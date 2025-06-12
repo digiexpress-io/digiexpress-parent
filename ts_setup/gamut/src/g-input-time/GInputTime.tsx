@@ -24,6 +24,7 @@ export interface GInputTimePropsVariantOverrides { };
 export interface GInputTimeProps {
   id: string;
   value: string | undefined;
+  disabled: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
@@ -69,7 +70,7 @@ export const GInputTime: React.FC<GInputTimeProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 

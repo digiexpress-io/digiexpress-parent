@@ -2,6 +2,7 @@ import React from 'react';
 import { useThemeInfra, GFormBaseRoot } from './useThemeInfra'
 import { GOverridableComponent } from '../g-override';
 import { GFormBaseElement } from '../g-form-base-element';
+import { useForm } from '../api-dialob';
 
 export interface GFormBaseClasses {
   root: string;
@@ -21,14 +22,14 @@ export const GFormBase: React.FC<GFormBaseProps> = (initProps) => {
     onAfterComplete, 
     actionItem, formStore, form
   } = useThemeInfra(initProps);
-
+  const { disabled } = useForm();
 
   if(ownerState.unwrap) {
-    return (<GFormBaseElement onAfterComplete={onAfterComplete} formStore={formStore} form={form} actionItem={actionItem}>{props.children}</GFormBaseElement>);
+    return (<GFormBaseElement disabled={disabled} onAfterComplete={onAfterComplete} formStore={formStore} form={form} actionItem={actionItem}>{props.children}</GFormBaseElement>);
   }
 
   const Root = ownerState.component ?? GFormBaseRoot;
   return (<Root className={classes.root} ownerState={ownerState}>
-    <GFormBaseElement onAfterComplete={onAfterComplete} formStore={formStore} actionItem={actionItem} form={form}>{props.children}</GFormBaseElement>
+    <GFormBaseElement disabled={disabled} onAfterComplete={onAfterComplete} formStore={formStore} actionItem={actionItem} form={form}>{props.children}</GFormBaseElement>
   </Root>);
 }

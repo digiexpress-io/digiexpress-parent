@@ -24,7 +24,7 @@ export const GInputRadio: React.FC<GInputListProps> = (props) => {
     <GInputRadioGroup className={classes.input} onChange={handleChange} value={selectedValue}>
 
       {/** All selection from data source */}
-      {datasource.entries.map(({ key, value }) => (<FormControlLabel key={key} value={key} control={<Radio />} label={value} />))}
+      {datasource.entries.map(({ key, value }) => (<FormControlLabel disabled={props.disabled} key={key} value={key} control={<Radio />} label={value} />))}
 
     </GInputRadioGroup>
   );

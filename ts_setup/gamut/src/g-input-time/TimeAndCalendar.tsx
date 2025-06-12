@@ -35,6 +35,7 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
       <InputHidden time={value} onChange={props.onChange} id={props.id} /> 
 
       <TimePicker 
+        disabled={props.disabled}
         value={value} 
         onChange={(newValue) => setValue(newValue)} 
         format={format}

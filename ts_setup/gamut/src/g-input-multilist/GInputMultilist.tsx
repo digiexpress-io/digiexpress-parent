@@ -58,7 +58,7 @@ export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
   const classes = useUtilityClasses(props.id, variant);
@@ -69,7 +69,7 @@ export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
 }
 
 const Label: React.FC<GInputLabelProps> = (props) => {
-  return (<GInputLabel {...props} braced/>)
+  return (<GInputLabel {...props} braced />)
 }
 
 

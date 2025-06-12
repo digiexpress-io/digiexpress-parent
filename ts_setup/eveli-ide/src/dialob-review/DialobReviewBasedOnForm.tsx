@@ -40,7 +40,7 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
         fetchAttachmentPost={'not-implemented' as any}
         fetchReviewGet={'not-implemented' as any}>
 
-        <Dialog open={true} onClose={props.onClose} maxWidth='md' fullWidth>
+        <Dialog open={true} onClose={props.onClose} maxWidth='lg' fullWidth>
           <DialogTitle>{intl.formatMessage({ id: 'dialobForm.review.title' })}</DialogTitle>
 
           <DialogContent>

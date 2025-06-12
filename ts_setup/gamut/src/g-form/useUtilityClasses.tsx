@@ -69,6 +69,7 @@ export const GFormRoot = styled("div", {
         marginLeft: theme.spacing(30),
         marginRight: theme.spacing(30),
       },
+
     },
     '& .GFormPage-body': {
       paddingTop: theme.spacing(2)

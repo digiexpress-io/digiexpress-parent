@@ -19,7 +19,7 @@ const Checkbox: React.FC<{
   const ref = React.useRef<HTMLInputElement>(null); 
 
   const {ownerState, optionKey, optionValue, onChange } = props;
-  const { value, keys, variant, id } = ownerState;
+  const { value, keys, variant, id, disabled } = ownerState;
   const checked = value?.includes(optionKey) ?? false;
   const classes = useUtilityClasses(id, variant);
 
@@ -43,6 +43,7 @@ const Checkbox: React.FC<{
 
   return (
     <Button className={classes.option} variant='outlined'
+      disabled={disabled}
       onClick={toggleInput}
       startIcon={checked ? <CheckBoxIcon className={classes.optionIcon} /> : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />}>
 

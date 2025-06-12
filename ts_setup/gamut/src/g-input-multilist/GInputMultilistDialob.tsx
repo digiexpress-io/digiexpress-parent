@@ -15,7 +15,7 @@ function parseValue(value: any): string[] {
 }
 
 
-export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
   const valueset = store.form.toValueSet(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -31,6 +31,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionI
   return (
     <GInputMultilist
       id={element.id}
+      disabled={disabled}
       label={element.label}
       description={desc}
       variant={element.props?.variant ?? 'multilist'}

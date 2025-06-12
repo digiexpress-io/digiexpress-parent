@@ -36,6 +36,7 @@ export const GInputAutoCompleteMulti: React.FC<GInputAutoCompleteProps> = (props
       <InputHiddenMulti id={props.id} value={value} onChange={props.onChange} />
       <Autocomplete disablePortal disableCloseOnSelect 
         multiple={true}
+        disabled={props.disabled}
         filterOptions={filterOptions}
         options={options}
         

@@ -15,6 +15,7 @@ export interface GInputSurveyQuestionProps {
   description: string | undefined;
 
   options: { id: string, label: string, description?: undefined | string }[];
+  disabled: boolean;
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
@@ -23,7 +24,7 @@ export interface GInputSurveyQuestionProps {
 
 export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props) => {
 
-  const { id, value, onChange, description } = props;
+  const { id, value, onChange, description, disabled } = props;
   const classes = useUtilityClasses(id);
   const [internalValue, setInternalValue] = React.useState<string>(value ?? '');
 
@@ -36,13 +37,13 @@ export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props)
     <>
       <GInputSurveyQuestionLabel className={classes.label} {...delegate}>
         <Typography>{props.label}</Typography>
-        <GInputAdornment id={`${id}-label`} title={props.label} children={description} />
+        <GInputAdornment id={`${id}-label`} title={props.label} children={description} disabled={props.disabled} />
         <InputHidden id={id} choice={internalValue} onChange={onChange} />
       </GInputSurveyQuestionLabel>
 
       {props.options.map(e => (
         <GInputSurveyQuestionBody key={e.label} className={classes.body} {...delegate}>
-          <IconButton onClick={(event) => handleOnClick(event, e)}>
+          <IconButton disabled={disabled} onClick={(event) => handleOnClick(event, e)}>
             {e.id === value ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
           </IconButton>
         </GInputSurveyQuestionBody>

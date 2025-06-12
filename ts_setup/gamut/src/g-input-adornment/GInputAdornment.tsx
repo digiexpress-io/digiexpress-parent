@@ -16,6 +16,7 @@ export interface GInputAdornmentProps {
   id: string;
   title: string | undefined;
   children: string | undefined;
+  disabled: boolean;
   component?: React.ElementType<GInputAdornmentProps>;
 }
 
@@ -38,7 +39,7 @@ export const GInputAdornment: React.FC<GInputAdornmentProps> = (initProps) => {
 
   return (
     <GInputAdornmentRoot ownerState={ownerState} as={ownerState.component} className={classes.root}>
-      <IconButton onClick={handleOpen}><HelpOutlineIcon color='disabled'/></IconButton>
+      <IconButton disabled={props.disabled} onClick={handleOpen}><HelpOutlineIcon color='disabled' /></IconButton>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>
@@ -47,7 +48,7 @@ export const GInputAdornment: React.FC<GInputAdornmentProps> = (initProps) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} autoFocus variant='contained'><FormattedMessage id='gamut.buttons.close'/></Button>
+          <Button onClick={handleClose} autoFocus variant='contained'><FormattedMessage id='gamut.buttons.close' /></Button>
         </DialogActions>
       </Dialog>
     </GInputAdornmentRoot>)

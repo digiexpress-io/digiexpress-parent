@@ -6,7 +6,7 @@ import { GInputSurvey } from './GInputSurvey';
 
 
 
-export const GInputSurveyDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, children }) => {
+export const GInputSurveyDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, children }) => {
 
   const errors = store.form.toErrors(element.id);
   const description = store.form.toDescription(element.id);
@@ -23,6 +23,7 @@ export const GInputSurveyDialob: React.FC<GFormBaseElementProps> = ({ actionItem
   return (<GInputSurvey
     id={element.id}
     label={element.label}
+    disabled={disabled}
     options={options?.entries.map(e => ({ id: e.key, label: e.value, description: undefined })) ?? []}
     questions={questions.map(e => ({
       label: e.label ?? '',

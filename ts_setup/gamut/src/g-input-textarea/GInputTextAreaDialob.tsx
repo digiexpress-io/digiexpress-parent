@@ -4,7 +4,7 @@ import { GInputTextArea } from './GInputTextArea';
 
 
 
-export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -17,6 +17,7 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({ actionIt
   return (
     <GInputTextArea
       id={element.id}
+      disabled={disabled}
       label={element.label}
       description={desc}
       errors={errors}

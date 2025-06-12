@@ -26,6 +26,7 @@ export interface GInputUploadProps {
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
+  disabled: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -70,7 +71,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
       error: { id, errors },
       input: { name: id, ...props },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: description, title: label ?? '' }
+      adornment: { id, children: description, title: label ?? '', disabled: props.disabled }
     }
   }
 
@@ -82,7 +83,6 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
 
 const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) => {  
 
-  const classes = useUtilityClasses(props.id, props.variant);
   const { fetchAttachmentPost } = useDialob();
   const { executionId } = useForm();
   
@@ -153,7 +153,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
         <TableRow>
           <TableCell align="right" colSpan={2}>
             <input type='file' id='file' multiple ref={inputFile} style={{ display: 'none' }} onChange={handleFileUpload} accept='.jpg, .jpeg, .png, .pdf' />
-            <IconButton onClick={() => inputFile.current?.click()}>
+              <IconButton disabled={props.disabled} onClick={() => inputFile.current?.click()}>
               <AddIcon color="primary" />
             </IconButton>
           </TableCell>

@@ -1,9 +1,8 @@
 import React from 'react';
-import { Autocomplete, FilterOptionsState, TextField } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 
 import { GInputAutoCompleteProps } from './g-input-autocomplete-types';
-import { OptionsProvider } from './GInputAutocompleteProvider';
-import { InputHiddenUni, InputHiddenMulti } from './InputHidden';
+import { InputHiddenUni } from './InputHidden';
 
 import { MaterialOptionType, useOwnerState } from './useOwnerState';
 
@@ -35,6 +34,7 @@ export const GInputAutoCompleteUni: React.FC<GInputAutoCompleteProps> = (props) 
     <>
       <InputHiddenUni id={props.id} value={value} onChange={props.onChange} />
       <Autocomplete disablePortal
+        disabled={props.disabled}
         filterOptions={filterOptions}
         options={options}
         

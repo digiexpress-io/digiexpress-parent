@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
  *  - defaults to `variant = autocomplete`
  */
 
-export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
   const intl = useIntl();
   const valueset = store.form.toValueSet(element.id);
   const desc = store.form.toDescription(element.id);
@@ -29,6 +29,7 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
   return (
     <GInputList
       id={element.id}
+      disabled={disabled}
       label={element.label}
       description={desc}
       errors={errors}

@@ -13,6 +13,7 @@ export const MultilistAutocomplete: React.FC<GInputBaseAnyProps & GInputMultilis
   return (
     <GInputAutoComplete
       id={id}
+      disabled={props.disabled}
       datasource={datasource}
       multiple={true}
       onChange={onChange}
