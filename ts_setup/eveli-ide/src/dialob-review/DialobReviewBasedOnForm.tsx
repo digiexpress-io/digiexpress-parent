@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useIntl, FormattedMessage, IntlProvider } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
@@ -40,12 +40,12 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
         fetchAttachmentPost={'not-implemented' as any}
         fetchReviewGet={'not-implemented' as any}>
 
-        <Dialog open={true} onClose={props.onClose} maxWidth='lg' fullWidth>
+        <Dialog open={true} onClose={props.onClose} fullScreen>
           <DialogTitle>{intl.formatMessage({ id: 'dialobForm.review.title' })}</DialogTitle>
 
           <DialogContent>
             <LocaleProvider disableErrors defaultLocale={() => intl.locale}>
-              <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete}>
+              <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete}> 
                 <GFormTip executionId='' variant='' onAfterComplete={handleOnComplete} />
               </WithFormProvider>
             </LocaleProvider>
