@@ -24,9 +24,9 @@ export function useOwnerState(props: GInputAutoCompleteProps) {
 
 
   function filterOptions(_options: MaterialOptionType[], state: FilterOptionsState<MaterialOptionType>): MaterialOptionType[] {
-    const inputValue = state.inputValue.toLocaleLowerCase();
+    const inputValue = state.inputValue?.toLocaleLowerCase();
     return (props.datasource?.entries ?? [])
-      .filter(v => v.value.toLocaleLowerCase().indexOf(inputValue) > - 1)
+      .filter(v => v.value?.toLocaleLowerCase().indexOf(inputValue) > - 1)
   }
 
 

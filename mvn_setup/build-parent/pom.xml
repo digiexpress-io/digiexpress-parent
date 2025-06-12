@@ -44,7 +44,10 @@
     <commons-lang.version>3.17.0</commons-lang.version>
     <commons-collections.version>4.4</commons-collections.version>
     <commons-validator.version>1.7</commons-validator.version>
+    
     <dialob.version>3.0.1</dialob.version>
+    <dialob-b.version>2.2.9</dialob-b.version>
+    
     <flexmark.version>0.62.2</flexmark.version>
     <jgit.version>7.2.0.202503040940-r</jgit.version>
 
@@ -282,6 +285,15 @@
         <artifactId>dialob-api</artifactId>
         <version>${dialob.version}</version>
       </dependency>
+      
+      <dependency>
+        <groupId>io.dialob</groupId>
+        <artifactId>dialob-bom</artifactId>
+        <version>${dialob-b.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    
     
       <dependency>
         <groupId>io.digiexpress</groupId>
