@@ -39,11 +39,12 @@ export const FormProvider: React.FC<FormProviderProps> = (props) => {
   return (<WithFormProvider {...props} id={formId}>{props.children}</WithFormProvider>);
 }
 
-export const WithFormProvider: React.FC<FormProviderProps & { id: string }> = (props) => {
+export const WithFormProvider: React.FC<FormProviderProps & { id: string; disabled?: boolean }> = (props) => {
   
-  const { id, executionId, variant, onAfterComplete } = props;
+  const { id, executionId, variant, onAfterComplete, disabled } = props;
   const store = useFormStore({ id });
-  const contextValue = React.useMemo(() => Object.freeze({ store, variant, executionId, onAfterComplete }), [store, variant, executionId, onAfterComplete])
+  const contextValue = React.useMemo(() => Object.freeze({ store, variant, executionId, disabled: disabled === true, onAfterComplete }), 
+    [store, variant, executionId, disabled, onAfterComplete])
 
   React.useEffect(() => {
     if(store.pending) {
