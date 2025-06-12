@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Select, FormControl, SelectChangeEvent, MenuItem, InputLabel, Chip, Typography } from '@mui/material';
+import { Box, Select, FormControl, SelectChangeEvent, MenuItem, InputLabel, Chip, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { PrefsApi } from '@/api-prefs';
 import { tenant_features, TenantFeature, useTenantConfig } from '@/api-tenant-config';
@@ -15,6 +15,7 @@ export interface TenantConfigSelectProps {
 
 export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProfile, onChange }) => {
   const intl = useIntl();
+  const theme = useTheme();
   const { hardcodedFeatures } = useTenantConfig();
 
   const [selectedFeatures, setSelectedFeatures] = React.useState<string[]>(userProfile.tenantFeatures ?? []);
@@ -103,7 +104,10 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
             const isHardcoded = isHardcodedFeature(key);
             return (
               <MenuItem key={key} value={key} disabled={isHardcoded}>
-                {intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${key}`, defaultMessage: key })}
+                <Box display='flex' flexDirection='column' width='100%'>
+                  <Typography fontWeight='bold'>{intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${key}`, defaultMessage: key })}</Typography>
+                  <Typography variant='subtitle2' sx={{ color: theme.palette.primary.main }}>{intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${key}.desc`, defaultMessage: key })}</Typography>
+                </Box>
               </MenuItem>
             )
           })}
