@@ -9,6 +9,7 @@ import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import WorkIcon from '@mui/icons-material/Work';
 
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -17,6 +18,8 @@ import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
 import { EveliPermissions } from '@/eveli-permissions';
 import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
+
+
 
 export const Secondary: React.FC = () => {
   const intl = useIntl();
@@ -126,6 +129,18 @@ export const Secondary: React.FC = () => {
           })}
         >
           {intl.formatMessage({ id: 'menu.profile' })}
+        </Button>
+      </EveliTenantFeatureEnabled>
+
+      <EveliTenantFeatureEnabled id='BATCHES'>
+        <Button startIcon={<PersonOutlineOutlinedIcon />}
+          variant={location.pathname.endsWith('batches') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/batches'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.batches' })}
         </Button>
       </EveliTenantFeatureEnabled>
 
