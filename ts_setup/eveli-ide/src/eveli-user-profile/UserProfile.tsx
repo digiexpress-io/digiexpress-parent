@@ -1,125 +1,141 @@
 import React from 'react';
-import { Typography, CircularProgress, Divider, Grid2 } from '@mui/material';
+import { Typography, CircularProgress, Divider, Grid2, Button, Box } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { FormattedMessage } from 'react-intl';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+import { FormattedMessage, useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
 import { UserAvatar } from './UserAvatar';
-import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
-import { SectionRow } from '@/eveli-styles';
+import { TenantConfigSelect } from './TenantConfigSelect';
+import { UserProfileNotifications } from './UserProfileNotifications';
+
+import { UserProfileFirstName } from './UserProfileFirstName';
+import { UserProfileLastName } from './UserProfileLastName';
+import { UserProfileDetailRow } from './UserProfileDetailRow';
+
 import { PrefsApi } from '@/api-prefs';
+import { useIam } from '@/api-iam';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { EveliUserOverviewDetail, EveliUserProfileRoot, EveliUserProfileHeader, useUtilityClasses } from './useUtilityClasses';
-import { UserActivity } from './UserActivity';
+import { useQuery } from '@tanstack/react-query';
 
 
 const formatFinnishDate = (isoString: string) =>
   DateTime.fromISO(isoString).setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 
 export const UserProfile: React.FC<{}> = () => {
+  const intl = useIntl();
   const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {})
-  const [state, setState] = React.useState<PrefsApi.UserProfile>();
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const { user } = useIam();
+  const [changes, setChanges] = React.useState<Record<string, PrefsApi.UserProfileUpdateCommand<any>>>({});
+
+  const { data: profile, error, refetch, isPending } = useQuery<PrefsApi.UserProfile>({
+    queryKey: ['current-user-profile'],
+    queryFn: () => restApi().currentUserProfile()
+  });
+
+
+  const userRoles = user.roles.length ? user.roles.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
+  const userPermissions = user.permissions.length ? user.permissions.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
   const classes = useUtilityClasses();
 
-  React.useEffect(() => {
-    restApi().currentUserProfile().then(userProfile => {
-      //alert('')
-      setState(userProfile);
-      setLoading(false);
-    });
-  }, []);
+  function handleChange(command: PrefsApi.UserProfileUpdateCommand<any>) {
+    setChanges(prev => {
+      const next: Record<string, PrefsApi.UserProfileUpdateCommand<any>> = { ...prev };
+      const id: string = command.commandType;
 
-  if (loading || !state) {
+      next[id] = command;
+      return next;
+    });
+  }
+
+
+  function handleSave() {
+    restApi().updateUserProfile(Object.values(changes))
+      .then(() => refetch())
+      .then(() => setChanges({}));
+  }
+
+
+  if (isPending || !profile) {
     return <CircularProgress />;
   }
 
-  const displayName = [state.details.lastName, state.details.lastName]
-    .filter(e => !!e)
-    .join(', ');
-
   return (<>
-    <EveliUserProfileHeader ownerState={state}>
+    <EveliUserProfileHeader ownerState={profile}>
       <Typography><FormattedMessage id='eveli.userProfile.title' /></Typography>
-      <UserAvatar user={state} />
+      <UserAvatar user={profile} />
     </EveliUserProfileHeader>
 
-    <EveliUserProfileRoot className={classes.root}>
-      <Grid2 container>
-        <Grid2 size={{ md: 4, lg: 4, xl: 4 }}>
-          <EveliUserOverviewDetail>
-            <div className={classes.sectionTitle}>
-              <PersonIcon />
-              <Typography><FormattedMessage id='eveli.userProfile.currentDetails' /></Typography>
-            </div>
-            <Divider className={classes.divider} />
+    <Box sx={{ justifySelf: 'center' }}>
+      <EveliUserProfileRoot className={classes.root}>
 
+        <EveliUserOverviewDetail>
+          <div className={classes.sectionTitle}>
+            <PersonIcon />
+            <Typography><FormattedMessage id='eveli.userProfile.currentDetails' /></Typography>
+          </div>
+          <Divider className={classes.divider} />
 
-            <div style={{ marginTop: 10 }}>
-              <SectionRow label={<FormattedMessage id='eveli.userProfile.id' />} value={state.id} />
-              <SectionRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={displayName} />
-              <SectionRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(state.created)} />
-              <SectionRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(state.updated)} />
-              <SectionRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value='TODO' />
-            </div>
-          </EveliUserOverviewDetail>
-        </Grid2>
+          <div style={{ marginTop: 10 }}>
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.id' />} value={profile.id} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={profile.details.username} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.firstAndLastName' />} value={profile.details.firstName + " " + profile.details.lastName} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.email' />} value={profile.details.email} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(profile.created)} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(profile.updated)} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value={userRoles} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
+          </div>
+        </EveliUserOverviewDetail>
 
-        <Grid2 size={{ md: 4, lg: 4, xl: 4 }}>
-          <EveliUserOverviewDetail>
-            <div className={classes.sectionTitle}>
-              <EditIcon />
-              <Typography><FormattedMessage id='eveli.userProfile.editDetails' /></Typography>
-            </div>
+        <EveliUserOverviewDetail>
+          <div className={classes.sectionTitle}>
+            <EditIcon />
+            <Typography><FormattedMessage id='eveli.userProfile.editDetails' defaultMessage='User details' /></Typography>
+          </div>
 
-            <Divider className={classes.divider} />
+          <Divider className={classes.divider} />
 
-            <FirstName init={state} />
-            <LastName init={state} />
-            <EmailAddress init={state} />
-          </EveliUserOverviewDetail>
-        </Grid2>
+          <Box display='flex' flexDirection='column'>
+            <UserProfileFirstName init={profile} onChange={handleChange} />
+            <UserProfileLastName init={profile} onChange={handleChange} />
+          </Box>
+        </EveliUserOverviewDetail>
 
-        <Grid2 size={{ md: 4, lg: 4, xl: 4 }}>
-          <EveliUserOverviewDetail>
-            <div className={classes.sectionTitle}>
-              <NotificationsIcon />
-              <Typography><FormattedMessage id='eveli.userProfile.notificationSettings' /></Typography>
-            </div>
-            <Divider className={classes.divider} />
+        {/* //TODO
+        <EveliUserOverviewDetail>
+          <div className={classes.sectionTitle}>
+            <NotificationsIcon />
+            <Typography><FormattedMessage id='eveli.userProfile.notificationSettings' defaultMessage='Notification settings' /></Typography>
+          </div>
+          <Divider className={classes.divider} />
 
-            <NotificationSettings />
-          </EveliUserOverviewDetail>
-        </Grid2>
+          <UserProfileNotifications />
+        </EveliUserOverviewDetail>
+         */}
 
-        <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
-          <EveliUserOverviewDetail>
-            <div className={classes.sectionTitle}>
-              <NotificationsIcon />
-              <Typography><FormattedMessage id='eveli.userProfile.userActivity' /></Typography>
-            </div>
-            <Divider className={classes.divider} />
+        <EveliUserOverviewDetail>
+          <div className={classes.sectionTitle}>
+            <SettingsIcon />
+            <Typography><FormattedMessage id='eveli.userProfile.tenantConfig' defaultMessage='Configuration options' /></Typography>
+          </div>
 
-            <UserActivity />
-          </EveliUserOverviewDetail>
-        </Grid2>
+          <Divider className={classes.divider} />
 
-      </Grid2>
-    </EveliUserProfileRoot>
+          <TenantConfigSelect userProfile={profile} onChange={handleChange} />
+        </EveliUserOverviewDetail>
 
+        <div style={{ display: 'flex', gap: 4, justifyContent: 'center' }}>
+          <Button disabled={Object.values(changes).length === 0} onClick={handleSave}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
+        </div>
+      </EveliUserProfileRoot>
+    </Box>
   </>
   );
 }
 
-/*
 
-const UserProfileHeader: React.FC<{ state: PrefsApi.UserProfile }> = ({ state }) => {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
-      <Typography variant='h1'><FormattedMessage id='eveli.userProfile.title' /></Typography><UserAvatar user={state} />
-    </div>)
-} 
-
-*/

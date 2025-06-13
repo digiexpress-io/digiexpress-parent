@@ -94,7 +94,7 @@ public class DbTestTemplate {
   	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
-    this.client = new BatchClientImpl(BatchDbImpl.create().db("junit").client(pgPool).build());
+    this.client = new BatchClientImpl(BatchDbImpl.create().tenant("junit").client(pgPool).build());
     if(callback != null && !init_performed) {
       init_performed = true;
       repo = this.client.manageTenants().commit()

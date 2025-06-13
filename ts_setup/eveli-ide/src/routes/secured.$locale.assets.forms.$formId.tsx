@@ -1,10 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { Container, createTheme, ThemeOptions, ThemeProvider } from '@mui/material'
 import { GShell, GFormTip, WithFormProvider, DialobProvider, LocaleProvider } from '@dxs-ts/gamut'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { useTenantConfig } from '@/api-tenant-config';
 
-export const Route = createFileRoute('/secured/$locale/assets/forms/$formId')({
+export const Route = createFileRoute({
   component: Component,
 })
 

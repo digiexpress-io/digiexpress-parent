@@ -29,7 +29,7 @@ export interface PopulateOfferContext {
 export function usePopulateContext(props: UsePropulateProps): PopulateOfferContext {
   const { site } = useSite();
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
-  const { getAllOffers, getOneOffer, options } = props;
+  const { getAllOffers, options } = props;
   const { staleTime, queryKey } = options;
 
   // tanstack query config

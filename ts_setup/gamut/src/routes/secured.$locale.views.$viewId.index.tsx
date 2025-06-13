@@ -1,5 +1,4 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { GRouterSecuredServices } from '../g-router-secured-services';
 import { GRouterInbox } from '../g-router-inbox';
 import { GRouterUnfinishedForms } from '../g-router-unfinished-forms';
@@ -22,7 +21,7 @@ export function parseViewRouteSearchParams(search: Record<string, unknown>): Vie
 }
 
 
-export const Route = createFileRoute('/secured/$locale/views/$viewId/')({
+export const Route = createFileRoute({
   component: Component,
   validateSearch: (search: Record<string, unknown>): ViewRouteSearchParams => parseViewRouteSearchParams(search)
 })

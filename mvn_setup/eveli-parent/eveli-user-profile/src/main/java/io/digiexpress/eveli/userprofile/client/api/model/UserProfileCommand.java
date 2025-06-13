@@ -61,7 +61,8 @@ public interface UserProfileCommand extends Serializable {
     ChangeUserDetailsLastName,
     ChangeUserDetailsEmail,
     ChangeNotificationSetting,
-    ArchiveUserProfile
+    ArchiveUserProfile,
+    ChangeTenantFeatures
   }
 
   @Value.Immutable @JsonSerialize(as = ImmutableCreateUserProfile.class) @JsonDeserialize(as = ImmutableCreateUserProfile.class)
@@ -95,7 +96,9 @@ public interface UserProfileCommand extends Serializable {
     @Type(value = ImmutableChangeUserDetailsEmail.class, name = "ChangeUserDetailsEmail"),  
     @Type(value = ImmutableChangeNotificationSetting.class, name = "ChangeNotificationSetting"),
     @Type(value = ImmutableArchiveUserProfile.class, name = "ArchiveUserProfile"),
-    @Type(value = ImmutableUpsertUiSettings.class, name = "UpsertUiSettings")
+    @Type(value = ImmutableUpsertUiSettings.class, name = "UpsertUiSettings"),
+    
+    @Type(value = ImmutableChangeTenantFeatures.class, name = "ChangeTenantFeatures")
   })
   interface UserProfileUpdateCommand extends UserProfileCommand {}
   
@@ -105,6 +108,7 @@ public interface UserProfileCommand extends Serializable {
     @Nullable String getFirstName();
     @Nullable String getLastName();
     String getEmail();
+    List<String> getTenantFeatures();
     List<NotificationSetting> getNotificationSettings();
     @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.UpsertUserProfile; }
   }
@@ -113,6 +117,11 @@ public interface UserProfileCommand extends Serializable {
   interface ChangeUserDetailsFirstName extends UserProfileUpdateCommand {
     String getFirstName();
     @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.ChangeUserDetailsFirstName; }
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableChangeTenantFeatures.class) @JsonDeserialize(as = ImmutableChangeTenantFeatures.class)
+  interface ChangeTenantFeatures extends UserProfileUpdateCommand {
+    List<String> getTenantFeatures();
+    @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.ChangeTenantFeatures; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeUserDetailsLastName.class) @JsonDeserialize(as = ImmutableChangeUserDetailsLastName.class)
@@ -129,8 +138,7 @@ public interface UserProfileCommand extends Serializable {
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangeNotificationSetting.class) @JsonDeserialize(as = ImmutableChangeNotificationSetting.class)
   interface ChangeNotificationSetting extends UserProfileUpdateCommand {
-    String getType();
-    Boolean getEnabled();
+    List<NotificationSetting> getNotificationSettings();
     @Override default UserProfileCommandType getCommandType() { return UserProfileCommandType.ChangeNotificationSetting; }
   }
   

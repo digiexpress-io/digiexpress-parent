@@ -16,6 +16,7 @@ export interface GInputTextAreaProps {
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
+  disabled: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;

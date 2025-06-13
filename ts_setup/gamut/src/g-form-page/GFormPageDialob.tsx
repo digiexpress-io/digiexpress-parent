@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 
 
-export const GFormPageDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, children }) => {
+export const GFormPageDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, children, disabled }) => {
   const intl = useIntl();
 
 
@@ -48,7 +48,7 @@ export const GFormPageDialob: React.FC<GFormBaseElementProps> = ({ actionItem: e
       children={children}
       active={meta.active}
       pageNumber={meta.order}
-
+      disabled={disabled}
       proceedAllowed={store.form.proceedAllowed}
       completeAllowed={store.form.completeAllowed}
 

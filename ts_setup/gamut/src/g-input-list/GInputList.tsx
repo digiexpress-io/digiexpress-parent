@@ -55,7 +55,7 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 
@@ -69,6 +69,7 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
 
 const GInputListAutocomplete: React.FC<GInputListProps> = (initProps) => {
   return <GInputAutoComplete
+    disabled={initProps.disabled}
     id={initProps.id}
     datasource={initProps.datasource}
     multiple={false}

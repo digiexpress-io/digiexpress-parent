@@ -28,15 +28,15 @@ import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenantContainer;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
-import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery;
-import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery.BatchDbMetricQuery;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTenantRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -69,6 +69,26 @@ public class BatchDbQueryImpl implements BatchDbQuery {
   @Override
   public BatchDbBatchQuery queryBatches() {
     return new BatchDbBatchQuery() {
+      
+      @Override
+      public Multi<Batch> findAll() {
+        final var sql = registry.getBatches().findAll();
+        
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryBatches.findAll query, with props: {} \r\n{}", 
+              "", 
+              sql.getValue());
+        }
+        
+        return dataSource.getClient().preparedQuery(sql.getValue())
+            .mapping(registry.getBatches().defaultMapper())
+            .execute()
+            .onItem()
+            .transformToMulti((RowSet<Batch> rowset) -> Multi.createFrom().iterable(rowset))
+            .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'BATCHES'-s!", sql, e)));
+      }
+      
+      
       @Override
       public Uni<List<Batch>> findAllByAppId(String appId, boolean lockForUpdate) {
         final var sql = registry.getBatches().findAllByAppId(appId, lockForUpdate);

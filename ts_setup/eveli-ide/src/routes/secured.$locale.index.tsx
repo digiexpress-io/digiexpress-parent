@@ -1,8 +1,8 @@
 import { useTenantConfig } from '@/api-tenant-config';
-import { Navigate, createFileRoute } from '@tanstack/react-router'
+import { Navigate } from '@tanstack/react-router'
 
 
-export const Route = createFileRoute('/secured/$locale/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

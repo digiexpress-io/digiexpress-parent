@@ -1,9 +1,9 @@
 import React from 'react'
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 import { useLocale } from '../api-locale';
 
 
-export const Route = createFileRoute('/public/$locale')({
+export const Route = createFileRoute({
   component: Component,
 })
 

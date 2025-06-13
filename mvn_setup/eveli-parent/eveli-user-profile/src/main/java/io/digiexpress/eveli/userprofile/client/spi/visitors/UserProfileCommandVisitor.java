@@ -35,6 +35,7 @@ import io.digiexpress.eveli.userprofile.client.api.model.UserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ArchiveUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ChangeNotificationSetting;
+import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ChangeTenantFeatures;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsEmail;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsFirstName;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsLastName;
@@ -93,6 +94,8 @@ public class UserProfileCommandVisitor {
       return visitChangeNotificationSetting((ChangeNotificationSetting) command);
     case ArchiveUserProfile:
       return visitArchiveUserProfile((ArchiveUserProfile) command);
+    case ChangeTenantFeatures:
+      return visitChangeTenantFeatures((ChangeTenantFeatures) command);
     }
     
     throw new UpdateUserProfileVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
@@ -165,6 +168,7 @@ public class UserProfileCommandVisitor {
       this.current = ImmutableUserProfile.builder()
           .id(id)
           .details(details)
+          .tenantFeatures(command.getTenantFeatures())
           .notificationSettings(command.getNotificationSettings().stream()
               .map(e -> ImmutableNotificationSetting.builder()
                   .from(e)
@@ -187,22 +191,39 @@ public class UserProfileCommandVisitor {
             .build());
     visitedCommands.add(command);
     return this.current;
-  }
-  
-  //TODO 
+  } 
   private UserProfile visitChangeUserDetailsLastName(ChangeUserDetailsLastName command) {
+    this.current = this.current
+        .withId(current.getId())
+        .withDetails(ImmutableUserDetails.builder()
+            .from(this.current.getDetails())
+            .lastName(command.getLastName())
+            .build());
     visitedCommands.add(command);
     return this.current;
   }
-  
-  //TODO
   private UserProfile visitChangeUserDetailsEmail(ChangeUserDetailsEmail command) {
+    this.current = this.current
+        .withId(current.getId())
+        .withDetails(ImmutableUserDetails.builder()
+            .from(this.current.getDetails())
+            .email(command.getNewEmail())
+            .build());
     visitedCommands.add(command);
     return this.current;
   }
   
-  //TODO
+  private UserProfile visitChangeTenantFeatures(ChangeTenantFeatures command) {
+    this.current = this.current
+        .withId(current.getId())
+        .withTenantFeatures(command.getTenantFeatures());
+    visitedCommands.add(command);
+    return this.current;
+  }
   private UserProfile visitChangeNotificationSetting(ChangeNotificationSetting command) {
+    this.current = this.current
+        .withId(current.getId())
+        .withNotificationSettings(command.getNotificationSettings());
     visitedCommands.add(command);
     return this.current;
   }
@@ -212,7 +233,6 @@ public class UserProfileCommandVisitor {
     visitedCommands.add(command);
     return this.current;
   }
-
   
   public static class NoChangesException extends Exception {
     private static final long serialVersionUID = 5955370217897065513L;

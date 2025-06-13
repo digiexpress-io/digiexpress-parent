@@ -1,0 +1,246 @@
+{
+  "_id": "144521f9a49bc9585fd1387e0fd87ef7",
+  "_rev": "37",
+  "name": "osbu_proposals",
+  "data": {
+    "list1": {
+      "id": "list1",
+      "type": "list",
+      "label": {
+        "en": "Select one area that your proposal applies to.",
+        "fi": "Valitse yksi osa-alue jota ehdotuksesi koskee"
+      },
+      "required": "true",
+      "valueSetId": "vs1"
+    },
+    "note1": {
+      "id": "note1",
+      "type": "note",
+      "label": {
+        "en": "This survey is an example of how you could collect ideas from city residents regarding participatory budgeting. In this DigiExpress demo environment, the form requires login, but this could equally well be published as a service that does not require login.",
+        "fi": "Tämä kyselyn on esimerkki siitä miten voisi kerätä ideointi kaupunkilaisilta liittyen osallistuvaan budjetointiin. Tässä DigiExpress demo ympäristössä lomake vaatii kirjautumisen, mutta yhtä hyvin tämän voisi myös julkaista palveluna joka ei vaadi kirjautumista."
+      },
+      "props": {
+        "style": "normal"
+      }
+    },
+    "note2": {
+      "id": "note2",
+      "type": "note",
+      "label": {
+        "en": "More information about the proposed targets can be found here.\n\n- Marjamäen beach improvement plan\n- Kielon park improvement plan",
+        "fi": "Lisää tietoa ehdotetuista kohteista löytyy alta\n\n- Marjamäen uimarannan [parannusehdotus](https://www.digiExpress.io)\n- Kielon puiston [parannusehdotus](https://www.digiExpress.io)"
+      },
+      "props": {
+        "style": "normal"
+      }
+    },
+    "page1": {
+      "id": "page1",
+      "type": "group",
+      "view": "page",
+      "items": [
+        "note1",
+        "group1"
+      ],
+      "props": {
+        "columns": 1
+      }
+    },
+    "text1": {
+      "id": "text1",
+      "type": "text",
+      "view": "text",
+      "label": {
+        "en": "Ehdotuksesi otsikko",
+        "fi": "Ehdotuksesi otsikko"
+      },
+      "required": "true",
+      "activeWhen": "list1 in ('choice3')"
+    },
+    "group1": {
+      "id": "group1",
+      "type": "group",
+      "label": {
+        "en": "Data collection form for proposals related to participatory budgeting ideation",
+        "fi": "Osallistuvaan budjetointiin ideointiin liittyvä ehdotusten tiedonkeruulomake"
+      },
+      "items": [
+        "note2",
+        "list1",
+        "text1",
+        "textBox1",
+        "boolean1",
+        "address1",
+        "multichoice1"
+      ],
+      "props": {
+        "columns": 1
+      }
+    },
+    "address1": {
+      "id": "address1",
+      "type": "text",
+      "view": "address",
+      "label": {
+        "en": "Enter the address associated with the suggestion or select it from the map",
+        "fi": "Anna ehdotukseen liittyvä osoite tai valitse se kartalta"
+      },
+      "props": {
+        "country": [
+          {
+            "key": "fi",
+            "label": "Finland"
+          }
+        ]
+      }
+    },
+    "boolean1": {
+      "id": "boolean1",
+      "type": "boolean",
+      "label": {
+        "en": "Would you like to include a location/address as part of your proposal?",
+        "fi": "Haluatko liittää paikan/osoitteen osana ehdotustasi?"
+      },
+      "required": "true",
+      "activeWhen": "list1 in ('choice3')"
+    },
+    "textBox1": {
+      "id": "textBox1",
+      "type": "text",
+      "view": "textBox",
+      "label": {
+        "en": "Tell us more about the your proposal",
+        "fi": "Kerro meille lisää ehdotuksesta"
+      },
+      "required": "true",
+      "activeWhen": "list1 in ('choice3')"
+    },
+    "multichoice1": {
+      "id": "multichoice1",
+      "type": "multichoice",
+      "label": {
+        "en": "MULTI TEST",
+        "fi": "MULTI TEST"
+      },
+      "valueSetId": "vs2"
+    },
+    "questionnaire": {
+      "id": "questionnaire",
+      "type": "questionnaire",
+      "items": [
+        "page1"
+      ]
+    }
+  },
+  "metadata": {
+    "label": "osbu ehdotuksia",
+    "created": "2025-06-11T06:18:48.496+00:00",
+    "lastSaved": "2025-06-11T08:58:03.774+00:00",
+    "valid": true,
+    "creator": "unauthenticated",
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "savedBy": "unauthenticated",
+    "labels": [
+      "osbu",
+      "demo"
+    ],
+    "languages": [
+      "fi",
+      "en"
+    ]
+  },
+  "variables": [
+    {
+      "name": "FirstNames",
+      "context": true,
+      "contextType": "text"
+    },
+    {
+      "name": "LastName",
+      "context": true,
+      "contextType": "text"
+    },
+    {
+      "name": "Address",
+      "context": true,
+      "contextType": "text"
+    },
+    {
+      "name": "Email",
+      "context": true,
+      "contextType": "text"
+    },
+    {
+      "name": "SocialSecurityNumber",
+      "context": true,
+      "contextType": "text"
+    },
+    {
+      "name": "ProtectionOrder",
+      "context": true,
+      "contextType": "boolean"
+    }
+  ],
+  "valueSets": [
+    {
+      "id": "vs1",
+      "entries": [
+        {
+          "id": "choice1",
+          "label": {
+            "en": " Muurijoki beach",
+            "fi": "Muurijoen uimaranta"
+          }
+        },
+        {
+          "id": "choice2",
+          "label": {
+            "en": "Kielo park",
+            "fi": "Kielon puisto"
+          }
+        },
+        {
+          "id": "choice3",
+          "label": {
+            "en": "An other idea",
+            "fi": "Muu kohde"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vs2",
+      "entries": [
+        {
+          "id": "choice1",
+          "label": {
+            "en": "choice1VALE",
+            "fi": "choice1VAUE"
+          }
+        },
+        {
+          "id": "choice2",
+          "label": {
+            "en": "choice2Value",
+            "fi": "choice2Value"
+          }
+        },
+        {
+          "id": "choice3",
+          "label": {
+            "en": "choice3Value",
+            "fi": "choice3Value"
+          }
+        },
+        {
+          "id": "choice4",
+          "label": {
+            "en": "choice4Value",
+            "fi": "choice4Value"
+          }
+        }
+      ]
+    }
+  ]
+}

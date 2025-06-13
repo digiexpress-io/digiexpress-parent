@@ -1,12 +1,11 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/api-locale';
 import { EveliServices } from '@/eveli-services';
 
 
-export const Route = createFileRoute('/secured/$locale/assets/services/')({
+export const Route = createFileRoute({
   component: Component,
-}) 
+})
 
 function Component() {
   const { locale } = Route.useParams();

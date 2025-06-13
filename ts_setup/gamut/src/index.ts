@@ -76,6 +76,7 @@ export * from './api-locale'
 export * from './api-search'
 
 export * from './router'
+export * from './api-config'
 
 export * from './g-theme'
 

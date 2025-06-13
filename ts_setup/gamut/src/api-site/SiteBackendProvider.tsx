@@ -5,7 +5,6 @@ import { SiteCache } from './site-reducer';
 import { useLocale } from '../api-locale';
 import { getSearchTopics } from './search-topics';
 import { useIntl } from 'react-intl';
-import { useNavigate } from '@tanstack/react-router';
 import { maintainace_en } from './fallback-content';
 
 
@@ -39,7 +38,6 @@ export const SiteBackendContext = React.createContext<SiteBackendContextType>({
 const staleTime = 15000;
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
-  const nav = useNavigate();
   const { locale: selectedLocale } = useLocale();
   const intl = useIntl();
   const fetchSiteGet: SiteApi.FetchSiteGET = React.useMemo(() => props.fetchSiteGet, [props.fetchSiteGet])

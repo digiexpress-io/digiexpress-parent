@@ -1,9 +1,9 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'
+import { Navigate, useNavigate } from '@tanstack/react-router'
 import { useIam } from '../api-iam';
 import { useLocale } from '../api-locale';
 
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute({
   component: Component,
 
 })

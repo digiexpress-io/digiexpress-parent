@@ -7,7 +7,6 @@ import { useSnackbar } from "notistack";
 
 import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { createFileRoute } from '@tanstack/react-router'
 
 
 import { EveliSetup } from '@/eveli-setup';
@@ -15,7 +14,7 @@ import { useLocale } from '@/api-locale';
 import { EveliApp } from '@/eveli-app';
 import { Button } from '@mui/material';
 
-export const Route = createFileRoute('/secured/$locale/assets/forms/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
 
-import { DialobApi } from '../api-dialob'
+import { DialobApi, useForm } from '../api-dialob'
 import { UnknownSlot } from './UnknownSlot';
 
 import { GInputUploadDialob } from '../g-input-upload';
@@ -34,6 +34,7 @@ export type GFormBaseElementClassKey = keyof GFormBaseElementClasses;
 export interface GFormBaseElementProps {
   actionItem: DialobApi.ActionItem;
   form: DialobApi.Form;
+  disabled: boolean;
   formStore: DialobApi.FormStore;
   children?: React.ReactNode | undefined; 
   onAfterComplete: () => void;
@@ -72,5 +73,5 @@ export const GFormBaseElement: React.FC<GFormBaseElementProps> = (initProps) => 
   const { variant } = useSlotVariant(element, store);
 
   const Component: React.ElementType<GFormBaseElementProps> = Slots[variant] ?? UnknownSlot;
-  return (<Component {...props}>{props.children}</Component>);
+  return (<Component {...props} disabled={props.disabled}>{props.children}</Component>);
 }

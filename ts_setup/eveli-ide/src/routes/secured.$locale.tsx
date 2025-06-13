@@ -1,9 +1,9 @@
 import { useIam } from '@/api-iam';
-import { Navigate, Outlet, createFileRoute } from '@tanstack/react-router';
+import { Navigate, Outlet } from '@tanstack/react-router';
 import { EveliErrorNotFound } from '../eveli-error-not-found/EveliErrorNotFound';
 import { useLocale } from '@/api-locale';
 
-export const Route = createFileRoute('/secured/$locale')({
+export const Route = createFileRoute({
   component: Component,
   notFoundComponent: EveliErrorNotFound,
 });

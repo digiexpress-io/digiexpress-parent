@@ -1,6 +1,6 @@
 import { ConfigEnv, UserConfig } from 'vite';
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
-import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import { tanstackRouter } from '@tanstack/router-vite-plugin';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
@@ -14,7 +14,12 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
   return {
     base: process.env.PUBLIC_URL || '',
     plugins: [
-      react({
+      tanstackRouter({
+        target: 'react',
+        autoCodeSplitting: true,
+        verboseFileRoutes: false,
+      }),
+      ...react({
         jsxImportSource: '@emotion/react',
         babel: {
           plugins: ['@emotion/babel-plugin'],
@@ -29,7 +34,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       mockDevServerPlugin(),
       intlTsVite({}),
       fetchVite(),
-      TanStackRouterVite(),
+
     ],
     build: {
       chunkSizeWarningLimit: 5000,

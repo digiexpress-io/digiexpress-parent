@@ -8,6 +8,7 @@ export interface GInputGroupProps {
   id: string;
   label: string | undefined;
   description: string | undefined;
+  disabled: boolean;
   children: React.ReactNode;
   onAddRow: (id: string) => void;
 
@@ -49,7 +50,7 @@ export const GInputGroup: React.FC<GInputGroupProps> = (initProps) => {
           <Typography>{props.label}</Typography>
         </div>
         <Divider flexItem />
-        <IconButton color='primary' onClick={handleAddRow}>
+        <IconButton disabled={props.disabled} color='primary' onClick={handleAddRow}>
           <AddIcon />
         </IconButton>
       </Label>

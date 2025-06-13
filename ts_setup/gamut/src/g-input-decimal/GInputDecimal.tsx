@@ -10,6 +10,7 @@ import { GInputLabel } from '../g-input-label';
 import { GInputAdornment } from '../g-input-adornment';
 
 import { MUI_NAME, useUtilityClasses, GInputDecimalRoot } from './useUtilityClasses';
+import { InputHidden } from './InputHidden';
 
 
 // extension hook for adding custom input types
@@ -22,6 +23,7 @@ export interface GInputDecimalProps {
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
+  disabled: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -65,7 +67,7 @@ export const GInputDecimal: React.FC<GInputDecimalProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 
@@ -85,30 +87,36 @@ const DEFAULT_FORMAT: numbro.Format = {
 
 const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
   const [value, setValue] = React.useState('');
+  const themeFormat = props.format ? props.format(props.id) : undefined;
+  const finalFormat = themeFormat ?? DEFAULT_FORMAT;
+
   function format(value: string | undefined): string {
     if(value === '' || value === undefined || value === null) {
       return '';
     }
-
-
     if(props.formatter) {
       return props.formatter(props.id, value);
     }
-    const themeFormat = props.format ? props.format(props.id) : undefined;
+
     const result = numbro(value).format(themeFormat ?? DEFAULT_FORMAT);
     return result;
   }
 
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+
     const caret = event.target.selectionStart
     const element = event.target
     window.requestAnimationFrame(() => {
       element.selectionStart = caret
       element.selectionEnd = caret
     })
+
     setValue(format(event.target.value));
   }
 
-  return <TextField value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+  return <>
+    <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange} />
+    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+  </>
 }

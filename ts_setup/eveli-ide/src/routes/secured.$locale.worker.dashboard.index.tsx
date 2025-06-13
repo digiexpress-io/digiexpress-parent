@@ -1,9 +1,8 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/api-locale';
 import { EveliTaskStats } from '@/eveli-task-stats';
 
-export const Route = createFileRoute('/secured/$locale/worker/dashboard/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

@@ -1,11 +1,10 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/api-locale'
 import { FeedbackAllTasks } from '@/eveli-task-feedback';
 import { FeedbackProvider } from '@/api-feedback';
 
 
-export const Route = createFileRoute('/secured/$locale/worker/feedback/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

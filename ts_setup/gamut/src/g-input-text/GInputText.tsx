@@ -17,6 +17,7 @@ export interface GInputTextPropsVariantOverrides { }
 
 export interface GInputTextProps {
   id: string;
+  disabled: boolean;
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
@@ -66,7 +67,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
       error: { id, errors },
       input: { name: id, ...props },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: description, title: label ?? '' }
+      adornment: { id, children: description, title: label ?? '', disabled: props.disabled }
     }
   }
 
@@ -80,5 +81,5 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
 
 const TextInput: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
-  return (<TextField value={props.value ?? ''} name={props.name} onChange={props.onChange} className={classes.input} error={(props.errors?.length ?? 0) > 0} />)
+  return (<TextField disabled={props.disabled} value={props.value ?? ''} name={props.name} onChange={props.onChange} className={classes.input} error={(props.errors?.length ?? 0) > 0} />)
 }

@@ -25,6 +25,7 @@ export interface GInputBooleanProps {
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
+  disabled: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -67,7 +68,7 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 
@@ -122,11 +123,11 @@ const YesAndNoCheckbox: React.FC<GInputBaseAnyProps & GInputBooleanProps> = (pro
 
   return (
     <div className={classes.input}>
-      <Button fullWidth className={classes.option} variant='outlined' onClick={toggleYes} startIcon={startIcon(isYes)}>
+      <Button disabled={props.disabled} fullWidth className={classes.option} variant='outlined' onClick={toggleYes} startIcon={startIcon(isYes)}>
         <Typography className={classes.optionTitle}><FormattedMessage id='gamut.forms.answer.boolean.yes'/></Typography>
       </Button>
       
-      <Button fullWidth className={classes.option} variant='outlined' onClick={toggleNo} startIcon={startIcon(isNo)}>
+      <Button disabled={props.disabled} fullWidth className={classes.option} variant='outlined' onClick={toggleNo} startIcon={startIcon(isNo)}>
         <Typography className={classes.optionTitle}><FormattedMessage id='gamut.forms.answer.boolean.no'/></Typography>
       </Button>
       

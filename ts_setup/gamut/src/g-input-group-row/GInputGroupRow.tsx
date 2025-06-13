@@ -10,6 +10,7 @@ export interface GInputGroupRowProps {
   id: string;
   label: string | undefined;
   description: string | undefined;
+  disabled: boolean;
   children: React.ReactNode;
   onDelete: (id: string) => void
   columns?: string | undefined; // numerical string
@@ -54,12 +55,12 @@ export const GInputGroupRow: React.FC<GInputGroupRowProps> = (initProps) => {
             <Typography>{props.order + 1}</Typography>
           </div>
           <Divider flexItem />
-          <IconButton color='error' onClick={handleDelete}>
+          <IconButton disabled={props.disabled} color='error' onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </Label>)
       }
-      <Body {...props} className={classes.body}>
+      <Body {...props} disabled={props.disabled} className={classes.body}>
         {children}
       </Body>
     </GInputGroupRowRoot>);

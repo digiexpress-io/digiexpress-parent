@@ -9,6 +9,7 @@ export interface GInputListProps {
   id: string;
   value: string;
   datasource: DialobApi.ActionValueSet | undefined;
+  disabled: boolean;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;

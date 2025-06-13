@@ -1,10 +1,8 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 import { useSite } from '../api-site';
 import { GErrorNotTranslated } from '../g-error-not-translated/GErrorNotTranslated';
 
-export const Route = createFileRoute(
-  '/public/$locale/pages/$pageId',
-)({
+export const Route = createFileRoute({
   component: Component,
 })
 

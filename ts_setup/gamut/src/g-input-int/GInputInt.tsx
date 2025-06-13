@@ -19,6 +19,7 @@ export interface GInputIntPropsVariantOverrides { };
 export interface GInputIntProps {
   id: string;
   value: string | undefined;
+  disabled: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
@@ -66,7 +67,7 @@ export const GInputInt: React.FC<GInputIntProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 
@@ -116,7 +117,7 @@ const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
 
   return (<>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange}/>
-    <TextField value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
     </>
   )
 }

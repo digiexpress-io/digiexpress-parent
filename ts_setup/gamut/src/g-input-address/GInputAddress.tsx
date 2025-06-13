@@ -27,6 +27,7 @@ export interface GInputAddressProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
   description: string | undefined;
+  disabled: boolean;
 
   options?: {
     defaultValue?: { lat: number, lng: number } | undefined;
@@ -94,7 +95,7 @@ export const GInputAddress: React.FC<GInputAddressProps> = (initProps) => {
       error: { id, errors },
       input: { name: id, ...props, options: { ...options, defaultValue, defaultCountryCodes, mapHeight } },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: description, title: label ?? '' },
+      adornment: { id, children: description, title: label ?? '', disabled: props.disabled },
       secondary: { name: id, ...props, options: { ...options, defaultValue, defaultCountryCodes, mapHeight } }
     }
   }

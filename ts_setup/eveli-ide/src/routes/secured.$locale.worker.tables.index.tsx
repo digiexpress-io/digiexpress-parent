@@ -1,10 +1,9 @@
 import React from 'react'
 import { Box } from '@mui/material';
-import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/api-locale';
 import { EveliTasksTable } from '@/eveli-tasks-2';
 
-export const Route = createFileRoute('/secured/$locale/worker/tables/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

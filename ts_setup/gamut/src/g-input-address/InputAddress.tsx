@@ -50,7 +50,7 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
   }
 
   function handelRenderInput(params: AutocompleteRenderInputParams) {
-    return <TextField {...params} error={(props.errors?.length ?? 0) > 0} InputLabelProps={{ shrink: true }} />
+    return <TextField  {...params} error={(props.errors?.length ?? 0) > 0} InputLabelProps={{ shrink: true }} />
   }
 
 
@@ -60,6 +60,7 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
       value={selected ?? ''}
       onInputChange={handleFiltering}
       onChange={handleChange}
+      disabled={props.disabled}
       
       renderInput={handelRenderInput}
     />

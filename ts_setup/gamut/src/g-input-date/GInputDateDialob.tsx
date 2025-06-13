@@ -4,7 +4,7 @@ import { GInputDate } from './GInputDate';
 
 
 
-export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, disabled }) => {
 
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
@@ -17,6 +17,7 @@ export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
 
   return (
     <GInputDate 
+      disabled={disabled}
       id={element.id}
       variant='date'
       label={element.label}

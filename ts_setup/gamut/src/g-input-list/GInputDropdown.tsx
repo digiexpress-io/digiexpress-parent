@@ -26,6 +26,7 @@ export const GInputDropdown: React.FC<GInputListProps> = (props) => {
   return (
     <GInputSelect
       className={classes.input}
+      disabled={props.disabled}
       onChange={handleChange}
       renderValue={(selected: string) => <Collapsed datasource={datasource} keys={props.keys} selected={selected} className={classes.collapsed} />}
       value={selectedValue}>

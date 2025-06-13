@@ -20,7 +20,7 @@ export interface GInputSurveyProps {
   options: { id: string, label: string, description?: undefined | string }[];
   questions: { id: string, label: string, description?: undefined | string, value: undefined | string }[];
   errors?: DialobApi.ActionError[] | undefined;
-  
+  disabled: boolean;
   vertical?: boolean | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 
@@ -43,6 +43,7 @@ export interface GInputSurveyOptionProps {
   index: number;
   label: string | undefined;
   description: string | undefined;
+  disabled: boolean;
 }
 
 
@@ -71,7 +72,7 @@ export const GInputSurvey: React.FC<GInputSurveyProps> = (initProps) => {
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
       secondary: { ...ownerState, name: id },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 
@@ -81,7 +82,7 @@ export const GInputSurvey: React.FC<GInputSurveyProps> = (initProps) => {
 }
 
 const Options: React.FC<GInputSurveyProps> = (props) => {
-  const { id, options } = props;
+  const { id, options, disabled } = props;
   const classes = useUtilityClasses(id);
   
   const Body: React.ElementType<{ ownerState: GInputSurveyProps, className: string }> = props.slots?.body ?? GInputSurveyBody as any;
@@ -90,7 +91,7 @@ const Options: React.FC<GInputSurveyProps> = (props) => {
   return (
     <Body ownerState={props} className={classes.body}>
       <div />
-      {options.map((e, index) => (<Option index={index} id={id} key={e.label} label={e.label} description={e.description} className={classes.option} />))}
+      {options.map((e, index) => (<Option disabled={disabled} index={index} id={id} key={e.label} label={e.label} description={e.description} className={classes.option} />))}
       {props.children}
     </Body>);
 }

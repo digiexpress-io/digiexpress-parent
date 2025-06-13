@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchBuilder;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchConsumerBuilder;
+import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.BatchClient.CreateBatchConfig;
 import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
@@ -100,6 +101,25 @@ public class CreateBatchConfigImpl implements CreateBatchConfig {
     RepoAssert.notBlank(commitMessage, () -> "commitMessage must be defined!");
     
     return batchDb.withTenant().onItem().transformToUni(db -> execute(db));
+  }
+  
+  @Override
+  public CreateBatchConfig addAll(List<BatchDefinition> defs) {
+    for(final var def : defs) {
+      final var batch = this.addBatch(builder -> builder
+          .batchName(def.getBatchName())
+          .externalId(def.getExternalId())
+          .comment(def.getComment()).build());
+      
+      for(final var step : def.getSteps()) {
+        batch.addConsumer(worker -> worker
+            .batchName(def.getBatchName())
+            .consumerName(step.getName())
+            .comment(step.getComment())
+            .build(step.getExecutor()));
+      }
+    }
+    return this;
   }
   
   public Uni<Envelope<BatchConfig>> execute(BatchDb batchDb) {

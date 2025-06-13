@@ -225,6 +225,7 @@ export declare namespace DialobApi {
     store: DialobApi.FormStore;
     variant: string;
     executionId: string;
+    disabled: boolean;
     onAfterComplete: () => void;
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { HdesApi } from '@/api-wrench';
@@ -11,7 +10,7 @@ import { EveliSetup } from '@/eveli-setup';
 import { WrenchStickySave } from '@/wrench-sticky-save';
 
 
-export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
+export const Route = createFileRoute({
   component: Component,
   validateSearch: (search: Record<string, unknown>): WrenchRouteSearchParams => parseWrenchSearchParams(search)
 })

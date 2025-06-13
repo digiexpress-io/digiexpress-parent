@@ -53,6 +53,7 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
 
         }}
 
+        disabled={props.disabled}
         dayPlaceholder={intl.formatMessage({ id: 'gamut.forms.answer.date.placeholder.day' })}
         monthPlaceholder={intl.formatMessage({ id: 'gamut.forms.answer.date.placeholder.month' })}
         yearPlaceholder={intl.formatMessage({ id: 'gamut.forms.answer.date.placeholder.year' })}

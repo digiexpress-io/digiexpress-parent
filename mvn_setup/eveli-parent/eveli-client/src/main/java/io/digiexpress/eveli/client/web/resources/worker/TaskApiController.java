@@ -48,6 +48,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -66,6 +67,7 @@ public class TaskApiController {
   private final WorkerAuthClient securityClient;
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
+  private final DialobReviewClient dialobReviewClient;
   private final MqEventPublisher mqEventPublisher;
   private final TaskViewerPublisher viewerPublisher;
   
@@ -246,6 +248,23 @@ public class TaskApiController {
       }
       //{ form: any, session: any }
      
+      return ResponseEntity.notFound().build();
+      
+    });
+  }
+  
+  @GetMapping(value="/{id}/review-actions")
+  public Uni<ResponseEntity<?>> getTaskFormReviewActions(@PathVariable("id") String id)
+  {
+    return taskClient.queryTasks().getOneById(id)
+    .onItem().transform(task -> {
+      
+      if(task.getQuestionnaireId() != null) {
+        final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
+        final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
+        final var actions = dialobReviewClient.createReview().form(form).formData(questionnaire).build();
+        return new ResponseEntity<>(actions, HttpStatus.OK);
+      }
       return ResponseEntity.notFound().build();
       
     });

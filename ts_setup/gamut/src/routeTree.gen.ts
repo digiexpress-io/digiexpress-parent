@@ -8,170 +8,309 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as PublicLocaleImport } from './routes/public.$locale'
-import { Route as PublicLocaleIndexImport } from './routes/public.$locale.index'
-import { Route as PublicLocaleLoginImport } from './routes/public.$locale.login'
-import { Route as SecuredLocaleViewsViewIdImport } from './routes/secured.$locale.views.$viewId'
-import { Route as SecuredLocaleFormsFormIdImport } from './routes/secured.$locale.forms.$formId'
-import { Route as PublicLocalePagesPageIdImport } from './routes/public.$locale.pages.$pageId'
-import { Route as SecuredLocaleViewsViewIdIndexImport } from './routes/secured.$locale.views.$viewId.index'
-import { Route as PublicLocalePagesPageIdIndexImport } from './routes/public.$locale.pages.$pageId.index'
-import { Route as SecuredLocaleViewsViewIdSubjectIdImport } from './routes/secured.$locale.views.$viewId.$subjectId'
-import { Route as SecuredLocalePagesPageIdProductsProductIdImport } from './routes/secured.$locale.pages.$pageId.products.$productId'
-import { Route as PublicLocalePagesPageIdProductsProductIdImport } from './routes/public.$locale.pages.$pageId.products.$productId'
-import { Route as SecuredLocalePagesPageIdProductsProductIdIndexImport } from './routes/secured.$locale.pages.$pageId.products.$productId.index'
-import { Route as PublicLocalePagesPageIdProductsProductIdIndexImport } from './routes/public.$locale.pages.$pageId.products.$productId.index'
-import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId'
-import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId'
-import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.index'
-import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId.index'
-import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.summary'
-import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId.summary'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicLocaleRouteImport } from './routes/public.$locale'
+import { Route as PublicLocaleIndexRouteImport } from './routes/public.$locale.index'
+import { Route as PublicLocaleLoginRouteImport } from './routes/public.$locale.login'
+import { Route as SecuredLocaleViewsViewIdRouteImport } from './routes/secured.$locale.views.$viewId'
+import { Route as SecuredLocaleFormsFormIdRouteImport } from './routes/secured.$locale.forms.$formId'
+import { Route as PublicLocalePagesPageIdRouteImport } from './routes/public.$locale.pages.$pageId'
+import { Route as SecuredLocaleViewsViewIdIndexRouteImport } from './routes/secured.$locale.views.$viewId.index'
+import { Route as SecuredLocaleFormsFormIdIndexRouteImport } from './routes/secured.$locale.forms.$formId.index'
+import { Route as PublicLocalePagesPageIdIndexRouteImport } from './routes/public.$locale.pages.$pageId.index'
+import { Route as SecuredLocaleViewsViewIdSubjectIdRouteImport } from './routes/secured.$locale.views.$viewId.$subjectId'
+import { Route as SecuredLocaleFormsFormIdReviewRouteImport } from './routes/secured.$locale.forms.$formId.review'
+import { Route as SecuredLocalePagesPageIdProductsProductIdRouteImport } from './routes/secured.$locale.pages.$pageId.products.$productId'
+import { Route as PublicLocalePagesPageIdProductsProductIdRouteImport } from './routes/public.$locale.pages.$pageId.products.$productId'
+import { Route as SecuredLocalePagesPageIdProductsProductIdIndexRouteImport } from './routes/secured.$locale.pages.$pageId.products.$productId.index'
+import { Route as PublicLocalePagesPageIdProductsProductIdIndexRouteImport } from './routes/public.$locale.pages.$pageId.products.$productId.index'
+import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId'
+import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId'
+import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRouteImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.index'
+import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRouteImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId.index'
+import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRouteImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.summary'
+import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRouteImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId.summary'
 
-// Create/Update Routes
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PublicLocaleRoute = PublicLocaleImport.update({
+const PublicLocaleRoute = PublicLocaleRouteImport.update({
   id: '/public/$locale',
   path: '/public/$locale',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PublicLocaleIndexRoute = PublicLocaleIndexImport.update({
+const PublicLocaleIndexRoute = PublicLocaleIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicLocaleRoute,
 } as any)
-
-const PublicLocaleLoginRoute = PublicLocaleLoginImport.update({
+const PublicLocaleLoginRoute = PublicLocaleLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => PublicLocaleRoute,
 } as any)
-
-const SecuredLocaleViewsViewIdRoute = SecuredLocaleViewsViewIdImport.update({
-  id: '/secured/$locale/views/$viewId',
-  path: '/secured/$locale/views/$viewId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SecuredLocaleFormsFormIdRoute = SecuredLocaleFormsFormIdImport.update({
-  id: '/secured/$locale/forms/$formId',
-  path: '/secured/$locale/forms/$formId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PublicLocalePagesPageIdRoute = PublicLocalePagesPageIdImport.update({
+const SecuredLocaleViewsViewIdRoute =
+  SecuredLocaleViewsViewIdRouteImport.update({
+    id: '/secured/$locale/views/$viewId',
+    path: '/secured/$locale/views/$viewId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SecuredLocaleFormsFormIdRoute =
+  SecuredLocaleFormsFormIdRouteImport.update({
+    id: '/secured/$locale/forms/$formId',
+    path: '/secured/$locale/forms/$formId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PublicLocalePagesPageIdRoute = PublicLocalePagesPageIdRouteImport.update({
   id: '/pages/$pageId',
   path: '/pages/$pageId',
   getParentRoute: () => PublicLocaleRoute,
 } as any)
-
 const SecuredLocaleViewsViewIdIndexRoute =
-  SecuredLocaleViewsViewIdIndexImport.update({
+  SecuredLocaleViewsViewIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleViewsViewIdRoute,
   } as any)
-
+const SecuredLocaleFormsFormIdIndexRoute =
+  SecuredLocaleFormsFormIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SecuredLocaleFormsFormIdRoute,
+  } as any)
 const PublicLocalePagesPageIdIndexRoute =
-  PublicLocalePagesPageIdIndexImport.update({
+  PublicLocalePagesPageIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => PublicLocalePagesPageIdRoute,
   } as any)
-
 const SecuredLocaleViewsViewIdSubjectIdRoute =
-  SecuredLocaleViewsViewIdSubjectIdImport.update({
+  SecuredLocaleViewsViewIdSubjectIdRouteImport.update({
     id: '/$subjectId',
     path: '/$subjectId',
     getParentRoute: () => SecuredLocaleViewsViewIdRoute,
   } as any)
-
+const SecuredLocaleFormsFormIdReviewRoute =
+  SecuredLocaleFormsFormIdReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => SecuredLocaleFormsFormIdRoute,
+  } as any)
 const SecuredLocalePagesPageIdProductsProductIdRoute =
-  SecuredLocalePagesPageIdProductsProductIdImport.update({
+  SecuredLocalePagesPageIdProductsProductIdRouteImport.update({
     id: '/secured/$locale/pages/$pageId/products/$productId',
     path: '/secured/$locale/pages/$pageId/products/$productId',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-
 const PublicLocalePagesPageIdProductsProductIdRoute =
-  PublicLocalePagesPageIdProductsProductIdImport.update({
+  PublicLocalePagesPageIdProductsProductIdRouteImport.update({
     id: '/products/$productId',
     path: '/products/$productId',
     getParentRoute: () => PublicLocalePagesPageIdRoute,
   } as any)
-
 const SecuredLocalePagesPageIdProductsProductIdIndexRoute =
-  SecuredLocalePagesPageIdProductsProductIdIndexImport.update({
+  SecuredLocalePagesPageIdProductsProductIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocalePagesPageIdProductsProductIdRoute,
   } as any)
-
 const PublicLocalePagesPageIdProductsProductIdIndexRoute =
-  PublicLocalePagesPageIdProductsProductIdIndexImport.update({
+  PublicLocalePagesPageIdProductsProductIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => PublicLocalePagesPageIdProductsProductIdRoute,
   } as any)
-
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute =
-  SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport.update({
+  SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteImport.update({
     id: '/offers/$offerId',
     path: '/offers/$offerId',
     getParentRoute: () => SecuredLocalePagesPageIdProductsProductIdRoute,
   } as any)
-
 const PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute =
-  PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport.update({
+  PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteImport.update({
     id: '/offers/$offerId',
     path: '/offers/$offerId',
     getParentRoute: () => PublicLocalePagesPageIdProductsProductIdRoute,
   } as any)
-
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute =
-  SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () =>
-      SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
-  } as any)
-
+  SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRouteImport.update(
+    {
+      id: '/',
+      path: '/',
+      getParentRoute: () =>
+        SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
+    } as any,
+  )
 const PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute =
-  PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport.update({
+  PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () =>
       PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
   } as any)
-
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute =
-  SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport.update({
-    id: '/summary',
-    path: '/summary',
-    getParentRoute: () =>
-      SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
-  } as any)
-
+  SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRouteImport.update(
+    {
+      id: '/summary',
+      path: '/summary',
+      getParentRoute: () =>
+        SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
+    } as any,
+  )
 const PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute =
-  PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport.update({
-    id: '/summary',
-    path: '/summary',
-    getParentRoute: () =>
-      PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
-  } as any)
+  PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRouteImport.update(
+    {
+      id: '/summary',
+      path: '/summary',
+      getParentRoute: () =>
+        PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
+    } as any,
+  )
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/public/$locale': typeof PublicLocaleRouteWithChildren
+  '/public/$locale/login': typeof PublicLocaleLoginRoute
+  '/public/$locale/': typeof PublicLocaleIndexRoute
+  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
+  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRouteWithChildren
+  '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
+  '/secured/$locale/forms/$formId/review': typeof SecuredLocaleFormsFormIdReviewRoute
+  '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
+  '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
+  '/secured/$locale/forms/$formId/': typeof SecuredLocaleFormsFormIdIndexRoute
+  '/secured/$locale/views/$viewId/': typeof SecuredLocaleViewsViewIdIndexRoute
+  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId/': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
+  '/secured/$locale/pages/$pageId/products/$productId/': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/public/$locale/login': typeof PublicLocaleLoginRoute
+  '/public/$locale': typeof PublicLocaleIndexRoute
+  '/secured/$locale/forms/$formId/review': typeof SecuredLocaleFormsFormIdReviewRoute
+  '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
+  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdIndexRoute
+  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdIndexRoute
+  '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdIndexRoute
+  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
+  '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/public/$locale': typeof PublicLocaleRouteWithChildren
+  '/public/$locale/login': typeof PublicLocaleLoginRoute
+  '/public/$locale/': typeof PublicLocaleIndexRoute
+  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
+  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRouteWithChildren
+  '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
+  '/secured/$locale/forms/$formId/review': typeof SecuredLocaleFormsFormIdReviewRoute
+  '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
+  '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
+  '/secured/$locale/forms/$formId/': typeof SecuredLocaleFormsFormIdIndexRoute
+  '/secured/$locale/views/$viewId/': typeof SecuredLocaleViewsViewIdIndexRoute
+  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId/': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
+  '/secured/$locale/pages/$pageId/products/$productId/': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
+  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
+  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/public/$locale'
+    | '/public/$locale/login'
+    | '/public/$locale/'
+    | '/public/$locale/pages/$pageId'
+    | '/secured/$locale/forms/$formId'
+    | '/secured/$locale/views/$viewId'
+    | '/secured/$locale/forms/$formId/review'
+    | '/secured/$locale/views/$viewId/$subjectId'
+    | '/public/$locale/pages/$pageId/'
+    | '/secured/$locale/forms/$formId/'
+    | '/secured/$locale/views/$viewId/'
+    | '/public/$locale/pages/$pageId/products/$productId'
+    | '/secured/$locale/pages/$pageId/products/$productId'
+    | '/public/$locale/pages/$pageId/products/$productId/'
+    | '/secured/$locale/pages/$pageId/products/$productId/'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/public/$locale/login'
+    | '/public/$locale'
+    | '/secured/$locale/forms/$formId/review'
+    | '/secured/$locale/views/$viewId/$subjectId'
+    | '/public/$locale/pages/$pageId'
+    | '/secured/$locale/forms/$formId'
+    | '/secured/$locale/views/$viewId'
+    | '/public/$locale/pages/$pageId/products/$productId'
+    | '/secured/$locale/pages/$pageId/products/$productId'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
+  id:
+    | '__root__'
+    | '/'
+    | '/public/$locale'
+    | '/public/$locale/login'
+    | '/public/$locale/'
+    | '/public/$locale/pages/$pageId'
+    | '/secured/$locale/forms/$formId'
+    | '/secured/$locale/views/$viewId'
+    | '/secured/$locale/forms/$formId/review'
+    | '/secured/$locale/views/$viewId/$subjectId'
+    | '/public/$locale/pages/$pageId/'
+    | '/secured/$locale/forms/$formId/'
+    | '/secured/$locale/views/$viewId/'
+    | '/public/$locale/pages/$pageId/products/$productId'
+    | '/secured/$locale/pages/$pageId/products/$productId'
+    | '/public/$locale/pages/$pageId/products/$productId/'
+    | '/secured/$locale/pages/$pageId/products/$productId/'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
+    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/'
+    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  PublicLocaleRoute: typeof PublicLocaleRouteWithChildren
+  SecuredLocaleFormsFormIdRoute: typeof SecuredLocaleFormsFormIdRouteWithChildren
+  SecuredLocaleViewsViewIdRoute: typeof SecuredLocaleViewsViewIdRouteWithChildren
+  SecuredLocalePagesPageIdProductsProductIdRoute: typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -179,146 +318,357 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/public/$locale': {
       id: '/public/$locale'
       path: '/public/$locale'
       fullPath: '/public/$locale'
-      preLoaderRoute: typeof PublicLocaleImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof PublicLocaleRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/public/$locale/login': {
       id: '/public/$locale/login'
       path: '/login'
       fullPath: '/public/$locale/login'
-      preLoaderRoute: typeof PublicLocaleLoginImport
-      parentRoute: typeof PublicLocaleImport
+      preLoaderRoute: typeof PublicLocaleLoginRouteImport
+      parentRoute: typeof PublicLocaleRoute
     }
     '/public/$locale/': {
       id: '/public/$locale/'
       path: '/'
       fullPath: '/public/$locale/'
-      preLoaderRoute: typeof PublicLocaleIndexImport
-      parentRoute: typeof PublicLocaleImport
+      preLoaderRoute: typeof PublicLocaleIndexRouteImport
+      parentRoute: typeof PublicLocaleRoute
     }
     '/public/$locale/pages/$pageId': {
       id: '/public/$locale/pages/$pageId'
       path: '/pages/$pageId'
       fullPath: '/public/$locale/pages/$pageId'
-      preLoaderRoute: typeof PublicLocalePagesPageIdImport
-      parentRoute: typeof PublicLocaleImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdRouteImport
+      parentRoute: typeof PublicLocaleRoute
     }
     '/secured/$locale/forms/$formId': {
       id: '/secured/$locale/forms/$formId'
       path: '/secured/$locale/forms/$formId'
       fullPath: '/secured/$locale/forms/$formId'
-      preLoaderRoute: typeof SecuredLocaleFormsFormIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof SecuredLocaleFormsFormIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/secured/$locale/views/$viewId': {
       id: '/secured/$locale/views/$viewId'
       path: '/secured/$locale/views/$viewId'
       fullPath: '/secured/$locale/views/$viewId'
-      preLoaderRoute: typeof SecuredLocaleViewsViewIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof SecuredLocaleViewsViewIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/secured/$locale/forms/$formId/review': {
+      id: '/secured/$locale/forms/$formId/review'
+      path: '/review'
+      fullPath: '/secured/$locale/forms/$formId/review'
+      preLoaderRoute: typeof SecuredLocaleFormsFormIdReviewRouteImport
+      parentRoute: typeof SecuredLocaleFormsFormIdRoute
     }
     '/secured/$locale/views/$viewId/$subjectId': {
       id: '/secured/$locale/views/$viewId/$subjectId'
       path: '/$subjectId'
       fullPath: '/secured/$locale/views/$viewId/$subjectId'
-      preLoaderRoute: typeof SecuredLocaleViewsViewIdSubjectIdImport
-      parentRoute: typeof SecuredLocaleViewsViewIdImport
+      preLoaderRoute: typeof SecuredLocaleViewsViewIdSubjectIdRouteImport
+      parentRoute: typeof SecuredLocaleViewsViewIdRoute
     }
     '/public/$locale/pages/$pageId/': {
       id: '/public/$locale/pages/$pageId/'
       path: '/'
       fullPath: '/public/$locale/pages/$pageId/'
-      preLoaderRoute: typeof PublicLocalePagesPageIdIndexImport
-      parentRoute: typeof PublicLocalePagesPageIdImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdIndexRouteImport
+      parentRoute: typeof PublicLocalePagesPageIdRoute
+    }
+    '/secured/$locale/forms/$formId/': {
+      id: '/secured/$locale/forms/$formId/'
+      path: '/'
+      fullPath: '/secured/$locale/forms/$formId/'
+      preLoaderRoute: typeof SecuredLocaleFormsFormIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleFormsFormIdRoute
     }
     '/secured/$locale/views/$viewId/': {
       id: '/secured/$locale/views/$viewId/'
       path: '/'
       fullPath: '/secured/$locale/views/$viewId/'
-      preLoaderRoute: typeof SecuredLocaleViewsViewIdIndexImport
-      parentRoute: typeof SecuredLocaleViewsViewIdImport
+      preLoaderRoute: typeof SecuredLocaleViewsViewIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleViewsViewIdRoute
     }
     '/public/$locale/pages/$pageId/products/$productId': {
       id: '/public/$locale/pages/$pageId/products/$productId'
       path: '/products/$productId'
       fullPath: '/public/$locale/pages/$pageId/products/$productId'
-      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdImport
-      parentRoute: typeof PublicLocalePagesPageIdImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdRouteImport
+      parentRoute: typeof PublicLocalePagesPageIdRoute
     }
     '/secured/$locale/pages/$pageId/products/$productId': {
       id: '/secured/$locale/pages/$pageId/products/$productId'
       path: '/secured/$locale/pages/$pageId/products/$productId'
       fullPath: '/secured/$locale/pages/$pageId/products/$productId'
-      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/public/$locale/pages/$pageId/products/$productId/': {
       id: '/public/$locale/pages/$pageId/products/$productId/'
       path: '/'
       fullPath: '/public/$locale/pages/$pageId/products/$productId/'
-      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdIndexImport
-      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdIndexRouteImport
+      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdRoute
     }
     '/secured/$locale/pages/$pageId/products/$productId/': {
       id: '/secured/$locale/pages/$pageId/products/$productId/'
       path: '/'
       fullPath: '/secured/$locale/pages/$pageId/products/$productId/'
-      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdIndexImport
-      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdImport
+      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdIndexRouteImport
+      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdRoute
     }
     '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': {
       id: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
       path: '/offers/$offerId'
       fullPath: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
-      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport
-      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteImport
+      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdRoute
     }
     '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': {
       id: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
       path: '/offers/$offerId'
       fullPath: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
-      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport
-      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdImport
+      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteImport
+      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdRoute
     }
     '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': {
       id: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
       path: '/summary'
       fullPath: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport
-      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRouteImport
+      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute
     }
     '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': {
       id: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
       path: '/summary'
       fullPath: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport
-      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport
+      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRouteImport
+      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute
     }
     '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/': {
       id: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/'
       path: '/'
       fullPath: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/'
-      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport
-      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport
+      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRouteImport
+      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute
     }
     '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/': {
       id: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/'
       path: '/'
       fullPath: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/'
-      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport
-      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport
+      preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRouteImport
+      parentRoute: typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute
     }
   }
 }
 
-// Create and export the route tree
+declare module './routes/index' {
+  const createFileRoute: CreateFileRoute<
+    '/',
+    FileRoutesByPath['/']['parentRoute'],
+    FileRoutesByPath['/']['id'],
+    FileRoutesByPath['/']['path'],
+    FileRoutesByPath['/']['fullPath']
+  >
+}
+declare module './routes/public.$locale' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale',
+    FileRoutesByPath['/public/$locale']['parentRoute'],
+    FileRoutesByPath['/public/$locale']['id'],
+    FileRoutesByPath['/public/$locale']['path'],
+    FileRoutesByPath['/public/$locale']['fullPath']
+  >
+}
+declare module './routes/public.$locale.login' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/login',
+    FileRoutesByPath['/public/$locale/login']['parentRoute'],
+    FileRoutesByPath['/public/$locale/login']['id'],
+    FileRoutesByPath['/public/$locale/login']['path'],
+    FileRoutesByPath['/public/$locale/login']['fullPath']
+  >
+}
+declare module './routes/public.$locale.index' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/',
+    FileRoutesByPath['/public/$locale/']['parentRoute'],
+    FileRoutesByPath['/public/$locale/']['id'],
+    FileRoutesByPath['/public/$locale/']['path'],
+    FileRoutesByPath['/public/$locale/']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId',
+    FileRoutesByPath['/public/$locale/pages/$pageId']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.forms.$formId' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/forms/$formId',
+    FileRoutesByPath['/secured/$locale/forms/$formId']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/forms/$formId']['id'],
+    FileRoutesByPath['/secured/$locale/forms/$formId']['path'],
+    FileRoutesByPath['/secured/$locale/forms/$formId']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.views.$viewId' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/views/$viewId',
+    FileRoutesByPath['/secured/$locale/views/$viewId']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/views/$viewId']['id'],
+    FileRoutesByPath['/secured/$locale/views/$viewId']['path'],
+    FileRoutesByPath['/secured/$locale/views/$viewId']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.forms.$formId.review' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/forms/$formId/review',
+    FileRoutesByPath['/secured/$locale/forms/$formId/review']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/forms/$formId/review']['id'],
+    FileRoutesByPath['/secured/$locale/forms/$formId/review']['path'],
+    FileRoutesByPath['/secured/$locale/forms/$formId/review']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.views.$viewId.$subjectId' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/views/$viewId/$subjectId',
+    FileRoutesByPath['/secured/$locale/views/$viewId/$subjectId']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/views/$viewId/$subjectId']['id'],
+    FileRoutesByPath['/secured/$locale/views/$viewId/$subjectId']['path'],
+    FileRoutesByPath['/secured/$locale/views/$viewId/$subjectId']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId/',
+    FileRoutesByPath['/public/$locale/pages/$pageId/']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.forms.$formId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/forms/$formId/',
+    FileRoutesByPath['/secured/$locale/forms/$formId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/forms/$formId/']['id'],
+    FileRoutesByPath['/secured/$locale/forms/$formId/']['path'],
+    FileRoutesByPath['/secured/$locale/forms/$formId/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.views.$viewId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/views/$viewId/',
+    FileRoutesByPath['/secured/$locale/views/$viewId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/views/$viewId/']['id'],
+    FileRoutesByPath['/secured/$locale/views/$viewId/']['path'],
+    FileRoutesByPath['/secured/$locale/views/$viewId/']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId.products.$productId' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId/products/$productId',
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.pages.$pageId.products.$productId' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/pages/$pageId/products/$productId',
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId']['id'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId']['path'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId.products.$productId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId/products/$productId/',
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.pages.$pageId.products.$productId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/pages/$pageId/products/$productId/',
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/']['id'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/']['path'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId']['id'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId']['path'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId.summary' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.summary' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['id'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['path'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary']['fullPath']
+  >
+}
+declare module './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/',
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/']['parentRoute'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/']['id'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/']['path'],
+    FileRoutesByPath['/public/$locale/pages/$pageId/products/$productId/offers/$offerId/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/',
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/']['id'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/']['path'],
+    FileRoutesByPath['/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/']['fullPath']
+  >
+}
 
 interface PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteChildren {
   PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
@@ -389,6 +739,22 @@ const PublicLocaleRouteWithChildren = PublicLocaleRoute._addFileChildren(
   PublicLocaleRouteChildren,
 )
 
+interface SecuredLocaleFormsFormIdRouteChildren {
+  SecuredLocaleFormsFormIdReviewRoute: typeof SecuredLocaleFormsFormIdReviewRoute
+  SecuredLocaleFormsFormIdIndexRoute: typeof SecuredLocaleFormsFormIdIndexRoute
+}
+
+const SecuredLocaleFormsFormIdRouteChildren: SecuredLocaleFormsFormIdRouteChildren =
+  {
+    SecuredLocaleFormsFormIdReviewRoute: SecuredLocaleFormsFormIdReviewRoute,
+    SecuredLocaleFormsFormIdIndexRoute: SecuredLocaleFormsFormIdIndexRoute,
+  }
+
+const SecuredLocaleFormsFormIdRouteWithChildren =
+  SecuredLocaleFormsFormIdRoute._addFileChildren(
+    SecuredLocaleFormsFormIdRouteChildren,
+  )
+
 interface SecuredLocaleViewsViewIdRouteChildren {
   SecuredLocaleViewsViewIdSubjectIdRoute: typeof SecuredLocaleViewsViewIdSubjectIdRoute
   SecuredLocaleViewsViewIdIndexRoute: typeof SecuredLocaleViewsViewIdIndexRoute
@@ -442,270 +808,14 @@ const SecuredLocalePagesPageIdProductsProductIdRouteWithChildren =
     SecuredLocalePagesPageIdProductsProductIdRouteChildren,
   )
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/public/$locale': typeof PublicLocaleRouteWithChildren
-  '/public/$locale/login': typeof PublicLocaleLoginRoute
-  '/public/$locale/': typeof PublicLocaleIndexRoute
-  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
-  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRoute
-  '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
-  '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
-  '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
-  '/secured/$locale/views/$viewId/': typeof SecuredLocaleViewsViewIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
-  '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
-  '/public/$locale/pages/$pageId/products/$productId/': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
-  '/secured/$locale/pages/$pageId/products/$productId/': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/public/$locale/login': typeof PublicLocaleLoginRoute
-  '/public/$locale': typeof PublicLocaleIndexRoute
-  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRoute
-  '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
-  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdIndexRoute
-  '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
-  '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/public/$locale': typeof PublicLocaleRouteWithChildren
-  '/public/$locale/login': typeof PublicLocaleLoginRoute
-  '/public/$locale/': typeof PublicLocaleIndexRoute
-  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
-  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRoute
-  '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
-  '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
-  '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
-  '/secured/$locale/views/$viewId/': typeof SecuredLocaleViewsViewIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
-  '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
-  '/public/$locale/pages/$pageId/products/$productId/': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
-  '/secured/$locale/pages/$pageId/products/$productId/': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
-  '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
-  '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/public/$locale'
-    | '/public/$locale/login'
-    | '/public/$locale/'
-    | '/public/$locale/pages/$pageId'
-    | '/secured/$locale/forms/$formId'
-    | '/secured/$locale/views/$viewId'
-    | '/secured/$locale/views/$viewId/$subjectId'
-    | '/public/$locale/pages/$pageId/'
-    | '/secured/$locale/views/$viewId/'
-    | '/public/$locale/pages/$pageId/products/$productId'
-    | '/secured/$locale/pages/$pageId/products/$productId'
-    | '/public/$locale/pages/$pageId/products/$productId/'
-    | '/secured/$locale/pages/$pageId/products/$productId/'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/public/$locale/login'
-    | '/public/$locale'
-    | '/secured/$locale/forms/$formId'
-    | '/secured/$locale/views/$viewId/$subjectId'
-    | '/public/$locale/pages/$pageId'
-    | '/secured/$locale/views/$viewId'
-    | '/public/$locale/pages/$pageId/products/$productId'
-    | '/secured/$locale/pages/$pageId/products/$productId'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
-  id:
-    | '__root__'
-    | '/'
-    | '/public/$locale'
-    | '/public/$locale/login'
-    | '/public/$locale/'
-    | '/public/$locale/pages/$pageId'
-    | '/secured/$locale/forms/$formId'
-    | '/secured/$locale/views/$viewId'
-    | '/secured/$locale/views/$viewId/$subjectId'
-    | '/public/$locale/pages/$pageId/'
-    | '/secured/$locale/views/$viewId/'
-    | '/public/$locale/pages/$pageId/products/$productId'
-    | '/secured/$locale/pages/$pageId/products/$productId'
-    | '/public/$locale/pages/$pageId/products/$productId/'
-    | '/secured/$locale/pages/$pageId/products/$productId/'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary'
-    | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/'
-    | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  PublicLocaleRoute: typeof PublicLocaleRouteWithChildren
-  SecuredLocaleFormsFormIdRoute: typeof SecuredLocaleFormsFormIdRoute
-  SecuredLocaleViewsViewIdRoute: typeof SecuredLocaleViewsViewIdRouteWithChildren
-  SecuredLocalePagesPageIdProductsProductIdRoute: typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
-}
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PublicLocaleRoute: PublicLocaleRouteWithChildren,
-  SecuredLocaleFormsFormIdRoute: SecuredLocaleFormsFormIdRoute,
+  SecuredLocaleFormsFormIdRoute: SecuredLocaleFormsFormIdRouteWithChildren,
   SecuredLocaleViewsViewIdRoute: SecuredLocaleViewsViewIdRouteWithChildren,
   SecuredLocalePagesPageIdProductsProductIdRoute:
     SecuredLocalePagesPageIdProductsProductIdRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/public/$locale",
-        "/secured/$locale/forms/$formId",
-        "/secured/$locale/views/$viewId",
-        "/secured/$locale/pages/$pageId/products/$productId"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/public/$locale": {
-      "filePath": "public.$locale.tsx",
-      "children": [
-        "/public/$locale/login",
-        "/public/$locale/",
-        "/public/$locale/pages/$pageId"
-      ]
-    },
-    "/public/$locale/login": {
-      "filePath": "public.$locale.login.tsx",
-      "parent": "/public/$locale"
-    },
-    "/public/$locale/": {
-      "filePath": "public.$locale.index.tsx",
-      "parent": "/public/$locale"
-    },
-    "/public/$locale/pages/$pageId": {
-      "filePath": "public.$locale.pages.$pageId.tsx",
-      "parent": "/public/$locale",
-      "children": [
-        "/public/$locale/pages/$pageId/",
-        "/public/$locale/pages/$pageId/products/$productId"
-      ]
-    },
-    "/secured/$locale/forms/$formId": {
-      "filePath": "secured.$locale.forms.$formId.tsx"
-    },
-    "/secured/$locale/views/$viewId": {
-      "filePath": "secured.$locale.views.$viewId.tsx",
-      "children": [
-        "/secured/$locale/views/$viewId/$subjectId",
-        "/secured/$locale/views/$viewId/"
-      ]
-    },
-    "/secured/$locale/views/$viewId/$subjectId": {
-      "filePath": "secured.$locale.views.$viewId.$subjectId.tsx",
-      "parent": "/secured/$locale/views/$viewId"
-    },
-    "/public/$locale/pages/$pageId/": {
-      "filePath": "public.$locale.pages.$pageId.index.tsx",
-      "parent": "/public/$locale/pages/$pageId"
-    },
-    "/secured/$locale/views/$viewId/": {
-      "filePath": "secured.$locale.views.$viewId.index.tsx",
-      "parent": "/secured/$locale/views/$viewId"
-    },
-    "/public/$locale/pages/$pageId/products/$productId": {
-      "filePath": "public.$locale.pages.$pageId.products.$productId.tsx",
-      "parent": "/public/$locale/pages/$pageId",
-      "children": [
-        "/public/$locale/pages/$pageId/products/$productId/",
-        "/public/$locale/pages/$pageId/products/$productId/offers/$offerId"
-      ]
-    },
-    "/secured/$locale/pages/$pageId/products/$productId": {
-      "filePath": "secured.$locale.pages.$pageId.products.$productId.tsx",
-      "children": [
-        "/secured/$locale/pages/$pageId/products/$productId/",
-        "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId"
-      ]
-    },
-    "/public/$locale/pages/$pageId/products/$productId/": {
-      "filePath": "public.$locale.pages.$pageId.products.$productId.index.tsx",
-      "parent": "/public/$locale/pages/$pageId/products/$productId"
-    },
-    "/secured/$locale/pages/$pageId/products/$productId/": {
-      "filePath": "secured.$locale.pages.$pageId.products.$productId.index.tsx",
-      "parent": "/secured/$locale/pages/$pageId/products/$productId"
-    },
-    "/public/$locale/pages/$pageId/products/$productId/offers/$offerId": {
-      "filePath": "public.$locale.pages.$pageId.products.$productId.offers.$offerId.tsx",
-      "parent": "/public/$locale/pages/$pageId/products/$productId",
-      "children": [
-        "/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary",
-        "/public/$locale/pages/$pageId/products/$productId/offers/$offerId/"
-      ]
-    },
-    "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId": {
-      "filePath": "secured.$locale.pages.$pageId.products.$productId.offers.$offerId.tsx",
-      "parent": "/secured/$locale/pages/$pageId/products/$productId",
-      "children": [
-        "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary",
-        "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/"
-      ]
-    },
-    "/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary": {
-      "filePath": "public.$locale.pages.$pageId.products.$productId.offers.$offerId.summary.tsx",
-      "parent": "/public/$locale/pages/$pageId/products/$productId/offers/$offerId"
-    },
-    "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary": {
-      "filePath": "secured.$locale.pages.$pageId.products.$productId.offers.$offerId.summary.tsx",
-      "parent": "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId"
-    },
-    "/public/$locale/pages/$pageId/products/$productId/offers/$offerId/": {
-      "filePath": "public.$locale.pages.$pageId.products.$productId.offers.$offerId.index.tsx",
-      "parent": "/public/$locale/pages/$pageId/products/$productId/offers/$offerId"
-    },
-    "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/": {
-      "filePath": "secured.$locale.pages.$pageId.products.$productId.offers.$offerId.index.tsx",
-      "parent": "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

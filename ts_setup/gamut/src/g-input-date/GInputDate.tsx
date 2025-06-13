@@ -20,6 +20,7 @@ export interface GInputDatePropsVariantOverrides { };
 
 export interface GInputDateProps {
   id: string;
+  disabled: boolean;
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
@@ -66,7 +67,7 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
       error: { id, errors },
       input: { ...ownerState, name: id },
       label: { id, children: label ?? '', labelPosition },
-      adornment: { id, children: props.description, title: label }
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
 

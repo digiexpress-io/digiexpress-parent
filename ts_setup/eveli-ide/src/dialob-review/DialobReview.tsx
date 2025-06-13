@@ -7,12 +7,8 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { GFormReview, DialobProvider } from '@dxs-ts/gamut';
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { DialobReviewProps } from './dialob-review-types';
 
-export interface DialobReviewProps {
-  taskId: string;
-  questionnaireId: string;
-  onClose: () => void;
-}
 
 // cross reference to gamut project
 // start gamut in limited scope
@@ -31,7 +27,7 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
         fetchAttachmentPost={'not-implemented' as any}
         fetchReviewGet={fetchReviewGet}>
 
-        <Dialog open={true} onClose={props.onClose} maxWidth='md' fullWidth>
+        <Dialog open={true} onClose={props.onClose} maxWidth='xl' fullWidth>
           <DialogTitle>{intl.formatMessage({ id: 'dialobForm.review.title' })}</DialogTitle>
 
           <DialogContent>

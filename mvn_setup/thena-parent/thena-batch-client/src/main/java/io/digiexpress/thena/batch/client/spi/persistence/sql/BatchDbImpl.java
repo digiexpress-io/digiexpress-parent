@@ -22,11 +22,14 @@ package io.digiexpress.thena.batch.client.spi.persistence.sql;
 
 import java.util.Optional;
 
+
 import io.digiexpress.thena.batch.client.api.BatchException;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbBuilder;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.datasource.ThenaDataSource;
@@ -35,6 +38,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
+import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -78,6 +82,48 @@ public class BatchDbImpl implements BatchDb {
       return callback.apply(new BatchDbImpl(dataSource.withTx(conn)));
     });
   }
+  
+  @Override
+  public BatchDbQuery query() {
+    return new BatchDbQueryImpl(dataSource);
+  }
+
+  @Override
+  public BatchDbBuilder builder() {
+    return new BatchDbBuilderImpl(dataSource);
+  }
+
+  @Override
+  public Uni<BatchDb> withTenant() {
+    if(this.dataSource.isTenantLoaded()) {
+      return Uni.createFrom().item(this);
+    }
+    return this.withTenant(this.dataSource.getTenant().getName());
+  }
+  
+
+  public Uni<BatchDb> createIfNot() {
+    return tenant().findByNameOrId(this.dataSource.getTenant().getName())
+        .onItem().transformToUni(repo -> {        
+          if(repo.isEmpty()) {
+            return new TenantActionsImpl(this, StructureType.batch)
+              .commit()
+              .name(this.dataSource.getTenant().getName())
+              .build().onItem().transform(commit -> {
+                if(commit.getStatus() != CommitStatus.OK) {
+                  
+                  final var msg = String.join(",", commit.getMessages().stream().map(e -> e.getText()).toList());
+                  final var ex = commit.getMessages().stream().map(e -> e.getException()).filter(e -> e != null).toList();
+                  throw new BatchException("Failed to to create batch tenant: " + msg, ex);
+                }
+                
+                return withTenant(commit.getRepo());
+              });
+          }
+          return Uni.createFrom().item(withTenant(repo.get()));
+    });
+  }
+  
   private <T> Uni<T> tenantNotFound(String tenantId) {
     return tenant().findAll().collect().asList().onItem().transform(tenants -> {
       final var text = new StringBuilder()
@@ -115,7 +161,7 @@ public class BatchDbImpl implements BatchDb {
 
     private TenantCache tenantCache;    
     public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
-    public Builder db(String db) { this.db = db; return this; }
+    public Builder tenant(String db) { this.db = db; return this; }
     public Builder tenantCache(TenantCache tenantCache) { this.tenantCache = tenantCache; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
 
@@ -139,24 +185,5 @@ public class BatchDbImpl implements BatchDb {
       );
       return new BatchDbImpl(dataSource);
     }
-  }
-
-
-  @Override
-  public BatchDbQuery query() {
-    return new BatchDbQueryImpl(dataSource);
-  }
-
-  @Override
-  public BatchDbBuilder builder() {
-    return new BatchDbBuilderImpl(dataSource);
-  }
-
-  @Override
-  public Uni<BatchDb> withTenant() {
-    if(this.dataSource.isTenantLoaded()) {
-      return Uni.createFrom().item(this);
-    }
-    return this.withTenant(this.dataSource.getTenant().getName());
   }
 }
