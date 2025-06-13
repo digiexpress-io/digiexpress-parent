@@ -3,6 +3,7 @@ import { Tooltip } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { useIntl, FormattedMessage } from 'react-intl';
+import { DateTime } from 'luxon';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 
@@ -42,10 +43,10 @@ export const ArticleTimestampsTable: React.FC = () => {
     };
   });
 
-  // Define columns: first is article name, others are per-locale
   const columns: ColumnDef<RowData>[] = [
     {
-      header: () => intl.formatMessage({ id: 'article.name' }),
+      id: 'name',
+      header: intl.formatMessage({ id: 'article.name' }),
       accessorKey: 'name',
       enableColumnFilter: false,
       enableSorting: true,
@@ -54,7 +55,7 @@ export const ArticleTimestampsTable: React.FC = () => {
     },
     ...locales.map(locale => ({
       id: locale.body.value,
-      header: () => locale.body.value,
+      header: locale.body.value,
       accessorFn: (row: RowData) => row.timestamps[locale.body.value],
       enableColumnFilter: false,
       enableSorting: true,
@@ -64,13 +65,16 @@ export const ArticleTimestampsTable: React.FC = () => {
       minSize: 160,
       cell: (info: CellContext<RowData, unknown>) => {
         const value = info.getValue() as Date | null;
-        return value ? value.toLocaleDateString() : (
-          <Tooltip title={<FormattedMessage id="locales.nopage" />}>
-            <ErrorOutlineIcon sx={{ color: 'error.main' }} />
-          </Tooltip>
-        );
+        return value
+          ? DateTime.fromJSDate(value).setLocale('fi').toFormat('d.M.yyyy HH:mm')
+          : (
+            <Tooltip title={<FormattedMessage id="locales.nopage" />}>
+              <ErrorOutlineIcon sx={{ color: 'error.main' }} />
+            </Tooltip>
+          );
       }
-    })),
+    }))
+    ,
   ];
 
   return (

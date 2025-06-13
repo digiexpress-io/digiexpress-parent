@@ -436,7 +436,7 @@ class SessionData implements StencilComposerApi.Session {
   getLastUpdated(anyObjectId: string): string {
     try {
       const lastUpdated = this._commitlogs[anyObjectId];
-      return lastUpdated[lastUpdated.length - 1].createdAt
+      return lastUpdated?.[0]?.createdAt ?? null;
     } catch (e) {
       console.error(e);
       return new Date().toISOString();
