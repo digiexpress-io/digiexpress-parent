@@ -26,6 +26,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.config.EveliBatchesAutoConfig.BatchTenantCondition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.BatchApiCotroller;
@@ -68,7 +69,7 @@ public class EveliBatchesAutoConfig {
   }
   
   @Bean
-  public BatchApiCotroller batchApiCotroller(BatchClient client, EveliPropsBatch props) {
-    return new BatchApiCotroller(client, props);
+  public BatchApiCotroller batchApiCotroller(BatchClient client, EveliPropsBatch props, WorkerAuthClient auth) {
+    return new BatchApiCotroller(auth, client, props);
   }
 }
