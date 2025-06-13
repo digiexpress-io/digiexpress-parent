@@ -18,11 +18,10 @@ export const Hook = createFileFetch('worker/rest/api/batches.GET')({
 function hook(props: {}) {
   const params = Hook.useParams();
   const { path, contextPath, method, url } = params;
-  const tableContext = React.useContext(EveliTaskTableContext);
 
 
   return {
-    dashboard: async (): Promise<BatchApi.Batch[]> => {
+    findAll: async (): Promise<BatchApi.Batch[]> => {
       return params.fetch(url({}) )
         .then(response => response.json());
     },

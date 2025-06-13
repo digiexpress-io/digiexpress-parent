@@ -137,6 +137,11 @@ public class SuccessBatchDbTest extends DbTestTemplate {
     //Assertions.assertNotNull(metric2.getExpensiveId());
     
     
+    final var batchQuery = client.queryBatches().findAll().await().atMost(atMost).getObject();
+    
+    Assertions.assertEquals(1, batchQuery.size());
+    Assertions.assertEquals(1, batchQuery.get(0).getTransitives().getInstances().size());
+    
   }
   
   

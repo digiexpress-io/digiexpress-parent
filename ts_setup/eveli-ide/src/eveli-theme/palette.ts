@@ -28,11 +28,14 @@ export const palette: PaletteOptions = {
     contrastText: '#FFFFFF',
   },
   warning: {
-    main: '#ff9800',
-    contrastText: '#000000',
+    light: '#ffeb3b',
+    main: '#ffc107',
+    dark: '#ffa000',
+    contrastText: '#000000' 
   },
   success: {
-    main: '#4caf50',
+    main: '#009900',
+    light: '#00ff00'
   },
 
   text: {

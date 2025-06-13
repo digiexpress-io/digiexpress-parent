@@ -30,6 +30,8 @@ import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.Envelope;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
+import io.digiexpress.thena.batch.client.api.entities.ImmutableBatch;
+import io.digiexpress.thena.batch.client.api.entities.ImmutableBatchTransitives;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableEnvelope;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableEnvelopeLog;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstance;
@@ -46,7 +48,6 @@ import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.TenantActionsImpl;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,9 +66,61 @@ public class BatchClientImpl implements BatchClient {
   @Override
   public BatchQuery queryBatches() {
     return new BatchQuery() {
+      
+      private Uni<Envelope<List<Batch>>> onQuery(BatchDb batchDb) {
+        return Uni.combine().all().unis(
+            batchDb.query().queryBatches().findAll().collect().asList(),
+            batchDb.query().queryInstances().findLastN(20).collect().asList()
+          )
+          .asTuple()
+          .onItem().transform(tuple -> onMap(batchDb, tuple.getItem1(), tuple.getItem2()));
+      }
+      
+      private Envelope<List<Batch>> onError(BatchDb batchDb, Throwable throwable) {
+        return ImmutableEnvelope.<List<Batch>>builder()
+            .tenantId(batchDb.getDataSource().getTenant().getId())
+            .addOperationLogs(ImmutableEnvelopeLog.builder()
+                .text(new StringBuilder()
+                  .append("Batch query to: '").append(batchDb.getDataSource().getTenant().getId()).append("'").append(" is rejected.")
+                  .append(System.lineSeparator())
+                  .append("Message: ").append(throwable.getMessage())
+                  .toString())
+                .exception(throwable)
+                .build())
+            .operationStatus(OperationStatus.ERROR)
+          .build();
+      }
+      
+      private Envelope<List<Batch>> onMap(
+          BatchDb batchDb, 
+          List<Batch> batches,
+          List<RuntimeInstance> instances) {
+        
+        final var byBatch = instances.stream()
+            .collect(Collectors.groupingBy(instance -> instance.getBatchId()));
+        
+        final List<Batch> items = batches.stream().map(batch -> {
+          final Batch next = ImmutableBatch.builder()
+            .from(batch)
+            .transitives(ImmutableBatchTransitives.builder()
+                .addAllInstances(byBatch.getOrDefault(batch.getId(), Collections.emptyList()))
+                .build()).build();
+          return next;
+        }).toList();
+        
+        return ImmutableEnvelope.<List<Batch>>builder()
+            .tenant(batchDb.getDataSource().getTenant())
+            .tenantId(batchDb.getDataSource().getTenant().getId())
+            .operationStatus(Envelope.OperationStatus.OK)
+            .object(items)
+            .build();
+      }
+      
+      
       @Override
-      public Multi<Batch> findAll() {
-        return batchDb.query().queryBatches().findAll();
+      public Uni<Envelope<List<Batch>>> findAll() {
+        return batchDb.withTenant().onItem().transformToUni(db -> onQuery(db)
+            .onFailure().recoverWithItem(t -> onError(db, t)));
       }
     };
   }
@@ -118,7 +171,7 @@ public class BatchClientImpl implements BatchClient {
             .tenantId(batchDb.getDataSource().getTenant().getId())
             .addOperationLogs(ImmutableEnvelopeLog.builder()
                 .text(new StringBuilder()
-                  .append("Runtime instance querry to: '").append(batchDb.getDataSource().getTenant().getId()).append("'").append(" is rejected.")
+                  .append("Runtime instance query to: '").append(batchDb.getDataSource().getTenant().getId()).append("'").append(" is rejected.")
                   .append(System.lineSeparator())
                   .append("Message: ").append(throwable.getMessage())
                   .toString())

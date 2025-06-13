@@ -21,9 +21,15 @@ package io.digiexpress.thena.batch.client.api.entities;
  */
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.annotation.Nullable;
 
 
 //Abstract grouping entity, provides under what to collect existing runs
@@ -41,11 +47,22 @@ public interface Batch extends AnyBatchEntity {
   Optional<OffsetDateTime> getUpdatedAt();
   Optional<String> getUpdatedBy();
   BatchStatus getStatus();
-  
   String getComment();
+  
+  
+  @Nullable BatchTransitives getTransitives();
   
   @Override 
   default public BatchDocType getDocType() { 
     return BatchDocType.BATCH; 
   }
+  
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableBatchTransitives.class)
+  @JsonDeserialize(as = ImmutableBatchTransitives.class)
+  interface BatchTransitives {
+    List<RuntimeInstance> getInstances();
+  }
+
 }

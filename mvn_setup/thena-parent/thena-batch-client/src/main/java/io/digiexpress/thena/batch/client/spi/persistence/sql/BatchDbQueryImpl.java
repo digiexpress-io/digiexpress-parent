@@ -223,6 +223,22 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find 'RUNTIME_INSTANCE' by status!")));
 
       }
+
+      @Override
+      public Multi<RuntimeInstance> findLastN(int count) {
+        final var sql = registry.getRuntimeInstances().findLastN(count);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryInstances.findLastN query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeInstances().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToMulti((RowSet<RuntimeInstance> rowset) -> Multi.createFrom().iterable(rowset))
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find 'RUNTIME_INSTANCE' by count!")));
+      }
       
 
     };

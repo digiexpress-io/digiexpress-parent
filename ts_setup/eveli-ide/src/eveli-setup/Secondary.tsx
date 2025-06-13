@@ -9,7 +9,7 @@ import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import WorkIcon from '@mui/icons-material/Work';
+import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -133,14 +133,14 @@ export const Secondary: React.FC = () => {
       </EveliTenantFeatureEnabled>
 
       <EveliTenantFeatureEnabled id='BATCHES'>
-        <Button startIcon={<PersonOutlineOutlinedIcon />}
+        <Button startIcon={<WorkOutlineOutlinedIcon />}
           variant={location.pathname.endsWith('batches') ? 'explorerActive' : 'explorerInactive'}
           onClick={() => navigate({
             from: '/secured/$locale',
             to: '/secured/$locale/worker/batches'
           })}
         >
-          {intl.formatMessage({ id: 'menu.batches' })}
+          {intl.formatMessage({ id: 'menu.batches', defaultMessage: 'Batches' })}
         </Button>
       </EveliTenantFeatureEnabled>
 

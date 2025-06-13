@@ -33,6 +33,7 @@ public interface RuntimeInstanceRegistry extends ThenaRegistryService<RuntimeIns
   
   ThenaSqlClient.Sql getNextRefSequence();
   
+  ThenaSqlClient.SqlTuple findLastN(int count);
   ThenaSqlClient.SqlTuple findAllByStatus(List<RuntimeStatus> status);
   ThenaSqlClient.SqlTuple getById(String id, boolean lockForUpdate);
   ThenaSqlClient.SqlTuple getNextRefSequence(long howMany);
