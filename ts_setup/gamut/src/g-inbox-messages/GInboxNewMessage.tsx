@@ -48,7 +48,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
     if (!files || files.length === 0) {
       return;
     }
-    appendContractAttachment(ownerState.contract.id, files).then(() => {
+    appendContractAttachment(ownerState.contract.exchangeId, files).then(() => {
       refresh();
     });
   };
