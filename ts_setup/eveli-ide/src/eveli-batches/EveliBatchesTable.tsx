@@ -30,7 +30,7 @@ export const EveliBatchesTable: React.FC = () => {
       minSize: 50,
       enableSorting: false,
       enableResizing: true,
-      cell: () => <BatchHealthBall health="RUNNING_NO_FAILS" />
+      cell: () => <BatchHealthBall health="COMPLETED_SUCCESS" />
     },
     {
       header: 'Batch Name',
