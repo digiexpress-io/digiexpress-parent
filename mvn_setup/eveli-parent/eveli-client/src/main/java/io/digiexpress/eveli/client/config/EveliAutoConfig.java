@@ -98,6 +98,7 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsTask.class,
     EveliPropsMq.class,
     EveliPropsEnvir.class,
+    EveliPropsBatch.class,
     
     EveliPropsDb.class
 })

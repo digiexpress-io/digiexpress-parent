@@ -68,7 +68,7 @@ public class EveliBatchesAutoConfig {
   }
   
   @Bean
-  public BatchApiCotroller batchApiCotroller(BatchClient client) {
-    return new BatchApiCotroller(client);
+  public BatchApiCotroller batchApiCotroller(BatchClient client, EveliPropsBatch props) {
+    return new BatchApiCotroller(client, props);
   }
 }
