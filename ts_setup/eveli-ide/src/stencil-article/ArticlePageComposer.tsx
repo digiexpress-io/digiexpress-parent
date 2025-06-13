@@ -146,6 +146,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
       return;
     }
     actions.handlePageUpdate(page.id, value ? value : "");
+    actions.handleLoadSite();
 
     // validate
     const containsTitle = isValidTitle(value);
