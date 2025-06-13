@@ -127,8 +127,14 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
                 </TableCell>
                 <TableCell align="right">
                   <div className={classes.vote}>
-                    <ThumbDownIcon fontSize='small' /><Typography>{row.feedback.thumbsDownCount}</Typography>
-                    <ThumbUpIcon fontSize='small' /><Typography>{row.feedback.thumbsUpCount}</Typography>
+                    <div className="vote-item">
+                      <ThumbDownIcon fontSize='small' />
+                      <Typography className="vote-count">{row.feedback.thumbsDownCount}</Typography>
+                    </div>
+                    <div className="vote-item">
+                      <ThumbUpIcon fontSize='small' />
+                      <Typography className="vote-count">{row.feedback.thumbsUpCount}</Typography>
+                    </div>
                   </div>
                 </TableCell>
               </TableRow>))

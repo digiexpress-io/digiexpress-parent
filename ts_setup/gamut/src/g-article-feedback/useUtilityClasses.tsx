@@ -84,8 +84,21 @@ export const GArticleFeedbackRoot = styled("div", {
     '& .GArticleFeedback-vote': {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'end',
-      gap: theme.spacing(1)
-    },
+      justifyContent: 'flex-end',
+      gap: theme.spacing(1),
+      '& .vote-item': {
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(0.25),
+        minWidth: 40,
+        justifyContent: 'center'
+      },
+      '& .vote-count': {
+        display: 'inline-block',
+        minWidth: 20,
+        textAlign: 'center',
+        lineHeight: 1,
+      }
+    },         
   };
 });
