@@ -35,7 +35,6 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.resys.thena.api.actions.TenantActions;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -53,7 +52,7 @@ public interface BatchClient {
   
   
   interface BatchQuery {
-    Multi<Batch> findAll();
+    Uni<Envelope<List<Batch>>> findAll();
   }
   
   interface CreateBatchEnvir {

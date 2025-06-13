@@ -81,7 +81,13 @@ public class BatchApiCotroller {
   
   @GetMapping
   public Multi<Batch> findAllBatches() {
-    return batchClient.queryBatches().findAll();
+    return batchClient.queryBatches().findAll()
+        .onItem().transformToMulti(resp -> {
+          if(resp.getOperationStatus() == OperationStatus.OK) {
+            return Multi.createFrom().items(resp.getObject().stream());
+          }
+          throw new BatchApiException("Failed to find any batches", resp.getOperationLogs());
+        });
   }
   
   @PostMapping("/{batchName}/instances")

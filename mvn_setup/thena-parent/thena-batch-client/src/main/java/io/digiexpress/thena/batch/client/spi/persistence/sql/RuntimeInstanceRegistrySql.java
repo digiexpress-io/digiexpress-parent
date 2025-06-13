@@ -234,4 +234,20 @@ public class RuntimeInstanceRegistrySql implements RuntimeInstanceRegistry {
         .props(Tuple.of(status.isEmpty() ? null : status.stream().map(e -> e.name()).toArray()))
         .build();
   }
+
+  @Override
+  public SqlTuple findLastN(int count) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * FROM (").ln()
+        .append("  SELECT").ln()
+        .append("    runtime.*,")
+        .append("    RANK() OVER (PARTITION BY batch_id order by instance_ended_at DESC, instance_created_at DESC) AS order_number").ln()
+        .append("  FROM ").append(options.getRuntimeInstances()).append(" as runtime").ln()
+        .append(")").ln()
+        .append("WHERE order_number <= $1").ln() 
+        .build())
+        .props(Tuple.of(count))
+        .build();
+  }
 }

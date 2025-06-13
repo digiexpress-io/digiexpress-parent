@@ -59,6 +59,8 @@ public interface BatchDbQuery {
   interface BatchDbInstanceQuery {
     Uni<RuntimeInstance> getById(String id, boolean lockForUpdate);
     Uni<List<RuntimeInstance>> findAllByStatus(List<RuntimeStatus> status);
+    
+    Multi<RuntimeInstance> findLastN(int count); // find last N number of instances for EVERY batch
     Uni<Long> nextSequence();
   }
   

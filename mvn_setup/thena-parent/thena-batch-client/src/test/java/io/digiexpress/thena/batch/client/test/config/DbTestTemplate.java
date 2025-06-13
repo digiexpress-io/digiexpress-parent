@@ -79,11 +79,11 @@ public class DbTestTemplate {
   	}
   	
   	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("debug_batch_db")
+  			.setDatabase("eveli-app")
         .setHost("localhost")
-        .setPort(5432)
-        .setUser("postgres")
-        .setPassword("postgres");
+        .setPort(5433)
+        .setUser("eveli-app")
+        .setPassword("password123");
     final var poolOptions = new PoolOptions().setMaxSize(6);
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
   }
