@@ -20,13 +20,13 @@ package io.digiexpress.eveli.client.test;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
+import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,15 +37,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.api.GamutAuthClient;
-import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
-import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes= {EveliAutoConfigPermissions.class})
 @SuppressWarnings({"unchecked", "rawtypes"})
 @EnableConfigurationProperties
