@@ -36,12 +36,6 @@ export const GInputGroupRoot = styled('div', {
       padding: theme.spacing(2),
       margin: theme.spacing(1),
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
-    } : {}),
-
-    ...(ownerState.disabled ? {
-      '.MuiSvgIcon-root': {
-        display: 'none'
-      }
     } : {})
   };
 });
@@ -76,11 +70,11 @@ export const GInputGroupLabel = styled('div', {
       ...theme.typography.h3
     },
 
-    ...(ownerState.disabled) ? {
+    ...(ownerState.disabled ? {
       '.MuiSvgIcon-root': {
-        color: 'red'
+       display: 'none'
       }
-    } : {}
+   } : {})
   };
 });
 

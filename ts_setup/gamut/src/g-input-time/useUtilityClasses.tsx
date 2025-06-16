@@ -35,7 +35,9 @@ export const GInputTimeRoot = styled("div", {
     return {
       color: theme.palette.info.main,
       '& .MuiInputBase-root': {
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.action.disabled}`,
+
       },
       '& .react-time-picker__inputGroup__input': {
         color: theme.palette.info.main,
