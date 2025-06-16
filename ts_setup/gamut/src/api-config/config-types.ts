@@ -5,6 +5,18 @@ import { createOfferFetch, createPublicOfferFetch } from './fetch_offer';
 import { createAuthFeedbackFetch, createContractFetch, createSubjectFetch } from './fetch_portal';
 import { createBookingFetch } from './fetch_booking';
 
+import { version, build_time } from '../version'
+
+
+const logo = `
+ ______ _______ _______ _     _ _______
+|  ____ |_____| |  |  | |     |    |   
+|_____| |     | |  |  | |_____|    |   
+version - ${version}
+build time - ${build_time}
+`;
+
+
 type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
 };
@@ -33,7 +45,9 @@ export namespace ConfigApi {
   export function mergeOptions(init: Options): ConfigContextType {
     const next = { ...default_config }
 
-    console.group('Config options');
+    console.groupCollapsed('Gamut config');
+    console.log(`%c ${logo}`, "color:#A020F0; font-size:10px; font-weight:900;")
+
 
     for(const [key, value] of Object.entries(init)) {
       if(!value) {
@@ -63,6 +77,7 @@ export namespace ConfigApi {
         (next[key] as any)[restApiKey] = restApiMethod;
       }
     }
+    console.log('Merged config', next)
     console.groupEnd();
 
     return next;

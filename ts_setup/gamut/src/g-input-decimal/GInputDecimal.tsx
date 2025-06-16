@@ -86,9 +86,8 @@ const DEFAULT_FORMAT: numbro.Format = {
 
 
 const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
-  const [value, setValue] = React.useState('');
-  const themeFormat = props.format ? props.format(props.id) : undefined;
-  const finalFormat = themeFormat ?? DEFAULT_FORMAT;
+  const [value, setValue] = React.useState(format(props.value));
+
 
   function format(value: string | undefined): string {
     if(value === '' || value === undefined || value === null) {
@@ -97,8 +96,9 @@ const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) 
     if(props.formatter) {
       return props.formatter(props.id, value);
     }
-
-    const result = numbro(value).format(themeFormat ?? DEFAULT_FORMAT);
+    const themeFormat = props.format ? props.format(props.id) : undefined;
+    const finalFormat = themeFormat ?? DEFAULT_FORMAT;
+    const result = numbro(value).format(finalFormat ?? DEFAULT_FORMAT);
     return result;
   }
 
@@ -115,6 +115,8 @@ const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) 
     setValue(format(event.target.value));
   }
 
+  const themeFormat = props.format ? props.format(props.id) : undefined;
+  const finalFormat = themeFormat ?? DEFAULT_FORMAT;
   return <>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange} />
     <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />

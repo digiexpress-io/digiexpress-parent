@@ -1,5 +1,3 @@
-import { version, build_time } from './version'
-
 export * from './g-shell'
 export * from './g-logo'
 
@@ -93,14 +91,3 @@ export * from './g-router-unfinished-forms'
 export * from './g-router-unsecured'
 export * from './g-router-user-overview'
 export * from './g-override'
-
-
-const logo = `
- ______ _______ _______ _     _ _______
-|  ____ |_____| |  |  | |     |    |   
-|_____| |     | |  |  | |_____|    |   
-version - ${version}
-build time - ${build_time}
-`;
-
-console.log(`%c ${logo}`, "color:#A020F0; font-size:10px; font-weight:900;")
