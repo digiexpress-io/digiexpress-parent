@@ -34,9 +34,6 @@ export const GInputMultilistRoot = styled('div', {
         '.MuiSvgIcon-root': { //disable the "close" icon in chip
           display: 'none'
         }
-      },
-      '& .MuiSvgIcon-root': { // disable the Description icon button if description set
-        display: 'none'
       }
     } : {})
 

@@ -86,9 +86,6 @@ export const GInputTextAreaRoot = styled("div", {
       },
       '& .MuiOutlinedInput-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
-      },
-      '& .MuiSvgIcon-root': {
-        display: 'none'
       }
     }
   }

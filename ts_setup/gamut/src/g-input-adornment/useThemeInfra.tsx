@@ -41,7 +41,14 @@ export const GInputAdornmentRoot = styled('div', {
       ...useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: GInputAdornmentProps }>(({ theme }) => {
+})<{ ownerState: GInputAdornmentProps }>(({ theme, ownerState }) => {
+
+  if (ownerState.disabled) {
+    return {
+      display: 'none'
+    }
+  }
+
   return {
     paddingLeft: theme.spacing(1),
     display: 'flex',

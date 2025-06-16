@@ -41,7 +41,7 @@ export const GInputDateRoot = styled("div", {
       '& .react-date-picker__inputGroup__leadingZero, & .react-date-picker__inputGroup__divider': {
         color: theme.palette.info.main,
       },
-      '& .MuiSvgIcon-root': {
+      '& .MuiSvgIcon-root': { // disable the icons in the input field
         display: 'none'
       }
     }

@@ -70,7 +70,7 @@ export const GInputGroupLabel = styled('div', {
       ...theme.typography.h3
     },
 
-    ...(ownerState.disabled ? {
+    ...(ownerState.disabled ? { // disable the "add" icon 
       '.MuiSvgIcon-root': {
        display: 'none'
       }

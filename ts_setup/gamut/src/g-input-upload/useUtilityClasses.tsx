@@ -26,7 +26,7 @@ export const GInputUploadRoot = styled("div", {
       '& .MuiInputBase-input.Mui-disabled': {
         WebkitTextFillColor: theme.palette.info.main,
       },
-      '& .MuiSvgIcon-root': {
+      '& .MuiSvgIcon-root': { // disable the "add" icon
         display: 'none'
       }
     }

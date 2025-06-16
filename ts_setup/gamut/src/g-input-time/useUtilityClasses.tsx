@@ -35,7 +35,6 @@ export const GInputTimeRoot = styled("div", {
     return {
       '& .MuiInputBase-root': {
         backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.action.disabled}`,
       },
       '& .react-time-picker__inputGroup__input': {
         color: theme.palette.info.main,
@@ -43,7 +42,7 @@ export const GInputTimeRoot = styled("div", {
       '& .react-time-picker__inputGroup__leadingZero, & .react-time-picker__inputGroup__divider': {
         color: theme.palette.info.main,
       },
-      '& .MuiSvgIcon-root': { // disable the Description icon button if description set
+      '& .MuiSvgIcon-root': { // disable the icons in the input field
         display: 'none'
       }
     }
