@@ -65,7 +65,11 @@ public class GrimMissionSqlFilterBuilder {
     
     // by id
     if(filter.getMissionIds().isPresent()) {
-      builder.append(" mission.id = ANY($").append(index++).append(")").ln();
+      builder.append("(")
+        .append(" mission.id = ANY($").append(index).append(")")
+        .append(" OR mission.mission_ref = ANY($").append(index++).append(")")
+        .append(")")
+        .ln();
       params.add(filter.getMissionIds().get().toArray());
     }
     
