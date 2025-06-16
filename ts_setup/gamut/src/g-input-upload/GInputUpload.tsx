@@ -152,7 +152,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
       <TableHead>
         <TableRow>
           <TableCell align="right" colSpan={2}>
-            <input type='file' id='file' multiple ref={inputFile} style={{ display: 'none' }} onChange={handleFileUpload} accept='.jpg, .jpeg, .png, .pdf' />
+              <input type='file' id='file' multiple ref={inputFile} style={{ display: 'none' }} onChange={handleFileUpload} accept='.jpg, .jpeg, .png, .pdf' />
               <IconButton disabled={props.disabled} onClick={() => inputFile.current?.click()}>
               <AddIcon color="primary" />
             </IconButton>

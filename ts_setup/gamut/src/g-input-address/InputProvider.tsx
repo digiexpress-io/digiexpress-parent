@@ -22,12 +22,9 @@ export const InputProvider: React.FC<InputProviderProps> = (props) => {
   const [inputValue, setInputValue] = React.useState<string | undefined | null>(backendState)
   const ref = React.useRef<HTMLInputElement>(null); 
 
-
   React.useEffect(() => {
 
-    if(inputValue !== backendState) {
-
-      console.log("triggering");
+    if (inputValue !== backendState) {
       const event = new Event('input', { bubbles: true });
       ref.current?.dispatchEvent(event);
     }

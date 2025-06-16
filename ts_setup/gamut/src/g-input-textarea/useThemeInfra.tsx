@@ -91,9 +91,6 @@ export const GInputTextAreaRoot = styled("div", {
     }
   }
 
-  return {
-
-  };
 });
 
 

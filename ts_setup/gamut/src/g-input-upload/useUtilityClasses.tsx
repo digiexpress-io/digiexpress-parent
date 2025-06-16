@@ -16,10 +16,20 @@ export const GInputUploadRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
-  return {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
 
-  };
+  if (ownerState.disabled) {
+    return {
+      color: theme.palette.info.main,
+      '& .MuiInputBase-input.Mui-disabled': {
+        WebkitTextFillColor: theme.palette.info.main,
+      },
+      '& .MuiSvgIcon-root': {
+        display: 'none'
+      }
+    }
+  }
+
 });
 
 
