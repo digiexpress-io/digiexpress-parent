@@ -20,7 +20,6 @@ export const GInputAddressRoot = styled("div", {
 
   if (ownerState.disabled) {
     return {
-      color: theme.palette.info.main,
       '& .MuiInputBase-input': {
         WebkitTextFillColor: theme.palette.info.main,
       },

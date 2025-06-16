@@ -33,7 +33,6 @@ export const GInputTimeRoot = styled("div", {
 
   if (ownerState.disabled) {
     return {
-      color: theme.palette.info.main,
       '& .MuiInputBase-root': {
         backgroundColor: theme.palette.background.paper,
         border: `1px solid ${theme.palette.action.disabled}`,

@@ -20,7 +20,6 @@ export const GInputUploadRoot = styled("div", {
 
   if (ownerState.disabled) {
     return {
-      color: theme.palette.info.main,
       '& .MuiInputLabel-root.Mui-disabled': {
         color: theme.palette.info.main,
       },

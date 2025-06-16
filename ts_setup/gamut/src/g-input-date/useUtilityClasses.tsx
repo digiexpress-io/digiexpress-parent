@@ -32,7 +32,6 @@ export const GInputDateRoot = styled("div", {
 
   if (ownerState.disabled) {
     return {
-      color: theme.palette.info.main,
       '& .MuiInputBase-root': {
         backgroundColor: theme.palette.background.paper
       },

@@ -32,7 +32,6 @@ export const GInputIntRoot = styled('div', {
 
   if (ownerState.disabled) {
     return {
-      color: theme.palette.info.main,
       '& .MuiInputBase-input.Mui-disabled': {
         WebkitTextFillColor: theme.palette.info.main,
       },

@@ -28,7 +28,6 @@ export const GInputMultilistRoot = styled('div', {
     } : {}),
 
     ...(ownerState.disabled ? {
-      color: theme.palette.info.main,
       '& .MuiChip-root.Mui-disabled': {
         opacity: '1',
         color: `${theme.palette.info.main}`,

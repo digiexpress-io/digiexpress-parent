@@ -45,7 +45,6 @@ export const GInputSurveyRoot = styled('div', {
     } : {}),
 
     ...(ownerState.disabled) ? {
-      color: theme.palette.info.main,
       '.MuiSvgIcon-root': {
         color: theme.palette.info.main
       }
