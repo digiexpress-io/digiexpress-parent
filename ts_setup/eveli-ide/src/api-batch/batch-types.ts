@@ -24,6 +24,10 @@ export declare namespace BatchApi {
     status: BatchStatus;
     
     comment: string;
+
+    transitives?: {
+        instances: RuntimeInstance[];
+    }
   }
 
   export interface RuntimeInstance {
