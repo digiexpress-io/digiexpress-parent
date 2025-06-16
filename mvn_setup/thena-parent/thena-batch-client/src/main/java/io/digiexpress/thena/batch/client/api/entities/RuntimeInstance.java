@@ -20,13 +20,10 @@ package io.digiexpress.thena.batch.client.api.entities;
  * #L%
  */
 
-import java.beans.Transient;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.annotation.Nullable;
 
@@ -46,7 +43,6 @@ public interface RuntimeInstance extends AnyBatchEntity {
   
   String getComment();
     
-  @Transient @JsonIgnore
   @Nullable RuntimeInstanceTransitives getTransitives();
   
   @Override 

@@ -33,6 +33,8 @@ public interface BatchRegistry extends ThenaRegistryService<Batch, io.vertx.muti
   
   ThenaSqlClient.SqlTuple findAllByAppId(String appId, boolean lockForUpdate);
   ThenaSqlClient.SqlTuple findOneByAppIdAndName(String appId, String batchName);
+  ThenaSqlClient.SqlTuple findOneByName(String batchName);
+  
   
   ThenaSqlClient.SqlTupleList insertMany(List<Batch> docs);
   ThenaSqlClient.SqlTupleList updateMany(List<Batch> docs);

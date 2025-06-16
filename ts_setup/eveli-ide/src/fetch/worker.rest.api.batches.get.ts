@@ -1,13 +1,4 @@
-import React from 'react';
-
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { QueryResult } from '@material-table/core'
-import { Column, Query } from '@material-table/core';
-
-import { TaskApi } from '@/api-task';
-
-import { createMuiTableQueryString } from '@/api-mui-table';
-import { EveliTaskTableContext } from '@/eveli-tasks';
 import { BatchApi } from '@/api-batch';
 
 
@@ -23,6 +14,10 @@ function hook(props: {}) {
   return {
     findAll: async (): Promise<BatchApi.Batch[]> => {
       return params.fetch(url({}) )
+        .then(response => response.json());
+    },
+    getOne: async (batchId: string): Promise<BatchApi.Batch> => {
+      return params.fetch(url({}) + '/' + batchId)
         .then(response => response.json());
     },
   }

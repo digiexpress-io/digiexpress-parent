@@ -130,6 +130,30 @@ public class BatchDbQueryImpl implements BatchDbQuery {
             })
             .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'BATCHES'-s by 'app_id' and 'batch_name'!", sql, e)));
       }
+      
+      @Override
+      public Uni<Optional<Batch>> findOneByName(String batchName) {
+        final var sql = registry.getBatches().findOneByName(batchName);
+        
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryBatches.findOneByName query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(), 
+              sql.getValue());
+        }
+        
+        return dataSource.getClient().preparedQuery(sql.getValue())
+            .mapping(registry.getBatches().defaultMapper())
+            .execute(sql.getProps())
+            .onItem()
+            .transform((RowSet<Batch> rowset) -> {
+              final var iterator = rowset.iterator();
+              if(iterator.hasNext()) {
+                return Optional.of(iterator.next());
+              }
+              return Optional.<Batch>empty();
+            })
+            .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't find 'BATCHES'-s by 'batch_name'!", sql, e)));
+      }
     };
   }
 
@@ -239,6 +263,23 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .transformToMulti((RowSet<RuntimeInstance> rowset) -> Multi.createFrom().iterable(rowset))
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find 'RUNTIME_INSTANCE' by count!")));
       }
+
+      @Override
+      public Multi<RuntimeInstance> findLastNByBatchName(int count, String batchIdOrName) {
+        
+        final var sql = registry.getRuntimeInstances().findLastNByBatchName(count, batchIdOrName);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryInstances.findLastNByBatchName query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeInstances().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToMulti((RowSet<RuntimeInstance> rowset) -> Multi.createFrom().iterable(rowset))
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find 'RUNTIME_INSTANCE' by count, batchIdOrName!")));
+      }
       
 
     };
@@ -301,6 +342,22 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_STEP' by instance status!")));
 
       }
+
+      @Override
+      public Multi<RuntimeStep> findForLastNInstancesByBatchName(int howMany, String batchIdOrName) {
+        final var sql = registry.getRuntimeSteps().findForLastNInstancesByBatchName(howMany, batchIdOrName);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.querySteps.findForLastNInstancesByBatchName query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeSteps().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToMulti((RowSet<RuntimeStep> rowset) -> Multi.createFrom().iterable(rowset))
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_STEP' for last N instances by batch id/name!")));
+      }
     };
   }
 
@@ -340,12 +397,32 @@ public class BatchDbQueryImpl implements BatchDbQuery {
               sql.getProps().deepToString(),
               sql.getValue());
         }
+        
         return dataSource.getClient().preparedQuery(sql.getValue())
           .mapping(registry.getRuntimeMetrics().defaultMapper())
           .execute(sql.getProps())
           .onItem()
           .transformToUni((RowSet<RuntimeMetric> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_METRIC' by instance status!")));
+      }
+
+      @Override
+      public Uni<List<RuntimeMetric>> findForLastNInstancesByBatchName(int howMany, String batchIdOrName) {
+        
+
+        final var sql = registry.getRuntimeMetrics().findForLastNInstancesByBatchName(howMany, batchIdOrName);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryMetrics.findForLastNInstancesByBatchName query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeMetrics().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToUni((RowSet<RuntimeMetric> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_METRIC' for last N instance by batchId!")));
       }
     };
   }

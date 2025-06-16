@@ -200,4 +200,26 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
         .props(Tuple.of(status.isEmpty() ? null : status.stream().map(e -> e.name()).toArray()))
         .build();
   }
+  @Override
+  public SqlTuple findForLastNInstancesByBatchName(int howMany, String batchIdOrName) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT metrics.* FROM (").ln()
+        .append("  SELECT").ln()
+        .append("    *,")
+        .append("    RANK() OVER (PARTITION BY batch_id order by instance_ended_at DESC, instance_created_at DESC) AS order_number").ln()
+        .append("  FROM ").append(options.getRuntimeInstances()).ln()
+        .append(") as runtime").ln()
+        
+        .append("  LEFT JOIN ").append(options.getBatches()).append(" as batch ").ln()
+        .append("  ON (batch.id = runtime.batch_id)").ln()
+        
+        .append("  RIGHT JOIN ").append(options.getRuntimeMetrics()).append(" as metrics ").ln()
+        .append("  ON (metrics.runtime_id = runtime.id)").ln()
+        
+        .append("WHERE order_number <= $1 AND (batch.id = $2 OR batch.batch_name = $2)").ln() 
+        .build())
+        .props(Tuple.of(howMany, batchIdOrName))
+        .build();
+  }
 }

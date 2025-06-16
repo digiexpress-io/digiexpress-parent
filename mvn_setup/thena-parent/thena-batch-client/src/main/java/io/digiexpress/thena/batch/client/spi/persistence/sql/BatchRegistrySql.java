@@ -94,6 +94,18 @@ public class BatchRegistrySql implements BatchRegistry {
   }
   
   @Override
+  public SqlTuple findOneByName(String batchName) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getBatches()).ln()
+        .append("  WHERE id = $1 OR batch_name = $1 OR batch_external_id = $1").ln() 
+        .build())
+        .props(Tuple.of(batchName))
+        .build();
+  }
+  
+  @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<Batch> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
@@ -227,5 +239,4 @@ public class BatchRegistrySql implements BatchRegistry {
         .comment(row.getString("batch_comment"))
         .build();
   }
-
 }

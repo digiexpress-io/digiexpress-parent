@@ -26,7 +26,7 @@ export declare namespace BatchApi {
     comment: string;
 
     transitives?: {
-        instances: RuntimeInstance[];
+      instances: RuntimeInstance[];
     }
   }
 
@@ -42,5 +42,47 @@ export declare namespace BatchApi {
     executionStatus: RuntimeExecutionStatus;
     
     comment: string;
+
+    transitives?: {
+      steps: RuntimeStep[];
+      metrics: RuntimeMetric[];
+    }
+  }
+
+  export interface RuntimeStep {
+    id: string;
+    runtimeId: string;
+    consumerId: string;
+    
+    status: RuntimeStatus;
+    executionStatus: RuntimeExecutionStatus;
+    
+    createdAt: string;
+    endedAt: string | undefined;
+    
+    name: string;
+    comment: string;
+  }
+
+  export interface RuntimeMetric {
+    id: string;
+    runtimeId: string;
+    stepId: string | undefined;
+    
+    name: 'batch-metrics';
+    createdAt: string;
+    updatedAt: string | undefined;
+    valueStructured: {
+      map: {
+        cheapId: string | undefined;
+        maxCost: number | undefined;
+        minCost: number | undefined;
+        stepName: string | undefined;
+        failCount: number | undefined;
+        expensiveId: string | undefined;
+        successCount: number | undefined;
+      }
+    } | undefined;
+ 
   }
 }

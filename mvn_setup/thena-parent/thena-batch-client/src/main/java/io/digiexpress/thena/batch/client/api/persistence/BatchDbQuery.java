@@ -48,12 +48,15 @@ public interface BatchDbQuery {
   
   interface BatchDbMetricQuery {
     Uni<List<RuntimeMetric>> findAllByInstanceStatus(List<RuntimeStatus> status);
+    Uni<List<RuntimeMetric>> findForLastNInstancesByBatchName(int howMany, String batchIdOrName);
   }
   
   interface BatchDbBatchQuery {
     Multi<Batch> findAll();
     Uni<List<Batch>> findAllByAppId(String appId, boolean lockForUpdate);
-    Uni<Optional<Batch>> findOneByAppIdAndName(String appId, String batchName);     
+    Uni<Optional<Batch>> findOneByAppIdAndName(String appId, String batchName);
+    
+    Uni<Optional<Batch>> findOneByName(String batchName);
   }
   
   interface BatchDbInstanceQuery {
@@ -61,6 +64,7 @@ public interface BatchDbQuery {
     Uni<List<RuntimeInstance>> findAllByStatus(List<RuntimeStatus> status);
     
     Multi<RuntimeInstance> findLastN(int count); // find last N number of instances for EVERY batch
+    Multi<RuntimeInstance> findLastNByBatchName(int count, String batchIdOoName); // find last N number of instances for EVERY batch
     Uni<Long> nextSequence();
   }
   
@@ -68,6 +72,7 @@ public interface BatchDbQuery {
     Uni<RuntimeStep> getById(String id, boolean lockForUpdate);
     Uni<List<RuntimeStep>> findAllByInstanceId(String instanceId);
     Uni<List<RuntimeStep>> findAllByInstanceStatus(List<RuntimeStatus> status);
+    Multi<RuntimeStep> findForLastNInstancesByBatchName(int howMany, String batchIdOrName);
   }
   
   interface BatchDbStepRowQuery {

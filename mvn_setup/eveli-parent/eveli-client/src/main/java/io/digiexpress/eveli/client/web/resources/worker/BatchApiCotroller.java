@@ -90,6 +90,11 @@ public class BatchApiCotroller {
         });
   }
   
+  @GetMapping("/{batchName}")
+  public Uni<Batch> getBatches(@PathVariable("batchName") String batchName) {
+    return batchClient.queryBatches().getOne(batchName).onItem().transform(resp -> resp.getObject());
+  }
+  
   @PostMapping("/{batchName}/instances")
   public Uni<RuntimeInstance> createOneInstance(
       @PathVariable("batchName") String batchName, 

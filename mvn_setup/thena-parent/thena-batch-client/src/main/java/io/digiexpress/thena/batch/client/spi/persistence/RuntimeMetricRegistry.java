@@ -31,6 +31,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface RuntimeMetricRegistry extends ThenaRegistryService<RuntimeMetric, io.vertx.mutiny.sqlclient.Row> {
   
+  ThenaSqlClient.SqlTuple findForLastNInstancesByBatchName(int howMany, String batchIdOrName);
   ThenaSqlClient.SqlTuple findAllByInstanceStatus(List<RuntimeStatus> status);
   ThenaSqlClient.SqlTupleList updateMany(List<RuntimeMetric> metrics);
   ThenaSqlClient.SqlTupleList insertMany(List<RuntimeMetric> metrics);
