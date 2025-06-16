@@ -30,7 +30,7 @@ export const GInputGroupRowRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: {  } }>(({ theme }) => {
+})<{ ownerState: { disabled: boolean } }>(({ theme }) => {
   return {
     
   };

@@ -44,12 +44,19 @@ export const GInputSurveyRoot = styled('div', {
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
     } : {}),
 
+    ...(ownerState.disabled) ? {
+      color: theme.palette.info.main,
+      '.MuiSvgIcon-root': {
+        color: theme.palette.info.main
+      }
+    } : {},
+
     '& .GInputSurvey-body': {
-      display: 'grid', 
-      alignItems: 'center', 
-      
-      gridAutoFlow: vertical ? 'column': 'row', 
-      gridTemplateRows: `repeat(${rowCount}, auto)`, 
+      display: 'grid',
+      alignItems: 'center',
+
+      gridAutoFlow: vertical ? 'column' : 'row',
+      gridTemplateRows: `repeat(${rowCount}, auto)`,
       gridTemplateColumns: `50% repeat(${colCount}, fit-content(30%))`,
     },
     '& .GInputSurvey-option': {
@@ -68,17 +75,17 @@ export const GInputSurveyBody = styled('div', {
   slot: 'Body',
 
   shouldForwardProp: (prop) => (
-    prop !== 'onChange' && 
-    prop !== 'id' && 
-    prop !== 'label' && 
-    prop !== 'options' && 
-    prop !== 'description' && 
-    prop !== 'vertical' && 
-    prop !== 'labelPosition' && 
+    prop !== 'onChange' &&
+    prop !== 'id' &&
+    prop !== 'label' &&
+    prop !== 'options' &&
+    prop !== 'description' &&
+    prop !== 'vertical' &&
+    prop !== 'labelPosition' &&
     prop !== 'border' &&
-    prop !== 'ownerState' && 
+    prop !== 'ownerState' &&
     prop !== 'questions'),
-    
+
   overridesResolver: (props, styles) => {
     return [
       styles.root,
