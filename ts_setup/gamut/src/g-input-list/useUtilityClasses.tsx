@@ -16,10 +16,22 @@ export const GInputListRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
-  return {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
 
-  };
+  if (ownerState.disabled) {
+    return {
+      color: theme.palette.info.main,
+      '& .MuiInputBase-input.Mui-disabled': {
+        WebkitTextFillColor: theme.palette.info.main,
+      },
+      '& .MuiOutlinedInput-root.Mui-disabled': {
+        backgroundColor: theme.palette.background.paper,
+      },
+      '& .MuiSvgIcon-root': { // disable the Description icon button if description set
+        display: 'none'
+      }
+    }
+  }
 });
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------

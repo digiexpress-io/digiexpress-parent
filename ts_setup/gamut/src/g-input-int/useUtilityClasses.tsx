@@ -39,6 +39,9 @@ export const GInputIntRoot = styled('div', {
       '& .MuiOutlinedInput-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
       },
+      '& .MuiSvgIcon-root': { // disable the Description icon button if description set
+        display: 'none'
+      }
     }
   }
 });

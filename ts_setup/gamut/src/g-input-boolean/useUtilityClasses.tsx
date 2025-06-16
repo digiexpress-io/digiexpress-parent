@@ -45,7 +45,11 @@ export const GInputBooleanRoot = styled("div", {
         color: theme.palette.info.main,
         backgroundColor: theme.palette.background.paper,
         border: `1px solid ${theme.palette.action.disabled}`,
-      }
+        '.MuiTypography-root': {
+          color: theme.palette.info.main,
+        }
+      },
+
 
     } : {},
 
