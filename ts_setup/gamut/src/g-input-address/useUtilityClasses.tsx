@@ -21,10 +21,10 @@ export const GInputAddressRoot = styled("div", {
   if (ownerState.disabled) {
     return {
       color: theme.palette.info.main,
-      '& .MuiInputBase-input.Mui-disabled': {
+      '& .MuiInputBase-input': {
         WebkitTextFillColor: theme.palette.info.main,
       },
-      '& .MuiOutlinedInput-root.Mui-disabled': {
+      '& .MuiOutlinedInput-root': {
         backgroundColor: theme.palette.background.paper,
       },
     }
