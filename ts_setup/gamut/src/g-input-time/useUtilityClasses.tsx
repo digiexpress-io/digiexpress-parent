@@ -65,7 +65,7 @@ export const GInputTimeInput = styled("div", {
     },
 
     '& .react-time-picker__inputGroup__input': {
-      ...theme.typography.body1
+      ...theme.typography.body1,
     },
     
   };

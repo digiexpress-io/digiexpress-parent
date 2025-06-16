@@ -18,16 +18,20 @@ export const palette: PaletteOptions = {
   text: {
     primary: '#212529',
     secondary: '#65748B',
-    disabled: 'rgba(55, 65, 81, 0.48)'
+    disabled: 'rgba(55, 65, 81, 0.90)'
   },
+  action: {
+    disabled: '#e9ecef'
+  },
+  divider: "#dee2e6",
   success: {
     main: '#2e7D32',
     contrastText: '#FFFFFF'
   },
   info: {
-    main: '#2196F3',
-    light: '#64B6F7',
-    dark: '#0B79D0',
+    main: '#0000CC',
+    light: '#3333FF',
+    dark: '#000099',
     contrastText: '#FFFFFF'
   },
   warning: {

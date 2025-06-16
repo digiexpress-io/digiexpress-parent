@@ -18,7 +18,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     props: initProps,
     name: MUI_NAME,
   })
-  
+
   const {
     variant = 'textBox',
     rows = 10,
@@ -29,7 +29,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     variant
   }
   const { id, onChange, value, label, labelPosition, errors } = props;
-  const slots: GInputBaseProps<TextFieldProps>  = {
+  const slots: GInputBaseProps<TextFieldProps> = {
     id,
     slots: {
       error: GInputError,
@@ -77,7 +77,20 @@ export const GInputTextAreaRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+
+  if (ownerState.disabled) {
+    return {
+      color: theme.palette.info.main,
+      '& .MuiInputBase-input.Mui-disabled': {
+        WebkitTextFillColor: theme.palette.info.main,
+      },
+      '& .MuiOutlinedInput-root.Mui-disabled': {
+        backgroundColor: theme.palette.background.paper,
+      },
+    }
+  }
+
   return {
 
   };
