@@ -31,8 +31,28 @@ export const GInputBooleanRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+
+
+
   return {
+    ...(ownerState.disabled) ? {
+      '.MuiSvgIcon-root': {
+        color: theme.palette.info.main
+      },
+      '.MuiButtonBase-root': {
+        color: theme.palette.info.main,
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.action.disabled}`,
+        '.MuiTypography-root': {
+          color: theme.palette.info.main,
+        }
+      },
+
+
+    } : {},
+
+
     '& .GInputBoolean-input': {
       display: 'flex',
       flexDirection: 'row',

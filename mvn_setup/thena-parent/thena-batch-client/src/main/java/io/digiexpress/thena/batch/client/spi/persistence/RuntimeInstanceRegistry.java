@@ -37,6 +37,9 @@ public interface RuntimeInstanceRegistry extends ThenaRegistryService<RuntimeIns
   ThenaSqlClient.SqlTuple findAllByStatus(List<RuntimeStatus> status);
   ThenaSqlClient.SqlTuple getById(String id, boolean lockForUpdate);
   ThenaSqlClient.SqlTuple getNextRefSequence(long howMany);
+  ThenaSqlClient.SqlTuple findLastNByBatchName(long howMany, String batchName);
+  
+  
   ThenaSqlClient.SqlTupleList insertMany(List<RuntimeInstance> instances);
   ThenaSqlClient.SqlTupleList updateMany(List<RuntimeInstance> instances);
   

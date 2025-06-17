@@ -28,10 +28,24 @@ export const GInputTimeRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
 
-  return {
 
+  if (ownerState.disabled) {
+    return {
+      '& .MuiInputBase-root': {
+        backgroundColor: theme.palette.background.paper,
+      },
+      '& .react-time-picker__inputGroup__input': {
+        color: theme.palette.info.main,
+      },
+      '& .react-time-picker__inputGroup__leadingZero, & .react-time-picker__inputGroup__divider': {
+        color: theme.palette.info.main,
+      },
+      '& .MuiSvgIcon-root': { // disable the icons in the input field
+        display: 'none'
+      }
+    }
   }
 });
 
@@ -65,7 +79,7 @@ export const GInputTimeInput = styled("div", {
     },
 
     '& .react-time-picker__inputGroup__input': {
-      ...theme.typography.body1
+      ...theme.typography.body1,
     },
     
   };

@@ -52,6 +52,7 @@ public interface BatchClient {
   
   
   interface BatchQuery {
+    Uni<Envelope<Batch>> getOne(String batchId);
     Uni<Envelope<List<Batch>>> findAll();
   }
   

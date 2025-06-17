@@ -27,6 +27,20 @@ export const GInputMultilistRoot = styled('div', {
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
     } : {}),
 
+    ...(ownerState.disabled ? {
+      '& .MuiInputBase-root.Mui-disabled': {
+        backgroundColor: theme.palette.background.paper,
+      },
+      '& .MuiChip-root.Mui-disabled': {
+        opacity: '1',
+        color: `${theme.palette.info.main}`,
+        '.MuiSvgIcon-root': { //disable the "close" icon in chip
+          display: 'none'
+        },
+
+      }
+    } : {})
+
   };
 })
 

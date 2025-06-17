@@ -16,10 +16,18 @@ export const GInputListRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
-  return {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
 
-  };
+  if (ownerState.disabled) {
+    return {
+      '& .MuiInputBase-input.Mui-disabled': {
+        WebkitTextFillColor: theme.palette.info.main,
+      },
+      '& .MuiOutlinedInput-root.Mui-disabled': {
+        backgroundColor: theme.palette.background.paper,
+      }
+    }
+  }
 });
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------

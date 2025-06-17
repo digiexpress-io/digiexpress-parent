@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDefaultProps } from '@mui/material/DefaultPropsProvider';
 
-import { DialobApi, useForm } from '../api-dialob'
+import { DialobApi } from '../api-dialob'
 import { UnknownSlot } from './UnknownSlot';
 
 import { GInputUploadDialob } from '../g-input-upload';

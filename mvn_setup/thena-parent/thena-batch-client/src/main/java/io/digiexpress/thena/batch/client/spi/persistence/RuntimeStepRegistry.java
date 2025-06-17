@@ -23,8 +23,8 @@ package io.digiexpress.thena.batch.client.spi.persistence;
 import java.util.List;
 import java.util.function.Function;
 
-import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -37,6 +37,8 @@ public interface RuntimeStepRegistry extends ThenaRegistryService<RuntimeStep, i
   ThenaSqlClient.SqlTuple getById(String id, boolean lockForUpdate);
   ThenaSqlClient.SqlTupleList insertMany(List<RuntimeStep> docs);
   ThenaSqlClient.SqlTupleList updateMany(List<RuntimeStep> docs);
+  
+  ThenaSqlClient.SqlTuple findForLastNInstancesByBatchName(int count, String batchIdOrName);
   
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.SqlTuple getById(String id);

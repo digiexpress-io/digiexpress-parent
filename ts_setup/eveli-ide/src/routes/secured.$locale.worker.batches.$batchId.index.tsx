@@ -1,11 +1,11 @@
 
-import { EveliBatchesTable } from '@/eveli-batches';
+import { EveliBatchView } from '@/eveli-batches';
 
 export const Route = createFileRoute({
   component: Component,
 })
 
 function Component() {
-
-  return (<>...view</>)
+  const { batchId } = Route.useParams();
+  return (<EveliBatchView batchId={batchId} />)
 }

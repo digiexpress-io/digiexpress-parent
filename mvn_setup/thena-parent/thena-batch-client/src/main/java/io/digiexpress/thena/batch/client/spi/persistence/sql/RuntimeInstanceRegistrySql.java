@@ -250,4 +250,22 @@ public class RuntimeInstanceRegistrySql implements RuntimeInstanceRegistry {
         .props(Tuple.of(count))
         .build();
   }
+  
+  @Override
+  public SqlTuple findLastNByBatchName(long howMany, String batchName) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT runtime.* FROM (").ln()
+        .append("  SELECT").ln()
+        .append("    *,")
+        .append("    RANK() OVER (PARTITION BY batch_id order by instance_ended_at DESC, instance_created_at DESC) AS order_number").ln()
+        .append("  FROM ").append(options.getRuntimeInstances()).ln()
+        .append(") as runtime").ln()
+        .append("  LEFT JOIN ").append(options.getBatches()).append(" as batch ").ln()
+        .append("  ON (batch.id = runtime.batch_id)").ln()
+        .append("WHERE order_number <= $1 AND (batch.id = $2 OR batch.batch_name = $2)").ln() 
+        .build())
+        .props(Tuple.of(howMany, batchName))
+        .build();
+  }
 }

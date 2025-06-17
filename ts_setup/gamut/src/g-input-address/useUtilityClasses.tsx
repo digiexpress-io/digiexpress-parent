@@ -16,10 +16,19 @@ export const GInputAddressRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
-  return {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
 
-  };
+  if (ownerState.disabled) {
+    return {
+      '& .MuiInputBase-input': {
+        WebkitTextFillColor: theme.palette.info.main,
+      },
+      '& .MuiOutlinedInput-root': {
+        backgroundColor: theme.palette.background.paper,
+      },
+    }
+  }
+
 });
 
 

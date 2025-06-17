@@ -1,5 +1,5 @@
 
-import { generateUtilityClass, styled, alpha } from '@mui/material'
+import { generateUtilityClass, styled } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
 import { useVariantOverride } from '../api-variants';
 
@@ -28,11 +28,25 @@ export const GInputDateRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
+})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
 
-  return {
-
+  if (ownerState.disabled) {
+    return {
+      '& .MuiInputBase-root': {
+        backgroundColor: theme.palette.background.paper
+      },
+      '& .react-date-picker__inputGroup__input': {
+        color: theme.palette.info.main,
+      },
+      '& .react-date-picker__inputGroup__leadingZero, & .react-date-picker__inputGroup__divider': {
+        color: theme.palette.info.main,
+      },
+      '& .MuiSvgIcon-root': { // disable the icons in the input field
+        display: 'none'
+      }
+    }
   }
+
 });
 
 
@@ -47,8 +61,8 @@ export const GInputDateInput = styled("div", {
   },
 })<{ ownerState: { variant: string } }>(({ theme, ownerState }) => {
 
-  return {
 
+  return {
     '& .react-date-picker': {
       alignItems: 'center',
       width: '100%',

@@ -46,6 +46,9 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
     if (reason === 'selectOption') {
       setSelected(newValue ?? '');
       input.setValue(newValue);
+    } else if (reason === 'clear') {
+      setSelected('');
+      input.setValue('');
     }
   }
 
@@ -61,7 +64,6 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
       onInputChange={handleFiltering}
       onChange={handleChange}
       disabled={props.disabled}
-      
       renderInput={handelRenderInput}
     />
   )

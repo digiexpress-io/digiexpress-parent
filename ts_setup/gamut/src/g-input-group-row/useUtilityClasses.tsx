@@ -30,9 +30,9 @@ export const GInputGroupRowRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: {  } }>(({ theme }) => {
+})<{ ownerState: { disabled: boolean } }>(({ theme }) => {
   return {
-    
+
   };
 });
 
@@ -45,14 +45,14 @@ export const GInputGroupRowRoot = styled('div', {
 export const GInputGroupRowLabel = styled('div', {
   name: MUI_NAME,
   slot: 'Label',
-  shouldForwardProp: (prop) => prop !== 'onDelete' ,
+  shouldForwardProp: (prop) => prop !== 'onDelete',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputGroupRowProps>(({ theme, label }) => {
+})<GInputGroupRowProps>(({ theme, label, disabled }) => {
   return {
     display: 'flex',
     '& .MuiDivider-root': {
@@ -63,7 +63,15 @@ export const GInputGroupRowLabel = styled('div', {
     },
     '& .MuiTypography-root': {
       ...theme.typography.h3
-    }
+    },
+    ...(disabled ? {
+      '.MuiSvgIcon-root': {
+        display: 'none'
+      }
+    } : {})
+
+
+
   };
 });
 
@@ -83,14 +91,14 @@ export const GInputGroupRowBody = styled('div', {
   let enabled = false;
   try {
     enabled = !!columns && parseInt(columns) > 1;
-  } catch(e) {
+  } catch (e) {
     console.warn('unsupported columns definition', { id, columns });
   }
-  if(!enabled) {
+  if (!enabled) {
     return {};
   }
   const colCount = parseInt(columns!);
-  const rowCount = Math.round(React.Children.count(children)/colCount);
+  const rowCount = Math.round(React.Children.count(children) / colCount);
 
   const labels: SxProps = colCount > 2 ? {
     '& .GInputBase-label': {
@@ -102,12 +110,12 @@ export const GInputGroupRowBody = styled('div', {
       overflow: 'hidden',
     }
   } : {};
-  
+
   return {
     display: 'grid',
 
-    gridAutoFlow: 'row', 
-    gridTemplateRows: `repeat(${rowCount}, auto)`, 
+    gridAutoFlow: 'row',
+    gridTemplateRows: `repeat(${rowCount}, auto)`,
     gridTemplateColumns: `repeat(${colCount}, 1fr)`,
 
     '& .GFormBase-root': {
