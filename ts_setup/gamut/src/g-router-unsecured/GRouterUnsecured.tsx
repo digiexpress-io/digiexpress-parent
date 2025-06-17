@@ -70,7 +70,7 @@ const Internal: React.FC<GRouterUnsecuredProps> = (initProps) => {
         <Container>
           <GRouterUnsecuredRoot className={classes.root} ownerState={ownerState}>
             <div className={classes.menuButtonContainer}>
-              <GPopoverTopics onTopic={handleTopicChange} />
+              <GPopoverTopics onTopic={handleTopicChange} hideChildren={true} />
               <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
             </div>
             <GArticle>{landingTopic}</GArticle>

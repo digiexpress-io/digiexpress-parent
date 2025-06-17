@@ -18,6 +18,7 @@ export interface GPopoverTopicsProps {
   onTopic: (topic: SiteApi.TopicView, event: React.MouseEvent) => void;
   filterTopic?: (topic: SiteApi.TopicView) => boolean;
   groupTopics?: (topic: SiteApi.TopicView[], itemsInColumn?: number | undefined) => SiteApi.TopicGroup[];
+  hideChildren?: boolean;
   slots?: {
     link?: React.ElementType<GTopicLinkProps>
     popover?: (query: typeof useMediaQuery, theme: Theme) => React.ElementType<GPopoverTopicsSlotProps> | undefined
@@ -45,6 +46,7 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
     <Link className={props.className} onClick={(event) => { props.onClick ? props.onClick(props.children, event) : null }}>
       {props.isChild === true && <CircleIcon />}
       {props.children.name}
+      {props.children.children?.length > 0 && <span style={{ marginLeft: 4 }}>{'>'}</span>}
     </Link>
   )
   );
@@ -74,16 +76,18 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
                 <div className={classes.topicsLayout}>
                   {column.topics.map(topic => {
                     const isChild = articlesWithChildArticle.has(topic.id);
+                    if (themeProps.hideChildren && isChild) return null;
                     return (
-                      <GTopicLinkSlot isChild={isChild}
+                      <GTopicLinkSlot
+                        isChild={isChild}
                         key={topic.id}
                         children={topic}
                         onClick={handleOnTopic}
                         className={isChild ? classes.childTopic : undefined}
                       />
-                    )
-                  }
-                  )}
+                      )
+                    }
+                    )}
                 </div>
                 <GDivider index={index} total={topics.length}><Divider flexItem orientation='vertical' /></GDivider>
               </React.Fragment>

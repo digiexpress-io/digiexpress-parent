@@ -51,7 +51,7 @@ export const GArticleRoot = styled("div", {
     '& .GArticle-content': {
       display: 'flex',
       flexGrow: 1,
-      padding: theme.spacing(2),
+      padding: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
       },

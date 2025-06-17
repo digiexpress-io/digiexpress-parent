@@ -55,7 +55,11 @@ export const GTopicsMuiPopover = styled(Popover, {
 })(({ theme }) => {
   return {
     '& .GPopoverTopics-topicsLayout': {
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: theme.spacing(3),
+      },
+      [theme.breakpoints.up('lg')]: {
+        paddingLeft: theme.spacing(2),
         width: '32vw'
       },
     },
@@ -137,7 +141,9 @@ export const GTopics = styled('div', {
       padding: theme.spacing(1),
       '& .MuiDivider-root': {
         borderRight: `3px solid ${theme.palette.primary.main}`,
-      },
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2)
+      },      
       '& .MuiDivider-vertical:last-of-type': {
         display: 'none'
       }
