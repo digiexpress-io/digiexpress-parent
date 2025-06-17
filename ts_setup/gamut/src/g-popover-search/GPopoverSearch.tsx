@@ -8,7 +8,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SiteApi, useSite } from '../api-site';
 import { useAnchor } from './useAnchor';
-import { GLinkFormUnlockedSearchResults, GLinkPhone, GLogo, GPopoverButton } from '../';
+import { GLinkPhone, GLogo, GPopoverButton } from '../';
 import { useUtilityClasses, GPopoverSearchRoot, GSearchMuiPopover, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 import { GLinkHyper } from '../';
@@ -48,7 +48,6 @@ interface ResultsDividerProps {
 
 const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isHidden, className }) => {
   const intl = useIntl();
-  //const classes = useUtilityClasses(ownerState);
 
   if (isHidden) {
     return (<></>);
@@ -64,17 +63,26 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isH
 
 const DefaultLinkSlot: React.FC<GSearchResultProps> = (props) => {
   const { children: topic } = props;
-
+  const classes = useUtilityClasses();
+  const isChild: boolean = !!topic.parent;
 
   function handleOnTopic(
-    topic: SiteApi.TopicView, 
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    topic: SiteApi.TopicView,
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) {
     props.onClick(event, topic);
     props.onClose();
   }
 
-  return (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)
-}
+  return (
+    <Box className={isChild ? classes.childTopic : undefined}>
+      {isChild && <CircleIcon fontSize="small" />}
+      <Link onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>
+    </Box>
+  );
+};
+
+
 
 export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const props = useThemeProps({
@@ -83,59 +91,40 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   });
   const intl = useIntl();
   const anchor = useAnchor();
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses();
   const { views } = useSite();
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
-  const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
+  const [state, setState] = React.useState<SearchApi.SearchState>();
   const iam = useIam();
+
+  React.useEffect(() => {
+    setState(SearchApi.getInstance(views, noValueIndicatorColon));
+  }, [intl.locale]);
+
+  if (!state) {
+    return (<></>)
+  }
+
 
   const noResults = state.topics.length === 0 &&
     state.forms.length === 0 &&
     state.phones.length === 0 &&
     state.internal.length === 0 &&
     state.external.length === 0;
-  
-  const enabledOptions = props.getEnabledOptions ? props.getEnabledOptions() : undefined;
-
-  const childTopicIds = new Set(
-    Object.values(views)
-      .flatMap(topic => topic.children ?? [])
-      .map(child => child.id)
-  );  
 
   function handleFilterByType(type: SearchApi.FilterMode) {
-    setState(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
+    setState(prev => prev!.filterMode(prev!.searchOptionType === type ? 'ALL' : type));
   }
-  
-  const Root = props.component ?? GPopoverSearchRoot;
 
   function isOptionEnabled(option: SearchApi.FilterMode): boolean {
+    const enabledOptions = props.getEnabledOptions ? props.getEnabledOptions() : undefined;
     if(enabledOptions) {
       return enabledOptions.includes(option);
     }
     return true;
   }
 
-  const DefaultLinkSlot: React.FC<GSearchResultProps> = (props) => {
-    const { children: topic } = props;
-    const isChild = childTopicIds.has(topic.id);
-  
-    function handleOnTopic(
-      topic: SiteApi.TopicView,
-      event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>
-    ) {
-      props.onClick(event, topic);
-      props.onClose();
-    }
-  
-    return (
-      <Box className={isChild ? classes.childTopic : undefined}>
-        {isChild && <CircleIcon fontSize="small" />}
-        <Link onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>
-      </Box>
-    );
-  };
-  
+  const Root = props.component ?? GPopoverSearchRoot;
   const TopicLinkSlot: React.ElementType<GSearchResultProps> = props.slots?.topicLink ? props.slots?.topicLink : DefaultLinkSlot;
 
   return (
@@ -154,7 +143,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
               <TextField
                 className={classes.inputField}
                 placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })}
-                onChange={({ currentTarget }) => setState(prev => prev.find(currentTarget.value))} />
+                onChange={({ currentTarget }) => setState(prev => prev!.find(currentTarget.value))} />
             </Grid2>
 
             <Grid2 size={{ lg: 3, xl: 3 }} />
