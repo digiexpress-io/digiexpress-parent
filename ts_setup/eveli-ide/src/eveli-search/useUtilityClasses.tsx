@@ -1,5 +1,5 @@
 
-import { generateUtilityClass, Popover, styled } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { EveliSearchProps } from './EveliSearch';
 
