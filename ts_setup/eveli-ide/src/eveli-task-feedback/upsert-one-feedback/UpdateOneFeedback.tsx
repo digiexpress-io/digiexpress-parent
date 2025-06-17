@@ -13,9 +13,10 @@ import { CancelButton } from '@/eveli-styles';
 export interface UpdateOneFeedbackProps {
   taskId: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
+  allowDelete?: boolean;
 }
 
-export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, onComplete }) => {
+export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, onComplete, allowDelete = true }) => {
   const navigate = useNavigate();
   const intl = useIntl();
   const theme = useTheme();
@@ -144,9 +145,13 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       />
 
       <Box display='flex' gap={1}>
-        <Button onClick={() => setConfirmOpen(true)} variant='text'>
-          <FormattedMessage id='button.delete' />
-        </Button>
+        {allowDelete && (
+          <>
+            <Button onClick={() => setConfirmOpen(true)} variant='text'>
+              <FormattedMessage id='button.delete' />
+            </Button>
+          </>
+        )}
         <CancelButton
           onClick={() => setReply(savedReply)}
           disabled={reply === savedReply}
@@ -154,32 +159,34 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <Button
           variant='contained'
           onClick={handlePublish}
-          ///disabled={reply === savedReply}
+        ///disabled={reply === savedReply}
         >
           <FormattedMessage id='button.update' />
         </Button>
       </Box>
 
-      <Dialog
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        maxWidth="xs"
-      >
-        <DialogTitle>
-          <FormattedMessage id='feedback.delete.confirmTitle' />
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            <FormattedMessage id='feedback.delete.confirmText' />
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <CancelButton onClick={() => setConfirmOpen(false)} />
-          <Button onClick={confirmDelete} color='error'>
-            <FormattedMessage id='button.confirmDelete' />
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {allowDelete && (
+        <Dialog
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          maxWidth="xs"
+        >
+          <DialogTitle>
+            <FormattedMessage id='feedback.delete.confirmTitle' />
+          </DialogTitle>
+          <DialogContent>
+            <Typography>
+              <FormattedMessage id='feedback.delete.confirmText' />
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <CancelButton onClick={() => setConfirmOpen(false)} />
+            <Button onClick={confirmDelete} color='error'>
+              <FormattedMessage id='button.confirmDelete' />
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
 
     </div>
   )

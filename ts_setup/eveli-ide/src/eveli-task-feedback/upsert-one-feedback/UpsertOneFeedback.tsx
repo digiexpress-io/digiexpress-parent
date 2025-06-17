@@ -9,6 +9,7 @@ export interface UpsertOneFeedbackProps {
   taskId: string;
   reload: number;
   onComplete: (upsertedFeedback: FeedbackApi.Feedback) => void;
+  allowDelete?: boolean;
 }
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
@@ -49,7 +50,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
   }
 
   if (feedbackExists) {
-    return (<UpdateOneFeedback  {...ownerState} />)
-  }
+    return (<UpdateOneFeedback {...ownerState} allowDelete={props.allowDelete} />)
+  }  
   return (<CreateOneFeedback {...ownerState} />);
 }
