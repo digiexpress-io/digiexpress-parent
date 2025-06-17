@@ -1,6 +1,6 @@
 import { generateUtilityClass, Popover, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
-import { GPopoverSearchProps } from './GPopoverSearch';
+
 
 export const MUI_NAME = 'GPopoverSearch';
 
@@ -25,7 +25,7 @@ export interface GPopoverSearchClasses {
 
 export type GPopoverSearchClassKey = keyof GPopoverSearchClasses;
 
-export const useUtilityClasses = (ownerState: GPopoverSearchProps) => {
+export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     title: ['title'],
