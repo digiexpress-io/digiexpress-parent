@@ -44,16 +44,17 @@ const InstanceSlot: React.FC<{ value: BatchApi.RuntimeInstance }> = ({ value }) 
   const instance = value;
   const isOk = instance.executionStatus === 'OK';
 
-  const bg_paper = isOk ? alpha(palette.error.light, 0.2) : undefined;
+  const bg_paper = isOk ? alpha(palette.success.light, 0.1) : alpha(palette.error.light, 0.1);
+
 
   return (
     <Stack direction='row' gap={1}>
       <Paper sx={{ padding: 2, backgroundColor: bg_paper, width: sectionWidth.instanceSectionWidth }}>
-        <Badge badgeContent={instance.name}>
+        <Badge badgeContent={instance.name} color={isOk ? "primary" : "error"}>
           <Paper sx={{
             width: '100px', height: '60px', borderRadius: '5px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }} >
+          }}>
             <AnyDateTimeShort value={instance.createdAt} />
           </Paper>
         </Badge>
