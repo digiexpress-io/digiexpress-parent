@@ -159,7 +159,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <Button
           variant='contained'
           onClick={handlePublish}
-        ///disabled={reply === savedReply}
+          disabled={reply === savedReply}
         >
           <FormattedMessage id='button.update' />
         </Button>
