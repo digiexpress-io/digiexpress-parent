@@ -34,9 +34,9 @@ eveli:
     - path-pattern: /worker/rest/api/tenant-configs
       method: GET
       roles: ROLE_Authorized
-    - path-pattern: /worker/rest/api/batches
+    - path-pattern: /worker/rest/api/batches/**
       method: GET,POST,PUT
       roles: ROLE_Authorized
-    - path-pattern: /worker/rest/api/userprofiles
+    - path-pattern: /worker/rest/api/userprofiles/**
       method: GET,POST,PUT
       roles: ROLE_Authorized
