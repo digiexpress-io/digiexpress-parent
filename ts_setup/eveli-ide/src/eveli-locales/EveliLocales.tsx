@@ -47,7 +47,7 @@ export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
   function handleChange(locale: string) {
 
     navigate({
-      to: '.',
+      to: '..',
       params: (params: any) => ({ ...params, locale }),
       search: (prev: any) => prev
     });
