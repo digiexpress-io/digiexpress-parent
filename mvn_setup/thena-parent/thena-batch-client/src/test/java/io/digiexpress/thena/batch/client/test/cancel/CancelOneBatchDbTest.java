@@ -34,8 +34,6 @@ import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
 import io.digiexpress.thena.batch.client.test.config.PgProfile;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,12 +47,7 @@ public class CancelOneBatchDbTest extends DbTestTemplate {
   BatchClient client;
   
   public void setUp() {
-    final TenantCommitResult repo = getClient().manageTenants().commit()
-        .name("CancelOneBatchDbTest")
-        .build()
-        .await().atMost(atMost);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
-    client = getClient().withTenant(repo.getRepo().getId());
+    client = getOrCreateTenant("CancelOneBatchDbTest");
   }
     
   @Test

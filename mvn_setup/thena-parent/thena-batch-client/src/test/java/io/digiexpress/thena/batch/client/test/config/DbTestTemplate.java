@@ -18,6 +18,8 @@ import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.api.persistence.BatchPrinter;
 import io.digiexpress.thena.batch.client.spi.BatchClientImpl;
 import io.digiexpress.thena.batch.client.spi.persistence.sql.BatchDbImpl;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -53,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DbTestTemplate {
-	private boolean STORE_TO_DEBUG_DB = false;
+	private static boolean STORE_TO_DEBUG_DB = false;
   private BatchClient client;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
@@ -72,6 +74,26 @@ public class DbTestTemplate {
   public DbTestTemplate(BiConsumer<BatchClient, Tenant> callback) {
     this.callback = callback;
   }  
+  
+  
+  protected BatchClient getOrCreateTenant(String defaultName) {
+    return getOrCreateTenant(getClient(), defaultName); 
+  }
+  
+  
+  protected static BatchClient getOrCreateTenant(BatchClient client, String defaultName) {
+    /*if(STORE_TO_DEBUG_DB) {
+      return client.withTenant("batch");   
+    }*/
+    
+    
+    final TenantCommitResult repo = client.manageTenants().commit()
+        .name(defaultName)
+        .build()
+        .await().atMost(atMost);
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    return client.withTenant(repo.getRepo().getId()); 
+  }
   
   private void connectToDebugDb() {
   	if(!STORE_TO_DEBUG_DB) {

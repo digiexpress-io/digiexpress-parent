@@ -36,7 +36,6 @@ import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
 import io.digiexpress.thena.batch.client.test.config.PgProfile;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,9 +53,8 @@ public class DurabilityTest extends DbTestTemplate {
   public DurabilityTest() {
     super((client, tenant) -> {
       
-      final var repo = client.manageTenants().commit().name("durability-test").build().await().atMost(atMost);
-      Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
-      DurabilityTest.client = client.withTenant("durability-test");
+      DurabilityTest.client = getOrCreateTenant(client, "durability-test");
+            
             
       final var config = DurabilityTest.client
           .createBatchConfig()
