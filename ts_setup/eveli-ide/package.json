@@ -13,6 +13,7 @@
   },
   "repository": "git@github.com:digiexpress-io/digiexpress-parent.git",
   "scripts": {
+    "preview": "START_MODE=frontdesk vite preview",
     "start": "START_MODE=frontdesk vite",
     "build": "NODE_ENV=production vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
