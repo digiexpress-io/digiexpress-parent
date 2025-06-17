@@ -975,5 +975,7 @@ export const en = {
   'eveli.userProfile.tenantConfig.select.user_profile': 'User profile enabled',
   'eveli.userProfile.tenantConfig.select.user_profile.desc': 'Show / hide the user profile feature from the UI',
   'eveli.userProfile.tenantConfig.select.visual_accommodation': 'Visual accommodation',
-  'eveli.userProfile.tenantConfig.select.visual_accommodation.desc': 'To make certain buttons and UI items pop for enhanced visibility'
+  'eveli.userProfile.tenantConfig.select.visual_accommodation.desc': 'To make certain buttons and UI items pop for enhanced visibility',
+  'eveli.batches.averageRunTime': 'Average run time',
+  'eveli.batches.averageRunTime.ms': 'ms'
 }

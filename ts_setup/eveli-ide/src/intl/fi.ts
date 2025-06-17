@@ -925,5 +925,7 @@ export const fi = {
   'toolbar.links': 'Linkkiyhteenveto',
   'toolbar.workflows': 'Työnkulkuyhteenveto',
   'toolbar.releases': 'Julkaisut',
-  'toolbar.locales': 'Sijainnit'
+  'toolbar.locales': 'Sijainnit',
+  'eveli.batches.averageRunTime': 'Average run time',
+  'eveli.batches.averageRunTime.ms': 'ms'
 }

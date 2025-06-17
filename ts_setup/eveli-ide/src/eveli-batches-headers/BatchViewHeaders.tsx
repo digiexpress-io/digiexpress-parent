@@ -5,6 +5,7 @@ import { BatchViewHeadersRoot, MUI_NAME, useUtilityClasses } from './useUtilityC
 import { BatchApi } from '@/api-batch';
 import { DateTime } from 'luxon';
 import numbro from 'numbro';
+import { useIntl } from 'react-intl';
 
 
 export interface BatchViewHeadersProps {
@@ -26,6 +27,7 @@ function formatDuration(duration: number) {
 
 export const BatchViewHeaders: React.FC<BatchViewHeadersProps> = (initProps) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
 
   const props = useThemeProps({
     props: initProps,
@@ -41,12 +43,12 @@ export const BatchViewHeaders: React.FC<BatchViewHeadersProps> = (initProps) => 
 
   return (
     <BatchViewHeadersRoot className={classes.root} ownerState={ownerState}>
-      <Box className={classes.instanceSection}>Average run time</Box>
+      <Box className={classes.instanceSection}><Typography className={classes.title}>{intl.formatMessage({ id: 'eveli.batches.averageRunTime' })}</Typography></Box>
 
       {stepNames.map(step => (
         <Box key={step} className={classes.stepSection}>
           <Typography className={classes.title}>{step}</Typography>
-          <Typography className={classes.title}>{formatDuration(averageDurations[step])} ms</Typography>
+          <Typography>{formatDuration(averageDurations[step])}{intl.formatMessage({ id: 'eveli.batches.averageRunTime.ms' })}</Typography>
         </Box>
       ))}
     </BatchViewHeadersRoot>
