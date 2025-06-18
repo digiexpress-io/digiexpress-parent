@@ -1,5 +1,5 @@
 import { BatchApi } from "@/api-batch";
-import { alpha, generateUtilityClass, Stack, styled } from "@mui/material";
+import { alpha, generateUtilityClass, Paper, Stack, styled, Theme } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 
 export const MUI_NAME = 'EveliBatchView';
@@ -93,4 +93,50 @@ export const StyledInstanceSlot = styled(Stack, {
       justifyContent: 'center',
     }
   }
-})
+});
+
+
+export const StyledStepSlot = styled(Paper, {
+  name: MUI_NAME,
+  slot: 'Step',
+  overridesResolver: (props, styles) => {
+    return [
+      styles.stepSlot,
+    ];
+  },
+})<{ value: BatchApi.RuntimeStep }>(({ theme, value }) => {
+
+  const bg_color = getStepBackgroundColor(value.status, theme)
+
+  return {
+    padding: theme.spacing(2),
+    width: sectionWidth.stepSectionWidth,
+    backgroundColor: bg_color
+  }
+});
+
+function getStepBackgroundColor(status: BatchApi.RuntimeStatus, theme: Theme): string {
+  switch (status) {
+    case 'CANCELLED': {
+      return `${alpha(theme.palette.action.disabled, 0.1)}`
+    }
+    case 'COMPLETED': {
+      return `${alpha(theme.palette.success.main, 0.1)}`
+    }
+    //TODO
+    case 'CREATED': {
+      return ''
+    }
+    //TODO
+    case "EXECUTING": {
+      return ''
+    }
+    case 'SKIPPED': {
+      return `${alpha(theme.palette.action.disabled, 0.05)}`
+    }
+    default: {
+      return theme.palette.background.paper;
+    }
+  }
+
+}

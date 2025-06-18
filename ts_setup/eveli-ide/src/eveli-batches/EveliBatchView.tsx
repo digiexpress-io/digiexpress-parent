@@ -1,12 +1,12 @@
 import { BatchApi } from "@/api-batch";
 import { useFetch } from "@dxs-ts/eveli-fetch";
-import { alpha, Badge, Box, Chip, Paper, Stack, Theme, Typography, useTheme } from "@mui/material";
+import { Chip, Paper, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
 import numbro from 'numbro';
 import { BatchViewHeaders } from "../eveli-batches-headers";
-import { EveliBatchViewRoot, StyledInstanceSlot, useUtilityClasses } from "./useUtilityClasses";
+import { EveliBatchViewRoot, StyledInstanceSlot, StyledStepSlot, useUtilityClasses } from "./useUtilityClasses";
 
 
 
@@ -62,34 +62,10 @@ const InstanceSlot: React.FC<{ value: BatchApi.RuntimeInstance }> = ({ value }) 
 }
 
 
-function getStepBackgroundColor(status: BatchApi.RuntimeStatus, theme: Theme): string {
-  switch (status) {
-    case 'CANCELLED': {
-      return `${alpha(theme.palette.action.disabled, 0.1)}`
-    }
-    case 'COMPLETED': {
-      return `${alpha(theme.palette.success.main, 0.1)}`
-    }
-    //TODO
-    case 'CREATED': {
-      return ''
-    }
-    //TODO
-    case "EXECUTING": {
-      return ''
-    }
-    case 'SKIPPED': {
-      return `${alpha(theme.palette.action.disabled, 0.05)}`
-    }
-    default: {
-      return theme.palette.background.paper;
-    }
-  }
-
-}
-
-
 const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.RuntimeInstance }> = ({ value, instance }) => {
+  const classes = useUtilityClasses();
+  const intl = useIntl();
+
   const interval = Interval.fromDateTimes(
     DateTime.fromISO(value.createdAt),
     DateTime.fromISO(value.endedAt ?? value.createdAt)
@@ -98,9 +74,7 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
     thousandSeparated: true,
     mantissa: 0,
   });
-  const theme = useTheme();
 
-  const bg_color = getStepBackgroundColor(value.status, theme)
 
   const metric = instance.transitives?.metrics
     .filter(metric => metric.name === 'batch-metrics')
@@ -108,25 +82,40 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
 
   const format = `~ ${duration} min.`;
   return (
-    <Paper sx={{ padding: 2, width: sectionWidth.stepSectionWidth, backgroundColor: bg_color }}>
-      <div>{format}</div>
-      <div>Status: {value.status}</div>
+    <StyledStepSlot className={classes.stepSlot} value={value}>
+      <Typography>{format}</Typography>
+      <Typography>
+        {intl.formatMessage({ id: 'eveli.batches.stepStatus', defaultMessage: 'Status' })}
+        {intl.formatMessage({ id: 'eveli.textSeparatorColon', defaultMessage: ': ' })}
+        {value.status}
+      </Typography>
       {value.status !== 'SKIPPED' && (
         <>
-          <div>success: {metric?.valueStructured?.map.successCount}</div>
-          <div>fail: {metric?.valueStructured?.map.failCount}</div>
+          <Typography>
+            {intl.formatMessage({ id: 'eveli.batches.stepStatus.sucess', defaultMessage: 'Success' })}
+            {intl.formatMessage({ id: 'eveli.textSeparatorColon', defaultMessage: ': ' })}
+            {metric?.valueStructured?.map.successCount}
+          </Typography>
+
+          <Typography>
+            {intl.formatMessage({ id: 'eveli.batches.stepStatus.failure', defaultMessage: 'Fail' })}
+            {intl.formatMessage({ id: 'eveli.textSeparatorColon', defaultMessage: ': ' })}
+            {metric?.valueStructured?.map.failCount}
+          </Typography>
         </>
       )}
-    </Paper>
+    </StyledStepSlot>
   )
 }
 
 
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const { locale } = useIntl();
+  const intl = useIntl();
+
   const rawDate = value;
   if (!rawDate) {
-    return <div>--</div>
+    return <div>  {intl.formatMessage({ id: 'eveli.noValueIndicator' })}</div>
   }
   const dateTime = DateTime.fromISO(rawDate).setLocale(locale);
   const formatted_date = dateTime.toLocaleString(DateTime.DATE_SHORT);
