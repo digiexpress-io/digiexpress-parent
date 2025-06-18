@@ -1,11 +1,12 @@
 import { BatchApi } from "@/api-batch";
 import { useFetch } from "@dxs-ts/eveli-fetch";
-import { alpha, Badge, Box, Paper, Stack, useTheme } from "@mui/material";
+import { alpha, Badge, Box, Chip, Paper, Stack, Theme, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
 import numbro from 'numbro';
 import { BatchViewHeaders } from "../eveli-batches-headers";
+import { EveliBatchViewRoot, StyledInstanceSlot, useUtilityClasses } from "./useUtilityClasses";
 
 
 
@@ -19,6 +20,7 @@ const sectionWidth: SectionWidth = {
 }
 
 export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
+  const classes = useUtilityClasses();
   const { getOne } = useFetch('worker/rest/api/batches.GET', {});
 
   const { data: batch, error, refetch, isPending } = useQuery({
@@ -33,39 +35,58 @@ export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
   const instances = batch.transitives?.instances ?? [];
 
   return (
-    <Stack spacing={2} direction='column'>
+    <EveliBatchViewRoot className={classes.root}>
       <BatchViewHeaders batch={batch} instanceSectionWidth={sectionWidth.instanceSectionWidth} stepSectionWidth={sectionWidth.stepSectionWidth} />
       {instances.map(instance => (<InstanceSlot key={instance.id} value={instance} />))}
-    </Stack>);
+    </EveliBatchViewRoot>);
 }
 
 const InstanceSlot: React.FC<{ value: BatchApi.RuntimeInstance }> = ({ value }) => {
-  const { palette } = useTheme();
+  const classes = useUtilityClasses();
   const instance = value;
-  const isOk = instance.executionStatus === 'OK';
-
-  const bg_paper = isOk ? alpha(palette.success.light, 0.1) : alpha(palette.error.light, 0.1);
 
 
   return (
-    <Stack direction='row' gap={1}>
-      <Paper sx={{ padding: 2, backgroundColor: bg_paper, width: sectionWidth.instanceSectionWidth }}>
-        <Badge badgeContent={instance.name} color={isOk ? "primary" : "error"}>
-          <Paper sx={{
-            width: '100px', height: '60px', borderRadius: '5px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <AnyDateTimeShort value={instance.createdAt} />
-          </Paper>
-        </Badge>
+    <StyledInstanceSlot className={classes.instanceSlot} ownerState={value}>
+      <Paper className={classes.instanceContainer}>
+        <Chip label={instance.name} size="small" />
+        <Paper className={classes.instanceDateTime}>
+          <AnyDateTimeShort value={instance.createdAt} />
+        </Paper>
       </Paper>
 
       {value.transitives?.steps.map(step => (<StepSlot key={step.id} value={step} instance={instance} />))}
-    </Stack>)
+    </StyledInstanceSlot>
+
+  )
 }
 
 
+function getStepBackgroundColor(status: BatchApi.RuntimeStatus, theme: Theme): string {
+  switch (status) {
+    case 'CANCELLED': {
+      return `${alpha(theme.palette.action.disabled, 0.1)}`
+    }
+    case 'COMPLETED': {
+      return `${alpha(theme.palette.success.main, 0.1)}`
+    }
+    //TODO
+    case 'CREATED': {
+      return ''
+    }
+    //TODO
+    case "EXECUTING": {
+      return ''
+    }
+    case 'SKIPPED': {
+      return `${alpha(theme.palette.action.disabled, 0.05)}`
+    }
+    default: {
+      return theme.palette.background.paper;
+    }
+  }
 
+}
 
 
 const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.RuntimeInstance }> = ({ value, instance }) => {
@@ -77,7 +98,9 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
     thousandSeparated: true,
     mantissa: 0,
   });
+  const theme = useTheme();
 
+  const bg_color = getStepBackgroundColor(value.status, theme)
 
   const metric = instance.transitives?.metrics
     .filter(metric => metric.name === 'batch-metrics')
@@ -85,11 +108,15 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
 
   const format = `~ ${duration} min.`;
   return (
-    <Paper sx={{ padding: 2, width: sectionWidth.stepSectionWidth }}>
-      <div>name: {value.name}</div>
+    <Paper sx={{ padding: 2, width: sectionWidth.stepSectionWidth, backgroundColor: bg_color }}>
       <div>{format}</div>
-      <div>success: {metric?.valueStructured?.map.successCount}</div>
-      <div>fail: {metric?.valueStructured?.map.failCount}</div>
+      <div>Status: {value.status}</div>
+      {value.status !== 'SKIPPED' && (
+        <>
+          <div>success: {metric?.valueStructured?.map.successCount}</div>
+          <div>fail: {metric?.valueStructured?.map.failCount}</div>
+        </>
+      )}
     </Paper>
   )
 }
@@ -105,8 +132,9 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const formatted_date = dateTime.toLocaleString(DateTime.DATE_SHORT);
   const formatted_time = dateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS);
 
-  return (<Stack direction='column'>
-    <div>{formatted_date}</div>
-    <Box sx={{ textAlign: 'center' }}>{formatted_time}</Box>
-  </Stack>);
+  return (
+    <Stack direction='column'>
+      <Typography variant='subtitle2'>{formatted_date}</Typography>
+      <Typography variant='subtitle2'>{formatted_time}</Typography>
+    </Stack>);
 }
