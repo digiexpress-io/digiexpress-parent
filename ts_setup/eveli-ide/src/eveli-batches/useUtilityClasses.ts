@@ -14,11 +14,12 @@ export interface EveliBatchViewClasses {
   instanceDateTime: string;
 }
 
-interface SectionWidth {
+export interface SectionWidth { 
   instanceSectionWidth: string,
   stepSectionWidth: string
 }
-const sectionWidth: SectionWidth = {
+// used in both headers and "body" to ensure that headers and instance/step boxes maintain same size
+export const sectionWidth: SectionWidth = {
   instanceSectionWidth: '300px',
   stepSectionWidth: '200px'
 }
@@ -48,8 +49,6 @@ export const EveliBatchViewRoot = styled(Stack, {
 })<{}>(({ theme, }) => {
   return {
     gap: theme.spacing(1),
-
-
   }
 })
 
@@ -76,6 +75,7 @@ export const StyledInstanceSlot = styled(Stack, {
 
     '& .EveliBatchView-instanceContainer': {
       padding: theme.spacing(2),
+      borderRadius: theme.spacing(0.5),
       backgroundColor: bg_color,
       width: sectionWidth.instanceSectionWidth
     },
@@ -111,25 +111,25 @@ export const StyledStepSlot = styled(Paper, {
   return {
     padding: theme.spacing(2),
     width: sectionWidth.stepSectionWidth,
-    backgroundColor: bg_color
+    backgroundColor: bg_color,
+    borderRadius: theme.spacing(0.5),
+
   }
 });
 
 function getStepBackgroundColor(status: BatchApi.RuntimeStatus, theme: Theme): string {
   switch (status) {
     case 'CANCELLED': {
-      return `${alpha(theme.palette.action.disabled, 0.1)}`
+      return `${alpha(theme.palette.action.disabled, 0.05)}`
     }
     case 'COMPLETED': {
       return `${alpha(theme.palette.success.main, 0.1)}`
     }
-    //TODO
     case 'CREATED': {
-      return ''
+      return theme.palette.background.paper
     }
-    //TODO
     case "EXECUTING": {
-      return ''
+      return theme.palette.background.paper
     }
     case 'SKIPPED': {
       return `${alpha(theme.palette.action.disabled, 0.05)}`

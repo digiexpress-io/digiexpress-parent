@@ -108,6 +108,10 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
 
 const BatchLink: React.FC<{ value: BatchApi.Batch }> = ({ value }) => {
 
+  if (!value.transitives || value.transitives?.instances.length === 0) {
+    return (<>{value.batchName}</>)
+  }
+
   return (
     <Box
       sx={{

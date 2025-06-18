@@ -1,23 +1,14 @@
 import { BatchApi } from "@/api-batch";
 import { useFetch } from "@dxs-ts/eveli-fetch";
-import { Chip, Paper, Stack, Typography } from "@mui/material";
+import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
 import numbro from 'numbro';
 import { BatchViewHeaders } from "../eveli-batches-headers";
-import { EveliBatchViewRoot, StyledInstanceSlot, StyledStepSlot, useUtilityClasses } from "./useUtilityClasses";
+import { EveliBatchViewRoot, StyledInstanceSlot, StyledStepSlot, useUtilityClasses, sectionWidth } from "./useUtilityClasses";
 
 
-
-interface SectionWidth {
-  instanceSectionWidth: string,
-  stepSectionWidth: string
-}
-const sectionWidth: SectionWidth = {
-  instanceSectionWidth: '300px',
-  stepSectionWidth: '200px'
-}
 
 export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
   const classes = useUtilityClasses();
@@ -54,7 +45,6 @@ const InstanceSlot: React.FC<{ value: BatchApi.RuntimeInstance }> = ({ value }) 
           <AnyDateTimeShort value={instance.createdAt} />
         </Paper>
       </Paper>
-
       {value.transitives?.steps.map(step => (<StepSlot key={step.id} value={step} instance={instance} />))}
     </StyledInstanceSlot>
 
@@ -105,6 +95,7 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
         </>
       )}
     </StyledStepSlot>
+
   )
 }
 
@@ -115,7 +106,7 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
 
   const rawDate = value;
   if (!rawDate) {
-    return <div>  {intl.formatMessage({ id: 'eveli.noValueIndicator' })}</div>
+    return <div>{intl.formatMessage({ id: 'eveli.noValueIndicator' })}</div>
   }
   const dateTime = DateTime.fromISO(rawDate).setLocale(locale);
   const formatted_date = dateTime.toLocaleString(DateTime.DATE_SHORT);

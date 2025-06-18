@@ -38,12 +38,14 @@ export const BatchViewHeadersRoot = styled("div", {
   return {
     display: 'flex',
     gap: theme.spacing(1),
+
     '& .BatchViewHeaders-stepSection': {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
       border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.spacing(0.5),
       padding: theme.spacing(2),
       height: '100px',
       width: ownerState.stepSectionWidth
