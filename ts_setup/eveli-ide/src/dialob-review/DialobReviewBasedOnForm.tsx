@@ -1,14 +1,16 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, createTheme, Dialog, DialogActions, DialogContent, DialogTitle, ThemeProvider } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-import { DialobProvider, DialobApi, WithFormProvider, GFormTip, LocaleProvider } from '@dxs-ts/gamut';
+import { DialobProvider, DialobApi, WithFormProvider, GFormTip, LocaleProvider, GThemeOptions } from '@dxs-ts/gamut';
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { DialobReviewProps } from './dialob-review-types';
 
+
+const reviewTheme = createTheme(GThemeOptions);
 
 
 // cross reference to gamut project
@@ -33,33 +35,33 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
 
   return (<>
     <QueryClientProvider client={queryClient}>
-      
-      <DialobProvider
-        fetchActionGet={fetchActionGet}
-        fetchActionPost={'not-implemented' as any}
-        fetchAttachmentPost={'not-implemented' as any}
-        fetchReviewGet={'not-implemented' as any}>
+      <ThemeProvider theme={reviewTheme}>
+        <DialobProvider
+          fetchActionGet={fetchActionGet}
+          fetchActionPost={'not-implemented' as any}
+          fetchAttachmentPost={'not-implemented' as any}
+          fetchReviewGet={'not-implemented' as any}>
 
-        <Dialog open={true} onClose={props.onClose} fullScreen>
-          <DialogTitle>{intl.formatMessage({ id: 'dialobForm.review.title' })}</DialogTitle>
+          <Dialog open={true} onClose={props.onClose} fullScreen>
+            <DialogTitle>{intl.formatMessage({ id: 'dialobForm.review.title' })}</DialogTitle>
 
-          <DialogContent>
-            <LocaleProvider disableErrors defaultLocale={() => intl.locale}>
-              <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete} disabled> 
-                <GFormTip executionId='' variant='' onAfterComplete={handleOnComplete} />
-              </WithFormProvider>
-            </LocaleProvider>
-          </DialogContent>
+            <DialogContent>
+              <LocaleProvider disableErrors defaultLocale={() => intl.locale}>
+                <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete} disabled>
+                  <GFormTip executionId='' variant='' onAfterComplete={handleOnComplete} />
+                </WithFormProvider>
+              </LocaleProvider>
+            </DialogContent>
 
-          <DialogActions>
-            <Button variant='outlined' endIcon={<ArrowRightIcon/>} onClick={()=> pdfTaskLinkCallback(props.questionnaireId, props.taskId)}>
-              <FormattedMessage id='taskLink.pdf.open' />
-            </Button>
-            <Button variant='contained' onClick={props.onClose}><FormattedMessage id='button.close'/></Button>
-          </DialogActions>
-        </Dialog>
-      </DialobProvider>
-
+            <DialogActions>
+              <Button variant='outlined' endIcon={<ArrowRightIcon />} onClick={() => pdfTaskLinkCallback(props.questionnaireId, props.taskId)}>
+                <FormattedMessage id='taskLink.pdf.open' />
+              </Button>
+              <Button variant='contained' onClick={props.onClose}><FormattedMessage id='button.close' /></Button>
+            </DialogActions>
+          </Dialog>
+        </DialobProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   </>)
 }
