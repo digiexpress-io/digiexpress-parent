@@ -42,10 +42,11 @@ public interface GrimMissionStats {
     @Nullable LocalDate getEventDate(); // date for events
     long getEventCount();                         // number of events
     GrimMissionAttributeEventType getEventType(); // number of events for specific attribute
+    @Nullable String getEventSubType();
     String getAttributeValue();// attribute value
   }
   
   enum GrimMissionAttributeEventType {
-    STATUS, PRIORITY, OVERDUE, STATUS_DATE
+    STATUS, PRIORITY, OVERDUE, STATUS_DATE, ROLE, QUESTIONNAIRE
   }
 }

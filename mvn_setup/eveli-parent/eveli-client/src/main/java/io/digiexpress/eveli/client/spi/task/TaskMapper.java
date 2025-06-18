@@ -43,7 +43,7 @@ import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 
 public class TaskMapper {
   public static final String ASSIGNMENT_TYPE_TASK_USER = GrimAssignment.ASSIGNMENT_TYPE_USER;
-  public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
+  public static final String ASSIGNMENT_TYPE_TASK_ROLE = GrimAssignment.ASSIGNMENT_TYPE_TASK_ROLE;
   
   public static final String LABEL_TYPE_KEYWORD = "keyword";
   public static final String LABEL_TYPE_FEATURES = "features";
@@ -157,27 +157,6 @@ public class TaskMapper {
         .filter(e -> TaskMapper.LINK_TYPE_ADDITIONAL_INFO.equals(e.getLinkType()))
         .map(e -> e.getLinkValue())
         .findFirst();
-    
-    /* JPA version
-    
-    return ImmutableTask.builder()
-        .version(task.getVersion())
-        .assignedUser(task.getAssignedUser())
-        .assignedUserEmail(task.getAssignedUserEmail())
-        .clientIdentificator(task.getClientIdentificator())
-        .completed(task.getCompleted())
-        .created(task.getCreated())
-        .description(task.getDescription())
-        .dueDate(task.getDueDate())
-        .id(task.getId())
-        .questionnaireId(task.getQuestionnanireId())
-        .priority(task.getPriority())
-        .status(task.getStatus())
-        .subject(task.getSubject())
-        .taskRef(task.getTaskRef())
-        .updated(task.getUpdated())
-        .updaterId(task.getUpdaterId())
-        .build();*/
     
     final var task = ImmutableTask.builder()
       .version(commited.getCommitId())

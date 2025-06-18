@@ -37,6 +37,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 public interface GrimAssignment extends IsGrimObject, TenantEntity {
   public static final String ASSIGNMENT_TYPE_USER = "task_user"; // dedicated constant for default assignment
+  public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
   
   String getId();
   String getCommitId();
