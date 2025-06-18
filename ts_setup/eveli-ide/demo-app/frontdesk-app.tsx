@@ -36,9 +36,7 @@ declare module '@mui/material' {
 
 function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof window.fetch {
   return async (input: RequestInfo | URL, init?: RequestInit) => {
-
     // my custom fetch, override init
-
     alert("Attachments not supported");
 
     return parentFetch(input, init)
@@ -46,6 +44,28 @@ function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof w
 
         return response;
       });
+  }
+}
+
+function globalFetchOverride(): typeof window.fetch {
+
+  return async (input: RequestInfo | URL, init?: RequestInit) => {
+
+    const override: RequestInit = {
+      ...(init ?? {}),
+      headers: {
+        ...(init?.headers ?? {}),
+        'My-Header': 'Header-1'
+      }
+    }
+
+    console.groupCollapsed('global fetch');
+    console.log(input);
+    console.log('original', init);
+    console.log('override', override);
+    console.groupEnd();
+
+    return window.fetch(input, override)
   }
 }
 
@@ -79,9 +99,11 @@ export const FrontdeskApp: React.FC = () => {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             >
 
-              <FetchProvider tree={fetchtree} initContextPath='/'
+              <FetchProvider 
+                tree={fetchtree.withFetch(globalFetchOverride)} 
+                initContextPath='/'
                 overrides={{
-                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
+                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments
                 }}>
                 <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
                   <TenantConfigContextProvider features={[
