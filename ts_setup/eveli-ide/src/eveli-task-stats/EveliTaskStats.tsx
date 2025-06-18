@@ -7,74 +7,8 @@ import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Toolti
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '../api-task';
-import { useTaskOverdue } from './useTaskOverdue';
-import { useStatusTimeline } from './useStatusTimeline';
-import { usePriorityCount } from './usePriorityCount';
-import { useStatusCount } from './useStatusCount';
-
-const chartPaperStyle = {
-  flex: '1',
-  marginTop: 2,
-  padding: 1,
-  borderRadius: 1
-};
-const chartStyle = {
-  flex: '1',
-  height: 300,
-  marginTop: 2,
-};
-
-const OVERDUE_FILL_COLORS = ['#1976D2', '#388E3C', '#FB8C00', '#D32F2F'];
-
-type StatusColorMap = {
-  [status in TaskApi.TaskStatus]: string
-}
-
-
-const statusColorMap: StatusColorMap = {
-  NEW: '#FB8C00',
-  OPEN: '#388E3C',
-  COMPLETED: '#1976D2',
-  REJECTED: '#D32F2F',
-  TRANSFERRED: 'grey',
-  DELEGATED: 'grey',
-  WAITING: 'yellow'
-
-};
-
-type PriorityColorMap = {
-  [priority in TaskApi.TaskPriority]: string
-}
-
-const priorityColorMap: PriorityColorMap = {
-  LOW: '#388E3C',
-  NORMAL: '#1976D2',
-  HIGH: '#D32F2F',
-};
-
-
-const BarLabel = (props: any) => {
-  const { value, x, y, width } = props;
-
-  if (value > 0) {
-    return (
-      <text
-        x={(x + width / 2) - 5}
-        y={y + 20}
-        style={{
-          fontSize: "12pt",
-          fontWeight: "bold",
-
-        }}
-
-      >
-        {value}
-      </text>
-    );
-  } else {
-    return <text></text>;
-  }
-};
+import { OVERDUE_FILL_COLORS, PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
+import { withDs } from './WithDashboardData';
 
 
 
@@ -94,99 +28,103 @@ export const EveliTaskStats: React.FC = () => {
 
 
 const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard}) => {
-
-  const { taskStatusNames, taskStatusMapping, taskStatusStats } = useStatusCount(dashoard);
-  const { taskPriorityNames, taskPriorityStats } = usePriorityCount(dashoard);
-  const { taskTimelineStats } = useStatusTimeline(dashoard);
-  const { tasksOverdue } = useTaskOverdue(dashoard);
   const intl = useIntl();
+
+  function getStatusName(item: TaskApi.GrimMissionAttributeEvent): string {
+    return intl.formatMessage({id: `task.status.${item.attributeValue.toLocaleLowerCase()}`});
+  }
+  function getPriorityName(item: TaskApi.GrimMissionAttributeEvent): string {
+    return intl.formatMessage({id: `task.priority.${item.attributeValue.toLocaleLowerCase()}`});
+  }
+
 
   return (
     <Container maxWidth='lg'>
       <Grid2 container spacing={2}>
-        <Grid2 size={{ xs: 12, sm: 6, lg: 4 }}>
-          <Paper sx={chartPaperStyle}>
-            <Typography component='h2' fontWeight='bold' gutterBottom>
-              <FormattedMessage id='task.statistics.statusCount' />
-            </Typography>
-            <Box sx={chartStyle}>
-              <ResponsiveContainer width='95%'>
-                <PieChart>
-                  <Pie data={taskStatusNames} dataKey="count" nameKey="status" label>
-                    {taskStatusStats?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={statusColorMap[entry.status]} />
-                    ))}
-                  </Pie>
-                  <Legend verticalAlign='bottom' />
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, lg: 4 }}>
-          <Paper sx={chartPaperStyle}>
-            <Typography component='h2' fontWeight='bold' gutterBottom>
-              <FormattedMessage id='task.statistics.priorityCount' />
-            </Typography>
-            <Box sx={chartStyle}>
-              <ResponsiveContainer width='95%'>
-                <PieChart>
-                  <Pie data={taskPriorityNames} dataKey="count" nameKey="priority" label>
-                    {taskPriorityStats?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={priorityColorMap[entry.priority]} />
-                    ))}
-                  </Pie>
-                  <Legend verticalAlign='bottom' />
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, lg: 4 }}>
-          <Paper sx={chartPaperStyle}>
-            <Typography component='h2' fontWeight='bold' gutterBottom>
-              <FormattedMessage id='task.statistics.overdue' />
-            </Typography>
-            <Box sx={chartStyle}>
-              <ResponsiveContainer width='95%'>
-                <PieChart>
-                  <Pie data={tasksOverdue} dataKey="count" nameKey="assignedId" label>
-                    {tasksOverdue?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={OVERDUE_FILL_COLORS[index % OVERDUE_FILL_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Legend verticalAlign='bottom' />
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 12, lg: 12 }}>
-          <Paper sx={chartPaperStyle}>
-            <Typography component='h2' fontWeight='bold' gutterBottom>
-              <FormattedMessage id='task.statistics.daily' />
-            </Typography>
-            <Box sx={chartStyle}>
-              <ResponsiveContainer width='95%'>
-                <BarChart data={taskTimelineStats} >
-                  <XAxis dataKey="statusDate" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Legend verticalAlign='bottom' />
-                  {(['NEW', 'COMPLETED', 'REJECTED'] as TaskApi.TaskStatus[]).map((status, index) => {
-                    return (<Bar key={index} dataKey={status.toLowerCase()}
-                      name={intl.formatMessage({ id: taskStatusMapping[status] })}
-                      fill={statusColorMap[status]} label={<BarLabel />}
-                      stackId={status === 'COMPLETED' || status === 'REJECTED' ? 'closed' : undefined} />)
-                  })}
-                </BarChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Grid2>
+        
+        <PieChartSlot 
+          label={<FormattedMessage id='task.statistics.statusCount' />}
+          pie={ withDs(dashoard)
+            .intl(getStatusName)
+            .fill(item => statusColorMap[item.attributeValue as TaskApi.TaskStatus])
+            .filter(item => item.eventType === 'STATUS')
+            .map(data => <Pie label dataKey="eventCount" nameKey="intl" data={data} >
+                {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+              </Pie>)
+          }
+        />
+
+        <PieChartSlot 
+          label={<FormattedMessage id='task.statistics.priorityCount' />}
+          pie={withDs(dashoard)
+            .intl(getPriorityName)
+            .fill(item => priorityColorMap[item.attributeValue as TaskApi.TaskPriority])
+            .filter(item => item.eventType === 'PRIORITY')
+            .map(data => <Pie label dataKey="eventCount" nameKey="intl" data={data} >
+                {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+              </Pie>)
+          }
+        />
+
+        <PieChartSlot 
+          label={<FormattedMessage id='task.statistics.overdue' />}
+          pie={withDs(dashoard)
+            .filter(item => item.eventType === 'OVERDUE')
+            .map(data => <Pie label dataKey="eventCount" nameKey="intl" data={data} >
+                {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+              </Pie>)
+          }
+        />
+
+
+        <PieChartSlot
+          label={<FormattedMessage id='task.statistics.new_task_by_role' />}
+          pie={withDs(dashoard)
+            .filter(item => item.eventType === 'ROLE' && item.eventSubType === 'NEW')
+            .map(data => <Pie dataKey="eventCount" nameKey="intl" data={data} legendType='none'>
+                {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+              </Pie>)
+          }
+        />
+        <PieChartSlot
+          label={<FormattedMessage id='task.statistics.open_task_by_role' />}
+          pie={withDs(dashoard)
+            .filter(item => item.eventType === 'ROLE' && item.eventSubType === 'OPEN')
+            .map(data => <Pie dataKey="eventCount" nameKey="intl" data={data} legendType='none'>
+                {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+              </Pie>)}
+        />
+
+        <PieChartSlot
+          label={<FormattedMessage id='task.statistics.task_by_questionnaire' />}
+          pie={withDs(dashoard)
+            .filter(item => item.eventType === 'QUESTIONNAIRE')
+            .map(data => <Pie dataKey="eventCount" nameKey="intl" data={data} legendType='none'>
+                {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+              </Pie>)
+          }
+        />
+
+        <BarChartSlot 
+          label={<FormattedMessage id='task.statistics.daily' />}
+          bar={
+            withDs(dashoard)
+              .filter(item => item.eventType === 'STATUS_DATE')
+              .groupByDate(data => <BarChart data={data.filter(({ eventAgeInMonths }) => eventAgeInMonths < 6) } >
+                <XAxis dataKey="eventDate" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Legend verticalAlign='bottom' />
+                {(['NEW', 'COMPLETED', 'REJECTED'] as TaskApi.TaskStatus[]).map((status, index) => 
+                   (<Bar key={index} dataKey={status.toLowerCase()}
+                    name={getStatusName({ attributeValue: status } as any)}
+                    fill={statusColorMap[status]} label={<BarLabel />}
+                    stackId={status === 'COMPLETED' || status === 'REJECTED' ? 'closed' : undefined} />)
+                )}
+              </BarChart>)
+           }
+        />
+
       </Grid2>
     </Container>
   );
