@@ -1,6 +1,6 @@
 import { BatchApi } from "@/api-batch";
 import { useFetch } from "@dxs-ts/eveli-fetch";
-import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
+import { Chip, Paper, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
@@ -12,6 +12,8 @@ import { EveliBatchViewRoot, StyledInstanceSlot, StyledStepSlot, useUtilityClass
 
 export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
+
   const { getOne } = useFetch('worker/rest/api/batches.GET', {});
 
   const { data: batch, error, refetch, isPending } = useQuery({
@@ -27,6 +29,7 @@ export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
 
   return (
     <EveliBatchViewRoot className={classes.root}>
+      <Typography variant='h1'>{intl.formatMessage({ id: 'eveli.batches.title', defaultMessage: 'Batches' })}</Typography>
       <BatchViewHeaders batch={batch} instanceSectionWidth={sectionWidth.instanceSectionWidth} stepSectionWidth={sectionWidth.stepSectionWidth} />
       {instances.map(instance => (<InstanceSlot key={instance.id} value={instance} />))}
     </EveliBatchViewRoot>);
