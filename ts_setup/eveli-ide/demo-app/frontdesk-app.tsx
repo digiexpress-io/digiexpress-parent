@@ -47,6 +47,23 @@ function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof w
   }
 }
 
+
+function fetchGroupMembership(parentFetch: typeof window.fetch): typeof window.fetch {
+  return async (input: RequestInfo | URL, init?: RequestInit) => {
+    const resp: Response = {
+      ok: true,
+      json: async () => []
+    } as any;
+    return resp;
+  }
+}
+
+const globalEvents: {}[] = [];
+console.groupCollapsed('global fetch');
+console.log(globalEvents);
+console.groupEnd();
+
+
 function globalFetchOverride(): typeof window.fetch {
 
   return async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -55,15 +72,12 @@ function globalFetchOverride(): typeof window.fetch {
       ...(init ?? {}),
       headers: {
         ...(init?.headers ?? {}),
-        'My-Header': 'Header-1'
+        'My-Header': 'Header-1',
+        'Content-Type': 'application/json'
       }
     }
 
-    console.groupCollapsed('global fetch');
-    console.log(input);
-    console.log('original', init);
-    console.log('override', override);
-    console.groupEnd();
+    globalEvents.push({ input, override });
 
     return window.fetch(input, override)
   }
@@ -103,7 +117,8 @@ export const FrontdeskApp: React.FC = () => {
                 tree={fetchtree.withFetch(globalFetchOverride)} 
                 initContextPath='/'
                 overrides={{
-                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments
+                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
+                  '$org/groupMembership.GET': fetchGroupMembership
                 }}>
                 <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
                   <TenantConfigContextProvider features={[
