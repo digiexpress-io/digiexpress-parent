@@ -91,9 +91,9 @@ export const GSearchMuiPopover = styled(Popover, {
       backgroundColor: theme.palette.primary.contrastText,
     },
     '& .GPopoverSearch-title': {
-      ...theme.typography.h1,
+      ...theme.typography.body1,
+      fontWeight: 'bold',
       marginRight: theme.spacing(1),
-      textAlign: 'center'
     },
     '& .GPopoverSearch-titleContainer': {
       display: 'flex',
@@ -138,7 +138,13 @@ export const GSearchMuiPopover = styled(Popover, {
     },
     '& .GPopoverSearch-resultsContainer': {
       paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '1000px',
+      },
     },
     '& .GPopoverSearch-resultsDividerTitle': {
       ...theme.typography.h1,
@@ -160,29 +166,35 @@ export const GSearchMuiPopover = styled(Popover, {
     },
 
     '& .MuiPopover-paper': {
-      minWidth: '100%',
-      left: '0px !important',
+      left: '50% !important',
+      transform: 'translateX(-50%) !important',
+      minWidth: '60%',
+      margin: '0 auto',
       borderRadius: 'unset',
-      padding: theme.spacing(1),
+      paddingTop: theme.spacing(3),
       maxHeight: '60vh',
       overflowY: 'auto',
-      transform: 'translateY(0)',
-
-      [theme.breakpoints.down('sm')]: {
-        padding: theme.spacing(2),
-        width: '100vw',
+    
+      [theme.breakpoints.down('md')]: {
+        left: '0px !important',
+        transform: 'none !important',
+        width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
         minHeight: '100vh',
+        padding: theme.spacing(2),
         overflow: 'auto',
         top: '0px !important',
       },
-    },
+    },    
+    
     '& .MuiLink-root': {
       display: 'block',
       textDecoration: 'none',
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
-      color: theme.palette.primary.dark,
-      fontWeight: theme.typography.fontWeightMedium,
+      fontWeight: 'bold',
+      color: theme.palette.text.primary,
       '&:focus, &:hover, &:visited, &:link, &:active': {
         textDecoration: 'underline'
       }
@@ -202,7 +214,8 @@ export const GSearchMuiPopover = styled(Popover, {
       fontSize: '6pt',
       marginRight: theme.spacing(1),
       color: theme.palette.primary.main
-    },    
+    },
+    
   };
 });
 

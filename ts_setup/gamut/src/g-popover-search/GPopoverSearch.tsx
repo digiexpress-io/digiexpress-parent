@@ -130,7 +130,13 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   return (
     <Root className={classes.root} ownerState={props}>
       <GPopoverButton onClick={anchor.onClick} label={<FormattedMessage id='gamut.buttons.search' />} icon={<SearchIcon />} />
-      <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open} marginThreshold={0}>
+      <GSearchMuiPopover
+        {...anchor.anchorProps}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={anchor.anchorProps.open}
+        marginThreshold={0}
+      >
         <Box className={classes.logoBox}>
           <GLogo variant='black_sm' />
           <Box onClick={() => anchor.anchorProps.onClose()}><CloseIcon /></Box>
@@ -138,12 +144,15 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
         <div className={classes.layoutContainer}>
           <Grid2>
-            <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>
-            <Grid2 size={{ lg: 12, xl: 12 }} className={classes.titleContainer}>
+            <Grid2 className={classes.titleContainer}>
+              <Typography className={classes.title}>
+                {intl.formatMessage({ id: 'gamut.search.popover.title' })}
+              </Typography>
               <TextField
                 className={classes.inputField}
                 placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })}
-                onChange={({ currentTarget }) => setState(prev => prev!.find(currentTarget.value))} />
+                onChange={({ currentTarget }) => setState(prev => prev!.find(currentTarget.value))}
+              />
             </Grid2>
 
             <Grid2 size={{ lg: 3, xl: 3 }} />
