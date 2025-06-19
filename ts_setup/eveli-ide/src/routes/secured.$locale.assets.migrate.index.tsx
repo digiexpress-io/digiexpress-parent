@@ -6,7 +6,6 @@ import { FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { PublicationApi } from '@/api-publications';
-import { useLocale } from '@/api-locale'
 import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-nav';
 import { CancelButton } from '@/eveli-styles';
 
@@ -18,15 +17,12 @@ export const Route = createFileRoute({
 
 function Component() {
   const { locale } = Route.useParams();
-  const { setLocale } = useLocale();
+  
   
   const inputFile = React.useRef<HTMLInputElement>(null);
   const [uploadErrorText , setUploadErrorText] = React.useState<string>();
   const [open, setOpen] = React.useState(true);
-
-
   const { migrateAsset } = useFetch('worker/rest/api/assets/migration.POST', {});
-  React.useLayoutEffect(() => setLocale(locale), [locale])
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     try {

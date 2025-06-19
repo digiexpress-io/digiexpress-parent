@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { useLocale } from '@/api-locale'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { StencilApi } from '@/api-stencil';
 import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-nav';
@@ -23,17 +22,12 @@ const MergedToolbar: React.FC = () => {
 }
 
 function Component() {
-  const { locale } = Route.useParams();
-  const { setLocale } = useLocale();
-
   const { getSite } = useFetch('worker/rest/api/assets/stencil.GET', {});
   const { delete: del } = useFetch('worker/rest/api/assets/stencil/$assetType.DELETE', {});
   const { create } = useFetch('worker/rest/api/assets/stencil/$assetType.POST', {});
   const { update } = useFetch('worker/rest/api/assets/stencil/$assetType.PUT', {});
   const { getReleaseContent } = useFetch('worker/rest/api/assets/stencil/releases/$releaseId.GET', {});
   const { getSiteCommitLog } = useFetch('worker/rest/api/assets/stencil/commitlogs.GET', {})
-
-  React.useLayoutEffect(() => setLocale(locale), [locale])
 
   const service = React.useMemo(() => {
     const store: StencilApi.StencilRestApi = { getSite, delete: del, create, update, getReleaseContent, getSiteCommitLog };

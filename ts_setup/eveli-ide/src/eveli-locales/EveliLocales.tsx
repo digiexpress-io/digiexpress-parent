@@ -7,7 +7,8 @@ import { FormattedMessage } from 'react-intl';
 import { useAnchor } from './useAnchor';
 import { MUI_NAME, EveliLocalesRoot, EveliLocalesLanguageSelect, useUtilityClasses } from './useUtilityClasses';
 import { EveliOverridableComponent } from '../api-variants';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import { useLocale } from '@/api-locale';
 
 
 export interface EveliLocalesProps {
@@ -19,9 +20,10 @@ export interface EveliLocalesProps {
 }
 
 export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
+  const loc = useLocation();
   const navigate = useNavigate();
   const params = useParams({ from: '/secured/$locale' });
-  
+  const { setLocale } = useLocale();
 
   const { anchorProps, onClick: anchorOnClick, onClose: anchorOnClose } = useAnchor();
 
@@ -45,12 +47,17 @@ export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
 
 
   function handleChange(locale: string) {
-
+    const newPath = loc.pathname.replace(`/${params.locale}/`, `/{$locale}/`);
     navigate({
-      to: '..',
-      params: (params: any) => ({ ...params, locale }),
-      search: (prev: any) => prev
+      to: newPath,
+      params: (params: any) => {
+        return { ...params, locale };
+      },
+      search: (prev: any) => {
+        return prev;
+      }
     });
+    setLocale(locale);
     onClick ? onClick(locale) : null;
   }
 

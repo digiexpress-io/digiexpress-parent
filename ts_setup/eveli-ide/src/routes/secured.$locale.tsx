@@ -11,7 +11,7 @@ export const Route = createFileRoute({
 function Component() {
   const iam = useIam();
   const { locale } = useLocale();
-  
+
   if (iam.authType === 'ANON') {
     return (
       <Navigate

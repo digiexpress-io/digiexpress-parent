@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLocale } from '@/api-locale'
 import { UpsertOneFeedback } from '@/eveli-task-feedback';
 import { FeedbackProvider } from '@/api-feedback';
 
@@ -9,11 +8,7 @@ export const Route = createFileRoute({
 })
 
 function Component() {
-  const { locale, feedbackId } = Route.useParams();
-  const { setLocale } = useLocale();
-
-  React.useLayoutEffect(() => setLocale(locale), [locale])
-
+  const { feedbackId } = Route.useParams();
   function handleOnComplete() {
   }
   
