@@ -78,7 +78,7 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
   });
 
   const views = siteQuery.data?.views;
-  const site = siteQuery.data?.site;
+  const site = siteQuery.data?.site ?? maintainace_en;
   const pending = siteQuery.isPending;
   const feedback = siteQuery.isPending ? [] : (feedbackQuery.data ?? []);
 
