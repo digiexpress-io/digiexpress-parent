@@ -3,7 +3,7 @@ import { useThemeProps, Divider, Link, Box, useMediaQuery, useTheme, Theme } fro
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CircleIcon from '@mui/icons-material/Circle';
 import CloseIcon from '@mui/icons-material/Close';
-
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { FormattedMessage } from 'react-intl'
 import { GDivider } from '../g-divider';
 import { SiteApi, useSite } from '../api-site';
@@ -42,12 +42,15 @@ export type GPopoverTopicsSlotProps = AnchorProps & {
 export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
   const { themeProps, classes, anchor, groups, topics, iconRotated, handleOnTopic, PopoverSlot, isPopoverSlotEnabled } = useOwnerState(initProps);
 
-  const GTopicLinkSlot: React.ElementType<GTopicLinkProps> = themeProps.slots?.link ?? ((props: GTopicLinkProps) => (
+  const GTopicLinkSlot: React.ElementType<GTopicLinkProps> = themeProps.slots?.link ?? ((props: GTopicLinkProps) => (<>
     <Link className={props.className} onClick={(event) => { props.onClick ? props.onClick(props.children, event) : null }}>
-      {props.isChild === true && <CircleIcon />}
-      {props.children.name}
-      {props.children.children?.length > 0 && <span style={{ marginLeft: 4 }}>{'>'}</span>}
+      <Box display='flex' alignItems='center'>
+        {props.isChild === true && <CircleIcon />}
+        {props.children.name}
+        {themeProps.hideChildren && props.children.children?.length > 0 && (<KeyboardArrowRightIcon color='primary' />)}
+      </Box>
     </Link>
+  </>
   )
   );
 
@@ -85,9 +88,9 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
                         onClick={handleOnTopic}
                         className={isChild ? classes.childTopic : undefined}
                       />
-                      )
-                    }
-                    )}
+                    )
+                  }
+                  )}
                 </div>
                 <GDivider index={index} total={topics.length}><Divider flexItem orientation='vertical' /></GDivider>
               </React.Fragment>

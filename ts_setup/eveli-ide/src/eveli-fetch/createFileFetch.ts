@@ -17,6 +17,9 @@ export class RootFileFetch {
   get(key: keyof HookByPath) {
     return this.children[key];
   }
+  withFetch(overrideFetch: () => typeof window.fetch) {
+    return new RootFileFetch(this.contextPath, this.children, overrideFetch);
+  }
 }
 
 

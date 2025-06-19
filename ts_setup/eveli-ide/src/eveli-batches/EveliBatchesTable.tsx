@@ -9,7 +9,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 
 import { useNavigate } from '@tanstack/react-router';
 import { BatchApi } from '@/api-batch';
-import { BatchHealthBall } from './BatchHealthBall';
+import { BatchHealthBall } from '../eveli-batches-health-ball';
 import { DateTime } from 'luxon';
 
 
@@ -107,6 +107,10 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
 }
 
 const BatchLink: React.FC<{ value: BatchApi.Batch }> = ({ value }) => {
+
+  if (!value.transitives || value.transitives?.instances.length === 0) {
+    return (<>{value.batchName}</>)
+  }
 
   return (
     <Box

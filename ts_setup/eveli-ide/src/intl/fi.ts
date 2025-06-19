@@ -2,7 +2,7 @@ export const fi = {
   'document.title': 'DigiExpress',
   'booleanValue.true': 'Kyllä',
   'booleanValue.false': 'Ei',
-  'eveli.textSeparatorColon': ':',
+  'eveli.textSeparatorColon': ': ',
   'eveli.noValueIndicator': '--',
   'eveli.permissions.none.title': 'Joitain meni väärin!',
   'eveli.permissions.none.desc1': 'Sinulla ei ole oikeuksia tämän sovelluksen käyttöön',

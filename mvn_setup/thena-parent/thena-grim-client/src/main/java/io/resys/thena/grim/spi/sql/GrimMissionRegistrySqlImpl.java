@@ -493,6 +493,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     params.add(GrimMissionAttributeEventType.PRIORITY.name());
     params.add(GrimMissionAttributeEventType.OVERDUE.name());
     params.add(GrimAssignment.ASSIGNMENT_TYPE_USER);
+    params.add(GrimAssignment.ASSIGNMENT_TYPE_TASK_ROLE);
     
 
     return ImmutableSqlTuple.builder().value(new SqlStatement()
@@ -519,7 +520,8 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       .append("  count(*) as events_total,").ln()
       .append("  $1 as event_type,").ln()
       .append("  status_date_events.event_date as event_date, ").ln()
-      .append("  mission_status.value as attribute_value").ln()
+      .append("  mission_status.value as attribute_value,").ln()
+      .append("  null as event_sub_type").ln()
       .append("from mission_status ").ln()
       .append("left join status_date_events").ln()
       .append("  on(mission_status.value = status_date_events.mission_status)").ln()
@@ -532,7 +534,8 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       .append("  count(*) as events_total,").ln()
       .append("  $2 as event_type,").ln()
       .append("  null as event_date,").ln()
-      .append("  mission.mission_status as attribute_value").ln()
+      .append("  mission.mission_status as attribute_value,").ln()
+      .append("  null as event_sub_type").ln()
       .append("from ").append(options.getGrimMission()).append(" as mission").ln()
       .append("  group by mission.mission_status").ln()
 
@@ -543,19 +546,22 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       .append("  count(*) as events_total,").ln()
       .append("  $3 as event_type,").ln()
       .append("  null as event_date,").ln()
-      .append("  mission.mission_priority as attribute_value").ln()
+      .append("  mission.mission_priority as attribute_value,").ln()
+      .append("  null as event_sub_type").ln()
       .append("from ").append(options.getGrimMission()).append(" as mission").ln()
       .append("  group by mission.mission_priority").ln()
       
       .append("union").ln()
       
       
-      // count overdue values
+      // count overdue values by user
       .append("select")
       .append("  count(*) as events_total,").ln()
       .append("  $4 as event_type,").ln()
       .append("  null as event_date,").ln()
-      .append("  coalesce(assignment.assignee, '__nobody') as attribute_value").ln()
+      .append("  coalesce(assignment.assignee, '__nobody') as attribute_value,").ln()
+      .append("  null as event_sub_type").ln()
+      
       .append("from ").append(options.getGrimMission()).append(" as mission").ln()
       .append("  left join ").append(options.getGrimAssignment()).append(" as assignment").ln()
       .append("  on(assignment.assignment_type = $5 and mission.id = assignment.mission_id)").ln()
@@ -563,6 +569,36 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
       .append("  where mission.mission_due_date < current_timestamp::date").ln()
       .append("  group by assignment.assignee").ln()
     
+      .append("union").ln()
+      
+      // count status and group
+      .append("select")
+      .append("  count(*) as events_total,").ln()
+      .append("  'ROLE' as event_type,").ln()
+      .append("  null as event_date,").ln()
+      .append("  coalesce(assignment.assignee, '__nobody') as attribute_value,").ln()
+      .append("  mission.mission_status as event_sub_type").ln()
+      
+      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append("  left join ").append(options.getGrimAssignment()).append(" as assignment").ln()
+      .append("  on(assignment.assignment_type = $6 and mission.id = assignment.mission_id)").ln()
+      .append("  where mission.mission_status is not null")
+      .append("  group by mission.mission_status, assignment.assignee").ln()
+
+      .append("union").ln()
+      
+      // count by questionnaire type
+      .append("select")
+      .append("  count(*) as events_total,").ln()
+      .append("  'QUESTIONNAIRE' as event_type,").ln()
+      .append("  null as event_date,").ln()
+      .append("  mission.mission_title as attribute_value,").ln()
+      .append("  null as event_sub_type").ln()
+      
+      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append("  where mission.questionnaire_id is not null")
+      .append("  group by mission.mission_title").ln()
+      
       .build())
       .props(Tuple.from(params))
     .build();
@@ -575,6 +611,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .eventCount(row.getLong("events_total"))
         .eventDate(Optional.ofNullable(row.getLocalDate("event_date")).orElse(null))
         .eventType(GrimMissionStats.GrimMissionAttributeEventType.valueOf(row.getString("event_type")))
+        .eventSubType(row.getString("event_sub_type"))
         .attributeValue(row.getString("attribute_value"))
         .build();
   }

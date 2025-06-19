@@ -57,7 +57,7 @@ Before starting the backend, make sure the database is up and running.
 
 1. **Navigate to the Docker setup directory**:
    ```bash
-   cd /digiexpress-parent/mvn_setup/eveli-parent/eveli-local-docker
+   cd mvn_setup/eveli-parent/eveli-local-docker
    ```
 
 2. **Start the Docker containers**:
@@ -81,7 +81,7 @@ To build and run the backend:
 2. **Navigate to the `eveli-app` directory and start the Spring Boot application**:
    ```bash
    cd eveli-parent/eveli-app
-   mvn clean spring-boot:run
+   mvn spring-boot:run
    ```
 
 
@@ -89,14 +89,11 @@ To build and run the backend:
 
 There are two **TypeScript frontend** applications:
 
-##### **Eveli-IDE**
-- Mikki refers to it as "front office, front desk".
-- Vahur refers to it as "task management".
-- This is the **worker interface** for managing tasks. It’s designed for officials to review, respond to, and make decisions on citizen-submitted applications via the Gamut portal.
+##### Frontdesk (Eveli-IDE)
+- This is the **worker interface** for managing tasks. It’s designed for officials to review, respond to, and make decisions on citizen-submitted applications via the **Portal**.
 
-##### **Gamut**
-- Mikki and Vahur call it the "portal".
-- This is the **citizen interface** for submitting applications, requests, or tasks. Citizens use Gamut to initiate processes that are later handled in Eveli-IDE.
+##### Portal (Gamut)
+- This is the **citizen interface** for submitting applications, requests, or tasks. Citizens use Gamut to initiate processes that are later handled in **Frontdesk**.
 
 To run either of the frontend applications:
 
@@ -115,6 +112,6 @@ To run either of the frontend applications:
 
 #### 4. Project Overview
 
-- **Eveli-IDE**: Task management interface for workers.
+- **Eveli-IDE**: Frontdesk interface for workers. 
 - **Gamut**: Portal interface for citizens.
 - **Backend**: Java-based service handling core business logic and operations.

@@ -10,7 +10,6 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
 import { EveliSetup } from '@/eveli-setup';
-import { useLocale } from '@/api-locale';
 import { EveliApp } from '@/eveli-app';
 import { Button } from '@mui/material';
 
@@ -19,11 +18,6 @@ export const Route = createFileRoute({
 })
 
 function Component() {
-  const { locale } = Route.useParams();
-
-  const { setLocale } = useLocale();
-  React.useLayoutEffect(() => setLocale(locale), [locale])
-
   return (<EveliApp main={Main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
 
 }

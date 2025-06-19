@@ -5,7 +5,6 @@ import { HdesApi } from '@/api-wrench';
 import { WrenchComposerApi, WrenchSetup } from '@/wrench-setup';
 import { EveliApp } from '@/eveli-app';
 import { parseWrenchSearchParams, WrenchRouteSearchParams } from '@/wrench-nav';
-import { useLocale } from '@/api-locale';
 import { EveliSetup } from '@/eveli-setup';
 import { WrenchStickySave } from '@/wrench-sticky-save';
 
@@ -17,9 +16,6 @@ export const Route = createFileRoute({
 
 
 function Component() {
-  const { locale } = Route.useParams();
-  const { setLocale } = useLocale();
-  React.useLayoutEffect(() => setLocale(locale), [locale])
 
   const { ast } = useFetch('worker/rest/api/assets/wrench/commands.POST', {})
   const { copy } = useFetch('worker/rest/api/assets/wrench/copyas.POST', {})

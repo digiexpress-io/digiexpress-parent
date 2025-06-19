@@ -2,7 +2,7 @@ export const sv = {
   'document.title': 'DigiExpress',
   'booleanValue.true': 'Ja',
   'booleanValue.false': 'Inga',
-  'eveli.textSeparatorColon': ':',
+  'eveli.textSeparatorColon': ': ',
   'eveli.noValueIndicator': '--',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'Du har inte rätt åtkomsträttigheter för att använda denna applikation.',

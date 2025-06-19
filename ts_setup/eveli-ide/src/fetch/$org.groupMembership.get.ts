@@ -22,10 +22,14 @@ function hook(props: {}) {
       if (!filteredGroups) {
         return [];
       }
-      
+      const restApi = url({ org: '' }).substring(1) + `/?groupName=${filteredGroups}`;
       return params
-        .fetch(url({ org: '' }).substring(1)+ `/?groupName=${filteredGroups}`)
-        .then(response => response.json());
+        .fetch(restApi)
+        .then(response => response.json())
+        .catch(e => {
+          console.warn(`Disabled rest api: ${restApi}`);
+          return [];
+        });
     }
   }
 }

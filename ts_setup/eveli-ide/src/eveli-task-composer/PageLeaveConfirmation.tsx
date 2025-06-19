@@ -15,6 +15,14 @@ export const PageLeavingConfirmation: React.FC<{
   const intl = useIntl();
   const { proceed, reset, status } = useBlocker({
     shouldBlockFn: ({ current, next }) => {
+      const oldLocale = current.params.locale;
+      const newLocale = next.params.locale;
+      if(!oldLocale || !newLocale) {
+        return navigationConfirmationRequired();
+      }
+      if(oldLocale != newLocale && current.pathname === next.pathname.replace(`/${newLocale}/`, `/${oldLocale}/`)) {
+        return false;
+      }
       return navigationConfirmationRequired();
     },
     enableBeforeUnload: false,

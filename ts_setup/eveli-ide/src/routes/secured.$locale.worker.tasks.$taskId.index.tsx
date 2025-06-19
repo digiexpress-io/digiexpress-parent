@@ -1,7 +1,4 @@
-import React from 'react'
-
 import { Container } from '@mui/material';
-import { useLocale } from '@/api-locale';
 import { EveliTaskComposer } from '@/eveli-task-composer';
 
 export const Route = createFileRoute({
@@ -9,10 +6,7 @@ export const Route = createFileRoute({
 })
 
 function Component() {
-  const { locale, taskId } = Route.useParams();
-  const { setLocale } = useLocale();
-
-  React.useLayoutEffect(() => setLocale(locale), [locale])
+  const { taskId } = Route.useParams();
 
   return (
     <Container maxWidth='lg'>

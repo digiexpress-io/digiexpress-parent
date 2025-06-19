@@ -40,12 +40,12 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
 
   const Item: React.ElementType<GContractItemProps> = props.slots?.item ?? GContractItem;
 
-  function mapToItem(contract: ContractApi.Contract): GContractItemProps & { key: string } {
+  function mapToItem(contract: ContractApi.Contract): GContractItemProps & { id: string } {
 
     const offerName = getLocalisedOfferName(site!, contract.offer.name);
 
     return {
-      key: contract.id,
+      id: contract.id,
       referenceId: contract.referenceId,
       exchangeId: contract.exchangeId,
       name: offerName,
@@ -84,7 +84,7 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
       {contracts
         .filter(props.filter)
         .map(mapToItem)
-        .map(contract => (<Item {...contract} />))}
+        .map(contract => (<Item key={contract.id} {...contract} />))}
     </Root>)
 }
 

@@ -99,8 +99,6 @@ export namespace TaskApi {
     DELEGATED: Colors.GREY,
     WAITING: Colors.GREY
   };
-
-
 }
 
 export declare namespace TaskApi {
@@ -180,13 +178,13 @@ export declare namespace TaskApi {
   }
 
   export interface GrimMissionAttributeEvent {
-    eventDate: string;
+    eventDate: string | undefined;
     eventCount: number;
     eventType: GrimMissionAttributeEventType;
-    attributeValue: string
+    eventSubType: string | undefined;
+    attributeValue: string;
   }
-  
 
-  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE');
+  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');
 
 }
