@@ -58,13 +58,14 @@ export const BatchViewHeadersRoot = styled("div", {
     },
     '& .BatchViewHeaders-instanceSection': {
       display: 'flex',
-      justifyContent: 'right',
-      alignItems: 'flex-end',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
       padding: theme.spacing(2),
+      textAlign: 'right',
       width: ownerState.instanceSectionWidth
     },
     '& .BatchViewHeaders-title': {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     }
   }
 })
