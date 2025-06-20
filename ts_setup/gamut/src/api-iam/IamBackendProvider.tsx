@@ -95,6 +95,37 @@ function createContext(
     return (userProducts?.products ?? []).includes(form.value);
   }
 
+  const getFormLinkAuthType = (link: SiteApi.TopicLink | undefined): IamApi.FormLinkAuthType => {
+    if (!link) {
+      return 'IS_FORM_DISABLED';
+    }
+
+    const allowed: boolean = link ? isFormLinkEnabled(link) : false;
+
+    const isAnon = authType === 'ANON';
+    if (isAnon) {
+      return (allowed ?
+        'IS_ANON_FORM_ENABLED' :
+        'IS_ANON_FORM_DISABLED');
+    }
+
+    const isRep = !!(user?.representedCompany || user?.representedPerson);
+    if (isRep) {
+      return (allowed ?
+        'IS_REP_ENABLED' :
+        'IS_REP_DISABLED');
+    }
+
+    const isUser = authType === 'USER';
+    if (isUser) {
+      return (allowed ?
+        'IS_USER_FORM_ENABLED' :
+        'IS_USER_FORM_DISABLED');
+    }
+
+    return 'IS_FORM_DISABLED';
+  }
+
   return Object.freeze({
     authType, user, userRoles, userProducts,
     userName, 
@@ -106,40 +137,7 @@ function createContext(
       return data;
     },
     isFormLinkEnabled,
-
-    getFormLinkAuthType: (link: SiteApi.TopicLink | undefined): IamApi.FormLinkAuthType => {
-      const iam = useIam();
-      if (!link) {
-        return 'IS_FORM_DISABLED';
-      }
-
-      const { user, authType } = iam;
-      const allowed: boolean = link ? iam.isFormLinkEnabled(link) : false;
-
-      const isAnon = authType === 'ANON';
-      if (isAnon) {
-        return (allowed ?
-          'IS_ANON_FORM_ENABLED' :
-          'IS_ANON_FORM_DISABLED');
-      }
-
-
-      const isRep = !!(user?.representedCompany || user?.representedPerson);
-      if (isRep) {
-        return (allowed ?
-          'IS_REP_ENABLED' :
-          'IS_REP_DISABLED');
-      }
-
-      const isUser = authType === 'USER';
-      if (isUser) {
-        return (allowed ?
-          'IS_USER_FORM_ENABLED' :
-          'IS_USER_FORM_DISABLED');
-      }
-
-      return 'IS_FORM_DISABLED';
-    }
+    getFormLinkAuthType
   });
 }
 
@@ -266,4 +264,3 @@ export class UnauthorizedRequestError extends Error {
     this.name = 'UnauthorizedRequestError';
   }
 }
-
