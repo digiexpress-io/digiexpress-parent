@@ -45,14 +45,14 @@ export const BatchViewHeaders: React.FC<BatchViewHeadersProps> = (initProps) => 
     <BatchViewHeadersRoot className={classes.root} ownerState={ownerState}>
       <Box className={classes.instanceSection}>
         <Typography className={classes.title}>
-          {intl.formatMessage({ id: 'eveli.batches.averageRunTime' })}
+          {intl.formatMessage({ id: 'eveli.batches.batchView.averageRunTime', defaultMessage: 'Average run time' })}
         </Typography>
       </Box>
 
       {stepNames.map(step => (
         <Box key={step} className={classes.stepSection}>
           <Typography className={classes.title}>{step}</Typography>
-          <Typography>{formatDuration(averageDurations[step])}{intl.formatMessage({ id: 'eveli.batches.averageRunTime.ms' })}</Typography>
+          <Typography>{formatDuration(averageDurations[step])}{intl.formatMessage({ id: 'eveli.batches.batchView.averageRunTime.ms', defaultMessage: 'ms' })}</Typography>
         </Box>
       ))}
     </BatchViewHeadersRoot>

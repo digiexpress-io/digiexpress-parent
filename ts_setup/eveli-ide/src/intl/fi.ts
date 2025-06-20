@@ -927,6 +927,6 @@ export const fi = {
   'toolbar.workflows': 'Työnkulkuyhteenveto',
   'toolbar.releases': 'Julkaisut',
   'toolbar.locales': 'Sijainnit',
-  'eveli.batches.averageRunTime': 'Average run time',
-  'eveli.batches.averageRunTime.ms': 'ms'
+  'eveli.batches.batchView..averageRunTime': 'Average run time',
+  'eveli.batches.batchView.averageRunTime.ms': 'ms'
 }

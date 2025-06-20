@@ -1,7 +1,7 @@
 import React from "react";
 import { BatchApi } from "@/api-batch";
 import { useFetch } from "@dxs-ts/eveli-fetch";
-import { Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
@@ -36,8 +36,13 @@ export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
         <Typography variant='h1'>{batch.batchName}</Typography>
         <Button onClick={() => setStartDialogOpen(true)}>{intl.formatMessage({ id: 'button.startBatch' })}</Button>
       </Box>
-      <BatchViewHeaders batch={batch} instanceSectionWidth={sectionWidth.instanceSectionWidth} stepSectionWidth={sectionWidth.stepSectionWidth} />
-      {instances.map(instance => (<InstanceSlot key={instance.id} value={instance} />))}
+      {!instances.length ? (<NoBatchInstancesAlert />
+      ) : (
+        <>
+            <BatchViewHeaders batch={batch} instanceSectionWidth={sectionWidth.instanceSectionWidth} stepSectionWidth={sectionWidth.stepSectionWidth} />
+            {instances.map(instance => (<InstanceSlot key={instance.id} value={instance} />))}
+        </>
+      )}
     </EveliBatchViewRoot>
   </>
   );
@@ -86,21 +91,21 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
     <StyledStepSlot className={classes.stepSlot} value={value}>
       <Typography>{format}</Typography>
       <Typography>
-        {intl.formatMessage({ id: 'eveli.batches.stepStatus', defaultMessage: 'Status' })}
+        {intl.formatMessage({ id: 'eveli.batches.batchView.stepStatus', defaultMessage: 'Status' })}
         {intl.formatMessage({ id: 'eveli.textSeparatorColon', defaultMessage: ': ' })}
         {value.status}
       </Typography>
       {value.status !== 'SKIPPED' && (
         <>
           <Typography>
-            {intl.formatMessage({ id: 'eveli.batches.stepStatus.sucess', defaultMessage: 'Success' })}
-            {intl.formatMessage({ id: 'eveli.textSeparatorColon', defaultMessage: ': ' })}
+            {intl.formatMessage({ id: 'eveli.batches.batchView.stepStatus.sucess', defaultMessage: 'Success' })}
+            {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
             {metric?.valueStructured?.map.successCount}
           </Typography>
 
           <Typography>
-            {intl.formatMessage({ id: 'eveli.batches.stepStatus.failure', defaultMessage: 'Fail' })}
-            {intl.formatMessage({ id: 'eveli.textSeparatorColon', defaultMessage: ': ' })}
+            {intl.formatMessage({ id: 'eveli.batches.batchView.stepStatus.failure', defaultMessage: 'Fail' })}
+            {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
             {metric?.valueStructured?.map.failCount}
           </Typography>
         </>
@@ -128,4 +133,15 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
       <Typography variant='subtitle2'>{formatted_date}</Typography>
       <Typography variant='subtitle2'>{formatted_time}</Typography>
     </Stack>);
+}
+
+const NoBatchInstancesAlert: React.FC = () => {
+  const intl = useIntl();
+  const classes = useUtilityClasses();
+  return (
+    <Alert severity='info' className={classes.noRunsAlert}>
+      <AlertTitle>{intl.formatMessage({ id: 'eveli.batches.batchView.noRuns', defaultMessage: 'This batch has never been run' })}</AlertTitle>
+      <Typography>{intl.formatMessage({ id: 'eveli.batches.batchView.startFirstRun', defaultMessage: 'Stats will appear here after the first run has been initialised' })}</Typography>
+    </Alert>
+  )
 }

@@ -12,7 +12,8 @@ export interface EveliBatchViewClasses {
   instanceSlot: string;
   instanceContainer: string;
   instanceDateTime: string;
-  batchNameRow: string
+  batchNameRow: string;
+  noRunsAlert: string;
 }
 
 export interface SectionWidth { 
@@ -32,7 +33,8 @@ export const useUtilityClasses = () => {
     instanceSlot: ['instanceSlot'],
     instanceContainer: ['instanceContainer'],
     instanceDateTime: ['instanceDateTime'],
-    batchNameRow: ['batchNameRow']
+    batchNameRow: ['batchNameRow'],
+    noRunsAlert: ['noRunsAlert']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -45,18 +47,26 @@ export const EveliBatchViewRoot = styled(Stack, {
   overridesResolver: (props, styles) => {
     return [
       styles.root,
-      styles.batchNameRow
+      styles.batchNameRow,
+      styles.noRunsAlert
     ];
   },
 })<{}>(({ theme, }) => {
+
+  const batchNameRowWidth = '50%';
+
   return {
     gap: theme.spacing(1),
 
-    '& .EveliBatchView-batchNameRow': {
+    '& .EveliBatchView-batchNameRow': { // maintain spacing between batchName and button, prevent button from pushing all the way right
       display: 'flex',
-      width: '50%',
+      width: batchNameRowWidth,
       justifyContent: 'space-between'
-    }
+    },
+
+    '& .EveliBatchView-noRunsAlert': { // maintain right alighment with end of alert and start button
+      width: batchNameRowWidth,
+    },
 
   }
 })

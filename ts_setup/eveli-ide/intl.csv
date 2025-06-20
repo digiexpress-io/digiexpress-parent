@@ -1065,6 +1065,7 @@ eveli.userProfile.tenantConfig.select.user_profile.desc,,Show / hide the user pr
 eveli.userProfile.tenantConfig.select.visual_accommodation,,Visual accommodation,,,
 eveli.userProfile.tenantConfig.select.visual_accommodation.desc,,To make certain buttons and UI items pop for enhanced visibility,,,
 // -------------------------- BATCHES ---------------------------------
-eveli.batches.averageRunTime,,Average run time,Average run time,,
-eveli.batches.averageRunTime.ms,,ms,ms,,
+eveli.batches.batchView..averageRunTime,,Average run time,Average run time,,
+eveli.batches.batchView.averageRunTime.ms,,ms,ms,,
+
 

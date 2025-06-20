@@ -67,7 +67,6 @@ export const EveliBatchesTable: React.FC = () => {
       enableColumnFilter: true,
       enableResizing: true,
     },
-
   ]
 
   return (
@@ -76,21 +75,7 @@ export const EveliBatchesTable: React.FC = () => {
         <Typography variant="h1" sx={{ flexGrow: 1 }}>
           <FormattedMessage id="batchesView.title" defaultMessage="Batches" />
         </Typography>
-
-          <Tooltip title={intl.formatMessage({ id: 'taskButton.addInstance' })}>
-            <IconButton
-              onClick={() => {
-                navigate({
-                  from: '/secured/$locale',
-                  to: '/secured/$locale/worker/batches/create',
-                });
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
       </Box>
-  
       <WithTableStyles data={data} columns={columns} options={{ tableId: 'batches'}}/>
     </Box>
   );  
@@ -108,10 +93,6 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
 }
 
 const BatchLink: React.FC<{ value: BatchApi.Batch }> = ({ value }) => {
-
-  if (!value.transitives || value.transitives?.instances.length === 0) {
-    return (<>{value.batchName}</>)
-  }
 
   return (
     <Box
