@@ -153,6 +153,7 @@ export const en = {
   'button.dismiss': 'Dismiss',
   'button.editRoles': 'Edit',
   'button.select': 'Select',
+  'button.startBatch': 'Start batch',
   'error.minTextLength': 'Value should be at least {minLength} characters long',
   'error.maxTextLength': 'Value should be no more than {max} characters long',
   'error.valueRequired': 'Value required',

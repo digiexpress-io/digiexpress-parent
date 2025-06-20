@@ -153,6 +153,7 @@ button.send,,Send,Lähetä,Skicka
 button.dismiss,,Dismiss,Sulje,Stäng
 button.editRoles,,Edit,Muokkaa,Redigera
 button.select,,Select,Valita,Select
+button.startBatch,,Start batch,Start batch,,
 error.minTextLength,,Value should be at least {minLength} characters long,Annetun arvon pitää olla vähintään {minLength} merkkiä,Texten måste vara minst {minLength} tecken lång.
 error.maxTextLength,,Value should be no more than {max} characters long,Annetun arvon tulee olla enintään {max} merkkiä pitkä,Texten måste vara max {max} tecken lång.
 error.valueRequired,,Value required,Vaaditaan,Nödvändig

@@ -59,7 +59,7 @@ export const BatchViewHeadersRoot = styled("div", {
     '& .BatchViewHeaders-instanceSection': {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between',
+      justifyContent: 'end',
       padding: theme.spacing(2),
       textAlign: 'right',
       width: ownerState.instanceSectionWidth

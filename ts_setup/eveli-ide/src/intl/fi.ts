@@ -153,6 +153,7 @@ export const fi = {
   'button.dismiss': 'Sulje',
   'button.editRoles': 'Muokkaa',
   'button.select': 'Valita',
+  'button.startBatch': 'Start batch',
   'error.minTextLength': 'Annetun arvon pitää olla vähintään {minLength} merkkiä',
   'error.maxTextLength': 'Annetun arvon tulee olla enintään {max} merkkiä pitkä',
   'error.valueRequired': 'Vaaditaan',

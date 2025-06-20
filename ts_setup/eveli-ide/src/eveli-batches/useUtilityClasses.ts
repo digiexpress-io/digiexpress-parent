@@ -12,6 +12,7 @@ export interface EveliBatchViewClasses {
   instanceSlot: string;
   instanceContainer: string;
   instanceDateTime: string;
+  batchNameRow: string
 }
 
 export interface SectionWidth { 
@@ -30,7 +31,8 @@ export const useUtilityClasses = () => {
     stepSlot: ['stepSlot'],
     instanceSlot: ['instanceSlot'],
     instanceContainer: ['instanceContainer'],
-    instanceDateTime: ['instanceDateTime']
+    instanceDateTime: ['instanceDateTime'],
+    batchNameRow: ['batchNameRow']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -43,12 +45,19 @@ export const EveliBatchViewRoot = styled(Stack, {
   overridesResolver: (props, styles) => {
     return [
       styles.root,
-
+      styles.batchNameRow
     ];
   },
 })<{}>(({ theme, }) => {
   return {
     gap: theme.spacing(1),
+
+    '& .EveliBatchView-batchNameRow': {
+      display: 'flex',
+      width: '50%',
+      justifyContent: 'space-between'
+    }
+
   }
 })
 

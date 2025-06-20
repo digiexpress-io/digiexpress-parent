@@ -1,19 +1,21 @@
+import React from "react";
 import { BatchApi } from "@/api-batch";
 import { useFetch } from "@dxs-ts/eveli-fetch";
-import { Chip, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
 import numbro from 'numbro';
 import { BatchViewHeaders } from "../eveli-batches-headers";
 import { EveliBatchViewRoot, StyledInstanceSlot, StyledStepSlot, useUtilityClasses, sectionWidth } from "./useUtilityClasses";
+import { StartBatchDialog } from "./StartBatchDialog";
 
 
 
 export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-
+  const [startDialogOpen, setStartDialogOpen] = React.useState(false);
   const { getOne } = useFetch('worker/rest/api/batches.GET', {});
 
   const { data: batch, error, refetch, isPending } = useQuery({
@@ -27,12 +29,18 @@ export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
 
   const instances = batch.transitives?.instances ?? [];
 
-  return (
+  return (<>
+    <StartBatchDialog open={startDialogOpen} onClose={() => setStartDialogOpen(false)} batch={batch} />
     <EveliBatchViewRoot className={classes.root}>
-      <Typography variant='h1'>{intl.formatMessage({ id: 'eveli.batches.title', defaultMessage: 'Batches' })}</Typography>
+      <Box className={classes.batchNameRow}>
+        <Typography variant='h1'>{batch.batchName}</Typography>
+        <Button onClick={() => setStartDialogOpen(true)}>{intl.formatMessage({ id: 'button.startBatch' })}</Button>
+      </Box>
       <BatchViewHeaders batch={batch} instanceSectionWidth={sectionWidth.instanceSectionWidth} stepSectionWidth={sectionWidth.stepSectionWidth} />
       {instances.map(instance => (<InstanceSlot key={instance.id} value={instance} />))}
-    </EveliBatchViewRoot>);
+    </EveliBatchViewRoot>
+  </>
+  );
 }
 
 const InstanceSlot: React.FC<{ value: BatchApi.RuntimeInstance }> = ({ value }) => {
