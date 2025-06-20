@@ -93,9 +93,10 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const anchor = useAnchor();
   const classes = useUtilityClasses();
   const { views } = useSite();
+  const iam = useIam();
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState<SearchApi.SearchState>();
-  const iam = useIam();
+  
 
   React.useEffect(() => {
     setState(SearchApi.getInstance(views, noValueIndicatorColon));
@@ -104,7 +105,6 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   if (!state) {
     return (<></>)
   }
-
 
   const noResults = state.topics.length === 0 &&
     state.forms.length === 0 &&
