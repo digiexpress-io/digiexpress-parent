@@ -20,13 +20,14 @@ package io.digiexpress.thena.batch.client.api.entities;
  * #L%
  */
 
-import java.beans.Transient;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeExecutionStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
@@ -48,13 +49,22 @@ public interface RuntimeStep extends AnyBatchEntity {
   String getName();
   String getComment();
   
-  @Transient @JsonIgnore
-  @Nullable RuntimeInstanceTransitives getTransitives();
+  @Nullable RuntimeStepTransitives getTransitives();
   
   @Override 
   default public BatchDocType getDocType() { 
     return BatchDocType.RUNTIME_STEP; 
   }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableRuntimeStepTransitives.class)
+  @JsonDeserialize(as = ImmutableRuntimeStepTransitives.class)
+  public interface RuntimeStepTransitives {
+    List<RuntimeMetric> getMetrics();
+    List<RuntimeLog> getLogs();
+    List<RuntimeStepRow> getStepRows();
+  }
+
 }
 
 

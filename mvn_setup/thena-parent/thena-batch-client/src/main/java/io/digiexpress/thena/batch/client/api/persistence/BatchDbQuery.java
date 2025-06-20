@@ -28,6 +28,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenantContainer;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
@@ -45,8 +46,14 @@ public interface BatchDbQuery {
   BatchDbStepQuery querySteps();
   BatchDbStepRowQuery queryStepRows();
   BatchDbMetricQuery queryMetrics();
+  BatchDbLogQuery queryLogs();
+  
+  interface BatchDbLogQuery {
+    Uni<List<RuntimeLog>> findAllByStepId(String stepId);
+  }
   
   interface BatchDbMetricQuery {
+    Uni<List<RuntimeMetric>> findAllByStepId(String stepId);
     Uni<List<RuntimeMetric>> findAllByInstanceStatus(List<RuntimeStatus> status);
     Uni<List<RuntimeMetric>> findForLastNInstancesByBatchName(int howMany, String batchIdOrName);
   }
@@ -76,6 +83,7 @@ public interface BatchDbQuery {
   }
   
   interface BatchDbStepRowQuery {
+    Uni<List<RuntimeStepRow>> findAllByStepId(String stepId);
     Uni<List<RuntimeStepRow>> findAllByInstanceStatus(List<RuntimeStatus> status);
   }
   

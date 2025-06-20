@@ -38,6 +38,7 @@ import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.EnvelopeLog;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -94,6 +95,12 @@ public class BatchApiCotroller {
   public Uni<Batch> getBatches(@PathVariable("batchName") String batchName) {
     return batchClient.queryBatches().getOne(batchName).onItem().transform(resp -> resp.getObject());
   }
+  
+  @GetMapping("/steps/{stepId}")
+  public Uni<RuntimeStep> getBatchInstanceStep(@PathVariable("stepId") String stepId) {
+    return batchClient.queryRuntimeSteps().getOne(stepId).onItem().transform(resp -> resp.getObject());
+  }
+  
   
   @PostMapping("/{batchName}/instances")
   public Uni<RuntimeInstance> createOneInstance(

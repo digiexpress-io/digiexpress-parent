@@ -65,7 +65,17 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .props(Tuple.of(id))
         .build();
   }
-  
+  @Override
+  public SqlTuple findAllByStepId(String stepId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getRuntimeStepRows()).ln()
+        .append("  WHERE (step_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(stepId))
+        .build();
+  }
   @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<RuntimeStepRow> docs) {
     return ImmutableSqlTupleList.builder()
@@ -204,4 +214,5 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .props(Tuple.of(status.isEmpty() ? null : status.stream().map(e -> e.name()).toArray()))
         .build();
   }
+
 }

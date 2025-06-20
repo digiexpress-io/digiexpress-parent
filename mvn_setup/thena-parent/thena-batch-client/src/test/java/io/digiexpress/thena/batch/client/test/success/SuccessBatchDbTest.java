@@ -94,7 +94,7 @@ public class SuccessBatchDbTest extends DbTestTemplate {
     Assertions.assertEquals(RuntimeExecutionStatus.OK, done.getExecutionStatus());
     
     
-    final var instances = client.queryRuntimeInstances().findAll().await().atMost(atMost).getObject();
+    final var instances = client.queryRuntimeInstances().includeStepRows().findAll().await().atMost(atMost).getObject();
     Assertions.assertEquals(1, instances.size());
     Assertions.assertEquals(RuntimeStatus.COMPLETED, instances.get(0).getStatus());
     
@@ -142,8 +142,13 @@ public class SuccessBatchDbTest extends DbTestTemplate {
       
       Assertions.assertNotNull(batchQuery);
       Assertions.assertEquals(1, batchQuery.getTransitives().getInstances().size());
+      
+      final var firstStep = batchQuery.getTransitives().getInstances().get(0).getTransitives().getSteps().get(0);
+      final var stepQuery = client.queryRuntimeSteps().getOne(firstStep.getId()).await().atMost(atMost).getObject();
+      Assertions.assertEquals(9, stepQuery.getTransitives().getStepRows().size());
+      
     }
-    
+
   }
   
   

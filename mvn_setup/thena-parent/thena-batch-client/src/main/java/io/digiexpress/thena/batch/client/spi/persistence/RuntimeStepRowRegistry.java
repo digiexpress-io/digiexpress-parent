@@ -34,6 +34,8 @@ public interface RuntimeStepRowRegistry extends ThenaRegistryService<RuntimeStep
   ThenaSqlClient.SqlTuple findAllByInstanceStatus(List<RuntimeStatus> status);
   ThenaSqlClient.SqlTupleList insertMany(List<RuntimeStepRow> docs);
   
+  ThenaSqlClient.SqlTuple findAllByStepId(String stepId);
+  
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.SqlTuple getById(String id);
   
