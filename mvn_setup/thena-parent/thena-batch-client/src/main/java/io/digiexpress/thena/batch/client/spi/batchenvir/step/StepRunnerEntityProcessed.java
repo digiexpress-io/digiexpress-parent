@@ -55,6 +55,7 @@ public class StepRunnerEntityProcessed {
         .externalId(event.getProcessed().get().getEntityId())
         .createdAt(event.getCreatedAt())
         .endedAt(event.getEndedAt())
+        .comment(event.getComment())
         .build();
     
     final var container = this.context.createPersistContainer()

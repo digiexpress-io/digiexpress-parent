@@ -62,6 +62,29 @@ export declare namespace BatchApi {
     
     name: string;
     comment: string;
+    transitives?: {
+      metrics: RuntimeMetric[];
+      stepRows: RuntimeStepRow[];
+    }
+  }
+
+  export interface RuntimeStepRow {
+    id: string;
+    runtimeId: string;
+    stepId: string;
+
+    executionStatus: RuntimeExecutionStatus;
+    
+    createdAt: string;
+    endedAt: string | undefined;
+    
+    rowNumber: number;
+    externalId: string;
+  
+    input: object | undefined;
+    output: any | undefined;
+
+    comment: string;
   }
 
   export interface RuntimeMetric {

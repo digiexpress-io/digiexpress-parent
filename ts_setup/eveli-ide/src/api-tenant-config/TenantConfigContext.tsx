@@ -76,6 +76,8 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
     const createIfNotDefined = contextValue.features.includes('user_profile');
     profile.restApi().currentUserProfile(createIfNotDefined)
       .then(profile => {
+        console.groupCollapsed('user profile');
+
         if(!profile) {
           console.log('User profile disabled');
           setUserTenantConfig((prev) => prev ?? []);
@@ -87,7 +89,7 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
       .catch((e) => {
         console.log('User profile disabled');
         setUserTenantConfig((prev) => prev ?? []);
-      });
+      }).finally(() => console.groupEnd());
 
   }, [pending, contextValue, userTenantConfig]);
 

@@ -9,6 +9,7 @@ import numbro from 'numbro';
 import { BatchViewHeaders } from "../eveli-batches-headers";
 import { EveliBatchViewRoot, StyledInstanceSlot, StyledStepSlot, useUtilityClasses, sectionWidth } from "./useUtilityClasses";
 import { StartBatchDialog } from "./StartBatchDialog";
+import { useNavigate } from "@tanstack/react-router";
 
 
 
@@ -71,6 +72,15 @@ const InstanceSlot: React.FC<{ value: BatchApi.RuntimeInstance }> = ({ value }) 
 const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.RuntimeInstance }> = ({ value, instance }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
+  const nav = useNavigate();
+
+  function handleOpenStep() {
+    nav({
+      from: '/secured/$locale/worker/batches/$batchId',
+      to: '/secured/$locale/worker/batches/$batchId/steps/$stepId',
+      params: { stepId: value.id }
+    })
+  }
 
   const interval = Interval.fromDateTimes(
     DateTime.fromISO(value.createdAt),
@@ -81,14 +91,13 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
     mantissa: 0,
   });
 
-
   const metric = instance.transitives?.metrics
     .filter(metric => metric.name === 'batch-metrics')
     .find(metric => metric.stepId === value.id);
 
   const format = `~ ${duration} min.`;
   return (
-    <StyledStepSlot className={classes.stepSlot} value={value}>
+    <StyledStepSlot className={classes.stepSlot} value={value} onClick={handleOpenStep}>
       <Typography>{format}</Typography>
       <Typography>
         {intl.formatMessage({ id: 'eveli.batches.batchView.stepStatus', defaultMessage: 'Status' })}

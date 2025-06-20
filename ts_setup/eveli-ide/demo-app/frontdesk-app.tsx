@@ -76,8 +76,8 @@ function globalFetchOverride(): typeof window.fetch {
         'Content-Type': 'application/json'
       }
     }
-
-    globalEvents.push({ input, override });
+    // comment in for debug
+    //globalEvents.push({ input, override });
 
     return window.fetch(input, override)
   }

@@ -34,12 +34,16 @@ public class StepEvent {
   private final OffsetDateTime endedAt;
   private final Object entity;
   private final Object entityConfig;
+  private final Optional<String> comment;
   private final Optional<ExecutorEntity> processed;
   private final Optional<Throwable> throwable;
   private final Long entityNumber;
   
   
   public boolean isOk() {
+    this.builder();
     return processed.isPresent();
   }
+  
+  
 }

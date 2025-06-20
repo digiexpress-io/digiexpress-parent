@@ -45,6 +45,7 @@ public interface RuntimeStepRow extends AnyBatchEntity {
   
   Optional<JsonObject> getInput();
   Optional<JsonObject> getOutput();
+  Optional<String> getComment();
 
   
   @Override 

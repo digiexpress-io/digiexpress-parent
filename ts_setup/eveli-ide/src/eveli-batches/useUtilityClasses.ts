@@ -128,6 +128,7 @@ export const StyledStepSlot = styled(Paper, {
   const bg_color = getStepBackgroundColor(value.status, theme)
 
   return {
+    cursor: 'pointer',
     padding: theme.spacing(2),
     width: sectionWidth.stepSectionWidth,
     backgroundColor: bg_color,
