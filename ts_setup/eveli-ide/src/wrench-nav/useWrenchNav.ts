@@ -27,8 +27,9 @@ export function useWrenchNav(): {
   const activeItem = explorer.find((explorer: ExplorerItem) => toExplorerId(explorer) === explorerActive);
 
   function onNav(input: ExplorerItem) {
-    navigate({ 
+    navigate({
       from: '/secured/$locale/assets/wrench',
+      to: '.',
       search: (prev: WrenchRouteSearchParams) => mergeWrenchSearchParams(input, prev)
     });
   }
