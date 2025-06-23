@@ -20,36 +20,41 @@ package io.digiexpress.eveli.app;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfig.EveliPropsDbResolved;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.spi.persistence.ThenaMqChannelStateImpl;
+import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 public class AppConfig {
   @Bean
   public ThenaMqClient mqClient2(EveliPropsMq props, EveliPropsDbResolved dbConfig) {
-    final var sslMode = SslMode.ALLOW;
-    
+    var trustOptions = new PemTrustOptions();
+    if (StringUtils.isNotBlank(dbConfig.getCertPath())) {
+      trustOptions.addCertPath(dbConfig.getCertPath());
+    }
     final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
-        new PgConnectOptions()
-          .setHost(dbConfig.getHost())
-          .setPort(dbConfig.getPort())
-          .setDatabase(dbConfig.getDatabase())
-          .setUser(dbConfig.getUsername())
-          .setPassword(dbConfig.getPassword())
-          .setSslMode(sslMode), 
-        new PoolOptions().setMaxSize(1));
+      new PgConnectOptions()
+        .setHost(dbConfig.getHost())
+        .setPort(dbConfig.getPort())
+        .setDatabase(dbConfig.getDatabase())
+        .setUser(dbConfig.getUsername())
+        .setPassword(dbConfig.getPassword())
+        .setTrustAll(dbConfig.getSslTrustAll())
+        .setPemTrustOptions(trustOptions)
+        .setSslMode(SslMode.of(dbConfig.getSslMode())),
+      new PoolOptions().setMaxSize(1));
     return ThenaMqChannelStateImpl.create()
         .db(props.getChannelName()).client(pgPool)
         .build();
