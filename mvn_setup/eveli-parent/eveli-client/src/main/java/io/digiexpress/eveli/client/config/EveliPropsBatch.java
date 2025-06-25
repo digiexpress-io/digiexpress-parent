@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /*-
  * #%L
  * eveli-client
@@ -29,6 +31,7 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "eveli.batches")
 public class EveliPropsBatch {  
 
+  @Value("${app-id:eveli-app}")
   private String appId;
 
 }

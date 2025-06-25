@@ -23,10 +23,12 @@ import java.time.Duration;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
+import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
@@ -277,5 +279,47 @@ public class TaskClientImpl implements TaskClient {
           });
       }
     };
+  }
+  @Override
+  public DeleteTasks deleteTasks() {
+
+    return new DeleteTasks() {
+      private String commitMessage;
+      private String commitAuthor;
+      @Override
+      public DeleteTasks commitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+        return this;
+      }
+      @Override
+      public DeleteTasks commitAuthor(String commitAuthor) {
+        this.commitAuthor = commitAuthor;
+        return this;
+      }
+      @Override
+      public Uni<TaskArchivePointer> deleteOne(String id) {
+        TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
+        TaskAssert.notEmpty(commitAuthor, () -> "commitAuthor can't be empty!");
+        TaskAssert.notEmpty(id, () -> "id can't be empty!");
+        
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        
+        return grim.find().missionDeleteQuery()
+          .commitAuthor(commitAuthor)
+          .commitMessage(commitMessage)
+          .missionId(Arrays.asList(id))
+          .deleteAll()
+          .onItem().transform(resp -> {
+            final TaskArchivePointer pointer = ImmutableTaskArchivePointer.builder()
+                .commit(resp)
+                .build();
+            return pointer;
+          }).collect().last();
+      }
+    };
+    
+    
+   
   }
 }

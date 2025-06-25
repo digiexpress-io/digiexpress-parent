@@ -1,5 +1,7 @@
 package io.digiexpress.thena.batch.client.spi.batchenvir.step;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-batch-client
@@ -53,6 +55,8 @@ public class StepRunnerEntityProcessed {
         .executionStatus(RuntimeExecutionStatus.OK)
         .rowNumber(event.getEntityNumber())
         .externalId(event.getProcessed().get().getEntityId())
+        .input(Optional.ofNullable(event.getProcessed().get().getInputBody()))
+        .output(Optional.ofNullable(event.getProcessed().get().getOutputBody()))
         .createdAt(event.getCreatedAt())
         .endedAt(event.getEndedAt())
         .comment(event.getComment())

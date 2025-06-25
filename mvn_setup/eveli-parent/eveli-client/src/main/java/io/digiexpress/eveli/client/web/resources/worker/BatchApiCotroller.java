@@ -1,8 +1,5 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
-import java.util.List;
-
-import org.immutables.value.Value;
 /*-
  * #%L
  * eveli-client
@@ -22,9 +19,18 @@ import org.immutables.value.Value;
  * limitations under the License.
  * #L%
  */
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.immutables.value.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,24 +41,30 @@ import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.config.EveliPropsBatch;
 import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.entities.Batch;
+import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.EnvelopeLog;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 @RestController
 @RequestMapping("/worker/rest/api/batches")
 @RequiredArgsConstructor
+@Slf4j
 public class BatchApiCotroller {
-
   private final WorkerAuthClient auth;
   private final BatchClient batchClient;
+  private final BatchConfig batchConfig;
   private final EveliPropsBatch batchProps;
+  private final ApplicationEventPublisher publisher;
   
   @JsonSerialize(as = ImmutableCreateOneInstanceCommand.class)
   @JsonDeserialize(as = ImmutableCreateOneInstanceCommand.class)
@@ -101,7 +113,6 @@ public class BatchApiCotroller {
     return batchClient.queryRuntimeSteps().getOne(stepId).onItem().transform(resp -> resp.getObject());
   }
   
-  
   @PostMapping("/{batchName}/instances")
   public Uni<RuntimeInstance> createOneInstance(
       @PathVariable("batchName") String batchName, 
@@ -123,8 +134,34 @@ public class BatchApiCotroller {
           throw new BatchApiException(
               "Failed to create batch instance for: " + batchName + ", json: " + JsonObject.mapFrom(body).encode(), 
               env.getOperationLogs());
-        });
+        })
+        .onItem().invoke(instance -> publisher.publishEvent(new RuntimeInstanceCreatedEvent(instance)));
   }
   
+  @RequiredArgsConstructor @Data
+  public class RuntimeInstanceCreatedEvent {
+    private final RuntimeInstance instance;
+  }
   
+  @Async
+  @EventListener
+  public CompletableFuture<?> handleStartAndRunInstance(RuntimeInstanceCreatedEvent event) {  
+    try {
+      
+      final var envir = batchClient.createBatchEnvir()
+          .config(batchConfig)
+          .build();
+        
+      return envir
+        .executor()
+        .commitMessage("Running with Spring @Async @EventListener")
+        .commitAuthor(BatchApiCotroller.class.getSimpleName())
+        .execute(event.getInstance())
+        .subscribeAsCompletionStage().toCompletableFuture();
+
+    } catch(Exception e) {
+      log.error("Failed to check to run instance: {}!", JsonObject.mapFrom(event).encode());
+      return Uni.createFrom().voidItem().subscribeAsCompletionStage().toCompletableFuture();
+    }
+  }
 }

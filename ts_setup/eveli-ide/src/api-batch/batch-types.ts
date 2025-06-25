@@ -9,6 +9,11 @@ export declare namespace BatchApi {
   export type RuntimeExecutionStatus = 'OK' | 'ERROR';
   export type RuntimeStatus = 'CREATED' | 'EXECUTING' | 'SKIPPED' | 'COMPLETED' | 'CANCELLED';
 
+  interface CreateOneInstanceCommand {
+    instanceName: string;
+    commitMessage: string;
+    params: object;
+  }
 
   export interface Batch {
     id: string;
