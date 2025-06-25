@@ -11,6 +11,8 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const newValue: 'true' | 'false' | '' = event.target.value + '' as any;
+
+    console.log("new value is ", newValue)
     if(newValue === 'true') {
       store.setAnswer(element.id, true);
     } else if(newValue === 'false') {
@@ -19,7 +21,6 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
       store.setAnswer(element.id, undefined);
     }
   }
-
   return (
     <GInputBoolean
       id={element.id}
