@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.task;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 
 /*-
  * #%L
@@ -28,8 +29,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
+import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -52,6 +56,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -64,7 +69,6 @@ public class TaskClientImpl implements TaskClient {
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
   private final CustomerAccountClient crmClient;
-  
   
   @Override
   public PaginateTasks paginateTasks() {
@@ -280,6 +284,7 @@ public class TaskClientImpl implements TaskClient {
       }
     };
   }
+
   @Override
   public DeleteTasks deleteTasks() {
 
@@ -318,8 +323,49 @@ public class TaskClientImpl implements TaskClient {
           }).collect().last();
       }
     };
-    
-    
-   
+  }    
+
+
+  @Override
+  public QueryTaskProcesess queryTaskProcesess() {
+    return new QueryTaskProcesess() {
+      
+      @Override
+      public Multi<ProcessInstance> findLast6Months() {
+        final var startDate = OffsetDateTime.now().minusMonths(6);
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOnOrAfter(startDate)
+          .onItem().transform(entity -> {
+            
+            return ImmutableProcessInstance.builder()
+                .id(Long.parseLong(entity.getId()))
+                .status(entity.getStatus() == null ? null : ProcessClient.ProcessStatus.valueOf(entity.getStatus()))
+                .questionnaireId(entity.getQuestionnaireId())
+                .taskId(entity.getTaskId())
+                .taskRef(entity.getTaskRef())
+                .userId(entity.getUserId())
+                .created(entity.getCreated())
+                .updated(entity.getUpdated())
+                
+                .workflowName(entity.getWorkflowName())
+                .articleName(entity.getArticleName())
+                .parentArticleName(entity.getParentArticleName())
+                .anon(Boolean.TRUE.equals(entity.getAnon()))
+                .formName(entity.getFormName())
+                .flowName(entity.getFlowName())
+                
+                .formTagName(entity.getFormTagName())
+                .stencilTagName(entity.getStencilTagName())
+                .wrenchTagName(entity.getWrenchTagName())
+                
+                .expiresInSeconds(entity.getExpiresInSeconds())
+                .expiresAt(entity.getExpiresAt())
+                .build();
+          });
+      }
+    };
+
   }
 }

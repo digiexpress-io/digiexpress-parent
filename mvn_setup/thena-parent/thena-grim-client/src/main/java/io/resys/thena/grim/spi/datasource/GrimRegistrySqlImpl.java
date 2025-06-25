@@ -34,6 +34,7 @@ import io.resys.thena.grim.spi.sql.GrimMissionLinkRegistrySqlImpl;
 import io.resys.thena.grim.spi.sql.GrimMissionRegistrySqlImpl;
 import io.resys.thena.grim.spi.sql.GrimObjectiveGoalRegistrySqlImpl;
 import io.resys.thena.grim.spi.sql.GrimObjectiveRegistrySqlImpl;
+import io.resys.thena.grim.spi.sql.GrimProcessRegistrySqlImpl;
 import io.resys.thena.grim.spi.sql.GrimRemarkRegistrySqlImpl;
 import io.resys.thena.grim.spi.sql.GrimTableNames;
 
@@ -51,7 +52,8 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
   private final GrimObjectiveRegistry objectives;
   private final GrimRemarkRegistry remarks;
   private final GrimCommandsRegistry commands;
-  
+  private final GrimProcessRegistry processes;
+
   public GrimRegistrySqlImpl(TenantContext tenant) {
     this.options = GrimTableNames.defaults().toRepo(tenant.getPrefix());
     assignments = new GrimAssignmentRegistrySqlImpl(options);
@@ -66,8 +68,12 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
     objectives = new GrimObjectiveRegistrySqlImpl(options);
     remarks = new GrimRemarkRegistrySqlImpl(options);
     commands = new GrimCommandsRegistrySqlImpl(options);
+    processes = new GrimProcessRegistrySqlImpl(options);
   }
-
+  @Override
+  public GrimProcessRegistry processes() {
+    return processes;
+  }
   @Override
   public GrimAssignmentRegistry assignments() {
     return assignments;

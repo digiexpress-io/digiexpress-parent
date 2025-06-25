@@ -1,5 +1,7 @@
 package io.resys.thena.grim.spi.actions;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -22,6 +24,7 @@ package io.resys.thena.grim.spi.actions;
 
 import java.util.List;
 
+import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
@@ -29,6 +32,7 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.grim.api.GrimQueryActions;
 import io.resys.thena.grim.spi.GrimDataSource;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -112,5 +116,15 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   @Override
   public MissionDeleteQuery missionDeleteQuery() {
     return new MissionDeleteQueryImpl(startingState, repoId);
+  }
+  @Override
+  public MissionProcsQuery missionProcsQuery() {
+    return new MissionProcsQuery() {
+      @Override
+      public Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter) {
+        return startingState.toGrimState(repoId)
+            .onItem().transformToMulti(state -> state.missionProcs().findOnOrAfter(onOrAfter));
+      }
+    };
   }
 }

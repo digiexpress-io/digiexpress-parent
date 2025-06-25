@@ -8,7 +8,8 @@ export declare namespace ProcExecutionApi {
     id: number;
     status: string;
     questionnaireId: string;
-    task?: string;
+    taskId?: string;
+    taskRef?: string;
     userId?: string;
     created: Date;
     workflow: Workflow;  

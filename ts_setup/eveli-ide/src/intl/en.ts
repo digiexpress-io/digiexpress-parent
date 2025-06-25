@@ -187,6 +187,7 @@ export const en = {
   'processTableHeader.status': 'Status',
   'processTableHeader.created': 'Created',
   'processTableHeader.questionnaireId': 'Questionnaire',
+  'processTableHeader.taskRef': 'Task reference',
   'process.status.ANSWERED': 'Answered',
   'process.status.CREATED': 'Created',
   'process.status.ANSWERING': 'Answering',

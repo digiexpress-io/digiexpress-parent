@@ -22,6 +22,7 @@ package io.resys.thena.grim.spi;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,6 +46,7 @@ import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
+import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -81,6 +83,7 @@ public interface GrimDataSource extends TenantDataSource {
     InternalCommitViewerQuery commitViewer();
     InternalCommitTreeQuery commitTree();
     InternalCommitQuery commit();
+    InternalProcQuery missionProcs();
     InternalMissionSequence missionSequences();
     InternalMissionRemarkQuery missionRemarks();
   }
@@ -90,12 +93,13 @@ public interface GrimDataSource extends TenantDataSource {
     Uni<R> apply(GrimState repoState);
   }
   
-
-  
-  
   interface InternalCommitTreeQuery {
     Uni<List<GrimCommitTree>> findAll();
     Uni<List<GrimCommitTree>> findAllByMissionId(String missionId);
+  }
+  
+  interface InternalProcQuery {
+    Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
   }
   
   interface InternalCommitQuery {

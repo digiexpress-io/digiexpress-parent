@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
@@ -49,6 +50,13 @@ public interface TaskClient {
   QueryTaskComments queryTaskComments();
   QueryTaskKeywords queryTaskKeywords();
   QueryTaskDasboard queryTaskDasboard();
+  
+  QueryTaskProcesess queryTaskProcesess(); 
+  
+  
+  interface QueryTaskProcesess {
+    Multi<ProcessClient.ProcessInstance> findLast6Months();
+  }
   
   interface QueryTaskDasboard {
     Uni<TaskDasboard> findAll();

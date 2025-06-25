@@ -20,18 +20,23 @@ package io.resys.thena.grim.spi.datasource;
  * #L%
  */
 
-public interface GrimRegistry {
-  GrimAssignmentRegistry assignments();
-  GrimCommitRegistry commits();
-  GrimCommitTreeRegistry commitTrees();
-  GrimCommitViewerRegistry commitViewers();
-  GrimMissionDataRegistry missionData();
-  GrimMissionLabelRegistry missionLabels();
-  GrimMissionLinkRegistry missionLinks();
-  GrimMissionRegistry missions();
-  GrimObjectiveGoalRegistry goals();
-  GrimObjectiveRegistry objectives();
-  GrimRemarkRegistry remarks();
-  GrimCommandsRegistry commands();
-  GrimProcessRegistry processes();
+import java.time.OffsetDateTime;
+import java.util.function.Function;
+
+import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.registry.ThenaRegistryService;
+import io.resys.thena.datasource.ThenaSqlClient;
+
+
+public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, io.vertx.mutiny.sqlclient.Row> {
+  ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple getById(String id);
+
+  ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter);
+  
+  ThenaSqlClient.Sql createTable();
+  ThenaSqlClient.Sql createConstraints();
+  ThenaSqlClient.Sql dropTable();
+  
+  Function<io.vertx.mutiny.sqlclient.Row, GrimProcess> defaultMapper();
 }

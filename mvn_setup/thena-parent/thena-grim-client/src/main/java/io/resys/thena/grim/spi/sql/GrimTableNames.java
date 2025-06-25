@@ -43,6 +43,8 @@ public abstract class GrimTableNames {
   public abstract String getGrimObjectiveGoal();
   public abstract String getGrimRemark();
   
+  public abstract String getGrimProcesses();
+  
   public GrimTableNames toRepo(Tenant repo) {
     final String prefix = repo.getPrefix();
     return toRepo(prefix);
@@ -52,7 +54,10 @@ public abstract class GrimTableNames {
     return ImmutableGrimTableNames.builder()
         .prefix(prefix)
         
+        // does not support actual tenant struct.
+        .grimProcesses(DEFAULTS.getGrimProcesses())
         
+        // supports tenants struct.
         .grimAssignment(    prefix + DEFAULTS.getGrimAssignment())
         .grimCommit(        prefix + DEFAULTS.getGrimCommit())
         .grimCommands(      prefix + DEFAULTS.getGrimCommands())
@@ -75,6 +80,7 @@ public abstract class GrimTableNames {
   public static GrimTableNames defaults() {
     return ImmutableGrimTableNames.builder()
         .prefix("")
+        .grimProcesses("process")
         .grimAssignment("grim_assignment")
         .grimCommit("grim_commit")
         .grimCommitTree("grim_commit_tree")

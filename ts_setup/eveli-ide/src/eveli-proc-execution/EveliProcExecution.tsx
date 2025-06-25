@@ -46,6 +46,17 @@ export const EveliProcExecution: React.FC = () => {
       cell: (workflowName) => workflowName.getValue(),
     },
     {
+      header: intl.formatMessage({ id: 'processTableHeader.taskRef' }),
+      accessorKey: 'taskRef',
+      filterFn: 'includesString',
+      sortingFn: sortingFns.alphanumeric,
+      size: 200,
+      minSize: 200,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+    },
+    {
       header: intl.formatMessage({ id: 'processTableHeader.questionnaireId' }),
       accessorKey: 'questionnaireId',
       filterFn: 'includesString',

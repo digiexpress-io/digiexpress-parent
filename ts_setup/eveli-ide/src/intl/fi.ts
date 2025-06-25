@@ -187,6 +187,7 @@ export const fi = {
   'processTableHeader.status': 'Tila',
   'processTableHeader.created': 'Luotu',
   'processTableHeader.questionnaireId': 'Lomake',
+  'processTableHeader.taskRef': 'Task reference',
   'process.status.ANSWERED': 'Lähetetty',
   'process.status.CREATED': 'Luotu',
   'process.status.ANSWERING': 'Keskeneräinen',
