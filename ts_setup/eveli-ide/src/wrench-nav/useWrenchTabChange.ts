@@ -12,6 +12,7 @@ export function useWrenchTabChange() {
     }
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
+      to: '.',
       search: (prev: WrenchRouteSearchParams) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
     });
   }

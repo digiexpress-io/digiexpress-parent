@@ -66,6 +66,7 @@ export function useWrenchNav(): {
 
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
+      to: '.',
       search: (prev: WrenchRouteSearchParams) => ({
         ...prev,
         explorer: [...newItem],
