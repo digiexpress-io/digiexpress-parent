@@ -6,6 +6,8 @@ import { useNavigate } from '@tanstack/react-router';
 
 import { GLogo } from '../g-logo';
 import { useLocale } from '../api-locale';
+import { useIam } from '../api-iam';
+import { GUserOverviewMenuView } from '../g-user-overview-menu';
 
 
 
@@ -15,12 +17,21 @@ export const GError: React.FC = () => {
   const intl = useIntl();
   const nav = useNavigate();
   const { locale } = useLocale();
+  const { authType } = useIam();
 
   function handleToHomePage(locale: string) {
-    nav({
-      params: { locale },
-      to: '/public/$locale',
-    })
+    if (authType === 'ANON') {
+      nav({
+        params: { locale },
+        to: '/public/$locale',
+      })
+    } else {
+      const viewId: GUserOverviewMenuView = 'user-overview';
+      nav({
+        params: { locale, viewId },
+        to: '/secured/$locale/views/$viewId',
+      })
+    }
   }
   const classes = useUtilityClasses();
 
