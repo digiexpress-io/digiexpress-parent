@@ -43,6 +43,7 @@ export const GOfferItemRoot = styled("div", {
 })<{ ownerState: GOfferItemProps }>(({ theme, ownerState }) => {
   return {
     cursor: 'pointer',
+
     '& .GOffers-started': {
       fontWeight: 'bold',
       marginRight: theme.spacing(0.5)

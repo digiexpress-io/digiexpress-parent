@@ -32,15 +32,14 @@ export const GUserOverviewDetail = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     cursor: ownerState.onClick ? 'pointer' : 'auto',
-    backgroundColor: `${lighten(theme.palette.action.disabled, 0.85)}`,
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: lighten(theme.palette.action.disabled, 0.5),
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.divider}`,
+
     ':hover': ownerState.onClick ? {
-      backgroundColor: `${lighten(theme.palette.action.disabled, 0.7)}`,
+      backgroundColor: theme.palette.action.disabled,
       borderColor: 'rgba(194,190,194,1)',
-      boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
     } : undefined,
+
     '& .GUserOverview-overviewItemTitle': {
       ...theme.typography.h4,
       padding: theme.spacing(2),
