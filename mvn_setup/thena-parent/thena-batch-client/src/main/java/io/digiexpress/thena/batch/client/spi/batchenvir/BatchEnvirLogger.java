@@ -161,6 +161,7 @@ public enum BatchEnvirLogger {
       if(step != null) {
         props.putAll(Map.of(
             "stepName", step.getName(),
+            "stepStatus", step.getStatus().name(),
             "stepCreatedAt", step.getCreatedAt().toString(),
             "stepExcecutionStatus", step.getExecutionStatus().name()
           ));
