@@ -22,7 +22,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>digiexpress-parent</artifactId>
   <groupId>io.digiexpress</groupId>
-  <version>0.y-SNAPSHOT</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
   <inceptionYear>2015</inceptionYear>
 
@@ -97,6 +97,7 @@
   </distributionManagement>
 
   <properties>
+    <revision>999-SNAPSHOT</revision>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 

@@ -32,13 +32,32 @@ jobs:
       name: Maven build
       run: |
         cd ./mvn_setup
-        ./mvnw -B clean install
-      env:
-        QUARKUS_JIB_PLATFORMS: "linux/amd64,linux/arm64"
-        QUARKUS_CONTAINER_IMAGE_BUILD: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
-        QUARKUS_CONTAINER_IMAGE_PUSH: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
-        QUARKUS_CONTAINER_IMAGE_GROUP: ${{ github.repository_owner }}
-        QUARKUS_CONTAINER_IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-        QUARKUS_CONTAINER_IMAGE_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-        QUARKUS_CONTAINER_IMAGE_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-        QUARKUS_CONTAINER_IMAGE_ADDITIONAL_TAGS: "${{ github.event_name != 'pull_request' && github.ref_name || 'pull_request' }},latest"
+        ./mvnw -B -Drevision=$(head -1 ./build-parent/next-release.version | tr -d '\n')-SNAPSHOT -DaltDeploymentRepository=local::file:./target/staging \
+          clean deploy
+
+    - uses: actions/upload-artifact@v4
+      id: snapshot-artifacts
+      name: Upload artifacts
+      with:
+        name: snapshot-artifacts
+        path: mvn_setup/target/staging/
+        retention-days: 7
+
+    - id: dispatch
+      name: Trigger test environment update
+      run: |
+        gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/${{ secrets.DIGIEXPRESS_DISPATCH_TARGET }}/dispatches \
+          ${{ secrets.DIGIEXPRESS_DISPATCH_PAT }} \
+          -F "event_type=snapshot-build" \
+          -F "client_payload[run_id]=${{ github.run_id }}" \
+          -F "client_payload[from_event_name]=${{ github.event_name }}" \
+          -F "client_payload[from_event_name]=${{ github.ref_type }}" \
+          -F "client_payload[from_event_name]=${{ github.ref_name }}" \
+          -F "client_payload[artifact-id]=${{ steps.snapshot-artifacts.outputs.artifact-id }}" \
+          -F "client_payload[artifact-url]=${{ steps.snapshot-artifacts.outputs.artifact-url }}" \
+          -F "client_payload[artifact-digest]=${{ steps.snapshot-artifacts.outputs.artifact-digest }}"
+
