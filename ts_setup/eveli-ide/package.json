@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.392",
+  "version": "0.0.393",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -24,7 +24,7 @@
     "@xyflow/react": "^12.4.4"
   },
   "peerDependencies": {
-    "@dxs-ts/gamut": "^1.0.238",
+    "@dxs-ts/gamut": "^1.0.242",
     "@monaco-editor/react": "^4.7.0",
     "elkjs": "^0.9.3",
     "js-file-download": "^0.4.12",
