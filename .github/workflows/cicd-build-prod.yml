@@ -32,7 +32,7 @@ jobs:
       name: Maven build
       run: |
         cd ./mvn_setup
-        ./mvnw -B -Drevision=$(head -1 ./build-parent/next-release.version | tr -d '\n')-SNAPSHOT -DaltDeploymentRepository=local::file:./target/staging \
+        ./mvnw -B -Drevision=$(head -1 ./build-parent/next-release.version | tr -d '\n')${{ github.event_name == 'pull_request' && format('-pr{0}', github.event.pull_request.number) }}-SNAPSHOT -DaltDeploymentRepository=local::file:./target/staging \
           clean deploy
 
     - uses: actions/upload-artifact@v4
@@ -54,9 +54,9 @@ jobs:
           ${{ secrets.DIGIEXPRESS_DISPATCH_PAT }} \
           -F "event_type=snapshot-build" \
           -F "client_payload[run_id]=${{ github.run_id }}" \
-          -F "client_payload[from_event_name]=${{ github.event_name }}" \
-          -F "client_payload[from_event_name]=${{ github.ref_type }}" \
-          -F "client_payload[from_event_name]=${{ github.ref_name }}" \
+          -F "client_payload[event_name]=${{ github.event_name }}" \
+          -F "client_payload[ref_type]=${{ github.ref_type }}" \
+          -F "client_payload[ref_name]=${{ github.ref_name }}" \
           -F "client_payload[artifact-id]=${{ steps.snapshot-artifacts.outputs.artifact-id }}" \
           -F "client_payload[artifact-url]=${{ steps.snapshot-artifacts.outputs.artifact-url }}" \
           -F "client_payload[artifact-digest]=${{ steps.snapshot-artifacts.outputs.artifact-digest }}"
