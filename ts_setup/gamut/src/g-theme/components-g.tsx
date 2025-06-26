@@ -1,6 +1,11 @@
 import { Theme, Components } from '@mui/material';
+import { SiteApi } from '../api-site';
+import { GComponents } from '../g-props';
 
-export const components_g: Components<Omit<Theme, 'components'>> = {
+
+ 
+export const components_g: GComponents<Theme> = {
+  
   GUserOverview: {
     defaultProps: {
       slotProps: {
@@ -34,7 +39,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
       }
     },
     styleOverrides: {
-      root: ({ theme }) => ({
+      root: ({  }) => ({
 
       })
     }
@@ -58,7 +63,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GArticleFeedback: {
     defaultProps: {
-      enabled(view) { //015_Palaute
+      enabled(view: SiteApi.TopicView) { //015_Palaute
         return view.id.toLowerCase().endsWith('palaute');
       },
     }
