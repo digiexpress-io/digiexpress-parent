@@ -1,4 +1,4 @@
-import { generateUtilityClass, Popover, styled } from "@mui/material";
+import { alpha, generateUtilityClass, lighten, Popover, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 
 
@@ -80,7 +80,6 @@ export const GSearchMuiPopover = styled(Popover, {
   },
 })(({ theme }) => {
   return {
-
     '& .GPopoverSearch-inputFieldContainer': {
       display: 'flex',
       justifyContent: 'center',
@@ -174,6 +173,8 @@ export const GSearchMuiPopover = styled(Popover, {
       paddingTop: theme.spacing(3),
       maxHeight: '60vh',
       overflowY: 'auto',
+      borderColor: theme.palette.divider,
+      boxShadow: '0px 7px 15px 0px rgba(194,190,194,0.7)',
     
       [theme.breakpoints.down('md')]: {
         left: '0px !important',
