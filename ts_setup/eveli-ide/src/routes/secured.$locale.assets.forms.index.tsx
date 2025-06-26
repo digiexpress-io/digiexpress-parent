@@ -2,12 +2,21 @@ import React from 'react'
 import { Box, useTheme } from '@mui/system';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
-import { useIntl } from "react-intl";
+import { useIntl, IntlProvider } from "react-intl";
 import { useSnackbar } from "notistack";
 
-import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
-import { useFetch } from '@dxs-ts/eveli-fetch';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
+import {
+  sv as svLocale,
+  fi as fiLocale,
+  et as etLocale,
+  enGB as enLocale,
+  ms as msLocale
+} from 'date-fns/locale';
+import { DialobAdminView, messages, DialobAdminProps, DialobDashboardFetchProvider, DialobDashboardStateProvider, DialobAdminConfig } from '@dialob/dashboard-material';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { EveliSetup } from '@/eveli-setup';
 import { EveliApp } from '@/eveli-app';
@@ -20,6 +29,28 @@ export const Route = createFileRoute({
 function Component() {
   return (<EveliApp main={Main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
 
+}
+
+const localeMap: { [key: string]: any } = {
+  en: enLocale,
+  et: etLocale,
+  fi: fiLocale,
+  sv: svLocale,
+  ms: msLocale,
+};
+
+export const DialobAdminContainer: React.FC<DialobAdminProps> = ({ config, showNotification }) => {
+  return (
+    <DialobDashboardFetchProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={localeMap[config.language]}>
+        <IntlProvider locale={config.language || 'en'} messages={messages[config.language]}>
+          <DialobDashboardStateProvider config={config} showNotification={showNotification}>
+            <DialobAdminView />
+          </DialobDashboardStateProvider>
+        </IntlProvider>
+      </LocalizationProvider>
+    </DialobDashboardFetchProvider>
+  );
 }
 
 const Main: React.FC<{}> = () => {
@@ -39,7 +70,7 @@ const Main: React.FC<{}> = () => {
   }, [dialobUrl, intl.locale])
 
   return (<Box sx={{ p: theme.spacing(1) }}>
-    <DialobAdmin showNotification={enqueueSnackbar} config={dialobAdminConfig} />
+    <DialobAdminContainer showNotification={enqueueSnackbar} config={dialobAdminConfig} />
   </Box>)
 }
 
