@@ -293,6 +293,7 @@ public interface FeedbackClient {
     FeedbackQuestionnaireContent getContent();
 
     List<String> getReplys();
+    String getTaskRef();
     
     Questionnaire getQuestionnaire();
     ProcessInstance getProcessInstance();

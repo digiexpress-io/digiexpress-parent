@@ -8,6 +8,7 @@ import { StatusIndicator } from '../status-indicator';
 
 import { WithTableStyles } from '@/eveli-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
+import { DateTime } from 'luxon';
 
 export interface FeedbackAllTasksProps {}
 
@@ -42,14 +43,14 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       cell: (info) => <StatusIndicator size='LARGE' taskId={info.row.original.sourceId} />,
     },
     {
-      header: intl.formatMessage({ id: 'feedback.taskId' }),
+      header: intl.formatMessage({ id: 'feedback.taskReferenceId.short' }),
       accessorKey: 'sourceId',
-      size: 250,
-      minSize: 250,
+      size: 150,
+      minSize: 150,
       filterFn: 'includesString',
       sortingFn: sortingFns.alphanumeric,
       enableSorting: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       enableResizing: true,
       cell: (info) => (
         <Box
@@ -111,6 +112,24 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       enableResizing: true,
       meta: { enableSelection: true },
       cell: (info) => info.getValue(),
+    },
+    {
+      header: intl.formatMessage({ id: 'feedback.updated' }),
+      accessorKey: 'updatedOnDate',
+      size: 200,
+      minSize: 200,
+      filterFn: 'includesString',
+      sortingFn: sortingFns.datetime,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      meta: { enableSelection: true },
+      cell: (info) => {
+        const dateTime = DateTime.fromJSDate(new Date(info.getValue()))
+          .setLocale("fi")
+          .toLocaleString(DateTime.DATE_SHORT)
+        return dateTime;
+      },
     },
   ];
 

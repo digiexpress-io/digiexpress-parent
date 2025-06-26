@@ -89,7 +89,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={classes.accordionDetails}>
-              <UpsertOneFeedback taskId={task.id} onComplete={() => { }} reload={0} allowDelete={false} />
+              <UpsertOneFeedback taskRef={task.taskRef!} onComplete={() => { }} reload={0} allowDelete={false} />
             </AccordionDetails>
           </Accordion>
         </Grid2>

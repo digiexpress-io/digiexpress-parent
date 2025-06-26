@@ -11,12 +11,13 @@ import { FeedbackContent } from './FeedbackContent';
 import { CancelButton } from '@/eveli-styles';
 
 export interface UpdateOneFeedbackProps {
+  taskRef: string;
   taskId: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
   allowDelete?: boolean;
 }
 
-export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, onComplete, allowDelete = true }) => {
+export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, taskId, onComplete, allowDelete = true }) => {
   const navigate = useNavigate();
   const intl = useIntl();
   const theme = useTheme();
@@ -31,8 +32,9 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const [main, setMain] = React.useState({ labelKey: '', labelValue: '' });
   const [sub, setSub] = React.useState({ subLabelKey: '', subLabelValue: '' });
 
+
   React.useEffect(() => {
-    getOneFeedback(taskId)
+    getOneFeedback(taskRef)
       .then((resp) => {
         setFeedback(resp);
         setReply(resp?.replyText ?? '');
@@ -66,19 +68,19 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       customerTitle: customerTitle
     };
 
-    modifyOneFeedback(taskId, command).then(updatedFeedback => {
+    modifyOneFeedback(taskRef, command).then(updatedFeedback => {
       onComplete(updatedFeedback);
       setSavedReply(reply);
     });
   }
 
   function confirmDelete() {
-    deleteOneFeedback(taskId).then(feedback => {
+    deleteOneFeedback(taskRef).then(feedback => {
       onComplete(feedback);
     });
     navigate({
       from: '/secured/$locale',
-      params: { taskId },
+      params: { taskId: taskRef },
       to: '/secured/$locale/worker/tasks/$taskId'
     });
   }
@@ -91,23 +93,36 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
       <Box display='flex' alignItems='center'>
-        <Typography variant='h3' fontWeight='bold' mr={1}>{intl.formatMessage({ id: 'feedback.update.title' })}</Typography>
+        <Typography variant='h3' fontWeight='bold' mr={1}>
+          {intl.formatMessage({ id: 'feedback.update.title' })}
+        </Typography>
         <StatusIndicator size='LARGE' taskId={taskId} />
         <Box flexGrow={1} />
         <ApprovalCount approvalCount={feedback.thumbsUpCount} disapprovalCount={feedback.thumbsDownCount} />
       </Box>
-      <Divider sx={{ my: 2 }} />
+
 
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
-          {intl.formatMessage({ id: 'feedback.updated' })}:
-        </Box>{' '}
-        <EveliDateTimeFormatter value={feedback.updatedOnDate} variant='text' />
+          {intl.formatMessage({ id: 'feedback.taskReferenceId' })}
+          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+        </Box>
+        {taskRef}
       </Typography>
+
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
-          {intl.formatMessage({ id: 'feedback.updatedBy' })}:
-        </Box>{' '}
+          {intl.formatMessage({ id: 'feedback.updated' })}
+          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+        </Box>
+        <EveliDateTimeFormatter value={feedback.updatedOnDate} variant='text' />
+      </Typography>
+
+      <Typography variant='body2'>
+        <Box component='span' fontWeight='bold'>
+          {intl.formatMessage({ id: 'feedback.updatedBy' })}
+          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+        </Box>
         {feedback.updatedBy}
       </Typography>
 

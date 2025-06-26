@@ -57,7 +57,7 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
         .addAllReplys(questionnaire.getReplys())
         .questionnaire(questionnaire.getQuestionnaire())
         .processId(questionnaire.getProcessInstance().getId().toString())
-        .taskId(taskId)
+        .taskId(questionnaire.getTaskRef())
         .reporterNames(questionnaire.getReporterNames())
         
         .customerTitle(questionnaire.getCustomerTitle())

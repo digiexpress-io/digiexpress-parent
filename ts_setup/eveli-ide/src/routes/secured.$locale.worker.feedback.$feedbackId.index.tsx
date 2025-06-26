@@ -12,5 +12,5 @@ function Component() {
   function handleOnComplete() {
   }
   
-  return (<FeedbackProvider><UpsertOneFeedback taskId={feedbackId!} onComplete={handleOnComplete} reload={0} /></FeedbackProvider>)
+  return (<FeedbackProvider><UpsertOneFeedback taskRef={feedbackId!} onComplete={handleOnComplete} reload={0} /></FeedbackProvider>)
 }

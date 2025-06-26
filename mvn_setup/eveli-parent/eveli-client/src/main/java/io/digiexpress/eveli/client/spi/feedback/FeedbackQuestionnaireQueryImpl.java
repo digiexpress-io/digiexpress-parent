@@ -54,8 +54,8 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
   
   
   @Override
-  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId) {
-    final var task = taskClient.queryTasks().getOneById(taskId).await().atMost(atMost);
+  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskIdOrRef) {
+    final var task = taskClient.queryTasks().getOneById(taskIdOrRef).await().atMost(atMost);
     final var comments = taskClient.queryTaskComments().findAllByTaskId(task.getId()).await().atMost(atMost);
 
     final var process = processClient.queryInstances().findOneByTaskId(task.getId());
@@ -63,18 +63,20 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
       return Optional.empty();
     }
 
-    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(taskId);
+    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(task.getId());
     if(processQuestionnaire.isEmpty()) {
       return Optional.empty();
     }
 
     final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
-    return Optional.of(new FeedbackQuestionnaireImpl(dialobClient, process.get(), comments, questionnaire, configProps));
+    return Optional.of(new FeedbackQuestionnaireImpl(dialobClient,task, process.get(), comments, questionnaire, configProps));
   }
 
   @RequiredArgsConstructor
   public static class FeedbackQuestionnaireImpl implements FeedbackQuestionnaire {
     private final DialobClient dialobClient;
+    
+    private final TaskClient.Task task;
     private final ProcessInstance process;
     private final List<TaskComment> comments;
     private final Questionnaire questionnaire;
@@ -240,6 +242,10 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     
     private String formatReply(TaskComment comment) {
       return new StringBuilder().append(comment.getCommentText()).toString();
+    }
+    @Override
+    public String getTaskRef() {
+      return task.getTaskRef();
     } 
   }
 }
