@@ -81,12 +81,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           value={value}
           onChange={setValue} />
 
-        <Box display="flex" alignItems="center" sx={{ mt: 1, mb: 1 }}>
-          <Button  onClick={() => setArticleId(Object.keys(site.articles))}  variant='text'><FormattedMessage id='allarticles'/></Button>
-          <Button  onClick={() => setArticleId([])}  variant='text'><FormattedMessage id='allarticles.individual'/></Button>
-          <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.link.help" /></Typography>
-        </Box>
-
+        <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
         <Burger.SelectMultiple label='article.select'
           multiline
           onChange={setArticleId}

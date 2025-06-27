@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputLabel, FormControl, MenuItem, Select, FormHelperText, Theme, SxProps, styled, FormControlProps } from '@mui/material';
+import { InputLabel, FormControl, MenuItem, Select, FormHelperText, Theme, SxProps, styled, FormControlProps, ListItemText, SelectChangeEvent, Checkbox } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 
@@ -85,6 +85,29 @@ const StyledSelectMultiple: React.FC<{
   renderValue?: (values: string[]) => React.ReactNode;
 } & StyledSelectProps<string[]>> = (props) => {
   const title = <FormattedMessage id={props.label} />;
+
+  const SELECT_ALL_ID = "_select_all_";
+  const DESELECT_ALL_ID = "_deselect_all_";
+
+  const allItemIds = props.items.map(item => item.id);
+
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const value = event.target.value;
+    const newValues = typeof value === 'string' ? value.split(',') : value;
+
+    if (newValues.includes(SELECT_ALL_ID)) {
+      const isAllSelected = allItemIds.every(id => props.selected.includes(id));
+      props.onChange(isAllSelected ? [] : allItemIds);
+      return;
+    } else if (newValues.includes(DESELECT_ALL_ID)) {
+      props.onChange([]);
+    } else {
+      props.onChange(newValues.filter(id => !id.startsWith("_helpers_")));
+    }
+  };
+
+
+
   return (
     <FormControl variant="outlined" fullWidth>
       <InputLabel>{title}</InputLabel>
@@ -94,9 +117,17 @@ const StyledSelectMultiple: React.FC<{
         disabled={props.disabled}
         value={props.selected}
         
-        onChange={({ target }) => props.onChange((target.value as string[]).filter(id => !id.startsWith("_helpers_")))}
+        onChange={handleChange}
         renderValue={props.renderValue}
         label={title}>
+        <MenuItem value={SELECT_ALL_ID}>
+          <Checkbox checked={props.selected.length === allItemIds.length} />
+          <ListItemText primary={<FormattedMessage id="select.all" defaultMessage="Apply to all articles" />} />
+        </MenuItem>
+        <MenuItem value={DESELECT_ALL_ID}>
+          <Checkbox checked={props.selected.length === 0} />
+          <ListItemText primary={<FormattedMessage id="deselect.all" defaultMessage="Do not apply to any articles" />} />
+        </MenuItem>
 
         {props.helpers?.map((item, index) => (<MenuItem key={index} value={"_helpers_"+ index} sx={item.sx}>{item.value}</MenuItem>))}
         {props.empty ? <MenuItem value={props.empty.id}><FormattedMessage id={props.empty.label} /></MenuItem> : null}

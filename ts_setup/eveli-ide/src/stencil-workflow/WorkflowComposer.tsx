@@ -39,9 +39,9 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
   const handleCreate = () => {
-    const entity: StencilApi.CreateWorkflow = { 
-      value: technicalname, 
-      articles: articleId, 
+    const entity: StencilApi.CreateWorkflow = {
+      value: technicalname,
+      articles: articleId,
       labels,
       devMode: workflowOptions.devMode,
       anon: workflowOptions.anon,
@@ -51,8 +51,8 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       flowName: flowName,
       formName: formName,
       formTag: formTag,
-      formId: allTags.find(tag=> tag.formName === formName && tag.tagName === formTag)?.tagFormId,
-     };
+      formId: allTags.find(tag => tag.formName === formName && tag.tagName === formTag)?.tagFormId,
+    };
     service.create().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -87,7 +87,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       sx: article.body.parentId ? selectSub : undefined
     }));
 
-  const handleFlowNameChange = (newFlowName:string) => {
+  const handleFlowNameChange = (newFlowName: string) => {
     if (technicalname === '' || technicalname === flowName) {
       setTechnicalname(newFlowName);
     }
@@ -95,10 +95,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   const allForms = React.useMemo(() => allTags
-      .filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName))
-      .map(tag=>{return {id:tag.formName, value:tag.formLabel}})
-      .filter(tag => !!tag.value)
-      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags]);
+    .filter((tag, index) => index === allTags.findIndex(tag2 => tag2.formName === tag.formName))
+    .map(tag => { return { id: tag.formName, value: tag.formLabel } })
+    .filter(tag => !!tag.value)
+    .sort((a, b) => a.value.localeCompare(b.value)), [allTags]);
 
   const formTags = React.useMemo(() => allTags
     .filter(t => t.formName === formName)
@@ -177,12 +177,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </>)
             }))}
           />
-
-          <Box display="flex" alignItems="center" sx={{ mt: 1, mb: 1 }}>
-            <Button  onClick={() => setArticleId(Object.keys(site.articles))}  variant='text'><FormattedMessage id='allarticles'/></Button>
-            <Button  onClick={() => setArticleId([])}  variant='text'><FormattedMessage id='allarticles.individual'/></Button>
-            <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.service.help" /></Typography>
-          </Box>
         </Paper>
 
         <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
@@ -191,7 +185,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <DialogActions>
         <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
-          <FormattedMessage id='button.add'/>
+          <FormattedMessage id='button.add' />
         </Button>
       </DialogActions>
     </Dialog>
