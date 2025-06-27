@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  Box, Typography, IconButton, Popover, List, ListItem, ListItemText, ListItemButton, ListItemIcon,
-  Grid2, useTheme, Divider, TextField
+  Box, Typography, Table, TableContainer, TableBody, TableCell, TableRow, TableHead, Paper,
+  IconButton, Popover, List, ListItem, ListItemText, ListItemButton, ListItemIcon
 } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -10,6 +10,8 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import CheckIcon from '@mui/icons-material/Check';
 
 import { FormattedMessage, useIntl } from 'react-intl';
+
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 
@@ -21,6 +23,7 @@ interface SelectedValue {
 
 interface LocaleLabelsProps {
   selected: SelectedValue[];
+  disablePaper?: boolean;
   onChange: (selected: SelectedValue[]) => void;
   onChangeStart: () => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -40,7 +43,6 @@ const toSelectedRecord = (input: SelectedValue[]): Record<string, SelectedValue>
 
 const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
   const { site } = Composer.useSession();
-  const theme = useTheme();
   const intl = useIntl();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [selected, setSelected] = React.useState<Record<string, SelectedValue>>(toSelectedRecord(props.selected));
@@ -87,91 +89,84 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
 
 
   const editField = edit ? (
-    <TextField
-      fullWidth
-      variant="outlined"
-      label={intl.formatMessage({ id: "sitelocale.label.table.editLocaleValue" })}
+    <Burger.TextField
+      label="sitelocale.label.table.editLocaleValue"
       value={edit.value}
-      onChange={(e) => setEdit({ locale: edit.locale, value: e.target.value })}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter') {
-          handleEditEnd();
-        }
-      }}
+      onEnter={() => handleEditEnd()}
+      onChange={(newValue) => setEdit({ locale: edit.locale, value: newValue })}
     />
   ) : null;
 
-  const labelSection = (
-    <>
-      <Grid2 container alignItems='center' px={theme.spacing(1)} sx={{ backgroundColor: theme.palette.secondary.main }}>
-        <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-          <Typography variant='subtitle2' fontWeight='bold'><FormattedMessage id="locales.label.table.locale" /></Typography>
-        </Grid2>
-        <Grid2 size={{ md: 5, lg: 5, xl: 5 }}>
-          <Typography variant='subtitle2' fontWeight='bold'><FormattedMessage id="locales.label.table.value" /></Typography>
-        </Grid2>
+  const table = (<Table size="small">
+    <TableHead>
+      <TableRow sx={{ borderBottom: 0 }}>
+        <TableCell colSpan={3} sx={{ borderBottom: 0 }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1, color: "secondary.main" }}>
+            <FormattedMessage id={"locales.label.table.title"} />
+          </Typography>
+        </TableCell>
 
-        <Box flexGrow={1} />
-
-        <Grid2 size={{ md: 1, lg: 1, xl: 1 }} display='flex' justifyContent='flex-end'>
+        <TableCell sx={{ borderBottom: 0 }} align="right">
           <IconButton
             disabled={(edit ? true : false)}
             onClick={(event) => setAnchorEl(event.currentTarget)}>
-            <AddCircleOutlineIcon color='primary' />
+            <AddCircleOutlineIcon />
           </IconButton>
-        </Grid2>
-      </Grid2>
+        </TableCell>
+      </TableRow>
 
-      <Divider />
-
-      <Box>
-        {rows.length === 0 ? <Box width='100%'>
-          <Typography variant="h5" my={theme.spacing(1)}><FormattedMessage id="transferlist.noItemsSelected" /></Typography>
+      <TableRow>
+        <TableCell sx={{ width: "100px" }} colSpan={2} align="left" color="primary.light"><FormattedMessage id="locales.label.table.locale" /></TableCell>
+        <TableCell sx={{}} colSpan={2} align="left"><FormattedMessage id="locales.label.table.value" /></TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {rows.length === 0 ? <TableRow>
+        <TableCell colSpan={4}>
+          <Typography variant="h5" sx={{ marginBottom: 1, marginTop: 1 }}><FormattedMessage id="transferlist.noItemsSelected" /></Typography>
           <Box display="flex" alignItems="center">
-            <WarningAmberRoundedIcon color='warning' />
+            <WarningAmberRoundedIcon sx={{ color: 'warning.main' }} />
             <Typography variant="caption" fontWeight='bold'>
               <FormattedMessage id={"locales.label.title.helper"} />
             </Typography>
           </Box>
-        </Box> : null}
+        </TableCell>
+      </TableRow> : null}
 
-        {rows.map((row, index) => (
-          <Grid2 container alignItems='center' p={theme.spacing(1)} key={index}>
-            <Grid2 size={{ md: 3, lg: 3, xl: 3 }}><Typography fontWeight='bold'>{site.locales[row.locale]?.body.value}</Typography></Grid2>
-            <Grid2 size={{ md: 5, lg: 5, xl: 5 }} pb={theme.spacing(0.5)}
+      {rows.map((row, index) => (
+        <TableRow hover key={index} sx={{ height: "85px" }}>
+          <TableCell sx={{ width: "40px" }}>
+            <IconButton onClick={() => handleRemoveLabel(row.locale)}>
+              <DeleteOutlineIcon />
+            </IconButton>
+          </TableCell>
+          <TableCell align="left">{site.locales[row.locale]?.body.value}</TableCell>
+          <TableCell align="left" onClick={() => {
+            if (!edit) {
+              setEdit(row);
+              props.onChangeStart();
+            }
+          }}>
+            {edit?.locale === row.locale ? editField : row.value}
+          </TableCell>
+          <TableCell align="right">
+            <IconButton
+              disabled={(edit && edit.locale !== row.locale || edit && edit.value.length === 0) ? true : false}
               onClick={() => {
-                if (!edit) {
+                if (edit) {
+                  handleEditEnd()
+                } else {
                   setEdit(row);
                   props.onChangeStart();
                 }
               }}>
-              {edit?.locale === row.locale ? editField : row.value}
-            </Grid2>
-
-            <Box flexGrow={1} />
-
-            <Grid2 size={{ md: 1, lg: 1, xl: 1 }} display='flex' justifyContent='flex-end'>
-              <IconButton
-                disabled={(edit && edit.locale !== row.locale || edit && edit.value.length === 0) ? true : false}
-                onClick={() => {
-                  if (edit) {
-                    handleEditEnd()
-                  } else {
-                    setEdit(row);
-                    props.onChangeStart();
-                  }
-                }}>
-                {edit?.locale === row.locale ? <CheckIcon color='primary' /> : <EditIcon color='primary' />}
-              </IconButton>
-              <IconButton onClick={() => handleRemoveLabel(row.locale)}>
-                <DeleteOutlineIcon color='error' />
-              </IconButton>
-            </Grid2>
-          </Grid2>
-        ))}
-      </Box>
-    </>
-  );
+              {edit?.locale === row.locale ? <CheckIcon /> : <EditIcon />}
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>);
 
   return (
     <>
@@ -195,15 +190,10 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
           </ListItem>))}
         </List>
       </Popover>
-      <>
-        <Typography variant="body2" fontWeight='bold' marginLeft={theme.spacing(2)}>
-          <FormattedMessage id={"locales.label.table.title"} />
-        </Typography>
 
-        <Box sx={{ marginTop: theme.spacing(1), border: `1px solid ${theme.palette.divider}` }}>
-          {labelSection}
-        </Box>
-      </>
+      <Box sx={{ marginTop: 1 }}>
+        {props.disablePaper ? table : (<TableContainer component={Paper}>{table}</TableContainer>)}
+      </Box>
     </>
   );
 }

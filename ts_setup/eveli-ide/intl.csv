@@ -507,7 +507,7 @@ sitelocale.label.select.alreadyDefined,,Cannot add because this locale is alread
 sitelocale.label.table.editLocaleValue,,Edit locale value,Editoi lokalisointia,Redigera språkvärde
 locales.label.table.title,,Locale labels,Lokalisonti tunniste,Platsetiketter
 locales.label.title.helper,,At least one language code (locale) + locale label value is required,,Minst en språkkod (lokal) + lokaletikettvärde krävs
-locales.label.table.value,,Locale label values,Lokalisointi,Platsetikettvärden
+locales.label.table.value,,Translated text value,Lokalisointi,Platsetikettvärden
 locales.enabledMessage,,Enabled: Content for this locale will be displayed on the portal side,,Aktiverad: Innehåll för den här lokalen kommer att visas på portalsidan
 locales.disabledMessage,,Disabled: Content for this locale will be hidden from the portal side. Content can still be edited.,,Inaktiverad: Innehåll för den här lokalen kommer att döljas från portalsidan. Innehållet kan fortfarande redigeras.
 transferlist.noItemsSelected,,No items selected,Ei valintoja,Inga objekt har valts

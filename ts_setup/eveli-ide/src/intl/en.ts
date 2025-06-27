@@ -507,7 +507,7 @@ export const en = {
   'sitelocale.label.table.editLocaleValue': 'Edit locale value',
   'locales.label.table.title': 'Locale labels',
   'locales.label.title.helper': 'At least one language code (locale) + locale label value is required',
-  'locales.label.table.value': 'Locale label values',
+  'locales.label.table.value': 'Translated text value',
   'locales.enabledMessage': 'Enabled: Content for this locale will be displayed on the portal side',
   'locales.disabledMessage': 'Disabled: Content for this locale will be hidden from the portal side. Content can still be edited.',
   'transferlist.noItemsSelected': 'No items selected',
