@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
@@ -18,6 +18,7 @@ const selectSub = { ml: 2, color: "article.dark" }
 
 const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
   const [startdate, setStartdate] = React.useState<string>('');
   const [enddate, setEnddate] = React.useState<string>('');
@@ -110,19 +111,18 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <DialogTitle><FormattedMessage id='services.add' /></DialogTitle>
       <DialogContent>
 
+        <LocaleLabels
+          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
+          onChangeStart={() => setChangeInProgress(true)}
+          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
+
         <Burger.TextField label='services.technicalname'
           required
           value={technicalname}
           onChange={setTechnicalname} />
 
         <Box display="flex">
-          <Box flexGrow={1}>
-            <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
-              selected={flowName}
-              items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
-            />
-          </Box>
-          <Box sx={{ ml: 1 }}>
+          <Box>
             <Burger.Select label="services.formName" onChange={setFormName}
               selected={formName}
               items={allForms}
@@ -136,9 +136,13 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               helperText='services.formTag.description'
             />
           </Box>
+          <Box sx={{ ml: 1 }} flexGrow={1}>
+            <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
+              selected={flowName}
+              items={allFlows.map((flow) => { return { id: flow, value: flow } })}
+            />
+          </Box>
         </Box>
-
-        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
 
         <Box display="flex">
           <Box flexGrow={1}>
@@ -155,13 +159,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </Box>
         </Box>
 
-        <LocaleLabels
-          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
-          onChangeStart={() => setChangeInProgress(true)}
-          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
+        <Paper variant="outlined" sx={{ mt: theme.spacing(1), p: theme.spacing(2) }}>
+          <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
 
-        <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
-          <Burger.SelectMultiple label='article.select'
+          <Burger.SelectMultiple label='composer.article.selected'
             multiline
             selected={articleId}
             disabled={!locales.length}
@@ -183,6 +184,9 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.service.help" /></Typography>
           </Box>
         </Paper>
+
+        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
+        <Box mb={theme.spacing(3)} />
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />

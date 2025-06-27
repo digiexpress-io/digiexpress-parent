@@ -508,6 +508,7 @@ sitelocale.label.table.editLocaleValue,,Edit locale value,Editoi lokalisointia,R
 locales.label.table.title,,Locale labels,Lokalisonti tunniste,Platsetiketter
 locales.label.title.helper,,At least one language code (locale) + locale label value is required,,Minst en språkkod (lokal) + lokaletikettvärde krävs
 locales.label.table.value,,Translated text value,Lokalisointi,Platsetikettvärden
+locales.label.table.noneSet,,No translated labels!,,,
 locales.enabledMessage,,Enabled: Content for this locale will be displayed on the portal side,,Aktiverad: Innehåll för den här lokalen kommer att visas på portalsidan
 locales.disabledMessage,,Disabled: Content for this locale will be hidden from the portal side. Content can still be edited.,,Inaktiverad: Innehåll för den här lokalen kommer att döljas från portalsidan. Innehållet kan fortfarande redigeras.
 transferlist.noItemsSelected,,No items selected,Ei valintoja,Inga objekt har valts
@@ -966,6 +967,7 @@ button.view,,,Katsele,
 button.addremove,,,Lisää/Irrota,
 composer.article.title,,,Artikkeli,
 composer.article.desc,,,"Ryhmä yhdistettyjä sivuja, linkkejä, työnkulkuja ja sijainteja",
+composer.article.selected,,Selected Articles,,,
 composer.locale.title,,,Sijainti,
 composer.locale.desc,,,"Lisää, aktivoi ja deaktivoi sisällön kieliä globaalisti",
 composer.page.title,,,Sivu,

@@ -1,7 +1,6 @@
 import React from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
-import { ClearIcon } from '@mui/x-date-pickers';
+import { ClearIcon, DatePicker } from '@mui/x-date-pickers';
 
 export interface CustomDatePickerProps {
   value: Date | undefined;

@@ -126,7 +126,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
 
       <Box>
         {rows.length === 0 ? <Box width='100%'>
-          <Typography variant="h5" my={theme.spacing(1)}><FormattedMessage id="transferlist.noItemsSelected" /></Typography>
+          <Typography variant="body1" m={theme.spacing(1)}><FormattedMessage id="locales.label.table.noneSet" /></Typography>
           <Box display="flex" alignItems="center">
             <WarningAmberRoundedIcon color='warning' />
             <Typography variant="caption" fontWeight='bold'>
