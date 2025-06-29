@@ -112,6 +112,9 @@ const StyledSelectMultiple: React.FC<{
     <FormControl variant="outlined" fullWidth>
       <InputLabel>{title}</InputLabel>
       <Select 
+        MenuProps={{
+          disableAutoFocusItem: true
+        }}
         multiple={true}
         multiline={props.multiline}
         disabled={props.disabled}
