@@ -82,7 +82,9 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           onChange={setValue} />
 
         <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
-        <Burger.SelectMultiple label='article.select'
+        <Burger.SelectMultiple
+          variant='ARTICLE_SELECT'
+          label='article.select'
           multiline
           onChange={setArticleId}
           selected={articleId}

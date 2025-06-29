@@ -163,6 +163,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
 
           <Burger.SelectMultiple label='composer.article.selected'
+            variant='ARTICLE_SELECT'
             multiline
             selected={articleId}
             disabled={!locales.length}

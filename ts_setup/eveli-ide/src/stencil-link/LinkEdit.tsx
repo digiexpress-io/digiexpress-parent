@@ -93,6 +93,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
 
         <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
         <Burger.SelectMultiple label='link.article.select' multiline
+          variant='ARTICLE_SELECT'
           selected={articleId}
           onChange={setArticleId}
           renderValue={(selected: StencilApi.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}

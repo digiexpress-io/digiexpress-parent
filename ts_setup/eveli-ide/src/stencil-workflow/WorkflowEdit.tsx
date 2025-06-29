@@ -167,6 +167,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
         <Paper variant="outlined" sx={{ mt: theme.spacing(1), p: theme.spacing(2) }}>
           <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
           <Burger.SelectMultiple label='composer.article.selected'
+            variant='ARTICLE_SELECT'
             multiline
             onChange={setArticleId}
             selected={articleId}
