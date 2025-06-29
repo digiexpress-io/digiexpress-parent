@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputLabel, FormControl, MenuItem, Select, FormHelperText, Theme, SxProps, styled, FormControlProps, ListItemText, SelectChangeEvent, Checkbox } from '@mui/material';
+import { InputLabel, FormControl, MenuItem, Select, FormHelperText, Theme, SxProps, styled, FormControlProps, ListItemText, useTheme, Checkbox, Divider, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 
@@ -39,6 +39,7 @@ const StyledSelectBase = styled(Select)(({ theme }) => ({
   alignItems: 'center',
   boxSizing: 'border-box',
   padding: '0 14px',
+  backgroundColor: theme.palette.secondary.main
 }));
 
 
@@ -85,6 +86,7 @@ const StyledSelectMultiple: React.FC<{
   renderValue?: (values: string[]) => React.ReactNode;
   variant?: 'ARTICLE_SELECT' | undefined;
 } & StyledSelectProps<string[]>> = (props) => {
+  const theme = useTheme();
   const title = <FormattedMessage id={props.label} />;
 
   const SELECT_ALL_ID = "_select_all_";
@@ -107,9 +109,23 @@ const StyledSelectMultiple: React.FC<{
   return (
     <FormControl variant="outlined" fullWidth>
       <InputLabel>{title}</InputLabel>
-      <Select
+      <Select autoWidth
         MenuProps={{
-          disableAutoFocusItem: true
+          disableAutoFocusItem: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'right',
+          },
+          transformOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left',
+          },
+          PaperProps: {
+            sx: {
+              backgroundColor: theme.palette.secondary.dark,
+              boxShadow: theme.shadows[7]
+            }
+          }
         }}
         multiple={true}
         multiline={props.multiline}
@@ -123,12 +139,13 @@ const StyledSelectMultiple: React.FC<{
           <>
             <MenuItem value={SELECT_ALL_ID} onClick={handleSelectAll}>
               <Checkbox checked={props.selected.length === allItemIds.length} />
-              <ListItemText primary={<FormattedMessage id="select.all" defaultMessage="Apply to all articles" />} />
+            <ListItemText primary={<FormattedMessage id="select.all" defaultMessage="Select all articles" />} />
             </MenuItem>
           <MenuItem value={DESELECT_ALL_ID} onClick={handleDeselectAll}>
             <Checkbox checked={props.selected.length === 0} />
-            <ListItemText primary={<FormattedMessage id="deselect.all" defaultMessage="Do not apply to any articles" />} />
+            <ListItemText primary={<FormattedMessage id="deselect.all" defaultMessage="Unselect all articles" />} />
           </MenuItem>
+          <Divider />
           </>
         }
 
