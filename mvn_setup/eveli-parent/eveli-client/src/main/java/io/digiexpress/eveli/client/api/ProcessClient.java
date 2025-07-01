@@ -104,7 +104,6 @@ public interface ProcessClient {
     
     void deleteOneById(Long id);
     List<ProcessInstance> findAll();
-    List<ProcessInstance> findLast6Months();
     List<ProcessInstance> findAllAnswered();
     List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom);
     
@@ -146,7 +145,8 @@ public interface ProcessClient {
     
     // Entity links
     @Nullable String getQuestionnaireId();
-    @Nullable String getTaskId();    
+    @Nullable String getTaskId();
+    @Nullable String getTaskRef();
     @Nullable String getUserId();
 
     

@@ -33,6 +33,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.digiexpress.thena.batch.client.api.entities.Envelope;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.resys.thena.api.actions.TenantActions;
 import io.smallrye.mutiny.Uni;
@@ -45,6 +46,7 @@ public interface BatchClient {
   
   BatchQuery queryBatches();
   RuntimeInstanceQuery queryRuntimeInstances();
+  RuntimeStepQuery queryRuntimeSteps();
   CreateOneRuntimeInstance createOneRuntimeInstance();  
   
   CreateBatchConfig createBatchConfig();
@@ -54,6 +56,10 @@ public interface BatchClient {
   interface BatchQuery {
     Uni<Envelope<Batch>> getOne(String batchId);
     Uni<Envelope<List<Batch>>> findAll();
+  }
+  
+  interface RuntimeStepQuery {
+    Uni<Envelope<RuntimeStep>> getOne(String stepId);
   }
   
   interface CreateBatchEnvir {
@@ -69,6 +75,7 @@ public interface BatchClient {
   }
   
   interface RuntimeInstanceQuery {
+    RuntimeInstanceQuery includeStepRows();
     RuntimeInstanceQuery status(RuntimeStatus ... status);
     Uni<Envelope<List<RuntimeInstance>>> findAll();
   }

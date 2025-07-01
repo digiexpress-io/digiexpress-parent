@@ -1,16 +1,17 @@
 import React from 'react';
-import { ColumnDef, flexRender } from '@tanstack/react-table';
-import { Link as RouterLink } from '@tanstack/react-router'
-import { useFetch } from '@dxs-ts/eveli-fetch';
-import { WithTableStyles } from '@/eveli-table';
 import { Box, Typography, IconButton, Tooltip, LinkProps, Link } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useIntl, FormattedMessage } from 'react-intl';
-
+import { DateTime } from 'luxon';
+import { ColumnDef, flexRender } from '@tanstack/react-table';
+import { Link as RouterLink } from '@tanstack/react-router'
 import { useNavigate } from '@tanstack/react-router';
+
+import { useFetch } from '@dxs-ts/eveli-fetch';
+import { WithTableStyles } from '@/eveli-table';
 import { BatchApi } from '@/api-batch';
 import { BatchHealthBall } from '../eveli-batches-health-ball';
-import { DateTime } from 'luxon';
+
 
 
 
@@ -66,7 +67,6 @@ export const EveliBatchesTable: React.FC = () => {
       enableColumnFilter: true,
       enableResizing: true,
     },
-
   ]
 
   return (
@@ -75,21 +75,7 @@ export const EveliBatchesTable: React.FC = () => {
         <Typography variant="h1" sx={{ flexGrow: 1 }}>
           <FormattedMessage id="batchesView.title" defaultMessage="Batches" />
         </Typography>
-
-          <Tooltip title={intl.formatMessage({ id: 'taskButton.addInstance' })}>
-            <IconButton
-              onClick={() => {
-                navigate({
-                  from: '/secured/$locale',
-                  to: '/secured/$locale/worker/batches/create',
-                });
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
       </Box>
-  
       <WithTableStyles data={data} columns={columns} options={{ tableId: 'batches'}}/>
     </Box>
   );  
@@ -107,10 +93,6 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
 }
 
 const BatchLink: React.FC<{ value: BatchApi.Batch }> = ({ value }) => {
-
-  if (!value.transitives || value.transitives?.instances.length === 0) {
-    return (<>{value.batchName}</>)
-  }
 
   return (
     <Box

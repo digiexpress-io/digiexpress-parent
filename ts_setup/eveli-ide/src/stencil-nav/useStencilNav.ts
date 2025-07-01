@@ -28,7 +28,8 @@ export function useStencilNav(): {
 
   function onNav(input: ExplorerItem) {
     navigate({ 
-      from: '/secured/$locale/assets/stencil', 
+      from: '/secured/$locale/assets/stencil',
+      to: '.',
       search: (prev: StencilRouteSearchParams) => mergeStencilSearchParams(input, prev)
     });
   }

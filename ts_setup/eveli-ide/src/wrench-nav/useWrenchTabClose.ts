@@ -8,6 +8,7 @@ export function useWrenchTabClose() {
   function onTabClose(tab: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
+      to: '.',
       search: (prev: WrenchRouteSearchParams) => {
         
         const targetId = toExplorerId(tab);

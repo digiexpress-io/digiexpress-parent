@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
@@ -18,6 +17,7 @@ const selectSub = { ml: 2, color: "article.dark" }
 
 const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
   const [startdate, setStartdate] = React.useState<string>('');
   const [enddate, setEnddate] = React.useState<string>('');
@@ -38,9 +38,9 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
   const handleCreate = () => {
-    const entity: StencilApi.CreateWorkflow = { 
-      value: technicalname, 
-      articles: articleId, 
+    const entity: StencilApi.CreateWorkflow = {
+      value: technicalname,
+      articles: articleId,
       labels,
       devMode: workflowOptions.devMode,
       anon: workflowOptions.anon,
@@ -50,8 +50,8 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       flowName: flowName,
       formName: formName,
       formTag: formTag,
-      formId: allTags.find(tag=> tag.formName === formName && tag.tagName === formTag)?.tagFormId,
-     };
+      formId: allTags.find(tag => tag.formName === formName && tag.tagName === formTag)?.tagFormId,
+    };
     service.create().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -86,7 +86,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       sx: article.body.parentId ? selectSub : undefined
     }));
 
-  const handleFlowNameChange = (newFlowName:string) => {
+  const handleFlowNameChange = (newFlowName: string) => {
     if (technicalname === '' || technicalname === flowName) {
       setTechnicalname(newFlowName);
     }
@@ -94,10 +94,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   const allForms = React.useMemo(() => allTags
-      .filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName))
-      .map(tag=>{return {id:tag.formName, value:tag.formLabel}})
-      .filter(tag => !!tag.value)
-      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags]);
+    .filter((tag, index) => index === allTags.findIndex(tag2 => tag2.formName === tag.formName))
+    .map(tag => { return { id: tag.formName, value: tag.formLabel } })
+    .filter(tag => !!tag.value)
+    .sort((a, b) => a.value.localeCompare(b.value)), [allTags]);
 
   const formTags = React.useMemo(() => allTags
     .filter(t => t.formName === formName)
@@ -110,19 +110,18 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <DialogTitle><FormattedMessage id='services.add' /></DialogTitle>
       <DialogContent>
 
+        <LocaleLabels
+          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
+          onChangeStart={() => setChangeInProgress(true)}
+          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
+
         <Burger.TextField label='services.technicalname'
           required
           value={technicalname}
           onChange={setTechnicalname} />
 
         <Box display="flex">
-          <Box flexGrow={1}>
-            <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
-              selected={flowName}
-              items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
-            />
-          </Box>
-          <Box sx={{ ml: 1 }}>
+          <Box>
             <Burger.Select label="services.formName" onChange={setFormName}
               selected={formName}
               items={allForms}
@@ -136,9 +135,13 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               helperText='services.formTag.description'
             />
           </Box>
+          <Box sx={{ ml: 1 }} flexGrow={1}>
+            <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
+              selected={flowName}
+              items={allFlows.map((flow) => { return { id: flow, value: flow } })}
+            />
+          </Box>
         </Box>
-
-        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
 
         <Box display="flex">
           <Box flexGrow={1}>
@@ -155,13 +158,11 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </Box>
         </Box>
 
-        <LocaleLabels
-          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
-          onChangeStart={() => setChangeInProgress(true)}
-          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
+        <Divider sx={{ my: theme.spacing(2) }} />
+          <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
 
-        <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
-          <Burger.SelectMultiple label='article.select'
+          <Burger.SelectMultiple label='composer.article.selected'
+            variant='ARTICLE_SELECT'
             multiline
             selected={articleId}
             disabled={!locales.length}
@@ -175,19 +176,15 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <ListItemText primary={article.value} />
               </>)
             }))}
-          />
+        />
 
-          <Box display="flex" alignItems="center" sx={{ mt: 1, mb: 1 }}>
-            <Button  onClick={() => setArticleId(Object.keys(site.articles))}  variant='text'><FormattedMessage id='allarticles'/></Button>
-            <Button  onClick={() => setArticleId([])}  variant='text'><FormattedMessage id='allarticles.individual'/></Button>
-            <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.service.help" /></Typography>
-          </Box>
-        </Paper>
+        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
+        <Box mb={theme.spacing(3)} />
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
-          <FormattedMessage id='button.add'/>
+          <FormattedMessage id='button.add' />
         </Button>
       </DialogActions>
     </Dialog>

@@ -50,7 +50,7 @@ task.comments.external.createTask,,Create task before adding external comments,L
 task.comments.internal.createTask,,Create task before adding internal comments,Luo tehtävä ennen sisäisten kommenttien lisäämistä,Skapa uppgift innan du lägger till interna kommentarer
 task.attachments.createTask,,Create task before uploading attachments,Luo tehtävä ennen liitteiden lataamista,Skapa uppgift innan du laddar upp bilagor
 task.comments.external.added,,Internal comment added,Sisäinen kommentti tallletettu,Intern kommentar tillagd
-task.feedback.publishedSaved,,Message to client sended,Viesti asiakkaalle lähetetty,Meddelande till klient har skickats
+task.feedback.publishedSaved,,Feedback changes saved,Palautemuutokset tallennettu,Feedbackändringar sparade
 task.comments.internal.added,task detail,Comment added,Kommentti lisätty,Kommentar har lagts till
 internalComments,task detail,Internal comments,Sisäiset kommentit,Interna kommentarer
 externalComments,task detail,Client messages,Asiakas viestit,Kundmeddelanden
@@ -153,6 +153,7 @@ button.send,,Send,Lähetä,Skicka
 button.dismiss,,Dismiss,Sulje,Stäng
 button.editRoles,,Edit,Muokkaa,Redigera
 button.select,,Select,Valita,Select
+button.startBatch,,Start batch,Start batch,,
 error.minTextLength,,Value should be at least {minLength} characters long,Annetun arvon pitää olla vähintään {minLength} merkkiä,Texten måste vara minst {minLength} tecken lång.
 error.maxTextLength,,Value should be no more than {max} characters long,Annetun arvon tulee olla enintään {max} merkkiä pitkä,Texten måste vara max {max} tecken lång.
 error.valueRequired,,Value required,Vaaditaan,Nödvändig
@@ -186,6 +187,7 @@ processTableHeader.user,theWrench,User id,Käyttäjä,Användare
 processTableHeader.status,theWrench,Status,Tila,Status
 processTableHeader.created,theWrench,Created,Luotu,Skapad
 processTableHeader.questionnaireId,theWrench,Questionnaire,Lomake,Formulär
+processTableHeader.taskRef,,Task reference,Task reference,,
 process.status.ANSWERED,theWrench,Answered,Lähetetty,Skickad
 process.status.CREATED,theWrench,Created,Luotu,Skapad
 process.status.ANSWERING,theWrench,Answering,Keskeneräinen,På hälft
@@ -242,6 +244,7 @@ feedback.sendScreenshot,,Send screenshot,Lähetä ruutukaappaus,Skicka en skärm
 feedback.close,,Close,Peru,Avbryt
 feedback.send,,Send,Lähetä,Skicka
 feedback.taskReferenceId,,Task Reference ID,Tehtävän viite,Ärende-ID
+feedback.taskReferenceId.short,,Task Ref,Task Ref,Task Ref,
 feedback.taskId,,Task ID,Tehtävän ID,Ärende-ID
 feedback.mainCategory,,Subject,Aihe,Ämne
 feedback.subCategory,,Specific topic area,Tarkempi aihealue,Specifikt ämnesområde
@@ -504,7 +507,8 @@ sitelocale.label.select.alreadyDefined,,Cannot add because this locale is alread
 sitelocale.label.table.editLocaleValue,,Edit locale value,Editoi lokalisointia,Redigera språkvärde
 locales.label.table.title,,Locale labels,Lokalisonti tunniste,Platsetiketter
 locales.label.title.helper,,At least one language code (locale) + locale label value is required,,Minst en språkkod (lokal) + lokaletikettvärde krävs
-locales.label.table.value,,Locale label values,Lokalisointi,Platsetikettvärden
+locales.label.table.value,,Translated text value,Lokalisointi,Platsetikettvärden
+locales.label.table.noneSet,,No translated labels!,,,
 locales.enabledMessage,,Enabled: Content for this locale will be displayed on the portal side,,Aktiverad: Innehåll för den här lokalen kommer att visas på portalsidan
 locales.disabledMessage,,Disabled: Content for this locale will be hidden from the portal side. Content can still be edited.,,Inaktiverad: Innehåll för den här lokalen kommer att döljas från portalsidan. Innehållet kan fortfarande redigeras.
 transferlist.noItemsSelected,,No items selected,Ei valintoja,Inga objekt har valts
@@ -963,6 +967,7 @@ button.view,,,Katsele,
 button.addremove,,,Lisää/Irrota,
 composer.article.title,,,Artikkeli,
 composer.article.desc,,,"Ryhmä yhdistettyjä sivuja, linkkejä, työnkulkuja ja sijainteja",
+composer.article.selected,,Selected Articles,,,
 composer.locale.title,,,Sijainti,
 composer.locale.desc,,,"Lisää, aktivoi ja deaktivoi sisällön kieliä globaalisti",
 composer.page.title,,,Sivu,
@@ -1064,6 +1069,7 @@ eveli.userProfile.tenantConfig.select.user_profile.desc,,Show / hide the user pr
 eveli.userProfile.tenantConfig.select.visual_accommodation,,Visual accommodation,,,
 eveli.userProfile.tenantConfig.select.visual_accommodation.desc,,To make certain buttons and UI items pop for enhanced visibility,,,
 // -------------------------- BATCHES ---------------------------------
-eveli.batches.averageRunTime,,Average run time,Average run time,,
-eveli.batches.averageRunTime.ms,,ms,ms,,
+eveli.batches.batchView..averageRunTime,,Average run time,Average run time,,
+eveli.batches.batchView.averageRunTime.ms,,ms,ms,,
+
 

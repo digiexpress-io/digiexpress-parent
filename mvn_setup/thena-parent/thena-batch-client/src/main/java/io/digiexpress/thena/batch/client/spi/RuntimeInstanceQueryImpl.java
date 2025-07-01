@@ -47,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 public class RuntimeInstanceQueryImpl implements RuntimeInstanceQuery {
   private final BatchDb batchDb;
   private final List<RuntimeStatus> status = new ArrayList<>();
+  private boolean includeStepRows = false;
   
   @Override
   public RuntimeInstanceQuery status(RuntimeStatus... status) {
@@ -58,7 +59,11 @@ public class RuntimeInstanceQueryImpl implements RuntimeInstanceQuery {
     return batchDb.withTenant().onItem().transformToUni(db -> onQuery(db)
         .onFailure().recoverWithItem(t -> onError(db, t)));
   }
-  
+  @Override
+  public RuntimeInstanceQuery includeStepRows() {
+    this.includeStepRows = true;
+    return this;
+  }
   private Envelope<List<RuntimeInstance>> onError(BatchDb batchDb, Throwable throwable) {
     return ImmutableEnvelope.<List<RuntimeInstance>>builder()
         .tenantId(batchDb.getDataSource().getTenant().getId())
@@ -78,7 +83,12 @@ public class RuntimeInstanceQueryImpl implements RuntimeInstanceQuery {
     return Uni.combine().all().unis(
         batchDb.query().queryInstances().findAllByStatus(status), 
         batchDb.query().querySteps().findAllByInstanceStatus(status),
-        batchDb.query().queryStepRows().findAllByInstanceStatus(status),
+        
+        // based on data can be expensive 
+        includeStepRows ? 
+            batchDb.query().queryStepRows().findAllByInstanceStatus(status) :
+            Uni.createFrom().item(Collections.<RuntimeStepRow>emptyList()),
+        
         batchDb.query().queryMetrics().findAllByInstanceStatus(status)
       )
       .asTuple()

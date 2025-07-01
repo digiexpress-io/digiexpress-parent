@@ -44,6 +44,7 @@ import { Route as SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport } from './
 import { Route as SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport } from './routes/secured.$locale.worker.feedback.$feedbackId.index'
 import { Route as SecuredLocaleWorkerBatchesCreateIndexRouteImport } from './routes/secured.$locale.worker.batches.create.index'
 import { Route as SecuredLocaleWorkerBatchesBatchIdIndexRouteImport } from './routes/secured.$locale.worker.batches.$batchId.index'
+import { Route as SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRouteImport } from './routes/secured.$locale.worker.batches.$batchId.steps.$stepId.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -237,6 +238,12 @@ const SecuredLocaleWorkerBatchesBatchIdIndexRoute =
     path: '/$batchId/',
     getParentRoute: () => SecuredLocaleWorkerBatchesRoute,
   } as any)
+const SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute =
+  SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRouteImport.update({
+    id: '/$batchId/steps/$stepId/',
+    path: '/$batchId/steps/$stepId/',
+    getParentRoute: () => SecuredLocaleWorkerBatchesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
   '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
   '/secured/$locale/worker/tasks/create': typeof SecuredLocaleWorkerTasksCreateIndexRoute
+  '/secured/$locale/worker/batches/$batchId/steps/$stepId': typeof SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -303,6 +311,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
   '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
   '/secured/$locale/worker/tasks/create': typeof SecuredLocaleWorkerTasksCreateIndexRoute
+  '/secured/$locale/worker/batches/$batchId/steps/$stepId': typeof SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -339,6 +348,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/queues/messages/': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
   '/secured/$locale/worker/tasks/$taskId/': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
   '/secured/$locale/worker/tasks/create/': typeof SecuredLocaleWorkerTasksCreateIndexRoute
+  '/secured/$locale/worker/batches/$batchId/steps/$stepId/': typeof SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -376,6 +386,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/queues/messages'
     | '/secured/$locale/worker/tasks/$taskId'
     | '/secured/$locale/worker/tasks/create'
+    | '/secured/$locale/worker/batches/$batchId/steps/$stepId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/queues/messages'
     | '/secured/$locale/worker/tasks/$taskId'
     | '/secured/$locale/worker/tasks/create'
+    | '/secured/$locale/worker/batches/$batchId/steps/$stepId'
   id:
     | '__root__'
     | '/'
@@ -442,6 +454,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/queues/messages/'
     | '/secured/$locale/worker/tasks/$taskId/'
     | '/secured/$locale/worker/tasks/create/'
+    | '/secured/$locale/worker/batches/$batchId/steps/$stepId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -682,6 +695,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/worker/tasks/create'
       preLoaderRoute: typeof SecuredLocaleWorkerTasksCreateIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerTasksRoute
+    }
+    '/secured/$locale/worker/batches/$batchId/steps/$stepId/': {
+      id: '/secured/$locale/worker/batches/$batchId/steps/$stepId/'
+      path: '/$batchId/steps/$stepId'
+      fullPath: '/secured/$locale/worker/batches/$batchId/steps/$stepId'
+      preLoaderRoute: typeof SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerBatchesRoute
     }
   }
 }
@@ -983,6 +1003,15 @@ declare module './routes/secured.$locale.worker.tasks.create.index' {
     FileRoutesByPath['/secured/$locale/worker/tasks/create/']['fullPath']
   >
 }
+declare module './routes/secured.$locale.worker.batches.$batchId.steps.$stepId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/batches/$batchId/steps/$stepId/',
+    FileRoutesByPath['/secured/$locale/worker/batches/$batchId/steps/$stepId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/batches/$batchId/steps/$stepId/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/batches/$batchId/steps/$stepId/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/batches/$batchId/steps/$stepId/']['fullPath']
+  >
+}
 
 interface SecuredLocaleAssetsRouteChildren {
   SecuredLocaleAssetsFormsFormIdRoute: typeof SecuredLocaleAssetsFormsFormIdRoute
@@ -1009,6 +1038,7 @@ interface SecuredLocaleWorkerBatchesRouteChildren {
   SecuredLocaleWorkerBatchesIndexRoute: typeof SecuredLocaleWorkerBatchesIndexRoute
   SecuredLocaleWorkerBatchesBatchIdIndexRoute: typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   SecuredLocaleWorkerBatchesCreateIndexRoute: typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute: typeof SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute
 }
 
 const SecuredLocaleWorkerBatchesRouteChildren: SecuredLocaleWorkerBatchesRouteChildren =
@@ -1018,6 +1048,8 @@ const SecuredLocaleWorkerBatchesRouteChildren: SecuredLocaleWorkerBatchesRouteCh
       SecuredLocaleWorkerBatchesBatchIdIndexRoute,
     SecuredLocaleWorkerBatchesCreateIndexRoute:
       SecuredLocaleWorkerBatchesCreateIndexRoute,
+    SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute:
+      SecuredLocaleWorkerBatchesBatchIdStepsStepIdIndexRoute,
   }
 
 const SecuredLocaleWorkerBatchesRouteWithChildren =

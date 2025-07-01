@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -23,6 +22,7 @@ interface WorkflowEditProps {
 
 const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
   const workflow = site.workflows[workflowId];
 
@@ -48,10 +48,10 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
 
   const handleCreate = () => {
 
-    const entity: StencilApi.WorkflowMutator = { 
-      workflowId: workflow.id, 
-      value: technicalname, 
-      articles: articleId, 
+    const entity: StencilApi.WorkflowMutator = {
+      workflowId: workflow.id,
+      value: technicalname,
+      articles: articleId,
       devMode: workflowOptions.devMode,
       anon: workflowOptions.anon,
       disabled: workflowOptions.disabled,
@@ -97,35 +97,36 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     }));
 
 
-    const allForms = React.useMemo(() => allDialobTags
-      .filter((tag,index) => index === allDialobTags.findIndex(tag2=>tag2.formName === tag.formName))
-      .map(({formName, formLabel}) => ({id: formName, value: formLabel}))
-      .filter(tag => !!tag.value)
-      .sort((a,b) => a.value.localeCompare(b.value)), [allDialobTags]);
-  
-    const formTags = React.useMemo(() => allDialobTags
-      .filter((tag) => tag.formName === formName)
-      .map(({tagName}) => ({id: tagName, value: tagName}))
-      .filter(tag => !!tag.value)
-      .sort((a,b)=> a.value.localeCompare(b.value)), [allDialobTags, formName]);
+  const allForms = React.useMemo(() => allDialobTags
+    .filter((tag, index) => index === allDialobTags.findIndex(tag2 => tag2.formName === tag.formName))
+    .map(({ formName, formLabel }) => ({ id: formName, value: formLabel }))
+    .filter(tag => !!tag.value)
+    .sort((a, b) => a.value.localeCompare(b.value)), [allDialobTags]);
+
+  const formTags = React.useMemo(() => allDialobTags
+    .filter((tag) => tag.formName === formName)
+    .map(({ tagName }) => ({ id: tagName, value: tagName }))
+    .filter(tag => !!tag.value)
+    .sort((a, b) => a.value.localeCompare(b.value)), [allDialobTags, formName]);
 
   return (
     <Dialog open={true} onClose={onClose}>
       <DialogTitle><FormattedMessage id='services.edit' /></DialogTitle>
       <DialogContent>
+
+        <LocaleLabels
+          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
+          onChangeStart={() => setChangeInProgress(true)}
+          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
+
+
         <Burger.TextField label='services.technicalname'
           required
           value={technicalname}
           onChange={setTechnicalname} />
 
         <Box display="flex">
-          <Box flexGrow={1}>
-            <Burger.Select label="services.flowName" onChange={setFlowName}
-              selected={flowName}
-              items={allFlows.map((flow)=>({id:flow, value: flow}))}
-            />
-          </Box>
-          <Box sx={{ ml: 1 }}>
+          <Box>
             <Burger.Select label="services.formName" onChange={setFormName}
               selected={formName}
               items={allForms}
@@ -139,8 +140,14 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
               helperText='services.formTag.description'
             />
           </Box>
+          <Box sx={{ ml: 1 }} flexGrow={1}>
+            <Burger.Select label="services.flowName" onChange={setFlowName}
+              selected={flowName}
+              items={allFlows.map((flow) => ({ id: flow, value: flow }))}
+            />
+          </Box>
         </Box>
-      
+
         <Box display="flex">
           <Box flexGrow={1}>
             <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'
@@ -156,18 +163,10 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           </Box>
         </Box>
 
-
-        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
-
-
-
-        <LocaleLabels
-          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
-          onChangeStart={() => setChangeInProgress(true)}
-          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
-
-        <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
-          <Burger.SelectMultiple label='composer.select.article'
+        <Divider sx={{ my: theme.spacing(2) }} />
+          <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
+          <Burger.SelectMultiple label='composer.article.selected'
+            variant='ARTICLE_SELECT'
             multiline
             onChange={setArticleId}
             selected={articleId}
@@ -182,19 +181,15 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
               )
             }))}
           />
-          <Box display="flex" alignItems="center" sx={{ mt: 1, mb: 1 }}>
-            <Button  onClick={() => setArticleId(Object.keys(site.articles))}  variant='text'><FormattedMessage id='allarticles'/></Button>
-            <Button  onClick={() => setArticleId([])}  variant='text'><FormattedMessage id='allarticles.individual'/></Button>
-            <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}>
-              <FormattedMessage id="add.allarticles.service.help" />
-            </Typography>
-          </Box>
-        </Paper>
+
+        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
+        <Box mb={theme.spacing(3)} />
+
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }>
-          <FormattedMessage id='button.apply'/>
+        <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
+          <FormattedMessage id='button.apply' />
         </Button>
       </DialogActions>
     </Dialog>

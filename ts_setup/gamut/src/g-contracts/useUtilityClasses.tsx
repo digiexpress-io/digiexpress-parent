@@ -52,12 +52,11 @@ export const GContractItem = styled("div", {
   const color = theme.palette.info.main;
 
   return {
-    cursor: 'pointer',
 
     '& .MuiGrid-item': {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     '& .GContracts-status': {
       fontWeight: 'bold',
@@ -127,6 +126,8 @@ export const GContractsRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+
     '& .GSort-root': {
       display: 'flex',
       width: '100%',

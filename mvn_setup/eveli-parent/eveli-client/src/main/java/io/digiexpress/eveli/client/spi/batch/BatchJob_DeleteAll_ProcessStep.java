@@ -52,7 +52,6 @@ public class BatchJob_DeleteAll_ProcessStep implements Executor<ProcessInstance,
       public Multi<ProcessInstance> findAll() {
         return Multi.createFrom().items(processClient.queryInstances().findAll().stream());
       }
-      
     };
   }
 

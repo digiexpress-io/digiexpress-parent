@@ -85,8 +85,8 @@ public class EveliAutoConfigWorker {
     return new TaskApiController(security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher);
   }
   @Bean 
-  public ProcessApiController processApiController(ProcessClient client) {
-    return new ProcessApiController(client);
+  public ProcessApiController processApiController(ProcessClient procClient, TaskClient taskClient) {
+    return new ProcessApiController(procClient, taskClient);
   }
   @Bean
   public PortalAccessValidator portalAccessValidator(ProcessClient client) {

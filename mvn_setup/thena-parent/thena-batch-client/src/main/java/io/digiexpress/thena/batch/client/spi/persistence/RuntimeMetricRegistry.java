@@ -33,6 +33,8 @@ public interface RuntimeMetricRegistry extends ThenaRegistryService<RuntimeMetri
   
   ThenaSqlClient.SqlTuple findForLastNInstancesByBatchName(int howMany, String batchIdOrName);
   ThenaSqlClient.SqlTuple findAllByInstanceStatus(List<RuntimeStatus> status);
+  ThenaSqlClient.SqlTuple findAllByStepId(String stepId);
+  
   ThenaSqlClient.SqlTupleList updateMany(List<RuntimeMetric> metrics);
   ThenaSqlClient.SqlTupleList insertMany(List<RuntimeMetric> metrics);
   

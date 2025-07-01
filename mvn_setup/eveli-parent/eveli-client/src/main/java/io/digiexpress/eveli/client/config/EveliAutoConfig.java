@@ -1,15 +1,10 @@
 package io.digiexpress.eveli.client.config;
 
-import java.time.Duration;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-
 /*-
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,29 +20,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
  * #L%
  */
 
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CustomerAccountClient;
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TenantConfigClient;
+import io.digiexpress.eveli.client.api.*;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -73,6 +50,7 @@ import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.resys.thena.grim.spi.GrimClientImpl;
+import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
@@ -80,6 +58,25 @@ import jakarta.persistence.EntityManager;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.Assert;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 
 
@@ -104,13 +101,7 @@ import lombok.extern.slf4j.Slf4j;
 })
 @Slf4j
 public class EveliAutoConfig {
-  @Value("${spring.datasource.url}")
-  private String datasourceUrl;
-  @Value("${spring.datasource.username}")
-  private String datasourceUsername;
-  @Value("${spring.datasource.password}")
-  private String datasourcePassword;
-  
+
   @Data
   @Builder
   public static class EveliPropsDbResolved {
@@ -119,26 +110,63 @@ public class EveliAutoConfig {
     private String username;
     private String password;
     private String database;
+    @Builder.Default
+    private String sslMode = "allow"; // default ssl mode, can be overridden by EveliPropsDb.sslMode
+    @Builder.Default
+    private Boolean sslTrustAll = false; // By default, don't trust all, can be overridden by EveliPropsDb.sslTrustAll
+    private String certPath; // Path to the certificate file, can be set in EveliPropsDb.certPath
   }
   
   @Bean
   @ConditionalOnMissingBean
-  public EveliPropsDbResolved eveliPropsDbResolved() {
-    final var datasourceConfig = datasourceUrl.split(":");
-    final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
+  public EveliPropsDbResolved eveliPropsDbResolved(
+    @Value("${spring.datasource.url}") String datasourceUrl,
+    @Value("${spring.datasource.username}") String datasourceUsername,
+    @Value("${spring.datasource.password}") String datasourcePassword
+  ) {
+    Assert.isTrue(datasourceUrl.startsWith("jdbc:postgresql://"), "postgresql is only supported database type.");
+    var matcher = Pattern.compile("^jdbc:postgresql://(?<host>[\\p{Lower}-.\\d]+)(:(?<port>\\d+))?/(?<database>[^?]+)(\\?(?<params>.*))?$")
+      .matcher(datasourceUrl);
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException("Invalid datasource URL: " + datasourceUrl);
+    }
+    var pgHost = matcher.group("host");
+    var portMatch = matcher.group("port");
+    var port = Integer.parseInt(Objects.toString(portMatch, "5432")); // default PostgreSQL port
+    var database = matcher.group("database");
+    var params = matcher.group("params");
+    var builder = EveliPropsDbResolved.builder()
+      .host(pgHost)
+      .port(port)
+      .database(database)
+      .username(datasourceUsername)
+      .password(datasourcePassword);
 
-    
-    final var pgHost = datasourceConfig[2].substring(2);
-    final var pgPort = Integer.parseInt(portAndDb[0]);
-    final var database = portAndDb[1];
-    
-    return EveliPropsDbResolved.builder()
-        .username(datasourceUsername)
-        .password(datasourcePassword)
-        .port(pgPort)
-        .host(pgHost)
-        .database(database)
-        .build();
+    if (params != null && !params.isEmpty()) {
+      for (String param : params.split("&")) {
+        var paramNameAndValue = param.split("=");
+        var paramName = paramNameAndValue[0];
+        var paramValue = paramNameAndValue[1];
+        if (StringUtils.isBlank(paramValue)) {
+          log.warn("Parameter '{}' in datasource URL is empty, skipping.", paramName);
+          continue;
+        }
+        switch (paramName) {
+          case "sslmode":
+            builder = builder.sslMode(paramValue);
+            break;
+          case "ssltrustall":
+            builder = builder.sslTrustAll(Boolean.parseBoolean(paramValue));
+            break;
+          case "sslrootcert":
+            builder = builder.certPath(paramValue);
+            break;
+          default:
+            log.warn("Unknown parameter in datasource URL: {}", paramName);
+        }
+      }
+    }
+    return builder.build();
   }
   
   @Bean 
@@ -198,8 +226,10 @@ public class EveliAutoConfig {
   
   @Bean
   public io.vertx.mutiny.pgclient.PgPool pgPool(EveliPropsDb db, EveliPropsDbResolved dbConfig) {
-    final var sslMode = SslMode.ALLOW;
-    
+    var trustOptions = new PemTrustOptions();
+    if (StringUtils.isNotBlank(dbConfig.getCertPath())) {
+      trustOptions.addCertPath(dbConfig.getCertPath());
+    }
     final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
         new PgConnectOptions()
           .setHost(dbConfig.getHost())
@@ -207,9 +237,10 @@ public class EveliAutoConfig {
           .setDatabase(dbConfig.getDatabase())
           .setUser(dbConfig.getUsername())
           .setPassword(dbConfig.getPassword())
-          .setSslMode(sslMode), 
+          .setTrustAll(dbConfig.getSslTrustAll())
+          .setPemTrustOptions(trustOptions)
+          .setSslMode(SslMode.of(dbConfig.getSslMode())),
         new PoolOptions().setMaxSize(db.getPoolMaxSize() == null ? 5 : db.getPoolMaxSize()));
-    
     return pgPool;
   }
   

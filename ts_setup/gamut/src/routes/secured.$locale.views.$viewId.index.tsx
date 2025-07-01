@@ -8,6 +8,7 @@ import { GRouterBookings } from '../g-router-bookings';
 import { GRouterFormsAwaitingDecision } from '../g-router-forms-awaiting-decision';
 import { GRouterFormsWithDecision } from '../g-router-forms-with-decision';
 import { useLocale } from '../api-locale';
+import { GErrorNotFound } from '../g-error-not-found';
 
 
 
@@ -57,5 +58,5 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string,
   } else if (viewId === 'bookings') {
     return <GRouterBookings locale={locale} viewId={viewId} />
   } 
-  return (<>No view defined</>)
+  return (<GErrorNotFound />)
 }

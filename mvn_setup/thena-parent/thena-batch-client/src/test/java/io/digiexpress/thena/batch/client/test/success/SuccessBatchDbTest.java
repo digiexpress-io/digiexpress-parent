@@ -94,13 +94,14 @@ public class SuccessBatchDbTest extends DbTestTemplate {
     Assertions.assertEquals(RuntimeExecutionStatus.OK, done.getExecutionStatus());
     
     
-    final var instances = client.queryRuntimeInstances().findAll().await().atMost(atMost).getObject();
+    final var instances = client.queryRuntimeInstances().includeStepRows().findAll().await().atMost(atMost).getObject();
     Assertions.assertEquals(1, instances.size());
     Assertions.assertEquals(RuntimeStatus.COMPLETED, instances.get(0).getStatus());
     
-    Assertions.assertEquals(2, instances.get(0).getTransitives().getSteps().size());
+    Assertions.assertEquals(3, instances.get(0).getTransitives().getSteps().size());
     Assertions.assertEquals(RuntimeStatus.COMPLETED, instances.get(0).getTransitives().getSteps().get(0).getStatus());
     Assertions.assertEquals(RuntimeStatus.COMPLETED, instances.get(0).getTransitives().getSteps().get(1).getStatus());
+    Assertions.assertEquals(RuntimeStatus.COMPLETED, instances.get(0).getTransitives().getSteps().get(2).getStatus());
     
     
     final var step1 = instances.get(0).getTransitives().getSteps().stream().filter(s -> s.getName().equals("close-all")).findFirst().get();
@@ -142,8 +143,13 @@ public class SuccessBatchDbTest extends DbTestTemplate {
       
       Assertions.assertNotNull(batchQuery);
       Assertions.assertEquals(1, batchQuery.getTransitives().getInstances().size());
+      
+      final var firstStep = batchQuery.getTransitives().getInstances().get(0).getTransitives().getSteps().get(0);
+      final var stepQuery = client.queryRuntimeSteps().getOne(firstStep.getId()).await().atMost(atMost).getObject();
+      Assertions.assertEquals(9, stepQuery.getTransitives().getStepRows().size());
+      
     }
-    
+
   }
   
   
@@ -167,8 +173,15 @@ public class SuccessBatchDbTest extends DbTestTemplate {
           .consumerName("report-closed")
           .comment("test consumer")
           .build(new SuccessStep2()))
+
+      .addConsumer(worker -> worker
+          .batchName(batchName)
+          .consumerName("empty-step")
+          .comment("empty step")
+          .build(new SuccessStep3()))
+      
       .commitAuthor("junitTest")
-      .commitMessage("create batch with 2 consumers")
+      .commitMessage("create batch with 3 consumers")
       .build()
       .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(OperationStatus.OK, config.getOperationStatus());

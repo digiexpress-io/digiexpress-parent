@@ -294,6 +294,7 @@ public class DurabilityTest extends DbTestTemplate {
     
     
     return client.queryRuntimeInstances()
+        .includeStepRows()
         .findAll().await().atMost(atMost)
         .getObject().stream()
         .filter(t -> t.getId().equals(instance.getObject().getId()))

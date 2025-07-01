@@ -32,7 +32,9 @@ import org.springframework.data.domain.Pageable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
@@ -41,13 +43,29 @@ public interface TaskClient {
   TaskCommandBuilder taskBuilder();  
   PaginateTasks paginateTasks();
   QueryTasks queryTasks();
+  
+  DeleteTasks deleteTasks();
+  
   QueryUnreadUserTasks queryUnreadUserTasks();
   QueryTaskComments queryTaskComments();
   QueryTaskKeywords queryTaskKeywords();
   QueryTaskDasboard queryTaskDasboard();
   
+  QueryTaskProcesess queryTaskProcesess(); 
+  
+  
+  interface QueryTaskProcesess {
+    Multi<ProcessClient.ProcessInstance> findLast6Months();
+  }
+  
   interface QueryTaskDasboard {
     Uni<TaskDasboard> findAll();
+  }
+  
+  interface DeleteTasks {
+    DeleteTasks commitMessage(String commitMessage);
+    DeleteTasks commitAuthor(String commitAuthor);
+    Uni<TaskArchivePointer> deleteOne(String id);
   }
   
   interface TaskCommandBuilder {
@@ -277,5 +295,13 @@ public interface TaskClient {
   interface TaskDasboard {
     List<GrimMissionAttributeEvent> getEvents();
   }
+  
+  @JsonSerialize(as = ImmutableTaskArchivePointer.class)
+  @JsonDeserialize(as = ImmutableTaskArchivePointer.class)
+  @Value.Immutable
+  interface TaskArchivePointer {
+    GrimCommit getCommit();
+  }
+  
   
 }

@@ -62,6 +62,7 @@ export const GRouterUnfinishedFormsRoot = styled("div", {
   },
 })<{ ownerState: GRouterUnfinishedFormsProps }>(({ theme }) => {
   return {
+    borderBottom: `1px solid ${theme.palette.divider}`,
 
     '& .GRouterUnfinishedForms-titleLayout': {
       display: 'flex',

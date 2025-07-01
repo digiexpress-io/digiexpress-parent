@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.config;
 import java.time.Duration;
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +33,7 @@ import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.BatchApiCotroller;
 import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
+import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
 import io.digiexpress.thena.batch.client.spi.BatchClientImpl;
 import io.digiexpress.thena.batch.client.spi.persistence.sql.BatchDbImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EveliBatchesAutoConfig {
   
-  
   static class BatchTenantCondition extends EveliTenantCondition {
     public BatchTenantCondition() {
       super(TenantConfigClientProps.BATCHES, TenantConfigClientProps.BATCHES_DEV);
@@ -51,25 +52,28 @@ public class EveliBatchesAutoConfig {
   }
 
   @Bean
-  public BatchClient batchClient(io.vertx.mutiny.pgclient.PgPool pgPool, List<BatchDefinition> definitions) {
+  public BatchClient batchClient(io.vertx.mutiny.pgclient.PgPool pgPool) {
     return BatchDbImpl.create().tenant("batch").client(pgPool).build()
       .createIfNot()
       .onItem().transform(store -> new BatchClientImpl(store))
-      .onItem().transformToUni(client -> {
-        // register app config
-        return client
-          .createBatchConfig()
-          .appId("eveli-app")
-          .commitAuthor("spring-boot-bean")
-          .commitMessage("default system config, with no. of jobs: " + definitions.size())
-          .addAll(definitions)
-          .build().onItem().transform(ignore -> client);
-      })
       .await().atMost(Duration.ofMinutes(1));
   }
   
   @Bean
-  public BatchApiCotroller batchApiCotroller(BatchClient client, EveliPropsBatch props, WorkerAuthClient auth) {
-    return new BatchApiCotroller(auth, client, props);
+  public BatchConfig batchConfig(BatchClient client, List<BatchDefinition> definitions) {
+    return client
+        .createBatchConfig()
+        .appId("eveli-app")
+        .commitAuthor("spring-boot-bean")
+        .commitMessage("default system config, with no. of jobs: " + definitions.size())
+        .addAll(definitions)
+        .build()
+      .onItem().transform(e -> e.getObject())
+      .await().atMost(Duration.ofMinutes(1));
+  }
+  
+  @Bean
+  public BatchApiCotroller batchApiCotroller(BatchClient client, BatchConfig config, EveliPropsBatch props, WorkerAuthClient auth, ApplicationEventPublisher publisher) {
+    return new BatchApiCotroller(auth, client, config, props, publisher);
   }
 }

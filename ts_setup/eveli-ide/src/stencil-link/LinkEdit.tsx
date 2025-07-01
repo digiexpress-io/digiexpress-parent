@@ -1,8 +1,7 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button, Checkbox,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
@@ -21,6 +20,7 @@ interface LinkEditProps {
 }
 
 const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const link = site.links[linkId];
@@ -71,60 +71,60 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
 
 
 
-  return (<Dialog open={true} onClose={onClose}>
-    <DialogTitle><FormattedMessage id='link.edit.title'/></DialogTitle>
-    <DialogContent>
-      <LocaleLabels
-        onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
-        onChangeStart={() => setChangeInProgress(true)}
-        selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
+  return (
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='link.edit.title' /></DialogTitle>
+      <DialogContent>
+        <LocaleLabels
+          onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
+          onChangeStart={() => setChangeInProgress(true)}
+          selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
 
-      <Burger.Select label="link.type"
-        selected={contentType}
-        onChange={setContentType as any}
-        items={linkTypes.map(link => ({ id: link, value: link }))}
-      />
-
-      <Burger.TextField label="link.content" helperText="link.composer.valuehelper" placeholder={link.body.value}
-        required
-        value={value}
-        onChange={setValue} />
-
-      <Box display="flex" alignItems="center" sx={{ mt: 1, mb: 1 }}>
-        <Button  onClick={() => setArticleId(Object.keys(site.articles))}  variant='text'><FormattedMessage id='allarticles'/></Button>
-        <Button  onClick={() => setArticleId([])}  variant='text'><FormattedMessage id='allarticles.individual'/></Button>
-        <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.link.help" /></Typography>
-      </Box>
-
-      <Burger.SelectMultiple label='link.article.select' multiline
-        selected={articleId}
-        onChange={setArticleId}
-        renderValue={(selected: StencilApi.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
-        items={articles.map((article) => ({
-          id: article.id,
-          value: (<>
-            <Checkbox checked={articleId.indexOf(article.id) > -1} />
-            <ListItemText primary={article.value} />
-          </>)
-        }
-        ))}
-      />
-      <Box maxWidth="50%" sx={{ ml: 1 }}>
-        <Burger.Switch
-          checked={devMode ? devMode : false}
-          helperText="link.devmode.helper"
-          label="link.devmode"
-          onChange={setDevMode}
+        <Burger.Select label="link.type"
+          selected={contentType}
+          onChange={setContentType as any}
+          items={linkTypes.map(link => ({ id: link, value: link }))}
         />
-      </Box>
-    </DialogContent>
-    <DialogActions>
-      <CancelButton onClick={onClose} />
-      <Button onClick={handleUpdate} disabled={!value || changeInProgress || labels.length < 1}>
-        <FormattedMessage id='button.update'/>
-      </Button>
-    </DialogActions>
-  </Dialog>
+
+        <Burger.TextField label="link.content" helperText="link.composer.valuehelper" placeholder={link.body.value}
+          required
+          value={value}
+          onChange={setValue} />
+
+        <Divider sx={{ my: theme.spacing(2) }} />
+
+        <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
+        <Burger.SelectMultiple label='link.article.select' multiline
+          variant='ARTICLE_SELECT'
+          selected={articleId}
+          onChange={setArticleId}
+          renderValue={(selected: StencilApi.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
+          items={articles.map((article) => ({
+            id: article.id,
+            value: (<>
+              <Checkbox checked={articleId.indexOf(article.id) > -1} />
+              <ListItemText primary={article.value} />
+            </>)
+          }
+          ))}
+        />
+
+        <Box maxWidth="50%" sx={{ ml: 1 }}>
+          <Burger.Switch
+            checked={devMode ? devMode : false}
+            helperText="link.devmode.helper"
+            label="link.devmode"
+            onChange={setDevMode}
+          />
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <CancelButton onClick={onClose} />
+        <Button onClick={handleUpdate} disabled={!value || changeInProgress || labels.length < 1}>
+          <FormattedMessage id='button.update' />
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 export { LinkEdit }

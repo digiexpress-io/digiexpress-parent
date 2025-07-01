@@ -44,15 +44,12 @@ const GFlexBodyRoot = styled("div", {
   },
 })<{ ownerState: GFlexBodyProps }>(({ theme }) => {
   return {
-    backgroundColor: `${lighten(theme.palette.action.disabled, 0.85)}`,
-    borderWidth: '1px',
-    borderBottomStyle: 'solid',
-    borderBottomColor: lighten(theme.palette.action.disabled, 0.5),
+    backgroundColor: theme.palette.background.default,
+    borderTop: `1px solid ${theme.palette.divider}`,
 
     ':hover': {
-      backgroundColor: `${lighten(theme.palette.action.disabled, 0.7)}`,
-      borderColor: 'rgba(194,190,194,1)',
-      boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
+      cursor: 'pointer',
+      backgroundColor: theme.palette.action.disabled,
     },
 
     '& .MuiGrid-root.MuiGrid-container': {

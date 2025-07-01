@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.smallrye.mutiny.Multi;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -43,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProcessApiController {
   protected final ProcessClient client;
+  protected final TaskClient taskClient;
 
   @Transactional
   @GetMapping
@@ -60,11 +63,9 @@ public class ProcessApiController {
         .findAll();
     return new ResponseEntity<>(processes, HttpStatus.OK);
   }
-  
-  
-  @Transactional
+
   @GetMapping("/last-6-months")
-  public List<ProcessClient.ProcessInstance> findLast6Months() {
-    return client.queryInstances().findLast6Months();
+  public Multi<ProcessClient.ProcessInstance> findLast6Months() {
+    return taskClient.queryTaskProcesess().findLast6Months();
   }
 }

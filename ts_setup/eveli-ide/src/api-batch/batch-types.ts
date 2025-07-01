@@ -9,6 +9,11 @@ export declare namespace BatchApi {
   export type RuntimeExecutionStatus = 'OK' | 'ERROR';
   export type RuntimeStatus = 'CREATED' | 'EXECUTING' | 'SKIPPED' | 'COMPLETED' | 'CANCELLED';
 
+  interface CreateOneInstanceCommand {
+    instanceName: string;
+    commitMessage: string;
+    params: object;
+  }
 
   export interface Batch {
     id: string;
@@ -61,6 +66,29 @@ export declare namespace BatchApi {
     endedAt: string | undefined;
     
     name: string;
+    comment: string;
+    transitives?: {
+      metrics: RuntimeMetric[];
+      stepRows: RuntimeStepRow[];
+    }
+  }
+
+  export interface RuntimeStepRow {
+    id: string;
+    runtimeId: string;
+    stepId: string;
+
+    executionStatus: RuntimeExecutionStatus;
+    
+    createdAt: string;
+    endedAt: string | undefined;
+    
+    rowNumber: number;
+    externalId: string;
+  
+    input: object | undefined;
+    output: any | undefined;
+
     comment: string;
   }
 

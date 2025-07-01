@@ -15,6 +15,9 @@ export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.S
   const offers: OfferApi.Offer[] = [];
 
   for (const proc of data) {
+
+
+
     if (!(proc.status === 'CREATED' 
       //|| proc.status === 'ANSWERED'
     )) {
@@ -22,6 +25,16 @@ export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.S
     }
 
     const offer = mapToOffer(proc, site);
+
+    if (!!offer.productId) {
+      // OK
+    } else if (offer.otherLocales.length > 0) {
+      // OK
+    } else {
+      console.error('Form not available! ', offer);
+      continue;
+    }
+
     md5
       .appendStr(proc.id)
       .appendStr(proc.name)

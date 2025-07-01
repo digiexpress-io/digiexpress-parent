@@ -54,6 +54,7 @@ export const GTopicsMuiPopover = styled(Popover, {
   },
 })(({ theme }) => {
   return {
+
     '& .GPopoverTopics-topicsLayout': {
       [theme.breakpoints.up('sm')]: {
         paddingLeft: theme.spacing(3),
@@ -90,6 +91,8 @@ export const GTopicsMuiPopover = styled(Popover, {
       left: '0px !important',
       borderRadius: 'unset',
       overflow: 'hidden',
+      borderColor: theme.palette.divider,
+      boxShadow: '0px 7px 15px 0px rgba(194,190,194,0.7)',
 
       [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(2),

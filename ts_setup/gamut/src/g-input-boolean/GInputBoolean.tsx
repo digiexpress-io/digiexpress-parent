@@ -82,7 +82,7 @@ const YesAndNoCheckbox: React.FC<GInputBaseAnyProps & GInputBooleanProps> = (pro
   const { onChange, id, variant, value } = props;
   const ref = React.useRef<HTMLInputElement>(null);
   const classes = useUtilityClasses(id, variant);
-  const [inputValue, setInputValue] = React.useState<string>(value ? value + '' : '');
+  const [inputValue, setInputValue] = React.useState<string>(value === undefined || value === null ? '' : value + '');
   const [sync, setSync] = React.useState<boolean>(false);
 
   React.useEffect(() => {

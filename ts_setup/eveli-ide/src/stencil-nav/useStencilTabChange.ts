@@ -12,6 +12,7 @@ export function useStencilTabChange() {
 
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
+      to: '.',
       search: (prev: StencilRouteSearchParams) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
     });
   }

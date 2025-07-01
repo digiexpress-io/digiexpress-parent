@@ -9,6 +9,7 @@ export function useStencilTabClose() {
   function onTabClose(tab: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
+      to: '.',
       search: (prev: StencilRouteSearchParams) => {
         const targetId = toExplorerId(tab);
         const explorer = [...prev.explorer].filter(t => toExplorerId(t) !== targetId);

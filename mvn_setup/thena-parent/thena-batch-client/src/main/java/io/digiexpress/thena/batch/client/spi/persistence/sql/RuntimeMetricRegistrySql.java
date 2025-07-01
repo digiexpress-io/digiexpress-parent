@@ -64,7 +64,17 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
         .props(Tuple.of(id))
         .build();
   }
-
+  @Override
+  public SqlTuple findAllByStepId(String stepId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getRuntimeMetrics()).ln()
+        .append("  WHERE (step_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(stepId))
+        .build();
+  }
   @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<RuntimeMetric> users) {
     return ImmutableSqlTupleList.builder()
@@ -222,4 +232,5 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
         .props(Tuple.of(howMany, batchIdOrName))
         .build();
   }
+
 }

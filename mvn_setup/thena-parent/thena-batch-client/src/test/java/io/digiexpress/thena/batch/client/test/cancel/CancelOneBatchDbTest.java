@@ -112,7 +112,7 @@ public class CancelOneBatchDbTest extends DbTestTemplate {
     Assertions.assertEquals(RuntimeExecutionStatus.OK, done.getExecutionStatus());
     
     
-    final var instances = client.queryRuntimeInstances().findAll().await().atMost(atMost).getObject();
+    final var instances = client.queryRuntimeInstances().includeStepRows().findAll().await().atMost(atMost).getObject();
     Assertions.assertEquals(1, instances.size());
     Assertions.assertEquals(RuntimeStatus.CANCELLED, instances.get(0).getStatus());
     

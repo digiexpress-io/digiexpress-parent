@@ -50,7 +50,7 @@ export const fi = {
   'task.comments.internal.createTask': 'Luo tehtävä ennen sisäisten kommenttien lisäämistä',
   'task.attachments.createTask': 'Luo tehtävä ennen liitteiden lataamista',
   'task.comments.external.added': 'Sisäinen kommentti tallletettu',
-  'task.feedback.publishedSaved': 'Viesti asiakkaalle lähetetty',
+  'task.feedback.publishedSaved': 'Palautemuutokset tallennettu',
   'task.comments.internal.added': 'Kommentti lisätty',
   'internalComments': 'Sisäiset kommentit',
   'externalComments': 'Asiakas viestit',
@@ -153,6 +153,7 @@ export const fi = {
   'button.dismiss': 'Sulje',
   'button.editRoles': 'Muokkaa',
   'button.select': 'Valita',
+  'button.startBatch': 'Start batch',
   'error.minTextLength': 'Annetun arvon pitää olla vähintään {minLength} merkkiä',
   'error.maxTextLength': 'Annetun arvon tulee olla enintään {max} merkkiä pitkä',
   'error.valueRequired': 'Vaaditaan',
@@ -186,6 +187,7 @@ export const fi = {
   'processTableHeader.status': 'Tila',
   'processTableHeader.created': 'Luotu',
   'processTableHeader.questionnaireId': 'Lomake',
+  'processTableHeader.taskRef': 'Task reference',
   'process.status.ANSWERED': 'Lähetetty',
   'process.status.CREATED': 'Luotu',
   'process.status.ANSWERING': 'Keskeneräinen',
@@ -242,6 +244,7 @@ export const fi = {
   'feedback.close': 'Peru',
   'feedback.send': 'Lähetä',
   'feedback.taskReferenceId': 'Tehtävän viite',
+  'feedback.taskReferenceId.short': 'Task Ref',
   'feedback.taskId': 'Tehtävän ID',
   'feedback.mainCategory': 'Aihe',
   'feedback.subCategory': 'Tarkempi aihealue',
@@ -926,6 +929,6 @@ export const fi = {
   'toolbar.workflows': 'Työnkulkuyhteenveto',
   'toolbar.releases': 'Julkaisut',
   'toolbar.locales': 'Sijainnit',
-  'eveli.batches.averageRunTime': 'Average run time',
-  'eveli.batches.averageRunTime.ms': 'ms'
+  'eveli.batches.batchView..averageRunTime': 'Average run time',
+  'eveli.batches.batchView.averageRunTime.ms': 'ms'
 }

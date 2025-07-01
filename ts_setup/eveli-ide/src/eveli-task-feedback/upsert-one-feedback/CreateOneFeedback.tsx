@@ -7,11 +7,11 @@ import { FeedbackContent } from './FeedbackContent';
 import { CancelButton } from '@/eveli-styles';
 
 export interface CreateOneFeedbackProps {
-  taskId: string;
+  taskRef: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
 }
 
-export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, onComplete }) => {
+export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, onComplete }) => {
   const navigate = useNavigate();
   const intl = useIntl();
 
@@ -20,7 +20,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   const [template, setTemplate] = React.useState<FeedbackApi.FeedbackTemplate>();
 
   React.useEffect(() => {
-    getOneTemplate(taskId!).then(template => {
+    getOneTemplate(taskRef!).then(template => {
 
       setCommand({
         content: template.content,
@@ -57,7 +57,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
 
   function handlePublish() {
     if (command) {
-      createOneFeedback(taskId, command).then(feedback => {
+      createOneFeedback(taskRef, command).then(feedback => {
         onComplete(feedback);
       });
     }
@@ -71,7 +71,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
 
     navigate({
       from: '/secured/$locale',
-      params: { taskId },
+      params: { taskId: taskRef },
       to: '/secured/$locale/worker/tasks/$taskId'
     })
   }

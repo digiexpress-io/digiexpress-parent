@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 public class QueryProcessInstancesImpl implements QueryProcessInstances {
   private final ProcessRepository processJPA;
   
-  
   @Override
   public Optional<ProcessClient.ProcessInstance> findOneById(String id) {
     return processJPA.findById(Long.parseLong(id)).map(CreateProcessInstanceImpl::map);
@@ -88,11 +87,7 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   public List<ProcessInstance> findAllExpired() {
     return processJPA.findAllByExpiration().stream().map(CreateProcessInstanceImpl::map).toList();
   }
-  @Override
-  public List<ProcessInstance> findLast6Months() {
-    return processJPA.findAllAfterCreated(OffsetDateTime.now().minusMonths(6))
-        .stream().map(CreateProcessInstanceImpl::map).toList();
-  }
+
   @Override
   public List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom) {
     return ImmutableList.<ProcessClient.ProcessInstance>builder()

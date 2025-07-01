@@ -36,6 +36,8 @@ public interface RuntimeLogRegistry extends ThenaRegistryService<RuntimeLog, io.
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.SqlTuple getById(String id);
   
+  ThenaSqlClient.SqlTuple findAllByStepId(String stepId);
+  
   @Override ThenaSqlClient.Sql createTable();
   @Override ThenaSqlClient.Sql createConstraints();
   @Override ThenaSqlClient.Sql dropTable();

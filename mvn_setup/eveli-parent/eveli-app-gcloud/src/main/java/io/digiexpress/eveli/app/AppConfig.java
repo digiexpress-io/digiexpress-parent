@@ -20,30 +20,16 @@ package io.digiexpress.eveli.app;
  * #L%
  */
 
-import java.time.Duration;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.Storage;
-
 import fi.suomi.asiointitili.ObjectFactory;
 import io.digiexpress.eveli.app.config.AppProperties;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.api.CommsClient.CustomerMessageBuilder;
 import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
-import io.digiexpress.eveli.client.config.EveliAutoConfig.EveliPropsDbResolved;
-import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
+import io.digiexpress.eveli.client.api.OrgClient;
+import io.digiexpress.eveli.client.config.*;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.google.AttachmentCommandsGoogle;
 import io.digiexpress.eveli.client.spi.comms.CustomerSmsBuilderImpl;
@@ -52,22 +38,16 @@ import io.digiexpress.eveli.client.spi.comms.EmailBuilderJakarta;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClientDummy;
 import io.digiexpress.eveli.client.spi.org.OrgClientImpl;
-import io.digiexpress.notification.client.CustomerSmsBuilderSuomifiRest;
-import io.digiexpress.notification.client.CustomerSmsBuilderSuomifiWsl;
-import io.digiexpress.notification.client.NotificationRestServiceClient;
-import io.digiexpress.notification.client.NotificationWebServiceClient;
-import io.digiexpress.notification.client.SuomiFiRestProperties;
-import io.digiexpress.notification.client.SuomiFiWSLProperties;
-import io.digiexpress.eveli.client.config.EveliProps;
-import io.digiexpress.eveli.client.config.EveliPropsAssets;
-import io.digiexpress.eveli.client.config.EveliPropsEmail;
-import io.digiexpress.eveli.client.config.EveliPropsMq;
-import io.digiexpress.eveli.client.config.EveliPropsOrg;
-import io.digiexpress.thena.mq.client.api.ThenaMqClient;
-import io.digiexpress.thena.mq.client.spi.persistence.ThenaMqChannelStateImpl;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.SslMode;
-import io.vertx.sqlclient.PoolOptions;
+import io.digiexpress.notification.client.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
+import java.util.function.Supplier;
 
 @Configuration
 public class AppConfig {

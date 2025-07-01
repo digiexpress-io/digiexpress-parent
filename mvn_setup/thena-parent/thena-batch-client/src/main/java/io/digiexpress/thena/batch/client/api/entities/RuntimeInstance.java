@@ -21,9 +21,13 @@ package io.digiexpress.thena.batch.client.api.entities;
  */
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.annotation.Nullable;
 
@@ -58,4 +62,16 @@ public interface RuntimeInstance extends AnyBatchEntity {
   enum RuntimeStatus { 
     CREATED, EXECUTING, SKIPPED, COMPLETED, CANCELLED
   }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableRuntimeInstanceTransitives.class)
+  @JsonDeserialize(as = ImmutableRuntimeInstanceTransitives.class)
+  interface RuntimeInstanceTransitives {
+    List<RuntimeMetric> getMetrics();
+    List<RuntimeLog> getLogs(); // only of status is ERROR
+    
+    List<RuntimeStep> getSteps();
+    List<RuntimeStepRow> getStepRows();
+  }
+
 }

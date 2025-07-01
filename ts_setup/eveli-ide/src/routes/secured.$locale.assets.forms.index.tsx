@@ -2,12 +2,11 @@ import React from 'react'
 import { Box, useTheme } from '@mui/system';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
-import { useIntl } from "react-intl";
+import { useIntl, IntlProvider } from "react-intl";
 import { useSnackbar } from "notistack";
 
-import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
+import { DialobAdminView, messages, DialobAdminProps, DialobDashboardFetchProvider, DialobDashboardStateProvider, DialobAdminConfig } from '@/dialob-dashboard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
-
 
 import { EveliSetup } from '@/eveli-setup';
 import { EveliApp } from '@/eveli-app';
@@ -20,6 +19,19 @@ export const Route = createFileRoute({
 function Component() {
   return (<EveliApp main={Main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
 
+}
+
+
+export const DialobAdminContainer: React.FC<DialobAdminProps> = ({ config, showNotification }) => {
+  return (
+    <DialobDashboardFetchProvider>
+      <IntlProvider locale={config.language || 'en'} messages={messages[config.language]}>
+        <DialobDashboardStateProvider config={config} showNotification={showNotification}>
+          <DialobAdminView />
+        </DialobDashboardStateProvider>
+      </IntlProvider>
+    </DialobDashboardFetchProvider>
+  );
 }
 
 const Main: React.FC<{}> = () => {
@@ -39,7 +51,7 @@ const Main: React.FC<{}> = () => {
   }, [dialobUrl, intl.locale])
 
   return (<Box sx={{ p: theme.spacing(1) }}>
-    <DialobAdmin showNotification={enqueueSnackbar} config={dialobAdminConfig} />
+    <DialobAdminContainer showNotification={enqueueSnackbar} config={dialobAdminConfig} />
   </Box>)
 }
 

@@ -123,8 +123,8 @@ public class InstanceRunnerConsumer {
           final var stepRunner = new StepRunner<Entity, E>(config, context, step);
           final var query = stepRunner.start(context);
   
-          return query.findAll()
-            .onSubscription().call(sub -> new StepRunnerBefore(context, config, step).accept())
+          return new StepRunnerBefore(context, config, step).accept().onItem().transformToMulti(ignore ->  query.findAll()) 
+            
             .onItem()
             .transformToUni((Entity entity) -> {
               
@@ -144,10 +144,14 @@ public class InstanceRunnerConsumer {
                 // turn to one.... disable concurrent proc.
                 //.merge(1)
             )
-  
-            .onItem().ignoreAsUni().onItem().transformToUni(ignore -> stepRunner.end(query, context))
+            
+            .onItem().ignoreAsUni()
+            .onItem().transformToUni(ignore -> stepRunner.end(query, context))
+            
+            
             .onItem().call(result -> new StepRunnerAfter(context, config, step).accept())
             .onFailure().recoverWithUni((t) -> new StepRunnerFail(context, config, step, t).accept())
+            
             .eventually(() -> stepRunner.close(context));
             
         } catch(Throwable t) {

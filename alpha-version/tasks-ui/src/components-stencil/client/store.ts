@@ -16,7 +16,7 @@ class DefaultStore implements StencilClient.Store {
       method: "GET",
       credentials: 'same-origin',
       headers: {
-        "Content-Type": "application/json;charset=UTF-8",
+        "Content-Type": "application/json",
         "Project-Id": config.projectId ?? ""
       }
     }

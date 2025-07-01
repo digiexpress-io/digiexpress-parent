@@ -34,6 +34,7 @@ import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -63,7 +64,17 @@ public class RuntimeLogRegistrySql implements RuntimeLogRegistry {
         .props(Tuple.of(id))
         .build();
   }
-
+  @Override
+  public SqlTuple findAllByStepId(String stepId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getRuntimeLogs()).ln()
+        .append("  WHERE (step_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(stepId))
+        .build();
+  }
   @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<RuntimeLog> logs) {
     return ImmutableSqlTupleList.builder()
@@ -195,5 +206,4 @@ public class RuntimeLogRegistrySql implements RuntimeLogRegistry {
         .build();
     };
   }
-
 }

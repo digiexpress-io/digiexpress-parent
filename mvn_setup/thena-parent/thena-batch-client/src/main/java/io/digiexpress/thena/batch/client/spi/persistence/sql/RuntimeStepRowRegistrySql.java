@@ -65,7 +65,17 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .props(Tuple.of(id))
         .build();
   }
-  
+  @Override
+  public SqlTuple findAllByStepId(String stepId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getRuntimeStepRows()).ln()
+        .append("  WHERE (step_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(stepId))
+        .build();
+  }
   @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<RuntimeStepRow> docs) {
     return ImmutableSqlTupleList.builder()
@@ -73,9 +83,9 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .append("INSERT INTO ").append(options.getRuntimeStepRows())
         .append("(")
         .append("  id, step_id, runtime_id, external_id,").ln()
-        .append("  row_number, row_created_at, row_ended_at, row_execution_status, row_input, row_output ").ln()
+        .append("  row_number, row_created_at, row_ended_at, row_execution_status, row_input, row_output, row_comment ").ln()
         .append(")")
-        .append("VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
+        .append("VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
         .build())
         .props(docs.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -90,7 +100,9 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
                 doc.getExecutionStatus().name(),
                 
                 doc.getInput().orElse(null),
-                doc.getOutput().orElse(null)
+                doc.getOutput().orElse(null),
+                
+                doc.getComment().orElse(null)
              }))
             .collect(Collectors.toList()))
         .build();
@@ -115,6 +127,7 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         
         .append("  row_input        JSONB,").ln()
         .append("  row_output       JSONB,").ln()
+        .append("  row_comment      TEXT,").ln()
         
         .append("  UNIQUE(step_id, row_number)")
         .append(");").ln()
@@ -183,6 +196,7 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
 
       .input(Optional.ofNullable(row.getJsonObject("row_input")))
       .output(Optional.ofNullable(row.getJsonObject("row_output")))
+      .comment(Optional.ofNullable(row.getString("row_comment")))
 
       .executionStatus(RuntimeExecutionStatus.valueOf(row.getString("row_execution_status")))
       .endedAt(Optional.ofNullable(row.getOffsetDateTime("row_ended_at")))
@@ -204,4 +218,5 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .props(Tuple.of(status.isEmpty() ? null : status.stream().map(e -> e.name()).toArray()))
         .build();
   }
+
 }

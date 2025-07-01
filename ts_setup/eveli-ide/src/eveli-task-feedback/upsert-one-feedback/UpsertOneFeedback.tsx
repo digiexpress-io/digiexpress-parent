@@ -6,7 +6,7 @@ import { UpdateOneFeedback } from './UpdateOneFeedback';
 import { useSnackbar } from 'notistack';
 
 export interface UpsertOneFeedbackProps {
-  taskId: string;
+  taskRef: string;
   reload: number;
   onComplete: (upsertedFeedback: FeedbackApi.Feedback) => void;
   allowDelete?: boolean;
@@ -21,16 +21,16 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
   React.useEffect(() => {
     setEnabled(undefined);
 
-    isTaskFeedbackEnabled(props.taskId).then((enabled) => {
+    isTaskFeedbackEnabled(props.taskRef).then((enabled) => {
       if(enabled) {
-        getOneFeedback(props.taskId).then(setFeedback)
+        getOneFeedback(props.taskRef).then(setFeedback)
       }
       setEnabled(enabled);
     });
-  }, [props.taskId, props.reload])
+  }, [props.taskRef, props.reload])
 
   function handleOnComplete(upsertedFeedback: FeedbackApi.Feedback) {
-    getOneFeedback(props.taskId).then((resp) => {
+    getOneFeedback(props.taskRef).then((resp) => {
       setFeedback(resp)
       enqueueSnackbar(<FormattedMessage id="task.feedback.publishedSaved" />, { variant: 'success' });
       props.onComplete(upsertedFeedback);
@@ -50,7 +50,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
   }
 
   if (feedbackExists) {
-    return (<UpdateOneFeedback {...ownerState} allowDelete={props.allowDelete} />)
+    return (<UpdateOneFeedback {...ownerState} allowDelete={props.allowDelete} taskId={props.taskRef} />)
   }  
   return (<CreateOneFeedback {...ownerState} />);
 }

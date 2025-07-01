@@ -29,6 +29,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenantContainer;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
@@ -367,7 +368,6 @@ public class BatchDbQueryImpl implements BatchDbQuery {
       
       @Override
       public Uni<List<RuntimeStepRow>> findAllByInstanceStatus(List<RuntimeStatus> status) {
-        
         final var sql = registry.getRuntimeStepRows().findAllByInstanceStatus(status);
         if(log.isDebugEnabled()) {
           log.debug("BatchDbQueryImpl.queryStepRows.findAllByInstanceStatus query, with props: {} \r\n{}", 
@@ -380,6 +380,21 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .onItem()
           .transformToUni((RowSet<RuntimeStepRow> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_STEP' by instance status!")));
+      }
+
+      @Override
+      public Uni<List<RuntimeStepRow>> findAllByStepId(String stepId) {
+        final var sql = registry.getRuntimeStepRows().findAllByStepId(stepId);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryStepRows.findAllByStepId query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeStepRows().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToUni((RowSet<RuntimeStepRow> rowset) -> Multi.createFrom().iterable(rowset).collect().asList());
       }
     };
   }
@@ -408,7 +423,6 @@ public class BatchDbQueryImpl implements BatchDbQuery {
 
       @Override
       public Uni<List<RuntimeMetric>> findForLastNInstancesByBatchName(int howMany, String batchIdOrName) {
-        
 
         final var sql = registry.getRuntimeMetrics().findForLastNInstancesByBatchName(howMany, batchIdOrName);
         if(log.isDebugEnabled()) {
@@ -423,6 +437,47 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .onItem()
           .transformToUni((RowSet<RuntimeMetric> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_METRIC' for last N instance by batchId!")));
+      }
+
+      @Override
+      public Uni<List<RuntimeMetric>> findAllByStepId(String stepId) {
+        final var sql = registry.getRuntimeMetrics().findAllByStepId(stepId);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryMetrics.findAllByStepId query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeMetrics().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToUni((RowSet<RuntimeMetric> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_METRIC' for by stepId!")));
+
+      }
+    };
+  }
+
+  @Override
+  public BatchDbLogQuery queryLogs() {
+    return new BatchDbLogQuery() {
+      
+      @Override
+      public Uni<List<RuntimeLog>> findAllByStepId(String stepId) {
+        final var sql = registry.getRuntimeLogs().findAllByStepId(stepId);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryLogs.findAllByStepId query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeLogs().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToUni((RowSet<RuntimeLog> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_LOG' for by stepId!")));
       }
     };
   }

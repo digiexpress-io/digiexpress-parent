@@ -97,8 +97,8 @@ public class StepRunner<Entity, E extends ExecutorConfig> {
       .entity(entity)
       .entityConfig(config)
       .entityNumber(entityNumber)
+      .comment(Optional.empty())
       .createdAt(OffsetDateTime.now());
-    
     
     
     return executor.accept(entity, config, mainContext)          
@@ -116,7 +116,7 @@ public class StepRunner<Entity, E extends ExecutorConfig> {
                   entityNumber, executed.getEntityId());
           })
           
-          .onItem().call(processed -> onSuccess(event.endedAt(OffsetDateTime.now()).processed(Optional.of(processed)).build(), mainContext))
+          .onItem().call(processed -> onSuccess(event.comment(Optional.ofNullable(processed.getUserComment())).endedAt(OffsetDateTime.now()).processed(Optional.of(processed)).build(), mainContext))
  
           // Failsafe on the stream
       .onFailure().invoke(t -> {

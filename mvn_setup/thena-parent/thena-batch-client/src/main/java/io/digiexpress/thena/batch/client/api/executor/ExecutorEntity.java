@@ -25,11 +25,16 @@ import java.util.List;
 import org.immutables.value.Value;
 
 import io.digiexpress.thena.batch.client.api.entities.RuntimeLog;
+import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
 public interface ExecutorEntity {
   String getEntityId();
+  @Nullable JsonObject getInputBody();
+  @Nullable JsonObject getOutputBody();
+  @Nullable String getUserComment();
   List<RuntimeLog> getMessages();
   ExecutorEntityStatus getStatus();
   

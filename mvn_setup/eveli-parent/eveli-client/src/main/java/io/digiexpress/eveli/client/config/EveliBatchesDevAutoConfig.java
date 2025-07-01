@@ -23,9 +23,11 @@ package io.digiexpress.eveli.client.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliBatchesDevAutoConfig.BatchTenantCondition;
+import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_Feedback;
 import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_ProcessStep;
 import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_TaskStep;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
@@ -49,7 +51,7 @@ public class EveliBatchesDevAutoConfig {
   }
 
   @Bean
-  public BatchDefinition tasksCleanUpJob(ProcessClient processClient, TaskClient taskClient) {
+  public BatchDefinition tasksCleanUpJob(ProcessClient processClient, TaskClient taskClient, FeedbackClient feedback) {
     return ImmutableBatchDefinition.builder()
         .batchName("tasks-delete-all")
         .comment("clean up batch for wiping most of the 'task managment' data")
@@ -63,6 +65,13 @@ public class EveliBatchesDevAutoConfig {
             .comment("deletes all tasks and makes and audit entry into commit logs")
             .executor(new BatchJob_DeleteAll_TaskStep(taskClient))
             .build())
+        .addSteps(ImmutableBatchStepDefinition.builder()
+            .name("delete-feedback")
+            .comment("deletes all feedback")
+            .executor(new BatchJob_DeleteAll_Feedback(feedback))
+            .build())
+        
+        
         .build();
   }
 }

@@ -23,7 +23,7 @@ export class BackendStoreImpl implements Store {
     this._forbidden = forbidden;
     this._urls = { ... config.urls};
     const headers = {
-      "Content-Type": "application/json;charset=UTF-8",
+      "Content-Type": "application/json",
     };
 
     this._defRef = {

@@ -23,12 +23,14 @@ import java.time.Duration;
  */
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.resys.thena.api.entities.PageQuery;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -52,6 +54,12 @@ public interface GrimQueryActions {
   MissionCommitQuery commitQuery();
   MissionStatsQuery missionStatsQuery();
   
+  MissionProcsQuery missionProcsQuery();
+  
+  
+  interface MissionProcsQuery {
+    Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
+  }
   
   interface MissionDeleteQuery {
     MissionDeleteQuery missionId(List<String> missionId);

@@ -60,6 +60,7 @@ public interface ThenaGrimObject {
   
   enum GrimDocType {
     GRIM_MISSION,
+    GRIM_PROCESS,
     GRIM_MISSION_DELETED,
     GRIM_MISSION_LINKS,
     GRIM_MISSION_LABEL,

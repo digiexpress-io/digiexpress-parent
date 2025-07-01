@@ -78,5 +78,8 @@ public class BatchClientImpl implements BatchClient {
     return new RuntimeInstanceQueryImpl(batchDb);
   }
 
-
+  @Override
+  public RuntimeStepQuery queryRuntimeSteps() {
+    return new RuntimeStepQueryImpl(batchDb);
+  }
 }
