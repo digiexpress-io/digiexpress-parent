@@ -64,7 +64,12 @@ export const GInboxRoot = styled("div", {
         borderColor: 'rgba(194,190,194,1)',
         boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
       },
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap',
+        rowGap: theme.spacing(1),
+      },
     },
+
     '.GInbox-inboxItemTitle': {
       fontSize: theme.typography.body2.fontSize,
       [theme.breakpoints.down('sm')]: {
@@ -134,7 +139,16 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'flex-start',
         paddingRight: theme.spacing(5),
       },
-    },     
+      [theme.breakpoints.down('sm')]: {
+        display: 'flex',                   // 👈 flex layout on mobile
+        flexWrap: 'wrap',                 // 👈 allow wrapping
+        gap: theme.spacing(1),
+        justifyContent: 'flex-start',     // 👈 start-aligned chips
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+        minWidth: 0,
+      },
+    },        
     
     '& .GSort-root': {
       display: 'flex',

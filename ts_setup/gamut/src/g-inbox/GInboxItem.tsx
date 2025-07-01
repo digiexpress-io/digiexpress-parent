@@ -55,11 +55,11 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
         <Typography component='span'>{title}</Typography>
       </Grid>
 
-      <Grid item md={4} lg={4} xl={4} className={classes.inboxItemAttachments}>
+      <Grid item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.inboxItemAttachments}>
         {props.children}
       </Grid>
 
-      <Grid item className={classes.inboxItemSentAt}>
+      <Grid item xs={12} sm={12} className={classes.inboxItemSentAt}>
         <GDate variant='date-only' date={sentAt} />
       </Grid>
 
