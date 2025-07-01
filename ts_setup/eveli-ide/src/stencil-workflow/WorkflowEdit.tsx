@@ -2,7 +2,6 @@ import React from 'react';
 
 import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -164,7 +163,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           </Box>
         </Box>
 
-        <Paper variant="outlined" sx={{ mt: theme.spacing(1), p: theme.spacing(2) }}>
+        <Divider sx={{ my: theme.spacing(2) }} />
           <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
           <Burger.SelectMultiple label='composer.article.selected'
             variant='ARTICLE_SELECT'
@@ -183,7 +182,6 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
             }))}
           />
 
-        </Paper>
         <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
         <Box mb={theme.spacing(3)} />
 

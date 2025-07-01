@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
@@ -159,7 +158,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </Box>
         </Box>
 
-        <Paper variant="outlined" sx={{ mt: theme.spacing(1), p: theme.spacing(2) }}>
+        <Divider sx={{ my: theme.spacing(2) }} />
           <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
 
           <Burger.SelectMultiple label='composer.article.selected'
@@ -177,8 +176,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <ListItemText primary={article.value} />
               </>)
             }))}
-          />
-        </Paper>
+        />
 
         <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
         <Box mb={theme.spacing(3)} />

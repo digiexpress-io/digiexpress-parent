@@ -1,8 +1,7 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
@@ -14,6 +13,7 @@ import { CancelButton } from '@/eveli-styles';
 const selectSub = { ml: 2, color: "article.dark" }
 
 const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
 
@@ -55,12 +55,12 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       value: `${article.body.order} - ${article.body.parentId ? site.articles[article.body.parentId].body.name + "/" : ""}${article.body.name}`,
       sx: article.body.parentId ? selectSub : undefined
     }));
-    
+
 
   return (
     <Dialog open={true} onClose={onClose}>
-    <DialogTitle><FormattedMessage id='link.composer.title'  /></DialogTitle>
-    <DialogContent>
+      <DialogTitle><FormattedMessage id='link.composer.title' /></DialogTitle>
+      <DialogContent>
         <LocaleLabels
           onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
           onChangeStart={() => setChangeInProgress(true)}
@@ -81,6 +81,8 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           value={value}
           onChange={setValue} />
 
+        <Divider sx={{ my: theme.spacing(2) }} />
+
         <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
         <Burger.SelectMultiple
           variant='ARTICLE_SELECT'
@@ -97,24 +99,25 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <ListItemText primary={article.value} />
             </>)
           })
-          
           )} />
-          <Box maxWidth="50%" sx={{ ml: 1 }}>
-            <Burger.Switch
-              checked={devMode}
-              helperText="link.devmode.helper"
-              label="link.devmode"
-              onChange={setDevMode}
-            />
-          </Box>
+
+
+        <Box maxWidth="50%" sx={{ ml: 1 }}>
+          <Burger.Switch
+            checked={devMode}
+            helperText="link.devmode.helper"
+            label="link.devmode"
+            onChange={setDevMode}
+          />
+        </Box>
       </DialogContent>
-    <DialogActions>
-      <CancelButton onClick={onClose} />
-      <Button onClick={handleCreate} disabled={!value || changeInProgress || labels.length < 1}>
-        <FormattedMessage id='button.create'/>
-      </Button>
-    </DialogActions>
-  </Dialog>
+      <DialogActions>
+        <CancelButton onClick={onClose} />
+        <Button onClick={handleCreate} disabled={!value || changeInProgress || labels.length < 1}>
+          <FormattedMessage id='button.create' />
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

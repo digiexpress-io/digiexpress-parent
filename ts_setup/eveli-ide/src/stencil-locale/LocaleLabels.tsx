@@ -137,7 +137,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
 
         {rows.map((row, index) => (
           <Grid2 container alignItems='center' p={theme.spacing(1)} key={index}>
-            <Grid2 size={{ md: 3, lg: 3, xl: 3 }}><Typography fontWeight='bold'>{site.locales[row.locale]?.body.value}</Typography></Grid2>
+            <Grid2 size={{ md: 3, lg: 3, xl: 3 }} pl={theme.spacing(2)}><Typography fontWeight='bold'>{site.locales[row.locale]?.body.value}</Typography></Grid2>
             <Grid2 size={{ md: 5, lg: 5, xl: 5 }} pb={theme.spacing(0.5)}
               onClick={() => {
                 if (!edit) {

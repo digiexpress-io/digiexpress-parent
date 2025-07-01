@@ -1,8 +1,7 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
@@ -21,6 +20,7 @@ interface LinkEditProps {
 }
 
 const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const link = site.links[linkId];
@@ -91,6 +91,8 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
           value={value}
           onChange={setValue} />
 
+        <Divider sx={{ my: theme.spacing(2) }} />
+
         <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
         <Burger.SelectMultiple label='link.article.select' multiline
           variant='ARTICLE_SELECT'
@@ -106,6 +108,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
           }
           ))}
         />
+
         <Box maxWidth="50%" sx={{ ml: 1 }}>
           <Burger.Switch
             checked={devMode ? devMode : false}
