@@ -7,7 +7,7 @@ export const downloadMiddleware = store => next => action => {
     if (!action.tag) {
       const form = store.getState().dialobComposer.form.toJS();
       const json = JSON.stringify(form, null,  2);
-      const blob = new Blob([json], {type: 'application/json;charset=utf-8'});
+      const blob = new Blob([json], {type: 'application/json'});
       FileSaver.saveAs(blob, `${form._id}.json`);
     } else {
       let config = store.getState().dialobComposer.config.transport;
@@ -15,7 +15,7 @@ export const downloadMiddleware = store => next => action => {
       const formName = store.getState().dialobComposer.form.get('name');
       formService.loadForm(formName, action.tag).then(json => {
         const text =  JSON.stringify(json, null,  2);
-        const blob = new Blob([text], {type: 'application/json;charset=utf-8'});
+        const blob = new Blob([text], {type: 'application/json'});
         FileSaver.saveAs(blob, `${formName}-${action.tag}.json`);
       })
     }

@@ -108,7 +108,7 @@ export namespace WrenchComposerApi {
     if (branchName && branchName !== "default") {
       headers["Branch-Name"] = branchName;
     }
-    headers["Content-Type"] = "application/json;charset=UTF-8";
+    headers["Content-Type"] = "application/json";
     return headers;
   }
 

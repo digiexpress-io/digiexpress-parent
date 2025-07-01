@@ -19,7 +19,7 @@ export default class FormService {
   doFetch(url, method, body = undefined) {
     let headers = {
       'Accept': 'application/json',
-      'Content-Type': 'application/json; charset=UTF-8'
+      'Content-Type': 'application/json'
     };
     if (this.csrf) {
       headers[this.csrf.headerName] = this.csrf.token;

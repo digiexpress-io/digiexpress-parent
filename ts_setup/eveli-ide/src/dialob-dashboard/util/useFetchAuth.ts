@@ -4,7 +4,7 @@ import type { DialobAdminConfig } from '../types';
 export const getHeaders = (config: DialobAdminConfig): Record<string, string> => {
   const headers: Record<string, string> = {
     Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json'
   };
   if (config.csrf) {
     headers[config.csrf.key] = config.csrf.value;
