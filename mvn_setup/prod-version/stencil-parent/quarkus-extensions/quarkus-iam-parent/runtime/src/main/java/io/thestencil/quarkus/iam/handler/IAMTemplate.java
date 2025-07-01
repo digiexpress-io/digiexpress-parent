@@ -112,7 +112,7 @@ public abstract class IAMTemplate implements Handler<RoutingContext> {
     Map<String, String> msg = new HashMap<>();
     msg.put("appcode", hash);
     
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     response.setStatusCode(404);
     response.end( Json.encode(msg) );
   }
@@ -128,7 +128,7 @@ public abstract class IAMTemplate implements Handler<RoutingContext> {
     Map<String, String> msg = new HashMap<>();
     msg.put("appcode", hash);
     
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     response.setStatusCode(422);
     response.end( Json.encode(msg) );
   }

@@ -70,7 +70,7 @@ public class HandlerComposer extends HandlerTemplate {
 
   @Override
   protected void handleResource(RoutingContext event, HttpServerResponse response, HandlerContext ctx, ObjectMapper objectMapper) throws IOException {
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     final var path = getPath(event);
     
     if(path.endsWith(ctx.getPaths().getServicePath())) {

@@ -73,7 +73,7 @@ public class SiteHandler extends HdesResourceHandler {
       })
       .onFailure().invoke(e -> HandlerStatusCodes.catch422(e, response))
       .subscribe().with(data -> {
-        response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");  
+        response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");  
         response.end(data);
       });
       break;

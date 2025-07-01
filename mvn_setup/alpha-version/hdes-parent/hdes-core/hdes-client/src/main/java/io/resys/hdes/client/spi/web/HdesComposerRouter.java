@@ -49,7 +49,7 @@ public class HdesComposerRouter extends HdesRouterTemplate {
 
   @Override
   protected void doRoute(RoutingContext event, HttpServerResponse response, HdesWebContext ctx, ObjectMapper objectMapper) {
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
     final var path = getPath(event);
     
     if(path.endsWith(ctx.getConfig().getServicePath())) {

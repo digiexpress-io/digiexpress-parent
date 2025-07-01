@@ -37,7 +37,7 @@ export const UserApiContext:React.FC<React.PropsWithChildren<UserApiConfig>> = (
     const headers = new Headers();
     
     headers.set('Accept', 'application/json');
-    headers.set('Content-Type', 'application/json; charset=utf-8');
+    headers.set('Content-Type', 'application/json');
     return headers;
   }
 

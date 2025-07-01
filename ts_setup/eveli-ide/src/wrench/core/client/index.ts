@@ -41,7 +41,7 @@ export class DefaultStore implements HdesApi.Store {
       method: "GET",
       credentials: 'same-origin',
       headers: {
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json"
       }
     }
     
@@ -162,7 +162,7 @@ export class DefaultStore implements HdesApi.Store {
         }
       }
       // @ts-ignore
-      this._headers["Content-Type"] = "application/json;charset=UTF-8";
+      this._headers["Content-Type"] = "application/json";
     }
     withBranch(branchName?: string): ServiceImpl {
       return new ServiceImpl(this._store, branchName);

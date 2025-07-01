@@ -62,7 +62,7 @@ public class UserActionsHandler extends UserActionsTemplate {
   
   @Override
   protected void handleResource(RoutingContext event, HttpServerResponse response, UserActionsContext ctx, IAMClient iam) {
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
 
     final var path = event.normalizedPath();
     

@@ -44,7 +44,7 @@ public class SiteResourceHandler extends HdesResourceHandler {
     case GET:
       String locale = event.request().getParam("locale");
       String defs = ctx.getContentValue(locale);
-      response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+      response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
       response.end(defs);
       break;
     default:

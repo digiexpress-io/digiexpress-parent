@@ -182,7 +182,7 @@ export namespace StencilClient {
         method: "GET",
         credentials: 'same-origin',
         headers: {
-          "Content-Type": "application/json;charset=UTF-8"
+          "Content-Type": "application/json"
         }
       }
       

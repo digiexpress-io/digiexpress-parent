@@ -50,7 +50,7 @@ public class FeedbackHandler extends FeedbackTemplate {
   
   @Override
   protected void handleResource(RoutingContext event, HttpServerResponse response, FeedbackContext ctx) {
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
 
     final var path = event.normalizedPath();
     
