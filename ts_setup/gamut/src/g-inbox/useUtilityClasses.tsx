@@ -50,7 +50,7 @@ export const GInboxRoot = styled("div", {
 
     '.GInbox-inboxItem': {
       display: 'flex',
-      flexWrap: 'wrap',
+      flexWrap: 'nowrap',
       cursor: 'pointer',
       alignItems: 'center',
       paddingLeft: theme.spacing(2),
@@ -69,7 +69,7 @@ export const GInboxRoot = styled("div", {
       fontSize: theme.typography.body2.fontSize,
       [theme.breakpoints.down('sm')]: {
         textAlign: 'right',
-      }
+      },
     },
 
     '.GInbox-newMsgIndicator': {
@@ -91,15 +91,28 @@ export const GInboxRoot = styled("div", {
     // date positioning
     '.GInbox-inboxItemSentAt': {
       display: 'flex',
-      width: '100%',
+      flexShrink: 0,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      paddingLeft: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
         flexDirection: 'row', 
         justifyContent: 'space-between',
         alignItems: 'center',
       }, 
       [theme.breakpoints.up('sm')]: {
-        flexDirection: 'column',
-        alignItems: 'flex-end',
+        flexShrink: 0,
+        width: '8ch',
+        minWidth: '8ch',
+        maxWidth: '8ch',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
       },
       [theme.breakpoints.up('md')]: {
         justifyContent: 'space-between',
@@ -108,14 +121,21 @@ export const GInboxRoot = styled("div", {
     },
 
     '.GInbox-inboxItemAttachments': {
-      display: 'flex',
       [theme.breakpoints.up('sm')]: {
-        justifyContent: 'flex-end'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexGrow: 1,
+        flexShrink: 1,
+        minWidth: 0,
+        overflow: 'hidden',
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.only('lg')]: {
         justifyContent: 'flex-start',
-      }
-    },
+        paddingRight: theme.spacing(5),
+      },
+    },     
+    
     '& .GSort-root': {
       display: 'flex',
       width: '100%',
@@ -125,7 +145,7 @@ export const GInboxRoot = styled("div", {
       },
       [theme.breakpoints.down('sm')]: {
         justifyContent: 'center'
-      }
+      },
     },
   };
 });

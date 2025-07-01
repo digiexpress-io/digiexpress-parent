@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Chip, useThemeProps } from '@mui/material';
+import { Avatar, Chip, Typography, useThemeProps } from '@mui/material';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import { GInboxAttachmentsRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { useContracts } from '../api-contract';
@@ -33,7 +33,14 @@ export const GInboxAttachments: React.FC<GInboxAttachmentsProps> = (initProps) =
     <GInboxAttachmentsRoot className={classes.root}>
       <Chip onClick={handleDownload}
         className={classes.attachmentItem}
-        label={name}
+        label={
+          <span
+            title={name}
+            className={classes.attachmentLabel}
+          >
+            {name}
+          </span>
+        }
         avatar={
           <Avatar className={classes.attachmentAvatar}>
             <FilePresentIcon className={classes.attachmentIcon} />
