@@ -6,7 +6,6 @@ import { Grid, Typography, useThemeProps } from '@mui/material';
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
 import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachments';
-import { GSort } from '../g-sort';
 
 import { CommsApi, useComms } from '../api-comms';
 import { IamApi, useIam } from '../api-iam';
@@ -42,7 +41,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const { subjects, toggleSubjectSortOrder, sortOrder } = useComms();
+  const { subjects } = useComms();
   const { getContract } = useContracts();
   const { getLocalisedOfferName } = useOffers();
   const iam = useIam();
@@ -68,10 +67,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   };
   return (
     <GInboxRoot className={classes.root}>
-      <GSort onClick={toggleSubjectSortOrder}
-        label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified.inbox' })}
-        direction={sortOrder}
-      />
       <GFlex variant='header'>
         <Grid container>
           <Grid item md={2} lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.taskRefId' })}</Typography></Grid>
@@ -80,16 +75,27 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
           <Grid item md={2} lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography></Grid>
         </Grid>
       </GFlex>
-
       {subjects
-        .map((subject) => {
-          const contract = getContract(subject.contractId);
+  .map((subject) => {
+    const contract = getContract(subject.contractId);
+    return {
+      ...subject,
+      contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
+    };
+  })
+  .sort((a, b) => {
+    const aViewed = a.isViewed ? 1 : 0;
+    const bViewed = b.isViewed ? 1 : 0;
 
-          return {
-            ...subject,
-            contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
-          };
-        })
+    if (aViewed !== bViewed) {
+      return aViewed - bViewed;
+    }
+
+    const aDate = a.lastExchange?.created ?? a.created;
+    const bDate = b.lastExchange?.created ?? b.created;
+
+    return bDate.toMillis() - aDate.toMillis();
+  })
         .map((subject) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
