@@ -9,6 +9,7 @@ import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { ExplorerItemArticlePages, useStencilNav } from '../../stencil-nav';
 import { StencilApi } from "../../api-stencil";
 import { useIntl } from "react-intl";
+import { parsePageTitle } from "@/stencil-page";
 
 
 
@@ -22,6 +23,7 @@ const SecondaryLabel: React.FC<{ article: StencilApi.Article, page: StencilApi.P
   const nav: ExplorerItemArticlePages | undefined = findTab('ARTICLE_PAGES', article.id) as any;
   const isPrimarySelected = nav?.locale1 === page.body.locale;
   const noPrimarySelected = !nav?.locale1;
+
 
   if (noPrimarySelected) {
     return <></>;
@@ -60,6 +62,8 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
   const activeColor = theme.palette.primary.main;
   const nav: ExplorerItemArticlePages | undefined = findTab('ARTICLE_PAGES', article.id) as any;
 
+  const pageTitle = parsePageTitle(page)
+
 
 
   const isPageSaved = () => {
@@ -93,15 +97,17 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
       label={
         <Grid2 container display='flex' sx={{ alignItems: 'center' }}>
           {/* Show 2-letter locale code and dev mode if applicable */}
-          <Grid2 size={{ md: 2, lg: 2, xl: 2 }} display='flex'>
-            <Typography variant="body2" sx={{ fontWeight: "inherit", mr: 1 }}>
+          <Grid2 size={{ md: 5, lg: 5, xl: 5 }} display='flex'>
+            <Typography variant="body2" sx={{ fontWeight: "bold", mr: 1 }}>
               {props.page.locale?.body.value}
+              {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
             </Typography>
             {page.body.devMode && <ConstructionIcon color='error' />}
+            <Typography variant="body2" sx={{ fontWeight: "inherit", ml: 1 }}>{pageTitle}</Typography>
           </Grid2>
 
           {/* Edit primary */}
-          <Grid2 size={{ md: 5, lg: 5, xl: 5 }} display='flex' sx={{ alignItems: 'center' }} color={isPrimary ? activeColor : "inherit"}>
+          <Grid2 size={{ md: 3, lg: 3, xl: 3 }} display='flex' sx={{ alignItems: 'center' }} color={isPrimary ? activeColor : "inherit"}>
 
             {isPrimary ?
               <>
@@ -117,7 +123,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
           </Grid2>
 
           {/* Edit secondary - can edit only if isPrimary is true */}
-          <Grid2 size={{ md: 5, lg: 5, xl: 5 }} sx={{ display: "flex", alignItems: "center" }}
+          <Grid2 size={{ md: 3, lg: 3, xl: 3 }} sx={{ display: "flex", alignItems: "center" }}
             color={nav?.locale2 === page.body.locale ? activeColor : "inherit"}
             onClick={(event) => {
               event.stopPropagation();

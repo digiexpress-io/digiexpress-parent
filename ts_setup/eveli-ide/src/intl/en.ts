@@ -598,7 +598,7 @@ export const en = {
   'newpage.info': 'A page consists of localised content and must be associated with an Article.',
   'newpage.article.info': 'Confirm creation of page for: {article} with locale: {locale}',
   'page.create': 'Create page',
-  'page.delete.dialog.title': 'Delete a page from article:',
+  'page.delete.dialog.title': 'Delete a page from article',
   'page.delete.description': 'The selected page and all of its content will be permanently removed from your site',
   'pages.save': 'Save pages',
   'pages.add': 'Add a page',

@@ -9,6 +9,7 @@ import { useStencilNav } from '../stencil-nav';
 
 import * as Burger from '@/eveli-styles';
 import { CancelButton } from '@/eveli-styles';
+import { parsePageTitle } from './helpers';
 
 
 const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
@@ -34,16 +35,17 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
   const message = <FormattedMessage id="snack.page.deletedMessage" />
   const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
 
-  const articleName = articlePages.map(articlePage => {
-    const articleId = articlePage.body.article;
-    const article = site.articles[articleId];
-    return article.body.name;
-  });
 
+
+  const article = site.articles[props.articleId];
+  const articleName = article?.body?.name || '';
 
   return (
     <Dialog open={true} onClose={props.onClose}>
-      <DialogTitle><FormattedMessage id='page.delete.dialog.title' />{articleName}</DialogTitle>
+      <DialogTitle><FormattedMessage id='page.delete.dialog.title' />
+        <FormattedMessage id='eveli.textSeparatorColon' />
+        {articleName}
+      </DialogTitle>
       <DialogContent>
         <FormattedMessage id='page.delete.description' />
         <Burger.Select
@@ -52,7 +54,7 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
           label='pages.edit.selectpage'
           items={articlePages.map(articlePage => ({
             id: articlePage.id,
-            value: site.locales[articlePage.body.locale].body.value
+            value: `${site.locales[articlePage.body.locale].body.value}:  ${parsePageTitle(articlePage)}`
           }))}
         />
       </DialogContent>

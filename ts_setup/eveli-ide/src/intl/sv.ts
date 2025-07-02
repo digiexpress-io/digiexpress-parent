@@ -582,7 +582,7 @@ export const sv = {
   'newpage.info': 'En sida består av lokaliserat innehåll och måste kopplas till en artikel.',
   'newpage.article.info': 'Bekräfta skapandet av sidan för: {article} med språk: {locale}',
   'page.create': 'Skapa sida',
-  'page.delete.dialog.title': 'Ta bort en sida från artikeln:',
+  'page.delete.dialog.title': 'Ta bort en sida från artikeln',
   'page.delete.description': 'Den valda sidan och allt dess innehåll kommer att tas bort permanent från din webbplats',
   'pages.save': 'Spara sidor',
   'pages.add': 'Lägg till en sida',
