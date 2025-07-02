@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, useTheme } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
@@ -102,7 +102,7 @@ const ArticlePageSelect: React.FC<{ articleId: StencilApi.ArticleId, open: boole
   const view = session.getArticleView(articleId);
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} maxWidth='lg'>
       <DialogTitle>
         <FormattedMessage id='pages.select.locale' defaultMessage='Select article locale(s) to edit page content' />
       </DialogTitle>

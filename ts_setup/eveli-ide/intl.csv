@@ -598,7 +598,7 @@ newpage.title,,Create a new page,Luo uusi sivu,Skapa en ny sida
 newpage.info,,A page consists of localised content and must be associated with an Article.,Sivulla on sisällöstä ja sen tulee olla yhdistetty artikkeliin.,En sida består av lokaliserat innehåll och måste kopplas till en artikel.
 newpage.article.info,,Confirm creation of page for: {article} with locale: {locale},Vahvista sivun luominen artikkelille: {article} sijainnilla: {locale},Bekräfta skapandet av sidan för: {article} med språk: {locale}
 page.create,,Create page,Luo sivu,Skapa sida
-page.delete.dialog.title,,Delete a page from article:,Poista sivu tästä artikkelista,Ta bort en sida från artikeln:
+page.delete.dialog.title,,Delete a page from article,Poista sivu tästä artikkelista,Ta bort en sida från artikeln
 page.delete.description,,The selected page and all of its content will be permanently removed from your site,,Den valda sidan och allt dess innehåll kommer att tas bort permanent från din webbplats
 pages.save,,Save pages,Tallenna sivut,Spara sidor
 pages.add,,Add a page,Lisää sivu,Lägg till en sida

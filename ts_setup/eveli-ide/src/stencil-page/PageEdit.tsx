@@ -7,6 +7,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
 import { CancelButton } from '@/eveli-styles';
+import { parsePageTitle } from './helpers';
 
 
 const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
@@ -32,6 +33,8 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId 
 
   const valid = pageId && articleId && newLocale;
 
+
+
   return (
   <Dialog open={true} onClose={props.onClose}>
     <DialogTitle><FormattedMessage id='pages.change' /></DialogTitle>
@@ -43,7 +46,7 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId 
         label='pages.edit.selectpage'
         items={articlePages.map((articlePage) => ({
           id: articlePage.id,
-          value: site.locales[articlePage.body.locale].body.value
+          value: `${site.locales[articlePage.body.locale].body.value}:  ${parsePageTitle(articlePage)}`
         }))}
       />
       <Burger.Select
