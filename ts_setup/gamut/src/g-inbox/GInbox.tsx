@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUtilityClasses, GInboxRoot, MUI_NAME } from './useUtilityClasses';
 import { IntlShape, useIntl } from 'react-intl';
-import { Grid, Typography, useThemeProps } from '@mui/material';
+import { Typography, useThemeProps, Grid2 } from '@mui/material';
 
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
@@ -68,12 +68,20 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   return (
     <GInboxRoot className={classes.root}>
       <GFlex variant='header'>
-        <Grid container>
-          <Grid item md={2} lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.taskRefId' })}</Typography></Grid>
-          <Grid item md={2} lg={4} xl={4} sx={{ justifyContent: 'flex-start !important' }}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.formName' })}</Typography></Grid>
-          <Grid item md={4} lg={4} xl={4}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.attachments' })}</Typography></Grid>
-          <Grid item md={2} lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography></Grid>
-        </Grid>
+        <Grid2 container sx={{ width: '100%' }}>
+          <Grid2 size={2}>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.taskRefId' })}</Typography>
+          </Grid2>
+          <Grid2 size={{ md: 2, lg: 4, xl: 4 }} sx={{ justifyContent: 'flex-start !important' }}>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.formName' })}</Typography>
+          </Grid2>
+          <Grid2 size={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.attachments' })}</Typography>
+          </Grid2>
+          <Grid2 size={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography>
+          </Grid2>
+        </Grid2>
       </GFlex>
       {subjects
   .map((subject) => {

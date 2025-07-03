@@ -123,6 +123,10 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'space-between',
         textAlign: 'right',
       },
+      [theme.breakpoints.up('lg')]: {
+        justifyContent: 'flex-end',
+        textAlign: 'right',
+      },      
     },
 
     '.GInbox-inboxItemAttachments': {
@@ -140,10 +144,10 @@ export const GInboxRoot = styled("div", {
         paddingRight: theme.spacing(5),
       },
       [theme.breakpoints.down('sm')]: {
-        display: 'flex',                   // 👈 flex layout on mobile
-        flexWrap: 'wrap',                 // 👈 allow wrapping
+        display: 'flex',
+        flexWrap: 'wrap',
         gap: theme.spacing(1),
-        justifyContent: 'flex-start',     // 👈 start-aligned chips
+        justifyContent: 'flex-start',
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
         minWidth: 0,

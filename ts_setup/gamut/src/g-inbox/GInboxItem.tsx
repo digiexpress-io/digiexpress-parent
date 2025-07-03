@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Tooltip, Typography, useThemeProps } from '@mui/material';
+import { Tooltip, Typography, useThemeProps, Grid2 } from '@mui/material';
 import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
@@ -38,34 +38,33 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   const isViewed = subject?.isViewed;
 
   return (
-    <div className={classes.inboxItem} onClick={() => onClick(id)}>
-      <Grid item xs={6} sm={2} md={2} lg={2} xl={2} className={classes.taskRefLayout}>
-
-        {isViewed ? <></> : <Tooltip title={tooltipContent}>
+  <Grid2 container className={classes.inboxItem} onClick={() => onClick(id)} >
+    <Grid2 size={{ lg: 2 }} className={classes.taskRefLayout}>
+      {!isViewed && (
+        <Tooltip title={tooltipContent}>
           <MarkEmailUnreadOutlinedIcon className={classes.newMsgIndicator} />
-        </Tooltip>}
-        <Typography variant='caption'>
-          {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
-          {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
-          {taskRefId}
-        </Typography>
-      </Grid>
+        </Tooltip>
+      )}
+      <Typography variant='caption'>
+        {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
+        {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
+        {taskRefId}
+      </Typography>
+    </Grid2>
 
-      <Grid item xs={6} sm={3} md={2} lg={6} xl={6} className={classes.inboxItemTitle}>
-        <Typography component='span'>{title}</Typography>
-      </Grid>
+    <Grid2 size={{ lg: 4 }} className={classes.inboxItemTitle}>
+      <Typography component='span'>{title}</Typography>
+    </Grid2>
 
-      <Grid item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.inboxItemAttachments}>
-        {props.children}
-      </Grid>
+    <Grid2 size={{ lg: 4 }} className={classes.inboxItemAttachments}>
+      {props.children}
+    </Grid2>
 
-      <Grid item xs={12} sm={12} className={classes.inboxItemSentAt}>
-        <GDate variant='date-only' date={sentAt} />
-      </Grid>
-
-    </div>
-
-  )
+    <Grid2 size={{ lg: 2 }} className={classes.inboxItemSentAt}>
+      <GDate variant='date-only' date={sentAt} />
+    </Grid2>
+  </Grid2>
+);
 }
 
 
