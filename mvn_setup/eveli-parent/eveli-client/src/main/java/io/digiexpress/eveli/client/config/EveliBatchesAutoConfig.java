@@ -27,10 +27,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.config.EveliBatchesAutoConfig.BatchTenantCondition;
+import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.BatchApiCotroller;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
@@ -51,6 +54,11 @@ public class EveliBatchesAutoConfig {
     }
   }
 
+  @Bean
+  public BatchDefinition tasksCleanUpStaleDataJob(TaskClient taskClient, DialobClient dialobClient) {
+    return BatchJob_RejectStaleForms_Definition.create(taskClient, dialobClient);
+  }
+  
   @Bean
   public BatchClient batchClient(io.vertx.mutiny.pgclient.PgPool pgPool) {
     return BatchDbImpl.create().tenant("batch").client(pgPool).build()

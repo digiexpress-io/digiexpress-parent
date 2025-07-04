@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.api;
  */
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.smallrye.mutiny.Multi;
@@ -46,6 +48,8 @@ public interface TaskClient {
   
   DeleteTasks deleteTasks();
   
+  ModifyTaskProcess modifyProcess();
+  
   QueryUnreadUserTasks queryUnreadUserTasks();
   QueryTaskComments queryTaskComments();
   QueryTaskKeywords queryTaskKeywords();
@@ -54,8 +58,17 @@ public interface TaskClient {
   QueryTaskProcesess queryTaskProcesess(); 
   
   
+  interface ModifyTaskProcess {
+    ModifyTaskProcess id(String id);
+    ModifyTaskProcess commitMessage(String commitMessage);
+    ModifyTaskProcess commitAuthor(String commitAuthor);
+    ModifyTaskProcess status(ProcessStatus status);
+    Uni<ProcessClient.ProcessInstance> build();
+  }
+  
   interface QueryTaskProcesess {
     Multi<ProcessClient.ProcessInstance> findLast6Months();
+    Multi<ProcessClient.ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen); 
   }
   
   interface QueryTaskDasboard {

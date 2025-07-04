@@ -4,7 +4,6 @@ import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
 
-import io.digiexpress.mig.client.api.ImmutableFormFilter;
 import io.digiexpress.mig.client.spi.MigClientImpl;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -32,7 +31,6 @@ public class RunAgainstTestDbRolesOnly {
   
   final io.vertx.mutiny.pgclient.PgPool target_dialob_pg_pool = null;
 
-  
   @Test
   public void test() {
     final var client = new MigClientImpl(

@@ -31,6 +31,7 @@ import io.resys.thena.grim.spi.GrimDataSource.InternalProcQuery;
 import io.resys.thena.grim.spi.datasource.GrimRegistry;
 import io.resys.thena.grim.spi.datasource.GrimRegistrySqlImpl;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +53,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
   public Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter) {
     final var sql = registry.processes().findOnOrAfter(onOrAfter);
     if(log.isDebugEnabled()) {
-      log.debug("User findOnOrAfter query, with props: {} \r\n{}", 
+      log.debug("InternalProcQueryImpl.findOnOrAfter query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -61,6 +62,45 @@ public class InternalProcQueryImpl implements InternalProcQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti(RowSet::toMulti)
-        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_MISSION)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+
+  @Override
+  public Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
+    final var sql = registry.processes().findOnOrBeforeWithoutMission(onOrBefore);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findOnOrBeforeWithoutMission query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+
+  @Override
+  public Uni<GrimProcess> getOneById(String id) {
+    final var sql = registry.processes().getById(id);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.getById query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform(rowset -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return it.next();
+          }
+          return null;
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+
   }
 }

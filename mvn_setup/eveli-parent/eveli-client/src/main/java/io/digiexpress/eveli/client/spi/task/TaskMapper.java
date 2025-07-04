@@ -27,8 +27,11 @@ import java.util.Collection;
 
 import org.apache.commons.codec.binary.StringUtils;
 
+import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
@@ -37,6 +40,7 @@ import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
+import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
@@ -192,5 +196,32 @@ public class TaskMapper {
       .build();
     
     return task;
+  }
+  
+  public static ProcessInstance map(GrimProcess entity) {
+    return ImmutableProcessInstance.builder()
+        .id(Long.parseLong(entity.getId()))
+        .status(entity.getStatus() == null ? null : ProcessClient.ProcessStatus.valueOf(entity.getStatus()))
+        .questionnaireId(entity.getQuestionnaireId())
+        .taskId(entity.getMissionId())
+        .taskRef(entity.getMissionRef())
+        .userId(entity.getUserId())
+        .created(entity.getCreated())
+        .updated(entity.getUpdated())
+        
+        .workflowName(entity.getWorkflowName())
+        .articleName(entity.getArticleName())
+        .parentArticleName(entity.getParentArticleName())
+        .anon(Boolean.TRUE.equals(entity.getAnon()))
+        .formName(entity.getFormName())
+        .flowName(entity.getFlowName())
+        
+        .formTagName(entity.getFormTagName())
+        .stencilTagName(entity.getStencilTagName())
+        .wrenchTagName(entity.getWrenchTagName())
+        
+        .expiresInSeconds(entity.getExpiresInSeconds())
+        .expiresAt(entity.getExpiresAt())
+        .build();
   }
 }

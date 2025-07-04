@@ -59,6 +59,7 @@ public interface GrimQueryActions {
   
   interface MissionProcsQuery {
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
+    Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
   }
   
   interface MissionDeleteQuery {
