@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Autocomplete, Box, Checkbox, ClickAwayListener, Grid2, Paper, TextField } from "@mui/material";
+import { Autocomplete, Box, Checkbox, Grid2, TextField } from "@mui/material";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
@@ -43,17 +43,17 @@ export type TaskRoleSelectProps = {
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const TaskRoleSelect: React.FC<TaskRoleSelectProps> = ({ assignedRoles, groups, acceptNewRoles}) => {
+const TaskRoleSelect: React.FC<TaskRoleSelectProps> = ({ assignedRoles, groups, acceptNewRoles }) => {
   const { formatMessage } = useIntl();
   const [roles, setRoles] = React.useState(groups.filter(g => assignedRoles.includes(g.id)));
 
   const handleChange = (event: any, newValue: IamApi.UserGroup[]) => {
     setRoles(newValue);
-    acceptNewRoles(newValue); 
+    acceptNewRoles(newValue);
   };
 
   return (
-    <Autocomplete multiple value={roles} options={groups} 
+    <Autocomplete multiple value={roles} options={groups}
       onChange={handleChange}
       disableCloseOnSelect
       getOptionLabel={(option) => option.groupName}
@@ -86,15 +86,19 @@ const TaskRoleSelect: React.FC<TaskRoleSelectProps> = ({ assignedRoles, groups, 
 export interface EveliTaskSubHeader {
   readOnly: boolean;
   form: TaskFormDelegateProps;
+  slots: {
+    statusExtra: React.ReactNode;
+  }
 }
 
 export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
   const { readOnly, form } = props;
   const { errors, currentState, setFieldValue } = form;
   const { assignedRoles } = currentState;
-  
+
   const { groups } = useFetch('$org/groupsList.GET', {});
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
+
   const [userList, setUserList] = React.useState<IamApi.GroupMember[]>([]);
 
   React.useEffect(() => {
@@ -105,26 +109,20 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
     }
   }, [assignedRoles])
 
+  return (<>
 
-
-
-  function findRoleDescription(role: string) {
-    return groups.find((group: any) => group.id === role)?.groupName || role;
-  }
-
-  return (
     <Box sx={{ p: 2, mb: 2, mt: 2 }}>
       <Grid2 container spacing={2}>
         {!!groups.length &&
           <Grid2 size={{ xs: 12, md: 6 }}>
-            
-          <TaskRoleSelect assignedRoles={assignedRoles ?? []}  groups={groups}
-            acceptNewRoles={(roles: IamApi.UserGroup[]) => { 
-            const groupList = roles.map(r => r.id);
-            setFieldValue("assignedRoles", groupList);
-          }}    
-           />
-          </Grid2>        
+
+            <TaskRoleSelect assignedRoles={assignedRoles ?? []} groups={groups}
+              acceptNewRoles={(roles: IamApi.UserGroup[]) => {
+                const groupList = roles.map(r => r.id);
+                setFieldValue("assignedRoles", groupList);
+              }}
+            />
+          </Grid2>
         }
         {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }}>
           {!readOnly &&
@@ -156,7 +154,7 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
               )}
             />
           }
-          {readOnly &&(
+          {readOnly && (
             <TextField
               sx={{ marginTop: 1 }}
               name='assignedUser'
@@ -169,25 +167,29 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
               InputLabelProps={{ shrink: true }}
             >
             </TextField>
-)
+          )
           }
         </Grid2>
         }
 
         <Grid2 size={{ xs: 12, md: 6 }}>
-          <RadioGroupPopover 
-            label={<FormattedMessage id='taskDialog.status' />}
-            readonly={readOnly}
-            messages={TaskApi.task_status_messages}
-            colorMap={TaskApi.task_status_colors}
-            invalidValues={[TaskApi.TaskStatus.TRANSFERRED]}
-            handleCallback={newValue => setFieldValue('status', newValue as any)}
-            value={currentState.status}
-          />
+          <Box display='flex' flexDirection='row' alignItems='flex-end' gap={2}>
+            <RadioGroupPopover
+              label={<FormattedMessage id='taskDialog.status' />}
+              readonly={readOnly}
+              messages={TaskApi.task_status_messages}
+              colorMap={TaskApi.task_status_colors}
+              invalidValues={[TaskApi.TaskStatus.TRANSFERRED]}
+              handleCallback={newValue => setFieldValue('status', newValue as any)}
+              value={currentState.status}
+            />
+            <Box>{props.slots.statusExtra}</Box>
+          </Box>
 
         </Grid2>
+
         <Grid2 size={{ xs: 12, md: 6 }}>
-          <RadioGroupPopover 
+          <RadioGroupPopover
             label={<FormattedMessage id='taskDialog.priority' />}
             readonly={readOnly}
             messages={TaskApi.task_priority_messages}
@@ -198,5 +200,6 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
         </Grid2>
       </Grid2>
     </Box>
+  </>
   );
 }

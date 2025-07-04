@@ -31,7 +31,11 @@ const getColor = (color: TaskApi.Colors) => {
 const RadioGroupPopover = ({ label, readonly, messages, colorMap, invalidValues, handleCallback, value }: CommonProps) => {
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [radioValue, setRadioValue] = React.useState<string | undefined>();
+  const [radioValue, setRadioValue] = React.useState<string>(value ?? '');
+
+  React.useEffect(() => {
+    setRadioValue(value ?? '')
+  }, [value]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +43,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, invalidValues,
 
   const handleClose = () => {
     setAnchorEl(null);
-    setRadioValue(undefined);
+    setRadioValue('');
   };
 
   const open = Boolean(anchorEl);
@@ -103,7 +107,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, invalidValues,
         }}
       >
         <Box sx={{ p: 2 }}>
-          <RadioGroup value={radioValue ? radioValue : value || ''} onChange={handleChange}>
+          <RadioGroup value={radioValue} onChange={handleChange}>
             {entries
               .filter(([value]) => invalidValues ? !invalidValues.includes(value) : true)
               .map(([value, color]) =>

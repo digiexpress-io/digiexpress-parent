@@ -15,6 +15,7 @@ import { EveliTaskSubHeader } from './EveliTaskSubHeader';
 import { EveliTaskFooter } from './EveliTaskFooter';
 import { EveliTaskBodyEmpty } from './EveliTaskBodyEmpty';
 import { EveliTaskFeatureProvider } from '@/eveli-task-feature';
+import { TaskReopen } from './EveliTaskReopen';
 
 
 export type EveliTaskComposerProps = {
@@ -29,7 +30,6 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
   const { createTask } = useFetch('worker/rest/api/tasks.POST', {});
 
-
   React.useEffect(() => {
     if (props.taskId && task === undefined) {
       getTask(props.taskId).then(setTask);
@@ -42,6 +42,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   if (task === undefined) {
     return (<LinearProgress/>);
   }
+
 
 
   async function handleSaveTask(task: Partial<TaskApi.Task>) {
@@ -58,6 +59,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
       getTask(props.taskId).then(setTask); 
     }
   }
+
   const status: TaskApi.TaskStatus = task?.status ?? TaskApi.TaskStatus.NEW;
   const keywords: string[] = (task?.keyWords ?? []).flatMap(element => element.split(','));
   const readOnly: boolean = (status === TaskApi.TaskStatus.COMPLETED || status === TaskApi.TaskStatus.REJECTED 
@@ -76,7 +78,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
             <PageLeavingConfirmation navigationConfirmationRequired={() => form.dirty && !form.isSubmitting} />
             <EveliTaskHeader taskId={task?.id} questionnaireId={task?.questionnaireId} form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
             {task ? <EveliTaskBody task={task} readOnly={readOnly} onReload={handleReload} /> : <EveliTaskBodyEmpty />}
-            <EveliTaskSubHeader form={form} readOnly={readOnly} />
+            <EveliTaskSubHeader form={form} readOnly={readOnly} slots={{ statusExtra: task && <TaskReopen task={task} onReload={handleReload} /> }} />
             <EveliTaskFooter task={task} form={form} readOnly={readOnly} />
           </>
         )
