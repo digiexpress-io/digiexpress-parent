@@ -3,7 +3,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Tex
 import { useIntl } from 'react-intl';
 import { TaskApi } from '@/api-task';
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { useIam } from '@/api-iam';
 import { EveliPermissions } from '@/eveli-permissions';
 
 
@@ -19,6 +18,7 @@ export const TaskReopen: React.FC<{
 
 
   function handleClose() {
+    setReason('');
     setOpen(false);
   }
 
@@ -63,7 +63,7 @@ export const TaskReopen: React.FC<{
         </DialogActions>
       </Dialog>
 
-      <EveliPermissions id='REOPEN_TASK'>
+      <EveliPermissions id='TASK_REOPEN'>
         <Button onClick={() => setOpen(true)}>{intl.formatMessage({ id: 'button.taskReopenDialog', defaultMessage: 'Reopen task' })}</Button>
       </EveliPermissions>
 

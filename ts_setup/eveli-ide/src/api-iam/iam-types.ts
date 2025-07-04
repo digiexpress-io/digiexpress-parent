@@ -16,7 +16,7 @@ export declare namespace IamApi {
     'FEEDBACK_VIEW' | 'FEEBACK_EDIT' |
     'DIALOB_VIEW' | 'DIALOB_EDIT' |
     'TABLES_V2' | 'BATCH_VIEW' | 'BATCH_EDIT' |
-    'TASK_REOPEN_ADMIN'
+    'TASK_REOPEN'
 
   export interface User {
     userId: string;
