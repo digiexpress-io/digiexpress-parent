@@ -72,10 +72,19 @@ export const GInboxRoot = styled("div", {
 
     '.GInbox-inboxItemTitle': {
       fontSize: theme.typography.body2.fontSize,
+      display: 'flex',
       [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-end',
+        textAlign: 'right',
+        flex: '1 1 0%',
+        minWidth: 0,
+        maxWidth: '100%',
+      },
+      [theme.breakpoints.only('md')]: {
+        justifyContent: 'flex-end',
         textAlign: 'right',
       },
-    },
+    },    
 
     '.GInbox-newMsgIndicator': {
       marginRight: theme.spacing(1),

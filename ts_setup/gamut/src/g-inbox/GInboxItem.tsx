@@ -38,33 +38,33 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   const isViewed = subject?.isViewed;
 
   return (
-  <Grid2 container className={classes.inboxItem} onClick={() => onClick(id)} >
-    <Grid2 size={{ lg: 2 }} className={classes.taskRefLayout}>
-      {!isViewed && (
-        <Tooltip title={tooltipContent}>
-          <MarkEmailUnreadOutlinedIcon className={classes.newMsgIndicator} />
-        </Tooltip>
-      )}
-      <Typography variant='caption'>
-        {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
-        {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
-        {taskRefId}
-      </Typography>
-    </Grid2>
+    <Grid2 container className={classes.inboxItem} onClick={() => onClick(id)} >
+      <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 2 }} className={classes.taskRefLayout}>
+        {!isViewed && (
+          <Tooltip title={tooltipContent}>
+            <MarkEmailUnreadOutlinedIcon className={classes.newMsgIndicator} />
+          </Tooltip>
+        )}
+        <Typography variant='caption'>
+          {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
+          {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
+          {taskRefId}
+        </Typography>
+      </Grid2>
 
-    <Grid2 size={{ lg: 4 }} className={classes.inboxItemTitle}>
-      <Typography component='span'>{title}</Typography>
-    </Grid2>
+      <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 4 }} className={classes.inboxItemTitle}>
+        <Typography component='span'>{title}</Typography>
+      </Grid2>
 
-    <Grid2 size={{ lg: 4 }} className={classes.inboxItemAttachments}>
-      {props.children}
-    </Grid2>
+      <Grid2 size={{ xs: 12, sm: 12, md: 4, lg: 4 }} className={classes.inboxItemAttachments}>
+        {props.children}
+      </Grid2>
 
-    <Grid2 size={{ lg: 2 }} className={classes.inboxItemSentAt}>
-      <GDate variant='date-only' date={sentAt} />
+      <Grid2 size={{ xs: 12, sm: 12, md: 2, lg: 2 }} className={classes.inboxItemSentAt}>
+        <GDate variant='date-only' date={sentAt} />
+      </Grid2>
     </Grid2>
-  </Grid2>
-);
+  );
 }
 
 
