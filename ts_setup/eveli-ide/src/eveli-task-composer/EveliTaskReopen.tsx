@@ -33,7 +33,7 @@ export const TaskReopen: React.FC<{
   }
 
   const disabled = !reason.trim();
-  const isTaskReopenable = props.task.status === 'COMPLETED' || props.task.status === 'REJECTED';
+  const isTaskReopenable = (props.task.status === 'COMPLETED' || props.task.status === 'REJECTED') && props.task.questionnaireId;
 
   if (!isTaskReopenable) {
     return (<></>)
