@@ -135,7 +135,7 @@ public interface GrimDataSource extends TenantDataSource {
   }    
   
   interface InternalMissionStatsQuery {
-    Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes();    
+    Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups);    
     
   }    
   

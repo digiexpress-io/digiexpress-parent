@@ -48,8 +48,8 @@ public class InternalMissionStatsQuerySqlImpl implements InternalMissionStatsQue
   }
 
   @Override
-  public Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes() {
-    final var sql = registry.missions().findAllStatsByMissionAttributes();
+  public Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups) {
+    final var sql = registry.missions().findAllStatsByMissionAttributes(assigneeGroups);
     if(log.isDebugEnabled()) {
       log.debug("User findAllByMissionAttributes query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),

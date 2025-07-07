@@ -486,7 +486,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   }
   
   @Override
-  public SqlTuple findAllStatsByMissionAttributes() {
+  public SqlTuple findAllStatsByMissionAttributes(List<String> assigneeGroups) {
     final var params = new ArrayList<Object>();
     params.add(GrimMissionAttributeEventType.STATUS_DATE.name());
     params.add(GrimMissionAttributeEventType.STATUS.name());
@@ -494,112 +494,118 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     params.add(GrimMissionAttributeEventType.OVERDUE.name());
     params.add(GrimAssignment.ASSIGNMENT_TYPE_USER);
     params.add(GrimAssignment.ASSIGNMENT_TYPE_TASK_ROLE);
+    params.add(assigneeGroups.toArray());
     
+final var sql = """
+with
+grim_mission as (
+  select mission.* from ${TABLE_GRIM_MISSION} as mission
+  right join ${TABLE_GRIM_ASSIGNMENT} as ass 
+  on(ass.mission_id = mission.id and ass.assignment_type = $6 and ass.assignee = ANY($7))  
+),
+grim_commit as (
+  select * from ${TABLE_GRIM_COMMIT}
+),
+grim_assignment as (
+  select * from ${TABLE_GRIM_ASSIGNMENT}
+),
+status_date_events as (
+  select
+    commit.created_at::date as event_date,
+    mission.mission_status as mission_status
+  from grim_mission as mission
+  left join grim_commit as commit
+  on(mission.commit_id = commit.commit_id and mission.id = commit.mission_id)
+),
+mission_status as (
+  select
+    distinct mission.mission_status as value
+  from grim_mission as mission
+)
 
-    return ImmutableSqlTuple.builder().value(new SqlStatement()
-      .append("with").ln()
-      
-      // virtual tables
-      .append("status_date_events as (").ln()
-      .append("  select").ln()
-      .append("    commit.created_at::date as event_date,").ln()
-      .append("    mission.mission_status as mission_status").ln()
-      .append("  from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append("  left join ").append(options.getGrimCommit()).append(" as commit").ln() 
-      .append("  on(mission.commit_id = commit.commit_id and mission.id = commit.mission_id)").ln()
-      .append("),").ln()
 
-      .append("mission_status as (").ln()
-      .append("  select").ln()
-      .append("    distinct mission.mission_status as value").ln()
-      .append("  from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append(")").ln()
-      
-      
-      .append("select")
-      .append("  count(*) as events_total,").ln()
-      .append("  $1 as event_type,").ln()
-      .append("  status_date_events.event_date as event_date, ").ln()
-      .append("  mission_status.value as attribute_value,").ln()
-      .append("  null as event_sub_type").ln()
-      .append("from mission_status ").ln()
-      .append("left join status_date_events").ln()
-      .append("  on(mission_status.value = status_date_events.mission_status)").ln()
-      .append("  group by status_date_events.event_date, mission_status.value").ln().ln()
-        
-      .append("union").ln()
-      
-        // count status values
-      .append("select")
-      .append("  count(*) as events_total,").ln()
-      .append("  $2 as event_type,").ln()
-      .append("  null as event_date,").ln()
-      .append("  mission.mission_status as attribute_value,").ln()
-      .append("  null as event_sub_type").ln()
-      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append("  group by mission.mission_status").ln()
-
-      .append("union").ln()
-
-      // count priority values
-      .append("select")
-      .append("  count(*) as events_total,").ln()
-      .append("  $3 as event_type,").ln()
-      .append("  null as event_date,").ln()
-      .append("  mission.mission_priority as attribute_value,").ln()
-      .append("  null as event_sub_type").ln()
-      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append("  group by mission.mission_priority").ln()
-      
-      .append("union").ln()
-      
-      
-      // count overdue values by user
-      .append("select")
-      .append("  count(*) as events_total,").ln()
-      .append("  $4 as event_type,").ln()
-      .append("  null as event_date,").ln()
-      .append("  coalesce(assignment.assignee, '__nobody') as attribute_value,").ln()
-      .append("  null as event_sub_type").ln()
-      
-      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append("  left join ").append(options.getGrimAssignment()).append(" as assignment").ln()
-      .append("  on(assignment.assignment_type = $5 and mission.id = assignment.mission_id)").ln()
-      
-      .append("  where mission.mission_due_date < current_timestamp::date").ln()
-      .append("  group by assignment.assignee").ln()
-    
-      .append("union").ln()
-      
-      // count status and group
-      .append("select")
-      .append("  count(*) as events_total,").ln()
-      .append("  'ROLE' as event_type,").ln()
-      .append("  null as event_date,").ln()
-      .append("  coalesce(assignment.assignee, '__nobody') as attribute_value,").ln()
-      .append("  mission.mission_status as event_sub_type").ln()
-      
-      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append("  left join ").append(options.getGrimAssignment()).append(" as assignment").ln()
-      .append("  on(assignment.assignment_type = $6 and mission.id = assignment.mission_id)").ln()
-      .append("  where mission.mission_status is not null")
-      .append("  group by mission.mission_status, assignment.assignee").ln()
-
-      .append("union").ln()
-      
-      // count by questionnaire type
-      .append("select")
-      .append("  count(*) as events_total,").ln()
-      .append("  'QUESTIONNAIRE' as event_type,").ln()
-      .append("  null as event_date,").ln()
-      .append("  mission.mission_title as attribute_value,").ln()
-      .append("  null as event_sub_type").ln()
-      
-      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
-      .append("  where mission.questionnaire_id is not null")
-      .append("  group by mission.mission_title").ln()
-      
-      .build())
+select * from (
+  select
+    count(*) as events_total,
+    $1 as event_type,
+    status_date_events.event_date as event_date,
+    mission_status.value as attribute_value,
+    null as event_sub_type
+  from mission_status
+  left join status_date_events
+    on(mission_status.value = status_date_events.mission_status)
+    group by status_date_events.event_date, mission_status.value
+  
+  union
+  
+  select
+    count(*) as events_total,
+    $2 as event_type,
+    null as event_date,
+    mission.mission_status as attribute_value,
+    null as event_sub_type
+  from grim_mission as mission
+    group by mission.mission_status
+  
+  union
+  
+  select
+    count(*) as events_total,
+    $3 as event_type,
+    null as event_date,
+    mission.mission_priority as attribute_value,
+    null as event_sub_type
+  from grim_mission as mission
+    group by mission.mission_priority
+  
+  union
+  
+  select
+    count(*) as events_total,
+    $4 as event_type,
+    null as event_date,
+    coalesce(assignment.assignee, '__nobody') as attribute_value,
+    null as event_sub_type
+  from grim_mission as mission
+    left join grim_assignment as assignment
+    on(assignment.assignment_type = $5 and mission.id = assignment.mission_id)
+    where mission.mission_due_date < current_timestamp::date
+    group by assignment.assignee
+  
+  union
+  
+  select
+    count(*) as events_total,
+    'ROLE' as event_type,
+    null as event_date,
+    coalesce(assignment.assignee, '__nobody') as attribute_value,
+    mission.mission_status as event_sub_type
+  from grim_mission as mission
+    left join grim_assignment as assignment
+    on(assignment.assignment_type = $6 and mission.id = assignment.mission_id)
+    where mission.mission_status is not null
+    group by mission.mission_status, assignment.assignee
+  
+  union
+  
+  select
+    count(*) as events_total,
+    'QUESTIONNAIRE' as event_type,
+    null as event_date,
+    mission.mission_title as attribute_value,
+    null as event_sub_type
+  from grim_mission as mission
+    where mission.questionnaire_id is not null
+    group by mission.mission_title
+)
+  
+where attribute_value is not null
+""";
+    return ImmutableSqlTuple.builder().value(
+        sql
+        .replace("${TABLE_GRIM_MISSION}", options.getGrimMission())
+        .replace("${TABLE_GRIM_COMMIT}", options.getGrimCommit())
+        .replace("${TABLE_GRIM_ASSIGNMENT}", options.getGrimAssignment()))
       .props(Tuple.from(params))
     .build();
   }

@@ -1,5 +1,7 @@
 package io.resys.thena.grim.spi.actions;
 
+import java.util.List;
+
 /*-
  * #%L
  * thena-grim-client
@@ -39,11 +41,11 @@ public class MissionStatsQueryImpl implements MissionStatsQuery {
 
 
   @Override
-  public Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes() {
+  public Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups) {
     return startingState
         .toGrimState(repoId).onItem()
         .transformToUni(tenant -> {
-          return tenant.missionStats().findAllByMissionAttributes()
+          return tenant.missionStats().findAllByMissionAttributes(assigneeGroups)
           .onItem().transform(events -> ImmutableQueryEnvelopeList.<GrimMissionAttributeEvent>builder()
             .repo(tenant.getDataSource().getTenant())
             .status(QueryEnvelopeStatus.OK)

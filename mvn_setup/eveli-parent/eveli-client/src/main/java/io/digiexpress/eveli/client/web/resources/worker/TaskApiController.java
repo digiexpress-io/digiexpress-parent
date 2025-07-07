@@ -199,7 +199,9 @@ public class TaskApiController {
   
   @GetMapping(value="/dashboard")
   public Uni<TaskDasboard> getDashboard() {
-    return taskClient.queryTaskDasboard().findAll();
+    final var worker = securityClient.getUser().getPrincipal();
+    
+    return taskClient.queryTaskDasboard().requireAnyRoles(worker.getRoles()).findAll();
   }
   
   

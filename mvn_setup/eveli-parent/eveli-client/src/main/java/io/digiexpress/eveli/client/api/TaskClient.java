@@ -72,6 +72,7 @@ public interface TaskClient {
   }
   
   interface QueryTaskDasboard {
+    QueryTaskDasboard requireAnyRoles(List<String> roles);
     Uni<TaskDasboard> findAll();
   }
   

@@ -261,12 +261,18 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryTaskDasboard queryTaskDasboard() {
     return new QueryTaskDasboard() {
-      
+      private final List<String> requireAnyRoles = new ArrayList<>();
+      @Override
+      public QueryTaskDasboard requireAnyRoles(List<String> roles) {
+        TaskAssert.notEmpty("roles", () -> "roles can't be empty!");
+        this.requireAnyRoles.addAll(roles);
+        return this;
+      }
       @Override
       public Uni<TaskDasboard> findAll() {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
-        return grim.find().missionStatsQuery().findAllByMissionAttributes()
+        return grim.find().missionStatsQuery().findAllByMissionAttributes(requireAnyRoles)
           .onItem().transform(resp -> {
             if(resp.getStatus() != QueryEnvelopeStatus.OK) {
               throw TaskException.builder("FIND_TASK_DASKBOARD_FAIL")

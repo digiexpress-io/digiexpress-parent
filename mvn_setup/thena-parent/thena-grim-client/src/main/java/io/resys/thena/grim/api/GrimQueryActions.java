@@ -70,7 +70,7 @@ public interface GrimQueryActions {
   }
   
   interface MissionStatsQuery {
-    Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes();
+    Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups);
   }
   interface MissionCommitQuery {
     Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits();
