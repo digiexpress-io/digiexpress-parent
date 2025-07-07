@@ -43,7 +43,8 @@ public class MergeProcImpl implements MergeProc {
   private Optional<String> status;
   private Optional<OffsetDateTime> expiresAt;
   private Optional<Long> expiresInSeconds;  
-    
+  private boolean isUpdated = false;
+  
   public MergeProcImpl(GrimProcess state) {
     super();
     this.grimProcPrevious = state;
@@ -93,28 +94,56 @@ public class MergeProcImpl implements MergeProc {
   
   public GrimProcess close() {
     RepoAssert.isTrue(built, () -> "you must call MergeProc.build() to finalize proc UPDATE!");
+    
+    
     if(missionId != null) {
-      next.missionId(missionId.orElse(null));
+      final var newValue = missionId.orElse(null);
+      next.missionId(newValue);
+      isUpdated(newValue, grimProcPrevious.getMissionId());
     }
+    
     if(flowName != null) {
-      next.flowName(flowName.orElse(null));
+      final var newValue = flowName.orElse(null); 
+      next.flowName(newValue);
+      isUpdated(newValue, grimProcPrevious.getFlowName());
     }
+    
     if(flowBody != null) {
-      next.flowBody(flowBody.map(e -> e.encode()).orElse(null));
+      final var newValue = flowBody.map(e -> e.encode()).orElse(null);
+      next.flowBody(newValue);
+      isUpdated(newValue, grimProcPrevious.getFlowBody());
     }
     if(formBody != null) {
-      next.formBody(formBody.map(e -> e.encode()).orElse(null));
+      final var newValue = formBody.map(e -> e.encode()).orElse(null); 
+      next.formBody(newValue);
+      isUpdated(newValue, grimProcPrevious.getFormBody());
     }
     if(status != null) {
-      next.status(status.orElse(null));
+      final var newValue = status.orElse(null); 
+      next.status(newValue);
+      isUpdated(newValue, grimProcPrevious.getStatus());
     }
     if(expiresAt != null) {
-      next.expiresAt(expiresAt.orElse(null));
+      final var newValue = expiresAt.orElse(null);
+      next.expiresAt(newValue);
+      isUpdated(newValue, grimProcPrevious.getExpiresAt());
     }
     if(expiresInSeconds != null) {
-      next.expiresInSeconds(expiresInSeconds.orElse(null));
+      final var newValue = expiresInSeconds.orElse(null);
+      next.expiresInSeconds(newValue);
+      isUpdated(newValue, grimProcPrevious.getExpiresInSeconds());
+    }
+    
+    if(this.isUpdated) {
+      next.updated(OffsetDateTime.now());
     }
 
     return next.build();
+  }
+  
+  private void isUpdated(Object o1, Object o2) {
+    if(!java.util.Objects.equals(o1, o2)) {
+      isUpdated = true;
+    }
   }
 }

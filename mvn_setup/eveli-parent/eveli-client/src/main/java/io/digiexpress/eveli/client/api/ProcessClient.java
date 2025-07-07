@@ -169,7 +169,8 @@ public interface ProcessClient {
     WAITING,
     COMPLETED,
     REJECTED,
-    WAITING_FOR_SYNC // complete event arrived from form, waiting to launch flow
+    WAITING_FOR_SYNC, // complete event arrived from form, waiting to launch flow
+    EXPIRED
   }
   
   
