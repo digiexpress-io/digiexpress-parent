@@ -15,7 +15,7 @@ import io.digiexpress.mig.client.api.SourceTasks.SourceRole;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger;
 import io.digiexpress.mig.client.spi.loggers.TargetTaskLogger;
 import io.resys.thena.api.entities.grim.GrimAssignment;
-import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.grim.spi.sql.GrimTableNames;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -29,12 +29,12 @@ import lombok.RequiredArgsConstructor;
 public class TargetTaskRolesBuilderImpl implements TargetTaskRolesBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
-  private TenantContext names;  
+  private GrimTableNames names;  
   private final AtomicLong counter = new AtomicLong();
   
   @Override
   public Uni<SourceTasks> build(SourceTasks source, String tenantName) {
-    this.names = TenantContext.defaults("").withTenantPrefix(tenantName);
+    this.names = GrimTableNames.defaults().toRepo(tenantName);
     return target_tasks.withTransaction(conn -> execute(conn, source));
   }
   

@@ -21,6 +21,7 @@ package io.resys.thena.grim.spi.datasource;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
@@ -33,6 +34,10 @@ public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, i
   ThenaSqlClient.SqlTuple getById(String id);
 
   ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter);
+  ThenaSqlClient.SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
+  
+  ThenaSqlClient.SqlTupleList insertAll(Collection<GrimProcess> mission);
+  ThenaSqlClient.SqlTupleList updateAll(Collection<GrimProcess> mission);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

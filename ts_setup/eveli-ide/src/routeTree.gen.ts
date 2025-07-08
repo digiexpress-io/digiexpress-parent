@@ -23,7 +23,6 @@ import { Route as SecuredLocaleWorkerProfileRouteImport } from './routes/secured
 import { Route as SecuredLocaleWorkerLibraRouteImport } from './routes/secured.$locale.worker.libra'
 import { Route as SecuredLocaleWorkerBatchesRouteImport } from './routes/secured.$locale.worker.batches'
 import { Route as SecuredLocaleWorkerTasksIndexRouteImport } from './routes/secured.$locale.worker.tasks.index'
-import { Route as SecuredLocaleWorkerTablesIndexRouteImport } from './routes/secured.$locale.worker.tables.index'
 import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/secured.$locale.worker.queues.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
 import { Route as SecuredLocaleWorkerLibraIndexRouteImport } from './routes/secured.$locale.worker.libra.index'
@@ -111,12 +110,6 @@ const SecuredLocaleWorkerTasksIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleWorkerTasksRoute,
-  } as any)
-const SecuredLocaleWorkerTablesIndexRoute =
-  SecuredLocaleWorkerTablesIndexRouteImport.update({
-    id: '/tables/',
-    path: '/tables/',
-    getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 const SecuredLocaleWorkerQueuesIndexRoute =
   SecuredLocaleWorkerQueuesIndexRouteImport.update({
@@ -270,7 +263,6 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/libra/': typeof SecuredLocaleWorkerLibraIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
-  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/batches/$batchId': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
@@ -302,7 +294,6 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/libra': typeof SecuredLocaleWorkerLibraIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
-  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/batches/$batchId': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
@@ -339,7 +330,6 @@ export interface FileRoutesById {
   '/secured/$locale/worker/libra/': typeof SecuredLocaleWorkerLibraIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
-  '/secured/$locale/worker/tables/': typeof SecuredLocaleWorkerTablesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/batches/$batchId/': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create/': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
@@ -377,7 +367,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/libra/'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
-    | '/secured/$locale/worker/tables'
     | '/secured/$locale/worker/tasks/'
     | '/secured/$locale/worker/batches/$batchId'
     | '/secured/$locale/worker/batches/create'
@@ -409,7 +398,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/libra'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
-    | '/secured/$locale/worker/tables'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/worker/batches/$batchId'
     | '/secured/$locale/worker/batches/create'
@@ -445,7 +433,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/libra/'
     | '/secured/$locale/worker/monitoring/'
     | '/secured/$locale/worker/queues/'
-    | '/secured/$locale/worker/tables/'
     | '/secured/$locale/worker/tasks/'
     | '/secured/$locale/worker/batches/$batchId/'
     | '/secured/$locale/worker/batches/create/'
@@ -631,13 +618,6 @@ declare module '@tanstack/react-router' {
       path: '/queues'
       fullPath: '/secured/$locale/worker/queues'
       preLoaderRoute: typeof SecuredLocaleWorkerQueuesIndexRouteImport
-      parentRoute: typeof SecuredLocaleWorkerRoute
-    }
-    '/secured/$locale/worker/tables/': {
-      id: '/secured/$locale/worker/tables/'
-      path: '/tables'
-      fullPath: '/secured/$locale/worker/tables'
-      preLoaderRoute: typeof SecuredLocaleWorkerTablesIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/tasks/': {
@@ -922,15 +902,6 @@ declare module './routes/secured.$locale.worker.queues.index' {
     FileRoutesByPath['/secured/$locale/worker/queues/']['fullPath']
   >
 }
-declare module './routes/secured.$locale.worker.tables.index' {
-  const createFileRoute: CreateFileRoute<
-    '/secured/$locale/worker/tables/',
-    FileRoutesByPath['/secured/$locale/worker/tables/']['parentRoute'],
-    FileRoutesByPath['/secured/$locale/worker/tables/']['id'],
-    FileRoutesByPath['/secured/$locale/worker/tables/']['path'],
-    FileRoutesByPath['/secured/$locale/worker/tables/']['fullPath']
-  >
-}
 declare module './routes/secured.$locale.worker.tasks.index' {
   const createFileRoute: CreateFileRoute<
     '/secured/$locale/worker/tasks/',
@@ -1101,7 +1072,6 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerHelpIndexRoute: typeof SecuredLocaleWorkerHelpIndexRoute
   SecuredLocaleWorkerMonitoringIndexRoute: typeof SecuredLocaleWorkerMonitoringIndexRoute
   SecuredLocaleWorkerQueuesIndexRoute: typeof SecuredLocaleWorkerQueuesIndexRoute
-  SecuredLocaleWorkerTablesIndexRoute: typeof SecuredLocaleWorkerTablesIndexRoute
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   SecuredLocaleWorkerQueuesMessagesIndexRoute: typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
@@ -1119,7 +1089,6 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerMonitoringIndexRoute:
     SecuredLocaleWorkerMonitoringIndexRoute,
   SecuredLocaleWorkerQueuesIndexRoute: SecuredLocaleWorkerQueuesIndexRoute,
-  SecuredLocaleWorkerTablesIndexRoute: SecuredLocaleWorkerTablesIndexRoute,
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute:
     SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute,
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute:

@@ -125,6 +125,11 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return startingState.toGrimState(repoId)
             .onItem().transformToMulti(state -> state.missionProcs().findOnOrAfter(onOrAfter));
       }
+      @Override
+      public Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
+        return startingState.toGrimState(repoId)
+            .onItem().transformToMulti(state -> state.missionProcs().findOnOrBeforeWithoutMission(onOrBefore));
+      }
     };
   }
 }

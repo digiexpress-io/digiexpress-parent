@@ -27,6 +27,7 @@ import io.resys.thena.grim.spi.create.CreateOneMissionsImpl;
 import io.resys.thena.grim.spi.modify.ModifyManyCommitViewersImpl;
 import io.resys.thena.grim.spi.modify.ModifyManyMissionsImpl;
 import io.resys.thena.grim.spi.modify.ModifyOneMissionImpl;
+import io.resys.thena.grim.spi.modify.ModifyOneProcImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -53,6 +54,10 @@ public class GrimCommitActionsImpl implements GrimCommitActions {
   @Override
   public ModifyManyCommitViewers modifyManyCommitViewer() {
     return new ModifyManyCommitViewersImpl(state, repoId);
+  }
+  @Override
+  public ModifyOneProc modifyOneProc() {
+    return new ModifyOneProcImpl(state, repoId);
   }
 
 }

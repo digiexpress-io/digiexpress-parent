@@ -42,6 +42,20 @@ import io.vertx.core.json.JsonObject;
 // Generic interfaces for create/update/delete operations 
 public interface ThenaGrimMergeObject {  
   
+  interface MergeProc {
+
+    MergeProc missionId(@Nullable String missionId);
+    MergeProc flowName(@Nullable String flowName);
+    MergeProc flowBody(@Nullable JsonObject flowBody);
+    MergeProc formBody(@Nullable JsonObject formBody);
+    MergeProc status(@Nullable String status);
+    
+    MergeProc expiresAt(@Nullable OffsetDateTime expiresAt);
+    MergeProc expiresInSeconds(@Nullable Long expiresInSeconds);  
+        
+    void build();
+  }
+  
   interface MergeMission {
     MergeMission onCurrentState(Consumer<GrimMissionContainer> handleCurrentState);
     GrimMissionContainer getCurrentState();

@@ -27,13 +27,9 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliBatchesDevAutoConfig.BatchTenantCondition;
-import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_Feedback;
-import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_ProcessStep;
-import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_TaskStep;
+import io.digiexpress.eveli.client.spi.batch.delete_all.Batch_DeleteAll_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
-import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
-import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -52,26 +48,6 @@ public class EveliBatchesDevAutoConfig {
 
   @Bean
   public BatchDefinition tasksCleanUpJob(ProcessClient processClient, TaskClient taskClient, FeedbackClient feedback) {
-    return ImmutableBatchDefinition.builder()
-        .batchName("tasks-delete-all")
-        .comment("clean up batch for wiping most of the 'task managment' data")
-        .addSteps(ImmutableBatchStepDefinition.builder()
-            .name("delete-proc")
-            .comment("deletes all processes")
-            .executor(new BatchJob_DeleteAll_ProcessStep(processClient))
-            .build())
-        .addSteps(ImmutableBatchStepDefinition.builder()
-            .name("delete-tasks")
-            .comment("deletes all tasks and makes and audit entry into commit logs")
-            .executor(new BatchJob_DeleteAll_TaskStep(taskClient))
-            .build())
-        .addSteps(ImmutableBatchStepDefinition.builder()
-            .name("delete-feedback")
-            .comment("deletes all feedback")
-            .executor(new BatchJob_DeleteAll_Feedback(feedback))
-            .build())
-        
-        
-        .build();
+    return Batch_DeleteAll_Definition.create(processClient, taskClient, feedback);
   }
 }

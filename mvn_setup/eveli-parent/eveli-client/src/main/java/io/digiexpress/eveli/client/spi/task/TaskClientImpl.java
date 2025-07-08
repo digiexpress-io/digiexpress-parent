@@ -29,11 +29,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
-import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -55,6 +54,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
+import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -261,12 +261,18 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryTaskDasboard queryTaskDasboard() {
     return new QueryTaskDasboard() {
-      
+      private final List<String> requireAnyRoles = new ArrayList<>();
+      @Override
+      public QueryTaskDasboard requireAnyRoles(List<String> roles) {
+        TaskAssert.notEmpty("roles", () -> "roles can't be empty!");
+        this.requireAnyRoles.addAll(roles);
+        return this;
+      }
       @Override
       public Uni<TaskDasboard> findAll() {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
-        return grim.find().missionStatsQuery().findAllByMissionAttributes()
+        return grim.find().missionStatsQuery().findAllByMissionAttributes(requireAnyRoles)
           .onItem().transform(resp -> {
             if(resp.getStatus() != QueryEnvelopeStatus.OK) {
               throw TaskException.builder("FIND_TASK_DASKBOARD_FAIL")
@@ -337,35 +343,72 @@ public class TaskClientImpl implements TaskClient {
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
           .findOnOrAfter(startDate)
-          .onItem().transform(entity -> {
-            
-            return ImmutableProcessInstance.builder()
-                .id(Long.parseLong(entity.getId()))
-                .status(entity.getStatus() == null ? null : ProcessClient.ProcessStatus.valueOf(entity.getStatus()))
-                .questionnaireId(entity.getQuestionnaireId())
-                .taskId(entity.getTaskId())
-                .taskRef(entity.getTaskRef())
-                .userId(entity.getUserId())
-                .created(entity.getCreated())
-                .updated(entity.getUpdated())
-                
-                .workflowName(entity.getWorkflowName())
-                .articleName(entity.getArticleName())
-                .parentArticleName(entity.getParentArticleName())
-                .anon(Boolean.TRUE.equals(entity.getAnon()))
-                .formName(entity.getFormName())
-                .flowName(entity.getFlowName())
-                
-                .formTagName(entity.getFormTagName())
-                .stencilTagName(entity.getStencilTagName())
-                .wrenchTagName(entity.getWrenchTagName())
-                
-                .expiresInSeconds(entity.getExpiresInSeconds())
-                .expiresAt(entity.getExpiresAt())
-                .build();
-          });
+          .onItem().transform(TaskMapper::map);
+      }
+
+      @Override
+      public Multi<ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOnOrBeforeWithoutMission(olderThen)
+          .onItem().transform(TaskMapper::map);
       }
     };
 
+  }
+  @Override
+  public ModifyTaskProcess modifyProcess() {
+    return new ModifyTaskProcess() {
+      private String commitMessage;
+      private String commitAuthor;
+      private String status;
+      private String id;
+      @Override
+      public ModifyTaskProcess id(String id) {
+        this.id = id;
+        return this;
+      }
+      @Override
+      public ModifyTaskProcess commitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+        return this;
+      }
+      @Override
+      public ModifyTaskProcess commitAuthor(String commitAuthor) {
+        this.commitAuthor = commitAuthor;
+        return this;
+      }
+      @Override
+      public ModifyTaskProcess status(ProcessStatus status) {
+        TaskAssert.notNull(status, () -> "status can't be empty!");
+        this.status = status.name();
+        return this;
+      }
+      
+      @Override
+      public Uni<ProcessInstance> build() {
+        TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
+        TaskAssert.notEmpty(commitAuthor, () -> "commitAuthor can't be empty!");
+        TaskAssert.notEmpty(id, () -> "id can't be empty!");
+        
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        
+        return grim.commit().modifyOneProc()
+            .commitAuthor(commitAuthor)
+            .commitMessage(commitMessage)
+            .procId(id)
+            .modifyProc(proc -> proc.status(status).build())
+            .build()
+            .onItem().transform(e -> {
+              if(e.getStatus() != CommitResultStatus.OK || e.getProc() == null) {
+                throw TaskException.builder("MODIFY_ONE_TASK_PROC_FAIL").add(grim, e).build();
+              }
+              return TaskMapper.map(e.getProc());
+            });
+        
+      }
+    };
   }
 }

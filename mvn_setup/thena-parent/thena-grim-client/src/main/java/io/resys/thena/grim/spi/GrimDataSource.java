@@ -99,7 +99,9 @@ public interface GrimDataSource extends TenantDataSource {
   }
   
   interface InternalProcQuery {
+    Uni<GrimProcess> getOneById(String id);
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
+    Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
   }
   
   interface InternalCommitQuery {
@@ -133,7 +135,7 @@ public interface GrimDataSource extends TenantDataSource {
   }    
   
   interface InternalMissionStatsQuery {
-    Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes();    
+    Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups);    
     
   }    
   
@@ -184,6 +186,7 @@ public interface GrimDataSource extends TenantDataSource {
   @Value.Immutable
   interface GrimBatchMissions {
     List<GrimMission> getMissions();
+    List<GrimProcess> getProcs();
     List<GrimMissionLabel> getMissionLabels();
     List<GrimMissionLink> getLinks();
     List<GrimRemark> getRemarks();
@@ -199,6 +202,7 @@ public interface GrimDataSource extends TenantDataSource {
     List<GrimCommitViewer> getCommitViewers();
     
     // Objects to update
+    List<GrimProcess> getUpdateProcs();
     List<GrimMissionData> getUpdateData();
     List<GrimRemark> getUpdateRemarks();
     List<GrimObjectiveGoal> getUpdateGoals();
@@ -225,6 +229,7 @@ public interface GrimDataSource extends TenantDataSource {
     default boolean isEmpty() {
       return 
         this.getMissions().isEmpty() &&
+        this.getProcs().isEmpty() &&
         this.getMissionLabels().isEmpty() &&
         this.getLinks().isEmpty() &&
         this.getRemarks().isEmpty() &&

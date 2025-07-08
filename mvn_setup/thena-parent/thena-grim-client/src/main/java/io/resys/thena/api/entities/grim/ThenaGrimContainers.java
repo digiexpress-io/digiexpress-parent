@@ -52,6 +52,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimCommit> getCommits(); 
     Map<String, GrimCommands> getCommands();
     Map<String, GrimCommitViewer> getViews();
+    Map<String, GrimProcess> getProcs();
     
     @JsonIgnore
     default GrimMission getMission() {
@@ -74,6 +75,8 @@ public interface ThenaGrimContainers extends ThenaContainer {
       getCommands().values().forEach(commands -> builders.get(commands.getMissionId()).putCommands(commands.getId(), commands));
       getViews().values().forEach(commands -> builders.get(commands.getMissionId()).putViews(commands.getId(), commands));
       getCommits().values().stream().filter(e -> builders.containsKey(e.getMissionId())).forEach(commit -> builders.get(commit.getMissionId()).putCommits(commit.getCommitId(), commit));
+      getProcs().values().forEach(proc -> builders.get(proc.getMissionId()).putProcs(proc.getId(), proc));
+      
       return builders.values().stream().map(builder -> builder.build()).collect(Collectors.toList());
     }
 
@@ -141,6 +144,10 @@ public interface ThenaGrimContainers extends ThenaContainer {
             .orElse((Comparable) mission.getCommitId());
       };
       
+      final Function<GrimProcess, Comparable> getProcKey = (mission) -> {
+        return mission.getCreated();
+      };
+      
       final Function<GrimAssignment, Comparable> getAssignmentKey = (mission) -> {
         return getCreatedAt(mission.getCommitId())
             .map(e -> (Comparable) e)
@@ -160,6 +167,9 @@ public interface ThenaGrimContainers extends ThenaContainer {
             .map(e -> (Comparable) e)
             .orElse((Comparable) mission.getCommitId());
       };
+      this.getProcs().values().stream()
+        .sorted((a, b) -> getProcKey.apply(a).compareTo(getProcKey.apply(b)))
+        .forEach(m -> result.putProcs(m.getId(), m));
       
       this.getMissions().values().stream()
         .sorted((a, b) -> getMissionSortingKey.apply(a).compareTo(getMissionSortingKey.apply(b)))
@@ -223,6 +233,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimCommitTree> getCommitTrees();
     Map<String, GrimCommitViewer> getCommitViewers();
     Map<String, GrimCommands> getCommands(); 
+    Map<String, GrimProcess> getProcs(); 
     
   }
   

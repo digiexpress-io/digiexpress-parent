@@ -33,8 +33,10 @@ import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
+import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.Message;
@@ -52,6 +54,18 @@ public interface GrimCommitActions {
   ModifyManyMissions modifyManyMissions();  
   
   ModifyManyCommitViewers modifyManyCommitViewer();
+  
+  ModifyOneProc modifyOneProc();
+  
+  interface ModifyOneProc {
+    ModifyOneProc commitAuthor(String author);
+    ModifyOneProc commitMessage(String message);
+    ModifyOneProc procId(String procId);
+    ModifyOneProc modifyProc(Consumer<MergeProc> modifyProc);
+    
+    Uni<OneProcEnvelope> build();
+  }
+  
   
   interface ModifyManyCommitViewers {
     ModifyManyCommitViewers usedFor(String usedFor);
@@ -113,6 +127,16 @@ public interface GrimCommitActions {
     List<GrimMissionLink> getLinks(); // remarks that are linked to mission
     List<GrimMissionLabel> getLabels(); // labels that are linked to mission
   }
+  
+  @Value.Immutable
+  interface OneProcEnvelope extends ThenaEnvelope {
+    String getRepoId();
+    CommitResultStatus getStatus();
+    List<Message> getMessages();
+    
+    @Nullable GrimProcess getProc();
+  }
+  
   
   @Value.Immutable
   interface ManyCommitViewersEnvelope extends ThenaEnvelope {

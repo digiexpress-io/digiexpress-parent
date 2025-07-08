@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.batch;
+package io.digiexpress.eveli.client.spi.batch.delete_all;
 
 /*-
  * #%L
@@ -20,9 +20,10 @@ package io.digiexpress.eveli.client.spi.batch;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.Task;
-import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_TaskStep.TaskCleanupConfig;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.digiexpress.eveli.client.spi.batch.delete_all.BatchJob_DeleteAll_Feedback.FeedbackCleanupConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
@@ -38,53 +39,51 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class BatchJob_DeleteAll_TaskStep implements Executor<Task, TaskCleanupConfig> {
+public class BatchJob_DeleteAll_Feedback implements Executor<Feedback, FeedbackCleanupConfig> {
 
-  private final TaskClient taskClient;
+  private final FeedbackClient client;
 
   @Override
-  public ExecutorQuery<Task, TaskCleanupConfig> before(ExecutorContext context) {
-    return new ExecutorQuery<Task, TaskCleanupConfig>() {
+  public ExecutorQuery<Feedback, FeedbackCleanupConfig> before(ExecutorContext context) {
+    return new ExecutorQuery<Feedback, FeedbackCleanupConfig>() {
       @Override
-      public TaskCleanupConfig getConfig() {
-        return new TaskCleanupConfig();
+      public FeedbackCleanupConfig getConfig() {
+        return new FeedbackCleanupConfig();
       }
       @Override
-      public Multi<Task> findAll() {
-        return taskClient.queryTasks().findAll().onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
+      public Multi<Feedback> findAll() {
+        return Multi.createFrom().items(client.queryFeedbacks().findAll().stream());
       }
       
     };
   }
 
   @Override
-  public Uni<ExecutorEntity> accept(Task entity, TaskCleanupConfig config, ExecutorContext context) {
+  public Uni<ExecutorEntity> accept(Feedback entity, FeedbackCleanupConfig config, ExecutorContext context) {
     
-    return taskClient.deleteTasks()
-      .commitAuthor(BatchJob_DeleteAll_TaskStep.class.getSimpleName())
-      .commitMessage("delete all ...")
-      .deleteOne(entity.getId())
-      .onItem().transform(pointer -> {
-        
-        return ImmutableExecutorEntity.builder()
-          .status(ExecutorEntity.ExecutorEntityStatus.OK)
-          .entityId("task ref: " + entity.getTaskRef())
-          .inputBody(JsonObject.mapFrom(entity))
-          .outputBody(JsonObject.mapFrom(pointer))
-          .build();
-      });
+    final var command = ImmutableDeleteReplyCommand.builder()
+        .addReplyIds(entity.getId())
+        .build();
+    final var resp = client.deleteAll(command, BatchJob_DeleteAll_Feedback.class.getSimpleName());
+    
+    return Uni.createFrom().item(          
+          ImmutableExecutorEntity.builder()  
+            .status(ExecutorEntity.ExecutorEntityStatus.OK)
+            .entityId("feedback id: " + entity.getId())
+            .inputBody(JsonObject.mapFrom(entity))
+            .build());
     
   }
 
   @Override
-  public Uni<ExecutorResult> after(TaskCleanupConfig config, ExecutorContext context) {
+  public Uni<ExecutorResult> after(FeedbackCleanupConfig config, ExecutorContext context) {
     return Uni.createFrom().item(ImmutableExecutorResult.builder()
         .status(ExecutorResult.ExecutorStatus.OK)
         .build());
   }
 
   @RequiredArgsConstructor
-  public static class TaskCleanupConfig implements ExecutorConfig {
+  public static class FeedbackCleanupConfig implements ExecutorConfig {
     private static final long serialVersionUID = 7079554536966522627L;
     
   }

@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.batch;
+package io.digiexpress.eveli.client.spi.batch.delete_all;
 
 /*-
  * #%L
@@ -20,11 +20,9 @@ package io.digiexpress.eveli.client.spi.batch;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
-import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
-import io.digiexpress.eveli.client.api.TaskClient.Task;
-import io.digiexpress.eveli.client.spi.batch.BatchJob_DeleteAll_Feedback.FeedbackCleanupConfig;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.spi.batch.delete_all.BatchJob_DeleteAll_ProcessStep.ProcessCleanupConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
@@ -35,56 +33,49 @@ import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class BatchJob_DeleteAll_Feedback implements Executor<Feedback, FeedbackCleanupConfig> {
+public class BatchJob_DeleteAll_ProcessStep implements Executor<ProcessInstance, ProcessCleanupConfig> {
 
-  private final FeedbackClient client;
+  private final ProcessClient processClient;
 
   @Override
-  public ExecutorQuery<Feedback, FeedbackCleanupConfig> before(ExecutorContext context) {
-    return new ExecutorQuery<Feedback, FeedbackCleanupConfig>() {
+  public ExecutorQuery<ProcessInstance, ProcessCleanupConfig> before(ExecutorContext context) {
+    return new ExecutorQuery<ProcessInstance, ProcessCleanupConfig>() {
       @Override
-      public FeedbackCleanupConfig getConfig() {
-        return new FeedbackCleanupConfig();
+      public ProcessCleanupConfig getConfig() {
+        return new ProcessCleanupConfig();
       }
       @Override
-      public Multi<Feedback> findAll() {
-        return Multi.createFrom().items(client.queryFeedbacks().findAll().stream());
+      public Multi<ProcessInstance> findAll() {
+        return Multi.createFrom().items(processClient.queryInstances().findAll().stream());
       }
-      
     };
   }
 
   @Override
-  public Uni<ExecutorEntity> accept(Feedback entity, FeedbackCleanupConfig config, ExecutorContext context) {
+  public Uni<ExecutorEntity> accept(ProcessInstance entity, ProcessCleanupConfig config, ExecutorContext context) {
     
-    final var command = ImmutableDeleteReplyCommand.builder()
-        .addReplyIds(entity.getId())
-        .build();
-    final var resp = client.deleteAll(command, BatchJob_DeleteAll_Feedback.class.getSimpleName());
+    // Delete process
+    processClient.queryInstances().deleteOneById(entity.getId());
     
-    return Uni.createFrom().item(          
-          ImmutableExecutorEntity.builder()  
-            .status(ExecutorEntity.ExecutorEntityStatus.OK)
-            .entityId("feedback id: " + entity.getId())
-            .inputBody(JsonObject.mapFrom(entity))
-            .build());
-    
+    return Uni.createFrom().item(ImmutableExecutorEntity.builder()
+        .status(ExecutorEntity.ExecutorEntityStatus.OK)
+        .entityId("processId: " + entity.getId().toString())
+        .build());
   }
 
   @Override
-  public Uni<ExecutorResult> after(FeedbackCleanupConfig config, ExecutorContext context) {
+  public Uni<ExecutorResult> after(ProcessCleanupConfig config, ExecutorContext context) {
     return Uni.createFrom().item(ImmutableExecutorResult.builder()
         .status(ExecutorResult.ExecutorStatus.OK)
         .build());
   }
 
   @RequiredArgsConstructor
-  public static class FeedbackCleanupConfig implements ExecutorConfig {
+  public static class ProcessCleanupConfig implements ExecutorConfig {
     private static final long serialVersionUID = 7079554536966522627L;
     
   }

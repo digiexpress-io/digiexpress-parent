@@ -117,7 +117,7 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .append("  id               VARCHAR(40) PRIMARY KEY,").ln()
         .append("  step_id          VARCHAR(40) NOT NULL,").ln()
         .append("  runtime_id       VARCHAR(40) NOT NULL,").ln()
-        .append("  external_id      VARCHAR(40) NOT NULL,").ln()
+        .append("  external_id      TEXT NOT NULL,").ln()
         
         .append("  row_number       BIGSERIAL NOT NULL,").ln()
         .append("  row_created_at   TIMESTAMP WITH TIME ZONE NOT NULL,").ln()

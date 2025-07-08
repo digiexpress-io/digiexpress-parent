@@ -59,6 +59,7 @@ public interface GrimQueryActions {
   
   interface MissionProcsQuery {
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
+    Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
   }
   
   interface MissionDeleteQuery {
@@ -69,7 +70,7 @@ public interface GrimQueryActions {
   }
   
   interface MissionStatsQuery {
-    Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes();
+    Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups);
   }
   interface MissionCommitQuery {
     Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits();

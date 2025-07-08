@@ -34,6 +34,7 @@ import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.grim.test.config.DbTestTemplate;
 import io.resys.thena.grim.test.config.PgProfile;
@@ -67,7 +68,7 @@ public class StatsMissionsTest extends DbTestTemplate {
 
     // just test if the query works
     Assertions.assertEquals(5, getClient().grim(repo).find().missionStatsQuery()
-        .findAllByMissionAttributes()
+        .findAllByMissionAttributes(Arrays.asList("admin"))
         .await().atMost(Duration.ofMinutes(1))
         .getObjects().size());
 
@@ -93,7 +94,9 @@ public class StatsMissionsTest extends DbTestTemplate {
             
             .addLabels(newLabel -> newLabel.labelType("keyword").labelValue("housing").build())
             .addLabels(newLabel -> newLabel.labelType("keyword").labelValue("roofing").build())
-
+            
+            
+            .addAssignees(newAssignee -> newAssignee.assignmentType(GrimAssignment.ASSIGNMENT_TYPE_TASK_ROLE).assignee("admin").build())
             .addAssignees(newAssignee -> newAssignee.assignmentType("role").assignee("admin").build())
             .addAssignees(newAssignee -> newAssignee.assignmentType("role").assignee("tenant-admin").build())
             

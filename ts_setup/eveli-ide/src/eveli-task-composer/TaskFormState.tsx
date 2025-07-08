@@ -58,19 +58,25 @@ export const TaskFormState: React.FC<{
   
 
 
-  const initState = React.useMemo<TaskFormProps>(() => ({
-    clientIdentificator: props.task?.clientIdentificator || '',
-    additionalInfo: props.task?.additionalInfo || '',
-    priority: props.task?.priority,
-    subject: props.task?.subject || '',
-    description: props.task?.description || '',
-    dueDate: props.task?.dueDate,
-    status: props.task?.status,
-    assignedUser: props.task?.assignedUser || '',
-    assignedUserEmail: props.task?.assignedUserEmail || '',
-    assignedRoles: props.task?.assignedRoles || []
-  }), []);
-  
+  const initState = React.useMemo<TaskFormProps>(() => {
+    return {
+      clientIdentificator: props.task?.clientIdentificator || '',
+      additionalInfo: props.task?.additionalInfo || '',
+      priority: props.task?.priority,
+      subject: props.task?.subject || '',
+      description: props.task?.description || '',
+      dueDate: props.task?.dueDate,
+      status: props.task?.status,
+      assignedUser: props.task?.assignedUser || '',
+      assignedUserEmail: props.task?.assignedUserEmail || '',
+      assignedRoles: props.task?.assignedRoles || []
+    }
+  }, [props.task?.version]);
+
+  React.useEffect(() => {
+    setForm(initState);
+  }, [props.task?.version])
+
   const [form, setForm] = React.useState<TaskFormProps>(initState);
   const subjectErrors = useSubjectErrors(form);
   const assignedUserErrors = useAssignedUserErrors(form);

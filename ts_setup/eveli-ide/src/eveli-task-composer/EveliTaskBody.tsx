@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Accordion, AccordionDetails, AccordionSummary, Badge, Box, Grid2, ThemeProvider, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Badge, Box, Grid2, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
@@ -60,6 +60,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
     loadAttachments(id).then(setAttachments);
   }, [id]);
 
+  console.log(task)
 
   return (
     <Grid2 container spacing={2} paddingLeft={2} paddingRight={2}>

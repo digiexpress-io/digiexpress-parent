@@ -43,7 +43,7 @@ public interface GrimMissionRegistry extends ThenaRegistryService<GrimMission, i
   ThenaSqlClient.SqlTuple findAllIdentifiers(GrimMissionFilter filter, List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit);
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
   
-  ThenaSqlClient.SqlTuple findAllStatsByMissionAttributes();
+  ThenaSqlClient.SqlTuple findAllStatsByMissionAttributes(List<String> assigneeGroups);
 
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMission> mission);
   ThenaSqlClient.SqlTupleList updateAll(Collection<GrimMission> mission);

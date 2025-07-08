@@ -162,14 +162,15 @@ public interface ProcessClient {
   enum ProcessStatus {
     
     CREATED,
-    ANSWERING,    
+    ANSWERING,
     ANSWERED, // 
     
     IN_PROGRESS,
     WAITING,
     COMPLETED,
     REJECTED,
-    WAITING_FOR_SYNC // complete event arrived from form, waiting to launch flow
+    WAITING_FOR_SYNC, // complete event arrived from form, waiting to launch flow
+    EXPIRED
   }
   
   

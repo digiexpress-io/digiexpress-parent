@@ -21,15 +21,19 @@ package io.resys.thena.grim.spi.sql;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
+import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.grim.spi.datasource.GrimProcessRegistry;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
@@ -41,6 +45,92 @@ import lombok.RequiredArgsConstructor;
 public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
   private final GrimTableNames options;
 
+  
+  @Override
+  public SqlTupleList updateAll(Collection<GrimProcess> procs) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getGrimProcesses()).append(" ").ln()   
+        .append("""
+SET
+  updated = $1,
+  status = $2,
+  expires_at = $3,
+  expires_in_seconds = $4,
+  task_id = $5,
+  
+  flow_name = $6,
+  flow_body = $7,
+  
+  form_body = $8 
+WHERE id = $9""").ln()
+        .build())
+        .props(procs.stream()
+            .map(proc -> Tuple.from(new Object[]{ 
+                proc.getUpdated(),
+                proc.getStatus(),
+                proc.getExpiresAt(),
+                proc.getExpiresInSeconds(),
+                proc.getMissionId(),
+                proc.getFlowName(),
+                proc.getFlowBody(),
+                proc.getFormBody(),
+                Long.parseLong(proc.getId())
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
+  @Override
+  public SqlTupleList insertAll(Collection<GrimProcess> procs) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("INSERT INTO ").append(options.getGrimProcesses()).append(" ").ln()
+        .append(" (").ln()        
+        .append("""
+  (id,
+  created,
+  updated,
+  flow_name,
+  workflow_name,
+  status,
+  expires_at,
+  expires_in_seconds,
+  questionnaire_id,
+  user_id,
+  anon,
+  article_name,
+  parent_article_name,
+  form_name,
+  form_tag_name,
+  stencil_tag_name,
+  wrench_tag_name)""").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)").ln()
+        .build())
+        .props(procs.stream()
+            .map(proc -> Tuple.from(new Object[]{ 
+                proc.getId(),
+                proc.getCreated(),
+                proc.getUpdated(),
+                proc.getFlowName(),
+                proc.getWorkflowName(),
+                proc.getStatus(),
+                proc.getExpiresAt(),
+                proc.getExpiresInSeconds(),
+                proc.getQuestionnaireId(),
+                proc.getUserId(),
+                proc.getAnon(),
+                proc.getArticleName(),
+                proc.getParentArticleName(),
+                proc.getFormName(),
+                proc.getFormTagName(),
+                proc.getStencilTagName(),
+                proc.getWrenchTagName()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  
   @Override
   public SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter) {
     return ImmutableSqlTuple.builder()
@@ -70,6 +160,23 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
         .build();
   }
 
+  @Override
+  public SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT procs.*, null AS mission_ref").ln()        
+        .append(" FROM ").append(options.getGrimProcesses()).append(" AS procs ")
+        
+        .append(" WHERE procs.created <= $1 ").ln()
+        .append(" AND procs.task_id IS NULL").ln()
+        .append(" AND (procs.status IN('CREATED', 'ANSWERING') OR procs.status IS NULL)").ln()
+
+        .build())
+        .props(Tuple.of(onOrBefore))
+        .build();
+  }
+
+  
   @Override
   public SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
@@ -114,7 +221,6 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
       wrench_tag_name     TEXT NULL,
       anon bool           NULL
     """)
-    
     
     .append(");").ln()
     
@@ -175,8 +281,8 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
           .questionnaireId(row.getString("questionnaire_id"))
           .status(row.getString("status"))
           .stencilTagName(row.getString("stencil_tag_name"))
-          .taskId(row.getString("task_id"))
-          .taskRef(row.getString("mission_ref"))
+          .missionId(row.getString("task_id"))
+          .missionRef(row.getString("mission_ref"))
           
           
           .updated(row.getOffsetDateTime("updated"))
@@ -188,6 +294,4 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
           .build();
     };
   }
-
-
 }

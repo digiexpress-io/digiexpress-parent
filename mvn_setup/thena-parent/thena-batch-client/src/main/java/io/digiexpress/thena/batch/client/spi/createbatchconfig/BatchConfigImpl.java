@@ -1,5 +1,7 @@
 package io.digiexpress.thena.batch.client.spi.createbatchconfig;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-batch-client
@@ -52,22 +54,33 @@ public class BatchConfigImpl implements BatchConfig {
 
   @Override
   public List<BatchConfigWithExecutor> findAllExecutors(String batchId) {
-
-    return executors.stream().map(executor -> {
-      final var batch = batches.stream()
+    final var batch = batches.stream()
         .filter(b -> 
             b.getBatchName().equals(batchId) || 
             b.getId().equals(batchId) || 
             b.getExternalId().map(e -> e.equals(batchId)).orElse(false))
         .findFirst();
-      if(batch.isEmpty()) {
-        return Optional.<BatchConfigWithExecutor>empty();
-      }
-      
-      final var consumer = batchConsumer.stream()
+    
+    if(batch.isEmpty()) {
+      return Collections.emptyList();
+    }
+    
+    final var consumers = batchConsumer.stream()
+        .filter(c -> c.getBatchName().equals(batch.get().getBatchName()) )
+        .toList();
+
+    
+    return executors.stream().map(executor -> {
+
+
+      final var consumer = consumers.stream()
         .filter(c -> c.getQualifiedJavaName().equals(executor.getClass().getCanonicalName()))
         .findFirst();
 
+      if(consumer.isEmpty()) {
+        return Optional.<BatchConfigWithExecutor>empty();
+      }
+      
       return Optional.<BatchConfigWithExecutor>of(ImmutableBatchConfigWithExecutor.builder()
           .batch(batch.get())
           .executor(executor)
