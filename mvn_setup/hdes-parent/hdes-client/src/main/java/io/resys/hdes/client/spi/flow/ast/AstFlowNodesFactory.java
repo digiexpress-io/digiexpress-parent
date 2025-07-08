@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import io.quarkus.logging.Log;
 import io.resys.hdes.client.api.HdesAstTypes.DataTypeAstBuilder;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
@@ -42,8 +43,9 @@ import io.resys.hdes.client.api.ast.ImmutableHeaders;
 import io.resys.hdes.client.api.ast.TypeDef;
 import io.resys.hdes.client.api.ast.TypeDef.Direction;
 import io.resys.hdes.client.api.ast.TypeDef.ValueType;
-import io.resys.hdes.client.api.exceptions.FlowAstException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AstFlowNodesFactory {
 
   public static HeadersBuilder headers(HdesClient types) {
@@ -175,19 +177,33 @@ public class AstFlowNodesFactory {
         if (entry.getValue().getType() == null) {
           continue;
         }
+        
+        final var required = getBooleanValue(entry.getValue().getRequired());
         try {
           ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
-          boolean required = getBooleanValue(entry.getValue().getRequired());
+          
           result.add(this.types.get()
               .id(entry.getValue().getStart() + "")
               .order(index++)
-              .name(entry.getKey()).valueType(valueType).direction(Direction.IN).required(required)
+              .name(entry.getKey())
+              .valueType(valueType)
+              .direction(Direction.IN)
+              .required(required)
               .values(getStringValue(entry.getValue().getDebugValue()))
               .build());
           
         } catch (Exception e) {
           final String msg = String.format("Failed to convert data type from: %s, error: %s", entry.getValue().getType().getValue(), e.getMessage());
-          throw new FlowAstException(msg, e);
+          log.error(msg);
+          result.add(this.types.get()
+              .id(entry.getValue().getStart() + "")
+              .order(index++)
+              .name(entry.getKey())
+              .valueType(ValueType.STRING) // fake it 
+              .direction(Direction.IN)
+              .required(required)
+              .values(getStringValue(entry.getValue().getDebugValue()))
+              .build());
         }
       }
       return ImmutableHeaders.builder().acceptDefs(result).build();
