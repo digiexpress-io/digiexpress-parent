@@ -18,6 +18,7 @@ export const tenant_features = [
 
   "external-deployment",
   "smart_tables",
+  "smart_task",
   "user_profile",
   'queues-visually-disabled',
   'feedback-visually-disabled',

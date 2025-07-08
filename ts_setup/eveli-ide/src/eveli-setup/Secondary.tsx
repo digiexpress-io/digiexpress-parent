@@ -43,18 +43,6 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliPermissions>
 
-      <EveliPermissions id='NAV_TO_TABLES_V2'>
-        <Button startIcon={<TableChartOutlinedIcon />}
-          variant={location.pathname.includes('tables') ? 'explorerActive' : 'explorerInactive'}
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/tables'
-          })}
-        >
-          tables
-        </Button>
-      </EveliPermissions>
-
       <EveliPermissions id='NAV_TO_TASKS'>
         <Button startIcon={<TaskOutlinedIcon />}
           variant={location.pathname.includes('tasks') ? 'explorerActive' : 'explorerInactive'}
