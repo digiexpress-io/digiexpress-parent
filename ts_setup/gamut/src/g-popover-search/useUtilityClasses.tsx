@@ -96,10 +96,17 @@ export const GSearchMuiPopover = styled(Popover, {
     },
     '& .GPopoverSearch-titleContainer': {
       display: 'flex',
-      alignItems: 'center',
-      gap: 3,
       justifyContent: 'center',
-    },
+      gap: 3,
+      [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      },
+    },    
     '& .GPopoverSearch-logoBox': {
       [theme.breakpoints.up('sm')]: {
         display: 'none'
