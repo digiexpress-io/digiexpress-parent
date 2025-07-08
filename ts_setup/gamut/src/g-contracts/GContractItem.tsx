@@ -1,12 +1,12 @@
 import React from 'react';
-import { Avatar, Grid, Typography, useThemeProps } from '@mui/material';
+import { Avatar, Badge, Box, Grid, Typography, useThemeProps, Tooltip } from '@mui/material';
+import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
 import { GFlex } from '../g-flex';
 import { GDate, GDateProps } from '../g-date';
 import { GContractItem as ContractItem, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
-
 
 export interface GContractItemProps {
   exchangeId: string;
@@ -16,15 +16,13 @@ export interface GContractItemProps {
   lastModified: DateTime;
   documents?: number | undefined;
   messages?: number | undefined;
+  hasUnviewedMessages?: boolean;
   onClick: (exchangeId: string) => void;
-  date?: Partial<GDateProps>
-
+  date?: Partial<GDateProps>;
   slotProps?: {
-    date?: Partial<GDateProps>
-  },
-
+    date?: Partial<GDateProps>;
+  };
 }
-
 
 export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
   const intl = useIntl();
@@ -35,7 +33,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const { lastModified, name, status, documents, messages, onClick, slotProps = {}, exchangeId, referenceId } = props;
+  const { lastModified, name, status, documents, messages, hasUnviewedMessages, onClick, slotProps = {}, exchangeId, referenceId } = props;
 
   const ownerState = {
     ...props,
@@ -76,13 +74,14 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
                 {intl.formatMessage({ id: 'gamut.forms.files' })}
               </Typography>
             </GFlex>
-            {documents ? <Avatar className={classes.filesCount}>
-              <Typography>{documents}</Typography>
-            </Avatar>
-              :
-              <Avatar className={classes.noValue}>{intl.formatMessage({ id: 'gamut.noValueIndicator' })}</Avatar>}
+            {documents ? (
+              <Avatar className={classes.filesCount}>
+                <Typography>{documents}</Typography>
+              </Avatar>
+            ) : (
+              <Avatar className={classes.noValue}>{intl.formatMessage({ id: 'gamut.noValueIndicator' })}</Avatar>
+            )}
           </Grid>
-
 
           <Grid item xs={12} sm={12} md={12} lg={1} xl={1}>
             <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
@@ -90,11 +89,28 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
                 {intl.formatMessage({ id: 'gamut.forms.messages' })}
               </Typography>
             </GFlex>
-            {messages ? <Avatar className={classes.messagesCount}>
-              <Typography>{messages}</Typography>
-            </Avatar>
-              :
-              <Avatar className={classes.noValue}>{intl.formatMessage({ id: 'gamut.noValueIndicator' })}</Avatar>}
+            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+              <Avatar className={messages ? classes.messagesCount : classes.noValue}>
+                <Typography>{messages ?? intl.formatMessage({ id: 'gamut.noValueIndicator' })}</Typography>
+              </Avatar>
+              {hasUnviewedMessages && (
+                <Tooltip title={intl.formatMessage({ id: 'cust.inbox.message.sender-name.org-user' })}>
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: -6,
+                      right: -6,
+                    }}
+                  >
+                    <MarkEmailUnreadOutlinedIcon
+                      className={classes.newMsgIndicator}
+                      fontSize="small"
+                    />
+                  </Box>
+                </Tooltip>
+              )}
+            </Box>
+
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -113,5 +129,5 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
         </Grid>
       </GFlex>
     </ContractItem>
-  )
-}
+  );
+};

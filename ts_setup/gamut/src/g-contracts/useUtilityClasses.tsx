@@ -16,6 +16,7 @@ export interface GContractsClasses {
   messagesCount: string;
   filesCount: string;
   noValue: string;
+  newMsgIndicator: string;
 }
 export type GContractsClassKey = keyof GContractsClasses;
 
@@ -32,6 +33,7 @@ export const useUtilityClasses = () => {
     messagesCount: ['messagesCount'],
     filesCount: ['filesCount'],
     noValue: ['noValue'],
+    newMsgIndicator: ['newMsgIndicator'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -111,7 +113,12 @@ export const GContractItem = styled("div", {
     '& .GContracts-offerIcon': {
       color: color,
       fontSize: 'large'
-    }
+    },
+    '& .GContracts-newMsgIndicator': {
+      color: theme.palette.error.main,
+      fontSize: '1.25rem',
+      marginLeft: theme.spacing(0.5),
+    }    
   };
 });
 
