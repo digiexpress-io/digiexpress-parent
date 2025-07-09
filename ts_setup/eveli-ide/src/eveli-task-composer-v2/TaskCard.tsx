@@ -11,6 +11,7 @@ export interface TaskCardProps {
   children: React.ReactNode;
   buttonLabel?: string | undefined;
   startAdornmentIcon?: React.ReactNode;
+  onClick?: () => void;
 }
 
 export const TaskCard: React.FC<TaskCardProps> = (props) => {
@@ -21,15 +22,15 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const handleToggle = () => setOpen((prev) => !prev);
 
   return (<>
-    <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' />
-    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard}>
+    <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
+    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard}> {/* TODO LINK CLICKY CLICK */}
       <Box pl={theme.spacing(1)} className={classes.dataCardTitleContainer}>
         {props.startAdornmentIcon}
         <Typography className={classes.dataCardTitle}>
           {props.title}
         </Typography>
         <Box flexGrow={1} />
-        {props.buttonLabel && <IconButton onClick={handleToggle}><MoreVertIcon color='primary' /></IconButton>}
+        {props.buttonLabel && <IconButton onClick={props.onClick}><MoreVertIcon color='primary' /></IconButton>}
       </Box>
       <Divider />
       <Box sx={{ flexGrow: 1, p: theme.spacing(1) }}>
@@ -91,13 +92,13 @@ const TaskSectionCard = styled(Box, {
     flexDirection: 'column',
     height: '100%',
     transition: 'border-color 200ms ease-in-out',
-    border: `1px solid transparent`,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(1),
 
     ':hover': {
       cursor: 'pointer',
       backgroundColor: theme.palette.secondary.main,
       boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
-      border: `1px solid ${theme.palette.divider}`,
 
     },
     '& .TaskSectionCard-dataCardTitle': {
