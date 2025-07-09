@@ -85,7 +85,7 @@ gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan,Linkovi
 gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama,Ime
 gamut.forms.taskRefId,,Reference Id,Viitetunnus,"Referens ID",Id Rujukan,Referentni broj
 gamut.forms.started,,Started,Aloitettu,Startade,Bermula,Započeto
-gamut.forms.attachments,,Attachments,Attachments,,
+gamut.forms.attachments,,Attachments,Attachments,,,,
 gamut.forms.status,,Status,Tila,Status,Status,Status
 gamut.forms.selectionUndefined,,Select,Select,,
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
