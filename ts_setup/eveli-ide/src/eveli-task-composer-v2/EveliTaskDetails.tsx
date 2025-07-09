@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Dialog, Grid2, Stack } from '@mui/material';
+import { Box, Dialog, Grid2, Stack, Typography } from '@mui/material';
 import TaskIcon from '@mui/icons-material/Task';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -75,19 +75,19 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
         <TaskCard id='customer-messages' title='Customer messages' buttonLabel='New message' startAdornmentIcon={StartAdornmentIcon(EmailIcon)}>
           <Stack direction='column'>
-            {task.comments
+            {task.comments.length ? task.comments
               .filter(c => c.external === true)
               .slice(0, 3)
               .map((comment) => <TaskCardDataRowText label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText} />
-              )}
-            {task.comments.length > 3 ? <MoreHorizIcon color='primary' fontSize='small' /> : ''}
+            ) : 'No messages'}
+            {task.comments.length > 3 && <Typography variant='caption'>...more...</Typography>}
           </Stack>
         </TaskCard>
       </Grid2>
 
       <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
         <TaskCard id='files' title='Files' buttonLabel='Upload file' startAdornmentIcon={StartAdornmentIcon(AttachFileOutlinedIcon)}>
-          <>List of files</>
+          <>No files</>
         </TaskCard>
       </Grid2>
 
@@ -97,7 +97,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             <TaskCardDataRowText label='Category' value={task.id} />
             <TaskCardDataRowText label='Subcategory' value={task.id} />
             <TaskCardDataRowText label='Title' value={task.id} />
-            <MoreHorizIcon color='primary' fontSize='small' />
+            <Typography variant='caption'>...more...</Typography>
           </Stack>
         </TaskCard>
       </Grid2>
@@ -105,15 +105,15 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
       <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }}>
         <TaskCard id='internal-comments' title='Internal comments' buttonLabel='New comment' startAdornmentIcon={StartAdornmentIcon(NoteAltIcon)}>
-          {task.comments.filter(c => !c.external)
+          {task.comments.length ? task.comments.filter(c => !c.external)
             .slice(0, 3)
             .map(comment => <TaskCardDataRowText key={comment.id}
               label={`${comment.userName} ${formatAnyDateShort(comment.created)}`}
               value={comment.commentText}
             />
-            )}
+          ) : 'No comments'}
           <Box flexGrow={1} />
-          {task.comments.length > 3 ? <MoreHorizIcon color='primary' fontSize='small' /> : ''}
+          {task.comments.length > 3 && <Typography variant='caption'>...more...</Typography>}
         </TaskCard>
       </Grid2>
 
