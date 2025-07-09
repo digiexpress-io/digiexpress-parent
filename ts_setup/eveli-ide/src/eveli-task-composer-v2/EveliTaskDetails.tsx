@@ -40,18 +40,21 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
 
   return (
-    <Grid2 container spacing={2} m={2}>
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
-        <TaskCard id='task-main' title={`Task main: ${task.taskRef}`} buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(TaskIcon)}>
+    <Grid2 container spacing={3} m={2}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }}>
+        <TaskCard id='task-main' title={`Task: ${task.taskRef}`} buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(TaskIcon)}>
           <TaskCardDataRowText label='Due date' value={formatAnyDateShort(task.dueDate)} />
           <TaskCardDataRowText label='Customer name' value={task.clientIdentificator ? task.clientIdentificator : 'NONE'} />
           <TaskCardDataRowText label='Subject' value={task.subject} />
           <TaskCardDataRowText label='Info' value={task.additionalInfo} />
+          <TaskCardDataRowText label='Protected' value='NO' />
+          <TaskCardDataRowText label='Source' value='Customer-created' />
+          <TaskCardDataRowText label='Type' value='Normal' />
           <Dialog open={false}></Dialog>
         </TaskCard>
       </Grid2>
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }} >
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }} >
         <TaskCard id='task-form-summary' title={`Form summary: ${task.subject}`} buttonLabel='View form' startAdornmentIcon={StartAdornmentIcon(SummarizeIcon)}>
           <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} />
           <TaskCardDataRowText label='Can publish feedback?' value='YES' />
@@ -61,7 +64,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </TaskCard>
       </Grid2>
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }}>
         <TaskCard id='assignees-roles' title='Assignees and roles' buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(AdminPanelSettingsIcon)}>
           <TaskCardDataRowText label='Assignees' value={task.assignedUser ? task.assignedUser : 'Nobody'} />
           <TaskCardDataRowText label='Roles' value={task.assignedRoles ? task.assignedRoles : 'No roles'} />
@@ -69,7 +72,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       </Grid2>
 
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
         <TaskCard id='customer-messages' title='Customer messages' buttonLabel='New message' startAdornmentIcon={StartAdornmentIcon(EmailIcon)}>
           <Stack direction='column'>
             {task.comments
@@ -82,13 +85,13 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </TaskCard>
       </Grid2>
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 6, xl: 6 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6 }}>
         <TaskCard id='files' title='Files' buttonLabel='Upload file' startAdornmentIcon={StartAdornmentIcon(AttachFileOutlinedIcon)}>
           <>List of files</>
         </TaskCard>
       </Grid2>
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }} >
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }} >
         <TaskCard id='feedback' title='Customer feedback' buttonLabel='Edit and publish' startAdornmentIcon={StartAdornmentIcon(ThumbUpIcon)}>
           <Stack direction='column'>
             <TaskCardDataRowText label='Category' value={task.id} />
@@ -100,7 +103,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       </Grid2>
 
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }}>
         <TaskCard id='internal-comments' title='Internal comments' buttonLabel='New comment' startAdornmentIcon={StartAdornmentIcon(NoteAltIcon)}>
           {task.comments.filter(c => !c.external)
             .slice(0, 3)
@@ -114,7 +117,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </TaskCard>
       </Grid2>
 
-      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 4, xl: 4 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 4 }}>
         <TaskCard id='task-meta' title='History and metadata' startAdornmentIcon={StartAdornmentIcon(HistoryIcon)}>
           <TaskCardDataRowText label='Last edited by' value={task.updaterId} />
           <TaskCardDataRowText label='Last edited date' value={formatAnyDateShort(task.updated)} />

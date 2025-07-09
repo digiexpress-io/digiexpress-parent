@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { EditDialog } from './EditDialog';
 import composeClasses from '@mui/utils/composeClasses';
@@ -23,7 +23,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   return (<>
     <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' />
     <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard}>
-      <Box pl={theme.spacing(1)} display='flex' alignItems='flex-end' height='3rem' sx={{ alignItems: 'center', backgroundColor: alpha(theme.palette.divider, 0.2) }}>
+      <Box pl={theme.spacing(1)} className={classes.dataCardTitleContainer}>
         {props.startAdornmentIcon}
         <Typography className={classes.dataCardTitle}>
           {props.title}
@@ -42,11 +42,20 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
 
 export const TaskCardDataRowText: React.FC<{ label: string, value: string | string[] | undefined }> = ({ label, value }) => {
-  return (
-    <Box display='flex' justifyContent='space-between'>
-      <Typography variant="subtitle2" fontWeight='bold'>{label}</Typography>
-      <Typography variant="subtitle2">{value}</Typography>
-    </Box>
+  const theme = useTheme();
+  return (<>
+    <Grid2 container spacing={theme.spacing(1)}>
+      <Grid2 size={{ xs: 12, sm: 4, md: 4, lg: 4, xl: 4 }}>
+        <Typography variant="subtitle2" fontWeight='bold' sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{label}</Typography>
+      </Grid2>
+
+      <Grid2 size={{ xs: 12, sm: 8, md: 8, lg: 8, xl: 8 }}>
+        <Typography variant="subtitle2">{value}</Typography>
+      </Grid2>
+    </Grid2>
+    <Divider sx={{ borderColor: alpha(theme.palette.divider, 0.4) }} />
+  </>
+
   )
 }
 
@@ -70,7 +79,8 @@ const TaskSectionCard = styled(Box, {
   overridesResolver: (_props, styles) => {
     return [
       styles.dataCard,
-      styles.editCardTitle
+      styles.editCardTitle,
+      styles.dataCardTitleContainer
     ];
   },
 
@@ -80,7 +90,6 @@ const TaskSectionCard = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    //padding: theme.spacing(1),
     transition: 'border-color 200ms ease-in-out',
     border: `1px solid transparent`,
 
@@ -95,7 +104,12 @@ const TaskSectionCard = styled(Box, {
       textAlign: 'left',
       ...theme.typography.body2,
       fontWeight: 'bold',
-
+    },
+    '& .TaskSectionCard-dataCardTitleContainer': {
+      display: 'flex',
+      alignItems: 'center',
+      height: '3rem',
+      backgroundColor: alpha(theme.palette.divider, 0.2) 
     }
   };
 })
@@ -104,7 +118,8 @@ const TaskSectionCard = styled(Box, {
 export const useUtilityClasses = () => {
   const slots = {
     dataCard: ['dataCard'],
-    dataCardTitle: ['dataCardTitle']
+    dataCardTitle: ['dataCardTitle'],
+    dataCardTitleContainer: ['dataCardTitleContainer']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
