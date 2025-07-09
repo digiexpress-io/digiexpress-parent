@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.spi.dms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.digiexpress.eveli.client.spi.dms.DocContainer.Doc;
 import io.smallrye.mutiny.Uni;
@@ -54,6 +55,10 @@ public class DocContainerClientDummy implements DocContainerClient {
         return this;
       }
       @Override
+      public DocContainerBuilder props(Map<String, String> porps) {
+        return this;
+      }
+      @Override
       public Uni<DocContainerEnvelope> build() {
         return Uni.createFrom().item(ImmutableDocContainerEnvelope.builder()
             .status(DocContainerEnvelope.DocContainerEnvelopeStatus.OK)
@@ -65,6 +70,7 @@ public class DocContainerClientDummy implements DocContainerClient {
         docsToMerge.add(newDocument);
         return this;
       }
+
     };
   }
 }

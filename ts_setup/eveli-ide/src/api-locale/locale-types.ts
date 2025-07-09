@@ -10,10 +10,13 @@ export declare namespace LocaleApi {
   export type Localizations = Record<LocalCode, Localization | {}>;
 
   export interface LocaleContextType {
+    // main locale
     locale: string
+    
+    // may or may not override localization explicitly for dates
+    localeForDate: string;
+
     messages: Localizations;
     setLocale: (newLocale: string) => void
-
   }
-  
 }

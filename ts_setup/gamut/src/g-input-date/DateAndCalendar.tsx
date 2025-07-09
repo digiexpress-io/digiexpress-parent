@@ -4,7 +4,7 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import 'react-date-picker/dist/DatePicker.css';
-import 'react-calendar/dist/Calendar.css';
+
 
 import DatePicker from 'react-date-picker';
 import { DateTime } from 'luxon';

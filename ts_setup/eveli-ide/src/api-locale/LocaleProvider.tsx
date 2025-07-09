@@ -1,21 +1,9 @@
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { LocaleApi } from './locale-types';
 import locales from '../intl';
 
-import { Locale } from 'date-fns';
-import { enUS } from 'date-fns/locale/en-US';
-import { fi } from 'date-fns/locale/fi';
-import { sv } from 'date-fns/locale/sv';
-
-const DATE_LOCALE_MAP: {[key: string]: Locale} = {
-  en: enUS,
-  fi: fi,
-  sv: sv
-};
 
 
 export const LocaleContext = React.createContext<LocaleApi.LocaleContextType>({} as any);
@@ -27,23 +15,35 @@ export interface LocaleProviderProps {
   options?: LocaleApi.Localizations;
 
   defaultLocale?: () => string;
+
+  // override locale for dates, inputLang => actualLang, by default always 'FI'
+  defaultDateLocale?: (selectedLocale: string) => string;
 }
 
 export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
-  const { options = {} } = props;
+  const { options = {}, defaultDateLocale = () => 'fi' } = props;
 
   const messages: any = React.useMemo(() => merge(options), [options]);
   const [locale, setLocale] = React.useState<string>(getLocale(props));
-  const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => Object.freeze({ locale, setLocale, messages }), [locale, messages]);
+
+  const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => {
+
+    // delegate class 
+    class ContextImpl implements LocaleApi.LocaleContextType {  
+      get localeForDate() { return defaultDateLocale(locale); }
+      get locale() { return locale; }
+      get messages() { return messages; }
+      setLocale(newLocale: string) { setLocale(newLocale) }
+    }
+
+    return new ContextImpl();
+  }, [locale, messages]);
+
   const intlMessages = messages[locale];
 
   return (<LocaleContext.Provider value={contextValue}>
-    <IntlProvider locale={locale} messages={intlMessages} onError={() => {
-
-    }}>
-      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>
-        {props.children}
-      </LocalizationProvider>
+    <IntlProvider locale={locale} messages={intlMessages} onError={() => {}}>
+      {props.children}
     </IntlProvider>
   </LocaleContext.Provider>);
 }
