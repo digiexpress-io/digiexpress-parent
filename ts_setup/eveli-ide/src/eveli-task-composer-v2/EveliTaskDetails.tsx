@@ -8,6 +8,7 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import HistoryIcon from '@mui/icons-material/History';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import dialob_logo from './dialob_logo.svg';
 
 import { TaskCard, TaskCardDataRowText, StartAdornmentIcon } from './TaskCard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
@@ -58,7 +59,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       </Grid2>
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
-          <TaskCard onClick={() => setReviewOpen(true)} id='task-form-summary' title={`Form summary: ${task.subject}`} buttonLabel='View form' startAdornmentIcon={StartAdornmentIcon(SummarizeIcon)}>
+          <TaskCard onClick={() => setReviewOpen(true)} id='task-form-summary' title={`${task.subject}`} buttonLabel='View form' startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
           <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} />
           <TaskCardDataRowText label='Can publish feedback?' value='YES' />
           <TaskCardDataRowText label='Representative?' value='Representative name' />
