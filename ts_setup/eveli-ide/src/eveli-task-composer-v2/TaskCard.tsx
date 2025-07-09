@@ -7,7 +7,7 @@ import composeClasses from '@mui/utils/composeClasses';
 
 export interface TaskCardProps {
   id: string;
-  title: string;
+  title?: string;
   children: React.ReactNode;
   buttonLabel?: string | undefined;
   startAdornmentIcon?: React.ReactNode;
