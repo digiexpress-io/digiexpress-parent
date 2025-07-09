@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Card, CardActions, CardContent, Button, Typography, Box, useTheme, Divider, darken, styled, generateUtilityClass } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { EditDialog } from './EditDialog';
 import composeClasses from '@mui/utils/composeClasses';
 
@@ -9,12 +10,11 @@ export interface TaskCardProps {
   title: string;
   children: React.ReactNode;
   buttonLabel?: string | undefined;
+  startAdornmentIcon?: React.ReactNode;
 }
-
 
 export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const theme = useTheme();
-  const darkPurple = darken(theme.palette.primary.main, 0.5);
   const classes = useUtilityClasses();
 
   const [open, setOpen] = React.useState(false);
@@ -23,25 +23,25 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   return (<>
     <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' />
     <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard}>
-      <Box p={theme.spacing(1)}>
+      <Box pl={theme.spacing(1)} display='flex' alignItems='flex-end' height='3rem' sx={{ alignItems: 'center', backgroundColor: alpha(theme.palette.divider, 0.2) }}>
+        {props.startAdornmentIcon}
         <Typography className={classes.dataCardTitle}>
           {props.title}
         </Typography>
+        <Box flexGrow={1} />
+        {props.buttonLabel && <IconButton onClick={handleToggle}><MoreVertIcon color='primary' /></IconButton>}
       </Box>
-      <CardContent sx={{ flexGrow: 1 }}>
+      <Divider />
+      <Box sx={{ flexGrow: 1, p: theme.spacing(1) }}>
         {props.children}
-      </CardContent>
-      {props.buttonLabel &&
-        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant='contained' size='small' onClick={handleToggle}>{props.buttonLabel}</Button>
-        </CardActions>}
+      </Box>
     </TaskSectionCard>
   </>
   );
 }
 
 
-export const TaskCardDataRowText: React.FC<{ label: string, value: string | undefined }> = ({ label, value }) => {
+export const TaskCardDataRowText: React.FC<{ label: string, value: string | string[] | undefined }> = ({ label, value }) => {
   return (
     <Box display='flex' justifyContent='space-between'>
       <Typography variant="subtitle2" fontWeight='bold'>{label}</Typography>
@@ -59,9 +59,12 @@ export const TaskCardDataRowElement: React.FC<{ label: string, value: React.Reac
   )
 }
 
+export const StartAdornmentIcon = (Icon: React.ElementType) => (
+  <Icon fontSize='small' color='primary' sx={{ mr: 1 }} />
+);
 
 const MUI_NAME = 'TaskSectionCard';
-const TaskSectionCard = styled(Card, {
+const TaskSectionCard = styled(Box, {
   name: MUI_NAME,
   slot: 'dataCard',
   overridesResolver: (_props, styles) => {
@@ -77,16 +80,22 @@ const TaskSectionCard = styled(Card, {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    padding: theme.spacing(1),
-    //width: 350,
+    //padding: theme.spacing(1),
+    transition: 'border-color 200ms ease-in-out',
+    border: `1px solid transparent`,
+
     ':hover': {
-      cursor: 'pointer'
+      cursor: 'pointer',
+      backgroundColor: theme.palette.secondary.main,
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
+      border: `1px solid ${theme.palette.divider}`,
+
     },
     '& .TaskSectionCard-dataCardTitle': {
       textAlign: 'left',
-      color: darken(theme.palette.primary.main, 0.3),
-      ...theme.typography.h4,
+      ...theme.typography.body2,
       fontWeight: 'bold',
+
     }
   };
 })
