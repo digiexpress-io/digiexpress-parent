@@ -22,7 +22,7 @@ function hook(props: {}) {
         userName: user.name,
         source: TaskApi.CommentSource.FRONTDESK
       };
-      return params.fetch(url({taskId: task.id!}), { method, body: JSON.stringify(savingComment) })
+      return params.fetch(url({taskId: task.id!}), { method, body: JSON.stringify({...savingComment, commandType: 'CommentOnTask'}) })
         .then(response => {
           if (response.ok) return response.json();
           throw new Error("Comment save error:" + response.status);
