@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.404",
+  "version": "0.0.405",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -22,7 +22,6 @@
     "@uiw/react-md-editor": "^4.0.4",
     "@xyflow/react": "^12.4.4",
     "diff2html": "^3.4.48"
-
   },
   "peerDependencies": {
     "react-date-picker": "^11.0.0",
