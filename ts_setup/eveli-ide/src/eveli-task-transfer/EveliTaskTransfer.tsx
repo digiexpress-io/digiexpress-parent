@@ -11,11 +11,12 @@ export interface EveliTaskTransferProps {
 
 export const EveliTaskTransfer: React.FC<EveliTaskTransferProps> = (props) => {
 
+  /*
   if(props.task.transferredId) {
     return <>
       <FormattedMessage id='task.transfer.published.done'/>: {props.task.transferredId}
     </>
-  }
+  }*/
 
   return (<CreateTaskTransfer task={props.task} onTransferComplete={props.onTransferComplete}/>);
 }

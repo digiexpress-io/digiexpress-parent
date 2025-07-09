@@ -132,7 +132,7 @@ public class FeedbackTaskEnvirSetup {
     log.info("Repo created: " + repo);
     
     final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-    return new TaskClientImpl(notificator, null, null, store, customer);
+    return new TaskClientImpl(null, notificator, null, null, store, customer);
   }
   
 }

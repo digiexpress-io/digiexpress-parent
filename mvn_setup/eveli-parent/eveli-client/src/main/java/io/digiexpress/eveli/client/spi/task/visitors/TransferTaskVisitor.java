@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.io.Serializable;
+import java.util.HashMap;
+
 /*-
  * #%L
  * eveli-client
@@ -21,18 +24,26 @@ package io.digiexpress.eveli.client.spi.task.visitors;
  */
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TransferTaskCommand;
 import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.api.TaskFileClient.TaskFile;
+import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.dms.DocContainerEnvelope;
 import io.digiexpress.eveli.client.spi.dms.ImmutableDoc;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -42,21 +53,41 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TransferTaskVisitor {
   
+  private final EveliEnvirClient envir;
   private final TaskStore ctx;
   private final TaskFileClient taskFileClient;
   private final DocContainerClient docContainerClient;
-  
+
   private final String userId;
   private final String taskId;
   private final TransferTaskCommand command;
+
+  private final String flowName = "resolve_task_transfer_props";
   
   public Uni<TaskClient.Task> accept() {
-    return getTaskFiles()
-      .onItem().transformToUni(files -> createDocContainer(files))
-      .onItem().transformToUni(env -> updateTask(env));
+    
+    return ctx.getConfig().accept(new GetOneTaskByIdVisitor(taskId))
+    .onItem().transformToUni(task -> 
+      // calculate extra props
+      // find all the files
+      // pass the task down the pipeline 
+      Uni.combine().all().unis(
+          getQuestionnairePropsFromFlow(task), 
+          getTaskFiles(), 
+          Uni.createFrom().item(task)).asTuple()
+      
+    )
+    .onItem().transformToUni(tuple -> {
+      
+      return createDocContainer(tuple.getItem3(), tuple.getItem1(), tuple.getItem2())
+          .onItem().transformToUni(created -> updateTask(created, tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
+    });
+
   }
   
-  private Uni<DocContainerEnvelope> createDocContainer(List<TaskFile> files) {
+  
+  
+  private Uni<DocContainerEnvelope> createDocContainer(Task task, Map<String, String> props, List<TaskFile> files) {
     final var container = docContainerClient.containerBuilder();
     
     for(final var file : files) {
@@ -90,17 +121,42 @@ public class TransferTaskVisitor {
   }
   
   
-  private Uni<TaskClient.Task> updateTask(DocContainerEnvelope env) {
+  private Uni<TaskClient.Task> updateTask(
+      DocContainerEnvelope env, 
+      Map<String, String> props, 
+      List<TaskFile> files, 
+      Task previousVerison) {
     final var docContainerId = env.getObjects().getId();
     final var config = ctx.getConfig();
     final var tenant = config.getClient().grim(ctx.getConfig().getTenantName());
     
-    return tenant.commit().modifyOneMission()
-      .missionId(taskId).modifyMission(merge -> {
-        merge
-        .addLink(newLink -> newLink.linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID).linkValue(docContainerId).build())
+    return tenant.commit().modifyOneMission().missionId(taskId).modifyMission(merge -> {
         
-        .status(TaskStatus.TRANSFERRED.name())
+        final var linkBody = JsonObject.mapFrom(props);
+        linkBody.put("files", files.stream().map(e -> e.getName()).toList());
+        
+        
+        final var previousTransfer = merge.getCurrentState().getLinks().values().stream()
+          .filter(e -> TaskMapper.LINK_TYPE_TRANSFERRED_ID.equals(e.getLinkType()))
+          .findFirst();
+        
+        if(previousTransfer.isEmpty()) {
+          merge.addLink(newLink -> newLink
+            .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
+            .linkValue(docContainerId)
+            .linkBody(linkBody)
+            .build());
+        } else {
+          merge.modifyLink(previousTransfer.get().getId(), modLink -> {
+            modLink
+              .linkType(TaskMapper.LINK_TYPE_TRANSFERRED_ID)
+              .linkValue(docContainerId)
+              .linkBody(linkBody)
+              .build();
+          });
+        }
+        
+        merge.status(TaskStatus.TRANSFERRED.name())
         // change is viewed by worker who created it
         .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
         .build();
@@ -118,4 +174,31 @@ public class TransferTaskVisitor {
       .onItem().transform(TaskMapper::map);
   }
 
+  
+  private Uni<Map<String, String>> getQuestionnairePropsFromFlow(Task task) {
+
+
+    
+    return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
+      final String questionnaireId = task.getQuestionnaireId(); 
+      final String assigneeId = task.getAssignedUser();
+      
+      TaskAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
+      TaskAssert.notNull(assigneeId, () -> "assigneeId must be defined!");
+      
+      final var flowInput = new HashMap<String, Serializable>();
+      flowInput.put("questionnaireId", questionnaireId);
+      flowInput.put("assigneeId", assigneeId);
+      final FlowResult run = runtime.getWrench()
+          .inputMap(flowInput)
+          .flow(flowName)
+          .andGetBody();
+      
+      return run.getReturns().entrySet().stream()
+          .filter(e -> e.getValue() != null)
+          .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().toString()));
+    }).onFailure().recoverWithItem(error -> {
+      return Map.of("failed", ExceptionUtils.getStackTrace(error));
+    });
+  }
 }

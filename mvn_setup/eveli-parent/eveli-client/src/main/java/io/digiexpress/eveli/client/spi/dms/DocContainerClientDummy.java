@@ -55,7 +55,7 @@ public class DocContainerClientDummy implements DocContainerClient {
         return this;
       }
       @Override
-      public DocContainerBuilder props(Map<String, String> porps) {
+      public DocContainerBuilder props(Map<String, String> props) {
         return this;
       }
       @Override

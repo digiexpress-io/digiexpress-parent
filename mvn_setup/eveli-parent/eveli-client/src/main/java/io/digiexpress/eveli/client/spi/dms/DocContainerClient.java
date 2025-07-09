@@ -36,7 +36,7 @@ public interface DocContainerClient {
     DocContainerBuilder draftedBy(String draftedBy);
     DocContainerBuilder decidedBy(String decidedBy);
     DocContainerBuilder title(String userGivenId);
-    DocContainerBuilder props(Map<String, String> porps);
+    DocContainerBuilder props(Map<String, String> props);
     DocContainerBuilder addDocument(Doc newDocument);
     Uni<DocContainerEnvelope> build();
   }

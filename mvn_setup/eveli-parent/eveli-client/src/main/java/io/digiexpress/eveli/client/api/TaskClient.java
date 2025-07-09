@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.immutables.value.Value;
@@ -39,6 +40,7 @@ import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
 
@@ -227,6 +229,7 @@ public interface TaskClient {
   @Value.Immutable
   interface TransferTaskCommand {
     String getTransferTitle();
+    Map<String, String> getTransferProps();
   }
   
   
@@ -265,6 +268,7 @@ public interface TaskClient {
 
     
     @Nullable String getTransferredId();
+    @Nullable JsonObject getTransferredProps();
     
     String getSubject();
     TaskPriority getPriority();

@@ -54,6 +54,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
@@ -64,6 +65,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
 
+  private final EveliEnvirClient envirClient;
   private final TaskNotificator notificator;
   private final TaskFileClient taskFilesClient;
   private final DocContainerClient docContainerClient;
@@ -184,7 +186,7 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return new TransferTaskVisitor(ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
+        return new TransferTaskVisitor(envirClient, ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
       }
     };
   }

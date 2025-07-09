@@ -12,7 +12,7 @@ export interface CreateTaskTransferProps {
 
 export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => {
   const intl = useIntl();
-  const [title, setTitle] = React.useState<string>('');
+  const [title, setTitle] = React.useState<string>(props.task.transferredId ?? '');
   const [isSaving, setSaving] = React.useState(false);
   const { transferTask } = useFetch('worker/rest/api/tasks/$taskId/transfers.PUT', {})
 
@@ -34,11 +34,24 @@ export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => 
               value={title ?? ''}
             />
           </div>
+
+        { props.task.transferredId && (<>
+            <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.props.title' })}</Typography>
+            <div>
+              {JSON.stringify(props.task.transferredProps ?? {}, null, 2)}
+            </div>
+        </>)}
         </Stack>
 
       </div>
       <Box display='flex' gap={1}>
-        <Button variant='contained' onClick={handleOnTransfer} disabled={!title || isSaving}><FormattedMessage id='button.publish' /></Button>
+        <Button variant='contained' onClick={handleOnTransfer} disabled={!title || isSaving}>
+          { 
+            props.task.transferredId ? 
+            <FormattedMessage id='button.republish' /> :
+            <FormattedMessage id='button.publish' />
+          }
+        </Button>
       </Box>
     </>
   );
