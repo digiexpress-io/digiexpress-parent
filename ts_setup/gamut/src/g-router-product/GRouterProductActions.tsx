@@ -33,12 +33,13 @@ export const GRouterProductActions: React.FC<GRouterProductOwnerState> = (props)
         params: { locale },
         to: '/public/$locale'
       })
+    } else {
+      nav({
+        from: '/secured/$locale/pages/$pageId/products/$productId',
+        params: { viewId: 'user-overview' },
+        to: '/secured/$locale/views/$viewId',
+      })
     }
-    nav({
-      from: '/secured/$locale/pages/$pageId/products/$productId',
-      params: { viewId: 'user-overview' },
-      to: '/secured/$locale/views/$viewId',
-    })
   }
 
   function handleCreateOffer() {

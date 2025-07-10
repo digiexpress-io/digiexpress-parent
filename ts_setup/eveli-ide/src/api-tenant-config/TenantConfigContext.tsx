@@ -26,7 +26,7 @@ export const tenant_features = [
   'stencil_locale_filter',
   'eveli_publication_only',
   'visual_accommodation',
-
+  'dialob_dashboard_smart',
   'batches'
 ] as const;
 
