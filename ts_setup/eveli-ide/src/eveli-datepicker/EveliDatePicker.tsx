@@ -9,6 +9,7 @@ import { useIntl } from 'react-intl';
 import DatePicker from 'react-date-picker';
 
 import 'react-date-picker/dist/DatePicker.css';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 
@@ -26,6 +27,7 @@ const dateFormat = 'dd.MM.yyyy';
 const DatePickerStyles = styled("div")(({ theme }) => {
   return {
     '& .react-date-picker': {
+      zIndex: 100,
       alignItems: 'center',
       width: '100%',
       boxSizing: 'border-box', // Prevent padding issue with fullWidth.

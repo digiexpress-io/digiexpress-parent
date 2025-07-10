@@ -6,9 +6,10 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { PublicationApi } from '../api-publications'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import { DateTime } from 'luxon';
 import { CancelButton } from '@/eveli-styles';
+import { EveliDatePicker } from '@/eveli-datepicker';
 
 
 
@@ -92,18 +93,15 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
         <DialogContent>
           <Stack spacing={1}>
-            <DatePicker
-              format='dd.MM.yyyy'
-              value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
-              label={intl.formatMessage({ id: 'publications.liveDate' })}
-              slots={{textField: textFieldProps => <TextField fullWidth {...textFieldProps} />}}
-              sx={{ minHeight: '72px' }}
-              onChange={date => setForm(prev => {
-                const next = {...prev};
-                next.liveDate = date ? DateTime.fromJSDate(date).plus({ seconds: 1}).toLocal().toISO({ includeOffset: false,  }) : null;
-                return next;
-              })}
-            />
+          <EveliDatePicker 
+            label={intl.formatMessage({ id: 'publications.liveDate' })}
+            value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
+            onChange={date => setForm(prev => {
+              const next = {...prev};
+              next.liveDate = date ? DateTime.fromJSDate(date).plus({ seconds: 1}).toLocal().toISO({ includeOffset: false,  }) : null;
+              return next;
+            })}
+          />
 
           <TextField
             fullWidth
