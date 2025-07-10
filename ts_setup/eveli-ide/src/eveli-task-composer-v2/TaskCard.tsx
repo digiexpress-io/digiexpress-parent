@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { EditDialog } from './EditDialog';
 import composeClasses from '@mui/utils/composeClasses';
 import { CSSObject } from '@emotion/react';
+
+import { EditDialog } from './EditDialog';
+import { TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardStyleConfig } from './TaskCardStyler';
+
 
 
 export interface TaskCardProps {
@@ -13,8 +16,22 @@ export interface TaskCardProps {
   buttonLabel?: string | undefined;
   startAdornmentIcon?: React.ReactNode;
   flashy?: boolean;
+  styleVariant?: TaskCardStyleKey;
   onClick?: () => void;
 }
+
+interface TaskCardDataRowTextProps {
+  label: string;
+  value: string | string[] | undefined;
+  style: TaskCardStyleDefinition;
+}
+
+interface TitleTextProps {
+  flashy?: boolean;
+  children: React.ReactNode
+  style: TaskCardStyleDefinition;
+}
+
 
 export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const theme = useTheme();
@@ -23,49 +40,56 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const [open, setOpen] = React.useState(false);
   const handleToggle = () => setOpen((prev) => !prev);
 
+  const variant = props.styleVariant ?? 'default';
+  const styleConfig = useTaskCardStyleConfig();
+  const style = styleConfig[variant];
+
+
   return (<>
     <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
-    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
+    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props} > {/* TODO LINK CLICKY CLICK */}
       <TitleContainer ownerState={props}>
         {props.startAdornmentIcon}
-        <TitleText ownerState={props}>{props.title}</TitleText>
-
+        <TitleText style={style} flashy={props.flashy}>{props.title}</TitleText>
         <Box flexGrow={1} />
         {props.buttonLabel && <IconButton onClick={props.onClick}><MoreVertIcon color='primary' /></IconButton>}
       </TitleContainer>
       <Divider />
-      <Box sx={{ flexGrow: 1, p: theme.spacing(1) }}>
+      <Typography p={theme.spacing(1)}>
         {props.children}
-      </Box>
+      </Typography>
     </TaskSectionCard>
   </>
   );
 }
 
-
-export const TaskCardDataRowText: React.FC<{ label: string, value: string | string[] | undefined }> = ({ label, value }) => {
+export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label, value, style }) => {
   const theme = useTheme();
 
   return (<>
     <Grid2 container spacing={theme.spacing(1)}>
-      <Grid2 size={{ xs: 12, sm: 4, md: 4, lg: 4, xl: 4 }}>
-        <Typography variant="subtitle2" fontWeight='bold' sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{label}</Typography>
+      <Grid2 size={style.dataRowGridSizes.label}>
+        <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold', whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {label}
+        </Typography>
       </Grid2>
 
-      <Grid2 size={{ xs: 12, sm: 8, md: 8, lg: 8, xl: 8 }}>
-        <Typography variant="subtitle2">{value}</Typography>
+      <Grid2 size={style.dataRowGridSizes.value}>
+        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {value}
+        </Typography>
       </Grid2>
     </Grid2>
     <Divider />
   </>
-
   )
 }
 
+// TODO
 export const TaskCardDataRowElement: React.FC<{ label: string, value: React.ReactNode }> = ({ label, value }) => {
   return (
     <Box display='flex' justifyContent='space-between'>
-      <Typography variant="subtitle2" fontWeight='bold'>{label}</Typography>
+      <Typography fontWeight='bold'>{label}</Typography>
       {value}
     </Box>
   )
@@ -106,6 +130,7 @@ const TaskSectionCard = styled(Box, {
   if (ownerState.flashy) {
     return {
       ...baseStyles,
+      borderRadius: theme.spacing(1),
       backgroundColor: alpha(theme.palette.primary.main, 0.1),
       ':hover': {
         cursor: 'pointer',
@@ -133,11 +158,16 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 }
 
-const TitleText = styled(Typography)<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => ({
-  textAlign: 'left',
-  fontWeight: 'bold',
-  color: ownerState.flashy ? theme.palette.background.default : 'inherit',
-}));
+
+const TitleText: React.FC<TitleTextProps> = ({ style, flashy, children }) => {
+  const theme = useTheme();
+
+  return (
+    <Typography sx={{ ...style.titleTypography, fontWeight: 'bold', color: flashy ? theme.palette.background.default : 'inherit' }} >
+      {children}
+    </Typography>
+  );
+};
 
 const TitleContainer = styled(Box)<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => ({
   display: 'flex',
