@@ -22,11 +22,7 @@ export const FormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose, ope
       open={open}
       onClose={onClose}
       variant='persistent'
-      slotProps={{
-        transition: {
-          Slide
-        }
-      }}
+      slotProps={{ transition: { Slide } }}
     >
       <Box display='flex' alignItems='center' justifyContent='space-between'>
         <Typography variant="h1">Form review</Typography>

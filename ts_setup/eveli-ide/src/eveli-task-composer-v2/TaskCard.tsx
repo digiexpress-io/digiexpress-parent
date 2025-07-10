@@ -26,14 +26,13 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   return (<>
     <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
     <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
-      <Box className={classes.dataCardTitleContainer}>
+      <TitleContainer ownerState={props}>
         {props.startAdornmentIcon}
-        <Typography className={classes.dataCardTitle}>
-          {props.title}
-        </Typography>
+        <TitleText ownerState={props}>{props.title}</TitleText>
+
         <Box flexGrow={1} />
         {props.buttonLabel && <IconButton onClick={props.onClick}><MoreVertIcon color='primary' /></IconButton>}
-      </Box>
+      </TitleContainer>
       <Divider />
       <Box sx={{ flexGrow: 1, p: theme.spacing(1) }}>
         {props.children}
@@ -83,8 +82,6 @@ const TaskSectionCard = styled(Box, {
   overridesResolver: (_props, styles) => {
     return [
       styles.dataCard,
-      styles.editCardTitle,
-      styles.dataCardTitleContainer
     ];
   },
 })<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
@@ -98,6 +95,11 @@ const TaskSectionCard = styled(Box, {
     borderRadius: theme.spacing(1),
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
+    },
+    ':hover': {
+      cursor: 'pointer',
+      backgroundColor: theme.palette.secondary.main,
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
     }
   };
 
@@ -105,24 +107,8 @@ const TaskSectionCard = styled(Box, {
     return {
       ...baseStyles,
       backgroundColor: alpha(theme.palette.primary.main, 0.1),
-
       ':hover': {
-        cursor: 'pointer',
         backgroundColor: alpha(theme.palette.primary.main, 0.15),
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-      },
-
-      '& .TaskSectionCard-dataCardTitle': {
-        textAlign: 'left',
-        fontWeight: 'bold',
-        color: theme.palette.background.default,
-      },
-      '& .TaskSectionCard-dataCardTitleContainer': {
-        display: 'flex',
-        alignItems: 'center',
-        height: '3rem',
-        backgroundColor: theme.palette.primary.main,
-        paddingLeft: theme.spacing(1),
       },
       '& .MuiSvgIcon-root': {
         color: theme.palette.background.paper
@@ -132,36 +118,30 @@ const TaskSectionCard = styled(Box, {
       }
     };
   }
-
   return {
-    ...baseStyles,
-    ':hover': {
-      cursor: 'pointer',
-      backgroundColor: theme.palette.secondary.main,
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    },
-    '& .TaskSectionCard-dataCardTitle': {
-      textAlign: 'left',
-      fontWeight: 'bold',
-      ...theme.typography.body2,
-    },
-    '& .TaskSectionCard-dataCardTitleContainer': {
-      display: 'flex',
-      alignItems: 'center',
-      height: '3rem',
-      backgroundColor: alpha(theme.palette.divider, 0.2),
-      paddingLeft: theme.spacing(1),
-    },
-  };
+    ...baseStyles
+  }
 });
 
 
 export const useUtilityClasses = () => {
   const slots = {
     dataCard: ['dataCard'],
-    dataCardTitle: ['dataCardTitle'],
-    dataCardTitleContainer: ['dataCardTitleContainer']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
+
+const TitleText = styled(Typography)<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => ({
+  textAlign: 'left',
+  fontWeight: 'bold',
+  color: ownerState.flashy ? theme.palette.background.default : 'inherit',
+}));
+
+const TitleContainer = styled(Box)<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  height: '3rem',
+  paddingLeft: theme.spacing(1),
+  backgroundColor: ownerState.flashy ? theme.palette.primary.main : alpha(theme.palette.divider, 0.2),
+}));
