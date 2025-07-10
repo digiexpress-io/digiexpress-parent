@@ -108,6 +108,7 @@ const TaskSectionCard = styled(Box, {
       ...baseStyles,
       backgroundColor: alpha(theme.palette.primary.main, 0.1),
       ':hover': {
+        cursor: 'pointer',
         backgroundColor: alpha(theme.palette.primary.main, 0.15),
       },
       '& .MuiSvgIcon-root': {

@@ -21,8 +21,7 @@ export const FormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose, ope
       anchor={isSmall ? 'bottom' : 'right'}
       open={open}
       onClose={onClose}
-      variant='persistent'
-      slotProps={{ transition: { Slide } }}
+      variant="persistent"
     >
       <Box display='flex' alignItems='center' justifyContent='space-between'>
         <Typography variant="h1">Form review</Typography>
@@ -50,9 +49,18 @@ const StyledFormReview = styled(Drawer, {
       width: drawerWidthOpen,
       height: '100%',
       padding: theme.spacing(2),
+      transform: 'translateX(100%)',
+      transition: 'transform 0.3s ease-in-out',
       boxSizing: 'border-box',
       [theme.breakpoints.down('md')]: {
         width: '100%',
+        transform: 'translateY(100%)'
+      },
+      '&.MuiDrawer-paperAnchorRight.MuiDrawer-paperOpen': {
+        transform: 'translateX(0)',
+      },
+      '&.MuiDrawer-paperAnchorBottom.MuiDrawer-paperOpen': {
+        transform: 'translateY(0)',
       },
     },
   }

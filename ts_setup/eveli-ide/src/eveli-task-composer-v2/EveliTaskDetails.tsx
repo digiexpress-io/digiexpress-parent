@@ -15,12 +15,14 @@ import { TaskCard, TaskCardDataRowText, StartAdornmentIcon } from './TaskCard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
-
+import { TaskCardStyler, TaskCardStyleKey } from './TaskCardStyler';
 
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   const [task, setTask] = React.useState<TaskApi.Task>();
+  const [stylePreset, setStylePreset] = React.useState<TaskCardStyleKey>('default');
+
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const [reviewOpen, setReviewOpen] = React.useState(false);
 
@@ -50,10 +52,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
   return (<>
     <Grid2 container spacing={1} m={2}>
-
       <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{ overflowY: 'auto', maxHeight: '100%' }} spacing={1}>
 
+        <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 12 }}>
+          <TaskCardStyler value={stylePreset} onChange={setStylePreset} />
+        </Grid2>
+
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
+
           <TaskCard id='task-main' title={`Task: ${task.taskRef}`} buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(TaskAltIcon)} flashy>
             <TaskCardDataRowText label='Due date' value={formatAnyDateShort(task.dueDate)} />
             <TaskCardDataRowText label='Customer name' value={task.clientIdentificator ? task.clientIdentificator : 'NONE'} />
