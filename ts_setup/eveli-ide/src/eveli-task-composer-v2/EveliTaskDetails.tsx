@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, Dialog, Grid2, Stack, Typography } from '@mui/material';
-import TaskIcon from '@mui/icons-material/Task';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import EmailIcon from '@mui/icons-material/Email';
+
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import HistoryIcon from '@mui/icons-material/History';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import dialob_logo from './dialob_logo.svg';
 
 import { TaskCard, TaskCardDataRowText, StartAdornmentIcon } from './TaskCard';
@@ -46,7 +46,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{ overflowY: 'auto', maxHeight: '100%' }} spacing={1}>
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
-          <TaskCard id='task-main' title={`Task: ${task.taskRef}`} buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(TaskIcon)}>
+          <TaskCard id='task-main' title={`Task: ${task.taskRef}`} buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(TaskAltIcon)} flashy>
             <TaskCardDataRowText label='Due date' value={formatAnyDateShort(task.dueDate)} />
             <TaskCardDataRowText label='Customer name' value={task.clientIdentificator ? task.clientIdentificator : 'NONE'} />
             <TaskCardDataRowText label='Subject' value={task.subject} />
@@ -71,7 +71,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
-          <TaskCard id='assignees-roles' title='Assignees and roles' buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(AdminPanelSettingsIcon)}>
+          <TaskCard id='assignees-roles' title='Assignees and roles' buttonLabel='Edit' startAdornmentIcon={StartAdornmentIcon(AdminPanelSettingsOutlinedIcon)}>
             <TaskCardDataRowText label='Assignees' value={task.assignedUser ? task.assignedUser : 'Nobody'} />
             <TaskCardDataRowText label='Roles' value={task.assignedRoles ? task.assignedRoles : 'No roles'} />
           </TaskCard>
@@ -79,14 +79,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
-          <TaskCard id='customer-messages' title='Customer messages' buttonLabel='New message' startAdornmentIcon={StartAdornmentIcon(EmailIcon)}>
+          <TaskCard id='customer-messages' title='Customer messages' buttonLabel='New message' startAdornmentIcon={StartAdornmentIcon(EditOutlinedIcon)}>
             <Stack direction='column'>
               {task.comments.length ? task.comments
                 .filter(c => c.external === true)
                 .slice(0, 3)
-                .map((comment) => <TaskCardDataRowText label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText} />
+                .map((comment) => <TaskCardDataRowText key={comment.id} label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText} />
                 ) : 'No messages'}
-              {task.comments.length > 3 && <Typography variant='caption'>...more...</Typography>}
+              {task.comments.length > 3 && <Typography variant='caption'>...{task.comments.length - 3} more...</Typography>}
             </Stack>
           </TaskCard>
         </Grid2>
@@ -98,7 +98,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }} >
-          <TaskCard id='feedback' title='Customer feedback' buttonLabel='Edit and publish' startAdornmentIcon={StartAdornmentIcon(ThumbUpIcon)}>
+          <TaskCard id='feedback' title='Customer feedback' buttonLabel='Edit and publish' startAdornmentIcon={StartAdornmentIcon(ThumbUpAltOutlinedIcon)}>
             <Stack direction='column'>
               <TaskCardDataRowText label='Category' value={task.id} />
               <TaskCardDataRowText label='Subcategory' value={task.id} />
@@ -110,7 +110,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
-          <TaskCard id='internal-comments' title='Internal comments' buttonLabel='New comment' startAdornmentIcon={StartAdornmentIcon(NoteAltIcon)}>
+          <TaskCard id='internal-comments' title='Internal comments' buttonLabel='New comment' startAdornmentIcon={StartAdornmentIcon(NoteAltOutlinedIcon)}>
             {task.comments.length ? task.comments.filter(c => !c.external)
               .slice(0, 3)
               .map(comment => <TaskCardDataRowText key={comment.id}

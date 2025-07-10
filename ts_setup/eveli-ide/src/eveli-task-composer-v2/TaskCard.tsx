@@ -3,6 +3,7 @@ import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconB
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { EditDialog } from './EditDialog';
 import composeClasses from '@mui/utils/composeClasses';
+import { CSSObject } from '@emotion/react';
 
 
 export interface TaskCardProps {
@@ -11,6 +12,7 @@ export interface TaskCardProps {
   children: React.ReactNode;
   buttonLabel?: string | undefined;
   startAdornmentIcon?: React.ReactNode;
+  flashy?: boolean;
   onClick?: () => void;
 }
 
@@ -23,8 +25,8 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
   return (<>
     <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
-    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard}> {/* TODO LINK CLICKY CLICK */}
-      <Box pl={theme.spacing(1)} className={classes.dataCardTitleContainer}>
+    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
+      <Box className={classes.dataCardTitleContainer}>
         {props.startAdornmentIcon}
         <Typography className={classes.dataCardTitle}>
           {props.title}
@@ -44,6 +46,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
 export const TaskCardDataRowText: React.FC<{ label: string, value: string | string[] | undefined }> = ({ label, value }) => {
   const theme = useTheme();
+
   return (<>
     <Grid2 container spacing={theme.spacing(1)}>
       <Grid2 size={{ xs: 12, sm: 4, md: 4, lg: 4, xl: 4 }}>
@@ -54,7 +57,7 @@ export const TaskCardDataRowText: React.FC<{ label: string, value: string | stri
         <Typography variant="subtitle2">{value}</Typography>
       </Grid2>
     </Grid2>
-    <Divider sx={{ borderColor: alpha(theme.palette.divider, 0.4) }} />
+    <Divider />
   </>
 
   )
@@ -84,36 +87,73 @@ const TaskSectionCard = styled(Box, {
       styles.dataCardTitleContainer
     ];
   },
+})<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
 
-})(({ theme }) => {
-
-  return {
+  const baseStyles: CSSObject = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
     transition: 'border-color 200ms ease-in-out',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.spacing(1),
+    '& .MuiDivider-root': {
+      borderColor: alpha(theme.palette.divider, 0.4)
+    }
+  };
 
+  if (ownerState.flashy) {
+    return {
+      ...baseStyles,
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+
+      ':hover': {
+        cursor: 'pointer',
+        backgroundColor: alpha(theme.palette.primary.main, 0.15),
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      },
+
+      '& .TaskSectionCard-dataCardTitle': {
+        textAlign: 'left',
+        fontWeight: 'bold',
+        color: theme.palette.background.default,
+      },
+      '& .TaskSectionCard-dataCardTitleContainer': {
+        display: 'flex',
+        alignItems: 'center',
+        height: '3rem',
+        backgroundColor: theme.palette.primary.main,
+        paddingLeft: theme.spacing(1),
+      },
+      '& .MuiSvgIcon-root': {
+        color: theme.palette.background.paper
+      },
+      '& .MuiDivider-root': {
+        borderColor: `${alpha(theme.palette.primary.main, 0.2)}`
+      }
+    };
+  }
+
+  return {
+    ...baseStyles,
     ':hover': {
       cursor: 'pointer',
       backgroundColor: theme.palette.secondary.main,
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
-
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
     },
     '& .TaskSectionCard-dataCardTitle': {
       textAlign: 'left',
-      ...theme.typography.body2,
       fontWeight: 'bold',
+      ...theme.typography.body2,
     },
     '& .TaskSectionCard-dataCardTitleContainer': {
       display: 'flex',
       alignItems: 'center',
       height: '3rem',
-      backgroundColor: alpha(theme.palette.divider, 0.2) 
-    }
+      backgroundColor: alpha(theme.palette.divider, 0.2),
+      paddingLeft: theme.spacing(1),
+    },
   };
-})
+});
 
 
 export const useUtilityClasses = () => {
