@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Dialog, Grid2, Stack, Typography } from '@mui/material';
-
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -10,10 +9,15 @@ import HistoryIcon from '@mui/icons-material/History';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import dialob_logo from './dialob_logo.svg';
 
+import { DateTime } from 'luxon';
+
 import { TaskCard, TaskCardDataRowText, StartAdornmentIcon } from './TaskCard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
-import { DateTime } from 'luxon';
+import { FormReviewDrawer } from './FormReviewDrawer';
+
+
+
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   const [task, setTask] = React.useState<TaskApi.Task>();
@@ -39,6 +43,10 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
     return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
   };
 
+  function toggleReview() {
+    setReviewOpen(prev => !prev)
+  }
+
 
   return (<>
     <Grid2 container spacing={1} m={2}>
@@ -59,7 +67,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
         <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: reviewOpen ? 12 : 4 }}>
-          <TaskCard onClick={() => setReviewOpen(true)} id='task-form-summary' buttonLabel='View form' startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
+          <TaskCard onClick={toggleReview} id='task-form-summary' buttonLabel='View form' startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
             <TaskCardDataRowText label='Form name' value={task.subject} />
             <TaskCardDataRowText label='Form version' value='v1.0' />
             <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} />
@@ -131,20 +139,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
       </Grid2>
 
-      {reviewOpen && (
-        <Grid2 size={{ xs: 12, md: 6 }} onClick={() => setReviewOpen(false)}
-          sx={{
-            display: 'flex',
-            backgroundColor: 'pink',
-            height: '100%',
-            top: 0,
-            overflowY: 'auto',
-            borderLeft: '1px solid rgba(0,0,0,0.12)',
-          }}
-        >
-          REVIEW
-        </Grid2>
-      )}
+      <FormReviewDrawer onClose={toggleReview} open={reviewOpen} />
     </Grid2>
   </>
   )
