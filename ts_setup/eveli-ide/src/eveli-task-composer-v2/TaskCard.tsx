@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2 } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import composeClasses from '@mui/utils/composeClasses';
 import { CSSObject } from '@emotion/react';
 
 import { EditDialog } from './EditDialog';
-import { TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardStyleConfig } from './TaskCardStyler';
+import { TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
 
 
 
@@ -18,6 +18,8 @@ export interface TaskCardProps {
   flashy?: boolean;
   styleVariant?: TaskCardStyleKey;
   onClick?: () => void;
+  onReview?: () => void;
+  onToggleFlashy?: () => void;
 }
 
 interface TaskCardDataRowTextProps {
@@ -27,7 +29,6 @@ interface TaskCardDataRowTextProps {
 }
 
 interface TitleTextProps {
-  flashy?: boolean;
   children: React.ReactNode
   style: TaskCardStyleDefinition;
 }
@@ -41,19 +42,62 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const handleToggle = () => setOpen((prev) => !prev);
 
   const variant = props.styleVariant ?? 'default';
-  const styleConfig = useTaskCardStyleConfig();
+  const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[variant];
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+  };
+
+  function handleFlashyToggle() {
+    if (props.onToggleFlashy) {
+      props.onToggleFlashy();
+    }
+    handleMenuClose();
+  };
+
+  function onReview() {
+    if (props.onReview) {
+      props.onReview()
+    }
+    handleMenuClose()
+
+  }
 
 
   return (<>
     <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
-    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props} > {/* TODO LINK CLICKY CLICK */}
-      <TitleContainer ownerState={props}>
+    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
+      <Box className={classes.title}>
         {props.startAdornmentIcon}
-        <TitleText style={style} flashy={props.flashy}>{props.title}</TitleText>
+        <TitleText style={style}>{props.title}</TitleText>
         <Box flexGrow={1} />
-        {props.buttonLabel && <IconButton onClick={props.onClick}><MoreVertIcon color='primary' /></IconButton>}
-      </TitleContainer>
+        {props.buttonLabel && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+        <Menu
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleMenuClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <MenuItem onClick={handleFlashyToggle}>
+            {props.flashy ? 'Remove Flashy' : 'Make Flashy'}
+          </MenuItem>
+          {props.id === 'task-form-summary' && (
+            <MenuItem onClick={onReview}>
+              Form review
+            </MenuItem>
+          )}
+
+        </Menu>
+      </Box>
       <Divider />
       <Typography p={theme.spacing(1)}>
         {props.children}
@@ -106,6 +150,7 @@ const TaskSectionCard = styled(Box, {
   overridesResolver: (_props, styles) => {
     return [
       styles.dataCard,
+      styles.titleContainer
     ];
   },
 })<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
@@ -117,6 +162,7 @@ const TaskSectionCard = styled(Box, {
     transition: 'border-color 200ms ease-in-out',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.spacing(1),
+
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
     },
@@ -124,14 +170,26 @@ const TaskSectionCard = styled(Box, {
       cursor: 'pointer',
       backgroundColor: theme.palette.secondary.main,
       boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    },
+    '& .TaskSectionCard-title': {
+      display: 'flex',
+      alignItems: 'center',
+      height: '3rem',
+      paddingLeft: theme.spacing(1),
+      backgroundColor: ownerState.flashy ? theme.palette.primary.main : alpha(theme.palette.divider, 0.2),
+      borderTopLeftRadius: ownerState.flashy ? theme.spacing(1) : 0,
+      borderTopRightRadius: ownerState.flashy ? theme.spacing(1) : 0,
+      border: ownerState.flashy ? 'none' : 0,
+      color: ownerState.flashy ? theme.palette.background.default : theme.palette.text.primary
     }
   };
 
   if (ownerState.flashy) {
     return {
       ...baseStyles,
-      borderRadius: theme.spacing(1),
       backgroundColor: alpha(theme.palette.primary.main, 0.1),
+      borderColor: `${alpha(theme.palette.primary.main, 0.2)}`,
+
       ':hover': {
         cursor: 'pointer',
         backgroundColor: alpha(theme.palette.primary.main, 0.15),
@@ -153,26 +211,19 @@ const TaskSectionCard = styled(Box, {
 export const useUtilityClasses = () => {
   const slots = {
     dataCard: ['dataCard'],
+    title: ['title']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
 
 
-const TitleText: React.FC<TitleTextProps> = ({ style, flashy, children }) => {
+const TitleText: React.FC<TitleTextProps> = ({ style, children }) => {
   const theme = useTheme();
 
   return (
-    <Typography sx={{ ...style.titleTypography, fontWeight: 'bold', color: flashy ? theme.palette.background.default : 'inherit' }} >
+    <Typography sx={{ ...style.titleTypography, fontWeight: 'bold' }} >
       {children}
     </Typography>
   );
 };
-
-const TitleContainer = styled(Box)<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  height: '3rem',
-  paddingLeft: theme.spacing(1),
-  backgroundColor: ownerState.flashy ? theme.palette.primary.main : alpha(theme.palette.divider, 0.2),
-}));

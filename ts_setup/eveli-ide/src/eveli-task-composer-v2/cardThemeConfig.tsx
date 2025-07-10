@@ -1,21 +1,21 @@
-import React from 'react'
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TypographyStyle, useTheme } from '@mui/material';
+import { CSSProperties} from 'react';
+import { useTheme } from '@mui/material';
 
 export type TaskCardStyleKey = 'compact' | 'default' | 'comfortable';
 
 const singleCol = { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 };
 
 export interface TaskCardStyleDefinition {
-  titleTypography: TypographyStyle;
-  bodyTypography: TypographyStyle;
+  titleTypography: CSSProperties;
+  bodyTypography: CSSProperties;
   dataRowGridSizes: {
     label: { xs: number; sm: number; md: number; lg: number; xl: number };
     value: { xs: number; sm: number; md: number; lg: number; xl: number };
   };
   cardSpacing?: string;
 }
-export const taskCardGridSize: Record<TaskCardStyleKey | 'oneCol', { xs: number; sm: number; md: number; lg: number; xl: number }> = {
-  oneCol: singleCol,
+export const taskCardGridSize: Record<TaskCardStyleKey | 'singleCol', { xs: number; sm: number; md: number; lg: number; xl: number }> = {
+  singleCol,
   compact: { xs: 12, sm: 6, md: 4, lg: 3, xl: 4 },
   default: { xs: 12, sm: 8, md: 6, lg: 6, xl: 6 },
   comfortable: { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 },
@@ -28,12 +28,12 @@ export const TASK_CARD_STYLE_LABELS: Record<TaskCardStyleKey, string> = {
 };
 
 
-export const useTaskCardStyleConfig = (reviewOpen?: boolean): Record<TaskCardStyleKey, TaskCardStyleDefinition> => {
+export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardStyleKey, TaskCardStyleDefinition> => {
   const theme = useTheme();
 
   return {
     compact: {
-      titleTypography: theme.typography.body2,
+      titleTypography: theme.typography.subtitle2,
       bodyTypography: theme.typography.subtitle2,
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },
@@ -69,26 +69,3 @@ export const useTaskCardStyleConfig = (reviewOpen?: boolean): Record<TaskCardSty
 };
 
 
-export interface TaskCardStylerProps {
-  value: TaskCardStyleKey;
-  onChange: (value: TaskCardStyleKey) => void;
-}
-
-export const TaskCardStyler: React.FC<TaskCardStylerProps> = ({ value, onChange }) => {
-  const handleChange = (event: SelectChangeEvent) => {
-    onChange(event.target.value as TaskCardStyleKey);
-  };
-
-  return (
-    <FormControl fullWidth sx={{ mb: 2, maxWidth: 300 }}>
-      <InputLabel>Card Style</InputLabel>
-      <Select value={value} label="Card Style" onChange={handleChange}>
-        {Object.entries(TASK_CARD_STYLE_LABELS).map(([key, label]) => (
-          <MenuItem key={key} value={key}>
-            {label}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-};

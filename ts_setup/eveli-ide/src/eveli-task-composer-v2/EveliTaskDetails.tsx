@@ -15,7 +15,8 @@ import { TaskCard, TaskCardDataRowText, StartAdornmentIcon } from './TaskCard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
-import { TaskCardStyler, TaskCardStyleKey, useTaskCardStyleConfig, taskCardGridSize } from './TaskCardStyler';
+import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
+import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -23,11 +24,19 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const [reviewOpen, setReviewOpen] = React.useState(false);
+  const [flashyCards, setFlashyCards] = React.useState<Record<string, boolean>>({});
 
   const [stylePreset, setStylePreset] = React.useState<TaskCardStyleKey>('default');
-  const styleConfig = useTaskCardStyleConfig(reviewOpen);
+  const styleConfig = useTaskCardThemeConfig(reviewOpen);
   const style = styleConfig[stylePreset];
 
+  const toggleFlashyForCard = (cardId: string) => {
+    setFlashyCards(prev => ({
+      ...prev,
+      [cardId]: !prev[cardId],
+    }));
+  };
+  const isCardFlashy = (cardId: string) => !!flashyCards[cardId];
 
   React.useEffect(() => {
     if (props.taskId && task === undefined) {
@@ -52,23 +61,25 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
     setReviewOpen(prev => !prev)
   }
 
-
   return (<>
 
     <Grid2 container spacing={1} m={2}>
-      <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
-        <TaskCardStyler value={stylePreset} onChange={setStylePreset} />
+      <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
+        <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
       </Grid2>
 
       <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{ overflowY: 'auto', maxHeight: '100%' }} spacing={style.cardSpacing}>
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
 
-          <TaskCard id='task-main'
+          <TaskCard
+            id='task-main'
             title={`Task: ${task.taskRef}`}
             buttonLabel='Edit'
             startAdornmentIcon={StartAdornmentIcon(TaskAltIcon)}
-            flashy
             styleVariant={stylePreset}
+            flashy={isCardFlashy('task-main')}
+            onToggleFlashy={() => toggleFlashyForCard('task-main')}
+            onReview={toggleReview}
           >
             <TaskCardDataRowText label='Due date' value={formatAnyDateShort(task.dueDate)} style={style} />
             <TaskCardDataRowText label='Customer name' value={task.clientIdentificator ? task.clientIdentificator : 'NONE'} style={style} />
@@ -81,12 +92,15 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           </TaskCard>
         </Grid2>
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
-          <TaskCard onClick={toggleReview}
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
+          <TaskCard 
             id='task-form-summary'
+            onReview={toggleReview}
             buttonLabel='View form'
             startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('task-form-summary')}
+            onToggleFlashy={() => toggleFlashyForCard('task-form-summary')}
           >
             <TaskCardDataRowText label='Form name' value={task.subject} style={style} />
             <TaskCardDataRowText label='Form version' value='v1.0' style={style} />
@@ -98,13 +112,15 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           </TaskCard>
         </Grid2>
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='assignees-roles'
             title='Assignees and roles'
             buttonLabel='Edit'
             startAdornmentIcon={StartAdornmentIcon(AdminPanelSettingsOutlinedIcon)}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('assignees-roles')}
+            onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
           >
             <TaskCardDataRowText label='Assignees' value={task.assignedUser ? task.assignedUser : 'Nobody'} style={style} />
             <TaskCardDataRowText label='Roles' value={task.assignedRoles ? task.assignedRoles : 'No roles'} style={style} />
@@ -112,13 +128,15 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='customer-messages'
             title='Customer messages'
             buttonLabel='New message'
             startAdornmentIcon={StartAdornmentIcon(EditOutlinedIcon)}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('customer-messages')}
+            onToggleFlashy={() => toggleFlashyForCard('customer-messages')}
           >
             <Stack direction='column'>
               {task.comments.length ? task.comments
@@ -131,25 +149,29 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           </TaskCard>
         </Grid2>
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='files'
             title='Files'
             buttonLabel='Upload file'
             startAdornmentIcon={StartAdornmentIcon(AttachFileOutlinedIcon)}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('files')}
+            onToggleFlashy={() => toggleFlashyForCard('files')}
           >
             <>No files</>
           </TaskCard>
         </Grid2>
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='feedback'
             title='Customer feedback'
             buttonLabel='Edit and publish'
             startAdornmentIcon={StartAdornmentIcon(ThumbUpAltOutlinedIcon)}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('feedback')}
+            onToggleFlashy={() => toggleFlashyForCard('feedback')}
           >
             <Stack direction='column'>
               <TaskCardDataRowText label='Category' value={task.id} style={style} />
@@ -161,17 +183,19 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='internal-comments'
             title='Internal comments'
             buttonLabel='New comment'
             startAdornmentIcon={StartAdornmentIcon(NoteAltOutlinedIcon)}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('internal-comments')}
+            onToggleFlashy={() => toggleFlashyForCard('internal-comments')}
           >
             {task.comments.length ? task.comments.filter(c => !c.external)
               .slice(0, 3)
-              .map(comment => <TaskCardDataRowText key={comment.id} style={style} 
+              .map(comment => <TaskCardDataRowText key={comment.id} style={style}
                 label={`${comment.userName} ${formatAnyDateShort(comment.created)}`}
                 value={comment.commentText}
               />
@@ -181,12 +205,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           </TaskCard>
         </Grid2>
 
-        <Grid2 size={reviewOpen ? taskCardGridSize.oneCol : taskCardGridSize[stylePreset]}>
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='task-meta'
             title='History and metadata'
             startAdornmentIcon={StartAdornmentIcon(HistoryIcon)}
             styleVariant={stylePreset}
+            flashy={isCardFlashy('task-meta')}
+            onToggleFlashy={() => toggleFlashyForCard('task-meta')}
           >
             <TaskCardDataRowText label='Last edited by' value={task.updaterId} style={style} />
             <TaskCardDataRowText label='Last edited date' value={formatAnyDateShort(task.updated)} style={style} />
