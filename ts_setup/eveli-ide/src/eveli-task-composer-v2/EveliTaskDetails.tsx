@@ -94,6 +94,20 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
+          <TaskCard
+            id='status-priority'
+            title='Status and Priority'
+            buttonLabel='Edit'
+            startAdornmentIcon={StartAdornmentIcon(TaskAltIcon)}
+            styleVariant={stylePreset}
+            flashy={isCardFlashy('status-priority')}
+            onToggleFlashy={() => toggleFlashyForCard('status-priority')}
+          >
+            <>TODO</>
+          </TaskCard>
+        </Grid2>
+
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard 
             id='task-form-summary'
             onReview={toggleReview}
