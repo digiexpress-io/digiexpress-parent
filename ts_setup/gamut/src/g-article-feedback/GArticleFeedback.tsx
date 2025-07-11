@@ -45,11 +45,11 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
 
   const reducer = React.useState(new GFeedbackTableArticleReducer({
     data: [],
-    order: 'asc',
-    orderBy: 'labelValue',
+    order: 'desc',
+    orderBy: 'updatedOnDate',
     page: 0,
     rowsPerPage: undefined
-  }));
+  }));  
 
   React.useEffect(() => {
     reducer[1](prev => prev.withData(feedback))
