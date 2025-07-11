@@ -1,11 +1,11 @@
 import React from 'react';
-import { Divider, generateUtilityClass, List, ListItem, ListItemText, styled, Typography } from '@mui/material';
+import { Box, Divider, generateUtilityClass, List, ListItem, ListItemText, styled, Typography } from '@mui/material';
+import CircleIcon from '@mui/icons-material/Circle';
 
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
 import { TaskCardStyleDefinition } from './cardThemeConfig';
 import composeClasses from '@mui/utils/composeClasses';
-
 
 const formatAnyDateShort = (value: Date | string | undefined): string => {
   if (!value) {
@@ -32,32 +32,38 @@ export const TaskNotes: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefin
 
   return (
     <StyledTaskNotes className={classes.notesContainer}>
-      {internalComments
-        .slice(0, 3)
-        .map(comment => (
-          <List key={comment.id}>
-            <ListItem dense disableGutters>
-              <ListItemText
-                primary={
-                  <>
-                    <Typography sx={{ ...style.bodyTypography }} className={classes.noteBody}>
-                      {`${truncateText(comment.commentText, 200)}`}
-                    </Typography>
+      <Box className={classes.noteBackground}>
+        {internalComments
+          .slice(0, 3)
+          .map(comment => (
+            <List key={comment.id}>
+              <ListItem dense disableGutters>
+                <ListItemText
+                  primary={<>
+                    <Box display='flex' alignItems='center'>
+                      <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
+                      <Typography sx={{ ...style.bodyTypography }} className={classes.noteBody}>
+                        {`${truncateText(comment.commentText, 200)}`}
+                      </Typography>
+                    </Box>
                     <Divider />
                   </>
-                }
-                secondary={
-                  <Typography sx={{ ...style.bodyTypographySmall }} className={classes.noteAuthor}>
-                    {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
-                  </Typography>
-                }
-              />
-            </ListItem>
-          </List>
-        ))}
-      {internalComments.length > 3 && (<Typography sx={{ ...style.bodyTypography }}>...{internalComments.length - 3} more...</Typography>
-      )}
-    </StyledTaskNotes>)
+
+                  }
+                  secondary={
+                    <Typography sx={{ ...style.bodyTypographySmall }} className={classes.noteAuthor}>
+                      {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            </List>
+          ))}
+        {internalComments.length > 3 && (<Typography sx={{ ...style.bodyTypography }}>...{internalComments.length - 3} more...</Typography>
+        )}
+      </Box>
+    </StyledTaskNotes>
+  )
 }
 
 
@@ -71,6 +77,14 @@ const StyledTaskNotes = styled('div', {
     ];
   },
 })(({ theme }) => ({
+
+  '& .TaskNotes-noteBackground': {
+    margin: theme.spacing(1),
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.spacing(1),
+  },
+
   '& .TaskNotes-noteBody': {
     fontWeight: 400,
     marginLeft: 1
@@ -86,7 +100,8 @@ export const useUtilityClasses = () => {
   const slots = {
     notesContainer: ['notesContainer'],
     noteBody: ['noteBody'],
-    noteAuthor: ['noteAuthor']
+    noteAuthor: ['noteAuthor'],
+    noteBackground: ['noteBackground']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
