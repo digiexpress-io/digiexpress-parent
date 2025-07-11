@@ -19,6 +19,7 @@ import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './ca
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { CustomerMessages } from './CustomerMessages';
 import { TaskProperties } from './TaskProperties';
+import { TaskNotes } from './TaskNotes';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -180,23 +181,16 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
-            id='internal-comments'
-            title='Internal comments'
+            id='notes'
+            title='Notes'
             buttonLabel='New comment'
             startAdornmentIcon={StartAdornmentIcon(NoteAltOutlinedIcon)}
             styleVariant={stylePreset}
-            flashy={isCardFlashy('internal-comments')}
-            onToggleFlashy={() => toggleFlashyForCard('internal-comments')}
+            flashy={isCardFlashy('notes')}
+            onToggleFlashy={() => toggleFlashyForCard('notes')}
           >
-            {task.comments.length ? task.comments.filter(c => !c.external)
-              .slice(0, 3)
-              .map(comment => <TaskCardDataRowText key={comment.id} style={style}
-                label={`${comment.userName} ${formatAnyDateShort(comment.created)}`}
-                value={comment.commentText}
-              />
-              ) : 'No comments'}
+            <TaskNotes task={task} style={style} />
             <Box flexGrow={1} />
-            {task.comments.length > 3 && <Typography variant='caption'>...more...</Typography>}
           </TaskCard>
         </Grid2>
 

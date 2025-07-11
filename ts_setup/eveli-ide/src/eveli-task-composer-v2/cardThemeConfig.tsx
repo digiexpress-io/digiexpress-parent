@@ -8,6 +8,7 @@ const singleCol = { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 };
 export interface TaskCardStyleDefinition {
   titleTypography: CSSProperties;
   bodyTypography: CSSProperties;
+  bodyTypographySmall: CSSProperties;
   dataRowGridSizes: {
     label: { xs: number; sm: number; md: number; lg: number; xl: number };
     value: { xs: number; sm: number; md: number; lg: number; xl: number };
@@ -35,6 +36,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
     compact: {
       titleTypography: theme.typography.subtitle2,
       bodyTypography: theme.typography.subtitle2,
+      bodyTypographySmall: theme.typography.caption,
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },
         value: { xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }
@@ -43,6 +45,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
     default: {
       titleTypography: theme.typography.h5,
       bodyTypography: theme.typography.body2,
+      bodyTypographySmall: theme.typography.subtitle2,
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },
         value: { xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }
@@ -59,6 +62,8 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
         paddingTop: theme.spacing(0.5),
         paddingBottom: theme.spacing(0.5)
       },
+      bodyTypographySmall: theme.typography.body2,
+
       dataRowGridSizes: {
         label: reviewOpen ? singleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
         value: reviewOpen ? singleCol : { xs: 9, sm: 9, md: 9, lg: 9, xl: 9 },

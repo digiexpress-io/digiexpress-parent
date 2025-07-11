@@ -27,6 +27,13 @@ export const CustomerMessages: React.FC<CustomerMessagesProps> = ({ task, style 
     }
   };
 
+
+  const truncateText = (text: string, maxLength: number): string => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '…';
+  };
+
+
   return (
 
     <StyledCustomerMessages className={classes.container}>
@@ -45,8 +52,8 @@ export const CustomerMessages: React.FC<CustomerMessagesProps> = ({ task, style 
               <Typography className={classes.senderInfo} sx={{ ...style.bodyTypography }} >
                 {comment.userName} wrote on {formatDate(comment.created)}
               </Typography>
-              <Typography style={{ ...style.bodyTypography }} className={classes.commentText}>
-                {comment.commentText}
+              <Typography style={{ ...style.bodyTypography, overflow: 'hidden', whiteSpace: 'normal' }}>
+                {truncateText(comment.commentText, 200)}
               </Typography>
             </Box>
           </Box>
@@ -80,13 +87,7 @@ const StyledCustomerMessages = styled('div', {
     display: 'flex',
     alignItems: 'center',
   },
-  '& .CustomerMessages-commentText': {
-    overflow: 'hidden',
-    display: '-webkit-box',
-    WebkitLineClamp: 3,
-    WebkitBoxOrient: 'vertical',
-    wordBreak: 'break-word',
-  },
+
   '& .CustomerMessages-senderInfo': {
     fontWeight: 'bold !important', //TODO figure out a better way with cardThemeConfig
   },
@@ -129,7 +130,6 @@ const StyledCustomerMessages = styled('div', {
 export const useUtilityClasses = () => {
   const slots = {
     container: ['container'],
-    commentText: ['commentText'],
     messageRow: ['messageRow'],
     senderInfo: ['senderInfo'],
     frontdeskAvatar: ['frontdeskAvatar'],
