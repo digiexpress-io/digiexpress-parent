@@ -27,9 +27,6 @@ export const CustomerMessages: React.FC<CustomerMessagesProps> = ({ task, style 
     }
   };
 
-  console.log(allExternalMessages.length)
-
-
   return (
 
     <StyledCustomerMessages className={classes.container}>

@@ -18,6 +18,7 @@ import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { CustomerMessages } from './CustomerMessages';
+import { TaskProperties } from './TaskProperties';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -86,9 +87,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             <TaskCardDataRowText label='Customer name' value={task.clientIdentificator ? task.clientIdentificator : 'NONE'} style={style} />
             <TaskCardDataRowText label='Subject' value={task.subject} style={style} />
             <TaskCardDataRowText label='Info' value={task.additionalInfo} style={style} />
-            <TaskCardDataRowText label='Protected' value='NO' style={style} />
-            <TaskCardDataRowText label='Source' value='Customer-created' style={style} />
-            <TaskCardDataRowText label='Type' value='Normal' style={style} />
+            <TaskProperties task={task} />
             <Dialog open={false}></Dialog>
           </TaskCard>
         </Grid2>
