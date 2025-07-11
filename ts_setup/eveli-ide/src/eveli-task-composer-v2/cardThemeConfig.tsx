@@ -37,6 +37,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
       titleTypography: theme.typography.subtitle2,
       bodyTypography: theme.typography.subtitle2,
       bodyTypographySmall: theme.typography.caption,
+      cardSpacing: theme.spacing(1),
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },
         value: { xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }
@@ -46,6 +47,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
       titleTypography: theme.typography.h5,
       bodyTypography: theme.typography.body2,
       bodyTypographySmall: theme.typography.subtitle2,
+      cardSpacing: theme.spacing(2),
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },
         value: { xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }
@@ -63,12 +65,12 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
         paddingBottom: theme.spacing(0.5)
       },
       bodyTypographySmall: theme.typography.body2,
+      cardSpacing: theme.spacing(2),
 
       dataRowGridSizes: {
         label: reviewOpen ? singleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
         value: reviewOpen ? singleCol : { xs: 9, sm: 9, md: 9, lg: 9, xl: 9 },
       },
-      cardSpacing: theme.spacing(2)
     },
   };
 };
