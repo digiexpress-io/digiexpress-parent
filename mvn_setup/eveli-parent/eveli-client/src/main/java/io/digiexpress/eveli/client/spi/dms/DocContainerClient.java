@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.dms;
  */
 
 import java.io.InputStream;
+import java.util.Map;
 
 import io.digiexpress.eveli.client.spi.dms.DocContainer.Doc;
 import io.smallrye.mutiny.Uni;
@@ -35,7 +36,7 @@ public interface DocContainerClient {
     DocContainerBuilder draftedBy(String draftedBy);
     DocContainerBuilder decidedBy(String decidedBy);
     DocContainerBuilder title(String userGivenId);
-    
+    DocContainerBuilder props(Map<String, String> props);
     DocContainerBuilder addDocument(Doc newDocument);
     Uni<DocContainerEnvelope> build();
   }

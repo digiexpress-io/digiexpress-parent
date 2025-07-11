@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.immutables.value.Value;
@@ -34,10 +35,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.TaskCommand.TaskUpdateCommand;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
 
@@ -139,22 +142,12 @@ public interface TaskClient {
   }
   
 
-  @JsonSerialize(as = ImmutableCreateTaskCommentCommand.class)
-  @JsonDeserialize(as = ImmutableCreateTaskCommentCommand.class)
-  @Value.Immutable
-  interface CreateTaskCommentCommand {
-    @Nullable Boolean getExternal();
-    @Nullable String getReplyToId();
-    String getTaskId();
-    String getCommentText();
-    TaskCommentSource getSource(); 
-  }
-  
+
 
   @JsonSerialize(as = ImmutableCreateTaskCommand.class)
   @JsonDeserialize(as = ImmutableCreateTaskCommand.class)
   @Value.Immutable
-  interface CreateTaskCommand {
+  interface CreateTaskCommand extends TaskCommand {
     // null on new task
     @Nullable TaskStatus getStatus();
     @Nullable ZonedDateTime getCompleted();
@@ -179,13 +172,35 @@ public interface TaskClient {
     List<String> getKeyWords();
     List<String> getFeatures();
     Set<String> getAssignedRoles();
+    
+    List<TaskComment> getComments();
+    List<Checklist> getChecklist();
+    
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.CreateTask; }
+    
+  }
+  
+  
+  @JsonSerialize(as = ImmutableCreateTaskCommentCommand.class)
+  @JsonDeserialize(as = ImmutableCreateTaskCommentCommand.class)
+  @Value.Immutable
+  interface CreateTaskCommentCommand extends TaskUpdateCommand {
+    @Nullable Boolean getExternal();
+    @Nullable String getReplyToId();
+    String getTaskId();
+    String getCommentText();
+    TaskCommentSource getSource(); 
+    
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.CommentOnTask; }
   }
   
   
   @JsonSerialize(as = ImmutableModifyTaskCommand.class)
   @JsonDeserialize(as = ImmutableModifyTaskCommand.class)
   @Value.Immutable
-  interface ModifyTaskCommand {
+  interface ModifyTaskCommand  extends TaskUpdateCommand {
     @Nullable TaskStatus getStatus();
     @Nullable ZonedDateTime getCompleted();
     @Nullable String getVersion();
@@ -202,6 +217,9 @@ public interface TaskClient {
     
     String getSubject();
     Set<String> getAssignedRoles();
+    
+    @Value.Default
+    @Override default TaskCommandType getCommandType() { return TaskCommandType.ModifyTask; }
   }
   
   
@@ -211,6 +229,7 @@ public interface TaskClient {
   @Value.Immutable
   interface TransferTaskCommand {
     String getTransferTitle();
+    Map<String, String> getTransferProps();
   }
   
   
@@ -249,6 +268,7 @@ public interface TaskClient {
 
     
     @Nullable String getTransferredId();
+    @Nullable JsonObject getTransferredProps();
     
     String getSubject();
     TaskPriority getPriority();
@@ -317,5 +337,22 @@ public interface TaskClient {
     GrimCommit getCommit();
   }
   
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChecklist.class) @JsonDeserialize(as = ImmutableChecklist.class)
+  interface Checklist {
+    String getId();
+    String getTitle();
+    
+    List<ChecklistItem> getItems();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableChecklistItem.class) @JsonDeserialize(as = ImmutableChecklistItem.class)
+  interface ChecklistItem {
+    String getId();
+    List<String> getAssigneeIds();
+    @Nullable LocalDate getDueDate();
+    Boolean getCompleted();
+    String getTitle();
+  }
   
 }

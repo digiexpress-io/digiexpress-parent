@@ -1,103 +1,229 @@
 import * as React from 'react';
-import { Card, CardActions, CardContent, CardMedia, Button, Typography, Box, useTheme, Divider, darken, styled, generateUtilityClass } from '@mui/material';
-import network3 from './network3.jpg';
-import { EditDialog } from './EditDialog';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import composeClasses from '@mui/utils/composeClasses';
+import { CSSObject } from '@emotion/react';
+
+import { EditDialog } from './EditDialog';
+import { TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
+
 
 
 export interface TaskCardProps {
   id: string;
-  title: string;
+  title?: string;
   children: React.ReactNode;
+  buttonLabel?: string | undefined;
+  startAdornmentIcon?: React.ReactNode;
+  flashy?: boolean;
+  styleVariant?: TaskCardStyleKey;
+  onClick?: () => void;
+  onReview?: () => void;
+  onToggleFlashy?: () => void;
+}
+
+interface TaskCardDataRowTextProps {
+  label: string;
+  value: string | string[] | undefined;
+  style: TaskCardStyleDefinition;
+}
+
+interface TitleTextProps {
+  children: React.ReactNode
+  style: TaskCardStyleDefinition;
 }
 
 
 export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const theme = useTheme();
-  const darkPurple = darken(theme.palette.primary.main, 0.7);
   const classes = useUtilityClasses();
 
   const [open, setOpen] = React.useState(false);
   const handleToggle = () => setOpen((prev) => !prev);
 
+  const variant = props.styleVariant ?? 'default';
+  const styleConfig = useTaskCardThemeConfig();
+  const style = styleConfig[variant];
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+  };
+
+  function handleFlashyToggle() {
+    if (props.onToggleFlashy) {
+      props.onToggleFlashy();
+    }
+    handleMenuClose();
+  };
+
+  function onReview() {
+    if (props.onReview) {
+      props.onReview()
+    }
+    handleMenuClose()
+
+  }
+
+
   return (<>
-    <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' />
-    <TaskEditSectionCard onDoubleClick={handleToggle} className={classes.editCard}>
-      <Box sx={{ position: 'relative', height: 50 }}>
-        <CardMedia sx={{ height: 50 }} image={network3} title="Task" />
-        <Typography
-          sx={{
-            position: 'absolute',
-            top: 10,
-            right: 8,
-            fontWeight: 'bold',
-            color: theme.palette.background.default,
-            textShadow: `
-              -4px 0 8px ${darkPurple},
-               4px 0 8px ${darkPurple},
-               0 0 10px ${darkPurple},
-               0 0 20px ${darkPurple}
-                `
-          }}
+    <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
+    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
+      <Box className={classes.title}>
+        {props.startAdornmentIcon}
+        <TitleText style={style}>{props.title}</TitleText>
+        <Box flexGrow={1} />
+        {props.buttonLabel && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+        <Menu
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleMenuClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          {props.title}
-        </Typography>
+          <MenuItem onClick={handleFlashyToggle}>
+            {props.flashy ? 'Remove Flashy' : 'Make Flashy'}
+          </MenuItem>
+          {props.id === 'task-form-summary' && (
+            <MenuItem onClick={onReview}>
+              Form review
+            </MenuItem>
+          )}
+
+        </Menu>
       </Box>
       <Divider />
-      <CardContent  sx={{ flexGrow: 1 }}>
+      <Typography p={theme.spacing(1)}>
         {props.children}
-      </CardContent>
-      <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button variant='contained' size='small' onClick={handleToggle}>Edit</Button>
-      </CardActions>
-    </TaskEditSectionCard>
+      </Typography>
+    </TaskSectionCard>
   </>
   );
 }
 
+export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label, value, style }) => {
+  const theme = useTheme();
 
-export const TaskCardDataRow: React.FC<{ label: string, value: string | undefined }> = ({ label, value }) => {
-  return (
-    <Box display='flex' justifyContent='space-between'>
-      <Typography variant="subtitle2" fontWeight='bold'>{label}</Typography>
-      <Typography variant="subtitle2">{value}</Typography>
-    </Box>
+  return (<>
+    <Grid2 container spacing={theme.spacing(1)}>
+      <Grid2 size={style.dataRowGridSizes.label}>
+        <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold', whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {label}
+        </Typography>
+      </Grid2>
 
+      <Grid2 size={style.dataRowGridSizes.value}>
+        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {value}
+        </Typography>
+      </Grid2>
+    </Grid2>
+    <Divider />
+  </>
   )
 }
 
+// TODO
+export const TaskCardDataRowElement: React.FC<{ label: string, value: React.ReactNode }> = ({ label, value }) => {
+  return (
+    <Box display='flex' justifyContent='space-between'>
+      <Typography fontWeight='bold'>{label}</Typography>
+      {value}
+    </Box>
+  )
+}
 
-const MUI_NAME = 'TaskEditSectionCard';
-const TaskEditSectionCard = styled(Card, {
+export const StartAdornmentIcon = (Icon: React.ElementType) => (
+  <Icon fontSize='small' color='primary' sx={{ mr: 1 }} />
+);
+
+const MUI_NAME = 'TaskSectionCard';
+const TaskSectionCard = styled(Box, {
   name: MUI_NAME,
-  slot: 'editCard',
+  slot: 'dataCard',
   overridesResolver: (_props, styles) => {
     return [
-      styles.editCard
+      styles.dataCard,
+      styles.titleContainer
     ];
   },
+})<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
 
-})(({ theme }) => {
-
-  return {
+  const baseStyles: CSSObject = {
     display: 'flex',
     flexDirection: 'column',
-    height: 250,
-    width: 350,
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-    transition: 'box-shadow 0.2s ease-in-out',
+    height: '100%',
+    transition: 'border-color 200ms ease-in-out',
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(1),
+
+    '& .MuiDivider-root': {
+      borderColor: alpha(theme.palette.divider, 0.4)
+    },
     ':hover': {
-      boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.25)',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      backgroundColor: theme.palette.secondary.main,
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+    },
+    '& .TaskSectionCard-title': {
+      display: 'flex',
+      alignItems: 'center',
+      height: '3rem',
+      paddingLeft: theme.spacing(1),
+      backgroundColor: ownerState.flashy ? theme.palette.primary.main : alpha(theme.palette.divider, 0.2),
+      borderTopLeftRadius: ownerState.flashy ? theme.spacing(1) : 0,
+      borderTopRightRadius: ownerState.flashy ? theme.spacing(1) : 0,
+      border: ownerState.flashy ? 'none' : 0,
+      color: ownerState.flashy ? theme.palette.background.default : theme.palette.text.primary
     }
   };
-})
+
+  if (ownerState.flashy) {
+    return {
+      ...baseStyles,
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+      borderColor: `${alpha(theme.palette.primary.main, 0.2)}`,
+
+      ':hover': {
+        cursor: 'pointer',
+        backgroundColor: alpha(theme.palette.primary.main, 0.15),
+      },
+      '& .MuiSvgIcon-root': {
+        color: theme.palette.background.paper
+      },
+      '& .MuiDivider-root': {
+        borderColor: `${alpha(theme.palette.primary.main, 0.2)}`
+      }
+    };
+  }
+  return {
+    ...baseStyles
+  }
+});
 
 
 export const useUtilityClasses = () => {
   const slots = {
-    editCard: ['editCard'],
+    dataCard: ['dataCard'],
+    title: ['title']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
+
+
+const TitleText: React.FC<TitleTextProps> = ({ style, children }) => {
+  const theme = useTheme();
+
+  return (
+    <Typography sx={{ ...style.titleTypography, fontWeight: 'bold' }} >
+      {children}
+    </Typography>
+  );
+};

@@ -96,11 +96,12 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const iam = useIam();
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState<SearchApi.SearchState>();
+
   
 
   React.useEffect(() => {
     setState(SearchApi.getInstance(views, noValueIndicatorColon));
-  }, [intl.locale]);
+  }, [intl.locale, Object.values(views).length]);
 
   if (!state) {
     return (<></>)

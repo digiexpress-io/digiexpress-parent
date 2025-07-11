@@ -156,6 +156,12 @@ public class TaskMapper {
         .filter(e -> TaskMapper.LINK_TYPE_TRANSFERRED_ID.equals(e.getLinkType()))
         .map(e -> e.getLinkValue())
         .findFirst();
+    
+    
+    final var transferredProps = links.stream()
+        .filter(e -> TaskMapper.LINK_TYPE_TRANSFERRED_ID.equals(e.getLinkType()))
+        .map(e -> e.getLinkBody())
+        .findFirst();
 
     final var additionalInfo = links.stream()
         .filter(e -> TaskMapper.LINK_TYPE_ADDITIONAL_INFO.equals(e.getLinkType()))
@@ -188,6 +194,7 @@ public class TaskMapper {
       .comments(remarks.stream().map(TaskMapper::map).toList())
       
       .transferredId(transferredId.orElse(null))
+      .transferredProps(transferredProps.orElse(null))
       
       .keyWords(keywords)
       .features(features)

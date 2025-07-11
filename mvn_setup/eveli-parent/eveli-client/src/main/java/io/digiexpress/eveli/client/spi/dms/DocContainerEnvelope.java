@@ -31,8 +31,10 @@ import org.immutables.value.Value;
 public interface DocContainerEnvelope {
   @Nullable
   DocContainer getObjects();
+  
+  
   DocContainerEnvelopeStatus getStatus();
-  List<DocContainerMessage> getMessages();  
+  List<DocContainerMessage> getMessages();
   
   enum DocContainerEnvelopeStatus { 
     OK, ERROR 

@@ -30,7 +30,7 @@ import org.immutables.value.Value;
 public interface DocContainer {
   String getId();
   Map<String, Doc> getDocs();
-  
+  Map<String, String> getProps();
   
   @Value.Immutable
   interface Doc {

@@ -211,7 +211,8 @@ public class EveliAutoConfig {
       AttachmentCommands attachmentCommands,
       RestTemplate restTemplate,
       TaskNotificator taskNotificator, 
-      io.vertx.mutiny.pgclient.PgPool pgPool) {
+      io.vertx.mutiny.pgclient.PgPool pgPool,
+      EveliEnvirClient envirClient) {
     
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName("task-tenant")
@@ -221,7 +222,7 @@ public class EveliAutoConfig {
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(taskNotificator, fileClient, docContainerClient, store, crmClient);
+    return new TaskClientImpl(envirClient, taskNotificator, fileClient, docContainerClient, store, crmClient);
   }
   
   @Bean

@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/gamut",
-  "version": "1.0.243",
+  "version": "1.0.247",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -30,7 +30,6 @@
     "moment": "^2.29.1",
     "numbro": "^2.5.0",
     "react": "^18.2.0",
-    "react-calendar": "^5.0.0",
     "react-clock": "^5.0.0",
     "react-date-picker": "^11.0.0",
     "react-dom": "^18.2.0",

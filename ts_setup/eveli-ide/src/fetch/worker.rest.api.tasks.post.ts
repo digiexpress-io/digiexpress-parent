@@ -22,7 +22,7 @@ function hook(props: {}) {
       }
       
       return params
-        .fetch(url({}), { method, body: JSON.stringify(task) })
+        .fetch(url({}), { method, body: JSON.stringify({...task, commandType: 'CreateTask' }) })
         .then(response => response.json());
     }
   }
