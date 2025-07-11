@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, } from '@mui/material';
 import { HdesApi } from '@/api-wrench';
 
 import MDEditor, { ICommand, commands } from '@uiw/react-md-editor';
@@ -74,42 +74,51 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
     setValue(prev => prev.withLocale(props.locale, value));
   }
 
-  return (<Dialog open={true} onClose={props.onClose}>
-    <DialogTitle>
-      <FormattedMessage id='decisions.cells.dialog.title' values={{
-        name: props.dt.name,
-        column: header.name,
-        value: props.locale
-      }} />
-
-    </DialogTitle>
-    <DialogContent>
-      <MDEditor
-        commands={getMdCommands(props.dt, header)}
-        textareaProps={{ placeholder: '# Title' }}
-        height={800}
-        value={value.getLocaleValue(props.locale)}
-        onChange={(value: any) => handleChangeValue(value ?? '')}
-
-      />;
-    </DialogContent>
-    <DialogActions>
-      <Button variant='text' onClick={() => {
-        setValue(prev => prev.withLocale(props.locale, ''));
-      }}>
-        <FormattedMessage id="decisions.cells.newvalue.clear" />
-      </Button>
-      <CancelButton onClick={props.onClose} />
-      <Button onClick={() => {
-        const command: HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
-        props.onChange([command]);
-        props.onClose();
-      }}>
-        <FormattedMessage id='buttons.apply' />
-      </Button>
-    </DialogActions>
-  </Dialog>
-  );
+  return (
+    <Dialog open={true} onClose={props.onClose}>
+      <DialogTitle>
+        <FormattedMessage id='decisions.cells.dialog.title.intl' />
+      </DialogTitle>
+      <DialogContent>
+        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
+          <FormattedMessage
+            id='decisions.cells.dialog.title'
+            values={{
+              name: props.dt.name,
+              column: header.name,
+              value: props.locale
+            }}
+          />
+        </Typography>
+        <MDEditor
+          commands={getMdCommands(props.dt, header)}
+          textareaProps={{ placeholder: '# Title' }}
+          height={800}
+          value={value.getLocaleValue(props.locale)}
+          onChange={(value: any) => handleChangeValue(value ?? '')}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={() => {
+          setValue(prev => prev.withLocale(props.locale, ''));
+        }}>
+          <FormattedMessage id="decisions.cells.newvalue.clear" />
+        </Button>
+        <CancelButton onClick={props.onClose} />
+        <Button onClick={() => {
+          const command: HdesApi.AstCommand = {
+            id: props.cell.id,
+            value: value.value,
+            type: 'SET_CELL_VALUE'
+          };
+          props.onChange([command]);
+          props.onClose();
+        }}>
+          <FormattedMessage id='buttons.apply' />
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );  
 }
 
 export type { CellEditIntlProps };

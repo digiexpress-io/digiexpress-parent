@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, TextField, } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, TextField, Typography } from '@mui/material';
 
 import { HdesApi } from '@/api-wrench';
 
@@ -67,8 +67,6 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
     editor = (<></>);
   }
 
-
-
   return (
     <Dialog
       open={true}
@@ -77,35 +75,41 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
       fullWidth
       scroll="body"
     >
-    <DialogTitle>
-      <FormattedMessage id='decisions.cells.dialog.title' values={{
-        name: props.dt.name,
-        column: header.name,
-        value: props.cell.value
-      }} />
-    </DialogTitle>
-    <DialogContent sx={{ pt: 2, pb: 1, px: 3 }}>
-      <Box display="flex" flexDirection="column" gap={2}>
-        {editor}
-      </Box>
-    </DialogContent>
-    <DialogActions>
+      <DialogTitle>
+        <FormattedMessage id='decisions.cells.dialog.title.simple' />
+      </DialogTitle>
+      <DialogContent sx={{ pt: 2, pb: 1, px: 3 }}>
+        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
+          <FormattedMessage
+            id='decisions.cells.dialog.title'
+            values={{
+              name: props.dt.name,
+              column: header.name,
+              value: props.cell.value ?? <FormattedMessage id="decisions.cells.newvalue.boolean.empty" />
+            }}
+          />
+        </Typography>
+        <Box display="flex" flexDirection="column" gap={2}>
+          {editor}
+        </Box>
+      </DialogContent>
+      <DialogActions>
         <Button variant='text' onClick={() => {
-            const builder = Builder({ header, value: undefined }) as any;
-            setValue({ value: undefined, builder });
-          }}>
-          <FormattedMessage id="decisions.cells.newvalue.clear"/>
+          const builder = Builder({ header, value: undefined }) as any;
+          setValue({ value: undefined, builder });
+        }}>
+          <FormattedMessage id="decisions.cells.newvalue.clear" />
         </Button>
         <CancelButton onClick={props.onClose} />
         <Button onClick={() => {
-            const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
-            props.onChange(command);
-            props.onClose();
-          }}>
-          <FormattedMessage id='buttons.apply'/>
+          const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
+          props.onChange(command);
+          props.onClose();
+        }}>
+          <FormattedMessage id='buttons.apply' />
         </Button>
-    </DialogActions>
-  </Dialog>
+      </DialogActions>
+    </Dialog>
   );
 }
 

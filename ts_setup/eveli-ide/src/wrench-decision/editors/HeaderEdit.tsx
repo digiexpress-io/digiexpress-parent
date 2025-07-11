@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Grid2, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Grid2, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -124,10 +124,17 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
 
   return (<Dialog open={true} onClose={onClose}>
     <DialogTitle>
-      <FormattedMessage id='decisions.header.dialog.title' values={{
-        name: dt.name,
-        column: header.name }} />
+      <FormattedMessage id='decisions.header.dialog.title.simple' />
     </DialogTitle>
+    <DialogContent>
+      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }}>
+        <FormattedMessage
+          id='decisions.header.dialog.title'
+          values={{ name: dt.name, column: header.name }}
+        />
+      </Typography>
+      {editor}
+    </DialogContent>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>
       <Button variant='text' children={intl.formatMessage({ id: 'dt.header.delete' })} onClick={() => {
