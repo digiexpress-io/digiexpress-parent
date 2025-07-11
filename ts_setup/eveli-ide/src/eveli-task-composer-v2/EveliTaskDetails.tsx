@@ -17,6 +17,7 @@ import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
+import { CustomerMessages } from './CustomerMessages';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -127,7 +128,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           </TaskCard>
         </Grid2>
 
-
+        {/*  label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText}*/}
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
             id='customer-messages'
@@ -139,12 +140,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('customer-messages')}
           >
             <Stack direction='column'>
-              {task.comments.length ? task.comments
-                .filter(c => c.external === true)
-                .slice(0, 3)
-                .map((comment) => <TaskCardDataRowText key={comment.id} label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText} style={style} />
-                ) : 'No messages'}
-              {task.comments.length > 3 && <Typography variant='caption'>...{task.comments.length - 3} more...</Typography>}
+              <CustomerMessages task={task} style={style} />
             </Stack>
           </TaskCard>
         </Grid2>

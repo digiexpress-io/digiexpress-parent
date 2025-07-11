@@ -41,7 +41,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
       }
     },
     default: {
-      titleTypography: theme.typography.body2,
+      titleTypography: theme.typography.h5,
       bodyTypography: theme.typography.body2,
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },

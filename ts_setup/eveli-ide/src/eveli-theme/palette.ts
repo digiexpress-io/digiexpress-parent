@@ -22,10 +22,11 @@ export const palette: PaletteOptions = {
   error: {
     main: '#e53935',
   },
-
   info: {
-    main: '#03045E',
-    contrastText: '#FFFFFF',
+    light: '#64b5f6',    // lighter shade
+    main: '#2196f3',     // default MUI info main blue
+    dark: '#1976d2',     // darker shade
+    contrastText: '#fff' // white text for contrast
   },
   warning: {
     light: '#ffeb3b',
