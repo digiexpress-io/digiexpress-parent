@@ -11,7 +11,7 @@ import dialob_logo from './dialob_logo.svg';
 
 import { DateTime } from 'luxon';
 
-import { TaskCard, TaskCardDataRowText, StartAdornmentIcon } from './TaskCard';
+import { TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement } from './TaskCard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
@@ -20,6 +20,8 @@ import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { CustomerMessages } from './CustomerMessages';
 import { TaskProperties } from './TaskProperties';
 import { TaskNotes } from './TaskNotes';
+import { TaskAssignee } from './TaskAssignee';
+import { TaskRoles } from './TaskRoles';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -64,7 +66,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
     setReviewOpen(prev => !prev)
   }
 
-  return (<>
+  return (
 
     <Grid2 container spacing={style.cardSpacing} m={1} p={1}>
       <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
@@ -74,9 +76,9 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{
         overflowY: 'auto',
         maxHeight: '100%',
-        overflowX: 'visible',
-        overflow: 'visible',
-      }} spacing={style.cardSpacing}>
+        overflow: 'visible'
+      }}
+        spacing={style.cardSpacing}>
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
 
           <TaskCard
@@ -141,9 +143,10 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             styleVariant={stylePreset}
             flashy={isCardFlashy('assignees-roles')}
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
-          >
-            <TaskCardDataRowText label='Assignees' value={task.assignedUser ? task.assignedUser : 'Nobody'} style={style} />
-            <TaskCardDataRowText label='Roles' value={task.assignedRoles ? task.assignedRoles : 'No roles'} style={style} />
+          > 
+            <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
+            <TaskCardDataRowElement label='Roles' value={<TaskRoles task={task} />} style={style} />
+
           </TaskCard>
         </Grid2>
 
@@ -231,6 +234,6 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
       <FormReviewDrawer onClose={toggleReview} open={reviewOpen} />
     </Grid2>
-  </>
+
   )
 }

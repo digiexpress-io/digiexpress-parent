@@ -128,13 +128,29 @@ export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label,
   )
 }
 
-// TODO
-export const TaskCardDataRowElement: React.FC<{ label: string, value: React.ReactNode }> = ({ label, value }) => {
+export const TaskCardDataRowElement: React.FC<{ label: string, value: React.ReactNode, style: TaskCardStyleDefinition }> = ({ label, value, style }) => {
+  const theme = useTheme();
+
   return (
-    <Box display='flex' justifyContent='space-between'>
-      <Typography fontWeight='bold'>{label}</Typography>
-      {value}
-    </Box>
+    <Grid2 container spacing={theme.spacing(1)}>
+      <Grid2 size={style.dataRowGridSizes.label}>
+
+        <Typography
+          sx={{
+            ...style.bodyTypography,
+            fontWeight: 'bold',
+            whiteSpace: 'normal',
+            wordWrap: 'break-word',
+            marginRight: 1
+          }}>
+          {label}
+        </Typography>
+      </Grid2>
+
+      <Grid2 size={style.dataRowGridSizes.value}>
+        {value}
+      </Grid2>
+    </Grid2>
   )
 }
 
@@ -156,12 +172,20 @@ const TaskSectionCard = styled(Box, {
   const { id, flashy } = ownerState;
   const colors = flashyCardColorsById[id] ?? flashyCardColorsById.default;
 
+  const transitionProps = theme.transitions.create(
+    ['border-color', 'background-color', 'box-shadow', 'color', 'transform'],
+    {
+      duration: theme.transitions.duration.standard,
+      easing: theme.transitions.easing.easeInOut,
+    }
+  );
 
   const baseStyles: CSSObject = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    transition: 'border-color 200ms ease-in-out',
+    transition: transitionProps,
+    backgroundColor: theme.palette.background.default,
 
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
@@ -173,7 +197,7 @@ const TaskSectionCard = styled(Box, {
       borderRadius: theme.spacing(1),
     },
     '& .TaskSectionCard-cardBody': {
-      padding: theme.spacing(1),
+      padding: theme.spacing(2),
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.spacing(1),
       flexGrow: 1,
@@ -196,10 +220,12 @@ const TaskSectionCard = styled(Box, {
       boxShadow: '-6px 0 8px -2px rgba(0, 0, 0, 0.1)',
       '& .MuiSvgIcon-root': {
         color: theme.palette.primary.main
-      }
+      },
+      transition: transitionProps,
+
     },
     '&:hover .TaskSectionCard-cardBody': {
-      padding: theme.spacing(1),
+      padding: theme.spacing(2),
       border: `1px solid ${theme.palette.divider}`,
       borderTopLeftRadius: 'unset',
       borderTopRightRadius: 'unset',
@@ -209,8 +235,12 @@ const TaskSectionCard = styled(Box, {
 
   if (flashy) {
     return {
-      ...baseStyles,
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      transition: transitionProps,
       border: `2px solid ${colors.flashyBackground}`,
+      borderRadius: theme.spacing(1),
       color: theme.palette.text.primary,
 
       ':hover': {
@@ -222,6 +252,12 @@ const TaskSectionCard = styled(Box, {
       },
       '& .MuiDivider-root': {
         borderColor: `${alpha(colors.flashyBorder, 0.1)}`
+      },
+      '& .TaskSectionCard-cardBody': {
+        padding: theme.spacing(1),
+        flexGrow: 1,
+        boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
+        backgroundColor: alpha(colors.flashyBackground, 0.02)
       },
       '& .TaskSectionCard-title': {
         display: 'flex',

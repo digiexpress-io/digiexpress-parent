@@ -18,7 +18,9 @@ export const TaskProperties: React.FC<TaskPropertiesProps> = ({ task }) => {
 
   return (
     <Box gap={1} display='flex' mt={1}>
-      {task.keyWords.map(keyword => <Chip label={keyword} variant='filled' color='primary' />)}
+      {task.keyWords.map(keyword => <Chip label={keyword} variant='filled' color='primary' sx={{
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+      }} />)}
     </Box>
 
   )
