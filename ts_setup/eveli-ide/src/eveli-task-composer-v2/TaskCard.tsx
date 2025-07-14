@@ -98,7 +98,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
         </Menu>
       </Box>
-      <Typography p={theme.spacing(1)}>
+      <Typography className={classes.cardBody}>
         {props.children}
       </Typography>
     </TaskSectionCard>
@@ -162,8 +162,6 @@ const TaskSectionCard = styled(Box, {
     flexDirection: 'column',
     height: '100%',
     transition: 'border-color 200ms ease-in-out',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.spacing(1),
 
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
@@ -172,18 +170,41 @@ const TaskSectionCard = styled(Box, {
       cursor: 'pointer',
       backgroundColor: theme.palette.secondary.main,
       boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      borderRadius: theme.spacing(1),
+    },
+    '& .TaskSectionCard-cardBody': {
+      padding: theme.spacing(1),
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.spacing(1),
+      flexGrow: 1,
+      boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)'
     },
     '& .TaskSectionCard-title': {
       display: 'flex',
       alignItems: 'center',
       height: '3rem',
       paddingLeft: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.primary.main,
+      border: `1px solid transparent`
+    },
+    '&:hover .TaskSectionCard-title': {
       borderTopLeftRadius: theme.spacing(1),
       borderTopRightRadius: theme.spacing(1),
-      color: theme.palette.text.primary,
-      borderBottom: `1px solid ${theme.palette.divider}`
-    }
+      borderLeft: `1px solid ${theme.palette.divider}`,
+      borderRight: `1px solid ${theme.palette.divider}`,
+      borderTop: `1px solid ${theme.palette.divider}`,
+      boxShadow: '-6px 0 8px -2px rgba(0, 0, 0, 0.1)',
+      '& .MuiSvgIcon-root': {
+        color: theme.palette.primary.main
+      }
+    },
+    '&:hover .TaskSectionCard-cardBody': {
+      padding: theme.spacing(1),
+      border: `1px solid ${theme.palette.divider}`,
+      borderTopLeftRadius: 'unset',
+      borderTopRightRadius: 'unset',
+      flexGrow: 1,
+    },
   };
 
   if (flashy) {
@@ -221,7 +242,8 @@ const TaskSectionCard = styled(Box, {
 export const useUtilityClasses = () => {
   const slots = {
     dataCard: ['dataCard'],
-    title: ['title']
+    title: ['title'],
+    cardBody: ['cardBody']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -229,7 +251,6 @@ export const useUtilityClasses = () => {
 
 
 const TitleText: React.FC<TitleTextProps> = ({ style, children }) => {
-  const theme = useTheme();
 
   return (
     <Typography sx={{ ...style.titleTypography, fontWeight: 'bold' }} >

@@ -66,12 +66,17 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
   return (<>
 
-    <Grid2 container spacing={style.cardSpacing} m={2}>
+    <Grid2 container spacing={style.cardSpacing} m={1} p={1}>
       <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
         <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
       </Grid2>
 
-      <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{ overflowY: 'auto', maxHeight: '100%' }} spacing={style.cardSpacing}>
+      <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{
+        overflowY: 'auto',
+        maxHeight: '100%',
+        overflowX: 'visible',
+        overflow: 'visible',
+      }} spacing={style.cardSpacing}>
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
 
           <TaskCard
