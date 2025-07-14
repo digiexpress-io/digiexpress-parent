@@ -13,9 +13,9 @@ export const TaskAssignee: React.FC<TaskAssigneeProps> = ({ task }) => {
 
   if (!task.assignedUser || typeof name !== 'string') {
     return (
-      <TaskAssigneeRoot>
+      <StyledTaskAssignee>
         <Typography>--</Typography>
-      </TaskAssigneeRoot>)
+      </StyledTaskAssignee>)
   }
   const firstName = task.assignedUser.substring(0, task.assignedUser.indexOf(" "));
   const lastName = task.assignedUser.substring(task.assignedUser.indexOf(" ") + 1);
@@ -23,7 +23,7 @@ export const TaskAssignee: React.FC<TaskAssigneeProps> = ({ task }) => {
   const secondInitial = lastName.substring(0, 1);
 
   return (
-    <TaskAssigneeRoot className={classes.root}>
+    <StyledTaskAssignee className={classes.root}>
       <Avatar variant='circular'>
         <Typography>{firstInitial}{secondInitial}</Typography>
       </Avatar>
@@ -32,15 +32,15 @@ export const TaskAssignee: React.FC<TaskAssigneeProps> = ({ task }) => {
         <Typography variant='caption'>user@gmail.com</Typography>
       </Stack>
 
-    </TaskAssigneeRoot>
+    </StyledTaskAssignee>
   )
 }
 
 
 
 
-const MUI_NAME = 'TaskAssigneeRootClassName';
-const TaskAssigneeRoot = styled('div', {
+const MUI_NAME = 'TaskAssigneeClassName';
+const StyledTaskAssignee = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {

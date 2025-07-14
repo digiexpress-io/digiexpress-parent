@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Dialog, Grid2, Stack, Typography } from '@mui/material';
+import { Box, Dialog, Divider, Grid2, Stack, Typography } from '@mui/material';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -21,7 +21,10 @@ import { CustomerMessages } from './CustomerMessages';
 import { TaskProperties } from './TaskProperties';
 import { TaskNotes } from './TaskNotes';
 import { TaskAssignee } from './TaskAssignee';
+import { TaskPriority } from './TaskPriority';
 import { TaskRoles } from './TaskRoles';
+import { TaskStatus } from './TaskStatus';
+import { TaskOverdueWarning } from './TaskOverdueWarning';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -110,7 +113,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('status-priority')}
             onToggleFlashy={() => toggleFlashyForCard('status-priority')}
           >
-            <>TODO</>
+            <Stack direction="column" height="100%">
+              <TaskCardDataRowElement label='Status' style={style} value={<TaskStatus task={task} />} />
+              <Divider sx={{ my: 1 }} />
+              <TaskCardDataRowElement label='Priority' style={style} value={<TaskPriority task={task} />} />
+              <Box flexGrow={1} />
+              <TaskOverdueWarning task={task} />
+            </Stack>
+
           </TaskCard>
         </Grid2>
 
@@ -145,6 +155,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
           > 
             <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
+            <Divider sx={{ my: 1 }} />
             <TaskCardDataRowElement label='Roles' value={<TaskRoles task={task} />} style={style} />
 
           </TaskCard>

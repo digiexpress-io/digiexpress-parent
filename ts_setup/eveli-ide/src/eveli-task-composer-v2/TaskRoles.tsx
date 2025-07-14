@@ -20,7 +20,7 @@ export const TaskRoles: React.FC<TaskRolesProps> = ({ task }) => {
 
   return (
     <TaskRolesRoot className={classes.root}>
-      {task.assignedRoles.map(role => <Chip label={role} variant='filled' />)}
+      {task.assignedRoles.map((role, index) => <Chip key={index} label={role} variant='filled' />)}
     </TaskRolesRoot>
   )
 }

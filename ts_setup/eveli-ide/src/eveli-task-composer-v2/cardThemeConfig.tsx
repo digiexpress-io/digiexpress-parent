@@ -1,7 +1,7 @@
 import { CSSProperties} from 'react';
 import { useTheme } from '@mui/material';
 
-export type TaskCardStyleKey = 'compact' | 'default' | 'comfortable';
+export type TaskCardStyleKey = 'compact' | 'default' | 'large';
 
 const singleCol = { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 };
 
@@ -19,13 +19,13 @@ export const taskCardGridSize: Record<TaskCardStyleKey | 'singleCol', { xs: numb
   singleCol,
   compact: { xs: 12, sm: 6, md: 4, lg: 3, xl: 4 },
   default: { xs: 12, sm: 8, md: 6, lg: 6, xl: 6 },
-  comfortable: { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 },
+  large: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
 };
 
 export const TASK_CARD_STYLE_LABELS: Record<TaskCardStyleKey, string> = {
   compact: 'Compact',
   default: 'Default',
-  comfortable: 'Comfortable',
+  large: 'Large',
 };
 
 
@@ -53,7 +53,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
         value: { xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }
       }
     },
-    comfortable: {
+    large: {
       titleTypography: {
         ...theme.typography.h3,
         paddingTop: theme.spacing(1),
