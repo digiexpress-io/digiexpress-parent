@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { CSSObject } from '@emotion/react';
 
 import { EditDialog } from './EditDialog';
-import { TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
+import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
 
 
 
@@ -98,7 +98,6 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
         </Menu>
       </Box>
-      <Divider />
       <Typography p={theme.spacing(1)}>
         {props.children}
       </Typography>
@@ -153,7 +152,10 @@ const TaskSectionCard = styled(Box, {
       styles.titleContainer
     ];
   },
-})<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
+})<{ ownerState: { flashy?: boolean; id: string } }>(({ theme, ownerState }) => {
+  const { id, flashy } = ownerState;
+  const colors = flashyCardColorsById[id] ?? flashyCardColorsById.default;
+
 
   const baseStyles: CSSObject = {
     display: 'flex',
@@ -176,34 +178,42 @@ const TaskSectionCard = styled(Box, {
       alignItems: 'center',
       height: '3rem',
       paddingLeft: theme.spacing(1),
-      backgroundColor: ownerState.flashy ? theme.palette.primary.main : alpha(theme.palette.divider, 0.2),
-      borderTopLeftRadius: ownerState.flashy ? theme.spacing(1) : 0,
-      borderTopRightRadius: ownerState.flashy ? theme.spacing(1) : 0,
-      border: ownerState.flashy ? 'none' : 0,
-      color: ownerState.flashy ? theme.palette.background.default : theme.palette.text.primary
+      backgroundColor: theme.palette.secondary.main,
+      borderTopLeftRadius: theme.spacing(1),
+      borderTopRightRadius: theme.spacing(1),
+      color: theme.palette.text.primary,
+      borderBottom: `1px solid ${theme.palette.divider}`
     }
   };
 
-  if (ownerState.flashy) {
+  if (flashy) {
     return {
       ...baseStyles,
-      backgroundColor: alpha(theme.palette.primary.main, 0.1),
-      borderColor: `${alpha(theme.palette.primary.main, 0.2)}`,
+      border: `2px solid ${colors.flashyBackground}`,
+      color: theme.palette.text.primary,
 
       ':hover': {
         cursor: 'pointer',
-        backgroundColor: alpha(theme.palette.primary.main, 0.15),
+        backgroundColor: alpha(colors.flashyBackground, 0.10),
       },
       '& .MuiSvgIcon-root': {
-        color: theme.palette.background.paper
+        color: colors.flashyBackground
       },
       '& .MuiDivider-root': {
-        borderColor: `${alpha(theme.palette.primary.main, 0.2)}`
+        borderColor: `${alpha(colors.flashyBorder, 0.1)}`
+      },
+      '& .TaskSectionCard-title': {
+        display: 'flex',
+        alignItems: 'center',
+        height: '3rem',
+        paddingLeft: theme.spacing(1),
+        color: colors.flashyBackground,
+        backgroundColor: alpha(colors.flashyBackground, 0.1)
       }
     };
   }
   return {
-    ...baseStyles
+    ...baseStyles,
   }
 });
 

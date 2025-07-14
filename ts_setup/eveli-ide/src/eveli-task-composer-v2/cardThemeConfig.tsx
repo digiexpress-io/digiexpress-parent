@@ -75,4 +75,45 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
   };
 };
 
-
+export const flashyCardColorsById: Record<string, { flashyBackground: string; flashyBorder: string }> = {
+  'task-main': {
+    flashyBackground: '#1565c0',     // Dark Blue
+    flashyBorder: '#0d47a1',
+  },
+  'status-priority': {
+    flashyBackground: '#b71c1c',     // Dark Red
+    flashyBorder: '#7f0000',
+  },
+  'task-form-summary': {
+    flashyBackground: '#303f9f',     // Dark Indigo
+    flashyBorder: '#1a237e',
+  },
+  'assignees-roles': {
+    flashyBackground: '#ef6c00',     // Darker Orange (↑ contrast)
+    flashyBorder: '#e65100',
+  },
+  'customer-messages': {
+    flashyBackground: '#6a1b9a',     // Deep Purple
+    flashyBorder: '#4a0072',
+  },
+  'files': {
+    flashyBackground: '#2e7d32',     // Dark Green
+    flashyBorder: '#1b5e20',
+  },
+  'feedback': {
+    flashyBackground: '#ad1457',     // Deep Pink
+    flashyBorder: '#880e4f',
+  },
+  'notes': {
+    flashyBackground: '#37474f',     // Dark Slate Gray
+    flashyBorder: '#263238',
+  },
+  'task-meta': {
+    flashyBackground: '#4e342e',     // Deep Brown
+    flashyBorder: '#3e2723',
+  },
+  default: {
+    flashyBackground: '#1565c0',
+    flashyBorder: '#0d47a1',
+  },
+};

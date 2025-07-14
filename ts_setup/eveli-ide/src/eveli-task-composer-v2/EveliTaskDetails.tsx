@@ -212,6 +212,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='task-meta'
             title='History and metadata'
+            buttonLabel='History and metadata'
             startAdornmentIcon={StartAdornmentIcon(HistoryIcon)}
             styleVariant={stylePreset}
             flashy={isCardFlashy('task-meta')}
