@@ -207,7 +207,7 @@ const TaskSectionCard = styled(Box, {
       alignItems: 'center',
       height: '3rem',
       paddingLeft: theme.spacing(1),
-      color: theme.palette.primary.main,
+      color: theme.palette.text.primary,
       border: `1px solid transparent`
     },
     '&:hover .TaskSectionCard-title': {

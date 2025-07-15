@@ -35,7 +35,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   const [flashyCards, setFlashyCards] = React.useState<Record<string, boolean>>({});
 
   const [stylePreset, setStylePreset] = React.useState<TaskCardStyleKey>('default');
-  const styleConfig = useTaskCardThemeConfig(reviewOpen);
+  const styleConfig = useTaskCardThemeConfig(reviewOpen); 
   const style = styleConfig[stylePreset];
 
   const toggleFlashyForCard = (cardId: string) => {
@@ -70,7 +70,6 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   }
 
   return (
-
     <Grid2 container spacing={style.cardSpacing} m={1} p={1}>
       <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
         <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
@@ -118,14 +117,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
               <Divider sx={{ my: 1 }} />
               <TaskCardDataRowElement label='Priority' style={style} value={<TaskPriority task={task} />} />
               <Box flexGrow={1} />
-              <TaskOverdueWarning task={task} />
+              <TaskOverdueWarning task={task} style={style} />
             </Stack>
 
           </TaskCard>
         </Grid2>
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-          <TaskCard 
+          <TaskCard
             id='task-form-summary'
             onReview={toggleReview}
             buttonLabel='View form'
@@ -153,7 +152,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             styleVariant={stylePreset}
             flashy={isCardFlashy('assignees-roles')}
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
-          > 
+          >
             <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
             <Divider sx={{ my: 1 }} />
             <TaskCardDataRowElement label='Roles' value={<TaskRoles task={task} />} style={style} />
