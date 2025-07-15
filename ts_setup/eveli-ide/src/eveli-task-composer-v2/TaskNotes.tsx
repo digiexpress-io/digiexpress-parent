@@ -36,28 +36,23 @@ export const TaskNotes: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefin
         {internalComments
           .slice(0, 3)
           .map(comment => (
-            <List key={comment.id}>
-              <ListItem dense disableGutters>
-                <ListItemText
-                  primary={<>
-                    <Box display='flex' alignItems='center'>
-                      <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
-                      <Typography sx={{ ...style.bodyTypography }} className={classes.noteBody}>
-                        {`${truncateText(comment.commentText, 200)}`}
-                      </Typography>
-                    </Box>
-                    <Divider />
-                  </>
+            <Box key={comment.id}>
+              <>
+                <Box display='flex' alignItems='center'>
+                  <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
+                  <Typography component='div' sx={{ ...style.bodyTypography }} className={classes.noteBody}>
+                    {`${truncateText(comment.commentText, 200)}`}
+                  </Typography>
+                </Box>
+                <Divider />
 
-                  }
-                  secondary={
-                    <Typography sx={{ ...style.bodyTypographySmall }} className={classes.noteAuthor}>
-                      {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
-                    </Typography>
-                  }
-                />
-              </ListItem>
-            </List>
+                <Box display='flex' alignItems='center' justifyContent='flex-end'>
+                  <Typography component='div' sx={{ ...style.bodyTypographySmall }} className={classes.noteAuthor}>
+                    {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
+                  </Typography>
+                </Box>
+              </>
+            </Box>
           ))}
         {internalComments.length > 3 && (<Typography sx={{ ...style.bodyTypography }}>...{internalComments.length - 3} more...</Typography>
         )}

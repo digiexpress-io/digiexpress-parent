@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem, SxProps } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import composeClasses from '@mui/utils/composeClasses';
-import { CSSObject } from '@emotion/react';
 
 import { EditDialog } from './EditDialog';
 import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
@@ -98,9 +97,9 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
         </Menu>
       </Box>
-      <Typography className={classes.cardBody}>
+      <Box className={classes.cardBody}>
         {props.children}
-      </Typography>
+      </Box>
     </TaskSectionCard>
   </>
   );
@@ -118,9 +117,9 @@ export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label,
       </Grid2>
 
       <Grid2 size={style.dataRowGridSizes.value}>
-        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        <Box sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {value}
-        </Typography>
+        </Box>
       </Grid2>
     </Grid2>
     <Divider />
@@ -180,7 +179,7 @@ const TaskSectionCard = styled(Box, {
     }
   );
 
-  const baseStyles: CSSObject = {
+  const baseStyles: SxProps = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',

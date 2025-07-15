@@ -223,7 +223,6 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('notes')}
           >
             <TaskNotes task={task} style={style} />
-            <Box flexGrow={1} />
           </TaskCard>
         </Grid2>
 

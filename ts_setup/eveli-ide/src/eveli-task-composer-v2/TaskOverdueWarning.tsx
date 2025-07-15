@@ -1,5 +1,5 @@
 import React from 'react';
-import { alpha, Box, darken, useTheme, Typography, Avatar } from '@mui/material';
+import { alpha, Box, useTheme, Typography, Avatar } from '@mui/material';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 import { TaskApi } from '@/api-task';
