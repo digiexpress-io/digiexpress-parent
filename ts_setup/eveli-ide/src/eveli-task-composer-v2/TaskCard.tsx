@@ -111,7 +111,7 @@ export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label,
   return (<>
     <Grid2 container spacing={theme.spacing(1)}>
       <Grid2 size={style.dataRowGridSizes.label}>
-        <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold', whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        <Typography sx={{ ...style.bodyTypography, fontWeight: 500, whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {label}
         </Typography>
       </Grid2>
@@ -137,7 +137,7 @@ export const TaskCardDataRowElement: React.FC<{ label: string, value: React.Reac
         <Typography
           sx={{
             ...style.bodyTypography,
-            fontWeight: 'bold',
+            fontWeight: 500,
             whiteSpace: 'normal',
             wordWrap: 'break-word',
             marginRight: 1

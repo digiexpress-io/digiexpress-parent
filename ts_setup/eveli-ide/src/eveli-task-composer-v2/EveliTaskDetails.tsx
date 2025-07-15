@@ -25,6 +25,7 @@ import { TaskPriority } from './TaskPriority';
 import { TaskRoles } from './TaskRoles';
 import { TaskStatus } from './TaskStatus';
 import { TaskOverdueWarning } from './TaskOverdueWarning';
+import { CustomerFeedback } from './CustomerFeedback';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -201,12 +202,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('feedback')}
             onToggleFlashy={() => toggleFlashyForCard('feedback')}
           >
-            <Stack direction='column'>
-              <TaskCardDataRowText label='Category' value={task.id} style={style} />
-              <TaskCardDataRowText label='Subcategory' value={task.id} style={style} />
-              <TaskCardDataRowText label='Title' value={task.id} style={style} />
-              <Typography variant='caption'>...more...</Typography>
-            </Stack>
+            <CustomerFeedback task={task} style={style} />
           </TaskCard>
         </Grid2>
 
