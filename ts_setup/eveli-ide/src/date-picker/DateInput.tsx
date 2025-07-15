@@ -57,13 +57,13 @@ const getBorderPosition = (field: 'day' | 'month' | 'year') => {
 };
 
 function useFocusField(): object | undefined {
-  const { focusedField } = useCalendarInput();
+  const { machine } = useCalendarInput();
   const theme = useTheme();
 
-  if(!focusedField) {
+  if(!machine.focusedField) {
     return undefined;
   }
-  const position = getBorderPosition(focusedField);
+  const position = getBorderPosition(machine.focusedField);
 
   return {    
     '.MuiInputBase-root': {
@@ -118,12 +118,10 @@ export const DateInput: React.FC<DateInputProps> = (props) => {
   const handleCalendarOpen = () => {
     setOpen(true);
   }
-
-  const disabled = false;
   return (
     <>
       { !open &&
-      <CalendarInputProvider value={props.value} disabled={disabled} onChange={props.onChange} onCalendarOpen={handleCalendarOpen}>
+      <CalendarInputProvider value={props.value} onChange={props.onChange} onCalendarOpen={handleCalendarOpen}>
         <TextFieldSetup endAdornment={<InputEndAdornment onClear={() => handleDateChange(null)} onOpen={handleCalendarOpen} />}/>
       </CalendarInputProvider>
       }

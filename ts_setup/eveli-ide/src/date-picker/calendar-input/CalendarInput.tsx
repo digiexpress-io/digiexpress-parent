@@ -5,20 +5,21 @@ import { useCalendarInput } from "./CalendarInputProvider";
 
 // Field components using context
 const DayField: React.FC = () => {
-  const { day, dayRef, handleDayChange, handleKeyDown, handleFocus, handleBlur, disabled } = useCalendarInput();
-  
+  const { machine, dayRef, handleKeyDown, focusField, blurField, typeDayDigit } = useCalendarInput();
   return (
     <Input
       ref={dayRef}
       type="text"
-      value={day}
-      onFocus={() => handleFocus('day')}
-      onBlur={(e) => handleBlur('day', e)}
-      onChange={handleDayChange}
-      onKeyDown={(e) => handleKeyDown(e, 'day')}
+      value={machine.day}
+      onFocus={() => focusField('day')}
+      onBlur={(e) => blurField('day')}
+      onChange={(e) => typeDayDigit(e.target.value)}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        handleKeyDown(e, 'day');
+      }}
       onClick={(e) => e.stopPropagation()}
       placeholder="dd"
-      disabled={disabled}
       style={{ width: '4ch' }}
       maxLength={2}
     />
@@ -26,20 +27,22 @@ const DayField: React.FC = () => {
 };
 
 const MonthField: React.FC = () => {
-  const { month, monthRef, handleMonthChange, handleKeyDown, handleFocus, handleBlur, disabled } = useCalendarInput();
+  const { machine, monthRef, handleKeyDown, focusField, blurField, typeMonthDigit } = useCalendarInput();
   
   return (
     <Input
       ref={monthRef}
       type="text"
-      value={month}
-      onFocus={() => handleFocus('month')}
-      onBlur={(e) => handleBlur('month', e)}
-      onChange={handleMonthChange}
-      onKeyDown={(e) => handleKeyDown(e, 'month')}
+      value={machine.month}
+      onFocus={() => focusField('month')}
+      onBlur={(e) => blurField('month')}
+      onChange={(e) => typeMonthDigit(e.target.value)}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        handleKeyDown(e, 'month');
+      }}
       onClick={(e) => e.stopPropagation()}
       placeholder="mm"
-      disabled={disabled}
       style={{ width: '4ch' }}
       maxLength={2}
     />
@@ -47,20 +50,22 @@ const MonthField: React.FC = () => {
 };
 
 const YearField: React.FC = () => {
-  const { year, yearRef, handleYearChange, handleKeyDown, handleFocus, handleBlur, disabled } = useCalendarInput();
+  const { machine, yearRef, handleKeyDown, focusField, blurField, typeYearDigit } = useCalendarInput();
   
   return (
     <Input
       ref={yearRef}
       type="text"
-      value={year}
-      onFocus={() => handleFocus('year')}
-      onBlur={(e) => handleBlur('year', e)}
-      onChange={handleYearChange}
-      onKeyDown={(e) => handleKeyDown(e, 'year')}
+      value={machine.year}
+      onFocus={() => focusField('year')}
+      onBlur={(e) => blurField('year')}
+      onChange={(e) => typeYearDigit(e.target.value)}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        handleKeyDown(e, 'year')
+      }}
       onClick={(e) => e.stopPropagation()}
       placeholder="yyyy"
-      disabled={disabled}
       style={{ width: '8ch' }}
       maxLength={4}
     />
@@ -68,12 +73,11 @@ const YearField: React.FC = () => {
 };
 
 const DateSeparator: React.FC = () => {
-  const { disabled } = useCalendarInput();
   
   return (
     <span 
       className="text-gray-400 mx-1" 
-      style={{ color: disabled ? '#00000042' : '#999' }}
+      style={{ color: '#999' }}
     >
       .
     </span>
@@ -81,9 +85,9 @@ const DateSeparator: React.FC = () => {
 };
 
 const ErrorMessage: React.FC = () => {
-  const { isValid } = useCalendarInput();
+  const { machine } = useCalendarInput();
   
-  if (isValid) return null;
+  if (machine.isValid) return null;
   
   return (
     <div className="absolute top-full left-0 mt-1 text-sm text-red-500">
