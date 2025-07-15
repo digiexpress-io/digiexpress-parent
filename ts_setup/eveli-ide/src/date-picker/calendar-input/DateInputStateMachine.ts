@@ -151,7 +151,6 @@ export class DateInputStateMachine {
   }
 
   public setFromDate(date: Date | null): DateInputStateMachine {
-    console.log('brains out');
     if (!date) {
       return new DateInputStateMachine({
         day: '',
