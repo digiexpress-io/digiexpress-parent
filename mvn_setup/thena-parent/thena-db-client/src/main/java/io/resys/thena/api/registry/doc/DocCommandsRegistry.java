@@ -21,6 +21,7 @@ package io.resys.thena.api.registry.doc;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.doc.DocCommands;
@@ -32,7 +33,8 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface DocCommandsRegistry extends ThenaRegistryService<DocCommands, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAll(DocFilter filter);
-
+  ThenaSqlClient.SqlTuple deleteByDocId(List<String> docIds);
+  
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommands> commits);  
   ThenaSqlClient.SqlTuple getById(String id);
   

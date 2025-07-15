@@ -42,7 +42,9 @@ public interface DocBranchRegistry extends ThenaRegistryService<DocBranch, io.ve
   ThenaSqlClient.SqlTuple getBranchLocks(List<DocBranchLockCriteria> crit);
   ThenaSqlClient.SqlTuple getDocLock(DocLockCriteria crit);
   ThenaSqlClient.SqlTuple getDocLocks(List<DocLockCriteria> crit);
+  
   ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple deleteByDocId(List<String> docIds);
   
   ThenaSqlClient.SqlTuple findAll(DocFilter filter);
   

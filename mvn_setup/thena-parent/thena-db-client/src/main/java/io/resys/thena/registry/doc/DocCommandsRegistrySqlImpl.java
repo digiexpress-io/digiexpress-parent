@@ -22,6 +22,7 @@ package io.resys.thena.registry.doc;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -46,6 +47,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
   private final DocTableNames options;
+  
+  
   
   
   @Override
@@ -169,5 +172,13 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
           .commands(Arrays.asList(row.getArrayOfJsonObjects("commands")))
           .build();
     };
+  }
+  @Override
+  public SqlTuple deleteByDocId(List<String> docIds) {
+    final var sql = "DELETE FROM ${TABLE_DOC_COMMANDS} WHERE doc_id = ANY($1)";
+    return ImmutableSqlTuple.builder()
+        .value(sql.replace("${TABLE_DOC_COMMANDS}", options.getDocCommands()))
+        .props(Tuple.of(docIds.toArray()))
+        .build();
   }
 }

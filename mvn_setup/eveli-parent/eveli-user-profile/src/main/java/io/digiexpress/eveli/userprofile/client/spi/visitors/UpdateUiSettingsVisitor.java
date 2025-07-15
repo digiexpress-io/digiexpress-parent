@@ -43,6 +43,7 @@ import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
+import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DocStoreException;
@@ -80,7 +81,58 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
     return builder
         .ownerId(command.getSettingsId())
         .parentId(command.getUserId())
-        .findOne();
+        .findAll()
+        .onItem().transformToUni(envelope -> {
+          
+          if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
+            throw DocStoreException.builder("GET_UI_SETTINGS_BY_IDS_FOR_UPSERT_FAIL")
+              .add(config, envelope)
+              .add((callback) -> callback.addArgs(Arrays.asList(command.getUserId(), command.getSettingsId()).stream().collect(Collectors.joining(",", "{", "}"))))
+              .build();
+          }
+          
+          
+          if(envelope.getObjects().getDocs().size() == 1) {
+            return Uni.createFrom().item(
+                ImmutableQueryEnvelope.<DocObject>builder()
+                .messages(envelope.getMessages())
+                .repo(envelope.getRepo())
+                .objects(envelope.getObjects().toOne())
+                .status(envelope.getStatus())
+                .build());
+          } else if(envelope.getObjects().getDocs().size() == 0) {
+            return Uni.createFrom().item(
+                ImmutableQueryEnvelope.<DocObject>builder()
+                .messages(envelope.getMessages())
+                .repo(envelope.getRepo())
+                .objects(null)
+                .status(envelope.getStatus())
+                .build());
+          }
+          
+          final var desc = envelope.getObjects().getDocs().values().stream()
+            .sorted((a, b) -> b.getCreatedAt().compareTo(b.getCreatedAt()))
+            .toList();
+          
+          final var latest = desc.iterator().next();
+          
+          // Delete conflicts or tangling data
+          final var deleted = config.getClient().doc(config.getRepoId()).find().docQuery()
+            .deleteAll(desc.stream()
+                .filter(entry -> !entry.getId().equals(latest.getId()))
+                .map(entry -> entry.getId())
+                .toList());
+          
+          
+          final var lastValidOne = ImmutableQueryEnvelope.<DocObject>builder()
+            .messages(envelope.getMessages())
+            .repo(envelope.getRepo())
+            .objects(envelope.getObjects().toOne(latest))
+            .status(envelope.getStatus())
+            .build();
+          
+          return deleted.onItem().transform(ignore -> lastValidOne);
+        });
   }
 
   @Override

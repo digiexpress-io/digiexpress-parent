@@ -113,19 +113,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
 
-  @Override
-  public ThenaSqlClient.SqlTuple deleteById(String id) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("DELETE FROM ").append(options.getDoc())
-        .append(" WHERE ").ln()
-        .append(" (id = $1 OR external_id = $1 or doc_name = $1)")
-        .append(" OR doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1 or doc_name = $1))").ln()
-        .append(" OR doc_parent_id = $1")
-        .build())
-        .props(Tuple.of(id))
-        .build();
-  }
+
   @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<Doc> docs) {
     return ImmutableSqlTupleList.builder()
@@ -306,5 +294,29 @@ WHERE id          = $11
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE IF EXISTS ").append(options.getDoc()).append(";").ln()
         .build()).build();
+  }
+  
+  /*
+  @Override
+  public ThenaSqlClient.SqlTuple deleteById(String id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getDoc())
+        .append(" WHERE ").ln()
+        .append(" (id = $1 OR external_id = $1 or doc_name = $1)")
+        .append(" OR doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1 or doc_name = $1))").ln()
+        .append(" OR doc_parent_id = $1")
+        .build())
+        .props(Tuple.of(id))
+        .build();
+  }*/
+  
+  @Override
+  public SqlTuple deleteByDocId(List<String> docIds) {
+    final var sql = "DELETE FROM ${TABLE_DOC} WHERE id = ANY($1)";
+    return ImmutableSqlTuple.builder()
+        .value(sql.replace("${TABLE_DOC}", options.getDoc()))
+        .props(Tuple.of(docIds.toArray()))
+        .build();
   }
 }

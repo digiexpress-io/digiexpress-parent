@@ -33,6 +33,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface DocCommitTreeRegistry extends ThenaRegistryService<DocCommitTree, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAll(DocFilter filter);
+  ThenaSqlClient.SqlTuple deleteByDocId(List<String> docIds);
   
   ThenaSqlClient.SqlTuple findAllByCommitIds(List<String> commitId);
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommitTree> commits);

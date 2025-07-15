@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
@@ -48,6 +49,7 @@ import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -229,6 +231,42 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   public Uni<QueryEnvelope<DocTenantObjects>> findAll() {
     return findAll(null);
   }
+  
+  @Override
+  public Uni<QueryEnvelope<DocTenantObjects>> deleteAll(List<String> idOrExternalIdOrName) {
+    
+    // lets query all docs, before deleting them, if success return all 
+    
+    return this.findAll(idOrExternalIdOrName).onItem().transformToUni(found -> {
+      
+      final var scope = ImmutableTxScope.builder()
+          .commitAuthor("")
+          .commitMessage("delete tx, nothing is going to be left anyway")
+          .tenantId(repoId)
+          .build();
+      
+      return this.state.withDocTransaction(scope, tx -> tx.query().docs().deleteAll(idOrExternalIdOrName)
+        .onItem().transform(deleted -> {
+          if(deleted.getStatus() == BatchStatus.OK) {
+            return ImmutableQueryEnvelope.<DocTenantObjects>builder()
+                .from(found)
+                .addAllMessages(deleted.getMessages())
+                .build();
+          } 
+          
+          return ImmutableQueryEnvelope.<DocTenantObjects>builder()
+              .from(found)
+              .objects(null)
+              .addAllMessages(deleted.getMessages())
+              .status(QueryEnvelopeStatus.ERROR)
+              .build();
+        })
+      );
+    });
+    
+
+  }
+  
   private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
     final var msg = new StringBuilder()
       .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
@@ -276,4 +314,5 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .commits(commits.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .build();
   }
+
 }

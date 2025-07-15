@@ -18,7 +18,8 @@ import { ToolColumnSavedFilter } from './tool-column-saved-filter';
 // Register extra config params
 declare module "@tanstack/react-table" {
   export interface ColumnMeta<TData extends RowData, TValue> {
-    enableSelection: boolean;
+    enableSelection?: boolean;
+    enableDateGTE?: boolean; // allow to cut data that is greate or equal then given date value
   }
 }
 

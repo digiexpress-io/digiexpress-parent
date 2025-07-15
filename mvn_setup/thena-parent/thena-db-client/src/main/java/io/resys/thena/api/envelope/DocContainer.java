@@ -99,6 +99,48 @@ public interface DocContainer extends ThenaContainer {
       }
       return Collections.unmodifiableList(result);
     }
+    
+    default DocObject toOne() {
+      if(getDocs().size() != 1) {
+        throw new IllegalStateException("When there are more then one document, then state can't be mapped to singular form!");
+      }
+      
+      return ImmutableDocObject.builder()
+          .doc(getDocs().values().iterator().next())
+          .putAllBranches(getBranches())
+          .putAllCommands(getCommands())
+          .putAllCommitTrees(getCommitTrees())
+          .putAllCommits(getCommits())
+          .build();
+    }
+    
+    default DocObject toOne(Doc doc) {
+      
+      return ImmutableDocObject.builder()
+          .doc(doc)
+          
+          .putAllBranches(
+              getBranches().values().stream()
+                .filter(entry -> entry.getDocId().equals(doc.getId()))
+                .collect(Collectors.toMap(entry -> entry.getId(), entry -> entry))
+          )
+          
+          .putAllCommands(
+              getCommands().values().stream()
+                .filter(entry -> entry.getDocId().equals(doc.getId()))
+                .collect(Collectors.toMap(entry -> entry.getId(), entry -> entry)))
+          
+          .putAllCommitTrees(
+              getCommitTrees().values().stream()
+                .filter(entry -> entry.getDocId().equals(doc.getId()))
+                .collect(Collectors.toMap(entry -> entry.getId(), entry -> entry)))
+          
+          .putAllCommits(
+              getCommits().values().stream()
+                .filter(entry -> entry.getDocId().equals(doc.getId()))
+                .collect(Collectors.toMap(entry -> entry.getId(), entry -> entry)))
+          .build();
+    }
   }
   
   @Value.Immutable

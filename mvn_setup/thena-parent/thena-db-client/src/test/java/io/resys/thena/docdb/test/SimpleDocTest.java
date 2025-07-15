@@ -35,6 +35,7 @@ import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.Doc.DocStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -147,6 +148,33 @@ public class SimpleDocTest extends DbTestTemplate {
       Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
       Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().size());
     }
+    
+    
+    
+    {
+      // Delete the doc now
+      final var findAllDocs = getClient().doc(repo).find().docQuery()
+          .include(IncludeInQuery.ALL)
+          .findAll()
+      .await().atMost(Duration.ofMinutes(1));   
+      final var deleted = getClient().doc(repo).find().docQuery().deleteAll(
+          findAllDocs.getObjects().getDocs().values().stream()
+          .map(e -> e.getId())
+          .toList())
+          .await().atMost(Duration.ofMinutes(1));
+      
+      Assertions.assertEquals(QueryEnvelopeStatus.OK, deleted.getStatus());
+      
+      
+      final var findAllDocsAfterDelete = getClient().doc(repo).find().docQuery()
+          .include(IncludeInQuery.ALL)
+          .findAll()
+      .await().atMost(Duration.ofMinutes(1));   
+      Assertions.assertEquals(0, findAllDocsAfterDelete.getObjects().getDocs().size());
+      
+      
+    }
+    
   }
   
   

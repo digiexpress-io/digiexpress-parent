@@ -56,21 +56,41 @@ import lombok.RequiredArgsConstructor;
 public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   private final DocTableNames options;
 
+  
+  @Override
+  public SqlTuple deleteByDocId(List<String> docIds) {
+    final var sql = "DELETE FROM ${TABLE_DOC_BRANCH} WHERE doc_id = ANY($1)";
+    return ImmutableSqlTuple.builder()
+        .value(sql.replace("${TABLE_DOC_BRANCH}", options.getDocBranch()))
+        .props(Tuple.of(docIds.toArray()))
+        .build();
+  }
+  
   @Override
   public ThenaSqlClient.Sql findAll() {
+final var sql = 
+"""
+  with
+  doc_branch as (
+    select * from ${TABLE_DOC_BRANCH}
+  ),
+  doc_commits as (
+    select * from ${TABLE_DOC_COMMITS}
+  )
+  
+  SELECT branch.*, 
+    branch_updated_commit.created_at as updated_at,
+    branch_created_commit.created_at as created_at
+  FROM doc_branch as branch
+    LEFT JOIN doc_commits as branch_updated_commit
+      ON(branch_updated_commit.id = branch.commit_id)
+    LEFT JOIN doc_commits as branch_created_commit
+      ON(branch_created_commit.id = branch.created_with_commit_id)      
+""";
     return ImmutableSql.builder()
-        .value(new SqlStatement()
-        .append("SELECT branch.*, ").ln()
-        .append(" branch_updated_commit.created_at as updated_at,").ln()
-        .append(" branch_created_commit.created_at as created_at").ln()
-        .append(" FROM ").append(options.getDocBranch()).append(" as branch").ln()
-        
-        .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as branch_updated_commit").ln()
-        .append(" ON(branch_updated_commit.id = branch.commit_id)").ln()
-        .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as branch_created_commit").ln()
-        .append(" ON(branch_created_commit.id = branch.created_with_commit_id)").ln()
-
-        .build())
+        .value(sql
+          .replace("${TABLE_DOC_BRANCH}", options.getDocBranch())
+          .replace("${TABLE_DOC_COMMITS}", options.getDocCommits()))
         .build();
   }
 
@@ -665,4 +685,6 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
     // string based - new JsonObject(row.getString(columnName));
     return row.getJsonObject(columnName);
   }
+
+
 }

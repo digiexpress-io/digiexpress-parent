@@ -11,28 +11,32 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import { EveliSetup } from '@/eveli-setup';
 import { EveliApp } from '@/eveli-app';
 import { Button } from '@mui/material';
+import { DialobDashboardSmart } from '@/dialob-dashboard-smart';
+import { useTenantConfigFeatures } from '@/api-tenant-config';
 
 export const Route = createFileRoute({
   component: Component,
 })
 
 function Component() {
-  return (<EveliApp main={Main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
+  const { isEnabled } = useTenantConfigFeatures();
+  const main = isEnabled('DIALOB_DASHBOARD_SMART') ? MainSmart : Main;
+
+  return (<EveliApp main={main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
 
 }
 
 
-export const DialobAdminContainer: React.FC<DialobAdminProps> = ({ config, showNotification }) => {
-  return (
-    <DialobDashboardFetchProvider>
-      <IntlProvider locale={config.language || 'en'} messages={messages[config.language]}>
-        <DialobDashboardStateProvider config={config} showNotification={showNotification}>
-          <DialobAdminView />
-        </DialobDashboardStateProvider>
-      </IntlProvider>
-    </DialobDashboardFetchProvider>
-  );
+const MainSmart: React.FC<{}> = () => {
+  const intl = useIntl();
+  const theme = useTheme();
+
+
+  return (<Box sx={{ p: theme.spacing(1) }}>
+    <DialobDashboardSmart />
+  </Box>)
 }
+
 
 const Main: React.FC<{}> = () => {
   const intl = useIntl();
@@ -40,7 +44,7 @@ const Main: React.FC<{}> = () => {
 
   const { enqueueSnackbar } = useSnackbar();
   const { dialobUrl } = useFetch('dialob.GET', {});
-  const dialobAdminConfig: DialobAdminConfig | undefined = React.useMemo(() => {
+  const config: DialobAdminConfig | undefined = React.useMemo(() => {
     return {
       csrf: undefined,
       dialobApiUrl: dialobUrl,
@@ -51,7 +55,16 @@ const Main: React.FC<{}> = () => {
   }, [dialobUrl, intl.locale])
 
   return (<Box sx={{ p: theme.spacing(1) }}>
-    <DialobAdminContainer showNotification={enqueueSnackbar} config={dialobAdminConfig} />
+    
+
+    <DialobDashboardFetchProvider>
+      <IntlProvider locale={config.language || 'en'} messages={messages[config.language]}>
+        <DialobDashboardStateProvider config={config} showNotification={enqueueSnackbar}>
+          <DialobAdminView />
+        </DialobDashboardStateProvider>
+      </IntlProvider>
+    </DialobDashboardFetchProvider>
+
   </Box>)
 }
 

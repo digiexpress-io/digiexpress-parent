@@ -9,7 +9,6 @@ import { useIntl } from 'react-intl';
 import DatePicker from 'react-date-picker';
 
 import 'react-date-picker/dist/DatePicker.css';
-import zIndex from '@mui/material/styles/zIndex';
 
 
 
@@ -18,7 +17,8 @@ export type EveliDatePickerProps = {
   readonly?: boolean,
   fullWidth?: boolean,
   value: string | Date | undefined | null;
-  onChange?: (newValue: Date | null) => void
+  onChange?: (newValue: Date | null) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 
@@ -35,6 +35,7 @@ const DatePickerStyles = styled("div")(({ theme }) => {
       border: '1px solid rgba(0, 0, 0, 0.23)',
       outline: '1px solid rgb(0,0,0, 0.0)',
       borderRadius: theme.spacing(0.5),
+
     },
 
     '& .react-date-picker__wrapper': {
@@ -44,13 +45,11 @@ const DatePickerStyles = styled("div")(({ theme }) => {
     '& .react-date-picker__inputGroup__input': {
       ...theme.typography.body1
     },
-
-
   };
 });
 
 
-export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({label, readonly, fullWidth, value, onChange}) => {
+export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({label, readonly, fullWidth, value, onChange, onKeyDown}) => {
   const dateValue: Date | null = value ? new Date(value) : null;
   const { localeForDate } = useLocale();
   const intl = useIntl();
@@ -63,7 +62,8 @@ export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({label, readonly
 
 
     return (
-      <TextField label={label} fullWidth={fullWidth} value={date} inputProps={{ readOnly : true }}
+      <TextField label={label} fullWidth={fullWidth} value={date} 
+        inputProps={{ readOnly : true }}
         InputLabelProps={{
           shrink: true,
         }}
@@ -85,6 +85,7 @@ export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({label, readonly
         clearIcon={<ClearIcon />}
         format={dateFormat}
         className='MuiInputBase-root'
+        onKeyDown={onKeyDown}
         dayPlaceholder={intl.formatMessage({ id: 'date.placeholder.day', defaultMessage: 'Day' })}
         monthPlaceholder={intl.formatMessage({ id: 'date.placeholder.month', defaultMessage: 'Month' })}
         yearPlaceholder={intl.formatMessage({ id: 'date.placeholder.year', defaultMessage: 'Year' })}

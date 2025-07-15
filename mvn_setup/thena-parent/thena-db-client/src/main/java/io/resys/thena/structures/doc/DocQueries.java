@@ -1,6 +1,7 @@
 package io.resys.thena.structures.doc;
 
 import java.util.List;
+import java.util.Set;
 
 /*-
  * #%L
@@ -24,6 +25,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocBranch;
@@ -32,6 +34,7 @@ import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
+import io.resys.thena.api.envelope.Message;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -47,6 +50,8 @@ public interface DocQueries {
     Multi<Doc> findAll();
     Multi<Doc> findAll(DocFilter filter);
     Uni<Doc> getById(String ids);
+    
+    Uni<DocDeleteForMany> deleteAll(List<String> ids);
   }
   
   interface DocCommitQuery {
@@ -88,5 +93,13 @@ public interface DocQueries {
     String getDocId();
   }
   
-  
+  @Value.Immutable
+  interface DocDeleteForMany {
+    BatchStatus getStatus();
+    String getRepo();
+    
+    Set<String> getItems();
+    String getLog();
+    List<Message> getMessages();
+  }
 }

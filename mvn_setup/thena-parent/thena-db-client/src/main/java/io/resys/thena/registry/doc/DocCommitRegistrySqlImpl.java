@@ -22,6 +22,7 @@ package io.resys.thena.registry.doc;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -214,6 +215,14 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE IF EXISTS ").append(options.getDocCommits()).append(";").ln()
         .build()).build();
+  }
+  @Override
+  public SqlTuple deleteByDocId(List<String> docIds) {
+    final var sql = "DELETE FROM ${TABLE_DOC_COMMITS} WHERE doc_id = ANY($1)";
+    return ImmutableSqlTuple.builder()
+        .value(sql.replace("${TABLE_DOC_COMMITS}", options.getDocCommits()))
+        .props(Tuple.of(docIds.toArray()))
+        .build();
   }
 
 }

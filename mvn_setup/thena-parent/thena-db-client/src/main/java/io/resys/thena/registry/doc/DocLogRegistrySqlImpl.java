@@ -182,4 +182,14 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
         .append("DROP TABLE IF EXISTS ").append(options.getDocLog()).append(";").ln()
         .build()).build();
   }
+  
+  @Override
+  public SqlTuple deleteByDocId(List<String> docIds) {
+    final var sql = "DELETE FROM ${TABLE_DOC_LOG} WHERE doc_id = ANY($1)";
+    return ImmutableSqlTuple.builder()
+        .value(sql.replace("${TABLE_DOC_LOG}", options.getDocLog()))
+        .props(Tuple.of(docIds.toArray()))
+        .build();
+  }
+
 }
