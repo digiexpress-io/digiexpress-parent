@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem, SxProps } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem, SxProps, Avatar } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { EditDialog } from './EditDialog';
 import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
+import { useTreeViewJSXItems } from '@mui/x-tree-view/internals';
 
 
 
@@ -153,9 +154,22 @@ export const TaskCardDataRowElement: React.FC<{ label: string, value: React.Reac
   )
 }
 
-export const StartAdornmentIcon = (Icon: React.ElementType) => (
-  <Icon fontSize='small' color='primary' sx={{ mr: 1 }} />
-);
+export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon }) => {
+  const theme = useTheme();
+  const Icon = icon;
+
+  return (
+    <Avatar sx={{
+      mr: 1,
+      border: `1px solid gray`,
+      backgroundColor: theme.palette.primary.main
+    }}>
+      <Icon />
+    </Avatar>
+  )
+}
+
+
 
 const MUI_NAME = 'TaskSectionCard';
 const TaskSectionCard = styled(Box, {

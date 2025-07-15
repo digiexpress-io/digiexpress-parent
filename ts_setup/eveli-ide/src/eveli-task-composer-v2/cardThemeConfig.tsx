@@ -34,7 +34,7 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
 
   return {
     compact: {
-      titleTypography: theme.typography.body2,
+      titleTypography: theme.typography.h5,
       bodyTypography: theme.typography.subtitle2,
       bodyTypographySmall: theme.typography.caption,
       cardSpacing: theme.spacing(2),

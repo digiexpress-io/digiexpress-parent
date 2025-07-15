@@ -71,7 +71,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   }
 
   return (
-    <Grid2 container spacing={style.cardSpacing} m={1} p={1}>
+    <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
         <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
       </Grid2>
@@ -88,7 +88,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='task-main'
             title={`Task: ${task.taskRef}`}
             buttonLabel='Edit'
-            startAdornmentIcon={StartAdornmentIcon(TaskAltIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('task-main')}
             onToggleFlashy={() => toggleFlashyForCard('task-main')}
@@ -108,7 +108,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='status-priority'
             title='Status and Priority'
             buttonLabel='Edit'
-            startAdornmentIcon={StartAdornmentIcon(TaskAltIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('status-priority')}
             onToggleFlashy={() => toggleFlashyForCard('status-priority')}
@@ -117,7 +117,8 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
               <TaskCardDataRowElement label='Status' style={style} value={<TaskStatus task={task} />} />
               <Divider sx={{ my: 1 }} />
               <TaskCardDataRowElement label='Priority' style={style} value={<TaskPriority task={task} />} />
-              <Box flexGrow={1} />
+              <Divider sx={{ my: 1 }} />
+
               <TaskOverdueWarning task={task} style={style} />
             </Stack>
 
@@ -149,7 +150,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='assignees-roles'
             title='Assignees and roles'
             buttonLabel='Edit'
-            startAdornmentIcon={StartAdornmentIcon(AdminPanelSettingsOutlinedIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('assignees-roles')}
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
@@ -167,7 +168,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='customer-messages'
             title='Customer messages'
             buttonLabel='New message'
-            startAdornmentIcon={StartAdornmentIcon(EditOutlinedIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('customer-messages')}
             onToggleFlashy={() => toggleFlashyForCard('customer-messages')}
@@ -183,7 +184,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='files'
             title='Files'
             buttonLabel='Upload file'
-            startAdornmentIcon={StartAdornmentIcon(AttachFileOutlinedIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('files')}
             onToggleFlashy={() => toggleFlashyForCard('files')}
@@ -197,7 +198,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='feedback'
             title='Customer feedback'
             buttonLabel='Edit and publish'
-            startAdornmentIcon={StartAdornmentIcon(ThumbUpAltOutlinedIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('feedback')}
             onToggleFlashy={() => toggleFlashyForCard('feedback')}
@@ -212,7 +213,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='notes'
             title='Notes'
             buttonLabel='New comment'
-            startAdornmentIcon={StartAdornmentIcon(NoteAltOutlinedIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('notes')}
             onToggleFlashy={() => toggleFlashyForCard('notes')}
@@ -226,7 +227,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             id='task-meta'
             title='History and metadata'
             buttonLabel='History and metadata'
-            startAdornmentIcon={StartAdornmentIcon(HistoryIcon)}
+            startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('task-meta')}
             onToggleFlashy={() => toggleFlashyForCard('task-meta')}
