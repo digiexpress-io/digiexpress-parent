@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 
 import { FilterByStringSlot, useUtilityClasses } from './useUtilityClasses';
 import { useHeaderSearchState } from './useHeaderSearchState';
-import { DateInput } from '@/date-picker/DateInput';
+import { DatePicker } from '@/date-picker';
 import { DateTime } from 'luxon';
 
 
@@ -53,7 +53,7 @@ export const ToolHeaderSearchDate: React.FC<ToolHeaderSearchDateProps> = ({ head
     <>
       <FilterByStringSlot className={classes.filterByString}>
         <Typography>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateGte', defaultMessage: 'Items after or on ' })}{title}</Typography>
-        <DateInput value={currentFilter} onChange={handleDateChange} inline/>
+        <DatePicker value={currentFilter} onChange={handleDateChange} inline/>
       </FilterByStringSlot>
     </>
   );

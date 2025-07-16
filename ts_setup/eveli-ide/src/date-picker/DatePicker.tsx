@@ -81,11 +81,12 @@ function useFocusField(): object | undefined {
 
 const TextFieldSetup: React.FC<{ endAdornment: React.ReactNode }> = ({endAdornment}) => {
   const focus = useFocusField();
-
+  const { machine } = useCalendarInput();
   return (
     <TextField
-      helperText="Enter date in DD.MM.YYYY format"
+      helperText="dd.mm.yyyy"
       sx={focus}
+      error={!!machine.error}
       slots={{
         htmlInput: CalendarInput,
         inputLabel: () => <></>,
@@ -97,13 +98,13 @@ const TextFieldSetup: React.FC<{ endAdornment: React.ReactNode }> = ({endAdornme
   );
 }
 
-export interface DateInputProps {
+export interface DatePickerProps {
   value: Date | null;
   inline: boolean;
   onChange: (newDate: Date | null) => void;
 }
 
-export const DateInput: React.FC<DateInputProps> = (props) => {
+export const DatePicker: React.FC<DatePickerProps> = (props) => {
   const { locale } = useIntl();
   const [open, setOpen] = React.useState(false);
 

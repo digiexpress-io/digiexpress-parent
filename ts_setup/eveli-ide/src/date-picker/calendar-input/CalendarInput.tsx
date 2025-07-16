@@ -89,11 +89,8 @@ const ErrorMessage: React.FC = () => {
   
   if (machine.isValid) return null;
   
-  return (
-    <div className="absolute top-full left-0 mt-1 text-sm text-red-500">
-      Invalid date
-    </div>
-  );
+  // todo
+  return (<div></div>);
 };
 
 
