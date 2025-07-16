@@ -12,7 +12,7 @@ import { useIntl } from 'react-intl';
 import { FillerRows } from './FillerRows';
 import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
-export type EveliTableDrawerType = 'filters' | 'columns' | 'saved-filters';
+export type EveliTableDrawerType = 'filters' | 'columns' | 'saved-filters' | 'export-data';
 
 export interface EveliTableProps {
   slotProps: {
@@ -30,7 +30,7 @@ export interface EveliTableProps {
       children: React.ReactNode;
     }
     drawer: {
-      body: (type: EveliTableDrawerType) => React.ReactNode;
+      body: Record<EveliTableDrawerType, React.ReactNode | undefined>;
     }
   }
 }
@@ -46,8 +46,9 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
   const handleDrawerOpenColumns = React.useCallback(() => setDrawerOpen('columns'), [])
   const handleDrawerOpenFilters = React.useCallback(() => setDrawerOpen('filters'), [])
   const handleDrawerOpenSavedFilters = React.useCallback(() => setDrawerOpen('saved-filters'), [])
+  const handleDrawerExportData = React.useCallback(() => setDrawerOpen('export-data'), [])
 
-  const drawerBody = drawerOpen ? drawer.body(drawerOpen) : undefined;
+  const drawerBody = drawerOpen ? drawer.body[drawerOpen] : undefined;
 
 
   return (
@@ -108,6 +109,14 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
             </Button>
           </DrawerButtonSlot>
         </EveliTenantFeatureEnabled>
+
+        { drawer.body['export-data'] && (
+        <DrawerButtonSlot className={classes.drawerButton}>
+          <Button variant='text' startIcon={<FilterListOutlinedIcon />} onClick={handleDrawerExportData} disableRipple>
+            <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.exportData', defaultMessage: 'Export data' })}</Typography>
+          </Button>
+        </DrawerButtonSlot>)
+        }
 
       </DrawerButtonBarSlot>
     </Box>

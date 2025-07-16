@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 import { DasboardItem, useDialobForms } from '@/api-dialob-form';
 import { FormTableDateTime } from '../form-table-date-time';
 import { filterDateGte_lastSaved, filterDateGte_latestTagDate } from '../form-table-filters';
+import { FormTableDownloadAll } from '../form-table-download-all';
 
 
 
@@ -73,6 +74,9 @@ export const FormTable: React.FC<{}> = () => {
   ]
 
   return (
-    <WithTableStyles data={forms} columns={columns} options={{ tableId: 'dialob_dashboard' }} />
+    <WithTableStyles 
+      data={forms} columns={columns} options={{ tableId: 'dialob_dashboard' }}
+      slots={{ drawer: { 'export-data': FormTableDownloadAll }}}
+    />
   );
 }

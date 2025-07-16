@@ -7,6 +7,7 @@ import {
   Visitor_DashboardState, Visitor_DownloadAllForms, 
   Visitor_RestApi, Visitor_UploadCsvForm, Visitor_UploadFormJson 
 } from './visitors';
+import { DialobRestApi } from './types-rest-api';
 
 
 export interface DialobFormsOperationResult {
@@ -18,7 +19,7 @@ export interface DialobFormsContextType {
   forms: DasboardItem[];
   uploadJsonForm: (file: File) => Promise<DialobFormsOperationResult>;
   uploadCsvForm: (file: File) => Promise<DialobFormsOperationResult>;
-  downloadAllForms: () => Promise<{ blob: Blob, fileName: string }>;
+  downloadAllForms: (forms: DialobRestApi.FormListItem[]) => Promise<{ blob: Blob, fileName: string }>;
 
   createForm: (props: Visitor_CreateNewForm.Input) => Promise<Visitor_CreateNewForm.Result>;
   copyForm: (props: Visitor_CopyForm.Input) => Promise<Visitor_CopyForm.Result>;
@@ -71,8 +72,8 @@ export const DialobFormsProvider: React.FC<DialobFormsProviderProps> = (props) =
     }
 
     // DOWNLOAD ALL AS JSON
-    async function downloadAllForms() {
-      return new Visitor_DownloadAllForms().accept(backend, { forms: state.forms });
+    async function downloadAllForms(forms: DialobRestApi.FormListItem[]) {
+      return new Visitor_DownloadAllForms().accept(backend, { forms });
     }
 
     // CREATE NEW FORM

@@ -28,7 +28,9 @@ export class Visitor_DownloadAllForms {
 
       const fileName = this.generateFileName(result.successfulForms);
       const jsonData = JSON.stringify(result.successfulForms, null, 2);
-      const blob = new Blob([jsonData], { type: 'json' });
+
+      
+      const blob = new Blob([jsonData], { type: 'application/json' });
 
       return { fileName, blob };
     } catch (error) {

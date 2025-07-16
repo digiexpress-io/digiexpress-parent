@@ -1,29 +1,23 @@
 import React from 'react';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { Badge, Box, IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 import { FormattedMessage } from 'react-intl';
-import FileSaver from 'file-saver';
 
 import { useDialobForms } from '@/api-dialob-form';
 import { FileUploadButton } from './FileUploadButton';
 import { DialogCreate } from '../dialog-create';
-
+import { IconButtonWithText } from './IconWithText';
 
 
 export const FormTableToolbar: React.FC<{}> = () => {
-  const { uploadJsonForm, downloadAllForms, uploadCsvForm } = useDialobForms();
-  
+  const { uploadJsonForm, uploadCsvForm } = useDialobForms();
+
   const formJsonUploadRef = React.useRef<HTMLInputElement | null>(null);
   const formCsvUploadRef = React.useRef<HTMLInputElement | null>(null);
 
   const [createRef, setCreateRef] = React.useState<boolean>(false);
- 
-  function handleDownloadAll() {
-    downloadAllForms().then(({ blob, fileName}) => FileSaver.saveAs(blob, fileName));
-  }
 
   return (
     <Box display='flex' alignItems='center' mb={2}>
@@ -31,38 +25,36 @@ export const FormTableToolbar: React.FC<{}> = () => {
         <FormattedMessage id='adminUI.dialog.heading' />
       </Typography>
 
-      {createRef && <DialogCreate onClose={() => setCreateRef(false)} /> }
+      {createRef && <DialogCreate onClose={() => setCreateRef(false)} />}
       <IconButton onClick={() => setCreateRef(true)}>
-        <AddIcon fontSize='small'/>
+        <AddIcon fontSize='small' />
       </IconButton>
-      
+
       {/**
        * Upload FORM as JSON create/update operation
        */}
-      <FileUploadButton accept='.json' uploadRef={formJsonUploadRef}  onChange={uploadJsonForm} />
-      <Tooltip title={<FormattedMessage id='upload.json' />}>
-        <IconButton onClick={() => formJsonUploadRef.current?.click()}>
+      <FileUploadButton accept='.json' uploadRef={formJsonUploadRef} onChange={uploadJsonForm} />
+
+      <IconButtonWithText onClick={() => formJsonUploadRef.current?.click()}>
+        <Badge
+          badgeContent={<FormattedMessage id='upload.json' />}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
           <FileUploadIcon fontSize='small' />
-        </IconButton>
-      </Tooltip>
-      
+        </Badge>
+      </IconButtonWithText>
+
       {/**
        * Upload FORM as CSV, creates always new form
        */}
       <FileUploadButton accept='.csv' uploadRef={formCsvUploadRef} onChange={uploadCsvForm} />
-      <Tooltip title={<FormattedMessage id='upload.csv' />}>
-        <IconButton onClick={() => formCsvUploadRef.current?.click()}>
+      <IconButtonWithText onClick={() => formCsvUploadRef.current?.click()}>
+        <Badge
+          badgeContent={<FormattedMessage id='upload.csv' />}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
           <FileUploadIcon fontSize='small' />
-        </IconButton>
-      </Tooltip>
+        </Badge>
+      </IconButtonWithText>
 
-      {/**
-       * Download everything
-       */}
-      <Tooltip title={<FormattedMessage id='download.all' />}>
-        <IconButton onClick={handleDownloadAll}>
-          <FileDownloadIcon fontSize='small' />
-        </IconButton>
-      </Tooltip>
+
     </Box>)
 }

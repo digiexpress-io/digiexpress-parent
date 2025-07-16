@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { flexRender, ColumnDef, RowData } from '@tanstack/react-table';
+import { flexRender, ColumnDef, RowData, Table } from '@tanstack/react-table';
 
 import { useTable } from './tanstack';
 import { EveliTable } from './table';
@@ -23,11 +23,17 @@ declare module "@tanstack/react-table" {
   }
 }
 
+export interface TableSlots<DataType extends object> {
+  drawer?: {
+    'export-data'?: React.ElementType<{ table: Table<DataType> }>;
+  }
+}
 
 export function WithTableStyles<DataType extends object>(props: {
   columns: ColumnDef<DataType, unknown>[],
   data: DataType[],
   options: { initialPageSize?: number, tableId: string }
+  slots?: TableSlots<DataType>
 }): React.ReactNode {
 
   const { tableId } = props.options;
@@ -37,10 +43,8 @@ export function WithTableStyles<DataType extends object>(props: {
   if(loading) {
     return <CircularProgress />
   }
-  return (<RenderTable columns={props.columns} data={props.data} options={{ initialPageSize, tableId }} state={state}/>)
+  return (<RenderTable columns={props.columns} data={props.data} options={{ initialPageSize, tableId }} state={state} slots={props.slots}/>)
 }
-
-
 
 
 function RenderTable<DataType extends object>(props: {
@@ -48,16 +52,17 @@ function RenderTable<DataType extends object>(props: {
   data: DataType[],
   options: { initialPageSize: number, tableId: string  },
   state: [TableState, React.Dispatch<React.SetStateAction<TableState>>];
+  slots: TableSlots<DataType> | undefined;
 }): React.ReactNode {
 
   const { table, pagination, columnSizeVars, filterDialogOpen, onColumnFilter, onClearAll } = useTable<DataType>(props);
+  const ExportDataSlot = props.slots?.drawer?.['export-data'];
+  
 
   return (
     <>
       <EveliTable slotProps={{
-
         root: { columnSizeVars },
-
         header: {
           cells: table.getFlatHeaders().filter(h => h.column.getIsVisible()).map(header => ({
             width: header.column.getSize(),
@@ -81,13 +86,11 @@ function RenderTable<DataType extends object>(props: {
         },
 
         drawer: {
-          body: (type) => {
-            if (type === 'filters') {
-              return <ToolColumnFilter table={table} onClearAll={onClearAll} />
-            } else if(type === 'saved-filters') {
-              return <ToolColumnSavedFilter table={table} state={props.state} tableId={props.options.tableId}/>
-            }
-            return (<ToolColumnVisibilitySelection table={table} />)
+          body: {
+            'export-data': ExportDataSlot ? <ExportDataSlot table={table} /> : undefined,
+            'saved-filters': <ToolColumnSavedFilter table={table} state={props.state} tableId={props.options.tableId}/>,
+            'columns': <ToolColumnVisibilitySelection table={table} />,
+            'filters': <ToolColumnFilter table={table} onClearAll={onClearAll} />,
           }
         }
       }} />
@@ -99,5 +102,4 @@ function RenderTable<DataType extends object>(props: {
       </>
     </>
   )
-
 }

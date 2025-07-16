@@ -19,8 +19,6 @@ export const DialobDashboardSmart: React.FC<{}> = () => {
   
   return (
     <IntlProvider locale={locale} messages={messages[locale]}>
-
-
       <DialobFormsProvider dialobApiUrl={dialobUrl}>
         <Box sx={{ display: 'inline-block' }}>
           <FormTableToolbar />
