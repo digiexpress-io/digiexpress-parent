@@ -204,10 +204,7 @@ const TaskSectionCard = styled(Box, {
       borderColor: alpha(theme.palette.divider, 0.4)
     },
     ':hover': {
-      cursor: 'pointer',
-      backgroundColor: theme.palette.secondary.main,
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-      borderRadius: theme.spacing(1),
+      cursor: 'pointer'
     },
     '& .TaskSectionCard-cardBody': {
       padding: theme.spacing(2),
@@ -224,26 +221,6 @@ const TaskSectionCard = styled(Box, {
       color: theme.palette.text.primary,
       border: `1px solid transparent`
     },
-    '&:hover .TaskSectionCard-title': {
-      borderTopLeftRadius: theme.spacing(1),
-      borderTopRightRadius: theme.spacing(1),
-      borderLeft: `1px solid ${theme.palette.divider}`,
-      borderRight: `1px solid ${theme.palette.divider}`,
-      borderTop: `1px solid ${theme.palette.divider}`,
-      boxShadow: '-6px 0 8px -2px rgba(0, 0, 0, 0.1)',
-      '& .MuiSvgIcon-root': {
-        color: theme.palette.primary.main
-      },
-      transition: transitionProps,
-
-    },
-    '&:hover .TaskSectionCard-cardBody': {
-      padding: theme.spacing(2),
-      border: `1px solid ${theme.palette.divider}`,
-      borderTopLeftRadius: 'unset',
-      borderTopRightRadius: 'unset',
-      flexGrow: 1,
-    },
   };
 
   if (flashy) {
@@ -257,8 +234,7 @@ const TaskSectionCard = styled(Box, {
       color: theme.palette.text.primary,
 
       ':hover': {
-        cursor: 'pointer',
-        backgroundColor: alpha(colors.flashyBackground, 0.10),
+        cursor: 'pointer'
       },
       '& .MuiSvgIcon-root': {
         color: colors.flashyBackground

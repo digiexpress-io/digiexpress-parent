@@ -36,7 +36,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   const [flashyCards, setFlashyCards] = React.useState<Record<string, boolean>>({});
 
   const [stylePreset, setStylePreset] = React.useState<TaskCardStyleKey>('default');
-  const styleConfig = useTaskCardThemeConfig(reviewOpen); 
+  const styleConfig = useTaskCardThemeConfig(reviewOpen);
   const style = styleConfig[stylePreset];
 
   const toggleFlashyForCard = (cardId: string) => {
@@ -112,6 +112,25 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
+            id='task-form-summary'
+            onReview={toggleReview}
+            buttonLabel='View form'
+            startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}
+            styleVariant={stylePreset}
+            flashy={isCardFlashy('task-form-summary')}
+            onToggleFlashy={() => toggleFlashyForCard('task-form-summary')}
+          >
+            <TaskCardDataRowElement label='Form name' style={style} value={<Typography sx={style.bodyTypography}>{task.subject}{" "}{'v1.0'}</Typography>} />
+            <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} style={style} />
+            <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
+            <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
+            <TaskCardDataRowText label='Other info' value='info here' style={style} />
+            <Dialog open={false}></Dialog>
+          </TaskCard>
+        </Grid2>
+
+        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
+          <TaskCard
             id='status-priority'
             title='Status and Priority'
             buttonLabel='Edit'
@@ -131,26 +150,6 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard
-            id='task-form-summary'
-            onReview={toggleReview}
-            buttonLabel='View form'
-            startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}
-            styleVariant={stylePreset}
-            flashy={isCardFlashy('task-form-summary')}
-            onToggleFlashy={() => toggleFlashyForCard('task-form-summary')}
-          >
-            <TaskCardDataRowText label='Form name' value={task.subject} style={style} />
-            <TaskCardDataRowText label='Form version' value='v1.0' style={style} />
-            <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} style={style} />
-            <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
-            <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
-            <TaskCardDataRowText label='Other info' value='info here' style={style} />
-            <Dialog open={false}></Dialog>
-          </TaskCard>
-        </Grid2>
-
-        <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-          <TaskCard
             id='assignees-roles'
             title='Assignees and roles'
             buttonLabel='Edit'
@@ -159,10 +158,9 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('assignees-roles')}
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
           >
-            <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
-            <Divider sx={{ my: 1 }} />
             <TaskCardDataRowElement label='Roles' value={<TaskRoles task={task} />} style={style} />
-
+            <Divider sx={{ my: 1 }} />
+            <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
           </TaskCard>
         </Grid2>
 
