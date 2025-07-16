@@ -1,83 +1,170 @@
 import React from 'react';
-import { alpha, Box, useTheme, Typography, Avatar } from '@mui/material';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-
-import { TaskApi } from '@/api-task';
+import { alpha, Typography, generateUtilityClass, styled, Theme } from '@mui/material';
+import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { DateTime } from 'luxon';
 import { TaskCardStyleDefinition } from './cardThemeConfig';
+import composeClasses from '@mui/utils/composeClasses';
 
 
+import { TaskApi } from '@/api-task';
 
-export const TaskOverdueWarning: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefinition }> = ({ task, style }) => {
-  const theme = useTheme();
+
+export interface TaskOverdueWarningProps {
+  task: TaskApi.Task,
+  style: TaskCardStyleDefinition
+}
+
+type OverdueStatus = 'overdue' | 'dueToday' | 'upcomingDue' | 'completedOverdue' | 'completedOnTime';
+
+function getTaskOverdue(task: TaskApi.Task): { isOverdue: boolean, days: number, status: OverdueStatus } | undefined {
+
   if (!task.dueDate) {
     return;
   }
 
   const today = DateTime.local().startOf('day');
   const dueDate = DateTime.fromJSDate(task.dueDate).startOf('day');
-  const diffInDays = Math.floor(dueDate.diff(today, 'days').days);
+  const diffInDays = Math.floor(today.diff(dueDate, 'days').days);
 
-  if (task.completed) {
-    const completedDate = DateTime.fromJSDate(task.completed).startOf('day');
-    const daysOverdue = Math.floor(completedDate.diff(dueDate, 'days').days);
-
-    if (daysOverdue > 0) {
-      return (
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor: alpha(theme.palette.warning.main, 0.2),
-          borderRadius: theme.spacing(3),
-          pr: theme.spacing(2)
-        }}>
-          <Avatar sx={{ backgroundColor: theme.palette.warning.main, color: theme.palette.background.default, mr: theme.spacing(1) }}>
-            <PriorityHighIcon />
-          </Avatar>
-          <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold', color: theme.palette.warning.dark }}>
-            This task was closed {daysOverdue} day(s) overdue
-          </Typography>
-        </Box>
-      );
+  if (task.status === 'COMPLETED' || task.status === 'REJECTED') {
+    return {
+      isOverdue: diffInDays > 0,
+      days: Math.abs(diffInDays),
+      status: diffInDays > 0 ? 'completedOverdue' : 'completedOnTime',
     }
-  } else if (diffInDays < 0) {
-    return (
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: alpha(theme.palette.error.main, 0.2),
-        borderRadius: theme.spacing(3),
-        pr: theme.spacing(2)
-      }}>
-        <Avatar sx={{ backgroundColor: theme.palette.error.main, color: theme.palette.background.default, mr: theme.spacing(1) }}><PriorityHighIcon /></Avatar>
-        <Typography sx={{ ...style.bodyTypography, color: theme.palette.error.main, fontWeight: 'bold' }}>This task is {-diffInDays} day(s) overdue</Typography>
-      </Box>
-    );
-  } else if (diffInDays === 0) {
-    return (
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: alpha('#ffea00', 0.2),
-        borderRadius: theme.spacing(3),
-        pr: theme.spacing(2)
-      }}>
-        <Avatar sx={{ backgroundColor: '#ffea00', color: theme.palette.text.primary, mr: theme.spacing(1) }}><PriorityHighIcon /></Avatar>
-        <Typography textAlign='center' sx={{ ...style.bodyTypography, color: theme.palette.text.primary, fontWeight: 'bold' }}>Task is due today!</Typography>
-      </Box>
-    );
   }
-  return (
-    <Box sx={{
-      display: 'flex',
-      alignItems: 'center',
-      backgroundColor: alpha(theme.palette.info.main, 0.2),
-      borderRadius: theme.spacing(3),
-      pr: theme.spacing(2)
-    }}>
-      <Avatar sx={{ backgroundColor:theme.palette.info.main, color: theme.palette.background.default, mr: theme.spacing(1) }}><PriorityHighIcon /></Avatar>
-      <Typography textAlign='center' sx={{ ...style.bodyTypography, color: theme.palette.info.dark, fontWeight: 'bold' }}>{diffInDays} day(s) left to complete this task</Typography>
-    </Box>
-  );
 
+  if (diffInDays > 0) {
+    return {
+      isOverdue: true,
+      days: diffInDays,
+      status: 'overdue'
+    }
+  }
+  else if (diffInDays === 0) {
+    return {
+      isOverdue: false,
+      days: 0,
+      status: 'dueToday'
+    }
+  } else {
+    return {
+      isOverdue: false,
+      days: Math.abs(diffInDays),
+      status: 'upcomingDue'
+    }
+  }
+}
+
+
+
+export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props }) => {
+  const classes = useUtilityClasses();
+
+  const taskInfo = getTaskOverdue(props.task);
+
+  if (!taskInfo) {
+    return undefined;
+  }
+
+
+  switch (taskInfo?.status) {
+    case 'upcomingDue':
+      return (
+        <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
+          <ErrorOutlinedIcon />
+
+          <Typography textAlign='center'
+            sx={{ ...props.style.bodyTypographySmall }}>
+            {taskInfo.days} day(s) left to complete this task
+          </Typography>
+        </StyledTaskOverrdueWarning>
+      );
+
+    case 'dueToday':
+      return (
+        <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
+          <ErrorOutlinedIcon />
+          <Typography textAlign='center'
+            sx={{ ...props.style.bodyTypographySmall }}>
+            Task is due today!
+          </Typography>
+        </StyledTaskOverrdueWarning>
+      )
+
+    case 'completedOverdue':
+      return (
+        <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
+          <ErrorOutlinedIcon />
+          <Typography sx={{ ...props.style.bodyTypographySmall }}>
+            This task was closed {taskInfo.days} day(s) overdue
+          </Typography>
+        </StyledTaskOverrdueWarning>
+      )
+
+    case 'overdue':
+      return (
+        <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
+          <ErrorOutlinedIcon />
+          <Typography sx={{ ...props.style.bodyTypographySmall }}>This task is {taskInfo.days} day(s) overdue</Typography>
+        </StyledTaskOverrdueWarning>
+      )
+    default:
+      return (<></>)
+  }
+}
+
+
+
+const MUI_NAME = 'TaskOverrdueWarningClassName'
+const StyledTaskOverrdueWarning = styled('div', {
+  name: MUI_NAME,
+  slot: 'Priority',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root
+    ];
+  },
+
+})<{ ownerState: TaskOverdueWarningProps & { status: OverdueStatus } }>(({ theme, ownerState }) => {
+
+  return {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: alpha(getBackgroundColor(theme, ownerState.status), 0.1),
+    padding: theme.spacing(0.5),
+    borderRadius: theme.spacing(1),
+    border: `1px solid ${getBackgroundColor(theme, ownerState.status)}`,
+    color: getBackgroundColor(theme, ownerState.status),
+
+    '& .MuiSvgIcon-root': {
+      color: getBackgroundColor(theme, ownerState.status),
+    }
+  };
+});
+
+const getBackgroundColor = (theme: Theme, status: OverdueStatus) => {
+  switch (status) {
+    case 'overdue':
+      return theme.palette.error.main;
+    case 'dueToday':
+      return '#e85d04';
+    case 'upcomingDue':
+      return theme.palette.info.main;
+    case 'completedOverdue':
+      return theme.palette.warning.main;
+    case 'completedOnTime':
+      return theme.palette.success.main;
+    default:
+      return theme.palette.background.paper;
+  }
 };
+
+const useUtilityClasses = () => {
+  const slots = {
+    root: ['root'],
+
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
+  return composeClasses(slots, getUtilityClass, {});
+}

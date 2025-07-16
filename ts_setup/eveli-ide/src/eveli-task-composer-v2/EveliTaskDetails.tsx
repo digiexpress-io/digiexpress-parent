@@ -94,7 +94,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('task-main')}
             onReview={toggleReview}
           >
-            <TaskCardDataRowText label='Due date' value={formatAnyDateShort(task.dueDate)} style={style} />
+            <TaskCardDataRowElement label='Due date' style={style}
+              value={
+                <Box display='flex' justifyContent='space-between'>
+                  {formatAnyDateShort(task.dueDate)}
+                  <TaskOverdueWarning task={task} style={style} />
+                </Box>
+              } />
+
             <TaskCardDataRowText label='Customer name' value={task.clientIdentificator ? task.clientIdentificator : 'NONE'} style={style} />
             <TaskCardDataRowText label='Subject' value={task.subject} style={style} />
             <TaskCardDataRowText label='Info' value={task.additionalInfo} style={style} />
@@ -117,9 +124,6 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
               <TaskCardDataRowElement label='Status' style={style} value={<TaskStatus task={task} />} />
               <Divider sx={{ my: 1 }} />
               <TaskCardDataRowElement label='Priority' style={style} value={<TaskPriority task={task} />} />
-              <Divider sx={{ my: 1 }} />
-
-              <TaskOverdueWarning task={task} style={style} />
             </Stack>
 
           </TaskCard>
