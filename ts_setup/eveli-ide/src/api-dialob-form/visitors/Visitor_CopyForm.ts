@@ -31,11 +31,10 @@ export class Visitor_CopyForm {
   async accept(backend: DialobRestApi.Backend, context: Visitor_CopyForm.Input): Promise<Visitor_CopyForm.Result> {
     try {
       // Validate input
-      const validationErrors = Visitor_CreateNewForm.validateInput({ label: context.newLabel, name: context.newLabel });
+      const validationErrors = Visitor_CreateNewForm.validateInput({ label: context.newLabel, name: context.newName });
       if (this.hasValidationErrors(validationErrors)) {
         return this.buildValidationFailureResult(validationErrors);
       }
-
       // Fetch the source form
       const sourceForm = await backend.getForm(context.sourceFormId);
       

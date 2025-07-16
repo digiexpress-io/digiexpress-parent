@@ -8,6 +8,7 @@ import { DasboardItem, useDialobForms } from '@/api-dialob-form';
 import { FormTableDateTime } from '../form-table-date-time';
 import { filterDateGte_lastSaved, filterDateGte_latestTagDate } from '../form-table-filters';
 import { FormTableDownloadAll } from '../form-table-download-all';
+import { FormTableToolbarRow } from '../form-table-toolbar-row';
 
 
 
@@ -23,8 +24,8 @@ export const FormTable: React.FC<{}> = () => {
     {
       header: intl.formatMessage({ id: 'adminUI.formConfiguration.label' }),
       accessorKey: 'metadata.label',
-      size: 200,
-      minSize: 200,
+      size: 500,
+      minSize: 500,
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
@@ -32,8 +33,8 @@ export const FormTable: React.FC<{}> = () => {
     {
       header: intl.formatMessage({ id: 'adminUI.formConfiguration.latestTagName' }),
       accessorKey: 'latestTagName',
-      size: 100,
-      minSize: 100,
+      size: 50,
+      minSize: 50,
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
@@ -65,11 +66,18 @@ export const FormTable: React.FC<{}> = () => {
     {
       header: intl.formatMessage({ id: 'adminUI.formConfiguration.labels' }),
       accessorKey: 'metadata.labels',
-      size: 100,
-      minSize: 100,
+      size: 200,
+      minSize: 200,
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
+    },
+    {
+      header: '',
+      accessorKey: 'metadata.labels',
+      size: 100,
+      minSize: 100,
+      cell: row => <FormTableToolbarRow value={row.row.original} />,
     }
   ]
 

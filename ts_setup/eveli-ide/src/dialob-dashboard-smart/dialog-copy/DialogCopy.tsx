@@ -33,7 +33,8 @@ export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
 
   const handleSubmit = async () => {
     setSubmitting(false);
-    copyForm({ newLabel: label, newName: name, sourceFormId: source.id });
+    const copy = await copyForm({ newLabel: label, newName: name, sourceFormId: source.id });
+    console.log('Form copied', copy);
     setSubmitting(true); 
   }
 
