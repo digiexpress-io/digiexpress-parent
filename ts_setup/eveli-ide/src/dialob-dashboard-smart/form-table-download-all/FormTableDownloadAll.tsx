@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import FileSaver from 'file-saver';
 
-import { DasboardItem, useDialobForms } from '@/api-dialob-form';
+import { DashboardItem, useDialobForms } from '@/api-dialob-form';
 
 
 const Root =  styled('div')(({ theme }) => ({
@@ -24,7 +24,7 @@ const Root =  styled('div')(({ theme }) => ({
 }));
 
 export const FormTableDownloadAll: React.FC<{
-  table: Table<DasboardItem>
+  table: Table<DashboardItem>
 }> = ({ table }) => {
 
   const { downloadAllForms } = useDialobForms();

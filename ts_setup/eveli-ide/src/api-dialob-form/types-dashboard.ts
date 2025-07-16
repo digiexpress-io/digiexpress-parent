@@ -3,11 +3,11 @@ import { DialobRestApi } from "./types-rest-api";
 export interface DashboardState {
   forms: DialobRestApi.FormListItem[];
   tags: DialobRestApi.FormTag[];
-  items: DasboardItem[];
+  items: DashboardItem[];
   loadedAt: Date;
 }
 
-export interface DasboardItem {
+export interface DashboardItem {
   id: string;
   metadata: DialobRestApi.FormMetadata;
   latestTagName?: string;

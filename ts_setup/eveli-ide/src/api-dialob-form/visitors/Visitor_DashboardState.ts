@@ -1,4 +1,4 @@
-import { DashboardState, DasboardItem } from "../types-dashboard";
+import { DashboardState, DashboardItem } from "../types-dashboard";
 import { DialobRestApi } from "../types-rest-api";
 
 
@@ -21,11 +21,11 @@ export class Visitor_DashboardState {
 
 
       // Enrich forms with latest tag information
-      const items: DasboardItem[] = forms.map(form => {
+      const items: DashboardItem[] = forms.map(form => {
         const latestTag = this.findLatestTag(tags, form);
         
         if (latestTag) {
-          const result: DasboardItem = {
+          const result: DashboardItem = {
             ...form,
             latestTagName: latestTag.name,
             latestTagDate: latestTag.created,

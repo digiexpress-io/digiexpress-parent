@@ -1,4 +1,4 @@
-import { DasboardItem, useDialobForms } from '@/api-dialob-form';
+import { DashboardItem, useDialobForms } from '@/api-dialob-form';
 import { Box, IconButton, Tooltip } from '@mui/material';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -11,7 +11,7 @@ import { DialogCopy } from '../dialog-copy';
 import React from 'react';
 
 
-export const FormTableToolbarRow: React.FC<{ value: DasboardItem }> = ({ value }) => {
+export const FormTableToolbarRow: React.FC<{ value: DashboardItem }> = ({ value }) => {
   const intl = useIntl();
   const { downloadAllForms, deleteForm } = useDialobForms();
   const [isCopyOpen, setCopyOpen] = React.useState(false);
@@ -37,18 +37,18 @@ export const FormTableToolbarRow: React.FC<{ value: DasboardItem }> = ({ value }
       {isCopyOpen && <DialogCopy onClose={handleCopyClose} source={value} />}
       <Tooltip title={intl.formatMessage({ id: 'adminUI.table.tooltip.copy' })} placement='top-end' arrow>
         <IconButton size='small' onClick={handleCopyOpen}>
-          <ContentCopyIcon />
+          <ContentCopyIcon fontSize='small'/>
         </IconButton>
       </Tooltip>
       
       <Tooltip title={intl.formatMessage({ id: 'adminUI.table.tooltip.delete' })} placement='top-end' arrow>
         <IconButton size='small' onClick={handleDelete} color='error'>
-          <CloseIcon />
+          <CloseIcon fontSize='small'/>
         </IconButton>
       </Tooltip>
       <Tooltip title={intl.formatMessage({ id: 'download' })} placement='top-end' arrow>
         <IconButton size='small' onClick={handleDownload}>
-          <DownloadIcon />
+          <DownloadIcon fontSize='small'/>
         </IconButton>
       </Tooltip>
     </Box>

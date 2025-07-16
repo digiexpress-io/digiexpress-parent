@@ -1,11 +1,12 @@
 import React from 'react';
 import { useQuery } from "@tanstack/react-query";
 
-import { DashboardState, DasboardItem } from './types-dashboard';
+import { DashboardState, DashboardItem } from './types-dashboard';
 import { 
   Visitor_DeleteForm, Visitor_CopyForm, Visitor_CreateNewForm, 
   Visitor_DashboardState, Visitor_DownloadAllForms, 
-  Visitor_RestApi, Visitor_UploadCsvForm, Visitor_UploadFormJson 
+  Visitor_RestApi, Visitor_UploadCsvForm, Visitor_UploadFormJson, 
+  Visitor_OpenForm
 } from './visitors';
 import { DialobRestApi } from './types-rest-api';
 
@@ -16,7 +17,7 @@ export interface DialobFormsOperationResult {
 }
 
 export interface DialobFormsContextType {
-  forms: DasboardItem[];
+  forms: DashboardItem[];
   uploadJsonForm: (file: File) => Promise<DialobFormsOperationResult>;
   uploadCsvForm: (file: File) => Promise<DialobFormsOperationResult>;
   downloadAllForms: (forms: DialobRestApi.FormListItem[]) => Promise<{ blob: Blob, fileName: string }>;
@@ -24,14 +25,19 @@ export interface DialobFormsContextType {
   createForm: (props: Visitor_CreateNewForm.Input) => Promise<Visitor_CreateNewForm.Result>;
   copyForm: (props: Visitor_CopyForm.Input) => Promise<Visitor_CopyForm.Result>;
   deleteForm: (props: Visitor_DeleteForm.Input) => Promise<Visitor_DeleteForm.Result>;
+
+  openForm: (props: DashboardItem) => void;
 }
 export const DialobFormsContext = React.createContext<DialobFormsContextType>({} as any);
 
 export interface DialobFormsProviderProps {
   tenantId?: string | undefined;
   dialobApiUrl?: string | undefined; 
-  fetch?: typeof window.fetch | undefined;
   children: React.ReactNode;
+  
+  fetch?: typeof window.fetch | undefined;
+
+  onOpen?: (props: DashboardItem) => void;
 }
 
 const initialData: DashboardState = { forms: [], tags: [], items: [], loadedAt: new Date() };
@@ -97,8 +103,21 @@ export const DialobFormsProvider: React.FC<DialobFormsProviderProps> = (props) =
       return result;
     }
 
-    return { uploadJsonForm, downloadAllForms, uploadCsvForm, createForm, copyForm, deleteForm, forms: state.items }
-  }, [backend, state]);
+    // OPEN EXISTING FORM
+    function openForm(form: DashboardItem) {
+      new Visitor_OpenForm().accept({ 
+        form, 
+        dialobApiUrl: props.dialobApiUrl,
+        tenantId: props.tenantId,
+        onOpen: props.onOpen  
+      });
+    }
+
+    return { uploadJsonForm, downloadAllForms, uploadCsvForm, createForm, copyForm, deleteForm, openForm, forms: state.items }
+  }, [
+    backend, state, 
+    props.onOpen, props.dialobApiUrl, props.tenantId
+  ]);
 
 
   return (<DialobFormsContext.Provider value={contextValue}>
