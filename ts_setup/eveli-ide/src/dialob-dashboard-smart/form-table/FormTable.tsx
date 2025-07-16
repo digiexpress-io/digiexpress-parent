@@ -10,6 +10,7 @@ import { filterDateGte_lastSaved, filterDateGte_latestTagDate } from '../form-ta
 import { FormTableDownloadAll } from '../form-table-download-all';
 import { FormTableToolbarRow } from '../form-table-toolbar-row';
 import { FormTableTitleRow } from '../form-table-title-row';
+import { FormTableLabelRow } from '../form-table-label-row';
 
 
 
@@ -68,11 +69,12 @@ export const FormTable: React.FC<{}> = () => {
     {
       header: intl.formatMessage({ id: 'adminUI.formConfiguration.labels' }),
       accessorKey: 'metadata.labels',
-      size: 200,
-      minSize: 200,
+      size: 400,
+      minSize: 400,
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
+      cell: row => <FormTableLabelRow value={row.row.original} />,
     },
     {
       header: '',

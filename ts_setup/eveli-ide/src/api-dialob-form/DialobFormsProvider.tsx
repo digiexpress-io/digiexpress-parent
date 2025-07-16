@@ -6,7 +6,9 @@ import {
   Visitor_DeleteForm, Visitor_CopyForm, Visitor_CreateNewForm, 
   Visitor_DashboardState, Visitor_DownloadAllForms, 
   Visitor_RestApi, Visitor_UploadCsvForm, Visitor_UploadFormJson, 
-  Visitor_OpenForm
+  Visitor_OpenForm,
+  Visitor_LabelAdd,
+  Visitor_LabelDelete
 } from './visitors';
 import { DialobRestApi } from './types-rest-api';
 
@@ -25,6 +27,9 @@ export interface DialobFormsContextType {
   createForm: (props: Visitor_CreateNewForm.Input) => Promise<Visitor_CreateNewForm.Result>;
   copyForm: (props: Visitor_CopyForm.Input) => Promise<Visitor_CopyForm.Result>;
   deleteForm: (props: Visitor_DeleteForm.Input) => Promise<Visitor_DeleteForm.Result>;
+
+  addFormLabel: (props: Visitor_LabelAdd.Input) => Promise<Visitor_LabelAdd.Result>;
+  deleteFormLabel: (props: Visitor_LabelDelete.Input) => Promise<Visitor_LabelDelete.Result>;
 
   openForm: (props: DashboardItem) => void;
 }
@@ -103,6 +108,20 @@ export const DialobFormsProvider: React.FC<DialobFormsProviderProps> = (props) =
       return result;
     }
 
+    // DELETE NEW FORM LABEL
+    async function deleteFormLabel(input: Visitor_LabelDelete.Input) {
+      const result = await new Visitor_LabelDelete().accept(backend, { ...input });
+      await refetch();
+      return result;
+    }
+
+    // ADD NEW FORM LABEL
+    async function addFormLabel(input: Visitor_LabelAdd.Input) {
+      const result = await new Visitor_LabelAdd().accept(backend, { ...input });
+      await refetch();
+      return result;
+    }
+
     // OPEN EXISTING FORM
     function openForm(form: DashboardItem) {
       new Visitor_OpenForm().accept({ 
@@ -113,7 +132,12 @@ export const DialobFormsProvider: React.FC<DialobFormsProviderProps> = (props) =
       });
     }
 
-    return { uploadJsonForm, downloadAllForms, uploadCsvForm, createForm, copyForm, deleteForm, openForm, forms: state.items }
+    return { 
+      addFormLabel, deleteFormLabel,
+      uploadJsonForm, downloadAllForms, 
+      uploadCsvForm, createForm,
+      copyForm, deleteForm, openForm, 
+      forms: state.items }
   }, [
     backend, state, 
     props.onOpen, props.dialobApiUrl, props.tenantId

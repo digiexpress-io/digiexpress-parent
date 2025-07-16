@@ -7,8 +7,9 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { useIntl } from 'react-intl';
 import FileSaver from 'file-saver';
-import { DialogCopy } from '../dialog-copy';
 import React from 'react';
+
+import { DialogCopy } from '../dialog-copy';
 
 
 export const FormTableToolbarRow: React.FC<{ value: DashboardItem }> = ({ value }) => {
@@ -33,7 +34,6 @@ export const FormTableToolbarRow: React.FC<{ value: DashboardItem }> = ({ value 
 
   return (
     <Box display='flex'>
-
       {isCopyOpen && <DialogCopy onClose={handleCopyClose} source={value} />}
       <Tooltip title={intl.formatMessage({ id: 'adminUI.table.tooltip.copy' })} placement='top-end' arrow>
         <IconButton size='small' onClick={handleCopyOpen}>
@@ -46,6 +46,7 @@ export const FormTableToolbarRow: React.FC<{ value: DashboardItem }> = ({ value 
           <CloseIcon fontSize='small'/>
         </IconButton>
       </Tooltip>
+
       <Tooltip title={intl.formatMessage({ id: 'download' })} placement='top-end' arrow>
         <IconButton size='small' onClick={handleDownload}>
           <DownloadIcon fontSize='small'/>
