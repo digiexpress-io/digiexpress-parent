@@ -21,11 +21,11 @@ import { CustomerMessages } from './CustomerMessages';
 import { TaskProperties } from './TaskProperties';
 import { TaskNotes } from './TaskNotes';
 import { TaskAssignee } from './TaskAssignee';
-import { TaskPriority } from './TaskPriority';
 import { TaskRoles } from './TaskRoles';
 import { TaskOverdueWarning } from './TaskOverdueWarning';
 import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskStatus } from './EveliTaskStatus';
+import { EveliTaskPriority } from './EveliTaskPriority';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -142,7 +142,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             <Stack direction="column" height="100%">
               <EveliTaskStatus style={style} />
               <Divider sx={{ my: 1 }} />
-              <TaskCardDataRowElement label='Priority' style={style} value={<TaskPriority task={task} />} />
+              <EveliTaskPriority style={style} />
             </Stack>
 
           </TaskCard>

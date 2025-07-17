@@ -76,7 +76,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
 
           <Typography textAlign='center'
             sx={{ ...props.style.bodyTypographySmall }}>
-            {taskInfo.days} day(s) left to complete this task
+            {taskInfo.days} day(s) left to complete task
           </Typography>
         </StyledTaskOverrdueWarning>
       );
@@ -97,7 +97,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography sx={{ ...props.style.bodyTypographySmall }}>
-            This task was closed {taskInfo.days} day(s) overdue
+            Task was closed {taskInfo.days} day(s) overdue
           </Typography>
         </StyledTaskOverrdueWarning>
       )
@@ -106,7 +106,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
       return (
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
-          <Typography sx={{ ...props.style.bodyTypographySmall }}>This task is {taskInfo.days} day(s) overdue</Typography>
+          <Typography sx={{ ...props.style.bodyTypographySmall }}>Task is {taskInfo.days} day(s) overdue</Typography>
         </StyledTaskOverrdueWarning>
       )
     default:

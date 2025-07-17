@@ -26,7 +26,7 @@ const TaskProgressBar: React.FC<{ status: TaskStatus, style: TaskCardStyleDefini
   const getColor = (): string => {
     switch (status) {
       case 'NEW':
-        return '#9575cd'; // Purpley
+        return '#ffeb3b'; // Purpley
       case 'OPEN':
         return '#2196f3'; // Blue
       case 'COMPLETED':
@@ -54,7 +54,7 @@ const TaskProgressBar: React.FC<{ status: TaskStatus, style: TaskCardStyleDefini
         }}
         />
       </Box>
-      <Typography style={{ marginTop: 4, textAlign: 'right', fontSize: 12 }}>{progress}% complete</Typography>
+      <Typography className={classes.progressDesc}>{progress}% complete</Typography>
     </Box>
   );
 };
@@ -120,6 +120,11 @@ const TaskStatus = styled('div', {
       borderRadius: theme.spacing(3),
       overflow: 'hidden',
       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)',
+    },
+    '& .TaskStatus-progressDesc': {
+      marginTop: theme.spacing(0.5),
+      textAlign: 'right',
+      ...theme.typography.caption
     }
   };
 })
@@ -130,7 +135,8 @@ export const useUtilityClasses = () => {
     root: ['root'],
     progressBar: ['progressBar'],
     backgroundTrack: ['backgroundTrack'],
-    progressIndicator: ['progressIndicator']
+    progressIndicator: ['progressIndicator'],
+    progressDesc: ['progressDesc']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
