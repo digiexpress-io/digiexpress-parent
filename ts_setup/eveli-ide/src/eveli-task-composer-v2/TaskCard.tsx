@@ -5,7 +5,6 @@ import composeClasses from '@mui/utils/composeClasses';
 
 import { EditDialog } from './EditDialog';
 import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
-import { useTreeViewJSXItems } from '@mui/x-tree-view/internals';
 
 
 
@@ -35,7 +34,6 @@ interface TitleTextProps {
 
 
 export const TaskCard: React.FC<TaskCardProps> = (props) => {
-  const theme = useTheme();
   const classes = useUtilityClasses();
 
   const [open, setOpen] = React.useState(false);

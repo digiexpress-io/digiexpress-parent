@@ -23,9 +23,9 @@ import { TaskNotes } from './TaskNotes';
 import { TaskAssignee } from './TaskAssignee';
 import { TaskPriority } from './TaskPriority';
 import { TaskRoles } from './TaskRoles';
-import { TaskStatus } from './TaskStatus';
 import { TaskOverdueWarning } from './TaskOverdueWarning';
 import { CustomerFeedback } from './CustomerFeedback';
+import { EveliTaskStatus } from './EveliTaskStatus';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -140,7 +140,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('status-priority')}
           >
             <Stack direction="column" height="100%">
-              <TaskCardDataRowElement label='Status' style={style} value={<TaskStatus task={task} />} />
+              <EveliTaskStatus style={style} />
               <Divider sx={{ my: 1 }} />
               <TaskCardDataRowElement label='Priority' style={style} value={<TaskPriority task={task} />} />
             </Stack>

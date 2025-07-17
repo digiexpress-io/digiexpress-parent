@@ -1,5 +1,5 @@
 import React from 'react';
-import { alpha, Box, Chip, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
+import { alpha, Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FeedbackApi, useFeedback } from '@/api-feedback';
 import { TaskApi } from '@/api-task';
@@ -26,12 +26,18 @@ export const CustomerFeedback: React.FC<{ task: TaskApi.Task, style: TaskCardSty
 
   return (
     <StyledCustomerFeedback className={classes.root}>
-      <Box className={classes.publishedNotifier} sx={{ ...style.bodyTypographySmall }}><CloseIcon />Not published</Box>
-      <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.main}</Typography>
-      <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.sub}</Typography>
+      <Box display='flex' flexDirection='row' justifyContent='space-between'>
+        <Box flexDirection='column' alignItems='center'>
+          <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.main}</Typography>
+          <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.sub}</Typography>
+        </Box>
+        <Box alignItems='top'>
+          <Box className={classes.publishedNotifier} sx={{ ...style.bodyTypographySmall }}><CloseIcon />Not published</Box>
+        </Box>
+      </Box>
       <Divider sx={{ my: 1 }} />
-      <Typography sx={{ ...style.bodyTypography }}>Customer wrote: {feedback.content.title}</Typography> 
-      <Typography>{feedback.content.question}</Typography>
+      <Typography sx={{ ...style.bodyTypography }}>Feedback title: {feedback.content.title}</Typography>
+      <Typography sx={{ ...style.bodyTypography }}>Detailed response: {feedback.content.question}</Typography>
     </StyledCustomerFeedback>
   )
 }

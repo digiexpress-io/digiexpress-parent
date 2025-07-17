@@ -139,6 +139,7 @@ const StyledTaskOverrdueWarning = styled('div', {
 
     '& .MuiSvgIcon-root': {
       color: getBackgroundColor(theme, ownerState.status),
+      fontSize: 'medium'
     }
   };
 });
