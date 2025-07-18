@@ -19,7 +19,7 @@ export const taskCardGridSize: Record<TaskCardStyleKey | 'singleCol', { xs: numb
   singleCol,
   compact: { xs: 12, sm: 6, md: 4, lg: 3, xl: 4 },
   default: { xs: 12, sm: 8, md: 6, lg: 6, xl: 6 },
-  large: { xs: 12, sm: 12, md: 6, lg: 6, xl: 6 },
+  large: singleCol,
 };
 
 export const TASK_CARD_STYLE_LABELS: Record<TaskCardStyleKey, string> = {

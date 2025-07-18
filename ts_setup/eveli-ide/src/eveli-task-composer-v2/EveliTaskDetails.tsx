@@ -26,6 +26,7 @@ import { TaskOverdueWarning } from './TaskOverdueWarning';
 import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskStatus } from './EveliTaskStatus';
 import { EveliTaskPriority } from './EveliTaskPriority';
+import { EveliTaskFiles } from './EveliTaskFiles';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -191,7 +192,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('files')}
             onToggleFlashy={() => toggleFlashyForCard('files')}
           >
-            <>No files</>
+            <EveliTaskFiles task={task} style={style} />
           </TaskCard>
         </Grid2>
 

@@ -241,7 +241,7 @@ const TaskSectionCard = styled(Box, {
         borderColor: `${alpha(colors.flashyBorder, 0.1)}`
       },
       '& .TaskSectionCard-cardBody': {
-        padding: theme.spacing(1),
+        padding: theme.spacing(2),
         flexGrow: 1,
         boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
         backgroundColor: alpha(colors.flashyBackground, 0.02)
