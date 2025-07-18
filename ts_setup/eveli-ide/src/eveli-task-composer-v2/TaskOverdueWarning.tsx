@@ -74,8 +74,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
 
-          <Typography textAlign='center'
-            sx={{ ...props.style.bodyTypographySmall }}>
+          <Typography textAlign='center' sx={{ ...props.style.bodyTypographySmall }}>
             {taskInfo.days} day(s) left to complete task
           </Typography>
         </StyledTaskOverrdueWarning>
@@ -85,8 +84,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
       return (
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
-          <Typography textAlign='center'
-            sx={{ ...props.style.bodyTypographySmall }}>
+          <Typography textAlign='center' sx={{ ...props.style.bodyTypographySmall ?? undefined }}>
             Task is due today!
           </Typography>
         </StyledTaskOverrdueWarning>

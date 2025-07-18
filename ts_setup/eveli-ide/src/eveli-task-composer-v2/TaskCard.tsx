@@ -3,7 +3,6 @@ import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconB
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import composeClasses from '@mui/utils/composeClasses';
 
-import { EditDialog } from './EditDialog';
 import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
 
 
@@ -12,11 +11,13 @@ export interface TaskCardProps {
   id: string;
   title?: string;
   children: React.ReactNode;
-  buttonLabel?: string | undefined;
+  isMenu?: boolean;
   startAdornmentIcon?: React.ReactNode;
+  editDialog?: React.ReactNode;
   flashy?: boolean;
   styleVariant?: TaskCardStyleKey;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   onReview?: () => void;
   onToggleFlashy?: () => void;
 }
@@ -35,10 +36,6 @@ interface TitleTextProps {
 
 export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const classes = useUtilityClasses();
-
-  const [open, setOpen] = React.useState(false);
-  const handleToggle = () => setOpen((prev) => !prev);
-
   const variant = props.styleVariant ?? 'default';
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[variant];
@@ -71,13 +68,13 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
 
   return (<>
-    <EditDialog open={open} onClose={handleToggle} dialogTitle='Edit Dialog' /> {/* TODO LINK CLICKY CLICK */}
-    <TaskSectionCard onDoubleClick={handleToggle} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
+    {props.editDialog}
+    <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props}> {/* TODO LINK CLICKY CLICK */}
       <Box className={classes.title}>
         {props.startAdornmentIcon}
         <TitleText style={style}>{props.title}</TitleText>
         <Box flexGrow={1} />
-        {props.buttonLabel && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+        {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
         <Menu
           anchorEl={anchorEl}
           open={menuOpen}

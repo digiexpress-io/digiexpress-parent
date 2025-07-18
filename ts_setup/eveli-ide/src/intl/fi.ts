@@ -150,6 +150,7 @@ export const fi = {
   'button.close': 'Sulje',
   'button.reject': 'Hylkää',
   'button.send': 'Lähetä',
+  'button.save': 'Save',
   'button.dismiss': 'Sulje',
   'button.editRoles': 'Muokkaa',
   'button.select': 'Valita',

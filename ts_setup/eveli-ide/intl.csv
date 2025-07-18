@@ -34,6 +34,13 @@ task.priority.low,,Low,Ei kiireellinen,Inte bråttom
 task.priority.normal,,Normal,Normaali,Normal
 task.priority.high,,High,Kiire,Brådskande
 task.status.new,,New,Uusi,Nya
+task.dueDate,,Due date,,
+task.customerMessages,,Customer messages,,
+task.edit,,Edit task,,
+task.customerName,,Customer name,,
+task.subject,,Subject,,
+task.additionalInfo,,Additional info,,
+task.metaData,,Metadata,,
 task.status.open,,Open,Käsittelyssä,Läsning
 task.status.completed,,Completed,Valmis,Redo
 task.status.rejected,,No processing,Ei käsittelyä,Ingen bearbetning
@@ -150,6 +157,7 @@ button.edit,,Edit,Avaa,Öppna
 button.close,,Close,Sulje,Stäng
 button.reject,,Reject,Hylkää,Avslå
 button.send,,Send,Lähetä,Skicka
+button.save,,Save,Save,Save,
 button.dismiss,,Dismiss,Sulje,Stäng
 button.editRoles,,Edit,Muokkaa,Redigera
 button.select,,Select,Valita,Select

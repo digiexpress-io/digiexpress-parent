@@ -27,6 +27,8 @@ import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskStatus } from './EveliTaskStatus';
 import { EveliTaskPriority } from './EveliTaskPriority';
 import { EveliTaskFiles } from './EveliTaskFiles';
+import { EditCustomerMessagesDialog, EditTaskDialog } from '@/eveli-task-composer-edit';
+import { TaskCardId } from './types';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -35,6 +37,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const [reviewOpen, setReviewOpen] = React.useState(false);
   const [flashyCards, setFlashyCards] = React.useState<Record<string, boolean>>({});
+  const [editingCardId, setEditingCardId] = React.useState<string | undefined>();
 
   const [stylePreset, setStylePreset] = React.useState<TaskCardStyleKey>('default');
   const styleConfig = useTaskCardThemeConfig(reviewOpen);
@@ -63,6 +66,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
       return '--';
     }
 
+
     const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
     return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
   };
@@ -71,28 +75,36 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
     setReviewOpen(prev => !prev)
   }
 
+  function handleEditDialogOpen(cardId: TaskCardId) {
+    setEditingCardId(cardId);
+  }
+
+  function handleEditDialogClose() {
+    setEditingCardId(undefined);
+  }
+
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
         <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
       </Grid2>
 
-      <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} sx={{
-        overflowY: 'auto',
-        maxHeight: '100%',
-        overflow: 'visible'
-      }}
-        spacing={style.cardSpacing}>
+      <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
+        sx={{
+          overflowY: 'auto',
+          maxHeight: '100%',
+          overflow: 'visible'
+        }}>
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-
-          <TaskCard
-            id='task-main'
+          <TaskCard id='task_main'
+            editDialog={editingCardId === 'task_main' && (<EditTaskDialog task={task} open={true} onClose={handleEditDialogClose} />)}
+            onDoubleClick={() => handleEditDialogOpen('task_main')}
+            isMenu
             title={`Task: ${task.taskRef}`}
-            buttonLabel='Edit'
             startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
             styleVariant={stylePreset}
-            flashy={isCardFlashy('task-main')}
-            onToggleFlashy={() => toggleFlashyForCard('task-main')}
+            flashy={isCardFlashy('task_main')}
+            onToggleFlashy={() => toggleFlashyForCard('task_main')}
             onReview={toggleReview}
           >
             <TaskCardDataRowElement label='Due date' style={style}
@@ -115,7 +127,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='task-form-summary'
             onReview={toggleReview}
-            buttonLabel='View form'
+            isMenu
             startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('task-form-summary')}
@@ -134,7 +146,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='status-priority'
             title='Status and Priority'
-            buttonLabel='Edit'
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('status-priority')}
@@ -153,7 +165,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='assignees-roles'
             title='Assignees and roles'
-            buttonLabel='Edit'
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('assignees-roles')}
@@ -167,14 +179,14 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
 
         {/*  label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText}*/}
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-          <TaskCard
-            id='customer-messages'
-            title='Customer messages'
-            buttonLabel='New message'
+          <TaskCard id='customer_messages' title='Customer messages'
+            editDialog={editingCardId === 'customer_messages' && (<EditCustomerMessagesDialog task={task} open={true} onClose={handleEditDialogClose} />)}
+            onDoubleClick={() => handleEditDialogOpen('customer_messages')}
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
             styleVariant={stylePreset}
-            flashy={isCardFlashy('customer-messages')}
-            onToggleFlashy={() => toggleFlashyForCard('customer-messages')}
+            flashy={isCardFlashy('customer_messages')}
+            onToggleFlashy={() => toggleFlashyForCard('customer_messages')}
           >
             <Stack direction='column'>
               <CustomerMessages task={task} style={style} />
@@ -186,7 +198,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='files'
             title='Files'
-            buttonLabel='Upload file'
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('files')}
@@ -200,7 +212,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='feedback'
             title='Customer feedback'
-            buttonLabel='Edit and publish'
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('feedback')}
@@ -215,7 +227,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='notes'
             title='Notes'
-            buttonLabel='New comment'
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('notes')}
@@ -229,7 +241,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='task-meta'
             title='History and metadata'
-            buttonLabel='History and metadata'
+            isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('task-meta')}

@@ -1,12 +1,12 @@
 
-export type TaskCardId = 'task_main' | 
-'status_priority' | 
-'task-form-summary' | 
-'assignees-roles' | 
-'customer-messages' | 
-'files' |
-'feedback' |
-'notes' |
-'task-meta'
+export type TaskCardId = 'task_main' |
+  'status_priority' |
+  'task_form_summary' |
+  'assignees_roles' |
+  'customer_messages' |
+  'files' |
+  'feedback' |
+  'notes' |
+  'task_meta'
 
 

@@ -150,6 +150,7 @@ export const sv = {
   'button.close': 'Stäng',
   'button.reject': 'Avslå',
   'button.send': 'Skicka',
+  'button.save': 'Save',
   'button.dismiss': 'Stäng',
   'button.editRoles': 'Redigera',
   'button.select': 'Select',
