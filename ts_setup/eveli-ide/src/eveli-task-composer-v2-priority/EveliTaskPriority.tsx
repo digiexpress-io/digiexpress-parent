@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup, generateUtilityClass, Stack, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
 
 type Priority = 'LOW' | 'MEDIUM' | 'HIGH';
 

@@ -1,8 +1,10 @@
+import React from 'react';
 import { TaskApi } from '@/api-task';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, Grid2, styled, TextField, Typography, Zoom } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import React from 'react';
 import { useIntl } from 'react-intl';
+
+import { TaskProperties } from './TaskProperties';
 
 
 export interface EditDialogProps {
@@ -62,7 +64,7 @@ export const EditTaskDialog: React.FC<EditDialogProps> = ({ task, open, onClose 
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.metaData' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            {task.keyWords?.map(keyword => keyword)}
+            <TaskProperties task={task}/>
           </Grid2>
         </Grid2>
 

@@ -17,18 +17,16 @@ import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
-import { TaskProperties } from './TaskProperties';
 import { TaskNotes } from './TaskNotes';
 import { TaskAssignee } from './TaskAssignee';
 import { TaskRoles } from './TaskRoles';
-import { TaskOverdueWarning } from './TaskOverdueWarning';
 import { CustomerFeedback } from './CustomerFeedback';
-import { EveliTaskStatus } from './EveliTaskStatus';
-import { EveliTaskPriority } from './EveliTaskPriority';
 import { EveliTaskFiles } from './EveliTaskFiles';
-import { EditTaskDialog } from '@/eveli-task-composer-edit';
 import { TaskCardId } from './types';
-import { CustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-messages';
+import { CustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
+import { EditTaskDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
+import { EveliTaskPriority } from '../eveli-task-composer-v2-priority';
+import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {

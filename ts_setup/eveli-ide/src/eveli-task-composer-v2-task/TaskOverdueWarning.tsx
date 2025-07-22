@@ -1,9 +1,10 @@
 import React from 'react';
 import { alpha, Typography, generateUtilityClass, styled, Theme } from '@mui/material';
+import composeClasses from '@mui/utils/composeClasses';
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { DateTime } from 'luxon';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
-import composeClasses from '@mui/utils/composeClasses';
+
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
 
 
 import { TaskApi } from '@/api-task';

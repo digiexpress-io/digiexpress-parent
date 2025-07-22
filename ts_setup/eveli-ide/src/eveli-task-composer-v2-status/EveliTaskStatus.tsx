@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, generateUtilityClass, MenuItem, Select, SelectChangeEvent, styled, Typography } from '@mui/material';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
 import composeClasses from '@mui/utils/composeClasses';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+
 
 type TaskStatus = 'NEW' | 'OPEN' | 'COMPLETED' | 'REJECTED';
 
