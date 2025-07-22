@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Divider, generateUtilityClass, List, ListItem, ListItemText, styled, Typography } from '@mui/material';
+import { Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
 import composeClasses from '@mui/utils/composeClasses';
 
 const formatAnyDateShort = (value: Date | string | undefined): string => {
@@ -16,7 +16,7 @@ const formatAnyDateShort = (value: Date | string | undefined): string => {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 };
 
-export const TaskNotes: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefinition }> = ({ task, style }) => {
+export const EveliTaskNotes: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefinition }> = ({ task, style }) => {
   const classes = useUtilityClasses();
   const internalComments = task.comments?.filter(c => !c.external) || [];
 

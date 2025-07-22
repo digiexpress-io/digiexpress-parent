@@ -17,7 +17,6 @@ import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
-import { TaskNotes } from './TaskNotes';
 import { TaskAssignee } from './TaskAssignee';
 import { TaskRoles } from './TaskRoles';
 import { CustomerFeedback } from './CustomerFeedback';
@@ -27,6 +26,7 @@ import { CustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-t
 import { EditTaskDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
 import { EveliTaskPriority } from '../eveli-task-composer-v2-priority';
 import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
+import { EveliTaskNotes } from '../eveli-task-composer-v2-notes';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -231,7 +231,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('notes')}
             onToggleFlashy={() => toggleFlashyForCard('notes')}
           >
-            <TaskNotes task={task} style={style} />
+            <EveliTaskNotes task={task} style={style} />
           </TaskCard>
         </Grid2>
 
