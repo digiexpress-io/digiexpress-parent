@@ -206,7 +206,8 @@ const TaskSectionCard = styled(Box, {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.spacing(1),
       flexGrow: 1,
-      boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)'
+      boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
+      backgroundColor: theme.palette.secondary.main
     },
     '& .TaskSectionCard-title': {
       display: 'flex',

@@ -1,8 +1,9 @@
 import { TaskApi } from '@/api-task';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, Grid2, styled, TextField, Typography, Zoom } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Zoom } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { CustomerMessagesEdit } from './CustomerMessagesEdit';
 
 
 export interface EditCustomerMessagesProps {
@@ -26,26 +27,18 @@ export const EditCustomerMessagesDialog: React.FC<EditCustomerMessagesProps> = (
       </DialogTitle>
 
       <DialogContent>
-        <Grid2 container display='flex' alignItems='center'>
-        <Box display='flex' flexDirection='column'>{task.comments.map(c => <Box>{c.commentText}</Box>)}</Box>
-        </Grid2>
+        <CustomerMessagesEdit task={task} />
 
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.save' })}</Button>
+        <Button>{intl.formatMessage({ id: 'button.sendMessage', defaultMessage: 'Send message now' })}</Button>
       </DialogActions>
     </StyledDialog>
   )
 }
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  '& .MuiInputBase-input': {
-    height: '2.5rem',
-    padding: '0 12px'
-  },
-}));
+
 
 
 
@@ -61,7 +54,15 @@ const StyledDialog = styled(Dialog, {
 
 })(({ theme }) => {
 
-  return {};
+  return {
+    height: '100vh',
+    '.MuiDialogContent-root': {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 0,
+      overflow: 'hidden'
+    }
+  };
 })
 
 

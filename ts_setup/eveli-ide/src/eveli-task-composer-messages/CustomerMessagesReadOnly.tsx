@@ -1,16 +1,16 @@
 import React from 'react';
 import { Box, styled, Avatar, generateUtilityClass, Typography, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
 
-export interface CustomerMessagesProps {
+export interface CustomerMessagesReadOnlyProps {
   style: TaskCardStyleDefinition;
   task: TaskApi.Task;
 }
 
-export const CustomerMessages: React.FC<CustomerMessagesProps> = ({ task, style }) => {
+export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> = ({ task, style }) => {
   const classes = useUtilityClasses();
 
   const allExternalMessages = task.comments?.filter(c => c.external)
@@ -36,7 +36,7 @@ export const CustomerMessages: React.FC<CustomerMessagesProps> = ({ task, style 
 
   return (
 
-    <StyledCustomerMessages className={classes.container}>
+    <StyledCustomerMessagesReadOnly className={classes.container}>
       {externalMessages.length === 0 && (
         <Typography sx={{ ...style }}>
           No messages
@@ -65,12 +65,12 @@ export const CustomerMessages: React.FC<CustomerMessagesProps> = ({ task, style 
         </Typography>
       )}
 
-    </StyledCustomerMessages>
+    </StyledCustomerMessagesReadOnly>
   );
 };
 
-const MUI_NAME = 'CustomerMessages';
-const StyledCustomerMessages = styled('div', {
+const MUI_NAME = 'CustomerMessagesReadOnly';
+const StyledCustomerMessagesReadOnly = styled('div', {
   name: MUI_NAME,
   slot: 'Message',
   overridesResolver: (_props, styles) => {
@@ -83,27 +83,27 @@ const StyledCustomerMessages = styled('div', {
   flexDirection: 'column',
   gap: theme.spacing(2),
 
-  '& .CustomerMessages-messageRow': {
+  '& .CustomerMessagesReadOnly-messageRow': {
     display: 'flex',
     alignItems: 'center',
   },
 
-  '& .CustomerMessages-senderInfo': {
+  '& .CustomerMessagesReadOnly-senderInfo': {
     fontWeight: 'bold !important', //TODO figure out a better way with cardThemeConfig
   },
-  '& .CustomerMessages-frontdeskAvatar': {
+  '& .CustomerMessagesReadOnly-frontdeskAvatar': {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     backgroundColor: '#caf0f8',
     marginRight: theme.spacing(1),
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
   },
-  '& .CustomerMessages-customerAvatar': {
+  '& .CustomerMessagesReadOnly-customerAvatar': {
     border: `1px solid ${darken('#ecf39e', 0.1)}`,
     backgroundColor: '#ecf39e',
     marginRight: theme.spacing(1),
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
   },
-  '& .CustomerMessages-frontdeskMessageBody': {
+  '& .CustomerMessagesReadOnly-frontdeskMessageBody': {
     flexGrow: 1,
     backgroundColor: '#caf0f8',
     borderRadius: '20px',
@@ -111,7 +111,7 @@ const StyledCustomerMessages = styled('div', {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
   },
-  '& .CustomerMessages-customerMessageBody': {
+  '& .CustomerMessagesReadOnly-customerMessageBody': {
     flexGrow: 1,
     backgroundColor: '#ecf39e',
     borderRadius: '20px',

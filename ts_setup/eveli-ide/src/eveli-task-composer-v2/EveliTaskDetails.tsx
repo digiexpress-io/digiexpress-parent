@@ -17,7 +17,6 @@ import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
-import { CustomerMessages } from './CustomerMessages';
 import { TaskProperties } from './TaskProperties';
 import { TaskNotes } from './TaskNotes';
 import { TaskAssignee } from './TaskAssignee';
@@ -27,8 +26,9 @@ import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskStatus } from './EveliTaskStatus';
 import { EveliTaskPriority } from './EveliTaskPriority';
 import { EveliTaskFiles } from './EveliTaskFiles';
-import { EditCustomerMessagesDialog, EditTaskDialog } from '@/eveli-task-composer-edit';
+import { EditTaskDialog } from '@/eveli-task-composer-edit';
 import { TaskCardId } from './types';
+import { CustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-messages';
 
 
 export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
@@ -189,7 +189,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('customer_messages')}
           >
             <Stack direction='column'>
-              <CustomerMessages task={task} style={style} />
+              <CustomerMessagesReadOnly task={task} style={style} />
             </Stack>
           </TaskCard>
         </Grid2>
