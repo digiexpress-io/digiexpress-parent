@@ -1,6 +1,7 @@
 import { Container } from '@mui/material';
 import { EveliTaskComposer } from '@/eveli-task-composer';
-import { EveliTaskDetails } from '@/eveli-task-composer-v2';
+import { EveliTaskDashboard } from '@/eveli-task-composer-v2';
+
 import { useTenantConfigFeatures } from '@/api-tenant-config';
 
 export const Route = createFileRoute({
@@ -15,7 +16,7 @@ function Component() {
 
   return (
     <Container maxWidth='lg'>
-      {isNew ? <EveliTaskDetails taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
+      {isNew ? <EveliTaskDashboard taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
     </Container>
   )
 }

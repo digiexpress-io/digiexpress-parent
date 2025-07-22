@@ -4,11 +4,11 @@ import { TaskApi } from '@/api-task';
 import composeClasses from '@mui/utils/composeClasses';
 
 
-export interface TaskRolesProps {
+export interface EveliTaskRolesProps {
   task: TaskApi.Task;
 }
 
-export const TaskRoles: React.FC<TaskRolesProps> = ({ task }) => {
+export const EveliTaskRoles: React.FC<EveliTaskRolesProps> = ({ task }) => {
   const classes = useUtilityClasses();
 
   if (!task.assignedRoles || task.assignedRoles.length === 0) {

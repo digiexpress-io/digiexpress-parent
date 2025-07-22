@@ -5,12 +5,12 @@ import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConf
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
 
-export interface CustomerMessagesReadOnlyProps {
+export interface EveliCustomerMessagesReadOnlyProps {
   style: TaskCardStyleDefinition;
   task: TaskApi.Task;
 }
 
-export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> = ({ task, style }) => {
+export const EveliCustomerMessagesReadOnly: React.FC<EveliCustomerMessagesReadOnlyProps> = ({ task, style }) => {
   const classes = useUtilityClasses();
 
   const allExternalMessages = task.comments?.filter(c => c.external)
@@ -69,7 +69,7 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
   );
 };
 
-const MUI_NAME = 'CustomerMessagesReadOnly';
+const MUI_NAME = 'EveliCustomerMessagesReadOnly';
 const StyledCustomerMessagesReadOnly = styled('div', {
   name: MUI_NAME,
   slot: 'Message',
@@ -83,27 +83,27 @@ const StyledCustomerMessagesReadOnly = styled('div', {
   flexDirection: 'column',
   gap: theme.spacing(2),
 
-  '& .CustomerMessagesReadOnly-messageRow': {
+  '& .EveliCustomerMessagesReadOnly-messageRow': {
     display: 'flex',
     alignItems: 'center',
   },
 
-  '& .CustomerMessagesReadOnly-senderInfo': {
+  '& .EveliCustomerMessagesReadOnly-senderInfo': {
     fontWeight: 'bold !important', //TODO figure out a better way with cardThemeConfig
   },
-  '& .CustomerMessagesReadOnly-frontdeskAvatar': {
+  '& .EveliCustomerMessagesReadOnly-frontdeskAvatar': {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     backgroundColor: '#caf0f8',
     marginRight: theme.spacing(1),
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
   },
-  '& .CustomerMessagesReadOnly-customerAvatar': {
+  '& .EveliCustomerMessagesReadOnly-customerAvatar': {
     border: `1px solid ${darken('#ecf39e', 0.1)}`,
     backgroundColor: '#ecf39e',
     marginRight: theme.spacing(1),
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
   },
-  '& .CustomerMessagesReadOnly-frontdeskMessageBody': {
+  '& .EveliCustomerMessagesReadOnly-frontdeskMessageBody': {
     flexGrow: 1,
     backgroundColor: '#caf0f8',
     borderRadius: '20px',
@@ -111,7 +111,7 @@ const StyledCustomerMessagesReadOnly = styled('div', {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
   },
-  '& .CustomerMessagesReadOnly-customerMessageBody': {
+  '& .EveliCustomerMessagesReadOnly-customerMessageBody': {
     flexGrow: 1,
     backgroundColor: '#ecf39e',
     borderRadius: '20px',

@@ -1,1 +1,1 @@
-export * from './EveliTaskDetails';
+export * from './EveliTaskDashboard';

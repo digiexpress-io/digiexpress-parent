@@ -18,18 +18,18 @@ import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { TaskAssignee } from './TaskAssignee';
-import { TaskRoles } from './TaskRoles';
 import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskFiles } from './EveliTaskFiles';
 import { TaskCardId } from './types';
-import { CustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
 import { EditTaskDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
 import { EveliTaskPriority } from '../eveli-task-composer-v2-priority';
 import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
 import { EveliTaskNotes } from '../eveli-task-composer-v2-notes';
+import { EveliTaskRoles } from '../eveli-task-composer-v2-roles';
+import { EveliCustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
 
 
-export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
+export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
   const [task, setTask] = React.useState<TaskApi.Task>();
 
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
@@ -169,7 +169,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('assignees-roles')}
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
           >
-            <TaskCardDataRowElement label='Roles' value={<TaskRoles task={task} />} style={style} />
+            <TaskCardDataRowElement label='Roles' value={<EveliTaskRoles task={task} />} style={style} />
             <Divider sx={{ my: 1 }} />
             <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
           </TaskCard>
@@ -187,7 +187,7 @@ export const EveliTaskDetails: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('customer_messages')}
           >
             <Stack direction='column'>
-              <CustomerMessagesReadOnly task={task} style={style} />
+              <EveliCustomerMessagesReadOnly task={task} style={style} />
             </Stack>
           </TaskCard>
         </Grid2>
