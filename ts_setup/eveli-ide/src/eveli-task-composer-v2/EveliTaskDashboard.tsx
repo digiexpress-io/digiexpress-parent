@@ -21,10 +21,11 @@ import { TaskAssignee } from './TaskAssignee';
 import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskFiles } from './EveliTaskFiles';
 import { TaskCardId } from './types';
+
 import { EditTaskDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
 import { EveliTaskPriority } from '../eveli-task-composer-v2-priority';
 import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
-import { EveliTaskNotes } from '../eveli-task-composer-v2-notes';
+import { EditNotesDialog, EveliTaskNotesTruncated } from '../eveli-task-composer-v2-notes';
 import { EveliTaskRoles } from '../eveli-task-composer-v2-roles';
 import { EveliCustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
 
@@ -225,13 +226,15 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
           <TaskCard
             id='notes'
             title='Notes'
+            onDoubleClick={() => handleEditDialogOpen('notes')}
+            editDialog={editingCardId === 'notes' && (<EditNotesDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('notes')}
             onToggleFlashy={() => toggleFlashyForCard('notes')}
           >
-            <EveliTaskNotes task={task} style={style} />
+            <EveliTaskNotesTruncated task={task} style={style} />
           </TaskCard>
         </Grid2>
 
