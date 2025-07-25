@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, generateUtilityClass, styled, TextField, Typography } from '@mui/material';
+import { Alert, alpha, Box, Divider, generateUtilityClass, styled, TextField, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -24,36 +24,33 @@ export const EveliTaskNotesEdit: React.FC<EveliTaskNotesProps> = ({ task }) => {
   const classes = useUtilityClasses();
   const internalComments = task.comments?.filter(c => !c.external) || [];
 
-  if (!internalComments || internalComments.length === 0) {
-    return <>No notes</>
-  }
 
   return (
     <StyledTaskNotes className={classes.notesContainer}>
       <Box className={classes.messagesContainer}>
 
-        {internalComments
-          .map(comment => (
-            <Box key={comment.id}>
-              <Box display='flex' alignItems='center'>
-                <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
-                <Typography component='div' className={classes.noteBody}>
-                  {comment.commentText}
-                </Typography>
-              </Box>
-              <Divider />
+        {!internalComments || internalComments.length === 0 && <Typography variant='body2' textAlign='center'>No notes yet</Typography>}
 
-              <Box display='flex' alignItems='center' justifyContent='flex-end'>
-                <Typography component='div' className={classes.noteAuthor}>
-                  {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
-                </Typography>
-              </Box>
+        {internalComments.map(comment => (
+          <Box key={comment.id}>
+            <Box display='flex' alignItems='center'>
+              <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
+              <Typography component='div' className={classes.noteBody}>
+                {comment.commentText}
+              </Typography>
             </Box>
-          ))}
+            <Divider />
+
+            <Box display='flex' alignItems='center' justifyContent='flex-end'>
+              <Typography component='div' className={classes.noteAuthor}>
+                {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
       </Box>
       <Box className={classes.inputBox}>
-        <Divider sx={{ my: 1 }} />
-        <Box display='flex' alignItems='center'>
+        <Box className={classes.inputBoxTitle}>
           <EditIcon color='primary' />
           <Typography fontWeight='bold'>Write a new note</Typography>
         </Box>
@@ -83,15 +80,28 @@ const StyledTaskNotes = styled('div', {
   '& .TaskNotes-messagesContainer': {
     flexGrow: 1,
     overflowY: 'auto',
-    padding: theme.spacing(7),
+    padding: theme.spacing(4),
+    margin: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(0.5),
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.05)`,
+  },
+
+  '& .TaskNotes-inputBoxTitle': {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    borderRadius: `4px 4px 0 0`,
+    border: `1px solid ${theme.palette.divider}`,
+    borderBottom: 'none',
+    padding: theme.spacing(1),
   },
 
   '& .TaskNotes-inputBox': {
     position: 'sticky',
     bottom: 0,
-    backgroundColor: theme.palette.background.paper,
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    paddingRight: theme.spacing(2),
   },
 
   '& .TaskNotes-noteBody': {
@@ -109,10 +119,15 @@ const StyledTaskNotes = styled('div', {
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
+  marginTop: 0,
+  '& .MuiOutlinedInput-root': {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
   '& .MuiInputBase-input': {
     height: '2.5rem',
-    padding: '0 12px'
-  },
+    padding: '0 12px',
+  }
 }));
 
 
@@ -123,7 +138,8 @@ export const useUtilityClasses = () => {
     noteAuthor: ['noteAuthor'],
     noteBackground: ['noteBackground'],
     messagesContainer: ['messagesContainer'],
-    inputBox: ['inputBox']
+    inputBox: ['inputBox'],
+    inputBoxTitle: ['inputBoxTitle']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);

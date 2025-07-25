@@ -1,6 +1,7 @@
 import React from 'react';
 import { TaskApi } from '@/api-task';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Zoom } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Typography, Zoom } from '@mui/material';
+import HistoryIcon from '@mui/icons-material/History';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { CustomerMessagesEdit } from './CustomerMessagesEdit';
@@ -27,6 +28,10 @@ export const EditCustomerMessagesDialog: React.FC<EditCustomerMessagesProps> = (
       </DialogTitle>
 
       <DialogContent>
+        <Box className={classes.historyLabel}>
+          <HistoryIcon />
+          <Typography>Message history</Typography>
+        </Box>
         <CustomerMessagesEdit task={task} />
       </DialogContent>
 
@@ -56,11 +61,28 @@ const StyledDialog = styled(Dialog, {
 
   return {
     height: '100vh',
+    '.EditCustomerMessagesDialog-historyLabel': {
+      marginLeft: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      '& .MuiTypography-root': {
+        ...theme.typography.body2,
+        fontWeight: 'bold'
+      },
+      '& .MuiSvgIcon-root': {
+        fontSize: '20pt',
+        marginRight: theme.spacing(1),
+        marginLeft: theme.spacing(1),
+        color: theme.palette.primary.main
+      },
+    },
     '.MuiDialogContent-root': {
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden'
-    }
+    },
+
+
   };
 })
 
@@ -68,6 +90,7 @@ const StyledDialog = styled(Dialog, {
 const useUtilityClasses = () => {
   const slots = {
     editCustomerMessages: ['editCustomerMessages'],
+    historyLabel: ['historyLabel']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

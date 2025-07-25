@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Zoom } from '@mui/material';
+import { alpha, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Typography, Zoom } from '@mui/material';
+import HistoryIcon from '@mui/icons-material/History';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
@@ -28,6 +29,10 @@ export const EditNotesDialog: React.FC<EditDialogProps> = ({ task, open, onClose
       </DialogTitle>
 
       <DialogContent>
+        <Box className={classes.historyLabel}>
+          <HistoryIcon />
+          <Typography>Message history</Typography>
+        </Box>
         <EveliTaskNotesEdit task={task} />
       </DialogContent>
 
@@ -59,8 +64,23 @@ const StyledEditNotesDialog = styled(Dialog, {
     '.MuiDialogContent-root': {
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden'
-    }
+      overflow: 'hidden',
+    },
+    '.EditNotesDialog-historyLabel': {
+      marginLeft: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      '& .MuiTypography-root': {
+        ...theme.typography.body2,
+        fontWeight: 'bold'
+      },
+      '& .MuiSvgIcon-root': {
+        fontSize: '20pt',
+        marginRight: theme.spacing(1),
+        marginLeft: theme.spacing(1),
+        color: theme.palette.primary.main
+      },
+    },
 
   };
 })
@@ -69,6 +89,7 @@ const StyledEditNotesDialog = styled(Dialog, {
 const useUtilityClasses = () => {
   const slots = {
     editDialog: ['editDialog'],
+    historyLabel: ['historyLabel']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

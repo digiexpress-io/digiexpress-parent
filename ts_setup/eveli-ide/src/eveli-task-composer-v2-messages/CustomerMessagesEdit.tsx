@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField, Divider, Alert } from '@mui/material';
+import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField, Divider, Alert, alpha } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
@@ -58,8 +58,7 @@ export const CustomerMessagesEdit: React.FC<CustomerMessagesEditProps> = ({ task
       </Box>
 
       <Box className={classes.inputBox}>
-        <Divider />
-        <Box display='flex' alignItems='center'>
+        <Box className={classes.inputBoxTitle}>
           <EditIcon color='primary' />
           <Typography className={classes.messageBoxLabel}>
             {intl.formatMessage({ id: 'task.customerMessages.newMessageTitle', defaultMessage: 'Write a new message' })}
@@ -92,12 +91,11 @@ const StyledCustomerMessagesEdit = styled('div', {
   '& .CustomerMessagesEdit-messagesContainer': {
     flexGrow: 1,
     overflowY: 'auto',
-    padding: theme.spacing(7)
-  },
-
-  '.MuiDivider-root': {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    padding: theme.spacing(4),
+    margin: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(0.5),
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.05)`,
   },
   '& .CustomerMessagesEdit-messageBoxLabel': {
     ...theme.typography.body2,
@@ -108,12 +106,22 @@ const StyledCustomerMessagesEdit = styled('div', {
     alignItems: 'center',
     marginBottom: theme.spacing(2)
   },
+  '& .CustomerMessagesEdit-inputBoxTitle': {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    borderRadius: `4px 4px 0 0`,
+    border: `1px solid ${theme.palette.divider}`,
+    borderBottom: 'none',
+    padding: theme.spacing(1),
+  },
 
   '& .CustomerMessagesEdit-inputBox': {
     position: 'sticky',
     width: '100%',
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    paddingRight: theme.spacing(2),
+    marginTop: theme.spacing(1)
   },
 
   '& .CustomerMessagesEdit-senderInfo': {
@@ -158,6 +166,11 @@ const StyledCustomerMessagesEdit = styled('div', {
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
+  marginTop: 0,
+  '& .MuiOutlinedInput-root': {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
   '& .MuiInputBase-input': {
     height: '2.5rem',
     padding: '0 12px'
@@ -175,7 +188,8 @@ export const useUtilityClasses = () => {
     frontdeskAvatar: ['frontdeskAvatar'],
     customerAvatar: ['customerAvatar'],
     frontdeskMessageBody: ['frontdeskMessageBody'],
-    customerMessageBody: ['customerMessageBody']
+    customerMessageBody: ['customerMessageBody'],
+    inputBoxTitle: ['inputBoxTitle']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
