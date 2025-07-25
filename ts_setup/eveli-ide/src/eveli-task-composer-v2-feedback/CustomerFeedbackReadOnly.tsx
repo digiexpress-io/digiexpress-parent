@@ -1,12 +1,12 @@
 import React from 'react';
 import { alpha, Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { FeedbackApi, useFeedback } from '@/api-feedback';
 import { TaskApi } from '@/api-task';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { PublishedNotifier } from './PublishedNotifier';
 
-export const CustomerFeedback: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefinition }> = ({ task, style }) => {
+export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefinition }> = ({ task, style }) => {
   const { getOneFeedback } = useFeedback();
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const classes = useUtilityClasses();
@@ -25,28 +25,28 @@ export const CustomerFeedback: React.FC<{ task: TaskApi.Task, style: TaskCardSty
 
 
   return (
-    <StyledCustomerFeedback className={classes.root}>
+    <StyledCustomerFeedbackReadOnly className={classes.root}>
       <Box display='flex' flexDirection='row' justifyContent='space-between'>
         <Box flexDirection='column' alignItems='center'>
           <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.main}</Typography>
           <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.sub}</Typography>
         </Box>
         <Box alignItems='top'>
-          <Box className={classes.publishedNotifier} sx={{ ...style.bodyTypographySmall }}><CloseIcon />Not published</Box>
+          <PublishedNotifier task={task} style={style} />
         </Box>
       </Box>
       <Divider sx={{ my: 1 }} />
       <Typography sx={{ ...style.bodyTypography }}>Feedback title: {feedback.content.title}</Typography>
       <Typography sx={{ ...style.bodyTypography }}>Detailed response: {feedback.content.question}</Typography>
-    </StyledCustomerFeedback>
+    </StyledCustomerFeedbackReadOnly>
   )
 }
 
 
-const MUI_NAME = 'CustomerFeedback';
-const StyledCustomerFeedback = styled('div', {
+const MUI_NAME = 'CustomerFeedbackReadOnly';
+const StyledCustomerFeedbackReadOnly = styled('div', {
   name: MUI_NAME,
-  slot: 'Message',
+  slot: 'Root',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
@@ -56,7 +56,7 @@ const StyledCustomerFeedback = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
-  '& .CustomerFeedback-publishedNotifier': {
+  '& .CustomerFeedbackReadOnly-publishedNotifier': {
     alignSelf: 'flex-end',
     display: 'flex',
     alignItems: 'center',
@@ -72,7 +72,7 @@ const StyledCustomerFeedback = styled('div', {
     },
 
   },
-  '& .CustomerFeedback-feedbackCategories': {
+  '& .CustomerFeedbackReadOnly-feedbackCategories': {
     fontWeight: 500,
   },
 

@@ -18,7 +18,6 @@ import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { TaskAssignee } from './TaskAssignee';
-import { CustomerFeedback } from './CustomerFeedback';
 import { EveliTaskFiles } from './EveliTaskFiles';
 import { TaskCardId } from './types';
 
@@ -28,6 +27,7 @@ import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
 import { EditNotesDialog, EveliTaskNotesTruncated } from '../eveli-task-composer-v2-notes';
 import { EveliTaskRoles } from '../eveli-task-composer-v2-roles';
 import { EveliCustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
+import { EditCustomerFeedbackDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
 
 
 export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
@@ -208,16 +208,16 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-          <TaskCard
-            id='feedback'
-            title='Customer feedback'
+          <TaskCard id='feedback' title='Customer feedback'
+            onDoubleClick={() => handleEditDialogOpen('feedback')}
+            editDialog={editingCardId === 'feedback' && (<EditCustomerFeedbackDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('feedback')}
             onToggleFlashy={() => toggleFlashyForCard('feedback')}
           >
-            <CustomerFeedback task={task} style={style} />
+            <CustomerFeedbackReadOnly task={task} style={style} />
           </TaskCard>
         </Grid2>
 
