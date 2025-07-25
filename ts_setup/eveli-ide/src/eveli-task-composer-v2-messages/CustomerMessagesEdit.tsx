@@ -88,7 +88,12 @@ const StyledCustomerMessagesEdit = styled('div', {
   flexDirection: 'column',
   height: '100%',
   overflow: 'hidden',
-  padding: theme.spacing(2),
+
+  '& .CustomerMessagesEdit-messagesContainer': {
+    flexGrow: 1,
+    overflowY: 'auto',
+    padding: theme.spacing(7)
+  },
 
   '.MuiDivider-root': {
     marginTop: theme.spacing(1),
@@ -105,22 +110,16 @@ const StyledCustomerMessagesEdit = styled('div', {
   },
 
   '& .CustomerMessagesEdit-inputBox': {
-    flexShrink: 0,
-    bottom: 0,
     position: 'sticky',
     width: '100%',
-    padding: theme.spacing(1),
-  },
-
-  '& .CustomerMessagesEdit-messagesContainer': {
-    flexGrow: 1,
-    overflowY: 'auto',
-    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
 
   '& .CustomerMessagesEdit-senderInfo': {
     fontWeight: 'bold !important', //TODO figure out a better way with cardThemeConfig
   },
+
   '& .CustomerMessagesEdit-frontdeskAvatar': {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     backgroundColor: '#caf0f8',

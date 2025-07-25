@@ -79,32 +79,30 @@ const StyledTaskNotes = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  padding: theme.spacing(2),
 
   '& .TaskNotes-messagesContainer': {
     flexGrow: 1,
     overflowY: 'auto',
-    paddingRight: theme.spacing(1),
+    padding: theme.spacing(7),
   },
 
   '& .TaskNotes-inputBox': {
     position: 'sticky',
     bottom: 0,
     backgroundColor: theme.palette.background.paper,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
 
   '& .TaskNotes-noteBody': {
     fontWeight: 400,
-    marginLeft: 1
   },
   '& .TaskNotes-noteAuthor': {
     textAlign: 'right',
     color: theme.palette.text.disabled
   },
   '& .MuiSvgIcon-root': {
-    //fontSize: '20pt',
     marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
   },
 
 }));

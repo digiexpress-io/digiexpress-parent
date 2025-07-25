@@ -19,7 +19,7 @@ export const EditNotesDialog: React.FC<EditDialogProps> = ({ task, open, onClose
   const intl = useIntl();
 
   return (
-    <StyledEditNotesDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
+    <StyledEditNotesDialog fullWidth maxWidth='xl' className={classes.editDialog} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle>
         {intl.formatMessage({ id: 'task.notes.edit', defaultMessage: 'Edit notes for task' })}
@@ -27,7 +27,7 @@ export const EditNotesDialog: React.FC<EditDialogProps> = ({ task, open, onClose
         {task.taskRef ?? 'no task reference id'}
       </DialogTitle>
 
-      <DialogContent sx={{p: 0}}>
+      <DialogContent>
         <EveliTaskNotesEdit task={task} />
       </DialogContent>
 
@@ -55,9 +55,11 @@ const StyledEditNotesDialog = styled(Dialog, {
 })(({ theme }) => {
 
   return {
-     '.MuiDialogContent-root': {
+    height: '100vh',
+    '.MuiDialogContent-root': {
       display: 'flex',
       flexDirection: 'column',
+      overflow: 'hidden'
     }
 
   };

@@ -18,7 +18,7 @@ export const EditCustomerMessagesDialog: React.FC<EditCustomerMessagesProps> = (
 
 
   return (
-    <StyledDialog className={classes.editCustomerMessages} open={open} onClose={onClose} fullWidth maxWidth='lg' slots={{ transition: Zoom }}>
+    <StyledDialog fullWidth maxWidth='xl' className={classes.editCustomerMessages} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle>
         {intl.formatMessage({ id: 'task.customerMessages' })}
@@ -28,8 +28,8 @@ export const EditCustomerMessagesDialog: React.FC<EditCustomerMessagesProps> = (
 
       <DialogContent>
         <CustomerMessagesEdit task={task} />
-
       </DialogContent>
+
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button>{intl.formatMessage({ id: 'button.sendMessage', defaultMessage: 'Send message now' })}</Button>
@@ -59,7 +59,6 @@ const StyledDialog = styled(Dialog, {
     '.MuiDialogContent-root': {
       display: 'flex',
       flexDirection: 'column',
-      padding: 0,
       overflow: 'hidden'
     }
   };
