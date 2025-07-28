@@ -18,7 +18,6 @@ import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { TaskAssignee } from './TaskAssignee';
-import { EveliTaskFiles } from './EveliTaskFiles';
 import { TaskCardId } from './types';
 
 import { EditTaskDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
@@ -28,6 +27,7 @@ import { EditNotesDialog, EveliTaskNotesTruncated } from '../eveli-task-composer
 import { EveliTaskRoles } from '../eveli-task-composer-v2-roles';
 import { EveliCustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
 import { EditCustomerFeedbackDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
+import { FilesReadOnly, FilesEditDialog } from '../eveli-task-composer-v2-files';
 
 
 export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
@@ -194,16 +194,16 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         </Grid2>
 
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-          <TaskCard
-            id='files'
-            title='Files'
+          <TaskCard id='files' title='Files'
+            onDoubleClick={() => handleEditDialogOpen('files')}
+            editDialog={editingCardId === 'files' && (<FilesEditDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('files')}
             onToggleFlashy={() => toggleFlashyForCard('files')}
           >
-            <EveliTaskFiles task={task} style={style} />
+            <FilesReadOnly task={task} style={style} />
           </TaskCard>
         </Grid2>
 

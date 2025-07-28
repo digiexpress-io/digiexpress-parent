@@ -1,31 +1,42 @@
 import React from 'react';
-import { alpha, Box, darken, generateUtilityClass, IconButton, styled, Typography } from '@mui/material';
+import { Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import DescriptionIcon from '@mui/icons-material/Description';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import { TaskApi } from '@/api-task';
-import { TaskCardStyleDefinition } from './cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
 
+const files = [
+  { id: 1, name: 'report.pdf', uploadedAt: '11.09.2025' },
+  { id: 2, name: 'design.png', uploadedAt: '10.09.2025' },
+  { id: 3, name: 'invoice.docx', uploadedAt: '09.09.2025' },
+];
 
-
-export interface EveliTaskFilesProps {
+export interface FilesReadOnlyProps {
   task: TaskApi.Task;
   style: TaskCardStyleDefinition
 }
 
-export const EveliTaskFiles: React.FC<EveliTaskFilesProps> = ({ task, style }) => {
+export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => {
   const classes = useUtilityClasses();
 
+  if (!files.length || files.length === 0) {
+    return <>No files</>
+  }
   return (
     <TaskFiles className={classes.root} style={style}>
-      <Box className={classes.file}>
-        <DescriptionIcon className={classes.fileIcon} />
-        <Typography sx={{ ...style }}>file-name.jpg</Typography>
-        <Box flexGrow={1} />
-        <IconButton color='error'><DeleteIcon className={classes.deleteIcon} /></IconButton>
-      </Box>
-    </TaskFiles>)
+      {files.map((file) => (<div key={file.id}>
+        <Box className={classes.file}>
+          <DescriptionIcon className={classes.fileIcon} />
+          <Typography sx={{ ...style }}>{file.name}</Typography>
+          <Box flexGrow={1} />
+          <Typography sx={{ ...style }}>{file.uploadedAt}</Typography>
+        </Box>
+        <Divider />
+      </div>
+      ))}
+    </TaskFiles>
+  )
 }
 
 
@@ -43,17 +54,8 @@ const TaskFiles = styled('div', {
 })<{ style: TaskCardStyleDefinition }>(({ theme, style }) => {
 
   return {
-    display: "flex",
-    alignItems: "center",
-
     '& .TaskFiles-file': {
       padding: theme.spacing(1),
-      border: `1px solid ${theme.palette.divider}`,
-      backgroundColor: alpha(theme.palette.divider, 0.3),
-      ':hover': {
-        border: `1px solid ${darken(theme.palette.divider, 0.2)}`,
-      },
-      borderRadius: theme.spacing(2),
       display: 'flex',
       alignItems: 'center',
       width: '100%',
@@ -64,11 +66,7 @@ const TaskFiles = styled('div', {
     '& .TaskFiles-fileIcon': {
       marginRight: theme.spacing(1),
       color: theme.palette.primary.main
-    },
-    '& .TaskFiles-deleteIcon': {
-      color: theme.palette.error.main
     }
-
 
   };
 })

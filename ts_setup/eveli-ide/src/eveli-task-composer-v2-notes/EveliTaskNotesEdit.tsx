@@ -51,7 +51,7 @@ export const EveliTaskNotesEdit: React.FC<EveliTaskNotesProps> = ({ task }) => {
       </Box>
       <Box className={classes.inputBox}>
         <Box className={classes.inputBoxTitle}>
-          <EditIcon color='primary' />
+          <EditIcon color='inherit' />
           <Typography fontWeight='bold'>Write a new note</Typography>
         </Box>
         <StyledTextField multiline rows={4} />
@@ -90,9 +90,10 @@ const StyledTaskNotes = styled('div', {
   '& .TaskNotes-inputBoxTitle': {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
     borderRadius: `4px 4px 0 0`,
-    border: `1px solid ${theme.palette.divider}`,
+    border: `2px solid ${theme.palette.primary.main}`,
     borderBottom: 'none',
     padding: theme.spacing(1),
   },
