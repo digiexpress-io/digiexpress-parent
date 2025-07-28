@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container, useTheme } from '@mui/material';
 import { EveliTaskComposer } from '@/eveli-task-composer';
 import { EveliTaskDashboard } from '@/eveli-task-composer-v2';
 
@@ -11,11 +11,11 @@ export const Route = createFileRoute({
 function Component() {
   const { taskId } = Route.useParams();
   const { isEnabled } = useTenantConfigFeatures();
-
+  const theme = useTheme();
   const isNew = isEnabled('SMART_TASK');
 
   return (
-    <Container maxWidth='lg'>
+    <Container sx={{ backgroundColor: theme.palette.secondary.main }}>
       {isNew ? <EveliTaskDashboard taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
     </Container>
   )

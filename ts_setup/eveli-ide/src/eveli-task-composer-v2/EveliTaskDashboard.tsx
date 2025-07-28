@@ -85,6 +85,8 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
+        <Typography variant='h1'>Edit task: {task.taskRef}</Typography>
+
         <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
       </Grid2>
 

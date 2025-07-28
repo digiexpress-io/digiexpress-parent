@@ -180,20 +180,13 @@ const TaskSectionCard = styled(Box, {
   const { id, flashy } = ownerState;
   const colors = flashyCardColorsById[id] ?? flashyCardColorsById.default;
 
-  const transitionProps = theme.transitions.create(
-    ['border-color', 'background-color', 'box-shadow', 'color', 'transform'],
-    {
-      duration: theme.transitions.duration.standard,
-      easing: theme.transitions.easing.easeInOut,
-    }
-  );
 
   const baseStyles: SxProps = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    transition: transitionProps,
-    backgroundColor: theme.palette.background.default,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
 
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
@@ -207,7 +200,7 @@ const TaskSectionCard = styled(Box, {
       borderRadius: theme.spacing(1),
       flexGrow: 1,
       boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
-      backgroundColor: theme.palette.secondary.main
+      backgroundColor: theme.palette.background.default
     },
     '& .TaskSectionCard-title': {
       display: 'flex',
@@ -224,7 +217,6 @@ const TaskSectionCard = styled(Box, {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      transition: transitionProps,
       border: `2px solid ${colors.flashyBackground}`,
       borderRadius: theme.spacing(1),
       color: theme.palette.text.primary,
