@@ -7,19 +7,19 @@ import { useIntl } from 'react-intl';
 import { TaskProperties } from './TaskProperties';
 
 
-export interface EditDialogProps {
+export interface TaskEditDialogProps {
   task: TaskApi.Task;
   open: boolean,
   onClose: () => void
 }
 
-export const EditTaskDialog: React.FC<EditDialogProps> = ({ task, open, onClose }) => {
+export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
 
 
   return (
-    <StyledEditTaskDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
+    <StyledTaskEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
 
       <DialogTitle>
         {intl.formatMessage({ id: 'task.edit' })}
@@ -73,7 +73,7 @@ export const EditTaskDialog: React.FC<EditDialogProps> = ({ task, open, onClose 
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={onClose}>{intl.formatMessage({ id: 'button.save' })}</Button>
       </DialogActions>
-    </StyledEditTaskDialog>
+    </StyledTaskEditDialog>
   )
 }
 
@@ -87,8 +87,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 
 
-const MUI_NAME = 'EditTaskDialog';
-const StyledEditTaskDialog = styled(Dialog, {
+const MUI_NAME = 'TaskEditDialog';
+const StyledTaskEditDialog = styled(Dialog, {
   name: MUI_NAME,
   slot: 'EditDialog',
   overridesResolver: (_props, styles) => {

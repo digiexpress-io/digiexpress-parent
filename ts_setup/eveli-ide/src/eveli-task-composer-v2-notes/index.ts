@@ -1,2 +1,2 @@
-export * from './EditNotesDialog';
-export * from './EveliTaskNotesTruncated';
+export * from './NotesEditDialog';
+export * from './NotesTruncated';

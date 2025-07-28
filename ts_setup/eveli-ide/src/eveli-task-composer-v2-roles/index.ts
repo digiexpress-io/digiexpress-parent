@@ -1,1 +1,1 @@
-export * from './EveliTaskRoles';
+export * from './TaskRolesReadOnly';

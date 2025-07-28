@@ -4,11 +4,11 @@ import { TaskApi } from '@/api-task';
 import composeClasses from '@mui/utils/composeClasses';
 
 
-export interface EveliTaskRolesProps {
+export interface TaskRolesReadOnlyProps {
   task: TaskApi.Task;
 }
 
-export const EveliTaskRoles: React.FC<EveliTaskRolesProps> = ({ task }) => {
+export const TaskRolesReadOnly: React.FC<TaskRolesReadOnlyProps> = ({ task }) => {
   const classes = useUtilityClasses();
 
   if (!task.assignedRoles || task.assignedRoles.length === 0) {
@@ -28,7 +28,7 @@ export const EveliTaskRoles: React.FC<EveliTaskRolesProps> = ({ task }) => {
 
 
 
-const MUI_NAME = 'TaskRolesRootClassName';
+const MUI_NAME = 'TaskRolesReadOnly';
 const TaskRolesRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',

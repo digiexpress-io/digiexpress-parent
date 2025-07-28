@@ -16,12 +16,12 @@ const formatAnyDateShort = (value: Date | string | undefined): string => {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 };
 
-export interface EveliTaskNotesTruncatedProps {
+export interface NotesTruncatedTruncatedProps {
   task: TaskApi.Task;
   style: TaskCardStyleDefinition | undefined;
 }
 
-export const EveliTaskNotesTruncated: React.FC<EveliTaskNotesTruncatedProps> = ({ task, style }) => {
+export const NotesTruncated: React.FC<NotesTruncatedTruncatedProps> = ({ task, style }) => {
   const classes = useUtilityClasses();
   const internalComments = task.comments?.filter(c => !c.external) || [];
 
@@ -65,7 +65,7 @@ export const EveliTaskNotesTruncated: React.FC<EveliTaskNotesTruncatedProps> = (
 }
 
 
-const MUI_NAME = 'TaskNotes';
+const MUI_NAME = 'NotesTruncated';
 const StyledTaskNotes = styled('div', {
   name: MUI_NAME,
   slot: 'Notes',
@@ -76,11 +76,11 @@ const StyledTaskNotes = styled('div', {
   },
 })(({ theme }) => ({
 
-  '& .TaskNotes-noteBody': {
+  '& .NotesTruncated-noteBody': {
     fontWeight: 400,
     marginLeft: 1
   },
-  '& .TaskNotes-noteAuthor': {
+  '& .NotesTruncated-noteAuthor': {
     textAlign: 'right',
     color: theme.palette.text.disabled
   }

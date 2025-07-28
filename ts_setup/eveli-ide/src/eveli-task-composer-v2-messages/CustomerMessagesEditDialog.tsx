@@ -1,29 +1,28 @@
 import React from 'react';
-import { alpha, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Typography, Zoom } from '@mui/material';
+import { TaskApi } from '@/api-task';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Typography, Zoom } from '@mui/material';
 import HistoryIcon from '@mui/icons-material/History';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
-
-import { TaskApi } from '@/api-task';
-import { EveliTaskNotesEdit } from './EveliTaskNotesEdit';
+import { CustomerMessagesEditor } from './CustomerMessagesEditor';
 
 
-
-export interface EditDialogProps {
+export interface CustomerMessagesEditDialogProps {
   task: TaskApi.Task;
   open: boolean,
   onClose: () => void
 }
 
-export const EditNotesDialog: React.FC<EditDialogProps> = ({ task, open, onClose }) => {
+export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProps> = ({ task, open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
 
+
   return (
-    <StyledEditNotesDialog fullWidth maxWidth='xl' className={classes.editDialog} open={open} onClose={onClose} slots={{ transition: Zoom }}>
+    <StyledDialog fullWidth maxWidth='xl' className={classes.customerMessagesEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle>
-        {intl.formatMessage({ id: 'task.notes.edit', defaultMessage: 'Edit notes for task' })}
+        {intl.formatMessage({ id: 'task.customerMessages' })}
         {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
         {task.taskRef ?? 'no task reference id'}
       </DialogTitle>
@@ -33,27 +32,28 @@ export const EditNotesDialog: React.FC<EditDialogProps> = ({ task, open, onClose
           <HistoryIcon />
           <Typography>Message history</Typography>
         </Box>
-        <EveliTaskNotesEdit task={task} />
+        <CustomerMessagesEditor task={task} />
       </DialogContent>
 
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.save' })}</Button>
+        <Button>{intl.formatMessage({ id: 'button.sendMessage', defaultMessage: 'Send message now' })}</Button>
       </DialogActions>
-    </StyledEditNotesDialog>
+    </StyledDialog>
   )
 }
 
 
 
 
-const MUI_NAME = 'EditNotesDialog';
-const StyledEditNotesDialog = styled(Dialog, {
+
+const MUI_NAME = 'CustomerMessagesEditDialog';
+const StyledDialog = styled(Dialog, {
   name: MUI_NAME,
-  slot: 'EditDialog',
+  slot: 'Messages',
   overridesResolver: (_props, styles) => {
     return [
-      styles.editDialog
+      styles.customerMessagesEdit
     ];
   },
 
@@ -61,12 +61,7 @@ const StyledEditNotesDialog = styled(Dialog, {
 
   return {
     height: '100vh',
-    '.MuiDialogContent-root': {
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-    },
-    '.EditNotesDialog-historyLabel': {
+    '.CustomerMessagesEditDialog-historyLabel': {
       marginLeft: theme.spacing(1),
       display: 'flex',
       alignItems: 'center',
@@ -81,6 +76,12 @@ const StyledEditNotesDialog = styled(Dialog, {
         color: theme.palette.primary.main
       },
     },
+    '.MuiDialogContent-root': {
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    },
+
 
   };
 })
@@ -88,7 +89,7 @@ const StyledEditNotesDialog = styled(Dialog, {
 
 const useUtilityClasses = () => {
   const slots = {
-    editDialog: ['editDialog'],
+    customerMessagesEdit: ['customerMessagesEdit'],
     historyLabel: ['historyLabel']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);

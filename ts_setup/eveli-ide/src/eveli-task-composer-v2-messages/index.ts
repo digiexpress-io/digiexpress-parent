@@ -1,2 +1,2 @@
-export * from './EditCustomerMessagesDialog';
-export * from './EveliCustomerMessagesReadOnly';
+export * from './CustomerMessagesEditDialog';
+export * from './CustomerMessagesReadOnly';

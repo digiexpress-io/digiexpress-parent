@@ -20,13 +20,13 @@ import { TaskCardStyleSelect } from './TaskCardStyleSelect';
 import { TaskAssignee } from './TaskAssignee';
 import { TaskCardId } from './types';
 
-import { EditTaskDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
+import { TaskEditDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
 import { EveliTaskPriority } from '../eveli-task-composer-v2-priority';
 import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
-import { EditNotesDialog, EveliTaskNotesTruncated } from '../eveli-task-composer-v2-notes';
-import { EveliTaskRoles } from '../eveli-task-composer-v2-roles';
-import { EveliCustomerMessagesReadOnly, EditCustomerMessagesDialog } from '../eveli-task-composer-v2-messages';
-import { EditCustomerFeedbackDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
+import { NotesEditDialog, NotesTruncated } from '../eveli-task-composer-v2-notes';
+import { TaskRolesReadOnly } from '../eveli-task-composer-v2-roles';
+import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../eveli-task-composer-v2-messages';
+import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
 import { FilesReadOnly, FilesEditDialog } from '../eveli-task-composer-v2-files';
 
 
@@ -98,7 +98,7 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         }}>
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard id='task_main'
-            editDialog={editingCardId === 'task_main' && (<EditTaskDialog task={task} open={true} onClose={handleEditDialogClose} />)}
+            editDialog={editingCardId === 'task_main' && (<TaskEditDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             onDoubleClick={() => handleEditDialogOpen('task_main')}
             isMenu
             title={`Task: ${task.taskRef}`}
@@ -172,7 +172,7 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
             flashy={isCardFlashy('assignees-roles')}
             onToggleFlashy={() => toggleFlashyForCard('assignees-roles')}
           >
-            <TaskCardDataRowElement label='Roles' value={<EveliTaskRoles task={task} />} style={style} />
+            <TaskCardDataRowElement label='Roles' value={<TaskRolesReadOnly task={task} />} style={style} />
             <Divider sx={{ my: 1 }} />
             <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
           </TaskCard>
@@ -181,7 +181,7 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         {/*  label={`${comment.userName} ${formatAnyDateShort(comment.created)}`} value={comment.commentText}*/}
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard id='customer_messages' title='Customer messages'
-            editDialog={editingCardId === 'customer_messages' && (<EditCustomerMessagesDialog task={task} open={true} onClose={handleEditDialogClose} />)}
+            editDialog={editingCardId === 'customer_messages' && (<CustomerMessagesEditDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             onDoubleClick={() => handleEditDialogOpen('customer_messages')}
             isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
@@ -190,7 +190,7 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
             onToggleFlashy={() => toggleFlashyForCard('customer_messages')}
           >
             <Stack direction='column'>
-              <EveliCustomerMessagesReadOnly task={task} style={style} />
+              <CustomerMessagesReadOnly task={task} style={style} />
             </Stack>
           </TaskCard>
         </Grid2>
@@ -212,7 +212,7 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
           <TaskCard id='feedback' title='Customer feedback'
             onDoubleClick={() => handleEditDialogOpen('feedback')}
-            editDialog={editingCardId === 'feedback' && (<EditCustomerFeedbackDialog task={task} open={true} onClose={handleEditDialogClose} />)}
+            editDialog={editingCardId === 'feedback' && (<CustomerFeedbackEditDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             styleVariant={stylePreset}
@@ -229,14 +229,14 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
             id='notes'
             title='Notes'
             onDoubleClick={() => handleEditDialogOpen('notes')}
-            editDialog={editingCardId === 'notes' && (<EditNotesDialog task={task} open={true} onClose={handleEditDialogClose} />)}
+            editDialog={editingCardId === 'notes' && (<NotesEditDialog task={task} open={true} onClose={handleEditDialogClose} />)}
             isMenu
             startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('notes')}
             onToggleFlashy={() => toggleFlashyForCard('notes')}
           >
-            <EveliTaskNotesTruncated task={task} style={style} />
+            <NotesTruncated task={task} style={style} />
           </TaskCard>
         </Grid2>
 

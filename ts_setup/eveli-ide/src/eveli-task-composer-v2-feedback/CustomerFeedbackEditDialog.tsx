@@ -6,19 +6,19 @@ import { useIntl } from 'react-intl';
 import { PublishedNotifier } from './PublishedNotifier';
 
 
-export interface EditCustomerFeedbackProps {
+export interface CustomerFeedbackEditProps {
   task: TaskApi.Task;
   open: boolean,
   onClose: () => void
 }
 
-export const EditCustomerFeedbackDialog: React.FC<EditCustomerFeedbackProps> = ({ task, open, onClose }) => {
+export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = ({ task, open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
 
 
   return (
-    <StyledDialog fullWidth maxWidth='xl' className={classes.customerFeedback} open={open} onClose={onClose} slots={{ transition: Zoom }}>
+    <StyledDialog fullWidth maxWidth='xl' className={classes.customerFeedbackEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle sx={{ display: 'flex' }}>
         {intl.formatMessage({ id: 'task.customerFeedback', defaultMessage: 'Customer feedback' })}
@@ -46,13 +46,13 @@ export const EditCustomerFeedbackDialog: React.FC<EditCustomerFeedbackProps> = (
 
 
 
-const MUI_NAME = 'EditCustomerFeedbackDialog';
+const MUI_NAME = 'CustomerFeedbackEditDialog';
 const StyledDialog = styled(Dialog, {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
     return [
-      styles.editCustomerFeedback
+      styles.customerFeedbackEdit
     ];
   },
 
@@ -71,7 +71,7 @@ const StyledDialog = styled(Dialog, {
 
 const useUtilityClasses = () => {
   const slots = {
-    customerFeedback: ['customerFeedback'],
+    customerFeedbackEdit: ['customerFeedbackEdit'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

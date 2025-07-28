@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField, Divider, Alert, alpha } from '@mui/material';
+import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField, Alert } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
@@ -7,11 +7,11 @@ import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@/api-task';
 
-export interface CustomerMessagesEditProps {
+export interface CustomerMessagesEditorProps {
   task: TaskApi.Task;
 }
 
-export const CustomerMessagesEdit: React.FC<CustomerMessagesEditProps> = ({ task }) => {
+export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ task }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const [message, setMessage] = React.useState('');
@@ -36,7 +36,7 @@ export const CustomerMessagesEdit: React.FC<CustomerMessagesEditProps> = ({ task
 
   return (
 
-    <StyledCustomerMessagesEdit className={classes.container}>
+    <StyledCustomerMessagesEditor className={classes.container}>
       <Box className={classes.messagesContainer}>
         {allExternalMessages.length === 0 ? (
           <Alert severity='info'>No messages yet</Alert>
@@ -68,13 +68,13 @@ export const CustomerMessagesEdit: React.FC<CustomerMessagesEditProps> = ({ task
           onChange={(e) => handleOnChange(e.target.value)}
           placeholder={intl.formatMessage({ id: 'task.customerMessages.newMessagePlaceholder', defaultMessage: 'My message to customer...' })} />
       </Box>
-    </StyledCustomerMessagesEdit>
+    </StyledCustomerMessagesEditor>
 
   );
 };
 
-const MUI_NAME = 'CustomerMessagesEdit';
-const StyledCustomerMessagesEdit = styled('div', {
+const MUI_NAME = 'CustomerMessagesEditor';
+const StyledCustomerMessagesEditor = styled('div', {
   name: MUI_NAME,
   slot: 'Message',
   overridesResolver: (_props, styles) => {
@@ -88,7 +88,7 @@ const StyledCustomerMessagesEdit = styled('div', {
   height: '100%',
   overflow: 'hidden',
 
-  '& .CustomerMessagesEdit-messagesContainer': {
+  '& .CustomerMessagesEditor-messagesContainer': {
     flexGrow: 1,
     overflowY: 'auto',
     padding: theme.spacing(4),
@@ -97,16 +97,16 @@ const StyledCustomerMessagesEdit = styled('div', {
     borderRadius: theme.spacing(0.5),
     boxShadow: `0 4px 12px rgba(0, 0, 0, 0.05)`,
   },
-  '& .CustomerMessagesEdit-messageBoxLabel': {
+  '& .CustomerMessagesEditor-messageBoxLabel': {
     ...theme.typography.body2,
     fontWeight: 'bold'
   },
-  '& .CustomerMessagesEdit-messageRow': {
+  '& .CustomerMessagesEditor-messageRow': {
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(2)
   },
-  '& .CustomerMessagesEdit-inputBoxTitle': {
+  '& .CustomerMessagesEditor-inputBoxTitle': {
     display: 'flex',
     alignItems: 'center',
     backgroundColor: theme.palette.primary.main,
@@ -117,7 +117,7 @@ const StyledCustomerMessagesEdit = styled('div', {
     padding: theme.spacing(1),
   },
 
-  '& .CustomerMessagesEdit-inputBox': {
+  '& .CustomerMessagesEditor-inputBox': {
     position: 'sticky',
     width: '100%',
     paddingLeft: theme.spacing(2),
@@ -125,23 +125,23 @@ const StyledCustomerMessagesEdit = styled('div', {
     marginTop: theme.spacing(1)
   },
 
-  '& .CustomerMessagesEdit-senderInfo': {
+  '& .CustomerMessagesEditor-senderInfo': {
     fontWeight: 'bold !important', //TODO figure out a better way with cardThemeConfig
   },
 
-  '& .CustomerMessagesEdit-frontdeskAvatar': {
+  '& .CustomerMessagesEditor-frontdeskAvatar': {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     backgroundColor: '#caf0f8',
     marginRight: theme.spacing(1),
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
   },
-  '& .CustomerMessagesEdit-customerAvatar': {
+  '& .CustomerMessagesEditor-customerAvatar': {
     border: `1px solid ${darken('#ecf39e', 0.1)}`,
     backgroundColor: '#ecf39e',
     marginRight: theme.spacing(1),
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
   },
-  '& .CustomerMessagesEdit-frontdeskMessageBody': {
+  '& .CustomerMessagesEditor-frontdeskMessageBody': {
     flexGrow: 1,
     backgroundColor: '#caf0f8',
     borderRadius: '20px',
@@ -149,7 +149,7 @@ const StyledCustomerMessagesEdit = styled('div', {
     border: `1px solid ${darken('#caf0f8', 0.1)}`,
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
   },
-  '& .CustomerMessagesEdit-customerMessageBody': {
+  '& .CustomerMessagesEditor-customerMessageBody': {
     flexGrow: 1,
     backgroundColor: '#ecf39e',
     borderRadius: '20px',

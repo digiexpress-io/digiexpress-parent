@@ -1,2 +1,2 @@
-export * from './EditCustomerFeedbackDialog';
+export * from './CustomerFeedbackEditDialog';
 export * from './CustomerFeedbackReadOnly';

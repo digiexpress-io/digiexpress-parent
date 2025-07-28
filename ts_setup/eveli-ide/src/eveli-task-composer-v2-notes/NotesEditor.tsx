@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, alpha, Box, Divider, generateUtilityClass, styled, TextField, Typography } from '@mui/material';
+import { Box, Divider, generateUtilityClass, styled, TextField, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -16,17 +16,17 @@ const formatAnyDateShort = (value: Date | string | undefined): string => {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 };
 
-export interface EveliTaskNotesProps {
+export interface NotesEditorProps {
   task: TaskApi.Task;
 }
 
-export const EveliTaskNotesEdit: React.FC<EveliTaskNotesProps> = ({ task }) => {
+export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
   const classes = useUtilityClasses();
   const internalComments = task.comments?.filter(c => !c.external) || [];
 
 
   return (
-    <StyledTaskNotes className={classes.notesContainer}>
+    <StyledNotesEditor className={classes.notesContainer}>
       <Box className={classes.messagesContainer}>
 
         {!internalComments || internalComments.length === 0 && <Typography variant='body2' textAlign='center'>No notes yet</Typography>}
@@ -57,13 +57,13 @@ export const EveliTaskNotesEdit: React.FC<EveliTaskNotesProps> = ({ task }) => {
         <StyledTextField multiline rows={4} />
 
       </Box>
-    </StyledTaskNotes>
+    </StyledNotesEditor>
   )
 }
 
 
-const MUI_NAME = 'TaskNotes';
-const StyledTaskNotes = styled('div', {
+const MUI_NAME = 'NotesEditor';
+const StyledNotesEditor = styled('div', {
   name: MUI_NAME,
   slot: 'Notes',
   overridesResolver: (_props, styles) => {
@@ -77,7 +77,7 @@ const StyledTaskNotes = styled('div', {
   flexDirection: 'column',
   overflow: 'hidden',
 
-  '& .TaskNotes-messagesContainer': {
+  '& .NotesEditor-messagesContainer': {
     flexGrow: 1,
     overflowY: 'auto',
     padding: theme.spacing(4),
@@ -87,7 +87,7 @@ const StyledTaskNotes = styled('div', {
     boxShadow: `0 4px 12px rgba(0, 0, 0, 0.05)`,
   },
 
-  '& .TaskNotes-inputBoxTitle': {
+  '& .NotesEditor-inputBoxTitle': {
     display: 'flex',
     alignItems: 'center',
     backgroundColor: theme.palette.primary.main,
@@ -98,17 +98,17 @@ const StyledTaskNotes = styled('div', {
     padding: theme.spacing(1),
   },
 
-  '& .TaskNotes-inputBox': {
+  '& .NotesEditor-inputBox': {
     position: 'sticky',
     bottom: 0,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
 
-  '& .TaskNotes-noteBody': {
+  '& .NotesEditor-noteBody': {
     fontWeight: 400,
   },
-  '& .TaskNotes-noteAuthor': {
+  '& .NotesEditor-noteAuthor': {
     textAlign: 'right',
     color: theme.palette.text.disabled
   },
