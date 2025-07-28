@@ -5,6 +5,7 @@ import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettin
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import HistoryIcon from '@mui/icons-material/History';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import dialob_logo from './dialob_logo.svg';
@@ -148,7 +149,7 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
             id='status-priority'
             title='Status and Priority'
             isMenu
-            startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
+            startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}
             styleVariant={stylePreset}
             flashy={isCardFlashy('status-priority')}
             onToggleFlashy={() => toggleFlashyForCard('status-priority')}

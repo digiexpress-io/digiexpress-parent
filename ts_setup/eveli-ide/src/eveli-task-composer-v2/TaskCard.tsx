@@ -244,12 +244,10 @@ const TaskSectionCard = styled(Box, {
         color: colors.flashyBackground,
         backgroundColor: alpha(colors.flashyBackground, 0.1),
         '& .MuiAvatar-root': {
-          backgroundColor: alpha(colors.flashyBackground, 0.8),
+          backgroundColor: alpha(colors.flashyBackground, 0.3),
           border: `2px solid ${colors.flashyBackground}`
         },
-        '.MuiSvgIcon-root': {
-          color: theme.palette.background.default
-        }
+
       }
     };
   }
