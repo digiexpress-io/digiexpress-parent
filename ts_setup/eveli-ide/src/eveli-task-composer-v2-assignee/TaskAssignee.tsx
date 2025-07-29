@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, generateUtilityClass, Stack, styled, Typography } from '@mui/material';
+import { generateUtilityClass, styled, TextField, Typography } from '@mui/material';
 import { TaskApi } from '@/api-task';
 import composeClasses from '@mui/utils/composeClasses';
 
@@ -17,21 +17,10 @@ export const TaskAssignee: React.FC<TaskAssigneeProps> = ({ task }) => {
         <Typography>--</Typography>
       </StyledTaskAssignee>)
   }
-  const firstName = task.assignedUser.substring(0, task.assignedUser.indexOf(" "));
-  const lastName = task.assignedUser.substring(task.assignedUser.indexOf(" ") + 1);
-  const firstInitial = firstName.substring(0, 1);
-  const secondInitial = lastName.substring(0, 1);
 
   return (
     <StyledTaskAssignee className={classes.root}>
-      <Avatar variant='circular'>
-        <Typography>{firstInitial}{secondInitial}</Typography>
-      </Avatar>
-      <Stack direction='column'>
-        <Typography fontWeight={500}>{task.assignedUser}</Typography>
-        <Typography variant='caption'>user@gmail.com</Typography>
-      </Stack>
-
+      <StyledTextField value={task.assignedUser} />
     </StyledTaskAssignee>
   )
 }
@@ -54,18 +43,21 @@ const StyledTaskAssignee = styled('div', {
   return {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(1),
-
-    '.MuiAvatar-root': {
-      backgroundColor: theme.palette.primary.dark,
-      marginRight: theme.spacing(1),
-      height: '35px',
-      width: '35px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
-
-    }
+    marginBottom: theme.spacing(1)
   };
 })
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  marginTop: 0,
+  '& .MuiOutlinedInput-root': {
+
+  },
+  '& .MuiInputBase-input': {
+    height: '2.5rem',
+    padding: '0 12px'
+  },
+}));
 
 export const useUtilityClasses = () => {
   const slots = {

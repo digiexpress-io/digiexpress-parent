@@ -18,7 +18,6 @@ import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
 import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
 import { TaskCardStyleSelect } from './TaskCardStyleSelect';
-import { TaskAssignee } from './TaskAssignee';
 import { TaskCardId } from './types';
 
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
@@ -29,6 +28,7 @@ import { TaskRolesReadOnly } from '../eveli-task-composer-v2-roles';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../eveli-task-composer-v2-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
 import { FilesReadOnly, FilesEditDialog } from '../eveli-task-composer-v2-files';
+import { TaskAssignee } from '../eveli-task-composer-v2-assignee';
 
 
 export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
