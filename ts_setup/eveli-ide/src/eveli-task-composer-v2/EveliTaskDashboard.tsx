@@ -61,9 +61,6 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
 
 
-
-
-
   React.useEffect(() => {
     if (props.taskId && task === undefined) {
       getTask(props.taskId).then(setTask);
@@ -106,8 +103,9 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title={`Task: ${task.taskRef}`} {...commonProps} isMenu
-              onDoubleClick={() => handleEditDialogOpen('task_main')}
-              editDialog={editingCardId === 'task_main' && (<TaskEditDialog task={task} open onClose={handleEditDialogClose} />)}
+              onDoubleClick={() => handleEditDialogOpen(cardId)}
+              onEdit={() => handleEditDialogOpen(cardId)}
+              editDialog={editingCardId === cardId && (<TaskEditDialog task={task} open onClose={handleEditDialogClose} />)}
               startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
             >
               <TaskCardDataRowElement
@@ -131,12 +129,12 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard {...commonProps} isMenu startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
-            <TaskCardDataRowElement label='Form name' style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
-            <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} style={style} />
-            <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
-            <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
-            <TaskCardDataRowText label='Other info' value='info here' style={style} />
-          </TaskCard>
+              <TaskCardDataRowElement label='Form name' style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
+              <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} style={style} />
+              <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
+              <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
+              <TaskCardDataRowText label='Other info' value='info here' style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
@@ -144,12 +142,12 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title='Status and Priority'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
-            <Stack direction="column" height="100%">
-              <EveliTaskStatus style={style} />
-              <Divider sx={{ my: 1 }} />
-              <EveliTaskPriority style={style} />
-            </Stack>
-          </TaskCard>
+              <Stack direction="column" height="100%">
+                <EveliTaskStatus style={style} />
+                <Divider sx={{ my: 1 }} />
+                <EveliTaskPriority style={style} />
+              </Stack>
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
@@ -157,10 +155,10 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title='Assignees and roles'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
-            <TaskCardDataRowElement label='Roles' value={<TaskRolesReadOnly task={task} />} style={style} />
-            <Divider sx={{ my: 1 }} />
-            <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
-          </TaskCard>
+              <TaskCardDataRowElement label='Roles' value={<TaskRolesReadOnly task={task} />} style={style} />
+              <Divider sx={{ my: 1 }} />
+              <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
@@ -168,26 +166,27 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title='Customer messages' {...commonProps} isMenu
-            startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
-            onDoubleClick={() => handleEditDialogOpen('customer_messages')}
-            editDialog={editingCardId === 'customer_messages' && (<CustomerMessagesEditDialog task={task} open onClose={handleEditDialogClose} />)}
-          >
-            <CustomerMessagesReadOnly task={task} style={style} />
-          </TaskCard>
+              onEdit={() => handleEditDialogOpen(cardId)}
+              startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
+              onDoubleClick={() => handleEditDialogOpen('customer_messages')}
+              editDialog={editingCardId === 'customer_messages' && (<CustomerMessagesEditDialog task={task} open onClose={handleEditDialogClose} />)}
+            >
+              <CustomerMessagesReadOnly task={task} style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
       case 'files':
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-
             <TaskCard title='Files' {...commonProps} isMenu
-            onDoubleClick={() => handleEditDialogOpen('files')}
-            startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
-            editDialog={editingCardId === 'files' && (<FilesEditDialog task={task} open onClose={handleEditDialogClose} />)}
-          >
-            <FilesReadOnly task={task} style={style} />
-          </TaskCard>
+              onEdit={() => handleEditDialogOpen(cardId)}
+              onDoubleClick={() => handleEditDialogOpen('files')}
+              startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
+              editDialog={editingCardId === 'files' && (<FilesEditDialog task={task} open onClose={handleEditDialogClose} />)}
+            >
+              <FilesReadOnly task={task} style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
@@ -195,12 +194,13 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title='Customer feedback'{...commonProps} isMenu
-            onDoubleClick={() => handleEditDialogOpen('feedback')}
-            startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
-            editDialog={editingCardId === 'feedback' && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditDialogClose} />)}
-          >
-            <CustomerFeedbackReadOnly task={task} style={style} />
-          </TaskCard>
+              onEdit={() => handleEditDialogOpen(cardId)}
+              onDoubleClick={() => handleEditDialogOpen('feedback')}
+              startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
+              editDialog={editingCardId === 'feedback' && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditDialogClose} />)}
+            >
+              <CustomerFeedbackReadOnly task={task} style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
@@ -208,12 +208,13 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title='Notes' {...commonProps} isMenu
-            onDoubleClick={() => handleEditDialogOpen('notes')}
-            startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
-            editDialog={editingCardId === 'notes' && (<NotesEditDialog task={task} open onClose={handleEditDialogClose} />)}
-          >
-            <NotesTruncated task={task} style={style} />
-          </TaskCard>
+              onEdit={() => handleEditDialogOpen(cardId)}
+              onDoubleClick={() => handleEditDialogOpen('notes')}
+              startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
+              editDialog={editingCardId === 'notes' && (<NotesEditDialog task={task} open onClose={handleEditDialogClose} />)}
+            >
+              <NotesTruncated task={task} style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 
@@ -221,9 +222,9 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
         return (
           <DraggableCardWrapper {...getDragPropsForId(cardId)}>
             <TaskCard title='History and metadata'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
-            <TaskCardDataRowText label='Last edited by' value={task.updaterId} style={style} />
-            <TaskCardDataRowText label='Last edited date' value={formatAnyDateShort(task.updated)} style={style} />
-          </TaskCard>
+              <TaskCardDataRowText label='Last edited by' value={task.updaterId} style={style} />
+              <TaskCardDataRowText label='Last edited date' value={formatAnyDateShort(task.updated)} style={style} />
+            </TaskCard>
           </DraggableCardWrapper>
         );
 

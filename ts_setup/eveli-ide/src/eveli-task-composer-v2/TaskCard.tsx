@@ -5,7 +5,7 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
-
+import { TaskCardMenu } from './TaskCardMenu';
 
 
 export interface TaskCardProps {
@@ -20,6 +20,7 @@ export interface TaskCardProps {
   onClick?: () => void;
   onDoubleClick?: () => void;
   onReview?: () => void;
+  onEdit?: () => void;
   onToggleFlashy?: () => void;
 }
 
@@ -52,20 +53,13 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     setAnchorEl(null);
   };
 
-  function handleFlashyToggle() {
-    if (props.onToggleFlashy) {
-      props.onToggleFlashy();
+
+  const handleEdit = () => {
+    if (props.onEdit) {
+      props.onEdit();
     }
     handleMenuClose();
   };
-
-  function onReview() {
-    if (props.onReview) {
-      props.onReview()
-    }
-    handleMenuClose()
-
-  }
 
 
   return (<>
@@ -79,23 +73,14 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
         <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
           <DragHandleIcon color='primary' />
         </Box>
-        <Menu
+        <TaskCardMenu cardId={props.id}
           anchorEl={anchorEl}
           open={menuOpen}
           onClose={handleMenuClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          <MenuItem onClick={handleFlashyToggle}>
-            {props.flashy ? 'Remove Flashy' : 'Make Flashy'}
-          </MenuItem>
-          {props.id === 'task-form-summary' && (
-            <MenuItem onClick={onReview}>
-              Form review
-            </MenuItem>
-          )}
-
-        </Menu>
+          flashy={props.flashy}
+          onToggleFlashy={props.onToggleFlashy}
+          onReview={props.onReview}
+          onEdit={handleEdit} />
       </Box>
       <Box className={classes.cardBody}>
         {props.children}
