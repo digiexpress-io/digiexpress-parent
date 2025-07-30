@@ -16,17 +16,10 @@ export interface TaskCardProps {
   editDialog?: React.ReactNode;
   flashy?: boolean;
   styleVariant?: TaskCardStyleKey;
-  isDragging?: boolean;
-  isDropTarget?: boolean;
   onClick?: () => void;
   onDoubleClick?: () => void;
   onReview?: () => void;
   onToggleFlashy?: () => void;
-  onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
-  onDragEnd?: (event: React.DragEvent<HTMLDivElement>) => void;
-  onDragLeave?: (event: React.DragEvent<HTMLDivElement>) => void
-  onDrop?: (event: React.DragEvent<HTMLDivElement>, id: string) => void;
-  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
 interface TaskCardDataRowTextProps {
@@ -76,16 +69,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
   return (<>
     {props.editDialog}
-    <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props}
-      id={props.id}
-      draggable
-      onDragStart={(e) => props.onDragStart?.(e)}
-      onDragEnd={(e) => props.onDragEnd?.(e)}
-      onDrop={(e) => props.onDrop?.(e, props.id)}
-      onDragOver={(e) => {
-        e.preventDefault();
-        props.onDragOver?.(e);
-      }}>
+    <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
       <Box className={classes.title}>
         {props.startAdornmentIcon}
         <TitleText style={style}>{props.title}</TitleText>
@@ -196,18 +180,12 @@ const TaskSectionCard = styled(Box, {
   const { id, flashy } = ownerState;
   const colors = flashyCardColorsById[id] ?? flashyCardColorsById.default;
 
-  const dragTransform = ownerState.isDragging ? 'scale(0.95)' : ownerState.isDropTarget ? 'scale(0.95)' : 'scale(1)';
-  const dragBorder = ownerState.isDragging ? `2px dashed ${theme.palette.primary.main}` : 'none';
-  const dropBorder = ownerState.isDropTarget ? `2px dashed ${theme.palette.primary.light}` : 'none';
-
   const baseStyles: SxProps = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
-    transform: dragTransform,
-    border: ownerState.isDropTarget ? dropBorder : dragBorder,
     transition: 'transform 0.2s ease, border 0.2s ease',
 
 
