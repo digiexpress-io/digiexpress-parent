@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem, SxProps, Avatar } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
@@ -75,6 +76,9 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
         <TitleText style={style}>{props.title}</TitleText>
         <Box flexGrow={1} />
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+        <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
+          <DragHandleIcon color='primary' />
+        </Box>
         <Menu
           anchorEl={anchorEl}
           open={menuOpen}
