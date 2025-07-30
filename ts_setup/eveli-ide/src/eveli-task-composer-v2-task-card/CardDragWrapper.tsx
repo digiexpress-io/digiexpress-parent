@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { Box, useTheme, alpha, Theme } from '@mui/material';
+import { TaskCardId, useCardConfig } from './CardConfigContext';
+
 
 interface DraggableCardWrapperProps {
   id: string;
@@ -64,10 +66,10 @@ export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
   );
 };
 
-export function useDragCardController<T extends string>(
-  items: T[],
-  setItems: (newItems: T[]) => void
-) {
+export function useDragCardController<T extends TaskCardId>() {
+
+  const { cardOrder: items, setCardOrder: setItems } = useCardConfig();
+
   const theme = useTheme<Theme>();
   const [draggingId, setDraggingId] = React.useState<T | null>(null);
   const [dropTargetId, setDropTargetId] = React.useState<T | null>(null);

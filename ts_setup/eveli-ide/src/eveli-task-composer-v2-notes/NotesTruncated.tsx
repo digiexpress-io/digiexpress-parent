@@ -4,7 +4,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import composeClasses from '@mui/utils/composeClasses';
 
 const formatAnyDateShort = (value: Date | string | undefined): string => {

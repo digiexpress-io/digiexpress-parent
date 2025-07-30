@@ -3,7 +3,7 @@ import { alpha, generateUtilityClass, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import composeClasses from '@mui/utils/composeClasses';
 import { TaskApi } from '@/api-task';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { useIntl } from 'react-intl';
 
 

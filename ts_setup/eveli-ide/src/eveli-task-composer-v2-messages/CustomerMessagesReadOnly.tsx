@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, styled, Avatar, generateUtilityClass, Typography, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
 

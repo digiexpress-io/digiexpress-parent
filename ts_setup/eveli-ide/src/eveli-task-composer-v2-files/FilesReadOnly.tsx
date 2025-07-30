@@ -4,7 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import DescriptionIcon from '@mui/icons-material/Description';
 
 import { TaskApi } from '@/api-task';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 
 const files = [
   { id: 1, name: 'report.pdf', uploadedAt: '11.09.2025' },

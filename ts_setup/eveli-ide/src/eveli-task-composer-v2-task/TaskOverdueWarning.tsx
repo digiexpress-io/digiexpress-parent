@@ -4,9 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { DateTime } from 'luxon';
 
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
-
-
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { TaskApi } from '@/api-task';
 
 

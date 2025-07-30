@@ -1,6 +1,7 @@
 import React from 'react';
-import { TASK_CARD_STYLE_LABELS, TaskCardStyleKey } from './cardThemeConfig';
+import { TASK_CARD_STYLE_LABELS, } from './cardThemeConfig';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { TaskCardStyleKey } from './CardConfigContext';
 
 
 

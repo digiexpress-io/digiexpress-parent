@@ -3,7 +3,7 @@ import { alpha, Box, Divider, generateUtilityClass, styled, Typography } from '@
 import { FeedbackApi, useFeedback } from '@/api-feedback';
 import { TaskApi } from '@/api-task';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { PublishedNotifier } from './PublishedNotifier';
 
 export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: TaskCardStyleDefinition }> = ({ task, style }) => {

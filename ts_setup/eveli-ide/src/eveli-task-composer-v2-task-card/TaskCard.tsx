@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, Menu, MenuItem, SxProps, Avatar } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, SxProps, Avatar } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import composeClasses from '@mui/utils/composeClasses';
 
-import { flashyCardColorsById, TaskCardStyleDefinition, TaskCardStyleKey, useTaskCardThemeConfig } from './cardThemeConfig';
+import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
 import { TaskCardMenu } from './TaskCardMenu';
+import { TaskCardStyleKey } from './CardConfigContext';
 
 
 export interface TaskCardProps {

@@ -1,7 +1,8 @@
 import { CSSProperties} from 'react';
 import { useTheme } from '@mui/material';
+import { TaskCardStyleKey, useCardConfig } from './CardConfigContext';
 
-export type TaskCardStyleKey = 'compact' | 'default' | 'large';
+
 
 const singleCol = { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 };
 
@@ -29,8 +30,9 @@ export const TASK_CARD_STYLE_LABELS: Record<TaskCardStyleKey, string> = {
 };
 
 
-export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardStyleKey, TaskCardStyleDefinition> => {
+export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyleDefinition> => {
   const theme = useTheme();
+  const { isReviewOpen } = useCardConfig();
 
   return {
     compact: {
@@ -68,8 +70,8 @@ export const useTaskCardThemeConfig = (reviewOpen?: boolean): Record<TaskCardSty
       cardSpacing: theme.spacing(3),
 
       dataRowGridSizes: {
-        label: reviewOpen ? singleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
-        value: reviewOpen ? singleCol : { xs: 9, sm: 9, md: 9, lg: 9, xl: 9 },
+        label: isReviewOpen ? singleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
+        value: isReviewOpen ? singleCol : { xs: 9, sm: 9, md: 9, lg: 9, xl: 9 },
       },
     },
   };

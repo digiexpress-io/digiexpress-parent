@@ -1,1 +1,1 @@
-export * from './EveliTaskPriority';
+export * from './TaskPriority';

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup, generateUtilityClass, Stack, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 
 type Priority = 'LOW' | 'MEDIUM' | 'HIGH';
 
-export const EveliTaskPriority: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
+export const TaskPriority: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
   const classes = useUtilityClasses();
   const [priority, setPriority] = useState<Priority>('LOW');
 
@@ -16,7 +16,7 @@ export const EveliTaskPriority: React.FC<{ style: TaskCardStyleDefinition }> = (
   ];
 
   return (
-    <TaskPriority className={classes.root} style={style}>
+    <StyledTaskPriority className={classes.root} style={style}>
       <Stack direction='column' width='100%'>
         <Typography fontWeight={500} mb={1} sx={{...style.bodyTypography, fontWeight: 500}}>Priority: {priority}</Typography>
         <ButtonGroup fullWidth className={classes.prioritySelect} disableElevation>
@@ -41,14 +41,14 @@ export const EveliTaskPriority: React.FC<{ style: TaskCardStyleDefinition }> = (
           })}
         </ButtonGroup>
       </Stack>
-    </TaskPriority>
+    </StyledTaskPriority>
   );
 };
 
 
 
 const MUI_NAME = 'TaskPriority';
-const TaskPriority = styled('div', {
+const StyledTaskPriority = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {

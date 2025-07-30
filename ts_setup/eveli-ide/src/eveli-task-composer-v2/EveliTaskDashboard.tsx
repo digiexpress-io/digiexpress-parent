@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Grid2, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Divider, Grid2, Stack, Typography } from '@mui/material';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -12,54 +12,208 @@ import dialob_logo from './dialob_logo.svg';
 
 import { DateTime } from 'luxon';
 
-import { TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement } from './TaskCard';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { FormReviewDrawer } from './FormReviewDrawer';
-import { TaskCardStyleKey, useTaskCardThemeConfig, taskCardGridSize } from './cardThemeConfig';
-import { TaskCardStyleSelect } from './TaskCardStyleSelect';
-import { TaskCardId } from './types';
+
 
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
-import { EveliTaskPriority } from '../eveli-task-composer-v2-priority';
-import { EveliTaskStatus } from '../eveli-task-composer-v2-status';
+import { TaskPriority } from '../eveli-task-composer-v2-priority';
+import { TaskStatus } from '../eveli-task-composer-v2-status';
+
 import { NotesEditDialog, NotesTruncated } from '../eveli-task-composer-v2-notes';
 import { TaskRolesReadOnly } from '../eveli-task-composer-v2-roles';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../eveli-task-composer-v2-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
 import { FilesReadOnly, FilesEditDialog } from '../eveli-task-composer-v2-files';
 import { TaskAssignee } from '../eveli-task-composer-v2-assignee';
-import { DraggableCardWrapper, useDragCardController } from './CardDragWrapper';
+import {
+  DraggableCardWrapper, useDragCardController,
+  CardConfigContextProvider,
+  TaskCardId, useCardConfig, useTaskCardThemeConfig,
+  taskCardGridSize,
+  TaskCardStyleSelect,
+  TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
+} from '../eveli-task-composer-v2-task-card';
 
 
 
-const initialCardIds = [
-  'task_main',
-  'task-form-summary',
-  'status-priority',
-  'assignees-roles',
-  'customer_messages',
-  'files',
-  'feedback',
-  'notes',
-  'task-meta'
-];
+const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ cardId, task }) => {
+  const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, setEditCard } = useCardConfig();
+  const styleConfig = useTaskCardThemeConfig();
+  const style = styleConfig[cardTheme];
+
+  const commonProps = {
+    id: cardId,
+    styleVariant: cardTheme,
+    flashy: isCardFlashy(cardId),
+    onToggleFlashy: () => toggleCardFlashy(cardId),
+    onReview: toggleReview,
+  };
+
+  const isEditOpen = cardId === editingCardId;
+
+  function handleEdit() {
+    setEditCard(cardId);
+  }
+  function handleEditClose() {
+    setEditCard(undefined);
+  }
+
+
+  switch (cardId) {
+    case 'task_main':
+      return (
+        <TaskCard title={`Task: ${task.taskRef}`} {...commonProps} isMenu
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={editingCardId === cardId && (<TaskEditDialog task={task} open onClose={handleEditClose} />)}
+          startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
+        >
+          <TaskCardDataRowElement
+            label='Due date' style={style}
+            value={
+              <Box display='flex' justifyContent='space-between'>
+                {_formatAnyDateShort(task.dueDate)}
+                <TaskOverdueWarning task={task} style={style} />
+              </Box>
+            }
+          />
+          <TaskCardDataRowText label='Customer name' value={task.clientIdentificator || 'NONE'} style={style} />
+          <TaskCardDataRowText label='Subject' value={task.subject} style={style} />
+          <TaskCardDataRowText label='Info' value={task.additionalInfo} style={style} />
+          <TaskProperties task={task} />
+        </TaskCard>
+      );
+
+    case 'task_form_summary':
+      return (
+        <TaskCard {...commonProps} isMenu startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
+          <TaskCardDataRowElement label='Form name' style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
+          <TaskCardDataRowText label='Submitted' value={_formatAnyDateShort(task.created)} style={style} />
+          <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
+          <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
+          <TaskCardDataRowText label='Other info' value='info here' style={style} />
+        </TaskCard>
+      );
+
+    case 'status_priority':
+      return (
+        <TaskCard title='Status and Priority'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
+          <Stack direction="column" height="100%">
+            <TaskStatus style={style} />
+            <Divider sx={{ my: 1 }} />
+            <TaskPriority style={style} />
+          </Stack>
+        </TaskCard>
+      );
+
+    case 'assignees_roles':
+      return (
+        <TaskCard title='Assignees and roles'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
+          <TaskCardDataRowElement label='Roles' value={<TaskRolesReadOnly task={task} />} style={style} />
+          <Divider sx={{ my: 1 }} />
+          <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
+        </TaskCard>
+      );
+
+    case 'customer_messages':
+      return (
+        <TaskCard title='Customer messages' {...commonProps} isMenu
+          onEdit={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
+          onDoubleClick={handleEdit}
+          editDialog={isEditOpen && (<CustomerMessagesEditDialog task={task} open onClose={handleEditClose} />)}
+        >
+          <CustomerMessagesReadOnly task={task} style={style} />
+        </TaskCard>
+      );
+
+    case 'files':
+      return (
+        <TaskCard title='Files' {...commonProps} isMenu
+          onEdit={handleEdit}
+          onDoubleClick={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
+          editDialog={isEditOpen && (<FilesEditDialog task={task} open onClose={handleEditClose} />)}
+        >
+          <FilesReadOnly task={task} style={style} />
+        </TaskCard>
+      );
+
+    case 'feedback':
+      return (
+        <TaskCard title='Customer feedback'{...commonProps} isMenu
+          onEdit={handleEdit}
+          onDoubleClick={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
+          editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
+        >
+          <CustomerFeedbackReadOnly task={task} style={style} />
+        </TaskCard>
+      );
+
+    case 'notes':
+      return (
+        <TaskCard title='Notes' {...commonProps} isMenu
+          onEdit={handleEdit}
+          onDoubleClick={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
+          editDialog={isEditOpen && (<NotesEditDialog task={task} open onClose={handleEditClose} />)}
+        >
+          <NotesTruncated task={task} style={style} />
+        </TaskCard>
+      );
+
+    case 'task_meta':
+      return (
+        <TaskCard title='History and metadata'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
+          <TaskCardDataRowText label='Last edited by' value={task.updaterId} style={style} />
+          <TaskCardDataRowText label='Last edited date' value={_formatAnyDateShort(task.updated)} style={style} />
+        </TaskCard>
+      );
+
+    default:
+      return null;
+  }
+}
+
+
+
+const EveliTaskDashboardInternal: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
+  const { cardOrder, isReviewOpen, cardTheme, setCardTheme, toggleReview } = useCardConfig();
+  const { getDragPropsForId } = useDragCardController();
+
+  const styleConfig = useTaskCardThemeConfig();
+  const style = styleConfig[cardTheme];
+
+  return (
+    <Grid2 container spacing={style.cardSpacing} m={1}>
+      <Grid2 size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
+        <Typography variant='h1'>Edit task: {task.taskRef}</Typography>
+        <TaskCardStyleSelect value={cardTheme} onChange={setCardTheme} />
+      </Grid2>
+
+      <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
+        sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
+        {cardOrder.map((cardId) => (
+          <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
+            <DraggableCardWrapper {...getDragPropsForId(cardId)}>
+              <CardFactory cardId={cardId} task={task} />
+            </DraggableCardWrapper>
+          </Grid2>
+        ))}
+      </Grid2>
+
+      <FormReviewDrawer onClose={toggleReview} open={isReviewOpen} />
+    </Grid2>
+  );
+};
 
 
 export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
-  const [task, setTask] = React.useState<TaskApi.Task>();
-  const [reviewOpen, setReviewOpen] = React.useState(false);
-  const [flashyCards, setFlashyCards] = React.useState<Record<string, boolean>>({});
-  const [editingCardId, setEditingCardId] = React.useState<string | undefined>();
-  const [stylePreset, setStylePreset] = React.useState<TaskCardStyleKey>('default');
-  const [cardOrder, setCardOrder] = React.useState<string[]>(initialCardIds);
-  const { getDragPropsForId } = useDragCardController(cardOrder, setCardOrder);
-
-  const styleConfig = useTaskCardThemeConfig(reviewOpen);
-  const style = styleConfig[stylePreset];
-
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
-
+  const [task, setTask] = React.useState<TaskApi.Task>();
 
   React.useEffect(() => {
     if (props.taskId && task === undefined) {
@@ -67,189 +221,21 @@ export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
     }
   }, [props.taskId, task]);
 
-  if (!task) return null;
+  if (!task) {
+    return null;
+  }
 
-  function formatAnyDateShort(value: Date | string | undefined): string {
-    if (!value) return '--';
-    const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
-    return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
-  };
-
-
-  function toggleReview() {
-    setReviewOpen(prev => !prev)
-  };
-
-  function toggleFlashyForCard(cardId: string) {
-    setFlashyCards(prev => ({ ...prev, [cardId]: !prev[cardId] }));
-  };
-
-  const isCardFlashy = (cardId: string) => !!flashyCards[cardId];
-  const handleEditDialogOpen = (cardId: TaskCardId) => setEditingCardId(cardId);
-  const handleEditDialogClose = () => setEditingCardId(undefined);
-
-  const renderCard = (cardId: string) => {
-    const commonProps = {
-      id: cardId,
-      styleVariant: stylePreset,
-      flashy: isCardFlashy(cardId),
-      onToggleFlashy: () => toggleFlashyForCard(cardId),
-      onReview: toggleReview,
-    };
-
-
-    switch (cardId) {
-      case 'task_main':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title={`Task: ${task.taskRef}`} {...commonProps} isMenu
-              onDoubleClick={() => handleEditDialogOpen(cardId)}
-              onEdit={() => handleEditDialogOpen(cardId)}
-              editDialog={editingCardId === cardId && (<TaskEditDialog task={task} open onClose={handleEditDialogClose} />)}
-              startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
-            >
-              <TaskCardDataRowElement
-                label='Due date' style={style}
-                value={
-                  <Box display='flex' justifyContent='space-between'>
-                    {formatAnyDateShort(task.dueDate)}
-                    <TaskOverdueWarning task={task} style={style} />
-                  </Box>
-                }
-              />
-              <TaskCardDataRowText label='Customer name' value={task.clientIdentificator || 'NONE'} style={style} />
-              <TaskCardDataRowText label='Subject' value={task.subject} style={style} />
-              <TaskCardDataRowText label='Info' value={task.additionalInfo} style={style} />
-              <TaskProperties task={task} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'task-form-summary':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard {...commonProps} isMenu startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
-              <TaskCardDataRowElement label='Form name' style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
-              <TaskCardDataRowText label='Submitted' value={formatAnyDateShort(task.created)} style={style} />
-              <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
-              <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
-              <TaskCardDataRowText label='Other info' value='info here' style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'status-priority':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='Status and Priority'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
-              <Stack direction="column" height="100%">
-                <EveliTaskStatus style={style} />
-                <Divider sx={{ my: 1 }} />
-                <EveliTaskPriority style={style} />
-              </Stack>
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'assignees-roles':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='Assignees and roles'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
-              <TaskCardDataRowElement label='Roles' value={<TaskRolesReadOnly task={task} />} style={style} />
-              <Divider sx={{ my: 1 }} />
-              <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'customer_messages':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='Customer messages' {...commonProps} isMenu
-              onEdit={() => handleEditDialogOpen(cardId)}
-              startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
-              onDoubleClick={() => handleEditDialogOpen('customer_messages')}
-              editDialog={editingCardId === 'customer_messages' && (<CustomerMessagesEditDialog task={task} open onClose={handleEditDialogClose} />)}
-            >
-              <CustomerMessagesReadOnly task={task} style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'files':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='Files' {...commonProps} isMenu
-              onEdit={() => handleEditDialogOpen(cardId)}
-              onDoubleClick={() => handleEditDialogOpen('files')}
-              startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
-              editDialog={editingCardId === 'files' && (<FilesEditDialog task={task} open onClose={handleEditDialogClose} />)}
-            >
-              <FilesReadOnly task={task} style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'feedback':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='Customer feedback'{...commonProps} isMenu
-              onEdit={() => handleEditDialogOpen(cardId)}
-              onDoubleClick={() => handleEditDialogOpen('feedback')}
-              startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
-              editDialog={editingCardId === 'feedback' && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditDialogClose} />)}
-            >
-              <CustomerFeedbackReadOnly task={task} style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'notes':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='Notes' {...commonProps} isMenu
-              onEdit={() => handleEditDialogOpen(cardId)}
-              onDoubleClick={() => handleEditDialogOpen('notes')}
-              startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
-              editDialog={editingCardId === 'notes' && (<NotesEditDialog task={task} open onClose={handleEditDialogClose} />)}
-            >
-              <NotesTruncated task={task} style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      case 'task-meta':
-        return (
-          <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-            <TaskCard title='History and metadata'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
-              <TaskCardDataRowText label='Last edited by' value={task.updaterId} style={style} />
-              <TaskCardDataRowText label='Last edited date' value={formatAnyDateShort(task.updated)} style={style} />
-            </TaskCard>
-          </DraggableCardWrapper>
-        );
-
-      default:
-        return null;
-    }
-  };
 
   return (
-    <Grid2 container spacing={style.cardSpacing} m={1}>
-      <Grid2 size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-        <Typography variant='h1'>Edit task: {task.taskRef}</Typography>
-        <TaskCardStyleSelect value={stylePreset} onChange={setStylePreset} />
-      </Grid2>
-
-      <Grid2 container size={{ xs: 12, md: reviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
-        sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
-        {cardOrder.map((cardId) => (
-          <Grid2 key={cardId} size={reviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[stylePreset]}>
-            {renderCard(cardId)}
-          </Grid2>
-        ))}
-      </Grid2>
-
-      <FormReviewDrawer onClose={toggleReview} open={reviewOpen} />
-    </Grid2>
+    <CardConfigContextProvider>
+      <EveliTaskDashboardInternal task={task} />
+    </CardConfigContextProvider>
   );
+}
+
+
+function _formatAnyDateShort(value: Date | string | undefined): string {
+  if (!value) return '--';
+  const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
+  return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 };

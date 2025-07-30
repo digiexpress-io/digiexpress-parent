@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, generateUtilityClass, MenuItem, Select, SelectChangeEvent, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2/cardThemeConfig';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 
 
-type TaskStatus = 'NEW' | 'OPEN' | 'COMPLETED' | 'REJECTED';
+type TaskStatusType = 'NEW' | 'OPEN' | 'COMPLETED' | 'REJECTED';
 
 
-const TaskProgressBar: React.FC<{ status: TaskStatus, style: TaskCardStyleDefinition }> = ({ status, style }) => {
+const TaskProgressBar: React.FC<{ status: TaskStatusType, style: TaskCardStyleDefinition }> = ({ status, style }) => {
   const classes = useUtilityClasses();
 
   const getProgress = (): number => {
@@ -60,16 +60,16 @@ const TaskProgressBar: React.FC<{ status: TaskStatus, style: TaskCardStyleDefini
   );
 };
 
-export const EveliTaskStatus: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
+export const TaskStatus: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
   const classes = useUtilityClasses();
-  const [status, setStatus] = React.useState<TaskStatus>('NEW');
+  const [status, setStatus] = React.useState<TaskStatusType>('NEW');
 
   const handleStatusChange = (e: SelectChangeEvent) => {
-    setStatus(e.target.value as TaskStatus);
+    setStatus(e.target.value as TaskStatusType);
   };
 
   return (
-    <TaskStatus className={classes.root}>
+    <StyledTaskStatus className={classes.root}>
       <TaskProgressBar status={status} style={style} />
 
       <Select
@@ -87,7 +87,7 @@ export const EveliTaskStatus: React.FC<{ style: TaskCardStyleDefinition }> = ({ 
         <MenuItem value="COMPLETED">COMPLETED</MenuItem>
         <MenuItem value="REJECTED">REJECTED</MenuItem>
       </Select>
-    </TaskStatus>
+    </StyledTaskStatus>
   );
 };
 
@@ -95,7 +95,7 @@ export const EveliTaskStatus: React.FC<{ style: TaskCardStyleDefinition }> = ({ 
 
 
 const MUI_NAME = 'TaskStatus';
-const TaskStatus = styled('div', {
+const StyledTaskStatus = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
