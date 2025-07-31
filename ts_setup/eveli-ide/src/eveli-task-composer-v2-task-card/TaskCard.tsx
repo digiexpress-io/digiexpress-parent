@@ -4,13 +4,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import composeClasses from '@mui/utils/composeClasses';
 
-import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
 import { TaskCardMenu } from './TaskCardMenu';
-import { TaskCardStyleKey } from './CardConfigContext';
+import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
+import { TaskCardId, TaskCardStyleKey } from './CardConfigContext';
 
 
 export interface TaskCardProps {
-  id: string;
+  id: TaskCardId;
   title?: string;
   children: React.ReactNode;
   isMenu?: boolean;
@@ -168,7 +168,7 @@ const TaskSectionCard = styled(Box, {
   },
 })<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
   const { id, flashy } = ownerState;
-  const colors = flashyCardColorsById[id] ?? flashyCardColorsById.default;
+  const colors = flashyCardColorsById[id] ?? '#333fff';
 
   const baseStyles: SxProps = {
     display: 'flex',

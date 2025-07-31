@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
 
-interface TaskCardMenuProps {
+export interface CardMenuProps {
   cardId: string;
   anchorEl: HTMLElement | null;
   open: boolean;
@@ -57,7 +57,7 @@ const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
   },
 };
 
-export const TaskCardMenu: React.FC<TaskCardMenuProps> = ({
+export const TaskCardMenu: React.FC<CardMenuProps> = ({
   cardId,
   anchorEl,
   open,
@@ -70,12 +70,16 @@ export const TaskCardMenu: React.FC<TaskCardMenuProps> = ({
   const config = CARD_MENU_CONFIG[cardId] ?? CARD_MENU_CONFIG.default;
 
   const handleFlashyToggle = () => {
-    if (onToggleFlashy) onToggleFlashy();
+    if (onToggleFlashy) {
+      onToggleFlashy()
+    };
     onClose();
   };
 
   const handleReview = () => {
-    if (onReview) onReview();
+    if (onReview) {
+      onReview()
+    };
     onClose();
   };
 
@@ -94,18 +98,18 @@ export const TaskCardMenu: React.FC<TaskCardMenuProps> = ({
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      {config.showFlashyToggle && (
-        <MenuItem onClick={handleFlashyToggle}>
-          {flashy ? 'Remove Flashy' : 'Make Flashy'}
-        </MenuItem>
-      )}
-
       {config.showReview && (
         <MenuItem onClick={handleReview}>Form Review</MenuItem>
       )}
 
       {config.showEdit && (
         <MenuItem onClick={handleEdit}>Edit this section</MenuItem>
+      )}
+
+      {config.showFlashyToggle && (
+        <MenuItem onClick={handleFlashyToggle}>
+          {flashy ? 'Remove Flashy' : 'Make Flashy'}
+        </MenuItem>
       )}
     </Menu>
   );

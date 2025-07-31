@@ -43,6 +43,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
+
   const commonProps = {
     id: cardId,
     styleVariant: cardTheme,
@@ -70,8 +71,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
           editDialog={editingCardId === cardId && (<TaskEditDialog task={task} open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
         >
-          <TaskCardDataRowElement
-            label='Due date' style={style}
+          <TaskCardDataRowElement label='Due date' style={style}
             value={
               <Box display='flex' justifyContent='space-between'>
                 {_formatAnyDateShort(task.dueDate)}

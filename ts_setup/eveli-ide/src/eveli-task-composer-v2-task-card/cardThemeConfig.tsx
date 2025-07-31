@@ -1,6 +1,6 @@
-import { CSSProperties} from 'react';
+import { CSSProperties } from 'react';
 import { useTheme } from '@mui/material';
-import { TaskCardStyleKey, useCardConfig } from './CardConfigContext';
+import { TaskCardId, TaskCardStyleKey, useCardConfig } from './CardConfigContext';
 
 
 
@@ -77,24 +77,24 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
   };
 };
 
-export const flashyCardColorsById: Record<string, { flashyBackground: string; flashyBorder: string }> = {
-  'task-main': {
+export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string; flashyBorder: string }> = {
+  'task_main': {
     flashyBackground: '#1565c0',     // Dark Blue
     flashyBorder: '#0d47a1',
   },
-  'status-priority': {
+  'status_priority': {
     flashyBackground: '#b71c1c',     // Dark Red
     flashyBorder: '#7f0000',
   },
-  'task-form-summary': {
-    flashyBackground: '#303f9f',     // Dark Indigo
-    flashyBorder: '#1a237e',
+  'task_form_summary': {
+    flashyBackground: '#232c70',     // Dark Indigo
+    flashyBorder: '#181e50',
   },
-  'assignees-roles': {
-    flashyBackground: '#ef6c00',     // Darker Orange (↑ contrast)
+  'assignees_roles': {
+    flashyBackground: '#ef6c00',     // Dark Orange 
     flashyBorder: '#e65100',
   },
-  'customer-messages': {
+  'customer_messages': {
     flashyBackground: '#6a1b9a',     // Deep Purple
     flashyBorder: '#4a0072',
   },
@@ -110,12 +110,8 @@ export const flashyCardColorsById: Record<string, { flashyBackground: string; fl
     flashyBackground: '#37474f',     // Dark Slate Gray
     flashyBorder: '#263238',
   },
-  'task-meta': {
+  'task_meta': {
     flashyBackground: '#4e342e',     // Deep Brown
     flashyBorder: '#3e2723',
-  },
-  default: {
-    flashyBackground: '#1565c0',
-    flashyBorder: '#0d47a1',
-  },
+  }
 };
