@@ -38,8 +38,7 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
 
     <StyledCustomerMessagesEditor className={classes.container}>
       <Box className={classes.messagesContainer}>
-        {allExternalMessages.length === 0 ? (
-          <Alert severity='info'>No messages yet</Alert>
+        {allExternalMessages.length === 0 ? (<Alert severity='info'>No messages yet</Alert>
         ) : (
           allExternalMessages.map((comment) => (
             <Box className={classes.messageRow} key={comment.id}>
@@ -59,7 +58,7 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
 
       <Box className={classes.inputBox}>
         <Box className={classes.inputBoxTitle}>
-          <EditIcon color='inherit' />
+          <EditIcon color='primary' />
           <Typography className={classes.messageBoxLabel}>
             {intl.formatMessage({ id: 'task.customerMessages.newMessageTitle', defaultMessage: 'Write a new message' })}
           </Typography>
@@ -99,22 +98,19 @@ const StyledCustomerMessagesEditor = styled('div', {
   },
   '& .CustomerMessagesEditor-messageBoxLabel': {
     ...theme.typography.body2,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   '& .CustomerMessagesEditor-messageRow': {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   '& .CustomerMessagesEditor-inputBoxTitle': {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    borderRadius: `4px 4px 0 0`,
-    border: `2px solid ${theme.palette.primary.main}`,
     borderBottom: 'none',
-    padding: theme.spacing(1),
+    marginBottom: theme.spacing(2),
+
   },
 
   '& .CustomerMessagesEditor-inputBox': {
@@ -160,18 +156,13 @@ const StyledCustomerMessagesEditor = styled('div', {
 
   '& .MuiSvgIcon-root': {
     fontSize: '20pt',
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
   marginTop: 0,
-  '& .MuiOutlinedInput-root': {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-  },
   '& .MuiInputBase-input': {
     height: '2.5rem',
     padding: '0 12px'

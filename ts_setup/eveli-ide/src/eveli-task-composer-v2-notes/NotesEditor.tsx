@@ -51,7 +51,7 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
       </Box>
       <Box className={classes.inputBox}>
         <Box className={classes.inputBoxTitle}>
-          <EditIcon color='inherit' />
+          <EditIcon color='primary' />
           <Typography fontWeight='bold'>Write a new note</Typography>
         </Box>
         <StyledTextField multiline rows={4} />
@@ -90,12 +90,8 @@ const StyledNotesEditor = styled('div', {
   '& .NotesEditor-inputBoxTitle': {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    borderRadius: `4px 4px 0 0`,
-    border: `2px solid ${theme.palette.primary.main}`,
-    borderBottom: 'none',
     padding: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
 
   '& .NotesEditor-inputBox': {

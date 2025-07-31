@@ -232,6 +232,7 @@ const TaskSectionCard = styled(Box, {
         alignItems: 'center',
         height: '3rem',
         paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
         color: colors.flashyBackground,
         backgroundColor: alpha(colors.flashyBackground, 0.1),
         '& .MuiAvatar-root': {
