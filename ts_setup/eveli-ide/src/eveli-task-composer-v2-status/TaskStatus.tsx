@@ -2,12 +2,14 @@ import React from 'react';
 import { Box, generateUtilityClass, MenuItem, Select, SelectChangeEvent, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
+import { useIntl } from 'react-intl';
 
 
 type TaskStatusType = 'NEW' | 'OPEN' | 'COMPLETED' | 'REJECTED';
 
 
 const TaskProgressBar: React.FC<{ status: TaskStatusType, style: TaskCardStyleDefinition }> = ({ status, style }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
 
   const getProgress = (): number => {
@@ -45,7 +47,11 @@ const TaskProgressBar: React.FC<{ status: TaskStatusType, style: TaskCardStyleDe
 
   return (
     <Box className={classes.progressBar}>
-      <Typography sx={{ ...style.bodyTypography, fontWeight: 500, mb: 1 }}>Status: {status}</Typography>
+      <Typography sx={{ ...style.bodyTypography, fontWeight: 500, mb: 1 }}>
+        {intl.formatMessage({ id: 'task.status', defaultMessage: 'Status' })}
+        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+        {status}
+      </Typography>
       <Box className={classes.backgroundTrack}>
         <Box sx={{
           height: '100%',
@@ -55,12 +61,16 @@ const TaskProgressBar: React.FC<{ status: TaskStatusType, style: TaskCardStyleDe
         }}
         />
       </Box>
-      <Typography className={classes.progressDesc}>{progress}% complete</Typography>
+      <Typography className={classes.progressDesc}>
+        {progress}
+        {intl.formatMessage({ id: 'task.status.percComplete', defaultMessage: '% complete' })}
+      </Typography>
     </Box>
   );
 };
 
 export const TaskStatus: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
   const [status, setStatus] = React.useState<TaskStatusType>('NEW');
 
@@ -82,10 +92,10 @@ export const TaskStatus: React.FC<{ style: TaskCardStyleDefinition }> = ({ style
           alignSelf: 'center',
         }}
       >
-        <MenuItem value="NEW">NEW</MenuItem>
-        <MenuItem value="OPEN">OPEN</MenuItem>
-        <MenuItem value="COMPLETED">COMPLETED</MenuItem>
-        <MenuItem value="REJECTED">REJECTED</MenuItem>
+        <MenuItem value="NEW">{intl.formatMessage({ id: 'task.status.new' })}</MenuItem>
+        <MenuItem value="OPEN">{intl.formatMessage({ id: 'task.status.open' })}</MenuItem>
+        <MenuItem value="COMPLETED">{intl.formatMessage({ id: 'task.status.completed' })}</MenuItem>
+        <MenuItem value="REJECTED">{intl.formatMessage({ id: 'task.status.rejected' })}</MenuItem>
       </Select>
     </StyledTaskStatus>
   );

@@ -2,25 +2,31 @@ import React, { useState } from 'react';
 import { Button, ButtonGroup, generateUtilityClass, Stack, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
+import { useIntl } from 'react-intl';
 
-type Priority = 'LOW' | 'MEDIUM' | 'HIGH';
+type Priority = 'LOW' | 'NORMAL' | 'HIGH';
 
 export const TaskPriority: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
   const [priority, setPriority] = useState<Priority>('LOW');
 
-  const priorities: { level: Priority, color: string }[] = [
-    { level: 'LOW', color: '#45a048' },
-    { level: 'MEDIUM', color: '#2196f3' },
-    { level: 'HIGH', color: '#f44336' },
+  const priorities: { level: Priority, intl: string, color: string }[] = [
+    { level: 'LOW', intl: 'task.priority.low', color: '#45a048' },
+    { level: 'NORMAL', intl: 'task.priority.normal', color: '#2196f3' },
+    { level: 'HIGH', intl: 'task.priority.high', color: '#f44336' },
   ];
 
   return (
     <StyledTaskPriority className={classes.root} style={style}>
       <Stack direction='column' width='100%'>
-        <Typography fontWeight={500} mb={1} sx={{...style.bodyTypography, fontWeight: 500}}>Priority: {priority}</Typography>
+        <Typography fontWeight={500} mb={1} sx={{ ...style.bodyTypography, fontWeight: 500 }}>
+          {intl.formatMessage({ id: 'task.priority', defaultMessage: 'Priority' })}
+          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+          {priority}
+        </Typography>
         <ButtonGroup fullWidth className={classes.prioritySelect} disableElevation>
-          {priorities.map(({ level, color }) => {
+          {priorities.map(({ level, color, intl: intlId }) => {
             const isActive = priority === level;
             return (
               <Button key={level} variant={isActive ? 'contained' : 'outlined'} onClick={() => setPriority(level)}
@@ -35,7 +41,7 @@ export const TaskPriority: React.FC<{ style: TaskCardStyleDefinition }> = ({ sty
                   },
                 }}
               >
-                {level}
+                {intl.formatMessage({ id: intlId })}
               </Button>
             );
           })}

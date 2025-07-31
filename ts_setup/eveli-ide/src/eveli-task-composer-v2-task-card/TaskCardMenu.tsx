@@ -1,22 +1,7 @@
 import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
+import { useIntl } from 'react-intl';
 
-export interface CardMenuProps {
-  cardId: string;
-  anchorEl: HTMLElement | null;
-  open: boolean;
-  flashy?: boolean;
-  onClose: () => void;
-  onToggleFlashy?: () => void;
-  onReview?: () => void;
-  onEdit?: () => void;
-}
-
-interface CardMenuOptions {
-  showFlashyToggle?: boolean;
-  showReview?: boolean;
-  showEdit?: boolean;
-}
 
 const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
   'task_main': {
@@ -57,58 +42,73 @@ const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
   },
 };
 
-export const TaskCardMenu: React.FC<CardMenuProps> = ({
-  cardId,
-  anchorEl,
-  open,
-  onClose,
-  flashy,
-  onToggleFlashy,
-  onReview,
-  onEdit,
-}) => {
-  const config = CARD_MENU_CONFIG[cardId] ?? CARD_MENU_CONFIG.default;
+export interface CardMenuProps {
+  cardId: string;
+  anchorEl: HTMLElement | null;
+  open: boolean;
+  flashy?: boolean;
+  onClose: () => void;
+  onToggleFlashy?: () => void;
+  onReview?: () => void;
+  onEdit?: () => void;
+}
 
-  const handleFlashyToggle = () => {
-    if (onToggleFlashy) {
-      onToggleFlashy()
+interface CardMenuOptions {
+  showFlashyToggle?: boolean;
+  showReview?: boolean;
+  showEdit?: boolean;
+}
+
+
+export const TaskCardMenu: React.FC<CardMenuProps> = (props) => {
+  const intl = useIntl();
+  const config = CARD_MENU_CONFIG[props.cardId] ?? CARD_MENU_CONFIG.default;
+
+  function handleFlashyToggle() {
+    if (props.onToggleFlashy) {
+      props.onToggleFlashy()
     };
-    onClose();
+    props.onClose();
   };
 
-  const handleReview = () => {
-    if (onReview) {
-      onReview()
+  function handleReview() {
+    if (props.onReview) {
+      props.onReview()
     };
-    onClose();
+    props.onClose();
   };
 
-  const handleEdit = () => {
-    if (onEdit) {
-      onEdit()
+  function handleEdit() {
+    if (props.onEdit) {
+      props.onEdit()
     };
-    onClose();
+    props.onClose();
   };
 
   return (
     <Menu
-      anchorEl={anchorEl}
-      open={open}
-      onClose={onClose}
+      anchorEl={props.anchorEl}
+      open={props.open}
+      onClose={props.onClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
       {config.showReview && (
-        <MenuItem onClick={handleReview}>Form Review</MenuItem>
+        <MenuItem onClick={handleReview}>{intl.formatMessage({ id: 'taskcard.menu.option.formReview', defaultMessage: 'Show form review' })}</MenuItem>
       )}
 
       {config.showEdit && (
-        <MenuItem onClick={handleEdit}>Edit this section</MenuItem>
+        <MenuItem onClick={handleEdit}>{intl.formatMessage({ id: 'taskcard.menu.option.editSection', defaultMessage: 'Edit this section' })}</MenuItem>
       )}
 
       {config.showFlashyToggle && (
         <MenuItem onClick={handleFlashyToggle}>
-          {flashy ? 'Remove Flashy' : 'Make Flashy'}
+          {props.flashy ? (
+            intl.formatMessage({ id: 'taskcard.menu.option.removeFlashy', defaultMessage: 'Remove Flashy' })
+          ) : (
+            intl.formatMessage({ id: 'taskcard.menu.option.setFlashy', defaultMessage: 'Make Flashy' })
+          )
+          }
         </MenuItem>
       )}
     </Menu>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import { TASK_CARD_STYLE_LABELS, } from './cardThemeConfig';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { TaskCardStyleKey } from './CardConfigContext';
@@ -11,17 +12,18 @@ export interface TaskCardStylerProps {
 }
 
 export const TaskCardStyleSelect: React.FC<TaskCardStylerProps> = ({ value, onChange }) => {
+  const intl = useIntl();
   const handleChange = (event: SelectChangeEvent) => {
     onChange(event.target.value as TaskCardStyleKey);
   };
 
   return (
     <FormControl fullWidth sx={{ mb: 2, maxWidth: 300 }}>
-      <InputLabel>Card Style</InputLabel>
-      <Select value={value} label="Card Style" onChange={handleChange}>
+      <InputLabel>{intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })}</InputLabel>
+      <Select value={value} label={intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })} onChange={handleChange}>
         {Object.entries(TASK_CARD_STYLE_LABELS).map(([key, label]) => (
           <MenuItem key={key} value={key}>
-            {label}
+            {intl.formatMessage({ id: `taskcard.style.${label}` })}
           </MenuItem>
         ))}
       </Select>

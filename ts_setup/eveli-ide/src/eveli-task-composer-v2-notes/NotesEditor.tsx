@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Divider, generateUtilityClass, styled, TextField, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import EditIcon from '@mui/icons-material/Edit';
+import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
@@ -21,6 +22,7 @@ export interface NotesEditorProps {
 }
 
 export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
   const internalComments = task.comments?.filter(c => !c.external) || [];
 
@@ -29,7 +31,10 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
     <StyledNotesEditor className={classes.notesContainer}>
       <Box className={classes.messagesContainer}>
 
-        {!internalComments || internalComments.length === 0 && <Typography variant='body2' textAlign='center'>No notes yet</Typography>}
+        {!internalComments || internalComments.length === 0 && <Typography variant='body2' textAlign='center'>
+          {intl.formatMessage({ id: 'task.note.none', defaultMessage: 'No notes yet' })}
+        </Typography>
+        }
 
         {internalComments.map(comment => (
           <Box key={comment.id}>
@@ -52,7 +57,7 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
       <Box className={classes.inputBox}>
         <Box className={classes.inputBoxTitle}>
           <EditIcon color='primary' />
-          <Typography fontWeight='bold'>Write a new note</Typography>
+          <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.note.newNote', defaultMessage: 'Write a new note' })}</Typography>
         </Box>
         <StyledTextField multiline rows={4} />
 
@@ -90,8 +95,7 @@ const StyledNotesEditor = styled('div', {
   '& .NotesEditor-inputBoxTitle': {
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(2)
   },
 
   '& .NotesEditor-inputBox': {

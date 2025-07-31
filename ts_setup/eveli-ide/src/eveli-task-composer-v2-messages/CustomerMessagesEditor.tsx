@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField, Alert } from '@mui/material';
+import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
@@ -31,21 +31,22 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
 
   function handleOnChange(value: string) {
     setMessage(value);
-    console.log("message:", value);
   }
 
   return (
 
     <StyledCustomerMessagesEditor className={classes.container}>
       <Box className={classes.messagesContainer}>
-        {allExternalMessages.length === 0 ? (<Alert severity='info'>No messages yet</Alert>
-        ) : (
+        {allExternalMessages.length === 0 ?
+          (
+            <Typography textAlign='center'>{intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No messages yet' })}</Typography>
+          ) : (
           allExternalMessages.map((comment) => (
             <Box className={classes.messageRow} key={comment.id}>
               <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
               <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
                 <Typography className={classes.senderInfo}>
-                  {comment.userName} wrote on {formatDate(comment.created)}
+                  {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
                 </Typography>
                 <Typography style={{ overflow: 'hidden', whiteSpace: 'normal' }}>
                   {comment.commentText}

@@ -997,5 +997,8 @@ export const en = {
   'eveli.userProfile.tenantConfig.select.visual_accommodation': 'Visual accommodation',
   'eveli.userProfile.tenantConfig.select.visual_accommodation.desc': 'To make certain buttons and UI items pop for enhanced visibility',
   'eveli.batches.batchView..averageRunTime': 'Average run time',
-  'eveli.batches.batchView.averageRunTime.ms': 'ms'
+  'eveli.batches.batchView.averageRunTime.ms': 'ms',
+  'taskcard.style.COMPACT': 'Compact',
+  'taskcard.style.DEFAULT': 'Default',
+  'taskcard.style.LARGE': 'Large'
 }

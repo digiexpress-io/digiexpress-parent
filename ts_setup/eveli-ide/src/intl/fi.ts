@@ -938,5 +938,8 @@ export const fi = {
   'toolbar.releases': 'Julkaisut',
   'toolbar.locales': 'Sijainnit',
   'eveli.batches.batchView..averageRunTime': 'Average run time',
-  'eveli.batches.batchView.averageRunTime.ms': 'ms'
+  'eveli.batches.batchView.averageRunTime.ms': 'ms',
+  'taskcard.style.COMPACT': 'Compact',
+  'taskcard.style.DEFAULT': 'Default',
+  'taskcard.style.LARGE': 'Large'
 }

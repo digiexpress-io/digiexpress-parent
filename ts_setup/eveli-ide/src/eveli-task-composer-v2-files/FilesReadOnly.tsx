@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import DescriptionIcon from '@mui/icons-material/Description';
+import { useIntl } from 'react-intl';
+
 
 import { TaskApi } from '@/api-task';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
@@ -18,10 +20,11 @@ export interface FilesReadOnlyProps {
 }
 
 export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
 
   if (!files.length || files.length === 0) {
-    return <>No files</>
+    return <>{intl.formatMessage({ id: 'task.file.none', defaultMessage: 'No files found' })}</>
   }
   return (
     <TaskFiles className={classes.root} style={style}>

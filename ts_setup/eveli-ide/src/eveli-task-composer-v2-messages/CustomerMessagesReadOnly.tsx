@@ -1,9 +1,11 @@
 import React from 'react';
 import { Box, styled, Avatar, generateUtilityClass, Typography, darken } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
+import { DateTime } from 'luxon';
+import { useIntl } from 'react-intl';
+
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { TaskApi } from '@/api-task';
-import { DateTime } from 'luxon';
 
 export interface CustomerMessagesReadOnlyProps {
   style: TaskCardStyleDefinition;
@@ -11,6 +13,7 @@ export interface CustomerMessagesReadOnlyProps {
 }
 
 export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> = ({ task, style }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
 
   const allExternalMessages = task.comments?.filter(c => c.external)
@@ -39,7 +42,7 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
     <StyledCustomerMessagesReadOnly className={classes.container}>
       {externalMessages.length === 0 && (
         <Typography sx={{ ...style }}>
-          No messages
+          {intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No messages yet' })}
         </Typography>
       )}
 
@@ -50,7 +53,7 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
             <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
             <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
               <Typography className={classes.senderInfo} sx={{ ...style.bodyTypography }} >
-                {comment.userName} wrote on {formatDate(comment.created)}
+                {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
               </Typography>
               <Typography style={{ ...style.bodyTypography, overflow: 'hidden', whiteSpace: 'normal' }}>
                 {truncateText(comment.commentText, 200)}

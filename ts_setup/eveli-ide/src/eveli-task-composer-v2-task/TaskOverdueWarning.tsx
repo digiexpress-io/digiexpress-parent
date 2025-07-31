@@ -3,6 +3,7 @@ import { alpha, Typography, generateUtilityClass, styled, Theme } from '@mui/mat
 import composeClasses from '@mui/utils/composeClasses';
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { DateTime } from 'luxon';
+import { useIntl } from 'react-intl';
 
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { TaskApi } from '@/api-task';
@@ -58,6 +59,7 @@ function getTaskOverdue(task: TaskApi.Task): { isOverdue: boolean, days: number,
 
 
 export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
 
   const taskInfo = getTaskOverdue(props.task);
@@ -72,9 +74,8 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
       return (
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
-
           <Typography textAlign='center' sx={{ ...props.style.bodyTypographySmall }}>
-            {taskInfo.days} day(s) left to complete task
+            {intl.formatMessage({ id: 'task.overdue.daysLeft', defaultMessage: `${taskInfo.days} day(s) left to complete task` })}
           </Typography>
         </StyledTaskOverrdueWarning>
       );
@@ -84,7 +85,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography textAlign='center' sx={{ ...props.style.bodyTypographySmall ?? undefined }}>
-            Task is due today!
+            {intl.formatMessage({ id: 'task.overdue.dueToday', defaultMessage: 'Task is due today!' })}
           </Typography>
         </StyledTaskOverrdueWarning>
       )
@@ -94,7 +95,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography sx={{ ...props.style.bodyTypographySmall }}>
-            Task was closed {taskInfo.days} day(s) overdue
+            {intl.formatMessage({ id: 'task.overdue.closedOverdue', defaultMessage: `Task was closed ${taskInfo.days} day(s) overdue` })}
           </Typography>
         </StyledTaskOverrdueWarning>
       )
@@ -103,7 +104,9 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
       return (
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
-          <Typography sx={{ ...props.style.bodyTypographySmall }}>Task is {taskInfo.days} day(s) overdue</Typography>
+          <Typography sx={{ ...props.style.bodyTypographySmall }}>
+            {intl.formatMessage({ id: 'task.overdue', defaultMessage: `Task is ${taskInfo.days} day(s) overdue` })}
+          </Typography>
         </StyledTaskOverrdueWarning>
       )
     default:
@@ -136,7 +139,8 @@ const StyledTaskOverrdueWarning = styled('div', {
 
     '& .MuiSvgIcon-root': {
       color: getBackgroundColor(theme, ownerState.status),
-      fontSize: 'medium'
+      fontSize: 'medium',
+      marginRight: theme.spacing(0.5)
     }
   };
 });

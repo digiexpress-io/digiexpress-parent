@@ -3,6 +3,7 @@ import { alpha, Box, generateUtilityClass, IconButton, styled, Typography } from
 import composeClasses from '@mui/utils/composeClasses';
 import DescriptionIcon from '@mui/icons-material/Description';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@/api-task';
 
@@ -17,13 +18,14 @@ export interface FilesEditorProps {
 }
 
 export const FilesEditor: React.FC<FilesEditorProps> = ({ task }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
 
   return (
     <StyledFilesEditor className={classes.root}>
       <Box className={classes.headerRow}>
-        <Box width='70%'>File Name</Box>
-        <Box width='25%'>Uploaded Date</Box>
+        <Box width='70%'>{intl.formatMessage({ id: 'task.file.fileName', defaultMessage: 'File name' })}</Box>
+        <Box width='25%'>{intl.formatMessage({ id: 'task.file.uploadDate', defaultMessage: 'Upload date' })}</Box>
       </Box>
 
       {files.map(file => (

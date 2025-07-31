@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
+import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@/api-task';
 import { DateTime } from 'luxon';
@@ -22,11 +23,12 @@ export interface NotesTruncatedTruncatedProps {
 }
 
 export const NotesTruncated: React.FC<NotesTruncatedTruncatedProps> = ({ task, style }) => {
+  const intl = useIntl();
   const classes = useUtilityClasses();
   const internalComments = task.comments?.filter(c => !c.external) || [];
 
   if (!internalComments || internalComments.length === 0) {
-    return <>No notes</>
+    return <>{intl.formatMessage({ id: 'task.note.none', defaultMessage: 'No notes yet' })}</>
   }
 
   const truncateText = (text: string, maxLength: number): string => {
