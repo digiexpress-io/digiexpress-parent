@@ -1,7 +1,8 @@
 import React from 'react';
-import { generateUtilityClass, styled, Typography, Drawer, useMediaQuery, useTheme, Box, IconButton, Slide } from '@mui/material';
+import { generateUtilityClass, styled, Typography, Drawer, useMediaQuery, useTheme, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import composeClasses from '@mui/utils/composeClasses';
+import { useIntl } from 'react-intl';
 
 
 
@@ -13,6 +14,7 @@ export interface FormReviewDrawerProps {
 
 export const FormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose, open }) => {
   const theme = useTheme();
+  const intl = useIntl();
   const isSmall = useMediaQuery(theme.breakpoints.down('md'));
   const classes = useUtilityClasses();
 
@@ -24,7 +26,7 @@ export const FormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose, ope
       variant="persistent"
     >
       <Box display='flex' alignItems='center' justifyContent='space-between'>
-        <Typography variant="h1">Form review</Typography>
+        <Typography variant="h1">{intl.formatMessage({ id: 'taskcard.form.review.title', defaultMessage: 'Form review' })}</Typography>
         <IconButton onClick={onClose}><CloseIcon color='primary' /></IconButton>
       </Box>
     </StyledFormReview>

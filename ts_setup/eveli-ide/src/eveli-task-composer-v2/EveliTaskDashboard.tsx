@@ -35,10 +35,12 @@ import {
   TaskCardStyleSelect,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../eveli-task-composer-v2-task-card';
+import { useIntl } from 'react-intl';
 
 
 
 const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ cardId, task }) => {
+  const intl = useIntl();
   const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, setEditCard } = useCardConfig();
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
@@ -65,13 +67,15 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
   switch (cardId) {
     case 'task_main':
       return (
-        <TaskCard title={`Task: ${task.taskRef}`} {...commonProps} isMenu
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}
+          {...commonProps}
+          isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog task={task} open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
         >
-          <TaskCardDataRowElement label='Due date' style={style}
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={
               <Box display='flex' justifyContent='space-between'>
                 {_formatAnyDateShort(task.dueDate)}
@@ -79,9 +83,9 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
               </Box>
             }
           />
-          <TaskCardDataRowText label='Customer name' value={task.clientIdentificator || 'NONE'} style={style} />
-          <TaskCardDataRowText label='Subject' value={task.subject} style={style} />
-          <TaskCardDataRowText label='Info' value={task.additionalInfo} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.customerName', defaultMessage: 'Customer name' })} value={task.clientIdentificator || 'NONE'} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.subject', defaultMessage: 'Subject' })} value={task.subject} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.additionalInfo', defaultMessage: 'Extra info' })} value={task.additionalInfo} style={style} />
           <TaskProperties task={task} />
         </TaskCard>
       );
@@ -89,17 +93,20 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
     case 'task_form_summary':
       return (
         <TaskCard {...commonProps} isMenu startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
-          <TaskCardDataRowElement label='Form name' style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
-          <TaskCardDataRowText label='Submitted' value={_formatAnyDateShort(task.created)} style={style} />
-          <TaskCardDataRowText label='Can publish feedback?' value='YES' style={style} />
-          <TaskCardDataRowText label='Representative?' value='Representative name' style={style} />
-          <TaskCardDataRowText label='Other info' value='info here' style={style} />
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate', defaultMessage: 'Submitted' })} value={_formatAnyDateShort(task.created)} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback', defaultMessage: 'Publish feedback?' })} value='YES' style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.representative', defaultMessage: 'Representative name' })} value='Representative name' style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.otherInfo', defaultMessage: 'Other info' })} value='info here' style={style} />
         </TaskCard>
       );
 
     case 'status_priority':
       return (
-        <TaskCard title='Status and Priority'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.statusAndPriority', defaultMessage: 'Status and Priority' })}
+          {...commonProps}
+          isMenu
+          startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
           <Stack direction="column" height="100%">
             <TaskStatus style={style} />
             <Divider sx={{ my: 1 }} />
@@ -110,16 +117,21 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
 
     case 'assignees_roles':
       return (
-        <TaskCard title='Assignees and roles'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
-          <TaskCardDataRowElement label='Roles' value={<TaskRolesReadOnly task={task} />} style={style} />
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees', defaultMessage: 'Roles and Assignees' })}
+          {...commonProps}
+          isMenu
+          startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles', defaultMessage: 'Roles' })} value={<TaskRolesReadOnly task={task} />} style={style} />
           <Divider sx={{ my: 1 }} />
-          <TaskCardDataRowElement label='Assigned to' value={<TaskAssignee task={task} />} style={style} />
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee', defaultMessage: 'Assignee' })} value={<TaskAssignee task={task} />} style={style} />
         </TaskCard>
       );
 
     case 'customer_messages':
       return (
-        <TaskCard title='Customer messages' {...commonProps} isMenu
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
+          {...commonProps}
+          isMenu
           onEdit={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
           onDoubleClick={handleEdit}
@@ -131,7 +143,9 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
 
     case 'files':
       return (
-        <TaskCard title='Files' {...commonProps} isMenu
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.files', defaultMessage: 'Files' })}
+          {...commonProps}
+          isMenu
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
@@ -143,7 +157,9 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
 
     case 'feedback':
       return (
-        <TaskCard title='Customer feedback'{...commonProps} isMenu
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback', defaultMessage: 'Customer feedback' })}
+          {...commonProps}
+          isMenu
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
@@ -155,7 +171,9 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
 
     case 'notes':
       return (
-        <TaskCard title='Notes' {...commonProps} isMenu
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes', defaultMessage: 'Notes' })}
+          {...commonProps}
+          isMenu
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
@@ -167,9 +185,12 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
 
     case 'task_meta':
       return (
-        <TaskCard title='History and metadata'{...commonProps} isMenu startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
-          <TaskCardDataRowText label='Last edited by' value={task.updaterId} style={style} />
-          <TaskCardDataRowText label='Last edited date' value={_formatAnyDateShort(task.updated)} style={style} />
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history', defaultMessage: 'History and metadata' })}
+          {...commonProps}
+          isMenu
+          startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />
         </TaskCard>
       );
 
@@ -194,7 +215,9 @@ const EveliTaskDashboardInternal: React.FC<{ task: TaskApi.Task }> = ({ task }) 
         <TaskCardStyleSelect value={cardTheme} onChange={setCardTheme} />
       </Grid2>
 
-      <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
+      <Grid2 container
+        size={{ xs: 12, md: isReviewOpen ? 6 : 12 }}
+        spacing={style.cardSpacing}
         sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
