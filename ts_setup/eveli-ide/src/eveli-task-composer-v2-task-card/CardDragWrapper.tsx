@@ -21,7 +21,7 @@ function getBorder(theme: Theme, isDragging: boolean, isDropTarget: boolean) {
     return `2px dashed ${theme.palette.primary.main}`;
   }
   if (isDropTarget) {
-    return `1px solid ${theme.palette.primary.light}`;
+    return `1px solid ${theme.palette.divider}`;
   }
   return 'none';
 }
@@ -58,7 +58,7 @@ export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
         borderRadius: theme.spacing(1),
         padding: theme.spacing(1),
         opacity: isDragging ? 0.6 : 1,
-        boxShadow: isDropTarget ? `0 0 6px 3px ${alpha(theme.palette.primary.light, 0.25)}` : 'none'
+        boxShadow: isDropTarget ? `0 0 6px 3px ${alpha(theme.palette.divider, 0.50)}` : 'none'
       }}
     >
       {children}
@@ -74,6 +74,51 @@ export function useDragCardController<T extends TaskCardId>() {
   const [draggingId, setDraggingId] = React.useState<T | null>(null);
   const [dropTargetId, setDropTargetId] = React.useState<T | null>(null);
   const draggedId = React.useRef<T | null>(null);
+  function startAutoScroll() {
+    const scrollMargin = 80; // px distance from top/bottom to trigger
+    const maxSpeed = 20;     // px per frame (lower than before)
+    let scrollSpeed = 0;     // current frame speed
+    let scrollDirection = 0; // -1 = up, 1 = down, 0 = none
+    let rafId: number | null = null;
+
+    const handleDragOver = (event: DragEvent) => {
+      const { clientY } = event;
+      const viewportHeight = window.innerHeight;
+
+      scrollDirection = 0;
+      scrollSpeed = 0;
+
+      if (clientY < scrollMargin) {
+        // Cursor near top → scroll up
+        scrollDirection = -1;
+        const distance = Math.max(clientY, 0);
+        scrollSpeed = ((scrollMargin - distance) / scrollMargin) * maxSpeed;
+      } else if (viewportHeight - clientY < scrollMargin) {
+        // Cursor near bottom → scroll down
+        scrollDirection = 1;
+        const distance = Math.max(viewportHeight - clientY, 0);
+        scrollSpeed = ((scrollMargin - distance) / scrollMargin) * maxSpeed;
+      }
+    };
+
+    const step = () => {
+      if (scrollDirection !== 0 && scrollSpeed > 0) {
+        window.scrollBy(0, scrollDirection * scrollSpeed);
+      }
+      rafId = requestAnimationFrame(step);
+    };
+
+    window.addEventListener('dragover', handleDragOver);
+    rafId = requestAnimationFrame(step);
+
+    return () => {
+      window.removeEventListener('dragover', handleDragOver);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }
+
+
+  let stopAutoScroll: (() => void) | null = null;
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, id: T) => {
     draggedId.current = id;
@@ -93,6 +138,8 @@ export function useDragCardController<T extends TaskCardId>() {
     setTimeout(() => {
       document.body.removeChild(clone);
     }, 0);
+
+    stopAutoScroll = startAutoScroll();
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -129,6 +176,10 @@ export function useDragCardController<T extends TaskCardId>() {
   };
   const handleDragEnd = () => {
     resetDragState();
+    if (stopAutoScroll) {
+      stopAutoScroll();
+      stopAutoScroll = null;
+    }
   };
 
   const resetDragState = () => {
@@ -152,3 +203,4 @@ export function useDragCardController<T extends TaskCardId>() {
     getDragPropsForId,
   };
 }
+
