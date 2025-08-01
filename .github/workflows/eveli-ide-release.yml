@@ -4,13 +4,13 @@ on:
       - 'ts_setup/eveli-ide/**'
 
     branches:
-      - dev
+      - prod_1.x
   workflow_call: # Enables manual triggering
 permissions:
   contents: write
   id-token: write
     
-name: Release eveli-ide
+name: Release eveli-ide prod_1.x
 jobs:
     build:
       runs-on: ubuntu-latest  # windows-latest || macos-latest
