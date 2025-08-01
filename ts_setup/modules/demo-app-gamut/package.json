@@ -1,0 +1,16 @@
+{
+  "name": "@dxs-ts/gamut-demo-app",
+  "version": "${project.version}",
+  "description": "Gamut demo application",
+  "type": "module",
+  "private": false,
+  "dependencies": {
+    "@dxs-ts/gamut": "*"
+  },
+  "peerDependencies": {},
+  "keywords": [
+    "gamut",
+    "demo-app"
+  ]
+
+}

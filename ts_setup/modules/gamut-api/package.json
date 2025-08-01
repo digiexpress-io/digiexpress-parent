@@ -1,0 +1,24 @@
+{
+  "name": "@dxs-ts/gamut-api",
+  "version": "${project.version}",
+  "description": "Gamut API layer - data fetching, business logic, state management",
+  "main": "./index.ts",
+  "type": "module",
+
+  "note": "No internal dependencies - this is the foundation layer",
+  "dependencies": {
+   "@dxs-ts/gamut-intl": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-intl": "*",
+    "@tanstack/react-query": "*",
+    "@tanstack/react-router": "*",
+    "luxon": "*",
+    "leaflet-geosearch": "*",
+    "ts-md5": "*"
+  },
+  "keywords": ["gamut", "api", "data", "business-logic"],
+  "private": true
+}

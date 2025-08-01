@@ -1,0 +1,6 @@
+export * from './plugin-build-one-module'
+export * from './plugin-release-all-modules'
+export * from './plugin-module-registry'
+export * from './plugin-demo-app'
+export * from './plugin-intl'
+export * from './gen-dts'

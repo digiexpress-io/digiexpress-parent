@@ -1,0 +1,22 @@
+{
+  "name": "@dxs-ts/gamut",
+  "version": "${project.version}",
+  "description": "Gamut route components - full page layouts, navigation",
+  "type": "module",
+  "private": false,
+  "dependencies": {
+    "@dxs-ts/gamut-api": "*",
+    "@dxs-ts/envir-util": "*",
+    "@dxs-ts/gamut-primitives": "*",
+    "@dxs-ts/gamut-intl": "*",
+    "@dxs-ts/gamut-routes": "*"
+  },
+  "peerDependencies": {},
+  "keywords": [
+    "gamut",
+    "routes",
+    "navigation",
+    "layouts"
+  ]
+
+}

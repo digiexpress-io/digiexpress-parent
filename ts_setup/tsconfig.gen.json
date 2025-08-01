@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/gamut-demo-app": [
+        "./modules/demo-app-gamut/index.ts"
+      ],
+      "@dxs-ts/envir-util": [
+        "./modules/envir-util/index.ts"
+      ],
+      "@dxs-ts/gamut-api": [
+        "./modules/gamut-api/index.ts"
+      ],
+      "@dxs-ts/gamut-intl": [
+        "./modules/gamut-intl/index.ts"
+      ],
+      "@dxs-ts/gamut-primitives": [
+        "./modules/gamut-primitives/index.ts"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "./modules/gamut-routes/index.ts"
+      ],
+      "@dxs-ts/gamut": [
+        "./modules/lib-gamut/index.ts"
+      ]
+    }
+  },
+  "_generated": {
+    "by": "TSConfigBuilder",
+    "at": "2025-08-01T09:27:04.558Z",
+    "fromRegistry": "ba2a2cd2fab0",
+    "moduleCount": 7
+  }
+}

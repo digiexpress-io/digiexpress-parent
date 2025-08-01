@@ -1,0 +1,597 @@
+{
+  "modules": {
+    "@dxs-ts/gamut-demo-app": {
+      "name": "@dxs-ts/gamut-demo-app",
+      "path": "modules/demo-app-gamut",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-demo-app",
+        "version": "${project.version}",
+        "description": "Gamut demo application",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/gamut": "*"
+        },
+        "peerDependencies": {},
+        "keywords": [
+          "gamut",
+          "demo-app"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/gamut"
+      ],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [
+        "@dxs-ts/gamut"
+      ],
+      "actualDependencies": [
+        "react",
+        "@dxs-ts/gamut",
+        "@tanstack/react-query",
+        "@mui/material",
+        "react-dom",
+        "@tanstack/react-router",
+        "react-intl",
+        "@mui/utils"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@mui/material",
+        "react-dom",
+        "@tanstack/react-router",
+        "react-intl",
+        "@mui/utils"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut"
+      ],
+      "missingDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@mui/material",
+        "react-dom",
+        "@tanstack/react-router",
+        "react-intl",
+        "@mui/utils"
+      ],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/envir-util": {
+      "name": "@dxs-ts/envir-util",
+      "path": "modules/envir-util",
+      "packageJson": {
+        "name": "@dxs-ts/envir-util",
+        "version": "${project.version}",
+        "description": "",
+        "type": "module",
+        "private": false,
+        "dependencies": {},
+        "peerDependencies": {},
+        "keywords": [
+          "Generic util-s used across every project"
+        ]
+      },
+      "dependencies": [],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-api": {
+      "name": "@dxs-ts/gamut-api",
+      "path": "modules/gamut-api",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-api",
+        "version": "${project.version}",
+        "description": "Gamut API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {
+          "@dxs-ts/gamut-intl": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "react-intl": "*",
+          "@tanstack/react-query": "*",
+          "@tanstack/react-router": "*",
+          "luxon": "*",
+          "leaflet-geosearch": "*",
+          "ts-md5": "*"
+        },
+        "keywords": [
+          "gamut",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-intl",
+        "react",
+        "react-dom",
+        "react-intl",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "luxon",
+        "leaflet-geosearch",
+        "ts-md5"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "luxon",
+        "leaflet-geosearch",
+        "ts-md5"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "luxon",
+        "leaflet-geosearch",
+        "ts-md5"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-intl"
+      ],
+      "actualDependencies": [
+        "react",
+        "luxon",
+        "ts-md5",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "react-intl",
+        "@dxs-ts/gamut-intl",
+        "leaflet-geosearch"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "luxon",
+        "ts-md5",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "react-intl",
+        "leaflet-geosearch"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-intl"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react-dom"
+      ]
+    },
+    "@dxs-ts/gamut-intl": {
+      "name": "@dxs-ts/gamut-intl",
+      "path": "modules/gamut-intl",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-intl",
+        "version": "${project.version}",
+        "description": "Gamut UI translation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "keywords": [
+          "intl",
+          "ui"
+        ],
+        "private": true
+      },
+      "dependencies": [],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-primitives": {
+      "name": "@dxs-ts/gamut-primitives",
+      "path": "modules/gamut-primitives",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-primitives",
+        "version": "${project.version}",
+        "description": "Gamut UI primitives - basic building blocks, form inputs, buttons",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "${project.version}"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "react-intl": "*",
+          "react-markdown": "*",
+          "react-leaflet": "*",
+          "react-date-picker": "*",
+          "react-time-picker": "*",
+          "@mui/material": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/types": "*",
+          "@tanstack/react-router": "*",
+          "luxon": "*",
+          "numbro": "*",
+          "leaflet": "*"
+        },
+        "keywords": [
+          "gamut",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "react",
+        "react-dom",
+        "react-intl",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "@tanstack/react-router",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "@tanstack/react-router",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "@tanstack/react-router",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@dxs-ts/gamut-api",
+        "react-intl",
+        "@mui/utils",
+        "@mui/icons-material",
+        "luxon",
+        "@tanstack/react-router",
+        "@mui/system",
+        "react-markdown",
+        "@mui/types",
+        "leaflet",
+        "react-leaflet",
+        "react-date-picker",
+        "numbro",
+        "react-time-picker"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@mui/utils",
+        "@mui/icons-material",
+        "luxon",
+        "@tanstack/react-router",
+        "@mui/system",
+        "react-markdown",
+        "@mui/types",
+        "leaflet",
+        "react-leaflet",
+        "react-date-picker",
+        "numbro",
+        "react-time-picker"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react-dom"
+      ]
+    },
+    "@dxs-ts/gamut-routes": {
+      "name": "@dxs-ts/gamut-routes",
+      "path": "modules/gamut-routes",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-routes",
+        "version": "${project.version}",
+        "description": "Gamut route components - full page layouts, navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-primitives": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "react-router-dom": "*",
+          "@tanstack/react-router": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "react-intl": "*"
+        },
+        "keywords": [
+          "gamut",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives",
+        "react",
+        "react-dom",
+        "react-router-dom",
+        "@tanstack/react-router",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "react-intl"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "react-router-dom",
+        "@tanstack/react-router",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "react-intl"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "react-router-dom",
+        "@tanstack/react-router",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "react-intl"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives"
+      ],
+      "actualDependencies": [
+        "@mui/material",
+        "@dxs-ts/gamut-primitives",
+        "react",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/icons-material",
+        "react-intl",
+        "@dxs-ts/gamut-api",
+        "@mui/system"
+      ],
+      "actualExternalDependencies": [
+        "@mui/material",
+        "react",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/icons-material",
+        "react-intl",
+        "@mui/system"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react-dom",
+        "react-router-dom"
+      ]
+    },
+    "@dxs-ts/gamut": {
+      "name": "@dxs-ts/gamut",
+      "path": "modules/lib-gamut",
+      "packageJson": {
+        "name": "@dxs-ts/gamut",
+        "version": "${project.version}",
+        "description": "Gamut route components - full page layouts, navigation",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/envir-util": "*",
+          "@dxs-ts/gamut-primitives": "*",
+          "@dxs-ts/gamut-intl": "*",
+          "@dxs-ts/gamut-routes": "*"
+        },
+        "peerDependencies": {},
+        "keywords": [
+          "gamut",
+          "routes",
+          "navigation",
+          "layouts"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes"
+      ],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes"
+      ],
+      "actualDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/envir-util"
+      ],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/envir-util"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/gamut-intl"
+      ]
+    }
+  },
+  "dependencyGraph": {
+    "forward": {
+      "@dxs-ts/gamut-demo-app": [
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/envir-util": [],
+      "@dxs-ts/gamut-api": [
+        "@dxs-ts/gamut-intl"
+      ],
+      "@dxs-ts/gamut-intl": [],
+      "@dxs-ts/gamut-primitives": [
+        "@dxs-ts/gamut-api"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives"
+      ],
+      "@dxs-ts/gamut": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes"
+      ]
+    },
+    "reverse": {
+      "@dxs-ts/gamut-demo-app": [],
+      "@dxs-ts/envir-util": [
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-api": [
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-intl": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-primitives": [
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut": [
+        "@dxs-ts/gamut-demo-app"
+      ]
+    },
+    "circularDependencies": []
+  },
+  "buildProfiles": {
+    "lib-gamut": {
+      "name": "lib-gamut",
+      "entryPoint": "modules/lib-gamut/index.ts",
+      "path": "modules/lib-gamut",
+      "entryModule": "@dxs-ts/gamut",
+      "includedModules": [
+        "@dxs-ts/gamut",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes"
+      ],
+      "externalDependencies": [
+        "@mui/icons-material",
+        "@mui/material",
+        "@mui/system",
+        "@mui/types",
+        "@mui/utils",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "leaflet",
+        "leaflet-geosearch",
+        "luxon",
+        "numbro",
+        "react",
+        "react-date-picker",
+        "react-dom",
+        "react-intl",
+        "react-leaflet",
+        "react-markdown",
+        "react-router-dom",
+        "react-time-picker",
+        "ts-md5"
+      ]
+    }
+  },
+  "rootPath": "/Users/olevmutso/Development/digiexpress-parent/ts_setup",
+  "checksum": "e8e3510395dfbb6516e60a5c32b9d6d1d8a27421bb962c42d18efa48c5bd27d9",
+  "generatedAt": "2025-08-01T10:08:33.882Z"
+}
