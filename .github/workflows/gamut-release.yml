@@ -4,13 +4,13 @@ on:
       - 'ts_setup/gamut/**'
 
     branches:
-      - dev
+      - prod_1.x
   workflow_call: # Enables manual triggering
 permissions:
   contents: write
   id-token: write
     
-name: Release Gamut
+name: Release Gamut prod_1.x
 jobs:
     build:
       runs-on: ubuntu-latest  # windows-latest || macos-latest
