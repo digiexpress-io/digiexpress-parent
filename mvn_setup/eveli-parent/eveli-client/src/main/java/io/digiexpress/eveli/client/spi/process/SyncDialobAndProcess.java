@@ -55,14 +55,10 @@ public class SyncDialobAndProcess {
           log.debug("Skipping execution because questionnaire: {} state is not completed!", init.getQuestionnaireId());
           return;
         }
-      } catch(Exception e) { }
-      
-      if(questionnaire == null) {
-        log.error("Skipping execution because questionnaire: {} could not be found!", init.getQuestionnaireId());
+      } catch(Exception e) { 
+        log.error("Skipping execution because questionnaire: {} reading failed!", init.getQuestionnaireId(), e);
         return;
       }
-      
-      
       
       final var optional = processClient.queryInstances().findOneByIdAndLock(init.getId().toString());
       if(optional.isEmpty()) {
