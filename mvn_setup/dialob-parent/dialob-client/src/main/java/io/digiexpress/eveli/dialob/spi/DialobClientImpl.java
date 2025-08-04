@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*-
  * #%L
@@ -329,8 +330,16 @@ public class DialobClientImpl implements DialobClient {
     // re-map answers with form data
     final var answers = questionnaire.getAnswers().stream()
     .map(answer -> {
-      final var meta = form.getData().get(answer.getId());
-      final var valueset = meta.getValueSetId() == null ? null : valuesets.get(meta.getValueSetId());
+      var meta = form.getData().get(answer.getId());      
+      if (meta == null) {
+        // rowgroup element similar to 'rowgroup1.1.text2' has meta info as last element in dot split id.
+        meta = Stream.of(answer.getId().split("\\."))
+          .reduce((first, second) -> second)
+          .map(lastField->form.getData().get(lastField)).orElse(null);
+      }
+      // rowgroup row similar 'rowgroup1.1' has no metadata, check for meta not being null
+      final var valueset = meta == null || meta.getValueSetId() == null ? null : valuesets.get(meta.getValueSetId());
+
   
       final Optional<FormValueSetEntry> valuesetEntry = valueset == null ? Optional.empty() : valueset.getEntries().stream().filter(entry -> entry.getId().equals(answer.getValue())).findFirst();    
       return new AnswerAndValueSet(answer, meta, Optional.ofNullable(valueset), valuesetEntry);
