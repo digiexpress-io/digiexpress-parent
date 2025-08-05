@@ -24,7 +24,7 @@ function hook(props: {}): { groups: IamApi.UserGroup[] } {
         const result: IamApi.UserGroup[] = data.map(response => {
           return {
             id: response.name,
-            groupName: response.description
+            groupName: response.description || response.name
           }
         });
         result.push({ id: ROLE_AUTHORIZED, groupName: intl.formatMessage({ id: 'task.role.assignedAllUsers' }) });
