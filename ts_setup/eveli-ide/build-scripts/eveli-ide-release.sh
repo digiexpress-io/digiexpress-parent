@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -e
+# Usage: eveli-ide-release.sh branch_name
+# branch_name is name of branch new version number will be pushed and from where publishable version is created. 
 
 # No changes, skip release
 readonly local last_release_commit_hash=$(git log --author="$BOT_NAME" --pretty=format:"%H" -1)
@@ -35,12 +37,12 @@ echo "Project version: '${PROJECT_VERSION}' next: '${PROJECT_VERSION_NEXT}'"
 
 git commit -am "eveli ide release ${PROJECT_VERSION_NEXT}"
 git tag -a "eveli_ide_release_${PROJECT_VERSION_NEXT}" -m "eveli_ide_release_${PROJECT_VERSION_NEXT}"
-git push origin dev
+git push origin $1
 git push origin --tags
 
 # Tag and publish
 pnpm install
 pnpm build
-pnpm publish --access public --no-git-checks --publish-branch dev
+pnpm publish --access public --no-git-checks --publish-branch $1
 
 

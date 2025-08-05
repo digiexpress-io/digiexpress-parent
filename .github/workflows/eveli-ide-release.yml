@@ -43,7 +43,7 @@ jobs:
 #          run: pnpm test -r
 
         - name: Run 'eveli-ide-release.sh'  
-          run: ./build-scripts/eveli-ide-release.sh
+          run: ./build-scripts/eveli-ide-release.sh prod_1.x
           env:
             CI: false # 
             BOT_EMAIL: jocelyn.mutso@resys.io 
