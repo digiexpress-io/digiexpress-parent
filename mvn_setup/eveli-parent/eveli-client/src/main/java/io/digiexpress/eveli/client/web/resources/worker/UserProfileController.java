@@ -134,6 +134,6 @@ public class UserProfileController {
     }
     
     // todo fix this later
-    throw new RuntimeException("not allowed!");
+    // throw new RuntimeException("not allowed!");
   }
 }
