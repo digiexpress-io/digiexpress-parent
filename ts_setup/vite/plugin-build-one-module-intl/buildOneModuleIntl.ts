@@ -1,7 +1,7 @@
 import type { Plugin, UserConfig } from 'vite';
 
 import { ModuleRegistryCacheBuilder } from '../module-registry-cache';
-import { IntlAnalyzer } from '../plugin-intl-v2';
+import { IntlAnalyzer } from '../intl-analyzer';
 
 
 export function buildOneModuleIntl(props: {
