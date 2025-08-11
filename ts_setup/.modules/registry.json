@@ -260,18 +260,18 @@
         "react",
         "@dxs-ts/gamut",
         "@tanstack/react-query",
-        "@mui/material",
         "react-dom",
         "@tanstack/react-router",
+        "@mui/material",
         "react-intl",
         "@mui/utils"
       ],
       "actualExternalDependencies": [
         "react",
         "@tanstack/react-query",
-        "@mui/material",
         "react-dom",
         "@tanstack/react-router",
+        "@mui/material",
         "react-intl",
         "@mui/utils"
       ],
@@ -2557,6 +2557,6 @@
     }
   },
   "rootPath": "/Users/olevmutso/Development/digiexpress-parent/ts_setup",
-  "checksum": "f4fc4fed85c9b31dfd612b285059065efb39807274b0ae5e7e5009274dbd0ec0",
-  "generatedAt": "2025-08-09T18:20:43.860Z"
+  "checksum": "3bd04ff86033aba3c1a893e018bf79c43933ba585e08d36b98c62c2105964b33",
+  "generatedAt": "2025-08-11T08:19:34.760Z"
 }

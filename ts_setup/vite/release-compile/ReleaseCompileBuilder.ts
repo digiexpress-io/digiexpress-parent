@@ -34,6 +34,7 @@ export class ReleaseCompileBuilder {
     const validateOutputsCmd = new Command_ValidateBuildOutputs();
     const buildAllCmd = new Command_BuildAllProfiles();
 
+    
 
     // Step 1: Validate registry
     const { registry } = validateRegistryCmd.execute({
@@ -42,7 +43,14 @@ export class ReleaseCompileBuilder {
 
     const buildProfiles = Object.values(registry.buildProfiles);
 
-    // Step 2: Validate build outputs
+
+    // Step 2: Build all profiles
+    const { successfulBuilds } = buildAllCmd.execute({
+      buildProfiles,
+      registry
+    });
+
+    // Step 3: Validate build outputs
     if (!this.options.skipValidation) {
       const { validProfiles, invalidProfiles } = validateOutputsCmd.execute({
         registry,
@@ -54,11 +62,7 @@ export class ReleaseCompileBuilder {
       }
     }
 
-    // Step 3: Build all profiles
-    const { successfulBuilds } = buildAllCmd.execute({
-      buildProfiles,
-      registry
-    });
+
 
     return { registry, buildProfiles, successfulBuilds }
 

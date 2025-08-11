@@ -60,7 +60,7 @@ export class Command_ValidateBuildOutputs {
         console.log(`   ✅ ${profile.name}: valid`);
         
       } catch (error) {
-        invalidProfiles.push({ profile, reason: `Failed to parse trace.json: ${error.message}` });
+        invalidProfiles.push({ profile, reason: `Failed to parse trace.json: ${error}` });
       }
     }
     
