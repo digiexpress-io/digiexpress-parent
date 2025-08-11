@@ -1,0 +1,60 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/envir-fetch": [
+        "../envir-fetch/index.ts"
+      ],
+      "@dxs-ts/envir-util": [
+        "../envir-util/index.ts"
+      ],
+      "@dxs-ts/wrench-api": [
+        "../wrench-api/index.ts"
+      ],
+      "@dxs-ts/stencil-api": [
+        "../stencil-api/index.ts"
+      ],
+      "@dxs-ts/eveli-intl": [
+        "../eveli-intl/index.ts"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "../gamut-theme/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../envir-fetch"
+    },
+    {
+      "path": "../envir-util"
+    },
+    {
+      "path": "../wrench-api"
+    },
+    {
+      "path": "../stencil-api"
+    },
+    {
+      "path": "../eveli-intl"
+    },
+    {
+      "path": "../gamut-theme"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-08-09T06:15:28.907Z",
+    "forModule": "@dxs-ts/eveli-api",
+    "fromRegistry": "34513ca2482d",
+    "alias": {
+      "@dxs-ts/eveli-api": [
+        "../gamut-theme"
+      ]
+    }
+  }
+}

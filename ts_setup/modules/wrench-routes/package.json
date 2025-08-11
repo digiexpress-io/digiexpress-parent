@@ -1,0 +1,35 @@
+{
+  "name": "@dxs-ts/wrench-routes",
+  "version": "${project.version}",
+  "description": "Wrench route components - full page layouts, navigation",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/wrench-api": "*",
+    "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/envir-fetch": "*",
+    "@dxs-ts/eveli-primitives": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    
+    "react-intl": "*",
+    "@tanstack/react-router": "*",
+    "@mui/material": "*",
+    "@mui/icons-material": "*",
+    "@mui/utils": "*",
+    "@mui/system": "*",
+    "@mui/x-tree-view": "*",
+    "@xyflow/react": "*",
+    "js-file-download": "*",
+    "diff2html": "*",
+    "elkjs": "*",
+    "@monaco-editor/react": "*",
+    "monaco-editor": "*",
+    "yaml": "*",
+    "notistack": "*" ,
+    "@uiw/react-md-editor": "*"
+  },
+  "keywords": ["wrench", "routes", "navigation", "layouts"],
+  "private": true
+}

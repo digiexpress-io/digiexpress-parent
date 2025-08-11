@@ -1,0 +1,97 @@
+import React from 'react'
+import { useThemeProps } from '@mui/material'
+import { MUI_NAME, useUtilityClasses, GInputSurveyRoot, GInputSurveyBody } from './useUtilityClasses'
+import { GInputError } from '../g-input-error'
+import { GInputLabel } from '../g-input-label'
+import { GInputBase, GInputBaseProps } from '../g-input-base'
+import { GInputAdornment } from '../g-input-adornment'
+import { GInputSurveyOption } from './GInputSurveyOption'
+import { DialobApi } from '@dxs-ts/gamut-api'
+
+
+
+export interface GInputSurveyProps {
+  id: string;
+  label: string | undefined;
+  labelPosition: DialobApi.ControlLabelPosition,
+  description: string | undefined;
+  children: React.ReactNode;
+
+  options: { id: string, label: string, description?: undefined | string }[];
+  questions: { id: string, label: string, description?: undefined | string, value: undefined | string }[];
+  errors?: DialobApi.ActionError[] | undefined;
+  disabled: boolean;
+  vertical?: boolean | undefined;
+  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+
+  /**
+  - Styles resembling MUI Paper, which include a border, elevation, and padding/margins 
+  - Set in Composer properties: border = true  
+   */
+  border?: boolean | undefined;
+
+  component?: React.ElementType<GInputSurveyProps>;
+  slots?: {
+    option: React.ElementType<GInputSurveyOptionProps>;
+    body: React.ElementType<{ ownerState: GInputSurveyProps }>;
+  };
+}
+
+/** SLOT PROPS */
+export interface GInputSurveyOptionProps {
+  id: string;
+  index: number;
+  label: string | undefined;
+  description: string | undefined;
+  disabled: boolean;
+}
+
+
+export const GInputSurvey: React.FC<GInputSurveyProps> = (initProps) => {
+  const props = useThemeProps({
+    props: initProps,
+    name: MUI_NAME,
+  });
+
+  const { id, label, vertical = false, labelPosition, errors } = props;
+  const ownerState = { ...props, vertical };
+  const classes = useUtilityClasses(id);
+
+
+  const slots: GInputBaseProps<GInputSurveyProps> = {
+    id,
+    slots: {
+      error: GInputError,
+      label: GInputLabel,
+      input: () => <></>,
+      adornment: GInputAdornment,
+      secondary: Options
+    },
+    slotProps: {
+      error: { id, errors },
+      input: { ...ownerState, name: id },
+      label: { id, children: label ?? '', labelPosition },
+      secondary: { ...ownerState, name: id },
+      adornment: { id, children: props.description, title: label, disabled: props.disabled }
+    }
+  }
+
+  return (<GInputSurveyRoot className={classes.root} ownerState={ownerState} as={props.component}>
+    <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
+  </GInputSurveyRoot>);
+}
+
+const Options: React.FC<GInputSurveyProps> = (props) => {
+  const { id, options, disabled } = props;
+  const classes = useUtilityClasses(id);
+  
+  const Body: React.ElementType<{ ownerState: GInputSurveyProps, className: string }> = props.slots?.body ?? GInputSurveyBody as any;
+  const Option: React.ElementType<GInputSurveyOptionProps> = props.slots?.option ?? GInputSurveyOption as any;
+
+  return (
+    <Body ownerState={props} className={classes.body}>
+      <div />
+      {options.map((e, index) => (<Option disabled={disabled} index={index} id={id} key={e.label} label={e.label} description={e.description} className={classes.option} />))}
+      {props.children}
+    </Body>);
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/gamut-theme",
+  "version": "${project.version}",
+  "description": "Gamut theme - mui theme override + few others",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "@mui/material": "*",
+    "@mui/system": "*"
+  },
+  "keywords": ["gamut", "theme"],
+  "private": true
+}

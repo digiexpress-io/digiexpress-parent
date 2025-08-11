@@ -1,0 +1,29 @@
+{
+  "name": "@dxs-ts/stencil-routes",
+  "version": "${project.version}",
+  "description": "Stencil route components - full page layouts, navigation",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/envir-fetch": "*",
+    "@dxs-ts/stencil-api": "*",
+    "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/eveli-primitives": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "luxon": "*",
+    "notistack": "*",
+    "@tanstack/react-router": "*",
+    "@tanstack/react-table": "*",
+    "@mui/material": "*",
+    "@mui/icons-material": "*",
+    "@mui/x-tree-view": "*",
+    "@mui/utils": "*",
+    "react-intl": "*",
+    "@uiw/react-md-editor": "*",
+    "js-file-download": "*"
+  },
+  "keywords": ["stencil", "routes", "navigation", "layouts"],
+  "private": true
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@dxs-ts/eveli-intl",
+  "version": "${project.version}", 
+  "description": "Eveli UI translation",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {
+  },
+  "keywords": ["eveli", "intl", "ui"],
+  "private": true
+}

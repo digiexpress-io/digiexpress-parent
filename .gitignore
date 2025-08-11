@@ -3,11 +3,13 @@ target/
 node_modules/
 .settings
 build/
+temp-build/
 .yarn
 .classpath
 .factorypath
 .project
 .idea/
+dist/
 *.iml
 *.swp
 pom.xml.versionsBackup
