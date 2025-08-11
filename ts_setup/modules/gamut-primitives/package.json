@@ -1,0 +1,33 @@
+{
+  "name": "@dxs-ts/gamut-primitives",
+  "version": "${project.version}", 
+  "description": "Gamut UI primitives - basic building blocks, form inputs, buttons",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/gamut-api": "*",
+    "@dxs-ts/gamut-md": "*",
+    "@dxs-ts/gamut-shell": "*",
+    "@dxs-ts/gamut-form-review": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-intl": "*",
+    "react-markdown": "*",
+    "react-leaflet": "*",
+    "react-date-picker": "*",
+    "react-time-picker": "*",
+    "@mui/material": "*",
+    "@mui/system": "*",
+    "@mui/icons-material": "*",
+    "@mui/utils": "*",
+    "@mui/types": "*",
+    "@tanstack/react-router": "*",
+    "luxon": "*",
+    "numbro": "*",
+    "leaflet": "*"
+  },
+  "keywords": ["gamut", "ui", "primitives", "components"],
+  "private": true
+}

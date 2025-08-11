@@ -1,0 +1,90 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/envir-util": [
+        "../envir-util/index.ts"
+      ],
+      "@dxs-ts/gamut": [
+        "../lib-gamut/index.ts"
+      ],
+      "@dxs-ts/gamut-api": [
+        "../gamut-api/index.ts"
+      ],
+      "@dxs-ts/gamut-md": [
+        "../gamut-md/index.ts"
+      ],
+      "@dxs-ts/gamut-primitives": [
+        "../gamut-primitives/index.ts"
+      ],
+      "@dxs-ts/gamut-form-review": [
+        "../gamut-form-review/index.ts"
+      ],
+      "@dxs-ts/gamut-form": [
+        "../gamut-form/index.ts"
+      ],
+      "@dxs-ts/gamut-shell": [
+        "../gamut-shell/index.ts"
+      ],
+      "@dxs-ts/gamut-intl": [
+        "../gamut-intl/index.ts"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "../gamut-routes/index.ts"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "../gamut-theme/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../envir-util"
+    },
+    {
+      "path": "../lib-gamut"
+    },
+    {
+      "path": "../gamut-api"
+    },
+    {
+      "path": "../gamut-md"
+    },
+    {
+      "path": "../gamut-primitives"
+    },
+    {
+      "path": "../gamut-form-review"
+    },
+    {
+      "path": "../gamut-form"
+    },
+    {
+      "path": "../gamut-shell"
+    },
+    {
+      "path": "../gamut-intl"
+    },
+    {
+      "path": "../gamut-routes"
+    },
+    {
+      "path": "../gamut-theme"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-08-09T06:15:28.906Z",
+    "forModule": "@dxs-ts/gamut-demo-app",
+    "fromRegistry": "34513ca2482d",
+    "alias": {
+      "@dxs-ts/gamut-demo-app": [
+        "../gamut-theme"
+      ]
+    }
+  }
+}

@@ -1,0 +1,2562 @@
+{
+  "modules": {
+    "@dxs-ts/eveli-demo-app": {
+      "name": "@dxs-ts/eveli-demo-app",
+      "path": "modules/demo-app-eveli",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-demo-app",
+        "version": "${project.version}",
+        "description": "Eveli demo application",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-theme": "*",
+          "@dxs-ts/gamut-form": "*",
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-form-review": "*",
+          "@dxs-ts/gamut-intl": "*",
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/envir-util": "*",
+          "@dxs-ts/wrench-api": "*",
+          "@dxs-ts/wrench-routes": "*",
+          "@dxs-ts/stencil-api": "*",
+          "@dxs-ts/stencil-routes": "*",
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/eveli-intl": "*",
+          "@dxs-ts/eveli-routes": "*",
+          "@dxs-ts/eveli-ide": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "react-intl": "*",
+          "notistack": "*",
+          "@tanstack/react-router": "*",
+          "@tanstack/react-query": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "eveli",
+          "demo-app"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "react",
+        "react-dom",
+        "react-intl",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "react-intl",
+        "notistack",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "react-dom",
+        "@dxs-ts/eveli-ide"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "react-intl",
+        "notistack",
+        "react-dom"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes",
+        "@mui/utils"
+      ]
+    },
+    "@dxs-ts/gamut-demo-app": {
+      "name": "@dxs-ts/gamut-demo-app",
+      "path": "modules/demo-app-gamut",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-demo-app",
+        "version": "${project.version}",
+        "description": "Gamut demo application",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/envir-util": "*",
+          "@dxs-ts/gamut": "*",
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/gamut-primitives": "*",
+          "@dxs-ts/gamut-form-review": "*",
+          "@dxs-ts/gamut-form": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-intl": "*",
+          "@dxs-ts/gamut-routes": "*",
+          "@dxs-ts/gamut-theme": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "react-intl": "*",
+          "@tanstack/react-router": "*",
+          "@tanstack/react-query": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "gamut",
+          "demo-app"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme",
+        "react",
+        "react-dom",
+        "react-intl",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ],
+      "actualDependencies": [
+        "react",
+        "@dxs-ts/gamut",
+        "@tanstack/react-query",
+        "@mui/material",
+        "react-dom",
+        "@tanstack/react-router",
+        "react-intl",
+        "@mui/utils"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@mui/material",
+        "react-dom",
+        "@tanstack/react-router",
+        "react-intl",
+        "@mui/utils"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ]
+    },
+    "@dxs-ts/envir-fetch": {
+      "name": "@dxs-ts/envir-fetch",
+      "path": "modules/envir-fetch",
+      "packageJson": {
+        "name": "@dxs-ts/envir-fetch",
+        "version": "${project.version}",
+        "description": "Generic fetch library",
+        "type": "module",
+        "private": false,
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "api",
+          "fetch",
+          "envir"
+        ]
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/envir-util": {
+      "name": "@dxs-ts/envir-util",
+      "path": "modules/envir-util",
+      "packageJson": {
+        "name": "@dxs-ts/envir-util",
+        "version": "${project.version}",
+        "description": "",
+        "type": "module",
+        "private": false,
+        "dependencies": {},
+        "peerDependencies": {},
+        "keywords": [
+          "Generic util-s used across every project"
+        ]
+      },
+      "dependencies": [],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/eveli-api": {
+      "name": "@dxs-ts/eveli-api",
+      "path": "modules/eveli-api",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-api",
+        "version": "${project.version}",
+        "description": "",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/envir-util": "*",
+          "@dxs-ts/wrench-api": "*",
+          "@dxs-ts/stencil-api": "*",
+          "@dxs-ts/eveli-intl": "*",
+          "@dxs-ts/gamut-theme": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "@tanstack/react-query": "*",
+          "@mui/material": "*",
+          "notistack": "*",
+          "react-intl": "*",
+          "@material-table/core": "^6.4.4"
+        },
+        "keywords": [
+          "eveli",
+          "api",
+          "data",
+          "business-logic"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/gamut-theme",
+        "react",
+        "@tanstack/react-query",
+        "@mui/material",
+        "notistack",
+        "react-intl",
+        "@material-table/core"
+      ],
+      "peerDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@mui/material",
+        "notistack",
+        "react-intl",
+        "@material-table/core"
+      ],
+      "externalDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "@mui/material",
+        "notistack",
+        "react-intl",
+        "@material-table/core"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/gamut-theme"
+      ],
+      "actualDependencies": [
+        "@dxs-ts/envir-fetch",
+        "react",
+        "@tanstack/react-query",
+        "react-intl",
+        "@dxs-ts/eveli-intl",
+        "@material-table/core",
+        "@mui/material",
+        "@dxs-ts/gamut-theme",
+        "notistack",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/wrench-api"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl",
+        "@material-table/core",
+        "@mui/material",
+        "notistack"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/wrench-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/envir-util"
+      ]
+    },
+    "@dxs-ts/eveli-intl": {
+      "name": "@dxs-ts/eveli-intl",
+      "path": "modules/eveli-intl",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-intl",
+        "version": "${project.version}",
+        "description": "Eveli UI translation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "keywords": [
+          "eveli",
+          "intl",
+          "ui"
+        ],
+        "private": true
+      },
+      "dependencies": [],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/eveli-primitives": {
+      "name": "@dxs-ts/eveli-primitives",
+      "path": "modules/eveli-primitives",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-primitives",
+        "version": "${project.version}",
+        "description": "",
+        "type": "module",
+        "private": false,
+        "keywords": [
+          "eveli",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "dependencies": {
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/envir-fetch": "*"
+        },
+        "peerDependencies": {
+          "ts-md5": "*",
+          "react": "*",
+          "react-intl": "*",
+          "@mui/material": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/x-tree-view": "*",
+          "@tanstack/react-router": "*",
+          "@tanstack/react-query": "*",
+          "@tanstack/react-table": "*",
+          "react-date-picker": "*",
+          "notistack": "*",
+          "luxon": "*",
+          "moment": "*",
+          "numbro": "*",
+          "file-saver": "*"
+        }
+      },
+      "dependencies": [
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch",
+        "ts-md5",
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/x-tree-view",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@tanstack/react-table",
+        "react-date-picker",
+        "notistack",
+        "luxon",
+        "moment",
+        "numbro",
+        "file-saver"
+      ],
+      "peerDependencies": [
+        "ts-md5",
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/x-tree-view",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@tanstack/react-table",
+        "react-date-picker",
+        "notistack",
+        "luxon",
+        "moment",
+        "numbro",
+        "file-saver"
+      ],
+      "externalDependencies": [
+        "ts-md5",
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/x-tree-view",
+        "@tanstack/react-router",
+        "@tanstack/react-query",
+        "@tanstack/react-table",
+        "react-date-picker",
+        "notistack",
+        "luxon",
+        "moment",
+        "numbro",
+        "file-saver"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "react-intl",
+        "luxon",
+        "react-date-picker",
+        "file-saver",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-api",
+        "@tanstack/react-table",
+        "notistack",
+        "@mui/utils",
+        "@tanstack/react-query",
+        "numbro",
+        "@tanstack/react-router",
+        "moment",
+        "@mui/system",
+        "@mui/x-tree-view",
+        "ts-md5"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "react-intl",
+        "luxon",
+        "react-date-picker",
+        "file-saver",
+        "@tanstack/react-table",
+        "notistack",
+        "@mui/utils",
+        "@tanstack/react-query",
+        "numbro",
+        "@tanstack/react-router",
+        "moment",
+        "@mui/system",
+        "@mui/x-tree-view",
+        "ts-md5"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/eveli-routes": {
+      "name": "@dxs-ts/eveli-routes",
+      "path": "modules/eveli-routes",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-routes",
+        "version": "${project.version}",
+        "description": "Eveli route components - full page layouts, navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-form": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-theme": "*",
+          "@dxs-ts/gamut-form-review": "*",
+          "@dxs-ts/stencil-api": "*",
+          "@dxs-ts/stencil-routes": "*",
+          "@dxs-ts/wrench-api": "*",
+          "@dxs-ts/wrench-routes": "*",
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/eveli-primitives": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "@material-table/core": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "@tanstack/react-router": "*",
+          "@tanstack/react-table": "*",
+          "@tanstack/react-query": "*",
+          "luxon": "*",
+          "moment": "*",
+          "notistack": "*",
+          "recharts": "*"
+        },
+        "keywords": [
+          "eveli",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "react",
+        "react-intl",
+        "@material-table/core",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "luxon",
+        "moment",
+        "notistack",
+        "recharts"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "@material-table/core",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "luxon",
+        "moment",
+        "notistack",
+        "recharts"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "@material-table/core",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "luxon",
+        "moment",
+        "notistack",
+        "recharts"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@tanstack/react-query",
+        "@mui/icons-material",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@tanstack/react-table",
+        "luxon",
+        "@material-table/core",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "notistack",
+        "recharts",
+        "moment",
+        "@dxs-ts/gamut-shell",
+        "@mui/system",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@tanstack/react-query",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "luxon",
+        "@material-table/core",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "notistack",
+        "recharts",
+        "moment",
+        "@mui/system"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-api": {
+      "name": "@dxs-ts/gamut-api",
+      "path": "modules/gamut-api",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-api",
+        "version": "${project.version}",
+        "description": "Gamut API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {
+          "@dxs-ts/gamut-intl": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "@mui/material": "*",
+          "@tanstack/react-query": "*",
+          "@tanstack/react-router": "*",
+          "luxon": "*",
+          "leaflet-geosearch": "*",
+          "ts-md5": "*"
+        },
+        "keywords": [
+          "gamut",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-intl",
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "luxon",
+        "leaflet-geosearch",
+        "ts-md5"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "luxon",
+        "leaflet-geosearch",
+        "ts-md5"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "luxon",
+        "leaflet-geosearch",
+        "ts-md5"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-intl"
+      ],
+      "actualDependencies": [
+        "react",
+        "luxon",
+        "ts-md5",
+        "@tanstack/react-query",
+        "react-intl",
+        "@dxs-ts/gamut-intl",
+        "leaflet-geosearch",
+        "@mui/material"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "luxon",
+        "ts-md5",
+        "@tanstack/react-query",
+        "react-intl",
+        "leaflet-geosearch",
+        "@mui/material"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-intl"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@tanstack/react-router"
+      ]
+    },
+    "@dxs-ts/gamut-form": {
+      "name": "@dxs-ts/gamut-form",
+      "path": "modules/gamut-form",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-form",
+        "version": "${project.version}",
+        "description": "Gamut form UI primitives - basic building blocks, form inputs, buttons",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-md": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "react-leaflet": "*",
+          "react-date-picker": "*",
+          "react-time-picker": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/types": "*",
+          "luxon": "*",
+          "numbro": "*",
+          "leaflet": "*"
+        },
+        "keywords": [
+          "gamut",
+          "dialob",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "react",
+        "react-intl",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md"
+      ],
+      "actualDependencies": [
+        "react",
+        "@dxs-ts/gamut-api",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/icons-material",
+        "@dxs-ts/gamut-md",
+        "react-intl",
+        "@mui/types",
+        "leaflet",
+        "react-leaflet",
+        "react-date-picker",
+        "luxon",
+        "numbro",
+        "react-time-picker"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/icons-material",
+        "react-intl",
+        "@mui/types",
+        "leaflet",
+        "react-leaflet",
+        "react-date-picker",
+        "luxon",
+        "numbro",
+        "react-time-picker"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-form-review": {
+      "name": "@dxs-ts/gamut-form-review",
+      "path": "modules/gamut-form-review",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-form-review",
+        "version": "${project.version}",
+        "description": "Gamut form UI primitives - basic building blocks, form inputs, buttons",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-md": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "react-markdown": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/system": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "gamut",
+          "dialob",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "react",
+        "react-intl",
+        "react-markdown",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/system",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "react-markdown",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/system",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "react-markdown",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/system",
+        "@mui/utils"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/system",
+        "@mui/material",
+        "@dxs-ts/gamut-api",
+        "@mui/utils",
+        "react-intl",
+        "react-markdown",
+        "@mui/icons-material",
+        "@dxs-ts/gamut-md"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/system",
+        "@mui/material",
+        "@mui/utils",
+        "react-intl",
+        "react-markdown",
+        "@mui/icons-material"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-intl": {
+      "name": "@dxs-ts/gamut-intl",
+      "path": "modules/gamut-intl",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-intl",
+        "version": "${project.version}",
+        "description": "Gamut UI translation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "keywords": [
+          "gamut",
+          "intl",
+          "ui"
+        ],
+        "private": true
+      },
+      "dependencies": [],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-md": {
+      "name": "@dxs-ts/gamut-md",
+      "path": "modules/gamut-md",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-md",
+        "version": "${project.version}",
+        "description": "Gamut markdown UI primitives - basic building blocks, form inputs, buttons",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-markdown": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "gamut",
+          "markdown",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "react",
+        "react-markdown",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-markdown",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-markdown",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "react-markdown",
+        "@dxs-ts/gamut-api",
+        "@mui/utils"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "react-markdown",
+        "@mui/utils"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-primitives": {
+      "name": "@dxs-ts/gamut-primitives",
+      "path": "modules/gamut-primitives",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-primitives",
+        "version": "${project.version}",
+        "description": "Gamut UI primitives - basic building blocks, form inputs, buttons",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-form-review": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "react-intl": "*",
+          "react-markdown": "*",
+          "react-leaflet": "*",
+          "react-date-picker": "*",
+          "react-time-picker": "*",
+          "@mui/material": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/types": "*",
+          "@tanstack/react-router": "*",
+          "luxon": "*",
+          "numbro": "*",
+          "leaflet": "*"
+        },
+        "keywords": [
+          "gamut",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "react",
+        "react-dom",
+        "react-intl",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "@tanstack/react-router",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "@tanstack/react-router",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "react-intl",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/types",
+        "@tanstack/react-router",
+        "luxon",
+        "numbro",
+        "leaflet"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-api",
+        "react-intl",
+        "@mui/utils",
+        "@dxs-ts/gamut-md",
+        "@mui/icons-material",
+        "luxon",
+        "@tanstack/react-router",
+        "@mui/system",
+        "@dxs-ts/gamut-form-review",
+        "@mui/types"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@mui/utils",
+        "@mui/icons-material",
+        "luxon",
+        "@tanstack/react-router",
+        "@mui/system",
+        "@mui/types"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-form-review"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react-dom",
+        "react-markdown",
+        "react-leaflet",
+        "react-date-picker",
+        "react-time-picker",
+        "numbro",
+        "leaflet"
+      ]
+    },
+    "@dxs-ts/gamut-routes": {
+      "name": "@dxs-ts/gamut-routes",
+      "path": "modules/gamut-routes",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-routes",
+        "version": "${project.version}",
+        "description": "Gamut route components - full page layouts, navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/gamut-primitives": "*",
+          "@dxs-ts/gamut-form-review": "*",
+          "@dxs-ts/gamut-form": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-dom": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@tanstack/react-router": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "react-intl": "*"
+        },
+        "keywords": [
+          "gamut",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "react",
+        "react-dom",
+        "@mui/material",
+        "@mui/icons-material",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/system",
+        "react-intl"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-dom",
+        "@mui/material",
+        "@mui/icons-material",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/system",
+        "react-intl"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-dom",
+        "@mui/material",
+        "@mui/icons-material",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/system",
+        "react-intl"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form"
+      ],
+      "actualDependencies": [
+        "@mui/material",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-form-review",
+        "react",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/icons-material",
+        "react-intl",
+        "@dxs-ts/gamut-api"
+      ],
+      "actualExternalDependencies": [
+        "@mui/material",
+        "react",
+        "@tanstack/react-router",
+        "@mui/utils",
+        "@mui/icons-material",
+        "react-intl"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react-dom",
+        "@mui/system"
+      ]
+    },
+    "@dxs-ts/gamut-shell": {
+      "name": "@dxs-ts/gamut-shell",
+      "path": "modules/gamut-shell",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-shell",
+        "version": "${project.version}",
+        "description": "Gamut shell UI primitives - basic building blocks, form inputs, buttons",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "gamut",
+          "ui",
+          "primitives",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@dxs-ts/gamut-api",
+        "@mui/utils"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut-theme": {
+      "name": "@dxs-ts/gamut-theme",
+      "path": "modules/gamut-theme",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-theme",
+        "version": "${project.version}",
+        "description": "Gamut theme - mui theme override + few others",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "@mui/material": "*",
+          "@mui/system": "*"
+        },
+        "keywords": [
+          "gamut",
+          "theme"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@mui/material",
+        "@mui/system"
+      ],
+      "peerDependencies": [
+        "@mui/material",
+        "@mui/system"
+      ],
+      "externalDependencies": [
+        "@mui/material",
+        "@mui/system"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "@mui/material",
+        "@mui/system"
+      ],
+      "actualExternalDependencies": [
+        "@mui/material",
+        "@mui/system"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/eveli-ide": {
+      "name": "@dxs-ts/eveli-ide",
+      "path": "modules/lib-eveli",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-ide",
+        "version": "${project.version}",
+        "description": "Eveli route components - full page layouts, navigation",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-theme": "*",
+          "@dxs-ts/gamut-form": "*",
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-form-review": "*",
+          "@dxs-ts/gamut-intl": "*",
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/envir-util": "*",
+          "@dxs-ts/wrench-api": "*",
+          "@dxs-ts/wrench-routes": "*",
+          "@dxs-ts/stencil-api": "*",
+          "@dxs-ts/stencil-routes": "*",
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/eveli-intl": "*",
+          "@dxs-ts/eveli-routes": "*"
+        },
+        "peerDependencies": {},
+        "keywords": [
+          "eveli",
+          "routes",
+          "navigation",
+          "layouts"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes"
+      ],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes"
+      ],
+      "actualDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-intl"
+      ],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-intl"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/gamut": {
+      "name": "@dxs-ts/gamut",
+      "path": "modules/lib-gamut",
+      "packageJson": {
+        "name": "@dxs-ts/gamut",
+        "version": "${project.version}",
+        "description": "Gamut route components - full page layouts, navigation",
+        "type": "module",
+        "private": false,
+        "dependencies": {
+          "@dxs-ts/envir-util": "*",
+          "@dxs-ts/gamut-api": "*",
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/gamut-primitives": "*",
+          "@dxs-ts/gamut-form-review": "*",
+          "@dxs-ts/gamut-form": "*",
+          "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-intl": "*",
+          "@dxs-ts/gamut-routes": "*",
+          "@dxs-ts/gamut-theme": "*"
+        },
+        "peerDependencies": {},
+        "keywords": [
+          "gamut",
+          "routes",
+          "navigation",
+          "layouts"
+        ]
+      },
+      "dependencies": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ],
+      "actualDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/envir-util"
+      ],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/envir-util"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/stencil-api": {
+      "name": "@dxs-ts/stencil-api",
+      "path": "modules/stencil-api",
+      "packageJson": {
+        "name": "@dxs-ts/stencil-api",
+        "version": "${project.version}",
+        "description": "Stencil API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "stencil",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/stencil-routes": {
+      "name": "@dxs-ts/stencil-routes",
+      "path": "modules/stencil-routes",
+      "packageJson": {
+        "name": "@dxs-ts/stencil-routes",
+        "version": "${project.version}",
+        "description": "Stencil route components - full page layouts, navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/stencil-api": "*",
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/eveli-primitives": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "luxon": "*",
+          "notistack": "*",
+          "@tanstack/react-router": "*",
+          "@tanstack/react-table": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/x-tree-view": "*",
+          "@mui/utils": "*",
+          "react-intl": "*",
+          "@uiw/react-md-editor": "*",
+          "js-file-download": "*"
+        },
+        "keywords": [
+          "stencil",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "react",
+        "luxon",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "react-intl",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ],
+      "peerDependencies": [
+        "react",
+        "luxon",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "react-intl",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ],
+      "externalDependencies": [
+        "react",
+        "luxon",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "react-intl",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "notistack",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/stencil-api",
+        "react-intl",
+        "@mui/icons-material",
+        "@uiw/react-md-editor",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "@dxs-ts/eveli-api",
+        "@tanstack/react-table",
+        "luxon",
+        "@tanstack/react-router",
+        "js-file-download",
+        "@dxs-ts/envir-fetch"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "notistack",
+        "react-intl",
+        "@mui/icons-material",
+        "@uiw/react-md-editor",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "@tanstack/react-table",
+        "luxon",
+        "@tanstack/react-router",
+        "js-file-download"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/wrench-api": {
+      "name": "@dxs-ts/wrench-api",
+      "path": "modules/wrench-api",
+      "packageJson": {
+        "name": "@dxs-ts/wrench-api",
+        "version": "${project.version}",
+        "description": "Wrench API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "wrench",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/wrench-routes": {
+      "name": "@dxs-ts/wrench-routes",
+      "path": "modules/wrench-routes",
+      "packageJson": {
+        "name": "@dxs-ts/wrench-routes",
+        "version": "${project.version}",
+        "description": "Wrench route components - full page layouts, navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/wrench-api": "*",
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/eveli-primitives": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "@tanstack/react-router": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "@mui/x-tree-view": "*",
+          "@xyflow/react": "*",
+          "js-file-download": "*",
+          "diff2html": "*",
+          "elkjs": "*",
+          "@monaco-editor/react": "*",
+          "monaco-editor": "*",
+          "yaml": "*",
+          "notistack": "*",
+          "@uiw/react-md-editor": "*"
+        },
+        "keywords": [
+          "wrench",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-primitives",
+        "react",
+        "react-intl",
+        "@tanstack/react-router",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/x-tree-view",
+        "@xyflow/react",
+        "js-file-download",
+        "diff2html",
+        "elkjs",
+        "@monaco-editor/react",
+        "monaco-editor",
+        "yaml",
+        "notistack",
+        "@uiw/react-md-editor"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "@tanstack/react-router",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/x-tree-view",
+        "@xyflow/react",
+        "js-file-download",
+        "diff2html",
+        "elkjs",
+        "@monaco-editor/react",
+        "monaco-editor",
+        "yaml",
+        "notistack",
+        "@uiw/react-md-editor"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "@tanstack/react-router",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/x-tree-view",
+        "@xyflow/react",
+        "js-file-download",
+        "diff2html",
+        "elkjs",
+        "@monaco-editor/react",
+        "monaco-editor",
+        "yaml",
+        "notistack",
+        "@uiw/react-md-editor"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-primitives"
+      ],
+      "actualDependencies": [
+        "@dxs-ts/eveli-primitives",
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@mui/icons-material",
+        "diff2html",
+        "@dxs-ts/wrench-api",
+        "@monaco-editor/react",
+        "@mui/system",
+        "yaml",
+        "notistack",
+        "@dxs-ts/envir-fetch",
+        "js-file-download",
+        "@uiw/react-md-editor",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "monaco-editor",
+        "@tanstack/react-router",
+        "@dxs-ts/eveli-api",
+        "@xyflow/react",
+        "elkjs"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@mui/icons-material",
+        "diff2html",
+        "@monaco-editor/react",
+        "@mui/system",
+        "yaml",
+        "notistack",
+        "js-file-download",
+        "@uiw/react-md-editor",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "monaco-editor",
+        "@tanstack/react-router",
+        "@xyflow/react",
+        "elkjs"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-api"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    }
+  },
+  "dependencyGraph": {
+    "forward": {
+      "@dxs-ts/eveli-demo-app": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/gamut-demo-app": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ],
+      "@dxs-ts/envir-fetch": [],
+      "@dxs-ts/envir-util": [],
+      "@dxs-ts/eveli-api": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/gamut-theme"
+      ],
+      "@dxs-ts/eveli-intl": [],
+      "@dxs-ts/eveli-primitives": [
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch"
+      ],
+      "@dxs-ts/eveli-routes": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives"
+      ],
+      "@dxs-ts/gamut-api": [
+        "@dxs-ts/gamut-intl"
+      ],
+      "@dxs-ts/gamut-form": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md"
+      ],
+      "@dxs-ts/gamut-form-review": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md"
+      ],
+      "@dxs-ts/gamut-intl": [],
+      "@dxs-ts/gamut-md": [
+        "@dxs-ts/gamut-api"
+      ],
+      "@dxs-ts/gamut-primitives": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form"
+      ],
+      "@dxs-ts/gamut-shell": [
+        "@dxs-ts/gamut-api"
+      ],
+      "@dxs-ts/gamut-theme": [],
+      "@dxs-ts/eveli-ide": [
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes"
+      ],
+      "@dxs-ts/gamut": [
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ],
+      "@dxs-ts/stencil-api": [],
+      "@dxs-ts/stencil-routes": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives"
+      ],
+      "@dxs-ts/wrench-api": [],
+      "@dxs-ts/wrench-routes": [
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/eveli-primitives"
+      ]
+    },
+    "reverse": {
+      "@dxs-ts/eveli-demo-app": [],
+      "@dxs-ts/gamut-demo-app": [],
+      "@dxs-ts/envir-fetch": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/wrench-routes"
+      ],
+      "@dxs-ts/envir-util": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/eveli-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/wrench-routes"
+      ],
+      "@dxs-ts/eveli-intl": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/eveli-primitives": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/wrench-routes"
+      ],
+      "@dxs-ts/eveli-routes": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/gamut-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-form": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-form-review": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-intl": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-md": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-primitives": [
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-shell": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
+      "@dxs-ts/eveli-ide": [
+        "@dxs-ts/eveli-demo-app"
+      ],
+      "@dxs-ts/gamut": [
+        "@dxs-ts/gamut-demo-app"
+      ],
+      "@dxs-ts/stencil-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/stencil-routes"
+      ],
+      "@dxs-ts/stencil-routes": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/wrench-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/wrench-routes"
+      ],
+      "@dxs-ts/wrench-routes": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ]
+    },
+    "circularDependencies": []
+  },
+  "buildProfiles": {
+    "lib-eveli": {
+      "name": "lib-eveli",
+      "entryPoint": "modules/lib-eveli/index.ts",
+      "path": "modules/lib-eveli",
+      "entryModule": "@dxs-ts/eveli-ide",
+      "includedModules": [
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-intl",
+        "@dxs-ts/eveli-routes"
+      ],
+      "externalDependencies": [
+        "@material-table/core",
+        "@monaco-editor/react",
+        "@mui/icons-material",
+        "@mui/material",
+        "@mui/system",
+        "@mui/types",
+        "@mui/utils",
+        "@mui/x-tree-view",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@uiw/react-md-editor",
+        "@xyflow/react",
+        "diff2html",
+        "elkjs",
+        "file-saver",
+        "js-file-download",
+        "leaflet",
+        "leaflet-geosearch",
+        "luxon",
+        "moment",
+        "monaco-editor",
+        "notistack",
+        "numbro",
+        "react",
+        "react-date-picker",
+        "react-intl",
+        "react-leaflet",
+        "react-markdown",
+        "react-time-picker",
+        "recharts",
+        "ts-md5",
+        "yaml"
+      ]
+    },
+    "lib-gamut": {
+      "name": "lib-gamut",
+      "entryPoint": "modules/lib-gamut/index.ts",
+      "path": "modules/lib-gamut",
+      "entryModule": "@dxs-ts/gamut",
+      "includedModules": [
+        "@dxs-ts/gamut",
+        "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/gamut-primitives",
+        "@dxs-ts/gamut-form-review",
+        "@dxs-ts/gamut-form",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme"
+      ],
+      "externalDependencies": [
+        "@mui/icons-material",
+        "@mui/material",
+        "@mui/system",
+        "@mui/types",
+        "@mui/utils",
+        "@tanstack/react-query",
+        "@tanstack/react-router",
+        "leaflet",
+        "leaflet-geosearch",
+        "luxon",
+        "numbro",
+        "react",
+        "react-date-picker",
+        "react-dom",
+        "react-intl",
+        "react-leaflet",
+        "react-markdown",
+        "react-time-picker",
+        "ts-md5"
+      ]
+    }
+  },
+  "rootPath": "/Users/olevmutso/Development/digiexpress-parent/ts_setup",
+  "checksum": "f4fc4fed85c9b31dfd612b285059065efb39807274b0ae5e7e5009274dbd0ec0",
+  "generatedAt": "2025-08-09T18:20:43.860Z"
+}
