@@ -6,6 +6,7 @@ on:
     branches:
       - prod_1.x
   workflow_call: # Enables manual triggering
+  workflow_dispatch: #manual triggering
 permissions:
   contents: write
   id-token: write
