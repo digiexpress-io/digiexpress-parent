@@ -44,7 +44,7 @@ jobs:
 #          run: pnpm test -r
 
         - name: Run 'gamut-release.sh'  
-          run: ./build-scripts/gamut-release.sh
+          run: ./build-scripts/gamut-release.sh prod_1.x
           env:
             CI: false # 
             BOT_EMAIL: jocelyn.mutso@resys.io 

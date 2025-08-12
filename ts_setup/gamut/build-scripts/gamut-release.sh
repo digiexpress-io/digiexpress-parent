@@ -34,9 +34,9 @@ echo "Project version: '${PROJECT_VERSION}' next: '${PROJECT_VERSION_NEXT}'"
 # Tag and publish
 pnpm install
 pnpm build
-pnpm publish --access public --no-git-checks --publish-branch dev
+pnpm publish --access public --no-git-checks --publish-branch $1
 
 #git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
 git tag -a "gamut_release_${PROJECT_VERSION_NEXT}" -m "gamut release ${PROJECT_VERSION_NEXT}"
 git push origin --tags
-git push origin dev
+git push origin $1
