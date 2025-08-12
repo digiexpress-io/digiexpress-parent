@@ -23,7 +23,19 @@ export function buildOneModuleIntl(props: {
         .withModuleRegistry(registry)
         .withTargetModules(props.moduleName)
         .withTargetModuleAlias({ '@dxs-ts/eveli': ['@dxs-ts/stencil', '@dxs-ts/wrench'] })
-        .withKnownGroups(['feedback.main_topic', 'feedback.sub_topic', 'locale'])
+        .withKnownGroups([
+          'feedback.main_topic', 
+          'feedback.sub_topic', 
+          'locale', 
+          'table', 
+          'error', 
+          'transferlist',
+          'process.status',
+          'publications',
+          'task.status',
+          'task.priority',
+          'calendar',
+          'eveli.userProfile.tenantConfig.select'])
         .build();
 
       return {
