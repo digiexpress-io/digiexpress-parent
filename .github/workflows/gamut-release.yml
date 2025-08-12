@@ -6,6 +6,7 @@ on:
     branches:
       - dev
   workflow_call: # Enables manual triggering
+  workflow_dispatch: #manual trigger
 permissions:
   contents: write
   id-token: write
