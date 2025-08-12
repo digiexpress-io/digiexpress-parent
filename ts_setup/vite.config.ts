@@ -14,11 +14,9 @@ export default defineConfig((props) => {
   if (process.env.START_MODE === 'uni-build') {
     return uniBuild(props);
   }
-
   if (process.env.START_MODE === 'publish') {
     return publishModules(props);
   }
-
   if (process.env.START_MODE === 'build-modules') {
     return buildModules(props);
   }
@@ -28,7 +26,7 @@ export default defineConfig((props) => {
   if (process.env.START_MODE === 'start-eveli') {
     return startEveli(props);
   }
-    if (process.env.START_MODE === 'intl-build') {
+  if (process.env.START_MODE === 'intl-build') {
     return buildIntl(props);
   }
   throw new Error('woops');
