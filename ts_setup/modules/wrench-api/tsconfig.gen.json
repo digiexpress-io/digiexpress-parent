@@ -11,9 +11,9 @@
   "references": [],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-09T06:15:28.908Z",
+    "at": "2025-08-13T07:26:47.158Z",
     "forModule": "@dxs-ts/wrench-api",
-    "fromRegistry": "34513ca2482d",
+    "fromRegistry": "1cd23d3c5919",
     "alias": {}
   }
 }

@@ -57,7 +57,6 @@ export class ModuleRegistryBuilder {
      modules: _arrayToRecord(analyzedModules),
      dependencyGraph,
      buildProfiles: _buildProfilesToRecord(buildProfiles),
-     rootPath: this.rootPath,
      checksum,
      generatedAt: new Date().toISOString()
    };
