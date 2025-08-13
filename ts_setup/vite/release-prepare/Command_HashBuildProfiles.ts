@@ -5,6 +5,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 
 export declare namespace Command_HashBuildProfiles {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
     buildProfiles: BuildProfile[];
   }
@@ -31,7 +32,7 @@ export class Command_HashBuildProfiles {
       for (const moduleName of profile.includedModules) {
         const moduleInfo = registry.modules[moduleName];
         if (moduleInfo) {
-          const modulePath = join(registry.rootPath, moduleInfo.path);
+          const modulePath = join(input.rootPath, moduleInfo.path);
           _addModuleToHash(modulePath, hash);
         }
       }

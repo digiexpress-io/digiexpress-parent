@@ -8,6 +8,7 @@ import { Command_UpdatePeerDependencies } from './Command_UpdatePeerDependencies
 
 export declare namespace Command_UpdateAllPackageJson {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
     updatedVersions: VersionsFile;
     changedProfiles: string[];
@@ -35,7 +36,7 @@ export class Command_UpdateAllPackageJson {
       if (!moduleInfo) {
         throw new Error(`❌  Module not found: ${versionEntry.moduleName}`);
       }
-      const packageJsonPath = join(registry.rootPath, moduleInfo.path, 'package.json');
+      const packageJsonPath = join(input.rootPath, moduleInfo.path, 'package.json');
       
       if (!existsSync(packageJsonPath)) {
         throw new Error(`❌  package.json not found: ${packageJsonPath}`);
@@ -43,7 +44,7 @@ export class Command_UpdateAllPackageJson {
 
       const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
       new Command_RemoveInternalDependencies().execute({ moduleInfo, packageJson, registry });
-      const { trace: moduleTrace } = new Command_UpdatePeerDependencies().execute({ moduleInfo, packageJson, registry });
+      const { trace: moduleTrace } = new Command_UpdatePeerDependencies().execute({ rootPath: input.rootPath, moduleInfo, packageJson, registry });
 
       trace[versionEntry.moduleName] = moduleTrace;
       

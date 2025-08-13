@@ -6,6 +6,7 @@ import { BuildConfig, ModuleRegistry, VersionsFile, ModuleCommits } from "../mod
 
 export declare namespace Command_UpdateAllPackageJsonTsVersions {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
     updatedVersions: VersionsFile;
     changedProfiles: string[];
@@ -33,7 +34,7 @@ export class Command_UpdateAllPackageJsonTsVersions {
       if (!moduleInfo) {
         throw new Error(`❌  Module not found: ${versionEntry.moduleName}`);
       }
-      const versionTsPath = join(registry.rootPath, moduleInfo.path, 'version.ts');
+      const versionTsPath = join(input.rootPath, moduleInfo.path, 'version.ts');
       
       if (!existsSync(versionTsPath)) {
         throw new Error(`❌  version.ts not found: ${versionTsPath}`);

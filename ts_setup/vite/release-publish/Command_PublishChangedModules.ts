@@ -5,6 +5,7 @@ import { Command_RunPnpmCommand } from "./Command_RunPnpmCommand"
 
 export declare namespace Command_PublishChangedModules {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
     changedProfiles: string[];
     updatedVersions: VersionsFile;
@@ -29,7 +30,7 @@ export class Command_PublishChangedModules {
     for (const profileName of changedProfiles) {
       const versionEntry = updatedVersions[profileName];
       const moduleInfo = registry.modules[versionEntry.moduleName];
-      const modulePath = join(registry.rootPath, moduleInfo.path);
+      const modulePath = join(input.rootPath, moduleInfo.path);
       
       console.log(`   📤 Publishing ${versionEntry.moduleName} v${versionEntry.version}...`);
       

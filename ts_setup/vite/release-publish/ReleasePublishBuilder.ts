@@ -13,6 +13,7 @@ export interface ReleasePublishOptions {
   registry: ModuleRegistry;
   versioning: VersioningResult;
   dryRun: boolean;
+  rootPath: string;
 }
 
 export interface ReleasePublishResult {
@@ -50,7 +51,8 @@ export class ReleasePublishBuilder {
     const { publishedModules } = publishCmd.execute({
       registry,
       changedProfiles: versioningResult.changedProfiles,
-      updatedVersions: versioningResult.updatedVersions
+      updatedVersions: versioningResult.updatedVersions,
+      rootPath: options.rootPath
     });
 
     // Step 6: Git commit with version changes

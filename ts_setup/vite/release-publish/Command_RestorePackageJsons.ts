@@ -30,7 +30,7 @@ export class Command_RestorePackageJsons {
         restoreBuilder.build(registry, versionEntry.moduleName);
         restoredModules.push(versionEntry.moduleName);
         console.log(`   ✅ ${versionEntry.moduleName}: restored`);
-      } catch (error) {
+      } catch (error: any) {
         console.warn(`   ⚠️  ${versionEntry.moduleName}: restore failed - ${error.message}`);
       }
     }

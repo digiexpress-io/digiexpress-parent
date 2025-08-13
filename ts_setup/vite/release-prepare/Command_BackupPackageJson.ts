@@ -5,6 +5,7 @@ import { BuildProfile, ModuleRegistry } from "../module-registry";
 
 export declare namespace Command_BackupPackageJson {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
     buildProfiles: BuildProfile[];
     changedProfiles: string[];
@@ -36,7 +37,7 @@ export class Command_BackupPackageJson {
         throw new Error(`Module '${moduleName}' not found in registry`);
       }
       
-      const modulePath = join(registry.rootPath, moduleInfo.path);
+      const modulePath = join(input.rootPath, moduleInfo.path);
       const originalPath = join(modulePath, 'package.json');
       const backupPath = join(modulePath, 'package.json.versionsbackup');
       

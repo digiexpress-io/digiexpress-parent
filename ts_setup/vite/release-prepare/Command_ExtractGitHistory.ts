@@ -4,6 +4,7 @@ import { ModuleRegistry, ModuleCommits } from "../module-registry";
 
 export declare namespace Command_ExtractGitHistory {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
   }
 
@@ -22,7 +23,7 @@ export class Command_ExtractGitHistory {
     const moduleCommits: Command_ExtractGitHistory.Result['moduleCommits'] = [];
     
     for (const moduleInfo of modules) {
-      const modulePath = join(registry.rootPath, moduleInfo.path);
+      const modulePath = join(input.rootPath, moduleInfo.path);
       
       console.log(`  📂 Processing ${moduleInfo.name} - ${modulePath} ...`);
       
@@ -32,7 +33,7 @@ export class Command_ExtractGitHistory {
         const gitCommand = `git log -n 3 --format="%H|%ad|%an" --date=iso -- "${moduleInfo.path}"`;
         
         const output = execSync(gitCommand, {
-          cwd: registry.rootPath,
+          cwd: input.rootPath,
           encoding: 'utf8',
           timeout: 10000 // 10 seconds timeout
         }).trim();
