@@ -7,6 +7,7 @@ export declare namespace Command_RestorePackageJsons {
     registry: ModuleRegistry;
     changedProfiles: string[];
     updatedVersions: VersionsFile;
+    rootPath: string;
   }
   
   export interface Result {
@@ -27,7 +28,7 @@ export class Command_RestorePackageJsons {
       const versionEntry = updatedVersions[profileName];
       
       try {
-        restoreBuilder.build(registry, versionEntry.moduleName);
+        restoreBuilder.build(registry, versionEntry.moduleName, input.rootPath);
         restoredModules.push(versionEntry.moduleName);
         console.log(`   ✅ ${versionEntry.moduleName}: restored`);
       } catch (error: any) {

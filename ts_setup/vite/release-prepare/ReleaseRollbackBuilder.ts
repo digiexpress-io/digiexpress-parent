@@ -9,7 +9,7 @@ export interface ReleaseRollbackResult {
 }
 
 export class ReleaseRollbackBuilder {
- build(registry: ModuleRegistry, moduleName: string): ReleaseRollbackResult {
+ build(registry: ModuleRegistry, moduleName: string, rootPath: string): ReleaseRollbackResult {
    console.log(`♻️  Restoring module from publish prep: ${moduleName}`);
 
    try {
@@ -17,7 +17,8 @@ export class ReleaseRollbackBuilder {
      
      const result = restoreCmd.execute({
        registry,
-       moduleName
+       moduleName,
+       rootPath
      });
 
      console.log(`✅ Module restoration completed for ${moduleName}`);

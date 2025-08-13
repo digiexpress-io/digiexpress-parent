@@ -70,7 +70,8 @@ export class ReleasePublishBuilder {
     restoreCmd.execute({
       registry,
       changedProfiles: versioningResult.changedProfiles,
-      updatedVersions: versioningResult.updatedVersions
+      updatedVersions: versioningResult.updatedVersions,
+      rootPath: options.rootPath
     });
 
     // Step 8: Git commit for next iteration

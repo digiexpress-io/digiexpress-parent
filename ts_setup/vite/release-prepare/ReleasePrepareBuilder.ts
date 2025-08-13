@@ -13,6 +13,7 @@ import { Command_ExtractGitHistory } from "./Command_ExtractGitHistory";
 export interface VersioningBuilderOptions {
   versionsFilePath?: string;
   bumpType?: 'patch' | 'minor' | 'major';
+  rootPath?: string;
 }
 
 export interface VersioningResult {
@@ -36,6 +37,7 @@ export class ReleasePrepareBuilder {
     this.options = {
       versionsFilePath: './.modules/versions.json',
       bumpType: 'patch',
+      rootPath: '.',
       ...options
     };
   }
@@ -79,7 +81,8 @@ export class ReleasePrepareBuilder {
     // Step 3: Hash all build profiles
     const { profileHashes } = hashProfilesCmd.execute({
       registry,
-      buildProfiles
+      buildProfiles,
+      rootPath: this.options.rootPath
     });
 
     // Step 4: Detect changes and bump versions
@@ -89,19 +92,21 @@ export class ReleasePrepareBuilder {
     });
 
     // Step 5: Update package.json/version.ts files for changed profiles
-    backupCmd.execute({ registry, buildProfiles, changedProfiles });
+    backupCmd.execute({ registry, buildProfiles, changedProfiles, rootPath: this.options.rootPath });
     const { updatedPackages, trace } = updatePackageJsonCmd.execute({
       registry,
       updatedVersions,
-      changedProfiles
+      changedProfiles,
+      rootPath: this.options.rootPath
     });
-    const { moduleCommits } = commitLogCmd.execute({ registry });
+    const { moduleCommits } = commitLogCmd.execute({ registry, rootPath: this.options.rootPath });
     versionTsCmd.execute({
       registry,
       updatedVersions,
       changedProfiles,
       trace,
-      moduleCommits
+      moduleCommits,
+      rootPath: this.options.rootPath
     });
 
     // Step 6: Save updated versions file
