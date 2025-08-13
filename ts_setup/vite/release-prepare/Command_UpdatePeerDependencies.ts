@@ -86,7 +86,7 @@ export class Command_UpdatePeerDependencies {
         }
       } else {
         // New peer dependency
-        addedPeerDependencies[depName] = version;
+        addedPeerDependencies[depName] = `^${version}`;
         packageJson.peerDependencies[depName] = version;
         console.log(`   ➕ Added: ${depName}@${version}`);
       }
