@@ -33,7 +33,7 @@ export class Command_ValidateRegistry {
       
       return { registry };
       
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Failed to load registry: ${error.message}`);
     }
   }

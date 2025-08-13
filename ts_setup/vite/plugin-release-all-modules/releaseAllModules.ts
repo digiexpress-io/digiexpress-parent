@@ -18,7 +18,8 @@ export function releaseAllModules(options: {
       
       // Step 1: Build all profiles
       const { successfulBuilds, registry, buildProfiles } = new ReleaseCompileBuilder({
-        skipValidation: options.skipValidation
+        skipValidation: options.skipValidation,
+        rootPath: process.cwd()
       }).build();
 
       // Step 2: Run versioning

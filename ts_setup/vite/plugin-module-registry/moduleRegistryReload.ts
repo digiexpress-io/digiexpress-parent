@@ -1,6 +1,5 @@
 import { Plugin } from 'vite'
 import { ModuleRegistryCacheBuilder } from '../module-registry-cache';
-import { ESLintConfigBuilder } from '../gen-eslint'
 import { TSConfigBuilder } from '../gen-tsconfig'
 
 
@@ -27,7 +26,7 @@ export function moduleRegistryReload(): Plugin {
             type: 'full-reload'
           });
 
-        } catch (error) {
+        } catch (error: any) {
           console.error('❌ Package.json change handler failed:', error);
 
           // Send error to client
@@ -53,8 +52,7 @@ export function moduleRegistryReload(): Plugin {
 async function _reloadRegistry(file: string, rootPath: string = process.cwd()) {
   new ModuleRegistryCacheBuilder({
     onRegistryBuilt(registry) {
-      new TSConfigBuilder().build(registry);
-      new ESLintConfigBuilder().build(registry);
+      new TSConfigBuilder({ rootPath }).build(registry);
     },
   }).build(rootPath, false);
 }

@@ -5,6 +5,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 export declare namespace Command_ValidateBuildOutputs {
   export interface Input {
+    rootPath: string;
     registry: ModuleRegistry;
     buildProfiles: BuildProfile[];
   }
@@ -31,7 +32,7 @@ export class Command_ValidateBuildOutputs {
         continue;
       }
       
-      const distPath = join(registry.rootPath, moduleInfo.path, 'dist');
+      const distPath = join(input.rootPath, moduleInfo.path, 'dist');
       const tracePath = join(distPath, 'trace.json');
       
       // Check if dist folder exists

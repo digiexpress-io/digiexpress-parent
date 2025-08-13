@@ -7,6 +7,7 @@ import { Command_BuildAllProfiles } from "./Command_BuildAllProfiles";
 export interface ReleaseCompileOptions {
   registryPath?: string;
   skipValidation?: boolean;
+  rootPath?: string;
 }
 
 export interface ReleaseCompileResult {
@@ -22,6 +23,7 @@ export class ReleaseCompileBuilder {
     this.options = {
       registryPath: '.modules/registry.json',
       skipValidation: false,
+      rootPath: '.',
       ...options
     };
   }
@@ -53,6 +55,7 @@ export class ReleaseCompileBuilder {
     // Step 3: Validate build outputs
     if (!this.options.skipValidation) {
       const { validProfiles, invalidProfiles } = validateOutputsCmd.execute({
+        rootPath: this.options.rootPath,
         registry,
         buildProfiles
       });

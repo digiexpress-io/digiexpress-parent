@@ -30,7 +30,7 @@ export function startDemoApp(options: {
         throw new Error(`❌ Can't find module with name: ${options.moduleName}!`);
       }
 
-      const allTsConfigs = new TSConfigBuilder({}).build(registry, true);
+      const allTsConfigs = new TSConfigBuilder({ rootPath }).build(registry, true);
       tsConfig = allTsConfigs.find(e => e.moduleName === options.moduleName)?.tsConfig!;
 
       if (!tsConfig) {

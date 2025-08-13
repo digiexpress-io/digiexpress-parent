@@ -1,6 +1,5 @@
 import { Plugin } from 'vite'
 import { ModuleRegistryCacheBuilder } from '../module-registry-cache';
-import { ESLintConfigBuilder } from '../gen-eslint'
 import { TSConfigBuilder } from '../gen-tsconfig'
 import { RegistryValidationBuilder, ValidationResultPrinter } from '../module-registry-validator';
 
@@ -13,8 +12,7 @@ export function moduleRegistryCreate(props: { strict: boolean }): Plugin {
       const rootPath = process.cwd();
       const registry = new ModuleRegistryCacheBuilder({
         onRegistryBuilt(registry) {
-          new TSConfigBuilder().build(registry);
-          new ESLintConfigBuilder().build(registry);
+          new TSConfigBuilder({ rootPath }).build(registry);
         },
       }).build(rootPath, true);
 

@@ -1,7 +1,6 @@
 import { ModuleRegistry } from '../module-registry';
 
 import { TSConfigGeneratorOptions, TSConfigOutput } from "./gen-tsconfig-types";
-import { Command_GenerateTSConfig } from "./Command_GenerateTSConfig"
 import { Command_WriteTSConfig } from "./Command_WriteTSConfig"
 import { Command_GenerateModuleTSConfigs } from './Command_GenerateModuleTSConfigs';
 
@@ -15,6 +14,7 @@ export class TSConfigBuilder {
       baseUrl: '.',
       includeExternalDeps: false,
       compilerOptions: {},
+      rootPath: '.',
       ...options
     };
   }
@@ -43,7 +43,7 @@ export class TSConfigBuilder {
       if(!dryRun) {
         for(const moduleConfig of moduleConfigs) {
           writeTSConfigCmd.execute({
-            rootPath: registry.rootPath,
+            rootPath: this.options.rootPath,
             tsConfig: moduleConfig.tsConfig,
             options: {
               ...this.options,

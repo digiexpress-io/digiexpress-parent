@@ -27,7 +27,6 @@ export class Command_BuildAllProfiles {
     
     for (const profile of buildProfiles) {
       const moduleInfo = registry.modules[profile.entryModule];
-      const modulePath = join(registry.rootPath, moduleInfo.path);
       
       console.log(`   🔨 Building ${profile.name}...`);
       

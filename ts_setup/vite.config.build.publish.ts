@@ -12,7 +12,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     plugins: [
       releaseAllModules({
         dryRun: true,
-        skipValidation: false
+        skipValidation: false,
       })
     ],
     build: {

@@ -1,4 +1,5 @@
 export interface TSConfigGeneratorOptions {
+  rootPath?: string;
   outputPath?: string;                    // Default: 'tsconfig.gen.json'
   baseUrl?: string;                       // Default: '.'
   includeExternalDeps?: boolean;          // Include external dependencies in paths

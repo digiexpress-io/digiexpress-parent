@@ -55,7 +55,7 @@ export interface ModuleRegistry {
   modules: Record<string, ModuleInfo>;
   dependencyGraph: DependencyGraph;
   buildProfiles: Record<string, BuildProfile>;
-  rootPath: string;
+  // rootPath: string;
   checksum: string;                    // Hash of all module files and package.json contents
   generatedAt: string;                 // ISO timestamp when registry was built
 }
