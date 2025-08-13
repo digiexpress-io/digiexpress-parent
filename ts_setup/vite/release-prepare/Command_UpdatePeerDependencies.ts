@@ -81,12 +81,12 @@ export class Command_UpdatePeerDependencies {
             from: currentPeerDeps[depName],
             to: version
           };
-          packageJson.peerDependencies[depName] = version;
+          packageJson.peerDependencies[depName] = version.startsWith('^') ? version : `^${version}`;;
           console.log(`   🔄 Updated: ${depName} (${currentPeerDeps[depName]} → ${version})`);
         }
       } else {
         // New peer dependency
-        addedPeerDependencies[depName] = `^${version}`;
+        addedPeerDependencies[depName] = version.startsWith('^') ? version : `^${version}`;
         packageJson.peerDependencies[depName] = version;
         console.log(`   ➕ Added: ${depName}@${version}`);
       }
