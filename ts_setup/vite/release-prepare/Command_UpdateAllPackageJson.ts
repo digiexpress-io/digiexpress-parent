@@ -26,6 +26,9 @@ export class Command_UpdateAllPackageJson {
     
     console.log(`📝 Updating package.json versions for changed profiles`);
     
+    const rootPackageJsonPath = join(input.rootPath, 'package.json');
+    const rootPackageJson = JSON.parse(readFileSync(rootPackageJsonPath, 'utf-8'));
+
     const updatedPackages: string[] = [];
     const trace: Record<string, BuildConfig> = {};
     
@@ -52,6 +55,7 @@ export class Command_UpdateAllPackageJson {
       packageJson.main = "dist/index.js";
       packageJson.types = "dist/index.d.ts";   
       packageJson.files = ["dist"];
+      packageJson.repository = rootPackageJson.repository;
 
       writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf-8');
       updatedPackages.push(versionEntry.moduleName);
