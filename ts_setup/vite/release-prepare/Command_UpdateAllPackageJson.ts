@@ -52,7 +52,6 @@ export class Command_UpdateAllPackageJson {
       packageJson.main = "dist/index.js";
       packageJson.types = "dist/index.d.ts";   
       packageJson.files = ["dist"];
-      packageJson.private = 'false';
 
       writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf-8');
       updatedPackages.push(versionEntry.moduleName);
