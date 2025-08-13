@@ -4,6 +4,9 @@
   "description": "Eveli route components - full page layouts, navigation",
   "type": "module",
   "private": false,
+  "publishConfig": {
+    "provenance": true
+  },
   "dependencies": {
     "@dxs-ts/gamut-api": "*",
     "@dxs-ts/gamut-theme": "*",

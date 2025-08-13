@@ -7,7 +7,8 @@ import { ReleasePublishBuilder, ReleasePublishResult } from '../release-publish'
 
 export function releaseAllModules(options: {
   skipValidation: false,
-  dryRun: boolean
+  dryRun: boolean,
+  branchName: string
 }): Plugin {
 
   let published: ReleasePublishResult;
@@ -32,7 +33,8 @@ export function releaseAllModules(options: {
         registry,
         successfulBuilds,
         versioning: versioningResult,
-        rootPath
+        rootPath,
+        branchName: options.branchName
       });
     },
 

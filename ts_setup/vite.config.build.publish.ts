@@ -13,6 +13,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       releaseAllModules({
         dryRun: false,
         skipValidation: false,
+        branchName: 'dev'
       })
     ],
     build: {

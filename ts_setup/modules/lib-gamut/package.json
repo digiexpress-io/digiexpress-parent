@@ -4,6 +4,9 @@
   "description": "Gamut route components - full page layouts, navigation",
   "type": "module",
   "private": false,
+  "publishConfig": {
+    "provenance": true
+  },
   "dependencies": {
     "@dxs-ts/envir-util": "*",
     "@dxs-ts/gamut-api": "*",

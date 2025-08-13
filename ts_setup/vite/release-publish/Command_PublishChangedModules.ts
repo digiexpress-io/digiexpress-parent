@@ -6,6 +6,7 @@ import { Command_RunPnpmCommand } from "./Command_RunPnpmCommand"
 export declare namespace Command_PublishChangedModules {
   export interface Input {
     rootPath: string;
+    branchName: string;
     registry: ModuleRegistry;
     changedProfiles: string[];
     updatedVersions: VersionsFile;
@@ -36,7 +37,7 @@ export class Command_PublishChangedModules {
       
       const result = pnpmCmd.execute({
         command: 'publish',
-        args: ['--access', 'public'],
+        args: ['--access', 'public', '--publish-branch', input.branchName],
         cwd: modulePath,
         timeout: 60000 // 1 minute
       });

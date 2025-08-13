@@ -14,6 +14,7 @@ export interface ReleasePublishOptions {
   versioning: VersioningResult;
   dryRun: boolean;
   rootPath: string;
+  branchName: string;
 }
 
 export interface ReleasePublishResult {
@@ -75,7 +76,8 @@ export class ReleasePublishBuilder {
       registry,
       changedProfiles: versioningResult.changedProfiles,
       updatedVersions: versioningResult.updatedVersions,
-      rootPath: options.rootPath
+      rootPath: options.rootPath,
+      branchName: options.branchName
     });
 
     // Step 7: Restore package.json files
