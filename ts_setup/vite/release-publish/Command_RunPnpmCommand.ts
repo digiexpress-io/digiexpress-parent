@@ -58,11 +58,11 @@ export class Command_RunPnpmCommand {
      console.error(`   Exit code: ${error.status || 'unknown'}`);
      
      if (error.stdout) {
-       console.log(`   📤 stdout: ${error.stdout.toString().substring(0, 200)}...`);
+       console.log(`   📤 stdout: ${error.stdout.toString()}`);
      }
      
      if (error.stderr) {
-       console.error(`   📥 stderr: ${error.stderr.toString().substring(0, 200)}...`);
+       console.error(`   📥 stderr: ${error.stderr.toString()}...`);
      }
      
      return {
