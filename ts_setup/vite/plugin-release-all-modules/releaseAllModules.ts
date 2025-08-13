@@ -15,11 +15,11 @@ export function releaseAllModules(options: {
   return {
     name: 'release-all-modules',
     buildStart() {
-      
+      const rootPath: string = process.cwd();
+
       // Step 1: Build all profiles
       const { successfulBuilds, registry, buildProfiles } = new ReleaseCompileBuilder({
-        skipValidation: options.skipValidation,
-        rootPath: process.cwd()
+        skipValidation: options.skipValidation, rootPath
       }).build();
 
       // Step 2: Run versioning
@@ -31,7 +31,8 @@ export function releaseAllModules(options: {
         buildProfiles,
         registry,
         successfulBuilds,
-        versioning: versioningResult
+        versioning: versioningResult,
+        rootPath
       });
     },
 
