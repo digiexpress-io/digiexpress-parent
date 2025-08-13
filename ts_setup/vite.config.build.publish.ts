@@ -11,7 +11,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     base: process.env.PUBLIC_URL || '',
     plugins: [
       releaseAllModules({
-        dryRun: true,
+        dryRun: false,
         skipValidation: false,
       })
     ],

@@ -7,7 +7,7 @@ import { ReleasePublishBuilder, ReleasePublishResult } from '../release-publish'
 
 export function releaseAllModules(options: {
   skipValidation: false,
-  dryRun: true
+  dryRun: boolean
 }): Plugin {
 
   let published: ReleasePublishResult;
