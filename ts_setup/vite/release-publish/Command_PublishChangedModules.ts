@@ -40,6 +40,8 @@ export class Command_PublishChangedModules {
         cwd: modulePath,
         timeout: 60000 // 1 minute
       });
+
+      console.log(' Published...', result.stdout);
       
       if (result.success) {
         publishedModules.push(versionEntry.moduleName);
