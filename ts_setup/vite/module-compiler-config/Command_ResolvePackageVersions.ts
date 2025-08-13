@@ -2,6 +2,9 @@ import { load } from "js-yaml";
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 
+
+const ignore_packages = ['react/jsx-dev-runtime'];
+
 export declare namespace Command_ResolvePackageVersions {
   export interface Input {
     external: string[];
@@ -32,6 +35,9 @@ export class Command_ResolvePackageVersions {
       // Try to get versions from pnpm lockfile first
       const lockVersions = _parsePnpmLockfile(lockfilePath);
       for (const packageName of allPackages) {
+        if(ignore_packages.includes(packageName)) {
+          continue;
+        }
 
         const version = _findLockVersion(packageName, lockVersions);
 
