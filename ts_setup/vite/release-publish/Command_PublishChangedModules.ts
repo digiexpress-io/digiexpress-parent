@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { ModuleRegistry, VersionsFile } from "../module-registry"
 import { Command_RunPnpmCommand } from "./Command_RunPnpmCommand"
+import { readFileSync } from "node:fs";
 
 
 export declare namespace Command_PublishChangedModules {
@@ -32,9 +33,9 @@ export class Command_PublishChangedModules {
       const versionEntry = updatedVersions[profileName];
       const moduleInfo = registry.modules[versionEntry.moduleName];
       const modulePath = join(input.rootPath, moduleInfo.path);
-      
-      console.log(`   📤 Publishing ${versionEntry.moduleName} v${versionEntry.version}...`);
-      
+      const packageJSON = readFileSync(join(modulePath, 'package.json'), 'utf-8');
+      console.log(`   📤 Publishing ${versionEntry.moduleName} v${versionEntry.version}...`, packageJSON);
+
       const result = pnpmCmd.execute({
         command: 'publish',
         args: ['--access', 'public', '--publish-branch', input.branchName],
