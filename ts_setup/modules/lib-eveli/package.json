@@ -3,7 +3,6 @@
   "version": "${project.version}",
   "description": "Eveli route components - full page layouts, navigation",
   "type": "module",
-  "private": false,
   "publishConfig": {
     "provenance": true
   },
