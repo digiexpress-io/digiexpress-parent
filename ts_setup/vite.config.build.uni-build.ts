@@ -5,9 +5,7 @@ import svgr from 'vite-plugin-svgr';
 import dts from 'unplugin-dts/vite'
 
 import { ConfigEnv, UserConfig } from 'vite';
-import { DTSBuilder, buildOneModule } from './vite'
-import { ModuleRegistryCacheBuilder } from './vite/module-registry-cache';
-
+import { DTSBuilder, buildOneModule, ModuleRegistryCacheBuilder } from './vite'
 
 
 

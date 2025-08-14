@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build-all": "START_MODE=publish-dry-run vite build --mode plugin-only",
     "release-all": "START_MODE=publish vite build --mode plugin-only",
     "build-modules": "START_MODE=build-modules vite build --mode plugin-only",
     "build-gamut-intl": "START_MODE=intl-build INTL_MODULES='@dxs-ts/gamut' INTL_FILE='./gamut/intl.csv' vite build",

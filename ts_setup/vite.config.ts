@@ -7,7 +7,7 @@ import startEveli from './vite.config.start.eveli';
 import uniBuild from './vite.config.build.uni-build';
 import publishModules from './vite.config.build.publish';
 import buildIntl from './vite.config.build.intl';
-
+import publishDryRun from './vite.config.build.publish.dry.run';
 
 // https://vitejs.dev/config/
 export default defineConfig((props) => {
@@ -28,6 +28,9 @@ export default defineConfig((props) => {
   }
   if (process.env.START_MODE === 'intl-build') {
     return buildIntl(props);
+  }
+  if(process.env.START_MODE === 'publish-dry-run') {
+    return publishDryRun(props);
   }
   throw new Error('woops');
 });
