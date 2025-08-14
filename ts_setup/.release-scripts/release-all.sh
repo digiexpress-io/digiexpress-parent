@@ -16,27 +16,9 @@ echo "Setup git user name to '$BOT_NAME' and email to '$BOT_EMAIL'"
 git config --global user.name "$BOT_NAME";
 git config --global user.email "$BOT_EMAIL";
 
-
-# resolve versions
-#readonly local PROJECT_VERSION=$(node -e "console.log(require('./package.json').version);")
-#npm version patch
-#readonly local PROJECT_VERSION_NEXT=$(node -e "console.log(require('./package.json').version);")
-
-# version info 
-#DATE=$(date "+%d/%m/%Y %H:%M:%S")
-#echo "export const version = '${PROJECT_VERSION_NEXT}';${NEWLINE}export const build_time = '${DATE}';" > ./src/version.ts
-#git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
-
-# Log
-#echo "Git checkout refname: '${refname}' commit: '${GITHUB_SHA}'"
-#echo "Project version: '${PROJECT_VERSION}' next: '${PROJECT_VERSION_NEXT}'"
-
 # Tag and publish
 pnpm install
 pnpm release-all
-# pnpm publish --access public --no-git-checks --publish-branch dev
 
-#git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
-# git tag -a "gamut_release_${PROJECT_VERSION_NEXT}" -m "gamut release ${PROJECT_VERSION_NEXT}"
-# git push origin --tags
-# git push origin dev
+git pull origin dev
+git push origin dev
