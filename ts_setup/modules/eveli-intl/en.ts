@@ -164,7 +164,7 @@ export const en = {
   'button.startBatch': 'Start batch',
   'error.minTextLength': 'Value should be at least {minLength} characters long',
   'error.maxTextLength': 'Value should be no more than {max} characters long',
-  'error.valueRequired': 'Value required',
+  'error.valueRequired': '* Value required',
   'error.title': 'Error!',
   'error.dialob.session': 'Questionnaire cannot be opened at this moment, please try again later',
   'error.errorLoadingData': 'Error during data loading',

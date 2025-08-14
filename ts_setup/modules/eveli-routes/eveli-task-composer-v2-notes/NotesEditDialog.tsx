@@ -4,20 +4,37 @@ import HistoryIcon from '@mui/icons-material/History';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
 import { NotesEditor } from './NotesEditor';
+import { useTaskDashboard } from '../eveli-task-composer-v2';
 
 
 
 export interface NotesEditDialogProps {
-  task: TaskApi.Task;
   open: boolean,
   onClose: () => void
 }
 
-export const NotesEditDialog: React.FC<NotesEditDialogProps> = ({ task, open, onClose }) => {
+export const NotesEditDialog: React.FC<NotesEditDialogProps> = ({ open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
+  const { task, saveTaskNote } = useTaskDashboard();
+  const [newNote, setNewNote] = React.useState<string>('');
+
+  function handleSetNote(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewNote(event.target.value);
+  }
+
+  async function handleSaveNote() {
+    await saveTaskNote({ commentText: newNote });
+    setNewNote('')
+  }
+
+  function handleCloseDialog() {
+    onClose();
+  }
+
+
+
 
   return (
     <StyledEditNotesDialog fullWidth maxWidth='xl' className={classes.editDialog} open={open} onClose={onClose} slots={{ transition: Zoom }}>
@@ -33,12 +50,12 @@ export const NotesEditDialog: React.FC<NotesEditDialogProps> = ({ task, open, on
           <HistoryIcon />
           <Typography>{intl.formatMessage({ id: 'task.note.history', defaultMessage: 'Note history' })}</Typography>
         </Box>
-        <NotesEditor task={task} />
+        <NotesEditor task={task} onChange={handleSetNote} noteText={newNote} />
       </DialogContent>
 
       <DialogActions>
-        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.save' })}</Button>
+        <Button variant='outlined' onClick={handleCloseDialog}>{intl.formatMessage({ id: 'button.close' })}</Button>
+        <Button onClick={handleSaveNote} disabled={!newNote.trim()}>{intl.formatMessage({ id: 'button.save' })}</Button>
       </DialogActions>
     </StyledEditNotesDialog>
   )

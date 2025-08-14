@@ -157,7 +157,7 @@ export const fi = {
   'button.startBatch': 'Start batch',
   'error.minTextLength': 'Annetun arvon pitää olla vähintään {minLength} merkkiä',
   'error.maxTextLength': 'Annetun arvon tulee olla enintään {max} merkkiä pitkä',
-  'error.valueRequired': 'Vaaditaan',
+  'error.valueRequired': '* Vaaditaan',
   'error.title': 'Virhe!',
   'error.dialob.session': 'Lomaketta ei voida aukaista juuri nyt. Yritä uudelleen myöhemmin',
   'error.errorLoadingData': 'Error during data loading',

@@ -7,6 +7,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardMenu } from './TaskCardMenu';
 import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
 import { TaskCardId, TaskCardStyleKey } from './CardConfigContext';
+import { TaskPropertiesAlt } from '../eveli-task-composer-v2-task';
 
 
 export interface TaskCardProps {
@@ -17,12 +18,14 @@ export interface TaskCardProps {
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
   flashy?: boolean;
+  altView?: boolean;
   styleVariant?: TaskCardStyleKey;
   onClick?: () => void;
   onDoubleClick?: () => void;
   onReview?: () => void;
   onEdit?: () => void;
   onToggleFlashy?: () => void;
+  onToggleAltView?: () => void;
 }
 
 interface TaskCardDataRowTextProps {
@@ -66,25 +69,28 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   return (<>
     {props.editDialog}
     <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
-      <Box className={classes.title}>
-        {props.startAdornmentIcon}
-        <TitleText style={style}>{props.title}</TitleText>
-        <Box flexGrow={1} />
-        {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
-        <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
-          <DragHandleIcon color='primary' />
-        </Box>
-        <TaskCardMenu cardId={props.id}
-          anchorEl={anchorEl}
-          open={menuOpen}
-          onClose={handleMenuClose}
-          flashy={props.flashy}
-          onToggleFlashy={props.onToggleFlashy}
-          onReview={props.onReview}
-          onEdit={handleEdit} />
-      </Box>
+
       <Box className={classes.cardBody}>
-        {props.children}
+        <Box className={classes.title}>
+          {props.startAdornmentIcon}
+          <TitleText style={style}>{props.title}</TitleText>
+          <Box flexGrow={1} />
+          {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+          <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
+            <DragHandleIcon color='primary' />
+          </Box>
+          <TaskCardMenu cardId={props.id}
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleMenuClose}
+            flashy={props.flashy}
+            onToggleFlashy={props.onToggleFlashy}
+            altView={props.altView}
+            onToggleAltView={props.onToggleAltView}
+            onReview={props.onReview}
+            onEdit={handleEdit} />
+        </Box>
+        {props.altView ? <TaskPropertiesAlt /> : props.children}
       </Box>
     </TaskSectionCard>
   </>
@@ -174,10 +180,7 @@ const TaskSectionCard = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
     transition: 'transform 0.2s ease, border 0.2s ease',
-
 
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
@@ -191,15 +194,15 @@ const TaskSectionCard = styled(Box, {
       borderRadius: theme.spacing(1),
       flexGrow: 1,
       boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
-      backgroundColor: theme.palette.background.default
+      backgroundColor: theme.palette.background.default,
+
     },
     '& .TaskSectionCard-title': {
       display: 'flex',
       alignItems: 'center',
-      height: '3rem',
-      paddingLeft: theme.spacing(1),
       color: theme.palette.text.primary,
-      border: `1px solid transparent`
+      paddingBottom: theme.spacing(2),
+
     },
   };
 
@@ -230,11 +233,9 @@ const TaskSectionCard = styled(Box, {
       '& .TaskSectionCard-title': {
         display: 'flex',
         alignItems: 'center',
-        height: '3rem',
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
         color: colors.flashyBackground,
-        backgroundColor: alpha(colors.flashyBackground, 0.1),
+        paddingBottom: theme.spacing(2),
+
         '& .MuiAvatar-root': {
           backgroundColor: alpha(colors.flashyBackground, 0.3),
           border: `2px solid ${colors.flashyBackground}`

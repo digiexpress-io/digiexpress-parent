@@ -23,9 +23,11 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
   }, [task.taskRef]);
 
   if (!feedback || !feedback.content) {
-    return <Typography sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.feedback.none', defaultMessage: 'No feedback found' })}</Typography>;
+    return (
+      <Typography color='error' sx={{ ...style.bodyTypography }}>
+        {intl.formatMessage({ id: 'task.feedback.none', defaultMessage: 'No feedback found' })}
+      </Typography>)
   }
-
 
   return (
     <StyledCustomerFeedbackReadOnly className={classes.root}>
@@ -61,7 +63,7 @@ function truncate(text: string | undefined, maxLength: number) {
   if (!text) {
     return;
   }
-  return text.length > maxLength ? text.slice(0, maxLength) + '...' : 'text';
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 }
 
 

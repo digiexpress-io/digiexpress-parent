@@ -1,29 +1,57 @@
 import React from 'react';
 import { alpha, generateUtilityClass, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 import composeClasses from '@mui/utils/composeClasses';
 import { TaskApi } from '@dxs-ts/eveli-api';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { useIntl } from 'react-intl';
+import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
 
 
-export const PublishedNotifier: React.FC<{ task: TaskApi.Task, style?: TaskCardStyleDefinition }> = ({ task, style }) => {
+export interface PublishedNotifierProps {
+  task: TaskApi.Task;
+  style?: TaskCardStyleDefinition;
+}
+
+
+export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, style }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
 
+  const { getOneFeedback } = useFeedback();
+  const [feedbacks, setFeedbacks] = React.useState<FeedbackApi.Feedback>();
 
+
+  React.useEffect(() => {
+    getOneFeedback(task.id)
+      .then(resp => resp)
+      .then((resp) => setFeedbacks(resp));
+  }, [])
+
+  const feedbackExists = feedbacks ? true : false;
+
+
+  if (feedbackExists) {
+    return (
+      <NotifierPublished className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
+        <CheckIcon />
+        {intl.formatMessage({ id: 'task.feedback.isPublished', defaultMessage: 'Published' })}
+      </NotifierPublished>)
+
+  }
 
   return (
-    <StyledPublishedNotifier className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
+    <NotifierUnpublished className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
       <CloseIcon />
-      {intl.formatMessage({id: 'task.feedback.notPublished', defaultMessage: 'Not published'})}
-    </StyledPublishedNotifier>
+      {intl.formatMessage({ id: 'task.feedback.isNotPublished', defaultMessage: 'Not published' })}
+    </NotifierUnpublished>
   )
 }
 
 
-const MUI_NAME = 'PublishedNotifier';
-const StyledPublishedNotifier = styled('div', {
+const MUI_NAME = 'FeedbackPublishedNotifier';
+const NotifierUnpublished = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -44,6 +72,32 @@ const StyledPublishedNotifier = styled('div', {
   '.MuiSvgIcon-root': {
     fontSize: 'small',
     color: 'red',
+    marginRight: theme.spacing(1)
+  },
+
+}));
+
+const NotifierPublished = styled('div', {
+  name: MUI_NAME,
+  slot: 'Root',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root
+    ];
+  },
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  backgroundColor: alpha(theme.palette.success.main, 0.1),
+  padding: theme.spacing(0.5),
+  borderRadius: theme.spacing(1),
+  border: `1px solid ${theme.palette.success.main}`,
+  color: theme.palette.success.main,
+  fontSize: theme.typography.body2.fontSize,
+
+  '.MuiSvgIcon-root': {
+    fontSize: 'small',
+    color: theme.palette.success.main,
     marginRight: theme.spacing(1)
   },
 

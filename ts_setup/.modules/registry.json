@@ -775,10 +775,10 @@
         "@tanstack/react-router",
         "@mui/utils",
         "notistack",
+        "@mui/system",
         "recharts",
         "moment",
         "@dxs-ts/gamut-shell",
-        "@mui/system",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/wrench-api",
@@ -796,9 +796,9 @@
         "@tanstack/react-router",
         "@mui/utils",
         "notistack",
+        "@mui/system",
         "recharts",
-        "moment",
-        "@mui/system"
+        "moment"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/gamut-form-review",
@@ -1593,7 +1593,9 @@
         "version": "${project.version}",
         "description": "Eveli route components - full page layouts, navigation",
         "type": "module",
-        "private": false,
+        "publishConfig": {
+          "provenance": true
+        },
         "dependencies": {
           "@dxs-ts/gamut-api": "*",
           "@dxs-ts/gamut-theme": "*",
@@ -1711,7 +1713,9 @@
         "version": "${project.version}",
         "description": "Gamut route components - full page layouts, navigation",
         "type": "module",
-        "private": false,
+        "publishConfig": {
+          "provenance": true
+        },
         "dependencies": {
           "@dxs-ts/envir-util": "*",
           "@dxs-ts/gamut-api": "*",
@@ -2556,6 +2560,6 @@
       ]
     }
   },
-  "checksum": "1cd23d3c5919f733ca3b9bc5d8f2a2aafbf53754e51c975a522de6c8adcbe6ac",
-  "generatedAt": "2025-08-13T07:26:47.156Z"
+  "checksum": "9da5ec446f0a3bc9345ac57123dec8f76206d803a43dde6a1148e0cf1ed582a1",
+  "generatedAt": "2025-08-14T09:45:51.648Z"
 }

@@ -25,39 +25,38 @@ export interface NotesTruncatedTruncatedProps {
 export const NotesTruncated: React.FC<NotesTruncatedTruncatedProps> = ({ task, style }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const internalComments = task.comments?.filter(c => !c.external) || [];
-
-  if (!internalComments || internalComments.length === 0) {
-    return <>{intl.formatMessage({ id: 'task.note.none', defaultMessage: 'No notes yet' })}</>
-  }
+  const internalComments = (task.comments?.filter(c => !c.external) || [])
+    .sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime())
+    .slice(-3);
 
   const truncateText = (text: string, maxLength: number): string => {
     if (text.length <= maxLength) return text;
     return text.slice(0, maxLength) + '…';
   };
 
+  if (!internalComments || internalComments.length === 0) {
+    return (<Typography sx={{ ...style?.bodyTypography }} color='error'>
+      {intl.formatMessage({ id: 'task.note.none', defaultMessage: 'No notes for this task' })}
+    </Typography>)
+  }
 
   return (
     <StyledTaskNotes className={classes.notesContainer}>
-      {internalComments
-        .slice(0, 3)
-        .map(comment => (
-          <Box key={comment.id}>
-            <>
-              <Box display='flex' alignItems='center'>
-                <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
-                <Typography component='div' sx={{ ...style?.bodyTypography }} className={classes.noteBody}>
-                  {`${truncateText(comment.commentText, 200)}`}
-                </Typography>
-              </Box>
-              <Divider />
+      {internalComments.map(comment => (
+        <Box key={comment.id}>
+          <Box display='flex' alignItems='center'>
+            <CircleIcon sx={{ fontSize: '7pt', mr: 1, color: 'primary.main' }} />
+            <Typography component='div' sx={{ ...style?.bodyTypography }} className={classes.noteBody}>
+              {`${truncateText(comment.commentText, 200)}`}
+            </Typography>
+          </Box>
+          <Divider />
 
-              <Box display='flex' alignItems='center' justifyContent='flex-end'>
-                <Typography component='div' sx={{ ...style?.bodyTypographySmall }} className={classes.noteAuthor}>
-                  {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
-                </Typography>
-              </Box>
-            </>
+          <Box display='flex' alignItems='center' justifyContent='flex-end'>
+            <Typography component='div' sx={{ ...style?.bodyTypographySmall }} className={classes.noteAuthor}>
+              {`${comment.userName}` + " noted on " + `${formatAnyDateShort(comment.created)}`}
+            </Typography>
+          </Box>
           </Box>
         ))}
       {internalComments.length > 3 && (<Typography sx={{ ...style?.bodyTypography }}>...{internalComments.length - 3} more...</Typography>
@@ -86,7 +85,6 @@ const StyledTaskNotes = styled('div', {
     textAlign: 'right',
     color: theme.palette.text.disabled
   }
-
 }));
 
 const useUtilityClasses = () => {

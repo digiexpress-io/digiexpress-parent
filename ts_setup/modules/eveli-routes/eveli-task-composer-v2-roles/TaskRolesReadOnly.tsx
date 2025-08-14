@@ -1,20 +1,23 @@
 import React from 'react';
 import { Chip, generateUtilityClass, styled, Typography } from '@mui/material';
-import { TaskApi } from '@dxs-ts/eveli-api';
 import composeClasses from '@mui/utils/composeClasses';
-
+import { useIntl } from 'react-intl';
+import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 
 export interface TaskRolesReadOnlyProps {
   task: TaskApi.Task;
+  style: TaskCardStyleDefinition
 }
 
-export const TaskRolesReadOnly: React.FC<TaskRolesReadOnlyProps> = ({ task }) => {
+export const TaskRolesReadOnly: React.FC<TaskRolesReadOnlyProps> = ({ task, style }) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
 
   if (!task.assignedRoles || task.assignedRoles.length === 0) {
     return (
       <TaskRolesRoot>
-        <Typography>--</Typography>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.roles.none', defaultMessage: 'No roles assigned' })}</Typography>
       </TaskRolesRoot>)
   }
 

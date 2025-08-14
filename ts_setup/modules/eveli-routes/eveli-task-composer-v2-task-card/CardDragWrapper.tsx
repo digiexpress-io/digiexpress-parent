@@ -56,7 +56,6 @@ export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
         transition: 'transform 0.2s ease, border 0.1s ease',
         border: getBorder(theme, isDragging, isDropTarget),
         borderRadius: theme.spacing(1),
-        padding: theme.spacing(1),
         opacity: isDragging ? 0.6 : 1,
         boxShadow: isDropTarget ? `0 0 6px 3px ${alpha(theme.palette.divider, 0.50)}` : 'none'
       }}
@@ -76,7 +75,7 @@ export function useDragCardController<T extends TaskCardId>() {
   const draggedId = React.useRef<T | null>(null);
   function startAutoScroll() {
     const scrollMargin = 80; // px distance from top/bottom to trigger
-    const maxSpeed = 20;     // px per frame (lower than before)
+    const maxSpeed = 15;     // px per frame (lower than before)
     let scrollSpeed = 0;     // current frame speed
     let scrollDirection = 0; // -1 = up, 1 = down, 0 = none
     let rafId: number | null = null;

@@ -9,15 +9,17 @@ import { TaskApi } from '@dxs-ts/eveli-api';
 
 export interface CustomerMessagesEditorProps {
   task: TaskApi.Task;
+  message: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ task }) => {
+export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ task, onChange, message }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const [message, setMessage] = React.useState('');
+  const lastMessageRef = React.useRef<HTMLDivElement | null>(null);
 
   const allExternalMessages = task.comments?.filter(c => c.external)
-    .sort((a, b) => DateTime.fromISO(b.created).toMillis() - DateTime.fromISO(a.created).toMillis())
+    .sort((a, b) => DateTime.fromISO(a.created).toMillis() - DateTime.fromISO(b.created).toMillis())
     || [];
 
 
@@ -29,9 +31,13 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
     }
   };
 
-  function handleOnChange(value: string) {
-    setMessage(value);
-  }
+  const externalCommentCount = allExternalMessages.length;
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      lastMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [externalCommentCount]);
 
   return (
 
@@ -41,20 +47,24 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
           (
             <Typography textAlign='center'>{intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No messages yet' })}</Typography>
           ) : (
-          allExternalMessages.map((comment) => (
-            <Box className={classes.messageRow} key={comment.id}>
-              <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
-              <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
-                <Typography className={classes.senderInfo}>
-                  {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
-                </Typography>
-                <Typography style={{ overflow: 'hidden', whiteSpace: 'normal' }}>
-                  {comment.commentText}
-                </Typography>
-              </Box>
-            </Box>
-          ))
-        )}
+            allExternalMessages.map((comment, index) => {
+              const isLast = index === externalCommentCount - 1;
+              return (
+                <Box className={classes.messageRow} key={comment.id} ref={isLast ? lastMessageRef : null}>
+                  <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
+                  <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
+                    <Typography className={classes.senderInfo}>
+                      {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
+                    </Typography>
+                    <Typography style={{ overflow: 'hidden', whiteSpace: 'normal' }}>
+                      {comment.commentText}
+                    </Typography>
+                  </Box>
+                </Box>
+              )
+            })
+          )}
+        <div ref={lastMessageRef} style={{ height: '32px' }} />
       </Box>
 
       <Box className={classes.inputBox}>
@@ -65,7 +75,7 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
           </Typography>
         </Box>
         <StyledTextField value={message} fullWidth multiline rows={3}
-          onChange={(e) => handleOnChange(e.target.value)}
+          onChange={onChange}
           placeholder={intl.formatMessage({ id: 'task.customerMessages.newMessagePlaceholder', defaultMessage: 'My message to customer...' })} />
       </Box>
     </StyledCustomerMessagesEditor>
@@ -111,7 +121,6 @@ const StyledCustomerMessagesEditor = styled('div', {
     alignItems: 'center',
     borderBottom: 'none',
     marginBottom: theme.spacing(2),
-
   },
 
   '& .CustomerMessagesEditor-inputBox': {

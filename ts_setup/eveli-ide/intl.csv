@@ -164,7 +164,7 @@ button.select,,Select,Valita,Select
 button.startBatch,,Start batch,Start batch,,
 error.minTextLength,,Value should be at least {minLength} characters long,Annetun arvon pitää olla vähintään {minLength} merkkiä,Texten måste vara minst {minLength} tecken lång.
 error.maxTextLength,,Value should be no more than {max} characters long,Annetun arvon tulee olla enintään {max} merkkiä pitkä,Texten måste vara max {max} tecken lång.
-error.valueRequired,,Value required,Vaaditaan,Nödvändig
+error.valueRequired,,* Value required,* Vaaditaan,* Nödvändig
 error.title,,Error!,Virhe!,Fel!
 error.dialob.session,,"Questionnaire cannot be opened at this moment, please try again later",Lomaketta ei voida aukaista juuri nyt. Yritä uudelleen myöhemmin,Blanketten kan inte öppnas just nu. Vänligen försök på nytt senare
 error.errorLoadingData,,Error during data loading,Error during data loading,Fel då försöker ladda data

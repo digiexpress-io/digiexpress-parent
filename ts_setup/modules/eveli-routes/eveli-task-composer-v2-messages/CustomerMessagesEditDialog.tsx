@@ -1,21 +1,37 @@
 import React from 'react';
-import { TaskApi } from '@dxs-ts/eveli-api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Typography, Zoom } from '@mui/material';
 import HistoryIcon from '@mui/icons-material/History';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { CustomerMessagesEditor } from './CustomerMessagesEditor';
+import { useTaskDashboard } from '../eveli-task-composer-v2/EveliTaskDashboardContext';
 
 
 export interface CustomerMessagesEditDialogProps {
-  task: TaskApi.Task;
   open: boolean,
   onClose: () => void
 }
 
-export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProps> = ({ task, open, onClose }) => {
+
+export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProps> = ({ open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
+  const [newMessage, setNewMessage] = React.useState<string>('');
+  const { task, saveCustomerComment } = useTaskDashboard();
+
+
+  function handleSetMessage(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewMessage(event.target.value);
+  }
+
+  async function handleSendMessage() {
+    await saveCustomerComment({ commentText: newMessage });
+    setNewMessage('')
+  }
+
+  function handleCloseDialog() {
+    onClose();
+  }
 
 
   return (
@@ -30,14 +46,14 @@ export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProp
       <DialogContent>
         <Box className={classes.historyLabel}>
           <HistoryIcon />
-          <Typography>Message history</Typography>
+          <Typography>{intl.formatMessage({ id: 'task.customerMessages.messageHistory', defaultMessage: 'Message history' })}</Typography>
         </Box>
-        <CustomerMessagesEditor task={task} />
+        <CustomerMessagesEditor onChange={handleSetMessage} task={task} message={newMessage} />
       </DialogContent>
 
       <DialogActions>
-        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button>{intl.formatMessage({ id: 'button.sendMessage', defaultMessage: 'Send message now' })}</Button>
+        <Button variant='outlined' onClick={handleCloseDialog}>{intl.formatMessage({ id: 'button.close' })}</Button>
+        <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>{intl.formatMessage({ id: 'button.sendMessage', defaultMessage: 'Send message now' })}</Button>
       </DialogActions>
     </StyledDialog>
   )

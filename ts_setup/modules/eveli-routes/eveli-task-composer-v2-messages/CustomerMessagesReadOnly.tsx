@@ -21,6 +21,7 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
     || [];
 
   const externalMessages = allExternalMessages.slice(0, 3);
+  const sortedExternalMessages = externalMessages.sort((a, b) => DateTime.fromISO(a.created).toMillis() - DateTime.fromISO(b.created).toMillis())
 
   const formatDate = (value: string): string => {
     try {
@@ -40,15 +41,12 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
   return (
 
     <StyledCustomerMessagesReadOnly className={classes.container}>
-      {externalMessages.length === 0 && (
-        <Typography sx={{ ...style }}>
-          {intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No messages yet' })}
+      {externalMessages.length === 0 ? (
+        <Typography color='error' sx={{ ...style.bodyTypography }}>
+          {intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No customer messages' })}
         </Typography>
-      )}
-
-      {externalMessages
-        .slice(0, 3)
-        .map((comment) => (
+      ) : (
+        sortedExternalMessages.map((comment) => (
           <Box className={classes.messageRow} key={comment.id}>
             <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
             <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
@@ -60,7 +58,8 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
               </Typography>
             </Box>
           </Box>
-        ))}
+        )))
+      }
 
       {allExternalMessages.length > 3 && (
         <Typography sx={{ ...style.bodyTypography }}>

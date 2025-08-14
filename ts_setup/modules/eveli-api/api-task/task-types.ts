@@ -19,12 +19,12 @@ export namespace TaskApi {
     PORTAL = "PORTAL"
   }
 
-
   export enum TaskPriority {
     LOW = 'LOW',
     NORMAL = 'NORMAL',
     HIGH = 'HIGH',
   }
+
   export const task_priority_messages = defineMessages({
     LOW: {
       id: 'task.priority.low',
@@ -45,9 +45,6 @@ export namespace TaskApi {
     NORMAL: Colors.BLUE,
     HIGH: Colors.RED,
   };
-
-
-
 
   export enum TaskStatus {
     NEW = 'NEW',
@@ -94,7 +91,7 @@ export namespace TaskApi {
     NEW: Colors.YELLOW,
     OPEN: Colors.BLUE,
     COMPLETED: Colors.GREEN,
-    REJECTED: Colors.GREY,
+    REJECTED: Colors.RED,
     TRANSFERRED: Colors.GREY,
     DELEGATED: Colors.GREY,
     WAITING: Colors.GREY

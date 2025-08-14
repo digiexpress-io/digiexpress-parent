@@ -1,1 +1,1 @@
-export * from './TaskPriority';
+export * from './TaskPriorityReadOnly';

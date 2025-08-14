@@ -1,14 +1,16 @@
 import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useTaskDashboard } from '../eveli-task-composer-v2';
 
 
 const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
   'task_main': {
     showFlashyToggle: true,
-    showEdit: true
+    showEdit: true,
+    showAltViewToggle: true
   },
-  'task-form-summary': {
+  'task_form_summary': {
     showFlashyToggle: true,
     showReview: true
   },
@@ -20,11 +22,13 @@ const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
     showFlashyToggle: true,
     showEdit: true
   },
-  'status-priority': {
-    showFlashyToggle: true
+  'status_priority': {
+    showFlashyToggle: true,
+    showEdit: true
   },
-  'assignees-roles': {
-    showFlashyToggle: true
+  'assignees_roles': {
+    showFlashyToggle: true,
+    showEdit: true
   },
   'customer_messages': {
     showFlashyToggle: true,
@@ -47,14 +51,17 @@ export interface CardMenuProps {
   anchorEl: HTMLElement | null;
   open: boolean;
   flashy?: boolean;
+  altView?: boolean;
   onClose: () => void;
   onToggleFlashy?: () => void;
+  onToggleAltView?: () => void;
   onReview?: () => void;
   onEdit?: () => void;
 }
 
 interface CardMenuOptions {
   showFlashyToggle?: boolean;
+  showAltViewToggle?: boolean;
   showReview?: boolean;
   showEdit?: boolean;
 }
@@ -63,10 +70,22 @@ interface CardMenuOptions {
 export const TaskCardMenu: React.FC<CardMenuProps> = (props) => {
   const intl = useIntl();
   const config = CARD_MENU_CONFIG[props.cardId] ?? CARD_MENU_CONFIG.default;
+  const { task } = useTaskDashboard();
+
+  const isTaskReopenable = task.status === 'COMPLETED' || task.status === 'REJECTED' && task.questionnaireId;
+
 
   function handleFlashyToggle() {
     if (props.onToggleFlashy) {
       props.onToggleFlashy()
+    };
+    props.onClose();
+  };
+
+  function handleAltViewToggle() {
+    if (props.onToggleAltView) {
+      props.onToggleAltView()
+      console.log('alt view', props.altView + "")
     };
     props.onClose();
   };
@@ -99,6 +118,17 @@ export const TaskCardMenu: React.FC<CardMenuProps> = (props) => {
 
       {config.showEdit && (
         <MenuItem onClick={handleEdit}>{intl.formatMessage({ id: 'taskcard.menu.option.editSection', defaultMessage: 'Edit this section' })}</MenuItem>
+      )}
+
+      {config.showAltViewToggle && (
+        <MenuItem onClick={handleAltViewToggle}>
+          {props.altView ? (
+            intl.formatMessage({ id: 'taskcard.menu.option.removeAltView', defaultMessage: 'Remove alternative view' })
+          ) : (
+            intl.formatMessage({ id: 'taskcard.menu.option.setAltView', defaultMessage: 'Change to alternative view' })
+          )
+          }
+        </MenuItem>
       )}
 
       {config.showFlashyToggle && (

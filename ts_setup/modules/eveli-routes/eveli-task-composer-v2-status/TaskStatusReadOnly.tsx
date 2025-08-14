@@ -1,7 +1,9 @@
 import React from 'react';
-import { Box, generateUtilityClass, MenuItem, Select, SelectChangeEvent, styled, Typography } from '@mui/material';
+import { Box, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
+import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { useIntl } from 'react-intl';
+import { useTaskDashboard } from '../eveli-task-composer-v2';
 import { TaskApi } from '@dxs-ts/eveli-api';
 
 const getStatusColor = (status: TaskApi.TaskStatus): string => {
@@ -24,8 +26,9 @@ const getStatusColor = (status: TaskApi.TaskStatus): string => {
 };
 
 
-const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) => {
+const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus, style: TaskCardStyleDefinition }> = ({ status, style }) => {
   const intl = useIntl();
+  const { task } = useTaskDashboard();
   const classes = useUtilityClasses();
 
   const getProgress = (): number => {
@@ -49,16 +52,18 @@ const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) =
   };
 
   const progress = getProgress();
-  const color = getStatusColor(status ?? TaskApi.TaskStatus.NEW);
+  const color = getStatusColor(status);
 
 
   return (
     <Box className={classes.progressBar}>
-      <Typography sx={{ fontWeight: 500, mb: 1 }}>
+      <Box display='flex'>
+      <Typography sx={{ ...style.bodyTypography, fontWeight: 500, mb: 1 }}>
         {intl.formatMessage({ id: 'task.status', defaultMessage: 'Status' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-        {status}
       </Typography>
+      <Box flexGrow={1} />
+      <Typography fontWeight={500} sx={{...style.bodyTypography, fontWeight: 'bold'}}>{task.status}</Typography>
+      </Box>
       <Box className={classes.backgroundTrack}>
         <Box sx={{
           height: '100%',
@@ -76,47 +81,22 @@ const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) =
   );
 };
 
-
-export const EditStatus: React.FC<{ onChange: (e: SelectChangeEvent) => void, status: TaskApi.TaskStatus }> = ({ onChange, status }) => {
-  const intl = useIntl();
+export const TaskStatusReadOnly: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
   const classes = useUtilityClasses();
+  const { task } = useTaskDashboard();
+
+
+
 
   return (
-    <StyledEditStatus className={classes.root}>
-      <TaskProgressBar status={status} />
-
-      <Select
-        value={status}
-        onChange={onChange}
-        size="small"
-        sx={{
-          width: '30%',
-          alignSelf: 'center',
-        }}
-      >
-        {Object.entries(TaskApi.task_status_messages).map(([key, message]) => (
-          <MenuItem key={key} value={key}>
-            <Box display="flex" alignItems="center">
-              <Box sx={{
-                width: 10,
-                height: 10,
-                borderRadius: '50%',
-                backgroundColor: getStatusColor(key as TaskApi.TaskStatus),
-                mr: 1,
-              }}
-              />
-              {intl.formatMessage(message)}
-            </Box>
-          </MenuItem>
-        ))}
-
-      </Select>
-    </StyledEditStatus>
+    <StyledTaskStatusReadOnly className={classes.root}>
+      <TaskProgressBar status={task.status!} style={style} />
+    </StyledTaskStatusReadOnly>
   );
 };
 
-const MUI_NAME = 'EditStatus';
-const StyledEditStatus = styled('div', {
+const MUI_NAME = 'TaskStatusReadOnly';
+const StyledTaskStatusReadOnly = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -132,10 +112,10 @@ const StyledEditStatus = styled('div', {
     justifyContent: "space-between",
     alignItems: "center",
 
-    '& .EditStatus-progressBar': {
-      width: '60%'
+    '& .TaskStatusReadOnly-progressBar': {
+      width: '100%'
     },
-    '& .EditStatus-backgroundTrack': {
+    '& .TaskStatusReadOnly-backgroundTrack': {
       width: '100%',
       height: theme.spacing(2),
       backgroundColor: '#eee',
@@ -143,7 +123,7 @@ const StyledEditStatus = styled('div', {
       overflow: 'hidden',
       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)',
     },
-    '& .EditStatus-progressDesc': {
+    '& .TaskStatusReadOnly-progressDesc': {
       marginTop: theme.spacing(0.5),
       textAlign: 'right',
       ...theme.typography.caption

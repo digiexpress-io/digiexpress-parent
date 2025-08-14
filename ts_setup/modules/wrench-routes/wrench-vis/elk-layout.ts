@@ -1,4 +1,7 @@
-import ELK, { ElkExtendedEdge, ElkNode } from 'elkjs';
+
+// BUG - https://github.com/kieler/elkjs/issues/142
+import ELK, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled.js';
+
 import { Node as xyflowNode, Edge as xyflowEdge, MarkerType, Position } from '@xyflow/react';
 import { Model, Edge, Node } from './vis-types';
 

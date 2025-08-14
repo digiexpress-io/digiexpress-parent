@@ -19,12 +19,27 @@ const formatAnyDateShort = (value: Date | string | undefined): string => {
 
 export interface NotesEditorProps {
   task: TaskApi.Task;
+  noteText: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
+export const NotesEditor: React.FC<NotesEditorProps> = ({ task, noteText, onChange }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const internalComments = task.comments?.filter(c => !c.external) || [];
+  const internalComments = task.comments?.filter(c => !c.external)
+    .sort((a, b) => DateTime.fromISO(a.created).toMillis() - DateTime.fromISO(b.created).toMillis())
+    || [];
+
+
+  const lastNoteRef = React.useRef<HTMLDivElement | null>(null);
+  const internalCommentCount = internalComments.length;
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      lastNoteRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [internalCommentCount]);
+
 
 
   return (
@@ -53,14 +68,15 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task }) => {
             </Box>
           </Box>
         ))}
+        <div ref={lastNoteRef} style={{ height: '32px' }} />
+
       </Box>
       <Box className={classes.inputBox}>
         <Box className={classes.inputBoxTitle}>
           <EditIcon color='primary' />
           <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.note.newNote', defaultMessage: 'Write a new note' })}</Typography>
         </Box>
-        <StyledTextField multiline rows={4} />
-
+        <StyledTextField multiline rows={4} value={noteText} onChange={onChange} />
       </Box>
     </StyledNotesEditor>
   )
@@ -121,10 +137,6 @@ const StyledNotesEditor = styled('div', {
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
   marginTop: 0,
-  '& .MuiOutlinedInput-root': {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-  },
   '& .MuiInputBase-input': {
     height: '2.5rem',
     padding: '0 12px',

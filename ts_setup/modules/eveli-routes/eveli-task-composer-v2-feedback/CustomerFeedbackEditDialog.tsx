@@ -3,22 +3,23 @@ import { TaskApi } from '@dxs-ts/eveli-api';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Zoom } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
+
 import { PublishedNotifier } from './PublishedNotifier';
+import { UpsertOneFeedback } from '../eveli-task-feedback';
 
 
 export interface CustomerFeedbackEditProps {
-  task: TaskApi.Task;
+  task: TaskApi.Task,
   open: boolean,
   onClose: () => void
 }
 
-export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = ({ task, open, onClose }) => {
+export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = ({ open, onClose, task }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
 
-
   return (
-    <StyledDialog fullWidth maxWidth='xl' className={classes.customerFeedbackEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
+    <StyledDialog fullScreen className={classes.customerFeedbackEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle sx={{ display: 'flex' }}>
         {intl.formatMessage({ id: 'task.customerFeedback', defaultMessage: 'Customer feedback' })}
@@ -31,12 +32,12 @@ export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = (
       </DialogTitle>
 
       <DialogContent>
-        feedback
+        <UpsertOneFeedback taskRef={task.taskRef!} onComplete={() => { }} reload={0} allowDelete={false} />
       </DialogContent>
 
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button>{intl.formatMessage({ id: 'button.save' })}</Button>
+        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.save' })}</Button>
       </DialogActions>
     </StyledDialog>
   )
@@ -63,7 +64,7 @@ const StyledDialog = styled(Dialog, {
     '.MuiDialogContent-root': {
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden'
+      // overflow: 'hidden'
     }
   };
 })

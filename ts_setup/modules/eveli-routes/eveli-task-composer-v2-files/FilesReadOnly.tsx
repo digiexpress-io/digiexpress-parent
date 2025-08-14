@@ -24,16 +24,19 @@ export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => 
   const classes = useUtilityClasses();
 
   if (!files.length || files.length === 0) {
-    return <>{intl.formatMessage({ id: 'task.file.none', defaultMessage: 'No files found' })}</>
+    return (
+      <Typography sx={{ ...style.bodyTypography }} color='error'>
+        {intl.formatMessage({ id: 'task.file.none', defaultMessage: 'No files found' })}
+      </Typography>)
   }
   return (
     <TaskFiles className={classes.root} style={style}>
       {files.map((file) => (<div key={file.id}>
         <Box className={classes.file}>
           <DescriptionIcon className={classes.fileIcon} />
-          <Typography sx={{ ...style }}>{file.name}</Typography>
+          <Typography sx={{ ...style.bodyTypography }}>{file.name}</Typography>
           <Box flexGrow={1} />
-          <Typography sx={{ ...style }}>{file.uploadedAt}</Typography>
+          <Typography sx={{ ...style.bodyTypography }}>{file.uploadedAt}</Typography>
         </Box>
         <Divider />
       </div>

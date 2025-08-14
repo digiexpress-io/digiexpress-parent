@@ -1,1 +1,1 @@
-export * from './TaskStatus';
+export * from './TaskStatusReadOnly';

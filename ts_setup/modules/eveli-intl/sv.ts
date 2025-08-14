@@ -156,7 +156,7 @@ export const sv = {
   'button.select': 'Select',
   'error.minTextLength': 'Texten måste vara minst {minLength} tecken lång.',
   'error.maxTextLength': 'Texten måste vara max {max} tecken lång.',
-  'error.valueRequired': 'Nödvändig',
+  'error.valueRequired': '* Nödvändig',
   'error.title': 'Fel!',
   'error.dialob.session': 'Blanketten kan inte öppnas just nu. Vänligen försök på nytt senare',
   'error.errorLoadingData': 'Fel då försöker ladda data',

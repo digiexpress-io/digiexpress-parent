@@ -9,24 +9,25 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import HistoryIcon from '@mui/icons-material/History';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import dialob_logo from './dialob_logo.svg';
-
+import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
-import { useFetch } from '@dxs-ts/envir-fetch';
-import { TaskApi } from '@dxs-ts/eveli-api';
 import { FormReviewDrawer } from './FormReviewDrawer';
-
-
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
-import { TaskPriority } from '../eveli-task-composer-v2-priority';
-import { TaskStatus } from '../eveli-task-composer-v2-status';
+import { TaskPriorityReadOnly } from '../eveli-task-composer-v2-priority';
+import { TaskStatusReadOnly } from '../eveli-task-composer-v2-status';
 
 import { NotesEditDialog, NotesTruncated } from '../eveli-task-composer-v2-notes';
 import { TaskRolesReadOnly } from '../eveli-task-composer-v2-roles';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../eveli-task-composer-v2-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../eveli-task-composer-v2-feedback';
 import { FilesReadOnly, FilesEditDialog } from '../eveli-task-composer-v2-files';
-import { TaskAssignee } from '../eveli-task-composer-v2-assignee';
+import { TaskAssigneeReadOnly } from '../eveli-task-composer-v2-assignee';
+
+import { AssigneeRolesEditDialog } from '../eveli-task-composer-v2-assignee-roles-edit';
+import { EveliTaskDashboardContextProvider, useTaskDashboard } from './EveliTaskDashboardContext';
+import { PriorityStatusEditDialog } from '../eveli-task-composer-v2-priority-status-edit';
+
 import {
   DraggableCardWrapper, useDragCardController,
   CardConfigContextProvider,
@@ -35,22 +36,24 @@ import {
   TaskCardStyleSelect,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../eveli-task-composer-v2-task-card';
-import { useIntl } from 'react-intl';
 
 
 
-const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ cardId, task }) => {
+
+const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const intl = useIntl();
-  const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, setEditCard } = useCardConfig();
+  const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard } = useCardConfig();
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
-
+  const { task } = useTaskDashboard();
 
   const commonProps = {
     id: cardId,
     styleVariant: cardTheme,
     flashy: isCardFlashy(cardId),
     onToggleFlashy: () => toggleCardFlashy(cardId),
+    altView: isCardAltView(cardId),
+    onToggleAltView: () => toggleCardAltView(cardId),
     onReview: toggleReview,
   };
 
@@ -72,7 +75,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && (<TaskEditDialog task={task} open onClose={handleEditClose} />)}
+          editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
         >
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
@@ -106,11 +109,14 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.statusAndPriority', defaultMessage: 'Status and Priority' })}
           {...commonProps}
           isMenu
+          onEdit={handleEdit}
+          onDoubleClick={handleEdit}
+          editDialog={editingCardId === cardId && (<PriorityStatusEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
           <Stack direction="column" height="100%">
-            <TaskStatus style={style} />
+            <TaskStatusReadOnly style={style} />
             <Divider sx={{ my: 1 }} />
-            <TaskPriority style={style} />
+            <TaskPriorityReadOnly style={style} />
           </Stack>
         </TaskCard>
       );
@@ -120,10 +126,14 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees', defaultMessage: 'Roles and Assignees' })}
           {...commonProps}
           isMenu
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={editingCardId === cardId && (<AssigneeRolesEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles', defaultMessage: 'Roles' })} value={<TaskRolesReadOnly task={task} />} style={style} />
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles', defaultMessage: 'Roles' })} style={style} value={<TaskRolesReadOnly task={task} style={style} />}
+          />
           <Divider sx={{ my: 1 }} />
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee', defaultMessage: 'Assignee' })} value={<TaskAssignee task={task} />} style={style} />
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee', defaultMessage: 'Assignee' })} style={style} value={<TaskAssigneeReadOnly task={task} style={style} />} />
         </TaskCard>
       );
 
@@ -135,7 +145,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
           onEdit={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
           onDoubleClick={handleEdit}
-          editDialog={isEditOpen && (<CustomerMessagesEditDialog task={task} open onClose={handleEditClose} />)}
+          editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
         >
           <CustomerMessagesReadOnly task={task} style={style} />
         </TaskCard>
@@ -177,7 +187,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
-          editDialog={isEditOpen && (<NotesEditDialog task={task} open onClose={handleEditClose} />)}
+          editDialog={isEditOpen && (<NotesEditDialog open onClose={handleEditClose} />)}
         >
           <NotesTruncated task={task} style={style} />
         </TaskCard>
@@ -201,12 +211,13 @@ const CardFactory: React.FC<{ cardId: TaskCardId, task: TaskApi.Task }> = ({ car
 
 
 
-const EveliTaskDashboardInternal: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
+const EveliTaskDashboardInternal: React.FC = () => {
   const { cardOrder, isReviewOpen, cardTheme, setCardTheme, toggleReview } = useCardConfig();
   const { getDragPropsForId } = useDragCardController();
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
+  const { task } = useTaskDashboard();
 
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
@@ -222,7 +233,7 @@ const EveliTaskDashboardInternal: React.FC<{ task: TaskApi.Task }> = ({ task }) 
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-              <CardFactory cardId={cardId} task={task} />
+              <CardFactory cardId={cardId} />
             </DraggableCardWrapper>
           </Grid2>
         ))}
@@ -235,24 +246,15 @@ const EveliTaskDashboardInternal: React.FC<{ task: TaskApi.Task }> = ({ task }) 
 
 
 export const EveliTaskDashboard: React.FC<{ taskId: string }> = (props) => {
-  const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
-  const [task, setTask] = React.useState<TaskApi.Task>();
-
-  React.useEffect(() => {
-    if (props.taskId && task === undefined) {
-      getTask(props.taskId).then(setTask);
-    }
-  }, [props.taskId, task]);
-
-  if (!task) {
-    return null;
-  }
 
 
   return (
-    <CardConfigContextProvider>
-      <EveliTaskDashboardInternal task={task} />
-    </CardConfigContextProvider>
+    <EveliTaskDashboardContextProvider taskId={props.taskId}>
+      <CardConfigContextProvider>
+        <EveliTaskDashboardInternal />
+      </CardConfigContextProvider>
+    </EveliTaskDashboardContextProvider>
+
   );
 }
 
