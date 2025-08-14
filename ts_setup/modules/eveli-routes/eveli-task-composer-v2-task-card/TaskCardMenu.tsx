@@ -85,7 +85,6 @@ export const TaskCardMenu: React.FC<CardMenuProps> = (props) => {
   function handleAltViewToggle() {
     if (props.onToggleAltView) {
       props.onToggleAltView()
-      console.log('alt view', props.altView + "")
     };
     props.onClose();
   };

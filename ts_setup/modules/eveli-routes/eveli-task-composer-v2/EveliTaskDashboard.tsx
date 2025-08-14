@@ -13,7 +13,7 @@ import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
 import { FormReviewDrawer } from './FormReviewDrawer';
-import { TaskEditDialog, TaskOverdueWarning, TaskProperties } from '../eveli-task-composer-v2-task';
+import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../eveli-task-composer-v2-task';
 import { TaskPriorityReadOnly } from '../eveli-task-composer-v2-priority';
 import { TaskStatusReadOnly } from '../eveli-task-composer-v2-status';
 
@@ -77,6 +77,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
+          altChildren={<TaskPropertiesAlt style={style} onReview={toggleReview} />} 
         >
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={

@@ -14,6 +14,8 @@ export interface TaskCardProps {
   id: TaskCardId;
   title?: string;
   children: React.ReactNode;
+  altChildren?: React.ReactNode;
+
   isMenu?: boolean;
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
@@ -35,7 +37,7 @@ interface TaskCardDataRowTextProps {
 }
 
 interface TitleTextProps {
-  children: React.ReactNode
+  children: React.ReactNode;
   style: TaskCardStyleDefinition;
 }
 
@@ -90,7 +92,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
             onReview={props.onReview}
             onEdit={handleEdit} />
         </Box>
-        {props.altView ? <TaskPropertiesAlt /> : props.children}
+        {props.altView ? props.altChildren : props.children}
       </Box>
     </TaskSectionCard>
   </>
