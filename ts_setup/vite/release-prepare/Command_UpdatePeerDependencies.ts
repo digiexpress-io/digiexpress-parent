@@ -3,6 +3,11 @@ import { ModuleInfo, ModuleRegistry } from "../module-registry";
 import { existsSync, readFileSync } from "node:fs";
 import { BuildConfig } from '../module-registry';
 
+
+const BROKEN_MAPPING: Record<string, string> = {
+  'elkjs/lib/elk.bundled.js': 'elkjs'
+};
+
 export declare namespace Command_UpdatePeerDependencies {
   export interface Input {
     rootPath: string;
@@ -64,7 +69,18 @@ export class Command_UpdatePeerDependencies {
 
 
     const currentPeerDeps = { ...packageJson.peerDependencies };
-    const tracePeerDeps = traceData.metadata.externalDependencies;
+    // do the broken dependency fixes .... when smth is imported as smth it is not, and lib maintainers have not bothered to fix it since 2021
+    const tracePeerDeps: Record<string, string> = Object.entries(traceData.metadata.externalDependencies)
+      .reduce<Record<string, string>>((previous, current) => {
+        const workaround = BROKEN_MAPPING[current[0]];
+        if(workaround) {
+          previous[workaround] = current[1];
+        } else {
+          previous[current[0]] = current[1];
+        }
+        return previous;
+      }, {});
+    
 
     const addedPeerDependencies: Record<string, string> = {};
     const updatedPeerDependencies: Record<string, { from: string; to: string }> = {};
