@@ -5,15 +5,16 @@ import { IconButton } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import moment from 'moment'; // TODO dead library
 
-import { TaskApi, mapIamRolesList } from '@dxs-ts/eveli-api';
-import { EveliPermissions } from "@dxs-ts/eveli-primitives";
 import { useFetch } from '@dxs-ts/envir-fetch';
+import { TaskApi } from '@dxs-ts/eveli-api';
+import { EveliPermissions } from "@dxs-ts/eveli-primitives";
 
 import { EveliTaskTableContext } from "./EveliTaskTableProvider";
 import { TaskLink } from "./TaskLink";
 import { TaskStatusIndicator } from "./TaskStatusIndicator";
 import { TaskPriorityIndicator } from "./TaskPriorityIndicator";
 import { TaskAdditionalInfo } from "./TaskAdditionalInfo";
+
 
 
 const formatTime = (time: any) => {
@@ -68,9 +69,17 @@ export interface TableState {
 
 export function useTasksTableState(): TableState {
   const { deleteTask } = useFetch('worker/rest/api/tasks/$taskId.DELETE', {});
+  const { groups } = useFetch('$org/groupsList.GET', {});
   const intl = useIntl();
   const tableContext = React.useContext(EveliTaskTableContext);
   const tableRef = React.useRef<any>();
+
+  const mapRoleToGroupName = (role: string): string => {
+    return groups?.find(grp=> grp.id === role)?.groupName || role;
+  }
+  const mapRolesToGroupNames = (roles: string[]): string[] => {
+    return roles.map(role => mapRoleToGroupName(role));
+  }
 
   return {
     tableRef,
@@ -142,7 +151,7 @@ export function useTasksTableState(): TableState {
         field: 'assignedRoles',
         headerStyle: { fontWeight: 'bold' },
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'assignedRoles')?.value || '',
-        render: data => mapIamRolesList(data.assignedRoles).join(),
+        render: data => mapRolesToGroupNames(data.assignedRoles!).join(),
         sorting: false,
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "assignedRoles").hidden
       },

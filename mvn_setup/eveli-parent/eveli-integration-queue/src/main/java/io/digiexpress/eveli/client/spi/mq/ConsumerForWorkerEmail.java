@@ -63,7 +63,9 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   public MessageResponse accept(QueueMessage msg) {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
-      
+      if (log.isDebugEnabled()) {
+        log.debug("Handling email queue message: id: {}, body: {}", msg.getId(), notification);
+      }
       commsClient.createEmail()
         .message(getMessage(notification))
         .title(getTitle(notification))

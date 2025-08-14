@@ -89,7 +89,7 @@ export function useSavedTableFilters(tableId: string) {
     const _updated = await restApi().updateUiSettings({
       commandType: 'UpsertUiSettings',
       settingsId: settingId,
-      userId: user.userId,
+      userId: user.name,
       visibility: [],
       config: Object.values(configs)
     });

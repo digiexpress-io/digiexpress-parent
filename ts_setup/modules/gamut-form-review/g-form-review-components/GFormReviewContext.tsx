@@ -70,7 +70,7 @@ export class GFormReviewContextType {
 
   public getAnswer(itemId: string, answerId: string | null = null): any | null {
     let aID = answerId ? answerId : itemId;
-    let answer = this.questionnaire.answers.find(e => e.id === aID);
+    let answer = this.questionnaire.answers?.find(e => e.id === aID);
     if (answer) {
       return answer.value;
     }

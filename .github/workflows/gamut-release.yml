@@ -4,14 +4,14 @@ on:
       - 'ts_setup/gamut/**'
 
     branches:
-      - dev
+      - prod_1.x
   workflow_call: # Enables manual triggering
-  workflow_dispatch: #manual trigger
+  workflow_dispatch: #manual triggering
 permissions:
   contents: write
   id-token: write
     
-name: Release Gamut
+name: Release Gamut prod_1.x
 jobs:
     build:
       runs-on: ubuntu-latest  # windows-latest || macos-latest
@@ -44,7 +44,7 @@ jobs:
 #          run: pnpm test -r
 
         - name: Run 'gamut-release.sh'  
-          run: ./build-scripts/gamut-release.sh
+          run: ./build-scripts/gamut-release.sh prod_1.x
           env:
             CI: false # 
             BOT_EMAIL: jocelyn.mutso@resys.io 

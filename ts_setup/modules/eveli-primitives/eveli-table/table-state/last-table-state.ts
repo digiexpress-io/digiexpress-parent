@@ -25,7 +25,7 @@ export function useLastTableState(tableId: string) {
         restApi().updateUiSettings({
           commandType: 'UpsertUiSettings',
           settingsId,
-          userId: user.userId,
+          userId: user.name,
           visibility: [],
 
           // always one value... last state of the table rules
