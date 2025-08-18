@@ -8,6 +8,7 @@ import { Command_UpdateAllPackageJsonTsVersions } from './Command_UpdateAllPacka
 import { Command_SaveVersionsFile } from './Command_SaveVersionsFile'
 import { Command_BackupPackageJson } from './Command_BackupPackageJson'
 import { Command_ExtractGitHistory } from "./Command_ExtractGitHistory";
+import { Command_SaveLogFile } from "./Command_SaveLogFile";
 
 
 export interface VersioningBuilderOptions {
@@ -65,6 +66,7 @@ export class ReleasePrepareBuilder {
     const saveVersionsCmd = new Command_SaveVersionsFile();
     const commitLogCmd = new Command_ExtractGitHistory();
     const versionTsCmd = new Command_UpdateAllPackageJsonTsVersions();
+    const saveCommitLogCmd = new Command_SaveLogFile();
 
 
     // Step 1: Load existing versions file
@@ -99,13 +101,12 @@ export class ReleasePrepareBuilder {
       changedProfiles,
       rootPath: this.options.rootPath
     });
-    const { moduleCommits } = commitLogCmd.execute({ registry, rootPath: this.options.rootPath });
+ 
     versionTsCmd.execute({
       registry,
       updatedVersions,
       changedProfiles,
       trace,
-      moduleCommits,
       rootPath: this.options.rootPath
     });
 
@@ -114,6 +115,18 @@ export class ReleasePrepareBuilder {
       versionsFile: updatedVersions,
       versionsFilePath: this.options.versionsFilePath
     });
+
+    // Step 7: Save commit log
+    const { moduleLogs } = commitLogCmd.execute({ registry, rootPath: this.options.rootPath });
+    const {} = saveCommitLogCmd.execute({
+      versionsFile: updatedVersions,
+      rootPath: this.options.rootPath,
+      moduleLogs,
+      registry,
+      changedProfiles,
+      trace,
+    });
+
 
     // Calculate summary
     const newProfiles = buildProfiles.length - Object.keys(existingVersions).length;

@@ -775,10 +775,10 @@
         "@tanstack/react-router",
         "@mui/utils",
         "notistack",
-        "@mui/system",
         "recharts",
         "moment",
         "@dxs-ts/gamut-shell",
+        "@mui/system",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/wrench-api",
@@ -796,9 +796,9 @@
         "@tanstack/react-router",
         "@mui/utils",
         "notistack",
-        "@mui/system",
         "recharts",
-        "moment"
+        "moment",
+        "@mui/system"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/gamut-form-review",
@@ -2560,6 +2560,6 @@
       ]
     }
   },
-  "checksum": "9da5ec446f0a3bc9345ac57123dec8f76206d803a43dde6a1148e0cf1ed582a1",
-  "generatedAt": "2025-08-14T09:45:51.648Z"
+  "checksum": "79ac74c1440624364bb7ff12b6f9c2cabdb3ee9c51c4f203c6adead4ceeb977e",
+  "generatedAt": "2025-08-18T08:18:13.293Z"
 }

@@ -21,10 +21,11 @@ jobs:
         NODE_ENV: test
         CI: true
         
-      name: Release Gamut into NPMJS 
+      name: Release TS projects into NPMJS 
       steps:
         - uses: actions/checkout@v4
-
+          with:
+            fetch-depth: 501
         - uses: pnpm/action-setup@v2
           name: install pnpm
           with:
@@ -49,3 +50,27 @@ jobs:
             BOT_EMAIL: jocelyn.mutso@resys.io 
             BOT_NAME: jocelyn.mutso
             NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+
+        - name: Generate Magnificent Build Summary ✨
+          run: |
+            # Make the script executable
+            chmod +x ./.release-scripts/generate-summary.sh
+            # Run our summary generator
+            ./.release-scripts/generate-summary.sh
+          env:
+            GITHUB_STEP_SUMMARY: ${{ runner.temp }}/build-summary.md
+
+        - name: Create Release with Build Summary 🚀
+          run: |
+            # Generate release tag with timestamp
+            RELEASE_TAG="build-$(date +%Y%m%d-%H%M%S)"
+            RELEASE_TITLE="Build Summary - $(date +'%Y-%m-%d %H:%M')"
+            
+            # Create release with summary
+            gh release create $RELEASE_TAG \
+              --title "$RELEASE_TITLE" \
+              --notes-file "${GITHUB_STEP_SUMMARY:-build-summary.md}" \
+              --prerelease \
+              --generate-notes
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
