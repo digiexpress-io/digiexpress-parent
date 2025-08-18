@@ -38,7 +38,7 @@ const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
     showFlashyToggle: true,
     showEdit: true
   },
-  'task-meta': {
+  'task_meta': {
     showFlashyToggle: true
   },
   default: {

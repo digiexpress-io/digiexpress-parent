@@ -7,7 +7,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardMenu } from './TaskCardMenu';
 import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
 import { TaskCardId, TaskCardStyleKey } from './CardConfigContext';
-import { TaskPropertiesAlt } from '../eveli-task-composer-v2-task';
 
 
 export interface TaskCardProps {

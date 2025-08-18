@@ -49,7 +49,7 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
       titleTypography: theme.typography.h4,
       bodyTypography: theme.typography.body2,
       bodyTypographySmall: theme.typography.subtitle2,
-      cardSpacing: theme.spacing(2),
+      cardSpacing: theme.spacing(1),
       dataRowGridSizes: {
         label: { xs: 4, sm: 4, md: 4, lg: 4, xl: 4 },
         value: { xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }
@@ -67,7 +67,7 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
         paddingBottom: theme.spacing(0.5)
       },
       bodyTypographySmall: theme.typography.body2,
-      cardSpacing: theme.spacing(3),
+      cardSpacing: theme.spacing(2),
 
       dataRowGridSizes: {
         label: isReviewOpen ? singleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
