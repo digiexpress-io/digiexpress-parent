@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { BuildConfig, ModuleRegistry, VersionsFile, ModuleCommits } from "../module-registry";
+import { BuildConfig, ModuleRegistry, VersionsFile } from "../module-registry";
 
 
 
@@ -11,7 +11,6 @@ export declare namespace Command_UpdateAllPackageJsonTsVersions {
     updatedVersions: VersionsFile;
     changedProfiles: string[];
     trace: Record<string, BuildConfig>;
-    moduleCommits: ModuleCommits;
   }
   
   export interface Result {
@@ -48,7 +47,6 @@ export class Command_UpdateAllPackageJsonTsVersions {
         `export const renderVersion = () => VersionInfoApi.builder()
           .setLogo('logo_1_great_ones_wisdom')
           .setTheme('red')
-          .setCommits(${JSON.stringify(input.moduleCommits)})
           .setProjectInfo('${moduleInfo.name}', '${versionEntry.version}', '${date_formated}')
           .addInternalComponents([${moduleTrace.metadata.internalDependencies.map(e => "'"+ e + "'").join(',')}])
           .addExternalComponents([${Object.entries(moduleTrace.metadata.externalDependencies).map(e => "'"+ e[0] + "@" + e[1] + "'").join(',')}])

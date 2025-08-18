@@ -1,11 +1,11 @@
 import { resolve } from 'node:path';
 
 import { BuildProfile, ModuleInfo, ModuleRegistry } from './module-registry-types';
-import { Command_CreateBuildProfiles } from './Command_CreateBuildProfiles';
-import { Command_FindImports } from './Command_FindImports';
-import { Command_FindModules } from './Command_FindModules';
-import { Command_CreateDepGraph } from './Command_CreateDepGraph';
-import { Command_CreateChecksum } from './Command_CreateChecksum';
+import { Command_CreateBuildProfiles } from './model-commands/Command_CreateBuildProfiles';
+import { Command_FindImports } from './model-commands/Command_FindImports';
+import { Command_FindModules } from './model-commands/Command_FindModules';
+import { Command_CreateDepGraph } from './model-commands/Command_CreateDepGraph';
+import { Command_CreateChecksum } from './model-commands/Command_CreateChecksum';
 
 
 export class ModuleRegistryBuilder {

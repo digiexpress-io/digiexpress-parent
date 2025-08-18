@@ -61,14 +61,7 @@ export interface ModuleRegistry {
 }
 
 
-export type ModuleCommits = Array<{
-  moduleName: string;
-  commits: Array<{ 
-    date: string; 
-    hash: string; 
-    author: string; 
-  }>;
-}>;
+
 
 // ============================================================================
 // VALIDATION TYPES
@@ -155,4 +148,29 @@ export interface BuildConfig {
     internalDependencies: string[]; 
     externalDependencies: Record<string, string>;
   }
+}
+
+
+
+export interface ModuleLog {
+  moduleName: string;
+  logs: ModuleCommitLog[];
+}
+
+export interface ModuleCommitLog {
+  hash: string;
+  date: string;
+  author: string;
+  comment: string;
+  issueId: string;
+  files: string[]
+}
+
+export interface ReleaseCommitLog {
+  hash: string;
+  date: string;
+  comment: string;
+  issueId: string;
+  author: string;
+  modules: string[];  // Module names instead of files
 }
