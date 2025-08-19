@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { createHash } from 'node:crypto';
 
-import { ModuleInfo } from './module-registry-types';
+import { ModuleInfo } from '../module-registry-types';
 
 
 export declare namespace Command_CreateChecksum {
@@ -34,19 +34,19 @@ export class Command_CreateChecksum {
 
       // Add dependency analysis results
       hash.update(JSON.stringify({
-        dependencies: moduleInfo.dependencies,
-        actualDependencies: moduleInfo.actualDependencies,
-        missingDependencies: moduleInfo.missingDependencies,
-        unusedDependencies: moduleInfo.unusedDependencies,
-        internalDependencies: moduleInfo.internalDependencies,
-        externalDependencies: moduleInfo.externalDependencies,
-        actualInternalDependencies: moduleInfo.actualInternalDependencies,
-        actualExternalDependencies: moduleInfo.actualExternalDependencies
+        dependencies: moduleInfo.dependencies.sort((a, b) => b.localeCompare(a)),
+        actualDependencies: moduleInfo.actualDependencies.sort((a, b) => b.localeCompare(a)),
+        missingDependencies: moduleInfo.missingDependencies.sort((a, b) => b.localeCompare(a)),
+        unusedDependencies: moduleInfo.unusedDependencies.sort((a, b) => b.localeCompare(a)),
+        internalDependencies: moduleInfo.internalDependencies.sort((a, b) => b.localeCompare(a)),
+        externalDependencies: moduleInfo.externalDependencies.sort((a, b) => b.localeCompare(a)),
+        actualInternalDependencies: moduleInfo.actualInternalDependencies.sort((a, b) => b.localeCompare(a)),
+        actualExternalDependencies: moduleInfo.actualExternalDependencies.sort((a, b) => b.localeCompare(a))
       }));
 
       // Add all source file contents
       const modulePath = join(rootPath, moduleInfo.path);
-      _addDirectoryToHash(modulePath, hash);
+      _addDirectoryToHash(rootPath, modulePath, hash);
     }
 
     const checksum = hash.digest('hex');
@@ -57,7 +57,7 @@ export class Command_CreateChecksum {
 }
 
 // Pure transformative functions
-function _addDirectoryToHash(dirPath: string, hash: ReturnType<typeof createHash>): void {
+function _addDirectoryToHash(rootPath: string, dirPath: string, hash: ReturnType<typeof createHash>): void {
   const entries = readdirSync(dirPath).sort(); // Sort for consistent hashing
 
   for (const entry of entries) {
@@ -68,19 +68,20 @@ function _addDirectoryToHash(dirPath: string, hash: ReturnType<typeof createHash
       // Skip node_modules and dist directories
       if (!['node_modules', 'dist', '.git'].includes(entry)) {
         hash.update(`dir:${entry}`);
-        _addDirectoryToHash(fullPath, hash);
+        _addDirectoryToHash(rootPath, fullPath, hash);
       }
     } else if (stat.isFile()) {
       // Include TypeScript/JavaScript files and package.json
       const ext = extname(entry);
+      const relative = fullPath.substring(rootPath.length);
       if (['.ts', '.tsx', '.js', '.jsx'].includes(ext) || entry === 'package.json') {
         try {
           const content = readFileSync(fullPath, 'utf-8');
-          hash.update(`file:${entry}`);
+          hash.update(`file:${relative}`);
           hash.update(content);
         } catch (error) {
           // If we can't read the file, just include its name
-          hash.update(`file:${entry}:unreadable`);
+          hash.update(`file:${relative}:unreadable`);
         }
       }
     }

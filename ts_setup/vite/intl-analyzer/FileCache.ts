@@ -20,13 +20,11 @@ export class FileCache {
     // Check cache first
     if (this.cache.has(modulePath)) {
       this.stats.hits++;
-      console.log(`📚 Cache HIT for module: ${modulePath} (${this.cache.get(modulePath)!.length} files)`);
       return this.cache.get(modulePath)!;
     }
 
     // Cache miss - read files from disk
     this.stats.misses++;
-    console.log(`📁 Cache MISS - Reading files from: ${modulePath}`);
     
     const startTime = Date.now();
     

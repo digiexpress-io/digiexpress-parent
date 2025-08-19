@@ -1,4 +1,4 @@
-import { ModuleInfo, DependencyGraph } from './module-registry-types';
+import { ModuleInfo, DependencyGraph } from '../module-registry-types';
 
 export declare namespace Command_CreateDepGraph {
   export interface Input {

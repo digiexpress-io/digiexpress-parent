@@ -27,7 +27,6 @@ export class Command_AnalyzeOneFileUsage_Phase3 {
     const groupPatterns = this.buildGroupPatterns(this.knownGroups, translationKeys);
     
     if (groupPatterns.size === 0) {
-      console.log(`  🔍 Phase 3: No matching group patterns found for ${translationKeys.size} keys`);
       return usageMap;
     }
     const lines = fileContent.split('\n');

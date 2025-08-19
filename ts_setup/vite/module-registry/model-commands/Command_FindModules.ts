@@ -1,6 +1,6 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
-import { ModuleInfo } from './module-registry-types';
+import { ModuleInfo } from '../module-registry-types';
 
 
 export declare namespace Command_FindModules {

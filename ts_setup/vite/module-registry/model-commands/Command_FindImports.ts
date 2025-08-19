@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
-import { ModuleInfo } from './module-registry-types';
+import { ModuleInfo } from '../module-registry-types';
 
 export declare namespace Command_FindImports {
   export interface Input {

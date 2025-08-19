@@ -1,4 +1,4 @@
-import { ModuleInfo, BuildProfile } from './module-registry-types';
+import { ModuleInfo, BuildProfile } from '../module-registry-types';
 
 
 export declare namespace Command_CreateBuildProfiles {
