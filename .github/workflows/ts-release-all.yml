@@ -18,7 +18,7 @@ jobs:
         run:
           working-directory: ts_setup
       env:
-        NODE_ENV: test
+        NODE_ENV: production
         CI: true
         
       name: Release TS projects into NPMJS 
