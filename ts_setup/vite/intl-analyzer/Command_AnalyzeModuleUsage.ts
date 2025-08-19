@@ -11,6 +11,7 @@ export declare namespace Command_AnalyzeModuleUsage {
     translationLines: Line[];
     targetModules: string;
     targetModuleAlias: Record<string, string[]>;
+    rootPath: string;
     moduleRegistry: ModuleRegistry;
     fileCache: FileCache;
     knownGroups: string[];
@@ -83,6 +84,7 @@ export class Command_AnalyzeModuleUsage {
     const phase1Results = await this.scanAllModulesForIntlUsage(
       input.fileCache,
       this.orphanedKeys,
+      input.rootPath,
       input.moduleRegistry,
       input.targetModules,
       input.targetModuleAlias,
@@ -109,6 +111,7 @@ export class Command_AnalyzeModuleUsage {
     const phase2Results = await this.scanAllModulesForIntlUsage(
       input.fileCache,
       this.orphanedKeys,
+      input.rootPath,
       input.moduleRegistry,
       input.targetModules,
       input.targetModuleAlias,
@@ -135,6 +138,7 @@ export class Command_AnalyzeModuleUsage {
     const phase3Results = await this.scanAllModulesForIntlUsage(
       input.fileCache,
       this.orphanedKeys,
+      input.rootPath,
       input.moduleRegistry,
       input.targetModules,
       input.targetModuleAlias,
@@ -174,6 +178,7 @@ export class Command_AnalyzeModuleUsage {
   private async scanAllModulesForIntlUsage(
     fileCache: FileCache,
     translationKeys: Set<string>,
+    rootPath: string,
     moduleRegistry: ModuleRegistry,
     targetModule: string,
     targetModuleAlias: Record<string, string[]>,
@@ -203,7 +208,7 @@ export class Command_AnalyzeModuleUsage {
         moduleName,
         moduleInfo,
         translationKeys,
-        rootPath: moduleRegistry.rootPath,
+        rootPath,
         command: phaseCommand
       });
 

@@ -18,6 +18,7 @@ export function buildOneModuleIntl(props: {
       const rootPath = process.cwd();
       const registry = new ModuleRegistryCacheBuilder().build(rootPath, false);
       const analyzer = new IntlAnalyzer()
+        .withRootPath(rootPath)
         .withInputCsv(props.inputCsv)
         .withOutputCsv(props.outputCsv)
         .withModuleRegistry(registry)

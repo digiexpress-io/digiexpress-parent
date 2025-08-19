@@ -15,6 +15,7 @@ import { FileCache } from './FileCache';
 export class IntlAnalyzer {
   private inputCsv?: string;
   private outputCsv?: string;
+  private rootPath?: string;
   private moduleRegistry?: ModuleRegistry;
   private targetModules = '';
   private targetModuleAlias: Record<string, string[]> = {};
@@ -48,11 +49,15 @@ export class IntlAnalyzer {
     this.knownGroups = knownGroups;
     return this;
   }
-
+  withRootPath(rootPath: string): IntlAnalyzer {
+    this.rootPath = rootPath;
+    return this;
+  }
   async build(): Promise<Command_GenerateOutputCsv.Result> {
     if (!this.inputCsv) throw new Error('Input CSV path is required');
     if (!this.outputCsv) throw new Error('Output CSV path is required');
     if (!this.moduleRegistry) throw new Error('Module registry is required');
+    if (!this.rootPath) throw new Error('rootPath is required');
 
     console.log('🎯 Starting IntlAnalyzer pipeline...');
     console.log('━'.repeat(50));
@@ -79,7 +84,8 @@ export class IntlAnalyzer {
       moduleRegistry: this.moduleRegistry,
       targetModules: this.targetModules,
       targetModuleAlias: this.targetModuleAlias,
-      knownGroups: this.knownGroups
+      knownGroups: this.knownGroups,
+      rootPath: this.rootPath
     });
 
     const groupResult = new Command_GroupKeysByModule().execute({
