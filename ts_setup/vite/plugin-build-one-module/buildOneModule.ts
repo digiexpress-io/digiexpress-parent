@@ -20,7 +20,13 @@ export function buildOneModule(user_options: ModuleCompilerOptions & {
       return {
         resolve: built.resolve,
         build: built.build,
-        mode: 'production'
+        mode: 'production',
+        esbuild: {
+          jsx: 'automatic',
+          define: {
+            'process.env.NODE_ENV': '"production"'
+          }
+        }
       }
     },
     closeBundle(error) {
