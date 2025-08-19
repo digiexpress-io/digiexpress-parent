@@ -3,7 +3,7 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 
 
-const ignore_packages = ['react/jsx-dev-runtime'];
+const ignore_packages: string[] = [];
 
 export declare namespace Command_ResolvePackageVersions {
   export interface Input {

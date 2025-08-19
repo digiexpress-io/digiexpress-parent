@@ -26,8 +26,6 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
   return {
     mode: 'production',
     base: process.env.PUBLIC_URL || '',
-
-
     plugins: [
 
       react({}),
