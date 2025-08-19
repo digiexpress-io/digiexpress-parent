@@ -9,6 +9,11 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { SQUARE_WIDTH } from './calendar_constants';
+
+
+
+
 // Calendar Header Component
 export const CalendarHeader: React.FC<{
   currentDate: Date;
@@ -20,7 +25,8 @@ export const CalendarHeader: React.FC<{
 
 }> = ({ currentDate, onPreviousMonth, onNextMonth, onPreviousYear, onNextYear, onYearClick }) => {
   
-  const width = (48 + 8) * 7;
+  const width = (SQUARE_WIDTH + 8) * 7;
+  
   return (
     <Box minWidth={width} width={width} >
       <Box display='flex' paddingRight={1} alignItems='center'>

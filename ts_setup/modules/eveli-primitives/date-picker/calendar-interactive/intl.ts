@@ -31,12 +31,15 @@ function formatMonthName(locale: string): Record<string, string> {
   for (let i = 0; i < 12; i++) {
     const month = startDate.plus({ months: i });
     const formatted = month.setLocale(locale).toFormat('MMMM'); // Full month name
-    monthNames['calendar.month.' + i] = formatted;
+    monthNames['calendar.month.' + i] = capitalize(formatted);
   }
   
   return monthNames;
 }
 
+function capitalize(s: string){
+    return String(s[0]).toUpperCase() + String(s).slice(1);
+}
 
 export function getMessages(locale: string): Record<string, string> {
   return {
