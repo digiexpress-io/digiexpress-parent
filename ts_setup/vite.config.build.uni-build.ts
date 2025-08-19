@@ -50,5 +50,11 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         }).build(),
       })
     ],
+    esbuild: {
+      jsx: 'automatic',
+      define: {
+        'process.env.NODE_ENV': '"production"'
+      }
+    },
   }
 }

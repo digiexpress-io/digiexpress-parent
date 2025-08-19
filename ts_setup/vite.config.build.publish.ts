@@ -16,6 +16,12 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         branchName: 'dev'
       })
     ],
+    esbuild: {
+      jsx: 'automatic',
+      define: {
+        'process.env.NODE_ENV': '"production"'
+      }
+    },
     build: {
       lib: {
         entry: 'vite/dummy.js',
