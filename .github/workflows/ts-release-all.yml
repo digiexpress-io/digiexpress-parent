@@ -31,6 +31,12 @@ jobs:
           with:
             version: 10
 
+        - name: Debug environment
+          run: |
+            echo "NODE_ENV: $NODE_ENV"
+            node --version
+            npm --version
+
         - uses: actions/setup-node@v4
           with:
             node-version: 22
