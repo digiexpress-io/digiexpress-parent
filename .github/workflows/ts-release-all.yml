@@ -18,7 +18,7 @@ jobs:
         run:
           working-directory: ts_setup
       env:
-        NODE_ENV: test
+        NODE_ENV: production
         CI: true
         
       name: Release TS projects into NPMJS 
@@ -30,6 +30,12 @@ jobs:
           name: install pnpm
           with:
             version: 10
+
+        - name: Debug environment
+          run: |
+            echo "NODE_ENV: $NODE_ENV"
+            node --version
+            npm --version
 
         - uses: actions/setup-node@v4
           with:

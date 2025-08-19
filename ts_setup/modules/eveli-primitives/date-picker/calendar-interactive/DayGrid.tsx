@@ -1,6 +1,8 @@
 import { Button, Grid2, Typography, alpha } from "@mui/material";
 import { FormattedMessage } from "react-intl";
+import { SQUARE_WIDTH } from "./calendar_constants";
 
+const WIDTH = `${SQUARE_WIDTH}px`;
 
 // Day Grid Component
 export const DayGrid: React.FC<{
@@ -55,7 +57,6 @@ export const DayGrid: React.FC<{
     const date = new Date(year, month, day);
     onDateSelect(date);
   };
-  
   return (
     <Grid2 container rowSpacing={1} columnSpacing={1}>
 
@@ -70,15 +71,18 @@ export const DayGrid: React.FC<{
         ))}
 
 
-         {days.map((day) => (
-          <Grid2 key={"_"+day} >
+         {days.map((day, index) => (
+          <Grid2 key={`day_${day ?? 'filler_' + index}`} >
             {day && (
               <Button
                 variant={isDateSelected(day) ? undefined : 'text' }
                 sx={{ 
                   color: isDateSelected(day) ? undefined : ((theme) => theme.palette.text.primary), 
                   fontWeight: 400, 
-                  borderRadius: '50%', minWidth: '48px', width: '48px', height: '48px' 
+                  borderRadius: '50%', 
+                  minWidth: WIDTH, 
+                  width: WIDTH, 
+                  height: WIDTH
                 }}
                 onClick={() => handleDateClick(day)}
                 disabled={isDateDisabled(day)}

@@ -13,12 +13,10 @@ export declare namespace Command_ProcessDTSImports {
 export class Command_ProcessDTSImports {
   execute(input: Command_ProcessDTSImports.Input): Command_ProcessDTSImports.Result {
     const { filePath, content } = input;
-    
-    if (!filePath.endsWith('.d.ts')) {
+    if (!filePath.endsWith('dist/index.d.ts')) {
       // Skip non-declaration files
       return { filePath, content };
     }
-
     const processedContent = _cleanDTSImports(content);
     
     return {
@@ -36,7 +34,16 @@ function _cleanDTSImports(tsMess: string): string {
 
   // Step 1: Find all @dxs-ts import lines and collect replacements
   tsMess.split('\n').forEach((line) => {
-    if (line.includes('@dxs-ts')) {
+    
+    if (line.match(/(RootRouteChildren|FileRouteTypes)_\d+/)) {
+      let cleanedLine = line;
+      
+      // Only replace Root* or File* words with _NUMBER suffix
+      cleanedLine = cleanedLine.replace(/(RootRouteChildren|FileRouteTypes)_\d+/g, '$1');
+      
+      cleaned.push(cleanedLine);
+    } else if (line.includes('@dxs-ts') || line.includes(" from 'index';")) {
+
       const match = line.match(/import\s+\{\s*(\w+)\s+as\s+(\w+_\d+)\s*\}/);
       if (match) {
         const real = match[1]; // "BookingApi"

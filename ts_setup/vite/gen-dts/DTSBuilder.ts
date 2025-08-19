@@ -43,12 +43,10 @@ export class DTSBuilder {
     // Add import processing if enabled
     if (this.options.processImports) {
       config.beforeWriteFile = (filePath: string, content: string) => {
+
         return processImportsCmd.execute({ filePath, content });
       };
     }
-
-    console.log(config);
-    //throw Error('wooops');
     return config;
   }
 }

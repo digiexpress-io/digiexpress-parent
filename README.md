@@ -99,14 +99,20 @@ To run either of the frontend applications:
 
 - Node version used for installing and testing this was `v22.5.1`.
 
-1. **Install the required dependencies**:
+1. **Navigate to the TypeScript setup folder**:
+   ```bash
+   cd ts_setup
+   ```
+
+2. **Install the required dependencies**:
    ```bash
    pnpm install
    ```
 
-2. **Start the development server**:
+3. **Start the development server**:
    ```bash
-   pnpm start
+   pnpm run start-gamut     # Portal (Gamut)
+   pnpm run start-eveli     # Frontdesk (Eveli-IDE)  
    ```
 
 
