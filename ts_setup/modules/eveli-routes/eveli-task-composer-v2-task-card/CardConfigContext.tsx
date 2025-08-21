@@ -5,6 +5,7 @@ import React, { createContext, PropsWithChildren, useContext } from 'react';
 
 export type TaskCardId =
   'task_main' |
+  'task_main_alt' |
   'task_form_summary' |
   'status_priority' |
   'assignees_roles' |
@@ -51,19 +52,19 @@ const INITIAL_CONFIG: CardConfig = {
 } as any;
 
 export interface CardConfigContextProviderProps {
-
+  cardTheme?: TaskCardStyleKey;
 }
 
 export const CardConfigContext = createContext<CardConfig>(INITIAL_CONFIG);
 
-export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigContextProviderProps>> = ({ children }) => {
+export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigContextProviderProps>> = (props) => {
   const [isReviewOpen, setReviewOpen] = React.useState(false);
 
   const [flashyCards, setFlashyCards] = React.useState<TaskCardId[]>([]);
   const [altViewCards, setAltViewCards] = React.useState<TaskCardId[]>([]);
 
   const [editingCardId, setEditingCardId] = React.useState<TaskCardId | undefined>();
-  const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>('default');
+  const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>(props.cardTheme ?? 'default');
   const [cardOrder, setCardOrder] = React.useState<TaskCardId[]>(TASK_CARD_IDS);
 
 
@@ -95,7 +96,7 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
 
   return (
     <CardConfigContext.Provider value={contextValue}>
-      {children}
+      {props.children}
     </CardConfigContext.Provider>
   );
 };

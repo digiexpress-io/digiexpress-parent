@@ -40,7 +40,7 @@ import {
 
 
 
-const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
+export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const intl = useIntl();
   const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard } = useCardConfig();
   const styleConfig = useTaskCardThemeConfig();
@@ -68,6 +68,19 @@ const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
 
 
   switch (cardId) {
+    case 'task_main_alt':
+      return (
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}
+          {...commonProps}
+          isMenu
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
+          startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
+        >
+          <TaskPropertiesAlt style={style} onReview={toggleReview} />
+        </TaskCard>
+      );
     case 'task_main':
       return (
         <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}

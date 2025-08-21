@@ -5,6 +5,7 @@ import { useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 
 import { EveliTaskComposer } from '../eveli-task-composer';
 import { EveliTaskDashboard } from '../eveli-task-composer-v2';
+import { EveliTaskDashboardProd } from '../eveli-task-composer-v2/EveliTaskDashboardProd';
 
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks/$taskId/')({
@@ -19,7 +20,7 @@ function Component() {
 
   return (
     <Container sx={{ backgroundColor: theme.palette.secondary.main }}>
-      {isNew ? <EveliTaskDashboard taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
+      {isNew ? <EveliTaskDashboardProd taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
     </Container>
   )
 }

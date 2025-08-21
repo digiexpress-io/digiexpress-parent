@@ -10,6 +10,11 @@ const CARD_MENU_CONFIG: Record<string, CardMenuOptions> = {
     showEdit: true,
     showAltViewToggle: true
   },
+  'task_main_alt': {
+    showFlashyToggle: false,
+    showEdit: true,
+    showAltViewToggle: false
+  },
   'task_form_summary': {
     showFlashyToggle: true,
     showReview: true

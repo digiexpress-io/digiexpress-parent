@@ -82,6 +82,10 @@ export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string
     flashyBackground: '#1565c0',     // Dark Blue
     flashyBorder: '#0d47a1',
   },
+  'task_main_alt': {
+    flashyBackground: '#1565c0',     // Dark Blue
+    flashyBorder: '#0d47a1',
+  },
   'status_priority': {
     flashyBackground: '#b71c1c',     // Dark Red
     flashyBorder: '#7f0000',
