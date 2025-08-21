@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, generateUtilityClass, styled, Typography } from '@mui/material';
+import { Chip, generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { useIntl } from 'react-intl';
+
 import { useTaskDashboard } from '../eveli-task-composer-v2';
 import { TaskApi } from '@dxs-ts/eveli-api';
 
@@ -25,78 +25,36 @@ const getStatusColor = (status: TaskApi.TaskStatus): string => {
   }
 };
 
+const getContrastText = (hex: string): string => {
+  const c = hex.substring(1);
+  const rgb = parseInt(c, 16);
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = rgb & 0xff;
 
-const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus, style: TaskCardStyleDefinition }> = ({ status, style }) => {
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? '#000000' : '#ffffff';
+};
+
+
+export const TaskStatusReadOnly: React.FC = () => {
   const intl = useIntl();
-  const { task } = useTaskDashboard();
   const classes = useUtilityClasses();
-
-  const getProgress = (): number => {
-    switch (status) {
-      case 'NEW':
-        return 25;
-      case 'OPEN':
-        return 50;
-      case 'COMPLETED':
-      case 'REJECTED':
-        return 100;
-      case 'TRANSFERRED':
-        return 50;
-      case 'DELEGATED':
-        return 50;
-      case 'WAITING':
-        return 50;
-      default:
-        return 0;
-    }
-  };
-
-  const progress = getProgress();
-  const color = getStatusColor(status);
+  const { task } = useTaskDashboard();
+  const label = intl.formatMessage({ id: `task.status.${task.status}`.toLowerCase() })
 
 
   return (
-    <Box className={classes.progressBar}>
-      <Box display='flex'>
-      <Typography sx={{ ...style.bodyTypography, fontWeight: 500, mb: 1 }}>
-        {intl.formatMessage({ id: 'task.status', defaultMessage: 'Status' })}
-      </Typography>
-      <Box flexGrow={1} />
-      <Typography fontWeight={500} sx={{...style.bodyTypography, fontWeight: 'bold'}}>{task.status}</Typography>
-      </Box>
-      <Box className={classes.backgroundTrack}>
-        <Box sx={{
-          height: '100%',
-          width: `${progress}%`,
-          backgroundColor: color,
-          transition: 'width 0.3s ease-in-out',
-        }}
-        />
-      </Box>
-      <Typography className={classes.progressDesc}>
-        {progress}
-        {intl.formatMessage({ id: 'task.status.percComplete', defaultMessage: '% complete' })}
-      </Typography>
-    </Box>
+    <TaskStatusRoot className={classes.root} task={task}>
+      <Chip label={label} />
+    </TaskStatusRoot>
   );
 };
 
-export const TaskStatusReadOnly: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
-  const classes = useUtilityClasses();
-  const { task } = useTaskDashboard();
 
-
-
-
-  return (
-    <StyledTaskStatusReadOnly className={classes.root}>
-      <TaskProgressBar status={task.status!} style={style} />
-    </StyledTaskStatusReadOnly>
-  );
-};
 
 const MUI_NAME = 'TaskStatusReadOnly';
-const StyledTaskStatusReadOnly = styled('div', {
+const TaskStatusRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -105,28 +63,15 @@ const StyledTaskStatusReadOnly = styled('div', {
     ];
   },
 
-})(({ theme }) => {
+})<{ task: TaskApi.Task }>(({ task }) => {
+
+  const bgColor = getStatusColor(task.status!);
+  const textColor = getContrastText(bgColor);
 
   return {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-
-    '& .TaskStatusReadOnly-progressBar': {
-      width: '100%'
-    },
-    '& .TaskStatusReadOnly-backgroundTrack': {
-      width: '100%',
-      height: theme.spacing(2),
-      backgroundColor: '#eee',
-      borderRadius: theme.spacing(3),
-      overflow: 'hidden',
-      boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)',
-    },
-    '& .TaskStatusReadOnly-progressDesc': {
-      marginTop: theme.spacing(0.5),
-      textAlign: 'right',
-      ...theme.typography.caption
+    '& .MuiChip-root': {
+      backgroundColor: getStatusColor(task.status!),
+      color: textColor,
     }
   };
 })
@@ -134,11 +79,7 @@ const StyledTaskStatusReadOnly = styled('div', {
 
 export const useUtilityClasses = () => {
   const slots = {
-    root: ['root'],
-    progressBar: ['progressBar'],
-    backgroundTrack: ['backgroundTrack'],
-    progressIndicator: ['progressIndicator'],
-    progressDesc: ['progressDesc']
+    root: ['root']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

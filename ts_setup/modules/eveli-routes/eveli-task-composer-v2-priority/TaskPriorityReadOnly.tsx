@@ -1,9 +1,8 @@
 import React from 'react';
-import { Box, generateUtilityClass, Stack, styled, Typography } from '@mui/material';
+import { Chip, generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
-import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { useTaskDashboard } from '../eveli-task-composer-v2';
 import { TaskApi } from '@dxs-ts/eveli-api';
 
@@ -25,37 +24,34 @@ const getPriorityColor = (priority: Priority): string => {
   }
 };
 
-export const TaskPriorityReadOnly: React.FC<{ style: TaskCardStyleDefinition }> = ({ style }) => {
+
+const getContrastText = (hex: string): string => {
+  const c = hex.substring(1);
+  const rgb = parseInt(c, 16);
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = rgb & 0xff;
+
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? '#000000' : '#ffffff';
+};
+
+export const TaskPriorityReadOnly: React.FC = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { task } = useTaskDashboard();
-
+  const label = intl.formatMessage({ id: `task.priority.${task.priority}`.toLowerCase() });
   return (
-    <StyledTaskPriorityReadOnly className={classes.root} style={style}>
-      <Stack direction='column' width='100%'>
-        <Typography fontWeight={500} mb={1} sx={{ ...style.bodyTypography, fontWeight: 500 }}>
-          {intl.formatMessage({ id: 'task.priority', defaultMessage: 'Priority' })}
-        </Typography>
-        <Box className={classes.priorities}>
-          {Object.entries(TaskApi.task_priority_messages).map(([key, message]) => {
-            const level = key as Priority;
-            const isActive = task.priority === level;
-            return (
-              <PriorityBox isActive={isActive} color={getPriorityColor(level)} key={level} >
-                {intl.formatMessage(message)}
-              </PriorityBox>
-            );
-          })}
-        </Box>
-      </Stack>
-    </StyledTaskPriorityReadOnly>
+    <TaskPriorityRoot className={classes.root} task={task}>
+      <Chip label={label} />
+    </TaskPriorityRoot>
   );
 };
 
 
 
-const MUI_NAME = 'TaskPriorityReadOnly';
-const StyledTaskPriorityReadOnly = styled('div', {
+const MUI_NAME = 'TaskPriorityRoot';
+const TaskPriorityRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -64,40 +60,22 @@ const StyledTaskPriorityReadOnly = styled('div', {
     ];
   },
 
-})<{ style: TaskCardStyleDefinition }>(({ theme, style }) => {
+})<{ task: TaskApi.Task }>(({ theme, task }) => {
+  const bgColor = getPriorityColor(task.priority!);
+  const textColor = getContrastText(bgColor);
 
   return {
-    display: "flex",
-    alignItems: "center",
-    '& .TaskPriorityReadOnly-priorities': {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      ...style.bodyTypography
+    '& .MuiChip-root': {
+      backgroundColor: getPriorityColor(task.priority!),
+      color: textColor,
     }
-  };
+  }
 })
 
-const PriorityBox = styled(Box)<{ isActive: boolean; color: string }>(({ theme, isActive, color }) => ({
-  padding: theme.spacing(0.5),
-  marginLeft: theme.spacing(1),
-  marginRight: theme.spacing(1),
-  width: '33%',
-  textAlign: 'center',
-  border: `1px solid ${isActive ? color : theme.palette.divider}`,
-  borderRadius: theme.spacing(3),
-  backgroundColor: isActive ? color : 'transparent',
-  color: isActive ? `${theme.palette.background.default}` : `${theme.palette.text.primary}`,
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-
-}));
 
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    priorities: ['priorities'],
-    onePriority: ['onePriority']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);

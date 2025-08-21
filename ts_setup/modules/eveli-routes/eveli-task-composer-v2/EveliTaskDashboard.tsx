@@ -82,7 +82,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={
               <Box display='flex' justifyContent='space-between'>
-                {_formatAnyDateShort(task.dueDate)}
+                <Typography sx={{ ...style.bodyTypography }}>{_formatAnyDateShort(task.dueDate)}</Typography>
                 <TaskOverdueWarning task={task} style={style} />
               </Box>
             }
@@ -97,7 +97,7 @@ const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
     case 'task_form_summary':
       return (
         <TaskCard {...commonProps} isMenu startAdornmentIcon={<img src={dialob_logo} height='50px' width='80px' style={{ marginRight: 10 }} />}>
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={<Typography sx={style.bodyTypography}>{task.subject} v1.0</Typography>} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={task.subject + " " + "v1.0"} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate', defaultMessage: 'Submitted' })} value={_formatAnyDateShort(task.created)} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback', defaultMessage: 'Publish feedback?' })} value='YES' style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.representative', defaultMessage: 'Representative name' })} value='Representative name' style={style} />
@@ -115,9 +115,9 @@ const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
           editDialog={editingCardId === cardId && (<PriorityStatusEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
           <Stack direction="column" height="100%">
-            <TaskStatusReadOnly style={style} />
+            <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.task.status', defaultMessage: 'Status' })} value={<TaskStatusReadOnly />} style={style} />
             <Divider sx={{ my: 1 }} />
-            <TaskPriorityReadOnly style={style} />
+            <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.task.priority', defaultMessage: 'Priority' })} value={<TaskPriorityReadOnly />} style={style} />
           </Stack>
         </TaskCard>
       );

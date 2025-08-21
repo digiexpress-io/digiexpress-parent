@@ -53,7 +53,7 @@ const TaskRolesRoot = styled('div', {
     '& .MuiChip-root': {
       backgroundColor: theme.palette.info.dark,
       color: theme.palette.background.default,
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+      // boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
     }
   };
 })

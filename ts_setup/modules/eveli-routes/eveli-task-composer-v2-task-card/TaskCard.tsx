@@ -102,7 +102,7 @@ export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label,
   const theme = useTheme();
 
   return (<>
-    <Grid2 container spacing={theme.spacing(1)}>
+    <Grid2 container margin={theme.spacing(0.5)}>
       <Grid2 size={style.dataRowGridSizes.label}>
         <Typography sx={{ ...style.bodyTypography, fontWeight: 500, whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {label}
@@ -110,9 +110,9 @@ export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label,
       </Grid2>
 
       <Grid2 size={style.dataRowGridSizes.value}>
-        <Box sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {value}
-        </Box>
+        </Typography>
       </Grid2>
     </Grid2>
     <Divider />
@@ -123,10 +123,9 @@ export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label,
 export const TaskCardDataRowElement: React.FC<{ label: string, value: React.ReactNode, style: TaskCardStyleDefinition }> = ({ label, value, style }) => {
   const theme = useTheme();
 
-  return (
-    <Grid2 container spacing={theme.spacing(1)}>
+  return (<>
+    <Grid2 container margin={theme.spacing(0.5)}>
       <Grid2 size={style.dataRowGridSizes.label}>
-
         <Typography
           sx={{
             ...style.bodyTypography,
@@ -143,6 +142,7 @@ export const TaskCardDataRowElement: React.FC<{ label: string, value: React.Reac
         {value}
       </Grid2>
     </Grid2>
+  </>
   )
 }
 
