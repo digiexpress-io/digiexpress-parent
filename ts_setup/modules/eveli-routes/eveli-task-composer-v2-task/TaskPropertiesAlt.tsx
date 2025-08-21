@@ -37,11 +37,7 @@ export const TaskPropertiesAlt: React.FC<{ style: TaskCardStyleDefinition, onRev
         </Box>
 
         <Box className={classes.cell}>
-          <Typography>
-            {intl.formatMessage({ id: 'task.created' })}
-            {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-            {formatAnyDateShort(task.created)}
-          </Typography>
+          <Typography>{intl.formatMessage({ id: 'task.created' })}{" "}{formatAnyDateShort(task.created)}</Typography>
         </Box>
 
         <Box className={classes.cell}>
@@ -52,11 +48,7 @@ export const TaskPropertiesAlt: React.FC<{ style: TaskCardStyleDefinition, onRev
         </Box>
 
         <Box className={classes.cell}>
-          <Typography>
-            {intl.formatMessage({ id: 'task.dueDate' })}
-            {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-            {formatAnyDateShort(task.dueDate)}
-          </Typography>
+          <Typography>{intl.formatMessage({ id: 'task.dueDate' })}{" "}{formatAnyDateShort(task.dueDate)}</Typography>
         </Box>
       </Grid2>
 

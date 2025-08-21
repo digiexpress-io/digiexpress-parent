@@ -1,13 +1,12 @@
 import React from 'react';
-import { Grid2, Typography } from '@mui/material';
-
+import { Grid2 } from '@mui/material';
 import { FormReviewDrawer } from './FormReviewDrawer';
-import { EveliTaskDashboardContextProvider, useTaskDashboard } from './EveliTaskDashboardContext';
+import { EveliTaskDashboardContextProvider } from './EveliTaskDashboardContext';
 import { CardFactory } from './EveliTaskDashboard';
 import {
   CardConfigContextProvider,
   DraggableCardWrapper, taskCardGridSize, TaskCardId, TaskCardStyleDefinition,
-  TaskCardStyleSelect, useCardConfig, useDragCardController, useTaskCardThemeConfig
+  useCardConfig, useDragCardController, useTaskCardThemeConfig
 } from '../eveli-task-composer-v2-task-card';
 
 

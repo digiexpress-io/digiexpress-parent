@@ -53,7 +53,7 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
     <StyledTaskEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
       <DialogTitle>
         {intl.formatMessage({ id: 'task.edit' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+        {" "}
         {task.taskRef ?? 'no task reference id'}
       </DialogTitle>
 

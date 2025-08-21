@@ -5,6 +5,7 @@ import { TaskCardId, TaskCardStyleKey, useCardConfig } from './CardConfigContext
 
 
 const singleCol = { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 };
+const doubleCol = { xs: 6, sm: 6, md: 6, lg: 6, xl: 6 };
 
 export interface TaskCardStyleDefinition {
   titleTypography: CSSProperties;
@@ -57,21 +58,22 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
     },
     large: {
       titleTypography: {
-        ...theme.typography.h3,
+        ...theme.typography.h4,
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1)
       },
       bodyTypography: {
-        ...theme.typography.h4,
+        ...theme.typography.h5,
         paddingTop: theme.spacing(0.5),
-        paddingBottom: theme.spacing(0.5)
+        paddingBottom: theme.spacing(0.5),
+        fontWeight: 400
       },
       bodyTypographySmall: theme.typography.body2,
       cardSpacing: theme.spacing(2),
 
       dataRowGridSizes: {
-        label: isReviewOpen ? singleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
-        value: isReviewOpen ? singleCol : { xs: 9, sm: 9, md: 9, lg: 9, xl: 9 },
+        label: isReviewOpen ? doubleCol : { xs: 3, sm: 3, md: 3, lg: 3, xl: 3 },
+        value: isReviewOpen ? doubleCol : { xs: 9, sm: 9, md: 9, lg: 9, xl: 9 },
       },
     },
   };

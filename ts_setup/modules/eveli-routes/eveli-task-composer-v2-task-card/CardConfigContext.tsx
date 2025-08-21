@@ -28,6 +28,8 @@ export const TASK_CARD_IDS: TaskCardId[] = [
   'task_meta'
 ];
 
+
+
 export type TaskCardStyleKey = 'compact' | 'default' | 'large';
 
 export interface CardConfig {
