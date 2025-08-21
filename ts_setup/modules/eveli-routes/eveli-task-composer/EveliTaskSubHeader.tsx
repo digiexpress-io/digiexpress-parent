@@ -8,7 +8,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useFetch } from "@dxs-ts/envir-fetch";
 import { IamApi } from "@dxs-ts/eveli-api";
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 import { TaskFormDelegateProps } from "./TaskFormState";
 import RadioGroupPopover from './RadioGroupPopover';

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, ButtonGroup, generateUtilityClass, Stack, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 
 

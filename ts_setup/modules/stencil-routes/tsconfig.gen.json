@@ -5,43 +5,43 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
-      "@dxs-ts/envir-fetch": [
-        "../envir-fetch/index.ts"
-      ],
       "@dxs-ts/stencil-api": [
         "../stencil-api/index.ts"
+      ],
+      "@dxs-ts/eveli-primitives": [
+        "../eveli-primitives/index.ts"
       ],
       "@dxs-ts/eveli-api": [
         "../eveli-api/index.ts"
       ],
-      "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
+      "@dxs-ts/envir-fetch": [
+        "../envir-fetch/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
-      "path": "../envir-fetch"
+      "path": "../stencil-api"
     },
     {
-      "path": "../stencil-api"
+      "path": "../eveli-primitives"
     },
     {
       "path": "../eveli-api"
     },
     {
-      "path": "../eveli-primitives"
+      "path": "../envir-fetch"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-13T07:26:47.158Z",
+    "at": "2025-08-21T14:49:16.871Z",
     "forModule": "@dxs-ts/stencil-routes",
-    "fromRegistry": "1cd23d3c5919",
+    "fromRegistry": "59014ff3ca3d",
     "alias": {
       "@dxs-ts/stencil-routes": [
-        "../eveli-primitives"
+        "../envir-fetch"
       ]
     }
   }

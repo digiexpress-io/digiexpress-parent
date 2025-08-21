@@ -6,7 +6,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import moment from 'moment'; // TODO dead library
 
 import { useFetch } from '@dxs-ts/envir-fetch';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { EveliPermissions } from "@dxs-ts/eveli-primitives";
 
 import { EveliTaskTableContext } from "./EveliTaskTableProvider";

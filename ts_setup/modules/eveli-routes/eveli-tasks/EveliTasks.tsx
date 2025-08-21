@@ -8,7 +8,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useNavigate } from '@tanstack/react-router';
-import { TaskApi, useMaterialTableLabels } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
+import { useMaterialTableLabels } from '@dxs-ts/eveli-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { EveliPermissions } from '@dxs-ts/eveli-primitives';
 

@@ -1,4 +1,4 @@
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import React from 'react';
 

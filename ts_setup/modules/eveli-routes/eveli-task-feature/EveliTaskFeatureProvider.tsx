@@ -1,5 +1,5 @@
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import React from 'react';
 
 export interface EveliTaskFeatureContextType {

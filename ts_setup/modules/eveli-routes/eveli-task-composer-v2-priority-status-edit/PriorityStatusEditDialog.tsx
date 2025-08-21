@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import { useTaskDashboard } from '../eveli-task-composer-v2/EveliTaskDashboardContext';
 import { EditStatus } from './EditStatus';
 import { EditPriority } from './EditPriority';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { EveliPermissions } from '@dxs-ts/eveli-primitives';
 
 

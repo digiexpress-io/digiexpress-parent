@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { TaskIndicator } from './TaskIndicator';
-import { TaskApi } from '@dxs-ts/eveli-api'
+import { TaskApi } from '@dxs-ts/task-api'
 
 
 

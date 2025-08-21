@@ -5,47 +5,44 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
-      "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
-      ],
-      "@dxs-ts/gamut-theme": [
-        "../gamut-theme/index.ts"
-      ],
-      "@dxs-ts/gamut-form": [
-        "../gamut-form/index.ts"
-      ],
-      "@dxs-ts/gamut-md": [
-        "../gamut-md/index.ts"
-      ],
-      "@dxs-ts/gamut-shell": [
-        "../gamut-shell/index.ts"
-      ],
-      "@dxs-ts/gamut-form-review": [
-        "../gamut-form-review/index.ts"
-      ],
-      "@dxs-ts/gamut-intl": [
-        "../gamut-intl/index.ts"
-      ],
-      "@dxs-ts/envir-fetch": [
-        "../envir-fetch/index.ts"
-      ],
-      "@dxs-ts/envir-util": [
-        "../envir-util/index.ts"
+      "@dxs-ts/wrench-routes": [
+        "../wrench-routes/index.ts"
       ],
       "@dxs-ts/wrench-api": [
         "../wrench-api/index.ts"
       ],
-      "@dxs-ts/wrench-routes": [
-        "../wrench-routes/index.ts"
-      ],
-      "@dxs-ts/stencil-api": [
-        "../stencil-api/index.ts"
+      "@dxs-ts/task-api": [
+        "../task-api/index.ts"
       ],
       "@dxs-ts/stencil-routes": [
         "../stencil-routes/index.ts"
       ],
-      "@dxs-ts/eveli-api": [
-        "../eveli-api/index.ts"
+      "@dxs-ts/stencil-api": [
+        "../stencil-api/index.ts"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "../gamut-theme/index.ts"
+      ],
+      "@dxs-ts/gamut-shell": [
+        "../gamut-shell/index.ts"
+      ],
+      "@dxs-ts/gamut-md": [
+        "../gamut-md/index.ts"
+      ],
+      "@dxs-ts/gamut-intl": [
+        "../gamut-intl/index.ts"
+      ],
+      "@dxs-ts/gamut-form-review": [
+        "../gamut-form-review/index.ts"
+      ],
+      "@dxs-ts/gamut-form": [
+        "../gamut-form/index.ts"
+      ],
+      "@dxs-ts/gamut-api": [
+        "../gamut-api/index.ts"
+      ],
+      "@dxs-ts/eveli-routes": [
+        "../eveli-routes/index.ts"
       ],
       "@dxs-ts/eveli-primitives": [
         "../eveli-primitives/index.ts"
@@ -53,54 +50,57 @@
       "@dxs-ts/eveli-intl": [
         "../eveli-intl/index.ts"
       ],
-      "@dxs-ts/eveli-routes": [
-        "../eveli-routes/index.ts"
+      "@dxs-ts/eveli-api": [
+        "../eveli-api/index.ts"
+      ],
+      "@dxs-ts/envir-util": [
+        "../envir-util/index.ts"
+      ],
+      "@dxs-ts/envir-fetch": [
+        "../envir-fetch/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
-      "path": "../gamut-api"
-    },
-    {
-      "path": "../gamut-theme"
-    },
-    {
-      "path": "../gamut-form"
-    },
-    {
-      "path": "../gamut-md"
-    },
-    {
-      "path": "../gamut-shell"
-    },
-    {
-      "path": "../gamut-form-review"
-    },
-    {
-      "path": "../gamut-intl"
-    },
-    {
-      "path": "../envir-fetch"
-    },
-    {
-      "path": "../envir-util"
+      "path": "../wrench-routes"
     },
     {
       "path": "../wrench-api"
     },
     {
-      "path": "../wrench-routes"
-    },
-    {
-      "path": "../stencil-api"
+      "path": "../task-api"
     },
     {
       "path": "../stencil-routes"
     },
     {
-      "path": "../eveli-api"
+      "path": "../stencil-api"
+    },
+    {
+      "path": "../gamut-theme"
+    },
+    {
+      "path": "../gamut-shell"
+    },
+    {
+      "path": "../gamut-md"
+    },
+    {
+      "path": "../gamut-intl"
+    },
+    {
+      "path": "../gamut-form-review"
+    },
+    {
+      "path": "../gamut-form"
+    },
+    {
+      "path": "../gamut-api"
+    },
+    {
+      "path": "../eveli-routes"
     },
     {
       "path": "../eveli-primitives"
@@ -109,17 +109,23 @@
       "path": "../eveli-intl"
     },
     {
-      "path": "../eveli-routes"
+      "path": "../eveli-api"
+    },
+    {
+      "path": "../envir-util"
+    },
+    {
+      "path": "../envir-fetch"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-13T07:26:47.158Z",
+    "at": "2025-08-21T14:49:16.870Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "1cd23d3c5919",
+    "fromRegistry": "59014ff3ca3d",
     "alias": {
       "@dxs-ts/eveli-ide": [
-        "../eveli-routes"
+        "../envir-fetch"
       ]
     }
   }

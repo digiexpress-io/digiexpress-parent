@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { CreateTaskTransfer } from './CreateTaskTransfer';
 
 export interface EveliTaskTransferProps {

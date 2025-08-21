@@ -8,14 +8,14 @@
       "@dxs-ts/wrench-api": [
         "../wrench-api/index.ts"
       ],
+      "@dxs-ts/eveli-primitives": [
+        "../eveli-primitives/index.ts"
+      ],
       "@dxs-ts/eveli-api": [
         "../eveli-api/index.ts"
       ],
       "@dxs-ts/envir-fetch": [
         "../envir-fetch/index.ts"
-      ],
-      "@dxs-ts/eveli-primitives": [
-        "../eveli-primitives/index.ts"
       ]
     }
   },
@@ -25,23 +25,23 @@
       "path": "../wrench-api"
     },
     {
+      "path": "../eveli-primitives"
+    },
+    {
       "path": "../eveli-api"
     },
     {
       "path": "../envir-fetch"
-    },
-    {
-      "path": "../eveli-primitives"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-13T07:26:47.158Z",
+    "at": "2025-08-21T14:49:16.871Z",
     "forModule": "@dxs-ts/wrench-routes",
-    "fromRegistry": "1cd23d3c5919",
+    "fromRegistry": "59014ff3ca3d",
     "alias": {
       "@dxs-ts/wrench-routes": [
-        "../eveli-primitives"
+        "../envir-fetch"
       ]
     }
   }

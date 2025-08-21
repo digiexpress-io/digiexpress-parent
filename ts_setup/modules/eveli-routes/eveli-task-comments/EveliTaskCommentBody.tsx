@@ -5,7 +5,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 import { CommentAdd } from './CommentAdd';
 

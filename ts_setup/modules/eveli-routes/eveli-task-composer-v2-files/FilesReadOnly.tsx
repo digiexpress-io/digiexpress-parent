@@ -5,7 +5,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useIntl } from 'react-intl';
 
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 
 const files = [

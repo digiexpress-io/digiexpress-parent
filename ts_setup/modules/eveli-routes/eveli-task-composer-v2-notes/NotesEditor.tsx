@@ -4,7 +4,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 import EditIcon from '@mui/icons-material/Edit';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { DateTime } from 'luxon';
 import composeClasses from '@mui/utils/composeClasses';
 

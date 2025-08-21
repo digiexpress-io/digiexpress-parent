@@ -23,6 +23,7 @@
     "@dxs-ts/stencil-api": "*",
     "@dxs-ts/stencil-routes": "*",
 
+    "@dxs-ts/task-api": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/eveli-intl": "*",

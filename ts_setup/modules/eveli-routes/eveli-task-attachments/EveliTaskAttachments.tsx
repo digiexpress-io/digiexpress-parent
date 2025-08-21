@@ -6,7 +6,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography }
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useFetch } from '@dxs-ts/envir-fetch';
-import { TaskApi, useMaterialTableLabels } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
+import { useMaterialTableLabels } from '@dxs-ts/eveli-api';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 const classes = {

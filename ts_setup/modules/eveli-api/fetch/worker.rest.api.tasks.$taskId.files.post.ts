@@ -1,5 +1,5 @@
 
-import { TaskApi } from '../api-task';
+import { TaskApi } from '@dxs-ts/task-api';
 import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl';

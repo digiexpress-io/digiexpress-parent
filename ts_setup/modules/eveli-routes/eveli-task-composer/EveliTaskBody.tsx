@@ -7,7 +7,7 @@ import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined
 
 import { FormattedMessage } from "react-intl";
 
-import { TaskApi } from "@dxs-ts/eveli-api";
+import { TaskApi } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 import { EveliTaskComments } from "../eveli-task-comments";

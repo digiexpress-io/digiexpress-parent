@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, TextField, Typography, Stack } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 

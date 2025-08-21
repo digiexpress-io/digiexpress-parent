@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Chip, Button } from '@mui/material';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 
 export interface TaskIndicatorProps {

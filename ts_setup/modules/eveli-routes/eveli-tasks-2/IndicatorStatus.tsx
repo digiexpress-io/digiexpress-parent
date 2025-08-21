@@ -1,7 +1,7 @@
 import React from 'react';
 import { alpha, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 
 function renderStatus(type: TaskApi.TaskStatus): { label: string, color: string } {

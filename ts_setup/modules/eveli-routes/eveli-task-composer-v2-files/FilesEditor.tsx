@@ -5,7 +5,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 const files = [
   { id: 1, name: 'report.pdf', uploadedAt: '11.09.2025' },

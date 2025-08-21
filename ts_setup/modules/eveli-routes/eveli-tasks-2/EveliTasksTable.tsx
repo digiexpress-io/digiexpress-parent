@@ -9,7 +9,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { WithTableStyles, EveliPermissions } from '@dxs-ts/eveli-primitives';
 
 import { IndicatorPriority } from './IndicatorPriority';

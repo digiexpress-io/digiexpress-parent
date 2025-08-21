@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 
 export interface TaskOverdueWarningProps {

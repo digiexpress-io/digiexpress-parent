@@ -3,7 +3,7 @@ import { OutlinedInput, Grid2, Stack, Button } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 

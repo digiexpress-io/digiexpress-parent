@@ -3,7 +3,7 @@ import { Box, Divider, generateUtilityClass, styled, Typography } from '@mui/mat
 import CircleIcon from '@mui/icons-material/Circle';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { DateTime } from 'luxon';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import composeClasses from '@mui/utils/composeClasses';

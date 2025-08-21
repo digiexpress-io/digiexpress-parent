@@ -3,7 +3,7 @@ import { Grid2, Paper, Typography } from '@mui/material';
 import React from 'react';
 import { Legend, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 
 const chartPaperStyle = {

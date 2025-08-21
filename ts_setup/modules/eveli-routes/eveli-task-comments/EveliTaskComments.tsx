@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, } from 'react';
 import { Box, Grid2, Button } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { useSnackbar } from 'notistack';
 
 import { CommentAdd } from './CommentAdd';

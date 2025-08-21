@@ -4,7 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
 import { useTaskDashboard } from '../eveli-task-composer-v2';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 const getStatusColor = (status: TaskApi.TaskStatus): string => {
   const colorEnum = TaskApi.task_status_colors[status];

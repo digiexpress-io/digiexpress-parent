@@ -1,6 +1,6 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { ROLE_AUTHORIZED } from '../api-iam';
-import { TaskApi } from '../api-task';
+import { TaskApi } from '@dxs-ts/task-api';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.POST')({
   hook

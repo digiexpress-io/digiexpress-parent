@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { FilesEditor } from './FilesEditor';
 
 

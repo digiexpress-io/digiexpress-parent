@@ -4,7 +4,7 @@ import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
-import { TaskApi } from '../api-task';
+import { TaskApi } from '@dxs-ts/task-api';
 
 import { createMuiTableQueryString } from '../api-mui-table';
 

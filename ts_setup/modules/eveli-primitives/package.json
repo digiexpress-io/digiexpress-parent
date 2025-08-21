@@ -8,6 +8,7 @@
   "keywords": ["eveli", "ui", "primitives", "components"],
   "dependencies": {
     "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/task-api": "*",
     "@dxs-ts/envir-fetch": "*"
   },
   "peerDependencies": {

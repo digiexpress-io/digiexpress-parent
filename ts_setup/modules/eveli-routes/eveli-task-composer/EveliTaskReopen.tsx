@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { EveliPermissions } from '@dxs-ts/eveli-primitives';
 

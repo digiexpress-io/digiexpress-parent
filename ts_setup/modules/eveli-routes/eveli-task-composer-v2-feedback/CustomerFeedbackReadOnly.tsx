@@ -3,7 +3,7 @@ import { alpha, Box, Divider, generateUtilityClass, styled, Typography } from '@
 import { useIntl } from 'react-intl';
 
 import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 import { PublishedNotifier } from './PublishedNotifier';

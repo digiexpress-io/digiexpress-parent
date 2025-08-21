@@ -11,8 +11,8 @@
   "references": [],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
-    "forModule": "@dxs-ts/stencil-api",
+    "at": "2025-08-21T14:49:16.871Z",
+    "forModule": "@dxs-ts/task-api",
     "fromRegistry": "59014ff3ca3d",
     "alias": {}
   }

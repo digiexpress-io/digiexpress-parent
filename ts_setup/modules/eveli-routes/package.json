@@ -15,6 +15,7 @@
     "@dxs-ts/wrench-api": "*",
     "@dxs-ts/wrench-routes": "*",
     "@dxs-ts/envir-fetch": "*",
+    "@dxs-ts/task-api": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*"
   },

@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 export interface CustomerMessagesEditorProps {
   task: TaskApi.Task;

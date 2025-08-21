@@ -8,7 +8,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { FormattedMessage } from 'react-intl';
 
 import { EveliDateTimeFormatter } from "@dxs-ts/eveli-primitives";
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 
 import { TaskFormDelegateProps } from './TaskFormState';

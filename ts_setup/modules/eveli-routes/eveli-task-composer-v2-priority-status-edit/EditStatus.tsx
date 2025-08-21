@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, generateUtilityClass, MenuItem, Select, SelectChangeEvent, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 const getStatusColor = (status: TaskApi.TaskStatus): string => {
   const colorEnum = TaskApi.task_status_colors[status];

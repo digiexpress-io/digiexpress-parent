@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 import { OVERDUE_FILL_COLORS, PieChartSlot, priorityColorMap, statusColorMap, BarChartSlot, BarLabel } from './useUtilityClasses';
 import { withDs } from './WithDashboardData';

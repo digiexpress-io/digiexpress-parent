@@ -10,6 +10,7 @@
     "@dxs-ts/wrench-api": "*",
     "@dxs-ts/stencil-api": "*",
     "@dxs-ts/eveli-intl": "*",
+    "@dxs-ts/task-api": "*",
     "@dxs-ts/gamut-theme": "*"
   },
   "peerDependencies": {

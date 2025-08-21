@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from '@mui/material';
 
 import { useIntl } from 'react-intl';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 export interface EveliTaskTransferStatusIndicatorProps {
   task: TaskApi.Task;
