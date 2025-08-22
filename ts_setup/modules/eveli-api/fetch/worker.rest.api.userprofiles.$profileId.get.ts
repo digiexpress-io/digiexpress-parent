@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
-import { PrefsApi } from '../api-prefs';
+import { UserProfileApi } from '@dxs-ts/user-profile';
 
 
 export const Hook = createFileFetch('worker/rest/api/userprofiles/$profileId.GET')({
@@ -11,8 +11,8 @@ function hook(props: {}) {
   const { path, contextPath, method, url } = params;
   
   return {
-    restApi: (): PrefsApi.PrefsRestApi => ({
-      async currentUserProfile(createIfNotDefined?: boolean): Promise<PrefsApi.UserProfile> {
+    restApi: (): UserProfileApi.PrefsRestApi => ({
+      async currentUserProfile(createIfNotDefined?: boolean): Promise<UserProfileApi.UserProfile> {
         const baseUrl = url({ profileId: 'current' + (createIfNotDefined ? '?create=true': '') });
         return params.fetch(`${baseUrl}`)
           .then(async (response) => {
@@ -23,7 +23,7 @@ function hook(props: {}) {
             return response.json();
           });
       },
-      async getUserProfileById(profileId: string): Promise<PrefsApi.UserProfile> {
+      async getUserProfileById(profileId: string): Promise<UserProfileApi.UserProfile> {
         const baseUrl = url({ profileId });
         return params.fetch(baseUrl)
           .then(async (response) => {
@@ -34,19 +34,19 @@ function hook(props: {}) {
             return response.json();
           });
       },
-      async findAllUserProfiles(): Promise<PrefsApi.UserProfile[]> {
+      async findAllUserProfiles(): Promise<UserProfileApi.UserProfile[]> {
         const baseUrl = url({ profileId: '' });
         return params.fetch(baseUrl).then(response => response.json());
       },
-      async updateUserProfile(commands: PrefsApi.UserProfileUpdateCommand<any>[]): Promise<PrefsApi.UserProfile> {
+      async updateUserProfile(commands: UserProfileApi.UserProfileUpdateCommand<any>[]): Promise<UserProfileApi.UserProfile> {
         const baseUrl = url({ profileId: 'current' });
         return params.fetch(baseUrl, { method: 'PUT', body: JSON.stringify(commands)}).then(response => response.json());
       },
-      async updateUiSettings(commands: PrefsApi.UpsertUiSettings): Promise<PrefsApi.UserProfile> {
+      async updateUiSettings(commands: UserProfileApi.UpsertUiSettings): Promise<UserProfileApi.UserProfile> {
         const baseUrl = url({ profileId: 'current/ui-settings' });
         return params.fetch(baseUrl, { method: 'PUT', body: JSON.stringify(commands)}).then(response => response.json());
       },
-      async findUiSettings(settingsId: string): Promise<PrefsApi.UiSettings | undefined> {
+      async findUiSettings(settingsId: string): Promise<UserProfileApi.UiSettings | undefined> {
         const baseUrl = url({ profileId: 'current/ui-settings/' + settingsId});
         return params.fetch(baseUrl)
           .then(async (response) => {

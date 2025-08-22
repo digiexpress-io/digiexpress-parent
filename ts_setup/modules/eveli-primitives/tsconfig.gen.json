@@ -5,6 +5,9 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
+      "@dxs-ts/user-profile": [
+        "../user-profile/index.ts"
+      ],
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
@@ -19,6 +22,9 @@
   "extends": "../../tsconfig.json",
   "references": [
     {
+      "path": "../user-profile"
+    },
+    {
       "path": "../task-api"
     },
     {
@@ -30,9 +36,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
+    "at": "2025-08-22T08:31:58.537Z",
     "forModule": "@dxs-ts/eveli-primitives",
-    "fromRegistry": "59014ff3ca3d",
+    "fromRegistry": "52ab2d6f2553",
     "alias": {
       "@dxs-ts/eveli-primitives": [
         "../envir-fetch"

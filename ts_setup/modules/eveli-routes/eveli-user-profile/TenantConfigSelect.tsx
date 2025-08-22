@@ -1,15 +1,15 @@
 import React from 'react';
 import { Box, Select, FormControl, SelectChangeEvent, MenuItem, InputLabel, Chip, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { PrefsApi } from '@dxs-ts/eveli-api';
+import { UserProfileApi } from '@dxs-ts/user-profile'
 import { tenant_features, TenantFeature, useTenantConfig } from '@dxs-ts/eveli-api';
 
 
 
 
 export interface TenantConfigSelectProps {
-  userProfile: PrefsApi.UserProfile,
-  onChange: (command: PrefsApi.UserProfileUpdateCommand<any>) => void
+  userProfile: UserProfileApi.UserProfile,
+  onChange: (command: UserProfileApi.UserProfileUpdateCommand<any>) => void
 }
 
 
@@ -45,7 +45,7 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
     const value = event.target.value;
     const valueArray = typeof value === 'string' ? value.split(',') : value;
 
-    const command: PrefsApi.ChangeTenantFeatures = {
+    const command: UserProfileApi.ChangeTenantFeatures = {
       commandType: 'ChangeTenantFeatures',
       id: userProfile.id,
       tenantFeatures: valueArray
@@ -66,7 +66,7 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
     const updated = selectedFeatures.filter((item) => item !== value);
     setSelectedFeatures(updated);
 
-    const command: PrefsApi.ChangeTenantFeatures = {
+    const command: UserProfileApi.ChangeTenantFeatures = {
       commandType: 'ChangeTenantFeatures',
       id: userProfile.id,
       tenantFeatures: updated

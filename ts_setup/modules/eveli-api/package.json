@@ -11,7 +11,8 @@
     "@dxs-ts/stencil-api": "*",
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/task-api": "*",
-    "@dxs-ts/gamut-theme": "*"
+    "@dxs-ts/gamut-theme": "*",
+    "@dxs-ts/user-profile": "*"
   },
   "peerDependencies": {
     "react": "*",

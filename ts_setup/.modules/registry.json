@@ -28,7 +28,8 @@
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/eveli-ide": "*",
-          "@dxs-ts/task-api": "*"
+          "@dxs-ts/task-api": "*",
+          "@dxs-ts/user-profile": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -56,6 +57,7 @@
         "@mui/material",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -97,6 +99,7 @@
       "internalDependencies": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -166,6 +169,7 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@mui/utils",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-primitives",
@@ -376,7 +380,8 @@
           "@dxs-ts/stencil-api": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/task-api": "*",
-          "@dxs-ts/gamut-theme": "*"
+          "@dxs-ts/gamut-theme": "*",
+          "@dxs-ts/user-profile": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -401,6 +406,7 @@
         "@mui/material",
         "@material-table/core",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-api",
         "@dxs-ts/gamut-theme",
@@ -426,6 +432,7 @@
       ],
       "internalDependencies": [
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-api",
         "@dxs-ts/gamut-theme",
@@ -441,6 +448,7 @@
         "@mui/material",
         "@material-table/core",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-api",
         "@dxs-ts/gamut-theme",
@@ -457,6 +465,7 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-api",
         "@dxs-ts/gamut-theme",
@@ -513,6 +522,7 @@
         "dependencies": {
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/task-api": "*",
+          "@dxs-ts/user-profile": "*",
           "@dxs-ts/envir-fetch": "*"
         },
         "peerDependencies": {
@@ -553,6 +563,7 @@
         "@mui/system",
         "@mui/material",
         "@mui/icons-material",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/envir-fetch"
@@ -596,6 +607,7 @@
         "@mui/icons-material"
       ],
       "internalDependencies": [
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/envir-fetch"
@@ -618,6 +630,7 @@
         "@mui/system",
         "@mui/material",
         "@mui/icons-material",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/envir-fetch"
@@ -642,6 +655,7 @@
         "@mui/icons-material"
       ],
       "actualInternalDependencies": [
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/envir-fetch"
@@ -671,7 +685,8 @@
           "@dxs-ts/envir-fetch": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/eveli-api": "*",
-          "@dxs-ts/eveli-primitives": "*"
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/user-profile": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -714,6 +729,7 @@
         "@material-table/core",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -761,6 +777,7 @@
       "internalDependencies": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -790,6 +807,7 @@
         "@material-table/core",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -821,6 +839,7 @@
       "actualInternalDependencies": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -1625,6 +1644,7 @@
           "@dxs-ts/gamut-intl": "*",
           "@dxs-ts/envir-fetch": "*",
           "@dxs-ts/envir-util": "*",
+          "@dxs-ts/user-profile": "*",
           "@dxs-ts/wrench-api": "*",
           "@dxs-ts/wrench-routes": "*",
           "@dxs-ts/stencil-api": "*",
@@ -1646,6 +1666,7 @@
       "dependencies": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -1668,6 +1689,7 @@
       "internalDependencies": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -1726,6 +1748,7 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api"
       ]
     },
@@ -2025,6 +2048,44 @@
       "missingDependencies": [],
       "unusedDependencies": []
     },
+    "@dxs-ts/user-profile": {
+      "name": "@dxs-ts/user-profile",
+      "path": "modules/user-profile",
+      "packageJson": {
+        "name": "@dxs-ts/user-profile",
+        "version": "${project.version}",
+        "description": "User profile, user configured settings",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "user-profile"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
     "@dxs-ts/wrench-api": {
       "name": "@dxs-ts/wrench-api",
       "path": "modules/wrench-api",
@@ -2233,6 +2294,7 @@
       "@dxs-ts/eveli-demo-app": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -2268,6 +2330,7 @@
       "@dxs-ts/envir-util": [],
       "@dxs-ts/eveli-api": [
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-api",
         "@dxs-ts/gamut-theme",
@@ -2277,6 +2340,7 @@
       ],
       "@dxs-ts/eveli-intl": [],
       "@dxs-ts/eveli-primitives": [
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/envir-fetch"
@@ -2284,6 +2348,7 @@
       "@dxs-ts/eveli-routes": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -2332,6 +2397,7 @@
       "@dxs-ts/eveli-ide": [
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
@@ -2369,6 +2435,7 @@
         "@dxs-ts/envir-fetch"
       ],
       "@dxs-ts/task-api": [],
+      "@dxs-ts/user-profile": [],
       "@dxs-ts/wrench-api": [],
       "@dxs-ts/wrench-routes": [
         "@dxs-ts/wrench-api",
@@ -2518,6 +2585,13 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide"
       ],
+      "@dxs-ts/user-profile": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
       "@dxs-ts/wrench-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
@@ -2550,6 +2624,7 @@
         "@dxs-ts/gamut-intl",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/envir-util",
+        "@dxs-ts/user-profile",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
@@ -2637,6 +2712,6 @@
       ]
     }
   },
-  "checksum": "b6c0b7b0280d8074fe2da4422897ab6c72e61bc4587f184e55c042062949369a",
-  "generatedAt": "2025-08-21T14:50:59.397Z"
+  "checksum": "99f207c35a417d1e4d4b1018d1013318efaa47f14cb7dbee39f1a66720c2affe",
+  "generatedAt": "2025-08-22T08:35:45.249Z"
 }

@@ -1,4 +1,4 @@
-import { ModuleRegistry, ValidationError, ValidationOptions } from "../module-registry";
+import { ModuleInfo, ModuleRegistry, ValidationError, ValidationOptions } from "../module-registry";
 
 export declare namespace Command_ValidateModules {
   export interface Input {
@@ -16,6 +16,7 @@ export declare namespace Command_ValidateModules {
 
 export class Command_ValidateModules {
   execute(input: Command_ValidateModules.Input): Command_ValidateModules.Result {
+
     const { registry, modulesToValidate, options } = input;
 
     const errors: ValidationError[] = [];
@@ -37,7 +38,7 @@ export class Command_ValidateModules {
           }
         }
 
-      } catch (error) {
+      } catch (error: any) {
         // Module validation corrupted - add corruption error but continue
         corruptions.push({
           type: 'corruption_error',
@@ -81,13 +82,13 @@ function _validateSingleModule(registry: ModuleRegistry, moduleName: string, val
     // Validate dependencies based on validation mode
     if (options.strictPerModuleValidation) {
       // STRICT MODE: Each module must have all its dependencies declared in its own package.json
-      _validateModuleDependenciesStrict(moduleInfo, errors);
+      _validateModuleDependenciesStrict(registry, moduleInfo, errors);
     } else {
       // AGGREGATE MODE: Dependencies can be satisfied anywhere in the validation scope
       _validateModuleDependenciesAggregate(registry, moduleInfo, validationScope, errors);
     }
 
-  } catch (error) {
+  } catch (error: any) {
     errors.push({
       type: 'invalid_structure',
       severity: 'corruption',
@@ -102,25 +103,108 @@ function _validateSingleModule(registry: ModuleRegistry, moduleName: string, val
   return errors;
 }
 
-function _validateModuleDependenciesStrict(moduleInfo: any, errors: ValidationError[]): void {
-  console.log(`🔒 Strict validation for ${moduleInfo.name} - each module must be self-sufficient`);
 
-  // Validate missing external dependencies
-  if (moduleInfo.missingDependencies) {
-    for (const missingDep of moduleInfo.missingDependencies) {
-      const isExternal = !missingDep.startsWith('@dxs-ts/');
-      const isInternal = missingDep.startsWith('@dxs-ts/');
 
-      errors.push({
-        type: isExternal ? 'missing_external' : 'missing_internal',
-        severity: 'error',
-        moduleName: moduleInfo.name,
-        item: missingDep,
-        problem: `Used in source code but not declared in package.json`,
-        solution: `Add "${missingDep}" to dependencies in ${moduleInfo.name}/package.json`
-      });
+function _getMissingRefs(registry: ModuleRegistry, moduleInfo: ModuleInfo, collector: string[], scanned: string[]): void {
+
+
+  for (const internalDepName of moduleInfo.actualInternalDependencies) {
+    if(internalDepName === moduleInfo.name) {
+      continue; // lets simply not crash... self ref should be error
+    }
+    if(scanned.includes(internalDepName)) {
+      continue;
+    }
+
+    scanned.push(internalDepName);
+
+    const scopeModuleInfo = registry.modules[internalDepName];
+    if (scopeModuleInfo) {
+      scopeModuleInfo.actualInternalDependencies;
     }
   }
+}
+
+class CollectDepChain {
+  private _collector: string[] = [];
+  private _refs: string[] = [];
+  private _scanned: string[] = [];
+  private _registry: ModuleRegistry;
+  private _moduleInfo: ModuleInfo;
+
+  constructor(registry: ModuleRegistry, moduleInfo: ModuleInfo) {
+    this._registry = registry;
+    this._moduleInfo = moduleInfo;
+  }
+
+  findAll(): string[] {
+    const isLib = this._moduleInfo.path.startsWith('modules/lib-');
+    const isDemoApp = this._moduleInfo.path.startsWith('modules/demo-app-');
+    const isValidTarget = isLib || isDemoApp;
+
+    if(!(isValidTarget)) {
+      return [];
+    }
+
+    this.scanModule(this._moduleInfo);
+    const result: string[] = [];
+
+    for(const ref of this._refs) {
+      if(result.includes(ref)) {
+        continue;
+      }
+      if(this._moduleInfo.missingDependencies.includes(ref)) {
+        continue;
+      }
+      if(this._moduleInfo.internalDependencies.includes(ref)) {
+        continue;
+      }
+      result.push(ref);
+    }
+
+    return result;
+  }
+
+  private scanModule(moduleInfo: ModuleInfo) {
+    this._scanned.push(moduleInfo.name);
+
+    for (const internalDepName of moduleInfo.actualInternalDependencies) {
+      if(internalDepName === moduleInfo.name) {
+        continue; // lets simply not crash... self ref should be error
+      }
+      if(this._scanned.includes(internalDepName)) {
+        continue;
+      }
+      this._refs.push(internalDepName);
+
+      const next: ModuleInfo = this._registry.modules[internalDepName];
+      if(next) {
+        this.scanModule(next);
+      }
+    }
+  }
+}
+
+function _validateModuleDependenciesStrict(registry: ModuleRegistry, moduleInfo: ModuleInfo, errors: ValidationError[]): void {
+  console.log(`🔒 Strict validation for ${moduleInfo.name} - each module must be self-sufficient`);
+
+  const refs: string[] = new CollectDepChain(registry, moduleInfo).findAll();
+  const missingDependencies: string[] = [... (moduleInfo.missingDependencies ?? []), ...refs];
+
+  // Validate missing external dependencies
+  for (const missingDep of missingDependencies) {
+    const isExternal = !missingDep.startsWith('@dxs-ts/');
+
+    errors.push({
+      type: isExternal ? 'missing_external' : 'missing_internal',
+      severity: 'error',
+      moduleName: moduleInfo.name,
+      item: missingDep,
+      problem: `Used in source code but not declared in package.json`,
+      solution: `Add "${missingDep}" to dependencies in ${moduleInfo.name}/package.json`
+    });
+  }
+
 
   // Validate unused dependencies (as warnings in strict mode)
   if (moduleInfo.unusedDependencies) {
@@ -149,7 +233,7 @@ function _validateModuleDependenciesStrict(moduleInfo: any, errors: ValidationEr
   }
 }
 
-function _validateModuleDependenciesAggregate(registry: ModuleRegistry, moduleInfo: any, validationScope: string[], errors: ValidationError[]): void {
+function _validateModuleDependenciesAggregate(registry: ModuleRegistry, moduleInfo: ModuleInfo, validationScope: string[], errors: ValidationError[]): void {
   console.log(`🌐 Aggregate validation for ${moduleInfo.name} - dependencies can be shared in scope`);
 
   // Collect all declared dependencies available in the scope

@@ -28,7 +28,8 @@
 
     "@dxs-ts/eveli-ide": "*",
 
-    "@dxs-ts/task-api": "*"
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/user-profile": "*"
   },
   "peerDependencies": {
     "react": "*",

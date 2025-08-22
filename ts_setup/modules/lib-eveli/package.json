@@ -17,6 +17,7 @@
 
     "@dxs-ts/envir-fetch": "*",
     "@dxs-ts/envir-util": "*",
+    "@dxs-ts/user-profile": "*",
 
     "@dxs-ts/wrench-api": "*",
     "@dxs-ts/wrench-routes": "*",

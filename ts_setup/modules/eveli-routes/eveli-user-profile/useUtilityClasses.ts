@@ -1,4 +1,4 @@
-import { PrefsApi } from '@dxs-ts/eveli-api';
+import { UserProfileApi } from '@dxs-ts/user-profile';
 import { styled, generateUtilityClass, Box, Switch, Avatar } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
 
@@ -178,7 +178,7 @@ export const EveliUserProfileHeader = styled("div", {
   overridesResolver: (_props) => {
     return [];
   },
-})<{ ownerState: PrefsApi.UserProfile }>(({ theme }) => {
+})<{ ownerState: UserProfileApi.UserProfile }>(({ theme }) => {
 
   return {
     display: 'flex',

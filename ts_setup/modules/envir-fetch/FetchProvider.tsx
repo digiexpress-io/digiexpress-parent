@@ -98,6 +98,6 @@ export function useFetch<TPathId extends keyof HookByPath>(
 ): ReturnType<HookByPath[TPathId]['hook']['proxy']>  {
 
   const context: FetchContextType = React.useContext(FetchContext);
-  const entry = context.state.get(id);
+  const entry: any = context.state.get(id);
   return entry.hook.proxy(props) as any;
 }

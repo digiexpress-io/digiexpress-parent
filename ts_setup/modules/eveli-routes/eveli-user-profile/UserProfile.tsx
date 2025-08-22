@@ -14,7 +14,7 @@ import { UserProfileFirstName } from './UserProfileFirstName';
 import { UserProfileLastName } from './UserProfileLastName';
 import { UserProfileDetailRow } from './UserProfileDetailRow';
 
-import { PrefsApi } from '@dxs-ts/eveli-api';
+import { UserProfileApi } from '@dxs-ts/user-profile';
 import { useIam } from '@dxs-ts/eveli-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { EveliUserOverviewDetail, EveliUserProfileRoot, EveliUserProfileHeader, useUtilityClasses } from './useUtilityClasses';
@@ -28,9 +28,9 @@ export const UserProfile: React.FC<{}> = () => {
   const intl = useIntl();
   const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {})
   const { user } = useIam();
-  const [changes, setChanges] = React.useState<Record<string, PrefsApi.UserProfileUpdateCommand<any>>>({});
+  const [changes, setChanges] = React.useState<Record<string, UserProfileApi.UserProfileUpdateCommand<any>>>({});
 
-  const { data: profile, error, refetch, isPending } = useQuery<PrefsApi.UserProfile>({
+  const { data: profile, error, refetch, isPending } = useQuery<UserProfileApi.UserProfile>({
     queryKey: ['current-user-profile'],
     queryFn: () => restApi().currentUserProfile()
   });
@@ -40,9 +40,9 @@ export const UserProfile: React.FC<{}> = () => {
   const userPermissions = user.permissions.length ? user.permissions.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
   const classes = useUtilityClasses();
 
-  function handleChange(command: PrefsApi.UserProfileUpdateCommand<any>) {
+  function handleChange(command: UserProfileApi.UserProfileUpdateCommand<any>) {
     setChanges(prev => {
-      const next: Record<string, PrefsApi.UserProfileUpdateCommand<any>> = { ...prev };
+      const next: Record<string, UserProfileApi.UserProfileUpdateCommand<any>> = { ...prev };
       const id: string = command.commandType;
 
       next[id] = command;

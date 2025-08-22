@@ -2,9 +2,9 @@
 import { TableState, TableStateInitWith } from "./table-state-types";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { PrefsApi, useIam } from "@dxs-ts/eveli-api";
+import { useIam } from "@dxs-ts/eveli-api";
 import { useFetch } from '@dxs-ts/envir-fetch';
-
+import { UserProfileApi } from '@dxs-ts/user-profile'
 
 const default_profile = 'default';
 
@@ -48,7 +48,7 @@ export function useSavedTableFilters(tableId: string) {
     )
 ): Promise<void> {
 
-    let toBeSaved: PrefsApi.UiSettingsForConfig | undefined;
+    let toBeSaved: UserProfileApi.UiSettingsForConfig | undefined;
     let dataId: string;
     if(operation?.type === 'CREATE') {
       dataId = `${data?.length ?? 1}`;
@@ -70,7 +70,7 @@ export function useSavedTableFilters(tableId: string) {
       throw new Error("not implemented")
     }
 
-    const configs = (data ?? []).reduce<Record<string, PrefsApi.UiSettingsForConfig>>((collector, next) => {
+    const configs = (data ?? []).reduce<Record<string, UserProfileApi.UiSettingsForConfig>>((collector, next) => {
       if (next.id === dataId && !toBeSaved) {
         return collector;
       } else if (next.id === dataId) {

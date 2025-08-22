@@ -33,7 +33,7 @@ export class Visitor_UploadFormJson {
       this.validateFile(context.file);
 
       // File reading - sync using FileReader
-      const fileContent = this.readFileSync(context.file);
+      const fileContent = await this.readFileSync(context.file);
 
       // JSON parsing
       const parsedJson = this.parseJson(fileContent);
@@ -67,9 +67,8 @@ export class Visitor_UploadFormJson {
     }
   }
 
-  private readFileSync(file: File): string {
-    // Use synchronous approach with FileReaderSync in worker or throw for now
-    throw new Error('Synchronous file reading not implemented - use async version');
+  private async readFileSync(file: File): Promise<string> {
+    return await file.text();
   }
 
   private parseJson(content: string): any {

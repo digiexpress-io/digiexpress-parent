@@ -9,6 +9,7 @@
   "dependencies": {
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/task-api": "*",
+    "@dxs-ts/user-profile": "*",
     "@dxs-ts/envir-fetch": "*"
   },
   "peerDependencies": {

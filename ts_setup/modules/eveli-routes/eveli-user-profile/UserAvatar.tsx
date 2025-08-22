@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
-import { PrefsApi } from '@dxs-ts/eveli-api';
+import { UserProfileApi } from '@dxs-ts/user-profile';
 import { EveliAvatar, EveliUserAvatar, useUtilityClasses } from './useUtilityClasses';
 
 function stringToColor(string: String) {
@@ -23,7 +23,7 @@ function stringToColor(string: String) {
 }
 
 
-const UserAvatar: React.FC<{ user: PrefsApi.UserProfile }> = ({ user }) => {
+const UserAvatar: React.FC<{ user: UserProfileApi.UserProfile }> = ({ user }) => {
   const classes = useUtilityClasses();
   const firstLetter = user.details.firstName.substring(0, 1).toUpperCase();
   const secondLetter = user.details.lastName.substring(0, 1).toUpperCase();

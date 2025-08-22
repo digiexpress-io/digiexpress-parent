@@ -11,6 +11,9 @@
       "@dxs-ts/wrench-api": [
         "../wrench-api/index.ts"
       ],
+      "@dxs-ts/user-profile": [
+        "../user-profile/index.ts"
+      ],
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
@@ -55,6 +58,9 @@
       "path": "../wrench-api"
     },
     {
+      "path": "../user-profile"
+    },
+    {
       "path": "../task-api"
     },
     {
@@ -90,9 +96,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
+    "at": "2025-08-22T08:32:53.341Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "59014ff3ca3d",
+    "fromRegistry": "ae4585e55023",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../envir-fetch"
