@@ -37,7 +37,7 @@ import {
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../eveli-task-composer-v2-task-card';
 import { useFetch } from '@dxs-ts/envir-fetch';
-import { TaskApi } from '@dxs-ts/eveli-api';
+import { TaskApi } from '@dxs-ts/task-api';
 
 
 
