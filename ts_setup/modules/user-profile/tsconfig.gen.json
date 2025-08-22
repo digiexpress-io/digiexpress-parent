@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-08-22T07:14:07.724Z",
+    "forModule": "@dxs-ts/user-profile",
+    "fromRegistry": "687aba6a2516",
+    "alias": {}
+  }
+}
