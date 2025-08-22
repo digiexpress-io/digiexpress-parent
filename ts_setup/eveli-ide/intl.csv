@@ -1,21 +1,11 @@
 ID,Info,en,fi,sv
 document.title,,DigiExpress,DigiExpress,DigiExpress
-booleanValue.true,,Yes,Kyllä,Ja
-booleanValue.false,,No,Ei,Inga
 eveli.textSeparatorColon,,: ,: ,: ,
 eveli.noValueIndicator,,--,--,--,
 eveli.permissions.none.title,,Oops!,Joitain meni väärin!,Oops!
 eveli.permissions.none.desc1,,You don't have the correct access rights to use this application.,Sinulla ei ole oikeuksia tämän sovelluksen käyttöön,Du har inte rätt åtkomsträttigheter för att använda denna applikation.
 eveli.permissions.none.desc2,,Please contact your system administrator.,Ota yhteyttä teidän käyttöoikeuksista vastaan henkilöön,Kontakta din systemadministratör.
 tasksView.title,,Tasks,Tehtävät,Uppgiften
-tasksTableHeader.taskName,,Task name,Tehtävän nimi,Uppgiftens namn
-tasksTableHeader.status,,Status,Tila,Status
-tasksTableHeader.dueDate,,Due date,Eräpäivä,Deadline
-tasksTableHeader.priority,,Priority,Prioriteetti,Prioritet
-tasksTableHeader.assigned,,Assigned to,Käsitteljä,Hanterare
-taskPriority.low,,Low,Ei kiireellinen,Inte bråttom
-taskPriority.normal,,Normal,Normaali,Normal
-taskPriority.high,,High,Kiire,Brådskande
 taskDialog.priority,,Priority,Prioriteetti,Prioritet
 taskDialog.subject,Task detail,Subject,Aihe,Ämne
 taskDialog.dueDate,Task detail,Due date,Eräpäivä,Deadline
@@ -46,7 +36,6 @@ task.status.waiting,,Waiting,Odottaa,Väntar
 task.form.review,,View form,Avaa lomake,Visa formulär
 task.created,,Created,Luotu,Skapad
 task.updated,,Updated,Päivitetty,Uppdaterad
-comments,,Comments,Kommentit,Meddelanden
 task.comments.external.createTask,,Create task before adding external comments,Luo tehtävä ennen ulkoisten kommenttien lisäämistä,Skapa uppgift innan du lägger till externa kommentarer
 task.comments.internal.createTask,,Create task before adding internal comments,Luo tehtävä ennen sisäisten kommenttien lisäämistä,Skapa uppgift innan du lägger till interna kommentarer
 task.attachments.createTask,,Create task before uploading attachments,Luo tehtävä ennen liitteiden lataamista,Skapa uppgift innan du laddar upp bilagor
@@ -76,7 +65,6 @@ table.toolbar.search,,Search,Etsi,Söka
 table.toolbar.showColumnsTitle,,Show columns,Näytä sarakkeet,Visa kolumner
 table.toolbar.addRemoveColumns,,Add or remove columns,Lisää tai poista sarakkeita,Lägg till eller ta bort kolumner
 taskLink.pdf.open,task detail,PDF,PDF,PDF
-explorer.title,,Public feedback,Julkinen viesti,Public feedback
 explorer.login,,Log in,Kirjaudu sisään,Logga in
 locale.fi,,Suomi,Suomi,Finska
 locale.sv,,Svenska,Ruotsi,Svenska
@@ -93,7 +81,6 @@ menu.tasks,,Tasks,Tehtävät,Uppgifter
 menu.forms,,Dialob,Dialob,Dialob
 menu.queues,,Queues,Queues,Queues
 menu.help,,Help,Ohjeet,Anvisningar
-menu.flow,,theWrench,theWrench,theWrench
 menu.processes,,Monitoring,Monitorointi,Övervakning
 menu.logout,,Log out,Kirjaudu ulos,Logga ut
 menu.publications,,Publications,Julkaisut,Offentliggörande
@@ -167,7 +154,6 @@ spoTasksTableHeader.created,,Created,Luotu,Ankomnstdatum
 spoTasksTableHeader.clientName,,Client,Asiakas,Kund
 spoTasksTableHeader.additionalInfo,,Info,Info,Info
 taskDialog.clientIdentificator,,Client name,Asiakas,Kundens namn
-Questionnaire,,Questionnaire,Lomake,Formulär
 Manual,,Manual,Manuaalinen,Manuellt
 Protected,,Protected,Suojattu,Skyddad
 Normal,,Normal,Normaali,Normalt
@@ -182,7 +168,6 @@ task.statistics.priorityCount,,By priority,Prioriteetin mukaan,Efter prioritet
 task.statistics.daily,,Daily,Päivittäin,Dagligen
 task.statistics.overdue,,Overdue,Myöhässä,Försenad
 feedback.create.title,,Create public reply to customer feedback,Luo vastine asiakkaan palautteeseen,Skapa offentliga svar på kundfeedback
-feedback.title,,Public reply to customer feedback,Vastine asiakkaan palautteesen,Offentligt svar på kundfeedback
 feedback.update.title,,Edit public reply to customer feedback,Editoi vastinetta asiakkaan palautteelle,Redigera offentligt svar på kundfeedback
 feedback.taskReferenceId,,Task Reference ID,Tehtävän viite,Ärende-ID
 feedback.taskReferenceId.short,,Task Ref,Task Ref,Task Ref,
@@ -262,12 +247,9 @@ releases,,Releases,Julkaisut,Släpps
 options,,Options,Valinnat,Alternativ
 value,,Value,Arvo,Värde
 date,,Date,Päiväys,Datum
-order,,Order,Järjestys,Beställa
 description,,Description,Kuvaus,Beskrivning
 name,,Name,Nimi,Namn
-delete,,Delete,Poista,Radera
 download,,Download JSON,Lataa JSON,Ladda ner JSON
-disable,,Disable,Poista käytöstä,Inaktivera
 status,,Status,Status,Status
 created,,Created,Luotu,Skapad
 remove,,Remove,Poista,Ta bort
@@ -374,7 +356,6 @@ snack.template.editedMessage,,Template changes saved,,Malländringar sparade
 snack.release.createdMessage,,Release created successfully,,Release skapad framgångsrikt
 snack.release.deletedMessage,,Release deleted,,Release raderad
 snack.migration.createdMessage,,Site data updated,,Webbplatsdata uppdaterad
-toolbar.search,,Search,Hae,Söka
 toolbar.save,,Save,Tallenna,Spara
 toolbar.stencil,,theStencil,theStencil,stencilen
 toolbar.wrench,,theWrench,theWrench,skiftnyckeln
@@ -402,7 +383,6 @@ transferlist.search,,Search,Hae,Söka
 transferlist.noSearchResults,,No search results found,Ei tuloksia,Inga sökresultat hittades
 explorer.tabs.links,,Links,Lomakkeet,Länkar
 explorer.tabs.services,,Services,Palvelut,Tjänster
-imports,,Imports,Tuotu sisältö,Importer
 imports.select,,Select a file to import,Valitse tuotava tiedosto,Välj en fil att importera
 imports.import.action,,Import selected,Tuonti valittu,Importera valt
 article.order,,Article order number,Artikkelin järjestysnumero,Artikelbeställningsnummer
@@ -425,7 +405,6 @@ articleservices,,Article services: {name},Artikkelin palvelut: {name},Artikeltj�
 articlelinks,,Article links: {name},Artikkelin linkit: {name},Artikellänkar: {name}
 article.composer.orderhelper,,"The lower the number, the higher up this article will appear in your portal UI Topic Menu.  Example: 000 will be the first Topic menu item, while 999 will be the last.",Mitä pienempi numero sen ylempänän tämä Artikkeli on valinnoissa,"Ju lägre siffra, desto högre upp kommer denna artikel att visas i portalens gränssnittsämnesmeny.  Exempel: 000 kommer att vara det första ämnesmenyn, medan 999 kommer att vara det sista."
 article.timestamps.title,,Assistance,,
-allarticles,,Select all articles,Valitse kaikki,Välj alla artiklar
 button.create,,Create,Luo,Skapa
 button.add,,Add,Lisää,Tillägga
 button.disable,,Continue and disable,Jatka ja deaktivoi,Fortsätt och inaktivera
@@ -543,7 +522,6 @@ flows.autocomplete.task.searchPlaceholder,,Asset name or description,Asset name 
 flows.autocomplete.task.selectType,,Select asset type to link,Select asset type to link,Select asset type to link
 flows.autocomplete.task.searchHelper,,Matches asset name and description,Matches asset name and description,Matches asset name and description
 flows.autocomplete.task.searchResults,,Search results,Search results,Search results
-flows.autocomplete.task,,Add existing asset or create new one,Add existing asset or create new one,Add existing asset or create new one
 flows.autocomplete.task.snackbar.created,,Created new {type}: {name},Created new {type}: {name},Created new {type}: {name}
 flows.autocomplete.task.snackbar.creating,,Creating new {type}: {name},Creating new {type}: {name},Creating new {type}: {name}
 flows.graph.show,,Show flow graph,Show flow graph,Show flow graph
@@ -709,7 +687,7 @@ compare.dialog.line,,Inline,Inline,Inline
 compare.dialog.side,,Side-by-side,Vierekkäin,Sida vid sida
 menu.activities,,Activities,Aktiviteetit,Aktiviteter
 feedback.all,,All feedback,Kaikki palaute,All feedback
-feedback.none,,No feedback available,Palautetta ei ole saatavilla,Ingen feedback tillgänglig
+task.feedback.none,,No feedback available,Palautetta ei ole saatavilla,Ingen feedback tillgänglig
 queues.all,,Queues,Jonot,Köer
 consumers.all,,Consumers,Kuluttajat,Konsumenter
 queue.config.none,,Loading,Ladataan,Belastning
@@ -801,6 +779,6 @@ eveli.userProfile.tenantConfig.select.user_profile.desc,,Show / hide the user pr
 eveli.userProfile.tenantConfig.select.visual_accommodation,,Visual accommodation,,,
 eveli.userProfile.tenantConfig.select.visual_accommodation.desc,,To make certain buttons and UI items pop for enhanced visibility,,,
 // -------------------------- BATCHES ---------------------------------
-eveli.batches.batchView..averageRunTime,,Average run time,Average run time,,
+eveli.batches.batchView.averageRunTime,,Average run time,Average run time,,
 eveli.batches.batchView.averageRunTime.ms,,ms,ms,,
 // -------------------------- TASK CARD -------------------------------
