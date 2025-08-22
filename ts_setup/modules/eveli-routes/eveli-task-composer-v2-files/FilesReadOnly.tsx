@@ -8,22 +8,18 @@ import { useIntl } from 'react-intl';
 import { TaskApi } from '@dxs-ts/task-api';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';
 
-const files = [
-  { id: 1, name: 'report.pdf', uploadedAt: '11.09.2025' },
-  { id: 2, name: 'design.png', uploadedAt: '10.09.2025' },
-  { id: 3, name: 'invoice.docx', uploadedAt: '09.09.2025' },
-];
 
 export interface FilesReadOnlyProps {
   task: TaskApi.Task;
-  style: TaskCardStyleDefinition
+  style: TaskCardStyleDefinition;
+  attachments: TaskApi.Attachment[],
 }
 
-export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => {
+export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style, attachments }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
 
-  if (!files.length || files.length === 0) {
+  if (!attachments.length || attachments.length === 0) {
     return (
       <Typography sx={{ ...style.bodyTypography }} color='error'>
         {intl.formatMessage({ id: 'task.file.none', defaultMessage: 'No files found' })}
@@ -31,12 +27,12 @@ export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => 
   }
   return (
     <TaskFiles className={classes.root} style={style}>
-      {files.map((file) => (<div key={file.id}>
+      {attachments.map((file) => (<div key={file.name}>
         <Box className={classes.file}>
           <DescriptionIcon className={classes.fileIcon} />
           <Typography sx={{ ...style.bodyTypography }}>{file.name}</Typography>
           <Box flexGrow={1} />
-          <Typography sx={{ ...style.bodyTypography }}>{file.uploadedAt}</Typography>
+          <Typography sx={{ ...style.bodyTypography }}>{file.updated.toString()}</Typography>
         </Box>
         <Divider />
       </div>

@@ -297,7 +297,7 @@ attachmentButton.deleteAttachment,,Delete file,Poista tiedosto,Ta bort fil
 attachment.uploadOk,,File {fileName} uploaded,Tiedosto {fileName} ladattu,Fil {fileName} uploaded
 attachment.uploadFailed,,File {fileName} upload failed!,Tiedoston {fileName} lataaminen epäonnistui!,Fil {fileName} upload failed!
 attachment.delete.confirmTitle,,Delete file?,Poista tiedosto?,Delete file?
-attachment.delete.confirmText,,Are you sure you want to delete file {fileName}?,Haluatko varmasti poistaa tiedoston {fileName}?,Är du säker på att du vill ta bort denna {fileName}?
+attachment.delete.confirmText,,Are you sure you want to delete the file {fileName}?,Haluatko varmasti poistaa tiedoston {fileName}?,Är du säker på att du vill ta bort denna {fileName}?
 attachment.deleteFailed,,File {fileName} delete failed!,Tiedoston {fileName} poistaminen epäonnistui!,File {fileName} delete failed!
 workflowReleaseTable.title,,Workflow release tags,Työnkulku,Workflow release
 workflowReleaseTableHeader.name,,Name,Nimi,Name

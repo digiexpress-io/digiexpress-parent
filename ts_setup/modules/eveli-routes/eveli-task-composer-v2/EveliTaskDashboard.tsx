@@ -36,6 +36,8 @@ import {
   TaskCardStyleSelect,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../eveli-task-composer-v2-task-card';
+import { useFetch } from '@dxs-ts/envir-fetch';
+import { TaskApi } from '@dxs-ts/eveli-api';
 
 
 
@@ -46,6 +48,15 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
   const { task } = useTaskDashboard();
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
+  const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
+
+  React.useEffect(() => {
+    loadAttachments(task.id).then(setAttachments);
+  }, [task.id]);
+
+
+
 
   const commonProps = {
     id: cardId,
@@ -70,7 +81,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   switch (cardId) {
     case 'task_main_alt':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })} ${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
@@ -90,7 +101,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
-          altChildren={<TaskPropertiesAlt style={style} onReview={toggleReview} />} 
+          altChildren={<TaskPropertiesAlt style={style} onReview={toggleReview} />}
         >
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={
@@ -173,9 +184,16 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
-          editDialog={isEditOpen && (<FilesEditDialog task={task} open onClose={handleEditClose} />)}
+          editDialog={isEditOpen && (
+            <FilesEditDialog open
+              task={task}
+              onClose={handleEditClose}
+              attachments={attachments}
+              setAttachments={setAttachments}
+            />
+          )}
         >
-          <FilesReadOnly task={task} style={style} />
+          <FilesReadOnly task={task} style={style} attachments={attachments} />
         </TaskCard>
       );
 

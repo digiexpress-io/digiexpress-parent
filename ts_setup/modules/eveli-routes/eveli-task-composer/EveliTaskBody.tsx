@@ -61,7 +61,6 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
     loadAttachments(id).then(setAttachments);
   }, [id]);
 
-  console.log(task)
 
   return (
     <Grid2 container spacing={2} paddingLeft={2} paddingRight={2}>
