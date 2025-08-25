@@ -24,6 +24,8 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.StringUtils;
 
@@ -52,6 +54,7 @@ public class TaskMapper {
   public static final String LABEL_TYPE_KEYWORD = "keyword";
   public static final String LABEL_TYPE_FEATURES = "features";
   
+  public static final String LINK_TYPE_DOC_PROPS = "doc_props";
   public static final String LINK_TYPE_CLIENT_LOCALE = "client_locale";
   public static final String LINK_TYPE_ADDITIONAL_INFO = "additional_info";
   public static final String LINK_TYPE_TRANSFERRED_ID = "transferred_id";
@@ -167,6 +170,13 @@ public class TaskMapper {
         .filter(e -> TaskMapper.LINK_TYPE_ADDITIONAL_INFO.equals(e.getLinkType()))
         .map(e -> e.getLinkValue())
         .findFirst();
+
+    final var docProps = links.stream()
+        .filter(e -> TaskMapper.LINK_TYPE_DOC_PROPS.equals(e.getLinkType()))
+        .map(e -> e.getLinkBody().getMap().entrySet().stream().collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue().toString())))
+        .findFirst();
+    
+    
     
     final var task = ImmutableTask.builder()
       .version(commited.getCommitId())
@@ -195,6 +205,8 @@ public class TaskMapper {
       
       .transferredId(transferredId.orElse(null))
       .transferredProps(transferredProps.orElse(null))
+      
+      .documentProperties(docProps.orElse(Collections.emptyMap()))
       
       .keyWords(keywords)
       .features(features)

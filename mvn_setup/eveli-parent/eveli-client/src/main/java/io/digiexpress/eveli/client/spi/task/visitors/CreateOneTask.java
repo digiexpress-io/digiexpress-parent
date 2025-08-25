@@ -45,6 +45,7 @@ import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.CreateOneMission;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
@@ -112,6 +113,19 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
         .build()
       );
     }
+    
+    
+    // set document properties 
+    if(!commmand.getDocumentProperties().isEmpty()) {
+      mission
+      .addLink(newLink -> newLink
+        .linkBody(JsonObject.mapFrom(commmand.getDocumentProperties()))
+        .linkValue("data associated with task creating")
+        .linkType(TaskMapper.LINK_TYPE_DOC_PROPS)
+        .build()
+      );
+    }
+    
     
     // set the keywords
     for(final var keyword : commmand.getKeyWords()) {

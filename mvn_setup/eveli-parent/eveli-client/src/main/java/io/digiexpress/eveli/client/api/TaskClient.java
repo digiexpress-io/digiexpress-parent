@@ -176,6 +176,8 @@ public interface TaskClient {
     List<TaskComment> getComments();
     List<Checklist> getChecklist();
     
+    Map<String, String> getDocumentProperties();
+    
     @Value.Default
     @Override default TaskCommandType getCommandType() { return TaskCommandType.CreateTask; }
     
@@ -266,7 +268,8 @@ public interface TaskClient {
     @Nullable String getAssignedUser();
     @Nullable String getAssignedUserEmail();
 
-    
+
+    Map<String, String> getDocumentProperties();
     @Nullable String getTransferredId();
     @Nullable JsonObject getTransferredProps();
     
