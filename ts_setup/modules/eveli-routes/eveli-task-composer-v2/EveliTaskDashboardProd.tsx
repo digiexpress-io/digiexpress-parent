@@ -51,9 +51,7 @@ const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (p
   const style = styleConfig[cardTheme];
   
   return (
-    <Grid2 container spacing={style.cardSpacing} m={1}>
-      
-
+    <Grid2 container spacing={style.cardSpacing} m={2}>
       <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
         sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
         {cardOrder.map((cardId) => (

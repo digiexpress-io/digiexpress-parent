@@ -147,16 +147,15 @@ export const TaskCardDataRowElement: React.FC<{ label: string, value: React.Reac
 }
 
 export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon }) => {
-  const theme = useTheme();
   const Icon = icon;
 
   return (
     <Avatar sx={{
       mr: 1,
-      border: `1px solid gray`,
-      backgroundColor: theme.palette.primary.main
+      border: `1px solid #c6cad2`,
+      backgroundColor: alpha("#70798c", 0.1)
     }}>
-      <Icon />
+      <Icon sx={{ color: '#6c7689' }} />
     </Avatar>
   )
 }
@@ -203,7 +202,6 @@ const TaskSectionCard = styled(Box, {
       alignItems: 'center',
       color: theme.palette.text.primary,
       paddingBottom: theme.spacing(2),
-
     },
   };
 
