@@ -22,7 +22,7 @@ export function useLastTableState(tableId: string) {
         return next.hash;
       }
       if(isSmartTables) {
-        restApi().updateUiSettings({
+        restApi.updateUiSettings({
           commandType: 'UpsertUiSettings',
           settingsId,
           userId: user.name,
@@ -45,7 +45,7 @@ export function useLastTableState(tableId: string) {
       return undefined;
     }
     try {
-      const data = await restApi().findUiSettings(settingsId);
+      const data = await restApi.findUiSettings(settingsId);
       if(!data?.config) {
         return undefined;
       }

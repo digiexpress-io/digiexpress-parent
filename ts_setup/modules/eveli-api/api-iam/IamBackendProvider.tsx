@@ -2,6 +2,7 @@ import React from 'react';
 import { IamApi } from './iam-types'
 import { IamLiveness } from './IamLiveness'
 import { useFetch } from '@dxs-ts/envir-fetch';
+import { UserProfileApi } from '@dxs-ts/user-profile';
 import { IamForcedLogin } from './IamForcedLogin';
 import { useConfig } from '../api-config';
 
@@ -18,6 +19,7 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   const { loginUrl } = useConfig();
 
   const { getUser, getEmptyUser } = useFetch('$org/userInfo.GET', {});
+  const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {});
   const [user, setUser] = React.useState<IamApi.User>(getEmptyUser());
   const [pending, setPending] = React.useState<boolean>(true);
 
@@ -53,8 +55,13 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   }
 
   return (<IamBackendContext.Provider value={contextValue}>
-    {props.children}
-    <IamLiveness onExpire={onExpire} user={user}/>
+    <>
+      {/** link user profile with IAM */}
+      <UserProfileApi.Provider backend={restApi} userId={user.name}>
+        {props.children}
+      </UserProfileApi.Provider>
+      <IamLiveness onExpire={onExpire} user={user}/>
+    </>
   </IamBackendContext.Provider>);
 }
 

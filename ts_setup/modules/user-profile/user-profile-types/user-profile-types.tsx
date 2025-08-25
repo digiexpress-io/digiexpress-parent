@@ -4,7 +4,7 @@ export namespace UserProfileApi {
   export const UserProfileContext = React.createContext<UserProfileContextType>({} as any)
 
   // just storage context
-  export const UserProfileProvider: React.FC<{ 
+  export const Provider: React.FC<{ 
     backend: PrefsRestApi;
     userId: string; // current user id... whoever is logged in
     children: React.ReactNode

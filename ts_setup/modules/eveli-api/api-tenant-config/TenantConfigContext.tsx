@@ -77,7 +77,7 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
       return;
     }
     const createIfNotDefined = contextValue.features.includes('user_profile');
-    profile.restApi().currentUserProfile(createIfNotDefined)
+    profile.restApi.currentUserProfile(createIfNotDefined)
       .then(profile => {
         console.groupCollapsed('user profile');
 

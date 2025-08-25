@@ -198,6 +198,8 @@ export class VersionInfoBuilder {
 
     // Execute the console.log with all formatting
     const finalOutput = allLines.join('\n').replace(/ /g, '\u00A0');
+    console.groupCollapsed("version info")
     console.log(finalOutput, ...allStyles);
+    console.groupEnd()
   }
 }

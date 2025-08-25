@@ -32,7 +32,7 @@ export const UserProfile: React.FC<{}> = () => {
 
   const { data: profile, error, refetch, isPending } = useQuery<UserProfileApi.UserProfile>({
     queryKey: ['current-user-profile'],
-    queryFn: () => restApi().currentUserProfile()
+    queryFn: () => restApi.currentUserProfile()
   });
 
 
@@ -52,7 +52,7 @@ export const UserProfile: React.FC<{}> = () => {
 
 
   function handleSave() {
-    restApi().updateUserProfile(Object.values(changes))
+    restApi.updateUserProfile(Object.values(changes))
       .then(() => refetch())
       .then(() => setChanges({}));
   }
