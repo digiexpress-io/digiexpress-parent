@@ -55,6 +55,7 @@ const INITIAL_CONFIG: CardConfig = {
 
 export interface CardConfigContextProviderProps {
   cardTheme?: TaskCardStyleKey;
+  initialCardOrder?: TaskCardId[];
 }
 
 export const CardConfigContext = createContext<CardConfig>(INITIAL_CONFIG);
@@ -67,7 +68,7 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
 
   const [editingCardId, setEditingCardId] = React.useState<TaskCardId | undefined>();
   const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>(props.cardTheme ?? 'default');
-  const [cardOrder, setCardOrder] = React.useState<TaskCardId[]>(TASK_CARD_IDS);
+  const [cardOrder, setCardOrder] = React.useState<TaskCardId[]>(props.initialCardOrder ?? TASK_CARD_IDS);
 
 
   const contextValue: CardConfig = React.useMemo(() => {

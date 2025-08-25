@@ -43,8 +43,8 @@ export interface EveliTaskDashboardProdProps {
 
 
 const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (props) => {
-  const cards = props.cards ?? _variant_prod;
-  const { isReviewOpen, cardTheme, toggleReview } = useCardConfig();
+  const { isReviewOpen, cardTheme, toggleReview, cardOrder } = useCardConfig();
+
   const { getDragPropsForId } = useDragCardController();
 
   const styleConfig = useTaskCardThemeConfig();
@@ -56,7 +56,7 @@ const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (p
 
       <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
         sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
-        {cards.map((cardId) => (
+        {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)}>
               <CardFactory cardId={cardId} />
@@ -75,7 +75,7 @@ export const EveliTaskDashboardProd: React.FC<{ taskId: string }> = (props) => {
 
   return (
     <EveliTaskDashboardContextProvider taskId={props.taskId}>
-      <CardConfigContextProvider cardTheme='large'>
+      <CardConfigContextProvider cardTheme='large' initialCardOrder={_variant_prod}>
         <EveliTaskDashboardProdInternal />
       </CardConfigContextProvider>
     </EveliTaskDashboardContextProvider>
