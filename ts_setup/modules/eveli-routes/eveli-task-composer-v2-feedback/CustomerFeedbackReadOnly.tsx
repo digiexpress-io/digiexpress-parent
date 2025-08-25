@@ -1,5 +1,5 @@
 import React from 'react';
-import { alpha, Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
+import { alpha, Box, generateUtilityClass, styled, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 
 import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
@@ -40,20 +40,23 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
           <PublishedNotifier task={task} style={style} />
         </Box>
       </Box>
-      <Divider sx={{ my: 1 }} />
 
-      <Box className={classes.customerTitle}>
-        <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold', marginBottom: 1 }}>
+      <Box className={classes.leftBorder}>
+
+        <Box className={classes.customerText}>
+          <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold' }}>
           {intl.formatMessage({ id: 'task.feedback.title', defaultMessage: 'Customer title' })}
         </Typography>
         <Typography sx={{ ...style.bodyTypography }}>{feedback.content.title}</Typography>
       </Box>
 
+
       <Box className={classes.customerText}>
-        <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold', marginBottom: 1 }}>
+          <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold' }}>
           {intl.formatMessage({ id: 'task.feedback.detailedResponse', defaultMessage: 'Details from customer' })}
         </Typography>
-        <Typography sx={{ ...style.bodyTypography }}>{truncate(feedback.content.question, 150)}</Typography>
+          <Typography sx={{ ...style.bodyTypography }}>{truncate(feedback.content.question, 350)}</Typography>
+        </Box>
       </Box>
     </StyledCustomerFeedbackReadOnly>
   )
@@ -85,19 +88,14 @@ const StyledCustomerFeedbackReadOnly = styled('div', {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1)
   },
-  '& .CustomerFeedbackReadOnly-customerTitle': {
-    backgroundColor: alpha(theme.palette.primary.dark, 0.1),
-    border: `1px solid ${alpha(theme.palette.primary.dark, 0.15)}`,
-    padding: theme.spacing(1),
-    borderRadius: theme.spacing(2),
+  '& .CustomerFeedbackReadOnly-customerText': {
+    padding: theme.spacing(0.5),
   },
 
-
-  '& .CustomerFeedbackReadOnly-customerText': {
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-    padding: theme.spacing(1),
-    borderRadius: theme.spacing(2)
+  '& .CustomerFeedbackReadOnly-leftBorder': {
+    borderLeft: `3px solid ${theme.palette.primary.main}`,
+    paddingLeft: theme.spacing(1),
+    backgroundColor: alpha(theme.palette.primary.main, 0.06)
   },
 
   '& .CustomerFeedbackReadOnly-publishedNotifier': {
@@ -129,7 +127,7 @@ export const useUtilityClasses = () => {
     publishedNotifier: ['publishedNotifier'],
     feedbackCategories: ['feedbackCategories'],
     customerText: ['customerText'],
-    customerTitle: ['customerTitle']
+    leftBorder: ['leftBorder']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
