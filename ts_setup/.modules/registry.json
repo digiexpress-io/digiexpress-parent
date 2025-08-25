@@ -27,6 +27,7 @@
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
+          "@dxs-ts/xui-datetime": "*",
           "@dxs-ts/eveli-ide": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/user-profile": "*"
@@ -55,6 +56,7 @@
         "@tanstack/react-query",
         "@mui/utils",
         "@mui/material",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/user-profile",
@@ -97,6 +99,7 @@
         "@mui/material"
       ],
       "internalDependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/user-profile",
@@ -169,6 +172,7 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@mui/utils",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-routes",
@@ -520,6 +524,7 @@
           "components"
         ],
         "dependencies": {
+          "@dxs-ts/xui-datetime": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/user-profile": "*",
@@ -563,6 +568,7 @@
         "@mui/system",
         "@mui/material",
         "@mui/icons-material",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -607,6 +613,7 @@
         "@mui/icons-material"
       ],
       "internalDependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -630,6 +637,7 @@
         "@mui/system",
         "@mui/material",
         "@mui/icons-material",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -655,6 +663,7 @@
         "@mui/icons-material"
       ],
       "actualInternalDependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -1653,7 +1662,8 @@
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/eveli-intl": "*",
-          "@dxs-ts/eveli-routes": "*"
+          "@dxs-ts/eveli-routes": "*",
+          "@dxs-ts/xui-datetime": "*"
         },
         "peerDependencies": {},
         "keywords": [
@@ -1664,6 +1674,7 @@
         ]
       },
       "dependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/user-profile",
@@ -1687,6 +1698,7 @@
       "peerDependencies": [],
       "externalDependencies": [],
       "internalDependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/user-profile",
@@ -1748,6 +1760,7 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api"
       ]
@@ -2287,11 +2300,77 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": []
+    },
+    "@dxs-ts/xui-datetime": {
+      "name": "@dxs-ts/xui-datetime",
+      "path": "modules/xui-datetime",
+      "packageJson": {
+        "name": "@dxs-ts/xui-datetime",
+        "version": "${project.version}",
+        "description": "XUI, base UI component for date and time picker",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "luxon": "*"
+        },
+        "keywords": [
+          "wrench",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react-intl",
+        "react",
+        "luxon",
+        "@mui/material",
+        "@mui/icons-material"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "@mui/material",
+        "@mui/icons-material",
+        "luxon"
+      ],
+      "externalDependencies": [
+        "react-intl",
+        "react",
+        "luxon",
+        "@mui/material",
+        "@mui/icons-material"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react-intl",
+        "react",
+        "luxon",
+        "@mui/material",
+        "@mui/icons-material"
+      ],
+      "actualExternalDependencies": [
+        "react-intl",
+        "react",
+        "luxon",
+        "@mui/material",
+        "@mui/icons-material"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
     }
   },
   "dependencyGraph": {
     "forward": {
       "@dxs-ts/eveli-demo-app": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/user-profile",
@@ -2340,6 +2419,7 @@
       ],
       "@dxs-ts/eveli-intl": [],
       "@dxs-ts/eveli-primitives": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -2395,6 +2475,7 @@
       ],
       "@dxs-ts/gamut-theme": [],
       "@dxs-ts/eveli-ide": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/user-profile",
@@ -2442,7 +2523,8 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-api",
         "@dxs-ts/envir-fetch"
-      ]
+      ],
+      "@dxs-ts/xui-datetime": []
     },
     "reverse": {
       "@dxs-ts/eveli-demo-app": [],
@@ -2603,6 +2685,11 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-ide"
       ]
     },
     "circularDependencies": []
@@ -2633,7 +2720,8 @@
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
-        "@dxs-ts/eveli-routes"
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/xui-datetime"
       ],
       "externalDependencies": [
         "@material-table/core",
@@ -2712,6 +2800,6 @@
       ]
     }
   },
-  "checksum": "f543320742b643f23e815f2efc578cb89dc40113280151df6467edbb1754d592",
-  "generatedAt": "2025-08-22T08:37:18.453Z"
+  "checksum": "da06b51e5ccf7be8335ad5da4b2c38c29918f20190f1cfb936fadb94b9b2656b",
+  "generatedAt": "2025-08-25T07:29:50.662Z"
 }

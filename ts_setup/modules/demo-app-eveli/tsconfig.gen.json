@@ -5,6 +5,9 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
+      ],
       "@dxs-ts/wrench-routes": [
         "../wrench-routes/index.ts"
       ],
@@ -70,6 +73,9 @@
   "extends": "../../tsconfig.json",
   "references": [
     {
+      "path": "../xui-datetime"
+    },
+    {
       "path": "../wrench-routes"
     },
     {
@@ -132,9 +138,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-22T08:35:45.251Z",
+    "at": "2025-08-25T07:29:50.663Z",
     "forModule": "@dxs-ts/eveli-demo-app",
-    "fromRegistry": "99f207c35a41",
+    "fromRegistry": "da06b51e5ccf",
     "alias": {
       "@dxs-ts/eveli-demo-app": [
         "../envir-fetch"

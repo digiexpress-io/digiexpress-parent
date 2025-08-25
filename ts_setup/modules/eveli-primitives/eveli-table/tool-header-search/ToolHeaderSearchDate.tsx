@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl';
 
 import { FilterByStringSlot, useUtilityClasses } from './useUtilityClasses';
 import { useHeaderSearchState } from './useHeaderSearchState';
-import { DatePicker } from '../../date-picker';
+import { DatePicker } from '@dxs-ts/xui-datetime';
 import { DateTime } from 'luxon';
 
 

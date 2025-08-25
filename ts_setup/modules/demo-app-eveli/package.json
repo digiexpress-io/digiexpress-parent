@@ -25,7 +25,7 @@
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/eveli-routes": "*",
-
+    "@dxs-ts/xui-datetime": "*",
     "@dxs-ts/eveli-ide": "*",
 
     "@dxs-ts/task-api": "*",

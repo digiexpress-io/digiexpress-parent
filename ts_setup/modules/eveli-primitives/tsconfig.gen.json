@@ -5,6 +5,9 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
+      ],
       "@dxs-ts/user-profile": [
         "../user-profile/index.ts"
       ],
@@ -22,6 +25,9 @@
   "extends": "../../tsconfig.json",
   "references": [
     {
+      "path": "../xui-datetime"
+    },
+    {
       "path": "../user-profile"
     },
     {
@@ -36,9 +42,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-22T08:31:58.537Z",
+    "at": "2025-08-25T07:28:09.288Z",
     "forModule": "@dxs-ts/eveli-primitives",
-    "fromRegistry": "52ab2d6f2553",
+    "fromRegistry": "08f436610867",
     "alias": {
       "@dxs-ts/eveli-primitives": [
         "../envir-fetch"

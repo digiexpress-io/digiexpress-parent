@@ -7,6 +7,7 @@
 
   "keywords": ["eveli", "ui", "primitives", "components"],
   "dependencies": {
+    "@dxs-ts/xui-datetime": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/task-api": "*",
     "@dxs-ts/user-profile": "*",
