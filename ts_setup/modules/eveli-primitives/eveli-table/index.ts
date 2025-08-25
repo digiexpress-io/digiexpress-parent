@@ -1,1 +1,0 @@
-export { WithTableStyles } from './WithTableStyles';

@@ -6,7 +6,7 @@ import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { Link as RouterLink } from '@tanstack/react-router'
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { BatchApi } from '@dxs-ts/eveli-api';
-import { WithTableStyles } from '../eveli-table';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { BatchHealthBall } from '../eveli-batches-health-ball';
 
 

@@ -1,0 +1,24 @@
+{
+  "name": "@dxs-ts/xui-table",
+  "version": "${project.version}",
+  "description": "",
+  "type": "module",
+  "private": false,
+
+  "keywords": ["xui", "table"],
+  "dependencies": {
+    "@dxs-ts/xui-datetime": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "luxon": "*",
+    "ts-md5": "*",
+    "react-intl": "*",
+    "@mui/material": "*",
+    "@mui/system": "*",
+    "@mui/icons-material": "*",
+    "@mui/utils": "*",
+    "@tanstack/react-table": "*",
+    "@tanstack/react-query": "*"
+  }
+}

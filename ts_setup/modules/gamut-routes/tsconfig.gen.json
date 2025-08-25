@@ -5,55 +5,55 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
+      "@dxs-ts/gamut-api": [
+        "../gamut-api/index.ts"
+      ],
       "@dxs-ts/gamut-shell": [
         "../gamut-shell/index.ts"
       ],
-      "@dxs-ts/gamut-primitives": [
-        "../gamut-primitives/index.ts"
-      ],
       "@dxs-ts/gamut-md": [
         "../gamut-md/index.ts"
+      ],
+      "@dxs-ts/gamut-primitives": [
+        "../gamut-primitives/index.ts"
       ],
       "@dxs-ts/gamut-form-review": [
         "../gamut-form-review/index.ts"
       ],
       "@dxs-ts/gamut-form": [
         "../gamut-form/index.ts"
-      ],
-      "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
+      "path": "../gamut-api"
+    },
+    {
       "path": "../gamut-shell"
     },
     {
-      "path": "../gamut-primitives"
+      "path": "../gamut-md"
     },
     {
-      "path": "../gamut-md"
+      "path": "../gamut-primitives"
     },
     {
       "path": "../gamut-form-review"
     },
     {
       "path": "../gamut-form"
-    },
-    {
-      "path": "../gamut-api"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
+    "at": "2025-08-25T08:29:08.096Z",
     "forModule": "@dxs-ts/gamut-routes",
-    "fromRegistry": "59014ff3ca3d",
+    "fromRegistry": "308e7ad54407",
     "alias": {
       "@dxs-ts/gamut-routes": [
-        "../gamut-api"
+        "../gamut-form"
       ]
     }
   }

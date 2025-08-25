@@ -3,7 +3,7 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 
-import { WithTableStyles } from '../../eveli-table';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { DashboardItem, useDialobForms } from '@dxs-ts/eveli-api';
 import { FormTableDateTime } from '../form-table-date-time';
 import { filterDateGte_lastSaved, filterDateGte_latestTagDate } from '../form-table-filters';

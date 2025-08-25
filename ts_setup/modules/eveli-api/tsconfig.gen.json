@@ -5,67 +5,73 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
-      "@dxs-ts/wrench-api": [
-        "../wrench-api/index.ts"
-      ],
-      "@dxs-ts/user-profile": [
-        "../user-profile/index.ts"
-      ],
-      "@dxs-ts/task-api": [
-        "../task-api/index.ts"
-      ],
-      "@dxs-ts/stencil-api": [
-        "../stencil-api/index.ts"
-      ],
-      "@dxs-ts/gamut-theme": [
-        "../gamut-theme/index.ts"
-      ],
-      "@dxs-ts/eveli-intl": [
-        "../eveli-intl/index.ts"
+      "@dxs-ts/envir-fetch": [
+        "../envir-fetch/index.ts"
       ],
       "@dxs-ts/envir-util": [
         "../envir-util/index.ts"
       ],
-      "@dxs-ts/envir-fetch": [
-        "../envir-fetch/index.ts"
+      "@dxs-ts/wrench-api": [
+        "../wrench-api/index.ts"
+      ],
+      "@dxs-ts/stencil-api": [
+        "../stencil-api/index.ts"
+      ],
+      "@dxs-ts/eveli-intl": [
+        "../eveli-intl/index.ts"
+      ],
+      "@dxs-ts/task-api": [
+        "../task-api/index.ts"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "../gamut-theme/index.ts"
+      ],
+      "@dxs-ts/user-profile": [
+        "../user-profile/index.ts"
+      ],
+      "@dxs-ts/xui-table": [
+        "../xui-table/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
-      "path": "../wrench-api"
-    },
-    {
-      "path": "../user-profile"
-    },
-    {
-      "path": "../task-api"
-    },
-    {
-      "path": "../stencil-api"
-    },
-    {
-      "path": "../gamut-theme"
-    },
-    {
-      "path": "../eveli-intl"
+      "path": "../envir-fetch"
     },
     {
       "path": "../envir-util"
     },
     {
-      "path": "../envir-fetch"
+      "path": "../wrench-api"
+    },
+    {
+      "path": "../stencil-api"
+    },
+    {
+      "path": "../eveli-intl"
+    },
+    {
+      "path": "../task-api"
+    },
+    {
+      "path": "../gamut-theme"
+    },
+    {
+      "path": "../user-profile"
+    },
+    {
+      "path": "../xui-table"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-22T07:19:18.199Z",
+    "at": "2025-08-25T08:59:33.830Z",
     "forModule": "@dxs-ts/eveli-api",
-    "fromRegistry": "b39401579c1a",
+    "fromRegistry": "d5fc913dac9e",
     "alias": {
       "@dxs-ts/eveli-api": [
-        "../envir-fetch"
+        "../xui-table"
       ]
     }
   }

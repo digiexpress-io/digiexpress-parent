@@ -10,7 +10,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import { useIntl } from 'react-intl';
 import { FillerRows } from './FillerRows';
-import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
+import { useTable } from '../table-provider';
 
 export type EveliTableDrawerType = 'filters' | 'columns' | 'saved-filters' | 'export-data';
 
@@ -37,6 +37,7 @@ export interface EveliTableProps {
 
 
 export function EveliTable(props: EveliTableProps): React.ReactNode {
+  const { persistent } = useTable();
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { header, body, footer, drawer, root } = props.slotProps;
@@ -102,13 +103,13 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
           </Button>
         </DrawerButtonSlot>
 
-        <EveliTenantFeatureEnabled id='SMART_TABLES'>
+        {persistent && (
           <DrawerButtonSlot className={classes.drawerButton}>
             <Button variant='text' startIcon={<FavoriteBorderIcon />} onClick={handleDrawerOpenSavedFilters} disableRipple>
               <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.savedFiltersButton', defaultMessage: 'Saved Filters' })}</Typography>
             </Button>
-          </DrawerButtonSlot>
-        </EveliTenantFeatureEnabled>
+          </DrawerButtonSlot>)
+        }
 
         { drawer.body['export-data'] && (
         <DrawerButtonSlot className={classes.drawerButton}>

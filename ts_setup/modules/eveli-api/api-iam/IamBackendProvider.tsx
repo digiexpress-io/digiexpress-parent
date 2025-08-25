@@ -5,6 +5,7 @@ import { useFetch } from '@dxs-ts/envir-fetch';
 import { UserProfileApi } from '@dxs-ts/user-profile';
 import { IamForcedLogin } from './IamForcedLogin';
 import { useConfig } from '../api-config';
+import { SmartTableIntegration } from './SmartTableIntegration';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -58,12 +59,17 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
     <>
       {/** link user profile with IAM */}
       <UserProfileApi.Provider backend={restApi} userId={user.name}>
-        {props.children}
+        <SmartTableIntegration>
+          {props.children}
+        </SmartTableIntegration>
       </UserProfileApi.Provider>
       <IamLiveness onExpire={onExpire} user={user}/>
     </>
   </IamBackendContext.Provider>);
 }
+
+
+
 
 export const useIam = () => {
   return React.useContext(IamBackendContext);

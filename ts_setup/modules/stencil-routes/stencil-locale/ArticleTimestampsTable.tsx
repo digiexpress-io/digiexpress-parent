@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 
-import { WithTableStyles } from '@dxs-ts/eveli-primitives';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 
 import type { CellContext } from '@tanstack/react-table';
 

@@ -18,7 +18,8 @@
     "@dxs-ts/task-api": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
-    "@dxs-ts/user-profile": "*"
+    "@dxs-ts/user-profile": "*",
+    "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {
     "react": "*",

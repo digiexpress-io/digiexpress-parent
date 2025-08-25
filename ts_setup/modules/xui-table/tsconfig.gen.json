@@ -5,31 +5,25 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
-      "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
-      ],
-      "@dxs-ts/gamut-md": [
-        "../gamut-md/index.ts"
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
-      "path": "../gamut-api"
-    },
-    {
-      "path": "../gamut-md"
+      "path": "../xui-datetime"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T08:29:08.096Z",
-    "forModule": "@dxs-ts/gamut-form-review",
+    "at": "2025-08-25T08:29:08.097Z",
+    "forModule": "@dxs-ts/xui-table",
     "fromRegistry": "308e7ad54407",
     "alias": {
-      "@dxs-ts/gamut-form-review": [
-        "../gamut-md"
+      "@dxs-ts/xui-table": [
+        "../xui-datetime"
       ]
     }
   }

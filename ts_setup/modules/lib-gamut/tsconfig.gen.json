@@ -5,23 +5,17 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
-      "@dxs-ts/gamut-theme": [
-        "../gamut-theme/index.ts"
+      "@dxs-ts/envir-util": [
+        "../envir-util/index.ts"
       ],
-      "@dxs-ts/gamut-shell": [
-        "../gamut-shell/index.ts"
-      ],
-      "@dxs-ts/gamut-routes": [
-        "../gamut-routes/index.ts"
-      ],
-      "@dxs-ts/gamut-primitives": [
-        "../gamut-primitives/index.ts"
+      "@dxs-ts/gamut-api": [
+        "../gamut-api/index.ts"
       ],
       "@dxs-ts/gamut-md": [
         "../gamut-md/index.ts"
       ],
-      "@dxs-ts/gamut-intl": [
-        "../gamut-intl/index.ts"
+      "@dxs-ts/gamut-primitives": [
+        "../gamut-primitives/index.ts"
       ],
       "@dxs-ts/gamut-form-review": [
         "../gamut-form-review/index.ts"
@@ -29,33 +23,33 @@
       "@dxs-ts/gamut-form": [
         "../gamut-form/index.ts"
       ],
-      "@dxs-ts/gamut-api": [
-        "../gamut-api/index.ts"
+      "@dxs-ts/gamut-shell": [
+        "../gamut-shell/index.ts"
       ],
-      "@dxs-ts/envir-util": [
-        "../envir-util/index.ts"
+      "@dxs-ts/gamut-intl": [
+        "../gamut-intl/index.ts"
+      ],
+      "@dxs-ts/gamut-routes": [
+        "../gamut-routes/index.ts"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "../gamut-theme/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
   "references": [
     {
-      "path": "../gamut-theme"
+      "path": "../envir-util"
     },
     {
-      "path": "../gamut-shell"
-    },
-    {
-      "path": "../gamut-routes"
-    },
-    {
-      "path": "../gamut-primitives"
+      "path": "../gamut-api"
     },
     {
       "path": "../gamut-md"
     },
     {
-      "path": "../gamut-intl"
+      "path": "../gamut-primitives"
     },
     {
       "path": "../gamut-form-review"
@@ -64,20 +58,26 @@
       "path": "../gamut-form"
     },
     {
-      "path": "../gamut-api"
+      "path": "../gamut-shell"
     },
     {
-      "path": "../envir-util"
+      "path": "../gamut-intl"
+    },
+    {
+      "path": "../gamut-routes"
+    },
+    {
+      "path": "../gamut-theme"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
+    "at": "2025-08-25T08:29:08.096Z",
     "forModule": "@dxs-ts/gamut",
-    "fromRegistry": "59014ff3ca3d",
+    "fromRegistry": "308e7ad54407",
     "alias": {
       "@dxs-ts/gamut": [
-        "../envir-util"
+        "../gamut-theme"
       ]
     }
   }

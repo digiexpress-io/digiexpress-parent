@@ -6,7 +6,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
 import { StatusIndicator } from '../status-indicator';
 
-import { WithTableStyles } from '@dxs-ts/eveli-primitives';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 

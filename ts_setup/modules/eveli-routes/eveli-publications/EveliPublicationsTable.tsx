@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, IconButton, Tooltip, Typography, Stack, Button, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
-import { WithTableStyles } from '@dxs-ts/eveli-primitives';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';

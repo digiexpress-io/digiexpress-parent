@@ -12,7 +12,8 @@
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/task-api": "*",
     "@dxs-ts/gamut-theme": "*",
-    "@dxs-ts/user-profile": "*"
+    "@dxs-ts/user-profile": "*",
+    "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {
     "react": "*",

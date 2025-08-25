@@ -10,7 +10,8 @@ import { useNavigate } from '@tanstack/react-router';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
-import { WithTableStyles, EveliPermissions } from '@dxs-ts/eveli-primitives';
+import { EveliPermissions } from '@dxs-ts/eveli-primitives';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';

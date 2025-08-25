@@ -4,7 +4,7 @@ import { EveliBatchStepRoot, MUI_NAME, useUtilityClasses } from './useUtilityCla
 import CloseIcon from '@mui/icons-material/Close';
 import { BatchApi } from '@dxs-ts/eveli-api';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { WithTableStyles } from '../eveli-table';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';

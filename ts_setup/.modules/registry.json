@@ -30,7 +30,8 @@
           "@dxs-ts/xui-datetime": "*",
           "@dxs-ts/eveli-ide": "*",
           "@dxs-ts/task-api": "*",
-          "@dxs-ts/user-profile": "*"
+          "@dxs-ts/user-profile": "*",
+          "@dxs-ts/xui-table": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -69,6 +70,7 @@
         "@dxs-ts/eveli-ide",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table",
         "react",
         "react-dom",
         "react-intl",
@@ -119,7 +121,8 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/task-api",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table"
       ],
       "actualDependencies": [
         "react",
@@ -178,6 +181,7 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table",
         "@mui/utils"
       ]
     },
@@ -385,7 +389,8 @@
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/gamut-theme": "*",
-          "@dxs-ts/user-profile": "*"
+          "@dxs-ts/user-profile": "*",
+          "@dxs-ts/xui-table": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -411,6 +416,7 @@
         "@dxs-ts/task-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table",
         "react",
         "@tanstack/react-query",
         "@mui/material",
@@ -442,13 +448,16 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/gamut-theme",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table"
       ],
       "actualDependencies": [
         "@dxs-ts/envir-fetch",
         "react",
         "@tanstack/react-query",
         "react-intl",
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table",
         "@dxs-ts/eveli-intl",
         "@material-table/core",
         "@mui/material",
@@ -456,8 +465,7 @@
         "notistack",
         "@dxs-ts/stencil-api",
         "@dxs-ts/wrench-api",
-        "@dxs-ts/task-api",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/task-api"
       ],
       "actualExternalDependencies": [
         "react",
@@ -469,12 +477,13 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/envir-fetch",
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/stencil-api",
         "@dxs-ts/wrench-api",
-        "@dxs-ts/task-api",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/task-api"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -525,6 +534,7 @@
         ],
         "dependencies": {
           "@dxs-ts/xui-datetime": "*",
+          "@dxs-ts/xui-table": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/user-profile": "*",
@@ -552,6 +562,7 @@
       },
       "dependencies": [
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table",
         "@dxs-ts/eveli-api",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
@@ -614,6 +625,7 @@
       ],
       "internalDependencies": [
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table",
         "@dxs-ts/eveli-api",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
@@ -630,6 +642,7 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
         "@tanstack/react-table",
+        "@dxs-ts/xui-table",
         "notistack",
         "@dxs-ts/task-api",
         "@mui/utils",
@@ -638,10 +651,7 @@
         "@tanstack/react-router",
         "moment",
         "@mui/system",
-        "@mui/x-tree-view",
-        "@dxs-ts/user-profile",
-        "ts-md5",
-        "@dxs-ts/xui-datetime"
+        "@mui/x-tree-view"
       ],
       "actualExternalDependencies": [
         "react",
@@ -659,18 +669,20 @@
         "@tanstack/react-router",
         "moment",
         "@mui/system",
-        "@mui/x-tree-view",
-        "ts-md5"
+        "@mui/x-tree-view"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
-        "@dxs-ts/task-api",
-        "@dxs-ts/user-profile",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-table",
+        "@dxs-ts/task-api"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/user-profile",
+        "ts-md5"
+      ]
     },
     "@dxs-ts/eveli-routes": {
       "name": "@dxs-ts/eveli-routes",
@@ -695,7 +707,8 @@
           "@dxs-ts/task-api": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
-          "@dxs-ts/user-profile": "*"
+          "@dxs-ts/user-profile": "*",
+          "@dxs-ts/xui-table": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -736,6 +749,7 @@
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table",
         "react",
         "react-intl",
         "@material-table/core",
@@ -797,7 +811,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table"
       ],
       "actualDependencies": [
         "react",
@@ -811,8 +826,9 @@
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/eveli-api",
-        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table",
         "@tanstack/react-table",
+        "@dxs-ts/eveli-primitives",
         "luxon",
         "@material-table/core",
         "@tanstack/react-router",
@@ -852,6 +868,7 @@
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/eveli-api",
+        "@dxs-ts/xui-table",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
@@ -1663,7 +1680,8 @@
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
-          "@dxs-ts/xui-datetime": "*"
+          "@dxs-ts/xui-datetime": "*",
+          "@dxs-ts/xui-table": "*"
         },
         "peerDependencies": {},
         "keywords": [
@@ -1693,7 +1711,8 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table"
       ],
       "peerDependencies": [],
       "externalDependencies": [],
@@ -1717,7 +1736,8 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table"
       ],
       "actualDependencies": [
         "@dxs-ts/gamut-api",
@@ -1762,7 +1782,8 @@
       "unusedDependencies": [
         "@dxs-ts/user-profile",
         "@dxs-ts/task-api",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table"
       ]
     },
     "@dxs-ts/gamut": {
@@ -1905,7 +1926,8 @@
           "@dxs-ts/envir-fetch": "*",
           "@dxs-ts/stencil-api": "*",
           "@dxs-ts/eveli-api": "*",
-          "@dxs-ts/eveli-primitives": "*"
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/xui-table": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -1934,6 +1956,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table",
         "react",
         "luxon",
         "notistack",
@@ -1979,7 +2002,8 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-api",
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table"
       ],
       "actualDependencies": [
         "react",
@@ -1995,6 +2019,7 @@
         "@dxs-ts/eveli-api",
         "@tanstack/react-table",
         "luxon",
+        "@dxs-ts/xui-table",
         "@tanstack/react-router",
         "js-file-download",
         "@dxs-ts/envir-fetch"
@@ -2017,6 +2042,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-api",
+        "@dxs-ts/xui-table",
         "@dxs-ts/envir-fetch"
       ],
       "missingDependencies": [],
@@ -2365,6 +2391,106 @@
       "actualInternalDependencies": [],
       "missingDependencies": [],
       "unusedDependencies": []
+    },
+    "@dxs-ts/xui-table": {
+      "name": "@dxs-ts/xui-table",
+      "path": "modules/xui-table",
+      "packageJson": {
+        "name": "@dxs-ts/xui-table",
+        "version": "${project.version}",
+        "description": "",
+        "type": "module",
+        "private": false,
+        "keywords": [
+          "xui",
+          "table"
+        ],
+        "dependencies": {
+          "@dxs-ts/xui-datetime": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "luxon": "*",
+          "ts-md5": "*",
+          "react-intl": "*",
+          "@mui/material": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*",
+          "@tanstack/react-table": "*",
+          "@tanstack/react-query": "*"
+        }
+      },
+      "dependencies": [
+        "@dxs-ts/xui-datetime",
+        "react",
+        "luxon",
+        "ts-md5",
+        "react-intl",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@tanstack/react-table",
+        "@tanstack/react-query"
+      ],
+      "peerDependencies": [
+        "react",
+        "luxon",
+        "ts-md5",
+        "react-intl",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@tanstack/react-table",
+        "@tanstack/react-query"
+      ],
+      "externalDependencies": [
+        "react",
+        "luxon",
+        "ts-md5",
+        "react-intl",
+        "@mui/material",
+        "@mui/system",
+        "@mui/icons-material",
+        "@mui/utils",
+        "@tanstack/react-table",
+        "@tanstack/react-query"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/xui-datetime"
+      ],
+      "actualDependencies": [
+        "react",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "react-intl",
+        "@mui/utils",
+        "@tanstack/react-query",
+        "ts-md5",
+        "@dxs-ts/xui-datetime",
+        "luxon"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "react-intl",
+        "@mui/utils",
+        "@tanstack/react-query",
+        "ts-md5",
+        "luxon"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/xui-datetime"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@mui/system"
+      ]
     }
   },
   "dependencyGraph": {
@@ -2390,7 +2516,8 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/task-api",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table"
       ],
       "@dxs-ts/gamut-demo-app": [
         "@dxs-ts/envir-util",
@@ -2415,11 +2542,13 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/gamut-theme",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table"
       ],
       "@dxs-ts/eveli-intl": [],
       "@dxs-ts/eveli-primitives": [
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table",
         "@dxs-ts/eveli-api",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
@@ -2439,7 +2568,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
-        "@dxs-ts/user-profile"
+        "@dxs-ts/user-profile",
+        "@dxs-ts/xui-table"
       ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/gamut-intl"
@@ -2494,7 +2624,8 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table"
       ],
       "@dxs-ts/gamut": [
         "@dxs-ts/envir-util",
@@ -2513,7 +2644,8 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-api",
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table"
       ],
       "@dxs-ts/task-api": [],
       "@dxs-ts/user-profile": [],
@@ -2524,7 +2656,10 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-primitives"
       ],
-      "@dxs-ts/xui-datetime": []
+      "@dxs-ts/xui-datetime": [],
+      "@dxs-ts/xui-table": [
+        "@dxs-ts/xui-datetime"
+      ]
     },
     "reverse": {
       "@dxs-ts/eveli-demo-app": [],
@@ -2689,7 +2824,16 @@
       "@dxs-ts/xui-datetime": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-primitives",
-        "@dxs-ts/eveli-ide"
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/xui-table"
+      ],
+      "@dxs-ts/xui-table": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/stencil-routes"
       ]
     },
     "circularDependencies": []
@@ -2721,7 +2865,8 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/xui-table"
       ],
       "externalDependencies": [
         "@material-table/core",
@@ -2800,6 +2945,6 @@
       ]
     }
   },
-  "checksum": "1785c78d96e4e5532821b591130af855253736f472711c0446e7ad9b62305a2f",
-  "generatedAt": "2025-08-25T07:48:38.674Z"
+  "checksum": "22929c970beeeddae17c998254b5e32571af6623941b8b82c6ee7328ae77a762",
+  "generatedAt": "2025-08-25T09:23:16.776Z"
 }

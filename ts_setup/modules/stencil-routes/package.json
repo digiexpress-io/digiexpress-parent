@@ -8,7 +8,8 @@
     "@dxs-ts/envir-fetch": "*",
     "@dxs-ts/stencil-api": "*",
     "@dxs-ts/eveli-api": "*",
-    "@dxs-ts/eveli-primitives": "*"
+    "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {
     "react": "*",

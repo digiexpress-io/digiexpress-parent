@@ -4,7 +4,7 @@ import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-i
 import { ProcExecutionApi } from '@dxs-ts/eveli-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
-import { WithTableStyles } from '@dxs-ts/eveli-primitives';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 
 
