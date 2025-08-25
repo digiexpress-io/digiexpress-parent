@@ -40,6 +40,27 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
     dateVariant: slotProps.date?.variant ?? 'date-only'
   }
 
+  const statusLabel = (() => {
+    switch (status) {
+      case 'OPEN':
+        return intl.formatMessage({ id: 'gamut.forms.status.OPEN' });
+      case 'NEW':
+        return intl.formatMessage({ id: 'gamut.forms.status.NEW' });
+      case 'COMPLETED':
+        return intl.formatMessage({ id: 'gamut.forms.status.COMPLETED' });
+      case 'REJECTED':
+        return intl.formatMessage({ id: 'gamut.forms.status.REJECTED' });
+      case 'DELEGATED':
+        return intl.formatMessage({ id: 'gamut.forms.status.DELEGATED' });
+      case 'TRANSFERRED':
+        return intl.formatMessage({ id: 'gamut.forms.status.TRANSFERRED' });
+      case 'WAITING':
+        return intl.formatMessage({ id: 'gamut.forms.status.WAITING' });
+      default:
+        return status;
+    }
+  })();
+
   return (
     <ContractItem className={classes.contractItem} ownerState={ownerState} onClick={() => onClick(exchangeId)}>
       <GFlex variant='body'>
@@ -64,7 +85,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
               </Typography>
             </GFlex>
             <Typography component='span'>
-              {intl.formatMessage({ id: `gamut.forms.status.${status}` })}
+              {statusLabel}
             </Typography>
           </Grid>
 

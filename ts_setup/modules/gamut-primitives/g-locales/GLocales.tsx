@@ -6,11 +6,8 @@ import { useAnchor } from './useAnchor';
 import { MUI_NAME, GLocalesRoot, useUtilityClasses } from './useUtilityClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 
-
 export interface GLocalesProps {
-  value?: string; // en, fi, sv
-  locales?: string[]; //en, fi, sv
-  localeToCountryCode?: Record<string, string>;
+  value?: string; // en, fi, sv, my, bs
   hidden?: boolean;
   onClick?: (newLocale: string) => void;
   component?: GOverridableComponent<GLocalesProps>;
@@ -24,26 +21,22 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  const ownerState = {
-    ...props
-  }
+  const ownerState = { ...props };
 
-  const { value, onClick, locales = [], hidden } = props;
-  if (locales.length <= 1 && hidden) {
+  const { value, onClick, hidden } = props;
+  if (hidden) {
     return (<></>);
   }
 
   /**
-   *  Map locales to country codes to get flag
-  */
+   *  Fixed mapping of locales to country codes
+   */
   const localeToCountryCode: Record<string, string> = {
-    en: 'gb', // Great Britain English for correct flag
+    en: 'gb', // Great Britain flag for English
     fi: 'fi',
     sv: 'se',
-    et: 'ee',
     my: 'my',
     bs: 'ba',
-    ...(props.localeToCountryCode ?? {})
   };
 
   function handleChange(newLocale: string) {
@@ -63,26 +56,50 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
         startIcon={startIcon}
         className={classes.selectedLocale}
       >
-        {!props.showOnlyFlag && <FormattedMessage id={"gamut.locale." + value} />}
+        {!props.showOnlyFlag && value && (
+          <>
+            {value === 'en' && <FormattedMessage id="gamut.locale.en" />}
+            {value === 'fi' && <FormattedMessage id="gamut.locale.fi" />}
+            {value === 'sv' && <FormattedMessage id="gamut.locale.sv" />}
+            {value === 'my' && <FormattedMessage id="gamut.locale.my" />}
+            {value === 'bs' && <FormattedMessage id="gamut.locale.bs" />}
+          </>
+        )}
       </Button>
       <Popover {...anchorProps}>
         <List disablePadding>
-          {locales.map((locale) => (
-            <ListItem key={locale} disablePadding>
-              <ListItemButton onClick={() => {
-                handleChange(locale);
-                anchorProps.onClose();
-              }}>
-                <ListItemIcon><img src={`https://flagcdn.com/w20/${localeToCountryCode[locale.toLowerCase()]}.png`} /></ListItemIcon>
-                <FormattedMessage id={"gamut.locale." + locale} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => { handleChange('en'); anchorProps.onClose(); }}>
+              <ListItemIcon><img src={`https://flagcdn.com/w20/gb.png`} /></ListItemIcon>
+              <FormattedMessage id="gamut.locale.en" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => { handleChange('fi'); anchorProps.onClose(); }}>
+              <ListItemIcon><img src={`https://flagcdn.com/w20/fi.png`} /></ListItemIcon>
+              <FormattedMessage id="gamut.locale.fi" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => { handleChange('sv'); anchorProps.onClose(); }}>
+              <ListItemIcon><img src={`https://flagcdn.com/w20/se.png`} /></ListItemIcon>
+              <FormattedMessage id="gamut.locale.sv" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => { handleChange('my'); anchorProps.onClose(); }}>
+              <ListItemIcon><img src={`https://flagcdn.com/w20/my.png`} /></ListItemIcon>
+              <FormattedMessage id="gamut.locale.my" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => { handleChange('bs'); anchorProps.onClose(); }}>
+              <ListItemIcon><img src={`https://flagcdn.com/w20/ba.png`} /></ListItemIcon>
+              <FormattedMessage id="gamut.locale.bs" />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Popover>
-
-    </Root>);
-}
-
-
-
+    </Root>
+  );
+};

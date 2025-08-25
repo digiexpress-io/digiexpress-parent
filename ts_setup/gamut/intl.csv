@@ -44,12 +44,9 @@ gamut.buttons.cancel,,Cancel,Peruuta,Avboka,Batal,Otkaži
 gamut.buttons.select,,Select,Valitse,Välja,Pilih,Odaberi
 gamut.buttons.close,,Close,Sulje,Nära,Tutup,Zatvori
 gamut.buttons.reply,,Reply,Vastaa,Svar,Balas,Odgovori
-gamut.buttons.delete,,Delete,Poista,Radera,Padam,Izbriši
 gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami,Naše usluge
 gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran,Dodaj prilog
-gamut.buttons.sort-last-modified.contracts,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,Sortiraj prema posljednjoj izmjeni
 gamut.buttons.sort-last-modified.offers,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,
-gamut.buttons.sort-last-modified.inbox,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,
 ,,,,,,
 // ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,,
 gamut.locale.en,,English,Englanti,Engelska,Inggeris,Engleski
@@ -61,10 +58,6 @@ gamut.locale.bs,,Bosnian,Bosnia,Bosnian,Bahasa Bosnia,Bosanski
 gamut.search.placeholder,,Search our services,Hae palvelua,Sök i våra tjänster,Cari perkhidmatan kami,Pretraga naših usluga
 gamut.search.popover.title,,Search our site,Hae sivustolta,Sök på vår sida,Cari tapak kami,Pretraga naše stranice
 gamut.search.popover.input.placeholder,,What are you looking for?,Mitä etsi,Vad letar du efter?,Apa yang anda cari?,Unesi pojam za pretragu
-gamut.search.popover.result.chip.form,,Form,Lomake,Form,Borang,Obrasci
-gamut.search.popover.result.chip.link,,Link,Linkki,Länk,Pautan,Link
-gamut.search.popover.result.chip.phone,,Phone,Puhelin,Telefon,Telefon,Telefon
-gamut.search.popover.result.chip.content,,Content,Sisältö,Innehåll,Kandungan,Sadržaj
 gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bentuk,Sve forme
 gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon,Svi brojevi telefona
 gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan,Svi linkovi
@@ -77,7 +70,6 @@ gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,Telefon,Telefoni
 gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,Pautan,Linkovi
 gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,Pautan,Linkovi
 gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,Pautan luar,Eksterni linkovi
-gamut.search.results.otherForms,,Other forms,Toiset lomakkeet,Andra former,Bentuk lain,Ostali obrasci
 // ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,,
 gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang,Obrasci
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan,Linkovi
@@ -133,9 +125,6 @@ gamut.forms.answer.date.placeholder.minute,,mm,mm,mm,mm,mm
 gamut.forms.answer.boolean.yes,,Yes,Kyllä,Ja,Ya,Da
 gamut.forms.answer.boolean.no,,No,Ei,Inga,Tidak,Ne
 gamut.forms.unfinished.none,,You do not have any unfinished forms,Sinulla ei ole keskeneräisiä lomakkeita,Du har inga oavslutade formulär,Anda tidak mempunyai sebarang borang yang belum selesai,Nema nedovršenih obrazaca
-gamut.forms.awaitingDecision.none,,You do not have any forms awaiting a decision,Sinulla ei ole keskeneräisiä asiointipyyntöjä,Du har inga blanketter som väntar på beslut,Anda tidak mempunyai sebarang borang menunggu keputusan,Nema obrazaca koji čekaju odluku
-gamut.forms.page.selection.start,,Start,Aloita,Start,Mulakan,Početak
-gamut.forms.page.selection.complete,,Complete,Valmis,Komplett,Lengkap,Kraj
 gamut.forms.unfinished.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai,Nedovršeni obrasci
 gamut.forms.unfinished.subtitle,,Processing has not started - Please select a form to continue filling or cancel,Käsittelyä ei ole aloitettu - Valitse lomake jatkaaksesi täyttämistä tai peruuta,Bearbetningen har inte startat - Välj ett formulär för att fortsätta fylla eller avbryta,Pemprosesan belum bermula - Sila pilih borang untuk terus mengisi atau membatalkan,"Obrada nije započeta - Potrebno je odabrati formu za nastavak popunjavanja, ili otkazati"
 gamut.forms.awaitingDecision.title,,Forms awaiting decision,"Lomakkeet, jotka odottavast päätöstä",Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
@@ -149,13 +138,7 @@ gamut.offers.deleteForm.deleteButton,,Yes delete this form,Kyllä haluan poistaa
 // -------------------- GAMUT INBOX ---------------------------,,,,#VALUE!,,
 gamut.inbox.title,,Inbox,Saapuneet,Inkorg,Peti masuk,Dolazne poruke
 gamut.inbox.subtitle,,Messages and files related to your forms,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden och filer relaterade till dina formulär,Mesej dan fail yang berkaitan dengan borang anda,Poruke i datoteke povezane sa obrascima
-gamut.inbox.sender,,Sender,Lähettäjä,Avsändare,Penghantar,Pošiljalac
-gamut.inbox.files,,Files,Tiedostot,Filer,Fail,Datoteke
-gamut.inbox.messages,,Messages: {count},Viestejä: {count],Meddelanden: {count},Mesej: {count},Poruke: {count}
 gamut.inbox.messages.title,,Messages,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden,Mesej,Poruke
-gamut.inbox.formName,,Form name,Lomakkeen nimi,Formnamn,Nama borang,Naziv obrasca
-gamut.inbox.message-preview,,Message preview,Viestin esikatselu,Förhandsgranskning av meddelande,Pratonton mesej,Pregled poruke
-gamut.inbox.message-date,,Date,Päivämäärä,Datum,Tarikh,Datum
 gamut.inbox.subjectAttachment.title,,Attachments,Liitteet,Bilagor,Lampiran,Prilozi
 gamut.inbox.newMessage.placeholder,,Please write your message,Kirjoita viestisi,Skriv ditt meddelande,Sila tulis mesej anda,Unesi poruku
 gamut.inbox.newMessage.replyingTo,,Replying to,Vastaa viestiin,Svarar på,Membalas kepada,Odgovor na
@@ -198,10 +181,7 @@ gamut.userOverview.waiting-forms.detail.title,,Forms awaiting decision,"Lomakkee
 gamut.userOverview.decided-forms.detail.title,,Forms with final decision,"Lomakkeet, jotka on käsitelty",Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa odlukom
 gamut.userOverview.inbox.detail.title,,Inbox,Viestit,Inkorg,Peti masuk,Dolazne poruke
 gamut.userOverview.bookings.detail.title,,Calendar bookings,Kalenteri varaukseni,Kalenderbokningar,Tempahan kalendar,Kalendarske rezervacije
-gamut.userOverview.personal-info.detail.title,,My personal info,Minun tiedot,Min personliga information,Maklumat peribadi saya,Moje lične informacije
 gamut.userOverview.welcome.desc,,From here you can search and apply for our services view the status of your applications send messages and files and book appointments with us,"Täältä voit etsiä ja hakea palveluitamme, tarkastella hakemustesi tilaa, lähettää viestejä ja tiedostoja sekä varata aikoja kanssamme.",Härifrån kan du söka och ansöka om våra tjänster se status för dina applikationer skicka meddelanden och filer och boka möten med oss,Dari sini anda boleh mencari dan memohon perkhidmatan kami melihat status aplikasi anda menghantar mesej dan fail serta menempah janji temu dengan kami,"Odavde je moguće pretraživati i prijaviti se za naše usluge, pregledati status prijava, slati poruke i datoteke, te rezervisati termine."
-// -------------------- SERVICES SELECT -------------------------,,,,#VALUE!,,
-gamut.services.subtitle,,Select or search for a service to view available forms,Valitse tai etsi palvelu nähdäksesi saatavilla olevat lomakkeet,Välj eller sök efter en tjänst för att se tillgängliga formulär,Pilih atau cari perkhidmatan untuk melihat borang yang tersedia,Odaberi ili pretraži usluge za pregled dostupnih obrazaca
 // -------------------- FEEDBACK SELECT -------------------------,,,,#VALUE!,,
 gamut.feedback.table.sorted.desc,,Sorted descending,Lajiteltu laskevassa järjestyksessä,Sorterat fallande,Diisih menurun,Sortirano opadajuće
 gamut.feedback.table.sorted.asc,,Sorted ascending,Lajiteltu nousevassa järjestyksessä,Sorterat stigande,Diisih menaik,Sortirano rastuće

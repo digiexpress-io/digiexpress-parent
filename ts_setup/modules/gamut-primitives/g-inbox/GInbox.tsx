@@ -132,7 +132,27 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
             sentAt={subject.lastExchange?.created ?? subject.created}
             title={offerName}
             subTitle={subject.lastExchange?.commentText ?? ''}
-            contractStatus={contract && contract.status ? intl.formatMessage({ id: `gamut.forms.status.${contract.status}` }) : 'status unknown'}
+            contractStatus={(() => {
+              if (!contract || !contract.status) return 'status unknown';
+              switch (contract.status) {
+                case 'OPEN':
+                  return intl.formatMessage({ id: 'gamut.forms.status.OPEN' });
+                case 'NEW':
+                  return intl.formatMessage({ id: 'gamut.forms.status.NEW' });
+                case 'COMPLETED':
+                  return intl.formatMessage({ id: 'gamut.forms.status.COMPLETED' });
+                case 'REJECTED':
+                  return intl.formatMessage({ id: 'gamut.forms.status.REJECTED' });
+                case 'DELEGATED':
+                  return intl.formatMessage({ id: 'gamut.forms.status.DELEGATED' });
+                case 'TRANSFERRED':
+                  return intl.formatMessage({ id: 'gamut.forms.status.TRANSFERRED' });
+                case 'WAITING':
+                  return intl.formatMessage({ id: 'gamut.forms.status.WAITING' });
+                default:
+                  return contract.status;
+              }
+            })()}            
           >
             <FormReview
               formName={offerName}

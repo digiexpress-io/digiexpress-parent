@@ -215,19 +215,64 @@ const Item: React.FC<GUserOverviewMenuItemSlotProps & { ownerState: GUserOvervie
   if (disabled) {
     return <></>;
   }
+
+  let label: React.ReactNode;
+  switch (id) {
+    case 'logout-representative':
+      label = <FormattedMessage id="gamut.userOverview.buttons.logout-representative" />;
+      break;
+    case 'login-representative':
+      label = <FormattedMessage id="gamut.userOverview.buttons.login-representative" />;
+      break;
+    case 'logout':
+      label = <FormattedMessage id="gamut.userOverview.buttons.logout" />;
+      break;
+    case 'logout-company':
+      label = <FormattedMessage id="gamut.userOverview.buttons.logout-company" />;
+      break;
+    case 'login-company':
+      label = <FormattedMessage id="gamut.userOverview.buttons.login-company" />;
+      break;
+    case 'user-overview':
+      label = <FormattedMessage id="gamut.userOverview.buttons.user-overview" />;
+      break;
+    case 'services':
+      label = <FormattedMessage id="gamut.userOverview.buttons.services" />;
+      break;
+    case 'requests-in-progress':
+      label = <FormattedMessage id="gamut.userOverview.buttons.requests-in-progress" />;
+      break;
+    case 'awaiting-decision':
+      label = <FormattedMessage id="gamut.userOverview.buttons.awaiting-decision" />;
+      break;
+    case 'with-decision':
+      label = <FormattedMessage id="gamut.userOverview.buttons.with-decision" />;
+      break;
+    case 'inbox':
+      label = <FormattedMessage id="gamut.userOverview.buttons.inbox" />;
+      break;
+    case 'bookings':
+      label = <FormattedMessage id="gamut.userOverview.buttons.bookings" />;
+      break;
+    default:
+      label = id;
+  }
+
   return (
     <GUserOverviewMenuItem className={classes.menuItem}>
       <ListItemButton onClick={handleOnClick} selected={props.id === active} className={classes.menuButton}>
         <Box className={classes.menuButtonLayout}>
-          <FormattedMessage id={`gamut.userOverview.buttons.${id}`} />
-          {userOrRepOrCompanyName && (<Typography className={classes.userOrRepOrCompanyNameStyle}>{userOrRepOrCompanyName}</Typography>
+          {label}
+          {userOrRepOrCompanyName && (
+            <Typography className={classes.userOrRepOrCompanyNameStyle}>
+              {userOrRepOrCompanyName}
+            </Typography>
           )}
         </Box>
         {endAdornment && <ListItemIcon className={classes.overviewMenuIcon}>{endAdornment}</ListItemIcon>}
       </ListItemButton>
     </GUserOverviewMenuItem>
-  )
-}
-
+  );
+};
 
 
