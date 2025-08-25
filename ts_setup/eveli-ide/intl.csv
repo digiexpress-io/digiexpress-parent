@@ -782,3 +782,6 @@ eveli.userProfile.tenantConfig.select.visual_accommodation.desc,,To make certain
 eveli.batches.batchView.averageRunTime,,Average run time,Average run time,,
 eveli.batches.batchView.averageRunTime.ms,,ms,ms,,
 // -------------------------- TASK CARD -------------------------------
+taskcard.style.COMPACT,,Compact,Compact,,
+taskcard.style.DEFAULT,,Default,Default,,
+taskcard.style.LARGE,,Large,Large,,

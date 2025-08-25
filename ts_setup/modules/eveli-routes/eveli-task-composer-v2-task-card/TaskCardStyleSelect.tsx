@@ -1,6 +1,5 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { TASK_CARD_STYLE_LABELS, } from './cardThemeConfig';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { TaskCardStyleKey } from './CardConfigContext';
 
@@ -19,13 +18,23 @@ export const TaskCardStyleSelect: React.FC<TaskCardStylerProps> = ({ value, onCh
 
   return (
     <FormControl fullWidth sx={{ mb: 2, maxWidth: 300 }}>
-      <InputLabel>{intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })}</InputLabel>
-      <Select value={value} label={intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })} onChange={handleChange}>
-        {Object.entries(TASK_CARD_STYLE_LABELS).map(([key, label]) => (
-          <MenuItem key={key} value={key}>
-            {intl.formatMessage({ id: `taskcard.style.${label}` })}
-          </MenuItem>
-        ))}
+      <InputLabel>
+        {intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })}
+      </InputLabel>
+      <Select
+        value={value}
+        label={intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })}
+        onChange={handleChange}
+      >
+        <MenuItem value="COMPACT">
+          {intl.formatMessage({ id: 'taskcard.style.COMPACT' })}
+        </MenuItem>
+        <MenuItem value="DEFAULT">
+          {intl.formatMessage({ id: 'taskcard.style.DEFAULT' })}
+        </MenuItem>
+        <MenuItem value="LARGE">
+          {intl.formatMessage({ id: 'taskcard.style.LARGE' })}
+        </MenuItem>
       </Select>
     </FormControl>
   );

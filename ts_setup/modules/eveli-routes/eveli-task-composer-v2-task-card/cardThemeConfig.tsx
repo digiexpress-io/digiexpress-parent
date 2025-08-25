@@ -24,13 +24,6 @@ export const taskCardGridSize: Record<TaskCardStyleKey | 'singleCol', { xs: numb
   large: singleCol,
 };
 
-export const TASK_CARD_STYLE_LABELS: Record<TaskCardStyleKey, string> = {
-  compact: 'COMPACT',
-  default: 'DEFAULT',
-  large: 'LARGE',
-};
-
-
 export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyleDefinition> => {
   const theme = useTheme();
   const { isReviewOpen } = useCardConfig();
