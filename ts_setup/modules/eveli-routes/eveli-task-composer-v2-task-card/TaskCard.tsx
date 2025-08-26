@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse } from '@mui/material';
+import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse, Button } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -85,6 +85,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
         {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
 
         <Box flexGrow={1} />
+        <Button variant='text' onClick={handleEdit}>Edit</Button>
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
         <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
