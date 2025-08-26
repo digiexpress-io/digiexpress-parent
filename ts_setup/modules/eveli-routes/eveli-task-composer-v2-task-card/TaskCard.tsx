@@ -222,7 +222,13 @@ const TaskSectionCard = styled(Box, {
       },
       '& .TaskSectionCard-titleNotifier': {
         marginLeft: theme.spacing(1),
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
+        minWidth: '4ch',
+        display: 'flex',
+        justifyContent: 'center',
+        padding: theme.spacing(0.5),
+        borderRadius: theme.spacing(1),
+        backgroundColor: alpha(theme.palette.primary.main, 0.1)
       },
       '& .TaskSectionCard-title': {
         display: 'flex',
