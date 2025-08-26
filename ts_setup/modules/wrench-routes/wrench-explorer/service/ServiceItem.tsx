@@ -148,10 +148,22 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
 
       {/** Service status */}
       <TreeItem itemId={service.id + 'status-nested'}
-        labelText={<FormattedMessage id={`program.status.${service.status}`} />}
+        labelText={(() => {
+          switch (service.status) {
+            case 'DEPENDENCY_ERROR':
+              return <FormattedMessage id="program.status.DEPENDENCY_ERROR" />;
+            case 'UP':
+              return <FormattedMessage id="program.status.UP" />;
+            case 'AST_ERROR':
+              return <FormattedMessage id="program.status.AST_ERROR" />;
+            case 'PROGRAM_ERROR':
+              return <FormattedMessage id="program.status.PROGRAM_ERROR" />;
+            default:
+              return service.status;
+          }
+        })()}
         labelInfo={`${service.errors.length + service.warnings.length}`}
-        labelcolor={theme.palette.primary.dark}
-      >
+        labelcolor={theme.palette.primary.dark}>
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}

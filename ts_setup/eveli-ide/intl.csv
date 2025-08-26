@@ -144,6 +144,13 @@ processTableHeader.status,theWrench,Status,Tila,Status
 processTableHeader.created,theWrench,Created,Luotu,Skapad
 processTableHeader.questionnaireId,theWrench,Questionnaire,Lomake,Formulär
 processTableHeader.taskRef,,Task reference,Task reference,,
+process.status.ANSWERED,theWrench,Answered,Lähetetty,Skickad
+process.status.CREATED,theWrench,Created,Luotu,Skapad
+process.status.ANSWERING,theWrench,Answering,Keskeneräinen,På hälft
+process.status.IN_PROGRESS,theWrench,In progress,Käsittelyssä,Under arbete
+process.status.WAITING,theWrench,Waiting,Odottaa,Väntar
+process.status.COMPLETED,theWrench,Completed,Valmis,Färdig
+process.status.REJECTED,theWrench,Rejected,Hylätty,Avslagen
 spoTasksTableHeader.taskName,,Name,Nimi,Uppgiftens namn
 spoTasksTableHeader.status,,Status,Tila,Status
 spoTasksTableHeader.priority,,Priority,Prioriteetti,Prioritet
@@ -615,6 +622,10 @@ dt.header.expression,,Expression,Expression,Expression
 dt.header.dataType,,Data type,Data type,Data type
 dt.header.script,,Script,Script,Script
 decisions,,Decisions,Decisions,Decisions
+program.status.DEPENDENCY_ERROR,,Dependency Errors,Dependency Errors,Dependency Errors
+program.status.UP,,Program is UP,Program is UP,Program is UP
+program.status.AST_ERROR,,Syntax errors,Syntax errors,Syntax errors
+program.status.PROGRAM_ERROR,,Compiler errors,Compiler errors,Compiler errors
 release.deleted.message,,Release {name} deleted,Julkaisu {name} poistettu,Release {name} raderad
 releases.composer.createdMessage,,Created new release {name},Luotu uusi julkaisu {name},Skapat ny version {name}
 releases.view.action,,Action,Toiminta,Handling

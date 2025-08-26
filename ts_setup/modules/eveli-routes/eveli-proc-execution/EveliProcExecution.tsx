@@ -78,7 +78,26 @@ export const EveliProcExecution: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: (status) => intl.formatMessage({ id: 'process.status.' + status.getValue() }),
+      cell: (status) => {
+        switch (status.getValue()) {
+          case 'ANSWERED':
+            return intl.formatMessage({ id: 'process.status.ANSWERED' });
+          case 'CREATED':
+            return intl.formatMessage({ id: 'process.status.CREATED' });
+          case 'ANSWERING':
+            return intl.formatMessage({ id: 'process.status.ANSWERING' });
+          case 'IN_PROGRESS':
+            return intl.formatMessage({ id: 'process.status.IN_PROGRESS' });
+          case 'WAITING':
+            return intl.formatMessage({ id: 'process.status.WAITING' });
+          case 'COMPLETED':
+            return intl.formatMessage({ id: 'process.status.COMPLETED' });
+          case 'REJECTED':
+            return intl.formatMessage({ id: 'process.status.REJECTED' });
+          default:
+            return status.getValue();
+        }
+      },
     },
     {
       header: intl.formatMessage({ id: 'processTableHeader.created' }),

@@ -149,7 +149,20 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
 
       {/** Flow status */}
       <TreeItem itemId={flow.id + 'status-nested'}
-        labelText={<FormattedMessage id={`program.status.${flow.status}`} />}
+        labelText={(() => {
+          switch (flow.status) {
+            case 'DEPENDENCY_ERROR':
+              return <FormattedMessage id="program.status.DEPENDENCY_ERROR" />;
+            case 'UP':
+              return <FormattedMessage id="program.status.UP" />;
+            case 'AST_ERROR':
+              return <FormattedMessage id="program.status.AST_ERROR" />;
+            case 'PROGRAM_ERROR':
+              return <FormattedMessage id="program.status.PROGRAM_ERROR" />;
+            default:
+              return flow.status;
+          }
+        })()}
         labelInfo={`${flow.errors.length + flow.warnings.length}`}
         labelcolor={theme.palette.primary.dark}>
 
