@@ -4,9 +4,23 @@ import { DateTime } from 'luxon';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
 
+function parse(text: string): DateTime {
+  const isoDate = DateTime.fromISO(text);
+  if(isoDate.isValid) {
+    return isoDate;
+  }
+  const sqlDate = DateTime.fromSQL(text);
+  if(sqlDate.isValid) {
+    return sqlDate;
+  }
+  // TODO other formats
+  return sqlDate;
+}
+
+
 export const DateTimeFormatter: React.FC<{ value: string, variant?: 'text' }> = ({ value, variant }) => {
   if (value) {
-    const localTime = DateTime.fromISO(value, { zone: 'utc' }).toLocal().toJSDate();
+    const localTime = parse(value).toLocal().toJSDate();
     if(variant === 'text') {
       return (<>
         <FormattedDate value={localTime} />
