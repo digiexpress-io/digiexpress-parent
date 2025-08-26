@@ -80,30 +80,30 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
 
       <Box className={classes.title}>
-          {props.startAdornmentIcon}
-          <TitleText style={style}>{props.title}</TitleText>
-          {props.titleNotifier && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
+        {props.startAdornmentIcon}
+        <TitleText style={style}>{props.title}</TitleText>
+        {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
 
-          <Box flexGrow={1} />
-          <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
-          {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
-          <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
-            <DragHandleIcon color='primary' />
-          </Box>
-          <TaskCardMenu cardId={props.id}
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleMenuClose}
-          flashy={props.isFlashy}
-            onToggleFlashy={props.onToggleFlashy}
-          altView={props.isAltView}
-            onToggleAltView={props.onToggleAltView}
-            onReview={props.onReview}
-            onEdit={handleEdit} />
+        <Box flexGrow={1} />
+        <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
+        {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+        <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
+          <DragHandleIcon color='primary' />
         </Box>
+        <TaskCardMenu cardId={props.id}
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleMenuClose}
+          flashy={props.isFlashy}
+          onToggleFlashy={props.onToggleFlashy}
+          altView={props.isAltView}
+          onToggleAltView={props.onToggleAltView}
+          onReview={props.onReview}
+          onEdit={handleEdit} />
+      </Box>
 
 
-        <Collapse in={props.isExpanded} timeout="auto" unmountOnExit >
+      <Collapse in={props.isExpanded} timeout="auto" unmountOnExit >
         <Box className={classes.cardBody}>
           <ExpandableBox isExpanded={props.isExpanded}>
             {cardContent}
@@ -177,7 +177,7 @@ const TaskSectionCard = styled(Box, {
     '& .TaskSectionCard-title': {
       display: 'flex',
       alignItems: 'center',
-      padding: theme.spacing(2),
+      padding: theme.spacing(1),
       backgroundColor: theme.palette.secondary.main,
       border: `1px solid ${theme.palette.divider}`,
       color: theme.palette.text.primary,
@@ -237,7 +237,7 @@ const TaskSectionCard = styled(Box, {
         alignItems: 'center',
         color: colors.flashyBackground,
         paddingBottom: theme.spacing(2),
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         backgroundColor: alpha(colors.flashyBackground, 0.15),
         borderBottom: `1px solid ${theme.palette.divider}`,
 

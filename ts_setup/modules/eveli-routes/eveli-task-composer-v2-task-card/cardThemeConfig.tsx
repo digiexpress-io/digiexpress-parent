@@ -51,7 +51,7 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
     },
     large: {
       titleTypography: {
-        ...theme.typography.h4,
+        ...theme.typography.h5,
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1)
       },

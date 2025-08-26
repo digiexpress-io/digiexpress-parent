@@ -26,12 +26,12 @@ const _variant_debug: TaskCardId[] = [
 
 const _variant_prod: TaskCardId[] = [
   'task_main_alt',
-  'assignees_roles',
-  'status_priority',
   'customer_messages',
   'feedback',
   'files',
   'notes',
+  'assignees_roles',
+  'status_priority',
 ];
 
 
