@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar } from '@mui/material';
+import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -13,6 +13,8 @@ import { TaskCardId, TaskCardStyleKey } from './CardConfigContext';
 export interface TaskCardProps {
   id: TaskCardId;
   title?: string;
+  titleNotifier?: string | number;
+
   children: React.ReactNode;
   altChildren?: React.ReactNode;
   styleVariant?: TaskCardStyleKey;
@@ -72,14 +74,16 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
   const cardContent = props.altView ? props.altChildren : props.children;
 
+
   return (<>
     {props.editDialog}
     <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
-
       <Box className={classes.cardBody}>
         <Box className={classes.title}>
           {props.startAdornmentIcon}
           <TitleText style={style}>{props.title}</TitleText>
+          {props.titleNotifier && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
+
           <Box flexGrow={1} />
           <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
           {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
@@ -97,13 +101,29 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
             onReview={props.onReview}
             onEdit={handleEdit} />
         </Box>
-        {props.isExpanded && cardContent}
+
+        <Collapse in={props.isExpanded} timeout="auto" unmountOnExit >
+          <ExpandableBox isExpanded={props.isExpanded}>
+            {cardContent}
+          </ExpandableBox>
+        </Collapse>
       </Box>
     </TaskSectionCard>
   </>
   );
 }
 
+
+
+export const ExpandableBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isExpanded',
+})<{ isExpanded?: boolean }>(({ isExpanded, theme }) => ({
+  padding: theme.spacing(2),
+  transform: isExpanded ? 'scaleY(1)' : 'scaleY(0.95)',
+  transformOrigin: 'top',
+  opacity: isExpanded ? 1 : 0,
+  transition: 'transform 0.3s ease, opacity 0.3s ease',
+}));
 
 export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon }) => {
   const Icon = icon;
@@ -155,12 +175,24 @@ const TaskSectionCard = styled(Box, {
       borderRadius: theme.spacing(1),
       flexGrow: 1,
       boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
-      backgroundColor: theme.palette.background.default,
+      height: 'fit-content',
+      backgroundColor: theme.palette.secondary.main,
+
     },
     '& .TaskSectionCard-title': {
       display: 'flex',
       alignItems: 'center',
       color: theme.palette.text.primary,
+    },
+    '& .TaskSectionCard-titleNotifier': {
+      marginLeft: theme.spacing(1),
+      color: theme.palette.primary.main,
+      minWidth: '4ch',
+      display: 'flex',
+      justifyContent: 'center',
+      padding: theme.spacing(0.5),
+      borderRadius: theme.spacing(1),
+      backgroundColor: alpha(theme.palette.primary.main, 0.1)
     },
   };
 
@@ -188,6 +220,10 @@ const TaskSectionCard = styled(Box, {
         boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
         backgroundColor: alpha(colors.flashyBackground, 0.02)
       },
+      '& .TaskSectionCard-titleNotifier': {
+        marginLeft: theme.spacing(1),
+        color: theme.palette.primary.main
+      },
       '& .TaskSectionCard-title': {
         display: 'flex',
         alignItems: 'center',
@@ -207,6 +243,7 @@ const TaskSectionCard = styled(Box, {
   }
 });
 
+
 const RotatingExpandIcon = styled(ExpandMoreIcon, {
   shouldForwardProp: (prop) => prop !== 'expanded',
 })<{ expanded?: boolean }>(({ expanded, theme }) => ({
@@ -219,6 +256,7 @@ export const useUtilityClasses = () => {
   const slots = {
     dataCard: ['dataCard'],
     title: ['title'],
+    titleNotifier: ['titleNotifier'],
     cardBody: ['cardBody']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);

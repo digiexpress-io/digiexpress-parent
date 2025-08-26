@@ -28,6 +28,7 @@ export const TASK_CARD_IDS: TaskCardId[] = [
   'task_meta'
 ];
 
+const defaultExpandedCards: TaskCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
 
 
 export type TaskCardStyleKey = 'compact' | 'default' | 'large';
@@ -68,7 +69,7 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
 
   const [flashyCards, setFlashyCards] = React.useState<TaskCardId[]>([]);
   const [altViewCards, setAltViewCards] = React.useState<TaskCardId[]>([]);
-  const [expandedCards, setExpandedCards] = React.useState<TaskCardId[]>([]);
+  const [expandedCards, setExpandedCards] = React.useState<TaskCardId[]>(defaultExpandedCards);
 
   const [editingCardId, setEditingCardId] = React.useState<TaskCardId | undefined>();
   const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>(props.cardTheme ?? 'default');

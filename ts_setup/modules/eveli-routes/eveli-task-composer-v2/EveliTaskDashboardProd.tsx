@@ -52,8 +52,7 @@ const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (p
   
   return (
     <Grid2 container spacing={style.cardSpacing} m={2}>
-      <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
-        sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
+      <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}>
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)}>

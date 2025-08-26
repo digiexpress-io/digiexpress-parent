@@ -65,6 +65,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
 
 
 
+
   const commonProps = {
     id: cardId,
     styleVariant: cardTheme,
@@ -176,6 +177,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
           {...commonProps}
           isMenu
+          titleNotifier={task.comments.filter(a => a.external).length}
           onEdit={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
           onDoubleClick={handleEdit}
@@ -225,6 +227,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes', defaultMessage: 'Notes' })}
           {...commonProps}
           isMenu
+          titleNotifier={task.comments.filter(a => !a.external).length}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}

@@ -19,7 +19,7 @@ function Component() {
   const isNew = isEnabled('SMART_TASK');
 
   return (
-    <Container sx={{ backgroundColor: theme.palette.secondary.main }}>
+    <Container>
       {isNew ? <EveliTaskDashboardProd taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
     </Container>
   )
