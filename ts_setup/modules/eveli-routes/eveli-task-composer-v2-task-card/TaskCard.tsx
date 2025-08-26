@@ -153,9 +153,11 @@ export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon
     <Avatar sx={{
       mr: 1,
       border: `1px solid #c6cad2`,
-      backgroundColor: alpha("#70798c", 0.1)
+      backgroundColor: alpha("#70798c", 0.1),
+      height: '35px',
+      width: '35px'
     }}>
-      <Icon sx={{ color: '#6c7689' }} />
+      <Icon sx={{ color: '#6c7689', fontSize: '15pt' }} />
     </Avatar>
   )
 }
