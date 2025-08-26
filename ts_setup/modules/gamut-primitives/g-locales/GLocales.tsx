@@ -1,13 +1,15 @@
 import React from 'react';
 import { useThemeProps, Button, Popover, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useAnchor } from './useAnchor';
 import { MUI_NAME, GLocalesRoot, useUtilityClasses } from './useUtilityClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 
 export interface GLocalesProps {
-  value?: string; // en, fi, sv, my, bs
+  value?: string; // current locale, e.g. en, fi, sv
+  locales?: string[]; // available locales, e.g. ['en', 'fi', 'sv', 'my', 'bs']
+  localeToCountryCode?: Record<string, string>;
   hidden?: boolean;
   onClick?: (newLocale: string) => void;
   component?: GOverridableComponent<GLocalesProps>;
@@ -15,6 +17,7 @@ export interface GLocalesProps {
 }
 
 export const GLocales: React.FC<GLocalesProps> = (initProps) => {
+  const intl = useIntl();
   const { anchorProps, onClick: anchorOnClick } = useAnchor();
 
   const props = useThemeProps({
@@ -23,13 +26,13 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
   });
   const ownerState = { ...props };
 
-  const { value, onClick, hidden } = props;
-  if (hidden) {
+  const { value, onClick, locales = [], hidden } = props;
+  if (locales.length <= 1 && hidden) {
     return (<></>);
   }
 
   /**
-   *  Fixed mapping of locales to country codes
+   *  Map locales to country codes to get flag
    */
   const localeToCountryCode: Record<string, string> = {
     en: 'gb', // Great Britain flag for English
@@ -37,6 +40,7 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
     sv: 'se',
     my: 'my',
     bs: 'ba',
+    ...(props.localeToCountryCode ?? {})
   };
 
   function handleChange(newLocale: string) {
@@ -44,9 +48,20 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
   }
 
   const classes = useUtilityClasses();
-  const startIcon = <img src={value ? `https://flagcdn.com/w20/${localeToCountryCode[value.toLowerCase()]}.png` : ''} />;
+  const startIcon = (
+    <img src={value ? `https://flagcdn.com/w20/${localeToCountryCode[value.toLowerCase()]}.png` : ''} />
+  );
 
   const Root = props.component ?? GLocalesRoot;
+
+  // Analyzer-hint: makes sure intl analyzer sees all supported keys
+  if (false) {
+    intl.formatMessage({ id: 'gamut.locale.en' });
+    intl.formatMessage({ id: 'gamut.locale.fi' });
+    intl.formatMessage({ id: 'gamut.locale.sv' });
+    intl.formatMessage({ id: 'gamut.locale.my' });
+    intl.formatMessage({ id: 'gamut.locale.bs' });
+  }
 
   return (
     <Root ownerState={ownerState} className={classes.root}>
@@ -57,47 +72,28 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
         className={classes.selectedLocale}
       >
         {!props.showOnlyFlag && value && (
-          <>
-            {value === 'en' && <FormattedMessage id="gamut.locale.en" />}
-            {value === 'fi' && <FormattedMessage id="gamut.locale.fi" />}
-            {value === 'sv' && <FormattedMessage id="gamut.locale.sv" />}
-            {value === 'my' && <FormattedMessage id="gamut.locale.my" />}
-            {value === 'bs' && <FormattedMessage id="gamut.locale.bs" />}
-          </>
+          <FormattedMessage id={"gamut.locale." + value} />
         )}
       </Button>
       <Popover {...anchorProps}>
         <List disablePadding>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => { handleChange('en'); anchorProps.onClose(); }}>
-              <ListItemIcon><img src={`https://flagcdn.com/w20/gb.png`} /></ListItemIcon>
-              <FormattedMessage id="gamut.locale.en" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => { handleChange('fi'); anchorProps.onClose(); }}>
-              <ListItemIcon><img src={`https://flagcdn.com/w20/fi.png`} /></ListItemIcon>
-              <FormattedMessage id="gamut.locale.fi" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => { handleChange('sv'); anchorProps.onClose(); }}>
-              <ListItemIcon><img src={`https://flagcdn.com/w20/se.png`} /></ListItemIcon>
-              <FormattedMessage id="gamut.locale.sv" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => { handleChange('my'); anchorProps.onClose(); }}>
-              <ListItemIcon><img src={`https://flagcdn.com/w20/my.png`} /></ListItemIcon>
-              <FormattedMessage id="gamut.locale.my" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => { handleChange('bs'); anchorProps.onClose(); }}>
-              <ListItemIcon><img src={`https://flagcdn.com/w20/ba.png`} /></ListItemIcon>
-              <FormattedMessage id="gamut.locale.bs" />
-            </ListItemButton>
-          </ListItem>
+          {locales.map((locale) => (
+            <ListItem key={locale} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  handleChange(locale);
+                  anchorProps.onClose();
+                }}
+              >
+                <ListItemIcon>
+                  <img
+                    src={`https://flagcdn.com/w20/${localeToCountryCode[locale.toLowerCase()]}.png`}
+                  />
+                </ListItemIcon>
+                <FormattedMessage id={"gamut.locale." + locale} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
       </Popover>
     </Root>
