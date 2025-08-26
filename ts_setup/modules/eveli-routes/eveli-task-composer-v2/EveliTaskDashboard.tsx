@@ -36,6 +36,7 @@ import {
   TaskCardStyleSelect,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../eveli-task-composer-v2-task-card';
+
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
 
@@ -44,7 +45,13 @@ import { TaskApi } from '@dxs-ts/task-api';
 
 export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const intl = useIntl();
-  const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard } = useCardConfig();
+
+  const {
+    cardTheme, editingCardId, toggleReview,
+    isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard,
+    isCardExpanded, toggleCardExpanded
+  } = useCardConfig();
+
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
   const { task } = useTaskDashboard();
@@ -65,6 +72,8 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
     onToggleFlashy: () => toggleCardFlashy(cardId),
     altView: isCardAltView(cardId),
     onToggleAltView: () => toggleCardAltView(cardId),
+    isExpanded: isCardExpanded(cardId),
+    onToggleExpanded: () => toggleCardExpanded(cardId),
     onReview: toggleReview,
   };
 

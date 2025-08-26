@@ -38,6 +38,9 @@ export interface CardConfig {
   cardTheme: TaskCardStyleKey;
   cardOrder: TaskCardId[];
 
+  isCardExpanded(id: TaskCardId): boolean;
+  toggleCardExpanded(id: TaskCardId): void;
+
   toggleReview(): void;
   isCardFlashy(id: TaskCardId): boolean;
   toggleCardFlashy(id: TaskCardId): void;
@@ -65,6 +68,7 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
 
   const [flashyCards, setFlashyCards] = React.useState<TaskCardId[]>([]);
   const [altViewCards, setAltViewCards] = React.useState<TaskCardId[]>([]);
+  const [expandedCards, setExpandedCards] = React.useState<TaskCardId[]>([]);
 
   const [editingCardId, setEditingCardId] = React.useState<TaskCardId | undefined>();
   const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>(props.cardTheme ?? 'default');
@@ -93,8 +97,14 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
       toggleCardAltView(cardId) {
         setAltViewCards(prev => prev.includes(cardId) ? prev.filter(id => cardId !== id) : [...prev, cardId])
       },
+      isCardExpanded(cardId) {
+        return expandedCards.includes(cardId);
+      },
+      toggleCardExpanded(cardId) {
+        setExpandedCards(prev => prev.includes(cardId) ? prev.filter(id => cardId !== id) : [...prev, cardId]);
+      }
     }
-  }, [isReviewOpen, editingCardId, cardTheme, flashyCards, altViewCards, cardOrder]);
+  }, [isReviewOpen, editingCardId, cardTheme, flashyCards, altViewCards, expandedCards, cardOrder]);
 
 
   return (

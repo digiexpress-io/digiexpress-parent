@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar } from '@mui/material';
+import { Typography, Box, useTheme, Divider, styled, generateUtilityClass, IconButton, alpha, Grid2, SxProps, Avatar } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { TaskCardMenu } from './TaskCardMenu';
@@ -15,24 +14,26 @@ export interface TaskCardProps {
   title?: string;
   children: React.ReactNode;
   altChildren?: React.ReactNode;
-  styleVariant?: TaskCardStyleKey;
 
   isMenu?: boolean;
-  isExpanded?: boolean;
-
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
   flashy?: boolean;
   altView?: boolean;
+  styleVariant?: TaskCardStyleKey;
   onClick?: () => void;
   onDoubleClick?: () => void;
   onReview?: () => void;
   onEdit?: () => void;
   onToggleFlashy?: () => void;
   onToggleAltView?: () => void;
-  onToggleExpanded?: () => void;
 }
 
+interface TaskCardDataRowTextProps {
+  label: string;
+  value: string | string[] | undefined;
+  style: TaskCardStyleDefinition;
+}
 
 interface TitleTextProps {
   children: React.ReactNode;
@@ -57,6 +58,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     setAnchorEl(null);
   };
 
+
   const handleEdit = () => {
     if (props.onEdit) {
       props.onEdit();
@@ -64,13 +66,6 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     handleMenuClose();
   };
 
-  const handleCardExpand = () => {
-    if (props.onToggleExpanded) {
-      props.onToggleExpanded();
-    }
-  }
-
-  const cardContent = props.altView ? props.altChildren : props.children;
 
   return (<>
     {props.editDialog}
@@ -81,7 +76,6 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
           {props.startAdornmentIcon}
           <TitleText style={style}>{props.title}</TitleText>
           <Box flexGrow={1} />
-          <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
           {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
           <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
             <DragHandleIcon color='primary' />
@@ -97,13 +91,60 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
             onReview={props.onReview}
             onEdit={handleEdit} />
         </Box>
-        {props.isExpanded && cardContent}
+        {props.altView ? props.altChildren : props.children}
       </Box>
     </TaskSectionCard>
   </>
   );
 }
 
+export const TaskCardDataRowText: React.FC<TaskCardDataRowTextProps> = ({ label, value, style }) => {
+  const theme = useTheme();
+
+  return (<>
+    <Grid2 container margin={theme.spacing(0.5)}>
+      <Grid2 size={style.dataRowGridSizes.label}>
+        <Typography sx={{ ...style.bodyTypography, fontWeight: 500, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {label}
+        </Typography>
+      </Grid2>
+
+      <Grid2 size={style.dataRowGridSizes.value}>
+        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {value}
+        </Typography>
+      </Grid2>
+    </Grid2>
+    <Divider />
+  </>
+  )
+}
+
+export const TaskCardDataRowElement: React.FC<{ label: string, value: React.ReactNode, style: TaskCardStyleDefinition }> = ({ label, value, style }) => {
+  const theme = useTheme();
+
+  return (<>
+    <Grid2 container margin={theme.spacing(0.5)}>
+      <Grid2 size={style.dataRowGridSizes.label}>
+        <Typography
+          sx={{
+            ...style.bodyTypography,
+            fontWeight: 500,
+            whiteSpace: 'normal',
+            wordWrap: 'break-word',
+            marginRight: 1
+          }}>
+          {label}
+        </Typography>
+      </Grid2>
+
+      <Grid2 size={style.dataRowGridSizes.value}>
+        {value}
+      </Grid2>
+    </Grid2>
+  </>
+  )
+}
 
 export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon }) => {
   const Icon = icon;
@@ -156,11 +197,13 @@ const TaskSectionCard = styled(Box, {
       flexGrow: 1,
       boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
       backgroundColor: theme.palette.background.default,
+
     },
     '& .TaskSectionCard-title': {
       display: 'flex',
       alignItems: 'center',
       color: theme.palette.text.primary,
+      paddingBottom: theme.spacing(2),
     },
   };
 
@@ -207,13 +250,6 @@ const TaskSectionCard = styled(Box, {
   }
 });
 
-const RotatingExpandIcon = styled(ExpandMoreIcon, {
-  shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded?: boolean }>(({ expanded, theme }) => ({
-  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: 'transform 0.3s ease',
-  color: theme.palette.primary.main
-}));
 
 export const useUtilityClasses = () => {
   const slots = {
