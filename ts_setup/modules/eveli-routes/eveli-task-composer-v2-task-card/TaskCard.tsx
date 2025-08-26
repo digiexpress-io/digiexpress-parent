@@ -21,11 +21,11 @@ export interface TaskCardProps {
 
   isMenu?: boolean;
   isExpanded?: boolean;
+  isFlashy?: boolean;
+  isAltView?: boolean;
 
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
-  flashy?: boolean;
-  altView?: boolean;
   onClick?: () => void;
   onDoubleClick?: () => void;
   onReview?: () => void;
@@ -72,14 +72,14 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     }
   }
 
-  const cardContent = props.altView ? props.altChildren : props.children;
+  const cardContent = props.isAltView ? props.altChildren : props.children;
 
 
   return (<>
     {props.editDialog}
     <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
-      <Box className={classes.cardBody}>
-        <Box className={classes.title}>
+
+      <Box className={classes.title}>
           {props.startAdornmentIcon}
           <TitleText style={style}>{props.title}</TitleText>
           {props.titleNotifier && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
@@ -94,20 +94,23 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
             anchorEl={anchorEl}
             open={menuOpen}
             onClose={handleMenuClose}
-            flashy={props.flashy}
+          flashy={props.isFlashy}
             onToggleFlashy={props.onToggleFlashy}
-            altView={props.altView}
+          altView={props.isAltView}
             onToggleAltView={props.onToggleAltView}
             onReview={props.onReview}
             onEdit={handleEdit} />
         </Box>
 
+
         <Collapse in={props.isExpanded} timeout="auto" unmountOnExit >
+        <Box className={classes.cardBody}>
           <ExpandableBox isExpanded={props.isExpanded}>
             {cardContent}
           </ExpandableBox>
-        </Collapse>
-      </Box>
+        </Box>
+
+      </Collapse>
     </TaskSectionCard>
   </>
   );
@@ -154,14 +157,16 @@ const TaskSectionCard = styled(Box, {
     ];
   },
 })<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
-  const { id, flashy } = ownerState;
+  const { id, isFlashy } = ownerState;
   const colors = flashyCardColorsById[id] ?? '#333fff';
+
 
   const baseStyles: SxProps = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
     transition: 'transform 0.2s ease, border 0.2s ease',
+    boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.06)',
 
     '& .MuiDivider-root': {
       borderColor: alpha(theme.palette.divider, 0.4)
@@ -169,20 +174,19 @@ const TaskSectionCard = styled(Box, {
     ':hover': {
       cursor: 'pointer'
     },
-    '& .TaskSectionCard-cardBody': {
-      padding: theme.spacing(2),
-      border: `1px solid ${theme.palette.divider}`,
-      borderRadius: theme.spacing(1),
-      flexGrow: 1,
-      boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
-      height: 'fit-content',
-      backgroundColor: theme.palette.secondary.main,
-
-    },
     '& .TaskSectionCard-title': {
       display: 'flex',
       alignItems: 'center',
+      padding: theme.spacing(2),
+      backgroundColor: theme.palette.secondary.main,
+      border: `1px solid ${theme.palette.divider}`,
       color: theme.palette.text.primary,
+    },
+
+    '& .TaskSectionCard-cardBody': {
+      backgroundColor: theme.palette.background.default,
+      border: `1px solid ${theme.palette.divider}`,
+      borderTop: 'none',
     },
     '& .TaskSectionCard-titleNotifier': {
       marginLeft: theme.spacing(1),
@@ -196,14 +200,14 @@ const TaskSectionCard = styled(Box, {
     },
   };
 
-  if (flashy) {
+  if (isFlashy) {
     return {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      border: `2px solid ${colors.flashyBackground}`,
-      borderRadius: theme.spacing(1),
+      border: `1px solid ${colors.flashyBackground}`,
       color: theme.palette.text.primary,
+
 
       ':hover': {
         cursor: 'pointer'
@@ -215,10 +219,8 @@ const TaskSectionCard = styled(Box, {
         borderColor: `${alpha(colors.flashyBorder, 0.1)}`
       },
       '& .TaskSectionCard-cardBody': {
-        padding: theme.spacing(2),
         flexGrow: 1,
-        boxShadow: '-4px 4px 10px rgba(0, 0, 0, 0.08)',
-        backgroundColor: alpha(colors.flashyBackground, 0.02)
+        backgroundColor: alpha(colors.flashyBackground, 0.05)
       },
       '& .TaskSectionCard-titleNotifier': {
         marginLeft: theme.spacing(1),
@@ -235,10 +237,13 @@ const TaskSectionCard = styled(Box, {
         alignItems: 'center',
         color: colors.flashyBackground,
         paddingBottom: theme.spacing(2),
+        padding: theme.spacing(2),
+        backgroundColor: alpha(colors.flashyBackground, 0.15),
+        borderBottom: `1px solid ${theme.palette.divider}`,
 
         '& .MuiAvatar-root': {
           backgroundColor: alpha(colors.flashyBackground, 0.3),
-          border: `2px solid ${colors.flashyBackground}`
+          border: `1px solid ${colors.flashyBackground}`
         },
 
       }

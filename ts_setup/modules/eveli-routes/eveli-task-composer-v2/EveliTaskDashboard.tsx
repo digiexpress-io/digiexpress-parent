@@ -69,11 +69,11 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const commonProps = {
     id: cardId,
     styleVariant: cardTheme,
-    flashy: isCardFlashy(cardId),
-    onToggleFlashy: () => toggleCardFlashy(cardId),
-    altView: isCardAltView(cardId),
-    onToggleAltView: () => toggleCardAltView(cardId),
+    isFlashy: isCardFlashy(cardId),
+    isAltView: isCardAltView(cardId),
     isExpanded: isCardExpanded(cardId),
+    onToggleFlashy: () => toggleCardFlashy(cardId),
+    onToggleAltView: () => toggleCardAltView(cardId),
     onToggleExpanded: () => toggleCardExpanded(cardId),
     onReview: toggleReview,
   };
