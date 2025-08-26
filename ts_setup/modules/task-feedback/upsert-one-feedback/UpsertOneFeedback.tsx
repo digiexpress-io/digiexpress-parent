@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useFeedback, FeedbackApi } from '@dxs-ts/eveli-api';
+import { useFeedback, FeedbackApi } from '../api-feedback';
 import { CreateOneFeedback } from './CreateOneFeedback';
 import { UpdateOneFeedback } from './UpdateOneFeedback';
 import { useSnackbar } from 'notistack';
@@ -9,6 +9,8 @@ export interface UpsertOneFeedbackProps {
   taskRef: string;
   reload: number;
   onComplete: (upsertedFeedback: FeedbackApi.Feedback) => void;
+  onDelete: () => void;
+  onCancel: () => void;
   allowDelete?: boolean;
 }
 

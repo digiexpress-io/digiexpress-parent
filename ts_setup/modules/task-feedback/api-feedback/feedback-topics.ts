@@ -1,4 +1,4 @@
-import { useLocale } from "../api-locale";
+
 import { FeedbackApi } from "./feedback-types";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -8,14 +8,11 @@ const subGroupId = 'feedback.sub_topic';
 
 
 function useFeedBackIntlTopic() {
-  const { messages } = useLocale();
+  const { messages } = useIntl();
 
   const codes = React.useMemo(() => {
     const mainKeys: string[] = [];
     const subKeys: string[] = [];
-
-
-
     Object.entries(messages)
       .flatMap(([, translations]) => Object.keys(translations))
       .forEach(key => {

@@ -14,8 +14,9 @@ import { EveliTaskComments } from "../eveli-task-comments";
 import { EveliTaskAttachments } from "../eveli-task-attachments";
 import { EveliTaskFeature } from "../eveli-task-feature";
 import { EveliTaskTransfer, EveliTaskTransferStatusIndicator } from "../eveli-task-transfer";
-import { StatusIndicator, UpsertOneFeedback } from "../eveli-task-feedback";
+import { StatusIndicator, UpsertOneFeedback } from "@dxs-ts/task-feedback";
 import { EveliTaskCountIndicator } from "./EveliTaskCountIndicator";
+import { useNavigate } from "@tanstack/react-router";
 
 
 
@@ -56,10 +57,20 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
   const { id } = task;
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
+  const navigate = useNavigate();
+
 
   React.useEffect(() => {
     loadAttachments(id).then(setAttachments);
   }, [id]);
+
+  function onFeedbackCancel() {
+    navigate({
+      from: '/secured/$locale',
+      params: { taskId: task.taskRef! },
+      to: '/secured/$locale/worker/tasks/$taskId'
+    });
+  }
 
 
   return (
@@ -90,7 +101,11 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={classes.accordionDetails}>
-              <UpsertOneFeedback taskRef={task.taskRef!} onComplete={() => { }} reload={0} allowDelete={false} />
+              <UpsertOneFeedback taskRef={task.taskRef!}reload={0} allowDelete={false} 
+                onComplete={() => { }} 
+                onCancel={onFeedbackCancel}
+                onDelete={onFeedbackCancel}
+              />
             </AccordionDetails>
           </Accordion>
         </Grid2>

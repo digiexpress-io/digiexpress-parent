@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
+import { FeedbackApi, useFeedback } from '../api-feedback';
 
 
   /*

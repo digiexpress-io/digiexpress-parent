@@ -19,6 +19,7 @@
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/user-profile": "*",
+    "@dxs-ts/task-feedback": "*",
     "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {

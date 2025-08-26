@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { FeedbackProvider } from '@dxs-ts/eveli-api';
-import { UpsertOneFeedback } from '../eveli-task-feedback';
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useFeedbackBackend } from '@dxs-ts/eveli-api';
+import { FeedbackProvider, UpsertOneFeedback } from '@dxs-ts/task-feedback';
 
 
 export const Route = createFileRoute('/secured/$locale/worker/feedback/$feedbackId/')({
@@ -9,8 +9,27 @@ export const Route = createFileRoute('/secured/$locale/worker/feedback/$feedback
 
 function Component() {
   const { feedbackId } = Route.useParams();
+  const backend = useFeedbackBackend();
+  const navigate = useNavigate();
+
+  function onFeedbackCancel() {
+    navigate({
+      from: '/secured/$locale',
+      params: { taskId: feedbackId! },
+      to: '/secured/$locale/worker/tasks/$taskId'
+    });
+  }
   function handleOnComplete() {
   }
   
-  return (<FeedbackProvider><UpsertOneFeedback taskRef={feedbackId!} onComplete={handleOnComplete} reload={0} /></FeedbackProvider>)
+  return (
+    <FeedbackProvider backend={backend}>
+      <UpsertOneFeedback 
+        taskRef={feedbackId!} 
+        onComplete={handleOnComplete} 
+        onCancel={onFeedbackCancel}
+        onDelete={onFeedbackCancel}
+        
+        reload={0} />
+    </FeedbackProvider>)
 }

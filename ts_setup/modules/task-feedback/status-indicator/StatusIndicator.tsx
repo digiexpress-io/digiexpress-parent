@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar, Tooltip, useTheme } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
-import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
+import { FeedbackApi, useFeedback } from '../api-feedback';
 import { useIntl } from 'react-intl';
 
 export interface StatusIndicatorProps {

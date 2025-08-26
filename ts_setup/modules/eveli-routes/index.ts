@@ -18,7 +18,6 @@ export * from './eveli-task-composer-v2-task-card'
 export * from './eveli-task-composer-v2-task'
 */
 export * from './eveli-task-feature'
-export * from './eveli-task-feedback'
 export * from './eveli-task-queue'
 export * from './eveli-task-stats'
 export * from './eveli-task-transfer'

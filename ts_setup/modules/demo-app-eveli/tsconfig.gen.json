@@ -70,6 +70,9 @@
       ],
       "@dxs-ts/xui-table": [
         "../xui-table/index.ts"
+      ],
+      "@dxs-ts/task-feedback": [
+        "../task-feedback/index.ts"
       ]
     }
   },
@@ -140,16 +143,19 @@
     },
     {
       "path": "../xui-table"
+    },
+    {
+      "path": "../task-feedback"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T09:18:24.067Z",
+    "at": "2025-08-26T08:27:33.394Z",
     "forModule": "@dxs-ts/eveli-demo-app",
-    "fromRegistry": "1eae4a74d70d",
+    "fromRegistry": "56a6b2f1c861",
     "alias": {
       "@dxs-ts/eveli-demo-app": [
-        "../xui-table"
+        "../task-feedback"
       ]
     }
   }

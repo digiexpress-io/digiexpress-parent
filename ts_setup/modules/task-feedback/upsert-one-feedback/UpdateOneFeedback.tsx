@@ -1,24 +1,26 @@
 import React from 'react';
 import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useNavigate } from '@tanstack/react-router';
+
 import { useIntl, FormattedMessage } from 'react-intl';
 
-import { useFeedback, FeedbackApi } from '@dxs-ts/eveli-api';
+import { useFeedback, FeedbackApi } from '../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 import { ApprovalCount } from '../approval-count';
 
 import { FeedbackContent } from './FeedbackContent';
-import { CancelButton, EveliDateTimeFormatter } from '@dxs-ts/eveli-primitives';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 export interface UpdateOneFeedbackProps {
   taskRef: string;
   taskId: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
+  onDelete: () => void;
+  
   allowDelete?: boolean;
 }
 
-export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, taskId, onComplete, allowDelete = true }) => {
-  const navigate = useNavigate();
+export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, taskId, onComplete, onDelete, allowDelete = true }) => {
+
   const intl = useIntl();
   const theme = useTheme();
 
@@ -74,15 +76,12 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
     });
   }
 
+
   function confirmDelete() {
     deleteOneFeedback(taskRef).then(feedback => {
       onComplete(feedback);
     });
-    navigate({
-      from: '/secured/$locale',
-      params: { taskId: taskRef },
-      to: '/secured/$locale/worker/tasks/$taskId'
-    });
+    onDelete();
   }
 
   if (!feedback) {
@@ -115,7 +114,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
           {intl.formatMessage({ id: 'feedback.updated' })}
           {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
         </Box>
-        <EveliDateTimeFormatter value={feedback.updatedOnDate} variant='text' />
+        <DateTimeFormatter value={feedback.updatedOnDate} variant='text' />
       </Typography>
 
       <Typography variant='body2'>
@@ -167,10 +166,11 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
             </Button>
           </>
         )}
-        <CancelButton
-          onClick={() => setReply(savedReply)}
-          disabled={reply === savedReply}
-        />
+
+        <Button variant="outlined" onClick={() => setReply(savedReply)} disabled={reply === savedReply}>
+          <FormattedMessage id='button.cancel' />
+        </Button>
+
         <Button
           variant='contained'
           onClick={handlePublish}
@@ -195,7 +195,9 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
             </Typography>
           </DialogContent>
           <DialogActions>
-            <CancelButton onClick={() => setConfirmOpen(false)} />
+            <Button variant="outlined" onClick={() => setConfirmOpen(false)}>
+              <FormattedMessage id='button.cancel' />
+            </Button>
             <Button onClick={confirmDelete} color='error'>
               <FormattedMessage id='button.confirmDelete' />
             </Button>

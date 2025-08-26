@@ -50,6 +50,9 @@
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
+      "@dxs-ts/task-feedback": [
+        "../task-feedback/index.ts"
+      ],
       "@dxs-ts/eveli-api": [
         "../eveli-api/index.ts"
       ],
@@ -118,6 +121,9 @@
       "path": "../task-api"
     },
     {
+      "path": "../task-feedback"
+    },
+    {
       "path": "../eveli-api"
     },
     {
@@ -138,9 +144,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T09:18:24.068Z",
+    "at": "2025-08-26T08:27:33.395Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "1eae4a74d70d",
+    "fromRegistry": "56a6b2f1c861",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../xui-table"

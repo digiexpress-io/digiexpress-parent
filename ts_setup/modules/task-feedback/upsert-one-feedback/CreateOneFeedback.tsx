@@ -1,18 +1,17 @@
 import React from 'react';
 import { Box, CircularProgress, TextField, Typography, Button } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { useNavigate } from '@tanstack/react-router';
-import { useFeedback, FeedbackApi } from '@dxs-ts/eveli-api';
+import { useFeedback, FeedbackApi } from '../api-feedback';
 import { FeedbackContent } from './FeedbackContent';
-import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 export interface CreateOneFeedbackProps {
   taskRef: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
+  onCancel: () => void;
 }
 
-export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, onComplete }) => {
-  const navigate = useNavigate();
+export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, onComplete, onCancel }) => {
+
   const intl = useIntl();
 
   const { getOneTemplate, createOneFeedback } = useFeedback();
@@ -63,17 +62,12 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
     }
   }
 
-
+  
   function handleCancel() {
     if (template) {
       setReply(template.replys?.join("\r\n\r\n") ?? '')
     }
-
-    navigate({
-      from: '/secured/$locale',
-      params: { taskId: taskRef },
-      to: '/secured/$locale/worker/tasks/$taskId'
-    })
+    onCancel();
   }
 
   if (!command || !template) {
@@ -107,7 +101,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
 
       </div>
       <Box display='flex' gap={1}>
-        <CancelButton onClick={handleCancel} />
+        <Button variant="outlined" onClick={handleCancel}><FormattedMessage id='button.cancel' /></Button>
         <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.publish' /></Button>
       </Box>
     </>

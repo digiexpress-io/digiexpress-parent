@@ -1,0 +1,22 @@
+{
+  "name": "@dxs-ts/task-feedback",
+  "version": "${project.version}",
+  "description": "Task extension for feedback",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/xui-datetime": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*",
+    "@mui/material": "*",
+    "@mui/icons-material": "*",
+    "@tanstack/react-table": "*",
+    "notistack": "*",
+    "luxon": "*"
+  },
+  "keywords": ["task", "feedback"],
+  "private": true
+}

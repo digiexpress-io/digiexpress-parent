@@ -1,35 +1,26 @@
 import React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useNavigate } from '@tanstack/react-router';
 
-import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
+import { FeedbackApi, useFeedback } from '../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 
-export interface FeedbackAllTasksProps {}
+export interface FeedbackAllTasksProps {
+  onOpenFeedback(feedbackId: string): void;
+}
 
-export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
+export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ onOpenFeedback }) => {
   const intl = useIntl();
-  const navigate = useNavigate();
-  const theme = useTheme();
   const { findAllFeedback } = useFeedback();
   const [data, setData] = React.useState<FeedbackApi.Feedback[]>([]);
 
   React.useEffect(() => {
     findAllFeedback().then(setData);
   }, []);
-
-  function handleFeedbackNav(feedbackId: string) {
-    navigate({
-      from: '/secured/$locale',
-      params: { feedbackId },
-      to: '/secured/$locale/worker/feedback/$feedbackId'
-    });
-  }
 
   const columns: ColumnDef<any, any>[] = [
     {
@@ -55,7 +46,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       cell: (info) => (
         <Box
           sx={{ cursor: 'pointer', color: 'primary.main', textDecoration: 'underline' }}
-          onClick={() => handleFeedbackNav(info.row.original.sourceId)}
+          onClick={() => onOpenFeedback(info.row.original.sourceId)}
         >
           {info.getValue()}
         </Box>

@@ -29,6 +29,9 @@
       "@dxs-ts/user-profile": [
         "../user-profile/index.ts"
       ],
+      "@dxs-ts/task-feedback": [
+        "../task-feedback/index.ts"
+      ],
       "@dxs-ts/xui-table": [
         "../xui-table/index.ts"
       ]
@@ -61,14 +64,17 @@
       "path": "../user-profile"
     },
     {
+      "path": "../task-feedback"
+    },
+    {
       "path": "../xui-table"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T08:59:33.830Z",
+    "at": "2025-08-26T08:12:15.905Z",
     "forModule": "@dxs-ts/eveli-api",
-    "fromRegistry": "d5fc913dac9e",
+    "fromRegistry": "f7f0ae7df858",
     "alias": {
       "@dxs-ts/eveli-api": [
         "../xui-table"
