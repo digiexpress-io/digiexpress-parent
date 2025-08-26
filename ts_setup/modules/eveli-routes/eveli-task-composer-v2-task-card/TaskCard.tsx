@@ -118,35 +118,6 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 }
 
 
-
-export const ExpandableBox = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isExpanded',
-})<{ isExpanded?: boolean }>(({ isExpanded, theme }) => ({
-  padding: theme.spacing(2),
-  transform: isExpanded ? 'scaleY(1)' : 'scaleY(0.95)',
-  transformOrigin: 'top',
-  opacity: isExpanded ? 1 : 0,
-  transition: 'transform 0.3s ease, opacity 0.3s ease',
-}));
-
-export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon }) => {
-  const Icon = icon;
-
-  return (
-    <Avatar sx={{
-      mr: 1,
-      border: `1px solid #c6cad2`,
-      backgroundColor: alpha("#70798c", 0.1),
-      height: '35px',
-      width: '35px'
-    }}>
-      <Icon sx={{ color: '#6c7689', fontSize: '15pt' }} />
-    </Avatar>
-  )
-}
-
-
-
 const MUI_NAME = 'TaskSectionCard';
 const TaskSectionCard = styled(Box, {
   name: MUI_NAME,
@@ -255,15 +226,6 @@ const TaskSectionCard = styled(Box, {
   }
 });
 
-
-const RotatingExpandIcon = styled(ExpandMoreIcon, {
-  shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded?: boolean }>(({ expanded, theme }) => ({
-  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: 'transform 0.3s ease',
-  color: theme.palette.primary.main
-}));
-
 export const useUtilityClasses = () => {
   const slots = {
     dataCard: ['dataCard'],
@@ -274,6 +236,43 @@ export const useUtilityClasses = () => {
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
+
+
+export const StartAdornmentIcon: React.FC<{ icon: React.ElementType }> = ({ icon }) => {
+  const Icon = icon;
+
+  return (
+    <Avatar sx={{
+      mr: 1,
+      border: `1px solid #c6cad2`,
+      backgroundColor: alpha("#70798c", 0.1),
+      height: '35px',
+      width: '35px'
+    }}>
+      <Icon sx={{ color: '#6c7689', fontSize: '15pt' }} />
+    </Avatar>
+  )
+}
+
+const ExpandableBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isExpanded',
+})<{ isExpanded?: boolean }>(({ isExpanded, theme }) => ({
+  padding: theme.spacing(2),
+  transform: isExpanded ? 'scaleY(1)' : 'scaleY(0.95)',
+  transformOrigin: 'top',
+  opacity: isExpanded ? 1 : 0,
+  transition: 'transform 0.3s ease, opacity 0.3s ease',
+}));
+
+
+const RotatingExpandIcon = styled(ExpandMoreIcon, {
+  shouldForwardProp: (prop) => prop !== 'expanded',
+})<{ expanded?: boolean }>(({ expanded, theme }) => ({
+  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+  transition: 'transform 0.3s ease',
+  color: theme.palette.primary.main
+}));
+
 
 
 const TitleText: React.FC<TitleTextProps> = ({ style, children }) => {
