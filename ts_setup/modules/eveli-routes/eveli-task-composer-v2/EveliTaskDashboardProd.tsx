@@ -54,8 +54,9 @@ const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (p
   
   return (
     <Grid2 container spacing={style.cardSpacing} m={2}>
-      <Typography variant='h1'>{intl.formatMessage({ id: 'task.edit' })}</Typography>
       <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}>
+        <Typography variant='h1'>{intl.formatMessage({ id: 'task.edit' })}</Typography>
+
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)}>
