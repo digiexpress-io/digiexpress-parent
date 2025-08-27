@@ -74,52 +74,52 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
 
 export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string; flashyBorder: string; contrastText: string }> = {
   'task_main': {
-    flashyBackground: '#D7E6F5', // brighter slate blue
+    flashyBackground: '#E4F0FB', // brighter slate blue
     flashyBorder: '#1F4E79',     // deep corporate blue
     contrastText: '#1C1C1C',
   },
   'task_main_alt': {
-    flashyBackground: '#CBE0F0', // soft sky blue
+    flashyBackground: '#D6EBF8', // bright sky blue
     flashyBorder: '#2E70B3',     // medium professional blue
     contrastText: '#1C1C1C',
   },
   'status_priority': {
-    flashyBackground: '#F2D8D8', // soft muted red
+    flashyBackground: '#F8D6D6', // brighter muted red
     flashyBorder: '#B73737',     // professional deep red
     contrastText: '#1C1C1C',
   },
   'task_form_summary': {
-    flashyBackground: '#D8D0EB', // light corporate purple/lilac
+    flashyBackground: '#E3D8F5', // brighter corporate lilac
     flashyBorder: '#4B4F7C',     // muted violet accent
     contrastText: '#1C1C1C',
   },
   'assignees_roles': {
-    flashyBackground: '#C3D5EA', // muted brighter slate
+    flashyBackground: '#D2E4F7', // brighter slate blue
     flashyBorder: '#1E5FA8',     // strong corporate blue
     contrastText: '#1C1C1C',
   },
   'customer_messages': {
-    flashyBackground: '#DCE3F0', // light blue-gray
+    flashyBackground: '#E1E8F5', // brighter light blue-gray
     flashyBorder: '#383F56',     // dark muted blue
     contrastText: '#1C1C1C',
   },
   'files': {
-    flashyBackground: '#E3D8F0', // light soft purple
+    flashyBackground: '#EAD8F5', // light vibrant purple
     flashyBorder: '#5A4B6A',     // muted purple accent
     contrastText: '#1C1C1C',
   },
   'feedback': {
-    flashyBackground: '#FFE3D0', // muted soft coral
+    flashyBackground: '#FFE6D6', // brighter muted coral
     flashyBorder: '#E5946B',     // muted coral accent
     contrastText: '#1C1C1C',
   },
   'notes': {
-    flashyBackground: '#D9E0EB', // light gray-blue
+    flashyBackground: '#E1E8F5', // brighter gray-blue
     flashyBorder: '#2E5C8A',     // deep corporate blue
     contrastText: '#1C1C1C',
   },
   'task_meta': {
-    flashyBackground: '#CED6E5', // soft gray-blue
+    flashyBackground: '#D8E2F0', // slightly brighter gray-blue
     flashyBorder: '#6B4F7C',     // muted purple accent
     contrastText: '#1C1C1C',
   }
