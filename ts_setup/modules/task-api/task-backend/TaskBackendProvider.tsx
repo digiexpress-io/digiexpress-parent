@@ -1,0 +1,65 @@
+
+import React from 'react';
+import { TaskApi } from '../task-types';
+
+export interface TaskBackendContextType {
+  permissions: {
+    isCreateTaskAllowed: boolean;
+    isReopenTaskAllowed: boolean;
+    isDeleteTaskAllowed: boolean;
+  };
+  navigate: {
+    findAllTasks: () => void;
+    createOneTask: () => void;
+    openOneTask: (taskIdOrRef: string) => void;
+  };
+  persistence: {
+    findAllUsers: (groups: string[]) => Promise<TaskApi.User[]>;
+    findAllRoles: () => Promise<TaskApi.Role[]>;
+    findAllAttachments: (taskId: string) => Promise<TaskApi.Attachment[]>;
+
+    getOneAttachmentLink: (taskId: string, attachment: TaskApi.Attachment) => Promise<string>
+    deleteOneAttachment: (taskId: string, attachment: TaskApi.Attachment) => Promise<unknown>;
+    createManyAttachments: (taskId: string, files: FileList) => Promise<unknown>; 
+    createOnTaskTransfer: (task: TaskApi.Task, command: TaskApi.TransferTaskCommand) => Promise<TaskApi.Task>;
+
+    
+    paginateTasks: (queryProps: string) => Promise<{
+      data: TaskApi.Task[], // array of data
+      page: number, // current page we are on, starts with 0 = first page
+      totalCount: number // total entries on all the pages combined
+    }>;
+
+    findAllTasks: () => Promise<TaskApi.Task[]>;
+    findAllUnreadTasks: () => Promise<string[]>;
+    getOneTask: (taskId: string) => Promise<TaskApi.Task>;
+    modifyOneTask: (newData: TaskApi.Task) => Promise<TaskApi.Task>;
+    deleteOneTask: (taskId: string) => Promise<unknown>;
+    createOneTask: (request: Partial<TaskApi.Task>) => Promise<TaskApi.Task>;
+    createOneComment: (commentText: string, replyToId: number | undefined, task: TaskApi.Task, isExternalThread: boolean | undefined) => Promise<TaskApi.Comment>
+  }
+}
+
+export const TaskBackendContext = React.createContext<TaskBackendContextType>({} as any);
+
+export interface TaskBackendProviderProps {
+  children: React.ReactNode;
+  navigate: TaskBackendContextType['navigate'];
+  persistence: TaskBackendContextType['persistence'];
+  permissions: TaskBackendContextType['permissions'];
+}
+
+export const TaskBackendProvider: React.FC<TaskBackendProviderProps> = (props) => {
+  const { navigate, persistence, permissions } = props;
+
+  const contextValue: TaskBackendContextType = React.useMemo(() => {
+    return { navigate, persistence, permissions };
+  }, []);
+
+  return (<TaskBackendContext.Provider value={contextValue}>{props.children}</TaskBackendContext.Provider>);
+}
+
+export function useTaskBackend() {
+  const result: TaskBackendContextType = React.useContext(TaskBackendContext);
+  return result;
+}
