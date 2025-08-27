@@ -22,7 +22,9 @@ package io.digiexpress.eveli.client.spi.task;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -45,14 +47,14 @@ public class TaskFileClientImpl implements TaskFileClient {
   private final AttachmentCommands attachmentCommands;
   private final RestTemplate restTemplate;
   
-  
   @Override
   public QueryTaskFiles queryTaskFiles() {
     return new QueryTaskFiles() {
       @Override
-      public Uni<List<TaskFile>> findAll(String taskId) {
+      public Uni<List<TaskFile>> findAll(String taskId, Optional<String> processId) {
+        
         return Multi.createFrom().iterable(ImmutableList.<AttachmentCommands.Attachment>builder()
-            .addAll(attachmentCommands.query().processId(taskId))
+            .addAll(processId.isPresent() ? attachmentCommands.query().processId(processId.get()) : Collections.emptyList())
             .addAll(attachmentCommands.query().taskId(taskId))
             .build())
         .onItem().transform(attachment -> createReq(attachment))
@@ -61,6 +63,7 @@ public class TaskFileClientImpl implements TaskFileClient {
       }
     };
   }
+  
   
   private TaskFile createResp(AttReq req) {
     final ResponseEntity<byte[]> resp = restTemplate.getForEntity(req.getUrl(), byte[].class);

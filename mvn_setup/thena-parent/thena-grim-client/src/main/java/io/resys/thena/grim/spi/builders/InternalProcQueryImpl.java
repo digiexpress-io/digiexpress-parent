@@ -21,6 +21,7 @@ package io.resys.thena.grim.spi.builders;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.grim.GrimProcess;
@@ -102,5 +103,27 @@ public class InternalProcQueryImpl implements InternalProcQuery {
         })
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
 
+  }
+
+  @Override
+  public Uni<Optional<GrimProcess>> findOneByMissionId(String missionId) {
+    final var sql = registry.processes().findOneByMissionId(missionId);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findOneByMissionId query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform(rowset -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return Optional.of(it.next());
+          }
+          return Optional.<GrimProcess>empty();
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
   }
 }

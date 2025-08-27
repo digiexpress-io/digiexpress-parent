@@ -32,6 +32,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.SqlTuple findOneByMissionId(String missionId);
 
   ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter);
   ThenaSqlClient.SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);

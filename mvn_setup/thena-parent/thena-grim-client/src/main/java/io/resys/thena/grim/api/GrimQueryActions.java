@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.entities.PageQuery;
 import io.resys.thena.api.entities.grim.GrimCommit;
@@ -60,6 +61,7 @@ public interface GrimQueryActions {
   interface MissionProcsQuery {
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
     Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
+    Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
   }
   
   interface MissionDeleteQuery {

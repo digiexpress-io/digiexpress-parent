@@ -23,6 +23,7 @@ import java.time.OffsetDateTime;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
@@ -129,6 +130,11 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       public Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
         return startingState.toGrimState(repoId)
             .onItem().transformToMulti(state -> state.missionProcs().findOnOrBeforeWithoutMission(onOrBefore));
+      }
+      @Override
+      public Uni<Optional<GrimProcess>> findOneByMissionId(String missionId) {
+        return startingState.toGrimState(repoId)
+            .onItem().transformToUni(state -> state.missionProcs().findOneByMissionId(missionId));
       }
     };
   }

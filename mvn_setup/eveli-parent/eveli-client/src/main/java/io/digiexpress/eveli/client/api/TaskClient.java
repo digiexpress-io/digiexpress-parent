@@ -25,6 +25,7 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.immutables.value.Value;
@@ -70,6 +71,7 @@ public interface TaskClient {
   }
   
   interface QueryTaskProcesess {
+    Uni<Optional<ProcessClient.ProcessInstance>> findOneByTaskId(String taskId);
     Multi<ProcessClient.ProcessInstance> findLast6Months();
     Multi<ProcessClient.ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen); 
   }
