@@ -10,9 +10,6 @@
       ],
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
-      ],
-      "@dxs-ts/xui-datetime": [
-        "../xui-datetime/index.ts"
       ]
     }
   },
@@ -23,19 +20,16 @@
     },
     {
       "path": "../task-api"
-    },
-    {
-      "path": "../xui-datetime"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-27T13:11:33.618Z",
+    "at": "2025-08-27T14:00:08.304Z",
     "forModule": "@dxs-ts/task-composer-v1",
-    "fromRegistry": "c98c26be038e",
+    "fromRegistry": "ada9335539fc",
     "alias": {
       "@dxs-ts/task-composer-v1": [
-        "../xui-datetime"
+        "../task-api"
       ]
     }
   }

@@ -2135,8 +2135,7 @@
         "type": "module",
         "dependencies": {
           "@dxs-ts/task-feedback": "*",
-          "@dxs-ts/task-api": "*",
-          "@dxs-ts/xui-datetime": "*"
+          "@dxs-ts/task-api": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -2146,9 +2145,8 @@
           "@mui/utils": "*",
           "@mui/icons-material": "*",
           "notistack": "*",
-          "luxon": "*",
-          "moment": "*",
-          "@tanstack/react-router": "*"
+          "@tanstack/react-router": "*",
+          "luxon": "*"
         },
         "keywords": [
           "task-composer"
@@ -2158,7 +2156,6 @@
       "dependencies": [
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
-        "@dxs-ts/xui-datetime",
         "react",
         "react-intl",
         "@material-table/core",
@@ -2166,9 +2163,8 @@
         "@mui/utils",
         "@mui/icons-material",
         "notistack",
-        "luxon",
-        "moment",
-        "@tanstack/react-router"
+        "@tanstack/react-router",
+        "luxon"
       ],
       "peerDependencies": [
         "react",
@@ -2178,9 +2174,8 @@
         "@mui/utils",
         "@mui/icons-material",
         "notistack",
-        "luxon",
-        "moment",
-        "@tanstack/react-router"
+        "@tanstack/react-router",
+        "luxon"
       ],
       "externalDependencies": [
         "react",
@@ -2190,14 +2185,12 @@
         "@mui/utils",
         "@mui/icons-material",
         "notistack",
-        "luxon",
-        "moment",
-        "@tanstack/react-router"
+        "@tanstack/react-router",
+        "luxon"
       ],
       "internalDependencies": [
         "@dxs-ts/task-feedback",
-        "@dxs-ts/task-api",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/task-api"
       ],
       "actualDependencies": [
         "@material-table/core",
@@ -2210,9 +2203,7 @@
         "luxon",
         "notistack",
         "@tanstack/react-router",
-        "@dxs-ts/task-feedback",
-        "@dxs-ts/xui-datetime",
-        "moment"
+        "@dxs-ts/task-feedback"
       ],
       "actualExternalDependencies": [
         "@material-table/core",
@@ -2223,13 +2214,11 @@
         "@mui/utils",
         "luxon",
         "notistack",
-        "@tanstack/react-router",
-        "moment"
+        "@tanstack/react-router"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/task-api",
-        "@dxs-ts/task-feedback",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/task-feedback"
       ],
       "missingDependencies": [],
       "unusedDependencies": []
@@ -2577,8 +2566,7 @@
           "react-intl": "*",
           "@mui/material": "*",
           "@mui/icons-material": "*",
-          "luxon": "*",
-          "react-date-picker": "*"
+          "luxon": "*"
         },
         "keywords": [
           "wrench",
@@ -2593,24 +2581,21 @@
         "react-intl",
         "@mui/material",
         "@mui/icons-material",
-        "luxon",
-        "react-date-picker"
+        "luxon"
       ],
       "peerDependencies": [
         "react",
         "react-intl",
         "@mui/material",
         "@mui/icons-material",
-        "luxon",
-        "react-date-picker"
+        "luxon"
       ],
       "externalDependencies": [
         "react",
         "react-intl",
         "@mui/material",
         "@mui/icons-material",
-        "luxon",
-        "react-date-picker"
+        "luxon"
       ],
       "internalDependencies": [],
       "actualDependencies": [
@@ -2618,16 +2603,14 @@
         "@mui/material",
         "@mui/icons-material",
         "react-intl",
-        "luxon",
-        "react-date-picker"
+        "luxon"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
         "@mui/icons-material",
         "react-intl",
-        "luxon",
-        "react-date-picker"
+        "luxon"
       ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
@@ -2898,8 +2881,7 @@
       "@dxs-ts/task-api": [],
       "@dxs-ts/task-composer-v1": [
         "@dxs-ts/task-feedback",
-        "@dxs-ts/task-api",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/task-api"
       ],
       "@dxs-ts/task-feedback": [
         "@dxs-ts/xui-table",
@@ -3095,7 +3077,6 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-ide",
-        "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-table"
       ],
@@ -3220,6 +3201,6 @@
       ]
     }
   },
-  "checksum": "f859ac88e4d1708d96b2bc24b9b2b4cc2b930fc56ee95c4ab1b0bf2af69f03f4",
-  "generatedAt": "2025-08-27T13:33:31.688Z"
+  "checksum": "ada9335539fcc265e0077eacb4f15ce121a9f91f80320929fe1fc1cf896afb43",
+  "generatedAt": "2025-08-27T14:00:08.301Z"
 }

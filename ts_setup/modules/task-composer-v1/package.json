@@ -6,8 +6,7 @@
   "type": "module",
   "dependencies": {
     "@dxs-ts/task-feedback": "*",
-    "@dxs-ts/task-api": "*",
-    "@dxs-ts/xui-datetime": "*"
+    "@dxs-ts/task-api": "*"
   },
   "peerDependencies": {
     "react": "*",
@@ -17,9 +16,8 @@
     "@mui/utils": "*",
     "@mui/icons-material": "*",
     "notistack": "*",
-    "luxon": "*",
-    "moment": "*",
-    "@tanstack/react-router": "*"
+    "@tanstack/react-router": "*",
+    "luxon": "*"
   },
   "keywords": ["task-composer"],
   "private": true

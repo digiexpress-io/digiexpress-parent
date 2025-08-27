@@ -3,21 +3,17 @@ import React from 'react';
 import { Box, Button, Grid2, Paper, Stack, Typography, useTheme, lighten } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-import { useNavigate } from '@tanstack/react-router';
+
 
 import { FormattedMessage } from 'react-intl';
-import { DateTimeFormatter } from "@dxs-ts/xui-datetime";
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { TaskFormDelegateProps } from './TaskFormState';
 
 
 const NavigateToTasksButton: React.FC = () => {
-  const navigate = useNavigate();
+  const backend = useTaskBackend();
   function handleBack() {
-    navigate({
-      from: '/secured/$locale/worker',
-      to: '/secured/$locale/worker/tasks'
-    });
+    backend.navigate.findAllTasks()
   }
   return (<Button variant='outlined' endIcon={<CloseIcon />}  onClick={handleBack}><FormattedMessage id='taskButton.cancel' /></Button>)
 }
@@ -42,7 +38,7 @@ export const TaskFooter: React.FC<TaskFooterProps> = (props) => {
   const updatedAt = task?.updated;
   const updatedBy = task?.updaterId;
   const theme = useTheme();
-
+  const backend = useTaskBackend();
 
   return (
     <>
@@ -50,7 +46,7 @@ export const TaskFooter: React.FC<TaskFooterProps> = (props) => {
       <Grid2 container spacing={2}>
         <Grid2 size={{ xs: 12, md: 6 }} container justifyContent="flex-start">
           <Typography variant="caption" display="flex" gutterBottom>
-            <FormattedMessage id='task.updated' />:&nbsp;<DateTimeFormatter value={updatedAt} variant='text'/>&nbsp;&nbsp;
+            <FormattedMessage id='task.updated' />:&nbsp;<backend.slots.DateTimeFormatter value={updatedAt} variant='text'/>&nbsp;&nbsp;
             {updatedBy || ''}
           </Typography>
         </Grid2>

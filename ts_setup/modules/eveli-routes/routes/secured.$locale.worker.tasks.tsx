@@ -4,14 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router'
 
 
-import { useEveliPermissions } from "@dxs-ts/eveli-primitives";
+import { useEveliPermissions, EveliDatePicker as DateTimePicker, EveliDateTimeFormatter as DateTimeFormatter } from "@dxs-ts/eveli-primitives";
 import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 import { FeedbackProvider } from '@dxs-ts/task-feedback';
 import { TaskApi, TaskBackendProvider, TaskBackendProviderProps } from '@dxs-ts/task-api';
 import { TasksTableProvider } from '@dxs-ts/task-composer-v1';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
-import { DialobReview } from '../dialob-review';
+import { DialobReview as RealDialobReview } from '../dialob-review';
 
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks')({
@@ -39,7 +39,11 @@ function Component() {
         persistence={persistence} 
         currentUser={currentUser} 
         roles={groups}
-        slots={{ DialobReview: FormReviewButton }}
+        slots={{ 
+          DialobReview, 
+          DateTimeFormatter, 
+          DateTimePicker
+        }}
       >
         <FeedbackProvider backend={feedbackBackend}>
           <TasksTableProvider>
@@ -131,7 +135,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
 
 
 
-const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
+const DialobReview: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
   const [open, setOpen] = React.useState(false);
   if(!task.questionnaireId) {
     return (<></>);
@@ -157,7 +161,7 @@ const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: string |
         </Button>
       </EveliTenantFeatureEnabled>
 
-      {open && <DialobReview taskId={task.id} questionnaireId={task.questionnaireId} onClose={() => setOpen(false)} />}
+      {open && <RealDialobReview taskId={task.id} questionnaireId={task.questionnaireId!} onClose={() => setOpen(false)} />}
     </>
   )
 }

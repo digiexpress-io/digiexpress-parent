@@ -8,7 +8,6 @@ export * from './api-batch'
 export * from './api-dialob-form'
 export * from './api-proc-execution'
 export * from './api-publications'
-export * from './api-mui-table'
 export * from './api-queue'
 export * from './api-feedback-backend'
 

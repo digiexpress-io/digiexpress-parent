@@ -3,7 +3,6 @@ import { useIntl, FormattedDate } from "react-intl";
 import { Column } from '@material-table/core';
 import { IconButton } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import moment from 'moment'; // TODO dead library
 
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 
@@ -12,7 +11,6 @@ import { TaskLink } from "./TaskLink";
 import { TaskStatusIndicator } from "./TaskStatusIndicator";
 import { TaskPriorityIndicator } from "./TaskPriorityIndicator";
 import { TaskAdditionalInfo } from "./TaskAdditionalInfo";
-
 
 
 const formatTime = (time: any) => {
@@ -26,17 +24,6 @@ const formatTime = (time: any) => {
   return "-";
 }
 
-const formatDate = (time: any) => {
-  if (time) {
-    const localTime = moment.utc(time).local().toDate();
-    return (
-      <React.Fragment>
-        <FormattedDate value={localTime} />
-      </React.Fragment>
-    )
-  }
-  return "-";
-}
 
 function getStatusCode(status: TaskApi.TaskStatus | undefined) {
   switch (status) {
@@ -174,7 +161,7 @@ export function useTasksTableState(): TableState {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.created' }),
         field: 'created',
         filtering: false,
-        render: data => formatDate(data.created),
+        render: data => <backend.slots.DateTimeFormatter value={data.created}/>,
         headerStyle: { fontWeight: 'bold' },
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "created").hidden
       },

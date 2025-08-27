@@ -25,7 +25,7 @@ function parse(textOrDate: string | Date): DateTime {
 }
 
 
-export const DateTimeFormatter: React.FC<{ value: string | Date, variant?: 'text' }> = ({ value, variant }) => {
+export const DateTimeFormatter: React.FC<{ value: string | Date | undefined, variant?: 'text' }> = ({ value, variant }) => {
   if (value) {
     const localTime = parse(value).toLocal().toJSDate();
     if(variant === 'text') {

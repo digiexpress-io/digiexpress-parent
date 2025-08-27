@@ -1,9 +1,9 @@
 import { Box, Chip, Grid2, InputLabel, TextField, Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
-import { DateTimeFormatter, EveliDatePicker } from '@dxs-ts/xui-datetime';
 
 import { TaskFormDelegateProps } from "./TaskFormState";
 import { FormReviewButton } from "./TaskFooter";
+import { useTaskBackend } from "@dxs-ts/task-api";
 
 
 const classes = {
@@ -29,6 +29,7 @@ export const TaskHeader: React.FC<TaskHeaderProps> = (props) => {
   const isProtected = keywords.includes('Protected');
   const isManual = keywords.includes('Manual');
   const { errors, currentState, setFieldValue } = form;
+  const backend = useTaskBackend();
 
   return (
     <Box sx={{ p: 2, mb: 2 }}>
@@ -45,7 +46,7 @@ export const TaskHeader: React.FC<TaskHeaderProps> = (props) => {
         </Grid2>
         <Grid2 size={{ xs: 12, md: 2 }}>
           <Typography>
-            <FormattedMessage id={'task.created'} />:&nbsp;<DateTimeFormatter value={createdAt} variant="text"/>
+            <FormattedMessage id={'task.created'} />:&nbsp;<backend.slots.DateTimeFormatter value={createdAt} variant="text"/>
           </Typography>
         </Grid2>
         
@@ -63,7 +64,7 @@ export const TaskHeader: React.FC<TaskHeaderProps> = (props) => {
         </Grid2>
 
         <Grid2 size={{ xs: 12, md: 6 }}>
-          <EveliDatePicker
+          <backend.slots.DateTimePicker
             label={<FormattedMessage id='taskDialog.dueDate' />}
             fullWidth={true}
             readonly={readOnly}

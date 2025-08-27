@@ -3,7 +3,7 @@ import { Container, useTheme } from '@mui/material';
 
 import { useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 
-import { EveliTaskComposer } from '../eveli-task-composer';
+import { TaskComposer } from '@dxs-ts/task-composer-v1';
 import { EveliTaskDashboard } from '../eveli-task-composer-v2';
 import { EveliTaskDashboardProd } from '../eveli-task-composer-v2/EveliTaskDashboardProd';
 
@@ -20,7 +20,7 @@ function Component() {
 
   return (
     <Container>
-      {isNew ? <EveliTaskDashboardProd taskId={taskId} /> : <EveliTaskComposer taskId={taskId} />}
+      {isNew ? <EveliTaskDashboardProd taskId={taskId} /> : <TaskComposer taskId={taskId} />}
     </Container>
   )
 }

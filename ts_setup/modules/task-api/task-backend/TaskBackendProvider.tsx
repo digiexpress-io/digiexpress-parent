@@ -43,9 +43,20 @@ export interface TaskBackendContextType {
     createOneComment: (commentText: string, replyToId: number | undefined, task: TaskApi.Task, isExternalThread: boolean | undefined) => Promise<TaskApi.Comment>
   },
   slots: {
-    DialobReview: React.ElementType<{ task: { id: string, questionnaireId?: string | undefined } }>
+    DialobReview: React.ElementType<{ task: { id: string, questionnaireId?: string | undefined } }>;
+    DateTimeFormatter: React.ElementType<{ value: string | Date | undefined, variant?: 'text' }>;
+    DateTimePicker: React.ElementType<{ 
+      label?: string | React.ReactNode,
+      readonly?: boolean,
+      fullWidth?: boolean,
+      value: string | Date | undefined | null;
+      onChange?: (newValue: Date | null) => void;
+      onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    }>
   }
 }
+
+
 
 export const TaskBackendContext = React.createContext<TaskBackendContextType>({} as any);
 
