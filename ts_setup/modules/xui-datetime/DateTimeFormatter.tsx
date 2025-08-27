@@ -4,7 +4,14 @@ import { DateTime } from 'luxon';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
 
-function parse(text: string): DateTime {
+function parse(textOrDate: string | Date): DateTime {
+
+  if (typeof textOrDate !== 'string') {
+    return DateTime.fromJSDate(textOrDate);
+  }
+
+  const text = textOrDate as string;
+
   const isoDate = DateTime.fromISO(text);
   if(isoDate.isValid) {
     return isoDate;
@@ -18,7 +25,7 @@ function parse(text: string): DateTime {
 }
 
 
-export const DateTimeFormatter: React.FC<{ value: string, variant?: 'text' }> = ({ value, variant }) => {
+export const DateTimeFormatter: React.FC<{ value: string | Date, variant?: 'text' }> = ({ value, variant }) => {
   if (value) {
     const localTime = parse(value).toLocal().toJSDate();
     if(variant === 'text') {

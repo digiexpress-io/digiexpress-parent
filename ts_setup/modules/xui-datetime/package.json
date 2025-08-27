@@ -12,7 +12,8 @@
     "react-intl": "*",
     "@mui/material": "*",
     "@mui/icons-material": "*",
-    "luxon": "*"
+    "luxon": "*",
+    "react-date-picker": "*"
 
   },
   "keywords": ["wrench", "routes", "navigation", "layouts"],

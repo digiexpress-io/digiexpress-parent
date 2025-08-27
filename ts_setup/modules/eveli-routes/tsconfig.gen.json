@@ -50,6 +50,9 @@
       "@dxs-ts/task-feedback": [
         "../task-feedback/index.ts"
       ],
+      "@dxs-ts/task-composer-v1": [
+        "../task-composer-v1/index.ts"
+      ],
       "@dxs-ts/xui-table": [
         "../xui-table/index.ts"
       ]
@@ -103,14 +106,17 @@
       "path": "../task-feedback"
     },
     {
+      "path": "../task-composer-v1"
+    },
+    {
       "path": "../xui-table"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-26T08:23:54.459Z",
+    "at": "2025-08-27T13:01:25.942Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "9899eb037a8c",
+    "fromRegistry": "7ca9bd806bfb",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../xui-table"

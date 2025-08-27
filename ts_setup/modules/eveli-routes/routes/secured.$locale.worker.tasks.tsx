@@ -1,11 +1,17 @@
+import React from 'react';
+import { Button } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router'
-import { EveliPermissions, useEveliPermissions } from "@dxs-ts/eveli-primitives";
-import { useFeedbackBackend } from '@dxs-ts/eveli-api';
+
+
+import { useEveliPermissions } from "@dxs-ts/eveli-primitives";
+import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 import { FeedbackProvider } from '@dxs-ts/task-feedback';
 import { TaskApi, TaskBackendProvider, TaskBackendProviderProps } from '@dxs-ts/task-api';
-
-import { EveliTaskTableProvider } from '../eveli-tasks';
+import { TasksTableProvider } from '@dxs-ts/task-composer-v1';
 import { useFetch } from '@dxs-ts/envir-fetch';
+
+import { DialobReview } from '../dialob-review';
 
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks')({
@@ -13,19 +19,34 @@ export const Route = createFileRoute('/secured/$locale/worker/tasks')({
 })
 
 function Component() {
+  const { groups } = useFetch('$org/groupsList.GET', {});
   const feedbackBackend = useFeedbackBackend();
   const navigate = useTaskNavigate();
   const permissions = useTaskPermissions();
   const persistence = useTaskPersistence();
+  const { user } = useIam();
+
+
+  const currentUser = React.useMemo(() => ({
+    name: user.name || "",
+    email: user.email || ""
+  }), [user.name, user?.email]);
 
   return (
-    <EveliTaskTableProvider>
-      <TaskBackendProvider navigate={navigate} permissions={permissions} persistence={persistence}>
+      <TaskBackendProvider 
+        navigate={navigate} 
+        permissions={permissions} 
+        persistence={persistence} 
+        currentUser={currentUser} 
+        roles={groups}
+        slots={{ DialobReview: FormReviewButton }}
+      >
         <FeedbackProvider backend={feedbackBackend}>
-          <Outlet />
+          <TasksTableProvider>
+            <Outlet />
+          </TasksTableProvider>
         </FeedbackProvider>
-      </TaskBackendProvider>
-    </EveliTaskTableProvider>)
+      </TaskBackendProvider>)
 }
 
 
@@ -58,7 +79,7 @@ function useTaskPermissions(): TaskBackendProviderProps['permissions'] {
 }
 
 function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
-  const { groups } = useFetch('$org/groupsList.GET', {});
+
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
 
   const { unreadTasks } = useFetch('worker/rest/api/tasks/unread.GET', {});
@@ -77,10 +98,6 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
   
   const unit:  TaskBackendProviderProps['persistence'] = {
-
-    findAllRoles: async function (): Promise<TaskApi.Role[]> {
-      return groups;
-    },
     findAllUnreadTasks: async function (): Promise<string[]> {
       return unreadTasks;
     },
@@ -109,4 +126,38 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   }
 
   return unit;
+}
+
+
+
+
+const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
+  const [open, setOpen] = React.useState(false);
+  if(!task.questionnaireId) {
+    return (<></>);
+  }
+
+  return (
+    <>
+      <EveliTenantFeatureEnabled id='FORM_REVIEW_FLASHY'>
+        <Button sx={{ padding: '15px', marginTop: '15px', width: '100%',  
+            animation: 'pulse 1.5s ease-in-out infinite',
+            transition: 'transform 0.3s ease-in-out',
+            '@keyframes pulse': {
+              '0%': { transform: 'scale(1)', opacity: 1 },
+              '50%': { transform: 'scale(1.05)', opacity: 0.8 },
+              '100%': { transform: 'scale(1)', opacity: 1 },
+          }}} 
+          onClick={() => setOpen(true)} variant='contained'><FormattedMessage id='task.form.review' /></Button>
+      </EveliTenantFeatureEnabled>
+
+      <EveliTenantFeatureEnabled id='FORM_REVIEW_NORMAL'>
+        <Button sx={{ padding: '15px', marginTop: '15px', width: '100%'}} onClick={() => setOpen(true)} variant='contained'>
+          <FormattedMessage id='task.form.review' />
+        </Button>
+      </EveliTenantFeatureEnabled>
+
+      {open && <DialobReview taskId={task.id} questionnaireId={task.questionnaireId} onClose={() => setOpen(false)} />}
+    </>
+  )
 }

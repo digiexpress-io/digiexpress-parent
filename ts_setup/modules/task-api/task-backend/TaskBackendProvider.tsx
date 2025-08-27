@@ -3,6 +3,11 @@ import React from 'react';
 import { TaskApi } from '../task-types';
 
 export interface TaskBackendContextType {
+  currentUser: {
+    name: string;
+    email: string;
+  },
+  roles: TaskApi.Role[];
   permissions: {
     isCreateTaskAllowed: boolean;
     isReopenTaskAllowed: boolean;
@@ -15,7 +20,6 @@ export interface TaskBackendContextType {
   };
   persistence: {
     findAllUsers: (groups: string[]) => Promise<TaskApi.User[]>;
-    findAllRoles: () => Promise<TaskApi.Role[]>;
     findAllAttachments: (taskId: string) => Promise<TaskApi.Attachment[]>;
 
     getOneAttachmentLink: (taskId: string, attachment: TaskApi.Attachment) => Promise<string>
@@ -37,6 +41,9 @@ export interface TaskBackendContextType {
     deleteOneTask: (taskId: string) => Promise<unknown>;
     createOneTask: (request: Partial<TaskApi.Task>) => Promise<TaskApi.Task>;
     createOneComment: (commentText: string, replyToId: number | undefined, task: TaskApi.Task, isExternalThread: boolean | undefined) => Promise<TaskApi.Comment>
+  },
+  slots: {
+    DialobReview: React.ElementType<{ task: { id: string, questionnaireId?: string | undefined } }>
   }
 }
 
@@ -44,16 +51,19 @@ export const TaskBackendContext = React.createContext<TaskBackendContextType>({}
 
 export interface TaskBackendProviderProps {
   children: React.ReactNode;
+  currentUser: TaskBackendContextType['currentUser'];
+  roles: TaskBackendContextType['roles'];
   navigate: TaskBackendContextType['navigate'];
+  slots: TaskBackendContextType['slots'];
   persistence: TaskBackendContextType['persistence'];
   permissions: TaskBackendContextType['permissions'];
 }
 
 export const TaskBackendProvider: React.FC<TaskBackendProviderProps> = (props) => {
-  const { navigate, persistence, permissions } = props;
+  const { navigate, persistence, permissions, currentUser, roles, slots } = props;
 
   const contextValue: TaskBackendContextType = React.useMemo(() => {
-    return { navigate, persistence, permissions };
+    return { navigate, persistence, permissions, currentUser, roles, slots };
   }, []);
 
   return (<TaskBackendContext.Provider value={contextValue}>{props.children}</TaskBackendContext.Provider>);
