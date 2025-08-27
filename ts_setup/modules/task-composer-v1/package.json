@@ -1,0 +1,26 @@
+{
+  "name": "@dxs-ts/task-composer-v1",
+  "version": "${project.version}",
+  "description": "Task composer v1",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/task-feedback": "*",
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/xui-datetime": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*",
+    "@material-table/core": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*",
+    "@mui/icons-material": "*",
+    "notistack": "*",
+    "luxon": "*",
+    "moment": "*",
+    "@tanstack/react-router": "*"
+  },
+  "keywords": ["task-composer"],
+  "private": true
+}
