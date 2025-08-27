@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse, Button } from '@mui/material';
+import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse, Button, lighten, darken } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -177,45 +177,51 @@ const TaskSectionCard = styled(Box, {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      border: `1px solid ${colors.flashyBackground}`,
-      color: theme.palette.text.primary,
-
+      border: `1px solid ${darken(colors.flashyBorder, 0.2)}`,
+      color: colors.contrastText,
+      boxShadow: `-4px 4px 10px ${alpha(colors.flashyBorder, 0.1)}`,
 
       ':hover': {
         cursor: 'pointer'
       },
       '& .MuiSvgIcon-root': {
-        color: colors.flashyBackground
+        color: darken(colors.flashyBorder, 0.2),
+      },
+      '& .MuiButton-root': {
+        color: colors.contrastText,
       },
       '& .MuiDivider-root': {
         borderColor: `${alpha(colors.flashyBorder, 0.1)}`
       },
+
       '& .TaskSectionCard-cardBody': {
         flexGrow: 1,
-        backgroundColor: alpha(colors.flashyBackground, 0.05)
+        borderTop: `1px solid ${colors.flashyBorder}`,
       },
       '& .TaskSectionCard-titleNotifier': {
         marginLeft: theme.spacing(1),
-        color: theme.palette.primary.main,
+        color: 'white',
+        fontWeight: 500,
         minWidth: '4ch',
         display: 'flex',
         justifyContent: 'center',
         padding: theme.spacing(0.5),
         borderRadius: theme.spacing(1),
-        backgroundColor: alpha(theme.palette.primary.main, 0.1)
+        border: `1px solid ${colors.flashyBorder}`,
+        backgroundColor: alpha(colors.flashyBorder, 0.9)
       },
       '& .TaskSectionCard-title': {
         display: 'flex',
         alignItems: 'center',
-        color: colors.flashyBackground,
         paddingBottom: theme.spacing(2),
         padding: theme.spacing(1),
-        backgroundColor: alpha(colors.flashyBackground, 0.15),
-        borderBottom: `1px solid ${theme.palette.divider}`,
-
+        backgroundColor: colors.flashyBackground,
         '& .MuiAvatar-root': {
-          backgroundColor: alpha(colors.flashyBackground, 0.3),
-          border: `1px solid ${colors.flashyBackground}`
+          border: `1px solid ${colors.flashyBorder}`,
+          backgroundColor: alpha(colors.flashyBorder, 0.3),
+          '& .MuiSvgIcon-root': {
+            color: colors.flashyBorder,
+          },
         },
 
       }
