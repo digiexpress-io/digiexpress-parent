@@ -11,7 +11,7 @@ function hook(props: {}) {
   const { path, contextPath, method, url } = params;
 
   return {
-    createTask: async (task: TaskApi.Task): Promise<TaskApi.Task> => {
+    createTask: async (task: Partial<TaskApi.Task>): Promise<TaskApi.Task> => {
       // default label for created task
       if (!(task.keyWords && task.keyWords?.length >0)) {
         task.keyWords = ['Manual'];

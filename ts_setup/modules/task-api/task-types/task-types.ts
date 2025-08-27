@@ -113,6 +113,7 @@ export declare namespace TaskApi {
   }
 
 
+
   export interface Comment {
     id: number
     userName: string
@@ -181,6 +182,17 @@ export declare namespace TaskApi {
     eventType: GrimMissionAttributeEventType;
     eventSubType: string | undefined;
     attributeValue: string;
+  }
+
+
+  export interface User {
+    userName: string;
+    userEmail: string;
+  }
+
+  export interface Role {
+    id: string;
+    groupName: string;
   }
 
   export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');

@@ -41,6 +41,17 @@ function hook(props: {}) {
         });
     },
 
+    paginateTasks: async (query: string) => {
+      return params.fetch(url({}) + `?${query}`)
+      .then(response => response.json())
+      .then(json => {
+        return {
+          data: json.content, // array of data
+          page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
+          totalCount: json.totalElements // total entries on all the pages combined
+        };
+      });
+    },
     loadTasks: async (query:Query<TaskApi.Task>, columns:Column<any>[], tableContext: { paging: any, setPaging: (paging:any)=>void} ) => {
 
       // console.log(query, columns);
@@ -79,6 +90,7 @@ function hook(props: {}) {
         }, 
         columns.filter((column: any) => !column.hidden)
       );
+      
   
       return params.fetch(url({}) + `?${queryString}`)
       .then(response => response.json())
