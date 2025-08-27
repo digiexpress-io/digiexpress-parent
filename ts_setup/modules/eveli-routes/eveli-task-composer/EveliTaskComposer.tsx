@@ -3,10 +3,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { LinearProgress, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { TaskApi } from '@dxs-ts/task-api';
+import { TaskApi, TaskFeatureProvider } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
-import { EveliTaskFeatureProvider } from '../eveli-task-feature';
 
 import { TaskFormState } from './TaskFormState';
 import { PageLeavingConfirmation } from './PageLeaveConfirmation';
@@ -72,7 +71,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
       {task?.taskRef || ''}
     </Typography>
 
-    <EveliTaskFeatureProvider options={task}>
+    <TaskFeatureProvider options={task}>
       <TaskFormState task={task} onSubmit={handleSaveTask}>
         {(form) => (
           <>
@@ -85,7 +84,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
         )
         }
       </TaskFormState>
-    </EveliTaskFeatureProvider>
+    </TaskFeatureProvider>
   </>
 
   );

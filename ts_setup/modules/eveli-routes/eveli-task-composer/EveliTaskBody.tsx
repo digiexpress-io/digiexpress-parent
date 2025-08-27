@@ -7,12 +7,12 @@ import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined
 
 import { FormattedMessage } from "react-intl";
 
-import { TaskApi } from '@dxs-ts/task-api';
+import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
 import { EveliTaskComments } from "../eveli-task-comments";
 import { EveliTaskAttachments } from "../eveli-task-attachments";
-import { EveliTaskFeature } from "../eveli-task-feature";
+
 import { EveliTaskTransfer, EveliTaskTransferStatusIndicator } from "../eveli-task-transfer";
 import { StatusIndicator, UpsertOneFeedback } from "@dxs-ts/task-feedback";
 import { EveliTaskCountIndicator } from "./EveliTaskCountIndicator";
@@ -75,7 +75,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
 
   return (
     <Grid2 container spacing={2} paddingLeft={2} paddingRight={2}>
-      <EveliTaskFeature id="CRM_MESSAGES">
+      <TaskFeature id="CRM_MESSAGES">
         <Grid2 size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -89,9 +89,9 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
             </AccordionDetails>
           </Accordion>
         </Grid2>
-      </EveliTaskFeature>
+      </TaskFeature>
 
-      <EveliTaskFeature id="TASK_FEEDBACK">
+      <TaskFeature id="TASK_FEEDBACK">
         <Grid2 size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
@@ -109,7 +109,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
             </AccordionDetails>
           </Accordion>
         </Grid2>
-      </EveliTaskFeature>
+      </TaskFeature>
 
       <Grid2 size={{ xs: 12 }}>
         <Accordion>
@@ -139,7 +139,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
         </Accordion>
       </Grid2>
 
-      <EveliTaskFeature id="TASK_TRANSFER">
+      <TaskFeature id="TASK_TRANSFER">
         <Grid2 size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
@@ -153,7 +153,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
             </AccordionDetails>
           </Accordion>
         </Grid2>
-      </EveliTaskFeature>
+      </TaskFeature>
     </Grid2>
   );
 }
