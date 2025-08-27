@@ -105,6 +105,7 @@ public class TransferTaskVisitor {
         .decidedBy(userId)
         .createdBy(userId)
         .externalId(taskId)
+        .props(task.getDocumentProperties())
         .build();
   }
   
