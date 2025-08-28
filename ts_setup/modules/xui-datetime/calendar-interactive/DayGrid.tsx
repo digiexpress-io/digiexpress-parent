@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography, alpha } from "@mui/material";
+import { Box, Button, Grid2, Typography, alpha } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { SQUARE_WIDTH } from "./calendar_constants";
 
@@ -56,44 +56,55 @@ export const DayGrid: React.FC<{
     if (isDateDisabled(day)) return;
     const date = new Date(year, month, day);
     onDateSelect(date);
-  };
-  return (
-    <Grid2 container rowSpacing={1} columnSpacing={1}>
+    };
 
-      {/* Day headers */}
-      <Grid2 container spacing={1} sx={{
-        display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 
-      }}>
-        {[1,2,3,4,5,6,0].map((day) => (
-          <Grid2 key={day} sx={{ textAlign: 'center'}}>
-            <Typography variant="button" color="primary.main" fontWeight='bold'><FormattedMessage id={`calendar.day.${day}`}/></Typography>
-          </Grid2>
+    return (
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+        {/* Day headers */}
+        {[1, 2, 3, 4, 5, 6, 0].map((day) => (
+          <Box key={day} textAlign="center">
+            <Typography variant="button" color="primary.main" fontWeight="bold">
+              <FormattedMessage id={`calendar.day.${day}`} />
+            </Typography>
+          </Box>
         ))}
 
-
-         {days.map((day, index) => (
-          <Grid2 key={`day_${day ?? 'filler_' + index}`} >
+        {days.map((day, index) => (
+          <Box key={`day_${day ?? 'filler_' + index}`} textAlign="center">
             {day && (
               <Button
-                variant={isDateSelected(day) ? undefined : 'text' }
-                sx={{ 
-                  color: isDateSelected(day) ? undefined : ((theme) => theme.palette.text.primary), 
-                  fontWeight: 400, 
-                  borderRadius: '50%', 
-                  minWidth: WIDTH, 
-                  width: WIDTH, 
-                  height: WIDTH
-                }}
                 onClick={() => handleDateClick(day)}
                 disabled={isDateDisabled(day)}
+                sx={(theme) => ({
+                  minWidth: WIDTH,
+                  width: WIDTH,
+                  height: WIDTH,
+                  borderRadius: '50%',
+                  fontWeight: 500,
+                  color: isDateSelected(day)
+                    ? theme.palette.common.white
+                    : theme.palette.text.primary,
+                  backgroundColor: isDateSelected(day)
+                    ? theme.palette.primary.main
+                    : 'transparent',
+                  '&:hover': {
+                    backgroundColor: isDateSelected(day)
+                      ? theme.palette.primary.dark
+                      : theme.palette.action.hover,
+                  },
+                  '&.Mui-disabled': {
+                    color: theme.palette.text.disabled,
+                    backgroundColor: 'transparent',
+                  },
+                })}
               >
-              {day}
+                {day}
               </Button>
             )}
-          </Grid2>
+          </Box>
         ))}
-      </Grid2>
-    </Grid2>
-  );
-};
+      </Box>
+    );
+
+  };
 

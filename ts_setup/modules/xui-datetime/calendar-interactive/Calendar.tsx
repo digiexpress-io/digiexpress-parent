@@ -17,7 +17,6 @@ export interface CalendarProps {
   onClose?: () => void;
 }
 
-
 // Main Calendar Component
 export const Calendar: React.FC<CalendarProps> = ({
   initialDate,
@@ -74,9 +73,8 @@ export const Calendar: React.FC<CalendarProps> = ({
         currentDate={currentDate}
         onPreviousMonth={handlePreviousMonth}
         onNextMonth={handleNextMonth}
-        onPreviousYear={handlePreviousYear}
-        onNextYear={handleNextYear}
-        onYearClick={() => setShowYearPicker(true)}
+        onYearClick={() => setShowYearPicker(prev => !prev)}
+        showYearPicker={showYearPicker}
       />
       {showYearPicker ? (
         <YearPicker
