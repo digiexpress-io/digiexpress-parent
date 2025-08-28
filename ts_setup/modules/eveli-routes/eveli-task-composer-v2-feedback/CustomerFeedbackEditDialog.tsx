@@ -5,7 +5,8 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
 import { PublishedNotifier } from './PublishedNotifier';
-import { UpsertOneFeedback } from '../eveli-task-feedback';
+import { UpsertOneFeedback } from '@dxs-ts/task-feedback';
+import { useNavigate } from '@tanstack/react-router';
 
 
 export interface CustomerFeedbackEditProps {
@@ -17,7 +18,14 @@ export interface CustomerFeedbackEditProps {
 export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = ({ open, onClose, task }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-
+  const navigate = useNavigate();
+  function onFeedbackCancel() {
+    navigate({
+      from: '/secured/$locale',
+      params: { taskId: task.taskRef! },
+      to: '/secured/$locale/worker/tasks/$taskId'
+    });
+  }
   return (
     <StyledDialog fullScreen className={classes.customerFeedbackEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
@@ -32,7 +40,12 @@ export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = (
       </DialogTitle>
 
       <DialogContent>
-        <UpsertOneFeedback taskRef={task.taskRef!} onComplete={() => { }} reload={0} allowDelete={false} />
+        <UpsertOneFeedback 
+          taskRef={task.taskRef!} 
+          onComplete={() => { }} 
+          onCancel={onFeedbackCancel}
+          onDelete={onFeedbackCancel}
+          reload={0} allowDelete={false} />
       </DialogContent>
 
       <DialogActions>

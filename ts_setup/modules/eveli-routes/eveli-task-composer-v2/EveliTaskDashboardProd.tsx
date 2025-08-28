@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid2 } from '@mui/material';
+import { Grid2, Typography } from '@mui/material';
 import { FormReviewDrawer } from './FormReviewDrawer';
 import { EveliTaskDashboardContextProvider } from './EveliTaskDashboardContext';
 import { CardFactory } from './EveliTaskDashboard';
@@ -8,6 +8,7 @@ import {
   DraggableCardWrapper, taskCardGridSize, TaskCardId, TaskCardStyleDefinition,
   useCardConfig, useDragCardController, useTaskCardThemeConfig
 } from '../eveli-task-composer-v2-task-card';
+import { useIntl } from 'react-intl';
 
 
 
@@ -26,12 +27,12 @@ const _variant_debug: TaskCardId[] = [
 
 const _variant_prod: TaskCardId[] = [
   'task_main_alt',
-  'assignees_roles',
-  'status_priority',
   'customer_messages',
   'feedback',
   'files',
   'notes',
+  'assignees_roles',
+  'status_priority',
 ];
 
 
@@ -43,6 +44,7 @@ export interface EveliTaskDashboardProdProps {
 
 
 const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (props) => {
+  const intl = useIntl();
   const { isReviewOpen, cardTheme, toggleReview, cardOrder } = useCardConfig();
 
   const { getDragPropsForId } = useDragCardController();
@@ -52,8 +54,9 @@ const EveliTaskDashboardProdInternal: React.FC<EveliTaskDashboardProdProps> = (p
   
   return (
     <Grid2 container spacing={style.cardSpacing} m={2}>
-      <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}
-        sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
+      <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}>
+        <Typography variant='h1'>{intl.formatMessage({ id: 'task.edit' })}</Typography>
+
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)}>

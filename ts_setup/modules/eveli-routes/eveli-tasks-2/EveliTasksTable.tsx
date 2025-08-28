@@ -16,9 +16,9 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
-import { filterFormattedDateFn, filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
+import { IndicatorSubject } from './IndicatorSubject';
 
-import { TaskLink } from '../eveli-tasks/TaskLink';
+import { filterFormattedDateFn, filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 
 
 export const EveliTasksTable: React.FC = () => {
@@ -51,7 +51,7 @@ export const EveliTasksTable: React.FC = () => {
       header: 'Name',
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
-      cell: (task) => flexRender(TaskLink, { title: task.getValue(), id: task.row.original.id, keywords: task.row.original.keyWords }),
+      cell: (task) => flexRender(IndicatorSubject, { title: task.getValue(), id: task.row.original.id, keywords: task.row.original.keyWords }),
       filterFn: filterTaskRefOrSubjectFn,
       size: 150,
       minSize: 150,

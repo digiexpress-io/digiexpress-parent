@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
-import { FeedbackApi } from '../api-feedback';
+import { FeedbackApi } from '@dxs-ts/task-feedback';
 
 
 export const Hook = createFileFetch('worker/rest/api/feedback/$feedbackId.GET')({
@@ -9,7 +9,7 @@ export const Hook = createFileFetch('worker/rest/api/feedback/$feedbackId.GET')(
 function hook(props: {}) {
 
   const params = Hook.useParams();
-  const { path, contextPath, method, url } = params;
+  const { method, url } = params;
 
   return {
 

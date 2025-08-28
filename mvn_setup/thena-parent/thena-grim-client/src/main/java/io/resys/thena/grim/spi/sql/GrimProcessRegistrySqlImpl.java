@@ -45,6 +45,22 @@ import lombok.RequiredArgsConstructor;
 public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
   private final GrimTableNames options;
 
+
+  @Override
+  public SqlTuple findOneByMissionId(String missionId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(procs.task_id = mission.id)").ln()
+        
+        .append(" WHERE procs.task_id = $1").ln()
+        .build())
+        .props(Tuple.of(missionId))
+        .build();
+  }
   
   @Override
   public SqlTupleList updateAll(Collection<GrimProcess> procs) {
@@ -294,4 +310,5 @@ WHERE id = $9""").ln()
           .build();
     };
   }
+
 }

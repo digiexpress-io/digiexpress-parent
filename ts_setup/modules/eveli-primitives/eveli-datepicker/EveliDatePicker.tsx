@@ -3,15 +3,16 @@ import { styled, TextField } from '@mui/material';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import { useLocale } from '@dxs-ts/eveli-api';
+
 import { DateTime } from 'luxon'; 
 import { useIntl } from 'react-intl';
 import DatePicker from 'react-date-picker';
 
 import 'react-date-picker/dist/DatePicker.css';
+import { useLocale } from '@dxs-ts/eveli-api';
 
 
-
+/// deprecated
 export type EveliDatePickerProps = {
   label?: string | React.ReactNode,
   readonly?: boolean,
@@ -35,7 +36,6 @@ const DatePickerStyles = styled("div")(({ theme }) => {
       border: '1px solid rgba(0, 0, 0, 0.23)',
       outline: '1px solid rgb(0,0,0, 0.0)',
       borderRadius: theme.spacing(0.5),
-
     },
 
     '& .react-date-picker__wrapper': {

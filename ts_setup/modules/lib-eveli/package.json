@@ -25,12 +25,14 @@
     "@dxs-ts/stencil-routes": "*",
 
     "@dxs-ts/task-api": "*",
+    "@dxs-ts/task-feedback": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/eveli-routes": "*",
     "@dxs-ts/xui-datetime": "*",
-    "@dxs-ts/xui-table": "*"
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/task-composer-v1": "*"
   },
   "peerDependencies": {},
   "keywords": [

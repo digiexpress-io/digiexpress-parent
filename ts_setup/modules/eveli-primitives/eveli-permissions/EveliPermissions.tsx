@@ -66,12 +66,21 @@ export type EveliPermissionType = keyof typeof EveliPermissionMapping;
 
 
 export const EveliPermissions: React.FC<{ children: React.ReactNode, id: EveliPermissionType }> = ({ children, id }) => {
-  const { user } = useIam();
-  const required = EveliPermissionMapping[id];
-  const isAccessGranted = user.permissions.find((permission) => required(permission));
-  if (isAccessGranted) {
+  const perm = useEveliPermissions();
+  if (perm.isAccessGranted(id)) {
     return <>{children}</>
   }
 
   return (<></>)
+}
+
+export function useEveliPermissions() {
+  const { user } = useIam();
+  return {
+    isAccessGranted: (id: EveliPermissionType) => {
+      const required = EveliPermissionMapping[id];
+      const isAccessGranted = user.permissions.find((permission) => required(permission));
+      return !!isAccessGranted;
+    }
+  }
 }

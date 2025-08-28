@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -100,6 +101,7 @@ public interface GrimDataSource extends TenantDataSource {
   
   interface InternalProcQuery {
     Uni<GrimProcess> getOneById(String id);
+    Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
     Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
   }

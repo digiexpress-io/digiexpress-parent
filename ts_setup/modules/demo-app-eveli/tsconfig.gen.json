@@ -70,6 +70,12 @@
       ],
       "@dxs-ts/xui-table": [
         "../xui-table/index.ts"
+      ],
+      "@dxs-ts/task-composer-v1": [
+        "../task-composer-v1/index.ts"
+      ],
+      "@dxs-ts/task-feedback": [
+        "../task-feedback/index.ts"
       ]
     }
   },
@@ -140,16 +146,22 @@
     },
     {
       "path": "../xui-table"
+    },
+    {
+      "path": "../task-composer-v1"
+    },
+    {
+      "path": "../task-feedback"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T09:18:24.067Z",
+    "at": "2025-08-27T13:33:31.689Z",
     "forModule": "@dxs-ts/eveli-demo-app",
-    "fromRegistry": "1eae4a74d70d",
+    "fromRegistry": "f859ac88e4d1",
     "alias": {
       "@dxs-ts/eveli-demo-app": [
-        "../xui-table"
+        "../task-feedback"
       ]
     }
   }

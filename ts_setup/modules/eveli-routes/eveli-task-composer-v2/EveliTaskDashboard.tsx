@@ -36,6 +36,7 @@ import {
   TaskCardStyleSelect,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../eveli-task-composer-v2-task-card';
+
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { TaskApi } from '@dxs-ts/task-api';
 
@@ -44,7 +45,13 @@ import { TaskApi } from '@dxs-ts/task-api';
 
 export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const intl = useIntl();
-  const { cardTheme, editingCardId, toggleReview, isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard } = useCardConfig();
+
+  const {
+    cardTheme, editingCardId, toggleReview,
+    isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard,
+    isCardExpanded, toggleCardExpanded
+  } = useCardConfig();
+
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
   const { task } = useTaskDashboard();
@@ -58,13 +65,16 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
 
 
 
+
   const commonProps = {
     id: cardId,
     styleVariant: cardTheme,
-    flashy: isCardFlashy(cardId),
+    isFlashy: isCardFlashy(cardId),
+    isAltView: isCardAltView(cardId),
+    isExpanded: isCardExpanded(cardId),
     onToggleFlashy: () => toggleCardFlashy(cardId),
-    altView: isCardAltView(cardId),
     onToggleAltView: () => toggleCardAltView(cardId),
+    onToggleExpanded: () => toggleCardExpanded(cardId),
     onReview: toggleReview,
   };
 
@@ -167,6 +177,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
           {...commonProps}
           isMenu
+          titleNotifier={task.comments.filter(a => a.external).length}
           onEdit={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
           onDoubleClick={handleEdit}
@@ -216,6 +227,7 @@ export const CardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes', defaultMessage: 'Notes' })}
           {...commonProps}
           isMenu
+          titleNotifier={task.comments.filter(a => !a.external).length}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}

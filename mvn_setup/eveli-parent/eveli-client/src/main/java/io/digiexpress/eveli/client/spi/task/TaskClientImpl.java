@@ -26,6 +26,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
@@ -355,6 +356,15 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
           .findOnOrBeforeWithoutMission(olderThen)
           .onItem().transform(TaskMapper::map);
+      }
+
+      @Override
+      public Uni<Optional<ProcessInstance>> findOneByTaskId(String taskId) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOneByMissionId(taskId)
+          .onItem().transform(optional -> optional.map(TaskMapper::map));
       }
     };
 

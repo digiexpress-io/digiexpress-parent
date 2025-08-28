@@ -51,7 +51,7 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
     },
     large: {
       titleTypography: {
-        ...theme.typography.h4,
+        ...theme.typography.h5,
         paddingTop: theme.spacing(1),
         paddingBottom: theme.spacing(1)
       },
@@ -72,45 +72,63 @@ export const useTaskCardThemeConfig = (): Record<TaskCardStyleKey, TaskCardStyle
   };
 };
 
-export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string; flashyBorder: string }> = {
+export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string; flashyBorder: string; contrastText: string }> = {
   'task_main': {
-    flashyBackground: '#1565c0',     // Dark Blue
-    flashyBorder: '#0d47a1',
+    flashyBackground: '#E4F0FB', // brighter slate blue
+    flashyBorder: '#1F4E79',     // deep corporate blue
+    contrastText: '#1C1C1C',
   },
   'task_main_alt': {
-    flashyBackground: '#1565c0',     // Dark Blue
-    flashyBorder: '#0d47a1',
+    flashyBackground: '#D6EBF8', // bright sky blue
+    flashyBorder: '#2E70B3',     // medium professional blue
+    contrastText: '#1C1C1C',
   },
   'status_priority': {
-    flashyBackground: '#b71c1c',     // Dark Red
-    flashyBorder: '#7f0000',
+    flashyBackground: '#F8D6D6', // brighter muted red
+    flashyBorder: '#B73737',     // professional deep red
+    contrastText: '#1C1C1C',
   },
   'task_form_summary': {
-    flashyBackground: '#232c70',     // Dark Indigo
-    flashyBorder: '#181e50',
+    flashyBackground: '#E3D8F5', // brighter corporate lilac
+    flashyBorder: '#4B4F7C',     // muted violet accent
+    contrastText: '#1C1C1C',
   },
   'assignees_roles': {
-    flashyBackground: '#ef6c00',     // Dark Orange 
-    flashyBorder: '#e65100',
+    flashyBackground: '#D2E4F7', // brighter slate blue
+    flashyBorder: '#1E5FA8',     // strong corporate blue
+    contrastText: '#1C1C1C',
   },
   'customer_messages': {
-    flashyBackground: '#6a1b9a',     // Deep Purple
-    flashyBorder: '#4a0072',
+    flashyBackground: '#E1E8F5', // brighter light blue-gray
+    flashyBorder: '#383F56',     // dark muted blue
+    contrastText: '#1C1C1C',
   },
   'files': {
-    flashyBackground: '#2e7d32',     // Dark Green
-    flashyBorder: '#1b5e20',
+    flashyBackground: '#EAD8F5', // light vibrant purple
+    flashyBorder: '#5A4B6A',     // muted purple accent
+    contrastText: '#1C1C1C',
   },
   'feedback': {
-    flashyBackground: '#ad1457',     // Deep Pink
-    flashyBorder: '#880e4f',
+    flashyBackground: '#FFE6D6', // brighter muted coral
+    flashyBorder: '#E5946B',     // muted coral accent
+    contrastText: '#1C1C1C',
   },
   'notes': {
-    flashyBackground: '#37474f',     // Dark Slate Gray
-    flashyBorder: '#263238',
+    flashyBackground: '#E1E8F5', // brighter gray-blue
+    flashyBorder: '#2E5C8A',     // deep corporate blue
+    contrastText: '#1C1C1C',
   },
   'task_meta': {
-    flashyBackground: '#4e342e',     // Deep Brown
-    flashyBorder: '#3e2723',
+    flashyBackground: '#D8E2F0', // slightly brighter gray-blue
+    flashyBorder: '#6B4F7C',     // muted purple accent
+    contrastText: '#1C1C1C',
   }
 };
+
+
+
+
+
+
+
+

@@ -13,6 +13,7 @@
     "@dxs-ts/task-api": "*",
     "@dxs-ts/gamut-theme": "*",
     "@dxs-ts/user-profile": "*",
+    "@dxs-ts/task-feedback": "*",
     "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {

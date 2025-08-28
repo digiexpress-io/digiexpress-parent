@@ -105,18 +105,26 @@ public class TransferTaskVisitor {
         .decidedBy(userId)
         .createdBy(userId)
         .externalId(taskId)
+        .props(task.getDocumentProperties())
         .build();
   }
   
   private Uni<List<TaskFile>> getTaskFiles() {
-    return taskFileClient.queryTaskFiles().findAll(taskId).onItem().transform(files -> {
-      if(files.isEmpty()) {
-        throw TaskException.builder("TRANSFER_TASK_FAIL_NO_FILES_TO_TRANSFER")
-          .add(
-              "transfer-files-fail", 
-              "Task transfer must contain at least 1 file!", JsonObject.mapFrom(command)).build(); 
-      }
-      return files;
+    
+    final var config = ctx.getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    return grim.find().missionProcsQuery().findOneByMissionId(taskId).onItem().transformToUni(process -> {
+      
+      return taskFileClient.queryTaskFiles().findAll(taskId, process.map(e -> e.getId())).onItem().transform(files -> {
+        if(files.isEmpty()) {
+          throw TaskException.builder("TRANSFER_TASK_FAIL_NO_FILES_TO_TRANSFER")
+            .add(
+                "transfer-files-fail", 
+                "Task transfer must contain at least 1 file!", JsonObject.mapFrom(command)).build(); 
+        }
+        return files;
+      });
+      
     });
   }
   

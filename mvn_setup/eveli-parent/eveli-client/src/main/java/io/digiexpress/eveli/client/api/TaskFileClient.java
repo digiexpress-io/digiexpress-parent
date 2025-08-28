@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.api;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -31,7 +32,7 @@ public interface TaskFileClient {
   QueryTaskFiles queryTaskFiles();
   
   interface QueryTaskFiles {
-    Uni<List<TaskFile>> findAll(String taskId);
+    Uni<List<TaskFile>> findAll(String taskId, Optional<String> processId);
   }
   
   @Value.Immutable

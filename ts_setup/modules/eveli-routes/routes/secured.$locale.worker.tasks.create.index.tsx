@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import React from 'react'
 
 import { Container } from '@mui/system';
-import { EveliTaskComposer } from '../eveli-task-composer';
+import { TaskComposer  } from '@dxs-ts/task-composer-v1';
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks/create/')({
   component: Component,
@@ -11,7 +11,7 @@ export const Route = createFileRoute('/secured/$locale/worker/tasks/create/')({
 function Component() {
   return (
     <Container maxWidth='lg'>
-      <EveliTaskComposer />
+      <TaskComposer />
     </Container>
   )
 }

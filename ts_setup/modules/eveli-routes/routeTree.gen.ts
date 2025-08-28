@@ -28,7 +28,6 @@ import { Route as SecuredLocaleWorkerDashboardIndexRouteImport } from './routes/
 import { Route as SecuredLocaleWorkerBatchesIndexRouteImport } from './routes/secured.$locale.worker.batches.index'
 import { Route as SecuredLocaleAssetsWrenchIndexRouteImport } from './routes/secured.$locale.assets.wrench.index'
 import { Route as SecuredLocaleAssetsStencilIndexRouteImport } from './routes/secured.$locale.assets.stencil.index'
-import { Route as SecuredLocaleAssetsServicesIndexRouteImport } from './routes/secured.$locale.assets.services.index'
 import { Route as SecuredLocaleAssetsMigrateIndexRouteImport } from './routes/secured.$locale.assets.migrate.index'
 import { Route as SecuredLocaleAssetsFormsIndexRouteImport } from './routes/secured.$locale.assets.forms.index'
 import { Route as SecuredLocaleAssetsFormsFormIdRouteImport } from './routes/secured.$locale.assets.forms.$formId'
@@ -149,12 +148,6 @@ const SecuredLocaleAssetsStencilIndexRoute =
     path: '/stencil/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-const SecuredLocaleAssetsServicesIndexRoute =
-  SecuredLocaleAssetsServicesIndexRouteImport.update({
-    id: '/services/',
-    path: '/services/',
-    getParentRoute: () => SecuredLocaleAssetsRoute,
-  } as any)
 const SecuredLocaleAssetsMigrateIndexRoute =
   SecuredLocaleAssetsMigrateIndexRouteImport.update({
     id: '/migrate/',
@@ -236,7 +229,6 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
-  '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
   '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
   '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
@@ -266,7 +258,6 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
-  '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
   '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
   '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesIndexRoute
@@ -300,7 +291,6 @@ export interface FileRoutesById {
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms/': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate/': typeof SecuredLocaleAssetsMigrateIndexRoute
-  '/secured/$locale/assets/services/': typeof SecuredLocaleAssetsServicesIndexRoute
   '/secured/$locale/assets/stencil/': typeof SecuredLocaleAssetsStencilIndexRoute
   '/secured/$locale/assets/wrench/': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
@@ -335,7 +325,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/migrate'
-    | '/secured/$locale/assets/services'
     | '/secured/$locale/assets/stencil'
     | '/secured/$locale/assets/wrench'
     | '/secured/$locale/worker/batches/'
@@ -365,7 +354,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/migrate'
-    | '/secured/$locale/assets/services'
     | '/secured/$locale/assets/stencil'
     | '/secured/$locale/assets/wrench'
     | '/secured/$locale/worker/batches'
@@ -398,7 +386,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms/'
     | '/secured/$locale/assets/migrate/'
-    | '/secured/$locale/assets/services/'
     | '/secured/$locale/assets/stencil/'
     | '/secured/$locale/assets/wrench/'
     | '/secured/$locale/worker/batches/'
@@ -559,13 +546,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleAssetsStencilIndexRouteImport
       parentRoute: typeof SecuredLocaleAssetsRoute
     }
-    '/secured/$locale/assets/services/': {
-      id: '/secured/$locale/assets/services/'
-      path: '/services'
-      fullPath: '/secured/$locale/assets/services'
-      preLoaderRoute: typeof SecuredLocaleAssetsServicesIndexRouteImport
-      parentRoute: typeof SecuredLocaleAssetsRoute
-    }
     '/secured/$locale/assets/migrate/': {
       id: '/secured/$locale/assets/migrate/'
       path: '/migrate'
@@ -650,7 +630,6 @@ interface SecuredLocaleAssetsRouteChildren {
   SecuredLocaleAssetsFormsFormIdRoute: typeof SecuredLocaleAssetsFormsFormIdRoute
   SecuredLocaleAssetsFormsIndexRoute: typeof SecuredLocaleAssetsFormsIndexRoute
   SecuredLocaleAssetsMigrateIndexRoute: typeof SecuredLocaleAssetsMigrateIndexRoute
-  SecuredLocaleAssetsServicesIndexRoute: typeof SecuredLocaleAssetsServicesIndexRoute
   SecuredLocaleAssetsStencilIndexRoute: typeof SecuredLocaleAssetsStencilIndexRoute
   SecuredLocaleAssetsWrenchIndexRoute: typeof SecuredLocaleAssetsWrenchIndexRoute
 }
@@ -659,7 +638,6 @@ const SecuredLocaleAssetsRouteChildren: SecuredLocaleAssetsRouteChildren = {
   SecuredLocaleAssetsFormsFormIdRoute: SecuredLocaleAssetsFormsFormIdRoute,
   SecuredLocaleAssetsFormsIndexRoute: SecuredLocaleAssetsFormsIndexRoute,
   SecuredLocaleAssetsMigrateIndexRoute: SecuredLocaleAssetsMigrateIndexRoute,
-  SecuredLocaleAssetsServicesIndexRoute: SecuredLocaleAssetsServicesIndexRoute,
   SecuredLocaleAssetsStencilIndexRoute: SecuredLocaleAssetsStencilIndexRoute,
   SecuredLocaleAssetsWrenchIndexRoute: SecuredLocaleAssetsWrenchIndexRoute,
 }

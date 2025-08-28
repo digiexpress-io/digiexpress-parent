@@ -2,7 +2,7 @@ import React from 'react';
 import { alpha, Box, generateUtilityClass, styled, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 
-import { FeedbackApi, useFeedback } from '@dxs-ts/eveli-api';
+import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
 import { TaskApi } from '@dxs-ts/task-api';
 import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardStyleDefinition } from '../eveli-task-composer-v2-task-card';

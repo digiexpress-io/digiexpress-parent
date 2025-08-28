@@ -19,6 +19,8 @@
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/user-profile": "*",
+    "@dxs-ts/task-feedback": "*",
+    "@dxs-ts/task-composer-v1": "*",
     "@dxs-ts/xui-table": "*"
   },
   "peerDependencies": {

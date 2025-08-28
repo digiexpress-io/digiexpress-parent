@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
-import { FeedbackApi } from '../api-feedback';
+import { FeedbackApi } from '@dxs-ts/task-feedback';
 
 
 export const Hook = createFileFetch('worker/rest/api/feedback/$feedbackId/templates.GET')({
