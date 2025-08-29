@@ -1,0 +1,98 @@
+import React from 'react';
+import { generateUtilityClass, styled, Typography, Drawer, useMediaQuery, useTheme, Box, IconButton, ButtonGroup } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import PictureAsPdfRoundedIcon from '@mui/icons-material/PictureAsPdfRounded';
+import composeClasses from '@mui/utils/composeClasses';
+import { useIntl } from 'react-intl';
+import { useTaskBackend } from '@dxs-ts/task-api';
+import { useTaskDashboard } from '../task-dashboard';
+import { margin } from '@mui/system';
+
+
+
+export interface FormReviewDrawerProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+
+export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose, open }) => {
+  const theme = useTheme();
+  const intl = useIntl();
+  const isSmall = useMediaQuery(theme.breakpoints.down('md'));
+  const classes = useUtilityClasses();
+  const backend = useTaskBackend();
+  const { task } = useTaskDashboard();
+
+  return (
+    <StyledFormReview className={classes.reviewDrawer}
+      anchor={isSmall ? 'bottom' : 'right'}
+      open={open}
+      onClose={onClose}
+      variant="persistent"
+    >
+      <Box display='flex' alignItems='center' justifyContent='space-between'>
+        <Typography variant="h1">{intl.formatMessage({ id: 'taskcard.form.review.title', defaultMessage: 'Form review' })}</Typography>
+
+        <ButtonGroup>
+          <IconButton onClick={onClose}><CloseIcon color='primary' /></IconButton>
+          <IconButton onClick={async () => {
+              const url = await backend.persistence.getOneTaskPdfLink(task.questionnaireId!, task.id);
+              window.open(url);
+            }}><PictureAsPdfRoundedIcon color='primary'/>
+          </IconButton>
+        </ButtonGroup>
+      </Box>
+      <backend.slots.DialobReview task={task} onClose={onClose} />
+    </StyledFormReview>
+  );
+};
+
+
+const MUI_NAME = 'FormReview';
+const StyledFormReview = styled(Drawer, {
+  name: MUI_NAME,
+  slot: 'Drawer',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.reviewDrawer
+    ];
+  },
+})(({ theme }) => {
+  const drawerWidthOpen = '40%';
+
+  return {
+    '& .GFormPage-root': {
+      'margin-left': 'unset',
+      'margin-right': 'unset'
+    },
+    '& .MuiDrawer-paper': {
+      width: drawerWidthOpen,
+      height: '100%',
+      padding: theme.spacing(2),
+      transform: 'translateX(100%)',
+      transition: 'transform 0.3s ease-in-out',
+      boxSizing: 'border-box',
+      [theme.breakpoints.down('md')]: {
+        width: '100%',
+        transform: 'translateY(100%)'
+      },
+      '&.MuiDrawer-paperAnchorRight.MuiDrawer-paperOpen': {
+        transform: 'translateX(0)',
+      },
+      '&.MuiDrawer-paperAnchorBottom.MuiDrawer-paperOpen': {
+        transform: 'translateY(0)',
+      },
+    },
+  }
+});
+
+
+
+export const useUtilityClasses = () => {
+  const slots = {
+    reviewDrawer: ['reviewDrawer'],
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
+  return composeClasses(slots, getUtilityClass, {});
+}

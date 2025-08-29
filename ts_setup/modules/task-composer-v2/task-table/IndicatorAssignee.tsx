@@ -1,0 +1,54 @@
+import React from 'react';
+import { Avatar, styled, Tooltip, Typography } from '@mui/material';
+
+
+interface IndicatorAssigneeProps {
+  name: string;
+}
+
+export const IndicatorAssignee: React.FC<IndicatorAssigneeProps> = ({ name }) => {
+  if (!name || typeof name !== 'string') {
+    return (
+      <IndicatorAssigneeRoot>
+        <Typography>--</Typography>
+      </IndicatorAssigneeRoot>)
+  }
+  const firstName = name.substring(0, name.indexOf(" "));
+  const lastName = name.substring(name.indexOf(" ") + 1);
+  const firstInitial = firstName.substring(0, 1);
+  const secondInitial = lastName.substring(0, 1);
+ 
+  return (
+    <IndicatorAssigneeRoot>
+      <Tooltip title={name} arrow>
+        <Avatar variant='rounded'>
+          <Typography>{firstInitial}{secondInitial}</Typography>
+        </Avatar>
+      </Tooltip>
+    </IndicatorAssigneeRoot>
+  )
+}
+
+
+
+
+const MUI_NAME = 'IndicatorAssigneeRootClassName';
+const IndicatorAssigneeRoot = styled('div', {
+  name: MUI_NAME,
+  slot: 'Root',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root
+    ];
+  },
+
+})(({ theme }) => {
+
+  return {
+
+    '.MuiAvatar-root': {
+      height: '25px',
+      width: '25px',
+    }
+  };
+})
