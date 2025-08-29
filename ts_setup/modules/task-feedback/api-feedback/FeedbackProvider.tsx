@@ -10,7 +10,7 @@ export interface FeedbackBackend {
   findAllFeedback: () => Promise<FeedbackApi.Feedback[]>;
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback | undefined>;
   isTaskFeedbackEnabled: (taskId: FeedbackApi.TaskId) => Promise<true | false>;
-  deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;  
+  deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
 }
 
 
@@ -24,6 +24,7 @@ export interface FeedbackProviderProps {
   children: React.ReactNode;
   backend: FeedbackBackend;
 }
+
 export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
 
   const { getFeedbackTopics } = useFeedbackTopics();

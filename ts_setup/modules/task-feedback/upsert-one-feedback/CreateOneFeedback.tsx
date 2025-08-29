@@ -8,9 +8,13 @@ export interface CreateOneFeedbackProps {
   taskRef: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
   onCancel: () => void;
+  slots?: {
+    AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }>;
+    CancelButton: React.ElementType<{  disabled: boolean, onClick: () => Promise<void> }>;
+  }
 }
 
-export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, onComplete, onCancel }) => {
+export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, onComplete, onCancel, slots }) => {
 
   const intl = useIntl();
 
@@ -53,17 +57,16 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
     setCommand(prev => (prev ? { ...prev, question } : undefined));
   }
 
-
-  function handlePublish() {
+  const handlePublish = React.useCallback(async function() {
     if (command) {
-      createOneFeedback(taskRef, command).then(feedback => {
+      return createOneFeedback(taskRef, command).then(feedback => {
         onComplete(feedback);
       });
     }
-  }
+  }, [command, taskRef]);
 
-  
-  function handleCancel() {
+
+  async function handleCancel() {
     if (template) {
       setReply(template.replys?.join("\r\n\r\n") ?? '')
     }
@@ -74,6 +77,8 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
     return <CircularProgress />
   }
 
+  const AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.AcceptButton ?? SaveFeedback;
+  const CancelButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> =  slots?.CancelButton ?? CancelFeedback;
 
   return (
     <>
@@ -101,9 +106,22 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
 
       </div>
       <Box display='flex' gap={1}>
-        <Button variant="outlined" onClick={handleCancel}><FormattedMessage id='button.cancel' /></Button>
-        <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.publish' /></Button>
+        <CancelButton onClick={handleCancel} disabled={false} />
+        <AcceptButton onClick={handlePublish} disabled={!command.reply}/>
       </Box>
     </>
+  )
+}
+
+
+const SaveFeedback: React.FC<{ disabled: boolean, onClick: () => Promise<void>  }> = ({ disabled, onClick }) => {
+  return (
+    <Button variant='contained' disabled={disabled} onClick={onClick}><FormattedMessage id='button.publish' /></Button>
+  )
+}
+
+const CancelFeedback: React.FC<{ disabled: boolean, onClick: () => Promise<void>  }> = ({ disabled, onClick }) => {
+  return (
+    <Button variant="outlined" disabled={disabled} onClick={onClick}><FormattedMessage id='button.cancel' /></Button>
   )
 }

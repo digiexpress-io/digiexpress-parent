@@ -26,7 +26,7 @@ export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, styl
 
 
   React.useEffect(() => {
-    getOneFeedback(task.id)
+    getOneFeedback(task.taskRef!)
       .then(resp => resp)
       .then((resp) => setFeedbacks(resp));
   }, [])

@@ -12,6 +12,13 @@ export interface UpsertOneFeedbackProps {
   onDelete: () => void;
   onCancel: () => void;
   allowDelete?: boolean;
+
+  slots?: {
+    AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }>;
+    CancelButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }>;
+  }
+  
+  onSaveDisabled?: (disabled: boolean) => void
 }
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
@@ -25,9 +32,13 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
 
     isTaskFeedbackEnabled(props.taskRef).then((enabled) => {
       if(enabled) {
-        getOneFeedback(props.taskRef).then(setFeedback)
+        getOneFeedback(props.taskRef).then(feedback => {
+          setFeedback(feedback);
+          setEnabled(!!feedback);  
+        })
+      } else {
+        setEnabled(enabled);
       }
-      setEnabled(enabled);
     });
   }, [props.taskRef, props.reload])
 
@@ -39,6 +50,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
     });
   }
 
+
   const ownerState = {...props, onComplete: handleOnComplete, enabled, version: props.reload};
   const feedbackExists = feedback ? true : false;
 
@@ -46,13 +58,12 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
     return <>...loading</>
   }
 
-
   if(ownerState.enabled === false) {
     return <FormattedMessage id='feedback.notenabled'/>
   }
 
   if (feedbackExists) {
-    return (<UpdateOneFeedback {...ownerState} allowDelete={props.allowDelete} taskId={props.taskRef} />)
+    return (<UpdateOneFeedback {...ownerState} allowDelete={props.allowDelete} taskId={props.taskRef}/>)
   }  
   return (<CreateOneFeedback {...ownerState} />);
 }
