@@ -19,9 +19,6 @@ export interface TaskBackendContextType {
     openOneTask: (taskIdOrRef: string) => void;
   };
   persistence: {
-
-
-
     findAllUsers: (groups: string[]) => Promise<TaskApi.User[]>;
     findAllAttachments: (taskId: string) => Promise<TaskApi.Attachment[]>;
 
