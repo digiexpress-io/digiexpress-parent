@@ -11,7 +11,7 @@ import { TaskApi, TaskBackendProvider, TaskBackendProviderProps } from '@dxs-ts/
 import { TasksTableProvider } from '@dxs-ts/task-composer-v1';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
-import { DialobReview as RealDialobReview } from '../dialob-review';
+import { DialobReviewBasedOnForm, DialobReview as RealDialobReview } from '../dialob-review';
 
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks')({
@@ -40,9 +40,10 @@ function Component() {
         currentUser={currentUser} 
         roles={groups}
         slots={{ 
-          DialobReview, 
           DateTimeFormatter, 
-          DateTimePicker
+          DateTimePicker,
+          DialobReview, 
+          DialobReviewButton
         }}
       >
         <FeedbackProvider backend={feedbackBackend}>
@@ -100,7 +101,8 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { downloadAttachmentLink } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.GET', {});
   const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
   const { deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
-  
+  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
+
   const unit:  TaskBackendProviderProps['persistence'] = {
     findAllUnreadTasks: async function (): Promise<string[]> {
       return unreadTasks;
@@ -126,7 +128,8 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
     modifyOneTask: updateTask,
     deleteOneTask: deleteTask,
     createOneTask: createTask,
-    createOneComment: saveComment
+    createOneComment: saveComment,
+    getOneTaskPdfLink: pdfTaskLinkCallback
   }
 
   return unit;
@@ -135,12 +138,20 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
 
 
 
-const DialobReview: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
-  const [open, setOpen] = React.useState(false);
+const DialobReview: React.FC<{task: { id: string, questionnaireId?: string | undefined }; onClose: () => void }> = ({ onClose, task }) => {
   if(!task.questionnaireId) {
     return (<></>);
   }
 
+  return (
+    <>
+      {/* <RealDialobReview taskId={task.id} questionnaireId={task.questionnaireId!} onClose={onClose} /> */}
+      <DialobReviewBasedOnForm taskId={task.id} questionnaireId={task.questionnaireId!} onClose={onClose} />
+    </>
+  )
+}
+
+const DialobReviewButton: React.FC<{ onClick: () => void; }> = ({ onClick }) => {
   return (
     <>
       <EveliTenantFeatureEnabled id='FORM_REVIEW_FLASHY'>
@@ -152,16 +163,14 @@ const DialobReview: React.FC<{task: { id: string, questionnaireId?: string | und
               '50%': { transform: 'scale(1.05)', opacity: 0.8 },
               '100%': { transform: 'scale(1)', opacity: 1 },
           }}} 
-          onClick={() => setOpen(true)} variant='contained'><FormattedMessage id='task.form.review' /></Button>
+          onClick={onClick} variant='contained'><FormattedMessage id='task.form.review' /></Button>
       </EveliTenantFeatureEnabled>
 
       <EveliTenantFeatureEnabled id='FORM_REVIEW_NORMAL'>
-        <Button sx={{ padding: '15px', marginTop: '15px', width: '100%'}} onClick={() => setOpen(true)} variant='contained'>
+        <Button sx={{ padding: '15px', marginTop: '15px', width: '100%'}} onClick={onClick} variant='contained'>
           <FormattedMessage id='task.form.review' />
         </Button>
       </EveliTenantFeatureEnabled>
-
-      {open && <RealDialobReview taskId={task.id} questionnaireId={task.questionnaireId!} onClose={() => setOpen(false)} />}
     </>
   )
 }

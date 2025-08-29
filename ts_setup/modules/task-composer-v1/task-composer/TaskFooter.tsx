@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Box, Button, Grid2, Paper, Stack, Typography, useTheme, lighten } from "@mui/material";
+import { Box, Button, Grid2, Paper, Stack, Typography, useTheme, lighten, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 import { FormattedMessage } from 'react-intl';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
@@ -19,11 +19,32 @@ const NavigateToTasksButton: React.FC = () => {
 }
 
 export const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
+  
   const backend = useTaskBackend();
+  const [open, setOpen] = React.useState(false);
   if(!task.questionnaireId) {
     return (<></>);
   }
-  return (<backend.slots.DialobReview task={task}/>)
+ 
+  return (
+    <>
+      <backend.slots.DialobReviewButton onClick={() => setOpen(true)}   />
+      <Dialog open={open} onClose={() => setOpen(false)} fullScreen>
+        <DialogTitle><FormattedMessage id='dialobForm.review.title'/></DialogTitle>
+        <DialogContent>
+          <backend.slots.DialobReview task={task} onClose={() => setOpen(false)} />
+        </DialogContent>
+        <DialogActions>
+          <Button variant='outlined' endIcon={<ArrowRightIcon/>} onClick={async () => {
+            const url = await backend.persistence.getOneTaskPdfLink(task.questionnaireId!, task.id);
+            window.open(url);
+          }}>
+            <FormattedMessage id='taskLink.pdf.open' />
+          </Button>
+          <Button variant='contained' onClick={() => setOpen(false)}><FormattedMessage id='button.close'/></Button>
+        </DialogActions>
+      </Dialog>
+    </>);
 }
 
 

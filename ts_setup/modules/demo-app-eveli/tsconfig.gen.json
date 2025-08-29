@@ -74,6 +74,9 @@
       "@dxs-ts/task-composer-v1": [
         "../task-composer-v1/index.ts"
       ],
+      "@dxs-ts/task-composer-v2": [
+        "../task-composer-v2/index.ts"
+      ],
       "@dxs-ts/task-feedback": [
         "../task-feedback/index.ts"
       ]
@@ -151,14 +154,17 @@
       "path": "../task-composer-v1"
     },
     {
+      "path": "../task-composer-v2"
+    },
+    {
       "path": "../task-feedback"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-27T13:33:31.689Z",
+    "at": "2025-08-28T09:40:29.813Z",
     "forModule": "@dxs-ts/eveli-demo-app",
-    "fromRegistry": "f859ac88e4d1",
+    "fromRegistry": "84d234dfa593",
     "alias": {
       "@dxs-ts/eveli-demo-app": [
         "../task-feedback"
