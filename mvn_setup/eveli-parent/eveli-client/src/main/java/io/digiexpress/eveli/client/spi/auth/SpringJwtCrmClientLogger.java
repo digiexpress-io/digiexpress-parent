@@ -20,26 +20,31 @@ package io.digiexpress.eveli.client.spi.auth;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
-
 import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerPrincipal;
 import io.digiexpress.eveli.client.spi.auth.CustomerRoleVisitor.UserRoles;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 
-@Slf4j
-public class SpringJwtCrmClientLogger {
+class SpringJwtCrmClientLogger implements SpringJwtCrmClient.Logger {
+
   private final List<LogEvent> events = new ArrayList<>();
-  
+
+  private final Consumer<String> log;
+
+  public SpringJwtCrmClientLogger(Consumer<String> log) {
+    this.log = log;
+  }
+
   @Data @Builder
   private static class LogEvent {
     private final Optional<JsonObject> body;
@@ -47,7 +52,7 @@ public class SpringJwtCrmClientLogger {
     private final LogEventType type;
   }
   
-  private static enum LogEventType {
+  private enum LogEventType {
     GET_UNAUTHENTICATED,
     
     GET_JWT_TOKEN,
@@ -68,56 +73,56 @@ public class SpringJwtCrmClientLogger {
     GET_REP_COMPANY_ROLES,
   }
   
-  public SpringJwtCrmClientLogger unauth() {
+  @Override
+  public void unauth() {
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.empty())
         .type(LogEventType.GET_UNAUTHENTICATED)
         .build());
-    return this;
   }
-  
 
-  public SpringJwtCrmClientLogger jwtError(Exception e) {
+  @Override
+  public void jwtError(Exception e) {
     events.add(LogEvent.builder()
         .error(Optional.ofNullable(e))
         .body(Optional.empty())
         .type(LogEventType.GET_JWT_ERROR)
         .build());
-    return this;
   }
   
-  public SpringJwtCrmClientLogger jwtOk(Jwt token) {
+  @Override
+  public void jwtOk(Jwt token) {
     final var body = JsonObject.mapFrom(token.getClaims());
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.ofNullable(body))
         .type(LogEventType.GET_JWT_TOKEN)
         .build());
-    return this;
   }
   
-  public SpringJwtCrmClientLogger customerOk(CustomerPrincipal token) {
+  @Override
+  public void customerOk(CustomerPrincipal token) {
     final var body = JsonObject.mapFrom(token);
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.ofNullable(body))
         .type(LogEventType.GET_CUSTOMER)
         .build());
-    return this;
   }
 
-  public SpringJwtCrmClientLogger rolesGetUrl(String url) {
+  @Override
+  public void rolesGetUrl(String url) {
     final var body = JsonObject.of("service-url", url);
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.ofNullable(body))
         .type(LogEventType.GET_REP_ROLE_FOR)
         .build());
-    return this;
   }
   
-  public SpringJwtCrmClientLogger rolesGetResp(ResponseEntity<String> resp) {
+  @Override
+  public void rolesGetResp(ResponseEntity<String> resp) {
     final var body = JsonObject.of(
         "code", resp.getStatusCode(),
         "body", resp.getBody());
@@ -127,39 +132,38 @@ public class SpringJwtCrmClientLogger {
         .body(Optional.ofNullable(body))
         .type(LogEventType.GET_REP_ROLE_RESP)
         .build()); 
-    return this;
   }
-  
-  
-  public SpringJwtCrmClientLogger rolesGetCompanyBody(JsonArray init) {
+
+  @Override
+  public void rolesGetCompanyBody(JsonArray init) {
     final var body = JsonObject.of("company-roles", init);
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.ofNullable(body))
         .type(LogEventType.GET_REP_COMPANY_ROLES)
         .build()); 
-    return this;
-    
   }
-  public SpringJwtCrmClientLogger rolesGetPersonBody(JsonObject init) {
+
+  @Override
+  public void rolesGetPersonBody(JsonObject init) {
     final var body = JsonObject.of("person-roles", init);
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.ofNullable(body))
         .type(LogEventType.GET_REP_PERSON_ROLES)
         .build()); 
-    return this;
   }
   
-  public SpringJwtCrmClientLogger rolesGetOk(UserRoles roles) {
+  @Override
+  public void rolesGetOk(UserRoles roles) {
     events.add(LogEvent.builder()
         .error(Optional.empty())
         .body(Optional.ofNullable(JsonObject.mapFrom(roles)))
         .type(LogEventType.GET_REP_ROLES_OK)
         .build()); 
-    return this;
   }
-  
+
+  @Override
   public void close() {
     if(events.isEmpty()) {
       return;
@@ -171,7 +175,6 @@ public class SpringJwtCrmClientLogger {
         .append("  - ").append(event.getType()).append(":").append(System.lineSeparator())
         .append("    ").append(body.encode()).append(System.lineSeparator());
     }
- 
-    log.info("{}", result.toString());
+    log.accept(String.valueOf(result));
   }
 }

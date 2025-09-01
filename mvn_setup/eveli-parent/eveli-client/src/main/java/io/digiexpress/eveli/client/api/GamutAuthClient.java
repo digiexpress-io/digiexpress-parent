@@ -37,6 +37,7 @@ import jakarta.annotation.Nullable;
 
 // currently logged in customer
 public interface GamutAuthClient {
+  @Nullable
   Liveness getLiveness();
   Customer getCustomer();
   CustomerRoles getCustomerRoles();
