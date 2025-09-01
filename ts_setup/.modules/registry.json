@@ -2314,7 +2314,6 @@
         "@mui/icons-material",
         "luxon",
         "@dxs-ts/task-api",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/task-feedback",
         "@mui/system",
         "@tanstack/react-table",
@@ -2332,12 +2331,13 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/task-api",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/xui-datetime"
+      ]
     },
     "@dxs-ts/task-feedback": {
       "name": "@dxs-ts/task-feedback",
@@ -3336,6 +3336,6 @@
       ]
     }
   },
-  "checksum": "f7f330c1a27ab817cd6c356562495cc49032518afd53bd8db5b4b99098ef6f8c",
-  "generatedAt": "2025-08-29T10:44:34.504Z"
+  "checksum": "8c6803bc03792cc40c210810172454c1a72a73436606204d3a6d9ee732e22d63",
+  "generatedAt": "2025-09-01T08:26:13.924Z"
 }
