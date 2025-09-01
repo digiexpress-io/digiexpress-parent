@@ -11,7 +11,7 @@ import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
-import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
+import { TaskApi, TaskFeature, useTaskBackend } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
@@ -171,17 +171,19 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
 
     case 'customer_messages':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
-          {...commonProps}
-          isMenu
-          titleNotifier={task.comments.filter(a => a.external).length}
-          onEdit={handleEdit}
-          startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
-          onDoubleClick={handleEdit}
-          editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
-        >
-          <CustomerMessagesReadOnly task={task} style={style} />
-        </TaskCard>
+        <TaskFeature id='CRM_MESSAGES'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
+            {...commonProps}
+            isMenu
+            titleNotifier={task.comments.filter(a => a.external).length}
+            onEdit={handleEdit}
+            startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
+            onDoubleClick={handleEdit}
+            editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
+          >
+            <CustomerMessagesReadOnly task={task} style={style} />
+          </TaskCard>
+        </TaskFeature>
       );
 
     case 'files':
@@ -207,16 +209,18 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
 
     case 'feedback':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback', defaultMessage: 'Customer feedback' })}
-          {...commonProps}
-          isMenu
-          onEdit={handleEdit}
-          onDoubleClick={handleEdit}
-          startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
-          editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
-        >
-          <CustomerFeedbackReadOnly task={task} style={style} />
-        </TaskCard>
+        <TaskFeature id='TASK_FEEDBACK'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback', defaultMessage: 'Customer feedback' })}
+            {...commonProps}
+            isMenu
+            onEdit={handleEdit}
+            onDoubleClick={handleEdit}
+            startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
+            editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
+          >
+            <CustomerFeedbackReadOnly task={task} style={style} />
+          </TaskCard>
+        </TaskFeature>
       );
 
     case 'notes':
