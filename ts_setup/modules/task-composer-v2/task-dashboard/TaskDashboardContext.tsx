@@ -1,4 +1,4 @@
-import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
+import { TaskApi, TaskFeatureProvider, useTaskBackend } from '@dxs-ts/task-api';
 
 import React from 'react';
 
@@ -85,7 +85,12 @@ const TaskDashboardContextProvider: React.FC<{ taskId: string, children: React.R
 
   }, [task]);
 
-  return (<TaskDashboardContext.Provider value={contextValue}>{task && props.children}</TaskDashboardContext.Provider>)
+  return (
+    <TaskFeatureProvider options={task}>
+      <TaskDashboardContext.Provider value={contextValue}>
+        {task && props.children}
+      </TaskDashboardContext.Provider>
+    </TaskFeatureProvider>)
 }
 
 const useTaskDashboard = () => {

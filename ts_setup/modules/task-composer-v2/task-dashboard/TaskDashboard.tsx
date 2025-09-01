@@ -11,9 +11,7 @@ import {
   taskCardGridSize,
   TaskCardStyleSelect
 } from '../task-card';
-import { TaskCardFactory } from '../task-card-factory';
-
-
+import { TaskCardFactory, TASK_CARD_IDS } from '../task-card-factory';
 
 
 const TaskDashboardInternal: React.FC = () => {
@@ -53,7 +51,7 @@ const TaskDashboardInternal: React.FC = () => {
 export const TaskDashboard: React.FC<{ taskId: string }> = (props) => {
   return (
     <TaskDashboardContextProvider taskId={props.taskId}>
-      <CardConfigContextProvider>
+      <CardConfigContextProvider initialCardOrder={TASK_CARD_IDS}>
         <TaskDashboardInternal />
       </CardConfigContextProvider>
     </TaskDashboardContextProvider>

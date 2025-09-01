@@ -33,13 +33,43 @@ import {
 
 
 
-export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
+
+export type FactoryCardId =
+  'task_main' |
+  'task_main_alt' |
+  'task_form_summary' |
+  'status_priority' |
+  'assignees_roles' |
+  'customer_messages'|
+  'files'|
+  'feedback' |
+  'notes'|
+  'task_meta'
+
+export const TASK_CARD_IDS: FactoryCardId[] = [
+  'task_main',
+  'task_form_summary',
+  'status_priority',
+  'assignees_roles',
+  'customer_messages',
+  'files',
+  'feedback',
+  'notes',
+  'task_meta'
+];
+
+const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
+
+
+
+export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => {
   const intl = useIntl();
+  const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
 
   const {
     cardTheme, editingCardId, toggleReview,
-    isCardFlashy, toggleCardFlashy, isCardAltView, toggleCardAltView, setEditCard,
-    isCardExpanded, toggleCardExpanded
+    isCardFlashy, toggleCardFlashy, setEditCard,
+    isCardExpanded, toggleCardExpanded, expandedCards
   } = useCardConfig();
 
   const styleConfig = useTaskCardThemeConfig();
@@ -58,10 +88,8 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
     id: cardId,
     styleVariant: cardTheme,
     isFlashy: isCardFlashy(cardId),
-    isAltView: isCardAltView(cardId),
-    isExpanded: isCardExpanded(cardId),
+    isExpanded: expandedCards.find(target => target.cardId === cardId) ? isCardExpanded(cardId) : defaultExpandedCards.includes(cardId),
     onToggleFlashy: () => toggleCardFlashy(cardId),
-    onToggleAltView: () => toggleCardAltView(cardId),
     onToggleExpanded: () => toggleCardExpanded(cardId),
     onReview: toggleReview,
   };

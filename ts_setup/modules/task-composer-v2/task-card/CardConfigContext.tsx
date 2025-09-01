@@ -1,56 +1,26 @@
 
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 
-
-
-export type TaskCardId =
-  'task_main' |
-  'task_main_alt' |
-  'task_form_summary' |
-  'status_priority' |
-  'assignees_roles' |
-  'customer_messages'|
-  'files'|
-  'feedback' |
-  'notes'|
-  'task_meta'
-
-
-export const TASK_CARD_IDS: TaskCardId[] = [
-  'task_main',
-  'task_form_summary',
-  'status_priority',
-  'assignees_roles',
-  'customer_messages',
-  'files',
-  'feedback',
-  'notes',
-  'task_meta'
-];
-
-const defaultExpandedCards: TaskCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
-
-
+export type TaskCardId = string;
 export type TaskCardStyleKey = 'compact' | 'default' | 'large';
 
 export interface CardConfig {
   isReviewOpen: boolean;
-  editingCardId: TaskCardId | undefined;
+  editingCardId: string | undefined;
   cardTheme: TaskCardStyleKey;
-  cardOrder: TaskCardId[];
-
-  isCardExpanded(id: TaskCardId): boolean;
-  toggleCardExpanded(id: TaskCardId): void;
+  cardOrder: string[];
+  expandedCards: { cardId: string, expanded: boolean }[];
+  
+  isCardExpanded(id: string): boolean;
+  toggleCardExpanded(id: string): void;
 
   toggleReview(): void;
-  isCardFlashy(id: TaskCardId): boolean;
-  toggleCardFlashy(id: TaskCardId): void;
+  isCardFlashy(id: string): boolean;
+  toggleCardFlashy(id: string): void;
 
-  isCardAltView(id: TaskCardId): boolean;
-  toggleCardAltView(id: TaskCardId): void;
 
-  setEditCard(id: TaskCardId | undefined): void;
-  setCardOrder(newOrder: TaskCardId[]): void;
+  setEditCard(id: string | undefined): void;
+  setCardOrder(newOrder: string[]): void;
   setCardTheme(theme: TaskCardStyleKey): void;
 }
 
@@ -59,7 +29,7 @@ const INITIAL_CONFIG: CardConfig = {
 
 export interface CardConfigContextProviderProps {
   cardTheme?: TaskCardStyleKey;
-  initialCardOrder?: TaskCardId[];
+  initialCardOrder: string[];
 }
 
 export const CardConfigContext = createContext<CardConfig>(INITIAL_CONFIG);
@@ -67,18 +37,17 @@ export const CardConfigContext = createContext<CardConfig>(INITIAL_CONFIG);
 export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigContextProviderProps>> = (props) => {
   const [isReviewOpen, setReviewOpen] = React.useState(false);
 
-  const [flashyCards, setFlashyCards] = React.useState<TaskCardId[]>([]);
-  const [altViewCards, setAltViewCards] = React.useState<TaskCardId[]>([]);
-  const [expandedCards, setExpandedCards] = React.useState<TaskCardId[]>(defaultExpandedCards);
-
-  const [editingCardId, setEditingCardId] = React.useState<TaskCardId | undefined>();
+  const [flashyCards, setFlashyCards] = React.useState<string[]>([]);
+  const [expandedCards, setExpandedCards] = React.useState<CardConfig['expandedCards']>([]);
+  const [cardOrder, setCardOrder] = React.useState<string[]>(props.initialCardOrder);
+  const [editingCardId, setEditingCardId] = React.useState<string | undefined>();
   const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>(props.cardTheme ?? 'default');
-  const [cardOrder, setCardOrder] = React.useState<TaskCardId[]>(props.initialCardOrder ?? TASK_CARD_IDS);
+
 
 
   const contextValue: CardConfig = React.useMemo(() => {
     return {
-      cardTheme, isReviewOpen, editingCardId, cardOrder,
+      cardTheme, isReviewOpen, editingCardId, cardOrder, expandedCards,
       setCardOrder, setCardTheme,
       toggleReview() {
         setReviewOpen(prev => !prev)
@@ -92,20 +61,20 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
       setEditCard(cardId) {
         setEditingCardId(cardId)
       },
-      isCardAltView(cardId) {
-        return altViewCards.includes(cardId);
-      },
-      toggleCardAltView(cardId) {
-        setAltViewCards(prev => prev.includes(cardId) ? prev.filter(id => cardId !== id) : [...prev, cardId])
-      },
       isCardExpanded(cardId) {
-        return expandedCards.includes(cardId);
+        return expandedCards.find(c => c.cardId === cardId)?.expanded ?? false;
       },
       toggleCardExpanded(cardId) {
-        setExpandedCards(prev => prev.includes(cardId) ? prev.filter(id => cardId !== id) : [...prev, cardId]);
+        setExpandedCards(prev => {
+          const targetCard = expandedCards.find(c => c.cardId === cardId);
+          if(targetCard) {
+            return [...prev.filter(card => card.cardId !== cardId), { cardId, expanded: !targetCard.expanded} ]
+          } 
+          return [...prev, { cardId, expanded: true}];
+        });
       }
     }
-  }, [isReviewOpen, editingCardId, cardTheme, flashyCards, altViewCards, expandedCards, cardOrder]);
+  }, [isReviewOpen, editingCardId, cardTheme, flashyCards, expandedCards, cardOrder]);
 
 
   return (
