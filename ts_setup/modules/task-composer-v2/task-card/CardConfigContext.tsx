@@ -12,7 +12,7 @@ export interface CardConfig {
   expandedCards: { cardId: string, expanded: boolean }[];
   
   isCardExpanded(id: string): boolean;
-  toggleCardExpanded(id: string): void;
+  toggleCardExpanded(id: string, forceToExpandedValue?: boolean): void;
 
   toggleReview(): void;
   isCardFlashy(id: string): boolean;
@@ -64,13 +64,13 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
       isCardExpanded(cardId) {
         return expandedCards.find(c => c.cardId === cardId)?.expanded ?? false;
       },
-      toggleCardExpanded(cardId) {
+      toggleCardExpanded(cardId, forceToExpandedValue) {
         setExpandedCards(prev => {
           const targetCard = expandedCards.find(c => c.cardId === cardId);
           if(targetCard) {
-            return [...prev.filter(card => card.cardId !== cardId), { cardId, expanded: !targetCard.expanded} ]
+            return [...prev.filter(card => card.cardId !== cardId), { cardId, expanded: forceToExpandedValue ?? !targetCard.expanded} ]
           } 
-          return [...prev, { cardId, expanded: true}];
+          return [...prev, { cardId, expanded: forceToExpandedValue ?? true}];
         });
       }
     }
