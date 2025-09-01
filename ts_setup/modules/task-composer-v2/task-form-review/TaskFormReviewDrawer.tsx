@@ -63,8 +63,8 @@ const StyledFormReview = styled(Drawer, {
 
   return {
     '& .GFormPage-root': {
-      'margin-left': 'unset',
-      'margin-right': 'unset'
+      marginLeft: 'unset',
+      marginRight: 'unset'
     },
     '& .MuiDrawer-paper': {
       width: drawerWidthOpen,
