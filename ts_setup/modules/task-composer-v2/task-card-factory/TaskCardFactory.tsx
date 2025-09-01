@@ -38,8 +38,6 @@ import {
 
 
 
-
-
 export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) => {
   const intl = useIntl();
 
@@ -95,6 +93,10 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
+          
+          showFlashyToggle={false}
+          showEdit={true}
+          showReview={false}
         >
           <TaskPropertiesAlt style={style} onReview={toggleReview} />
         </TaskCard>
@@ -108,7 +110,10 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
-          altChildren={<TaskPropertiesAlt style={style} onReview={toggleReview} />}
+
+          showFlashyToggle={true}
+          showEdit={true}
+          showReview={false}
         >
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={
@@ -127,7 +132,11 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
 
     case 'task_form_summary':
       return (
-        <TaskCard {...commonProps} isMenu>
+        <TaskCard {...commonProps} isMenu
+          showFlashyToggle={true}
+          showEdit={false}
+          showReview={true}
+        >
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={task.subject + " " + "v1.0"} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate', defaultMessage: 'Submitted' })} value={_formatAnyDateShort(task.created)} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback', defaultMessage: 'Publish feedback?' })} value='YES' style={style} />
@@ -141,6 +150,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.statusAndPriority', defaultMessage: 'Status and Priority' })}
           {...commonProps}
           isMenu
+          showFlashyToggle={true}
+          showEdit={true}
+          showReview={false}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           editDialog={editingCardId === cardId && (<PriorityStatusEditDialog open onClose={handleEditClose} />)}
@@ -158,6 +170,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees', defaultMessage: 'Roles and Assignees' })}
           {...commonProps}
           isMenu
+          showFlashyToggle={true}
+          showEdit={true}
+          showReview={false}
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<AssigneeRolesEditDialog open onClose={handleEditClose} />)}
@@ -175,6 +190,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
           <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
             {...commonProps}
             isMenu
+            showFlashyToggle={true}
+            showEdit={true}
+            showReview={true}
             titleNotifier={task.comments.filter(a => a.external).length}
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
@@ -191,6 +209,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.files', defaultMessage: 'Files' })}
           {...commonProps}
           isMenu
+          showFlashyToggle={true}
+          showEdit={true}
+          showReview={false}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
@@ -213,6 +234,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
           <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback', defaultMessage: 'Customer feedback' })}
             {...commonProps}
             isMenu
+            showFlashyToggle={true}
+            showEdit={true}
+            showReview={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
@@ -233,6 +257,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
           editDialog={isEditOpen && (<NotesEditDialog open onClose={handleEditClose} />)}
+          showFlashyToggle={true}
+          showEdit={true}
+          showReview={false}
         >
           <NotesTruncated task={task} style={style} />
         </TaskCard>
@@ -242,7 +269,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
       return (
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history', defaultMessage: 'History and metadata' })}
           {...commonProps}
-          isMenu
+          showFlashyToggle={true}
+          showEdit={false}
+          showReview={false}
           startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />

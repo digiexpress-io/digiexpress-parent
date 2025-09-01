@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse, Button, lighten, darken } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
@@ -16,16 +16,19 @@ export interface TaskCardProps {
   titleNotifier?: string | number;
 
   children: React.ReactNode;
-  altChildren?: React.ReactNode;
   styleVariant?: TaskCardStyleKey;
 
   isMenu?: boolean;
   isExpanded?: boolean;
   isFlashy?: boolean;
-  isAltView?: boolean;
 
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
+
+  showFlashyToggle: boolean;
+  showReview: boolean;
+  showEdit: boolean;
+
   onClick?: () => void;
   onDoubleClick?: () => void;
   onReview?: () => void;
@@ -72,7 +75,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     }
   }
 
-  const cardContent = props.isAltView ? props.altChildren : props.children;
+  const cardContent = props.children;
 
 
   return (<>
@@ -97,10 +100,13 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
           onClose={handleMenuClose}
           flashy={props.isFlashy}
           onToggleFlashy={props.onToggleFlashy}
-          altView={props.isAltView}
           onToggleAltView={props.onToggleAltView}
           onReview={props.onReview}
-          onEdit={handleEdit} />
+          onEdit={handleEdit} 
+          showEdit={props.showEdit}
+          showFlashyToggle={props.showFlashyToggle}
+          showReview={props.showReview}
+          />
       </Box>
 
 
