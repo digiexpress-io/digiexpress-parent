@@ -49,6 +49,8 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
+
+  
   const { task } = useTaskDashboard();
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   
