@@ -73,6 +73,10 @@ public class TaskClientImpl implements TaskClient {
   private final TaskStore ctx;
   private final CustomerAccountClient crmClient;
   
+  public TaskStore unwrap() {
+    return ctx;
+  }
+  
   @Override
   public PaginateTasks paginateTasks() {
     return new PaginateTasksImpl(ctx);

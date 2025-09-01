@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskCommand.TaskUpdateCommand;
+import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.smallrye.mutiny.Multi;
@@ -46,6 +47,8 @@ import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
 
 public interface TaskClient {
+  TaskStore unwrap();
+  
   TaskCommandBuilder taskBuilder();  
   PaginateTasks paginateTasks();
   QueryTasks queryTasks();
