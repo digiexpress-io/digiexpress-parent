@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Grid2, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -15,24 +15,19 @@ import { TaskApi, TaskFeature, useTaskBackend } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
-import { TaskFormReviewDrawer } from '../task-form-review';
 import { TaskAssigneeReadOnly } from '../task-assignee';
 import { TaskPriorityReadOnly } from '../task-priority';
 import { FilesReadOnly, FilesEditDialog } from '../task-files';
 import { NotesEditDialog, NotesTruncated } from '../task-notes';
 import { AssigneeRolesEditDialog } from '../task-assignee-roles-edit';
 import { PriorityStatusEditDialog } from '../task-priority-status-edit';
-import { TaskDashboardContextProvider, useTaskDashboard } from '../task-dashboard';
+import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../task-feedback';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
 import {
-  DraggableCardWrapper, useDragCardController,
-  CardConfigContextProvider,
   TaskCardId, useCardConfig, useTaskCardThemeConfig,
-  taskCardGridSize,
-  TaskCardStyleSelect,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../task-card';
 
@@ -49,14 +44,10 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
-
   
   const { task } = useTaskDashboard();
-  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
-  
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);  
   const backend = useTaskBackend();
-
-
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
@@ -285,58 +276,12 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = ({ cardId }) =>
   }
 }
 
-
-
-const TaskDashboardInternal: React.FC = () => {
-  const { cardOrder, isReviewOpen, cardTheme, setCardTheme, toggleReview } = useCardConfig();
-  const { getDragPropsForId } = useDragCardController();
-
-  const styleConfig = useTaskCardThemeConfig();
-  const style = styleConfig[cardTheme];
-  const { task } = useTaskDashboard();
-
-  return (
-    <Grid2 container spacing={style.cardSpacing} m={1}>
-      <Grid2 size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
-        <Typography variant='h1'>Edit task: {task.taskRef}</Typography>
-        <TaskCardStyleSelect value={cardTheme} onChange={setCardTheme} />
-      </Grid2>
-
-      <Grid2 container
-        size={{ xs: 12, md: isReviewOpen ? 6 : 12 }}
-        spacing={style.cardSpacing}
-        sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
-        {cardOrder.map((cardId) => (
-          <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
-            <DraggableCardWrapper {...getDragPropsForId(cardId)}>
-              <TaskCardFactory cardId={cardId} />
-            </DraggableCardWrapper>
-          </Grid2>
-        ))}
-      </Grid2>
-
-      <TaskFormReviewDrawer onClose={toggleReview} open={isReviewOpen} />
-    </Grid2>
-  );
-};
-
-
-export const TaskDashboard: React.FC<{ taskId: string }> = (props) => {
-
-
-  return (
-    <TaskDashboardContextProvider taskId={props.taskId}>
-      <CardConfigContextProvider>
-        <TaskDashboardInternal />
-      </CardConfigContextProvider>
-    </TaskDashboardContextProvider>
-
-  );
-}
-
-
 function _formatAnyDateShort(value: Date | string | undefined): string {
   if (!value) return '--';
   const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
-};
+}
+
+
+
+
