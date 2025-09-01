@@ -69,7 +69,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     padding: '0 12px',
     '&::placeholder': {
       color: theme.palette.text.disabled,
-      ...theme.typography.subtitle2,
       opacity: 1,
     },
   },

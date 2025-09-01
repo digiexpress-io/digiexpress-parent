@@ -121,7 +121,7 @@ export const TaskCreate: React.FC = () => {
                 required
                 onChange={handleSetSubject}
                 value={subject}
-                placeholder={intl.formatMessage({ id: 'task.composer.field.required', defaultMessage: '* required field' })}
+                placeholder={intl.formatMessage({ id: 'task.composer.field.required', defaultMessage: '* required' })}
                 error={!!errors.subject}
                 helperText={errors.subject}
               />
