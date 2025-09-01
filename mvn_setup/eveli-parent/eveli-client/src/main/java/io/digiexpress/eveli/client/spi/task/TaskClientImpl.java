@@ -102,7 +102,6 @@ public class TaskClientImpl implements TaskClient {
         if(roles == null) {
           roles = new ArrayList<>();
         }
-        roles.clear();
         this.requireAnyRoles.addAll(roles);
         return this;
       }
