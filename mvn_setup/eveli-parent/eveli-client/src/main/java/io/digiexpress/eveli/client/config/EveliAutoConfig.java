@@ -1,5 +1,26 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Duration;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.Assert;
+import org.springframework.web.client.RestTemplate;
+
 /*-
  * #%L
  * eveli-client
@@ -24,7 +45,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.digiexpress.eveli.client.api.*;
+
+import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.CustomerAccountClient;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskAuditClient;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TenantConfigClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -42,6 +70,7 @@ import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
+import io.digiexpress.eveli.client.spi.taskaudit.TaskAuditClientImpl;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -49,6 +78,8 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.resys.thena.grim.spi.GrimClientImpl;
 import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
@@ -58,25 +89,6 @@ import jakarta.persistence.EntityManager;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
-
-import java.time.Duration;
-import java.util.Objects;
-import java.util.regex.Pattern;
 
 
 
@@ -291,6 +303,15 @@ public class EveliAutoConfig {
     return new ProcessClientImpl(processJPA, ts, envir);
   }
 
+  
+  @Bean
+  public TaskAuditClient taskAuditClient(
+      Optional<ThenaMqClient> mqClient,
+      Optional<ThenaMqAppConfig> mqConfig,
+      TaskClient taskClient
+      ) {
+    return new TaskAuditClientImpl(taskClient, mqClient, mqConfig);
+  }
   
   @Bean
   @ConditionalOnMissingBean
