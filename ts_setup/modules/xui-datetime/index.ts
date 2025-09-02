@@ -1,2 +1,2 @@
-export * from './DatePicker';
-export * from './DateTimeFormatter';
+export * from './date-picker';
+export * from './date-time-formatter';

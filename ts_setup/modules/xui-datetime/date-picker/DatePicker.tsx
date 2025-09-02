@@ -4,8 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import TodayIcon from '@mui/icons-material/Today';
 import { useIntl } from 'react-intl';
 
-import { CalendarInput, CalendarInputProvider, useCalendarInput } from './calendar-input';
-import { CalendarProvider } from './calendar-interactive';
+import { CalendarInput, CalendarInputProvider, useCalendarInput } from '../calendar-input';
+import { CalendarProvider } from '../calendar-interactive';
 
 const DateFieldContainer: React.FC<{ onClear: () => void; onOpen: () => void }> = ({
   onClear,
@@ -13,13 +13,15 @@ const DateFieldContainer: React.FC<{ onClear: () => void; onOpen: () => void }> 
 }) => {
   const { machine } = useCalendarInput();
 
+  const showError = !machine.isValid && machine.day !== '' && machine.month !== '' && machine.year !== '';
+
   return (
     <Box
       display="flex"
       alignItems="center"
       justifyContent="space-between"
       sx={{
-        border: `1px solid ${machine.isValid ? '#ccc' : 'red'}`,
+        border: `1px solid ${showError ? 'red' : '#ccc'}`,
         borderRadius: 2,
         padding: '2px 6px',
         width: 'fit-content',

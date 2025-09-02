@@ -149,6 +149,20 @@ export const CalendarInputProvider: React.FC<{
         focusAndSelect(monthRef);
       }
     }
+
+    if (e.key === 'Enter') {
+      if (machine.state === 'valid' && machine.resultDate) {
+        onChange(machine.resultDate);
+        if (yearRef.current) {
+          yearRef.current.blur();
+        } else if (monthRef.current) {
+          monthRef.current.blur();
+        } else if (dayRef.current) {
+          dayRef.current.blur();
+        }
+      }
+    }
+    
   };
 
   const handleContainerClick = (e: React.MouseEvent) => {

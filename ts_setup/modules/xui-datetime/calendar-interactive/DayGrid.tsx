@@ -59,7 +59,7 @@ export const DayGrid: React.FC<{
     };
 
     return (
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, px: 1 }}>
         {/* Day headers */}
         {[1, 2, 3, 4, 5, 6, 0].map((day) => (
           <Box key={day} textAlign="center">
