@@ -30,12 +30,12 @@ public interface QueueRegistry extends ThenaMqRegistryTemplate<Queue, io.vertx.m
 
   ThenaSqlClient.SqlTupleList insertMany(List<Queue> queue);
   ThenaSqlClient.SqlTuple deleteById(String id);  // matches by external_id or id
- 
+  ThenaSqlClient.SqlTuple findAllByIdOrName(List<String> id);
+  
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.Sql createTable();
   @Override ThenaSqlClient.Sql createConstraints();
   @Override ThenaSqlClient.Sql dropTable();
   @Override Function<io.vertx.mutiny.sqlclient.Row, Queue> defaultMapper();
-
 }

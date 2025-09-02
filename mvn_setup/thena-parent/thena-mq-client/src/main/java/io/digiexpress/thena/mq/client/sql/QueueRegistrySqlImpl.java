@@ -63,6 +63,17 @@ public class QueueRegistrySqlImpl implements QueueRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllByIdOrName(List<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getQueues()).ln()
+        .append("  WHERE (id = ANY($1) OR queue_name = ANY($1))").ln() 
+        .build())
+        .props(Tuple.of(id.toArray()))
+        .build();
+  }
+  @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<Queue> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()

@@ -76,7 +76,8 @@ public interface GrimQueryActions {
   }
   interface MissionCommitQuery {
     Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits();
-    Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId);
+    Uni<QueryEnvelope<GrimProjectObjects>> findAllCommitsByMissionId(String missionId);
+    Uni<QueryEnvelope<GrimContainerVersion>> findOneCommitByMissionId(String missionId, String currentCommitId);
   }
   
   interface CommitViewersQuery {

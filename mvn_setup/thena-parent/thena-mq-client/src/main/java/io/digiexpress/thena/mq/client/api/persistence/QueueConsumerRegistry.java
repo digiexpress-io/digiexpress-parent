@@ -34,6 +34,7 @@ public interface QueueConsumerRegistry extends ThenaMqRegistryTemplate<QueueCons
   ThenaSqlClient.SqlTuple findAllByAppId(String appId, boolean lockForUpdate);
   ThenaSqlClient.Sql findAllEnabled();  
   ThenaSqlClient.SqlTuple findAllEnabledByAppId(String appId);
+  ThenaSqlClient.SqlTuple findAllById(List<String> id);
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
@@ -41,5 +42,6 @@ public interface QueueConsumerRegistry extends ThenaMqRegistryTemplate<QueueCons
   @Override ThenaSqlClient.Sql createConstraints();
   @Override ThenaSqlClient.Sql dropTable();
   @Override Function<io.vertx.mutiny.sqlclient.Row, QueueConsumer> defaultMapper();
+
 
 }

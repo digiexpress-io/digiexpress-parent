@@ -57,4 +57,18 @@ public class DeliveryQueryImpl implements DeliveryQuery {
           .collect(Collectors.toList());
     });
   }
+
+  @Override
+  public Uni<List<Delivery>> findAllByMessageId(List<String> messageId) {
+    return Uni.combine().all().unis(
+        state.queryDeliveries().findAllByMessageId(messageId),
+        state.queryDeliveries().findAllAttemptsByMessageId(messageId)
+    ).asTuple().onItem().transform(tuple -> {
+      final var byDelivery = tuple.getItem2().stream().collect(Collectors.groupingBy(e -> e.getDeliveryId()));
+      return tuple.getItem1().stream().map(e -> ImmutableDelivery.builder()
+          .from(e)
+          .addAllAttempts(byDelivery.getOrDefault(e.getId(), Collections.emptyList())).build())
+          .collect(Collectors.toList());
+    });
+  }
 }

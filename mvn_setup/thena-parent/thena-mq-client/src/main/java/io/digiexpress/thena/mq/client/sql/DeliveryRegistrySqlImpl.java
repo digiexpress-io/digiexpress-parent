@@ -64,6 +64,17 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllByMessageId(List<String> messageId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getDelivery()).ln()
+        .append("  WHERE message_id = ANY($1)").ln() 
+        .build())
+        .props(Tuple.of(messageId.toArray()))
+        .build();
+  }
+  @Override
   public SqlTuple findLastNEntries(long entries) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

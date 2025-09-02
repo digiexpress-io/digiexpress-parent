@@ -22,10 +22,12 @@ package io.digiexpress.eveli.client.spi.taskaudit;
 
 import java.util.Optional;
 
+import io.digiexpress.eveli.client.api.ImmutableTaskAuditLog;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,8 +39,39 @@ public class TaskAuditClientImpl implements TaskAuditClient {
   
   @Override
   public TaskAuditQuery createTaskAuditQuery() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    return new TaskAuditQuery() {
+      
+      @Override
+      public Uni<Optional<TaskAuditLog>> findOneTask(String taskId) {
+        
+        // join all the queries
+        return Uni.combine().all()
+        .unis(
+            
+          // optional MQ data
+          mqClient.isPresent() ? 
+              new TaskAuditEntryMqVisitor(mqClient.get(), mqConfig.get(), taskId).accept() : 
+              Uni.createFrom().item(Optional.<TaskAuditEntryMq>empty()),
+              
+          // access and commits
+          new TaskAuditEntryAccessVisitor(taskClient, taskId).accept(),
+          
+          
+          // process and wrench flow
+          new TaskAuditEntryProcessVisitor(taskClient, taskId).accept()
+        ).asTuple().onItem().transform(tuple -> {
+          
 
+          final var audit = ImmutableTaskAuditLog.builder()
+            .id(taskId)
+            .access(tuple.getItem2())
+            .mq(tuple.getItem1().orElse(null))
+            .flow(tuple.getItem3().orElse(null))
+            ;
+          
+          return Optional.of(audit.build());
+        });
+      }
+    };
+  }
 }

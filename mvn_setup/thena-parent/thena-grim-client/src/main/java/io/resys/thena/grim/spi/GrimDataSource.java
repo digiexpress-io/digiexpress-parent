@@ -60,6 +60,7 @@ import io.resys.thena.grim.spi.datasource.GrimCommitViewerRegistry.AnyObjectCrit
 import io.resys.thena.spi.TenantDataSource;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 public interface GrimDataSource extends TenantDataSource {

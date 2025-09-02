@@ -64,6 +64,34 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllByMessageId(List<String> messageId) {
+  
+    final var sql = """
+  with
+  delivery as (
+    select * from ${TABLE_DELIVERY}
+  ),
+  delivery_attempt as (
+    select * from ${TABLE_DELIVERY_ATTEMPT}
+  )
+  SELECT delivery_attempt.* 
+   FROM delivery_attempt
+   RIGHT JOIN delivery ON(delivery_attempt.delivery_id = delivery.id)
+   WHERE delivery.message_id = ANY($1)
+"""; 
+    
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        
+        .append(sql
+            .replace("${TABLE_DELIVERY}", options.getDelivery())
+            .replace("${TABLE_DELIVERY_ATTEMPT}", options.getDeliveryAttempt())
+        )
+        .build())
+        .props(Tuple.of(messageId.toArray()))
+        .build();
+  }
+  @Override
   public SqlTuple findLastNEntries(long entries) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

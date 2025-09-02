@@ -32,6 +32,7 @@ public interface DeliveryAttemptRegistry extends ThenaMqRegistryTemplate<Deliver
   ThenaSqlClient.SqlTupleList updateMany(List<DeliveryAttempt> attempts);
   ThenaSqlClient.SqlTupleList insertMany(List<DeliveryAttempt> attempts);
   ThenaSqlClient.SqlTuple findLastNEntries(long entries);
+  ThenaSqlClient.SqlTuple findAllByMessageId(List<String> messageId);
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
@@ -39,4 +40,5 @@ public interface DeliveryAttemptRegistry extends ThenaMqRegistryTemplate<Deliver
   @Override ThenaSqlClient.Sql createConstraints();
   @Override ThenaSqlClient.Sql dropTable();
   @Override Function<io.vertx.mutiny.sqlclient.Row, DeliveryAttempt> defaultMapper();
+  
 }
