@@ -12,9 +12,11 @@ import {
   TaskCardStyleSelect
 } from '../task-card';
 import { TaskCardFactory, TASK_CARD_IDS } from '../task-card-factory';
+import { useIntl } from 'react-intl';
 
 
 const TaskDashboardInternal: React.FC = () => {
+  const intl = useIntl();
   const { cardOrder, isReviewOpen, cardTheme, setCardTheme, toggleReview } = useCardConfig();
   const { getDragPropsForId } = useDragCardController();
 
@@ -25,7 +27,7 @@ const TaskDashboardInternal: React.FC = () => {
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2 size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
-        <Typography variant='h1'>Edit task: {task.taskRef}</Typography>
+        <Typography variant='h1'>{intl.formatMessage({ id: 'task.composer.task.edit', defaultMessage: 'Edit task: ' })} {task.taskRef}</Typography>
         <TaskCardStyleSelect value={cardTheme} onChange={setCardTheme} />
       </Grid2>
 

@@ -8,6 +8,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { TaskCardMenu } from './TaskCardMenu';
 import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
 import { TaskCardId, TaskCardStyleKey } from './CardConfigContext';
+import { useIntl } from 'react-intl';
 
 
 export interface TaskCardProps {
@@ -50,6 +51,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const variant = props.styleVariant ?? 'default';
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[variant];
+  const intl = useIntl();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -88,7 +90,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
         {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
 
         <Box flexGrow={1} />
-        <Button variant='text' onClick={handleEdit}>Edit</Button>
+        <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
         <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>

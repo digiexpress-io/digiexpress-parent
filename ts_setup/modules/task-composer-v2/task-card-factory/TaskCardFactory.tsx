@@ -6,6 +6,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import HistoryIcon from '@mui/icons-material/History';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import { useIntl } from 'react-intl';
@@ -24,6 +25,7 @@ import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../task-feedback';
+import { TaskTransferEditDialog } from '../task-transfer';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
 import {
@@ -40,11 +42,12 @@ export type FactoryCardId =
   'task_form_summary' |
   'status_priority' |
   'assignees_roles' |
-  'customer_messages'|
-  'files'|
+  'customer_messages' |
+  'files' |
   'feedback' |
-  'notes'|
-  'task_meta'
+  'notes' |
+  'task_meta' |
+  'transfer'
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
   'task_main',
@@ -55,7 +58,9 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'files',
   'feedback',
   'notes',
-  'task_meta'
+  'task_meta',
+  'transfer'
+
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -74,15 +79,14 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
-  
+
   const { task } = useTaskDashboard();
-  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);  
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const backend = useTaskBackend();
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
   }, [task.id]);
-
 
   const commonProps = {
     id: cardId,
@@ -91,11 +95,11 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     isExpanded: expandedCards.find(target => target.cardId === cardId) ? isCardExpanded(cardId) : defaultExpandedCards.includes(cardId),
     onToggleFlashy: () => toggleCardFlashy(cardId),
     onToggleExpanded: () => {
-
       const current = expandedCards.find(target => target.cardId === cardId);
-      toggleCardExpanded(cardId, current ? undefined : false)
+      toggleCardExpanded(cardId, current ? undefined : false);
     },
     onReview: toggleReview,
+
   };
 
   const isEditOpen = cardId === editingCardId;
@@ -111,14 +115,14 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   switch (cardId) {
     case 'task_main_alt':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: '.textSeparatorColon' })} ${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })} ${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
-          
+
           showFlashyToggle={false}
           showEdit={true}
           showReview={false}
@@ -128,7 +132,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'task_main':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: '.textSeparatorColon' })}${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
@@ -300,6 +304,29 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />
+        </TaskCard>
+      );
+
+    case 'transfer':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer', defaultMessage: 'Task transfer' })}
+          {...commonProps}
+          showFlashyToggle={true}
+          showEdit={true}
+          showReview={false}
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={isEditOpen && (<TaskTransferEditDialog open onClose={handleEditClose} task={task} />)}
+          isMenu
+          startAdornmentIcon={<StartAdornmentIcon icon={DriveFileMoveOutlinedIcon} />}>
+          <TaskCardDataRowText
+            label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title', defaultMessage: 'Document title' })
+            ) : (
+              intl.formatMessage({ id: 'taskcard.body.transfer.none', defaultMessage: 'Not transferred' })
+            )}
+            value={task.transferredId ?? task.transferredId}
+            style={style}
+          />
         </TaskCard>
       );
 

@@ -93,7 +93,7 @@ export const TaskCreate: React.FC = () => {
 
 
   return (
-    <StyledTaskCreate className={classes.root} open={true} onClose={() => { }} maxWidth='md'>
+    <StyledTaskCreate className={classes.root} open={false} onClose={() => { }} maxWidth='md'>
 
       <DialogTitle><Typography variant='h1'>{intl.formatMessage({ id: 'task.composer.create', defaultMessage: 'Create new task' })}</Typography></DialogTitle>
       <DialogContent>

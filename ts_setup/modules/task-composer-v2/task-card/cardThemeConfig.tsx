@@ -122,7 +122,12 @@ export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string
     flashyBackground: '#D8E2F0', // slightly brighter gray-blue
     flashyBorder: '#6B4F7C',     // muted purple accent
     contrastText: '#1C1C1C',
-  }
+  },
+  'transfer': {
+    flashyBackground: '#D6F2EB', // soft mint-teal background
+    flashyBorder: '#3A9D8F',     // deeper teal accent
+    contrastText: '#1C1C1C',
+}
 };
 
 
