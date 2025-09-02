@@ -81,7 +81,7 @@ export const TaskDashboardProd: React.FC<{ taskId: string }> = (props) => {
 
   return (
     <TaskDashboardContextProvider taskId={props.taskId}>
-      <CardConfigContextProvider cardTheme='large' initialCardOrder={_variant_debug}>
+      <CardConfigContextProvider cardTheme='large' initialCardOrder={_variant_prod}>
         <TaskDashboardProdInternal />
       </CardConfigContextProvider>
     </TaskDashboardContextProvider>
