@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
@@ -171,6 +172,7 @@ public class AuthenticationConfigFakeUser  {
   @Bean
   public GamutAuthClient crm() {
     return new GamutAuthClient() {
+      @Nullable
       @Override
       public Liveness getLiveness() {
         return null;

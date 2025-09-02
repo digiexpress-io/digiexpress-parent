@@ -73,6 +73,10 @@ public class TaskClientImpl implements TaskClient {
   private final TaskStore ctx;
   private final CustomerAccountClient crmClient;
   
+  public TaskStore unwrap() {
+    return ctx;
+  }
+  
   @Override
   public PaginateTasks paginateTasks() {
     return new PaginateTasksImpl(ctx);
@@ -102,7 +106,6 @@ public class TaskClientImpl implements TaskClient {
         if(roles == null) {
           roles = new ArrayList<>();
         }
-        roles.clear();
         this.requireAnyRoles.addAll(roles);
         return this;
       }

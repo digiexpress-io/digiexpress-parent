@@ -1,0 +1,25 @@
+{
+  "name": "@dxs-ts/task-composer-v2",
+  "version": "${project.version}",
+  "description": "Task composer v2",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/task-feedback": "*",
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/xui-datetime": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*",
+    "luxon": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*",
+    "@mui/system": "*",
+    "@mui/icons-material": "*",
+    "@tanstack/react-table": "*"
+  },
+  "keywords": ["task-composer"],
+  "private": true
+}

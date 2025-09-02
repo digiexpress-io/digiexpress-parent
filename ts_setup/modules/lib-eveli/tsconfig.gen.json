@@ -73,6 +73,9 @@
       ],
       "@dxs-ts/task-composer-v1": [
         "../task-composer-v1/index.ts"
+      ],
+      "@dxs-ts/task-composer-v2": [
+        "../task-composer-v2/index.ts"
       ]
     }
   },
@@ -146,16 +149,19 @@
     },
     {
       "path": "../task-composer-v1"
+    },
+    {
+      "path": "../task-composer-v2"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-27T13:33:31.690Z",
+    "at": "2025-08-28T09:40:29.814Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "f859ac88e4d1",
+    "fromRegistry": "84d234dfa593",
     "alias": {
       "@dxs-ts/eveli-ide": [
-        "../task-composer-v1"
+        "../task-composer-v2"
       ]
     }
   }

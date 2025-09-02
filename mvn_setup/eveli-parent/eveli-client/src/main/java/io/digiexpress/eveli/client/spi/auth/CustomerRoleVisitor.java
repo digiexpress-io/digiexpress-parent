@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerRoleVisitor {
-  private final SpringJwtCrmClientLogger logger;
+  private final SpringJwtCrmClient.Logger logger;
   private final RestTemplate rest;
   private final String serviceUrlCompany;
   private final String serviceUrlPerson;

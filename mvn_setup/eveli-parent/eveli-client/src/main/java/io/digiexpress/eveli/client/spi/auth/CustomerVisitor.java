@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomerVisitor {
-  private final SpringJwtCrmClientLogger logger;
+  private final SpringJwtCrmClient.Logger logger;
 
   public Customer accept() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -89,7 +89,7 @@ public class CustomerVisitor {
     }
   }
 
-  public SpringJwtCrmClientLogger getLogger() {
+  public SpringJwtCrmClient.Logger getLogger() {
     return logger;
   }
 

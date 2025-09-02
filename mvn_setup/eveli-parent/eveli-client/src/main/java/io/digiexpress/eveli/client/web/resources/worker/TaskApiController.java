@@ -38,13 +38,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -70,6 +71,7 @@ public class TaskApiController {
   private final DialobReviewClient dialobReviewClient;
   private final MqEventPublisher mqEventPublisher;
   private final TaskViewerPublisher viewerPublisher;
+  private final TaskAuditClient taskAuditClient;
   
   
   @GetMapping
@@ -266,6 +268,20 @@ public class TaskApiController {
         final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
         final var actions = dialobReviewClient.createReview().form(form).formData(questionnaire).build();
         return new ResponseEntity<>(actions, HttpStatus.OK);
+      }
+      return ResponseEntity.notFound().build();
+      
+    });
+  }
+  
+  @GetMapping(value="/{id}/audits")
+  public Uni<ResponseEntity<?>> getTaskDebug(@PathVariable("id") String id)
+  {
+    return taskAuditClient.createTaskAuditQuery().findOneTask(id)
+    .onItem().transform(task -> {
+      
+      if(task.isPresent()) {
+        return new ResponseEntity<>(task.get(), HttpStatus.OK);
       }
       return ResponseEntity.notFound().build();
       

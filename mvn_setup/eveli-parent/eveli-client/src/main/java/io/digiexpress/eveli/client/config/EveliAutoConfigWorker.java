@@ -29,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
@@ -80,9 +81,10 @@ public class EveliAutoConfigWorker {
       DialobClient dialobClient,
       DialobReviewClient dialobReviewClient,
       MqEventPublisher mqEventPublisher,
-      TaskViewerPublisher viewerEventPublisher) {
+      TaskViewerPublisher viewerEventPublisher,
+      TaskAuditClient taskAuditClient) {
     
-    return new TaskApiController(security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher);
+    return new TaskApiController(security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher, taskAuditClient);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient procClient, TaskClient taskClient) {

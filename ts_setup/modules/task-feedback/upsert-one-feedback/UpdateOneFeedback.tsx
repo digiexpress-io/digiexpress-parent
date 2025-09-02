@@ -2,13 +2,13 @@ import React from 'react';
 import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { useIntl, FormattedMessage } from 'react-intl';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 import { useFeedback, FeedbackApi } from '../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 import { ApprovalCount } from '../approval-count';
-
 import { FeedbackContent } from './FeedbackContent';
-import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
+
 
 export interface UpdateOneFeedbackProps {
   taskRef: string;
@@ -17,9 +17,13 @@ export interface UpdateOneFeedbackProps {
   onDelete: () => void;
   
   allowDelete?: boolean;
+  slots?: {
+    AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }>;
+    CancelButton: React.ElementType<{  disabled: boolean, onClick: () => Promise<void> }>;
+  }
 }
 
-export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, taskId, onComplete, onDelete, allowDelete = true }) => {
+export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, taskRef, taskId, onComplete, onDelete, allowDelete = true }) => {
 
   const intl = useIntl();
   const theme = useTheme();
@@ -50,7 +54,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
       });
   }, []);
 
-  function handlePublish() {
+  const handlePublish = React.useCallback(async function() {
     if (!feedback) {
       return;
     }
@@ -70,11 +74,11 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
       customerTitle: customerTitle
     };
 
-    modifyOneFeedback(taskRef, command).then(updatedFeedback => {
+    return modifyOneFeedback(taskRef, command).then(updatedFeedback => {
       onComplete(updatedFeedback);
       setSavedReply(reply);
     });
-  }
+  }, [main, sub, customerTitle, taskRef, reply, question, feedback?.id])
 
 
   function confirmDelete() {
@@ -88,6 +92,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
     return (<CircularProgress />)
   }
 
+  const AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.AcceptButton ?? SaveFeedback;
+  const CancelButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> =  slots?.CancelButton ?? CancelFeedback;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
@@ -167,17 +173,13 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
           </>
         )}
 
-        <Button variant="outlined" onClick={() => setReply(savedReply)} disabled={reply === savedReply}>
+        <CancelButton onClick={async () => setReply(savedReply)} disabled={reply === savedReply}>
           <FormattedMessage id='button.cancel' />
-        </Button>
+        </CancelButton>
 
-        <Button
-          variant='contained'
-          onClick={handlePublish}
-          disabled={reply === savedReply}
-        >
+        <AcceptButton onClick={handlePublish} disabled={reply === savedReply}>
           <FormattedMessage id='button.update' />
-        </Button>
+        </AcceptButton>
       </Box>
 
       {allowDelete && (
@@ -206,5 +208,21 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskRef, t
       )}
 
     </div>
+  )
+}
+
+const SaveFeedback: React.FC<{ disabled: boolean, onClick: () => Promise<void> }> = ({ disabled, onClick }) => {
+  return (
+    <Button variant="outlined" onClick={onClick} disabled={disabled}>
+      <FormattedMessage id='button.cancel' />
+    </Button>
+  )
+}
+
+const CancelFeedback: React.FC<{ disabled: boolean, onClick: () => Promise<void> }> = ({ disabled, onClick }) => {
+  return (
+    <Button variant='contained' onClick={onClick} disabled={disabled}>
+      <FormattedMessage id='button.update' />
+    </Button>
   )
 }

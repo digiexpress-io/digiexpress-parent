@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, createTheme, Dialog, DialogActions, DialogContent, DialogTitle, ThemeProvider } from '@mui/material';
-import { useIntl, FormattedMessage } from 'react-intl';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 import { DialobProvider, DialobApi, WithFormProvider, LocaleProvider } from '@dxs-ts/gamut-api';
 import { GFormTip } from '@dxs-ts/gamut-form';
@@ -25,7 +24,6 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
   const intl = useIntl();
   const queryClient = new QueryClient()
   const { fetchReviewActionsGet } = useFetch('worker/rest/api/tasks/$taskId/review-actions.GET', {});
-  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
 
   const fetchActionGet: DialobApi.FetchActionGET = async (_sessionId: string) => {
     
@@ -42,8 +40,7 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
 
   }
 
-
-  return (<>
+  return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={reviewTheme}>
         <DialobProvider
@@ -52,26 +49,13 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
           fetchAttachmentPost={'not-implemented' as any}
           fetchReviewGet={'not-implemented' as any}>
 
-          <Dialog open={true} onClose={props.onClose} fullScreen>
-            <DialogTitle>{intl.formatMessage({ id: 'dialobForm.review.title' })}</DialogTitle>
+          <LocaleProvider disableErrors defaultLocale={() => intl.locale}>
+            <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete} disabled onCancel={handleOnCancel} formUnavailable={formUnavailable}>
+              <GFormTip executionId='' variant='' onAfterComplete={handleOnComplete} onCancel={handleOnCancel} formUnavailable={formUnavailable}/>
+            </WithFormProvider>
+          </LocaleProvider>
 
-            <DialogContent>
-              <LocaleProvider disableErrors defaultLocale={() => intl.locale}>
-                <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete} disabled onCancel={handleOnCancel} formUnavailable={formUnavailable}>
-                  <GFormTip executionId='' variant='' onAfterComplete={handleOnComplete} onCancel={handleOnCancel} formUnavailable={formUnavailable}/>
-                </WithFormProvider>
-              </LocaleProvider>
-            </DialogContent>
-
-            <DialogActions>
-              <Button variant='outlined' endIcon={<ArrowRightIcon />} onClick={() => pdfTaskLinkCallback(props.questionnaireId, props.taskId)}>
-                <FormattedMessage id='taskLink.pdf.open' />
-              </Button>
-              <Button variant='contained' onClick={props.onClose}><FormattedMessage id='button.close' /></Button>
-            </DialogActions>
-          </Dialog>
         </DialobProvider>
       </ThemeProvider>
-    </QueryClientProvider>
-  </>)
+    </QueryClientProvider>)
 }

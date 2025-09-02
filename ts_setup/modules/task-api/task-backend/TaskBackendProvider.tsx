@@ -37,13 +37,16 @@ export interface TaskBackendContextType {
     findAllTasks: () => Promise<TaskApi.Task[]>;
     findAllUnreadTasks: () => Promise<string[]>;
     getOneTask: (taskId: string) => Promise<TaskApi.Task>;
+    getOneTaskPdfLink: (questionnaireId: string, taskId: string) => Promise<string>;
     modifyOneTask: (newData: TaskApi.Task) => Promise<TaskApi.Task>;
     deleteOneTask: (taskId: string) => Promise<unknown>;
     createOneTask: (request: Partial<TaskApi.Task>) => Promise<TaskApi.Task>;
     createOneComment: (commentText: string, replyToId: number | undefined, task: TaskApi.Task, isExternalThread: boolean | undefined) => Promise<TaskApi.Comment>
   },
   slots: {
-    DialobReview: React.ElementType<{ task: { id: string, questionnaireId?: string | undefined } }>;
+    DialobReview: React.ElementType<{ task: { id: string, questionnaireId?: string | undefined }; onClose: () => void }>;
+    DialobReviewButton: React.ElementType<{ onClick: () => void; }>;
+
     DateTimeFormatter: React.ElementType<{ value: string | Date | undefined, variant?: 'text' }>;
     DateTimePicker: React.ElementType<{ 
       label?: string | React.ReactNode,
