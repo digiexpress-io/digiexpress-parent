@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, TextField, useTheme } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import TodayIcon from '@mui/icons-material/Today';
 import { useIntl } from 'react-intl';
@@ -7,96 +7,42 @@ import { useIntl } from 'react-intl';
 import { CalendarInput, CalendarInputProvider, useCalendarInput } from './calendar-input';
 import { CalendarProvider } from './calendar-interactive';
 
-
-const InputEndAdornment: React.FC<{ onClear: () => void, onOpen: () => void, disabled?: boolean }> = ({ onClear, onOpen, disabled }) => {
-  return (<Box display='flex' flexDirection='row' flexGrow={1} alignItems='center' justifyContent='flex-end'>
-
-    <IconButton size='small'
-      onClick={onClear}
-      disabled={disabled}
-      className="p-1 hover:bg-gray-100 rounded transition-colors disabled:opacity-50"
-      aria-label="Clear date"
-    >
-      <CloseIcon />
-    </IconButton>
-    
-    <IconButton size='small'
-      type="button"
-      onClick={onOpen}
-      disabled={disabled}
-      className="p-1 hover:bg-gray-100 rounded transition-colors disabled:opacity-50"
-      aria-label="Open calendar"
-    >
-      <TodayIcon />
-    </IconButton>
-  </Box>)
-}
-
-const getBorderPosition = (field: 'day' | 'month' | 'year') => {
-  switch (field) {
-    case 'day':
-      return {
-        left: '0.5rem',            // Start at beginning
-        width: '4ch',              // Match day field width
-      };
-    
-    case 'month':
-      return {
-        left: 'calc(4ch + 1rem)', // Day width + separator spacing
-        width: '4ch',             // Match month field width
-      };
-    
-    case 'year':
-      return {
-        left: 'calc(8ch + 1.2rem)', // Day + month + 2 separators
-        width: '6ch',               // Match year field width
-      };
-    
-    default: return { left: 0, width: 0 };
-  }
-};
-
-function useFocusField(): object | undefined {
+const DateFieldContainer: React.FC<{ onClear: () => void; onOpen: () => void }> = ({
+  onClear,
+  onOpen,
+}) => {
   const { machine } = useCalendarInput();
-  const theme = useTheme();
 
-  if(!machine.focusedField) {
-    return undefined;
-  }
-  const position = getBorderPosition(machine.focusedField);
-
-  return {    
-    '.MuiInputBase-root': {
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        bottom: 0,
-        height: '2px',
-        backgroundColor: theme.palette.primary.main,
-        ...position
-      }
-    }
-  };
-}
-
-const TextFieldSetup: React.FC<{ endAdornment: React.ReactNode }> = ({endAdornment}) => {
-  const focus = useFocusField();
-  const { machine } = useCalendarInput();
   return (
-    <TextField
-      helperText="dd.mm.yyyy"
-      sx={focus}
-      error={!!machine.error}
-      slots={{
-        htmlInput: CalendarInput,
-        inputLabel: () => <></>,
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{
+        border: `1px solid ${machine.isValid ? '#ccc' : 'red'}`,
+        borderRadius: 2,
+        padding: '2px 6px',
+        width: 'fit-content',
+        '&:focus-within': {
+          borderColor: 'blue',
+          boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.2)',
+        },
       }}
-      slotProps={{
-        input: { endAdornment }
-      }}
-    />
+      
+    >
+      <CalendarInput className="calendar-input" />
+
+      <Box display="flex" alignItems="center" ml={0.5}>
+        <IconButton size="small" onClick={onClear}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
+        <IconButton size="small" onClick={onOpen}>
+          <TodayIcon fontSize="small" />
+        </IconButton>
+      </Box>
+    </Box>
   );
-}
+};
 
 export interface DatePickerProps {
   value: Date | null;
@@ -104,29 +50,42 @@ export interface DatePickerProps {
   onChange: (newDate: Date | null) => void;
 }
 
-export const DatePicker: React.FC<DatePickerProps> = (props) => {
+export const DatePicker: React.FC<DatePickerProps> = ({ value, inline, onChange }) => {
   const { locale } = useIntl();
   const [open, setOpen] = React.useState(false);
 
-  function handleClose() {
-    setOpen(false);
-  }
+  const handleClose = () => setOpen(false);
+
   const handleDateChange = (date: Date | null) => {
     setOpen(false);
-    props.onChange(date)
-  }
+    onChange(date);
+  };
 
-  const handleCalendarOpen = () => {
-    setOpen(true);
-  }
+  const handleCalendarOpen = () => setOpen(true);
+
   return (
     <>
-      { !open &&
-      <CalendarInputProvider value={props.value} onChange={props.onChange} onCalendarOpen={handleCalendarOpen}>
-        <TextFieldSetup endAdornment={<InputEndAdornment onClear={() => handleDateChange(null)} onOpen={handleCalendarOpen} />}/>
-      </CalendarInputProvider>
-      }
-      {open && <CalendarProvider inline={props.inline} locale={locale} open={open} onClose={handleClose} value={props.value} onChange={handleDateChange} /> }
+      {!open && (
+        <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
+          <Box display="flex" justifyContent="center" width="100%" mt={1}>
+            <DateFieldContainer
+              onClear={() => handleDateChange(null)}
+              onOpen={handleCalendarOpen}
+            />
+          </Box>
+        </CalendarInputProvider>
+      )}
+
+      {open && (
+        <CalendarProvider
+          inline={inline}
+          locale={locale}
+          open={open}
+          onClose={handleClose}
+          value={value}
+          onChange={handleDateChange}
+        />
+      )}
     </>
   );
-}
+};

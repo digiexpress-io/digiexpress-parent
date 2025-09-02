@@ -12,77 +12,58 @@ const DayField: React.FC = () => {
       type="text"
       value={machine.day}
       onFocus={() => focusField('day')}
-      onBlur={(e) => blurField('day')}
+      onBlur={() => blurField('day')}
       onChange={(e) => typeDayDigit(e.target.value)}
-      onKeyDown={(e) => {
-        e.stopPropagation();
-        handleKeyDown(e, 'day');
-      }}
+      onKeyDown={(e) => { e.stopPropagation(); handleKeyDown(e, 'day'); }}
       onClick={(e) => e.stopPropagation()}
       placeholder="dd"
-      style={{ width: '4ch' }}
       maxLength={2}
+      style={{ width: '2ch', textAlign: 'center' }}
     />
   );
 };
 
 const MonthField: React.FC = () => {
   const { machine, monthRef, handleKeyDown, focusField, blurField, typeMonthDigit } = useCalendarInput();
-  
   return (
     <Input
       ref={monthRef}
       type="text"
       value={machine.month}
       onFocus={() => focusField('month')}
-      onBlur={(e) => blurField('month')}
+      onBlur={() => blurField('month')}
       onChange={(e) => typeMonthDigit(e.target.value)}
-      onKeyDown={(e) => {
-        e.stopPropagation();
-        handleKeyDown(e, 'month');
-      }}
+      onKeyDown={(e) => { e.stopPropagation(); handleKeyDown(e, 'month'); }}
       onClick={(e) => e.stopPropagation()}
       placeholder="mm"
-      style={{ width: '4ch' }}
       maxLength={2}
+      style={{ width: '3ch', textAlign: 'center' }}
     />
   );
 };
 
 const YearField: React.FC = () => {
   const { machine, yearRef, handleKeyDown, focusField, blurField, typeYearDigit } = useCalendarInput();
-  
   return (
     <Input
       ref={yearRef}
       type="text"
       value={machine.year}
       onFocus={() => focusField('year')}
-      onBlur={(e) => blurField('year')}
+      onBlur={() => blurField('year')}
       onChange={(e) => typeYearDigit(e.target.value)}
-      onKeyDown={(e) => {
-        e.stopPropagation();
-        handleKeyDown(e, 'year')
-      }}
+      onKeyDown={(e) => { e.stopPropagation(); handleKeyDown(e, 'year'); }}
       onClick={(e) => e.stopPropagation()}
       placeholder="yyyy"
-      style={{ width: '8ch' }}
       maxLength={4}
+      style={{ width: '4ch', textAlign: 'center' }}
     />
   );
 };
 
-const DateSeparator: React.FC = () => {
-  
-  return (
-    <span 
-      className="text-gray-400 mx-1" 
-      style={{ color: '#999' }}
-    >
-      .
-    </span>
-  );
-};
+const DateSeparator: React.FC = () => (
+  <span style={{ color: '#999' }}>.</span>
+);
 
 const ErrorMessage: React.FC = () => {
   const { machine } = useCalendarInput();
