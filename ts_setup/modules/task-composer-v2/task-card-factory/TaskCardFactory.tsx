@@ -6,6 +6,10 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import HistoryIcon from '@mui/icons-material/History';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
@@ -47,7 +51,12 @@ export type FactoryCardId =
   'feedback' |
   'notes' |
   'task_meta' |
-  'transfer'
+  'transfer' |
+  'audit_viewers' |
+  'audit_commits' |
+  'audit_queues' |
+  'audit_processes'
+
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
   'task_main',
@@ -59,8 +68,11 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'feedback',
   'notes',
   'task_meta',
-  'transfer'
-
+  'transfer',
+  'audit_viewers',
+  'audit_commits',
+  'audit_queues',
+  'audit_processes'
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -96,7 +108,6 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     onToggleFlashy: () => toggleCardFlashy(cardId),
     onToggleExpanded: () => {
       const current = expandedCards.find(target => target.cardId === cardId);
-      console.log(current?.cardId)
       toggleCardExpanded(cardId, current ? undefined : false);
     },
     onReview: toggleReview,
@@ -123,10 +134,10 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
-
           showFlashyToggle={false}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
         >
           <TaskPropertiesAlt style={style} onReview={toggleReview} />
         </TaskCard>
@@ -142,8 +153,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
 
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
         >
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={
@@ -164,8 +176,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       return (
         <TaskCard {...commonProps} isMenu
           showFlashyToggle={true}
-          showEdit={false}
-          showReview={true}
+          showEditOnMenu={false}
+          showEditButton={true}
+          showReviewOnMenu={true}
         >
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={task.subject + " " + "v1.0"} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate', defaultMessage: 'Submitted' })} value={_formatAnyDateShort(task.created)} style={style} />
@@ -181,8 +194,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           {...commonProps}
           isMenu
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           editDialog={editingCardId === cardId && (<PriorityStatusEditDialog open onClose={handleEditClose} />)}
@@ -201,8 +215,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           {...commonProps}
           isMenu
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<AssigneeRolesEditDialog open onClose={handleEditClose} />)}
@@ -221,8 +236,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             {...commonProps}
             isMenu
             showFlashyToggle={true}
-            showEdit={true}
-            showReview={true}
+            showEditOnMenu={true}
+            showEditButton={true}
+            showReviewOnMenu={true}
             titleNotifier={task.comments.filter(a => a.external).length}
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
@@ -240,8 +256,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           {...commonProps}
           isMenu
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
@@ -265,8 +282,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             {...commonProps}
             isMenu
             showFlashyToggle={true}
-            showEdit={true}
-            showReview={false}
+            showEditOnMenu={true}
+            showEditButton={true}
+            showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
@@ -288,8 +306,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
           editDialog={isEditOpen && (<NotesEditDialog open onClose={handleEditClose} />)}
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
         >
           <NotesTruncated task={task} style={style} />
         </TaskCard>
@@ -300,8 +319,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history', defaultMessage: 'History and metadata' })}
           {...commonProps}
           showFlashyToggle={true}
-          showEdit={false}
-          showReview={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />
@@ -313,8 +333,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer', defaultMessage: 'Task transfer' })}
           {...commonProps}
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={isEditOpen && (<TaskTransferEditDialog open onClose={handleEditClose} task={task} />)}
@@ -331,6 +352,54 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
         </TaskCard>
       );
 
+    case 'audit_viewers':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.viewers', defaultMessage: 'Audit: Viewers' })}
+          {...commonProps}
+          showFlashyToggle={true}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={PersonSearchOutlinedIcon} />}>
+          <>viewers</>
+        </TaskCard>
+      );
+    case 'audit_commits':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.commits', defaultMessage: 'Audit: Commits' })}
+          {...commonProps}
+          showFlashyToggle={true}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={SaveOutlinedIcon} />}>
+          <>commits</>
+        </TaskCard>
+      );
+    case 'audit_queues':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queues', defaultMessage: 'Audit: Queues' })}
+          {...commonProps}
+          showFlashyToggle={true}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={CloudOutlinedIcon} />}>
+          <>Queues</>
+        </TaskCard>
+      );
+    case 'audit_processes':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.processes', defaultMessage: 'Audit: Processes' })}
+          {...commonProps}
+          showFlashyToggle={true}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <>Queues</>
+        </TaskCard>
+      );
     default:
       return null;
   }

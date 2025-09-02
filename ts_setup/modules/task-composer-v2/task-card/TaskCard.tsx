@@ -27,8 +27,9 @@ export interface TaskCardProps {
   editDialog?: React.ReactNode;
 
   showFlashyToggle: boolean;
-  showReview: boolean;
-  showEdit: boolean;
+  showReviewOnMenu: boolean;
+  showEditOnMenu: boolean;
+  showEditButton: boolean;
 
   onClick?: () => void;
   onDoubleClick?: () => void;
@@ -90,7 +91,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
         {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
 
         <Box flexGrow={1} />
-        <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>
+        {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
         <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
@@ -105,9 +106,9 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
           onToggleAltView={props.onToggleAltView}
           onReview={props.onReview}
           onEdit={handleEdit} 
-          showEdit={props.showEdit}
+          showEdit={props.showEditOnMenu}
           showFlashyToggle={props.showFlashyToggle}
-          showReview={props.showReview}
+          showReview={props.showReviewOnMenu}
           />
       </Box>
 

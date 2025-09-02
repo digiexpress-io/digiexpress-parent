@@ -23,7 +23,11 @@ const _variant_debug: TaskCardId[] = [
   'files',
   'notes',
   'task_meta',
-  'transfer'
+  'transfer',
+  'audit_viewers',
+  'audit_commits',
+  'audit_queues',
+  'audit_processes'
 ];
 
 const _variant_prod: TaskCardId[] = [
