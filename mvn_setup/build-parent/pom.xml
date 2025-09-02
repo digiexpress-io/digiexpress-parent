@@ -41,7 +41,7 @@
     <commons-io.version>2.16.1</commons-io.version>
     <commons-csv.version>1.11.0</commons-csv.version>
     <commons-codec.version>1.17.1</commons-codec.version>
-    <commons-lang.version>3.17.0</commons-lang.version>
+    <commons-lang.version>3.18.0</commons-lang.version>
     <commons-collections.version>4.4</commons-collections.version>
     <commons-validator.version>1.7</commons-validator.version>
     
@@ -49,7 +49,7 @@
     <dialob-b.version>2.2.9</dialob-b.version>
     
     <flexmark.version>0.62.2</flexmark.version>
-    <jgit.version>7.2.0.202503040940-r</jgit.version>
+    <jgit.version>7.2.1.202505142326-r</jgit.version>
 
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>

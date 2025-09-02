@@ -56,6 +56,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
@@ -183,8 +184,6 @@ public class TaskClientImpl implements TaskClient {
             return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId, views))
                 .onItem().transformToUni((task) -> Uni.createFrom().voidItem());            
           });
-        
-
       }
       @Override
       public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {

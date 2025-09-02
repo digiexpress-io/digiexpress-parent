@@ -6,6 +6,11 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import HistoryIcon from '@mui/icons-material/History';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import { useIntl } from 'react-intl';
@@ -24,6 +29,7 @@ import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../task-feedback';
+import { TaskTransferEditDialog } from '../task-transfer';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
 import {
@@ -40,11 +46,17 @@ export type FactoryCardId =
   'task_form_summary' |
   'status_priority' |
   'assignees_roles' |
-  'customer_messages'|
-  'files'|
+  'customer_messages' |
+  'files' |
   'feedback' |
-  'notes'|
-  'task_meta'
+  'notes' |
+  'task_meta' |
+  'transfer' |
+  'audit_viewers' |
+  'audit_commits' |
+  'audit_queues' |
+  'audit_processes'
+
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
   'task_main',
@@ -55,7 +67,12 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'files',
   'feedback',
   'notes',
-  'task_meta'
+  'task_meta',
+  'transfer',
+  'audit_viewers',
+  'audit_commits',
+  'audit_queues',
+  'audit_processes'
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -74,15 +91,15 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
-  
+
   const { task } = useTaskDashboard();
-  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);  
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const backend = useTaskBackend();
+
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
   }, [task.id]);
-
 
   const commonProps = {
     id: cardId,
@@ -91,11 +108,11 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     isExpanded: expandedCards.find(target => target.cardId === cardId) ? isCardExpanded(cardId) : defaultExpandedCards.includes(cardId),
     onToggleFlashy: () => toggleCardFlashy(cardId),
     onToggleExpanded: () => {
-
       const current = expandedCards.find(target => target.cardId === cardId);
-      toggleCardExpanded(cardId, current ? undefined : false)
+      toggleCardExpanded(cardId, current ? undefined : false);
     },
     onReview: toggleReview,
+
   };
 
   const isEditOpen = cardId === editingCardId;
@@ -111,24 +128,24 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   switch (cardId) {
     case 'task_main_alt':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: '.textSeparatorColon' })} ${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })} ${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<TaskEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
-          
           showFlashyToggle={false}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
         >
           <TaskPropertiesAlt style={style} onReview={toggleReview} />
         </TaskCard>
       );
     case 'task_main':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: '.textSeparatorColon' })}${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
@@ -137,8 +154,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
 
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
         >
           <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
             value={
@@ -159,8 +177,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       return (
         <TaskCard {...commonProps} isMenu
           showFlashyToggle={true}
-          showEdit={false}
-          showReview={true}
+          showEditOnMenu={false}
+          showEditButton={true}
+          showReviewOnMenu={true}
         >
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={task.subject + " " + "v1.0"} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate', defaultMessage: 'Submitted' })} value={_formatAnyDateShort(task.created)} style={style} />
@@ -176,8 +195,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           {...commonProps}
           isMenu
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           editDialog={editingCardId === cardId && (<PriorityStatusEditDialog open onClose={handleEditClose} />)}
@@ -196,8 +216,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           {...commonProps}
           isMenu
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<AssigneeRolesEditDialog open onClose={handleEditClose} />)}
@@ -216,8 +237,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             {...commonProps}
             isMenu
             showFlashyToggle={true}
-            showEdit={true}
-            showReview={true}
+            showEditOnMenu={true}
+            showEditButton={true}
+            showReviewOnMenu={true}
             titleNotifier={task.comments.filter(a => a.external).length}
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={EditOutlinedIcon} />}
@@ -235,8 +257,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           {...commonProps}
           isMenu
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
           onEdit={handleEdit}
           onDoubleClick={handleEdit}
           startAdornmentIcon={<StartAdornmentIcon icon={AttachFileOutlinedIcon} />}
@@ -260,8 +283,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             {...commonProps}
             isMenu
             showFlashyToggle={true}
-            showEdit={true}
-            showReview={false}
+            showEditOnMenu={true}
+            showEditButton={true}
+            showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
@@ -283,8 +307,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           startAdornmentIcon={<StartAdornmentIcon icon={NoteAltOutlinedIcon} />}
           editDialog={isEditOpen && (<NotesEditDialog open onClose={handleEditClose} />)}
           showFlashyToggle={true}
-          showEdit={true}
-          showReview={false}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
         >
           <NotesTruncated task={task} style={style} />
         </TaskCard>
@@ -295,14 +320,87 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history', defaultMessage: 'History and metadata' })}
           {...commonProps}
           showFlashyToggle={true}
-          showEdit={false}
-          showReview={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />
         </TaskCard>
       );
 
+    case 'transfer':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer', defaultMessage: 'Task transfer' })}
+          {...commonProps}
+          showFlashyToggle={true}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={isEditOpen && (<TaskTransferEditDialog open onClose={handleEditClose} task={task} />)}
+          isMenu
+          startAdornmentIcon={<StartAdornmentIcon icon={DriveFileMoveOutlinedIcon} />}>
+          <TaskCardDataRowText
+            label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title', defaultMessage: 'Document title' })
+            ) : (
+              intl.formatMessage({ id: 'taskcard.body.transfer.none', defaultMessage: 'Not transferred' })
+            )}
+            value={task.transferredId ?? task.transferredId}
+            style={style}
+          />
+        </TaskCard>
+      );
+
+    case 'audit_viewers':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.viewers', defaultMessage: 'Audit: Viewers' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={PersonSearchOutlinedIcon} />}>
+          <>Viewers</>
+        </TaskCard>
+      );
+    case 'audit_commits':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.commits', defaultMessage: 'Audit: Commits' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={SaveOutlinedIcon} />}>
+          <>Commits</>
+        </TaskCard>
+      );
+    case 'audit_queues':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queues', defaultMessage: 'Audit: Queues' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={CloudOutlinedIcon} />}>
+          <>Queues</>
+        </TaskCard>
+      );
+    case 'audit_processes':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.processes', defaultMessage: 'Audit: Processes' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <>Processes</>
+        </TaskCard>
+      );
     default:
       return null;
   }

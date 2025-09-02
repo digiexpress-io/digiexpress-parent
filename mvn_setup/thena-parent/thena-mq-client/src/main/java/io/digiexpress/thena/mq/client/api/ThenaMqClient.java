@@ -32,6 +32,7 @@ import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -47,23 +48,36 @@ public interface ThenaMqClient {
   MessageQuery messageQuery();
   DeliveryQuery deliveryQuery();
   BindingQuery bindingQuery();
+  ConsumerQuery consumerQuery();
+  QueueQuery queueQuery();
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
 
   
+  interface QueueQuery {
+    Uni<List<Queue>> findAllById(List<String> id);       
+  }
+  
+  interface ConsumerQuery {
+    Uni<List<QueueConsumer>> findAllById(List<String> id);    
+  }
+  
   interface BindingQuery {
+    Uni<List<Binding>> findAllByMessageId(List<String> messageId);
     Uni<List<Binding>> findAll();    
   }
   
   interface MessageQuery {
     MessageQuery lastNEntries(long lastNEntriesToGet);
+    Multi<QueueMessage> findAllByBodyId(String bodyId);
     Uni<List<QueueMessage>> findAll();
   }
   
   interface DeliveryQuery {
     DeliveryQuery lastNEntries(long lastNEntriesToGet);
     Uni<List<Delivery>> findAll();
+    Uni<List<Delivery>> findAllByMessageId(List<String> messageId);
   }
   
   

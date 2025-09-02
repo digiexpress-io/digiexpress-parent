@@ -29,6 +29,7 @@ import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -60,5 +61,26 @@ public class BindingQueryImpl implements BindingQuery {
         .transformToMulti((RowSet<Binding> rowset) -> Multi.createFrom().iterable(rowset)).collect().asList()
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Collections.emptyList())
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'BINDING'-s!", sql, e)));
+  }
+
+  @Override
+  public Uni<List<Binding>> findAllByMessageId(List<String> messageId) {
+    final var dataSource = state.getDataSource();
+    
+    final var sql = dataSource.getRegistry().binding().findAllByMessageId(messageId);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("BindingQueryImpl.findAllByMessageId query, with props: {} \r\n{}", 
+          messageId, 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().binding().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<Binding> rowset) -> Multi.createFrom().iterable(rowset)).collect().asList()
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Collections.emptyList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'BINDING'-s!", sql, e)));
   }
 }

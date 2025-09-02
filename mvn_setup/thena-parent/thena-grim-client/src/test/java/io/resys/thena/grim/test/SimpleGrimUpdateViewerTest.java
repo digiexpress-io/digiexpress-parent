@@ -254,7 +254,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 1
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_1.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_1.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(null, version.getObjects().getParentVersion());
@@ -264,7 +264,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 2
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_2.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_2.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_1.sort(), version.getObjects().getParentVersion().sort());
@@ -273,7 +273,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 3
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_3.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_3.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_2.sort(), version.getObjects().getParentVersion().sort());
@@ -282,7 +282,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 4
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_4.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_4.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_3.sort(), version.getObjects().getParentVersion().sort());
@@ -292,7 +292,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 5
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_5.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_5.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_4.sort(), version.getObjects().getParentVersion().sort());
@@ -301,7 +301,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 6
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_6.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_6.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_5.sort(), version.getObjects().getParentVersion().sort());
@@ -310,7 +310,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 7
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_7.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_7.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_6.sort(), version.getObjects().getParentVersion().sort());
@@ -319,7 +319,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 8
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_8.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_8.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_7.sort(), version.getObjects().getParentVersion().sort());
@@ -329,7 +329,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // DIFF VERSION 9
       final var version = getClient().grim(repo).find().commitQuery()
-        .findCommit(missionId, version_9.getMission().getCommitId())
+        .findOneCommitByMissionId(missionId, version_9.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertEquals(version_8.sort(), version.getObjects().getParentVersion().sort());

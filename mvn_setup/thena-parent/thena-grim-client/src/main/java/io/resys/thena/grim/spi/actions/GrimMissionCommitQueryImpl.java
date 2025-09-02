@@ -84,7 +84,53 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
   private final String repoId;
 
   @Override
-  public Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId) {
+  public Uni<QueryEnvelope<GrimProjectObjects>> findAllCommitsByMissionId(String missionId) {
+    return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
+      return Uni.combine().all().unis(
+          tx.commit().findAllByMissionId(missionId),
+          tx.commitTree().findAllByMissionId(missionId)
+        ).asTuple().onItem().transform(tuple -> {
+          
+          final var commits = tuple.getItem1().stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
+          final var commitTrees = tuple.getItem2().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+          return ImmutableQueryEnvelope.<GrimProjectObjects>builder()
+              .repo(tx.getDataSource().getTenant())
+              .status(QueryEnvelopeStatus.OK)
+              .objects(ImmutableGrimProjectObjects.builder()
+                  .commits(commits)
+                  .commitTrees(commitTrees)
+                  .build())
+              .build();
+        });
+      
+    });
+  }
+  
+  @Override
+  public Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits() {
+    return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
+      return Uni.combine().all().unis(
+          tx.commit().findAll(),
+          tx.commitTree().findAll()
+        ).asTuple().onItem().transform(tuple -> {
+          
+          final var commits = tuple.getItem1().stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
+          final var commitTrees = tuple.getItem2().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+          return ImmutableQueryEnvelope.<GrimProjectObjects>builder()
+              .repo(tx.getDataSource().getTenant())
+              .status(QueryEnvelopeStatus.OK)
+              .objects(ImmutableGrimProjectObjects.builder()
+                  .commits(commits)
+                  .commitTrees(commitTrees)
+                  .build())
+              .build();
+        });
+      
+    });
+  }
+  
+  @Override
+  public Uni<QueryEnvelope<GrimContainerVersion>> findOneCommitByMissionId(String missionId, String currentCommitId) {
     return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
       return visitCommit(tx, missionId)
           .onItem()
@@ -759,26 +805,4 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
   }
 
 
-  @Override
-  public Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits() {
-    return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
-      return Uni.combine().all().unis(
-          tx.commit().findAll(),
-          tx.commitTree().findAll()
-        ).asTuple().onItem().transform(tuple -> {
-          
-          final var commits = tuple.getItem1().stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
-          final var commitTrees = tuple.getItem2().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-          return ImmutableQueryEnvelope.<GrimProjectObjects>builder()
-              .repo(tx.getDataSource().getTenant())
-              .status(QueryEnvelopeStatus.OK)
-              .objects(ImmutableGrimProjectObjects.builder()
-                  .commits(commits)
-                  .commitTrees(commitTrees)
-                  .build())
-              .build();
-        });
-      
-    });
-  }
 }

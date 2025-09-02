@@ -31,6 +31,7 @@ public interface BindingRegistry extends ThenaMqRegistryTemplate<Binding, io.ver
   
   ThenaSqlClient.SqlTupleList updateMany(List<Binding> docs);
   ThenaSqlClient.SqlTupleList insertMany(List<Binding> docs);
+  ThenaSqlClient.SqlTuple findAllByMessageId(List<String> messageId);
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
@@ -38,4 +39,5 @@ public interface BindingRegistry extends ThenaMqRegistryTemplate<Binding, io.ver
   @Override ThenaSqlClient.Sql createConstraints();
   @Override ThenaSqlClient.Sql dropTable();
   @Override Function<io.vertx.mutiny.sqlclient.Row, Binding> defaultMapper();
+
 }

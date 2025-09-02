@@ -95,4 +95,22 @@ public class InternalMessageQueryImpl implements InternalMessageQuery {
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_MESSAGE'!", sql, e)));
 
   }
+
+  @Override
+  public Multi<QueueMessage> findAllByBodyId(String bodyId) {
+   final var sql = dataSource.getRegistry().message().findAllByBodyId(bodyId);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalMessageQueryImpl.findAllByBodyId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().message().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti((RowSet<QueueMessage> rowset) -> Multi.createFrom().iterable(rowset))
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_MESSAGE'!", sql, e)));
+  }
 }

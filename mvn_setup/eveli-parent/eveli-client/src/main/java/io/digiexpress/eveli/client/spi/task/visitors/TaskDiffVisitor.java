@@ -58,7 +58,7 @@ public class TaskDiffVisitor {
   public Uni<TaskDiff> accept() {
     final var tenantName = ctx.getConfig().getTenantName();
     final var tenant = ctx.getConfig().getClient().grim(tenantName);
-    return tenant.find().commitQuery().findCommit(taskId, commitId)
+    return tenant.find().commitQuery().findOneCommitByMissionId(taskId, commitId)
         .onItem().transform(resp -> visitVersion(resp, tenant));
   }
   

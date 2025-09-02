@@ -20,7 +20,6 @@ package io.digiexpress.eveli.client.api;
  * #L%
  */
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,9 +33,11 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
-import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
+import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
+import io.resys.thena.api.entities.grim.GrimCommit;
+import io.resys.thena.api.entities.grim.GrimCommitTree;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -61,7 +62,7 @@ public interface TaskAuditClient {
     @Nullable TaskAuditEntryProcess getFlow();
     @Nullable TaskAuditEntryMq getMq();
     
-    TaskAuditEntryDiff getDiff();
+    //TaskAuditEntryDiff getDiff();
     TaskAuditEntryAccess getAccess();
   }
   
@@ -71,7 +72,8 @@ public interface TaskAuditClient {
   @Value.Immutable @JsonSerialize(as = ImmutableTaskAuditEntryProcess.class) @JsonDeserialize(as = ImmutableTaskAuditEntryProcess.class)
   interface TaskAuditEntryProcess {
     ProcessClient.ProcessInstance getProcessInstance();
-    JsonObject getProcessFlowLog();
+    @Nullable JsonObject getProcessFlowLog(); //FlowProgram.FlowResult
+    @Nullable JsonObject getProcessFormLog(); //Questionnaire
     
     default TaskAuditEntryType getType() {
       return TaskAuditEntryType.FLOW;
@@ -81,11 +83,11 @@ public interface TaskAuditClient {
   
   @Value.Immutable @JsonSerialize(as = ImmutableTaskAuditEntryMq.class) @JsonDeserialize(as = ImmutableTaskAuditEntryMq.class)
   interface TaskAuditEntryMq {
-    Map<String, Delivery> getDeliveries();    
-    Map<String, DeliveryAttempt> getDeliveryAttempts();
+    Map<String, Delivery> getDeliveries();
     Map<String, Binding> getBindings();
-    Map<String, QueueMessage> getPublishedMessages();
+    Map<String, QueueMessage> getQueueMessages();
     Map<String, Queue> getQueues();
+    Map<String, QueueConsumer> getQueueConsumers();
     Map<String, Channel> getChannels();
     
     default TaskAuditEntryType getType() {
@@ -97,7 +99,7 @@ public interface TaskAuditClient {
   interface TaskAuditEntryDiff {
     
     Map<String, TaskDiff> getValue();
-    Map<String, TaskCommiter> getCommiters();
+
     
     default TaskAuditEntryType getType() {
       return TaskAuditEntryType.DIFF;
@@ -108,19 +110,14 @@ public interface TaskAuditClient {
   @Value.Immutable @JsonSerialize(as = ImmutableTaskAuditEntryAccess.class) @JsonDeserialize(as = ImmutableTaskAuditEntryAccess.class)
   interface TaskAuditEntryAccess {
     List<GrimCommitViewer> getValue();
+    Map<String, GrimCommit> getCommits();
+    Map<String, GrimCommitTree> getCommitTrees();
     
     default TaskAuditEntryType getType() {
       return TaskAuditEntryType.VIEWER;
     }
   }
   
-  
-  interface TaskCommiter {
-    OffsetDateTime getCommitedAt();
-    String getCommitId();
-    String getUserId();
-    String getMessage();
-  }
   
   enum TaskAuditEntryType {
     DIFF, MQ, FLOW, VIEWER

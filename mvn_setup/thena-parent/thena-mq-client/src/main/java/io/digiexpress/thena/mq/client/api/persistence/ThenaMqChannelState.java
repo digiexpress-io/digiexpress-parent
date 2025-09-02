@@ -42,6 +42,7 @@ import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStat
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqContainers;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaMqChannelState {
@@ -73,6 +74,9 @@ public interface ThenaMqChannelState {
     Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);
     Uni<List<DeliveryAttempt>> findLastNAttemptEntries(long entries);
     Uni<List<Delivery>> findLastNEntries(long entries);
+    
+    Uni<List<DeliveryAttempt>> findAllAttemptsByMessageId(List<String> messageId);
+    Uni<List<Delivery>> findAllByMessageId(List<String> messageId);
   }
   
   interface InternalQueueConsumerQuery {
@@ -99,6 +103,7 @@ public interface ThenaMqChannelState {
   }
   
   interface InternalMessageQuery {
+    Multi<QueueMessage> findAllByBodyId(String bodyId);
     Uni<List<QueueMessage>> findLastNEntries(long entries);
     Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
     Uni<List<QueueMessage>> findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status);
