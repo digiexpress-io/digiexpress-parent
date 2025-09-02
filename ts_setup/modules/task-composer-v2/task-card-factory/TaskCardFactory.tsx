@@ -96,6 +96,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const backend = useTaskBackend();
 
+
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
   }, [task.id]);
@@ -356,31 +357,31 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       return (
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.viewers', defaultMessage: 'Audit: Viewers' })}
           {...commonProps}
-          showFlashyToggle={true}
+          showFlashyToggle={false}
           showEditOnMenu={false}
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={PersonSearchOutlinedIcon} />}>
-          <>viewers</>
+          <>Viewers</>
         </TaskCard>
       );
     case 'audit_commits':
       return (
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.commits', defaultMessage: 'Audit: Commits' })}
           {...commonProps}
-          showFlashyToggle={true}
+          showFlashyToggle={false}
           showEditOnMenu={false}
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={SaveOutlinedIcon} />}>
-          <>commits</>
+          <>Commits</>
         </TaskCard>
       );
     case 'audit_queues':
       return (
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queues', defaultMessage: 'Audit: Queues' })}
           {...commonProps}
-          showFlashyToggle={true}
+          showFlashyToggle={false}
           showEditOnMenu={false}
           showEditButton={false}
           showReviewOnMenu={false}
@@ -392,12 +393,12 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       return (
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.processes', defaultMessage: 'Audit: Processes' })}
           {...commonProps}
-          showFlashyToggle={true}
+          showFlashyToggle={false}
           showEditOnMenu={false}
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
-          <>Queues</>
+          <>Processes</>
         </TaskCard>
       );
     default:
