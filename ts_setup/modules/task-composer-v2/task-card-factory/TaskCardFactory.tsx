@@ -95,8 +95,8 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     isExpanded: expandedCards.find(target => target.cardId === cardId) ? isCardExpanded(cardId) : defaultExpandedCards.includes(cardId),
     onToggleFlashy: () => toggleCardFlashy(cardId),
     onToggleExpanded: () => {
-      const current = expandedCards.find(target => target.cardId === cardId);
-      toggleCardExpanded(cardId, current ? undefined : false);
+      const isCurrentlyExpanded = expandedCards.some(target => target.cardId === cardId);
+      toggleCardExpanded(cardId, !isCurrentlyExpanded)
     },
     onReview: toggleReview,
 
