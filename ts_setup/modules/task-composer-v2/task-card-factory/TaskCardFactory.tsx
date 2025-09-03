@@ -40,6 +40,7 @@ import { TaskAuditViewersTable } from '../task-audit-viewers';
 import { TaskAuditCommitsTable } from '../task-audit-commits';
 import { TaskAuditProcessesTable } from '../task-audit-processes';
 import { TaskAuditFlow } from '../task-audit-flow';
+import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
 
 
 
@@ -59,7 +60,8 @@ export type FactoryCardId =
   'audit_commits' |
   'audit_queues' |
   'audit_processes' |
-  'audit_flow'
+  'audit_flow' |
+  'audit_queue_messages'
 
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
@@ -76,7 +78,9 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'audit_viewers',
   'audit_commits',
   'audit_queues',
-  'audit_processes'
+  'audit_processes',
+  'audit_flow',
+  'audit_queue_messages'
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -114,7 +118,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     onToggleExpanded: () => {
       const current = expandedCards.find(target => target.cardId === cardId);
       const isDefault = defaultExpandedCards.includes(cardId)
-      if(isDefault) {
+      if (isDefault) {
         toggleCardExpanded(cardId, current ? undefined : false);
       } else {
         toggleCardExpanded(cardId, current ? undefined : true);
@@ -420,6 +424,18 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
           <TaskAuditFlow />
+        </TaskCard>
+      );
+    case 'audit_queue_messages':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueMessages', defaultMessage: 'Audit: Queue messages' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditQueueMessagesTable />
         </TaskCard>
       );
     default:

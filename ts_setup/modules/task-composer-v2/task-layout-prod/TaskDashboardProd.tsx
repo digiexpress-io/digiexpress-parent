@@ -27,8 +27,10 @@ const _variant_debug: TaskCardId[] = [
   'audit_viewers',
   'audit_commits',
   'audit_queues',
+  'audit_queue_messages',
   'audit_processes',
-  'audit_flow'
+  'audit_flow',
+
 ];
 
 const _variant_prod: TaskCardId[] = [

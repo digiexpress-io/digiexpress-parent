@@ -11,56 +11,54 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { useTaskDashboard } from '../task-dashboard';
 
 
-export const TaskAuditCommitsTable: React.FC = () => {
+export const TaskAuditQueueMessagesTable: React.FC = () => {
   const intl = useIntl();
   const { task, taskAudit } = useTaskDashboard();
-  const [commits, setCommits] = React.useState<TaskApi.TaskCommit[]>([]);
+  const [ messages, setMessages] = React.useState<TaskApi.TaskAuditEntryMq[]>([]);
 
   React.useEffect(() => {
 
-    if (taskAudit.access.commits) {
-      const sortedCommits = Object.values(taskAudit.access.commits)
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        setCommits(sortedCommits);
+    if (taskAudit.mq?.messages) {
+        setMessages(Object.values(taskAudit.mq.messages));
       } else {
-        console.log("oops, no commits!")
+        console.log("oops, no messages!")
       }
 
   }, [taskAudit, task.id]);
 
+console.log(taskAudit)
 
-
-  const columns: ColumnDef<TaskApi.TaskCommit, any>[] = [
+  const columns: ColumnDef<TaskApi.TaskAuditEntryMq, any>[] = [
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.author', defaultMessage: 'Author' }),
-      accessorKey: 'commitAuthor',
-      size: 200,
-      minSize: 200,
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.routingKey', defaultMessage: 'Author' }),
+      accessorKey: 'routingKey',
+      size: 150,
+      minSize: 100,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.message', defaultMessage: 'Message' }),
-      accessorKey: 'commitMessage',
-      size: 400,
-      minSize: 400,
-      enableSorting: true,
-      enableColumnFilter: true,
-      enableResizing: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'task.audit.commits.commitBody', defaultMessage: 'Body' }),
-      accessorKey: 'commitBody',
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.bodyType', defaultMessage: 'Body type' }),
+      accessorKey: 'bodyType',
       size: 150,
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: (updated) => flexRender(CommitBody, { value: updated.row.original })
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.createdAt', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.bodyValue', defaultMessage: 'Body value' }),
+      accessorKey: 'bodyValue',
+      size: 150,
+      minSize: 150,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      //cell: (bodyValue) => flexRender(BodyValue, { value: bodyValue.row.original })
+    },
+    {
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.createdAt', defaultMessage: 'Created' }),
       accessorKey: 'createdAt',
       size: 150,
       minSize: 150,
@@ -73,7 +71,7 @@ export const TaskAuditCommitsTable: React.FC = () => {
 
   return (
     <Box sx={{ display: 'inline-block' }}>
-      <WithTableStyles data={commits} columns={columns} options={{ tableId: 'taskAuditCommits' }} />
+      <WithTableStyles data={messages} columns={columns} options={{ tableId: 'taskAuditQueueMessages' }} />
     </Box>
   );
 }
@@ -85,10 +83,11 @@ const toYaml = (props: any) => {
   return doc.toString();
 }
 
-const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
+/*
+const BodyValue: React.FC<{ value: TaskApi.TaskAuditEntryMq }> = ({ value }) => {
   const intl = useIntl();
   const { taskAudit } = useTaskDashboard();
-  const tree = Object.values(taskAudit.access.commitTrees).find(tree => tree.commitId === value.commitId);
+  const tree = Object.values(taskAudit.mq?.messages ?? {}).find(tree => tree.commitId === value.commitId);
   const [open, setOpen] = React.useState(false);
 
   function handleOnClick(e: React.MouseEvent) {
@@ -114,6 +113,7 @@ const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
       </Dialog>
     </div>);
 }
+    */
 const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const rawDate = value;
   if (!rawDate) {

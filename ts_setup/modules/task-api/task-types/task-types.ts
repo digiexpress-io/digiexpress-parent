@@ -213,10 +213,6 @@ export declare namespace TaskApi {
     access: TaskAuditEntryAccess;
   }
 
-  export interface TaskProcessInstance {
-
-  }
-
   export interface TaskAuditEntryProcess {
     processInstance: any;                            //ProcessClient.ProcessInstance;
     processFlowLog: object | undefined;
@@ -232,6 +228,13 @@ export declare namespace TaskApi {
     queueConsumers: Record<string, any>;             //Map<String, QueueConsumer> getQueueConsumers();
     channels: Record<string, any>;                   //Map<String, Channel> getChannels();
     type: 'MQ'
+  }
+
+  export interface TaskAuditQueueMessage {
+    routingKey: string;
+    bodyType: string;
+    bodyValue: object;
+    createdAt: string;
   }
 
   export interface TaskAuditEntryDiff {
