@@ -184,7 +184,6 @@ export declare namespace TaskApi {
     attributeValue: string;
   }
 
-
   export interface User {
     userName: string;
     userEmail: string;
@@ -195,6 +194,44 @@ export declare namespace TaskApi {
     groupName: string;
   }
 
-  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');
+  export type TaskAuditEntryType = 'DIFF' | 'MQ' | 'FLOW' | 'VIEWER'
 
+
+  export interface TaskAuditLog {
+    id: string;
+    flow: TaskAuditEntryProcess | undefined;
+    mq: TaskAuditEntryMq | undefined;
+    access: TaskAuditEntryAccess;
+  }
+
+  export interface TaskAuditEntryProcess {
+    processInstance: any;                            //ProcessClient.ProcessInstance;
+    processFlowLog: object | undefined;
+    processFormLog: object | undefined;
+    type: 'FLOW';
+  }
+
+  export interface TaskAuditEntryMq {
+    deliveries: Record<string, any>;                 //Map<String, Delivery> getDeliveries();
+    bindings: Record<string, any>;                   //Map<String, Binding> getBindings();
+    messages: Record<string, any>;                   //Map<String, QueueMessage> getQueueMessages();
+    queues: Record<string, any>;                     // Map<String, Queue> getQueues();
+    queueConsumers: Record<string, any>;             //Map<String, QueueConsumer> getQueueConsumers();
+    channels: Record<string, any>;                   //Map<String, Channel> getChannels();
+    type: 'MQ'
+  }
+
+  export interface TaskAuditEntryDiff {
+    value: Record<string, any>                       //Map<String, TaskDiff> getValue();
+    type: 'DIFF'
+  }
+
+  export interface TaskAuditEntryAccess {
+    value: any[];                                     //List<GrimCommitViewer> getValue();
+    commits: Record<string, any>;                     //Map<String, GrimCommit> getCommits();
+    commitTrees: Record<string, any>;                 //Map<String, GrimCommitTree> getCommitTrees();
+    type: 'VIEWER'
+  }
+
+  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');
 }
