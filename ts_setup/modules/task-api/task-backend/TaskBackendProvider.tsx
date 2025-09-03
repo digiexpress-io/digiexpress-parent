@@ -79,7 +79,7 @@ export const TaskBackendProvider: React.FC<TaskBackendProviderProps> = (props) =
 
   const contextValue: TaskBackendContextType = React.useMemo(() => {
     return { navigate, persistence, permissions, currentUser, roles, slots };
-  }, []);
+  }, [roles, currentUser]);
 
   return (<TaskBackendContext.Provider value={contextValue}>{props.children}</TaskBackendContext.Provider>);
 }

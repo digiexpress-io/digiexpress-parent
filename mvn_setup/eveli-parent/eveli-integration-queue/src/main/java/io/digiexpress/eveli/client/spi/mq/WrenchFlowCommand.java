@@ -64,7 +64,7 @@ public class WrenchFlowCommand {
       for(final var diffValue : diff.getValues()) {
         queues.addAll(processDiffValue(diff, diffValue, envir, taskGroupId));
       }
-      return queues;
+      return queues.stream().distinct().toList();
     } catch(Exception e) {
       log.error("Failed to resolved flow queues of task diff:\r\n{}\r\n{}", diff, e.getMessage(), e);
       return Collections.emptyList();
