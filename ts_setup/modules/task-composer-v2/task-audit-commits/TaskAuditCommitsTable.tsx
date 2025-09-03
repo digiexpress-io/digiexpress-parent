@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Dialog, DialogContent } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
@@ -13,7 +13,6 @@ import { useTaskDashboard } from '../task-dashboard';
 
 export const TaskAuditCommitsTable: React.FC = () => {
   const intl = useIntl();
-
   const { task, taskAudit } = useTaskDashboard();
   const [commits, setCommits] = React.useState<TaskApi.TaskCommit[]>([]);
 
@@ -87,6 +86,7 @@ const toYaml = (props: any) => {
 }
 
 const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
+  const intl = useIntl();
   const { taskAudit } = useTaskDashboard();
   const tree = Object.values(taskAudit.access.commitTrees).find(tree => tree.commitId === value.commitId);
   const [open, setOpen] = React.useState(false);
@@ -99,6 +99,7 @@ const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
     <div>
       <a href='#' onClick={handleOnClick}>...</a>
       <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>{intl.formatMessage({ id: 'task.audit.commits.commitBody.title', defaultMessage: 'Commit body' })}</DialogTitle>
         <DialogContent>
           <Editor
             value={toYaml(tree)}
@@ -107,6 +108,9 @@ const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
             height='500px'
           />
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>{intl.formatMessage({ id: 'button.close' })}</Button>
+        </DialogActions>
       </Dialog>
     </div>);
 }
