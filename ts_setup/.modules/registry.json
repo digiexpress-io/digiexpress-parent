@@ -2259,7 +2259,9 @@
           "@mui/utils": "*",
           "@mui/system": "*",
           "@mui/icons-material": "*",
-          "@tanstack/react-table": "*"
+          "@tanstack/react-table": "*",
+          "@monaco-editor/react": "*",
+          "yaml": "*"
         },
         "keywords": [
           "task-composer"
@@ -2278,7 +2280,9 @@
         "@mui/utils",
         "@mui/system",
         "@mui/icons-material",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "@monaco-editor/react",
+        "yaml"
       ],
       "peerDependencies": [
         "react",
@@ -2288,7 +2292,9 @@
         "@mui/utils",
         "@mui/system",
         "@mui/icons-material",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "@monaco-editor/react",
+        "yaml"
       ],
       "externalDependencies": [
         "react",
@@ -2298,7 +2304,9 @@
         "@mui/utils",
         "@mui/system",
         "@mui/icons-material",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "@monaco-editor/react",
+        "yaml"
       ],
       "internalDependencies": [
         "@dxs-ts/task-feedback",
@@ -2314,10 +2322,12 @@
         "@mui/icons-material",
         "luxon",
         "@dxs-ts/task-api",
-        "@dxs-ts/task-feedback",
-        "@mui/system",
         "@tanstack/react-table",
-        "@dxs-ts/xui-table"
+        "@monaco-editor/react",
+        "yaml",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/task-feedback",
+        "@mui/system"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2326,13 +2336,15 @@
         "react-intl",
         "@mui/icons-material",
         "luxon",
-        "@mui/system",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "@monaco-editor/react",
+        "yaml",
+        "@mui/system"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/task-api",
-        "@dxs-ts/task-feedback",
-        "@dxs-ts/xui-table"
+        "@dxs-ts/xui-table",
+        "@dxs-ts/task-feedback"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -2715,15 +2727,15 @@
       ],
       "internalDependencies": [],
       "actualDependencies": [
-        "react",
         "@mui/material",
+        "react",
         "@mui/icons-material",
         "react-intl",
         "luxon"
       ],
       "actualExternalDependencies": [
-        "react",
         "@mui/material",
+        "react",
         "@mui/icons-material",
         "react-intl",
         "luxon"
@@ -3336,6 +3348,6 @@
       ]
     }
   },
-  "checksum": "8c6803bc03792cc40c210810172454c1a72a73436606204d3a6d9ee732e22d63",
-  "generatedAt": "2025-09-01T07:56:40.274Z"
+  "checksum": "0a8666bcf5086dd05063b6bd6768e2811e5000bbd645329fa1db275ea744be2e",
+  "generatedAt": "2025-09-03T13:19:53.278Z"
 }

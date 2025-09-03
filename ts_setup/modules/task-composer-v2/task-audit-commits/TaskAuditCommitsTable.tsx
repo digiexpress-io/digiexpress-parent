@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
@@ -97,7 +99,9 @@ const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
   }
   return (
     <div>
-      <a href='#' onClick={handleOnClick}>...</a>
+      <Button endIcon={<OpenInNewOutlinedIcon />} variant='text' sx={{ fontSize: '9pt' }} onClick={handleOnClick}>
+        {intl.formatMessage({ id: 'button.view', defaultMessage: 'View' })}
+      </Button>
       <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
         <DialogTitle>{intl.formatMessage({ id: 'task.audit.commits.commitBody.title', defaultMessage: 'Commit body' })}</DialogTitle>
         <DialogContent>

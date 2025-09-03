@@ -223,7 +223,7 @@ export declare namespace TaskApi {
   export interface TaskAuditEntryMq {
     deliveries: Record<string, any>;                 //Map<String, Delivery> getDeliveries();
     bindings: Record<string, any>;                   //Map<String, Binding> getBindings();
-    messages: Record<string, any>;                   //Map<String, QueueMessage> getQueueMessages();
+    queueMessages: Record<string, any>;                   //Map<String, QueueMessage> getQueueMessages();
     queues: Record<string, any>;                     //Map<String, Queue> getQueues();
     queueConsumers: Record<string, any>;             //Map<String, QueueConsumer> getQueueConsumers();
     channels: Record<string, any>;                   //Map<String, Channel> getChannels();

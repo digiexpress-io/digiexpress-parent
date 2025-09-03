@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
@@ -18,15 +19,14 @@ export const TaskAuditQueueMessagesTable: React.FC = () => {
 
   React.useEffect(() => {
 
-    if (taskAudit.mq?.messages) {
-        setMessages(Object.values(taskAudit.mq.messages));
+    if (taskAudit.mq?.queueMessages) {
+      setMessages(Object.values(taskAudit.mq.queueMessages));
       } else {
         console.log("oops, no messages!")
       }
 
   }, [taskAudit, task.id]);
 
-console.log(taskAudit)
 
   const columns: ColumnDef<TaskApi.TaskAuditEntryMq, any>[] = [
     {
@@ -55,7 +55,7 @@ console.log(taskAudit)
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      //cell: (bodyValue) => flexRender(BodyValue, { value: bodyValue.row.original })
+      cell: (bodyValue) => flexRender(BodyValue, { value: bodyValue.row.original })
     },
     {
       header: intl.formatMessage({ id: 'task.audit.queueMessages.createdAt', defaultMessage: 'Created' }),
@@ -83,11 +83,9 @@ const toYaml = (props: any) => {
   return doc.toString();
 }
 
-/*
-const BodyValue: React.FC<{ value: TaskApi.TaskAuditEntryMq }> = ({ value }) => {
+
+const BodyValue: React.FC<{ value: any }> = ({ value }) => {
   const intl = useIntl();
-  const { taskAudit } = useTaskDashboard();
-  const tree = Object.values(taskAudit.mq?.messages ?? {}).find(tree => tree.commitId === value.commitId);
   const [open, setOpen] = React.useState(false);
 
   function handleOnClick(e: React.MouseEvent) {
@@ -96,12 +94,14 @@ const BodyValue: React.FC<{ value: TaskApi.TaskAuditEntryMq }> = ({ value }) => 
   }
   return (
     <div>
-      <a href='#' onClick={handleOnClick}>...</a>
+      <Button endIcon={<OpenInNewOutlinedIcon />} variant='text' sx={{ fontSize: '9pt' }} onClick={handleOnClick}>
+        {intl.formatMessage({ id: 'button.view', defaultMessage: 'View' })}
+      </Button>
       <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>{intl.formatMessage({ id: 'task.audit.commits.commitBody.title', defaultMessage: 'Commit body' })}</DialogTitle>
+        <DialogTitle>{intl.formatMessage({ id: 'task.audit.commits.bodyValue.title', defaultMessage: 'Message body value' })}</DialogTitle>
         <DialogContent>
           <Editor
-            value={toYaml(tree)}
+            value={toYaml(value)}
             onChange={() => { }}
             defaultLanguage='yaml'
             height='500px'
@@ -113,7 +113,7 @@ const BodyValue: React.FC<{ value: TaskApi.TaskAuditEntryMq }> = ({ value }) => 
       </Dialog>
     </div>);
 }
-    */
+
 const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const rawDate = value;
   if (!rawDate) {
