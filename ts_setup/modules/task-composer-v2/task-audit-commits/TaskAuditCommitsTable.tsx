@@ -1,33 +1,36 @@
-import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
-import { WithTableStyles } from '@dxs-ts/xui-table';
-import { Box } from '@mui/system';
+import React from 'react';
+import { Box, Dialog, DialogContent } from '@mui/material';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
-import React from 'react';
 import { useIntl } from 'react-intl';
+import Editor from '@monaco-editor/react';
+import YAML from 'yaml';
+
+import { TaskApi } from '@dxs-ts/task-api';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { useTaskDashboard } from '../task-dashboard';
 
 
 export const TaskAuditCommitsTable: React.FC = () => {
   const intl = useIntl();
-  const backend = useTaskBackend();
-  const { task } = useTaskDashboard();
+
+  const { task, taskAudit } = useTaskDashboard();
   const [commits, setCommits] = React.useState<TaskApi.TaskCommit[]>([]);
 
   React.useEffect(() => {
-    backend.persistence.getOneTaskAudit(task.id).then((audit) => {
-      if (audit.access.commits) {
-        const sortedCommits = Object.values(audit.access.commits)
+
+    if (taskAudit.access.commits) {
+      const sortedCommits = Object.values(taskAudit.access.commits)
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         setCommits(sortedCommits);
       } else {
         console.log("oops, no commits!")
       }
-    });
-  }, [backend, task.id]);
+
+  }, [taskAudit, task.id]);
 
 
-  console.log("Commits", commits)
+
   const columns: ColumnDef<TaskApi.TaskCommit, any>[] = [
     {
       header: intl.formatMessage({ id: 'task.audit.commits.author', defaultMessage: 'Author' }),
@@ -48,6 +51,16 @@ export const TaskAuditCommitsTable: React.FC = () => {
       enableResizing: true,
     },
     {
+      header: intl.formatMessage({ id: 'task.audit.commits.commitBody', defaultMessage: 'Body' }),
+      accessorKey: 'commitBody',
+      size: 150,
+      minSize: 150,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      cell: (updated) => flexRender(CommitBody, { value: updated.row.original })
+    },
+    {
       header: intl.formatMessage({ id: 'task.audit.commits.createdAt', defaultMessage: 'Created' }),
       accessorKey: 'createdAt',
       size: 150,
@@ -66,6 +79,37 @@ export const TaskAuditCommitsTable: React.FC = () => {
   );
 }
 
+
+const toYaml = (props: any) => {
+  const doc = new YAML.Document();
+  doc.contents = props;
+  return doc.toString();
+}
+
+const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
+  const { taskAudit } = useTaskDashboard();
+  const tree = Object.values(taskAudit.access.commitTrees).find(tree => tree.commitId === value.commitId);
+  const [open, setOpen] = React.useState(false);
+
+  function handleOnClick(e: React.MouseEvent) {
+    e.preventDefault();
+    setOpen(true);
+  }
+  return (
+    <div>
+      <a href='#' onClick={handleOnClick}>...</a>
+      <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+        <DialogContent>
+          <Editor
+            value={toYaml(tree)}
+            onChange={() => { }}
+            defaultLanguage='yaml'
+            height='500px'
+          />
+        </DialogContent>
+      </Dialog>
+    </div>);
+}
 const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const rawDate = value;
   if (!rawDate) {

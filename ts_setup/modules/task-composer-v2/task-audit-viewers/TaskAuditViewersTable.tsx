@@ -1,29 +1,28 @@
-import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
-import { WithTableStyles } from '@dxs-ts/xui-table';
-import { Box } from '@mui/system';
-import { ColumnDef, flexRender } from '@tanstack/react-table';
-import { DateTime } from 'luxon';
 import React from 'react';
+import { Box } from '@mui/material';
+import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
+import { ColumnDef, flexRender } from '@tanstack/react-table';
+
+import { TaskApi } from '@dxs-ts/task-api';
+import { WithTableStyles } from '@dxs-ts/xui-table';
 import { useTaskDashboard } from '../task-dashboard';
 
 
 
 export const TaskAuditViewersTable: React.FC = () => {
   const intl = useIntl();
-  const backend = useTaskBackend();
-  const { task } = useTaskDashboard();
+  const { task, taskAudit } = useTaskDashboard();
   const [viewers, setViewers] = React.useState<TaskApi.TaskViewer[]>([]);
 
   React.useEffect(() => {
-    backend.persistence.getOneTaskAudit(task.id).then((audit) => {
-      if (audit.access.value) {
-        setViewers(audit.access.value);
+    if (taskAudit.access.value) {
+      setViewers(taskAudit.access.value);
       } else {
         console.log("oops, no viewers!")
       }
-    });
-  }, [backend, task.id]);
+
+  }, [taskAudit, task.id]);
 
 
 

@@ -213,6 +213,10 @@ export declare namespace TaskApi {
     access: TaskAuditEntryAccess;
   }
 
+  export interface TaskProcessInstance {
+
+  }
+
   export interface TaskAuditEntryProcess {
     processInstance: any;                            //ProcessClient.ProcessInstance;
     processFlowLog: object | undefined;

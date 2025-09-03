@@ -38,6 +38,8 @@ import {
 } from '../task-card';
 import { TaskAuditViewersTable } from '../task-audit-viewers';
 import { TaskAuditCommitsTable } from '../task-audit-commits';
+import { TaskAuditProcessesTable } from '../task-audit-processes';
+import { TaskAuditFlow } from '../task-audit-flow';
 
 
 
@@ -56,7 +58,8 @@ export type FactoryCardId =
   'audit_viewers' |
   'audit_commits' |
   'audit_queues' |
-  'audit_processes'
+  'audit_processes' |
+  'audit_flow'
 
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
@@ -404,7 +407,19 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
-          <>Processes</>
+          <TaskAuditProcessesTable />
+        </TaskCard>
+      );
+    case 'audit_flow':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.flow', defaultMessage: 'Audit: Flow' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditFlow />
         </TaskCard>
       );
     default:
