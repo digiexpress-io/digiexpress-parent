@@ -8,29 +8,30 @@ import { useIntl } from 'react-intl';
 import { useTaskDashboard } from '../task-dashboard';
 
 
-
-export const TaskAuditViewersTable: React.FC = () => {
+export const TaskAuditCommitsTable: React.FC = () => {
   const intl = useIntl();
   const backend = useTaskBackend();
   const { task } = useTaskDashboard();
-  const [viewers, setViewers] = React.useState<TaskApi.TaskViewer[]>([]);
+  const [commits, setCommits] = React.useState<TaskApi.TaskCommit[]>([]);
 
   React.useEffect(() => {
     backend.persistence.getOneTaskAudit(task.id).then((audit) => {
-      if (audit.access.value) {
-        setViewers(audit.access.value);
+      if (audit.access.commits) {
+        const sortedCommits = Object.values(audit.access.commits)
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setCommits(sortedCommits);
       } else {
-        console.log("oops, no viewers!")
+        console.log("oops, no commits!")
       }
     });
   }, [backend, task.id]);
 
 
-
-  const columns: ColumnDef<TaskApi.TaskViewer, any>[] = [
+  console.log("Commits", commits)
+  const columns: ColumnDef<TaskApi.TaskCommit, any>[] = [
     {
-      header: intl.formatMessage({id: 'task.audit.viewers.usedBy', defaultMessage: 'Viewed by'}),
-      accessorKey: 'usedBy',
+      header: intl.formatMessage({ id: 'task.audit.commits.author', defaultMessage: 'Author' }),
+      accessorKey: 'commitAuthor',
       size: 300,
       minSize: 300,
       enableSorting: true,
@@ -38,10 +39,19 @@ export const TaskAuditViewersTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({id: 'task.audit.viewers.updatedAt', defaultMessage: 'Updated at'}),
-      accessorKey: 'updatedAt',
-      size: 300,
-      minSize: 300,
+      header: intl.formatMessage({ id: 'task.audit.commits.message', defaultMessage: 'Message' }),
+      accessorKey: 'commitMessage',
+      size: 400,
+      minSize: 400,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+    },
+    {
+      header: intl.formatMessage({ id: 'task.audit.commits.createdAt', defaultMessage: 'Created' }),
+      accessorKey: 'createdAt',
+      size: 150,
+      minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
@@ -51,7 +61,7 @@ export const TaskAuditViewersTable: React.FC = () => {
 
   return (
     <Box sx={{ display: 'inline-block' }}>
-      <WithTableStyles data={viewers} columns={columns} options={{ tableId: 'taskAuditViewers' }} />
+      <WithTableStyles data={commits} columns={columns} options={{ tableId: 'taskAuditCommits' }} />
     </Box>
   );
 }

@@ -37,7 +37,7 @@ import {
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../task-card';
 import { TaskAuditViewersTable } from '../task-audit-viewers';
-
+import { TaskAuditCommitsTable } from '../task-audit-commits';
 
 
 
@@ -380,7 +380,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={SaveOutlinedIcon} />}>
-          <>Commits</>
+          <TaskAuditCommitsTable />
         </TaskCard>
       );
     case 'audit_queues':

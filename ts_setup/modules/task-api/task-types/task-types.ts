@@ -199,6 +199,13 @@ export declare namespace TaskApi {
     usedBy: string         // userId-- could be human readable id or not
   }
 
+  export interface TaskCommit {
+    commitId: string;
+    createdAt: string;
+    commitAuthor: string;
+    commitMessage: string;
+  }
+
   export interface TaskAuditLog {
     id: string;
     flow: TaskAuditEntryProcess | undefined;
@@ -230,7 +237,7 @@ export declare namespace TaskApi {
 
   export interface TaskAuditEntryAccess {
     value: TaskViewer[];                              //List<GrimCommitViewer> getValue();
-    commits: Record<string, any>;                     //Map<String, GrimCommit> getCommits();
+    commits: Record<string, TaskCommit>;              //Map<String, GrimCommit> getCommits();
     commitTrees: Record<string, any>;                 //Map<String, GrimCommitTree> getCommitTrees();
     type: 'VIEWER'
   }
