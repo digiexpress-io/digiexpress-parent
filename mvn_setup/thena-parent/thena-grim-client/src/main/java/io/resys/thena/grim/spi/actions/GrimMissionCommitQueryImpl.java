@@ -76,9 +76,11 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor @Setter @Accessors(fluent = true)
+@Slf4j
 public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
   private final GrimDataSource startingState;
   private final String repoId;
@@ -798,9 +800,14 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
     }
     
     private <T> Tuple2<Optional<T>, Optional<T>> parse(GrimCommitTree tree, Class<T> type) {
-      final var before = Optional.ofNullable(tree.getBodyBefore()).map(b -> b.mapTo(type));
-      final var after =  Optional.ofNullable(tree.getBodyAfter()).map(b -> b.mapTo(type));
-      return Tuple2.of(before, after);
+      try {
+        final var before = Optional.ofNullable(tree.getBodyBefore()).map(b -> b.mapTo(type));
+        final var after =  Optional.ofNullable(tree.getBodyAfter()).map(b -> b.mapTo(type));
+        return Tuple2.of(before, after);
+      } catch(Exception e) {
+        log.error(e.getMessage(), e);
+        return Tuple2.of(Optional.empty(), Optional.empty());
+      }
     }
   }
 
