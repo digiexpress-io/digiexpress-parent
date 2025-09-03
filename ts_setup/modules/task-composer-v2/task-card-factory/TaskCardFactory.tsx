@@ -36,6 +36,7 @@ import {
   TaskCardId, useCardConfig, useTaskCardThemeConfig,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../task-card';
+import { TaskAuditViewersTable } from '../task-audit-viewers';
 
 
 
@@ -367,7 +368,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={PersonSearchOutlinedIcon} />}>
-          <>Viewers</>
+          <TaskAuditViewersTable />
         </TaskCard>
       );
     case 'audit_commits':

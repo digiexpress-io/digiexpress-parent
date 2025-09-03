@@ -131,12 +131,6 @@ export declare namespace TaskApi {
     linkAddress: string
   }
 
-  export interface TaskViewer {
-    id: string
-    updatedAt: string
-    usedBy: string         // userId-- could be human readable id or not
-  }
-
   export interface Task {
     id: string;
     taskRef?: string;
@@ -199,6 +193,11 @@ export declare namespace TaskApi {
 
   export type TaskAuditEntryType = 'DIFF' | 'MQ' | 'FLOW' | 'VIEWER'
 
+  export interface TaskViewer {
+    id: string
+    updatedAt: string
+    usedBy: string         // userId-- could be human readable id or not
+  }
 
   export interface TaskAuditLog {
     id: string;
