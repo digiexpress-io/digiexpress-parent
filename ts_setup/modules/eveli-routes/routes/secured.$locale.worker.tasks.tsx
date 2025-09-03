@@ -94,6 +94,8 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { transferTask } = useFetch('worker/rest/api/tasks/$taskId/transfers.PUT', {})
   const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
+  const { getOneTaskAudit } = useFetch('worker/rest/api/tasks/$taskId/audits.GET', {});
+
   const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
   const { createTask } = useFetch('worker/rest/api/tasks.POST', {});
   const { saveComment } = useFetch('worker/rest/api/tasks/$taskId/comments.POST', {});
@@ -119,6 +121,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
       await Promise.all(promises);
       return {};
     },
+    getOneTaskAudit: getOneTaskAudit,
     paginateTasks: paginateTasks,
     findAllAttachments: loadAttachments,
     findAllUsers: getUsers,

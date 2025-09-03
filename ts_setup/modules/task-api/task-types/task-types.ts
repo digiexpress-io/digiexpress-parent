@@ -112,8 +112,6 @@ export declare namespace TaskApi {
     putRequestUrl: string
   }
 
-
-
   export interface Comment {
     id: number
     userName: string
@@ -133,6 +131,11 @@ export declare namespace TaskApi {
     linkAddress: string
   }
 
+  export interface TaskViewer {
+    id: string
+    updatedAt: string
+    usedBy: string         // userId-- could be human readable id or not
+  }
 
   export interface Task {
     id: string;
@@ -215,7 +218,7 @@ export declare namespace TaskApi {
     deliveries: Record<string, any>;                 //Map<String, Delivery> getDeliveries();
     bindings: Record<string, any>;                   //Map<String, Binding> getBindings();
     messages: Record<string, any>;                   //Map<String, QueueMessage> getQueueMessages();
-    queues: Record<string, any>;                     // Map<String, Queue> getQueues();
+    queues: Record<string, any>;                     //Map<String, Queue> getQueues();
     queueConsumers: Record<string, any>;             //Map<String, QueueConsumer> getQueueConsumers();
     channels: Record<string, any>;                   //Map<String, Channel> getChannels();
     type: 'MQ'
@@ -227,7 +230,7 @@ export declare namespace TaskApi {
   }
 
   export interface TaskAuditEntryAccess {
-    value: any[];                                     //List<GrimCommitViewer> getValue();
+    value: TaskViewer[];                              //List<GrimCommitViewer> getValue();
     commits: Record<string, any>;                     //Map<String, GrimCommit> getCommits();
     commitTrees: Record<string, any>;                 //Map<String, GrimCommitTree> getCommitTrees();
     type: 'VIEWER'

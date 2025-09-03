@@ -1,31 +1,30 @@
-import { TaskApi, TaskFeatureProvider, useTaskBackend } from '@dxs-ts/task-api';
-
 import React from 'react';
-
+import { TaskApi, TaskFeatureProvider, useTaskBackend } from '@dxs-ts/task-api';
 
 
 
 interface TaskDashboardContextType {
   task: TaskApi.Task,
+  taskAudit: TaskApi.TaskAuditLog,
   saveTask(changes: Partial<TaskApi.Task>): Promise<TaskApi.Task>;
   saveCustomerComment(changes: { commentText: string }): Promise<TaskApi.Task>;
   saveTaskNote(changes: { commentText: string }): Promise<TaskApi.Task>;
-
   isTaskChanged(changes: Partial<TaskApi.Task>): boolean;
 }
-
 
 
 const TaskDashboardContext = React.createContext({} as any);
 
 const TaskDashboardContextProvider: React.FC<{ taskId: string, children: React.ReactElement }> = (props) => {
   const [task, setTask] = React.useState<TaskApi.Task>();
+  const [taskAudit, setTaskAudit] = React.useState<TaskApi.TaskAuditLog>();
   const backend = useTaskBackend();
 
   React.useEffect(() => {
     if (props.taskId && task === undefined) {
       backend.persistence.getOneTask(props.taskId).then(setTask);
-    }
+      backend.persistence.getOneTaskAudit(props.taskId).then(setTaskAudit);
+    } 
   }, [props.taskId, task]);
 
 
@@ -81,9 +80,9 @@ const TaskDashboardContextProvider: React.FC<{ taskId: string, children: React.R
     }
 
 
-    return { task: task ?? {} as any, saveTask, isTaskChanged, saveCustomerComment, saveTaskNote }
+    return { task: task ?? {} as any, taskAudit: taskAudit ?? {} as any, saveTask, isTaskChanged, saveCustomerComment, saveTaskNote }
 
-  }, [task]);
+  }, [task, taskAudit]);
 
   return (
     <TaskFeatureProvider options={task}>

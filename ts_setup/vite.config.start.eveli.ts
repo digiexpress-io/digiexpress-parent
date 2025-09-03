@@ -67,7 +67,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         }
       }),
 
-      fetchVite({ 
+      fetchVite({
         fetchDirectory: "./modules/eveli-api/fetch",
         fetchTreeDirectory: "./modules/eveli-api",
         fetchTreeGenFile: "./fetchTree.gen.ts",
