@@ -51,7 +51,7 @@ export const GRouterProductContent: React.FC<GRouterProductOwnerState> = (props)
             {/** OK */}
             <UserMessage enabled={type === 'IS_ANON_FORM_ENABLED'} debug='IS_ANON_FORM_ENABLED'
               title={intl.formatMessage({ id: 'gamut.forms.filling.anonUser_and_welcome' })}
-              description={intl.formatMessage({ id: 'gamut.forms.filling.proceed_to_form_anonUser' }, { userName })} />
+              description={intl.formatMessage({ id: 'gamut.forms.filling.proceed_to_form_anonUser' })} />
 
             {/** OK */}
             <UserMessage enabled={type === 'IS_USER_FORM_ENABLED'} debug='IS_USER_FORM_ENABLED'
@@ -106,71 +106,8 @@ const UserMessage: React.FC<{
         <AlertTitle>
           {props.title}
         </AlertTitle>
-        {props.description}
+        <Typography sx={{ maxWidth: '50ch' }}>{props.description}</Typography>
       </Alert>
     </>)
 }
 
-
-/*
-
-
-  {allowed ? (
-    <Alert severity='success' variant='filled' className={classes.loginAlert}>
-      <AlertTitle>
-        {anonUser
-          ? intl.formatMessage({ id: 'gamut.forms.filling.anonUser_and_welcome' })
-          : intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}
-      </AlertTitle>
-      {intl.formatMessage({ id: 'gamut.forms.filling.proceed_to_form' }, { userName })}
-    </Alert>
-  ) : notAuthorizedRepresentative ? (
-    <Alert severity='error' variant='filled' className={classes.loginAlert}>
-        {intl.formatMessage({
-          id: 'gamut.forms.filling.representativeNotAuthorized',
-        })}
-    </Alert>
-  ) : (
-    <Alert severity='error' variant='filled' className={classes.loginAlert}>
-      <Typography className={classes.productBodyTextError}>
-        {intl.formatMessage({ id: 'gamut.forms.filling.must_be_authenticated' })}
-      </Typography>
-    </Alert>
-  )}
-
-Alert with green box
-
-1. 'IS_REP_ENABLED'
-  title: gamut.forms.filling.authenticated_and_welcome
-  body: 'gamut.forms.filling.proceed_to_form
-
-2. 'IS_ANON_FORM_ENABLED'
-  title: gamut.forms.filling.anonUser_and_welcome
-  body: 'gamut.forms.filling.proceed_to_form'
-
-3. 'IS_USER_FORM_ENABLED'
-  title: gamut.forms.filling.authenticated_and_welcome
-  body: 'gamut.forms.filling.proceed_to_form
-
-
-
-
-Alert with red box
-
-1. 'IS_ANON_FORM_DISABLED'
-  title: gamut.forms.filling.must_be_authenticated
-  body: ''
-
-2. 'IS_REP_DISABLED' 
-  title: 'gamut.forms.filling.representativeNotAuthorized'
-  body: ''
-
-3. 'IS_FORM_DISABLED'
-  title: '' ?? 
-  body: '' ??
-
-4. 'IS_USER_FORM_DISABLED' 
-title: '' ??
-body: '' ??
-
-*/
