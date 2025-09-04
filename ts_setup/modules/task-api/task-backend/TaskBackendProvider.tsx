@@ -13,6 +13,9 @@ export interface TaskBackendContextType {
     isReopenTaskAllowed: boolean;
     isDeleteTaskAllowed: boolean;
   };
+  features: {
+    isAuditTaskEnabled: boolean;
+  },
   navigate: {
     findAllTasks: () => void;
     createOneTask: () => void;
@@ -72,13 +75,14 @@ export interface TaskBackendProviderProps {
   slots: TaskBackendContextType['slots'];
   persistence: TaskBackendContextType['persistence'];
   permissions: TaskBackendContextType['permissions'];
+  features: TaskBackendContextType['features'];
 }
 
 export const TaskBackendProvider: React.FC<TaskBackendProviderProps> = (props) => {
-  const { navigate, persistence, permissions, currentUser, roles, slots } = props;
+  const { navigate, persistence, permissions, currentUser, roles, slots, features } = props;
 
   const contextValue: TaskBackendContextType = React.useMemo(() => {
-    return { navigate, persistence, permissions, currentUser, roles, slots };
+    return { navigate, persistence, permissions, currentUser, roles, slots, features };
   }, [roles, currentUser]);
 
   return (<TaskBackendContext.Provider value={contextValue}>{props.children}</TaskBackendContext.Provider>);

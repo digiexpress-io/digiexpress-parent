@@ -2,18 +2,19 @@ import React from 'react';
 import { Grid2, Typography } from '@mui/material';
 import { TaskFormReviewDrawer } from '../task-form-review';
 import { TaskDashboardContextProvider } from '../task-dashboard';
-import { TaskCardFactory } from '../task-card-factory';
+import { FactoryCardId, TaskCardFactory } from '../task-card-factory';
 import {
   CardConfigContextProvider,
   DraggableCardWrapper, taskCardGridSize, TaskCardId, TaskCardStyleDefinition,
   useCardConfig, useDragCardController, useTaskCardThemeConfig
 } from '../task-card';
 import { useIntl } from 'react-intl';
+import { useTaskBackend } from '@dxs-ts/task-api';
 
 
 
 
-const _variant_debug: TaskCardId[] = [
+const _variant_debug: FactoryCardId[] = [
   'task_main',
   'task_form_summary',
   'assignees_roles',
@@ -33,7 +34,7 @@ const _variant_debug: TaskCardId[] = [
 
 ];
 
-const _variant_prod: TaskCardId[] = [
+const _variant_prod: FactoryCardId[] = [
   'task_main_alt',
   'customer_messages',
   'feedback',
@@ -41,6 +42,16 @@ const _variant_prod: TaskCardId[] = [
   'notes',
   'assignees_roles',
   'status_priority',
+];
+
+
+const _variant_prod_audit: FactoryCardId[] = [
+  'audit_viewers',
+  'audit_commits',
+  'audit_queues',
+  'audit_queue_messages',
+  'audit_processes',
+  'audit_flow',
 ];
 
 
@@ -81,10 +92,21 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
 
 
 export const TaskDashboardProd: React.FC<{ taskId: string }> = (props) => {
+  const { features } = useTaskBackend();
+
+  const initialCardOrder: FactoryCardId[] = React.useMemo(() => {
+
+  return [
+    ..._variant_prod,
+    ...( features.isAuditTaskEnabled ?_variant_prod_audit : [])
+  ];
+
+  }, [features])
+
 
   return (
     <TaskDashboardContextProvider taskId={props.taskId}>
-      <CardConfigContextProvider cardTheme='large' initialCardOrder={_variant_debug}>
+      <CardConfigContextProvider cardTheme='large' initialCardOrder={initialCardOrder}>
         <TaskDashboardProdInternal />
       </CardConfigContextProvider>
     </TaskDashboardContextProvider>

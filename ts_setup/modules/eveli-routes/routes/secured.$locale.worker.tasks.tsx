@@ -5,7 +5,7 @@ import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router'
 
 
 import { useEveliPermissions, EveliDatePicker as DateTimePicker, EveliDateTimeFormatter as DateTimeFormatter } from "@dxs-ts/eveli-primitives";
-import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
+import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled, useTenantConfig, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 import { FeedbackProvider } from '@dxs-ts/task-feedback';
 import { TaskApi, TaskBackendProvider, TaskBackendProviderProps } from '@dxs-ts/task-api';
 import { TasksTableProvider } from '@dxs-ts/task-composer-v1';
@@ -24,6 +24,7 @@ function Component() {
   const navigate = useTaskNavigate();
   const permissions = useTaskPermissions();
   const persistence = useTaskPersistence();
+  const features = useTaskFeatures();
   const { user } = useIam();
 
 
@@ -39,6 +40,7 @@ function Component() {
         persistence={persistence} 
         currentUser={currentUser} 
         roles={groups}
+        features={features}
         slots={{ 
           DateTimeFormatter, 
           DateTimePicker,
@@ -71,6 +73,13 @@ function useTaskNavigate(): TaskBackendProviderProps['navigate'] {
       to:'/secured/$locale/worker/tasks/$taskId',
       params: { taskId }
     }),
+  }
+}
+
+function useTaskFeatures(): TaskBackendProviderProps['features'] {
+  const tenant = useTenantConfigFeatures()
+  return {
+    isAuditTaskEnabled: tenant.isEnabled('SMART_TASK_AUDIT'),
   }
 }
 
