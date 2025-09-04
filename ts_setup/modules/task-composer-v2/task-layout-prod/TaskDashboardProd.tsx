@@ -29,6 +29,8 @@ const _variant_debug: FactoryCardId[] = [
   'audit_commits',
   'audit_queues',
   'audit_queue_messages',
+  'audit_queue_bindings',
+  'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
 
@@ -50,6 +52,8 @@ const _variant_prod_audit: FactoryCardId[] = [
   'audit_commits',
   'audit_queues',
   'audit_queue_messages',
+  'audit_queue_bindings',
+  'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
 ];

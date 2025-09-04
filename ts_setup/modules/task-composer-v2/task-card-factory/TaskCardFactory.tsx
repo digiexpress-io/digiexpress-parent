@@ -41,6 +41,7 @@ import { TaskAuditCommitsTable } from '../task-audit-commits';
 import { TaskAuditProcessesTable } from '../task-audit-processes';
 import { TaskAuditFlow } from '../task-audit-flow';
 import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
+import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 
 
 
@@ -59,6 +60,8 @@ export type FactoryCardId =
   'audit_viewers' |
   'audit_commits' |
   'audit_queues' |
+  'audit_queue_bindings' |
+  'audit_queue_deliveries' |
   'audit_processes' |
   'audit_flow' |
   'audit_queue_messages'
@@ -78,6 +81,8 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'audit_viewers',
   'audit_commits',
   'audit_queues',
+  'audit_queue_bindings',
+  'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
   'audit_queue_messages'
@@ -429,6 +434,30 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'audit_queue_messages':
       return (
         <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueMessages', defaultMessage: 'Audit: Queue messages' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditQueueMessagesTable />
+        </TaskCard>
+      );
+    case 'audit_queue_bindings':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueBindings', defaultMessage: 'Audit: Queue bindings' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditQueueBindingsTable />
+        </TaskCard>
+      );
+    case 'audit_queue_deliveries':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueDeliveries', defaultMessage: 'Audit: Queue deliveries' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
