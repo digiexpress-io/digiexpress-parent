@@ -42,6 +42,7 @@ import { TaskAuditProcessesTable } from '../task-audit-processes';
 import { TaskAuditFlow } from '../task-audit-flow';
 import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
 import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
+import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 
 
 
@@ -464,7 +465,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
-          <TaskAuditQueueMessagesTable />
+          <TaskAuditQueueDeliveriesTable />
         </TaskCard>
       );
     default:

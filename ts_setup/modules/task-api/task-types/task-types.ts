@@ -214,20 +214,25 @@ export declare namespace TaskApi {
   }
 
   export interface TaskAuditEntryProcess {
-    processInstance: any;                            //ProcessClient.ProcessInstance;
+    processInstance: any;                           
     processFlowLog: object | undefined;
     processFormLog: object | undefined;
     type: 'FLOW';
   }
 
   export interface TaskAuditEntryMq {
-    deliveries: Record<string, any>;                 //Map<String, Delivery> getDeliveries();
-    bindings: Record<string, any>;                   //Map<String, Binding> getBindings();
-    queueMessages: Record<string, any>;                   //Map<String, QueueMessage> getQueueMessages();
-    queues: Record<string, any>;                     //Map<String, Queue> getQueues();
-    queueConsumers: Record<string, any>;             //Map<String, QueueConsumer> getQueueConsumers();
-    channels: Record<string, any>;                   //Map<String, Channel> getChannels();
+    deliveries: Record<string, TaskAuditQueueDelivery>;
+    bindings: Record<string, any>;
+    queueMessages: Record<string, any>;
+    queues: Record<string, { queueName: string }>;
+    queueConsumers: Record<string, any>;
+    channels: Record<string, any>;                 
     type: 'MQ'
+  }
+
+  export interface TaskAuditQueueDelivery {
+    queueId: string;
+
   }
 
   export interface TaskAuditQueueMessage {
@@ -238,14 +243,14 @@ export declare namespace TaskApi {
   }
 
   export interface TaskAuditEntryDiff {
-    value: Record<string, any>                       //Map<String, TaskDiff> getValue();
+    value: Record<string, any>                   
     type: 'DIFF'
   }
 
   export interface TaskAuditEntryAccess {
-    value: TaskViewer[];                              //List<GrimCommitViewer> getValue();
-    commits: Record<string, TaskCommit>;              //Map<String, GrimCommit> getCommits();
-    commitTrees: Record<string, any>;                 //Map<String, GrimCommitTree> getCommitTrees();
+    value: TaskViewer[];
+    commits: Record<string, TaskCommit>;
+    commitTrees: Record<string, any>;               
     type: 'VIEWER'
   }
 

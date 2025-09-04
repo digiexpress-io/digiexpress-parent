@@ -1,11 +1,8 @@
 import React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import { Box } from '@mui/material';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
-import Editor from '@monaco-editor/react';
-import YAML from 'yaml';
 
 import { TaskApi } from '@dxs-ts/task-api';
 import { WithTableStyles } from '@dxs-ts/xui-table';
@@ -27,7 +24,6 @@ export const TaskAuditQueueBindingsTable: React.FC = () => {
 
   }, [taskAudit, task.id]);
 
-  console.log(bindings)
 
   const columns: ColumnDef<TaskApi.TaskAuditEntryMq, any>[] = [
     {
