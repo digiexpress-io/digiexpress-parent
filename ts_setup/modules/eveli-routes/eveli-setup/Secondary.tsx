@@ -15,31 +15,58 @@ import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
 
 import { _eveli_shell_useUtilityClasses as useUtilityClasses, EveliShellExplorer, EveliPermissions } from '@dxs-ts/eveli-primitives';
-import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
+import { EveliTenantFeatureEnabled, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
+import { TaskCreate } from '@dxs-ts/task-composer-v2'
+import { AnyTaskRoute } from '../eveli-any-task-route';
 
+
+
+const CreateTaskButton: React.FC = () => {
+  const classes = useUtilityClasses();
+  const intl = useIntl();
+  const navigate = useNavigate();
+  const tenant = useTenantConfigFeatures();
+  const [open, setOpen] = React.useState(false);
+
+  function handleCreateTask() {
+
+    if(tenant.isEnabled('SMART_TASK')) {
+      setOpen(true);
+    } else {
+      navigate({
+        from: '/secured/$locale',
+        to: '/secured/$locale/worker/tasks/create'
+      })
+    }
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
+  return (
+    <EveliPermissions id='CREATE_TASK'>
+      <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleCreateTask}>
+        {intl.formatMessage({ id: 'button.compose' })}
+      </Button>
+      <AnyTaskRoute>
+        <TaskCreate open={open} onClose={handleClose}/>
+      </AnyTaskRoute>
+    </EveliPermissions>
+  )
+}
 
 
 export const Secondary: React.FC = () => {
   const intl = useIntl();
   const navigate = useNavigate();
-  const classes = useUtilityClasses();
   const location = useLocation()
 
 
   return (<>
 
     <EveliShellExplorer>
-      <EveliPermissions id='CREATE_TASK'>
-        <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton}
-          onClick={() => {
-            navigate({
-              from: '/secured/$locale',
-              to: '/secured/$locale/worker/tasks/create'
-            })
-          }}>
-          {intl.formatMessage({ id: 'button.compose' })}
-        </Button>
-      </EveliPermissions>
+      <CreateTaskButton />
 
       <EveliPermissions id='NAV_TO_TASKS'>
         <Button startIcon={<TaskOutlinedIcon />}
