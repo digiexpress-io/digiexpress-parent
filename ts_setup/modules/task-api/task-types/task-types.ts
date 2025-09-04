@@ -224,10 +224,14 @@ export declare namespace TaskApi {
     deliveries: Record<string, TaskAuditQueueDelivery>;
     bindings: Record<string, TaskAuditQueueBinding>;
     queueMessages: Record<string, TaskAuditQueueMessage>;
-    queues: Record<string, { queueName: string }>;
+    queues: Record<string, TaskAuditQueue>;
     queueConsumers: Record<string, any>;
     channels: Record<string, any>;                 
     type: 'MQ'
+  }
+
+  export interface TaskAuditQueue {
+    queueName: string
   }
 
   export interface TaskAuditQueueDelivery {
