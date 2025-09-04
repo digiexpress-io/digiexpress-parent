@@ -12,10 +12,9 @@ import { useTaskDashboard } from '../task-dashboard';
 export const TaskAuditQueueBindingsTable: React.FC = () => {
   const intl = useIntl();
   const { task, taskAudit } = useTaskDashboard();
-  const [ bindings, setBindings] = React.useState<TaskApi.TaskAuditEntryMq[]>([]);
+  const [bindings, setBindings] = React.useState<TaskApi.TaskAuditQueueBinding[]>([]);
 
   React.useEffect(() => {
-
     if (taskAudit.mq?.bindings) {
       setBindings(Object.values(taskAudit.mq.bindings));
       } else {
@@ -25,7 +24,7 @@ export const TaskAuditQueueBindingsTable: React.FC = () => {
   }, [taskAudit, task.id]);
 
 
-  const columns: ColumnDef<TaskApi.TaskAuditEntryMq, any>[] = [
+  const columns: ColumnDef<TaskApi.TaskAuditQueueBinding, any>[] = [
     {
       header: intl.formatMessage({ id: 'task.audit.queueBindings.createdBy', defaultMessage: 'Created by' }),
       accessorKey: 'createdBy',

@@ -15,10 +15,9 @@ import { useTaskDashboard } from '../task-dashboard';
 export const TaskAuditQueueMessagesTable: React.FC = () => {
   const intl = useIntl();
   const { task, taskAudit } = useTaskDashboard();
-  const [ messages, setMessages] = React.useState<TaskApi.TaskAuditEntryMq[]>([]);
+  const [messages, setMessages] = React.useState<TaskApi.TaskAuditQueueMessage[]>([]);
 
   React.useEffect(() => {
-
     if (taskAudit.mq?.queueMessages) {
       setMessages(Object.values(taskAudit.mq.queueMessages));
       } else {
@@ -28,7 +27,7 @@ export const TaskAuditQueueMessagesTable: React.FC = () => {
   }, [taskAudit, task.id]);
 
 
-  const columns: ColumnDef<TaskApi.TaskAuditEntryMq, any>[] = [
+  const columns: ColumnDef<TaskApi.TaskAuditQueueMessage, any>[] = [
     {
       header: intl.formatMessage({ id: 'task.audit.queueMessages.routingKey', defaultMessage: 'Author' }),
       accessorKey: 'routingKey',
