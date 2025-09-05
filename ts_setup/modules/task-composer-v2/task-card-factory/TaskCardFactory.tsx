@@ -44,6 +44,7 @@ import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
 import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 import { TaskAuditQueuesTable } from '../task-audit-queue';
+import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
 
 
 
@@ -97,6 +98,9 @@ const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles
 export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
+  const { task } = useTaskDashboard();
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
+  const backend = useTaskBackend();
 
   const {
     cardTheme, editingCardId, toggleReview,
@@ -107,10 +111,17 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
-  const { task } = useTaskDashboard();
-  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
-  const backend = useTaskBackend();
 
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
+  React.useEffect(() => {
+    getOneFeedback(task.taskRef!)
+      .then((resp) => {
+        setFeedback(resp);
+      });
+  }, [task.taskRef]);
+
+  console.log(task)
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
@@ -308,6 +319,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
+            titleNotifier={feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : undefined}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
           >
