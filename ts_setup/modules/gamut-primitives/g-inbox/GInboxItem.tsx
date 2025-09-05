@@ -24,7 +24,12 @@ export interface GInboxItemProps {
 export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { getSubject } = useComms();
+  const { getSubject, markViewed } = useComms();
+
+  const handleClick = () => {
+    markViewed(id);
+    onClick(id);
+  };
 
   const props = useThemeProps({
     props: initProps,
@@ -38,7 +43,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   const isViewed = subject?.isViewed;
 
   return (
-    <Grid2 container className={classes.inboxItem} onClick={() => onClick(id)} >
+    <Grid2 container className={classes.inboxItem} onClick={handleClick} >
       <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 2 }} className={classes.taskRefLayout}>
         {!isViewed && (
           <Tooltip title={tooltipContent}>

@@ -52,6 +52,17 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
     created: DateTime.fromISO(created)
   })));
 
+  // Build a set of identifiers that might appear in message.userName for the current user
+  const myNames = new Set(
+    [
+      user?.userId,
+      (user as any)?.userName,
+      (user as any)?.username,
+      (user as any)?.name,
+      (user as any)?.email,
+    ]
+      .filter((v): v is string => typeof v === 'string' && v.length > 0)
+  );
 
   const exchange: readonly CommsApi.Message[] = data.messages
     .map(m => Object.freeze({
@@ -60,9 +71,10 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
       replyToId: m.replyToId,
       commentText: m.commentText,
       userName: m.userName,
-      isMyMessage: m.userName === (user?.userId ?? '')
+      // BEFORE: isMyMessage: m.userName === (user?.userId ?? '')
+      isMyMessage: myNames.has(m.userName)
     }))
-    .sort((a, b) => a.created.toMillis() - b.created.toMillis())
+    .sort((a, b) => a.created.toMillis() - b.created.toMillis());
 
   let created: DateTime;
   let updated: DateTime;
@@ -79,6 +91,13 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
     updated = DateTime.fromISO(data.updated);
   }
 
+  // If there are messages, consider the thread viewed only if the last message is mine.
+  // If there are no messages yet, fall back to the legacy 'viewed' flag.
+  const isViewed =
+    exchange.length === 0
+      ? data.viewed
+      : (lastExchange?.isMyMessage ?? data.viewed);
+
   return Object.freeze({
     id: data.id,
     name: data.name,
@@ -90,6 +109,7 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
     lastExchange,
     created,
     updated,
-    isViewed: data.viewed
+    isViewed
   });
+
 }

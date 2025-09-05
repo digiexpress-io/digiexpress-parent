@@ -17,9 +17,18 @@ export const CommsProvider: React.FC<{
   markViewed: CommsApi.ViewSubjectFetchPUT;
 }> = (props) => {
   const data = usePopulateContext(props);
+  const [readAt, setReadAt] = React.useState<Record<string, number>>({});
+
+  const subjectsWithOverride = React.useMemo(() => {
+    return data.subjects.map((s) => {
+      const lastTs = (s.lastExchange?.created ? s.lastExchange.created.toMillis() : s.created.toMillis());
+      const viewedOverride = (readAt[s.id] ?? 0) >= lastTs;
+      return viewedOverride ? { ...s, isViewed: true } : s;
+    });
+  }, [data.subjects, readAt]);
 
   const [sortOrder, setSortOrder] = React.useState<CommsApi.SubjectSortOrder>('DESC');
-  const sortedByDate = data.subjects
+  const sortedByDate = subjectsWithOverride
     .filter((c) => !!c.created)
     .sort((a, b) => {
       const dateA = a.lastExchange?.created ? a.lastExchange.created.toMillis() : a.created.toMillis();
@@ -33,27 +42,32 @@ export const CommsProvider: React.FC<{
 
 
   return React.useMemo(() => {
-    const exchanges = data.subjects.filter((c) => c.exchange.length).length;
-    const unread = data.subjects.filter((c) => !c.isViewed).length;
+    const exchanges = subjectsWithOverride.filter((c) => c.exchange.length).length;
+    const unread = subjectsWithOverride.filter((c) => !c.isViewed).length;
+
     const contextValue: CommsApi.CommsContextType = {
       subjects: sortedByDate,
       isPending: data.isPending,
-      subjectStats: Object.freeze({
-        exchanges,
-        unread
-      }),
-      getSubject: (id) => data.subjects.find((subject) => subject.id === id),
+      subjectStats: Object.freeze({ exchanges, unread }),
+      getSubject: (id) => subjectsWithOverride.find((subject) => subject.id === id),
       toggleSubjectSortOrder,
       sortOrder,
-      replyTo: data.replyTo, 
+      replyTo: data.replyTo,
       refresh: data.refresh,
-      markViewed: (subjectId) => props.markViewed(subjectId).then(_data => { })
+      markViewed: (subjectId) => {
+        // optimistic: mark read up to the current latest message (or created)
+        const s = data.subjects.find(x => x.id === subjectId);
+        const ts = s
+          ? (s.lastExchange?.created ? s.lastExchange.created.toMillis() : s.created.toMillis())
+          : Date.now();
+        setReadAt(prev => ({ ...prev, [subjectId]: ts }));
+        return props.markViewed(subjectId).then(() => { /* no-op */ });
+      }
     };
 
     return (<CommsContext.Provider value={contextValue}>{props.children}</CommsContext.Provider>);
-  }, [data, props, sortOrder]);
+  }, [subjectsWithOverride, sortedByDate, data.isPending, data.replyTo, data.refresh, toggleSubjectSortOrder, sortOrder, props]);
 }
-
 
 export function useComms(): CommsApi.CommsContextType {
   const result: CommsApi.CommsContextType = React.useContext(CommsContext);
