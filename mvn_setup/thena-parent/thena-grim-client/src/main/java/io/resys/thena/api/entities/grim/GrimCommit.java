@@ -24,9 +24,15 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.thena.api.entities.TenantEntity;
 import jakarta.annotation.Nullable;
 
+
+@JsonSerialize(as = ImmutableGrimCommit.class)
+@JsonDeserialize(as = ImmutableGrimCommit.class)
 @Value.Immutable
 public interface GrimCommit extends TenantEntity {
   String getCommitId();

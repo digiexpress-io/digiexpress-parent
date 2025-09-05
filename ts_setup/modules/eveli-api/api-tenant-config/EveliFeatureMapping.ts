@@ -35,8 +35,10 @@ export const EveliFeatureMapping = {
 
   'PROFILE_ENABLED': oneOf(['user_profile']),                                
 
-  'SMART_TABLES': oneOf(['smart_tables']),                             
+  'SMART_TABLES': oneOf(['smart_tables']),
+  
   'SMART_TASK': oneOf(['smart_task']),
+  'SMART_TASK_AUDIT': oneOf(['smart_task_audit']),
   'BATCHES': oneOf(['batches']),
 }
 

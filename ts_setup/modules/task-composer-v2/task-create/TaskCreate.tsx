@@ -12,7 +12,7 @@ interface RequiredError {
   subject?: string;
 }
 
-export const TaskCreate: React.FC = () => {
+export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useTaskBackend();
@@ -93,7 +93,7 @@ export const TaskCreate: React.FC = () => {
 
 
   return (
-    <StyledTaskCreate className={classes.root} open={false} onClose={() => { }} maxWidth='md'>
+    <StyledTaskCreate className={classes.root} open={open} onClose={onClose} maxWidth='md'>
 
       <DialogTitle><Typography variant='h1'>{intl.formatMessage({ id: 'task.composer.create', defaultMessage: 'Create new task' })}</Typography></DialogTitle>
       <DialogContent>
@@ -179,7 +179,7 @@ export const TaskCreate: React.FC = () => {
       </DialogContent>
 
       <DialogActions>
-        <Button variant='outlined' onClick={() => { }}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={handleCreateTask} disabled={!subject.trim()}>{intl.formatMessage({ id: 'button.accept' })}</Button>
       </DialogActions>
     </StyledTaskCreate>

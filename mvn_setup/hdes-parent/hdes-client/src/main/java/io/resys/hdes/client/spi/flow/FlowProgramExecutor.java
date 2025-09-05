@@ -57,7 +57,11 @@ import io.resys.hdes.client.spi.decision.DecisionProgramExecutor;
 import io.resys.hdes.client.spi.expression.OperationFlowContext.FlowTaskExpressionContext;
 import io.resys.hdes.client.spi.groovy.ServiceProgramExecutor;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
+
+
+@Slf4j
 public class FlowProgramExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(FlowProgramExecutor.class);
   private final HdesTypesMapper factory;
@@ -479,7 +483,7 @@ public class FlowProgramExecutor {
       }
       
       if(!isAtleastOneMatch) {
-        throw new ProgramException("Flow switch: '" + step.getId() + "' does not match any expressions!");
+        log.debug("Flow switch: '" + step.getId() + "' does not match any expressions!");
       }
     }
     

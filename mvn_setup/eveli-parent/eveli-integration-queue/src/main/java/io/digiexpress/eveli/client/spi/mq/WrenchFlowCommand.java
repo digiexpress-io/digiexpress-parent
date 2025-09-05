@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
+import io.digiexpress.eveli.client.api.TaskClient.TaskDiffValue;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
@@ -56,55 +57,71 @@ public class WrenchFlowCommand {
     return envir.runtimeQuery().getOne().onItem().transform(runtime -> runFlow(diff, runtime, source));
   }
   
-  @SuppressWarnings("unchecked")
   private List<TaskNotification> runFlow(TaskDiff diff, EveliRuntime envir, TaskCommentSource source) {
     try {
       final List<TaskNotification> queues = new ArrayList<>();
       final var taskGroupId = diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next();
-    
-      
       for(final var diffValue : diff.getValues()) {
-        final var language = Optional.ofNullable( diff.getTask().getClientLanguage()).orElse(default_locale);
-        final FlowResult run = envir.getWrench()
-            .inputMap(Map.of(
-                "operation", diffValue.getOp().operationName().toLowerCase(),
-                "path", diffValue.getPath(),
-                "taskRef",  diff.getTask().getTaskRef(),
-                "clientId", diff.getTask().getClientIdentificator(),
-                "taskGroupId", taskGroupId,
-                "clientLanguage", language,
-                "taskSource", source 
-            ))
-            .flow(flowName)
-            .andGetBody();
-        
-        final List<Map<String, Object>> dtMatches = (List<Map<String, Object>>) run.getReturns().get("");
-        if(dtMatches == null) {
-          continue;
-        }
-        for(final var match : dtMatches) {
-          try {
-            final var json = JsonObject
-                .mapFrom(match)
-                .put("taskId", diff.getTask().getId())
-                .put("updaterId", diff.getTask().getUpdaterId())
-                .put("customerLocale", language)
-                .put("assigneeId", diff.getTask().getAssignedId())
-                .put("taskGroupId", diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next())
-                .put("assigneeEmail", diff.getTask().getAssignedUserEmail());
-            
-            final var notification = json.mapTo(TaskNotification.class);
-            queues.add(notification);
-          } catch(Exception e) {
-            log.error("Failed to resolved flow queues of task diff:\r\n{}\r\n{}\r\n{}", diff, match, e.getMessage(), e);            
-          }
-        }
+        queues.addAll(processDiffValue(diff, diffValue, envir, taskGroupId));
       }
-      return queues;
+      return queues.stream().distinct().toList();
     } catch(Exception e) {
       log.error("Failed to resolved flow queues of task diff:\r\n{}\r\n{}", diff, e.getMessage(), e);
       return Collections.emptyList();
     }
+  }
+  
+  
+  private List<TaskNotification> processDiffValue(TaskDiff diff, TaskDiffValue diffValue, EveliRuntime envir, String taskGroupId) {
+    
+    final var language = Optional.ofNullable(diff.getTask().getClientLanguage()).orElse(default_locale);
+    
+    try {
+      final FlowResult run = envir.getWrench()
+          .inputMap(Map.of(
+              "operation", diffValue.getOp().operationName().toLowerCase(),
+              "path", diffValue.getPath(),
+              "taskRef",  diff.getTask().getTaskRef(),
+              "clientId", diff.getTask().getClientIdentificator(),
+              "taskGroupId", taskGroupId,
+              "clientLanguage", language,
+              "taskSource", source 
+          ))
+          .flow(flowName)
+          .andGetBody();
+      
+      @SuppressWarnings("unchecked")
+      final List<Map<String, Object>> dtMatches = (List<Map<String, Object>>) run.getReturns().get("");
+      if(dtMatches == null) {
+        return Collections.emptyList();
+      }
+      
+      final List<TaskNotification> queues = new ArrayList<>();
+      for(final var match : dtMatches) {
+        try {
+          final var json = JsonObject
+              .mapFrom(match)
+              .put("taskId", diff.getTask().getId())
+              .put("updaterId", diff.getTask().getUpdaterId())
+              .put("customerLocale", language)
+              .put("assigneeId", diff.getTask().getAssignedId())
+              .put("taskGroupId", diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next())
+              .put("assigneeEmail", diff.getTask().getAssignedUserEmail());
+          
+          final var notification = json.mapTo(TaskNotification.class);
+          queues.add(notification);
+        } catch(Exception e) {
+          log.error("Failed to resolved flow queues of task diff value:\r\n{}\r\n{}\r\n{}", diffValue, match, e.getMessage(), e);            
+        }
+      }
+      
+      return queues;
+    } catch(Exception e) {
+      log.error("Failed to resolved flow queues of task diff value:\r\n{}\r\n{}", diffValue, e.getMessage(), e);
+      return Collections.emptyList();
+    }
+    
+
   }
   
   @JsonSerialize(as = ImmutableTaskNotification.class)

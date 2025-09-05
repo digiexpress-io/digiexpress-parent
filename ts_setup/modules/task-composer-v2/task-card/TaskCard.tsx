@@ -86,17 +86,16 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
     <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
 
       <Box className={classes.title}>
-        {props.startAdornmentIcon}
-        <TitleText style={style}>{props.title}</TitleText>
-        {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
+        <Box display='flex' flexGrow={1} alignItems='center' onClick={props.onToggleExpanded}>
+          {props.startAdornmentIcon}
+          <TitleText style={style}>{props.title}</TitleText>
+          {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
+        </Box>
 
-        <Box flexGrow={1} />
         {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
-        <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
-          <DragHandleIcon color='primary' />
-        </Box>
+        <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}><DragHandleIcon color='primary' /></Box>
         <TaskCardMenu cardId={props.id}
           anchorEl={anchorEl}
           open={menuOpen}
@@ -105,11 +104,11 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
           onToggleFlashy={props.onToggleFlashy}
           onToggleAltView={props.onToggleAltView}
           onReview={props.onReview}
-          onEdit={handleEdit} 
+          onEdit={handleEdit}
           showEdit={props.showEditOnMenu}
           showFlashyToggle={props.showFlashyToggle}
           showReview={props.showReviewOnMenu}
-          />
+        />
       </Box>
 
 

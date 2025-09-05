@@ -18,7 +18,9 @@
     "@mui/utils": "*",
     "@mui/system": "*",
     "@mui/icons-material": "*",
-    "@tanstack/react-table": "*"
+    "@tanstack/react-table": "*",
+    "@monaco-editor/react": "*",
+    "yaml": "*"
   },
   "keywords": ["task-composer"],
   "private": true

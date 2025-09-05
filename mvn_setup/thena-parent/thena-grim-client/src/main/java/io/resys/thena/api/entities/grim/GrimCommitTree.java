@@ -22,11 +22,16 @@ package io.resys.thena.api.entities.grim;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.thena.api.entities.TenantEntity;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
+@JsonSerialize(as = ImmutableGrimCommitTree.class)
+@JsonDeserialize(as = ImmutableGrimCommitTree.class)
 public interface GrimCommitTree extends TenantEntity {
   String getId();
   String getCommitId();

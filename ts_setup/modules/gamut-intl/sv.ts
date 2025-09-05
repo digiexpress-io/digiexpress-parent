@@ -86,6 +86,7 @@ export const sv = {
   'gamut.forms.filling.must_be_authenticated': 'Du måste vara inloggad för att fylla i detta formulär',
   'gamut.forms.filling.authenticated_and_welcome': 'Hei {userName}!',
   'gamut.forms.filling.proceed_to_form': 'Klicka nedan för att starta formuläret',
+  'gamut.forms.filling.proceed_to_form_anonUser': 'Genom att välja Fortsätt med formulär börjar du fylla i formuläret. Om du vill ha svar väljer du Avbryt och väljer Logga in och väljer det här formuläret därifrån.',
   'gamut.forms.filling.anonUser_and_welcome': 'Hej!',
   'gamut.forms.filling.start': 'Du är på väg att starta detta formulär',
   'gamut.forms.filling.login-then-start.button': 'Logga in nu',

@@ -4,7 +4,7 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
-import { startDemoApp, generateIntl } from './vite';
+import { startDemoApp, generateIntl, fetchVite } from './vite';
 
 
 
@@ -55,6 +55,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         generatedRouteTree: './modules/eveli-routes/routeTree.gen.ts'
       }),
       generateIntl({ ignoreErrors: true, intlDirectory: './modules/eveli-intl', csv: './eveli-ide/intl.csv' }),
+      
+      
       react({
         jsxImportSource: '@emotion/react',
         babel: { plugins: ['@emotion/babel-plugin'] },
@@ -63,6 +65,13 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         typescript: {
           tsconfigPath: './modules/demo-app-eveli/tsconfig.json'
         }
+      }),
+
+      fetchVite({
+        fetchDirectory: "./modules/eveli-api/fetch",
+        fetchTreeDirectory: "./modules/eveli-api",
+        fetchTreeGenFile: "./fetchTree.gen.ts",
+        moduleName: "@dxs-ts/eveli-api"
       }),
       svgr({}),
       mockDevServerPlugin(),

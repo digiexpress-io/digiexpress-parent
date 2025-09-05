@@ -42,6 +42,7 @@ import org.springframework.web.client.RestTemplate;
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -80,7 +81,13 @@ import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
+import io.quarkus.vertx.runtime.jackson.JsonArrayDeserializer;
+import io.quarkus.vertx.runtime.jackson.JsonArraySerializer;
+import io.quarkus.vertx.runtime.jackson.JsonObjectDeserializer;
+import io.quarkus.vertx.runtime.jackson.JsonObjectSerializer;
 import io.resys.thena.grim.spi.GrimClientImpl;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
@@ -260,8 +267,14 @@ public class EveliAutoConfig {
 
   @Bean
   public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
+      SimpleModule module = new SimpleModule("vertx-module-json");
+      module.addSerializer(JsonObject.class, new JsonObjectSerializer());
+      module.addSerializer(JsonArray.class, new JsonArraySerializer());
+      module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
+      module.addDeserializer(JsonArray.class, new JsonArrayDeserializer());
+      
       return builder -> builder
-          .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module())
+          .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module(), module)
           .build();
   }
   

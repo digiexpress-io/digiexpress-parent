@@ -36,7 +36,15 @@ import {
   TaskCardId, useCardConfig, useTaskCardThemeConfig,
   TaskCard, TaskCardDataRowText, StartAdornmentIcon, TaskCardDataRowElement
 } from '../task-card';
-
+import { TaskAuditViewersTable } from '../task-audit-viewers';
+import { TaskAuditCommitsTable } from '../task-audit-commits';
+import { TaskAuditProcessesTable } from '../task-audit-processes';
+import { TaskAuditFlow } from '../task-audit-flow';
+import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
+import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
+import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
+import { TaskAuditQueuesTable } from '../task-audit-queue';
+import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
 
 
 
@@ -55,7 +63,11 @@ export type FactoryCardId =
   'audit_viewers' |
   'audit_commits' |
   'audit_queues' |
-  'audit_processes'
+  'audit_queue_bindings' |
+  'audit_queue_deliveries' |
+  'audit_processes' |
+  'audit_flow' |
+  'audit_queue_messages'
 
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
@@ -72,7 +84,11 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'audit_viewers',
   'audit_commits',
   'audit_queues',
-  'audit_processes'
+  'audit_queue_bindings',
+  'audit_queue_deliveries',
+  'audit_processes',
+  'audit_flow',
+  'audit_queue_messages'
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -82,6 +98,9 @@ const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles
 export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
+  const { task } = useTaskDashboard();
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
+  const backend = useTaskBackend();
 
   const {
     cardTheme, editingCardId, toggleReview,
@@ -92,10 +111,17 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
-  const { task } = useTaskDashboard();
-  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
-  const backend = useTaskBackend();
 
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
+  React.useEffect(() => {
+    getOneFeedback(task.taskRef!)
+      .then((resp) => {
+        setFeedback(resp);
+      });
+  }, [task.taskRef]);
+
+  console.log(task)
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
@@ -109,7 +135,12 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     onToggleFlashy: () => toggleCardFlashy(cardId),
     onToggleExpanded: () => {
       const current = expandedCards.find(target => target.cardId === cardId);
-      toggleCardExpanded(cardId, current ? undefined : false);
+      const isDefault = defaultExpandedCards.includes(cardId)
+      if (isDefault) {
+        toggleCardExpanded(cardId, current ? undefined : false);
+      } else {
+        toggleCardExpanded(cardId, current ? undefined : true);
+      }
     },
     onReview: toggleReview,
 
@@ -288,6 +319,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
+            titleNotifier={feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : undefined}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
           >
@@ -362,7 +394,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={PersonSearchOutlinedIcon} />}>
-          <>Viewers</>
+          <TaskAuditViewersTable />
         </TaskCard>
       );
     case 'audit_commits':
@@ -374,7 +406,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={SaveOutlinedIcon} />}>
-          <>Commits</>
+          <TaskAuditCommitsTable />
         </TaskCard>
       );
     case 'audit_queues':
@@ -386,7 +418,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={CloudOutlinedIcon} />}>
-          <>Queues</>
+          <TaskAuditQueuesTable />
         </TaskCard>
       );
     case 'audit_processes':
@@ -398,7 +430,55 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
-          <>Processes</>
+          <TaskAuditProcessesTable />
+        </TaskCard>
+      );
+    case 'audit_flow':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.flow', defaultMessage: 'Audit: Flow' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditFlow />
+        </TaskCard>
+      );
+    case 'audit_queue_messages':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueMessages', defaultMessage: 'Audit: Queue messages' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditQueueMessagesTable />
+        </TaskCard>
+      );
+    case 'audit_queue_bindings':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueBindings', defaultMessage: 'Audit: Queue bindings' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditQueueBindingsTable />
+        </TaskCard>
+      );
+    case 'audit_queue_deliveries':
+      return (
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueDeliveries', defaultMessage: 'Audit: Queue deliveries' })}
+          {...commonProps}
+          showFlashyToggle={false}
+          showEditOnMenu={false}
+          showEditButton={false}
+          showReviewOnMenu={false}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
+          <TaskAuditQueueDeliveriesTable />
         </TaskCard>
       );
     default:

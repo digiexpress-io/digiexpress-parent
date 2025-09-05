@@ -112,8 +112,6 @@ export declare namespace TaskApi {
     putRequestUrl: string
   }
 
-
-
   export interface Comment {
     id: number
     userName: string
@@ -132,7 +130,6 @@ export declare namespace TaskApi {
     linkKey: string
     linkAddress: string
   }
-
 
   export interface Task {
     id: string;
@@ -184,7 +181,6 @@ export declare namespace TaskApi {
     attributeValue: string;
   }
 
-
   export interface User {
     userName: string;
     userEmail: string;
@@ -195,6 +191,79 @@ export declare namespace TaskApi {
     groupName: string;
   }
 
-  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');
+  export type TaskAuditEntryType = 'DIFF' | 'MQ' | 'FLOW' | 'VIEWER'
 
+  export interface TaskViewer {
+    id: string
+    updatedAt: string
+    usedBy: string         // userId-- could be human readable id or not
+  }
+
+  export interface TaskCommit {
+    commitId: string;
+    createdAt: string;
+    commitAuthor: string;
+    commitMessage: string;
+  }
+
+  export interface TaskAuditLog {
+    id: string;
+    flow: TaskAuditEntryProcess | undefined;
+    mq: TaskAuditEntryMq | undefined;
+    access: TaskAuditEntryAccess;
+  }
+
+  export interface TaskAuditEntryProcess {
+    processInstance: any;                           
+    processFlowLog: object | undefined;
+    processFormLog: object | undefined;
+    type: 'FLOW';
+  }
+
+  export interface TaskAuditEntryMq {
+    deliveries: Record<string, TaskAuditQueueDelivery>;
+    bindings: Record<string, TaskAuditQueueBinding>;
+    queueMessages: Record<string, TaskAuditQueueMessage>;
+    queues: Record<string, TaskAuditQueue>;
+    queueConsumers: Record<string, any>;
+    channels: Record<string, any>;                 
+    type: 'MQ'
+  }
+
+  export interface TaskAuditQueue {
+    queueName: string
+  }
+
+  export interface TaskAuditQueueDelivery {
+    queueId: string;
+  }
+
+  export interface TaskAuditQueueBinding {
+    id: string;
+  }
+
+  export interface TaskAuditQueueMessage {
+    id: string;
+  }
+
+  export interface TaskAuditQueueMessage {
+    routingKey: string;
+    bodyType: string;
+    bodyValue: object;
+    createdAt: string;
+  }
+
+  export interface TaskAuditEntryDiff {
+    value: Record<string, any>                   
+    type: 'DIFF'
+  }
+
+  export interface TaskAuditEntryAccess {
+    value: TaskViewer[];
+    commits: Record<string, TaskCommit>;
+    commitTrees: Record<string, any>;               
+    type: 'VIEWER'
+  }
+
+  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE' | 'ROLE' | 'QUESTIONNAIRE');
 }

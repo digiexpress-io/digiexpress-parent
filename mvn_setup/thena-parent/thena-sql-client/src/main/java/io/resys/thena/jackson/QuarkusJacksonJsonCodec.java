@@ -45,7 +45,9 @@ import io.quarkus.vertx.runtime.jackson.ByteArrayDeserializer;
 import io.quarkus.vertx.runtime.jackson.ByteArraySerializer;
 import io.quarkus.vertx.runtime.jackson.InstantDeserializer;
 import io.quarkus.vertx.runtime.jackson.InstantSerializer;
+import io.quarkus.vertx.runtime.jackson.JsonArrayDeserializer;
 import io.quarkus.vertx.runtime.jackson.JsonArraySerializer;
+import io.quarkus.vertx.runtime.jackson.JsonObjectDeserializer;
 import io.quarkus.vertx.runtime.jackson.JsonObjectSerializer;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.DecodeException;
@@ -89,9 +91,12 @@ public class QuarkusJacksonJsonCodec implements JsonCodec {
         
         
         SimpleModule module = new SimpleModule("vertx-module");
-        // custom types
+        // quarkus objects
         module.addSerializer(JsonObject.class, new JsonObjectSerializer());
         module.addSerializer(JsonArray.class, new JsonArraySerializer());
+        module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
+        module.addDeserializer(JsonArray.class, new JsonArrayDeserializer());
+        
         // we have 2 extensions: RFC-7493
         module.addSerializer(Instant.class, new InstantSerializer());
         module.addDeserializer(Instant.class, new InstantDeserializer());
@@ -99,6 +104,7 @@ public class QuarkusJacksonJsonCodec implements JsonCodec {
         module.addDeserializer(byte[].class, new ByteArrayDeserializer());
         module.addSerializer(Buffer.class, new BufferSerializer());
         module.addDeserializer(Buffer.class, new BufferDeserializer());
+
 
         mapper.registerModule(module);
         

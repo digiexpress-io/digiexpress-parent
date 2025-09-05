@@ -27,8 +27,8 @@ export function fetchVite(options: FetchPluginOptions): Plugin {
     name: 'fetch-vite',
     
     async configResolved(resolvedConfig) {
-      rootPath = resolvedConfig.root || process.cwd()
-      
+      rootPath = process.cwd()
+
       // Merge user options with defaults
       config = {
         ...DEFAULT_CONFIG,
