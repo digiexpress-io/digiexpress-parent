@@ -23,7 +23,7 @@ export const IndicatorSubject: React.FC<IndicatorSubjectProps> = ({ title, id, k
 
   React.useEffect(() => {
     backend.persistence.findAllUnreadTasks().then(setUnreadTasks);
-  }, []);
+  }, [...backend.deps]);
 
   const link = (
     <Box

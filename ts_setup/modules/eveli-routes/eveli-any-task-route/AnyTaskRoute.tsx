@@ -16,7 +16,8 @@ import { TaskCreate } from '@dxs-ts/task-composer-v2';
 
 
 export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }) => {
- const { groups } = useFetch('$org/groupsList.GET', {});
+  const { unreadTasks } = useFetch('worker/rest/api/tasks/unread.GET', {});
+  const { groups } = useFetch('$org/groupsList.GET', {});
   const feedbackBackend = useFeedbackBackend();
   const [open, setOpen] = React.useState(false);
   const navigate = useTaskNavigate({ setTaskCreateOpen: setOpen });
@@ -37,19 +38,20 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
   }
 
   return (
-      <TaskBackendProvider 
-        navigate={navigate} 
-        permissions={permissions} 
-        persistence={persistence} 
-        currentUser={currentUser} 
-        roles={groups}
-        features={features}
-        slots={{ 
-          DateTimeFormatter, 
-          DateTimePicker,
-          DialobReview, 
-          DialobReviewButton
-        }}
+    <TaskBackendProvider 
+      deps={[unreadTasks]}
+      navigate={navigate}
+      permissions={permissions}
+      persistence={persistence}
+      currentUser={currentUser}
+      roles={groups}
+      features={features}
+      slots={{
+        DateTimeFormatter,
+        DateTimePicker,
+        DialobReview,
+        DialobReviewButton
+      }}
       >
         <FeedbackProvider backend={feedbackBackend}>
           <TasksTableProvider>
@@ -64,8 +66,7 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
 function useTaskNavigate(props: { setTaskCreateOpen: (open: boolean) => void}): TaskBackendProviderProps['navigate'] {
   const navigate = useNavigate();
   const tenant = useTenantConfigFeatures();
-  
-  
+
   return {
     findAllTasks: () => navigate({
       from: '/secured/$locale/worker',
@@ -109,7 +110,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
 
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
 
-  const { unreadTasks } = useFetch('worker/rest/api/tasks/unread.GET', {});
+  const { unreadTasks, refetch } = useFetch('worker/rest/api/tasks/unread.GET', {});
   const { paginateTasks, findAll } = useFetch('worker/rest/api/tasks.GET', {});
   const { deleteTask } = useFetch('worker/rest/api/tasks/$taskId.DELETE', {});
 
@@ -149,7 +150,13 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
     findAllUsers: getUsers,
     createOnTaskTransfer: transferTask,
     findAllTasks: findAll,
-    getOneTask: getTask,
+    getOneTask: async (taskId: string): Promise<TaskApi.Task> => {
+      const task = await getTask(taskId);
+      if (unreadTasks.includes(task.id)) {
+        refetch();
+      }
+      return task;
+    },
     modifyOneTask: updateTask,
     deleteOneTask: deleteTask,
     createOneTask: createTask,

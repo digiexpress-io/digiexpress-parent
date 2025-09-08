@@ -3,6 +3,7 @@ import React from 'react';
 import { TaskApi } from '../task-types';
 
 export interface TaskBackendContextType {
+  deps: any[];
   currentUser: {
     name: string;
     email: string;
@@ -29,8 +30,6 @@ export interface TaskBackendContextType {
     deleteOneAttachment: (taskId: string, attachment: TaskApi.Attachment) => Promise<unknown>;
     createManyAttachments: (taskId: string, files: FileList) => Promise<unknown>; 
     createOnTaskTransfer: (task: TaskApi.Task, command: TaskApi.TransferTaskCommand) => Promise<TaskApi.Task>;
-
-    
     paginateTasks: (queryProps: string) => Promise<{
       data: TaskApi.Task[], // array of data
       page: number, // current page we are on, starts with 0 = first page
@@ -68,6 +67,7 @@ export interface TaskBackendContextType {
 export const TaskBackendContext = React.createContext<TaskBackendContextType>({} as any);
 
 export interface TaskBackendProviderProps {
+  deps: any[];
   children: React.ReactNode;
   currentUser: TaskBackendContextType['currentUser'];
   roles: TaskBackendContextType['roles'];
@@ -79,11 +79,11 @@ export interface TaskBackendProviderProps {
 }
 
 export const TaskBackendProvider: React.FC<TaskBackendProviderProps> = (props) => {
-  const { navigate, persistence, permissions, currentUser, roles, slots, features } = props;
+  const { navigate, persistence, permissions, currentUser, roles, slots, features, deps } = props;
 
   const contextValue: TaskBackendContextType = React.useMemo(() => {
-    return { navigate, persistence, permissions, currentUser, roles, slots, features };
-  }, [roles, currentUser]);
+    return { navigate, persistence, permissions, currentUser, roles, slots, features, deps };
+  }, [roles, currentUser, deps]);
 
   return (<TaskBackendContext.Provider value={contextValue}>{props.children}</TaskBackendContext.Provider>);
 }

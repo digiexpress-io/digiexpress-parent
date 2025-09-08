@@ -89,6 +89,10 @@ public class GrimMissionSqlFilterBuilder {
       .append("  NOT EXISTS(").ln()
       .append("    SELECT id FROM ").append(options.getGrimCommitViewer()).append(" AS viewer_filter").ln()
       .append("    WHERE viewer_filter.mission_id = mission.id").ln();
+      // this is commit based view... ie has user seen changes to certain point in history
+      // without this the not viewed = have I ever seen given data
+      // .append("    AND viewer_filter.commit_id = mission.updated_tree_commit_id ").ln();
+      
 
       if(filter.getNotViewedByUsage() != null) {
         builder.append("      AND LOWER(used_for) = $").append(index++).ln();
@@ -98,6 +102,9 @@ public class GrimMissionSqlFilterBuilder {
         builder.append("      AND LOWER(used_by) = $").append(index++).ln();
         params.add(filter.getNotViewedByUser().toLowerCase());
       }
+      
+      
+      
       builder.append("  )");
     }
     

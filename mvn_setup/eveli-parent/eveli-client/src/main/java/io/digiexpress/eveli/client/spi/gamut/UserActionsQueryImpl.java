@@ -25,6 +25,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +46,7 @@ import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -98,8 +100,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .stream().filter(process -> Boolean.TRUE.equals(process.getAnon()))
         .toList();
     final var tasks = new TasksContext(
-        Collections.emptyMap(), 
-        Collections.emptyList()
+        Collections.emptyMap(),
+        Collections.emptyMap()
     );
     return processes.stream()
         .map(process -> visitUserAction(process, tasks))
@@ -129,13 +131,19 @@ public class UserActionsQueryImpl implements UserActionQuery {
   }
   
   private TasksContext visitTasks(List<ProcessInstance> processes, CustomerId userId) {
+    final var config = taskClient.unwrap().getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    
+    
     final var taskIds = processes.stream().filter(t -> t.getTaskId() != null).map(t -> t.getTaskId()).toList();
-    final var unreadTasks = taskClient.queryUnreadUserTasks().customerId(userId.getSafeId()).findAll().await().atMost(atMost);
+    final var unreadTasks = grim.find().commitViewersQuery().usedBy(userId.getSafeId()).findAll().await().atMost(atMost);
+    
+    
     final var allTasks = taskClient.queryTasks().findAll(taskIds).await().atMost(atMost);    
     
     return new TasksContext(
         allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), 
-        unreadTasks
+        unreadTasks.getObjects().stream().collect(Collectors.groupingBy(GrimCommitViewer::getMissionId))
     );
   }
   
@@ -180,10 +188,14 @@ public class UserActionsQueryImpl implements UserActionQuery {
       }
     }
     
-    final var isMessagingDisabled = userMessages.isEmpty();
-    final var isNewMessages = tasks.getUnreadTaskIds().contains(task.getId());
+    final var taskViewedLastAt = tasks.getViews().getOrDefault(task.getId(), Collections.emptyList())
+        .stream().map(e -> e.getCreatedAt())
+        .max(Comparator.naturalOrder())
+        .orElse(lastUpdate);
     
-    final var isViewed = isMessagingDisabled || !isNewMessages;
+    final var isMessagingDisabled = userMessages.isEmpty();
+    
+    final var isViewed = isMessagingDisabled || taskViewedLastAt.isAfter(lastUpdate);
     return new UserMessagesContext(userMessages, isViewed, lastUpdate);
   }
   
@@ -241,7 +253,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   @RequiredArgsConstructor
   private static class TasksContext {
     private final Map<String, Task> tasksById;
-    private final List<String> unreadTaskIds;
+    private final Map<String, List<GrimCommitViewer>> views;
   }
   
   

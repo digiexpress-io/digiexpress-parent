@@ -253,7 +253,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .append("SELECT commits.* ").ln()
         .append("  FROM ").append(options.getGrimCommit()).append(" as commits").ln()
         
-        .append("  LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
+        .append("  RIGHT JOIN ").append(options.getGrimMission()).append(" as mission")
         .append("  ON(commits.mission_id = mission.id)")
         .append(where.getValue()) 
         .build())

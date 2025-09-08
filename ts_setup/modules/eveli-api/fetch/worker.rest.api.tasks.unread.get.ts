@@ -5,7 +5,7 @@ export const Hook = createFileFetch('worker/rest/api/tasks/unread.GET')({
   hook
 })
 
-function hook(props: {}): { unreadTasks: string[] } {
+function hook(props: {}): { unreadTasks: string[], refetch: () => Promise<any> } {
   const params = Hook.useParams();
   const { path, url } = params;
   
@@ -15,6 +15,7 @@ function hook(props: {}): { unreadTasks: string[] } {
   });
 
   return {
-    unreadTasks: data ?? []
+    unreadTasks: data ?? [],
+    refetch
   }
 }

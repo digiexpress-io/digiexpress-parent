@@ -92,11 +92,8 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
   }
 
   // If there are messages, consider the thread viewed only if the last message is mine.
-  // If there are no messages yet, fall back to the legacy 'viewed' flag.
-  const isViewed =
-    exchange.length === 0
-      ? data.viewed
-      : (lastExchange?.isMyMessage ?? data.viewed);
+  const isViewed: boolean = data.viewed;
+
 
   return Object.freeze({
     id: data.id,
