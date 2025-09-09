@@ -30,7 +30,8 @@ export default defineMock({
       'DASHBOARD_VIEW',
       'TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE',
       'TABLES_V2',
-      'TASK_REOPEN'
+      'TASK_REOPEN',
+      'NAV_TO_USER_PROFILE'
     ]
   }
 })

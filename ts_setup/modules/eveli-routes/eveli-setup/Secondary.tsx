@@ -134,15 +134,17 @@ export const Secondary: React.FC = () => {
       </EveliTenantFeatureEnabled>
 
       <EveliTenantFeatureEnabled id='PROFILE_ENABLED'>
-        <Button startIcon={<PersonOutlineOutlinedIcon />}
-          variant={location.pathname.endsWith('profile') ? 'explorerActive' : 'explorerInactive'}
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/profile'
-          })}
-        >
-          {intl.formatMessage({ id: 'menu.profile' })}
-        </Button>
+        <EveliPermissions id='NAV_TO_USER_PROFILE'>
+          <Button startIcon={<PersonOutlineOutlinedIcon />}
+            variant={location.pathname.endsWith('profile') ? 'explorerActive' : 'explorerInactive'}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/profile'
+            })}
+          >
+            {intl.formatMessage({ id: 'menu.profile' })}
+          </Button>
+        </EveliPermissions>
       </EveliTenantFeatureEnabled>
 
       <EveliTenantFeatureEnabled id='BATCHES'>
