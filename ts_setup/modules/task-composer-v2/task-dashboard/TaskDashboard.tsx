@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
 const TaskDashboardInternal: React.FC = () => {
   const intl = useIntl();
   const { cardOrder, isReviewOpen, cardTheme, setCardTheme, toggleReview } = useCardConfig();
-  const { getDragPropsForId } = useDragCardController();
+  const { getDragPropsForId, draggingId } = useDragCardController();
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
@@ -37,7 +37,7 @@ const TaskDashboardInternal: React.FC = () => {
         sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
-            <DraggableCardWrapper {...getDragPropsForId(cardId)}>
+            <DraggableCardWrapper {...getDragPropsForId(cardId)} draggingId={draggingId}>
               <TaskCardFactory cardId={cardId} />
             </DraggableCardWrapper>
           </Grid2>

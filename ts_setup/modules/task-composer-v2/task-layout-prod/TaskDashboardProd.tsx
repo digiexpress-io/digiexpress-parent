@@ -70,11 +70,14 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
   const intl = useIntl();
   const { isReviewOpen, cardTheme, toggleReview, cardOrder } = useCardConfig();
 
-  const { getDragPropsForId } = useDragCardController();
+  const { getDragPropsForId, draggingId } = useDragCardController();
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
-  
+
+
+
+
   return (
     <Grid2 container spacing={style.cardSpacing} m={2}>
       <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}>
@@ -82,7 +85,7 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
 
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
-            <DraggableCardWrapper {...getDragPropsForId(cardId)}>
+            <DraggableCardWrapper {...getDragPropsForId(cardId)} draggingId={draggingId}>
               <TaskCardFactory cardId={cardId} />
             </DraggableCardWrapper>
           </Grid2>
