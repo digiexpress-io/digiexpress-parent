@@ -18,9 +18,10 @@ export const ToolColumnVisibilitySelection: React.FC<ToolColumnVisibilitySelecti
       table={table}
       slotProps={{
         columns: allColumns.map((col) => ({
+          colId: col.id,
           colTitle: col.columnDef.header?.toString() || col.id,
           isVisible: col.getIsVisible(),
-          onToggle: (newValue) => col.toggleVisibility(newValue)
+          onToggle: (newValue: any) => col.toggleVisibility(newValue)
         }))
       }} />
   )
