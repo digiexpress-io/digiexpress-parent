@@ -1,5 +1,7 @@
 package io.resys.thena.grim.spi.datasource;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -31,6 +33,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface GrimCommitTreeRegistry extends ThenaRegistryService<GrimCommitTree, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.SqlTuple findAllGteCreateAt(OffsetDateTime createtAt);
   ThenaSqlClient.SqlTuple getById(String id);
   ThenaSqlClient.SqlTuple findAllByCommitIds(List<String> commitId);
   ThenaSqlClient.SqlTuple findAllByMissionId(String missionId);

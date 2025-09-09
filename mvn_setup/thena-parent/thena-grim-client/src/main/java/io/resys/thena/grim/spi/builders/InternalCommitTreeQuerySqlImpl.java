@@ -1,5 +1,7 @@
 package io.resys.thena.grim.spi.builders;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -76,6 +78,23 @@ public class InternalCommitTreeQuerySqlImpl implements InternalCommitTreeQuery {
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.commitTrees().defaultMapper())
         .execute()
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT)));
+  }
+  @Override
+  public Uni<List<GrimCommitTree>> findAllGteCreateAt(OffsetDateTime createtAt) {
+    
+    final var sql = registry.commitTrees().findAllGteCreateAt(createtAt);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllGteCreateAt query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.commitTrees().defaultMapper())
+        .execute(sql.getProps())
         .onItem()
         .transformToMulti(RowSet::toMulti)
         .collect().asList()

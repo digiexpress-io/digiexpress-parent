@@ -1,5 +1,7 @@
 package io.resys.thena.grim.spi.sql;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -258,6 +260,17 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .append(where.getValue()) 
         .build())
         .props(where.getProps())
+        .build();
+  }
+
+  @Override
+  public ThenaSqlClient.SqlTuple findAllGteCreateAt(OffsetDateTime createtAt) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * FROM ").append(options.getGrimCommit()).ln()
+        .append(" created_at >= $1")
+        .build())
+        .props(Tuple.of(createtAt))
         .build();
   }
 }

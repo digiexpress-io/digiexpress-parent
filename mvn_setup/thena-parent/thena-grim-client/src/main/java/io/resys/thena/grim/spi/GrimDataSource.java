@@ -60,7 +60,6 @@ import io.resys.thena.grim.spi.datasource.GrimCommitViewerRegistry.AnyObjectCrit
 import io.resys.thena.spi.TenantDataSource;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 public interface GrimDataSource extends TenantDataSource {
@@ -97,6 +96,7 @@ public interface GrimDataSource extends TenantDataSource {
   
   interface InternalCommitTreeQuery {
     Uni<List<GrimCommitTree>> findAll();
+    Uni<List<GrimCommitTree>> findAllGteCreateAt(OffsetDateTime createtAt);
     Uni<List<GrimCommitTree>> findAllByMissionId(String missionId);
   }
   
@@ -109,6 +109,7 @@ public interface GrimDataSource extends TenantDataSource {
   
   interface InternalCommitQuery {
     Uni<List<GrimCommit>> findAll();
+    Uni<List<GrimCommit>> findAllGteCreateAt(OffsetDateTime createtAt);
     Uni<List<GrimCommit>> findAllByMissionId(String missionId);
   }
   
@@ -119,7 +120,7 @@ public interface GrimDataSource extends TenantDataSource {
       @Nullable String usedBy, 
       @Nullable String usedFor, 
       @Nullable Duration duration,
-      @Nullable String missionId
+      @Nullable List<String> missionId
     );
   }
   

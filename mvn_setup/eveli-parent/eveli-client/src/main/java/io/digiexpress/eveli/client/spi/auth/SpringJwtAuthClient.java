@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.auth;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,17 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SpringJwtAuthClient implements WorkerAuthClient {
-  private boolean isAdminAccessEnabled = false;
+  private final List<String> adminRoles;
+  private final Boolean everybodyIsAdmin;
+
   @Override
   public User getUser() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,14 +58,17 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
     }
     
     final Jwt token = (Jwt) authentication.getPrincipal();
+    final var roles = authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList());
+    final var isAdmin = everybodyIsAdmin == null ? roles.stream().filter(role -> adminRoles.contains(role)).findAny().isPresent() : everybodyIsAdmin;
+    
     return ImmutableUser.builder()
         .isAuthenticated(true)
         .principal(ImmutableUserPrincipal.builder()
-            .isAdmin(isAdminAccessEnabled)
+            .isAdmin(isAdmin)
             .sub(getSub(token))
             .username(getUserName(token))
             .email(getEmail(token))
-            .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
+            .roles(roles)
             .build())
         .build();
   }
@@ -103,11 +111,5 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
     }
     return sub;
   }
-  public boolean isAdminAccessEnabled() {
-    return isAdminAccessEnabled;
-  }
 
-  public void setAdminAccessEnabled(boolean isAdminAccessEnabled) {
-    this.isAdminAccessEnabled = isAdminAccessEnabled;
-  }
 }

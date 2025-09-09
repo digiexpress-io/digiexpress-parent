@@ -1,5 +1,7 @@
 package io.resys.thena.grim.spi.sql;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -63,6 +65,21 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .build())
         .build();
   }
+  
+  @Override
+  public ThenaSqlClient.SqlTuple findAllGteCreateAt(OffsetDateTime createtAt) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT tree.*, commit.mission_id as mission_id").ln()
+        .append(" FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimCommit()).append(" as commit").ln()
+        .append(" ON(tree.commit_id = commit.commit_id)").ln()
+        .append(" commit.created_at >= $1")
+        .build())
+        .props(Tuple.of(createtAt))
+        .build();
+  }
+  
   @Override
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
