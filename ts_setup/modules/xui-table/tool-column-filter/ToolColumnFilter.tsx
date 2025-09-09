@@ -11,7 +11,6 @@ import { useHeaderItems } from '../tool-header-search';
 
 export interface ToolColumnFilterProps {
   table: Table<any>;
-  onClearAll: () => void;
 }
 
 
@@ -42,10 +41,10 @@ export const ToolColumnFilter: React.FC<ToolColumnFilterProps> = (props) => {
     col.setFilterValue(next.length > 0 ? next : undefined);
   }
 
+  const resetFiltersDisabled = props.table.getState().columnFilters.length === 0;
+
   return (
     <Root className={classes.root}>
-      <Button onClick={props.onClearAll}>{intl.formatMessage({ id: 'eveli.table.resetAll', defaultMessage: 'Reset table' })}</Button>
-
       {props.table.getAllFlatColumns()
         .filter(col => col.columnDef.meta?.enableSelection)
         .map(col => <ColumnFilter
@@ -55,6 +54,13 @@ export const ToolColumnFilter: React.FC<ToolColumnFilterProps> = (props) => {
           onToggleFilter={(event, value) => toggleFilter(event, col, value)}
           onClearAll={(event) => handleClearFilters(event, col.id)}
           onExpandToggle={() => toggleExpanded(col.id)} />)}
+
+      <Button variant='contained'
+        disabled={resetFiltersDisabled}
+        onClick={() => props.table.resetColumnFilters()}>
+        {intl.formatMessage({ id: 'eveli.table.clearFilters', defaultMessage: 'Clear all filters' })}
+      </Button>
+
     </Root>
   )
 }

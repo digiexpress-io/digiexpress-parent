@@ -1,9 +1,10 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { Root, ColumnSlot, useUtilityClasses } from './useUtilityClasses';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-
-import { Root, ColumnSlot, useUtilityClasses } from './useUtilityClasses';
+import { Table } from '@tanstack/react-table';
+import { useIntl } from 'react-intl';
 
 
 
@@ -14,19 +15,27 @@ export interface ToolColumnVisibilityColumnsSlotProps {
 }
 
 
-export const ToolColumnVisibility: React.FC<{ 
+export const ToolColumnVisibility: React.FC<{
+  table: Table<any>;
   slotProps: {
     columns: ToolColumnVisibilityColumnsSlotProps[]
   }
-}> = ({ slotProps }) => {
+}> = ({ table, slotProps }) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
+
+  const resetColsDisabled = table.getState().columnVisibility ? Object.values(table.getState().columnVisibility).every(v => v === true) : true;
 
   return (
     <Root className={classes.root}>
-        {slotProps.columns.map((delegateProps, index) => (<Visibility {...delegateProps} key={index} />))}
-      </Root >
-    )
-  }
+      {slotProps.columns.map((delegateProps, index) => (<Visibility {...delegateProps} key={index} />))}
+      <Box mt={2} />
+      <Button onClick={() => table.resetColumnVisibility()} disabled={resetColsDisabled}>
+        {intl.formatMessage({ id: 'eveli.table.resetColumns', defaultMessage: 'Reset columns' })}
+      </Button>
+    </Root>
+  )
+}
 
 const Visibility: React.FC<ToolColumnVisibilityColumnsSlotProps> = ({ isVisible, colTitle, onToggle }) => {
   const classes = useUtilityClasses();
