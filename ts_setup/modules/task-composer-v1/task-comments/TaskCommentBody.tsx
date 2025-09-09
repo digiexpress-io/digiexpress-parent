@@ -54,7 +54,11 @@ export const TaskCommentBody: React.FC<TaskCommentBodyProps> = (initProps) => {
       </div>
 
       <div className={classes.body}>
-        <Typography>{comment.commentText}</Typography>
+        <Typography
+          sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+        >
+          {comment.commentText}
+        </Typography>
       </div>
 
       {writingReply && (
