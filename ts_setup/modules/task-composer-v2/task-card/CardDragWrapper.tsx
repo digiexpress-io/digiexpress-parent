@@ -44,7 +44,7 @@ export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
   return (
     <Box
       id={id}
-      draggable
+      //draggable
       onDragStart={(e) => onDragStart(e, id)}
       onDragEnd={onDragEnd}
       onDrop={(e) => onDrop(e, id)}
@@ -73,6 +73,14 @@ export function useDragCardController<T extends TaskCardId>() {
   const [draggingId, setDraggingId] = React.useState<T | null>(null);
   const [dropTargetId, setDropTargetId] = React.useState<T | null>(null);
   const draggedId = React.useRef<T | null>(null);
+
+  const getDragHandlePropsForId = (id: T) => ({
+    draggable: true,
+    onDragStart: (e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, id),
+    onDragEnd: handleDragEnd,
+  });
+
+
   function startAutoScroll() {
     const scrollMargin = 80; // px distance from top/bottom to trigger
     const maxSpeed = 15;     // px per frame (lower than before)
@@ -199,7 +207,7 @@ export function useDragCardController<T extends TaskCardId>() {
   });
 
   return {
-    getDragPropsForId,
+    getDragPropsForId, getDragHandlePropsForId
   };
 }
 
