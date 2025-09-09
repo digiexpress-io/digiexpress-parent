@@ -699,5 +699,9 @@ export const sv = {
   'queue.all_messages.bodyType': 'Kroppstyp',
   'queue.all_messages.status': 'Status',
   'queue.all_messages.body': 'Kropp',
-  'queue.all_messages.created': 'Skapad'
+  'queue.all_messages.created': 'Skapad',
+  'eveli.table.drawer.title.columns': 'Columns: drag to reorder',
+  'eveli.table.drawer.title.filters': 'Filters',
+  'eveli.table.drawer.title.saved-filters': 'My saved filters',
+  'eveli.table.drawer.title.export-data': 'Export data'
 }

@@ -155,7 +155,8 @@ const ColumnFilterSlot = styled('div', {
 })(({ theme }) => {
 
   return {
-    marginLeft: theme.spacing(1),
+    margin: theme.spacing(0.5),
+
     '.filters-select-checkmark-icon': {
       marginRight: theme.spacing(2),
       color: theme.palette.primary.main,

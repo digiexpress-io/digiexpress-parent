@@ -82,7 +82,7 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
 
         {!!drawerBody && (
           <DrawerSlot className={classes.drawer}>
-            <Box className='title'>{<Typography>{intl.formatMessage({ id: `eveli.table.drawer.title.${drawerOpen}`, defaultMessage: drawerOpen })}</Typography>}
+            <Box className='title'>{<Typography>{intl.formatMessage({ id: `eveli.table.drawer.title.${drawerOpen}` })}</Typography>}
               <IconButton onClick={handleDrawerClose}><CloseIcon fontSize='small' /></IconButton>
             </Box>
             {drawerBody}

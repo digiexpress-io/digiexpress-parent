@@ -220,7 +220,7 @@ export const DrawerSlot = styled('div', {
       marginLeft: theme.spacing(1)
     },
     '& .title .MuiTypography-root': {
-      ...theme.typography.subtitle2,
+      ...theme.typography.body1,
       fontWeight: 'bold'
     }
   }
