@@ -72,10 +72,22 @@ export const ToolColumnVisibility: React.FC<{
       {columns.map((col, index) => (
         <div draggable
           key={col.colId}
-          onDragStart={() => handleDragStart(index)}
-          onDragOver={(e) => handleDragOver(e, index)}
-          onDragLeave={() => setHoveredIndex(undefined)}
-          onDrop={() => { handleDrop(index) }}
+          onDragStart={(e) => {
+            e.stopPropagation();
+            handleDragStart(index);
+          }}
+          onDragOver={(e) => {
+            e.stopPropagation();
+            handleDragOver(e, index)
+          }}
+          onDragLeave={(e) => {
+            e.stopPropagation();
+            setHoveredIndex(undefined)
+          }}
+          onDrop={(e) => {
+            e.stopPropagation();
+            handleDrop(index)
+          }}
           style={{
             border: hoveredIndex === index ? `2px dashed ${theme.palette.primary.main}` : 'none',
             boxShadow: hoveredIndex === index ? `0 0 6px 3px ${alpha(theme.palette.divider, 0.5)}` : undefined,
@@ -84,10 +96,7 @@ export const ToolColumnVisibility: React.FC<{
             transition: 'transform 0.2s ease, box-shadow 0.2s ease, border 0.1s ease',
           }}
         >
-          <Visibility col={col} table={table} isVisible={col.isVisible} dragHandleProps={{
-            onDragStart: (e: React.DragEvent) => handleDragStart(index),
-            onDragEnd: () => setDraggedIndex(undefined),
-          }} />
+          <Visibility col={col} table={table} isVisible={col.isVisible} />
         </div>
       ))}
 
@@ -106,14 +115,15 @@ const Visibility: React.FC<{
   col: ToolColumnVisibilityColumnsSlotProps;
   table: Table<any>;
   isVisible: boolean;
-  dragHandleProps?: React.HTMLAttributes<HTMLElement>;
-}> = ({ col, table, isVisible, dragHandleProps }) => {
+}> = ({ col, table, isVisible }) => {
   const classes = useUtilityClasses();
 
-  const handleToggle = (e: React.MouseEvent) => {
+  function handleToggle(e: React.MouseEvent) {
     e.stopPropagation();
     const column = table.getColumn(col.colId);
-    if (column) column.toggleVisibility();
+    if (column) {
+      column.toggleVisibility()
+    };
   };
 
   return (
@@ -125,7 +135,7 @@ const Visibility: React.FC<{
         )}
         <Typography>{col.colTitle}</Typography>
         <Box flex={1} />
-        <Box {...dragHandleProps}>
+      <Box>
           <DragIndicatorIcon sx={{ cursor: 'grab' }} color='primary' />
         </Box>
       </ColumnSlot>
