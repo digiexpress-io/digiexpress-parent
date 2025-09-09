@@ -15,7 +15,7 @@ import { useDragCardController } from './CardDragWrapper';
 export interface TaskCardProps {
   id: TaskCardId;
   title?: string;
-  titleNotifier?: string | number;
+  titleNotifier?: string | number | React.ReactNode;
 
   children: React.ReactNode;
   styleVariant?: TaskCardStyleKey;

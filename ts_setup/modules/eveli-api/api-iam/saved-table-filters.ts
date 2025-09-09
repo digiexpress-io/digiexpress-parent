@@ -1,10 +1,10 @@
 
-import { TableState, TableStateInitWith } from "./table-state-types";
+
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useIam } from "@dxs-ts/eveli-api";
-import { useFetch } from '@dxs-ts/envir-fetch';
+
 import { UserProfileApi } from '@dxs-ts/user-profile'
+import { TableState, TableStateInitWith } from "@dxs-ts/xui-table";
 
 const default_profile = 'default';
 
@@ -15,14 +15,13 @@ export interface SavedFilter {
 }
 
 export function useSavedTableFilters(tableId: string) {
-  const { user } = useIam();
-  const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {});
+  const { userId, backend } = UserProfileApi.useUserProfile();
   const settingId = `saved-table-filters-${tableId}`;
 
   const { data, error, refetch, isPending } = useQuery({
     queryKey: [settingId],
     queryFn: async (): Promise<SavedFilter[]> => {
-      const data = await restApi.findUiSettings(settingId);
+      const data = await backend.findUiSettings(settingId);
       if(!data?.config) {
         return [];
       }
@@ -86,10 +85,10 @@ export function useSavedTableFilters(tableId: string) {
     }
 
 
-    const _updated = await restApi.updateUiSettings({
+    const _updated = await backend.updateUiSettings({
       commandType: 'UpsertUiSettings',
       settingsId: settingId,
-      userId: user.name,
+      userId: userId,
       visibility: [],
       config: Object.values(configs)
     });

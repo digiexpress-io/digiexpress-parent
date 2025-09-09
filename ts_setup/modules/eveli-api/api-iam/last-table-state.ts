@@ -1,16 +1,14 @@
 
-import { TableState, TableStateInitWith } from "./table-state-types";
+import { TableState, TableStateInitWith } from "@dxs-ts/xui-table";
 import React from "react";
-import { useFetch } from '@dxs-ts/envir-fetch';
-import { useIam } from "@dxs-ts/eveli-api";
-import { useTenantConfigFeatures } from "@dxs-ts/eveli-api";
+import { useTenantConfigFeatures } from '../api-tenant-config';
+import { UserProfileApi } from "@dxs-ts/user-profile";
 
 const dataId = 'last-table-state';
 
 export function useLastTableState(tableId: string) {
-  const { user } = useIam();
+  const { userId, backend } = UserProfileApi.useUserProfile();
   const [, setLastSync] = React.useState<string>();
-  const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {});
   const { isEnabled } = useTenantConfigFeatures()
   const isSmartTables = isEnabled('SMART_TABLES');
   const settingsId =  `${tableId}-${dataId}`;
@@ -22,10 +20,10 @@ export function useLastTableState(tableId: string) {
         return next.hash;
       }
       if(isSmartTables) {
-        restApi.updateUiSettings({
+        backend.updateUiSettings({
           commandType: 'UpsertUiSettings',
           settingsId,
-          userId: user.name,
+          userId,
           visibility: [],
 
           // always one value... last state of the table rules
@@ -45,7 +43,7 @@ export function useLastTableState(tableId: string) {
       return undefined;
     }
     try {
-      const data = await restApi.findUiSettings(settingsId);
+      const data = await backend.findUiSettings(settingsId);
       if(!data?.config) {
         return undefined;
       }

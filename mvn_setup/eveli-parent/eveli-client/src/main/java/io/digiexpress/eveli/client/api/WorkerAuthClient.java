@@ -53,6 +53,7 @@ public interface WorkerAuthClient {
   @Value.Immutable
   interface UserPrincipal {
     String getUsername(); // get the subject name
+    String getSub();
     String getEmail();
     boolean isAdmin(); //private final boolean adminsearch;
     List<String> getRoles();

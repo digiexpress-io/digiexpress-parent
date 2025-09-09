@@ -44,9 +44,10 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
       return ImmutableUser.builder()
           .isAuthenticated(false)
           .principal(ImmutableUserPrincipal.builder()
+              .sub("")
+              .email("")
               .isAdmin(false)
               .username("UNAUTHENTICATED")
-              .email("")
               .build())
           .build();
     }
@@ -56,6 +57,7 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
         .isAuthenticated(true)
         .principal(ImmutableUserPrincipal.builder()
             .isAdmin(isAdminAccessEnabled)
+            .sub(getSub(token))
             .username(getUserName(token))
             .email(getEmail(token))
             .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
@@ -93,7 +95,14 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
     return userName;
       
   }
-
+  
+  private String getSub(Jwt principal) {
+    String sub = "";
+    if(principal != null) {
+      sub = Objects.toString(principal.getClaimAsString("sub"), "");
+    }
+    return sub;
+  }
   public boolean isAdminAccessEnabled() {
     return isAdminAccessEnabled;
   }

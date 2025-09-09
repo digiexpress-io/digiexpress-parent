@@ -77,7 +77,7 @@ public class UserProfileController {
           if(items.isEmpty()) {
             final var principal = workerAuthClient.getUser().getPrincipal();
             final var command = ImmutableCreateUserProfile.builder()
-                .id(principal.getUsername())
+                .id(principal.getSub())
                 .email(principal.getEmail())
                 .addTenantFeatures(EveliWrenchOnlyTenantAutoConfig.FEATURE_USER_PROFILE)
                 .build();
@@ -123,13 +123,13 @@ public class UserProfileController {
   }
   public String getUserId(String init) {
     if("current".equals(init)) {
-      return workerAuthClient.getUser().getPrincipal().getUsername();      
+      return workerAuthClient.getUser().getPrincipal().getSub();
     }
     return init;
   }
 
   private void assertAccess(String id) {
-    if(workerAuthClient.getUser().getPrincipal().getUsername().equals(id) || "current".equals(id)) {
+    if(workerAuthClient.getUser().getPrincipal().getSub().equals(id) || "current".equals(id)) {
       return;
     }
     

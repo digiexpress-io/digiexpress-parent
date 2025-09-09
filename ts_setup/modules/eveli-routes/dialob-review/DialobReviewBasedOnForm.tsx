@@ -26,10 +26,8 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
   const { fetchReviewActionsGet } = useFetch('worker/rest/api/tasks/$taskId/review-actions.GET', {});
 
   const fetchActionGet: DialobApi.FetchActionGET = async (_sessionId: string) => {
-    
     return fetchReviewActionsGet(props.taskId)
       .then((data) => {
-        console.log(data);
         return data;
       });
   }

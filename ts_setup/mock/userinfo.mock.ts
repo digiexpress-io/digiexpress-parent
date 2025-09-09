@@ -15,7 +15,7 @@ export default defineMock({
   body: {
     authenticated: true,
     authorized: true,
-    userId: 'tester',
+    userId: 'John Smith',
     email: 'super user @ super dot things',
     name: 'John Smith',
     //roles: ['super-role', 'role 2', 'admin', 'super-role2', 'role 3', 'admin-again'],

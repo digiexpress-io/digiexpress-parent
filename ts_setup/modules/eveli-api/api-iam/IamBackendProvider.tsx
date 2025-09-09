@@ -58,7 +58,7 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   return (<IamBackendContext.Provider value={contextValue}>
     <>
       {/** link user profile with IAM */}
-      <UserProfileApi.Provider backend={restApi} userId={user.name}>
+      <UserProfileApi.Provider backend={restApi} userId={user.userId}>
         <SmartTableIntegration>
           {props.children}
         </SmartTableIntegration>
