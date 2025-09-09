@@ -12,16 +12,19 @@ export interface FilesEditProps {
   task: TaskApi.Task;
   open: boolean,
   onClose: () => void;
-  attachments: TaskApi.Attachment[],
-  setAttachments: React.Dispatch<React.SetStateAction<TaskApi.Attachment[]>>
 }
 
-export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose, attachments, setAttachments }) => {
+export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const backend = useTaskBackend();
+  
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
+  React.useEffect(() => {
+    backend.persistence.findAllAttachments(task.id).then(setAttachments);
+  }, [task.id]);
 
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [attachmentFileName, setAttachmentFileName] = React.useState<TaskApi.Attachment | null>(null);

@@ -153,6 +153,7 @@ public class AuthenticationConfigFakeUser  {
             .isAuthenticated(true)
             .principal(ImmutableUserPrincipal.builder()
                 .isAdmin(true)
+                .sub("John Smith")
                 .username("John Smith")
                 .email("john.smith@resys.io")
                 .roles(Arrays.stream(ROLES).map(r->"ROLE_"+r).collect(Collectors.toList()))

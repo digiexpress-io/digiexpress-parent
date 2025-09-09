@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions,
   Typography, Box, ListItem, ListItemText, ListItemButton,
+  styled,
 } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -19,6 +20,7 @@ export interface ToolColumnSavedFilterProps {
   table: Table<any>;
   tableId: string;
   state: [TableState, React.Dispatch<React.SetStateAction<TableState>>];
+  onClearAll: () => void;
 }
 
 
@@ -84,6 +86,9 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
           onRestore={() => setTableState(prev => prev.restore(filter.filter))} 
         />
       ))}
+      <TableResetButton onClick={props.onClearAll}>
+        {intl.formatMessage({ id: 'eveli.table.resetAll', defaultMessage: 'Reset table to default settings' })}
+      </TableResetButton>
     </Root>
   )
 }
@@ -210,3 +215,15 @@ const FilterItem: React.FC<{
     </StyledFilterItem>
   )
 }
+
+
+const TableResetButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.error.main,
+  color: theme.palette.getContrastText(theme.palette.error.main),
+  '&:hover': {
+    backgroundColor: theme.palette.error.dark,
+  },
+  textTransform: 'none',
+  fontWeight: 600,
+}));
+

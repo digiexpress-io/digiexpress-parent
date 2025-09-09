@@ -14,12 +14,14 @@ export const ToolColumnVisibilitySelection: React.FC<ToolColumnVisibilitySelecti
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());;
 
   return (
-    <ToolColumnVisibility slotProps={{
-      columns: allColumns.map((col) => ({
-        colTitle: col.columnDef.header?.toString() || col.id,
-        isVisible: col.getIsVisible(),
-        onToggle: (newValue) => col.toggleVisibility(newValue)
-      }))
-    }} />
-    )
+    <ToolColumnVisibility
+      table={table}
+      slotProps={{
+        columns: allColumns.map((col) => ({
+          colTitle: col.columnDef.header?.toString() || col.id,
+          isVisible: col.getIsVisible(),
+          onToggle: (newValue) => col.toggleVisibility(newValue)
+        }))
+      }} />
+  )
 }

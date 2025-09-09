@@ -5,19 +5,26 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useIntl } from 'react-intl';
 
 
-import { TaskApi } from '@dxs-ts/task-api';
+import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { TaskCardStyleDefinition } from '../task-card';
 
 
 export interface FilesReadOnlyProps {
   task: TaskApi.Task;
   style: TaskCardStyleDefinition;
-  attachments: TaskApi.Attachment[],
 }
 
-export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style, attachments }) => {
+export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const backend = useTaskBackend();
+  
+  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
+  React.useEffect(() => {
+    backend.persistence.findAllAttachments(task.id).then(setAttachments);
+  }, [task.id]);
+
+
 
   if (!attachments.length || attachments.length === 0) {
     return (

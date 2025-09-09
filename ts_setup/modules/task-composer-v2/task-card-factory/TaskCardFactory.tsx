@@ -16,7 +16,7 @@ import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
-import { TaskApi, TaskFeature, useTaskBackend } from '@dxs-ts/task-api';
+import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
@@ -99,9 +99,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { task } = useTaskDashboard();
-  const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
-  const backend = useTaskBackend();
-
+  
   const {
     cardTheme, editingCardId, toggleReview,
     isCardFlashy, toggleCardFlashy, setEditCard,
@@ -111,21 +109,6 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
-
-  const { getOneFeedback } = useFeedback();
-  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
-  React.useEffect(() => {
-    getOneFeedback(task.taskRef!)
-      .then((resp) => {
-        setFeedback(resp);
-      });
-  }, [task.taskRef]);
-
-  console.log(task)
-
-  React.useEffect(() => {
-    backend.persistence.findAllAttachments(task.id).then(setAttachments);
-  }, [task.id]);
 
   const commonProps = {
     id: cardId,
@@ -298,12 +281,10 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             <FilesEditDialog open
               task={task}
               onClose={handleEditClose}
-              attachments={attachments}
-              setAttachments={setAttachments}
             />
           )}
         >
-          <FilesReadOnly task={task} style={style} attachments={attachments} />
+          <FilesReadOnly task={task} style={style} />
         </TaskCard>
       );
 
@@ -319,7 +300,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
-            titleNotifier={feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : undefined}
+            titleNotifier={<FeedbackTitle task={task}/>}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
           >
@@ -494,4 +475,20 @@ function _formatAnyDateShort(value: Date | string | undefined): string {
 
 
 
+const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
 
+  const intl = useIntl();
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
+
+  
+  React.useEffect(() => {
+    getOneFeedback(task.taskRef!)
+      .then((resp) => {
+        setFeedback(resp);
+      });
+  }, [task.taskRef]);
+
+
+  return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : undefined
+}

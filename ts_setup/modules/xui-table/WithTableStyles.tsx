@@ -89,9 +89,9 @@ function RenderTable<DataType extends object>(props: {
         drawer: {
           body: {
             'export-data': ExportDataSlot ? <ExportDataSlot table={table} /> : undefined,
-            'saved-filters': <ToolColumnSavedFilter table={table} state={props.state} tableId={props.options.tableId}/>,
+            'saved-filters': <ToolColumnSavedFilter table={table} state={props.state} tableId={props.options.tableId} onClearAll={onClearAll} />,
             'columns': <ToolColumnVisibilitySelection table={table} />,
-            'filters': <ToolColumnFilter table={table} onClearAll={onClearAll} />,
+            'filters': <ToolColumnFilter table={table} />,
           }
         }
       }} />

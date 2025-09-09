@@ -48,7 +48,9 @@ export const ToolColumnVisibilityDialog: React.FC<ToolColumnVisibilityDialogProp
     <Dialog open={open} onClose={onClose} maxWidth='xs'>
       <DialogTitle>{intl.formatMessage({ id: 'eveli.table.menu.sort.chooseCols', defaultMessage: 'Select columns' })}</DialogTitle>
       <DialogContent>
-        <ToolColumnVisibility slotProps={{
+        <ToolColumnVisibility
+          table={table}
+          slotProps={{
           columns: allColumns.map((col) => ({
             colTitle: col.columnDef.header?.toString() || col.id,
             isVisible: selected[col.id],

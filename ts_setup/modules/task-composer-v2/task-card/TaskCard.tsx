@@ -9,12 +9,13 @@ import { TaskCardMenu } from './TaskCardMenu';
 import { flashyCardColorsById, TaskCardStyleDefinition, useTaskCardThemeConfig } from './cardThemeConfig';
 import { TaskCardId, TaskCardStyleKey } from './CardConfigContext';
 import { useIntl } from 'react-intl';
+import { useDragCardController } from './CardDragWrapper';
 
 
 export interface TaskCardProps {
   id: TaskCardId;
   title?: string;
-  titleNotifier?: string | number;
+  titleNotifier?: string | number | React.ReactNode;
 
   children: React.ReactNode;
   styleVariant?: TaskCardStyleKey;
@@ -53,6 +54,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[variant];
   const intl = useIntl();
+  const { getDragHandlePropsForId } = useDragCardController();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -83,7 +85,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
   return (<>
     {props.editDialog}
-    <TaskSectionCard onDoubleClick={props.onDoubleClick} className={classes.dataCard} ownerState={props} id={props.id}>
+    <TaskSectionCard className={classes.dataCard} ownerState={props} id={props.id}>
 
       <Box className={classes.title}>
         <Box display='flex' flexGrow={1} alignItems='center' onClick={props.onToggleExpanded}>
@@ -95,7 +97,10 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
         {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
-        <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}><DragHandleIcon color='primary' /></Box>
+        <Box {...getDragHandlePropsForId(props.id)}
+          sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
+          <DragHandleIcon color='primary' />
+        </Box>
         <TaskCardMenu cardId={props.id}
           anchorEl={anchorEl}
           open={menuOpen}
@@ -114,7 +119,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
       <Collapse in={props.isExpanded} timeout="auto" unmountOnExit >
         <Box className={classes.cardBody}>
-          <ExpandableBox isExpanded={props.isExpanded}>
+          <ExpandableBox isExpanded={props.isExpanded} onDoubleClick={props.onDoubleClick}>
             {cardContent}
           </ExpandableBox>
         </Box>

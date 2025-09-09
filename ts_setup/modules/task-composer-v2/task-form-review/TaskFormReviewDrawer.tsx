@@ -5,8 +5,8 @@ import PictureAsPdfRoundedIcon from '@mui/icons-material/PictureAsPdfRounded';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { useTaskBackend } from '@dxs-ts/task-api';
+
 import { useTaskDashboard } from '../task-dashboard';
-import { margin } from '@mui/system';
 
 
 
@@ -43,7 +43,7 @@ export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose,
           </IconButton>
         </ButtonGroup>
       </Box>
-      <backend.slots.DialobReview task={task} onClose={onClose} />
+      {open && <backend.slots.DialobReview task={task} onClose={onClose} /> }
     </StyledFormReview>
   );
 };
