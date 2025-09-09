@@ -1,17 +1,8 @@
-import { createSSEStream, defineMock } from 'vite-plugin-mock-dev-server'
+import { defineMock } from 'vite-plugin-mock-dev-server'
 
 
 export default defineMock({
   url: '/userInfo',
-
-  /*
-  response: (req, res) => {
-    const sse = createSSEStream(req, res)
-    sse.write({ event: 'message', data: { message: 'hello world' } })
-    sse.end()
-  }*/
-
-
   body: {
     authenticated: true,
     authorized: true,
@@ -31,7 +22,7 @@ export default defineMock({
       'TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE',
       'TABLES_V2',
       'TASK_REOPEN',
-      'NAV_TO_USER_PROFILE'
+      'USER_PROFILE_EDIT',
     ]
   }
 })
