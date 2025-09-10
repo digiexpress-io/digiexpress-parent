@@ -1,4 +1,4 @@
-import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, OnChangeFn, Updater, PaginationState } from "@tanstack/react-table";
+import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, Updater, PaginationState, ColumnOrderState } from "@tanstack/react-table";
 import { TableState, TableStateInitWith } from "./table-state-types";
 import React from "react";
 import { Md5 } from 'ts-md5';
@@ -14,6 +14,7 @@ class TableStateImpl implements TableState {
   private _columnVisibility: VisibilityState;
   private _columnFilters: ColumnFiltersState;
   private _columnSizing: ColumnSizingState;
+  private _columnOrder: ColumnOrderState;
   private _filterDialogOpen: boolean;
   private _hash: string;
 
@@ -23,6 +24,7 @@ class TableStateImpl implements TableState {
     columnVisibility: VisibilityState;
     columnFilters: ColumnFiltersState;
     columnSizing: ColumnSizingState;
+    columnOrder: ColumnOrderState;
     filterDialogOpen: boolean;
     onNext: (next: TableState) => Promise<void>
   }) {
@@ -32,6 +34,7 @@ class TableStateImpl implements TableState {
     this._columnFilters = props.columnFilters;
     this._columnSizing = props.columnSizing;
     this._filterDialogOpen = props.filterDialogOpen;
+    this._columnOrder = props.columnOrder;
     this._onNext = props.onNext;
 
     this._hash = new Md5()
@@ -40,6 +43,7 @@ class TableStateImpl implements TableState {
       .appendStr(JSON.stringify(props.columnVisibility))
       .appendStr(JSON.stringify(props.columnFilters))
       .appendStr(JSON.stringify(props.columnSizing))
+      .appendStr(JSON.stringify(props.columnOrder))
       .appendStr(JSON.stringify(props.filterDialogOpen))
       .end() + '';
   }
@@ -57,6 +61,9 @@ class TableStateImpl implements TableState {
   }
   public get columnSizing(): ColumnSizingState {
     return this._columnSizing;
+  }
+  public get columnOrder(): ColumnOrderState {
+    return this._columnOrder;
   }
   public get filterDialogOpen(): boolean {
     return this._filterDialogOpen;
@@ -79,7 +86,8 @@ class TableStateImpl implements TableState {
       columnVisibility: this._columnVisibility,
       columnFilters: this._columnFilters,
       columnSizing: this._columnSizing,
-      filterDialogOpen: this._filterDialogOpen
+      filterDialogOpen: this._filterDialogOpen,
+      columnOrder: this._columnOrder
     }
   }
 
@@ -89,6 +97,7 @@ class TableStateImpl implements TableState {
     columnVisibility: VisibilityState;
     columnFilters: ColumnFiltersState;
     columnSizing: ColumnSizingState;
+    columnOrder: ColumnOrderState;
     filterDialogOpen: boolean;
   }): TableState {
 
@@ -131,11 +140,19 @@ class TableStateImpl implements TableState {
     this._onNext(state);
     return state;
   }
+  public setColumnOrder(updater: Updater<ColumnOrderState>): TableState {
+    const prev = this._columnOrder;
+    const columnOrder = typeof updater === 'function' ? updater(prev) : updater;
+    const state = new TableStateImpl({ ...this.toProps(), columnOrder });
+    this._onNext(state);
+    return state;
+  }
   public setFilterDialogOpen(filterDialogOpen: boolean): TableState {
     const state = new TableStateImpl({ ...this.toProps(), filterDialogOpen });
     this._onNext(state);
     return state;
   }
+
   public clear(): TableState {
     const state = new TableStateImpl({ 
       ...this.toProps(),
@@ -143,6 +160,7 @@ class TableStateImpl implements TableState {
       columnVisibility: {},
       columnFilters: [],
       columnSizing: {},
+      columnOrder: []
     });
     this._onNext(state);
     return state;
@@ -174,6 +192,7 @@ function initTableState(props: {
     columnVisibility: {},
     columnFilters: [],
     columnSizing: {},
+    columnOrder: [],
     filterDialogOpen: false,
     onNext: props.onNext
   });

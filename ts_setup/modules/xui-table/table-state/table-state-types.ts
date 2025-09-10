@@ -5,7 +5,8 @@ import {
   ColumnSizingState,
   VisibilityState,
   Updater,
-  PaginationState
+  PaginationState,
+  ColumnOrderState
 } from '@tanstack/react-table';
 
 
@@ -15,6 +16,7 @@ export interface TableStateInitWith {
   columnVisibility: VisibilityState;
   columnFilters: ColumnFiltersState;
   columnSizing: ColumnSizingState;
+  columnOrder: ColumnOrderState;
   filterDialogOpen: boolean;
 }
 
@@ -24,6 +26,7 @@ export interface TableState {
   columnVisibility: VisibilityState;
   columnFilters: ColumnFiltersState;
   columnSizing: ColumnSizingState;
+  columnOrder: ColumnOrderState;
   filterDialogOpen: boolean;
 
   hash: string;
@@ -34,6 +37,7 @@ export interface TableState {
   setColumnFilters(next: Updater<ColumnFiltersState>): TableState;
   setColumnSizing(next: Updater<ColumnSizingState>): TableState;
   setFilterDialogOpen(next: boolean): TableState;
+  setColumnOrder(next: Updater<ColumnOrderState>): TableState;
 
   clear(): TableState;
   clearFiltersAndVisibility(): TableState;

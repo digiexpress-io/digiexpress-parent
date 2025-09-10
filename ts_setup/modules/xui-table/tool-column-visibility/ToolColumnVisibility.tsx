@@ -38,13 +38,18 @@ export const ToolColumnVisibility: React.FC<{
       return
     };
 
+    // new state
     const newOrder = [...columnsOrder];
     const [moved] = newOrder.splice(draggedIndex, 1);
     newOrder.splice(dropIndex, 0, moved);
+
+    // apply new state
     setColumnsOrder(newOrder);
-    table.setColumnOrder(newOrder);
     setDraggedIndex(undefined);
     setHoveredIndex(undefined);
+
+    // delegate state to tanstack
+    table.setColumnOrder(newOrder);
   };
 
   function handleDragStart(index: number) {

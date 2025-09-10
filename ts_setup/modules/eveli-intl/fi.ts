@@ -658,7 +658,7 @@ export const fi = {
   'workflow.edit': 'Muokkaa työnkulkua',
   'eveli.table.drawer.title.columns': 'Columns: drag to reorder',
   'eveli.table.drawer.title.filters': 'Filters',
-  'eveli.table.drawer.title.saved-filters': 'My saved filters',
+  'eveli.table.drawer.title.saved-filters': 'Personalised table profiles',
   'eveli.table.drawer.title.export-data': 'Export data',
   'eveli.batches.batchView.averageRunTime': 'Average run time',
   'eveli.batches.batchView.averageRunTime.ms': 'ms',

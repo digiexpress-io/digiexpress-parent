@@ -728,7 +728,7 @@ export const en = {
   'composer.article.selected': 'Selected Articles',
   'eveli.table.drawer.title.columns': 'Columns: drag to reorder',
   'eveli.table.drawer.title.filters': 'Filters',
-  'eveli.table.drawer.title.saved-filters': 'My saved filters',
+  'eveli.table.drawer.title.saved-filters': 'Personalised table profiles',
   'eveli.table.drawer.title.export-data': 'Export data',
   'eveli.error.general': 'Ooops, we have encountered an error!',
   'eveli.error.notFound': 'Ooops, the thing you are looking for is not found!',

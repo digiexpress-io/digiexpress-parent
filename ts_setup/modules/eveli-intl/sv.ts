@@ -702,6 +702,6 @@ export const sv = {
   'queue.all_messages.created': 'Skapad',
   'eveli.table.drawer.title.columns': 'Columns: drag to reorder',
   'eveli.table.drawer.title.filters': 'Filters',
-  'eveli.table.drawer.title.saved-filters': 'My saved filters',
+  'eveli.table.drawer.title.saved-filters': 'Personalised table profiles',
   'eveli.table.drawer.title.export-data': 'Export data'
 }

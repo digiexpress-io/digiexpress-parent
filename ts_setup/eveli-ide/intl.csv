@@ -748,7 +748,7 @@ eveli.table.drawer.buttons.filtersButton,,,,
 eveli.table.resetAll,,,,
 eveli.table.drawer.title.columns,,Columns: drag to reorder,Columns: drag to reorder,Columns: drag to reorder,
 eveli.table.drawer.title.filters,,Filters,Filters,Filters,
-eveli.table.drawer.title.saved-filters,,My saved filters,My saved filters,My saved filters,
+eveli.table.drawer.title.saved-filters,,Personalised table profiles,Personalised table profiles,Personalised table profiles,
 eveli.table.drawer.title.export-data,,Export data,Export data,Export data,
 
 eveli.error.general,,"Ooops, we have encountered an error!",,

@@ -106,7 +106,7 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
         {persistent && (
           <DrawerButtonSlot className={classes.drawerButton}>
             <Button variant='text' startIcon={<FavoriteBorderIcon />} onClick={handleDrawerOpenSavedFilters} disableRipple>
-              <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.savedFiltersButton', defaultMessage: 'Saved Filters' })}</Typography>
+              <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.savedFiltersButton', defaultMessage: 'Personalise' })}</Typography>
             </Button>
           </DrawerButtonSlot>)
         }
