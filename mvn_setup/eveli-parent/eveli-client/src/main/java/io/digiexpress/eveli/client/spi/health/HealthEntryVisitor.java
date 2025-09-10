@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.health;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,7 +72,11 @@ public class HealthEntryVisitor {
   
   private Multi<HealthEntry> diagnose(List<TaskClient.Task> tasks, List<GrimCommitViewer> views, List<GrimProcess> procs) {
     final var tasksById = tasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var procsByTaskId = procs.stream().collect(Collectors.toMap(e -> e.getMissionId(), e -> e));
+    
+    final var procsByTaskId = new HashMap<String, GrimProcess>();
+    for(final var proc : procs) {
+      procsByTaskId.put(proc.getMissionId(), proc);
+    }
     
     final var viewsByTask = views.stream().collect(Collectors.groupingBy(GrimCommitViewer::getMissionId));
     
@@ -93,27 +98,30 @@ public class HealthEntryVisitor {
           .flowName(proc.getFlowName())
           .formName(proc.getFormName())
           .name(proc.getWorkflowName())
+          .createdAt(proc.getCreated())
           .id(proc.getId())
           .build());
       }),
         
       tasks.stream().map(task -> {
         final boolean viewed = !viewsByTask.getOrDefault(task.getId(), Collections.emptyList()).isEmpty();
-        final var proc = procsByTaskId.get(task.getId());
+        final var proc = Optional.ofNullable(procsByTaskId.get(task.getId()));
         return diagnose(ImmutableTaskHealth.builder()
+          .id(task.getId())
           .ageInDays(Duration.between(task.getCreated(), OffsetDateTime.now()).toDays())
           .customerId(task.getClientIdentificator())
-          .taskRef(proc.getMissionRef())
-          .flowBody(Optional.ofNullable(proc.getFlowBody()).map(JsonObject::new).orElse(null))
-          .formBody(Optional.ofNullable(proc.getFormBody()).map(JsonObject::new).orElse(null))
-          .flowName(proc.getFlowName())
-          .formName(proc.getFormName())
-          .name(proc.getWorkflowName())
-          .id(task.getId())
+          .taskRef(task.getTaskRef())
+          .flowBody(proc.map(GrimProcess::getFlowBody).map(JsonObject::new).orElse(null))
+          .formBody(proc.map(GrimProcess::getFormBody).map(JsonObject::new).orElse(null))
+          .flowName(proc.map(GrimProcess::getFlowName).orElse(null))
+          .formName(proc.map(GrimProcess::getFormName).orElse(null))
+          .name(proc.map(GrimProcess::getWorkflowName).orElse(null))
           .assignedRoles(task.getAssignedRoles())
           .taskStatus(task.getStatus().name())
-          .processId(proc.getId())
+          .processId(proc.map(GrimProcess::getId).orElse(null))
           .viewed(viewed)
+          .createdAt(task.getCreated().toOffsetDateTime())
+          .subject(task.getSubject())
           .build());
       })
     ));

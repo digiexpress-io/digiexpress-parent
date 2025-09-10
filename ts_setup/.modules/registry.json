@@ -864,6 +864,8 @@
         "@mui/utils",
         "@material-table/core",
         "recharts",
+        "@monaco-editor/react",
+        "yaml",
         "@dxs-ts/user-profile",
         "@dxs-ts/gamut-shell",
         "@mui/system",
@@ -885,6 +887,8 @@
         "@mui/utils",
         "@material-table/core",
         "recharts",
+        "@monaco-editor/react",
+        "yaml",
         "@mui/system",
         "notistack"
       ],
@@ -908,7 +912,10 @@
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@monaco-editor/react",
+        "yaml"
+      ],
       "unusedDependencies": [
         "moment"
       ]
@@ -3347,6 +3354,6 @@
       ]
     }
   },
-  "checksum": "d1634ccfd46a4e33d3a05fc795ad5c9b29eaad68c50e6449817c22803d493212",
-  "generatedAt": "2025-09-09T08:25:25.479Z"
+  "checksum": "7c8b465402d5eab0f2623f0edb78a214efe8279b8176cbad0a98e47b04e20c0e",
+  "generatedAt": "2025-09-10T08:35:23.529Z"
 }

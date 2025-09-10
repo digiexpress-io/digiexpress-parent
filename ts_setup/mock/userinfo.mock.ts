@@ -23,6 +23,7 @@ export default defineMock({
       'TABLES_V2',
       'TASK_REOPEN',
       'USER_PROFILE_EDIT',
+      'HEALTH'
     ]
   }
 })

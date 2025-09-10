@@ -19,6 +19,7 @@ import { Route as SecuredLocalePublicationsIndexRouteImport } from './routes/sec
 import { Route as SecuredLocaleWorkerTasksRouteImport } from './routes/secured.$locale.worker.tasks'
 import { Route as SecuredLocaleWorkerProfileRouteImport } from './routes/secured.$locale.worker.profile'
 import { Route as SecuredLocaleWorkerBatchesRouteImport } from './routes/secured.$locale.worker.batches'
+import { Route as SecuredLocaleWorkerUserActivityIndexRouteImport } from './routes/secured.$locale.worker.user-activity.index'
 import { Route as SecuredLocaleWorkerTasksIndexRouteImport } from './routes/secured.$locale.worker.tasks.index'
 import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/secured.$locale.worker.queues.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
@@ -93,6 +94,12 @@ const SecuredLocaleWorkerBatchesRoute =
   SecuredLocaleWorkerBatchesRouteImport.update({
     id: '/batches',
     path: '/batches',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
+const SecuredLocaleWorkerUserActivityIndexRoute =
+  SecuredLocaleWorkerUserActivityIndexRouteImport.update({
+    id: '/user-activity/',
+    path: '/user-activity/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 const SecuredLocaleWorkerTasksIndexRoute =
@@ -246,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
+  '/secured/$locale/worker/user-activity': typeof SecuredLocaleWorkerUserActivityIndexRoute
   '/secured/$locale/worker/batches/$batchId': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
@@ -276,6 +284,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksIndexRoute
+  '/secured/$locale/worker/user-activity': typeof SecuredLocaleWorkerUserActivityIndexRoute
   '/secured/$locale/worker/batches/$batchId': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
@@ -310,6 +319,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
+  '/secured/$locale/worker/user-activity/': typeof SecuredLocaleWorkerUserActivityIndexRoute
   '/secured/$locale/worker/batches/$batchId/': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create/': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/tasks/'
+    | '/secured/$locale/worker/user-activity'
     | '/secured/$locale/worker/batches/$batchId'
     | '/secured/$locale/worker/batches/create'
     | '/secured/$locale/worker/feedback/$feedbackId'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/tasks'
+    | '/secured/$locale/worker/user-activity'
     | '/secured/$locale/worker/batches/$batchId'
     | '/secured/$locale/worker/batches/create'
     | '/secured/$locale/worker/feedback/$feedbackId'
@@ -408,6 +420,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/monitoring/'
     | '/secured/$locale/worker/queues/'
     | '/secured/$locale/worker/tasks/'
+    | '/secured/$locale/worker/user-activity/'
     | '/secured/$locale/worker/batches/$batchId/'
     | '/secured/$locale/worker/batches/create/'
     | '/secured/$locale/worker/feedback/$feedbackId/'
@@ -494,6 +507,13 @@ declare module '@tanstack/react-router' {
       path: '/batches'
       fullPath: '/secured/$locale/worker/batches'
       preLoaderRoute: typeof SecuredLocaleWorkerBatchesRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
+    }
+    '/secured/$locale/worker/user-activity/': {
+      id: '/secured/$locale/worker/user-activity/'
+      path: '/user-activity'
+      fullPath: '/secured/$locale/worker/user-activity'
+      preLoaderRoute: typeof SecuredLocaleWorkerUserActivityIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/tasks/': {
@@ -718,6 +738,7 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerHelpIndexRoute: typeof SecuredLocaleWorkerHelpIndexRoute
   SecuredLocaleWorkerMonitoringIndexRoute: typeof SecuredLocaleWorkerMonitoringIndexRoute
   SecuredLocaleWorkerQueuesIndexRoute: typeof SecuredLocaleWorkerQueuesIndexRoute
+  SecuredLocaleWorkerUserActivityIndexRoute: typeof SecuredLocaleWorkerUserActivityIndexRoute
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   SecuredLocaleWorkerQueuesMessagesIndexRoute: typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
@@ -735,6 +756,8 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerMonitoringIndexRoute:
     SecuredLocaleWorkerMonitoringIndexRoute,
   SecuredLocaleWorkerQueuesIndexRoute: SecuredLocaleWorkerQueuesIndexRoute,
+  SecuredLocaleWorkerUserActivityIndexRoute:
+    SecuredLocaleWorkerUserActivityIndexRoute,
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute:
     SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute,
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute:
