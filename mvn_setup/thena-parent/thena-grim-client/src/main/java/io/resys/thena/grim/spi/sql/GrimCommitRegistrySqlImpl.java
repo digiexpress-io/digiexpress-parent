@@ -268,7 +268,7 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * FROM ").append(options.getGrimCommit()).ln()
-        .append(" created_at >= $1")
+        .append(" WHERE created_at >= $1")
         .build())
         .props(Tuple.of(createtAt))
         .build();

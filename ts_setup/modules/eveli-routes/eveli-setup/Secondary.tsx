@@ -7,6 +7,8 @@ import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomi
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import SupervisedUserCircleOutlinedIcon from '@mui/icons-material/SupervisedUserCircleOutlined';
+import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined';
 
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
@@ -158,6 +160,26 @@ export const Secondary: React.FC = () => {
           {intl.formatMessage({ id: 'menu.batches', defaultMessage: 'Batches' })}
         </Button>
       </EveliTenantFeatureEnabled>
+
+      <Button startIcon={<HealthAndSafetyOutlinedIcon />}
+        variant={location.pathname.endsWith('health') ? 'explorerActive' : 'explorerInactive'}
+        onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/worker/health'
+        })}
+      >
+        {intl.formatMessage({ id: 'menu.health', defaultMessage: 'Health' })}
+      </Button>
+
+      <Button startIcon={<SupervisedUserCircleOutlinedIcon />}
+        variant={location.pathname.endsWith('user-activity') ? 'explorerActive' : 'explorerInactive'}
+        onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/worker/user-activity'
+        })}
+      >
+        {intl.formatMessage({ id: 'menu.user-activity', defaultMessage: 'User activity' })}
+      </Button>
 
     </EveliShellExplorer>
   </>

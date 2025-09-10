@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { EveliProcExecution } from '../eveli-proc-execution';
+import { EveliHealth } from '../eveli-health';
 
 
 
@@ -8,5 +8,5 @@ export const Route = createFileRoute('/secured/$locale/worker/health/')({
 })
 
 function Component() {
-  return (<EveliProcExecution />)
+  return (<EveliHealth />)
 }

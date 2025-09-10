@@ -74,7 +74,7 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .append(" FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
         .append(" RIGHT JOIN ").append(options.getGrimCommit()).append(" as commit").ln()
         .append(" ON(tree.commit_id = commit.commit_id)").ln()
-        .append(" commit.created_at >= $1")
+        .append(" WHERE commit.created_at >= $1")
         .build())
         .props(Tuple.of(createtAt))
         .build();
