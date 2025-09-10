@@ -46,7 +46,7 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
         </Grid2>
 
         <Grid2 size={{ xs: 12, sm: 3, md: 3, lg: 3, xl: 3 }} className={classes.msgItemCommentText}>
-          <Typography>
+          <Typography style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
             {commentText}
           </Typography>
         </Grid2>
