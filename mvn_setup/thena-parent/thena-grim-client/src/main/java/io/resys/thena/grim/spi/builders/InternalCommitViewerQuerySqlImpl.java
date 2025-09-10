@@ -23,6 +23,7 @@ import java.time.Duration;
  */
 
 import java.util.Collection;
+import java.util.List;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.grim.GrimAnyObject;
@@ -83,7 +84,7 @@ public class InternalCommitViewerQuerySqlImpl implements InternalCommitViewerQue
   }
 
   @Override
-  public Multi<GrimCommitViewer> findAllViewersInDuration(String usedBy, String usedFor, Duration duration, String missionId) {
+  public Multi<GrimCommitViewer> findAllViewersInDuration(String usedBy, String usedFor, Duration duration, List<String> missionId) {
     final var sql = registry.commitViewers().findAllViewersInDuration(usedBy, usedFor, duration, missionId);
     if(log.isDebugEnabled()) {
       log.debug("User findAllViewersInDuration query, with props: {} \r\n{}", 

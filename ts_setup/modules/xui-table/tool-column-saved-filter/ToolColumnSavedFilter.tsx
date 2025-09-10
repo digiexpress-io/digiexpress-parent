@@ -36,13 +36,6 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
   const [dialog, setDialog] = React.useState<DialogState>();
   const filters = (backend.filters ?? []);
 
-
-  function handleClearFilters(event: React.MouseEvent<HTMLElement>, columnId: string) {
-
-  }
-  function toggleFilter(event: React.MouseEvent<HTMLElement>, col: Column<any, unknown>, value: string) {
-  }
-
   function handleSaveDefault() {
     backend.onSave(tableState, {
       type: 'CREATE',

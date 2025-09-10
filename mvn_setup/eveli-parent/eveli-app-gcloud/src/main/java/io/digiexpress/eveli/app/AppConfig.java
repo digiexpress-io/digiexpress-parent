@@ -47,6 +47,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @Configuration
@@ -111,7 +112,7 @@ public class AppConfig {
   
   @Bean
   public OrgClient orgClient(RestTemplate client, EveliPropsOrg orgProps) {
-    return new OrgClientImpl(client, orgProps.getServiceUrl());    
+    return new OrgClientImpl(client, orgProps.getServiceUrl(), Optional.empty());    
   }
   
   @Bean

@@ -1,6 +1,7 @@
 package io.resys.thena.grim.spi.datasource;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 
 /*-
  * #%L
@@ -23,6 +24,7 @@ import java.time.Duration;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimAnyObject;
@@ -39,10 +41,11 @@ import lombok.RequiredArgsConstructor;
 public interface GrimCommitViewerRegistry extends ThenaRegistryService<GrimCommitViewer, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.SqlTuple findAllGteCreateAt(OffsetDateTime createtAt);
   
   ThenaSqlClient.SqlTuple findAllObjectsByIdAndType(Collection<AnyObjectCriteria> commits);
   ThenaSqlClient.SqlTuple findAllByUsedByAndCommit(String usedBy, String usedFor, Collection<String> commits);
-  ThenaSqlClient.SqlTuple findAllViewersInDuration(@Nullable String usedBy, @Nullable String usedFor, @Nullable Duration duration, @Nullable String missionId);
+  ThenaSqlClient.SqlTuple findAllViewersInDuration(@Nullable String usedBy, @Nullable String usedFor, @Nullable Duration duration, @Nullable List<String> missionId);
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
   ThenaSqlClient.SqlTuple findAllByMissionIdsUsedByAndCommit(Collection<String> missionId, String usedBy, String usedFor);
   

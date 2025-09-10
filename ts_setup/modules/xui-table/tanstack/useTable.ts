@@ -9,11 +9,12 @@ import {
   VisibilityState,
   OnChangeFn,
   Updater,
-  PaginationState
+  PaginationState,
+  ColumnOrderState
 } from '@tanstack/react-table';
 
 import { tableSizeFn } from './tableSizeFn';
-import { TableState, useTableState } from '../table-state';
+import { TableState } from '../table-state';
 
 
 export function useTable<DataType extends object>(
@@ -32,21 +33,19 @@ export function useTable<DataType extends object>(
   const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = React.useCallback((p) => setState(prev => prev.setColumnFilters(p)), []);
   const onColumnSizingChange: OnChangeFn<ColumnSizingState> = React.useCallback((p) => setState(prev => prev.setColumnSizing(p)), []);
   const onSortingChange: OnChangeFn<SortingState> = React.useCallback((p) => setState(prev => prev.setSorting(p)), []);
+  const onColumnOrderChange: OnChangeFn<ColumnOrderState> = React.useCallback((p) => setState(prev => prev.setColumnOrder(p)), []);
 
   const onColumnVisibilityChange: OnChangeFn<VisibilityState> = React.useCallback((updaterOrValue: Updater<VisibilityState>) => 
     setState(state => {
       const prev = state.columnVisibility;
       const newVisibility = typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue;
-      //TODO:: state managment bug??  table.setColumnSizing(tableSizeFn(table, prev, newVisibility));
+      // TODO:: state managment bug??  table.setColumnSizing(tableSizeFn(table, prev, newVisibility));
       return state.setColumnVisibility(newVisibility);
     }), []);
 
   const onClearAll = React.useCallback(() => setState(state => state.clear()), [])
   const resetTableColsAndFilters = React.useCallback(() => setState(state => state.clearFiltersAndVisibility()), [])
 
-  React.useEffect(() => {
-    
-  }, [state.columnVisibility]);
 
 
   const table = useReactTable({
@@ -61,6 +60,7 @@ export function useTable<DataType extends object>(
     onColumnFiltersChange,
     onColumnSizingChange,
     onSortingChange,
+    onColumnOrderChange,
 
     columns: props.columns,
     data: props.data,
@@ -78,7 +78,8 @@ export function useTable<DataType extends object>(
       columnFilters: state.columnFilters,
       columnSizing: state.columnSizing,
       sorting: state.sorting,
-      pagination: state.pagination
+      pagination: state.pagination,
+      columnOrder: state.columnOrder
     }
   });
 

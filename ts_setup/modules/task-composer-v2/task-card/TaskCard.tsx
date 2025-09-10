@@ -117,7 +117,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
       </Box>
 
 
-      <Collapse in={props.isExpanded} timeout="auto" unmountOnExit >
+      <Collapse in={props.isExpanded} timeout="auto" unmountOnExit>
         <Box className={classes.cardBody}>
           <ExpandableBox isExpanded={props.isExpanded} onDoubleClick={props.onDoubleClick}>
             {cardContent}

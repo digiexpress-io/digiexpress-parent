@@ -36,6 +36,8 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Collections;
 import java.util.List;
 
+
+
 @Configuration
 public class AppConfig {
   @Bean
@@ -64,18 +66,24 @@ public class AppConfig {
   @Bean
   public OrgClient orgClient() {
     return new OrgClient() {
-
       @Override
       public GroupEmailQuery queryGroupEmails() {
         return new GroupEmailQuery() {
-          
           @Override
           public List<String> findAllByGroupName(String groupName) {
             return Collections.emptyList();
           }
         };
       }
-      
+      @Override
+      public GroupQuery queryGroups() {
+        return new GroupQuery() {
+          @Override
+          public List<Group> findAll() {
+            return Collections.emptyList();
+          }
+        };
+      }
     };
   }
 }

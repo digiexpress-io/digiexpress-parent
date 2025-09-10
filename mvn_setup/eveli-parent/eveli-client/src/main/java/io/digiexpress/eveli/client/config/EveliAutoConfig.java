@@ -54,6 +54,7 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -62,6 +63,7 @@ import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
+import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.DialobScheduler;
@@ -73,6 +75,7 @@ import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.digiexpress.eveli.client.spi.taskaudit.TaskAuditClientImpl;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
+import io.digiexpress.eveli.client.web.resources.worker.HealthApiController;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
@@ -335,6 +338,11 @@ public class EveliAutoConfig {
   @Bean
   public TenantApiController tenantApiController(TenantConfigClient tenantClient, EveliProps props) {
     return new TenantApiController(tenantClient);
+  }
+  
+  @Bean 
+  public HealthApiController healthApiController(TaskClient task, WorkerAuthClient worker) {
+    return new HealthApiController(new HealthClientImpl(task), worker);
   }
   
   @Bean

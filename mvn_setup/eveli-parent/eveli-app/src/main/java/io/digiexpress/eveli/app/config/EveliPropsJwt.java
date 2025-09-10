@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.app.config;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-app
@@ -32,4 +34,6 @@ public class EveliPropsJwt {
   private String gamutIssuer;
   private String eveliPublicKeyValue;
   private String eveliIssuer;
+  
+  private List<String> adminRoles;
 }

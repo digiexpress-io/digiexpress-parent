@@ -6,6 +6,7 @@ import { TaskCardId, useCardConfig } from './CardConfigContext';
 
 interface DraggableCardWrapperProps {
   id: string;
+  draggingId: string | null;
   isDragging: boolean;
   isDropTarget: boolean;
   onDragStart: (e: React.DragEvent<HTMLDivElement>, id: string) => void;
@@ -30,6 +31,7 @@ function getBorder(theme: Theme, isDragging: boolean, isDropTarget: boolean) {
 
 export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
   id,
+  draggingId,
   isDragging,
   isDropTarget,
   onDragStart,
@@ -40,6 +42,7 @@ export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
   children
 }) => {
   const theme = useTheme();
+  const isDraggingStartedOverAllCards: boolean = !!draggingId; 
   
   return (
     <Box
@@ -52,12 +55,12 @@ export const DraggableCardWrapper: React.FC<DraggableCardWrapperProps> = ({
       onDragLeave={(e) => onDragLeave(e, id)}
       sx={{
         height: '100%',
-        transform: (isDragging || isDropTarget) ? 'scale(0.95)' : 'scale(1)',
+        transform: isDraggingStartedOverAllCards && (isDragging || isDropTarget) ? 'scale(0.95)' : 'scale(1)',
         transition: 'transform 0.2s ease, border 0.1s ease',
-        border: getBorder(theme, isDragging, isDropTarget),
+        border: getBorder(theme, isDraggingStartedOverAllCards && isDragging, isDraggingStartedOverAllCards && isDropTarget),
         borderRadius: theme.spacing(1),
-        opacity: isDragging ? 0.6 : 1,
-        boxShadow: isDropTarget ? `0 0 6px 3px ${alpha(theme.palette.divider, 0.50)}` : 'none'
+        opacity: isDraggingStartedOverAllCards && isDragging ? 0.6 : 1,
+        boxShadow: isDraggingStartedOverAllCards && isDropTarget ? `0 0 6px 3px ${alpha(theme.palette.divider, 0.50)}` : 'none'
       }}
     >
       {children}
@@ -73,6 +76,7 @@ export function useDragCardController<T extends TaskCardId>() {
   const [draggingId, setDraggingId] = React.useState<T | null>(null);
   const [dropTargetId, setDropTargetId] = React.useState<T | null>(null);
   const draggedId = React.useRef<T | null>(null);
+
 
   const getDragHandlePropsForId = (id: T) => ({
     draggable: true,
@@ -207,7 +211,9 @@ export function useDragCardController<T extends TaskCardId>() {
   });
 
   return {
-    getDragPropsForId, getDragHandlePropsForId
+    getDragPropsForId, getDragHandlePropsForId,
+
+    draggingId
   };
 }
 

@@ -1,5 +1,6 @@
 package io.resys.thena.grim.spi.actions;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -91,6 +92,31 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
       return Uni.combine().all().unis(
           tx.commit().findAllByMissionId(missionId),
           tx.commitTree().findAllByMissionId(missionId)
+        ).asTuple().onItem().transform(tuple -> {
+          
+          final var commits = tuple.getItem1().stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
+          final var commitTrees = tuple.getItem2().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+          return ImmutableQueryEnvelope.<GrimProjectObjects>builder()
+              .repo(tx.getDataSource().getTenant())
+              .status(QueryEnvelopeStatus.OK)
+              .objects(ImmutableGrimProjectObjects.builder()
+                  .commits(commits)
+                  .commitTrees(commitTrees)
+                  .build())
+              .build();
+        });
+      
+    });
+  }
+  
+
+  @Override
+  public Uni<QueryEnvelope<GrimProjectObjects>> findAllCommitsGteCreateAt(OffsetDateTime createtAt) {
+    
+    return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
+      return Uni.combine().all().unis(
+          tx.commit().findAllGteCreateAt(createtAt),
+          tx.commitTree().findAllGteCreateAt(createtAt)
         ).asTuple().onItem().transform(tuple -> {
           
           final var commits = tuple.getItem1().stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
@@ -810,6 +836,4 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
       }
     }
   }
-
-
 }

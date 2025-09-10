@@ -52,6 +52,7 @@ export const ToolColumnVisibilityDialog: React.FC<ToolColumnVisibilityDialogProp
           table={table}
           slotProps={{
           columns: allColumns.map((col) => ({
+            colId: col.id,
             colTitle: col.columnDef.header?.toString() || col.id,
             isVisible: selected[col.id],
             onToggle: () => handleColumnVisibility(col.id)

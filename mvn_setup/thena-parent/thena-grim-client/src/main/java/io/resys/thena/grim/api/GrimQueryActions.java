@@ -75,6 +75,7 @@ public interface GrimQueryActions {
     Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes(List<String> assigneeGroups);
   }
   interface MissionCommitQuery {
+    Uni<QueryEnvelope<GrimProjectObjects>> findAllCommitsGteCreateAt(OffsetDateTime createtAt);
     Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits();
     Uni<QueryEnvelope<GrimProjectObjects>> findAllCommitsByMissionId(String missionId);
     Uni<QueryEnvelope<GrimContainerVersion>> findOneCommitByMissionId(String missionId, String currentCommitId);
@@ -84,7 +85,9 @@ public interface GrimQueryActions {
     CommitViewersQuery usedBy(String userBy);
     CommitViewersQuery usedFor(String usedFor);
     CommitViewersQuery missionId(String missionId);
+    CommitViewersQuery missionIds(List<String> missionId);
     CommitViewersQuery createdIn(Duration duration);
+    CommitViewersQuery gteCreateAt(OffsetDateTime createtAt);
     Uni<QueryEnvelopeList<GrimCommitViewer>> findAll();
   }
   

@@ -25,6 +25,7 @@ import java.time.OffsetDateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,17 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
         .append("  WHERE (id = $1)").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTuple findAllGteCreateAt(OffsetDateTime createtAt) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimCommitViewer()).ln()
+        .append("  WHERE (created_at >= $1)").ln() 
+        .build())
+        .props(Tuple.of(createtAt))
         .build();
   }
   @Override
@@ -215,7 +227,7 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
   }
   
   @Override
-  public SqlTuple findAllViewersInDuration(String usedBy, String usedFor, Duration duration, String missionId) {
+  public SqlTuple findAllViewersInDuration(String usedBy, String usedFor, Duration duration, List<String> missionId) {
     final var where = new ArrayList<String>();
     final var props = new ArrayList<>();
     int index = 1; 
@@ -232,8 +244,8 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
       where.add("viewers.used_for = $" + index++);
     }    
     if(missionId != null) {
-      props.add(missionId);
-      where.add("viewers.mission_id = $" + index++);
+      props.add(missionId.toArray());
+      where.add("viewers.mission_id = ANY($" + index++ + ")");
     }
     final var statement = " WHERE " + String.join(" AND ", where); 
     
@@ -394,4 +406,5 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
         .props(Tuple.of(usedBy, usedFor, missionId.toArray()))
         .build();
   }
+
 }

@@ -22,10 +22,32 @@ package io.digiexpress.eveli.client.api;
 
 import java.util.List;
 
+import org.immutables.value.Value;
+
 public interface OrgClient {
   GroupEmailQuery queryGroupEmails();
+  GroupQuery queryGroups();
   
   interface GroupEmailQuery {
     List<String> findAllByGroupName(String groupName); 
+  }
+  
+  interface GroupQuery {
+    List<Group> findAll();     
+  }
+  
+  
+  @Value.Immutable
+  interface Group {
+    String getName();
+    String getDescription();
+    
+    List<String> getMembers(); 
+  }
+
+  @Value.Immutable
+  interface GroupMember {
+    String getUserName();
+    String getUserEmail();
   }
 }

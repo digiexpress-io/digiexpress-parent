@@ -48,7 +48,7 @@ export const ColumnSlot = styled('div', {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: theme.spacing(1),
+    margin: theme.spacing(0.5),
     '.MuiTypography-root': {
       fontSize: '10pt',
       fontWeight: 400,

@@ -21,6 +21,9 @@ package io.resys.thena.grim.spi.actions;
  */
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
@@ -39,7 +42,7 @@ public class GrimCommitViewerQueryImpl implements CommitViewersQuery {
   private final Uni<GrimState> state;
   private String usedBy;
   private String usedFor;
-  private String missionId;
+  private List<String> missionId;
   private Duration duration;
   
   @Override
@@ -60,10 +63,20 @@ public class GrimCommitViewerQueryImpl implements CommitViewersQuery {
   
   @Override
   public CommitViewersQuery missionId(String missionId) {
-    this.missionId = RepoAssert.notNull(missionId, () -> "missionId can't be null!"); 
+    this.missionId = Arrays.asList(RepoAssert.notNull(missionId, () -> "missionId can't be null!")); 
     return this;
   }
-  
+  @Override
+  public CommitViewersQuery missionIds(List<String> missionIds) {
+    this.missionId = RepoAssert.notNull(missionIds, () -> "missionIds can't be null!"); 
+    return this;
+  }
+  @Override
+  public CommitViewersQuery gteCreateAt(OffsetDateTime gteCreatetAt) {
+    this.duration = Duration.between(RepoAssert.notNull(gteCreatetAt, () -> "gteCreatetAt can't be null!"), OffsetDateTime.now().plusDays(1)); 
+    return this;
+  }
+
   
   @Override
   public Uni<QueryEnvelopeList<GrimCommitViewer>> findAll() {
