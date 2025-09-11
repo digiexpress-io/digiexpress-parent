@@ -25,6 +25,7 @@ export interface GInboxMessagesClasses {
   newMsgSenderName: string;
   newMsgAddButton: string;
   newMsgCancelButton: string;
+  newMsgReplyButton: string;
 
   msgNotAllowed: string;
   msgNotAllowedContent: string;
@@ -61,6 +62,7 @@ export const GInboxMessagesRoot = styled("div", {
       styles.newMsgSenderName,
       styles.newMsgAddButton,
       styles.newMsgCancelButton,
+      styles.newMsgReplyButton,
 
       styles.msgNotAllowed,
       styles.msgNotAllowedContent,
@@ -209,6 +211,12 @@ export const GInboxMessagesRoot = styled("div", {
       },
     },
 
+    '& .GInboxMessages-newMsgReplyButton.MuiButtonBase-root.Mui-disabled': {
+      backgroundColor: lighten(theme.palette.action.disabledBackground, 0.4),
+      color: theme.palette.text.disabled,
+      cursor: 'not-allowed',
+    },     
+
     '& .GInboxMessages-newMsgAddButton .MuiButton-root': {},
 
     '.GInboxMessages-msgItem': {
@@ -284,6 +292,7 @@ export const useUtilityClasses = () => {
     newMsgSenderName: ['newMsgSenderName'],
     newMsgAddButton: ['newMsgAddButton'],
     newMsgCancelButton: ['newMsgCancelButton'],
+    newMsgReplyButton: ['newMsgReplyButton'],
 
     msgNotAllowed: ['msgNotAllowed'],
     msgNotAllowedContent: ['msgNotAllowedContent'],

@@ -79,7 +79,13 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
       />
 
       <div className={classes.newMsgButtons}>
-        <Button startIcon={<ReplyIcon />} variant='contained' disabled={emptyMessage} onClick={() => props.onReplyTo(messageText)}>
+        <Button
+          className={classes.newMsgReplyButton}
+          startIcon={<ReplyIcon />}
+          variant="contained"
+          disabled={emptyMessage}
+          onClick={() => props.onReplyTo(messageText)}
+        >
           {intl.formatMessage({ id: 'gamut.buttons.reply' })}
         </Button>
         <Button className={classes.newMsgAddButton} startIcon={<AttachFileIcon />} variant='outlined' onClick={triggerFileInput}>
