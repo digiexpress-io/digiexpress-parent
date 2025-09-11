@@ -2,32 +2,20 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from '@mui/material';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import { Editor } from '@monaco-editor/react';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { useQuery } from "@tanstack/react-query";
-import { Editor } from '@monaco-editor/react';
+import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 import YAML from 'yaml';
+import { DateTime } from 'luxon';
+
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { WithTableStyles } from '@dxs-ts/xui-table';
-import { DateTime } from 'luxon';
-import { useNavigate } from '@tanstack/react-router';
-import { useLocale } from '@dxs-ts/gamut-api';
+import { EveliHealthUserActivity } from '@dxs-ts/eveli-api';
 
 
-export type UserActivityType = 'ACCESS' | 'CHANGE';
-
-export interface EveliHealthUserActivity {
-  id: string;
-  createdAt: string;
-  targetId: string;
-  targetIdType: string;
-  taskRef: string;
-  type: UserActivityType;
-  usedFor: string;
-  usedBy: string;
-  userName: string;
-}
 
 
 export const EveliUserActivity: React.FC = () => {
@@ -64,8 +52,8 @@ export const EveliUserActivity: React.FC = () => {
       enableColumnFilter: true,
       enableResizing: true,
       cell: ({ row }) => {
-        const { userName, usedFor } = row.original;
-        return usedFor === 'WORKER' ? userName : '-'
+        const { userName } = row.original;
+        return userName
       }
     },
     {

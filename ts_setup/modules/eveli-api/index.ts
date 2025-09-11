@@ -9,6 +9,7 @@ export * from './api-dialob-form'
 export * from './api-proc-execution'
 export * from './api-publications'
 export * from './api-queue'
+export * from './api-health'
 export * from './api-feedback-backend'
 
 export { tree as fetchtree } from './fetchTree.gen'

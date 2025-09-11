@@ -35,6 +35,8 @@
     "@tanstack/react-router": "*",
     "@tanstack/react-table": "*",
     "@tanstack/react-query": "*",
+    "@monaco-editor/react": "*",
+    "yaml": "*",
     "luxon": "*",
     "moment": "*",
     "notistack": "*",
