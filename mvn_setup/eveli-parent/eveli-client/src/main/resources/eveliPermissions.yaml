@@ -16,6 +16,9 @@ eveli:
     - path-pattern: /worker/rest/api/processes/**
       method: GET
       roles: ROLE_TASK_ADMIN
+    - path-pattern: /worker/rest/api/health/**
+      method: GET
+      roles: ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/queues/**
       method: GET
       roles: ROLE_TASK_ADMIN

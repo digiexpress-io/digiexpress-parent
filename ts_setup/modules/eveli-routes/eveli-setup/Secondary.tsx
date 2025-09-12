@@ -161,26 +161,29 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliTenantFeatureEnabled>
 
-      <Button startIcon={<HealthAndSafetyOutlinedIcon />}
-        variant={location.pathname.endsWith('health') ? 'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/health'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.health', defaultMessage: 'Health' })}
-      </Button>
-
-      <Button startIcon={<SupervisedUserCircleOutlinedIcon />}
-        variant={location.pathname.endsWith('user-activity') ? 'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/user-activity'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.user-activity', defaultMessage: 'User activity' })}
-      </Button>
-
+      <EveliPermissions id='NAV_TO_HEALTH'>
+        <Button startIcon={<HealthAndSafetyOutlinedIcon />}
+          variant={location.pathname.endsWith('health') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/health'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.health', defaultMessage: 'Health' })}
+        </Button>
+      </EveliPermissions>
+      
+      <EveliPermissions id='NAV_TO_HEALTH'>
+        <Button startIcon={<SupervisedUserCircleOutlinedIcon />}
+          variant={location.pathname.endsWith('user-activity') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/user-activity'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.user-activity', defaultMessage: 'User activity' })}
+        </Button>
+      </EveliPermissions>
     </EveliShellExplorer>
   </>
   )

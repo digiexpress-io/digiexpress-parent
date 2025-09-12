@@ -37,6 +37,7 @@ const EveliPermissionMapping = {
 
   'NAV_TO_USER_PROFILE': oneOf(['USER_PROFILE_EDIT']),
   'NAV_TO_BATCHES': oneOf(['BATCH_VIEW', 'BATCH_EDIT']),
+  'NAV_TO_HEALTH':  oneOf(['HEALTH_VIEW']),
 
   'CREATE_TASK': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT']),
   'CREATE_STENCIL_ASSET': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
