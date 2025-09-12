@@ -23,8 +23,6 @@ export const TaskAuditQueuesTable: React.FC = () => {
 
   }, [taskAudit, task.id]);
 
-  console.log(queues)
-
   const columns: ColumnDef<TaskApi.TaskAuditQueue, any>[] = [
     {
       header: intl.formatMessage({ id: 'task.audit.queue.name', defaultMessage: 'Queue name' }),

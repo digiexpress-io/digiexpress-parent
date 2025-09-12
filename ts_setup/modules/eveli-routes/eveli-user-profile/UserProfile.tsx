@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, CircularProgress, Divider, Button, Box } from '@mui/material';
+import { Typography, Divider, Button, Box } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -16,6 +16,7 @@ import { UserProfileDetailRow } from './UserProfileDetailRow';
 
 import { UserProfileApi } from '@dxs-ts/user-profile';
 import { useIam } from '@dxs-ts/eveli-api';
+import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { EveliUserOverviewDetail, EveliUserProfileRoot, EveliUserProfileHeader, useUtilityClasses } from './useUtilityClasses';
 import { useQuery } from '@tanstack/react-query';
@@ -59,7 +60,7 @@ export const UserProfile: React.FC<{}> = () => {
 
 
   if (isPending || !profile) {
-    return <CircularProgress />;
+    return <EveliSpinner />;
   }
 
   return (<>

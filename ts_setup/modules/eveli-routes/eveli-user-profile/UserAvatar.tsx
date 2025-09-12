@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { UserProfileApi } from '@dxs-ts/user-profile';
 import { EveliAvatar, EveliUserAvatar, useUtilityClasses } from './useUtilityClasses';
+import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 
 function stringToColor(string: String) {
   let hash = 0;
@@ -30,7 +31,7 @@ const UserAvatar: React.FC<{ user: UserProfileApi.UserProfile }> = ({ user }) =>
   const twoLetters = firstLetter + secondLetter;
 
   if (!user) {
-    return <CircularProgress />;
+    return <EveliSpinner />;
   }
 
   return (

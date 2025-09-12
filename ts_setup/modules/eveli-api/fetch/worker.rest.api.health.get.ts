@@ -1,10 +1,6 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { EveliHealthTaskActivity, EveliHealthUserActivity } from '../api-health';
 
-
-
-
-
 export const Hook = createFileFetch('worker/rest/api/health.GET')({
   hook
 })

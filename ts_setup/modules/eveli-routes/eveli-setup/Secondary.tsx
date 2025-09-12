@@ -163,13 +163,13 @@ export const Secondary: React.FC = () => {
 
       <EveliPermissions id='NAV_TO_HEALTH'>
         <Button startIcon={<HealthAndSafetyOutlinedIcon />}
-          variant={location.pathname.endsWith('health') ? 'explorerActive' : 'explorerInactive'}
+          variant={location.pathname.endsWith('task-activity') ? 'explorerActive' : 'explorerInactive'}
           onClick={() => navigate({
             from: '/secured/$locale',
-            to: '/secured/$locale/worker/health'
+            to: '/secured/$locale/worker/task-activity'
           })}
         >
-          {intl.formatMessage({ id: 'menu.health', defaultMessage: 'Health' })}
+          {intl.formatMessage({ id: 'menu.task-activity', defaultMessage: 'Task activity' })}
         </Button>
       </EveliPermissions>
       

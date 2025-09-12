@@ -7,7 +7,7 @@ export interface EveliHealthUserActivity {
   targetIdType: string;
   taskRef: string;
   type: UserActivityType;
-  userFor: string;
+  usedFor: string;
   userName: string;
 }
 export interface EveliHealthTaskActivity {
@@ -17,7 +17,7 @@ export interface EveliHealthTaskActivity {
   targetIdType: string;
   taskRef: string;
   type: UserActivityType;
-  userFor: string;
+  usedFor: string;
   userName: string;
   diagnosis?: string;
   diagnosisDescription?: string;

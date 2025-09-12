@@ -1,23 +1,25 @@
-
 import React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Box, Typography } from '@mui/material';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
-import { Editor } from '@monaco-editor/react';
-import { ColumnDef, flexRender } from '@tanstack/react-table';
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
-import YAML from 'yaml';
-import { DateTime } from 'luxon';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
+import { useQuery } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
+import { useNavigate } from '@tanstack/react-router';
+import { Editor } from '@monaco-editor/react';
+import YAML from 'yaml';
+import { ColumnDef, flexRender } from '@tanstack/react-table';
+
 import { WithTableStyles } from '@dxs-ts/xui-table';
+import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 import { EveliHealthTaskActivity } from '@dxs-ts/eveli-api';
 
 
-export const EveliHealth: React.FC = () => {
-  const intl = useIntl();
 
+
+export const EveliTaskActivity: React.FC = () => {
+  const intl = useIntl();
   const { findAllTaskActivity } = useFetch('worker/rest/api/health.GET', {});
 
   const { data, error, refetch, isPending } = useQuery({
@@ -25,7 +27,10 @@ export const EveliHealth: React.FC = () => {
     queryFn: findAllTaskActivity
   });
 
-
+  if (isPending) {
+    return (<EveliSpinner />
+    )
+  }
 
   const columns: ColumnDef<EveliHealthTaskActivity, any>[] = [
     {
@@ -37,60 +42,48 @@ export const EveliHealth: React.FC = () => {
       enableColumnFilter: true,
       enableResizing: true,
       cell: ({ row }) => (
-        <TaskRefLink taskRef={row.original.taskRef} taskId={row.original.id} />
+        <TaskRefLink taskRef={row.original.taskRef} />
       ),
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.userName', defaultMessage: 'Username' }),
-      accessorKey: 'userName',
+      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.ageInDays', defaultMessage: 'Age in days' }),
+      accessorKey: 'ageInDays',
+      size: 150,
+      minSize: 100,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
+    },
+
+    {
+      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.flowName', defaultMessage: 'Flow name' }),
+      accessorKey: 'flowName',
       size: 200,
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: ({ row }) => {
-        const { userName } = row.original;
-        return userName
+      meta: {
+        enableSelection: true
       }
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.userName', defaultMessage: 'Diagnosis' }),
-      accessorKey: 'diagnosis',
+      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.formName', defaultMessage: 'Form name' }),
+      accessorKey: 'formName',
       size: 200,
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.diagnosisDescription', defaultMessage: 'Diagnosis description' }),
-      accessorKey: 'diagnosisDescription',
-      size: 200,
-      minSize: 150,
-      enableSorting: true,
-      enableColumnFilter: true,
-      enableResizing: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.usedFor', defaultMessage: 'Used for' }),
-      accessorKey: 'usedFor',
-      size: 200,
-      minSize: 150,
-      enableSorting: true,
-      enableColumnFilter: true,
-      enableResizing: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.type', defaultMessage: 'Type' }),
-      accessorKey: 'type',
-      size: 150,
-      minSize: 150,
-      enableSorting: true,
-      enableColumnFilter: true,
-      enableResizing: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.created', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.health.userActivities.created', defaultMessage: 'Created' }),
       accessorKey: 'createdAt',
       size: 200,
       minSize: 150,
@@ -100,7 +93,7 @@ export const EveliHealth: React.FC = () => {
       cell: (updated) => flexRender(AnyTaskDateTimeShort, { value: updated.getValue() })
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.health.taskActivities.bodyValue', defaultMessage: 'Body value' }),
+      header: intl.formatMessage({ id: 'task.audit.health.userActivities.bodyValue', defaultMessage: 'Body value' }),
       accessorKey: 'bodyValue',
       size: 150,
       minSize: 150,
@@ -158,15 +151,15 @@ const BodyValue: React.FC<{ value: any }> = ({ value }) => {
     </div>);
 }
 
-const TaskRefLink: React.FC<{ taskRef: string, taskId: string }> = ({ taskRef, taskId }) => {
+const TaskRefLink: React.FC<{ taskRef: string }> = ({ taskRef }) => {
   const nav = useNavigate();
 
   const handleClick = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-     nav({
+    nav({
       from: '/secured/$locale/worker',
-      to:'/secured/$locale/worker/tasks/$taskId',
+      to: '/secured/$locale/worker/tasks/$taskId',
       params: { taskId: taskRef }
     })
   }
@@ -198,4 +191,5 @@ const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
 
   return <div>{formatted}</div>;
+
 }

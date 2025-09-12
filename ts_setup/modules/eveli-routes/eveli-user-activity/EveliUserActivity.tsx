@@ -10,11 +10,10 @@ import { useIntl } from 'react-intl';
 import YAML from 'yaml';
 import { DateTime } from 'luxon';
 
-
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { EveliHealthUserActivity } from '@dxs-ts/eveli-api';
-
+import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 
 
 
@@ -28,7 +27,10 @@ export const EveliUserActivity: React.FC = () => {
     queryFn: findAllUserActivity
   });
 
-
+  if (isPending) {
+    return (<EveliSpinner />
+    )
+  }
 
   const columns: ColumnDef<EveliHealthUserActivity, any>[] = [
     {
@@ -40,8 +42,11 @@ export const EveliUserActivity: React.FC = () => {
       enableColumnFilter: true,
       enableResizing: true,
       cell: ({ row }) => (
-        <TaskRefLink taskRef={row.original.taskRef} taskId={row.original.id} />
+        <TaskRefLink taskRef={row.original.taskRef} />
       ),
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: intl.formatMessage({ id: 'task.audit.health.userActivities.userName', defaultMessage: 'Username' }),
@@ -51,9 +56,12 @@ export const EveliUserActivity: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      },
       cell: ({ row }) => {
-        const { userName } = row.original;
-        return userName
+       const { userName, usedFor } = row.original;
+       return usedFor === 'WORKER' ? userName : '-'
       }
     },
     {
@@ -64,6 +72,9 @@ export const EveliUserActivity: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: intl.formatMessage({ id: 'task.audit.health.userActivities.type', defaultMessage: 'Type' }),
@@ -73,6 +84,9 @@ export const EveliUserActivity: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: intl.formatMessage({ id: 'task.audit.health.userActivities.created', defaultMessage: 'Created' }),
@@ -143,7 +157,7 @@ const BodyValue: React.FC<{ value: any }> = ({ value }) => {
     </div>);
 }
 
-const TaskRefLink: React.FC<{ taskRef: string, taskId: string }> = ({ taskRef, taskId }) => {
+const TaskRefLink: React.FC<{ taskRef: string }> = ({ taskRef }) => {
   const nav = useNavigate();
 
   const handleClick = (event: React.MouseEvent) => {
