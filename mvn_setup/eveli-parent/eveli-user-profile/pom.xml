@@ -45,11 +45,6 @@
 
 
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-arc-deployment</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
