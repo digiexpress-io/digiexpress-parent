@@ -107,7 +107,7 @@ public class SpringJwtAuthClient implements WorkerAuthClient {
   private String getSub(Jwt principal) {
     String sub = "";
     if(principal != null) {
-      sub = Objects.toString(principal.getClaimAsString("sub"), "");
+      sub = Objects.toString(principal.getSubject(), "");
     }
     return sub;
   }

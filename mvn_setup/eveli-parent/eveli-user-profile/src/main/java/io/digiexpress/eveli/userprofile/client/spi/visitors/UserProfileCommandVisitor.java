@@ -44,8 +44,9 @@ import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.Upse
 import io.resys.thena.spi.ThenaDocConfig;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class UserProfileCommandVisitor {
   @SuppressWarnings("unused")
   private final UserProfile start;
@@ -148,6 +149,7 @@ public class UserProfileCommandVisitor {
               .build())
           .toList())
       .build();
+    log.debug("Creating user profile: {}", this.current);
     visitedCommands.add(command);
     
     return this.current;

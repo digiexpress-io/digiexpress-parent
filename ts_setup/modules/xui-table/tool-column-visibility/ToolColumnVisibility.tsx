@@ -67,10 +67,15 @@ export const ToolColumnVisibility: React.FC<{
     setColumnsOrder(originalColsOrder);
   }
 
+  function handleResetColSorting() {
+    table.resetSorting();
+  }
+
   const currentOrder = columnsOrder;
   const allVisible = table.getState().columnVisibility ? Object.values(table.getState().columnVisibility).every(v => v === true) : true;
   const orderUnchanged = currentOrder.join(',') === originalColsOrder.join(',');
   const resetColsDisabled = allVisible && orderUnchanged;
+  const sortingResetDiasabled = table.getState().sorting.length === 0;
 
   return (
     <Root className={classes.root}>
@@ -105,13 +110,17 @@ export const ToolColumnVisibility: React.FC<{
         </div>
       ))}
 
-      <Box mt={2} />
-      <Button
-        onClick={handleResetOriginalCols}
-        disabled={resetColsDisabled}
-      >
-        {intl.formatMessage({ id: 'eveli.table.resetColumns', defaultMessage: 'Reset columns' })}
-      </Button>
+      <Box mt={2} display='flex' flexDirection='column' gap={1}>
+        <Button
+          onClick={handleResetOriginalCols}
+          disabled={resetColsDisabled}
+        >
+          {intl.formatMessage({ id: 'eveli.table.resetColumnVisbility', defaultMessage: 'Reset column order and visibility' })}
+        </Button>
+        <Button onClick={handleResetColSorting} disabled={sortingResetDiasabled}>
+          {intl.formatMessage({ id: 'eveli.table.resetColumnSorting', defaultMessage: 'Reset column sorting' })}
+        </Button>
+      </Box>
     </Root>
     );
   };
@@ -137,9 +146,9 @@ const Visibility: React.FC<{
         <CheckBoxIcon className='cols-select-checkmark-icon' />
       ) : (
         <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
-        )}
-        <Typography>{col.colTitle}</Typography>
-        <Box flex={1} />
+      )}
+      <Typography>{col.colTitle}</Typography>
+      <Box flex={1} />
       <Box>
           <DragIndicatorIcon sx={{ cursor: 'grab' }} color='primary' />
         </Box>

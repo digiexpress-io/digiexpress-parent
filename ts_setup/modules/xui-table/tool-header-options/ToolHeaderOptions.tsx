@@ -20,6 +20,7 @@ export const ToolHeaderOptions: React.FC<ToolHeaderOptionsProps> = (props) => {
   const isSortable = column.getCanSort();
   const sortDirection = column.getIsSorted();
 
+
   if (isSortable) {
     return (
       <>
