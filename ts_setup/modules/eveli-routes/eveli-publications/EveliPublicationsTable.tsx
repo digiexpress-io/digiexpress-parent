@@ -3,6 +3,7 @@ import { Box, IconButton, Tooltip, Typography, Stack, Button, Dialog, DialogCont
 import { useIntl, FormattedMessage } from 'react-intl';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { WithTableStyles } from '@dxs-ts/xui-table';
+import { DateTime } from 'luxon';
 
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -18,6 +19,14 @@ import { CancelButton, EveliDateTimeFormatter, EveliPermissions } from '@dxs-ts/
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
 
+const formatFinnishDate = (value?: string) => {
+  if (!value) return '';
+  try {
+    return DateTime.fromISO(value).setLocale('fi').toLocaleString(DateTime.DATETIME_SHORT);
+  } catch {
+    return value;
+  }
+};
 
 const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) => {
   const [open, setOpen] = useState(false);
@@ -138,18 +147,18 @@ export const PublicationsTable: React.FC = () => {
       header: intl.formatMessage({ id: 'publicationsTableHeader.liveDate' }),
       accessorKey: 'startsAt',
       sortingFn: sortingFns.datetime,
-      cell: info => <EveliDateTimeFormatter value={info.getValue()} />,
+      cell: info => formatFinnishDate(info.getValue()),
       size: 160,
       minSize: 140,
-    },
+    },    
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
       accessorKey: 'createdAt',
       sortingFn: sortingFns.datetime,
-      cell: info => <EveliDateTimeFormatter value={info.getValue()} />,
+      cell: info => formatFinnishDate(info.getValue()),
       size: 160,
       minSize: 140,
-    },
+    },    
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
       accessorKey: 'createdBy',
