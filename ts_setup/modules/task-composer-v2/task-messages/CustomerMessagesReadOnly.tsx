@@ -53,7 +53,14 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
               <Typography className={classes.senderInfo} sx={{ ...style.bodyTypography }} >
                 {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
               </Typography>
-              <Typography style={{ ...style.bodyTypography, overflow: 'hidden', whiteSpace: 'normal' }}>
+              <Typography
+                style={{
+                  ...style.bodyTypography,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                  overflow: 'hidden'
+                }}
+              >
                 {truncateText(comment.commentText, 200)}
               </Typography>
             </Box>
