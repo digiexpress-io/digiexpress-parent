@@ -3,7 +3,6 @@ import { Box, IconButton, Tooltip, Typography, Stack, Button, Dialog, DialogCont
 import { useIntl, FormattedMessage } from 'react-intl';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { WithTableStyles } from '@dxs-ts/xui-table';
-import { DateTime } from 'luxon';
 
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -13,20 +12,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { useConfig, PublicationApi, EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
-import { CancelButton, EveliDateTimeFormatter, EveliPermissions } from '@dxs-ts/eveli-primitives';
-
+import { CancelButton, EveliPermissions } from '@dxs-ts/eveli-primitives';
+import { DateTime } from 'luxon';
 
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
 
-const formatFinnishDate = (value?: string) => {
-  if (!value) return '';
-  try {
-    return DateTime.fromISO(value).setLocale('fi').toLocaleString(DateTime.DATETIME_SHORT);
-  } catch {
-    return value;
-  }
-};
 
 const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) => {
   const [open, setOpen] = useState(false);
@@ -110,6 +101,15 @@ const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () =>
   );
 };
 
+const PublicationDateTimeFi: React.FC<{ value: any }> = ({ value }) => {
+  if (!value) {
+    return <div>--</div>;
+  }
+  const dateTime = DateTime.fromISO(value).setLocale('fi');
+  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT);
+  return <div>{formatted}</div>;
+};
+
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
   const config = useConfig();
@@ -147,18 +147,18 @@ export const PublicationsTable: React.FC = () => {
       header: intl.formatMessage({ id: 'publicationsTableHeader.liveDate' }),
       accessorKey: 'startsAt',
       sortingFn: sortingFns.datetime,
-      cell: info => formatFinnishDate(info.getValue()),
+      cell: info => <PublicationDateTimeFi value={info.getValue()} />,
       size: 160,
       minSize: 140,
-    },    
+    },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
       accessorKey: 'createdAt',
       sortingFn: sortingFns.datetime,
-      cell: info => formatFinnishDate(info.getValue()),
+      cell: info => <PublicationDateTimeFi value={info.getValue()} />,
       size: 160,
       minSize: 140,
-    },    
+    },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
       accessorKey: 'createdBy',
