@@ -45,11 +45,13 @@ import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.Crea
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @RestController
 @RequestMapping("/worker/rest/api/userprofiles")
 @RequiredArgsConstructor
+@Slf4j
 public class UserProfileController {
 
   private final UserProfileClient userProfileClient;
@@ -65,8 +67,12 @@ public class UserProfileController {
       @RequestParam(required = false, name = "create", defaultValue = "false") boolean create
   ) {
     assertAccess(profileId);
-    final var id = getUserId(profileId);
-    return userProfileClient.userProfileQuery().findByIds(Arrays.asList(id))
+    final var principal = workerAuthClient.getUser().getPrincipal();
+    final var sub = principal.getSub();
+    
+    log.debug("Creating/getting user profile for principal: {}", principal);
+    
+    return userProfileClient.userProfileQuery().findByIds(Arrays.asList(sub))
         .onItem().transformToUni(items -> {
           
           if(items.isEmpty() && !create) {
@@ -75,12 +81,12 @@ public class UserProfileController {
           
           // create profile if non
           if(items.isEmpty()) {
-            final var principal = workerAuthClient.getUser().getPrincipal();
             final var command = ImmutableCreateUserProfile.builder()
-                .id(principal.getSub())
+                .id(sub)
                 .email(principal.getEmail())
                 .addTenantFeatures(EveliWrenchOnlyTenantAutoConfig.FEATURE_USER_PROFILE)
                 .build();
+            log.debug("Creating user profile: {}", command);
             return userProfileClient.createUserProfile().createOne(command);
           } 
           

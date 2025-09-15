@@ -40,8 +40,10 @@ import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CreateUserProfileVisitor implements ThenaDocConfig.DocCreateVisitor<UserProfile> {
   private final List<? extends CreateUserProfile> commands;
   private final List<UserProfile> profiles = new ArrayList<UserProfile>();
@@ -65,6 +67,7 @@ public class CreateUserProfileVisitor implements ThenaDocConfig.DocCreateVisitor
           .externalId(entity.getItem1().getId())
           .commands(entity.getItem2())
           .next();
+        log.debug("Creating user profile: {}", json);
         profiles.add(entity.getItem1());
       } catch (NoChangesException e) {
         throw new RuntimeException(e.getMessage(), e);
