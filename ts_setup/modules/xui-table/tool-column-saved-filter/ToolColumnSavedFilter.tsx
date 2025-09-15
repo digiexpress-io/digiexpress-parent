@@ -80,7 +80,7 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
         />
       ))}
       <TableResetButton onClick={props.onClearAll}>
-        {intl.formatMessage({ id: 'eveli.table.resetAll', defaultMessage: 'Reset table to default settings' })}
+        {intl.formatMessage({ id: 'eveli.table.resetAll', defaultMessage: 'Reset table to system default settings' })}
       </TableResetButton>
     </Root>
   )
