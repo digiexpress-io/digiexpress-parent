@@ -106,7 +106,7 @@ const PublicationDateTimeFi: React.FC<{ value: any }> = ({ value }) => {
     return <div>--</div>;
   }
   const dateTime = DateTime.fromISO(value).setLocale('fi');
-  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT);
+  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
   return <div>{formatted}</div>;
 };
 
