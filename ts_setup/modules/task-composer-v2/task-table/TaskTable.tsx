@@ -54,7 +54,7 @@ export const TaskTable: React.FC = () => {
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
-      enableHiding: false,
+      enableHiding: true,
       enableResizing: true,
       meta: {
         enableSelection: true
