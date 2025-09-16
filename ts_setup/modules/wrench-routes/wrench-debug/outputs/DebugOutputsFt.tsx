@@ -30,10 +30,11 @@ const DebugOutputsFt: React.FC<{ debug:HdesApi.ServiceResult }> = ({ debug }) =>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
-
             <MonacoReact key="debug-output"
               value={toYaml(debug.value)}
-              defaultLanguage='yaml'/>
+              defaultLanguage='yaml'
+              height='500px'
+              />
           </Box>
         </Collapse>
       </TableCell>
