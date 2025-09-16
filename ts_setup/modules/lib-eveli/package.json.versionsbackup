@@ -1,0 +1,46 @@
+{
+  "name": "@dxs-ts/eveli-ide",
+  "version": "${project.version}",
+  "description": "Eveli route components - full page layouts, navigation",
+  "type": "module",
+  "publishConfig": {
+    "provenance": true
+  },
+  "dependencies": {
+    "@dxs-ts/gamut-api": "*",
+    "@dxs-ts/gamut-theme": "*",
+    "@dxs-ts/gamut-form": "*",
+    "@dxs-ts/gamut-md": "*",
+    "@dxs-ts/gamut-shell": "*",
+    "@dxs-ts/gamut-form-review": "*",
+    "@dxs-ts/gamut-intl": "*",
+
+    "@dxs-ts/envir-fetch": "*",
+    "@dxs-ts/envir-util": "*",
+    "@dxs-ts/user-profile": "*",
+
+    "@dxs-ts/wrench-api": "*",
+    "@dxs-ts/wrench-routes": "*",
+    "@dxs-ts/stencil-api": "*",
+    "@dxs-ts/stencil-routes": "*",
+
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/task-feedback": "*",
+    "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/eveli-intl": "*",
+    "@dxs-ts/eveli-routes": "*",
+    "@dxs-ts/xui-datetime": "*",
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/task-composer-v1": "*",
+    "@dxs-ts/task-composer-v2": "*"
+  },
+  "peerDependencies": {},
+  "keywords": [
+    "eveli",
+    "routes",
+    "navigation",
+    "layouts"
+  ]
+
+}
