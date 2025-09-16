@@ -23,7 +23,7 @@
     
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-db-client</artifactId>
+      <artifactId>thena-doc-client</artifactId>
     </dependency>
 
     <dependency>

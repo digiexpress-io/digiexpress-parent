@@ -30,7 +30,7 @@ import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettings;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettingsCommand;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettingsCommand.UpsertUiSettings;
-import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.doc.api.ThenaDocConfig;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;

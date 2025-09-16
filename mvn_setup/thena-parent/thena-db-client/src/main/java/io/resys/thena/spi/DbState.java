@@ -21,7 +21,6 @@ package io.resys.thena.spi;
  */
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.org.OrgState;
@@ -36,10 +35,6 @@ public interface DbState extends TenantDataSource {
   Uni<GitState> toGitState(String tenantId);
   GitState toGitState(Tenant repo);
   <R> Uni<R> withGitTransaction(TxScope tenantId, GitState.TransactionFunction<R> callback);
-  
-  Uni<DocState> toDocState(String tenantId);
-  DocState toDocState(Tenant repo);
-  <R> Uni<R> withDocTransaction(TxScope tenantId, DocState.TransactionFunction<R> callback);
   
   Uni<OrgState> toOrgState(String tenantId);
   OrgState toOrgState(Tenant repo);

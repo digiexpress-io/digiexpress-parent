@@ -21,8 +21,8 @@ package io.digiexpress.eveli.userprofile.client.spi;
  */
 
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.spi.DocStoreImpl;
-import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.doc.api.ThenaDocConfig;
+import io.resys.thena.doc.spi.DocStoreImpl;
 
 
 

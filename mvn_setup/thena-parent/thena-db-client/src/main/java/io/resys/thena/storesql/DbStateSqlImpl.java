@@ -35,7 +35,6 @@ import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
-import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.GitState.TransactionFunction;
@@ -98,25 +97,6 @@ public class DbStateSqlImpl implements DbState {
   @Override
   public <R> Uni<R> withGitTransaction(TxScope scope, TransactionFunction<R> callback) {
     return toGitState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
-  }
-  
-  // doc state
-  @Override
-  public Uni<DocState> toDocState(String tenantId) {
-    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
-      if(tenant == null) {
-        return tenantNotFound(tenantId);
-      }
-      return Uni.createFrom().item(toDocState(tenant));
-    });
-  }
-  @Override
-  public DocState toDocState(Tenant repo) {
-    return new DocDbStateImpl(dataSource.withTenant(repo));
-  }
-  @Override
-  public <R> Uni<R> withDocTransaction(TxScope scope, io.resys.thena.structures.doc.DocState.TransactionFunction<R> callback) {
-    return toDocState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
   
   // org state

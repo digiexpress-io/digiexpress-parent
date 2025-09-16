@@ -41,7 +41,7 @@ import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.Chan
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsLastName;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
-import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.doc.api.ThenaDocConfig;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;

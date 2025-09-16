@@ -24,8 +24,6 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.DocCommitActions;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.FsCommitActions;
 import io.resys.thena.api.actions.FsQueryActions;
 import io.resys.thena.api.actions.GitBranchActions;
@@ -45,7 +43,6 @@ import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
-import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.ThenaContainer;
 import io.smallrye.mutiny.Uni;
@@ -56,10 +53,6 @@ public interface ThenaClient {
   GitStructuredTenant git(String tenantIdOrName);
   GitStructuredTenant git(TenantCommitResult repo);
   GitStructuredTenant git(Tenant repo);
-  
-  DocStructuredTenant doc(String tenantIdOrName);
-  DocStructuredTenant doc(TenantCommitResult repo);
-  DocStructuredTenant doc(Tenant repo);
   
   OrgStructuredTenant org(String tenantIdOrName);
   OrgStructuredTenant org(TenantCommitResult repo);
@@ -96,16 +89,6 @@ public interface ThenaClient {
   }
 
 
-  // single document model
-  interface DocStructuredTenant {
-    DocCommitActions commit();
-    DocQueryActions find();
-  }
-  // build world state
-  interface DocProjectQuery {
-    DocProjectQuery tenant(String tenantId);
-    Uni<QueryEnvelope<DocTenantObjects>> get();
-  }
   
   // multi doc model, cropped git replica
   interface GitStructuredTenant {

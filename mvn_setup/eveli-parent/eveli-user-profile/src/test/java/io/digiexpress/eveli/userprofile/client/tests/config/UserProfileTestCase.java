@@ -39,8 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
-import io.resys.thena.spi.ThenaClientPgSql;
-import io.resys.thena.support.DocDbPrinter;
+import io.resys.thena.doc.spi.support.DocDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -83,13 +82,6 @@ public class UserProfileTestCase {
   public static ObjectMapper objectMapper() {
     return DatabindCodec.mapper(); 
   }
-
-  public void assertCommits(String repoName) {
-    final var config = getStore().getConfig();
-    final var commits = config.getClient().git(repoName).commit().findAllCommits().await().atMost(atMost);
-    log.debug("Total commits: {}", commits.size());
-    
-  }
   
   @AfterEach
   public void tearDown() {
@@ -108,17 +100,10 @@ public class UserProfileTestCase {
     return targetDate;
   }
 
-  public String printRepo(UserProfileClient client) {
-    final var config = ((UserProfileClientImpl) client).getCtx().getConfig();
-    final var state = ((ThenaClientPgSql) config.getClient()).getState();
-    final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
-    final String result = new DocDbPrinter(state).printWithStaticIds(repo);
-    return result;
-  }
-  
+
   public String toStaticData(UserProfileClient client) {
     final var config = ((UserProfileClientImpl) client).getCtx().getConfig();
-    final var state = ((ThenaClientPgSql) config.getClient()).getState();
+    final var state = config.getClient().unwrap();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
     return new DocDbPrinter(state).printWithStaticIds(repo);
   }

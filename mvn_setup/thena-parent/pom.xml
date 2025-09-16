@@ -20,6 +20,7 @@
     <module>thena-grim-client</module>
     <module>thena-mq-client</module>
     <module>thena-batch-client</module>
+    <module>thena-doc-client</module>
   </modules>
 
 </project>

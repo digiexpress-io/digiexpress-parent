@@ -31,8 +31,8 @@ import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.spi.DocStoreImpl;
-import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.doc.api.ThenaDocConfig;
+import io.resys.thena.doc.spi.DocStoreImpl;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
 

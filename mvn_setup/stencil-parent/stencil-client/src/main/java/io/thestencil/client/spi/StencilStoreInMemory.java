@@ -130,11 +130,6 @@ public class StencilStoreInMemory implements StencilStore {
       };
     }
     @Override
-    public DocStructuredTenant doc(String repoId) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
     public OrgStructuredTenant org(String repoId) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
@@ -146,16 +141,6 @@ public class StencilStoreInMemory implements StencilStore {
 
     @Override
     public GitStructuredTenant git(Tenant repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public DocStructuredTenant doc(TenantCommitResult repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public DocStructuredTenant doc(Tenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 

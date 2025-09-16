@@ -30,7 +30,6 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
-import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
@@ -51,7 +50,6 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
   public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
     final var git = new GitRegistrySqlImpl(next.getRegistry());
-    final var doc = new DocRegistrySqlImpl(next.getRegistry());
     final var org = new OrgRegistrySqlImpl(next.getRegistry());
     final var fs = new FsRegistrySqlImpl(next.getRegistry());
     final var sqlQuery = new TenantRegistrySqlImpl(next.getRegistry());
@@ -122,23 +120,7 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
         .append(fs.direntRemarks().createConstraints().getValue());
         
         
-      } else  {
-        tablesCreate
-          .append(doc.docs().createTable().getValue())
-          .append(doc.docBranches().createTable().getValue())
-          .append(doc.docCommands().createTable().getValue())
-          .append(doc.docCommits().createTable().getValue())
-          .append(doc.docCommitTrees().createTable().getValue())
-          
-  
-          .append(doc.docs().createConstraints().getValue())
-          .append(doc.docBranches().createConstraints().getValue())
-          .append(doc.docCommands().createConstraints().getValue())
-          .append(doc.docCommits().createConstraints().getValue())
-          .append(doc.docCommitTrees().createConstraints().getValue())
-          
-          .toString();
-      }
+      } 
       
       if(log.isDebugEnabled()) {
         log.debug(new StringBuilder("Creating schema: ")
@@ -172,7 +154,7 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
   public Uni<Tenant> delete(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
     final var git = new GitRegistrySqlImpl(next.getRegistry());
-    final var doc = new DocRegistrySqlImpl(next.getRegistry());
+    
     final var org = new OrgRegistrySqlImpl(next.getRegistry());
     final var fs = new FsRegistrySqlImpl(next.getRegistry());
     final var sqlQuery = new TenantRegistrySqlImpl(next.getRegistry());
@@ -222,14 +204,7 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
         .append(org.orgCommits().dropTable().getValue());
         
         
-      } else {
-        tablesDrop
-        .append(doc.docCommitTrees().dropTable().getValue())
-        .append(doc.docCommits().dropTable().getValue())
-        .append(doc.docCommands().dropTable().getValue())
-        .append(doc.docBranches().dropTable().getValue())
-        .append(doc.docs().dropTable().getValue());        
-      }
+      } 
       
       
       if(log.isDebugEnabled()) {

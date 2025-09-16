@@ -27,7 +27,7 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirTenantQuery;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeCache;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
-import io.resys.thena.spi.DocStore.StoreTenantQuery;
+import io.resys.thena.doc.api.DocStore.StoreTenantQuery;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 

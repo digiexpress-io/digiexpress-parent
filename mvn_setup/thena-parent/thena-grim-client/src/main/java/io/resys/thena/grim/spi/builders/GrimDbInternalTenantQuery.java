@@ -55,7 +55,7 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
     return pool.withTransaction(tx -> {
       final var tenantInsert = sqlQuery.insertOne(newRepo);
       final var tablesCreate = new StringBuilder();
-      RepoAssert.isTrue(newRepo.getType() == StructureType.grim, () -> "Tenant type must be batch");
+      RepoAssert.isTrue(newRepo.getType() == StructureType.grim, () -> "Tenant type must be grim");
 
       
       

@@ -21,8 +21,6 @@ package io.resys.thena.spi;
  */
 
 import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.DocCommitActions;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.FsCommitActions;
 import io.resys.thena.api.actions.FsQueryActions;
 import io.resys.thena.api.actions.GitBranchActions;
@@ -37,8 +35,6 @@ import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.structures.doc.actions.DocAppendActionsImpl;
-import io.resys.thena.structures.doc.actions.DocQueryActionsImpl;
 import io.resys.thena.structures.fs.actions.FsCommitActionsImpl;
 import io.resys.thena.structures.fs.actions.FsQueryActionsImpl;
 import io.resys.thena.structures.git.GitRepoQueryImpl;
@@ -85,15 +81,6 @@ public class ThenaClientPgSql implements ThenaClient {
   }
 
   @Override
-  public DocStructuredTenant doc(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new DocStructuredTenant() {
-      @Override public DocQueryActions find() { return new DocQueryActionsImpl(state, repoId); }
-      @Override public DocCommitActions commit() { return new DocAppendActionsImpl(state, repoId); }
-    };
-  }
-
-  @Override
   public OrgStructuredTenant org(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     return new OrgStructuredTenant() {
@@ -123,14 +110,6 @@ public class ThenaClientPgSql implements ThenaClient {
   @Override
   public GitStructuredTenant git(Tenant repo) {
     return git(repo.getId());
-  }
-  @Override
-  public DocStructuredTenant doc(TenantCommitResult repo) {
-    return doc(repo.getRepo().getId());
-  }
-  @Override
-  public DocStructuredTenant doc(Tenant repo) {
-    return doc(repo.getId());
   }
   @Override
   public OrgStructuredTenant org(TenantCommitResult repo) {
