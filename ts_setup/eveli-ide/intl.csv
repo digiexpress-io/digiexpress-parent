@@ -1,6 +1,6 @@
 ID,Info,en,fi,sv
 document.title,,DigiExpress,DigiExpress,DigiExpress
-eveli.textSeparatorColon,,: ,: ,: ,
+eveli.textSeparatorColon,,: ,: ,:
 eveli.noValueIndicator,,--,--,--,
 eveli.permissions.none.title,,Oops!,Joitain meni väärin!,Oops!
 eveli.permissions.none.desc1,,You don't have the correct access rights to use this application.,Sinulla ei ole oikeuksia tämän sovelluksen käyttöön,Du har inte rätt åtkomsträttigheter för att använda denna applikation.
