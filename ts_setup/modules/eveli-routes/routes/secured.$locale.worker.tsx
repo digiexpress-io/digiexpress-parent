@@ -9,16 +9,29 @@ import { EveliApp } from '../eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/worker')({
   component: Component,
+  validateSearch: (search: Record<string, unknown>): SearchParams => parseSearchParams(search)
 })
 
 function Component() {
+  const { mode } = Route.useSearch();
+
+  if (mode === 'CONTENT_ONLY') {
+    return (<EveliApp contentOnly main={Main} secondary={() => <></>} toolbar={() => <></>} />)
+  }
+
   return (<EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />)
 }
 
 
 const Main: React.FC<{}> = () => {
+  return (<Box p={1}><Outlet /></Box>)
+}
 
-  return (<Box p={1}>
-    <Outlet />
-  </Box>)
+interface SearchParams {
+  mode?: 'CONTENT_ONLY',
+  explorer?: any[]
+}
+
+function parseSearchParams(search: Record<string, unknown>): SearchParams {
+  return { mode: search.mode === 'CONTENT_ONLY' ? 'CONTENT_ONLY' : undefined }
 }

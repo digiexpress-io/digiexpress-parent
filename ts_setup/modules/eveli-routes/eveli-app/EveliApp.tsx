@@ -51,25 +51,27 @@ export interface ContainerProps {
 
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
   drawerWidth?: number;
-
+  drawerOpen?: boolean;
+  contentOnly?: boolean;
   children?: React.ReactNode
 };
 
 export const EveliApp: React.FC<ContainerProps> = (components) => {
-  const { main: UserContent, tabs: UserTabs } = components;
+  const { main: UserContent, tabs: UserTabs, contentOnly } = components;
 
   return (
     <IconbarProvider>
       <EveliShell 
-        drawerOpen={true} 
+        drawerOpen={components.drawerOpen ?? true} 
         toolbarHeight={components.toolbarHeight} 
         drawerWidth={components.drawerWidth} >
         
-        <ToggleDrawer {...components} />
+        {!contentOnly && (<ToggleDrawer {...components} />)}
 
+        {!contentOnly && (
         <AppBar position='fixed' className={EveliShellClassName}>
           {UserTabs ? <UserTabs /> : <></>}
-        </AppBar>
+          </AppBar>)}
 
         <main role='main'>
           <MuiContainer><UserContent /></MuiContainer>
