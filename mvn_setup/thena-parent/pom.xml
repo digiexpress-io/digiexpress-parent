@@ -21,6 +21,7 @@
     <module>thena-mq-client</module>
     <module>thena-batch-client</module>
     <module>thena-doc-client</module>
+    <module>thena-git-client</module>
   </modules>
 
 </project>

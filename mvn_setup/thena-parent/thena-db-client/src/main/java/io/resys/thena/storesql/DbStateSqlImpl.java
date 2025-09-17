@@ -36,8 +36,6 @@ import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.structures.fs.FsState;
-import io.resys.thena.structures.git.GitState;
-import io.resys.thena.structures.git.GitState.TransactionFunction;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -78,25 +76,6 @@ public class DbStateSqlImpl implements DbState {
     return toFsState(scope.getTenantId()).onItem().transformToUni(state -> {
       return state.withTransaction(callback);
     });
-  }
-  
-  // git state
-  @Override
-  public Uni<GitState> toGitState(String tenantId) {
-    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
-      if(tenant == null) {
-        return tenantNotFound(tenantId);
-      }
-      return Uni.createFrom().item(toGitState(tenant));
-    });
-  }
-  @Override
-  public GitState toGitState(Tenant repo) {
-    return new GitDbStateImpl(dataSource.withTenant(repo));
-  }
-  @Override
-  public <R> Uni<R> withGitTransaction(TxScope scope, TransactionFunction<R> callback) {
-    return toGitState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
   }
   
   // org state

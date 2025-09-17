@@ -32,15 +32,15 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
-import io.resys.thena.spi.DbState;
-import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.structures.git.GitPrinter;
+import io.resys.thena.git.api.GitClient;
+import io.resys.thena.git.api.GitDataSource;
+import io.resys.thena.git.spi.GitDataSourceImpl;
+import io.resys.thena.git.spi.GitPrinter;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PgTestTemplate {
-  private ThenaClient client;
+  private GitClient client;
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
   
@@ -68,7 +68,7 @@ public class PgTestTemplate {
   @BeforeEach
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
-    this.client = DbStateSqlImpl.create()
+    this.client = GitDataSourceImpl.create()
         .db("junit")
         .client(pgPool)
         .build();
@@ -89,13 +89,13 @@ public class PgTestTemplate {
     connection.closeAndForget();
   }
 
-  public ThenaClient getClient() {
+  public GitClient getClient() {
     return client;
   }
   
-  public DbState createState() {
+  public GitDataSource createState() {
     final var ctx = TenantContext.defaults("junit");
-    return DbStateSqlImpl.create(ctx, pgPool, new TenantCacheImpl());
+    return GitDataSourceImpl.create(ctx, pgPool, new TenantCacheImpl());
   }
   
   public void printRepo(Tenant repo) {
@@ -120,7 +120,7 @@ public class PgTestTemplate {
   
   @SuppressWarnings("unused")
   public StencilComposer getPersistence(String repoId) {
-    final ThenaClient client = getClient();
+    final GitClient client = getClient();
     
     // create project
     TenantCommitResult repo = getClient().tenants().commit()

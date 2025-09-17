@@ -27,8 +27,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.permission.client.spi.PermissionStore.PermissionStoreConfig;
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.doc.api.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.spi.ExMessageFormatter;
@@ -65,14 +63,7 @@ public class PermissionStoreException extends RuntimeException {
   public List<DocumentExceptionMsg> getMessages() { return messages; }
   public JsonObject getTarget() { return target; }  
   
- 
-  public static DocumentExceptionMsg convertMessages(CommitResultEnvelope commit) {
-    return ImmutableDocumentExceptionMsg.builder()
-        .id(commit.getGid())
-        .value("") //TODO
-        .addAllArgs(commit.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-        .build();
-  }
+
 
   public static DocumentExceptionMsg convertMessages(ManyDocsEnvelope envelope) {
     return ImmutableDocumentExceptionMsg.builder()
@@ -83,18 +74,7 @@ public class PermissionStoreException extends RuntimeException {
   }
   
   
-  public static DocumentExceptionMsg convertMessages1(QueryEnvelope<GitPullActions.PullObject> state) {
-    return ImmutableDocumentExceptionMsg.builder()
-        .id("STATE_FAIL")
-        .value("")
-        .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-        .build();
-  }
-  public static DocumentExceptionMsg convertMessages2(QueryEnvelope<GitPullActions.PullObjects> state) {
-    return ImmutableDocumentExceptionMsg.builder()
-        .addAllArgs(state.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
-        .build();
-  }
+
 
   public static Builder builder(String msgId) {
     return new Builder(msgId);

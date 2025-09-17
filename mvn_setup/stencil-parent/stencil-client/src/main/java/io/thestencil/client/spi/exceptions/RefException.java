@@ -2,9 +2,9 @@ package io.thestencil.client.spi.exceptions;
 
 /*-
  * #%L
- * stencil-client-api
+ * stencil-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ package io.thestencil.client.spi.exceptions;
  * #L%
  */
 
-import io.resys.thena.api.actions.GitBranchActions;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.git.api.GitBranchActions;
 
 public class RefException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;

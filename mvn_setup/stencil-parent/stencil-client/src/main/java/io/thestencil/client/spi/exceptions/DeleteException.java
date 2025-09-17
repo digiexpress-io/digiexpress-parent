@@ -22,10 +22,10 @@ package io.thestencil.client.spi.exceptions;
 
 import java.util.List;
 
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.git.api.GitPullActions;
+import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityType;
 

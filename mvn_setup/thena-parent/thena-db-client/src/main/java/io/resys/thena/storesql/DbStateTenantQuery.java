@@ -31,7 +31,6 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.registry.fs.FsRegistrySqlImpl;
-import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
 import io.resys.thena.spi.InternalTenantQueryImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
@@ -49,7 +48,6 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
   @Override
   public Uni<Tenant> insert(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
-    final var git = new GitRegistrySqlImpl(next.getRegistry());
     final var org = new OrgRegistrySqlImpl(next.getRegistry());
     final var fs = new FsRegistrySqlImpl(next.getRegistry());
     final var sqlQuery = new TenantRegistrySqlImpl(next.getRegistry());
@@ -60,20 +58,7 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
       final var tablesCreate = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
-        tablesCreate
-          .append(git.blobs().createTable().getValue())
-          .append(git.commits().createTable().getValue())
-          .append(git.treeValues().createTable().getValue())
-          .append(git.trees().createTable().getValue())
-          .append(git.branches().createTable().getValue())
-          .append(git.tags().createTable().getValue())
-          
-          .append(git.commits().createConstraints().getValue())
-          .append(git.branches().createConstraints().getValue())
-          .append(git.tags().createConstraints().getValue())
-          .append(git.trees().createConstraints().getValue())
-          .append(git.treeValues().createConstraints().getValue())
-          .toString();
+
       } else if(newRepo.getType() == StructureType.grim) {
 
       } else if(newRepo.getType() == StructureType.org) {
@@ -153,7 +138,6 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
   @Override
   public Uni<Tenant> delete(final Tenant newRepo) {
     final var next = dataSource.withTenant(newRepo);
-    final var git = new GitRegistrySqlImpl(next.getRegistry());
     
     final var org = new OrgRegistrySqlImpl(next.getRegistry());
     final var fs = new FsRegistrySqlImpl(next.getRegistry());
@@ -165,13 +149,6 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
       final var tablesDrop = new StringBuilder();
       
       if(newRepo.getType() == StructureType.git) {
-        tablesDrop
-        .append(git.branches().dropTable().getValue())
-        .append(git.tags().dropTable().getValue())
-        .append(git.commits().dropTable().getValue())
-        .append(git.treeValues().dropTable().getValue())
-        .append(git.trees().dropTable().getValue())
-        .append(git.blobs().dropTable().getValue());
 
       } else if(newRepo.getType() == StructureType.grim) {
 

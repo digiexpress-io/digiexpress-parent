@@ -51,7 +51,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.hdes.client.spi.store.ThenaStore;
-import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
@@ -181,7 +181,7 @@ public class EveliAutoConfigAssets {
     
     final var stencilClient = new StencilClientImpl(StencilStoreImpl.builder()
         .config((builder) -> builder
-            .client(DbStateSqlImpl.create().client(pgPool).build())
+            .client(GitDataSourceImpl.create().client(pgPool).build())
             .objectMapper(objectMapper)
             .repoName("stencil-assets")
             .headName("main")

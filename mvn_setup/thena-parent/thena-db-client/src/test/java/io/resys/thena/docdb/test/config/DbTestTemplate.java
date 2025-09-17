@@ -21,7 +21,6 @@ import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.fs.FsPrinter;
-import io.resys.thena.structures.git.GitPrinter;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -135,8 +134,6 @@ public class DbTestTemplate {
       log.debug(result);
       
     } else if(repo.getType() == StructureType.git) {
-      final String result = new GitPrinter(createState()).print(repo);
-      log.debug(result);
       
     } else if(repo.getType() == StructureType.grim) {
 
@@ -184,7 +181,8 @@ public class DbTestTemplate {
     } else if(client.getType() == StructureType.fs) {
       return new FsPrinter(createState()).printWithStaticIds(client, replacements);
     }
-    return new GitPrinter(createState()).printWithStaticIds(client);
+
+    return "";
   }
   
 }

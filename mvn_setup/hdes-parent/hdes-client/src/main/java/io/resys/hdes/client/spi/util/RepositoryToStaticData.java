@@ -34,12 +34,12 @@ import org.apache.commons.io.IOUtils;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.spi.DbState;
+import io.resys.thena.git.api.GitDataSource;
 
 public class RepositoryToStaticData {
-  private final DbState state;
+  private final GitDataSource state;
 
-  public RepositoryToStaticData(DbState state) {
+  public RepositoryToStaticData(GitDataSource state) {
     super();
     this.state = state;
   }

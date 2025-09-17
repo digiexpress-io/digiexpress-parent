@@ -22,7 +22,6 @@ package io.resys.thena.spi;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.fs.FsState;
-import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.org.OrgState;
 import io.smallrye.mutiny.Uni;
 
@@ -31,11 +30,7 @@ public interface DbState extends TenantDataSource {
   Uni<FsState> toFsState(String tenantId);
   FsState toFsState(Tenant repo);
   <R> Uni<R> withFsTransaction(TxScope tenantId, FsState.TransactionFunction<R> callback);
-  
-  Uni<GitState> toGitState(String tenantId);
-  GitState toGitState(Tenant repo);
-  <R> Uni<R> withGitTransaction(TxScope tenantId, GitState.TransactionFunction<R> callback);
-  
+
   Uni<OrgState> toOrgState(String tenantId);
   OrgState toOrgState(Tenant repo);
   <R> Uni<R> withOrgTransaction(TxScope tenantId, OrgState.TransactionFunction<R> callback);

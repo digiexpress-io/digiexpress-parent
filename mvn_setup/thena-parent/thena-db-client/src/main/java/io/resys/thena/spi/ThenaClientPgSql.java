@@ -23,12 +23,6 @@ package io.resys.thena.spi;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.FsCommitActions;
 import io.resys.thena.api.actions.FsQueryActions;
-import io.resys.thena.api.actions.GitBranchActions;
-import io.resys.thena.api.actions.GitCommitActions;
-import io.resys.thena.api.actions.GitDiffActions;
-import io.resys.thena.api.actions.GitHistoryActions;
-import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
@@ -37,13 +31,6 @@ import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.fs.actions.FsCommitActionsImpl;
 import io.resys.thena.structures.fs.actions.FsQueryActionsImpl;
-import io.resys.thena.structures.git.GitRepoQueryImpl;
-import io.resys.thena.structures.git.commits.CommitActionsImpl;
-import io.resys.thena.structures.git.diff.DiffActionsImpl;
-import io.resys.thena.structures.git.history.HistoryActionsDefault;
-import io.resys.thena.structures.git.objects.BranchActionsImpl;
-import io.resys.thena.structures.git.objects.ObjectsActionsImpl;
-import io.resys.thena.structures.git.tags.TagActionsDefault;
 import io.resys.thena.structures.org.actions.OrgCommitActionsImpl;
 import io.resys.thena.structures.org.actions.OrgHistoryActionsImpl;
 import io.resys.thena.structures.org.actions.OrgQueryActionsImpl;
@@ -64,20 +51,6 @@ public class ThenaClientPgSql implements ThenaClient {
   }
   public DbState getState() {
     return state;
-  }
-
-  @Override
-  public GitStructuredTenant git(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new GitStructuredTenant() {
-      @Override public GitTenantQuery tenants() { return new GitRepoQueryImpl(state, repoId); }
-      @Override public GitCommitActions commit() { return new CommitActionsImpl(state, repoId); }
-      @Override public GitTagActions tag() { return new TagActionsDefault(state, repoId); }
-      @Override public GitHistoryActions history() { return new HistoryActionsDefault(state, repoId); }
-      @Override public GitPullActions pull() { return new ObjectsActionsImpl(state, repoId); }
-      @Override public GitDiffActions diff() { return new DiffActionsImpl(state, pull(), commit(), () -> tenants()); }
-      @Override public GitBranchActions branch() { return new BranchActionsImpl(state, repoId); }
-    };
   }
 
   @Override
@@ -103,14 +76,6 @@ public class ThenaClientPgSql implements ThenaClient {
   }
   
 
-  @Override
-  public GitStructuredTenant git(TenantCommitResult repo) {
-    return git(repo.getRepo().getId());
-  }
-  @Override
-  public GitStructuredTenant git(Tenant repo) {
-    return git(repo.getId());
-  }
   @Override
   public OrgStructuredTenant org(TenantCommitResult repo) {
     return org(repo.getRepo().getId());

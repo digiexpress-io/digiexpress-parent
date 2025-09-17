@@ -14,7 +14,7 @@ import io.digiexpress.mig.client.spi.loggers.TargetThenaLogger;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.datasource.GitTableNames;
+import io.resys.thena.git.spi.sql.GitTableNames;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;

@@ -34,7 +34,7 @@
     
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-db-client</artifactId>
+      <artifactId>thena-git-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

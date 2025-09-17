@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelopePage;
+import io.resys.thena.git.api.GitPullActions;
+import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
