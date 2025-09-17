@@ -37,8 +37,9 @@ export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose,
         <ButtonGroup>
           <IconButton onClick={onClose}><CloseIcon color='primary' /></IconButton>
           <IconButton onClick={async () => {
-              const url = await backend.persistence.getOneTaskPdfLink(task.questionnaireId!, task.id);
-              window.open(url);
+              const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId: task.id, fields: [] });
+              const pdfUrl = URL.createObjectURL(pdfBlob);
+              const _newWindow = window.open(pdfUrl, '_blank');
             }}><PictureAsPdfRoundedIcon color='primary'/>
           </IconButton>
         </ButtonGroup>

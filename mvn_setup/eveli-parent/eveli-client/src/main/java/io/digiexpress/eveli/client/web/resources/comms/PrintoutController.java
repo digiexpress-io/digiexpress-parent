@@ -1,6 +1,9 @@
 package io.digiexpress.eveli.client.web.resources.comms;
 
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
 
 /*-
  * #%L
@@ -27,19 +30,23 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import jakarta.annotation.Nullable;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -49,51 +56,74 @@ import lombok.extern.slf4j.Slf4j;
 public class PrintoutController {
 
   private final TaskClient client;
+  
   private final WorkerAuthClient auth;
   private final DialobClient dialob;
   private final RestTemplate restTemplate;
   private final String serviceUrl;
   private static final Duration timeout = Duration.ofMillis(10000);
   
-  @GetMapping(value = {"/pdf"}, produces = MediaType.APPLICATION_PDF_VALUE)
-  public ResponseEntity<byte[]> printQuestionnaire(
-      @RequestParam(required = false, value = "taskId")String taskId, 
-      @RequestParam(required = false, value = "questionnaireId")String questionnaireId) {
+  @PostMapping(value = {"/pdf"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<byte[]> printQuestionnaire(@RequestBody PdfRequest body) {
     
     try {
       final var worker = auth.getUser().getPrincipal();
+      log.debug("PDF printout request user has roles: {}", worker.getRoles());      
       
-      
-      log.debug("PDF printout request user has roles: {}", worker.getRoles());
-      final var task = client.queryTasks().getOneById(taskId).await().atMost(timeout);
+      final var task = client.queryTasks().getOneById(body.getTaskId()).await().atMost(timeout);
       
       if(!worker.isAdmin() && !worker.isAccessGranted(task.getAssignedRoles())) {
-        log.warn("Task with ID {} not found or no roles access for printout, returning 404", taskId);
+        log.warn("Task with ID {} not found or no roles access for printout, returning 404", task.getId());
         return ResponseEntity.status(403).build();
       }
-
-      if (verifyLink(questionnaireId, task)) {
-        Questionnaire questionnaire = dialob.getQuestionnaireById(questionnaireId);
-        Form form = dialob.getFormById(questionnaire.getMetadata().getFormId());
-        PrintoutInput input = new PrintoutInput();
-        input.setForm(form);
-        input.setSession(questionnaire);
-        input.setLang(questionnaire.getMetadata().getLanguage());
-        input.setReferenceId(task.getTaskRef());
-        ResponseEntity<byte[]> printoutResponse = callPrintoutService(restTemplate, input);
-        log.info("PDF printout request completed for user: {} for printout of task: {} and questionnaire: {}", 
-            worker.getUsername(), taskId, questionnaireId);
-        return new ResponseEntity<>(printoutResponse.getBody(), HttpStatus.OK);
-      }
-      else {
-        log.warn("Task with ID {} has no questionnaire {} for printout, returning 404", taskId, questionnaireId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
       
-    }
-    catch (Exception e) {
+      final var process = client.queryTaskProcesess().findOneByTaskId(task.getId()).await().atMost(timeout);
+      final var questionnaire = dialob.getQuestionnaireById(task.getQuestionnaireId());
+      final var form = dialob.getFormById(questionnaire.getMetadata().getFormId());
+      
+      
+      final PrintoutInput input = PrintoutInput.builder()
+          .form(form)
+          .session(questionnaire)
+          .lang(questionnaire.getMetadata().getLanguage())
+          .referenceId(task.getTaskRef())
+          
+          .customerName(body.getFields().contains(PdfRequestFields.CUSTOMER_NAME) ? task.getClientIdentificator() : null)
+          .customerSsn(body.getFields().contains(PdfRequestFields.CUSTOMER_SSN) ? process.get().getUserId() : null)
+          .comments(body.getFields().contains(PdfRequestFields.EXTERNAL_COMMENTS) ? task.getComments().stream()
+              .filter(e -> Boolean.TRUE.equals(e.getExternal()))
+              .map(e -> PrintoutInputComment.builder()
+                  .created(e.getCreated())
+                  .commentText(e.getCommentText())
+                  .source(e.getSource())
+                  .build())
+              .sorted((a, b) -> a.getCreated().compareTo(b.getCreated()))
+              .toList(): Collections.emptyList())
+          .build();
+      
+      
+      
+      final ResponseEntity<byte[]> printoutResponse = callPrintoutService(restTemplate, input);
+      
+      log.info("PDF printout request completed for user: {} for printout of task: {} and questionnaire: {}", 
+          worker.getUsername(), task.getId(), task.getQuestionnaireId());
+      
+      return ResponseEntity
+          .ok()
+          .contentType(MediaType.APPLICATION_PDF)
+          .contentLength(printoutResponse.getBody().length)
+          .body(printoutResponse.getBody());
+
+    } catch (Exception e) {
       log.error("PDF printout request FAILED with cause {}", e);
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      /* just get empty pdf when fast and furious end point testing ...
+      return ResponseEntity
+          .ok()
+          .contentType(MediaType.APPLICATION_PDF)
+          .contentLength(0)
+          .body(new byte[] {});
+          */
     }
   }
   
@@ -118,7 +148,7 @@ public class PrintoutController {
   }
   
   private int getResponseStatus(ResponseEntity<byte[]> pdfEntity) {
-    return pdfEntity != null ? pdfEntity.getStatusCodeValue() : 0;
+    return pdfEntity != null ? pdfEntity.getStatusCode().value() : 0;
   }
   
   private void checkStatus(String scope, int status) {
@@ -133,21 +163,37 @@ public class PrintoutController {
       throw new IllegalStateException("Printout service error!");
     }
   }
-
-  private boolean verifyLink(String questionnaireId, TaskClient.Task taskModel) {
-    boolean linkFound = false;
-    if (questionnaireId.equals(taskModel.getQuestionnaireId())) {
-      linkFound = true;
-    }
-    return linkFound;
+  
+  @Data @Builder @Jacksonized
+  public static class PdfRequest {
+    private final String taskId;
+    private final List<PdfRequestFields> fields;
   }
-
-  @Data
+  
+  public enum PdfRequestFields {
+    CUSTOMER_NAME,
+    CUSTOMER_SSN,
+    EXTERNAL_COMMENTS
+  }
+  
+  
+  @Data @Builder
   public static class PrintoutInput {
-    String lang;
-    Form form;
-    Questionnaire session;
-    String referenceId;
-  }
+    private final String lang;
+    private final Form form;
+    private final Questionnaire session;
+    private final String referenceId;
+    
+    @Nullable private final String customerName;
+    @Nullable private final String customerSsn;
 
+    private final List<PrintoutInputComment> comments;
+  }
+  
+  @Data @Builder
+  public static class PrintoutInputComment {
+    private final ZonedDateTime created;
+    private final String commentText;
+    private final TaskCommentSource source;
+  }
 }

@@ -23,7 +23,7 @@ eveli:
       method: GET
       roles: ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/pdf
-      method: GET
+      method: GET,POST
       roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/assets/**
       method: GET,POST,PUT,DELETE

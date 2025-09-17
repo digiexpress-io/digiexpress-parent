@@ -28,21 +28,26 @@ export const FormReviewButton: React.FC<{ task: { id: string, questionnaireId?: 
     return (<></>);
   }
  
-  const linkProps = useLinkProps({
-    to: '/secured/$locale/worker/tasks/$taskId/review',
-    params: { taskId: task.id, locale },
-    search: { mode: 'CONTENT_ONLY' }
-  });
-
-  function handleOpenReview() {
-    if (linkProps.href) {
-      window.open(linkProps.href, '_blank', 'noopener,noreferrer');
-    }
-  }
-
-  return (<>
-    <backend.slots.DialobReviewButton onClick={handleOpenReview} />
-  </>);
+  return (
+    <>
+      <backend.slots.DialobReviewButton onClick={() => setOpen(true)}   />
+      <Dialog open={open} onClose={() => setOpen(false)} fullScreen>
+        <DialogTitle><FormattedMessage id='dialobForm.review.title'/></DialogTitle>
+        <DialogContent>
+          <backend.slots.DialobReview task={task} onClose={() => setOpen(false)} />
+        </DialogContent>
+        <DialogActions>
+          <Button variant='outlined' endIcon={<ArrowRightIcon/>} onClick={async () => {
+            const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId: task.id, fields: [] });
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const _newWindow = window.open(pdfUrl, '_blank');
+          }}>
+            <FormattedMessage id='taskLink.pdf.open' />
+          </Button>
+          <Button variant='contained' onClick={() => setOpen(false)}><FormattedMessage id='button.close'/></Button>
+        </DialogActions>
+      </Dialog>
+    </>);
 }
 
 

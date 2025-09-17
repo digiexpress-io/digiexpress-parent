@@ -39,7 +39,7 @@ export interface TaskBackendContextType {
     findAllTasks: () => Promise<TaskApi.Task[]>;
     findAllUnreadTasks: () => Promise<string[]>;
     getOneTask: (taskId: string) => Promise<TaskApi.Task>;
-    getOneTaskPdfLink: (questionnaireId: string, taskId: string) => Promise<string>;
+    getOneTaskPdf: (pdfRequest: TaskApi.TaskPdfRequest) => Promise<Blob>;
     getOneTaskAudit: (taskId: string) => Promise<TaskApi.TaskAuditLog>;
     modifyOneTask: (newData: TaskApi.Task) => Promise<TaskApi.Task>;
     deleteOneTask: (taskId: string) => Promise<unknown>;

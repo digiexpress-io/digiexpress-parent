@@ -126,7 +126,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { downloadAttachmentLink } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.GET', {});
   const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
   const { deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
-  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
+  const { pdfTaskCallback } = useFetch('worker/rest/api/pdf.POST', {});
 
   const unit:  TaskBackendProviderProps['persistence'] = {
     findAllUnreadTasks: async function (): Promise<string[]> {
@@ -161,7 +161,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
     deleteOneTask: deleteTask,
     createOneTask: createTask,
     createOneComment: saveComment,
-    getOneTaskPdfLink: pdfTaskLinkCallback
+    getOneTaskPdf: pdfTaskCallback
   }
 
   return unit;
