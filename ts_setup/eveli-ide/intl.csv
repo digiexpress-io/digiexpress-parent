@@ -33,6 +33,12 @@ task.status.rejected,,No processing,Ei käsittelyä,Ingen bearbetning
 task.status.transferred,,Transferred,Siirretty,Överförs
 task.status.delegated,,Delegated,Delegoitu,Delegerad
 task.status.waiting,,Waiting,Odottaa,Väntar
+task.pdf.options.select.CUSTOMER_NAME,,Customer name,Customer name,Customer name,
+task.pdf.options.select.CUSTOMER_SSN,,Customer SSN,Customer SSN,Customer SSN,
+task.pdf.options.select.EXTERNAL_COMMENTS,,Customer messages,Customer messages,Customer messages,
+task.pdf.options.select,,PDF Printing options,PDF Printing options,PDF Printing options,
+task.pdf.print,,Print PDF,Print PDF,Print PDF,
+task.pdf.options.select.desc,,The form will be printed as a PDF which includes the additional options you select here.,The form will be printed as a PDF which includes the additional options you select here.,The form will be printed as a PDF which includes the additional options you select here.,
 task.form.review,,View form,Avaa lomake,Visa formulär
 task.created,,Created,Luotu,Skapad
 task.updated,,Updated,Päivitetty,Uppdaterad

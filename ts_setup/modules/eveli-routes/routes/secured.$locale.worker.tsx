@@ -16,7 +16,7 @@ function Component() {
   const { mode } = Route.useSearch();
 
   if (mode === 'CONTENT_ONLY') {
-    return (<EveliApp contentOnly main={Main} secondary={() => <></>} toolbar={() => <></>} />)
+    return (<EveliApp contentOnly drawerOpen={false} main={Main} secondary={() => <></>} toolbar={() => <></>} />)
   }
 
   return (<EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />)
