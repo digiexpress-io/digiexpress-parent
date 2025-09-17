@@ -111,9 +111,6 @@
     <cobertura.total-branch-rate>1</cobertura.total-branch-rate>
     <cobertura.total-line-rate>1</cobertura.total-line-rate>
 
-    <quarkus.container.image.group>digiexpress-io</quarkus.container.image.group>
-    <quarkus.container.image.build>false</quarkus.container.image.build>
-
     <sonar.organization>digiexpress-io</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
