@@ -1,11 +1,12 @@
-import { Box, Button, Container } from '@mui/material';
+import React from 'react';
+
+import { Button, Container } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { createFileRoute } from '@tanstack/react-router'
 import { DialobReviewBasedOnForm } from '../dialob-review';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { useFetch } from "@dxs-ts/envir-fetch";
 
-import React from 'react';
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks/$taskId/review/')({
   component: Component,
@@ -25,9 +26,11 @@ function Component() {
   }, [taskId]);
 
   async function handlePdfClick() {
-    const url = await backend.persistence.getOneTaskPdfLink(task?.questionnaireId!, taskId);
-    window.open(url);
+    const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId, fields: [] });
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    const _newWindow = window.open(pdfUrl, '_blank');
   }
+  
   return (
     <Container>
       <Button variant='outlined' onClick={handlePdfClick}>{intl.formatMessage({ id: 'taskLink.pdf.open' })}</Button>
