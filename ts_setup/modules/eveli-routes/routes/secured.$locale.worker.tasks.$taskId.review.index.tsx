@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import { createFileRoute } from '@tanstack/react-router'
 import { DialobReviewBasedOnForm } from '../dialob-review';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
-import { useFetch } from '@dxs-ts/envir-fetch';
+
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks/$taskId/review/')({
   component: Component,
@@ -15,25 +15,18 @@ export const Route = createFileRoute('/secured/$locale/worker/tasks/$taskId/revi
 function Component() {
   const { taskId } = Route.useParams();
   const backend = useTaskBackend();
-
-  const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
-  const [task, setTask] = React.useState<TaskApi.Task>();
-
-
-  React.useEffect(() => {
-    getTask(taskId).then(setTask);
-  }, [taskId]);
+  const options = React.useState<TaskApi.TaskPdfRequest['fields']>([]);
 
   async function handlePdfClick() {
-    const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId, fields: [] });
+    const pdfBlob = await backend.persistence.getOneTaskPdf({ taskId, fields: options[0] });
     const pdfUrl = URL.createObjectURL(pdfBlob);
     const _newWindow = window.open(pdfUrl, '_blank');
   }
 
   return (
     <Container>
-      <div className='GFormPage-root'><PdfOptionsSelect onPdfCreate={handlePdfClick} /></div>
-      <DialobReviewBasedOnForm taskId={taskId} questionnaireId={''} onClose={() => { }} />
+      <div className='GFormPage-root'><PdfOptionsSelect state={options} onPdfCreate={handlePdfClick} /></div>
+      {React.useMemo(() => <DialobReviewBasedOnForm taskId={taskId} questionnaireId={''} onClose={() => { }} />, [taskId])}
     </Container>
   )
 }
@@ -45,9 +38,12 @@ const options: TaskApi.TaskPdfRequest['fields'] = [
   'EXTERNAL_COMMENTS'
 ];
 
-const PdfOptionsSelect: React.FC<{ onPdfCreate: () => void }> = ({ onPdfCreate }) => {
+const PdfOptionsSelect: React.FC<{
+  onPdfCreate: () => void,
+  state: [TaskApi.TaskPdfRequest['fields'], React.Dispatch<React.SetStateAction<TaskApi.TaskPdfRequest['fields']>>]
+}> = ({ onPdfCreate, state }) => {
   const intl = useIntl();
-  const [optionValues, setOptionValues] = React.useState<TaskApi.TaskPdfRequest['fields']>([]);
+  const [optionValues, setOptionValues] = state;
 
   const handleChange = (event: SelectChangeEvent<typeof optionValues>) => {
     const value = event.target.value as TaskApi.TaskPdfRequest['fields'];
