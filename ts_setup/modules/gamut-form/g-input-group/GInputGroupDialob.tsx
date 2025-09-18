@@ -1,12 +1,13 @@
 import React from 'react';
 import { GFormBaseElementProps } from '../g-form-base-element';
 import { GInputGroup } from './GInputGroup';
+import { DialobApi } from '@dxs-ts/gamut-api';
 
 
 
 export const GInputGroupDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, children }) => {
   const description = store.form.toDescription(element.id);
-  const border: boolean | undefined = element.props?.border ? (element.props?.border === 'true') : undefined;
+  const border: boolean | undefined = element.props?.border ? (DialobApi.isTrue(element.props?.border)) : undefined;
 
   return (
     <GInputGroup

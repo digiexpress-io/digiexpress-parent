@@ -866,12 +866,12 @@
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@mui/icons-material",
-        "@monaco-editor/react",
-        "@tanstack/react-table",
-        "yaml",
-        "luxon",
         "@dxs-ts/xui-table",
+        "@tanstack/react-table",
+        "luxon",
         "@mui/utils",
+        "@monaco-editor/react",
+        "yaml",
         "@material-table/core",
         "recharts",
         "@dxs-ts/user-profile",
@@ -890,11 +890,11 @@
         "react-intl",
         "@tanstack/react-router",
         "@mui/icons-material",
-        "@monaco-editor/react",
         "@tanstack/react-table",
-        "yaml",
         "luxon",
         "@mui/utils",
+        "@monaco-editor/react",
+        "yaml",
         "@material-table/core",
         "recharts",
         "@mui/system",
@@ -2338,7 +2338,8 @@
         "@monaco-editor/react",
         "yaml",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-feedback"
+        "@dxs-ts/task-feedback",
+        "@tanstack/react-query"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2349,14 +2350,17 @@
         "luxon",
         "@tanstack/react-table",
         "@monaco-editor/react",
-        "yaml"
+        "yaml",
+        "@tanstack/react-query"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/task-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/task-feedback"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@tanstack/react-query"
+      ],
       "unusedDependencies": [
         "@dxs-ts/xui-datetime",
         "@mui/system"
@@ -3359,6 +3363,6 @@
       ]
     }
   },
-  "checksum": "d8828af1fa36807e58cc2b91c4d9edbaab84591f4929db523338fee0f9e738c3",
-  "generatedAt": "2025-09-11T10:09:28.219Z"
+  "checksum": "b799a90a1d6b09caf2abff64c90f68cd1b9e98f62d47dfa5b8d3b8ba5233f47b",
+  "generatedAt": "2025-09-18T09:48:48.014Z"
 }

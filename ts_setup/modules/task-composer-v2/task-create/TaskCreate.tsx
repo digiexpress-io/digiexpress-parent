@@ -7,34 +7,61 @@ import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { EditRoles } from './TaskCreateRoles';
 import { EditPriority } from './TaskCreatePriority';
 import { TaskCreateAssignee } from './TaskCreateAssignee';
+import { useQueryClient } from '@tanstack/react-query';
+import { TASK_TABLE_QUERY_KEY } from '../task-table';
+
+
 
 interface RequiredError {
   subject?: string;
 }
 
 export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ open, onClose }) => {
+  const client = useQueryClient();
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useTaskBackend();
   const groups = backend.roles;
 
+  const initialDueDate = new Date();
+  const initialAssignee: TaskApi.User = {
+    userName: backend.currentUser.name,
+    userEmail: backend.currentUser.email
+  };
+
+
+
   const [clientName, setClientName] = React.useState<string>('');
   const [subject, setSubject] = React.useState<string>('');
   const [addInfo, setAddInfo] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
-  const [assignee, setAssignee] = React.useState<TaskApi.User>({
-    userName: backend.currentUser.name,
-    userEmail: backend.currentUser.email
-  });
+  const [assignee, setAssignee] = React.useState<TaskApi.User>(initialAssignee);
   const [roles, setRoles] = React.useState<string[]>([]);
   const [priority, setPriority] = React.useState<TaskApi.TaskPriority>(TaskApi.TaskPriority.NORMAL);
-  const [dueDate, setDueDate] = React.useState<Date | null>(new Date());
+  const [dueDate, setDueDate] = React.useState<Date | null>(initialDueDate);
 
   const [userList, setUserList] = React.useState<TaskApi.User[]>([]);
   const [errors, setErrors] = React.useState<RequiredError>({
     subject: intl.formatMessage({ id: 'task.composer.error.subject.required', defaultMessage: '* Task subject is required' })
   });
 
+  function resetAllCreateFields() {
+    setClientName('');
+    setSubject('');
+    setAddInfo('');
+    setDescription('');
+    setAssignee(initialAssignee);
+    setRoles([]);
+    setPriority(TaskApi.TaskPriority.NORMAL);
+    setDueDate(initialDueDate);
+    setUserList([]);
+    setErrors({
+      subject: intl.formatMessage({
+        id: 'task.composer.error.subject.required',
+        defaultMessage: '* Task subject is required'
+      })
+    });
+  }
 
   React.useEffect(() => {
     if (roles.length > 0) {
@@ -74,7 +101,9 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
     };
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length > 0) return;
+    if (Object.keys(newErrors).length > 0) {
+      return
+    };
 
     const taskFromValues: Partial<TaskApi.Task> = {
       priority: priority,
@@ -88,14 +117,18 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
       assignedRoles: roles,
       additionalInfo: addInfo,
     }
-    backend.persistence.createOneTask(taskFromValues);
+
+    await backend.persistence.createOneTask(taskFromValues);
+    await client.refetchQueries({ exact: true, queryKey: [TASK_TABLE_QUERY_KEY] }, { throwOnError: false });
+    resetAllCreateFields();
+    onClose();
   };
 
 
   return (
     <StyledTaskCreate className={classes.root} open={open} onClose={onClose} maxWidth='md'>
 
-      <DialogTitle><Typography variant='h1'>{intl.formatMessage({ id: 'task.composer.create', defaultMessage: 'Create new task' })}</Typography></DialogTitle>
+      <DialogTitle variant='h1'>{intl.formatMessage({ id: 'task.composer.create', defaultMessage: 'Create new task' })}</DialogTitle>
       <DialogContent>
 
         <Stack direction="row" spacing={3} className={classes.fieldsRow}>

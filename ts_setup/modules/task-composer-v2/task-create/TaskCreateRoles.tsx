@@ -58,7 +58,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
   // root of the outlined input
   '& .MuiOutlinedInput-root': {
-    height: '2.5rem',
+    minHeight: '2.5rem',
+    maxHeight: 'fit-content',
     padding: 0,
     '& .MuiAutocomplete-input': {
       paddingLeft: theme.spacing(1.5),

@@ -1,6 +1,7 @@
 import React from 'react';
 import { GFormBaseElementProps } from '../g-form-base-element';
 import { GFormGroup } from './GFormGroup';
+import { DialobApi } from '@dxs-ts/gamut-api';
 
 
 
@@ -9,8 +10,8 @@ export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
 
   // starts from 1: Page is group 1
   const parents = store.form.toParents(element.id);
-  const border: boolean | undefined = element.props?.border ? (element.props?.border === 'true') : undefined;
-  const collapsible: boolean | undefined = element.props?.collapsible ? (element.props?.collapsible === 'true') : undefined;
+  const border: boolean | undefined = element.props?.border ? (DialobApi.isTrue(element.props?.border)) : undefined;
+  const collapsible: boolean | undefined = element.props?.collapsible ? (DialobApi.isTrue(element.props?.collapsible)) : undefined;
 
   return (
     <GFormGroup

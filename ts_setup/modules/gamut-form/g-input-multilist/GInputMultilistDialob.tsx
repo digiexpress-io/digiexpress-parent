@@ -1,6 +1,7 @@
 import React from 'react';
 import { GFormBaseElementProps } from '../g-form-base-element';
 import { GInputMultilist } from './GInputMultilist';
+import { DialobApi } from '@dxs-ts/gamut-api';
 
 
 
@@ -20,7 +21,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ disable
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
   const errors = store.form.toErrors(element.id);
-  const border: boolean | undefined = element.props?.border ? (element.props?.border === 'true') : undefined;
+  const border: boolean | undefined = element.props?.border ? (DialobApi.isTrue(element.props?.border)) : undefined;
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {      
     const multichoiceEvent = event as React.ChangeEvent<HTMLInputElement>;

@@ -1,6 +1,8 @@
 
 export namespace DialobApi {
-
+  export function isTrue(value: string | boolean) {
+    return 'true' === value || value === true;
+  }
 }
 
 

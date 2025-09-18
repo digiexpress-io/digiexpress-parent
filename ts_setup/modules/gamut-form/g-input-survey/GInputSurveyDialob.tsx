@@ -3,6 +3,7 @@
 import React from 'react';
 import { GFormBaseElementProps } from '../g-form-base-element';
 import { GInputSurvey } from './GInputSurvey';
+import { DialobApi } from '@dxs-ts/gamut-api';
 
 
 
@@ -14,7 +15,7 @@ export const GInputSurveyDialob: React.FC<GFormBaseElementProps> = ({ disabled, 
   const questions = store.form.toChildren(element.id);
   const vertical = element.view === 'verticalSurveygroup';
   const labelPosition = store.form.toLabelPosition(element.id);
-  const border: boolean | undefined = element.props?.border ? (element.props?.border === 'true') : undefined;
+  const border: boolean | undefined = element.props?.border ? (DialobApi.isTrue(element.props?.border)) : undefined;
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 

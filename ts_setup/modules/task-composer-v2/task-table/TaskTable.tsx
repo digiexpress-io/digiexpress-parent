@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { useIntl, FormattedMessage } from 'react-intl';
-
+import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 
@@ -19,43 +19,41 @@ import { IndicatorSubject } from './IndicatorSubject';
 
 import { filterFormattedDateFn, filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 
-
+export const TASK_TABLE_QUERY_KEY = 'find-all-tasks';
 
 export const TaskTable: React.FC = () => {
   const intl = useIntl();
   const backend = useTaskBackend();
-  const [data, setData] = React.useState<TaskApi.Task[]>([]);
-  const [deleteId, setDeleteId] = React.useState<string | undefined>();
+  const [deleteId, setArchiveId] = React.useState<string | undefined>();
 
-  React.useEffect(() => {
-    backend.persistence.findAllTasks().then(setData);
-  }, []);
+  const { data, error, refetch, isPending } = useQuery({
+    queryKey: [TASK_TABLE_QUERY_KEY],
+    queryFn: () => backend.persistence.findAllTasks(),
+    initialData: [],
+  });
 
-
-  async function handleDelete(data: { id: string }) {
-    backend.persistence.deleteOneTask(data.id).then(() => {
-      backend.persistence.findAllTasks().then(setData);
-    });
+  async function handleArchive(data: { id: string }) {
+    backend.persistence.deleteOneTask(data.id).then(() => refetch());
   }
 
-  function confirmDelete(id: string) {
-    setDeleteId(id);
+  function confirmArchive(id: string) {
+    setArchiveId(id);
   };
 
-  function handleCancelDelete() {
-    setDeleteId(undefined);
+  function handleCancelArchive() {
+    setArchiveId(undefined);
   };
 
-  async function handleConfirmDelete() {
+  async function handleConfirmArchive() {
     if (deleteId) {
-      await handleDelete({ id: deleteId });
-      setDeleteId(undefined);
+      await handleArchive({ id: deleteId });
+      setArchiveId(undefined);
     }
   };
 
   const columns: ColumnDef<TaskApi.Task, any>[] = [
     {
-      header: 'Priority',
+      header: intl.formatMessage({ id: 'taskTable.col.header.priority', defaultMessage: 'Priority' }),
       accessorKey: 'priority',
       filterFn: filterStringOrArrayFn,
       sortingFn: taskSortingFn,
@@ -70,7 +68,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: 'Name',
+      header: intl.formatMessage({ id: 'taskTable.col.header.subject', defaultMessage: 'Subject' }),
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
       cell: (task) => flexRender(IndicatorSubject, { title: task.getValue(), id: task.row.original.id, keywords: task.row.original.keyWords }),
@@ -86,7 +84,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: 'Info',
+      header: intl.formatMessage({ id: 'taskTable.col.header.addInfo', defaultMessage: 'Info' }),
       accessorKey: 'additionalInfo',
       size: 100,
       minSize: 100,
@@ -95,7 +93,7 @@ export const TaskTable: React.FC = () => {
       enableColumnFilter: true,
     },
     {
-      header: 'Client',
+      header: intl.formatMessage({ id: 'taskTable.col.header.client', defaultMessage: 'Client' }),
       accessorKey: 'clientIdentificator',
       filterFn: 'includesString',
       size: 150,
@@ -104,7 +102,7 @@ export const TaskTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: 'Status',
+      header: intl.formatMessage({ id: 'taskTable.col.header.status', defaultMessage: 'Status' }),
       accessorKey: 'status',
       filterFn: filterStringOrArrayFn,
       size: 150,
@@ -119,7 +117,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: 'Roles',
+      header: intl.formatMessage({ id: 'taskTable.col.header.roles', defaultMessage: 'Roles' }),
       accessorKey: 'assignedRoles',
       filterFn: filterStringOrArrayFn,
       size: 150,
@@ -132,7 +130,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: 'Assignee',
+      header: intl.formatMessage({ id: 'taskTable.col.header.assignee', defaultMessage: 'Assignee' }),
       accessorKey: 'assignedUser',
       filterFn: filterStringOrArrayFn,
       cell: (assignee) => flexRender(IndicatorAssignee, { name: assignee.getValue() }),
@@ -147,7 +145,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: 'Due',
+      header: intl.formatMessage({ id: 'taskTable.col.header.due', defaultMessage: 'Due' }),
       accessorKey: 'dueDate',
       filterFn: filterFormattedDateFn,
       size: 150,
@@ -158,7 +156,7 @@ export const TaskTable: React.FC = () => {
       cell: (dueDate) => flexRender(AnyTaskDateTimeShort, { value: dueDate.getValue() })
     },
     {
-      header: 'Created',
+      header: intl.formatMessage({ id: 'taskTable.col.header.created', defaultMessage: 'Created' }),
       accessorKey: 'created',
       filterFn: filterFormattedDateFn,
       size: 150,
@@ -169,7 +167,7 @@ export const TaskTable: React.FC = () => {
       cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },
     ...(backend.permissions.isDeleteTaskAllowed ? [{
-      header: 'Archive',
+      header: intl.formatMessage({ id: 'taskTable.col.header.archive', defaultMessage: 'Archive' }),
       filterFn: filterFormattedDateFn,
       size: 100,
       minSize: 100,
@@ -181,7 +179,7 @@ export const TaskTable: React.FC = () => {
       },
       cell: ({ row }: CellContext<TaskApi.Task, unknown>) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <IconButton color='error' onClick={() => confirmDelete(row.original.id)} size="small">
+          <IconButton color='error' onClick={() => confirmArchive(row.original.id)} size="small">
             <DeleteForeverIcon color="error" fontSize="small" />
           </IconButton>
         </div>
@@ -191,11 +189,9 @@ export const TaskTable: React.FC = () => {
 
 
   return (
-    <Box sx={{ display: 'inline-block' }}>
+    <>
       <Box display="flex" alignItems="center" mb={2}>
-        <Typography variant="h1" sx={{ flexGrow: 1 }}>
-          <FormattedMessage id="tasksView.title" />
-        </Typography>
+        <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'taskTable.title', defaultMessage: 'Tasks' })}</Typography>
         {backend.permissions.isCreateTaskAllowed && (
           <Tooltip title={intl.formatMessage({ id: 'taskButton.addTask' })}>
             <IconButton onClick={() => backend.navigate.createOneTask()}>
@@ -204,30 +200,28 @@ export const TaskTable: React.FC = () => {
           </Tooltip>
         )}
       </Box>
-      <DeleteConfirmationDialog tasks={data} deleteId={deleteId} handleCancelDelete={handleCancelDelete} handleConfirmDelete={handleConfirmDelete} />
+      <ArchiveConfirmationDialog tasks={data} deleteId={deleteId} handleCancelArchive={handleCancelArchive} handleConfirmArchive={handleConfirmArchive} />
       <WithTableStyles data={data} columns={columns} options={{ tableId: 'tasks' }} />
-    </Box>
+    </>
   );
 }
 
 
-interface DeleteConfirmationDialogProps {
+interface ArchiveConfirmationDialogProps {
   tasks: TaskApi.Task[],
   deleteId: string | undefined,
-  handleCancelDelete: () => void,
-  handleConfirmDelete: () => void
+  handleCancelArchive: () => void,
+  handleConfirmArchive: () => void
 }
 
 
-const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({ tasks, deleteId, handleCancelDelete, handleConfirmDelete }) => {
+const ArchiveConfirmationDialog: React.FC<ArchiveConfirmationDialogProps> = ({ tasks, deleteId, handleCancelArchive, handleConfirmArchive }) => {
   const intl = useIntl();
   const task = tasks.find(t => t.id === deleteId);
 
   return (
-    <Dialog open={!!deleteId} onClose={handleCancelDelete}>
-      <DialogTitle>
-        {intl.formatMessage({ id: 'task.confirmDelete.title', defaultMessage: `Confirm archive task: ${task?.taskRef ?? ''}` })}
-      </DialogTitle>
+    <Dialog open={!!deleteId} onClose={handleCancelArchive}>
+      <DialogTitle>{intl.formatMessage({ id: 'task.confirmArchive.title', defaultMessage: `Confirm archive task: ${task?.taskRef ?? ''}` })}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           {intl.formatMessage({
@@ -237,12 +231,8 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({ tas
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancelDelete} variant='outlined'>
-          {intl.formatMessage({ id: 'button.cancel', defaultMessage: 'Cancel' })}
-        </Button>
-        <Button onClick={handleConfirmDelete} color="error" autoFocus>
-          {intl.formatMessage({ id: 'button.archive', defaultMessage: 'Archive' })}
-        </Button>
+        <Button onClick={handleCancelArchive} variant='outlined'>{intl.formatMessage({ id: 'button.cancel', defaultMessage: 'Cancel' })}</Button>
+        <Button onClick={handleConfirmArchive} color="error" autoFocus>{intl.formatMessage({ id: 'button.archive', defaultMessage: 'Archive' })}</Button>
       </DialogActions>
     </Dialog>
   )
