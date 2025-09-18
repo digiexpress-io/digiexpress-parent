@@ -1,9 +1,11 @@
 import React from 'react';
+import { Box, Typography, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 
-import { ColumnDef, flexRender } from '@tanstack/react-table';
+import { CellContext, ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
-import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 import { useIntl, FormattedMessage } from 'react-intl';
 
 import { WithTableStyles } from '@dxs-ts/xui-table';
@@ -23,10 +25,33 @@ export const TaskTable: React.FC = () => {
   const intl = useIntl();
   const backend = useTaskBackend();
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
-  
+  const [deleteId, setDeleteId] = React.useState<string | undefined>();
+
   React.useEffect(() => {
     backend.persistence.findAllTasks().then(setData);
   }, []);
+
+
+  async function handleDelete(data: { id: string }) {
+    backend.persistence.deleteOneTask(data.id).then(() => {
+      backend.persistence.findAllTasks().then(setData);
+    });
+  }
+
+  function confirmDelete(id: string) {
+    setDeleteId(id);
+  };
+
+  function handleCancelDelete() {
+    setDeleteId(undefined);
+  };
+
+  async function handleConfirmDelete() {
+    if (deleteId) {
+      await handleDelete({ id: deleteId });
+      setDeleteId(undefined);
+    }
+  };
 
   const columns: ColumnDef<TaskApi.Task, any>[] = [
     {
@@ -143,7 +168,27 @@ export const TaskTable: React.FC = () => {
       enableResizing: true,
       cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },
+    ...(backend.permissions.isDeleteTaskAllowed ? [{
+      header: 'Archive',
+      filterFn: filterFormattedDateFn,
+      size: 100,
+      minSize: 100,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      meta: {
+        enableSelection: true
+      },
+      cell: ({ row }: CellContext<TaskApi.Task, unknown>) => (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <IconButton color='error' onClick={() => confirmDelete(row.original.id)} size="small">
+            <DeleteForeverIcon color="error" fontSize="small" />
+          </IconButton>
+        </div>
+      )
+    }] : [])
   ]
+
 
   return (
     <Box sx={{ display: 'inline-block' }}>
@@ -159,10 +204,48 @@ export const TaskTable: React.FC = () => {
           </Tooltip>
         )}
       </Box>
-  
-      <WithTableStyles data={data} columns={columns} options={{ tableId: 'tasks'}}/>
+      <DeleteConfirmationDialog tasks={data} deleteId={deleteId} handleCancelDelete={handleCancelDelete} handleConfirmDelete={handleConfirmDelete} />
+      <WithTableStyles data={data} columns={columns} options={{ tableId: 'tasks' }} />
     </Box>
-  );  
+  );
+}
+
+
+interface DeleteConfirmationDialogProps {
+  tasks: TaskApi.Task[],
+  deleteId: string | undefined,
+  handleCancelDelete: () => void,
+  handleConfirmDelete: () => void
+}
+
+
+const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({ tasks, deleteId, handleCancelDelete, handleConfirmDelete }) => {
+  const intl = useIntl();
+  const task = tasks.find(t => t.id === deleteId);
+
+  return (
+    <Dialog open={!!deleteId} onClose={handleCancelDelete}>
+      <DialogTitle>
+        {intl.formatMessage({ id: 'task.confirmDelete.title', defaultMessage: `Confirm archive task: ${task?.taskRef ?? ''}` })}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {intl.formatMessage({
+            id: 'taskTable.button.archive.confirm',
+            defaultMessage: 'You are about to archive this task, which will remove it from the active tasks. Are you sure you want to continue?',
+          })}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancelDelete} variant='outlined'>
+          {intl.formatMessage({ id: 'button.cancel', defaultMessage: 'Cancel' })}
+        </Button>
+        <Button onClick={handleConfirmDelete} color="error" autoFocus>
+          {intl.formatMessage({ id: 'button.archive', defaultMessage: 'Archive' })}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
 }
 
 const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
