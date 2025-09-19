@@ -330,6 +330,9 @@ services.devmode.tooltip,,Development mode,Development mode,Utvecklingsläge
 services.disabledmode.label,,Disabled mode,Disabled mode,Inaktiverat läge
 services.disabledmode.helper,,Disabled mode: Service does not appear on client portal,Palvelu ei ole portaalissa näkyvissä,Inaktiverat läge: Tjänsten visas inte på klientportalen
 services.disabledmode.tooltip,,Disabled mode,Disabled mode,Inaktiverat läge
+services.assignableMode.label,,Assignable mode,Assignable mode,Assignable mode,
+services.assignableMode.helper,,Assignable mode: Can be assigned directly to customer,Assignable manually: Can be assigned directly to customer,Assignable manually: Can be assigned directly to customer,
+services.assignableMode.tooltip,,Assignable mode,Assignable mode,Assignable mode,
 services.none.label,,No configuration selected,No configuration selected,Ingen konfiguration har valts
 services.none.helper,,"Default mode: Service appears in production, is available ONLY to authenticated users, and is connected to ALL ARTICLES if no Article is selected",Default configuration,"Standardläge: Tjänsten visas i produktion, är ENDAST tillgänglig för autentiserade användare och är ansluten till ALLA ARTIKLAR om ingen artikel är vald"
 services.none.tooltip,,No special configuration,No special configuration,Ingen speciell konfiguration

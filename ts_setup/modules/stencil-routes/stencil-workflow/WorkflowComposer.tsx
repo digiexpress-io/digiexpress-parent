@@ -31,7 +31,12 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [formName, setFormName] = React.useState<string>('');
   const [formTag, setFormTag] = React.useState<string>('');
 
-  const [workflowOptions, setWorkflowOptions] = React.useState<WorkflowOptions>({ anon: undefined, devMode: undefined, disabled: undefined });
+  const [workflowOptions, setWorkflowOptions] = React.useState<WorkflowOptions>({
+    anon: undefined,
+    devMode: undefined,
+    disabled: undefined,
+    assignable: undefined
+  });
 
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
   const { allTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
@@ -44,6 +49,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       labels,
       devMode: workflowOptions.devMode,
       anon: workflowOptions.anon,
+      assignable: workflowOptions.assignable,
       disabled: workflowOptions.disabled,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,

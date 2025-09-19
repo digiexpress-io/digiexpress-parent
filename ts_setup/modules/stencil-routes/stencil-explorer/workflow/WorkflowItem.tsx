@@ -6,8 +6,8 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import FaceIcon from '@mui/icons-material/Face';
-
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -39,6 +39,7 @@ const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflo
           {workflow.body.devMode && <Tooltip title={intl.formatMessage({ id: 'services.devmode.tooltip' })}><ConstructionIcon sx={iconStyle} /></Tooltip>}
           {workflow.body.disabled && <Tooltip title={intl.formatMessage({ id: 'services.disabledmode.tooltip' })}><NotInterestedIcon sx={iconStyle} /></Tooltip>}
           {workflow.body.anon && <Tooltip title={intl.formatMessage({ id: 'services.anonmode.tooltip' })}><FaceIcon sx={iconStyle} /></Tooltip>}
+          {workflow.body.assignable && <Tooltip title={intl.formatMessage({ id: 'services.assignable.tooltip' })}><AssignmentIndIcon sx={iconStyle} /></Tooltip>}
         </Box>
         }
         labelcolor="explorerItem"

@@ -252,6 +252,7 @@ export declare namespace StencilApi {
       devMode?: boolean,
       disabled?: boolean,
       anon?: boolean,
+      assignable?: boolean,
       startDate?: string | undefined,
       endDate?: string | undefined,
       formName?: string | undefined,
@@ -268,6 +269,7 @@ export declare namespace StencilApi {
     labels: LocaleLabel[] | undefined,
     devMode: boolean | undefined,
     anon: boolean | undefined,
+    assignable?: boolean,
     disabled: boolean | undefined,
     startDate?: string | undefined,
     endDate?: string | undefined,
@@ -306,7 +308,7 @@ export declare namespace StencilApi {
   }
   export interface CreateTemplate {
     type: "page" | string;
-    name: string,
+    name: string;
     description: string;
     content: string;
   }
@@ -325,6 +327,7 @@ export declare namespace StencilApi {
     articles: ArticleId[];
     devMode: boolean | undefined;
     anon: boolean | undefined;
+    assignable?: boolean;
     disabled: boolean | undefined;
 
     startDate?: string | undefined;
@@ -361,7 +364,6 @@ export declare namespace StencilApi {
     workflow(id: WorkflowId): Promise<void>;
     workflowArticlePage(workflow: WorkflowId, article: ArticleId, locale: Locale): Promise<void>;
     release(id: ReleaseId): Promise<void>;
-
   }
   export interface UpdateBuilder {
     locale(article: LocaleMutator): Promise<SiteLocale>;

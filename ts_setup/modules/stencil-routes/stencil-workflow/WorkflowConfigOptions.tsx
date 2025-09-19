@@ -11,7 +11,7 @@ interface WorkflowIntl {
   helperText: string;
 }
 
-type WorkflowFeatureType = 'DEV' | 'ANON' | 'DISABLED' | 'NONE';
+type WorkflowFeatureType = 'DEV' | 'ANON' | 'DISABLED' | 'ASSIGNABLE' | 'NONE';
 
 const all_features: WorkflowIntl[] = [
   {
@@ -30,6 +30,11 @@ const all_features: WorkflowIntl[] = [
     helperText: 'services.disabledmode.helper'
   },
   {
+    value: 'ASSIGNABLE',
+    label: 'services.assignableMode.label',
+    helperText: 'services.assignableMode.helper'
+  },
+  {
     value: 'NONE',
     label: 'services.none.label',
     helperText: 'services.none.helper'
@@ -43,25 +48,35 @@ function getIntl(type: string) {
 function getTypes(value: WorkflowOptions): WorkflowFeatureType[] {
 
   const result: WorkflowFeatureType[] = [];
-  if(value.anon === true) {
+  if (value.anon === true) {
     result.push('ANON');
   }
 
-  if(value.disabled === true) {
+  if (value.disabled === true) {
     result.push('DISABLED');
   }
 
-  if(value.devMode === true) {
+  if (value.assignable === true) {
+    result.push('ASSIGNABLE');
+  }
+
+  if (value.devMode === true) {
     result.push('DEV');
   }
+
   return result;
 }
 
 
-export type WorkflowOptions = { devMode: boolean | undefined, anon: boolean | undefined, disabled: boolean | undefined }
+export type WorkflowOptions = {
+  devMode: boolean | undefined,
+  anon: boolean | undefined,
+  disabled: boolean | undefined,
+  assignable: boolean | undefined,
+}
 
-export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions) => void, value: WorkflowOptions}> = ({ value, onChange}) => {
-  const intl = useIntl();  
+export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions) => void, value: WorkflowOptions }> = ({ value, onChange }) => {
+  const intl = useIntl();
   const selectedModes: WorkflowFeatureType[] = getTypes(value);
 
   const handleChange = (selected: string[]) => {
@@ -70,6 +85,7 @@ export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions
       anon: newState.includes('ANON') ? true : undefined,
       devMode: newState.includes('DEV') ? true : undefined,
       disabled: newState.includes('DISABLED') ? true : undefined,
+      assignable: newState.includes('ASSIGNABLE') ? true : undefined
     });
   }
   const none = getIntl('NONE');
@@ -82,26 +98,26 @@ export const WorkflowConfigOptions: React.FC<{ onChange: (props: WorkflowOptions
       selected={selectedModes}
       onChange={handleChange}
       renderValue={(selected) => (
-      <Box>
-        {selected
-          .map(getIntl)
-          .map(({ value, label }) => <Chip key={value} label={intl.formatMessage({ id: label })} />)}
-      </Box>
+        <Box display='flex' gap={1}>
+          {selected
+            .map(getIntl)
+            .map(({ value, label }) => <Chip key={value} label={intl.formatMessage({ id: label })} />)}
+        </Box>
       )}
-      items={all_features.filter(({value}) => value !== 'NONE').map((article) => ({
+      items={all_features.filter(({ value }) => value !== 'NONE').map((article) => ({
         id: article.value,
         value: (<>
           <Checkbox checked={selectedModes.includes(article.value)} />
-          <ListItemText primary={article.value} />
+          <ListItemText primary={intl.formatMessage({ id: article.label })} />
         </>)
       }))}
     />
 
     <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
-      { selectedModes.length === 0 && 
-      (<Typography variant='caption' component='div'>
-        {intl.formatMessage({ id: none.label })}
-      </Typography>)
+      {selectedModes.length === 0 &&
+        (<Typography variant='caption' component='div'>
+          {intl.formatMessage({ id: none.label })}
+        </Typography>)
       }
 
       {selectedModes.map(getIntl).map(({ helperText, value }) => (
