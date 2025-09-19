@@ -3,6 +3,10 @@ import { Column } from "@tanstack/react-table";
 
 export function useHeaderItems(header: Column<unknown, unknown>): string[] {
   const almostUniqueValues = header.getFacetedUniqueValues();
+  if (!almostUniqueValues) {
+    return []
+  }
+
   const filterItems: string[] = Array.from(new Set(Array.from(almostUniqueValues.keys())
     .map(key => key as (string | string[]))
     .filter(item => item)
