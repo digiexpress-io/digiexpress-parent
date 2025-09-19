@@ -163,6 +163,8 @@ public interface CreateBuilder {
     @Nullable Boolean getDevMode();
     @Nullable Boolean getAnon();
     @Nullable Boolean getDisabled();
+    @Nullable Boolean getAssignable();
+    
     
     @Nullable
     LocalDateTime getStartDate();

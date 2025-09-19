@@ -282,6 +282,7 @@ public class CreateBuilderImpl implements CreateBuilder {
         .disabled(init.getDisabled())
         .devMode(init.getDevMode())
         .anon(Boolean.TRUE.equals(init.getAnon()))
+        .assignable(Boolean.TRUE.equals(init.getAssignable()) ? true : null)
         .value(init.getValue())
         .startDate(init.getStartDate())
         .endDate(init.getEndDate())

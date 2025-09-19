@@ -131,6 +131,38 @@ public class SiteStateVisitor {
       return result;
     }
     
+    if(Boolean.TRUE.equals(link.getBody().getAssignable())) {
+      for(final var label : link.getBody().getLabels()) {
+        if(!enablesLocales.keySet().contains(label.getLocale())) {
+          continue;
+        }
+      
+        final var locale = enablesLocales.get(label.getLocale());
+        final var resource = ImmutableLinkResource.builder()
+            .id(link.getId() + "-" + locale.getBody().getValue())
+            .addLocale(locale.getBody().getValue())
+            .desc(label.getLabelValue())
+            .path("_") // reserve empty path
+            .value(link.getBody().getValue())
+            .startDate(link.getBody().getStartDate())
+            .endDate(link.getBody().getEndDate())
+            .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
+            .workflow(true)
+            .global(false)
+            .flowName(link.getBody().getFlowName())
+            .formName(link.getBody().getFormName())
+            .formTag(link.getBody().getFormTag())
+            .formId(link.getBody().getFormId())
+            .type(LINK_TYPE_WORKFLOW)
+            .build();
+        result.add(resource);
+      }
+      return result;
+    } else if(Boolean.FALSE.equals(link.getBody().getAssignable())) {
+      return result;      
+    }
+    
+    
     for(final var articleId : link.getBody().getArticles()) {
       final var article = entity.getArticles().get(articleId);
       

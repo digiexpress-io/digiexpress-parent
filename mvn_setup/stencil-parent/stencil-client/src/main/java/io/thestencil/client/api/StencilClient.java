@@ -148,6 +148,10 @@ public interface StencilClient {
     
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
+    Boolean getAssignable();
+    
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getAnon();
     
     @Nullable

@@ -135,6 +135,7 @@ public interface UpdateBuilder {
     @Nullable Boolean getDisabled();
     @Nullable Boolean getDevMode();
     @Nullable Boolean getAnon();
+    @Nullable Boolean getAssignable();
     
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();
