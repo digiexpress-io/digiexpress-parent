@@ -27,7 +27,7 @@ const Main: React.FC<{}> = () => {
   return (<Box p={1}><Outlet /></Box>)
 }
 
-interface SearchParams {
+export interface SearchParams {
   mode?: 'CONTENT_ONLY',
   explorer?: any[]
 }
