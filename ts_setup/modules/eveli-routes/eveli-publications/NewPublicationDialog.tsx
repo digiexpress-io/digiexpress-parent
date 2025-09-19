@@ -50,7 +50,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
     savePublication(init, () => {
       setOpen(false);
-      onSubmit();        // no-arg, matches EveliPublicationsTable usage
+      onSubmit();
       setSubmitting(false);
     });
   };
