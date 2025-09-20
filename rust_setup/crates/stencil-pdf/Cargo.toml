@@ -1,5 +1,5 @@
 [package]
-name = "typst-rest-api"
+name = "stencil-pdf"
 version = "0.1.0"
 edition = "2021"
 
@@ -22,11 +22,10 @@ typst-kit = "0.13.1"
 
 # Error handling
 anyhow = "1.0.100"
-
 thiserror = "2.0.16"
 
+# Type utils
 ecow = "0.2"
-
 
 # Logging
 tracing = "0.1"
