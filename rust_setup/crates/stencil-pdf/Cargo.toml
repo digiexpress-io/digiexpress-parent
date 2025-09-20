@@ -21,7 +21,8 @@ typst-pdf = "0.13.1"
 typst-kit = "0.13.1"
 
 # Error handling
-anyhow = "1.0"
+anyhow = "1.0.100"
+
 thiserror = "2.0.16"
 
 ecow = "0.2"
