@@ -161,12 +161,28 @@ export declare namespace TaskApi {
 
     comments: Comment[];
     questionnaireId?: string | undefined;
+
+    customerAssignments: TaskCustomerAssignment[];
+  }
+
+  export interface TaskCustomerAssignment {
+    id: string;
+    created: Date;
+    status: 'OPEN' | 'COMPLETED';
+    questionnaireId: string;
   }
 
   export type TaskFeatureType = 'feedback' | 'transfer' | 'anon' | 'assignable';
 
   export interface TransferTaskCommand {
     transferTitle: string;
+  }
+
+  export interface CreateTaskCustomerAssignmentCommand {
+    id: string;
+    created: Date;
+    status: 'OPEN' | 'COMPLETED';
+    questionnaireId: string;
   }
 
   export interface TaskDasboard {
@@ -275,5 +291,14 @@ export declare namespace TaskApi {
       'CUSTOMER_SSN' |
       'EXTERNAL_COMMENTS'
      )[];
+  }
+
+  export interface FormAssignment {
+    locales: string[];
+    serviceName: string;
+
+    formId: string;
+    formName: string;
+    formTag: string;
   }
 }

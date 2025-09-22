@@ -127,20 +127,21 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
   const { deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
   const { pdfTaskCallback } = useFetch('worker/rest/api/pdf.POST', {});
+  const { getTaskFormAssignment } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.GET', []);
 
   const unit:  TaskBackendProviderProps['persistence'] = {
     findAllUnreadTasks: async function (): Promise<string[]> {
       return unreadTasks;
     },
     deleteOneAttachment: async function (taskId: string, attachment: TaskApi.Attachment): Promise<unknown> {
-      return deleteAttachment(taskId, attachment.name)
+      return deleteAttachment(taskId, attachment.name);
     },
 
     getOneAttachmentLink: async function (taskId: string, attachment: TaskApi.Attachment): Promise<string> {
-      return downloadAttachmentLink(taskId, attachment.name)
+      return downloadAttachmentLink(taskId, attachment.name);
     },
     createManyAttachments: async function (taskId: string, files: FileList): Promise<unknown> {
-      const promises = Array.from(files).map((file, index) => addAttachment(taskId, file))
+      const promises = Array.from(files).map((file, index) => addAttachment(taskId, file));
       await Promise.all(promises);
       return {};
     },
@@ -161,7 +162,11 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
     deleteOneTask: deleteTask,
     createOneTask: createTask,
     createOneComment: saveComment,
-    getOneTaskPdf: pdfTaskCallback
+    getOneTaskPdf: pdfTaskCallback,
+    findAllTaskFormAssignments: getTaskFormAssignment,
+    createManyTaskCustomerAssignments: function (request: TaskApi.CreateTaskCustomerAssignmentCommand[]): Promise<TaskApi.Task> {
+      throw new Error('Function not implemented.');
+    }
   }
 
   return unit;

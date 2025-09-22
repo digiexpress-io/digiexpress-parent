@@ -22,7 +22,7 @@ export const TaskFeatureProvider: React.FC<TaskFeatureProviderProps> = (props) =
   const contextValue: TaskFeatureContextType = React.useMemo(() => {
   return { 
     features: [ 
-      ...(options?.features ?? []),
+      ...(options?.features ?? [])
     ] 
   };    
   }, [options]);

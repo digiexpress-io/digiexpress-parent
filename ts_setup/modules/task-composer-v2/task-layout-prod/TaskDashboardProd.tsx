@@ -38,13 +38,14 @@ const _variant_debug: FactoryCardId[] = [
 
 const _variant_prod: FactoryCardId[] = [
   'task_main_alt',
+  'assignable',
   'customer_messages',
   'feedback',
   'files',
   'notes',
   'assignees_roles',
   'status_priority',
-  'assignable',
+
 ];
 
 
