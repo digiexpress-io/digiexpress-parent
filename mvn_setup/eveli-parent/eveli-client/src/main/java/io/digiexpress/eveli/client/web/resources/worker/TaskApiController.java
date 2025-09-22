@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.FormAssignment;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDasboard;
@@ -50,6 +51,7 @@ import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobReviewClient;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -135,6 +137,12 @@ public class TaskApiController {
     });
  
   }
+  
+  @GetMapping("/{id}/form-assignments")
+  public Multi<FormAssignment> getPossibleCustomerTaskAssignments(@PathVariable("id") String id) {
+    return taskClient.queryFormAssignments().findAll(id);
+  }
+  
 
   @PostMapping
   public Uni<ResponseEntity<TaskClient.Task>> createTask(@RequestBody TaskClient.CreateTaskCommand command) {

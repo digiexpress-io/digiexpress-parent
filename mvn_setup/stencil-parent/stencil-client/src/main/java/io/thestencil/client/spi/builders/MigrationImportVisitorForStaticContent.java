@@ -220,6 +220,7 @@ public class MigrationImportVisitorForStaticContent {
       .formName(topicLink.getFormName())
       .formTag(topicLink.getFormTag())
       .flowName(topicLink.getFlowName())
+      .assignable(topicLink.getAssignable())
       .anon(topicLink.getAnon())
       .addLabels(ImmutableLocaleLabel.builder()
           .labelValue(topicLink.getName())

@@ -173,7 +173,7 @@ public class MigrationImportVisitorForSiteState {
       .formTag(input.getBody().getFormTag())
       .flowName(input.getBody().getFlowName())
       .anon(input.getBody().getAnon())
-      .assignable(input.getBody().getAssignable() ? true : null)
+      .assignable(input.getBody().getAssignable() != null && input.getBody().getAssignable() ? true : null)
       .addAllLabels(input.getBody().getLabels().stream()
           .map(label -> ImmutableLocaleLabel.builder()
               .labelValue(label.getLabelValue())

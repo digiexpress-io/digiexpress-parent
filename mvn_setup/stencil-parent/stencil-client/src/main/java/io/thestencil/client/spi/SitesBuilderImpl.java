@@ -97,6 +97,7 @@ public class SitesBuilderImpl implements SitesBuilder {
           .locale(locale)
           .type(link.getType())
           .name(link.getDesc())
+          .assignable(link.getAssignable())
           .anon(link.getAnon())
           .global(link.getGlobal())
           .value(link.getValue())

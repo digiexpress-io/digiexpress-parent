@@ -98,6 +98,7 @@ public class CSVLinksVisitor {
         .workflow(SiteStateVisitor.LINK_TYPE_WORKFLOW.equals(type))
         .anon(anon)
         .global(path == null || path.isBlank())
+        .assignable(false)
         .build();
   }
   

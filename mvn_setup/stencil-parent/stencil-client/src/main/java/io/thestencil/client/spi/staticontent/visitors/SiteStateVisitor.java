@@ -149,6 +149,7 @@ public class SiteStateVisitor {
             .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
             .workflow(true)
             .global(false)
+            .assignable(true)
             .flowName(link.getBody().getFlowName())
             .formName(link.getBody().getFormName())
             .formTag(link.getBody().getFormTag())
@@ -211,7 +212,7 @@ public class SiteStateVisitor {
               .startDate(link.getBody().getStartDate())
               .endDate(link.getBody().getEndDate())
               .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
-              .workflow(true).global(true)
+              .workflow(true).global(true).assignable(false)
               .flowName(link.getBody().getFlowName())
               .formName(link.getBody().getFormName())
               .formTag(link.getBody().getFormTag())
@@ -256,7 +257,7 @@ public class SiteStateVisitor {
             .desc(label.getLabelValue())
             .path(visitArticlePath(article))
             .value(link.getBody().getValue())
-            .workflow(false).anon(true).global(false)
+            .workflow(false).anon(true).global(false).assignable(false)
             .type(link.getBody().getContentType())
             .build();
         result.add(resource);
@@ -278,7 +279,7 @@ public class SiteStateVisitor {
               .desc(label.getLabelValue())
               .path(visitArticlePath(article))
               .value(link.getBody().getValue())
-              .workflow(false).anon(true).global(true)
+              .workflow(false).anon(true).global(true).assignable(false)
               .type(link.getBody().getContentType())
               .build();
           result.add(resource);

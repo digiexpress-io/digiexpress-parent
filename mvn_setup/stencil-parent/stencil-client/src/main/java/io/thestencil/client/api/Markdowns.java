@@ -46,6 +46,7 @@ public interface Markdowns {
     Boolean getWorkflow();
     Boolean getGlobal();
     Boolean getAnon();
+    Boolean getAssignable();
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();
     @Nullable String getDesc();

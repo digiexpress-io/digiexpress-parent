@@ -64,6 +64,13 @@ public interface TaskClient {
   
   QueryTaskProcesess queryTaskProcesess(); 
   
+  QueryFormAssignments queryFormAssignments();
+  
+  
+  
+  interface QueryFormAssignments {
+    Multi<FormAssignment> findAll(String taskId);
+  }
   
   interface ModifyTaskProcess {
     ModifyTaskProcess id(String id);
@@ -308,6 +315,19 @@ public interface TaskClient {
     ZonedDateTime getCreated();
     TaskAssignmentStatus getStatus();
     String getQuestionnaireId();
+  }
+  
+  
+  @JsonSerialize(as = ImmutableFormAssignment.class)
+  @JsonDeserialize(as = ImmutableFormAssignment.class)
+  @Value.Immutable
+  interface FormAssignment {
+    List<String> getLocales();
+    
+    String getServiceName();
+    String getFormId();
+    String getFormName();
+    String getFormTag();
   }
   
   

@@ -3,14 +3,14 @@
   "created" : 1,
   "sites" : {
     "en" : {
-      "id" : "23e9f2dd654b0b1b494936f4958540e5",
+      "id" : "c38baa6f1b620b79ace22caee72c483e",
       "images" : "/images",
       "locale" : "en",
       "topics" : {
         "000_test-article" : {
           "id" : "000_test-article",
           "name" : "Header 1",
-          "links" : [ "1e1faf180a0118dd54e7a2c30fc145c6", "1da109ba642e1ffd850ea556d836d698" ],
+          "links" : [ "b4c1aebc97e2c2ccccd1adff6dcc7413", "c84997b50be9206f4b0361fd9c99609a" ],
           "headings" : [ {
             "id" : "1",
             "name" : "# Header 1",
@@ -28,15 +28,16 @@
         }
       },
       "links" : {
-        "1da109ba642e1ffd850ea556d836d698" : {
-          "id" : "1da109ba642e1ffd850ea556d836d698",
+        "b4c1aebc97e2c2ccccd1adff6dcc7413" : {
+          "id" : "b4c1aebc97e2c2ccccd1adff6dcc7413",
           "path" : "000_test-article",
-          "type" : "workflow",
-          "name" : "cool name",
-          "value" : "workflow name",
-          "global" : true,
-          "workflow" : true,
-          "anon" : false,
+          "type" : "internal",
+          "name" : "description",
+          "value" : "www.example.com",
+          "global" : false,
+          "workflow" : false,
+          "assignable" : false,
+          "anon" : true,
           "startDate" : null,
           "endDate" : null,
           "formId" : null,
@@ -44,15 +45,16 @@
           "formTag" : null,
           "flowName" : null
         },
-        "1e1faf180a0118dd54e7a2c30fc145c6" : {
-          "id" : "1e1faf180a0118dd54e7a2c30fc145c6",
+        "c84997b50be9206f4b0361fd9c99609a" : {
+          "id" : "c84997b50be9206f4b0361fd9c99609a",
           "path" : "000_test-article",
-          "type" : "internal",
-          "name" : "description",
-          "value" : "www.example.com",
-          "global" : false,
-          "workflow" : false,
-          "anon" : true,
+          "type" : "workflow",
+          "name" : "cool name",
+          "value" : "workflow name",
+          "global" : true,
+          "workflow" : true,
+          "assignable" : false,
+          "anon" : false,
           "startDate" : null,
           "endDate" : null,
           "formId" : null,
@@ -63,13 +65,14 @@
       },
       "workflowsInOtherLocales" : {
         "en" : [ {
-          "id" : "1da109ba642e1ffd850ea556d836d698",
+          "id" : "c84997b50be9206f4b0361fd9c99609a",
           "path" : "000_test-article",
           "type" : "workflow",
           "name" : "cool name",
           "value" : "workflow name",
           "global" : true,
           "workflow" : true,
+          "assignable" : false,
           "anon" : false,
           "startDate" : null,
           "endDate" : null,

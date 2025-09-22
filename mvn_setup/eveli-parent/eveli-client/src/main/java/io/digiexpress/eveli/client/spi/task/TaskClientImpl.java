@@ -50,6 +50,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskByIdsVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskCommentsByTaskIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllUnreadTasksVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.FormAssignmentVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
@@ -82,6 +83,18 @@ public class TaskClientImpl implements TaskClient {
   public PaginateTasks paginateTasks() {
     return new PaginateTasksImpl(ctx);
   }
+  
+  @Override
+  public QueryFormAssignments queryFormAssignments() {
+    return new QueryFormAssignments() {
+      
+      @Override
+      public Multi<FormAssignment> findAll(String taskId) {
+        return new FormAssignmentVisitor(envirClient, ctx, taskId).accept();
+      }
+    };
+  }
+  
   @Override
   public QueryTasks queryTasks() {
     return new QueryTasks() {

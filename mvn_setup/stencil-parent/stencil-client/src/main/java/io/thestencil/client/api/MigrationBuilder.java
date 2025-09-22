@@ -108,6 +108,7 @@ public interface MigrationBuilder {
     Boolean getGlobal();
     Boolean getWorkflow();
     
+    @Nullable Boolean getAssignable();
     @Nullable Boolean getAnon();
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();
