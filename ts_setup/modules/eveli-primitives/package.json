@@ -26,7 +26,6 @@
     "@tanstack/react-router": "*",
     "@tanstack/react-query": "*",
     "@tanstack/react-table": "*",
-    "react-date-picker": "*",
     "notistack": "*",
     "luxon": "*",
     "moment": "*",
