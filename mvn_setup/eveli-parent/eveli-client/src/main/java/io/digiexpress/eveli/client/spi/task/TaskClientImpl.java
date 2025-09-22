@@ -41,6 +41,7 @@ import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.AddWorkerCommitViewer;
+import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
@@ -56,7 +57,6 @@ import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
@@ -190,6 +190,11 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         return new TransferTaskVisitor(envirClient, ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
+      }
+      @Override
+      public Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        return ctx.getConfig().accept(new CompleteCustomerAssignment(userId, userEmail, notificator, taskId, command));
       }
     };
   }

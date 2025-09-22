@@ -53,7 +53,6 @@ public class FindAllTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Lis
         GrimDocType.GRIM_COMMANDS, 
         GrimDocType.GRIM_COMMIT, 
         GrimDocType.GRIM_COMMIT_VIEWER, 
-        GrimDocType.GRIM_OBJECTIVE,
         GrimDocType.GRIM_OBJECTIVE_GOAL);
     
     if (requireAnyRoles == null) {
@@ -88,7 +87,9 @@ public class FindAllTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Lis
             container.getAssignments().values(), 
             container.getRemarks().values(),
             container.getLinks().values(),
-            container.getMissionLabels().values()))
+            container.getMissionLabels().values(),
+            container.getObjectives().values()
+            ))
         .toList();
     
     return Uni.createFrom().item(tasks);

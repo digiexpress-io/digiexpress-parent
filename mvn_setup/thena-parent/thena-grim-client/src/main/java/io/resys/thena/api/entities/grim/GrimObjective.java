@@ -62,6 +62,8 @@ public interface GrimObjective extends IsGrimObject, TenantEntity {
   @Nullable LocalDate getStartDate();
   @Nullable LocalDate getDueDate();
   @Nullable String getDescription(); // free form description
+  @Nullable String getType(); // free form description
+  @Nullable String getExternalId();
   String getTitle(); // task title
   
     

@@ -148,6 +148,7 @@ public interface ProcessClient {
     @Nullable String getTaskId();
     @Nullable String getTaskRef();
     @Nullable String getUserId();
+    @Nullable ProcessType getType();
 
     
     Boolean getAnon();
@@ -158,6 +159,9 @@ public interface ProcessClient {
     @Nullable String getWrenchTagName();
   }
   
+  enum ProcessType {
+    CUSTOMER_ASSIGNMENT
+  }
 
   enum ProcessStatus {
     

@@ -95,7 +95,8 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
         commited.getAssignments(), 
         commited.getRemarks(), 
         commited.getLinks(),
-        commited.getLabels());
+        commited.getLabels(),
+        commited.getObjectives());
     
     if (comment.getExternal()) {
       notificator.sendNewCommentNotificationToClient(comment, task);

@@ -60,7 +60,8 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         merge.getCurrentState().getAssignments().values(),
         merge.getCurrentState().getRemarks().values(),
         merge.getCurrentState().getLinks().values(),
-        merge.getCurrentState().getMissionLabels().values()
+        merge.getCurrentState().getMissionLabels().values(),
+        merge.getCurrentState().getObjectives().values()
         );
     
     if(command.getVersion() != null && !previousVersion.getVersion().equals(command.getVersion())) {
@@ -152,7 +153,8 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         commited.getAssignments(), 
         commited.getRemarks(),
         commited.getLinks(),
-        commited.getLabels());
+        commited.getLabels(),
+        commited.getObjectives());
     notificator.handleTaskUpdate(task, previousVersion, email);
     return Uni.createFrom().item(task);
   }

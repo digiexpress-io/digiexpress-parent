@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -61,6 +62,10 @@ public class ProcessEntity {
   @Column(name="status")
   @Enumerated(EnumType.STRING)
 	private ProcessStatus status;
+  
+  @Column(name="type")
+  @Enumerated(EnumType.STRING)
+  private ProcessType type;
   
   @Column(name="created", nullable = false, updatable = false)
   private OffsetDateTime created;

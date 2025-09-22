@@ -105,6 +105,16 @@ public class MergeObjectiveBuilder implements MergeObjective {
     return this;
   }
   @Override
+  public MergeObjective type(String type) {
+    this.nextObjective.type(type);
+    return this;
+  }
+  @Override
+  public MergeObjective externalId(String externalId) {
+    this.nextObjective.externalId(externalId);
+    return this;
+  }
+  @Override
   public MergeObjective description(String description) {
     this.nextObjective.description(description);
     return this;

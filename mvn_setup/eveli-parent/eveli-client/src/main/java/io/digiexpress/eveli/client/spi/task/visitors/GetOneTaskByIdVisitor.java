@@ -81,7 +81,8 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
         container.getAssignments().values(), 
         container.getRemarks().values(),
         container.getLinks().values(),
-        container.getMissionLabels().values());
+        container.getMissionLabels().values(),
+        container.getObjectives().values());
     
     return Uni.createFrom().item(task);
   }

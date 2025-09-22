@@ -111,6 +111,7 @@ public class CreateOneMissionsImpl implements CreateOneMission {
       final OneMissionEnvelope result = ImmutableOneMissionEnvelope.builder()
           .repoId(tenantId)
           .mission(rsp.getMissions().iterator().next())
+          .objectives(rsp.getObjectives())
           .addAllLabels(rsp.getMissionLabels())
           .addAllLinks(rsp.getLinks())
           .addAllRemarks(request.getRemarks())

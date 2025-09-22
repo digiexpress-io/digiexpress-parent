@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.spi.process;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -22,24 +25,94 @@ package io.digiexpress.eveli.client.spi.process;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
+import io.digiexpress.eveli.client.api.ImmutableCompleteCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
+// background non blocking sync block
 @RequiredArgsConstructor
 @Slf4j
 public class SyncDialobAndProcess {
 
   private final ProcessClient processClient;
+  private final TaskClient taskClient;
   private final DialobClient dialobClient;
   private final ObjectMapper objectMapper;
+  
+  
+  private void executeCustomerAssignment(Questionnaire questionnaire, ProcessInstance instance) throws JsonProcessingException {
+    if(instance.getTaskId() == null) {
+      log.error("Skipping execution: {} because task MUST be defined for objective!", instance.getId());
+      return; 
+    }
+    
+    final var task = taskClient.queryTasks().getOneById(instance.getTaskId()).await().atMost(Duration.ofMinutes(1));
+    
+    final var assignment = task.getCustomerAssignments().stream()
+      .filter(t -> t.getQuestionnaireId().equals(instance.getQuestionnaireId()))
+      .findFirst();
+    
+    if(assignment.isEmpty()) {
+      log.error("Skipping execution: {} because assignment MUST be defined for questionnaire!", instance.getId());
+      return; 
+    }
+    
+    if(assignment.get().getStatus() == TaskAssignmentStatus.COMPLETED) {
+      log.error("Skipping execution: {} because assignment MUST be 'OPEN'!", instance.getId());
+      return;
+    }
+    
+    taskClient.taskBuilder()
+      .userId(SyncDialobAndProcess.class.getSimpleName(), null)
+      .completeCustomerAssignment(task.getId(), ImmutableCompleteCustomerAssignmentCommand.builder()
+          .targetDate(ZonedDateTime.now())
+          .assignmentId(assignment.get().getId())
+          .taskVersion(task.getVersion())
+          .build())
+      .await().atMost(Duration.ofMinutes(1));
+    
+    
+    processClient.createBodyBuilder()
+      .processInstanceId(instance.getId())
+      .formBody(objectMapper.writeValueAsString(questionnaire))
+      .build();
+    
+    processClient.changeInstanceStatus()
+      .completed(instance.getId().toString());
+  }
+  
+  private void executeUserTask(Questionnaire questionnaire, ProcessInstance instance) throws JsonProcessingException {
+    
+    if(instance.getTaskId() != null) {
+      log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
+      return;
+    }
+    
+    processClient.createBodyBuilder()
+      .processInstanceId(instance.getId())
+      .formBody(objectMapper.writeValueAsString(questionnaire))
+      .build();
+    
+    final var flow = processClient.createExecutor().processInstance(instance).execute();
+    
+    processClient.createBodyBuilder()
+      .processInstanceId(instance.getId())
+      .flowBody(objectMapper.writeValueAsString(flow))
+      .build();
+    
+  }
   
   
   @Transactional
@@ -67,22 +140,15 @@ public class SyncDialobAndProcess {
       }
       
       final var instance = optional.get();
-      if(instance.getTaskId() != null) {
-        log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
-        return;
+      // default process execution
+      if(instance.getType() == null) {
+        executeUserTask(questionnaire, instance);
+        
+      } else if(instance.getType() == ProcessType.CUSTOMER_ASSIGNMENT) {
+        executeCustomerAssignment(questionnaire, instance);
       }
+
       
-      processClient.createBodyBuilder()
-        .processInstanceId(instance.getId())
-        .formBody(objectMapper.writeValueAsString(questionnaire))
-        .build();
-      
-      final var flow = processClient.createExecutor().processInstance(instance).execute();
-      
-      processClient.createBodyBuilder()
-        .processInstanceId(instance.getId())
-        .flowBody(objectMapper.writeValueAsString(flow))
-        .build();
       
     } catch(Exception e) {
       log.error("Failed to run flow for process instance: {}, e: {}!", init.getId(), e.getMessage(), e);

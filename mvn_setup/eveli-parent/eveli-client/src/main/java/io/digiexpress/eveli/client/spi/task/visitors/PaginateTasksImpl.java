@@ -233,7 +233,8 @@ public class PaginateTasksImpl implements PaginateTasks {
             container.getAssignments().values(), 
             container.getRemarks().values(),
             container.getLinks().values(),
-            container.getMissionLabels().values()))
+            container.getMissionLabels().values(),
+            container.getObjectives().values()))
         .toList();
     
     final Page<Task> page = new PageImpl<Task>(tasks, pageable, commit.getTotalObjectsOnPages());

@@ -162,6 +162,7 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
             return ImmutableOneMissionEnvelope.builder()
               .repoId(tenantId)
               .mission(item.getMission())
+              .objectives(item.getObjectives().values())
               .addAllLabels(item.getMissionLabels().values())
               .addAllLinks(item.getLinks().values())
               .addAllRemarks(item.getRemarks().values())

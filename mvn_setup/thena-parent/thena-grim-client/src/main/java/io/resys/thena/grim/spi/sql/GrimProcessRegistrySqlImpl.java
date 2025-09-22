@@ -105,6 +105,7 @@ WHERE id = $9""").ln()
         .append(" (").ln()        
         .append("""
   (id,
+  type,
   created,
   updated,
   flow_name,
@@ -121,11 +122,12 @@ WHERE id = $9""").ln()
   form_tag_name,
   stencil_tag_name,
   wrench_tag_name)""").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)").ln()
         .build())
         .props(procs.stream()
             .map(proc -> Tuple.from(new Object[]{ 
                 proc.getId(),
+                proc.getType(),
                 proc.getCreated(),
                 proc.getUpdated(),
                 proc.getFlowName(),
@@ -217,6 +219,7 @@ WHERE id = $9""").ln()
     .append("(").ln()
     .append(""" 
       id                  BIGSERIAL PRIMARY KEY GENERATED ALWAYS AS IDENTITY),
+      type                VARCHAR(255) NULL,
       article_name        VARCHAR(255) NULL,
       created             TIMESTAMPTZ NOT NULL,
       expires_at          TIMESTAMPTZ NULL,
@@ -243,6 +246,9 @@ WHERE id = $9""").ln()
     .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_CREATED_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (created);").ln()
 
+    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_TYPE_INDEX")
+    .append(" ON ").append(options.getGrimProcesses()).append(" (type);").ln()
+    
     .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_WK_NAME_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (workflow_name);").ln()
 
@@ -286,6 +292,7 @@ WHERE id = $9""").ln()
 
           .articleName(row.getString("article_name"))
           .created(row.getOffsetDateTime("created"))
+          .type(row.getString("type"))
           .expiresAt(row.getOffsetDateTime("expires_at"))
           .expiresInSeconds(row.getLong("expires_in_seconds"))
           .flowBody(Optional.ofNullable(row.getJsonObject("flow_body")).map(e -> e.encode()).orElse(null))

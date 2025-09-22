@@ -227,6 +227,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_status VARCHAR(100),").ln()
+    .append("  objective_type VARCHAR(100),").ln()
+    .append("  objective_external_id VARCHAR(255),").ln()
     .append("  objective_start_date DATE,").ln()
     .append("  objective_due_date DATE,").ln()
     .append("  objective_title TEXT NOT NULL,").ln()
@@ -271,6 +273,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           .title(row.getString("objective_title"))
           .description(row.getString("objective_description"))
           
+          .type(row.getString("objective_type"))
+          .externalId(row.getString("objective_external_id"))
           
           .transitives(ImmutableGrimObjectiveTransitives.builder()
             .dataExtension(row.getJsonObject("data_extension"))

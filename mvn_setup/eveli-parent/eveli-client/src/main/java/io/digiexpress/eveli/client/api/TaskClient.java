@@ -100,6 +100,7 @@ public interface TaskClient {
     Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
     Uni<Task> deleteTask(String taskId);
     Uni<Task> transferTask(String taskId, TransferTaskCommand command);
+    Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command);
     
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
@@ -240,11 +241,21 @@ public interface TaskClient {
   }
   
   
+  @JsonSerialize(as = ImmutableCompleteCustomerAssignmentCommand.class)
+  @JsonDeserialize(as = ImmutableCompleteCustomerAssignmentCommand.class)
+  @Value.Immutable
+  interface CompleteCustomerAssignmentCommand {
+    String getAssignmentId(); 
+    String getTaskVersion();
+    ZonedDateTime getTargetDate();
+  }
+  
   
   
   enum TaskStatus { NEW, OPEN, COMPLETED, TRANSFERRED, REJECTED, DELEGATED, WAITING }
   enum TaskPriority { LOW, NORMAL, HIGH }
   enum TaskCommentSource { FRONTDESK, PORTAL }
+  enum TaskAssignmentStatus { OPEN, COMPLETED }
   
   @JsonSerialize(as = ImmutableTask.class)
   @JsonDeserialize(as = ImmutableTask.class)
@@ -286,6 +297,17 @@ public interface TaskClient {
     Set<String> getAssignedRoles();
 
     List<TaskComment> getComments();
+    List<TaskCustomerAssignment> getCustomerAssignments();
+  }
+  
+  @JsonSerialize(as = ImmutableTaskCustomerAssignment.class)
+  @JsonDeserialize(as = ImmutableTaskCustomerAssignment.class)
+  @Value.Immutable
+  interface TaskCustomerAssignment {
+    String getId();
+    ZonedDateTime getCreated();
+    TaskAssignmentStatus getStatus();
+    String getQuestionnaireId();
   }
   
   
@@ -362,5 +384,4 @@ public interface TaskClient {
     Boolean getCompleted();
     String getTitle();
   }
-  
 }

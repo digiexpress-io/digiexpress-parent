@@ -105,6 +105,8 @@ public interface ThenaGrimMergeObject {
   interface MergeObjective {
     MergeObjective title(String title);
     MergeObjective description(String description);
+    MergeObjective type(@Nullable String type);
+    MergeObjective externalId(@Nullable String externalId);
     MergeObjective status(@Nullable String status);
     MergeObjective startDate(@Nullable LocalDate startDate);
     MergeObjective dueDate(@Nullable LocalDate dueDate);

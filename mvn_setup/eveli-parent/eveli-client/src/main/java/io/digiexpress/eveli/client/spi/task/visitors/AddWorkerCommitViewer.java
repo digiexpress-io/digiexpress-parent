@@ -80,7 +80,8 @@ public class AddWorkerCommitViewer implements TaskStoreConfig.MergeTaskVisitor<T
         commited.getAssignments(), 
         commited.getRemarks(), 
         commited.getLinks(),
-        commited.getLabels()
+        commited.getLabels(),
+        commited.getObjectives()
       );
     return Uni.createFrom().item(task);
   }

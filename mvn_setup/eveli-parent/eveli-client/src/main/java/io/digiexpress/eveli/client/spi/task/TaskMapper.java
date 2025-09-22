@@ -42,6 +42,7 @@ import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
+import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -107,7 +108,8 @@ public class TaskMapper {
         cont.getAssignments().values(), 
         cont.getRemarks().values(),
         cont.getLinks().values(),
-        cont.getMissionLabels().values()
+        cont.getMissionLabels().values(),
+        cont.getObjectives().values()
         );
   }
   
@@ -118,7 +120,8 @@ public class TaskMapper {
         commited.getAssignments(), 
         commited.getRemarks(), 
         commited.getLinks(),
-        commited.getLabels());
+        commited.getLabels(),
+        commited.getObjectives());
     return task;
   }
   
@@ -127,7 +130,8 @@ public class TaskMapper {
       Collection<GrimAssignment> assignments, 
       Collection<GrimRemark> remarks,
       Collection<GrimMissionLink> links,
-      Collection<GrimMissionLabel> labels) {
+      Collection<GrimMissionLabel> labels,
+      Collection<GrimObjective> objectives) {
 
     final var assignee = assignments.stream()
       .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_USER.equals(e.getAssignmentType()))

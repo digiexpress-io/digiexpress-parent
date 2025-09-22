@@ -49,7 +49,8 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         merge.getCurrentState().getAssignments().values(), 
         merge.getCurrentState().getRemarks().values(),
         merge.getCurrentState().getLinks().values(),
-        merge.getCurrentState().getMissionLabels().values());
+        merge.getCurrentState().getMissionLabels().values(),
+        merge.getCurrentState().getObjectives().values());
     
     merge
     .archivedAt(OffsetDateTime.now())
@@ -82,7 +83,8 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         commited.getAssignments(), 
         commited.getRemarks(), 
         commited.getLinks(),
-        commited.getLabels());
+        commited.getLabels(),
+        commited.getObjectives());
     return Uni.createFrom().item(task);
   }
 }

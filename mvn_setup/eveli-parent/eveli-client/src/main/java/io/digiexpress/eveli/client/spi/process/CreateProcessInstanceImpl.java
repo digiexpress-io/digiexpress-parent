@@ -107,6 +107,8 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .anon(Boolean.TRUE.equals(entity.getAnon()))
       .formName(entity.getFormName())
       .flowName(entity.getFlowName())
+      .type(entity.getType())
+      
       
       .formTagName(entity.getFormTagName())
       .stencilTagName(entity.getStencilTagName())

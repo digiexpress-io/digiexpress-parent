@@ -89,6 +89,7 @@ public class DialobScheduler {
           
           
           final var answeredInstance = processClient.queryInstances().findOneById(String.valueOf(instance.getId()));
+          
           if(answeredInstance.isPresent()) {
             log.debug("Executing flow directly for process: {} after dialob completion event!", instance.getId());
             syncDialobAndProcess.executeFlowForInstance(answeredInstance.get());

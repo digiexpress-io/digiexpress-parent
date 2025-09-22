@@ -90,6 +90,8 @@ public interface ThenaGrimNewObject {
   interface NewObjective {
     NewObjective title(String title);
     NewObjective description(String description);
+    NewObjective type(@Nullable String type);
+    NewObjective externalId(@Nullable String externalId);
     NewObjective status(@Nullable String status);
     NewObjective startDate(@Nullable LocalDate startDate);
     NewObjective dueDate(@Nullable LocalDate dueDate);

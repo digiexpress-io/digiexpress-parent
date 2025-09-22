@@ -96,6 +96,16 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
     return this;
   }
   @Override
+  public NewObjective type(String type) {
+    this.objective.type(type);
+    return this;
+  }
+  @Override
+  public NewObjective externalId(String externalId) {
+    this.objective.externalId(externalId);
+    return this;
+  }
+  @Override
   public NewObjective status(String status) {
     this.objective.objectiveStatus(status);
     return this;
@@ -149,4 +159,5 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
     
     return this.batch.build();
   }
+
 }

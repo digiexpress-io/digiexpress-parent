@@ -209,7 +209,8 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
         commited.getAssignments(), 
         commited.getRemarks(), 
         commited.getLinks(),
-        commited.getLabels());
+        commited.getLabels(),
+        commited.getObjectives());
     notificator.handleTaskCreation(task, userId); 
     return Uni.createFrom().item(task);
   }

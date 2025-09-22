@@ -44,6 +44,7 @@ public interface GrimProcess extends IsGrimObject, TenantEntity {
    String getWorkflowName();
    
    @Nullable String getStatus();
+   @Nullable String getType();
    @Nullable OffsetDateTime getExpiresAt();
    @Nullable Long getExpiresInSeconds();  
    @Nullable String getQuestionnaireId();

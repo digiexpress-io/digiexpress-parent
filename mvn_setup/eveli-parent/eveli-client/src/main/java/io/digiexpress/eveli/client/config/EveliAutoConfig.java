@@ -286,8 +286,9 @@ public class EveliAutoConfig {
   public SyncDialobAndProcess syncDialobAndProcess(
       ProcessClient processClient, 
       DialobClient dialobClient,
-      ObjectMapper objectMapper) {
-    return new SyncDialobAndProcess(processClient, dialobClient, objectMapper);
+      ObjectMapper objectMapper,
+      TaskClient taskClient) {
+    return new SyncDialobAndProcess(processClient, taskClient, dialobClient, objectMapper);
   }
 
   @Bean
