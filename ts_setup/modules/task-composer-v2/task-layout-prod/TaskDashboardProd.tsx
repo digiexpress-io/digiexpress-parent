@@ -24,6 +24,7 @@ const _variant_debug: FactoryCardId[] = [
   'files',
   'notes',
   'task_meta',
+  'assignable',
   'transfer',
   'audit_viewers',
   'audit_commits',
@@ -33,7 +34,6 @@ const _variant_debug: FactoryCardId[] = [
   'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
-
 ];
 
 const _variant_prod: FactoryCardId[] = [
@@ -44,6 +44,7 @@ const _variant_prod: FactoryCardId[] = [
   'notes',
   'assignees_roles',
   'status_priority',
+  'assignable',
 ];
 
 
@@ -75,7 +76,7 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
-
+  console.log(cardOrder)
 
 
   return (

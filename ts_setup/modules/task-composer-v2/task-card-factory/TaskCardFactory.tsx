@@ -7,6 +7,7 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
@@ -24,6 +25,7 @@ import { TaskAssigneeReadOnly } from '../task-assignee';
 import { TaskPriorityReadOnly } from '../task-priority';
 import { FilesReadOnly, FilesEditDialog } from '../task-files';
 import { NotesEditDialog, NotesTruncated } from '../task-notes';
+import { TaskAssignmentEditDialog, TaskAssignmentReadOnly } from '../task_assignable';
 import { AssigneeRolesEditDialog } from '../task-assignee-roles-edit';
 import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
@@ -60,6 +62,7 @@ export type FactoryCardId =
   'notes' |
   'task_meta' |
   'transfer' |
+  'assignable' |
   'audit_viewers' |
   'audit_commits' |
   'audit_queues' |
@@ -81,6 +84,7 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'notes',
   'task_meta',
   'transfer',
+  'assignable',
   'audit_viewers',
   'audit_commits',
   'audit_queues',
@@ -261,6 +265,27 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
           >
             <CustomerMessagesReadOnly task={task} style={style} />
+          </TaskCard>
+        </TaskFeature>
+      );
+
+    case 'assignable':
+      return (
+        <TaskFeature id='ASSIGNABLE'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.assignable', defaultMessage: 'Assigned to customer' })}
+            {...commonProps}
+            isMenu
+            showFlashyToggle={true}
+            showEditOnMenu={true}
+            showEditButton={true}
+            showReviewOnMenu={true}
+            titleNotifier={3}
+            onEdit={handleEdit}
+            startAdornmentIcon={<StartAdornmentIcon icon={AssignmentIndOutlinedIcon} />}
+            onDoubleClick={handleEdit}
+            editDialog={isEditOpen && (<TaskAssignmentEditDialog open onClose={handleEditClose} />)}
+          >
+            <TaskAssignmentReadOnly />
           </TaskCard>
         </TaskFeature>
       );

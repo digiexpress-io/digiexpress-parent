@@ -19,6 +19,8 @@ const TaskFeatureMapping = {
   'TASK_FEEDBACK': oneOf(['feedback']),
   'TASK_TRANSFER': oneOf(['transfer']),
   'CRM_MESSAGES': notOneOf(['anon']),
+  'ASSIGNABLE': notOneOf(['assignable']),
+
 }
 
 export type TaskFeatureType = keyof typeof TaskFeatureMapping;
