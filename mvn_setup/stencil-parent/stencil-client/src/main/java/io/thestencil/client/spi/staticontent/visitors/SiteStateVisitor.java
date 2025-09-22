@@ -184,6 +184,7 @@ public class SiteStateVisitor {
             .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
             .workflow(true)
             .global(false)
+            .assignable(false)
             .flowName(link.getBody().getFlowName())
             .formName(link.getBody().getFormName())
             .formTag(link.getBody().getFormTag())
