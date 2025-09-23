@@ -6,13 +6,13 @@
   "type": "module",
   "dependencies": {
     "@dxs-ts/gamut-api": "*",
-    "@dxs-ts/gamut-md": "*"
+    "@dxs-ts/gamut-md": "*",
+    "@dxs-ts/xui-datetime": "workspace:*"
   },
   "peerDependencies": {
     "react": "*",
     "react-intl": "*",
     "react-leaflet": "*",
-    "react-date-picker": "*",
     "react-time-picker": "*",
     "@mui/material": "*",
     "@mui/icons-material": "*",
