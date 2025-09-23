@@ -77,8 +77,6 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
-  console.log(cardOrder)
-
 
   return (
     <Grid2 container spacing={style.cardSpacing} m={2}>

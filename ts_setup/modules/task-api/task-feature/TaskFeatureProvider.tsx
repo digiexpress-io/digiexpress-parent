@@ -23,7 +23,7 @@ export const TaskFeatureProvider: React.FC<TaskFeatureProviderProps> = (props) =
   return { 
     features: [ 
       ...(options?.features ?? []),
-      // 'assignable'
+      'assignable'
     ] 
   };    
   }, [options]);
