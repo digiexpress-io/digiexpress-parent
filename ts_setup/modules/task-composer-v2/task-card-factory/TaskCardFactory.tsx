@@ -283,7 +283,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={AssignmentIndOutlinedIcon} />}
             onDoubleClick={handleEdit}
-            editDialog={isEditOpen && (<TaskAssignmentEditDialog open onClose={handleEditClose} />)}
+            editDialog={isEditOpen && (<TaskAssignmentEditDialog open onClose={handleEditClose} taskId={task.id} />)}
           >
             <TaskAssignmentReadOnly />
           </TaskCard>

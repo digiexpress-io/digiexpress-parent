@@ -111,6 +111,7 @@ public class SiteVisitorDefault implements SiteVisitor {
     final var visitedTopics = new ArrayList<String>();
     final var parents = new ArrayList<String>();
     final var locale = localization.getKey();
+
     
     for(final var src : localization.getValue()) {
       final var topicId = src.getPath();
@@ -138,6 +139,15 @@ public class SiteVisitorDefault implements SiteVisitor {
       topic.getLinks().forEach(link -> siteLinks.put(link, this.links.get(link)));
       siteBlobs.put(topic.getBlob(), this.blobs.get(topic.getBlob()));
     }
+    
+    // add assignable links
+    
+    
+    visitTopicLinks("_", locale).stream()
+      .filter(id -> Boolean.TRUE.equals(this.links.get(id).getAssignable()))
+      .forEach(id -> {
+        siteLinks.put(id, this.links.get(id));
+      });
     
     
     // Add missing levels
