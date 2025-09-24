@@ -97,7 +97,9 @@ There are two **TypeScript frontend** applications:
 
 To run either of the frontend applications:
 
-- Node version used for installing and testing this was `v22.5.1`.
+- Node version used for installing and testing this was v22.5.1
+- For Windows users, it is recommended to use WSL (Windows Subsystem for Linux) for development, as everything works as expected in that environment.
+
 
 1. **Navigate to the TypeScript setup folder**:
    ```bash
