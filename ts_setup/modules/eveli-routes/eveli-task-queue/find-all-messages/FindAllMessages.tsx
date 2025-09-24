@@ -3,7 +3,7 @@ import MaterialTable from '@material-table/core';
 
 import { useIntl } from 'react-intl';
 import { Typography } from '@mui/material';
-import { EveliDateTimeFormatter } from '@dxs-ts/eveli-primitives';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 import { useQueue, QueueApi } from '@dxs-ts/eveli-api';
 
 
@@ -59,7 +59,7 @@ export const FindAllMessages: React.FC<{}> = ({  }) => {
             field: 'createdAt',
             filtering: false,
             type: 'date',
-            render: data => <EveliDateTimeFormatter value={data.createdAt} />,
+            render: data => <DateTimeFormatter value={data.createdAt} />,
             headerStyle: { fontWeight: 'bold' }
           },
         ]}

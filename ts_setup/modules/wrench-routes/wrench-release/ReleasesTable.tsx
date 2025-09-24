@@ -23,6 +23,7 @@ import { ReleaseBranch } from './release-types';
 import { AssetMapper } from '../wrench-compare/CompareView'
 import { ErrorView } from '../wrench-styles';
 import { ExplorerItem, useWrenchNav } from "../wrench-nav";
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 
 
@@ -328,7 +329,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
         <TableCell align="center" sx={{ width: "10px" }}>{!isLatest && !isDefault && <IconButton onClick={toggleExpand}>{expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</IconButton>}</TableCell>
         <TableCell align="left"><Typography>{release.body.name}</Typography></TableCell>
         <TableCell align="center" sx={{ width: "10px" }}>{release.branches.length ? <ForkRightIcon /> : <></>}</TableCell>
-        <TableCell align="left"><EveliDateTimeFormatter value={release.body.created} /></TableCell>
+        <TableCell align="left"><DateTimeFormatter value={release.body.created} /></TableCell>
         <TableCell align="left">{release.body.note}</TableCell>
         <TableCell align="center">
           {actionButton()}
@@ -346,7 +347,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
                   <TableCell />
                   <TableCell align="left">{branch.branch.name}</TableCell>
                   <TableCell />
-                  <TableCell align="left"><EveliDateTimeFormatter value={branch.branch.created} /></TableCell>
+                  <TableCell align="left"><DateTimeFormatter value={branch.branch.created} /></TableCell>
                   <TableCell align="left">Branch created from release: {release.body.name}</TableCell>
                   <TableCell align="center">
                     <Button  onClick={() => handleCheckout(branch.branch.name)} variant='text'><FormattedMessage id='releases.button.checkout'/></Button>

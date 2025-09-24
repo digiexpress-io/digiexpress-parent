@@ -2,9 +2,9 @@ import React from 'react';
 import MaterialTable from '@material-table/core';
 
 import { useIntl } from 'react-intl';
-import { Typography } from '@mui/material';
-import { EveliDateTimeFormatter } from '@dxs-ts/eveli-primitives';
 import { useQueue, QueueApi } from '@dxs-ts/eveli-api';
+import { Typography } from '@mui/material';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 
 export const FindAllDeliveries: React.FC<{}> = ({  }) => {
@@ -49,7 +49,7 @@ export const FindAllDeliveries: React.FC<{}> = ({  }) => {
             field: 'createdAt',
             filtering: false,
             type: 'date',
-            render: data => <EveliDateTimeFormatter value={data.attempt.createdAt} />,
+            render: data => <DateTimeFormatter value={data.attempt.createdAt} />,
             headerStyle: { fontWeight: 'bold' }
           },
         ]}
