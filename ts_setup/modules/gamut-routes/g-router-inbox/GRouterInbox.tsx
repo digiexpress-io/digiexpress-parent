@@ -16,6 +16,7 @@ import {
 import { GShell, GShellClassName, } from '@dxs-ts/gamut-shell';
 
 import { Bread, GRouterInboxRoot, MUI_NAME, Top, useUtilityClasses } from './useUtilityClasses';
+import { useRouteToOffer } from '../g-router-offer';
 
 
 
@@ -34,6 +35,7 @@ export const GRouterInbox: React.FC<GRouterInboxProps> = (initProps) => {
   });
   const { locale, viewId } = props;
   const classes = useUtilityClasses();
+  const { onOpenOffer } = useRouteToOffer();
 
 
   function handleNav(viewId: GUserOverviewMenuView | undefined) {
@@ -81,7 +83,7 @@ export const GRouterInbox: React.FC<GRouterInboxProps> = (initProps) => {
                 topTitle: () => <Top />,
                 left: () => (<>
                   <Divider />
-                  <GInbox slotProps={{
+                  <GInbox onOpenOffer={onOpenOffer} slotProps={{
                     attachment: { onClick: handleAttachmentClick },
                     item: { onClick: handleSubjectClick },
                     formReview: {}

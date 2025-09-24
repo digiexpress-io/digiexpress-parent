@@ -11,9 +11,9 @@ import {
   GOffers
 } from '@dxs-ts/gamut-primitives';
 import { GShell, GShellClassName, } from '@dxs-ts/gamut-shell';
-import { OfferApi } from '@dxs-ts/gamut-api';
 
 import { GRouterUnfinishedFormsRoot, MUI_NAME, UnfinishedFormsBreadcrumbs, UnfinishedFormsTitle, useUtilityClasses } from './useUtilityClasses';
+import { useRouteToOffer } from '../g-router-offer';
 
 
 
@@ -25,6 +25,7 @@ export interface GRouterUnfinishedFormsProps {
 export const GRouterUnfinishedForms: React.FC<GRouterUnfinishedFormsProps> = (props) => {
   const nav = useNavigate();
   const classes = useUtilityClasses();
+  const { onOpenOffer } = useRouteToOffer();
 
   const ownerState = useThemeProps({
     props: props,
@@ -50,37 +51,14 @@ export const GRouterUnfinishedForms: React.FC<GRouterUnfinishedFormsProps> = (pr
     })
   }
 
-  function handleOnOpenOffer(offer: OfferApi.Offer) {
 
-    const offerId = offer.id;
-    const pageId = offer.pageId;
-    const productId = offer.productId;
-
-
-    if(!!productId) {
-      nav({
-        from: '/secured/$locale/views/$viewId',
-        params: { offerId, pageId, productId },
-        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
-      })
-    } else if(offer.otherLocales.length > 0) {
-      nav({
-        from: '/secured/$locale/views/$viewId',
-        params: { offerId, pageId, productId: offer.otherLocales[0].productId, locale: offer.otherLocales[0].locale },
-        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
-      })
-    } else {
-      // TODO: polite error msgs
-      alert('Form not available!');
-    }
-  }
 
   const breadcrumbs = React.useCallback(() => <UnfinishedFormsBreadcrumbs onClick={() => handleNav('user-overview')} />, []);
   const topTitle = React.useCallback(() => <UnfinishedFormsTitle />, []);
   const left = () => (
     <>
       <Divider />
-      <GOffers slotProps={{ item: { onOpen: handleOnOpenOffer } }} />
+      <GOffers slotProps={{ item: { onOpen: onOpenOffer } }} />
     </>
   );
 

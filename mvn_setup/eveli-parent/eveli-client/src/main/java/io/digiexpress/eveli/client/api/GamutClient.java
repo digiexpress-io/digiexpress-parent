@@ -199,6 +199,7 @@ public interface GamutClient {
   @Value.Immutable
   interface UserSubAction {
     String getId();
+    String getFormId();
     Boolean getFormInProgress();
   }
   

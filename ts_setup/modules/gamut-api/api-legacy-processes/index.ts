@@ -37,7 +37,7 @@ export namespace LegacyProcessApi {
     viewed: boolean;
     messages: ProcessComment[];
     attachments: ProcessAttachment[];
-    subActions: { formInProgress: boolean, id: string } [];
+    subActions: { formInProgress: boolean, id: string, formId: string }[];
     messagesUri: string;
     assigned: boolean;
   }

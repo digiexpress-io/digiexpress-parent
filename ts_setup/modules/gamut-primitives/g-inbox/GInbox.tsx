@@ -7,18 +7,19 @@ import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
 import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachments';
 
-import { CommsApi, useComms } from '@dxs-ts/gamut-api';
+import { CommsApi, OfferApi, useComms } from '@dxs-ts/gamut-api';
 import { IamApi, useIam } from '@dxs-ts/gamut-api';
 import { useContracts } from '@dxs-ts/gamut-api';
 import { useSite } from '@dxs-ts/gamut-api';
 import { useOffers } from '@dxs-ts/gamut-api';
 import { GFlex } from '../g-flex';
+import { GInboxFormAssignedNotComplete } from '../g-inbox-form-assigned-not-complete';
 
 
 
 export interface GInboxProps {
   children?: React.ReactNode;
-
+  onOpenOffer: (offer: OfferApi.Offer) => void;
   slots?: {
     item?: React.ElementType<GInboxItemProps>;
     attachment?: React.ElementType<GInboxAttachmentsProps>;
@@ -41,9 +42,10 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
+
   const { subjects } = useComms();
   const { getContract } = useContracts();
-  const { getLocalisedOfferName } = useOffers();
+  const { getLocalisedOfferName, getOffer } = useOffers();
   const iam = useIam();
 
   const { site } = useSite();
@@ -65,6 +67,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
         return subject.lastExchange.userName;
     }
   };
+
   return (
     <GInboxRoot className={classes.root}>
       <GFlex variant='header'>
@@ -94,27 +97,30 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
           </Grid2>
         </Grid2>
       </GFlex>
+
+
+
       {subjects
-  .map((subject) => {
-    const contract = getContract(subject.contractId);
-    return {
-      ...subject,
-      contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
-    };
-  })
-  .sort((a, b) => {
-    const aViewed = a.isViewed ? 1 : 0;
-    const bViewed = b.isViewed ? 1 : 0;
+        .map((subject) => {
+          const contract = getContract(subject.contractId);
+          return {
+            ...subject,
+            contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
+          };
+        })
+        .sort((a, b) => {
+          const aViewed = a.isViewed ? 1 : 0;
+          const bViewed = b.isViewed ? 1 : 0;
 
-    if (aViewed !== bViewed) {
-      return aViewed - bViewed;
-    }
+          if (aViewed !== bViewed) {
+            return aViewed - bViewed;
+          }
 
-    const aDate = a.lastExchange?.created ?? a.created;
-    const bDate = b.lastExchange?.created ?? b.created;
+          const aDate = a.lastExchange?.created ?? a.created;
+          const bDate = b.lastExchange?.created ?? b.created;
 
-    return bDate.toMillis() - aDate.toMillis();
-  })
+          return bDate.toMillis() - aDate.toMillis();
+        })
         .map((subject) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
@@ -152,7 +158,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
                 default:
                   return contract.status;
               }
-            })()}            
+            })()}
           >
             <FormReview
               formName={offerName}
@@ -168,7 +174,27 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
                 onClick={props.slotProps.attachment.onClick!}
               />
             ))}
-          </InboxItem>)
+
+            {contract.subforms.length > 0 ? contract.subforms.map((entry) => {
+              const subOffer = entry.formInProgress ? getOffer(entry.id) : undefined;
+
+              if (subOffer?.formId) {
+                const name = getLocalisedOfferName(site, entry.id);
+                return (
+                  <GInboxFormAssignedNotComplete key={entry.id} onClick={() => props.onOpenOffer(subOffer)} formName={name} />
+                )
+              }
+
+              if (entry.formId) {
+                return (<FormReview formName={offerName} formId={entry.formId} />)
+              }
+              return (<></>);
+
+
+            }) : (<></>)
+            }
+          </InboxItem>
+          )
         })}
     </GInboxRoot>
   )

@@ -40,11 +40,11 @@ export const GInboxAttachmentsRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
-    margin: theme.spacing(0.5),
+    marginLeft: theme.spacing(1),
     '.GInboxAttachments-attachmentItem': {
       display: 'flex',
       alignItems: 'center',
-      maxWidth: '20ch',
+      maxWidth: '30ch',
       minWidth: 0,
       overflow: 'hidden',
       whiteSpace: 'nowrap',

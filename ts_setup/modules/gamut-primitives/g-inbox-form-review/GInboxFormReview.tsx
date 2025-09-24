@@ -23,11 +23,13 @@ export const GInboxFormReview: React.FC<GInboxFormReviewProps> = (initProps) => 
   const classes = useUtilityClasses();
   const [openReview, setOpenReview] = React.useState(false);
 
-  function handleOpenReview() {
+  function handleOpenReview(event: React.MouseEvent<any>) {
+    event.stopPropagation();
     setOpenReview(true)
   }
 
-  function handleCloseReview() {
+  function handleCloseReview(event: React.MouseEvent<any>) {
+    event.stopPropagation();
     setOpenReview(false)
   }
 

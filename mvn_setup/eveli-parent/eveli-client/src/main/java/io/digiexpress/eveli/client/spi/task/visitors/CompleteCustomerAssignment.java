@@ -65,7 +65,7 @@ public class CompleteCustomerAssignment implements TaskStoreConfig.MergeTaskVisi
     
     
     merge.modifyObjective(command.getAssignmentId(), objective -> {
-      objective.status(TaskClient.TaskAssignmentStatus.COMPLETED.name());
+      objective.status(TaskClient.TaskAssignmentStatus.COMPLETED.name()).build();
     }).build();
   }
   

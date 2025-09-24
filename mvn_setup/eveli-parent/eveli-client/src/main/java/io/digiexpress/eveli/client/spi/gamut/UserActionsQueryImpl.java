@@ -222,6 +222,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .map(assignment -> {
           final UserSubAction action = ImmutableUserSubAction.builder()
               .id(assignment.getProcessId())
+              .formId(assignment.getQuestionnaireId())
               .formInProgress(assignment.getStatus() == TaskAssignmentStatus.OPEN)
               .build();
           return action;

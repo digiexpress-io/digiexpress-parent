@@ -14,7 +14,7 @@ export function mapToSubjectData(data: LegacyProcessApi.Process[], user: IamApi.
   const subjects: CommsApi.Subject[] = [];
 
   for (const proc of data) {
-    if (!proc.taskId) {
+    if (!proc.taskId || proc.assigned) {
       continue;
     }
     if (proc.messages?.length === 0) {

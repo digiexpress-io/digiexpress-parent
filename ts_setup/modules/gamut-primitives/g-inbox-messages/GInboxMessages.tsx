@@ -13,6 +13,7 @@ import { useComms, CommsApi, OfferApi } from '@dxs-ts/gamut-api';
 import { useContracts } from '@dxs-ts/gamut-api';
 import { useOffers } from '@dxs-ts/gamut-api';
 import { useSite } from '@dxs-ts/gamut-api';
+import { GInboxFormAssignedNotComplete } from '../g-inbox-form-assigned-not-complete';
 
 
 
@@ -87,7 +88,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
       <>
 
         <div className={classes.header}>
-          { contract.offer.formId &&
+          {contract.offer.formId &&
             (<FormReview formName={offerName} formId={contract.offer.formId} />)
           }
           {subject?.documents.map((doc) => (
@@ -101,32 +102,30 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
 
         </div>
 
-        { contract.subforms.length > 0 && (
+        {contract.subforms.length > 0 && (
           <Box className={classes.title}>
             <Typography>
               {intl.formatMessage({ id: 'gamut.inbox.subjectAttachmentAssignedNotCompleted.title', defaultMessage: 'Forms assigned to me but not yet completed' })}
             </Typography>
             {
               contract.subforms.map(entry => {
-                const subOffer = getOffer(entry.id);
-                if(!subOffer?.formId) {
-                  return (<></>)
+                const subOffer = entry.formInProgress ? getOffer(entry.id) : undefined;
+
+                if (subOffer?.formId) {
+                  const name = getLocalisedOfferName(site, entry.id);
+                  return (
+                    <GInboxFormAssignedNotComplete key={entry.id} onClick={() => onOpenOffer(subOffer)} formName={name} />
+                  )
                 }
 
-                if(entry.formInProgress) {
-                  const name = getLocalisedOfferName(site, entry.id);
-                  return (<>
-                    <div onClick={() => onOpenOffer(subOffer)}>{name}</div>
-                  </>)
+                if (entry.formId) {
+                  return (<FormReview formName={offerName} formId={entry.formId} />)
                 }
-            
-                if(subOffer?.formId) {
-                  return ((<FormReview formName={offerName} formId={subOffer.formId} />))
-                }
-                
+                return (<></>);
               })
             }
-          </Box>)
+          </Box>
+        )
         }
 
 
