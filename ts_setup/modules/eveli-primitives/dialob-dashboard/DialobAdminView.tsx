@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import {
   Box, TableContainer, Typography, Table, TableRow, TableHead, TableBody,
-  Tooltip, IconButton, SvgIcon, OutlinedInput, TableCell, Button
+  Tooltip, IconButton, OutlinedInput, TableCell, Button
 } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import type { FormConfiguration } from './types';
@@ -63,12 +63,12 @@ export const DialobAdminView: React.FC = () => {
                   addFormConfiguration();
                 }}
               >
-                <SvgIcon fontSize="medium"><AddIcon /></SvgIcon>
+                <AddIcon fontSize="medium"/>
               </Button>
               <Button onClick={handleJsonUploadClick}>
-                <SvgIcon fontSize="small" >
-                  <FileUploadIcon />
-                </SvgIcon>
+                
+                  <FileUploadIcon fontSize="small" />
+                
                 {intl.formatMessage({ id: "upload.json" })}
               </Button>
               <input
@@ -79,9 +79,9 @@ export const DialobAdminView: React.FC = () => {
                 onChange={(e) => uploadJsonDialogForm(e)}
               />
               <Button onClick={handleCsvUploadClick}>
-                <SvgIcon fontSize="small">
-                  <FileUploadIcon />
-                </SvgIcon>
+                
+                <FileUploadIcon fontSize="small"/>
+                
                 {intl.formatMessage({ id: "upload.csv" })}
               </Button>
               <input
@@ -140,7 +140,7 @@ export const DialobAdminView: React.FC = () => {
                           downloadAllFormConfigurations();
                         }}
                       >
-                        <SvgIcon fontSize="small"><DownloadIcon /></SvgIcon>
+                        <DownloadIcon fontSize="small"/>
                       </IconButton>
                     </Tooltip>
                   </TableCell>
