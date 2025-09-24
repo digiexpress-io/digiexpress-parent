@@ -22,6 +22,8 @@ package io.digiexpress.eveli.client.event;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 
+
+@Deprecated // does nothing
 public interface TaskNotificator {
 
   void sendNewCommentNotificationToClient(TaskClient.TaskComment comment, TaskClient.Task taskModel);

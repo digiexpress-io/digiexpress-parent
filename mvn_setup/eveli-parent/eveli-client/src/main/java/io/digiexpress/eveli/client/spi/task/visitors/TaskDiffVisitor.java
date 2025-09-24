@@ -34,10 +34,10 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskDiffValue;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.jsonpatch.JsonPatch;
 import io.resys.thena.jsonpatch.JsonPatch.JsonPatchOp;
 import io.resys.thena.jsonpatch.JsonPatch.JsonPatchValueType;
@@ -58,7 +58,7 @@ public class TaskDiffVisitor {
   public Uni<TaskDiff> accept() {
     final var tenantName = ctx.getConfig().getTenantName();
     final var tenant = ctx.getConfig().getClient().grim(tenantName);
-    return tenant.find().commitQuery().findCommit(taskId, commitId)
+    return tenant.find().commitQuery().findOneCommitByMissionId(taskId, commitId)
         .onItem().transform(resp -> visitVersion(resp, tenant));
   }
   

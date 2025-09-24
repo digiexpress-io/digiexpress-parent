@@ -66,6 +66,17 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllById(List<String> id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getQueueConsumers()).ln()
+        .append("  WHERE id = ANY($1)").ln() 
+        .build())
+        .props(Tuple.of(id.toArray()))
+        .build();
+  }
+  @Override
   public Sql findAllEnabled() {
     return ImmutableSql.builder()
         .value(new SqlStatement()

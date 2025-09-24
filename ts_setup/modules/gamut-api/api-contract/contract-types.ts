@@ -1,0 +1,67 @@
+import { DateTime } from "luxon";
+import { ProductApi } from "../api-product";
+import { OfferApi } from "../api-offer";
+import { BookingApi } from "../api-bookings";
+
+
+export namespace ContractApi {
+
+}
+
+
+export declare namespace ContractApi {
+  // process ID
+  export type ContractId = string;
+  export type ContractSortOrder = 'ASC' | 'DESC';
+
+  export type ContractStatus = (
+    'NEW' // task worker has not started working on the task
+    | 'OPEN' // task worker has started working on the task
+    | "COMPLETED"  // task worker has completed work
+    | "REJECTED" // task worker has completed work and rejected the task
+    | "TRANSFERRED" //
+    | "DELEGATED" // task is delegated to external provider and completed
+    | "WAITING"  // task is waiting for decision
+  )
+
+  export interface ContractDocument {
+    id: string;
+    name: string;
+    created: DateTime;
+    size: number
+  }
+
+  export interface Contract {
+    id: ContractId; // task id internally
+    referenceId: string; // task reference id
+    exchangeId: string; // process id
+    created: DateTime; // task created
+    updated: DateTime | undefined; // task updated
+    status: ContractStatus;
+    reviewUri: string;
+    documents: readonly ContractDocument[];
+    product: ProductApi.Product;
+    offer: OfferApi.Offer;
+    booking: BookingApi.Booking | undefined;
+    assigned: boolean;
+
+    subforms: { formInProgress: boolean, id: string } [];
+  }
+
+  export type GetContractFetchGET = () => Promise<Response>;
+  export type ContractAttachmentFetchGET = (contractId: ContractId, filename: string) => Promise<Response>;
+  export type AppendContractAttachmentFetchPOST = (contractId: ContractId, files: FileList) => Promise<void>;
+
+  export interface ContractContextType {
+    contracts: readonly Contract[];
+    isPending: boolean;
+    contractStats: { awaitingDecision: number, decided: number },
+    toggleContractSortOrder(): void;
+    sortOrder: ContractSortOrder;
+    getContract(contractId: ContractId): Contract | undefined;
+    appendContractAttachment: (contractId: ContractId, files: FileList) => Promise<Contract>;
+    getContractAttachment: (contractId: ContractId, fileName: string) => Promise<{ download: string }>;
+    refresh(): Promise<void>;
+  }
+
+}

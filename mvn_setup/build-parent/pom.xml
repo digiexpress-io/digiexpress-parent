@@ -7,6 +7,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
 
+  <name>digiexpress-build-parent</name>
   <artifactId>digiexpress-build-parent</artifactId>
   <packaging>pom</packaging>
 
@@ -40,11 +41,15 @@
     <commons-io.version>2.16.1</commons-io.version>
     <commons-csv.version>1.11.0</commons-csv.version>
     <commons-codec.version>1.17.1</commons-codec.version>
-    <commons-lang.version>3.17.0</commons-lang.version>
+    <commons-lang.version>3.18.0</commons-lang.version>
     <commons-collections.version>4.4</commons-collections.version>
     <commons-validator.version>1.7</commons-validator.version>
+    
     <dialob.version>3.0.1</dialob.version>
-    <flexmark.version>0.62.2</flexmark.version>  
+    <dialob-b.version>2.2.9</dialob-b.version>
+    
+    <flexmark.version>0.62.2</flexmark.version>
+    <jgit.version>7.2.1.202505142326-r</jgit.version>
 
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
@@ -280,6 +285,15 @@
         <artifactId>dialob-api</artifactId>
         <version>${dialob.version}</version>
       </dependency>
+      
+      <dependency>
+        <groupId>io.dialob</groupId>
+        <artifactId>dialob-bom</artifactId>
+        <version>${dialob-b.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    
     
       <dependency>
         <groupId>io.digiexpress</groupId>
@@ -363,6 +377,18 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-collections4</artifactId>
         <version>${commons-collections.version}</version>
+      </dependency>
+
+      <!-- JGIT -->
+      <dependency>
+        <groupId>org.eclipse.jgit</groupId>
+        <artifactId>org.eclipse.jgit</artifactId>
+        <version>${jgit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jgit</groupId>
+        <artifactId>org.eclipse.jgit.ssh.apache</artifactId>
+        <version>${jgit.version}</version>
       </dependency>
 
       <!-- Quarkus -->

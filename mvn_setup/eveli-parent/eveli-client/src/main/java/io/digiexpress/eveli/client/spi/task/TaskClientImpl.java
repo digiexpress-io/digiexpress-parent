@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.spi.task;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -21,43 +24,83 @@ package io.digiexpress.eveli.client.spi.task;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.digiexpress.eveli.client.api.CustomerAccountClient;
+import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
+import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
+import io.digiexpress.eveli.client.spi.task.visitors.AddFormToCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.AddWorkerCommitViewer;
+import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
+import io.digiexpress.eveli.client.spi.task.visitors.CreateCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllExternalTaskCommentsByReporterIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskByIdsVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskCommentsByTaskIdVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllUnreadTasksVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.FormAssignmentVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
 
+  private final EveliEnvirClient envirClient;
   private final TaskNotificator notificator;
+  private final TaskFileClient taskFilesClient;
+  private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
+  private final CustomerAccountClient crmClient;
   
+  public TaskStore unwrap() {
+    return ctx;
+  }
   
   @Override
   public PaginateTasks paginateTasks() {
     return new PaginateTasksImpl(ctx);
   }
+  
+  @Override
+  public QueryFormAssignments queryFormAssignments() {
+    return new QueryFormAssignments() {
+      
+      @Override
+      public Multi<FormAssignment> findAll(String taskId) {
+        return new FormAssignmentVisitor(envirClient, ctx, taskId).accept();
+      }
+    };
+  }
+  
   @Override
   public QueryTasks queryTasks() {
     return new QueryTasks() {
+      private List<String> requireAnyRoles;
       @Override
       public Uni<Task> getOneById(String taskId) {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
@@ -73,6 +116,18 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notNull(taskId, () -> "taskId can't be empty!");
         TaskAssert.notNull(commitId, () -> "commitId can't be empty!");
         return new TaskDiffVisitor(ctx, taskId, commitId).accept();
+      }
+      @Override
+      public QueryTasks requireAnyRoles(List<String> roles) {
+        if(roles == null) {
+          roles = new ArrayList<>();
+        }
+        this.requireAnyRoles.addAll(roles);
+        return this;
+      }
+      @Override
+      public Uni<List<Task>> findAll() {
+        return ctx.getConfig().accept(new FindAllTaskVisitor(requireAnyRoles));
       }
     };
   }
@@ -95,7 +150,12 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Uni<Task> createTask(CreateTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command));
+        if(command.getQuestionnaireId() == null) {
+          return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command, null));  
+        }
+        return crmClient.accountQuery().getOneByAnyId(command.getQuestionnaireId())
+          .onItem().transformToUni(account -> ctx.getConfig().accept(new CreateOneTask(userId, notificator, command, account)));
+        
       }
       @Override
       public Uni<Task> modifyTask(String taskId, ModifyTaskCommand command) {
@@ -109,16 +169,63 @@ public class TaskClientImpl implements TaskClient {
         return ctx.getConfig().accept(new DeleteOneTask(userId, userEmail, taskId));
       }
       @Override
-      public Uni<Task> addWorkerCommitViewer(String taskId) {
+      public Uni<Void> addWorkerCommitViewer(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId));
+        
+        final var config = ctx.getConfig();
+        return config.getClient().grim(ctx.getConfig().getTenantName())
+          .find().commitViewersQuery().createdIn(Duration.ofHours(1))
+          .usedBy(userId)
+          .usedFor(TaskMapper.VIEWER_WORKER)
+          .missionId(taskId)
+          .findAll().onItem().transformToUni(views -> {
+            return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId, views))
+                .onItem().transformToUni((task) -> Uni.createFrom().voidItem());            
+          });
       }
       @Override
-      public Uni<Task> addCustomerCommitViewer(String taskId) {
+      public Uni<Void> addCustomerCommitViewer(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId));
+        final var config = ctx.getConfig();
+        
+        return config.getClient().grim(ctx.getConfig().getTenantName())
+          .find().commitViewersQuery().createdIn(Duration.ofHours(1))
+          .usedBy(userId)
+          .usedFor(TaskMapper.VIEWER_CUSTOMER)
+          .missionId(taskId)
+          .findAll().onItem().transformToUni(views -> {
+            return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId, views))
+                .onItem().transformToUni((task) -> Uni.createFrom().voidItem());            
+          });
+      }
+      @Override
+      public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return new TransferTaskVisitor(envirClient, ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
+      }
+      @Override
+      public Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new CompleteCustomerAssignment(userId, taskId, command));
+      }
+      @Override
+      public Uni<Task> createCustomerAssignment(String taskId, List<CreateCustomerAssignmentCommand> command) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        
+        return envirClient.runtimeQuery().getOne()
+            .onItem().transform(runtime -> runtime.getStencil(OffsetDateTime.now()))
+            .onItem().transformToUni(sites -> ctx.getConfig().accept(new CreateCustomerAssignment(userId, taskId, command, sites)));
+      }
+      @Override
+      public Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command) {
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        
+        return ctx.getConfig().accept(new AddFormToCustomerAssignment(userId, taskId, command));
       }
     };
   }
@@ -161,11 +268,17 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryUnreadUserTasks queryUnreadUserTasks() {
     return new QueryUnreadUserTasks() {
-      private String userId;
+      private String workerId;
+      private String customerId;
       private final List<String> roles = new ArrayList<>();
       @Override
-      public QueryUnreadUserTasks userId(String userId) {
-        this.userId = userId;
+      public QueryUnreadUserTasks workerId(String workerId) {
+        this.workerId = workerId;
+        return this;
+      }
+      @Override
+      public QueryUnreadUserTasks customerId(String customerId) {
+        this.customerId = customerId;
         return this;
       }
       @Override
@@ -176,10 +289,176 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public Uni<List<String>> findAll() {
-        TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(userId, roles, TaskMapper.VIEWER_WORKER));
+        TaskAssert.isTrue(workerId != null || customerId != null, () -> "workerId or customerId both can't be empty!");
+        
+        if(customerId != null) {
+          return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(customerId, roles, TaskMapper.VIEWER_CUSTOMER));          
+        }
+        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(workerId, roles, TaskMapper.VIEWER_WORKER));
+      }
+
+    };
+  }
+  @Override
+  public QueryTaskDasboard queryTaskDasboard() {
+    return new QueryTaskDasboard() {
+      private final List<String> requireAnyRoles = new ArrayList<>();
+      @Override
+      public QueryTaskDasboard requireAnyRoles(List<String> roles) {
+        TaskAssert.notEmpty("roles", () -> "roles can't be empty!");
+        this.requireAnyRoles.addAll(roles);
+        return this;
+      }
+      @Override
+      public Uni<TaskDasboard> findAll() {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionStatsQuery().findAllByMissionAttributes(requireAnyRoles)
+          .onItem().transform(resp -> {
+            if(resp.getStatus() != QueryEnvelopeStatus.OK) {
+              throw TaskException.builder("FIND_TASK_DASKBOARD_FAIL")
+                .add(grim, resp)
+                .build();
+            }
+            final var result = resp.getObjects();
+            if(result == null) {
+              throw TaskException.builder("FIND_TASK_DASKBOARD_NO_FOUND")   
+                .add(grim, resp)
+                .build();
+            }
+            return ImmutableTaskDasboard.builder().events(result).build();
+          });
       }
     };
   }
 
+  @Override
+  public DeleteTasks deleteTasks() {
+
+    return new DeleteTasks() {
+      private String commitMessage;
+      private String commitAuthor;
+      @Override
+      public DeleteTasks commitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+        return this;
+      }
+      @Override
+      public DeleteTasks commitAuthor(String commitAuthor) {
+        this.commitAuthor = commitAuthor;
+        return this;
+      }
+      @Override
+      public Uni<TaskArchivePointer> deleteOne(String id) {
+        TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
+        TaskAssert.notEmpty(commitAuthor, () -> "commitAuthor can't be empty!");
+        TaskAssert.notEmpty(id, () -> "id can't be empty!");
+        
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        
+        return grim.find().missionDeleteQuery()
+          .commitAuthor(commitAuthor)
+          .commitMessage(commitMessage)
+          .missionId(Arrays.asList(id))
+          .deleteAll()
+          .onItem().transform(resp -> {
+            final TaskArchivePointer pointer = ImmutableTaskArchivePointer.builder()
+                .commit(resp)
+                .build();
+            return pointer;
+          }).collect().last();
+      }
+    };
+  }    
+
+
+  @Override
+  public QueryTaskProcesess queryTaskProcesess() {
+    return new QueryTaskProcesess() {
+      
+      @Override
+      public Multi<ProcessInstance> findLast6Months() {
+        final var startDate = OffsetDateTime.now().minusMonths(6);
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOnOrAfter(startDate)
+          .onItem().transform(TaskMapper::map);
+      }
+
+      @Override
+      public Multi<ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOnOrBeforeWithoutMission(olderThen)
+          .onItem().transform(TaskMapper::map);
+      }
+
+      @Override
+      public Uni<Optional<ProcessInstance>> findOneByTaskId(String taskId) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOneByMissionId(taskId)
+          .onItem().transform(optional -> optional.map(TaskMapper::map));
+      }
+    };
+
+  }
+  @Override
+  public ModifyTaskProcess modifyProcess() {
+    return new ModifyTaskProcess() {
+      private String commitMessage;
+      private String commitAuthor;
+      private String status;
+      private String id;
+      @Override
+      public ModifyTaskProcess id(String id) {
+        this.id = id;
+        return this;
+      }
+      @Override
+      public ModifyTaskProcess commitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+        return this;
+      }
+      @Override
+      public ModifyTaskProcess commitAuthor(String commitAuthor) {
+        this.commitAuthor = commitAuthor;
+        return this;
+      }
+      @Override
+      public ModifyTaskProcess status(ProcessStatus status) {
+        TaskAssert.notNull(status, () -> "status can't be empty!");
+        this.status = status.name();
+        return this;
+      }
+      
+      @Override
+      public Uni<ProcessInstance> build() {
+        TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
+        TaskAssert.notEmpty(commitAuthor, () -> "commitAuthor can't be empty!");
+        TaskAssert.notEmpty(id, () -> "id can't be empty!");
+        
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        
+        return grim.commit().modifyOneProc()
+            .commitAuthor(commitAuthor)
+            .commitMessage(commitMessage)
+            .procId(id)
+            .modifyProc(proc -> proc.status(status).build())
+            .build()
+            .onItem().transform(e -> {
+              if(e.getStatus() != CommitResultStatus.OK || e.getProc() == null) {
+                throw TaskException.builder("MODIFY_ONE_TASK_PROC_FAIL").add(grim, e).build();
+              }
+              return TaskMapper.map(e.getProc());
+            });
+        
+      }
+    };
+  }
 }

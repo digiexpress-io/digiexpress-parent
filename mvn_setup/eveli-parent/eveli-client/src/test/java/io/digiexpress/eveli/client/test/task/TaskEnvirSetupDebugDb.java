@@ -31,10 +31,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -43,6 +40,7 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -54,13 +52,12 @@ import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.HdesTypeDefsFactory;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.grim.api.GrimClient;
+import io.resys.thena.grim.spi.GrimClientImpl;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -72,7 +69,7 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class TaskEnvirSetupDebugDb {
   private static io.vertx.mutiny.pgclient.PgPool PGPOOL;
   
-  private static ThenaClient THENA_STATE;
+  private static GrimClient THENA_STATE;
   
   public static ServiceInit SERVICE_INIT = new ServiceInit() {
     @Override
@@ -105,7 +102,7 @@ public abstract class TaskEnvirSetupDebugDb {
         new PoolOptions().setMaxSize(5));
     waitUntilPostgresqlAcceptsConnections(PGPOOL);
     
-    THENA_STATE = DbStateSqlImpl.create()
+    THENA_STATE = GrimClientImpl.create()
         .db("junit")
         .client(PGPOOL)
         .build();
@@ -153,7 +150,7 @@ public abstract class TaskEnvirSetupDebugDb {
     }
     
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
       final var config = ImmutableTaskStoreConfig.builder()
           .tenantName("task-tenant")
           .client(THENA_STATE)
@@ -168,7 +165,8 @@ public abstract class TaskEnvirSetupDebugDb {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(notificator, store);
+      final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
+      return new TaskClientImpl(null, notificator, null, null, store, customer);
     }
     
     @Bean

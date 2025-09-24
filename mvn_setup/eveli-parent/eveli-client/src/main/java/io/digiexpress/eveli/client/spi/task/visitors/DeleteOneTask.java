@@ -26,11 +26,11 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -47,13 +47,15 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
     previousVersion = TaskMapper.map(
         merge.getCurrentState().getMission(), 
         merge.getCurrentState().getAssignments().values(), 
-        merge.getCurrentState().getRemarks().values());
+        merge.getCurrentState().getRemarks().values(),
+        merge.getCurrentState().getLinks().values(),
+        merge.getCurrentState().getMissionLabels().values(),
+        merge.getCurrentState().getObjectives().values());
     
     merge
     .archivedAt(OffsetDateTime.now())
-    
     // change is viewed by worker who deleted it
-    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).build())
+    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
     
     .build();
   }
@@ -76,7 +78,13 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks(),
+        commited.getLabels(),
+        commited.getObjectives());
     return Uni.createFrom().item(task);
   }
 }

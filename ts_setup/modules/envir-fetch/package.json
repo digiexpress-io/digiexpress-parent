@@ -1,0 +1,14 @@
+{
+  "name": "@dxs-ts/envir-fetch",
+  "version": "${project.version}",
+  "description": "Generic fetch library",
+  "type": "module",
+  "private": false,
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "*"
+  },
+  "keywords": [
+    "api", "fetch", "envir"
+  ]
+}

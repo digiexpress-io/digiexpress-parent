@@ -20,31 +20,8 @@ package io.digiexpress.eveli.client.test.feedback;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommand;
-import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
-import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.*;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
@@ -60,6 +37,25 @@ import io.vertx.core.json.JsonObject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Testcontainers
@@ -74,6 +70,18 @@ public abstract class FeedbackEnvirSetup {
   public static void start(PostgreSQLContainer<?> container) {
     CONTAINER = container;
     CONTAINER.start();
+    for (int i = 0; i < 100; i++) {
+      try (var c = DriverManager.getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword())) {
+        break;
+      } catch (SQLException e) {
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException ex) {
+          throw new RuntimeException(ex);
+        }
+      }
+    }
+
   }  
   public static void end() {
     CONTAINER.stop();
@@ -91,10 +99,10 @@ public abstract class FeedbackEnvirSetup {
     @Autowired ApplicationEventPublisher publisher;
 
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository processJPA) {
       final var repoId = "test-task-client-" + TEST_INDEX.incrementAndGet();
       final var setup = new FeedbackTaskEnvirSetup(CONTAINER, new TaskEventPublisher(publisher), repoId);
-      return setup.getTaskClient();
+      return setup.getTaskClient(processJPA);
     }
     
     @Bean

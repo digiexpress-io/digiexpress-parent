@@ -99,4 +99,42 @@ public class InternalDeliveryQueryImpl implements InternalDeliveryQuery {
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_DELIVERY_ATTEMPTS'!", sql, e)));
 
   }
+
+
+  @Override
+  public Uni<List<DeliveryAttempt>> findAllAttemptsByMessageId(List<String> messageId) {
+ final var sql = dataSource.getRegistry().deliveryAttempt().findAllByMessageId(messageId);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalDeliveryQueryImpl.findAllAttemptsByMessageId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().deliveryAttempt().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<DeliveryAttempt> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_DELIVERY_ATTEMPTS'!", sql, e)));
+  }
+
+
+  @Override
+  public Uni<List<Delivery>> findAllByMessageId(List<String> messageId) {
+   final var sql = dataSource.getRegistry().delivery().findAllByMessageId(messageId);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalDeliveryQueryImpl.findAllByMessageId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().delivery().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<Delivery> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_DELIVERIES'!", sql, e)));
+  }
 }

@@ -37,6 +37,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.util.UriUtils;
 
 import com.google.cloud.spring.storage.GoogleStorageResource;
+import com.google.cloud.storage.Blob.BlobSourceOption;
 import com.google.cloud.storage.HttpMethod;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.Storage.BlobListOption;
@@ -214,5 +215,32 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
       AttachmentAssert.notNull(resourceLoader, () -> "resourceLoader must be defiend!");
       return new AttachmentCommandsGoogle(downloadBucket, storage, resourceLoader);
     }
+  }
+
+  @Override
+  public AttachmentRemoveBuilder remove() {
+    return new AttachmentRemoveBuilder() {
+      private String fileName;
+      @Override
+      public void removeByTaskId(String taskId) {
+        final var blobName = String.format("tasks/%s/files/%s", taskId, fileName);
+        boolean deleted = storage.delete(downloadBucket, blobName);
+        AttachmentAssert.isTrue(deleted, ()->String.format("File %s for task %s not found", fileName, taskId));
+      }
+      
+      @Override
+      public void removeByProcessId(String processId) {
+        final var blobName = String.format("processes/%s/files/%s", processId, fileName);
+        boolean deleted = storage.delete(downloadBucket, blobName);
+        AttachmentAssert.isTrue(deleted, ()->String.format("File %s for process %s not found", fileName, processId));
+        
+      }
+      
+      @Override
+      public AttachmentRemoveBuilder filename(String filename) {
+        this.fileName = filename;
+        return this;
+      }
+    };
   }
 }

@@ -23,19 +23,19 @@ package io.digiexpress.eveli.client.config;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.spi.assets.HdesDefaultAssets;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsMigrationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
@@ -51,7 +51,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.hdes.client.spi.store.ThenaStore;
-import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
@@ -65,7 +65,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 
-@DependsOn(EveliAutoConfigAssets.BEAN_NAME)
+@ConditionalOnBean(name = EveliAutoConfigAssets.BEAN_NAME)
 @Configuration
 @Slf4j
 public class EveliAutoConfigAssets {
@@ -89,7 +89,7 @@ public class EveliAutoConfigAssets {
   @Bean
   public AssetsAnyTagController assetsAnyTagController(
       EveliEditEnvir context, 
-      AuthClient security, 
+      WorkerAuthClient security, 
       DialobClient dialobClient,
       EveliEnvirClient envir
   ) {
@@ -100,7 +100,7 @@ public class EveliAutoConfigAssets {
   public AssetsDeploymentController assetsDeploymentController(
       ApplicationEventPublisher publisher,
       EveliEditEnvir context, 
-      AuthClient auth, 
+      WorkerAuthClient auth, 
       DialobClient dialobClient,
       EveliEnvirClient envir) {
     
@@ -109,16 +109,28 @@ public class EveliAutoConfigAssets {
   @Bean 
   public AssetsPublicationController assetReleaseController(
       EveliEditEnvir context, 
-      AuthClient security,
+      WorkerAuthClient security,
       DialobClient dialobClient,
       EveliEnvirClient envir,
       ApplicationEventPublisher publisher
   ) {
     return new AssetsPublicationController(envir, context.getStencil(), context.getWrench(), dialobClient, security, publisher);
   }
+  
+  @Bean 
+  public AssetsMigrationController assetsMigrationController(
+      EveliEditEnvir context, 
+      WorkerAuthClient security,
+      DialobClient dialobClient,
+      EveliEnvirClient envir,
+      ApplicationEventPublisher publisher
+  ) {
+    return new AssetsMigrationController(context.getStencil(), context.getWrench(), dialobClient);
+  }
+  
   @Bean
-  public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
-    return new AssetsDialobController(client, objectMapper);
+  public AssetsDialobController assetsDialobController(DialobClient client) {
+    return new AssetsDialobController(client);
   }
   @Bean 
   public AssetsWorkflowController workflowController(
@@ -169,7 +181,7 @@ public class EveliAutoConfigAssets {
     
     final var stencilClient = new StencilClientImpl(StencilStoreImpl.builder()
         .config((builder) -> builder
-            .client(DbStateSqlImpl.create().client(pgPool).build())
+            .client(GitDataSourceImpl.create().client(pgPool).build())
             .objectMapper(objectMapper)
             .repoName("stencil-assets")
             .headName("main")
@@ -192,11 +204,14 @@ public class EveliAutoConfigAssets {
    * Call this for get/create wrench/stencil db-s only needed for edit envir
    */
   public static Uni<EveliEditEnvir> getOrCreateDb(EveliEditEnvir envir) {
-    final var createdWrench = envir.getWrench().repo().create()
-        .onItem().transformToUni(init -> 
+    final var createdWrench = envir.getWrench().repo().create();
+        /*
+         * Creates default wrench assets
+         * .onItem().transformToUni(init -> 
           new HdesDefaultAssets(init, Boolean.TRUE.equals(envir.getAssetProps().getOverwrite())).accept()
           .onItem().transform(junk -> init)
         );
+        */
     final var createdStencil = envir.getStencil().repo().create();
     return Uni.combine().all()
         .unis(createdWrench, createdStencil)

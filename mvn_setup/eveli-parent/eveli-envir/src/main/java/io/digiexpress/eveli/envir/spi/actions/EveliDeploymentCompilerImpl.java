@@ -32,10 +32,10 @@ import io.resys.hdes.client.spi.HdesClientEnvirBuilder;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.envir.ProgramEnvirFactory;
-import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
-import io.resys.thena.spi.DocStoreException;
-import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.doc.api.ThenaDocConfig;
+import io.resys.thena.doc.api.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.doc.spi.support.DocStoreException;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -105,7 +105,7 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
     if(errors1 > 0 && !forced) {
       return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());
     }
-    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment, stencil, logger).accept();
+    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment.getSources(), stencil, logger).accept();
     if(errors2 > 0 && !forced) {
       return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());      
     }

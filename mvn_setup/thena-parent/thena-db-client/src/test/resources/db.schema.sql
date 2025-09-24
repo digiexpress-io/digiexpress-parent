@@ -11,211 +11,6 @@ CREATE TABLE IF NOT EXISTS tenants
 CREATE INDEX IF NOT EXISTS tenants_NAME_INDEX ON tenants (name);
 CREATE INDEX IF NOT EXISTS tenants_EXT_INDEX ON tenants (external_id);
 
-CREATE TABLE git_blobs
-(
-  id VARCHAR(40) PRIMARY KEY,
-  value jsonb NOT NULL
-);
-
-CREATE TABLE git_commits
-(
-  id VARCHAR(40) PRIMARY KEY,
-  datetime VARCHAR(29) NOT NULL,
-  author VARCHAR(40) NOT NULL,
-  message VARCHAR(255) NOT NULL,
-  tree VARCHAR(40) NOT NULL,
-  parent VARCHAR(40),
-  merge VARCHAR(40)
-);
-CREATE INDEX git_commits_TREE_INDEX ON git_commits (tree);
-CREATE INDEX git_commits_PARENT_INDEX ON git_commits (tree);
-
-CREATE TABLE git_treeItems(  id SERIAL PRIMARY KEY,  name VARCHAR(255) NOT NULL,  blob VARCHAR(40) NOT NULL,  tree VARCHAR(40) NOT NULL);CREATE INDEX git_treeItems_TREE_INDEX ON git_treeItems (tree);
-CREATE INDEX git_treeItems_PARENT_INDEX ON git_treeItems (tree);
-
-CREATE TABLE git_trees
-(
-  id VARCHAR(40) PRIMARY KEY
-);
-
-CREATE TABLE git_refs
-(
-  name VARCHAR(100) PRIMARY KEY,
-  commit VARCHAR(40) NOT NULL
-);
-
-CREATE TABLE git_tags
-(
-  id VARCHAR(40) PRIMARY KEY,
-  commit VARCHAR(40) NOT NULL,
-  datetime VARCHAR(29) NOT NULL,
-  author VARCHAR(40) NOT NULL,
-  message VARCHAR(100) NOT NULL
-);
-
-ALTER TABLE git_commits
-  ADD CONSTRAINT git_commits_COMMIT_PARENT_FK
-  FOREIGN KEY (parent)
-  REFERENCES git_commits (id);
-ALTER TABLE git_commits
-  ADD CONSTRAINT git_commits_COMMIT_TREE_FK
-  FOREIGN KEY (tree)
-  REFERENCES git_trees (id);
-
-ALTER TABLE git_refs
-  ADD CONSTRAINT git_refs_REF_COMMIT_FK
-  FOREIGN KEY (commit)
-  REFERENCES git_commits (id);
-
-ALTER TABLE git_tags
-  ADD CONSTRAINT git_tags_TAG_COMMIT_FK
-  FOREIGN KEY (commit)
-  REFERENCES git_commits (id);
-
-ALTER TABLE git_treeItems
-  ADD CONSTRAINT git_treeItems_TREE_ITEM_BLOB_FK
-  FOREIGN KEY (blob)
-  REFERENCES git_blobs (id);
-ALTER TABLE git_treeItems
-  ADD CONSTRAINT git_treeItems_TREE_ITEM_PARENT_FK
-  FOREIGN KEY (tree)
-  REFERENCES git_trees (id);
-ALTER TABLE git_treeItems
-  ADD CONSTRAINT git_treeItems_TREE_NAME_BLOB_UNIQUE
-  UNIQUE (tree, name, blob);
-
-CREATE TABLE doc
-(
-  id VARCHAR(100) PRIMARY KEY,
-  commit_id VARCHAR(40) NOT NULL,
-  created_with_commit_id VARCHAR(40) NOT NULL,
-  external_id VARCHAR(100) UNIQUE,
-  owner_id VARCHAR(100),
-  doc_parent_id VARCHAR(100),
-  doc_type VARCHAR(40) NOT NULL,
-  doc_status VARCHAR(8) NOT NULL,
-  doc_starts_at TIMESTAMP WITH TIME ZONE,
-  doc_ends_at TIMESTAMP WITH TIME ZONE,
-  doc_name TEXT UNIQUE,
-  doc_description TEXT,
-  doc_sub_status VARCHAR(100),
-  doc_meta jsonb
-);
-CREATE INDEX doc_DOC_STARTS_AT_INDEX ON doc (doc_starts_at);
-CREATE INDEX doc_DOC_ENDS_AT_INDEX ON doc (doc_ends_at);
-CREATE INDEX doc_DOC_SUB_STATUS_INDEX ON doc (doc_sub_status);
-CREATE INDEX doc_DOC_NAME_INDEX ON doc (doc_name);
-CREATE INDEX doc_DOC_EXT_INDEX ON doc (external_id);
-CREATE INDEX doc_DOC_PARENT_INDEX ON doc (doc_parent_id);
-CREATE INDEX doc_DOC_TYPE_INDEX ON doc (doc_type);
-CREATE INDEX doc_DOC_OWNER_INDEX ON doc (owner_id);
-ALTER TABLE doc
-  ADD CONSTRAINT doc_DOC_PARENT_FK
-  FOREIGN KEY (doc_parent_id)
-  REFERENCES doc (id);
-
-
-CREATE TABLE doc_branch
-(
-  doc_id                   VARCHAR(100) NOT NULL,
-  branch_id                VARCHAR(40) NOT NULL,
-  commit_id                VARCHAR(40) NOT NULL,
-  created_with_commit_id   VARCHAR(40) NOT NULL,
-  branch_name              VARCHAR(255) NOT NULL,
-  branch_status            VARCHAR(40) NOT NULL,
-  value                    JSONB NOT NULL,
-  value_starts_at          TIMESTAMP WITH TIME ZONE,
-  value_ends_at            TIMESTAMP WITH TIME ZONE,
-  value_name               TEXT,
-  value_description        TEXT,
-  value_status             VARCHAR(100),
-  PRIMARY KEY (branch_id),
-  UNIQUE (doc_id, branch_name)
-);
-CREATE INDEX doc_branch_VALUE_STARTS_AT_INDEX ON doc_branch (value_starts_at);
-CREATE INDEX doc_branch_VALUE_ENDS_AT_INDEX ON doc_branch (value_ends_at);
-CREATE INDEX doc_branch_VALUE_STATUS_INDEX ON doc_branch (value_status);
-CREATE INDEX doc_branch_VALUE_NAME_INDEX ON doc_branch (value_name);
-CREATE INDEX doc_branch_DOC_DOC_ID_INDEX ON doc_branch (doc_id);
-CREATE INDEX doc_branch_DOC_BRANCH_NAME_INDEX ON doc_branch (branch_name);
-CREATE INDEX doc_branch_DOC_COMMIT_ID_INDEX ON doc_branch (commit_id);
-
-ALTER TABLE doc_branch
-  ADD CONSTRAINT doc_branch_DOC_ID_FK
-  FOREIGN KEY (doc_id)
-  REFERENCES doc (id);
-
-
-CREATE TABLE doc_commits
-(
-  id VARCHAR(40) PRIMARY KEY,
-  branch_id VARCHAR(40),
-  doc_id VARCHAR(100) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  author VARCHAR(255) NOT NULL,
-  message TEXT NOT NULL,
-  commit_log TEXT NOT NULL,
-  parent VARCHAR(40)
-);
-CREATE INDEX doc_commits_DOC_COMMIT_DOC_ID_INDEX ON doc_commits (doc_id);
-CREATE INDEX doc_commits_DOC_COMMIT_PARENT_INDEX ON doc_commits (parent);
-CREATE INDEX doc_commits_DOC_COMMIT_BRANCH_ID_INDEX ON doc_commits (branch_id);
-ALTER TABLE doc_commits
-  ADD CONSTRAINT doc_commits_DOC_COMMIT_PARENT_FK
-  FOREIGN KEY (parent)
-  REFERENCES doc_commits (id);
-
-
-ALTER TABLE doc_commits
-  ADD CONSTRAINT doc_commits_DOC_COMMIT_FK
-  FOREIGN KEY (doc_id)
-  REFERENCES doc (id);
-
-
-CREATE TABLE doc_log
-(
-  id VARCHAR(40) PRIMARY KEY,
-  commit_id VARCHAR(40) NOT NULL,
-  doc_id VARCHAR(100) NOT NULL,
-  branch_id VARCHAR(40),
-  operation_type VARCHAR(100) NOT NULL,
-  body_type VARCHAR(100) NOT NULL,
-  body_after jsonb,
-  body_before jsonb,
-  body_patch jsonb
-);
-CREATE INDEX doc_log_DOC_INDEX ON doc_log (doc_id);
-CREATE INDEX doc_log_BRANCH_INDEX ON doc_log (branch_id);
-CREATE INDEX doc_log_COMMIT_INDEX ON doc_log (commit_id);
-
-ALTER TABLE doc_log
-  ADD CONSTRAINT doc_log_DOC_LOG_COMMIT_FK
-  FOREIGN KEY (commit_id)
-  REFERENCES doc_commits (id);
-
-
-CREATE TABLE doc_commands
-(
-  id VARCHAR(40) PRIMARY KEY,
-  commit_id VARCHAR(40) NOT NULL,
-  doc_id VARCHAR(100) NOT NULL,
-  branch_id VARCHAR(40),
-  commands JSONB[] NOT NULL
-);
-CREATE INDEX doc_commands_DOC_INDEX ON doc_commands (doc_id);
-
---- constraints fordoc_commands
-ALTER TABLE doc_commands
-  ADD CONSTRAINT doc_commands_DOC_FK
-  FOREIGN KEY (doc_id)
-  REFERENCES doc (id);
-
-ALTER TABLE doc_commands
-  ADD CONSTRAINT doc_commands_BRANCH_FK
-  FOREIGN KEY (branch_id)
-  REFERENCES doc_branch (branch_id);
-
-
 CREATE TABLE org_rights
 (
   id VARCHAR(40) PRIMARY KEY,
@@ -456,4 +251,232 @@ ALTER TABLE org_rights
   FOREIGN KEY (created_commit_id)
   REFERENCES org_commits (commit_id);
 
+
+
+CREATE TABLE fs_commits
+(
+  commit_id VARCHAR(40) PRIMARY KEY,
+  parent_id VARCHAR(40),
+  dirent_id VARCHAR(40),
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  commit_log TEXT NOT NULL,
+  commit_author VARCHAR(255) NOT NULL,
+  commit_message VARCHAR(255) NOT NULL
+);
+CREATE INDEX fs_commits_PARENT_INDEX ON fs_commits (parent_id);
+CREATE INDEX fs_commits_DIRENT_INDEX ON fs_commits (dirent_id);
+CREATE INDEX fs_commits_AUTH_INDEX ON fs_commits (commit_author);
+ALTER TABLE fs_commits
+  ADD CONSTRAINT fs_commits_PARENT_FK
+  FOREIGN KEY (parent_id)
+  REFERENCES fs_commits (commit_id);
+
+CREATE TABLE fs_commit_trees
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  operation_type VARCHAR(40),
+  body_after JSONB,
+  body_before JSONB
+);
+CREATE INDEX fs_commit_trees_COMMIT_INDEX ON fs_commit_trees (commit_id);
+
+CREATE TABLE fs_dirents
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  created_commit_id VARCHAR(40) NOT NULL,
+  updated_tree_commit_id VARCHAR(40) NOT NULL,
+  external_id VARCHAR(40) UNIQUE,
+  dirent_parent_id VARCHAR(40),
+  dirent_ref VARCHAR(40) NOT NULL,
+  dirent_type VARCHAR(100) NOT NULL,
+  dirent_name TEXT NOT NULL,
+  dirent_description TEXT NOT NULL,
+  dirent_user_type VARCHAR(100),
+  archived_at TIMESTAMP WITH TIME ZONE,
+  archived_status VARCHAR(40)
+);
+CREATE SEQUENCE fs_dirent_ref MINVALUE 1 MAXVALUE 999999 CYCLE;
+CREATE INDEX fs_dirents_REF_INDEX ON fs_dirents (dirent_ref);
+CREATE INDEX fs_dirents_EXT_ID_INDEX ON fs_dirents (external_id);
+CREATE INDEX fs_dirents_NAME_INDEX ON fs_dirents (dirent_name);
+CREATE INDEX fs_dirents_PARENT_INDEX ON fs_dirents (dirent_parent_id);
+CREATE INDEX fs_dirents_COMMIT_INDEX ON fs_dirents (commit_id);
+CREATE INDEX fs_dirents_CREATED_INDEX ON fs_dirents (created_commit_id);
+CREATE INDEX fs_dirents_TREE_UPDATED_INDEX ON fs_dirents (updated_tree_commit_id);
+ALTER TABLE fs_dirents
+  ADD CONSTRAINT fs_dirents_PARENT_FK
+  FOREIGN KEY (dirent_parent_id)
+  REFERENCES fs_dirents (id);
+
+CREATE TABLE fs_dirent_data
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  created_commit_id VARCHAR(40) NOT NULL,
+  data_extension JSONB,
+  dirent_id VARCHAR(40) NOT NULL,
+  UNIQUE NULLS NOT DISTINCT(dirent_id)
+);
+CREATE INDEX fs_dirent_data_CREATED_INDEX ON fs_dirent_data (created_commit_id);
+CREATE INDEX fs_dirent_data_DIRENT_INDEX ON fs_dirent_data (dirent_id);
+
+CREATE TABLE fs_dirent_labels
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  label_type VARCHAR(100) NOT NULL,
+  label_value VARCHAR(255) NOT NULL,
+  label_body JSONB,
+  dirent_id VARCHAR(40) NOT NULL,
+  UNIQUE NULLS NOT DISTINCT(dirent_id, label_type, label_value)
+);
+CREATE INDEX fs_dirent_labels_DIRENT_INDEX ON fs_dirent_labels (dirent_id);
+CREATE INDEX fs_dirent_labels_LABEL_INDEX ON fs_dirent_labels (label_value);
+
+CREATE TABLE fs_dirent_links
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  created_commit_id VARCHAR(40) NOT NULL,
+  dirent_id VARCHAR(40) NOT NULL,
+  link_type VARCHAR(100) NOT NULL,
+  external_id TEXT NOT NULL,
+  link_body JSONB,
+  UNIQUE NULLS NOT DISTINCT(dirent_id, link_type, external_id)
+);
+CREATE INDEX fs_dirent_links_DIRENT_INDEX ON fs_dirent_links (dirent_id);
+
+CREATE TABLE fs_dirent_remarks
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  parent_id VARCHAR(40),
+  created_commit_id VARCHAR(40) NOT NULL,
+  dirent_id VARCHAR(40) NOT NULL,
+  reporter_id VARCHAR(255) NOT NULL,
+  remark_status VARCHAR(100),
+  remark_type VARCHAR(100),
+  remark_source VARCHAR(100),
+  remark_text TEXT NOT NULL
+);
+ALTER TABLE fs_dirent_remarks
+  ADD CONSTRAINT fs_dirent_remarks_PARENT_FK
+  FOREIGN KEY (parent_id)
+  REFERENCES fs_dirent_remarks (id);
+
+CREATE INDEX fs_dirent_remarks_CREATED_INDEX ON fs_dirent_remarks (created_commit_id);
+CREATE INDEX fs_dirent_remarks_DIRENT_INDEX ON fs_dirent_remarks (dirent_id);
+
+CREATE TABLE fs_dirent_assignment
+(
+  id VARCHAR(40) PRIMARY KEY,
+  commit_id VARCHAR(40) NOT NULL,
+  dirent_id VARCHAR(40) NOT NULL,
+  assignee VARCHAR(255) NOT NULL,
+  assignment_type VARCHAR(100) NOT NULL,
+  assignee_contact TEXT,
+  UNIQUE NULLS NOT DISTINCT(dirent_id, assignee, assignment_type)
+);
+CREATE INDEX fs_dirent_assignment_DIRENT_INDEX ON fs_dirent_assignment (dirent_id);
+
+--- constraints forfs_commits
+
+ALTER TABLE fs_dirent_assignment
+  ADD CONSTRAINT fs_dirent_assignment_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_commit_trees
+  ADD CONSTRAINT fs_commit_trees_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirent_data
+  ADD CONSTRAINT fs_dirent_data_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirent_labels
+  ADD CONSTRAINT fs_dirent_labels_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirent_links
+  ADD CONSTRAINT fs_dirent_links_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirent_remarks
+  ADD CONSTRAINT fs_dirent_remarks_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirents
+  ADD CONSTRAINT fs_dirents_COMMIT_FK
+  FOREIGN KEY (commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirents
+  ADD CONSTRAINT fs_dirents_CREATED_COMMIT_ID_FK
+  FOREIGN KEY (created_commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirents
+  ADD CONSTRAINT fs_dirents_UPDATED_TREE_COMMIT_ID_FK
+  FOREIGN KEY (updated_tree_commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+ALTER TABLE fs_dirent_links
+  ADD CONSTRAINT fs_dirent_links_CREATED_COMMIT_ID_FK
+  FOREIGN KEY (created_commit_id)
+  REFERENCES fs_commits (commit_id);
+
+
+--- constraints forfs_commit_trees
+
+--- constraints forfs_dirents
+
+--- constraints forfs_dirent_data
+ALTER TABLE fs_dirent_data
+  ADD CONSTRAINT fs_dirent_labels_DIRENT_FK
+  FOREIGN KEY (dirent_id)
+  REFERENCES fs_dirents (id);
+
+
+--- constraints forfs_dirent_labels
+ALTER TABLE fs_dirent_labels
+  ADD CONSTRAINT fs_dirent_labels_DIRENT_FK
+  FOREIGN KEY (dirent_id)
+  REFERENCES fs_dirents (id);
+
+
+--- constraints forfs_dirent_links
+ALTER TABLE fs_dirent_links
+  ADD CONSTRAINT fs_dirent_links_DIRENT_FK
+  FOREIGN KEY (dirent_id)
+  REFERENCES fs_dirents (id);
+
+
+ALTER TABLE fs_dirent_remarks
+  ADD CONSTRAINT fs_dirent_remarks_DIRENT_FK
+  FOREIGN KEY (dirent_id)
+  REFERENCES fs_dirents (id);
+
+
+--- constraints forfs_dirent_assignment
+ALTER TABLE fs_dirent_assignment
+  ADD CONSTRAINT fs_dirent_assignment_DIRENT_FK
+  FOREIGN KEY (dirent_id)
+  REFERENCES fs_dirents (id);
 

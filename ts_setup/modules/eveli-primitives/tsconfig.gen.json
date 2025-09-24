@@ -1,0 +1,60 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
+      ],
+      "@dxs-ts/xui-table": [
+        "../xui-table/index.ts"
+      ],
+      "@dxs-ts/eveli-api": [
+        "../eveli-api/index.ts"
+      ],
+      "@dxs-ts/task-api": [
+        "../task-api/index.ts"
+      ],
+      "@dxs-ts/user-profile": [
+        "../user-profile/index.ts"
+      ],
+      "@dxs-ts/envir-fetch": [
+        "../envir-fetch/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../xui-datetime"
+    },
+    {
+      "path": "../xui-table"
+    },
+    {
+      "path": "../eveli-api"
+    },
+    {
+      "path": "../task-api"
+    },
+    {
+      "path": "../user-profile"
+    },
+    {
+      "path": "../envir-fetch"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-08-25T09:20:56.848Z",
+    "forModule": "@dxs-ts/eveli-primitives",
+    "fromRegistry": "a50834c0ad0b",
+    "alias": {
+      "@dxs-ts/eveli-primitives": [
+        "../envir-fetch"
+      ]
+    }
+  }
+}

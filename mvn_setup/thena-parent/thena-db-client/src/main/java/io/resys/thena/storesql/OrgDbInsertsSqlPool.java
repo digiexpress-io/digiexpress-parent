@@ -24,11 +24,12 @@ package io.resys.thena.storesql;
 
 import java.util.List;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.registry.OrgRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.registry.org.OrgRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
 import io.resys.thena.structures.org.OrgInserts;
 import io.resys.thena.support.RepoAssert;
@@ -43,7 +44,7 @@ public class OrgDbInsertsSqlPool implements OrgInserts {
   
   public OrgDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().org();
+    this.registry = new OrgRegistrySqlImpl(dataSource.getRegistry());
   }
   @Override
   public Uni<OrgBatchForOne> batchMany(OrgBatchForOne inputBatch) {

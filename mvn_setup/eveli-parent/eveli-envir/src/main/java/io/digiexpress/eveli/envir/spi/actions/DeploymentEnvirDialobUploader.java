@@ -22,7 +22,7 @@ package io.digiexpress.eveli.envir.spi.actions;
 
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliSources;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeploymentEnvirDialobUploader {
   private final DialobClient dialobClient;
-  private final EveliDeployment deployment;
+  private final EveliSources deployment;
   private final Sites sites;
   private final EveliDeploymentCompilerLogger logger;
   private int errorIndex;
@@ -54,11 +54,16 @@ public class DeploymentEnvirDialobUploader {
     if(!Boolean.TRUE.equals(link.getWorkflow())) {
       return;
     }
-    visitForm(locale, link);
+    try {
+      visitForm(locale, link);
+    } catch(Exception e) {
+      addError();
+      logger.failedToUpdateForm(link, e);
+    }
   }
   
   private void visitForm(String locale, TopicLink link) {
-    final var found = deployment.getSources().getDialob().stream()
+    final var found = deployment.getDialob().stream()
         .filter(e -> link.getFormId() != null)
         .filter(e -> link.getFormId().equals(e.getId()))
         .findFirst();
@@ -69,7 +74,7 @@ public class DeploymentEnvirDialobUploader {
     
     final var form = found.get();
 
-    final var tag = dialobClient.findAllFormTags(form.getName()).stream()
+    final var tag = dialobClient.getOneFormTags(form.getName()).stream()
         .filter(e -> e.getName().equals(link.getFormTag()))
         .findFirst();
     

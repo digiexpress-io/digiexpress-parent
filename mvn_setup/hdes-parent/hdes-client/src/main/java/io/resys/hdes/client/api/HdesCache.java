@@ -39,6 +39,7 @@ public interface HdesCache {
   AstBody setAst(AstBody wrapper, AstSource src);
   
   void flush(String id);
+  void flushAll();
   
   @Value.Immutable
   interface CacheEntry extends Serializable {

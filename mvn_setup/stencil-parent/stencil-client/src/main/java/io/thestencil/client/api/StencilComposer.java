@@ -52,6 +52,8 @@ public interface StencilComposer {
   SitesBuilder sites();
   VersionBuilder version();
   
+  StencilClient getClient();
+  
   StencilComposer withRepo(String repoId);
   StencilComposer withRepo(String repoId, String headName);
   

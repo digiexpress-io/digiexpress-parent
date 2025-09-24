@@ -29,7 +29,7 @@ import io.resys.thena.api.registry.org.OrgCommitRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.OrgTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class OrgCommitRegistrySqlImpl implements OrgCommitRegistry {
-  private final TenantTableNames options;
+  private final OrgTableNames options;
   @Override
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()

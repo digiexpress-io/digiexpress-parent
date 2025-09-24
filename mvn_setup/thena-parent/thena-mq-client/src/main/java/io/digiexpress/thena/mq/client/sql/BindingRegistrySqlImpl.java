@@ -53,6 +53,16 @@ public class BindingRegistrySqlImpl implements BindingRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllByMessageId(List<String> messageId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * FROM ").append(options.getBindings())
+        .append("  WHERE message_id = ANY($1)").ln()
+        .build())
+        .props(Tuple.of(messageId.toArray()))
+        .build();
+  }
+  @Override
   public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

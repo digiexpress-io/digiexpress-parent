@@ -44,6 +44,7 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -55,9 +56,9 @@ import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.HdesTypeDefsFactory;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.grim.api.GrimClient;
+import io.resys.thena.grim.spi.GrimClientImpl;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -73,7 +74,7 @@ public abstract class TaskEnvirSetup {
   private static PostgreSQLContainer<?> CONTAINER;
   private static AtomicInteger TEST_INDEX = new AtomicInteger(0);
   private static io.vertx.mutiny.pgclient.PgPool PGPOOL;
-  private static ThenaClient THENA_STATE;
+  private static GrimClient THENA_STATE;
   public static ServiceInit SERVICE_INIT = new ServiceInit() {
     @Override
     public <T> T get(Class<T> type) {
@@ -106,7 +107,7 @@ public abstract class TaskEnvirSetup {
         new PoolOptions().setMaxSize(5));
     waitUntilPostgresqlAcceptsConnections(PGPOOL);
     
-    THENA_STATE = DbStateSqlImpl.create()
+    THENA_STATE = GrimClientImpl.create()
         .db("junit")
         .client(PGPOOL)
         .build();
@@ -159,7 +160,7 @@ public abstract class TaskEnvirSetup {
     }
     
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
       final var repoId = "task-client-" + TEST_INDEX.incrementAndGet();
       final var config = ImmutableTaskStoreConfig.builder()
           .tenantName(repoId)
@@ -175,7 +176,9 @@ public abstract class TaskEnvirSetup {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(notificator, store);
+      
+      final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
+      return new TaskClientImpl(null, notificator, null, null, store, customer);
     }
     
     @Bean

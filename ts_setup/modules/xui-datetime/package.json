@@ -1,0 +1,20 @@
+{
+  "name": "@dxs-ts/xui-datetime",
+  "version": "${project.version}",
+  "description": "XUI, base UI component for date and time picker",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*",
+    "@mui/material": "*",
+    "@mui/icons-material": "*",
+    "luxon": "*"
+
+  },
+  "keywords": ["wrench", "routes", "navigation", "layouts"],
+  "private": true
+}

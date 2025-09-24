@@ -1,0 +1,59 @@
+package io.resys.thena.datasource;
+
+/*-
+ * #%L
+ * thena-docdb-api
+ * %%
+ * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import org.immutables.value.Value;
+
+import io.resys.thena.api.entities.Tenant;
+
+@Value.Immutable
+public abstract class TenantContext {
+
+  public interface WithTenant<T extends WithTenant<T>> {
+    T withTenant(TenantContext options);
+  }
+  
+  public abstract String getDb();
+  public abstract String getTenant();
+  public abstract String getPrefix();
+  
+
+  public TenantContext withTenant(Tenant repo) {
+    final String prefix = repo.getPrefix();
+    return withTenantPrefix(prefix);
+  }
+  
+  public TenantContext withTenantPrefix(String prefix) {
+    return ImmutableTenantContext.builder()
+        .db(this.getDb())
+        .tenant(this.getTenant())
+        .prefix(prefix)
+        .build();
+  }
+  
+  public static TenantContext defaults(String db) {
+    return ImmutableTenantContext.builder()
+        .db(db == null ? "docdb" : db)
+        .tenant("tenants")
+        .prefix("")
+        .build();
+  }
+}

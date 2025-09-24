@@ -38,6 +38,8 @@ import io.resys.hdes.client.api.ast.ImmutableAstTagValue;
 import io.resys.hdes.client.api.ast.ImmutableHeaders;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 
+import java.time.LocalDateTime;
+
 public class ComposerEntityMapper {
 
   public static EnvirBuilder toEnvir(EnvirBuilder envirBuilder, AstTag source) {
@@ -156,7 +158,7 @@ public class ComposerEntityMapper {
     
     return builder
         .name(source.getTagName())
-        .created(source.getCommitAt())
+        .created(source.getCommitAt() == null ? LocalDateTime.now() : source.getCommitAt())
         .commitId(source.getCommitId())
         .headers(ImmutableHeaders.builder().build())
         .bodyType(AstBodyType.TAG)

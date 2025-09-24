@@ -1,0 +1,12 @@
+{
+  "name": "@dxs-ts/envir-util",
+  "version": "${project.version}",
+  "description": "",
+  "type": "module",
+  "private": false,
+  "dependencies": {},
+  "peerDependencies": {},
+  "keywords": [
+    "Generic util-s used across every project"
+  ]
+}

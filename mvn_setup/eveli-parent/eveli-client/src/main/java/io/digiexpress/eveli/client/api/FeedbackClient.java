@@ -109,9 +109,10 @@ public interface FeedbackClient {
     String getTaskId();
     
     String getOrigin();
-    String getContent();
+    FeedbackQuestionnaireContent getContent();
     String getReply();
     String getLocale();
+    @Nullable String getQuestion();
   }
   
   @JsonTypeInfo(
@@ -140,6 +141,13 @@ public interface FeedbackClient {
   @Value.Immutable
   interface ModifyOneFeedbackReplyCommand extends ModifyOneFeedbackCommand {
     String getReply();
+    String getQuestion();
+    String getLabelKey();
+    String getLabelValue();
+    String getCustomerTitle();
+    @Nullable String getSubLabelKey();
+    @Nullable String getSubLabelValue();
+
     @Value.Default
     @Override default ModifyFeedbackCommandType getCommandType() { return ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY; }
   }
@@ -194,7 +202,7 @@ public interface FeedbackClient {
     String getUpdatedOnDate();
     String getCreatedBy();
     
-    String getContent();
+    FeedbackQuestionnaireContent getContent();
     String getReplyText();
     String getLocale();
 
@@ -244,9 +252,8 @@ public interface FeedbackClient {
     String getProcessId();
     String getTaskId();
     String getOrigin();
-    String getContent();
+    FeedbackQuestionnaireContent getContent();
     String getLocale();
-    
     String getUserId();
     
     Questionnaire getQuestionnaire();
@@ -283,9 +290,10 @@ public interface FeedbackClient {
     
     String getSubLabelKey();
     String getSubLabelValue();
-    String getContent();
+    FeedbackQuestionnaireContent getContent();
 
     List<String> getReplys();
+    String getTaskRef();
     
     Questionnaire getQuestionnaire();
     ProcessInstance getProcessInstance();
@@ -293,16 +301,14 @@ public interface FeedbackClient {
     @Nullable String getCustomerTitle();
   }
   
+  @JsonSerialize(as = ImmutableFeedbackQuestionnaireContent.class)
+  @JsonDeserialize(as = ImmutableFeedbackQuestionnaireContent.class)
   @Value.Immutable
-  interface QuestionnaireCategoryExtract {
-    boolean getEnabled();
-    
-    String getLabelKey();
-    String getLabelValue();
-    
-    @Nullable String getSubLabelKey();
-    @Nullable String getSubLabelValue();
-    @Nullable String getContent();
+  interface FeedbackQuestionnaireContent {
+    String getTitle(); 
+    @Nullable String getMain(); 
+    @Nullable String getSub(); 
+    @Nullable String getQuestion();
   }
 
 }

@@ -23,7 +23,9 @@ package io.digiexpress.eveli.client.spi.mq;
 import org.springframework.context.ApplicationEventPublisher;
 
 import io.digiexpress.eveli.client.api.TaskClient.Task;
-import io.digiexpress.eveli.client.spi.mq.QueueWriter.MqEvent;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 
 public class MqEventPublisher {
@@ -34,12 +36,19 @@ public class MqEventPublisher {
     this.publisher = publisher;
   }
   
-  public void publishMqEvent(Task task) {
-    publisher.publishEvent(new MqEvent(task.getId(), task.getVersion()));
+  public void publishMqEvent(Task task, TaskCommentSource source) {
+    publisher.publishEvent(new MqEvent(task.getId(), task.getVersion(), source));
   }
   
-  public void publishMqEvent(String taskId, String version) {
-    publisher.publishEvent(new MqEvent(taskId, version));
+  public void publishMqEvent(String taskId, String version, TaskCommentSource source) {
+    publisher.publishEvent(new MqEvent(taskId, version, source));
   }
   
+  @Data
+  @AllArgsConstructor
+  public static class MqEvent {
+    private final String taskId;
+    private final String commitId;
+    private final TaskCommentSource source;
+  }
 }

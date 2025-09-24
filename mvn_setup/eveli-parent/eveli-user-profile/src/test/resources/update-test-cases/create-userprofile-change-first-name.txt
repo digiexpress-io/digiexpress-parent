@@ -1,0 +1,31 @@
+
+Docs
+  - 2: 2
+
+Branches
+  - branch name: main
+    branch id: 3
+    doc id: 2
+    commit id: 4
+    {"id":"2","created":null,"details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jack"},"updated":null,"version":null,"tenantFeatures":[],"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
+
+Commands
+  - commands for doc: 2
+    commands id: 6
+    branch id: 3
+    value: [{"id":"2","firstName":"Jack","commandType":"ChangeUserDetailsFirstName"}]
+
+  - commands for doc: 2
+    commands id: 5
+    branch id: 3
+    value: [{"id":"2","email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","colorCode":null,"firstName":"Jerry","letterCode":null,"commandType":"CreateUserProfile","displayName":null,"tenantFeatures":[],"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]
+
+
+Commits
+  - id: 4
+    doc id: 2, branch id: 3, parent: 7, message: -, author: not-configured
+  - commit log:
+
+
+
+Logs

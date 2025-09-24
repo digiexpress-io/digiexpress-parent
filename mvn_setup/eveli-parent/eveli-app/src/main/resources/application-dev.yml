@@ -33,19 +33,22 @@ management:
 # quarkus warnings when something takes too long, or simply at breakpoint with debugger
 logging.level.io.vertx.core.impl.btc.BlockedThreadChecker: OFF
 logging.level.io.vertx.core.impl.BlockedThreadChecker: OFF
-
+logging.level.io.digiexpress.eveli.dialob: OFF
 # wrench asset compiler noise, for broken assets
 logging.level.io.resys.hdes.client.spi.groovy: OFF
 logging.level.io.resys.hdes.client.spi.envir: OFF
 
 # deployment CACHE, BUILDERS, QUERIES
-logging.level.io.digiexpress.eveli.envir.spi.EveliRuntimeCacheInMemory: DEBUG
-logging.level.io.digiexpress.eveli.envir.spi.actions.DeploymentBuilderLogger: DEBUG
-logging.level.io.digiexpress.eveli.envir.spi.actions.EveliRuntimeLogger: DEBUG 
-
+logging.level.io.digiexpress.eveli.envir.spi.actions.DeploymentBuilderLogger: OFF
+logging.level.io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir: OFF
+logging.level.io.digiexpress.eveli.envir.spi.EveliRuntimeCacheInMemory: OFF
+logging.level.io.digiexpress.eveli.envir.spi.actions.EveliRuntimeLogger: OFF
+logging.level.io.thestencil.client.spi.staticontent.visitors.SiteStateVisitor: OFF
+logging.level.io.resys.thena.datasource.TenantCacheImpl: OFF
+logging.level.io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand: ERROR
 
 # SQL-s
-#logging.level.io.resys.thena.show_sql: DEBUG
+#logging.level.io.resys.thena.show_sql: ERROR
 #logging.level.io.resys.thenamq.show_sql: ERROR
 
 
@@ -95,7 +98,9 @@ eveli.email.enabled: false
 eveli.email.host-name: 
 eveli.email.host-port: 
 eveli.email.sender-email: 
-eveli.email.sender-password: 
+eveli.email.sender-name: 
+eveli.email.server-user-name: 
+eveli.email.server-password: 
 eveli.email.allowed-recipients: 
 eveli.email.enabled-domains:
 #in case of REST API implementation, if defined it is used
@@ -108,3 +113,7 @@ eveli.user-registry.service-url:
 
 eveli.envir.cache-expirations.short-deployment: PT1M
 eveli.envir.cache-expirations.long-runtime: PT30M
+eveli.envir.dev-enabled: false
+eveli.tenant-features: batches-dev
+
+

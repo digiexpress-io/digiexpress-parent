@@ -7,10 +7,10 @@
     <version>0.y-SNAPSHOT</version>
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
-    
+  
+  <name>hdes-parent</name>  
   <artifactId>hdes-parent</artifactId>
   <packaging>pom</packaging>
-  <name>hdes</name>
 
   <modules>
     <module>hdes-client</module>

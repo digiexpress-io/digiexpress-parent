@@ -1,0 +1,52 @@
+{
+  "name": "@dxs-ts/eveli-demo-app",
+  "version": "${project.version}",
+  "description": "Eveli demo application",
+  "type": "module",
+  "private": false,
+  "dependencies": {
+    "@dxs-ts/gamut-api": "*",
+    "@dxs-ts/gamut-theme": "*",
+    "@dxs-ts/gamut-form": "*",
+    "@dxs-ts/gamut-md": "*",
+    "@dxs-ts/gamut-shell": "*",
+    "@dxs-ts/gamut-form-review": "*",
+    "@dxs-ts/gamut-intl": "*",
+
+    "@dxs-ts/envir-fetch": "*",
+    "@dxs-ts/envir-util": "*",
+
+    "@dxs-ts/wrench-api": "*",
+    "@dxs-ts/wrench-routes": "*",
+    "@dxs-ts/stencil-api": "*",
+    "@dxs-ts/stencil-routes": "*",
+
+    "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/eveli-intl": "*",
+    "@dxs-ts/eveli-routes": "*",
+    "@dxs-ts/xui-datetime": "*",
+    "@dxs-ts/eveli-ide": "*",
+
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/user-profile": "*",
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/task-composer-v1": "*",
+    "@dxs-ts/task-composer-v2": "*",
+    "@dxs-ts/task-feedback": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-intl": "*",
+    "notistack": "*",
+    "@tanstack/react-router": "*",
+    "@tanstack/react-query": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*"
+  },
+  "keywords": [
+    "eveli",
+    "demo-app"
+  ]
+}

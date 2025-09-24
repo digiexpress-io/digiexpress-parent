@@ -24,11 +24,13 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -36,12 +38,19 @@ import lombok.RequiredArgsConstructor;
 public class AddCustomerCommitViewer implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
+  private final QueryEnvelopeList<GrimCommitViewer> views;
   
   public void modify(MergeMission merge) {
 
     merge
     // change is viewed by worker who created it
-    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_CUSTOMER).build())
+    .addViewer(viewer -> {
+      if(views.getObjects().stream().filter(view -> view.getCommitId().equals(viewer.getCurrentTreeCommit())).count() > 1) {
+        viewer.skipViewer().build();
+        return;
+      }
+      viewer.userId(userId).usedFor(TaskMapper.VIEWER_CUSTOMER).currentTreeCommit().build();
+    })
     .build();
   }
   
@@ -63,7 +72,13 @@ public class AddCustomerCommitViewer implements TaskStoreConfig.MergeTaskVisitor
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks(),
+        commited.getLabels(),
+        commited.getObjectives());
     return Uni.createFrom().item(task);
   }
 }

@@ -1,0 +1,36 @@
+{
+  "name": "@dxs-ts/eveli-primitives",
+  "version": "${project.version}",
+  "description": "",
+  "type": "module",
+  "private": false,
+
+  "keywords": ["eveli", "ui", "primitives", "components"],
+  "dependencies": {
+    "@dxs-ts/xui-datetime": "*",
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/eveli-api": "*",
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/user-profile": "*",
+    "@dxs-ts/envir-fetch": "*"
+  },
+  "peerDependencies": {
+    "ts-md5": "*",
+    "react": "*",
+    "react-intl": "*",
+    "@mui/material": "*",
+    "@mui/system": "*",
+    "@mui/icons-material": "*",
+    "@mui/utils": "*",
+    "@mui/x-tree-view": "*",
+    "@tanstack/react-router": "*",
+    "@tanstack/react-query": "*",
+    "@tanstack/react-table": "*",
+    "react-date-picker": "*",
+    "notistack": "*",
+    "luxon": "*",
+    "moment": "*",
+    "numbro": "*",
+    "file-saver": "*"
+  }
+}

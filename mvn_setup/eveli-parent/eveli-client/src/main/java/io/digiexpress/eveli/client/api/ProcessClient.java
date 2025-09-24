@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -73,14 +74,14 @@ public interface ProcessClient {
     CreateProcessInstance articleName(String articleName);
     CreateProcessInstance parentArticleName(String parentArticleName);
     
-
+    CreateProcessInstance taskId(@Nullable String taskId);
     CreateProcessInstance formName(String formName);
     CreateProcessInstance flowName(String flowName);
 
     CreateProcessInstance formTagName(String formTagName);
     CreateProcessInstance stencilTagName(String stencilTagName);
     CreateProcessInstance wrenchTagName(String wrenchTagName);
-    
+    CreateProcessInstance customerAssignment(boolean isCustomerAssignment);
     ProcessInstance create();
   }
   
@@ -99,11 +100,14 @@ public interface ProcessClient {
   interface QueryProcessInstances {
     Optional<ProcessInstance> findOneById(String id);
     Optional<ProcessInstance> findOneByTaskId(String taskId);    
-    Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);    
+    Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);
+    Optional<ProcessInstance> findOneByIdAndLock(String id);
     
     void deleteOneById(Long id);
     List<ProcessInstance> findAll();
     List<ProcessInstance> findAllAnswered();
+    List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom);
+    
     List<ProcessInstance> findAllExpired();
     List<ProcessInstance> findAllByUserId(String userId);    
   }
@@ -142,8 +146,10 @@ public interface ProcessClient {
     
     // Entity links
     @Nullable String getQuestionnaireId();
-    @Nullable String getTaskId();    
+    @Nullable String getTaskId();
+    @Nullable String getTaskRef();
     @Nullable String getUserId();
+    @Nullable GrimProcessType getType();
 
     
     Boolean getAnon();
@@ -155,17 +161,19 @@ public interface ProcessClient {
   }
   
 
+
   enum ProcessStatus {
     
     CREATED,
-    ANSWERING,    
+    ANSWERING,
     ANSWERED, // 
     
     IN_PROGRESS,
     WAITING,
     COMPLETED,
     REJECTED,
-    WAITING_FOR_SYNC // complete event arrived from form, waiting to launch flow
+    WAITING_FOR_SYNC, // complete event arrived from form, waiting to launch flow
+    EXPIRED
   }
   
   

@@ -78,6 +78,7 @@ public interface SiteVisitor {
     String getLocale();
     Boolean getGlobal();
     Boolean getAnon();
+    Boolean getAssignable();
     Boolean getWorkflow();
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();

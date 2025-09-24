@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.comms;
 
+import java.io.UnsupportedEncodingException;
+
 /*-
  * #%L
  * eveli-client
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
 
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
@@ -103,7 +107,7 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
     }
   }
 
-  private void sendEmail(List<InternetAddress> internetAddresses) throws MessagingException, AddressException {
+  private void sendEmail(List<InternetAddress> internetAddresses) throws MessagingException, AddressException, UnsupportedEncodingException {
     
     Properties props = new Properties();
     props.put("mail.smtp.host", config.getHostName());
@@ -114,8 +118,12 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
     
     Session session = Session.getInstance(props);
     final var msg = new MimeMessage(session);
-    msg.setFrom(new InternetAddress(config.getSenderEmail(), false));
-
+    if (StringUtils.isAllBlank(config.getSenderName())) {
+      msg.setFrom(new InternetAddress(config.getSenderEmail(), false));
+    }
+    else {
+      msg.setFrom(new InternetAddress(config.getSenderEmail(), config.getSenderName()));
+    }
     msg.setRecipients(MimeMessage.RecipientType.TO, internetAddresses.toArray(new InternetAddress[internetAddresses.size()]));
     msg.setSubject(title);
     msg.setText(message);
@@ -123,7 +131,12 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
     msg.setHeader("Auto-Submitted", "auto-generated");
     msg.setHeader("X-Auto-Response-Suppress", "DR, RN, NRN, OOF, AutoReply");
 
-    Transport.send(msg);
+    if (StringUtils.isNoneBlank(config.getServerUserName(), config.getServerPassword())) {
+      Transport.send(msg, config.getServerUserName(), config.getServerPassword());
+    }
+    else {
+      Transport.send(msg);
+    }
   }
 
   private List<InternetAddress> visitInternetAddresses(List<String> emailAddresses) {

@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.api;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package io.digiexpress.eveli.client.api;
  * #L%
  */
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -31,6 +30,8 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
@@ -51,6 +52,12 @@ public interface GamutClient {
   CancelUserActionBuilder cancelUserActionBuilder();
   UserActionFillEventBuilder fillEvent();
   UserActionMetaQuery userActionMetaQuery();
+  UserActionViewBuilder userActionViewBuilder();
+  
+  interface UserActionViewBuilder {
+    UserActionViewBuilder actionId(String actionId);
+    Uni<Void> create();
+  }
   
   interface UserActionMetaQuery {
     UserActionMetaQuery locale(String locale);
@@ -97,15 +104,20 @@ public interface GamutClient {
   
   interface UserActionQuery {
     List<UserAction> findAll();
+    Optional<UserAction> findOneById(String id);
     Optional<UserAction> findOneAnonById(String id); // only anon forms can be fetched by id
   }
   
   interface UserActionBuilder {
+    UserActionBuilder customer(Customer customer);
+    UserActionBuilder customerRoles(CustomerRoles customerRoles);
     UserActionBuilder actionId(String actionId);
+    UserActionBuilder taskId(@Nullable String taskId);
     UserActionBuilder anon(boolean anon);
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);
     UserActionBuilder inputParentContextId(String inputParentContextId);
+    UserActionBuilder customerAssignment(boolean isCustomerAssignment); 
     Uni<UserAction> createOne();
   }
   
@@ -154,7 +166,7 @@ public interface GamutClient {
     String getReviewUri();
     String getMessagesUri();
     String getFormUri();
-    String getFormId();
+    @Nullable String getFormId();
     OffsetDateTime getCreated();
     OffsetDateTime getUpdated();
     
@@ -173,10 +185,20 @@ public interface GamutClient {
     @Nullable
     ZonedDateTime getTaskUpdated();
     
-    
+    Boolean getAssigned();    
     Boolean getViewed();
     List<UserMessage> getMessages();
     List<UserActionAttachment> getAttachments();
+    List<UserSubAction> getSubActions();
+    Boolean getFormInProgress();
+  }
+  
+  
+  @JsonSerialize(as = ImmutableUserSubAction.class)
+  @JsonDeserialize(as = ImmutableUserSubAction.class)
+  @Value.Immutable
+  interface UserSubAction {
+    String getId();
     Boolean getFormInProgress();
   }
   

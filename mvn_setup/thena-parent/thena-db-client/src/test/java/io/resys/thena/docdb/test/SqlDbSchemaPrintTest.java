@@ -30,10 +30,9 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
-import io.resys.thena.registry.doc.DocRegistrySqlImpl;
-import io.resys.thena.registry.git.GitRegistrySqlImpl;
+import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,36 +42,14 @@ public class SqlDbSchemaPrintTest {
   final Charset UTF_8 = StandardCharsets.UTF_8;
   @Test
   public void printSchema() throws IOException {
-    final var names = TenantTableNames.defaults("public");
+    final var names = TenantContext.defaults("public");
     final var sqlSchema = new TenantRegistrySqlImpl(names);
-    final var git = new GitRegistrySqlImpl(names);
-    final var doc = new DocRegistrySqlImpl(names);
+
     final var org = new OrgRegistrySqlImpl(names);
+    final var fs = new FsRegistrySqlImpl(names);
     
     final var schema = new StringBuilder()
       .append(sqlSchema.createTable().getValue())
-      .append(git.blobs().createTable().getValue())
-      .append(git.commits().createTable().getValue())
-      .append(git.treeValues().createTable().getValue())
-      .append(git.trees().createTable().getValue())
-      .append(git.branches().createTable().getValue())
-      .append(git.tags().createTable().getValue())
-      .append(git.commits().createConstraints().getValue())
-      .append(git.branches().createConstraints().getValue())
-      .append(git.tags().createConstraints().getValue())
-      .append(git.treeValues().createConstraints().getValue())
-      
-      
-      .append(doc.docs().createTable().getValue())
-      .append(doc.docBranches().createTable().getValue())
-      .append(doc.docBranches().createConstraints().getValue())
-      .append(doc.docCommits().createTable().getValue())
-      .append(doc.docCommits().createConstraints().getValue())
-      .append(doc.docCommitTrees().createTable().getValue())
-      .append(doc.docCommitTrees().createConstraints().getValue())
-      .append(doc.docCommands().createTable().getValue())
-      .append(doc.docCommands().createConstraints().getValue())
-      
       
       .append(org.orgRights().createTable().getValue())
       .append(org.orgParties().createTable().getValue())
@@ -85,6 +62,25 @@ public class SqlDbSchemaPrintTest {
       .append(org.orgMembers().createConstraints().getValue())
       .append(org.orgParties().createConstraints().getValue())
       .append(org.orgCommits().createConstraints().getValue())
+      
+      
+      .append(fs.commits().createTable().getValue())
+      .append(fs.commitTrees().createTable().getValue())
+      .append(fs.dirents().createTable().getValue())
+      .append(fs.direntData().createTable().getValue())
+      .append(fs.direntLabels().createTable().getValue())
+      .append(fs.direntLinks().createTable().getValue())
+      .append(fs.direntRemarks().createTable().getValue())
+      .append(fs.direntAssignments().createTable().getValue())
+
+      .append(fs.commits().createConstraints().getValue())
+      .append(fs.commitTrees().createConstraints().getValue())
+      .append(fs.dirents().createConstraints().getValue())
+      .append(fs.direntData().createConstraints().getValue())
+      .append(fs.direntLabels().createConstraints().getValue())
+      .append(fs.direntLinks().createConstraints().getValue())
+      .append(fs.direntRemarks().createConstraints().getValue())
+      .append(fs.direntAssignments().createConstraints().getValue())
       
       .toString();
     

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import org.springframework.context.ApplicationEventPublisher;
+
 /*-
  * #%L
  * eveli-client
@@ -25,41 +27,41 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
+import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
+import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
+import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
-import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
-import io.digiexpress.eveli.client.web.resources.worker.QueueApiController;
+import io.digiexpress.eveli.client.web.resources.worker.SchedulerApiCotroller;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
+import io.digiexpress.eveli.client.web.resources.worker.UserProfileController;
 import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
-import io.digiexpress.thena.mq.client.api.ThenaMqClient;
+import io.digiexpress.eveli.dialob.api.DialobReviewClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 
 
 
 @Configuration
 public class EveliAutoConfigWorker {
   @Bean 
-  public AttachmentApiController attachmentApiController(ProcessClient processClient, AuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
+  public AttachmentApiController attachmentApiController(ProcessClient processClient, WorkerAuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
     return new AttachmentApiController(attachments, taskClient, security, processClient);
   }
   @Bean 
-  public CommentApiController commentApiController(TaskClient taskClient, AuthClient security, MqEventPublisher mqEventPublisher) {
-    
-    return new CommentApiController(taskClient, security, mqEventPublisher);
-  }
-  @Bean 
   public PrintoutController printoutController(
-      AuthClient authClient,  
+      WorkerAuthClient authClient,  
       RestTemplate restTemplate,
       DialobClient dialobClient,
       TaskClient taskClient,
@@ -67,36 +69,66 @@ public class EveliAutoConfigWorker {
   ) {
     return new PrintoutController(taskClient, authClient, dialobClient, restTemplate, printoutConfig.getServiceUrl());
   }
+  
+  @Bean
+  public UserProfileController userProfileController(UserProfileClient useProfileClient, WorkerAuthClient authClient) {
+    return new UserProfileController(useProfileClient, authClient);
+  }
+  
   @Bean 
   public TaskApiController taskApiController(
       FeedbackClient feedback,
-      AuthClient security, 
+      WorkerAuthClient security, 
       TaskClient taskclient, 
       DialobClient dialobClient,
-      MqEventPublisher mqEventPublisher) {
+      DialobReviewClient dialobReviewClient,
+      MqEventPublisher mqEventPublisher,
+      TaskViewerPublisher viewerEventPublisher,
+      TaskAuditClient taskAuditClient,
+      DialobCreateEventPublisher dialobCreateEventPublisher) {
     
-    return new TaskApiController(security, taskclient, dialobClient, mqEventPublisher);
+    return new TaskApiController(dialobCreateEventPublisher, security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher, taskAuditClient);
   }
   @Bean 
-  public ProcessApiController processApiController(ProcessClient client) {
-    return new ProcessApiController(client);
+  public ProcessApiController processApiController(ProcessClient procClient, TaskClient taskClient) {
+    return new ProcessApiController(procClient, taskClient);
   }
   @Bean
   public PortalAccessValidator portalAccessValidator(ProcessClient client) {
       return new PortalAccessValidatorImpl(client);
   }
   @Bean
-  public WorkerIamController workerIamController(AuthClient authClient) {
+  public WorkerIamController workerIamController(WorkerAuthClient authClient) {
     return new WorkerIamController(authClient);
   } 
-
   @Bean 
-  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
+  public FeedbackApiController feedbackApiController(WorkerAuthClient authClient, FeedbackClient feedbackClient) {
     return new FeedbackApiController(authClient, feedbackClient);
   }
+  @Bean
+  public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {
+    return new MqEventPublisher(publisher);
+  }
+  @Bean
+  public DialobCreateEventPublisher dialobCreateEventPublisher(
+      ApplicationEventPublisher publisher,
+      TaskClient taskClient,
+      ProcessClient processClient,
+      DialobClient dialobClient,
+      EveliEnvirClient envir,
+      MqEventPublisher mqEventPublisher
+  ) {
+    return new DialobCreateEventPublisher(publisher, taskClient, processClient, dialobClient, envir, mqEventPublisher);
+  }
   
-  @Bean 
-  public QueueApiController queueApiController(ThenaMqClient client, ThenaMqAppConfig config) {
-    return new QueueApiController(client, config);
+  
+  @Bean
+  public TaskViewerPublisher viewerEventPublisher(ApplicationEventPublisher publisher, TaskClient client) {
+    return new TaskViewerPublisher(publisher, client);
+  }
+  
+  @Bean
+  public SchedulerApiCotroller schedulerApiCotroller(DialobScheduler dialob) {
+    return new SchedulerApiCotroller(dialob);
   }
 }

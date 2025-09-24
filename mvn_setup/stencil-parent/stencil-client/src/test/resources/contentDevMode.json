@@ -3,14 +3,14 @@
   "created" : 1,
   "sites" : {
     "en" : {
-      "id" : "e38e5f3d0354219f76390ab5ec4437d5",
+      "id" : "d5b2d8a822502aff41a7cc6c397e7cb7",
       "images" : "/images",
       "locale" : "en",
       "topics" : {
         "000_test-article" : {
           "id" : "000_test-article",
           "name" : "Header 1",
-          "links" : [ "1e1faf180a0118dd54e7a2c30fc145c6", "1da109ba642e1ffd850ea556d836d698" ],
+          "links" : [ "b4c1aebc97e2c2ccccd1adff6dcc7413", "c84997b50be9206f4b0361fd9c99609a" ],
           "headings" : [ {
             "id" : "1",
             "name" : "# Header 1",
@@ -23,7 +23,7 @@
         "000_test-article-dev-mode" : {
           "id" : "000_test-article-dev-mode",
           "name" : "Header 1 - article dev mode true",
-          "links" : [ "b657664c031f17a6b4f594c3cef84701" ],
+          "links" : [ "e253354fb750342ead6a01822ad5ba86" ],
           "headings" : [ {
             "id" : "1",
             "name" : "# Header 1 - article dev mode true",
@@ -36,7 +36,7 @@
         "000_test-article-in-prod" : {
           "id" : "000_test-article-in-prod",
           "name" : "Header 1 - article dev mode false but page true",
-          "links" : [ "2a87cfea271bc01678c7906df55bf376" ],
+          "links" : [ "0c00c2ad12cd82dfb238145dbede98e0" ],
           "headings" : [ {
             "id" : "1",
             "name" : "# Header 1 - article dev mode false but page true",
@@ -62,14 +62,15 @@
         }
       },
       "links" : {
-        "1da109ba642e1ffd850ea556d836d698" : {
-          "id" : "1da109ba642e1ffd850ea556d836d698",
-          "path" : "000_test-article",
+        "0c00c2ad12cd82dfb238145dbede98e0" : {
+          "id" : "0c00c2ad12cd82dfb238145dbede98e0",
+          "path" : "000_test-article-in-prod",
           "type" : "workflow",
           "name" : "cool name",
           "value" : "workflow name",
           "global" : true,
           "workflow" : true,
+          "assignable" : false,
           "anon" : false,
           "startDate" : null,
           "endDate" : null,
@@ -78,14 +79,15 @@
           "formTag" : null,
           "flowName" : null
         },
-        "1e1faf180a0118dd54e7a2c30fc145c6" : {
-          "id" : "1e1faf180a0118dd54e7a2c30fc145c6",
+        "b4c1aebc97e2c2ccccd1adff6dcc7413" : {
+          "id" : "b4c1aebc97e2c2ccccd1adff6dcc7413",
           "path" : "000_test-article",
           "type" : "internal",
           "name" : "description",
           "value" : "www.example.com",
           "global" : false,
           "workflow" : false,
+          "assignable" : false,
           "anon" : true,
           "startDate" : null,
           "endDate" : null,
@@ -94,14 +96,15 @@
           "formTag" : null,
           "flowName" : null
         },
-        "2a87cfea271bc01678c7906df55bf376" : {
-          "id" : "2a87cfea271bc01678c7906df55bf376",
-          "path" : "000_test-article-in-prod",
+        "c84997b50be9206f4b0361fd9c99609a" : {
+          "id" : "c84997b50be9206f4b0361fd9c99609a",
+          "path" : "000_test-article",
           "type" : "workflow",
           "name" : "cool name",
           "value" : "workflow name",
           "global" : true,
           "workflow" : true,
+          "assignable" : false,
           "anon" : false,
           "startDate" : null,
           "endDate" : null,
@@ -110,14 +113,15 @@
           "formTag" : null,
           "flowName" : null
         },
-        "b657664c031f17a6b4f594c3cef84701" : {
-          "id" : "b657664c031f17a6b4f594c3cef84701",
+        "e253354fb750342ead6a01822ad5ba86" : {
+          "id" : "e253354fb750342ead6a01822ad5ba86",
           "path" : "000_test-article-dev-mode",
           "type" : "workflow",
           "name" : "cool name",
           "value" : "workflow name",
           "global" : true,
           "workflow" : true,
+          "assignable" : false,
           "anon" : false,
           "startDate" : null,
           "endDate" : null,
@@ -126,6 +130,57 @@
           "formTag" : null,
           "flowName" : null
         }
+      },
+      "workflowsInOtherLocales" : {
+        "en" : [ {
+          "id" : "0c00c2ad12cd82dfb238145dbede98e0",
+          "path" : "000_test-article-in-prod",
+          "type" : "workflow",
+          "name" : "cool name",
+          "value" : "workflow name",
+          "global" : true,
+          "workflow" : true,
+          "assignable" : false,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        }, {
+          "id" : "c84997b50be9206f4b0361fd9c99609a",
+          "path" : "000_test-article",
+          "type" : "workflow",
+          "name" : "cool name",
+          "value" : "workflow name",
+          "global" : true,
+          "workflow" : true,
+          "assignable" : false,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        }, {
+          "id" : "e253354fb750342ead6a01822ad5ba86",
+          "path" : "000_test-article-dev-mode",
+          "type" : "workflow",
+          "name" : "cool name",
+          "value" : "workflow name",
+          "global" : true,
+          "workflow" : true,
+          "assignable" : false,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ]
       }
     }
   }

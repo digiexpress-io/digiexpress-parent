@@ -6,6 +6,7 @@
     <artifactId>mig-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
+  <name>mig-client</name>
   <artifactId>mig-client</artifactId>
 
   <dependencies>

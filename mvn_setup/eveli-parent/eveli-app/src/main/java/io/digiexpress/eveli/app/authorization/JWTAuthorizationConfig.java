@@ -25,19 +25,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
+import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
+
 @Configuration
+@Profile("jwt")
 public class JWTAuthorizationConfig {
 
 //Worker security filter
  @Bean
- @Profile("jwt")
  public SecurityFilterChain workerSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
@@ -56,7 +60,6 @@ public class JWTAuthorizationConfig {
  
  // Customer security filter
  @Bean
- @Profile("jwt")
  public SecurityFilterChain portalSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
@@ -73,5 +76,8 @@ public class JWTAuthorizationConfig {
      .build();
  }
  
-
+ @Bean
+ public SpringSecurityPolicy authorization(WorkerAuthClient auth, GamutAuthClient crm, EveliAutoConfigPermissions props) {
+   return new SpringSecurityPolicy(auth, crm, props);
+ }
 }

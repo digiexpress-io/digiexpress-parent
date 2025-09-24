@@ -25,11 +25,11 @@ import java.util.List;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimQueryActions.MissionQuery;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -46,10 +46,10 @@ public class FindAllUnreadTasksVisitor implements TaskStoreConfig.QueryTasksVisi
     if(!roles.isEmpty()) {
       query.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, roles);
     }
-    return query
-        .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, userId)
-        .notViewed(userId, viewerType)
-        .atLeastOneRemarkWithAnyType();
+    return query.notViewed(userId, viewerType)
+        //.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, userId)
+        //.atLeastOneRemarkWithAnyType()
+        ;
 
   }
 

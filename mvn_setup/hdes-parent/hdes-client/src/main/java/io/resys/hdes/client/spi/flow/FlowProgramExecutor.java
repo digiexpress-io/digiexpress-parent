@@ -57,7 +57,11 @@ import io.resys.hdes.client.spi.decision.DecisionProgramExecutor;
 import io.resys.hdes.client.spi.expression.OperationFlowContext.FlowTaskExpressionContext;
 import io.resys.hdes.client.spi.groovy.ServiceProgramExecutor;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
+
+
+@Slf4j
 public class FlowProgramExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(FlowProgramExecutor.class);
   private final HdesTypesMapper factory;
@@ -341,7 +345,7 @@ public class FlowProgramExecutor {
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
-          throw new StepException(e.getMessage(), e);
+          throw new StepException("Error in step: " + step.getId() + ", error: "  + e.getMessage(), e);
         }
       }
       default: 
@@ -441,7 +445,7 @@ public class FlowProgramExecutor {
     final var inputMapping = visitSwitchInputMapping(step);
     for(final var mappingEntry : inputMapping) {
       
-      boolean isMatch = false;
+      boolean isAtleastOneMatch = false;
       for(final var whenThen : ((FlowProgramStepWhenThenPointer) step.getPointer()).getConditions()) {
         final var expressionContext = new FlowTaskExpressionContext() {
           @Override
@@ -455,16 +459,45 @@ public class FlowProgramExecutor {
               .collect(Collectors.toMap(e -> e.getKey().substring(name.length() + 1), e -> e.getValue()));
           }
         };      
-        isMatch = (Boolean) whenThen.getExpression().run(expressionContext).getValue();
-        if(isMatch) {
-          visited.addAll(visitStep(whenThen.getStepId()));
+        
+        if((Boolean) whenThen.getExpression().run(expressionContext).getValue()) {
+          isAtleastOneMatch = true;
+          //switch leads to end
+          if(FlowProgramBuilder.END_STEP.getId().equals(whenThen.getStepId())) {
+            visited.add(visitStepLog(
+                ImmutableFlowResultLog.builder()
+                .id(this.stepLogs.size() + 1)
+                .stepId(step.getId())
+                .start(start)
+                .end(LocalDateTime.now())
+                .status(FlowExecutionStatus.COMPLETED)
+                .isReturnsCollection(false)
+                .build()));
+              
+          } else {
+            visited.addAll(visitStep(whenThen.getStepId()));  
+          }
+          
           break;
         }     
       }
       
-      if(!isMatch) {
-        throw new ProgramException("Flow switch: '" + step.getId() + "' does not match any expressions!");
+      if(!isAtleastOneMatch) {
+        log.debug("Flow switch: '" + step.getId() + "' does not match any expressions!");
       }
+    }
+    
+    // nothing found nowhere to route
+    if(visited.isEmpty()) {
+      visited.add(visitStepLog(
+          ImmutableFlowResultLog.builder()
+          .id(this.stepLogs.size() + 1)
+          .stepId(step.getId())
+          .start(start)
+          .end(LocalDateTime.now())
+          .status(FlowExecutionStatus.COMPLETED)
+          .isReturnsCollection(false)
+          .build()));
     }
 
     return visited;

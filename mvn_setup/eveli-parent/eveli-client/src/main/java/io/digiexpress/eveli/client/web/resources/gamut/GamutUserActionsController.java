@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.immutables.value.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,10 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
@@ -58,6 +57,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -69,9 +69,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/secured/actions")
 @RequiredArgsConstructor
 public class GamutUserActionsController {
-  private final ApplicationEventPublisher publisher;
+  private final DialobFillEventPublisher publisher;
   private final GamutClient gamutClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final DialobClient dialob;
   private final ProcessClient hdes;
   private final FeedbackClient feedback;
@@ -85,11 +85,12 @@ public class GamutUserActionsController {
   }
   @GetMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().sessionGet(sessionId);
+    ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionGet(sessionId);
+    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
   }
   @PostMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    final var resp = dialob.createProxy().sessionPost(sessionId, body);
+    final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
     
     if(resp.getStatusCode().is2xxSuccessful()) {
       final var event = gamutClient.fillEvent()
@@ -99,7 +100,7 @@ public class GamutUserActionsController {
         .create();
       publisher.publishEvent(event);
     }
-    return resp; 
+    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()); 
   }
   @GetMapping(value="/review/{sessionId}")
   public ResponseEntity<?> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -136,6 +137,11 @@ public class GamutUserActionsController {
     } catch (ProcessNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+  }
+  
+  @PutMapping(value="{actionId}/views")
+  public Uni<ResponseEntity<?>> markUserActionViewed(@PathVariable("actionId") String actionId) {
+    return gamutClient.userActionViewBuilder().actionId(actionId).create().onItem().transform(junk -> ResponseEntity.ok().build());
   }
   
   @PostMapping(value="{actionId}/messages")
@@ -201,8 +207,6 @@ public class GamutUserActionsController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
   }
-  
-  
 
   @GetMapping
   public Uni<ResponseEntity<?>> kindOfCreateActionOrGet(
@@ -222,6 +226,8 @@ public class GamutUserActionsController {
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)
+          .customer(authClient.getCustomer())
+          .customerRoles(authClient.getCustomerRoles())
           .createOne().onItem().transform(e -> ResponseEntity.ok(e));
       
     } catch(UserActionNotAllowedException e) {

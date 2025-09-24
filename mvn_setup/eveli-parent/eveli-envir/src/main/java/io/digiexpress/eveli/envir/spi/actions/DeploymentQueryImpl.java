@@ -33,18 +33,18 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient.DeploymentQuery;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.spi.EveliEnvirStore;
-import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
-import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
+import io.resys.thena.api.entities.doc.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.spi.DocStoreException;
-import io.resys.thena.spi.ThenaDocConfig;
-import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
+import io.resys.thena.doc.api.ThenaDocConfig;
+import io.resys.thena.doc.api.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.doc.api.ThenaDocConfig.DocObjectsVisitor;
+import io.resys.thena.doc.spi.support.DocStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -82,9 +82,17 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
         if(predefined.isPresent() && (predefined.get().getId().equals(id) || predefined.get().getName().equals(id))) {
           return Uni.createFrom().item(predefined.get());
         }
-        
+
         final var config = ctx.getConfig();
+        if(ctx.isExternalProviderOnly()) {
+          throw DocStoreException.builder("GET_ONE_DEPLOYMENT_BY_ID_FAIL")
+          .add(config)
+          .add((m) -> m.addArgs(JsonObject.of("deploymentId", id).encode()))
+          .build();
+        }
+
         return config.accept(this).onItem().transform(e -> {
+          
           if(e.size() != 1) {
             throw DocStoreException.builder("GET_ONE_DEPLOYMENT_BY_ID_FAIL")
               .add(config)
@@ -105,6 +113,14 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
           final var isIncludeExternal = predefined.isPresent() && (this.ids.isEmpty() || this.ids.contains(predefined.get().getId()));
           
           final var config = ctx.getConfig();
+          if(ctx.isExternalProviderOnly()) {
+            if(isIncludeExternal) {
+              return Uni.createFrom().item(Arrays.asList(predefined.get()));
+            }
+            return Uni.createFrom().item(Collections.emptyList());
+          }
+          
+          
           return config.accept(this)
               .onItem().transform(e -> {
                 

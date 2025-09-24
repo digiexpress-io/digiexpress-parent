@@ -34,7 +34,7 @@ import io.digiexpress.eveli.client.test.task.TaskEnvirSetupDebugDb;
 
 
 @Disabled
-@SpringBootTest(webEnvironment = WebEnvironment.NONE    )
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 public class DebugTaskData extends TaskEnvirSetupDebugDb {
 
   @Autowired 
@@ -42,6 +42,15 @@ public class DebugTaskData extends TaskEnvirSetupDebugDb {
   
   @Test
   void run() {
-    final var diff = taskClient.queryTasks().getOneTaskDiff("3", "3/UP").await().atMost(Duration.ofMinutes(1));
+    final var diff = taskClient.queryTasks().getOneTaskDiff("106", "960a35a182a6a88eb058fefe33f482d5").await().atMost(Duration.ofMinutes(1));
+    
+    
+    System.out.print(String.join("\r\n", diff.getValues().stream().map(e -> e.getPath()).toList()));
+    
+    
+    taskClient.taskBuilder()
+      .userId("blaaa", "blaaaax")
+      .addWorkerCommitViewer("106")
+      .await().atMost(Duration.ofMinutes(1));
   }
 }

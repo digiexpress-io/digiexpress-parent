@@ -27,11 +27,11 @@ import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -63,7 +63,7 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
       // internally store new comment id
       setRemarkId(remarkId);
     })
-    .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).build())
+    .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).currentTxCommit().build())
     .build();
   }
 
@@ -72,7 +72,7 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
     builder.missionId(command.getTaskId()).modifyMission(merge -> createTaskComment(command, merge));
     return builder
         .commitAuthor(userId)
-        .commitMessage("Creating tasks by: " + CreateOneTask.class.getSimpleName());
+        .commitMessage("Creating tasks by: " + CreateOneTaskComment.class.getSimpleName());
   }
 
   @Override
@@ -90,7 +90,13 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
         .findFirst().get();
     
     final var comment = TaskMapper.map(createdRemark);
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks(),
+        commited.getLabels(),
+        commited.getObjectives());
     
     if (comment.getExternal()) {
       notificator.sendNewCommentNotificationToClient(comment, task);

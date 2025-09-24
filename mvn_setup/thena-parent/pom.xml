@@ -10,12 +10,18 @@
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
 
+  <name>thena-parent</name>
   <artifactId>thena-parent</artifactId>
   <packaging>pom</packaging>
 
   <modules>
+    <module>thena-sql-client</module>
     <module>thena-db-client</module>
+    <module>thena-grim-client</module>
     <module>thena-mq-client</module>
+    <module>thena-batch-client</module>
+    <module>thena-doc-client</module>
+    <module>thena-git-client</module>
   </modules>
 
 </project>

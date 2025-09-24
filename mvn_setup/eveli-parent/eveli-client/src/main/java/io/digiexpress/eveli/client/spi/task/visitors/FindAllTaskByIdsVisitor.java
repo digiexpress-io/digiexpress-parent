@@ -27,12 +27,12 @@ import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimQueryActions.MissionQuery;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -47,10 +47,11 @@ public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisito
           .addMissionId(taskId)
           // we don't need following docs
           .excludeDocs(
+              //GrimDocType.GRIM_REMARK,
               GrimDocType.GRIM_COMMANDS, 
               GrimDocType.GRIM_COMMIT, 
               GrimDocType.GRIM_COMMIT_VIEWER, 
-              GrimDocType.GRIM_OBJECTIVE,
+              //GrimDocType.GRIM_OBJECTIVE,
               GrimDocType.GRIM_OBJECTIVE_GOAL);
   }
 
@@ -78,7 +79,10 @@ public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisito
         .map(container -> TaskMapper.map(
             container.getMission(), 
             container.getAssignments().values(), 
-            container.getRemarks().values()))
+            container.getRemarks().values(),
+            container.getLinks().values(),
+            container.getMissionLabels().values(),
+            container.getObjectives().values()))
         .toList();
     
     return Uni.createFrom().item(tasks);

@@ -1,6 +1,7 @@
 package io.digiexpress.mig.client.spi;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -123,7 +124,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
         .id(row.getLong("id"))
         .comment_text(row.getString("comment_text"))
         .created(row.getLocalDateTime("created"))
-        .user_name(row.getString("user_name"))
+        .user_name(Objects.requireNonNullElse(row.getString("user_name"), "-"))
         .reply_to_id(Optional.ofNullable(row.getLong("reply_to_id")))
         .external(Optional.ofNullable(row.getBoolean("external")))
         .source(Optional.ofNullable(row.getString("source")))

@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/stencil-api",
+  "version": "${project.version}",
+  "description": "Stencil API layer - data fetching, business logic, state management",
+  "main": "./index.ts",
+  "type": "module",
+
+  "note": "No internal dependencies - this is the foundation layer",
+  "dependencies": { },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "keywords": ["stencil", "api", "data", "business-logic"],
+  "private": true
+}

@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class AttachmentApiController {
   
   private final AttachmentCommands client;
   private final TaskClient taskClient;  
-  private final AuthClient securityClient;
+  private final WorkerAuthClient securityClient;
   private final ProcessClient processClient;
   private static final Duration timeout = Duration.ofMillis(10000);
   
@@ -71,7 +72,7 @@ public class AttachmentApiController {
       throws URISyntaxException 
   {
     final var authentication = securityClient.getUser();
-    log.info("Attachment list GET API call for task id: {} from user {}", taskId, authentication.getPrincipal().getUsername());
+    log.debug("Attachment list GET API call for task id: {} from user {}", taskId, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
     }
@@ -100,7 +101,7 @@ public class AttachmentApiController {
       throws URISyntaxException 
   {
     final var authentication = securityClient.getUser();
-    log.info("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    log.debug("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
     }
@@ -112,6 +113,28 @@ public class AttachmentApiController {
       return ResponseEntity.status(HttpStatus.FOUND).location(attachmentUrl.get().toURI()).build();
     }
     return ResponseEntity.notFound().build();
+  }
+  
+  @DeleteMapping("/tasks/{taskId}/files/{filename}")
+  public ResponseEntity<Void> deleteTaskAttachment(
+      @PathVariable String taskId, 
+      @PathVariable String filename 
+      ) 
+      throws URISyntaxException 
+  {
+    final var authentication = securityClient.getUser();
+    log.debug("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    if (!checkTaskAccess(taskId, authentication)) {
+      return ResponseEntity.notFound().build();
+    }
+    final var processId = getProcessIdFromTask(taskId);
+    if (processId != null) {
+      client.remove().filename(filename).removeByProcessId(processId);
+    }
+    else {
+      client.remove().filename(filename).removeByTaskId(taskId);
+    }
+    return ResponseEntity.noContent().build();
   }
   
   /**
@@ -130,7 +153,7 @@ public class AttachmentApiController {
       throws URISyntaxException 
   {
     final var authentication = securityClient.getUser();
-    log.info("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    log.debug("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
     }
@@ -144,7 +167,7 @@ public class AttachmentApiController {
     return ResponseEntity.notFound().build();
   }
 
-  private boolean checkTaskAccess(String taskId, AuthClient.User authentication) {
+  private boolean checkTaskAccess(String taskId, WorkerAuthClient.User authentication) {
     log.debug("Checking task {} access for user {}", taskId, authentication.getPrincipal().getUsername());
     List<String> roles = authentication.getPrincipal().getRoles();
     

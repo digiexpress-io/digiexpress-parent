@@ -79,6 +79,22 @@ public class EveliDeploymentCompilerLogger {
     STENCIL_WK_OK
   }
   
+  public EveliDeploymentCompilerLogger failedToUpdateForm(TopicLink link, Exception e) {
+    final var stack = String.join(System.lineSeparator(), ExceptionUtils.getRootCauseStackTrace(e));
+    errors.add(
+      LogEvent.builder()
+          .type(LogEventType.DIALOB_FAILED_TO_UPDATE_FORM)
+          .props(Map.of(
+              "text", "can't update dialob form",
+              "form name", link.getFormName(),
+              "form tag", link.getFormTag(),
+              "wk value", link.getValue(),
+              "stack", stack
+              ))
+          .build()
+    );
+    return this;
+  }
   
   public EveliDeploymentCompilerLogger failedToUpdateForm(Form form, TopicLink link, Exception e) {
     final var stack = String.join(System.lineSeparator(), ExceptionUtils.getRootCauseStackTrace(e));

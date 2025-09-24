@@ -34,6 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -92,15 +93,16 @@ INSERT INTO feedback_reply
   created_by,
   reporter_names,
   reply_text,
-  customer_title
+  customer_title,
+  customer_question
 )
 VALUES
-(?,?,?,?,?,?,?,?,?,?,?,?,?)
+(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
      categeoryStm.setObject(1, UUID.fromString(categoryId));
-     categeoryStm.setString(2, command.getContent());
+     categeoryStm.setString(2, JsonObject.mapFrom(command.getContent()).encode());
      categeoryStm.setString(3, command.getLocale());
      categeoryStm.setString(4, command.getLabelValue().trim());
      categeoryStm.setObject(5, command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());
@@ -114,6 +116,7 @@ VALUES
      categeoryStm.setString(11, command.getReporterNames());
      categeoryStm.setString(12, command.getReply());
      categeoryStm.setString(13, command.getCustomerTitle());
+     categeoryStm.setString(14, command.getQuestion());
 
     
      categeoryStm.execute();

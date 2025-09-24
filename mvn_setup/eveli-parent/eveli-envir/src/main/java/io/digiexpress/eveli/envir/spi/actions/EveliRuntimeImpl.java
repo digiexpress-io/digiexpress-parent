@@ -52,6 +52,7 @@ public class EveliRuntimeImpl implements EveliRuntime {
       boolean isDev) {
     
     this.hdesClientConfig = hdesClientConfig;
+    this.hdesClientConfig.getCache().flushAll();
     this.wrenchEnvir = new HdesClientEnvirBuilder(new ProgramEnvirFactory(hdesClientConfig), hdesClientConfig.getTypes())
         .tagName(deployment.getName())
         .callback(builder -> ComposerEntityMapper.toEnvir(builder, deployment.getSources().getWrench()).build())
@@ -87,7 +88,7 @@ public class EveliRuntimeImpl implements EveliRuntime {
   }
   @Override
   public String getStencilTagName() {
-    return deployment.getSources().getWrench().getName();
+    return deployment.getSources().getStencil().getName();
   }
 
   @Override

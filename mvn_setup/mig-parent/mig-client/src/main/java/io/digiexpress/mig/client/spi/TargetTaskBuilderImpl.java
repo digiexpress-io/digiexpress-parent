@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -12,6 +14,7 @@ import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.mig.client.api.MigClient.TargetTaskBuilder;
 import io.digiexpress.mig.client.api.SourceTasks;
+import io.digiexpress.mig.client.api.SourceTasks.SourceRole;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger;
 import io.digiexpress.mig.client.spi.loggers.TargetTaskLogger;
 import io.resys.thena.api.entities.grim.GrimAssignment;
@@ -20,7 +23,7 @@ import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.grim.spi.sql.GrimTableNames;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.subscription.Cancellable;
 import io.vertx.mutiny.sqlclient.Row;
@@ -33,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
-  private TenantTableNames names;
+  private GrimTableNames names;
   private final String anonUser = "unknown";
   
   private final AtomicLong counter = new AtomicLong();
@@ -61,7 +64,8 @@ delete from process;
   
   @Override
   public Uni<SourceTasks> build(SourceTasks source, String tenantName) {
-    this.names = TenantTableNames.defaults("").toRepo(tenantName);
+    this.names = GrimTableNames.defaults().toRepo(tenantName);
+    
     return target_tasks.withTransaction(conn -> execute(conn, source));
   }
   
@@ -216,10 +220,11 @@ delete from process;
     final var props = source.getRoles().values().stream()
         .flatMap(e -> e.stream())
         .map(doc -> {
+          final var sequence = allocateTaskSeq(source, doc.getTask_id(), doc);
           final var commits = TargetTaskCommit.of(doc.getTask_id(), source);
           final var task = source.getTasks().get(doc.getTask_id());
           return Tuple.from(Arrays.asList(
-              doc.getGid(),
+              doc.getGid() + "_" + sequence,
               commits.createdWithCommit(),
               String.valueOf(task.getId()),
               null, //objective_id
@@ -477,6 +482,18 @@ delete from process;
      
       return batch(conn, ProcessEntity.class, sql, props).onItem().invoke(rs->postProcess(conn, ProcessEntity.class));
   }
+ 
+ 
+ private int allocateTaskSeq(SourceTasks source, long taskId, SourceRole role) {
+   final var toBeMapped = Optional.ofNullable(source.getRoles().get(taskId))
+       .orElse(Collections.emptyList())
+       .stream()
+       .map(e -> e.getAssigned_roles())
+       .sorted((a, b) -> a.compareTo(b))
+       .toList();
+   final var index = toBeMapped.indexOf(role.getAssigned_roles());
+   return index;
+ }
 
   private <T> Cancellable postProcess(
       io.vertx.mutiny.sqlclient.SqlConnection conn,

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.comms;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * eveli-client
@@ -21,12 +23,14 @@ package io.digiexpress.eveli.client.spi.comms;
  */
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Email notification builder implementation based on Jakarta mail transport.
@@ -34,31 +38,26 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
+@Slf4j
 public class EmailBuilderDummy implements CommsClient.EmailBuilder {
-
+  private final List<String> recipients = new ArrayList<>();
+  private String title;
+  private String message;
+  private String refId;
   @Override
   public EmailBuilder recipientAddress(String recipientAddress) {
+    recipients.add(recipientAddress);
     return this;
   }
   @Override
   public EmailBuilder recipientAddress(List<String> recipientAddress) {
-    return this;
-  }
-  @Override
-  public EmailBuilder title(String title) {
-    return this;
-  }
-  @Override
-  public EmailBuilder message(String message) {
-    return this;
-  }
-  @Override
-  public EmailBuilder refId(String refId) {
+    recipients.addAll(recipientAddress);
     return this;
   }
   
   @Override
   public void build() {
-    
+    log.debug("Email builder request for: title: {}, message: {}, refId: {}, recipients: {}",
+        title, message, refId, recipients.stream().collect(Collectors.joining(", ")));
   }
 }

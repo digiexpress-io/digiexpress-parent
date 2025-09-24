@@ -26,9 +26,9 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.git.api.GitClient;
+import io.resys.thena.git.api.GitPullActions;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
@@ -38,7 +38,7 @@ import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface StencilConfig {
-  ThenaClient getClient();
+  GitClient getClient();
   String getRepoName();
   String getHeadName();
   AuthorProvider getAuthorProvider();

@@ -1,0 +1,17 @@
+{
+  "name": "@dxs-ts/gamut-shell",
+  "version": "${project.version}", 
+  "description": "Gamut shell UI primitives - basic building blocks, form inputs, buttons",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/gamut-api": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*"
+  },
+  "keywords": ["gamut", "ui", "primitives", "components"],
+  "private": true
+}

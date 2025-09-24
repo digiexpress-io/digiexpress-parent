@@ -1,0 +1,19 @@
+{
+  "name": "@dxs-ts/gamut-md",
+  "version": "${project.version}", 
+  "description": "Gamut markdown UI primitives - basic building blocks, form inputs, buttons",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/gamut-api": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-markdown": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*"
+
+  },
+  "keywords": ["gamut", "markdown", "ui", "primitives", "components"],
+  "private": true
+}

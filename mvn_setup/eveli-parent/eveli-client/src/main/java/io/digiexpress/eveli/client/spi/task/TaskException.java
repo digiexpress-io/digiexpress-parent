@@ -26,14 +26,15 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelopePage;
+import io.resys.thena.git.api.GitPullActions;
+import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.ManyMissionsEnvelope;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
+import io.resys.thena.grim.api.GrimCommitActions.OneProcEnvelope;
 import io.resys.thena.spi.ExMessageFormatter;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
@@ -102,6 +103,19 @@ public class TaskException extends RuntimeException {
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     private final List<Throwable> surpressed = new ArrayList<>();
 
+    
+    
+    public Builder add(GrimStructuredTenant config, OneProcEnvelope envelope) {
+      msg.id(envelope.getRepoId() == null ? config.getTenantId(): envelope.getRepoId())
+      
+      .addAllArgs(envelope.getMessages().stream() .map(message -> {
+        if(message.getException() != null) {
+          surpressed.add(message.getException());
+        }
+        return message.getText();
+      }).collect(Collectors.toList()));
+      return this;
+    }    
     public Builder add(GrimStructuredTenant config, QueryEnvelopeList<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())

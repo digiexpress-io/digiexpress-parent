@@ -27,16 +27,16 @@ import org.immutables.value.Value;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
-import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.git.api.GitClient;
+import io.resys.thena.git.api.GitPullActions;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface ThenaConfig {
-  ThenaClient getClient();
+  GitClient getClient();
   String getRepoName();
   String getHeadName();
   AuthorProvider getAuthorProvider();

@@ -30,10 +30,14 @@ public class QueryException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final String entityId;
-  private final EntityType type;
+  private final String type;
   private final List<Message> commit;
   
   public QueryException(String entityId, EntityType type, QueryEnvelope<?> commit) {
+    this(entityId, type.name(), commit);
+  }
+  
+  public QueryException(String entityId, String type, QueryEnvelope<?> commit) {
     super(msg(entityId, type, commit.getMessages()));
     this.entityId = entityId;
     this.type = type;
@@ -42,13 +46,13 @@ public class QueryException extends RuntimeException {
   public String getEntityId() {
     return entityId;
   }
-  public EntityType getType() {
+  public String getType() {
     return type;
   }
   public List<Message> getCommit() {
     return commit;
   }
-  private static String msg(String entityId, EntityType type, List<Message> commit) {
+  private static String msg(String entityId, String type, List<Message> commit) {
     StringBuilder messages = new StringBuilder();
     for(var msg : commit) {
       messages

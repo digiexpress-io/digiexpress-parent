@@ -1,5 +1,15 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import com.google.common.collect.ImmutableList;
+
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CrmAccountType;
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
+
 /*-
  * #%L
  * eveli-client
@@ -29,12 +39,14 @@ import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.CreateOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.CreateOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -42,6 +54,7 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
   private final String userId;
   private final TaskNotificator notificator;
   private final CreateTaskCommand command;
+  @Nullable private final CustomerAccount account;
   
   private void createTask(CreateTaskCommand commmand, NewMission mission) {
     final var status = commmand.getStatus() == null ? TaskStatus.NEW: commmand.getStatus();
@@ -79,6 +92,42 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
       );
     }
     
+    
+    // set client locale    
+    if(command.getQuestionnaireId() != null) {
+      mission
+      .addLink(newLink -> newLink
+        .linkValue(Optional.ofNullable(commmand.getClientLanguage() ).orElse(TaskMapper.DEFAULT_CLIENT_LANG))
+        .linkType(TaskMapper.LINK_TYPE_CLIENT_LOCALE)
+        .build()
+      );
+    }
+    
+    
+    // set additional info 
+    if(commmand.getAdditionalInfo() != null) {
+      mission
+      .addLink(newLink -> newLink
+        .linkValue(commmand.getAdditionalInfo())
+        .linkType(TaskMapper.LINK_TYPE_ADDITIONAL_INFO)
+        .build()
+      );
+    }
+    
+    
+    // set document properties 
+    if(!commmand.getDocumentProperties().isEmpty()) {
+      mission
+      .addLink(newLink -> newLink
+        .linkBody(JsonObject.mapFrom(commmand.getDocumentProperties()))
+        .linkValue("data associated with task creating")
+        .linkType(TaskMapper.LINK_TYPE_DOC_PROPS)
+        .build()
+      );
+    }
+    
+    
+    // set the keywords
     for(final var keyword : commmand.getKeyWords()) {
       mission.addLabels(newLabel -> newLabel
           .labelType(TaskMapper.LABEL_TYPE_KEYWORD)
@@ -86,11 +135,59 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
           .build());
     }
 
+    // set the features
+    for(final var feature : commmand.getFeatures()) {
+      mission.addLabels(newLabel -> newLabel
+          .labelType(TaskMapper.LABEL_TYPE_FEATURES)
+          .labelValue(feature)
+          .build());
+    }
+    
+    
+    final var features = ImmutableList.<String>builder()
+        .addAll(getCsvFeatures(command))
+        .addAll(getCrmFeatures(account))
+        .build();
+    
+    for(final var feature : features) {
+      mission.addLabels(newLabel -> newLabel
+          .labelType(TaskMapper.LABEL_TYPE_FEATURES)
+          .labelValue(feature)
+          .build());
+    }
+  
+    
     mission.build();
   }
-
+  
+  
+  private List<String> getCrmFeatures(CustomerAccount account) {
+    if(account == null) {
+      return Collections.emptyList();
+    }
+    if(account.getType() == CrmAccountType.ANON) {
+      return Arrays.asList(TaskMapper.TASK_FEATURE_ANON);
+    }
+    return Collections.emptyList();
+  }
+  
+  private List<String> getCsvFeatures(CreateTaskCommand commmand) {
+    if(commmand.getFeaturesAsCsv() != null && !commmand.getFeaturesAsCsv().trim().isEmpty()) {
+      return Arrays.asList(commmand.getFeaturesAsCsv().split(","));
+    }
+    return Collections.emptyList();
+  }
+  
   @Override
   public CreateOneMission start(GrimStructuredTenant config, CreateOneMission builder) {
+    
+    /*
+    if(command.getQuestionnaireId() != null && StringUtils.isEmpty(command.getClientLanguage())) {
+      throw TaskException.builder("CREATE_TASKS_SAVE_FAIL")
+        .add("clientLanguageMustBeDefined", "command is missing clientLanguage", JsonObject.of("questionnaireId", command.getQuestionnaireId()))
+        .build(); 
+    }*/
+    
     builder.mission(newMission -> createTask(command, newMission));
     return builder
         .commitAuthor(userId)
@@ -107,7 +204,13 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
 
   @Override
   public Uni<Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks(),
+        commited.getLabels(),
+        commited.getObjectives());
     notificator.handleTaskCreation(task, userId); 
     return Uni.createFrom().item(task);
   }

@@ -21,15 +21,18 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -37,10 +40,10 @@ import lombok.RequiredArgsConstructor;
 public class GamutClientImpl implements GamutClient {
   private final ProcessClient processInstanceClient;
   private final TaskClient taskClient;
-  
+  private final MqEventPublisher mqEventPublisher;
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final EveliEnvirClient envir;
 
 
@@ -51,7 +54,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, authClient, envir);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, envir);
   }
 
   @Override
@@ -71,7 +74,7 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public ReplyToBuilder replyToBuilder() {
-    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient);
+    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient, mqEventPublisher);
   }
 
   @Override
@@ -107,6 +110,7 @@ public class GamutClientImpl implements GamutClient {
             .inputParentContextId(process.getParentArticleName())
             .formId(process.getQuestionnaireId())
             .formInProgress(true)
+            .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
             .viewed(true)
             
             // deprecated
@@ -128,5 +132,37 @@ public class GamutClientImpl implements GamutClient {
   @Override
   public UserActionMetaQuery userActionMetaQuery() {
     return new UserActionMetaQueryImpl(envir);
+  }
+
+  @Override
+  public UserActionViewBuilder userActionViewBuilder() {
+
+    return new UserActionViewBuilder() {
+      private String actionId;
+      @Override
+      public UserActionViewBuilder actionId(String actionId) {
+        TaskAssert.notNull(actionId, () -> "actionId can't be null!");
+        this.actionId = actionId;
+        return this;
+      }
+      @Override
+      public Uni<Void> create() {
+        final var action = userActionQuery().findOneById(actionId);
+        if(action.isEmpty()) {
+          return Uni.createFrom().voidItem();        
+        }
+        final var taskId = action.get().getTaskId();
+        if(taskId == null) {
+          return Uni.createFrom().voidItem();
+        }
+        
+        final var customerId = authClient.getCustomer().getCustomerId();
+        return taskClient.taskBuilder()
+            .userId(customerId.getSafeId(), null)
+            .addCustomerCommitViewer(taskId);
+      }
+      
+
+    };
   }
 }

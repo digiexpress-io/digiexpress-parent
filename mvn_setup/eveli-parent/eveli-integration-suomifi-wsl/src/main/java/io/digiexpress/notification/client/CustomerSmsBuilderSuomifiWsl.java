@@ -73,21 +73,18 @@ public class CustomerSmsBuilderSuomifiWsl implements CustomerMessageBuilder {
   @Override
   public CustomerMessageBuilder senderId(String senderId) {
     this.senderId = senderId;
-    return null;
+    return this;
   }
   @Override
   public CustomerMessageBuilder messageId(String messageId) {
     this.messageId = messageId;
     return this;
   }
-  @Override
-  public CustomerMessageBuilder ssn(String ssn) {
-    request.client(Client.builder().clientId(ssn).clientType(ssn.length() == 9 ? ClientType.CRN : ClientType.SSN).build());
-    return this;
-  }
+
   @Override
   public void build() {
     final var request = this.request
+      .client(Client.builder().clientId(senderId).clientType(senderId.length() == 9 ? ClientType.CRN : ClientType.SSN).build())
       .emailTitle(emails.stream().collect(Collectors.toMap(e -> e.locale(), e -> e.title())))
       .emailMessage(emails.stream().collect(Collectors.toMap(e -> e.locale(), e -> e.content())))
       .build();

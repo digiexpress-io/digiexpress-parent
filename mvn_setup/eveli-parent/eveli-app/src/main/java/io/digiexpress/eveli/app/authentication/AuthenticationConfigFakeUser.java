@@ -2,6 +2,8 @@ package io.digiexpress.eveli.app.authentication;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +29,20 @@ import org.springframework.context.annotation.Configuration;
  */
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.AuthClient.Liveness;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
 import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
@@ -42,6 +50,8 @@ import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
 
 
 
@@ -52,6 +62,49 @@ import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 @Configuration
 @Profile("fake-user")
 public class AuthenticationConfigFakeUser  {
+  
+  public static String[] ROLES = {"TASK_ADMIN","TASK_WORKER","FEEDBACK_ADMIN","FEEDBACK_VIEWER","ASSET_ADMIN","Authorized"};
+
+  
+//Worker security filter
+ @Bean
+ public SecurityFilterChain workerSecurity(
+     HttpSecurity http, 
+     AuthorizationManager<RequestAuthorizationContext> auth,
+     AuthenticationManager authenticationManager) throws Exception {
+   
+   return http
+     .securityMatchers(matcher -> matcher.requestMatchers("/worker/**"))
+     .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
+     .csrf(t -> t.disable())
+     .httpBasic(Customizer.withDefaults())
+     .formLogin(form -> form
+         .loginPage("/login-worker")
+         .permitAll()
+     )
+     .authenticationManager(authenticationManager)
+     .build();
+ }
+ 
+ // Customer security filter
+ @Bean
+ public SecurityFilterChain portalSecurity(
+     HttpSecurity http, 
+     AuthorizationManager<RequestAuthorizationContext> auth,
+     AuthenticationManager authenticationManager) throws Exception {
+   
+   return http
+     .securityMatchers(matcher -> matcher.requestMatchers("/portal/secured/**"))
+     .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
+     .csrf(t -> t.disable())
+     .httpBasic(Customizer.withDefaults())
+     .formLogin(form -> form
+         .loginPage("/login-customer")
+         .permitAll()
+     )
+     .authenticationManager(authenticationManager)
+     .build();
+ }
   
   @Bean
   public AuthenticationManager authenticationManager() {
@@ -84,27 +137,26 @@ public class AuthenticationConfigFakeUser  {
           }
           @Override
           public Collection<? extends GrantedAuthority> getAuthorities() {
-            return null;
+            return Arrays.stream(ROLES).map(role->new SimpleGrantedAuthority("ROLE_"+role)).collect(Collectors.toList());
           }
         };
       }
     };
   }
-
-
   
   @Bean
-  public AuthClient authClientFakeUser() {
-    return new AuthClient() {
+  public WorkerAuthClient authClientFakeUser() {
+    return new WorkerAuthClient() {
       @Override
       public User getUser() {
         return ImmutableUser.builder()
             .isAuthenticated(true)
             .principal(ImmutableUserPrincipal.builder()
                 .isAdmin(true)
-                .username("tester")
-                .email("tester@resys.io")
-                .roles(Arrays.asList())
+                .sub("John Smith")
+                .username("John Smith")
+                .email("john.smith@resys.io")
+                .roles(Arrays.stream(ROLES).map(r->"ROLE_"+r).collect(Collectors.toList()))
                 .build())
             .build();
       }
@@ -119,8 +171,9 @@ public class AuthenticationConfigFakeUser  {
   }
   
   @Bean
-  public CrmClient crm() {
-    return new CrmClient() {
+  public GamutAuthClient crm() {
+    return new GamutAuthClient() {
+      @Nullable
       @Override
       public Liveness getLiveness() {
         return null;
@@ -135,10 +188,19 @@ public class AuthenticationConfigFakeUser  {
                 .firstName("same")
                 .lastName("vimes")
                 .protectionOrder(false)
+                
+                /*
+                .representedCompany(ImmutableCustomerRepresentedCompany.builder()
+                    .companyId("Serial-X")
+                    .name("Night Watch")
+                    .build())
+                */
+                
                 .contact(ImmutableCustomerContact.builder()
                     .email("same.vimes@resys.io")
                     .addressValue("test-street")
                     .build())
+                
                 .build())
             .type(CustomerType.AUTH_CUSTOMER)
             .build();
@@ -146,12 +208,21 @@ public class AuthenticationConfigFakeUser  {
 
       @Override
       public CustomerRoles getCustomerRoles() {
-        final var customer = getCustomer();
-        
         return ImmutableCustomerRoles.builder()
-            .identifier(customer.getPrincipal().getSsn())
-            .username(customer.getPrincipal().getUsername())
             .build();
+      }
+    };
+  }
+  
+  @Bean
+  public AuthorizationManager allowAll() {
+    return new AuthorizationManager<RequestAuthorizationContext>() {
+      @Override
+      public AuthorizationDecision check(
+          Supplier<Authentication> authentication,
+          RequestAuthorizationContext object) {
+
+        return new AuthorizationDecision(true);
       }
     };
   }

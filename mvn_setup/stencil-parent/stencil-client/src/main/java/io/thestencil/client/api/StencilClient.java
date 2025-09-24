@@ -2,6 +2,7 @@ package io.thestencil.client.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -41,6 +42,7 @@ public interface StencilClient {
   StencilStore getStore();
   MarkdownBuilder markdown();
   SitesBuilder sites();
+  SiteCommitLogBuilder commitLog();
   StencilClient withRepo(String repoId);
   StencilClient withRepo(String repoId, String headName);
   
@@ -51,6 +53,12 @@ public interface StencilClient {
     SitesBuilder tagName(String tagName);
     Sites build();
   }
+  
+  interface SiteCommitLogBuilder {
+    Uni<List<SiteCommitLog>> build();
+  }
+  
+
   
   interface MarkdownBuilder {
     MarkdownBuilder json(String jsonOfSiteState, boolean dev);
@@ -133,20 +141,29 @@ public interface StencilClient {
   @JsonDeserialize(as = ImmutableWorkflow.class)
   interface Workflow extends EntityBody {
     String getValue(); // workflow name
+    
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getDevMode();
-
+    
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    Boolean getAssignable();
+    
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    Boolean getAnon();
+    
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    Boolean getDisabled();
+    
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     LocalDateTime getStartDate();
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     @Nullable
     LocalDateTime getEndDate();
-
-    @Nullable
-    @JsonInclude(JsonInclude.Include.NON_NULL) 
-    Boolean getAnon();
     
     // ID is used in cases when dialob uses file-based forms, which are searchable by id
     @Nullable
@@ -269,4 +286,15 @@ public interface StencilClient {
     String getVersion();
     String getDate();
   }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableSiteCommitLog.class)
+  @JsonDeserialize(as = ImmutableSiteCommitLog.class)
+  interface SiteCommitLog {
+    String getObjectId();
+    String getCommitId();
+    OffsetDateTime getCreatedAt();
+    String getCreatedBy();
+  }
+  
 }

@@ -22,9 +22,11 @@ package io.digiexpress.eveli.client.spi.feedback;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import org.flywaydb.core.internal.jdbc.JdbcUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient.DeleteReplyCommand;
@@ -40,25 +42,60 @@ public class FeedbackRatingDeleteBuilderImpl {
   
   public List<Feedback> execute(DeleteReplyCommand command) {
     return withHistory.withHistory(history -> {
-      final var upserted = deleteAll(command);
+      final var upserted = jdbc.execute((Connection conn) -> doInConnection(conn, command));
       history.append(command, upserted, userId);
       return upserted;
     });
   }
   
-  private List<Feedback> deleteAll(DeleteReplyCommand command) {
-    
-    final var entries = command.getReplyIds().stream()
-      .map(id -> new FeedbackQueryImpl(jdbc).findOneById(id))
-      .map(e -> e.orElseThrow(() -> ProcessAssert.fail(() -> "Failed to find feedbacks: " + command.getReplyIds() + " for deletion!")))
-      .toList();
-    
-    deleteApproval(entries);
-    return entries;
-    
+
+
+  private final List<Feedback> doInConnection(Connection connection, DeleteReplyCommand command) throws SQLException {
+    connection.setAutoCommit(false);
+    connection.beginRequest();
+    try {
+
+      final var entries = command.getReplyIds().stream()
+          .map(id -> new FeedbackQueryImpl(jdbc).findOneById(id))
+          .map(e -> e.orElseThrow(() -> ProcessAssert.fail(() -> "Failed to find feedbacks: " + command.getReplyIds() + " for deletion!")))
+          .toList();
+      
+      deleteApproval(entries);
+      deleteReply(entries);
+      return entries;
+      
+    } catch(Exception e) {
+      connection.rollback();
+      throw ProcessAssert.fail(e);
+    } finally {
+      JdbcUtils.closeConnection(connection);
+    }
   }
+  
 
   private UUID[] deleteApproval(List<Feedback> entries) {
+    final var ids = entries.stream().map(e -> e.getId()).map(UUID::fromString).toList().toArray(new UUID[]{});
+    return jdbc.execute((Connection connection) -> {
+      
+      final var prep = connection.prepareStatement(
+"""
+DELETE 
+FROM feedback_approval
+WHERE reply_id = ANY(?::UUID[])
+"""
+);
+      final var array = connection.createArrayOf("UUID", ids);
+      prep.setObject(1, array);
+      
+      return prep;
+    }, 
+    (PreparedStatement categeoryStm) -> {
+      categeoryStm.executeUpdate();
+      return ids;
+   });
+  }
+  
+  private UUID[] deleteReply(List<Feedback> entries) {
     final var ids = entries.stream().map(e -> e.getId()).map(UUID::fromString).toList().toArray(new UUID[]{});
     return jdbc.execute((Connection connection) -> {
       
@@ -71,6 +108,9 @@ WHERE id = ANY(?::UUID[])
 );
       final var array = connection.createArrayOf("UUID", ids);
       prep.setObject(1, array);
+      
+      
+      
       return prep;
     }, 
     (PreparedStatement categeoryStm) -> {

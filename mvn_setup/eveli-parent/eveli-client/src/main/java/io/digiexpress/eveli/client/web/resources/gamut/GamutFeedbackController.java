@@ -37,12 +37,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -58,14 +60,26 @@ public class GamutFeedbackController {
   private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final DialobClient dialob;
+  private final DialobFillEventPublisher publisher;
+  private final GamutAuthClient authClient;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().sessionGet(sessionId);
+    ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionGet(sessionId);
+    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    return dialob.createProxy().sessionPost(sessionId, body);
+    ResponseEntity<String> resp = dialob.createProxyClient().sessionPost(sessionId, body);
+    if(resp.getStatusCode().is2xxSuccessful()) {
+      final var event = gamutClient.fillEvent()
+        .requestBody(body)
+        .responseBody(resp.getBody())
+        .sessionId(sessionId)
+        .create();
+      publisher.publishEvent(event);
+    }
+    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody());
   }
   @DeleteMapping(value="/{actionId}")
   public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
@@ -99,6 +113,9 @@ public class GamutFeedbackController {
       @RequestParam("inputParentContextId") String inputParentContextId,
       @RequestParam("actionLocale") String actionLocale) {
     
+    final var customer = authClient.getCustomer();
+    final var customerRoles = authClient.getCustomerRoles();
+    
     return gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale)
       .getOne().onItem().transform(meta -> {
         if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
@@ -108,6 +125,8 @@ public class GamutFeedbackController {
           return ResponseEntity.ok(gamutClient.userActionBuilder()
             .actionId(actionId)
             .anon(true)
+            .customer(customer)
+            .customerRoles(customerRoles)
             .clientLocale(actionLocale)
             .inputContextId(inputContextId)
             .inputParentContextId(inputParentContextId)

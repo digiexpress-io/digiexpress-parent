@@ -37,9 +37,9 @@ import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ImmutableStoreExceptionMsg;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.git.api.GitClient;
+import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
@@ -223,7 +223,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
           this.pgPass == null ? "null" : "***");
       }
       
-      final ThenaClient thena;
+      final GitClient thena;
       if(pgPool == null) {
         HdesAssert.notNull(pgHost, () -> "pgHost must be defined!");
         HdesAssert.notNull(pgPort, () -> "pgPort must be defined!");
@@ -243,9 +243,9 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
         
         final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
+        thena = GitDataSourceImpl.create().client(pgPool).db(repoName).build();
       } else {
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
+        thena = GitDataSourceImpl.create().client(pgPool).db(repoName).build();
       }
       
       final ObjectMapper objectMapper = getObjectMapper();

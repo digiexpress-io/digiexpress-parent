@@ -27,11 +27,6 @@ public class CustomerSmsBuilderImpl implements CustomerMessageBuilder {
 
 
   @Override
-  public CustomerMessageBuilder ssn(String userId) {
-    return this;
-  }
-
-  @Override
   public void build() {
   }
 

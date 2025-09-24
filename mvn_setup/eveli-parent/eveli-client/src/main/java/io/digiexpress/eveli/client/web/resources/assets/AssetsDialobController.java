@@ -1,8 +1,6 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,19 +31,18 @@ import org.springframework.http.MediaType;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.dialob.api.form.Form;
-import io.dialob.api.form.FormTag;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.dialob.api.DialobClient.FormListItem;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -57,8 +54,19 @@ import lombok.RequiredArgsConstructor;
 public class AssetsDialobController {
   
   private final DialobClient dialobCommands;
-  private final ObjectMapper objectMapper;
 
+  
+  @GetMapping(value="/fill/{sessionId}")
+  public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
+    ResponseEntity<String> responseEntity = dialobCommands.createProxyClient().sessionGet(sessionId);
+    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+  }
+  @PostMapping(value="/fill/{sessionId}")
+  public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    final var resp = dialobCommands.createProxyClient().sessionPost(sessionId, body);
+    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()); 
+  }
+  
 
   @RequestMapping(path="/proxy/api/forms/**", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> proxy(
@@ -71,16 +79,16 @@ public class AssetsDialobController {
     final var path = request.getServletPath().substring(46);
     final var method = HttpMethod.valueOf(request.getMethod());
     
-    return dialobCommands.createProxy().formRequest(path, query, method, body, headers);
+    return dialobCommands.createProxyClient().formRequest(path, query, method, body, headers);
   }
  
   @GetMapping(path="/tags", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<FormTagResult>> allTags() throws JsonMappingException, JsonProcessingException {
     List<FormTagResult> tags = new ArrayList<>();
     
-    FormListItem[] forms = getForms();
-    Map<String, @NotNull String> formLabels = Arrays.stream(forms).collect(Collectors.toMap(val->val.getId(), val->val.getMetadata().getLabel()));
-    FormTag[] formTags = getTags();
+    final var forms = dialobCommands.findAllForms();
+    Map<String, @NotNull String> formLabels = forms.stream().collect(Collectors.toMap(val->val.getId(), val->val.getMetadata().getLabel()));
+    final var formTags = dialobCommands.findAllFormTags();
     for (var formTag : formTags) {
       FormTagResult result = new FormTagResult();
       result.setFormName(formTag.getFormName());
@@ -94,27 +102,11 @@ public class AssetsDialobController {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FormListItem> allForms() throws JsonMappingException, JsonProcessingException{
-    FormListItem[] forms = getForms();
-    return Arrays.asList(forms);
+    return dialobCommands.findAllForms();
   }
 
 
-  private FormTag[] getTags() throws JsonMappingException, JsonProcessingException {
-    final String body = dialobCommands.createProxy().tagsRequest("", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
-    return objectMapper.readerForArrayOf(FormTag.class).readValue(body);
-  }
 
-  private FormListItem[] getForms() throws JsonMappingException, JsonProcessingException {
-    final String body = dialobCommands.createProxy().formRequest("", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
-    return objectMapper.readerForArrayOf(FormListItem.class).readValue(body);
-  }
-
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  @Data
-  public static class FormListItem {
-    private String id;
-    private Form.Metadata metadata;
-  }
   
   @Data
   public static class FormTagResult {

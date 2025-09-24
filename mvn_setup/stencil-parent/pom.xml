@@ -8,6 +8,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
 
+  <name>stencil-parent</name>
   <artifactId>stencil-parent</artifactId>
   <packaging>pom</packaging>
   

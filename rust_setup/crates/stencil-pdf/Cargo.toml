@@ -1,0 +1,40 @@
+[package]
+name = "stencil-pdf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Web framework
+axum = "0.8.4"
+tokio = { version = "1.0", features = ["full"] }
+tower = "0.5.2"
+tower-http = { version = "0.6.6", features = ["cors", "fs"] }
+async-trait = "0.1"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Typst dependencies
+typst = "0.13"
+typst-library = "0.13"
+typst-pdf = "0.13"
+typst-kit = "0.13"
+
+# Error handling
+anyhow = "1.0.100"
+thiserror = "2.0.16"
+
+# Type utils
+ecow = "0.2"
+itertools = "0.14"
+chrono = { version = "0.4", features = ["serde"] }
+lazy_static = "1.4"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# File handling
+tempfile = "3.0"
+base64 = "0.22"

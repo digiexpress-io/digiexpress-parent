@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/gamut-intl": [
+        "../gamut-intl/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../gamut-intl"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-08-21T14:49:16.870Z",
+    "forModule": "@dxs-ts/gamut-api",
+    "fromRegistry": "59014ff3ca3d",
+    "alias": {
+      "@dxs-ts/gamut-api": [
+        "../gamut-intl"
+      ]
+    }
+  }
+}

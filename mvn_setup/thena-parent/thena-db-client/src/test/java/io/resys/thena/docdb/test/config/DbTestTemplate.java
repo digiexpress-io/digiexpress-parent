@@ -16,12 +16,11 @@ import org.junit.jupiter.api.TestInfo;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantCacheImpl;
+import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.structures.git.GitPrinter;
-import io.resys.thena.structures.grim.GrimPrinter;
-import io.resys.thena.support.DocDbPrinter;
+import io.resys.thena.structures.fs.FsPrinter;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
@@ -58,6 +57,7 @@ public class DbTestTemplate {
   private ThenaClient client;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
+  protected static Duration atMost = Duration.ofMinutes(1);
   
   private static AtomicInteger index = new AtomicInteger(1);
   private BiConsumer<ThenaClient, Tenant> callback;
@@ -78,11 +78,11 @@ public class DbTestTemplate {
   	}
   	
   	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("debug_task_db")
+  			.setDatabase("eveli-app")
         .setHost("localhost")
-        .setPort(5432)
-        .setUser("postgres")
-        .setPassword("postgres");
+        .setPort(5433)
+        .setUser("eveli-app")
+        .setPassword("password123");
     final var poolOptions = new PoolOptions().setMaxSize(6);
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
   }
@@ -122,24 +122,23 @@ public class DbTestTemplate {
   }
   
   public DbState createState() {
-    final var ctx = TenantTableNames.defaults(db);
-    return DbStateSqlImpl.create(ctx, pgPool);
+    final var ctx = TenantContext.defaults(db);
+    return DbStateSqlImpl.create(ctx, pgPool, new TenantCacheImpl());
   }
   
   public void printRepo(Tenant repo) {
     if(repo.getType() == StructureType.doc) {
-      final String result = new DocDbPrinter(createState()).print(repo);
-      log.debug(result);
+
     } else if(repo.getType() == StructureType.org) {
       final String result = new OrgDbPrinter(createState()).print(repo);
       log.debug(result);
       
     } else if(repo.getType() == StructureType.git) {
-      final String result = new GitPrinter(createState()).print(repo);
-      log.debug(result);
       
     } else if(repo.getType() == StructureType.grim) {
-      final String result = new GrimPrinter(createState()).print(repo);
+
+    } else if(repo.getType() == StructureType.fs) {
+      final String result = new FsPrinter(createState()).print(repo);
       log.debug(result);
     }
   }
@@ -174,13 +173,16 @@ public class DbTestTemplate {
   
   public String toStaticData(Tenant client) {    
     if(client.getType() == StructureType.doc) {
-      return new DocDbPrinter(createState()).printWithStaticIds(client);
+
     } else if(client.getType() == StructureType.org) {
       return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
     } else if(client.getType() == StructureType.grim) {
-      return new GrimPrinter(createState()).printWithStaticIds(client, replacements);
+
+    } else if(client.getType() == StructureType.fs) {
+      return new FsPrinter(createState()).printWithStaticIds(client, replacements);
     }
-    return new GitPrinter(createState()).printWithStaticIds(client);
+
+    return "";
   }
   
 }

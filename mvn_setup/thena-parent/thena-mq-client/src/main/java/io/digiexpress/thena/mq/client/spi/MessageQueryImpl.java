@@ -25,6 +25,7 @@ import java.util.List;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.MessageQuery;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -43,5 +44,10 @@ public class MessageQueryImpl implements MessageQuery {
   @Override
   public Uni<List<QueueMessage>> findAll() {
     return state.queryMessages().findLastNEntries(lastNEntriesToGet == null ? 100 : lastNEntriesToGet);
+  }
+
+  @Override
+  public Multi<QueueMessage> findAllByBodyId(String bodyId) {
+    return state.queryMessages().findAllByBodyId(bodyId);
   }
 }

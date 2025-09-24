@@ -55,6 +55,17 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllByBodyId(String bodyId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getMessages()).ln()
+        .append("  WHERE (body_id = $1)").ln() 
+        .build())
+        .props(Tuple.of(bodyId))
+        .build();
+  }
+  @Override
   public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

@@ -86,7 +86,7 @@ public class SiteStateVisitor {
     return result.tagName(entity.getName()).build();
   }
   
-  private boolean isWorkflowEnabled(Entity<Workflow> link) {
+  private boolean isWorkflowInPeriod(Entity<Workflow> link) {
     if(link.getBody().getStartDate() == null && link.getBody().getEndDate() == null) {
       return true;
     }
@@ -111,11 +111,15 @@ public class SiteStateVisitor {
   private List<LinkResource> visitWorkflows(Entity<Workflow> link) {
     final List<LinkResource> result = new ArrayList<>();
     
+    if(Boolean.TRUE.equals(link.getBody().getDisabled())) {
+      return result;
+    }
+    
     if(!dev && Boolean.TRUE.equals(link.getBody().getDevMode())){
       return result;
     }
     
-    if(!isWorkflowEnabled(link)) {
+    if(!isWorkflowInPeriod(link)) {
       return result;
     }
     
@@ -126,6 +130,39 @@ public class SiteStateVisitor {
     if(locales.stream().filter(l -> usedLocales.contains(l.getId())).findFirst().isEmpty()) {
       return result;
     }
+    
+    if(Boolean.TRUE.equals(link.getBody().getAssignable())) {
+      for(final var label : link.getBody().getLabels()) {
+        if(!enablesLocales.keySet().contains(label.getLocale())) {
+          continue;
+        }
+      
+        final var locale = enablesLocales.get(label.getLocale());
+        final var resource = ImmutableLinkResource.builder()
+            .id(link.getId() + "-" + locale.getBody().getValue())
+            .addLocale(locale.getBody().getValue())
+            .desc(label.getLabelValue())
+            .path("_") // reserve empty path
+            .value(link.getBody().getValue())
+            .startDate(link.getBody().getStartDate())
+            .endDate(link.getBody().getEndDate())
+            .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
+            .workflow(true)
+            .global(false)
+            .assignable(true)
+            .flowName(link.getBody().getFlowName())
+            .formName(link.getBody().getFormName())
+            .formTag(link.getBody().getFormTag())
+            .formId(link.getBody().getFormId())
+            .type(LINK_TYPE_WORKFLOW)
+            .build();
+        result.add(resource);
+      }
+      return result;
+    } else if(Boolean.FALSE.equals(link.getBody().getAssignable())) {
+      return result;      
+    }
+    
     
     for(final var articleId : link.getBody().getArticles()) {
       final var article = entity.getArticles().get(articleId);
@@ -147,6 +184,7 @@ public class SiteStateVisitor {
             .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
             .workflow(true)
             .global(false)
+            .assignable(false)
             .flowName(link.getBody().getFlowName())
             .formName(link.getBody().getFormName())
             .formTag(link.getBody().getFormTag())
@@ -175,7 +213,7 @@ public class SiteStateVisitor {
               .startDate(link.getBody().getStartDate())
               .endDate(link.getBody().getEndDate())
               .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
-              .workflow(true).global(true)
+              .workflow(true).global(true).assignable(false)
               .flowName(link.getBody().getFlowName())
               .formName(link.getBody().getFormName())
               .formTag(link.getBody().getFormTag())
@@ -220,7 +258,7 @@ public class SiteStateVisitor {
             .desc(label.getLabelValue())
             .path(visitArticlePath(article))
             .value(link.getBody().getValue())
-            .workflow(false).anon(true).global(false)
+            .workflow(false).anon(true).global(false).assignable(false)
             .type(link.getBody().getContentType())
             .build();
         result.add(resource);
@@ -242,7 +280,7 @@ public class SiteStateVisitor {
               .desc(label.getLabelValue())
               .path(visitArticlePath(article))
               .value(link.getBody().getValue())
-              .workflow(false).anon(true).global(true)
+              .workflow(false).anon(true).global(true).assignable(false)
               .type(link.getBody().getContentType())
               .build();
           result.add(resource);

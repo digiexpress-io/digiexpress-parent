@@ -36,8 +36,6 @@ public interface CommsClient {
     
     CustomerMessageBuilder senderId(String senderId);
     CustomerMessageBuilder messageId(String messageId);
-    
-    CustomerMessageBuilder ssn(String ssn);
     void build();
   }
 

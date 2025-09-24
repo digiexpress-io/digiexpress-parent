@@ -73,7 +73,7 @@ public class TaskStoreImpl implements TaskStore {
   private Uni<TaskStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.git(repoName).tenants().get();
+    final var existingRepo = client.grim(repoName).tenants().get();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {

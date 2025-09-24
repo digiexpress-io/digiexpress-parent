@@ -1,5 +1,15 @@
 package io.thestencil.client.tests.util;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+import org.apache.commons.io.IOUtils;
+
 /*-
  * #%L
  * stencil-client-api
@@ -26,22 +36,13 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.TreeValue;
-import io.resys.thena.spi.DbState;
+import io.resys.thena.git.api.GitDataSource;
 import io.thestencil.client.api.StencilClient.EntityType;
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 public class TestExporter {
-  private final DbState state;
+  private final GitDataSource state;
 
-  public TestExporter(DbState state) {
+  public TestExporter(GitDataSource state) {
     super();
     this.state = state;
   }

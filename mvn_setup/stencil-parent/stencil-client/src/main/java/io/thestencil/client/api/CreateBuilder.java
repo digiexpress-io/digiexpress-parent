@@ -159,10 +159,12 @@ public interface CreateBuilder {
     String getFormId();
     
     String getFlowName();
+    
     @Nullable Boolean getDevMode();
-
-    @Nullable
-    Boolean getAnon();
+    @Nullable Boolean getAnon();
+    @Nullable Boolean getDisabled();
+    @Nullable Boolean getAssignable();
+    
     
     @Nullable
     LocalDateTime getStartDate();

@@ -140,7 +140,7 @@ public class HdesTypeDefsFactory implements HdesTypesMapper {
   }
   
   public class GenericDataTypeBuilder implements DataTypeAstBuilder {
-    private Boolean required;
+    private Boolean required = true;
     private String name;
     private String extRef;
     private ValueType valueType;

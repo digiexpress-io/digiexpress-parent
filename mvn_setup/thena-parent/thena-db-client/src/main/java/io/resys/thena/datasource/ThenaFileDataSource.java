@@ -24,7 +24,7 @@ import io.resys.thena.api.entities.Tenant;
 
 public interface ThenaFileDataSource extends ThenaDataSource {
   Tenant getTenant();
-  TenantTableNames getTenantTableNames();
+  TenantContext getTenantContext();
   ThenaFileDataSource withTenant(Tenant tenant);
   boolean isLocked(Throwable t);
 }

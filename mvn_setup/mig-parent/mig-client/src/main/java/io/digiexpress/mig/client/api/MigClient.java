@@ -10,6 +10,7 @@ import io.vertx.core.json.JsonObject;
 
 public interface MigClient {
   SourceTaskQuery taskQuery();
+  
   SourceDialobQuery dialobQuery();
   SourceThenaQuery thenaQuary();
   
@@ -17,7 +18,7 @@ public interface MigClient {
   TargetTaskBuilder taskBuilder();
   TargetWrenchBuilder wrenchBuilder();
   TargetStencilBuilder stencilBuilder();
-  
+  TargetTaskRolesBuilder taskRolesBuilder();
   
   
   interface TargetStencilBuilder {
@@ -31,6 +32,10 @@ public interface MigClient {
   
   
   interface TargetTaskBuilder {
+    Uni<SourceTasks> build(SourceTasks tasks, String tenantName);
+  }
+  
+  interface TargetTaskRolesBuilder {
     Uni<SourceTasks> build(SourceTasks tasks, String tenantName);
   }
   

@@ -7,6 +7,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <artifactId>eveli-app</artifactId>
+  <name>eveli-app</name>
 
   <properties>
     <start-class>io.digiexpress.eveli.app.Application</start-class>
@@ -29,7 +30,9 @@
             <profile>dev</profile>
             <profile>fake-user</profile>
           </profiles>
-           <jvmArguments>-Dspring.config.location=classpath:application-dev.yml,classpath:application-fake-user.yml -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:8000
+           <jvmArguments>
+            -Dspring.config.location=classpath:application-dev.yml,classpath:application-fake-user.yml,classpath:application-prod.yml 
+            -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:8000
            </jvmArguments>
         </configuration>
       </plugin>
@@ -87,10 +90,7 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-gateway-mvc</artifactId>
     </dependency>
-    <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-websocket</artifactId>
-</dependency>
+
 
 
     <dependency>
@@ -106,6 +106,10 @@
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>eveli-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>eveli-integration-queue</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>

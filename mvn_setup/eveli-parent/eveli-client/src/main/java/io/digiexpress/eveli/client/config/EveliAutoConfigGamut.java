@@ -26,12 +26,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
+import io.digiexpress.eveli.client.spi.dialob.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.gamut.GamutClientImpl;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutFeedbackController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutIamController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutSiteController;
@@ -53,27 +56,43 @@ public class EveliAutoConfigGamut {
       AttachmentCommands attachmentCommands,
       EveliEnvirClient envir, 
       DialobClient dialobCommands,
-      CrmClient authClient
+      GamutAuthClient authClient,
+      MqEventPublisher mqEventPublisher
     ) {
     
     return new GamutClientImpl(
         processRepository, 
         taskclient, 
-        
+        mqEventPublisher,
         attachmentCommands, 
         dialobCommands,
         authClient,
         envir
+        
     );
   }
   
   @Bean
-  public GamutFeedbackController gamutFeedbackController(EveliPropsGamut props, GamutClient gamutClient, DialobClient dialobClient) {
-    return new GamutFeedbackController(gamutClient, dialobClient);
+  public DialobFillEventPublisher dialobFillEventPublisher(
+      ApplicationEventPublisher publisher,
+      ProcessClient processClient,
+      DialobClient dialobClient,
+      SyncDialobAndProcess syncDialobAndProcess
+  ) {
+    return new DialobFillEventPublisher(publisher, processClient, dialobClient, syncDialobAndProcess);
+  }
+  
+  @Bean
+  public GamutFeedbackController gamutFeedbackController(
+      EveliPropsGamut props, GamutClient gamutClient, 
+      DialobClient dialobClient, 
+      DialobFillEventPublisher publisher,
+      GamutAuthClient auth) {
+    return new GamutFeedbackController(gamutClient, dialobClient, publisher, auth);
   }
 
   @Bean
-  public GamutIamController gamutIamController(CrmClient crmClient) {
+  public GamutIamController gamutIamController(GamutAuthClient crmClient) {
     return new GamutIamController(crmClient);
   }
   
@@ -85,8 +104,8 @@ public class EveliAutoConfigGamut {
   @Bean
   public GamutUserActionsController gamutUserActionsController(
       FeedbackClient feedback,
-      GamutClient gamutClient, DialobClient dialobClient, CrmClient crmClient, ProcessClient processRepository,
-      ApplicationEventPublisher publisher
+      GamutClient gamutClient, DialobClient dialobClient, GamutAuthClient crmClient, ProcessClient processRepository,
+      DialobFillEventPublisher publisher
       ) {
     return new GamutUserActionsController(publisher, gamutClient, crmClient, dialobClient, processRepository, feedback);
   }

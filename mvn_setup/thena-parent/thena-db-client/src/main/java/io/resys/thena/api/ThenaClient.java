@@ -2,9 +2,9 @@ package io.resys.thena.api;
 
 /*-
  * #%L
- * thena-docdb-api
+ * thena-db-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,66 +20,40 @@ package io.resys.thena.api;
  * #L%
  */
 
-import java.util.Map;
-
-import org.immutables.value.Value;
-
-import io.resys.thena.api.actions.DocCommitActions;
-import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.GitBranchActions;
-import io.resys.thena.api.actions.GitCommitActions;
-import io.resys.thena.api.actions.GitDiffActions;
-import io.resys.thena.api.actions.GitHistoryActions;
-import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitTagActions;
-import io.resys.thena.api.actions.GrimCommitActions;
-import io.resys.thena.api.actions.GrimQueryActions;
+import io.resys.thena.api.actions.FsCommitActions;
+import io.resys.thena.api.actions.FsQueryActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.git.Branch;
-import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
-import io.resys.thena.api.entities.git.Tag;
-import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimProjectObjects;
+import io.resys.thena.api.entities.fs.ThenaFsContainers.FsProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
-import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.ThenaContainer;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaClient {  
   TenantActions tenants();
-  
-  GitStructuredTenant git(String tenantIdOrName);
-  GitStructuredTenant git(TenantCommitResult repo);
-  GitStructuredTenant git(Tenant repo);
-  
-  DocStructuredTenant doc(String tenantIdOrName);
-  DocStructuredTenant doc(TenantCommitResult repo);
-  DocStructuredTenant doc(Tenant repo);
-  
+
   OrgStructuredTenant org(String tenantIdOrName);
   OrgStructuredTenant org(TenantCommitResult repo);
   OrgStructuredTenant org(Tenant repo);
 
-  GrimStructuredTenant grim(String tenantIdOrName);
-  GrimStructuredTenant grim(TenantCommitResult repo);
-  GrimStructuredTenant grim(Tenant repo);
-
+  FsStructuredTenant fs(String tenantIdOrName);
+  FsStructuredTenant fs(TenantCommitResult repo);
+  FsStructuredTenant fs(Tenant repo);  
   
-  // workflow/task like structure
-  interface GrimStructuredTenant {
+  
+  interface FsStructuredTenant {
     String getTenantId();
-    GrimCommitActions commit();
-    GrimQueryActions find();
-    GrimProjectQuery tenants();
+    FsCommitActions commit();
+    FsQueryActions find();
+    FsProjectQuery tenants();
   }
   // build world state
-  interface GrimProjectQuery {
-    Uni<QueryEnvelope<GrimProjectObjects>> get();
+  interface FsProjectQuery {
+    Uni<QueryEnvelope<FsProjectObjects>> get();
   }
 
 
@@ -94,40 +68,5 @@ public interface ThenaClient {
   // build world state
   interface OrgProjectQuery {
     Uni<QueryEnvelope<OrgProjectObjects>> get();
-  }
-
-
-  // single document model
-  interface DocStructuredTenant {
-    DocCommitActions commit();
-    DocQueryActions find();
-  }
-  // build world state
-  interface DocProjectQuery {
-    DocProjectQuery tenant(String tenantId);
-    Uni<QueryEnvelope<DocTenantObjects>> get();
-  }
-  
-  // multi doc model, cropped git replica
-  interface GitStructuredTenant {
-    GitCommitActions commit();
-    GitTagActions tag();
-    GitDiffActions diff();
-    GitHistoryActions history();
-    GitPullActions pull();
-    GitBranchActions branch();
-    GitTenantQuery tenants();
-  }
-  
-  // build world state
-  interface GitTenantQuery {
-    Uni<QueryEnvelope<ThenaClient.GitRepoObjects>> get();
-  }
-
-  @Value.Immutable 
-  interface GitRepoObjects extends ThenaContainer {
-    Map<String, Branch> getBranches();
-    Map<String, Tag> getTags();
-    Map<String, IsGitObject> getValues();   
   }
 }

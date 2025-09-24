@@ -22,22 +22,45 @@ package io.digiexpress.eveli.client.spi;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AttachmentCommandsDummy implements AttachmentCommands {
+  
+  private final static URL dummyUrl = getDummyUrl();
+  private final static Attachment dummyAttachment = ImmutableAttachment.builder()
+      .created(ZonedDateTime.now())
+      .updated(ZonedDateTime.now())
+      .processId("")
+      .taskId("")
+      .status(AttachmentStatus.OK)
+      .size(10l)
+      .name("cat")
+      .build();
+  
+  private static final URL getDummyUrl() {
+    try {
+      return new URL("https://upload.wikimedia.org/wikipedia/commons/4/4d/Cat_November_2010-1a.jpg");
+    } catch(Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
 
   @Override
   public AttachmentQuery query() {
     return new AttachmentQuery() {
       @Override
       public List<Attachment> taskId(String taskId) {
-        return Collections.emptyList();
+        return Arrays.asList(dummyAttachment);
       }
       @Override
       public List<Attachment> processId(String processId) {
@@ -71,11 +94,11 @@ public class AttachmentCommandsDummy implements AttachmentCommands {
     return new AttachmentUrlBuilder() {
       @Override
       public Optional<URL> taskId(String taskId) throws URISyntaxException {
-        return Optional.empty();
+        return Optional.ofNullable(dummyUrl);
       }
       @Override
       public Optional<URL> processId(String processId) throws URISyntaxException {
-        return Optional.empty();
+        return Optional.ofNullable(dummyUrl);
       }
       @Override
       public AttachmentUrlBuilder filename(String filename) {
@@ -83,6 +106,24 @@ public class AttachmentCommandsDummy implements AttachmentCommands {
       }
       @Override
       public AttachmentUrlBuilder encodePath(String filename) {
+        return this;
+      }
+    };
+  }
+  @Override
+  public AttachmentRemoveBuilder remove() {
+    return new AttachmentRemoveBuilder() {
+      
+      @Override
+      public void removeByTaskId(String taskId) {
+      }
+      
+      @Override
+      public void removeByProcessId(String processId) {
+      }
+      
+      @Override
+      public AttachmentRemoveBuilder filename(String filename) {
         return this;
       }
     };

@@ -6,30 +6,34 @@
     <artifactId>eveli-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
+  <name>eveli-client</name>
   <artifactId>eveli-client</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-mq-client</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jboss.slf4j</groupId>
-          <artifactId>slf4j-jboss-logmanager</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-batch-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-grim-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-db-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>eveli-envir</artifactId>
-      <exclusions>
-      	<exclusion>
-      		<groupId>org.jboss.slf4j</groupId>
-      		<artifactId>slf4j-jboss-logmanager</artifactId>
-      	</exclusion>
-      </exclusions>
     </dependency>
-  
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>eveli-user-profile</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>

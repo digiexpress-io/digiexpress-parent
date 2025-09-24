@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.persistence.repositories;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -32,10 +34,20 @@ import org.springframework.data.repository.query.Param;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
+
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
   Optional<ProcessEntity> findByQuestionnaireId(String questionnaireId);
   Optional<ProcessEntity> findByTaskId(String taskId);
   Optional<ProcessEntity> findById(Long id);
+  
+    
+  @Query(nativeQuery = true, value =
+"""
+SELECT * FROM process 
+WHERE id = :id
+FOR UPDATE
+""")
+  Optional<ProcessEntity> findByIdWithLock(Long id);
   
   @Query(value=
       "select p from ProcessEntity p where " +
@@ -54,6 +66,10 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
   @Query(value="select p from ProcessEntity p where status = :status and taskId is null")
   List<ProcessEntity> findAllByStatus(ProcessStatus status);
   
+  @Query(value="select p from ProcessEntity p where status = :status and taskId is null and created > :created")
+  List<ProcessEntity> findAllByStatusFromGivenDate(ProcessStatus status, OffsetDateTime created);
+  
+  
 
   @Query(nativeQuery = true, value=
 """
@@ -63,7 +79,8 @@ and created + make_interval(secs => expires_in_seconds) < expires_at
 and status in('CREATED', 'ANSWERING')
 """)
   List<ProcessEntity> findAllByExpiration();
-  
+
+
   @Query(nativeQuery = true, value=
 """
 SELECT form_body FROM process 

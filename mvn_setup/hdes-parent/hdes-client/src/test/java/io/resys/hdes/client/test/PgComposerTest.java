@@ -48,7 +48,7 @@ public class PgComposerTest extends PgTestTemplate {
 
   @Test
   public void readWriteRunTest() {
-    final var client = getClient().repo().repoName("PgComposerTest").create()
+    final var client = getClient().repo().repoName("PgComposerTest-111").create()
         .await().atMost(Duration.ofMinutes(1));
     final var composer = new HdesComposerImpl(client);       
 

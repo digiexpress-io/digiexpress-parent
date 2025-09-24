@@ -29,6 +29,7 @@ import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -47,25 +48,27 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private Long expiresInSeconds;
   
   private boolean anon = false;
+  private boolean customerAssignment = false;
   private String formName;
   private String flowName;
-
+  private String taskId;
   private String formTagName;
   private String stencilTagName;
   private String wrenchTagName;
   
   
   public ProcessInstance create() {
-    
-    ProcessAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
-    ProcessAssert.notNull(userId, () -> "userId must be defined!");
     ProcessAssert.notNull(workflowName, () -> "workflowName must be defined!");
-    ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
-    ProcessAssert.notNull(formName, () -> "formName must be defined!");
-    ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
+    ProcessAssert.notNull(userId, () -> "userId must be defined!");
     ProcessAssert.notNull(anon, () -> "anon must be defined!");
     
-    
+    if(taskId == null) {
+      ProcessAssert.notNull(formName, () -> "formName must be defined!");
+      ProcessAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
+      ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
+      ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
+    }
+        
     final var entity = processRepository.save(new ProcessEntity()
       .setExpiresAt(expiresAt)
       .setStatus(ProcessStatus.CREATED)
@@ -81,10 +84,12 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setAnon(anon)
       .setFormName(formName)
       .setFlowName(flowName)
+      .setTaskId(taskId)
       
       .setFormTagName(formTagName)
       .setStencilTagName(stencilTagName)
       .setWrenchTagName(wrenchTagName)
+      .setType(customerAssignment ? GrimProcessType.CUSTOMER_ASSIGNMENT : null)
       );
 
     return map(entity);
@@ -107,6 +112,8 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .anon(Boolean.TRUE.equals(entity.getAnon()))
       .formName(entity.getFormName())
       .flowName(entity.getFlowName())
+      .type(entity.getType())
+      
       
       .formTagName(entity.getFormTagName())
       .stencilTagName(entity.getStencilTagName())

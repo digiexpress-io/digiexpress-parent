@@ -72,4 +72,12 @@ public class ThenaMqClientImpl implements ThenaMqClient {
   public BindingQuery bindingQuery() {
     return new BindingQueryImpl(state);
   }
+  @Override
+  public ConsumerQuery consumerQuery() {
+    return new ConsumerQueryImpl(state);
+  }
+  @Override
+  public QueueQuery queueQuery() {
+    return new QueueQueryImpl(state);
+  }
 }

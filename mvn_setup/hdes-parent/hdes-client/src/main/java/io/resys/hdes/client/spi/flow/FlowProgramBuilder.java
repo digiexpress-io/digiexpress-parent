@@ -56,7 +56,7 @@ import io.resys.hdes.client.spi.flow.ast.AstFlowNodesFactory;
 
 public class FlowProgramBuilder {
   private static final FlowProgramStepEndPointer END_STEP_POINTER = ImmutableFlowProgramStepEndPointer.builder().type(FlowProgramStepPointerType.END).build();
-  private static final FlowProgramStep END_STEP = ImmutableFlowProgramStep.builder()
+  public static final FlowProgramStep END_STEP = ImmutableFlowProgramStep.builder()
       .id("end")
       .pointer(END_STEP_POINTER)
       .build();

@@ -35,7 +35,7 @@ public interface DeliveryRegistry extends ThenaMqRegistryTemplate<Delivery, io.v
   
   ThenaSqlClient.SqlTuple findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);
   ThenaSqlClient.SqlTuple findLastNEntries(long entries);
-  
+  ThenaSqlClient.SqlTuple findAllByMessageId(List<String> messageId);  
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
@@ -43,4 +43,5 @@ public interface DeliveryRegistry extends ThenaMqRegistryTemplate<Delivery, io.v
   @Override ThenaSqlClient.Sql createConstraints();
   @Override ThenaSqlClient.Sql dropTable();
   @Override Function<io.vertx.mutiny.sqlclient.Row, Delivery> defaultMapper();
+
 }

@@ -39,61 +39,25 @@ https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
 ### Licensing 
 DigiExpress is [Apache 2.0](/LICENSE) licensed.
 
-
+___
 
 ### Project Setup Guide
 
-This project consists of three main applications: a **Java backend** and two **TypeScript frontends**. Below are the details on how to set up and run each component.
+This project consists of three main applications: a **Java backend** and two **TypeScript frontends**. Below are the details on how to set up and run each component in the correct order.
 
-#### 1. Backend (Java)
-The **Java Backend** is the core of the project and handles all business logic and data processing.
+---
 
-To build and run the backend:
+> **⚠️ Note for Windows users:**  
+> Docker setup may not work directly in native Windows environments. However, it works inside **Windows Subsystem for Linux (WSL)**. If you encounter issues starting the database containers, try running the setup inside WSL.
 
-1. **Build the project without running tests**:
-   ```bash
-   mvn clean install -DskipTests
-   ```
 
-2. **Navigate to the `eveli-app` directory and start the Spring Boot application**:
-   ```bash
-   cd eveli-parent/eveli-app
-   mvn clean spring-boot:run
-   ```
+#### 1. Database Setup
 
-#### 2. Frontend Applications (TypeScript)
-There are two **TypeScript frontend** applications:
-
-##### **Eveli-IDE**
-- Mikki refers to it as "front office, front desk".
-- Vahur refers to it as "task management".
-- This is the **worker interface** for managing tasks. This is the interface designed for workers or officials who oversee and manage tasks submitted by citizens. They can review, respond to, and make decisions on applications or requests submitted through the Gamut portal. The worker interface facilitates the decision-making process, approvals, and replies to the citizen tasks.
-
-##### **Gamut**
-- Mikki and Vahur call it the "portal".
-- This is the **citizen interface**. This is the interface for citizens to submit requests, applications, or tasks. Citizens interact with the Gamut portal to initiate processes, make inquiries, or provide necessary information, which is then reviewed and processed by the workers using the Eveli-IDE interface.
-
-To run any of these frontend applications:
-
-- Node version used for installing and testing this was v22.5.1
-- For Windows users, it is recommended to use WSL (Windows Subsystem for Linux) for development, as everything works as expected in that environment.
-
-1. **Install the required dependencies**:
-   ```bash
-   pnpm install
-   ```
-
-2. **Start the development server**:
-   ```bash
-   pnpm start
-   ```
-
-#### 3. Database Setup
-To set up the database using Docker, follow these steps:
+Before starting the backend, make sure the database is up and running.
 
 1. **Navigate to the Docker setup directory**:
    ```bash
-   cd /digiexpress-parent/mvn_setup/eveli-parent/eveli-local-docker
+   cd mvn_setup/eveli-parent/eveli-local-docker
    ```
 
 2. **Start the Docker containers**:
@@ -101,9 +65,61 @@ To set up the database using Docker, follow these steps:
    docker compose up
    ```
 
+
+#### 2. Backend (Java)
+
+The **Java Backend** is the core of the project and handles all business logic and data processing.
+
+To build and run the backend:
+
+1. **Build the project without running tests**:
+   ```bash
+   cd mvn_setup/
+   mvn clean install -DskipTests
+   ```
+
+2. **Navigate to the `eveli-app` directory and start the Spring Boot application**:
+   ```bash
+   cd eveli-parent/eveli-app
+   mvn spring-boot:run
+   ```
+
+
+#### 3. Frontend Applications (TypeScript)
+
+There are two **TypeScript frontend** applications:
+
+##### Frontdesk (Eveli-IDE)
+- This is the **worker interface** for managing tasks. It’s designed for officials to review, respond to, and make decisions on citizen-submitted applications via the **Portal**.
+
+##### Portal (Gamut)
+- This is the **citizen interface** for submitting applications, requests, or tasks. Citizens use Gamut to initiate processes that are later handled in **Frontdesk**.
+
+To run either of the frontend applications:
+
+- Node version used for installing and testing this was v22.5.1
+- For Windows users, it is recommended to use WSL (Windows Subsystem for Linux) for development, as everything works as expected in that environment.
+
+
+1. **Navigate to the TypeScript setup folder**:
+   ```bash
+   cd ts_setup
+   ```
+
+2. **Install the required dependencies**:
+   ```bash
+   pnpm install
+   ```
+
+3. **Start the development server**:
+   ```bash
+   pnpm run start-gamut     # Portal (Gamut)
+   pnpm run start-eveli     # Frontdesk (Eveli-IDE)  
+   ```
+
+
 #### 4. Project Overview
 
-- **Eveli-IDE**: Task management interface for workers.
+- **Eveli-IDE**: Frontdesk interface for workers. 
 - **Gamut**: Portal interface for citizens.
 - **Backend**: Java-based service handling core business logic and operations.
-

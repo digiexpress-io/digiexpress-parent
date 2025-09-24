@@ -164,7 +164,6 @@ public class MigrationImportVisitorForSiteState {
     }
     
     final var gid = input.getId();
-    // TODO??
     final var workflow = ImmutableWorkflow.builder()
       .value(input.getBody().getValue()) // pointer
       .startDate(input.getBody().getStartDate())
@@ -174,6 +173,7 @@ public class MigrationImportVisitorForSiteState {
       .formTag(input.getBody().getFormTag())
       .flowName(input.getBody().getFlowName())
       .anon(input.getBody().getAnon())
+      .assignable(input.getBody().getAssignable() != null && input.getBody().getAssignable() ? true : null)
       .addAllLabels(input.getBody().getLabels().stream()
           .map(label -> ImmutableLocaleLabel.builder()
               .labelValue(label.getLabelValue())

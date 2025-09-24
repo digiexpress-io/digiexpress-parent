@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal File Organization System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .presentation {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .slide {
+            display: none;
+            padding: 60px;
+            min-height: 600px;
+            box-sizing: border-box;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .slide h1 {
+            font-size: 2.2em;
+            color: #666;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 20px;
+            font-weight: normal;
+        }
+        
+        .slide h2 {
+            font-size: 1.6em;
+            color: #777;
+            margin: 30px 0 20px 0;
+            font-weight: normal;
+        }
+        
+        .slide ul {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #555;
+            margin-left: 20px;
+        }
+        
+        .slide li {
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #444;
+            border-radius: 4px;
+        }
+        
+        .boring-emphasis {
+            color: #888;
+            font-style: italic;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        
+        .navigation button {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .navigation button:hover {
+            background: #777;
+        }
+        
+        .navigation button:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+        
+        .slide-counter {
+            color: #999;
+            font-size: 0.9em;
+            text-align: right;
+            margin-top: 40px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            color: #888;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Internal File Organization System</h1>
+            <div class="subtitle">Basic TypeScript Project Structure & Automation Scripts</div>
+            
+            <h2>Overview</h2>
+            <ul>
+                <li>Simple folder-based module organization</li>
+                <li>Basic configuration file generation</li>
+                <li>Standard build automation utilities</li>
+                <li>Routine maintenance scripts</li>
+            </ul>
+            
+            <p class="boring-emphasis">Nothing revolutionary - just organized file management for our specific internal requirements.</p>
+            
+            <div class="slide-counter">1 / 5</div>
+        </div>
+
+        <!-- Slide 2: Basic Structure -->
+        <div class="slide">
+            <h1>Basic Folder Structure</h1>
+            
+            <h2>Standard Directory Layout</h2>
+            <div class="code-block">root-ts-code/<br>
+├── package.json          <span class="boring-emphasis"># Central dependency versions</span><br>
+├── tsconfig.json         <span class="boring-emphasis"># Base TypeScript config</span><br>
+└── modules/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── module-1/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── package.json  <span class="boring-emphasis"># Template with "*" dependencies</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── tsconfig.json <span class="boring-emphasis"># Extends generated config</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── tsconfig.gen.json <span class="boring-emphasis"># Auto-generated paths</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── module-2/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ...same pattern</div>
+            
+            <h2>Generated Configuration Files</h2>
+            <ul>
+                <li>TypeScript path mapping for module resolution</li>
+                <li>Project reference configuration</li>
+                <li>Basic dependency tracking metadata</li>
+            </ul>
+            
+            <p class="boring-emphasis">Just standard TypeScript workspace setup with some automation to avoid manual configuration.</p>
+            
+            <div class="slide-counter">2 / 5</div>
+        </div>
+
+        <!-- Slide 3: Adding Modules -->
+        <div class="slide">
+            <h1>Adding New Modules</h1>
+            
+            <h2>Simple File Operations</h2>
+            <ul>
+                <li><strong>Step 1:</strong> Create new folder in modules/</li>
+                <li><strong>Step 2:</strong> Copy package.json template</li>
+                <li><strong>Step 3:</strong> Copy tsconfig.json template</li>
+                <li><strong>Step 4:</strong> Run configuration refresh command</li>
+            </ul>
+            
+            <h2>Template Files</h2>
+            <div class="code-block">// package.json template<br>
+{<br>
+&nbsp;&nbsp;"name": "@dxs-ts/new-module",<br>
+&nbsp;&nbsp;"version": "${project.version}",<br>
+&nbsp;&nbsp;"dependencies": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"@dxs-ts/other-module": "*"<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+// tsconfig.json template<br>
+{<br>
+&nbsp;&nbsp;"extends": "./tsconfig.gen.json"<br>
+}</div>
+            
+            <div class="code-block">pnpm build-modules  <span class="boring-emphasis"># Refreshes all configurations</span></div>
+            
+            <p class="boring-emphasis">Takes about 30 seconds total. Basic file copying and one command.</p>
+            
+            <div class="slide-counter">3 / 5</div>
+        </div>
+
+        <!-- Slide 4: Translation Processing -->
+        <div class="slide">
+            <h1>Translation File Processing</h1>
+            
+            <h2>CSV to TypeScript Conversion</h2>
+            <ul>
+                <li>Translators prefer working with CSV files</li>
+                <li>Script converts CSV to TypeScript modules (en.ts, fi.ts, etc.)</li>
+                <li>Basic static analysis scans source code for usage</li>
+                <li>Generates organized output with unused translations marked</li>
+            </ul>
+            
+            <h2>Output Organization</h2>
+            <div class="code-block">// Generated CSV organization<br>
+// Module: gamut-api<br>
+&nbsp;&nbsp;login.button.submit=Submit<br>
+&nbsp;&nbsp;login.error.invalid=Invalid credentials<br>
+<br>
+// Module: eveli-routes<br>
+&nbsp;&nbsp;navigation.home=Home<br>
+&nbsp;&nbsp;navigation.settings=Settings<br>
+<br>
+// Unused translations (commented)<br>
+// login.old.message=... // unused - original on line 247</div>
+            
+            <p class="boring-emphasis">Standard text processing and file conversion. Nothing sophisticated - just automated housekeeping.</p>
+            
+            <div class="slide-counter">4 / 5</div>
+        </div>
+
+        <!-- Slide 5: Release Automation -->
+        <div class="slide">
+            <h1>Release Process Automation</h1>
+            
+            <h2>Two-Phase Release Pattern</h2>
+            <ul>
+                <li><strong>Prepare Phase:</strong> Generate build artifacts and backup files</li>
+                <li><strong>Perform Phase:</strong> Publish to npm and restore originals</li>
+                <li>Borrowed from Maven - standard industry pattern</li>
+                <li>Hidden behind single command for convenience</li>
+            </ul>
+            
+            <div class="code-block">pnpm release-all  <span class="boring-emphasis"># Runs both phases automatically</span></div>
+            
+            <h2>Basic Build Processing</h2>
+            <ul>
+                <li>Scans for "lib-*" modules designated for publishing</li>
+                <li>Compiles TypeScript, generates declarations</li>
+                <li>Fixes known TypeScript compiler namespace bugs</li>
+                <li>Creates proper package.json with actual dependencies used</li>
+            </ul>
+            
+            <p class="boring-emphasis">Standard build pipeline with some cleanup scripts for toolchain quirks.</p>
+            
+            <div class="slide-counter">5 / 5</div>
+        </div>
+
+        <!-- Summary Slide -->
+        <div class="slide">
+            <h1>Summary</h1>
+            
+            <h2>Just Basic File Management Utilities</h2>
+            <ul>
+                <li>Folder-based organization with template files</li>
+                <li>Configuration generation and refresh automation</li>
+                <li>Standard CSV processing for translation workflows</li>
+                <li>Borrowed release patterns from established tools</li>
+                <li>Basic cleanup scripts for common toolchain issues</li>
+            </ul>
+            
+            <h2>Nothing Special</h2>
+            <ul>
+                <li>Standard TypeScript workspace setup</li>
+                <li>Basic file operations and text processing</li>
+                <li>Specific to our internal project requirements</li>
+                <li>Probably not suitable for other use cases</li>
+            </ul>
+            
+            <p class="boring-emphasis">Just mundane automation scripts that accumulated over time. The kind of housekeeping utilities every project ends up needing.</p>
+            
+            <div class="slide-counter">Summary</div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

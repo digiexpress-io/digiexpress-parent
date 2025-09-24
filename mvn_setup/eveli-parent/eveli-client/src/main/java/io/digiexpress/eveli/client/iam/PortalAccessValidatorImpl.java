@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   private final ProcessClient processClient;
 
   @Override
-  public void validateTaskAccess(Long id, CrmClient.CustomerPrincipal principal) {
+  public void validateTaskAccess(Long id, GamutAuthClient.CustomerPrincipal principal) {
     if (id == null || principal == null) {
       log.error("Access violation by user: {} to access task by id: {}", principal.getUsername(), id);
       throw new ResponseStatusException(
@@ -54,7 +54,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   }
 
   @Override
-  public void validateProcessAccess(ProcessClient.ProcessInstance process, CrmClient.CustomerPrincipal principal) {
+  public void validateProcessAccess(ProcessClient.ProcessInstance process, GamutAuthClient.CustomerPrincipal principal) {
     if (process == null) {
       log.error("Access violation by user: {}, process not found", principal.getUsername());
       throw new ResponseStatusException(
@@ -65,7 +65,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   }
 
   @Override
-  public void validateProcessIdAccess(String processId, CrmClient.CustomerPrincipal principal) {
+  public void validateProcessIdAccess(String processId, GamutAuthClient.CustomerPrincipal principal) {
     final var process = processClient.queryInstances().findOneById(processId).orElse(null);
     if (process == null) {
       log.error("Access violation by user: {}, process by id {} not found", principal.getUsername(), processId);
@@ -81,7 +81,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   }
   
   @Override
-  public void validateUserAccess(CrmClient.CustomerPrincipal principal, String userId) {
+  public void validateUserAccess(GamutAuthClient.CustomerPrincipal principal, String userId) {
     if (principal == null) {
       log.error("Access violation, missing principal");
       throw new ResponseStatusException(

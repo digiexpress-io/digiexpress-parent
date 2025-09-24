@@ -26,26 +26,26 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.CreateManyMissions;
-import io.resys.thena.api.actions.GrimCommitActions.CreateOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
-import io.resys.thena.api.actions.GrimCommitActions.ModifyManyMissions;
-import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
-import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
-import io.resys.thena.api.actions.GrimQueryActions.MissionRemarkQuery;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.grim.api.GrimClient;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.CreateManyMissions;
+import io.resys.thena.grim.api.GrimCommitActions.CreateOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.ManyMissionsEnvelope;
+import io.resys.thena.grim.api.GrimCommitActions.ModifyManyMissions;
+import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
+import io.resys.thena.grim.api.GrimQueryActions.MissionQuery;
+import io.resys.thena.grim.api.GrimQueryActions.MissionRemarkQuery;
 import io.smallrye.mutiny.Uni;
 
 
 @Value.Immutable
 public interface TaskStoreConfig {
-  ThenaClient getClient();
+  GrimClient getClient();
   String getTenantName();
   
   @FunctionalInterface

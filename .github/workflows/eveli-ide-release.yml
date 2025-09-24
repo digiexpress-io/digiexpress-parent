@@ -4,13 +4,13 @@ on:
       - 'ts_setup/eveli-ide/**'
 
     branches:
-      - dev
+      - prod_1.x
   workflow_call: # Enables manual triggering
 permissions:
   contents: write
   id-token: write
     
-name: Release eveli-ide
+name: Release eveli-ide prod_1.x
 jobs:
     build:
       runs-on: ubuntu-latest  # windows-latest || macos-latest
@@ -28,7 +28,7 @@ jobs:
         - uses: pnpm/action-setup@v2
           name: install pnpm
           with:
-            version: 8
+            version: 10
 
         - uses: actions/setup-node@v4
           with:
@@ -38,12 +38,12 @@ jobs:
             registry-url: 'https://registry.npmjs.org'
 
         - name: Install dependencies 📦
-          run: pnpm install -r --prefer-frozen-lockfile
+          run: pnpm install -r --frozen-lockfile
 #        - name: Test
 #          run: pnpm test -r
 
         - name: Run 'eveli-ide-release.sh'  
-          run: ./build-scripts/eveli-ide-release.sh
+          run: ./build-scripts/eveli-ide-release.sh prod_1.x
           env:
             CI: false # 
             BOT_EMAIL: jocelyn.mutso@resys.io 

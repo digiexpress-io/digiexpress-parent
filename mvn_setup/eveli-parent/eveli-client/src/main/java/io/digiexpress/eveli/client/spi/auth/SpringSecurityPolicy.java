@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.auth;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /*-
  * #%L
@@ -23,15 +24,18 @@ import java.util.Arrays;
  */
 
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.util.AntPathMatcher;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
+import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +44,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthorizationContext> {
   
-  private final AuthClient authClient;
-  private final CrmClient crmClient;
+  private final WorkerAuthClient authClient;
+  private final GamutAuthClient crmClient;
+  private final EveliAutoConfigPermissions authProps;
   
   private final static String PORTAL_LOGIN_PATH = "/portal/login";
   private final static String PORTAL_LOGOUT_PATH = "/portal/logout";
@@ -50,9 +55,12 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
   private final static String WORKER_LOGOUT_PATH = "/worker/logout";
   
   private final static String WORKER_PATH = "/worker/rest/api";
+  private final static String TENANT_CONFIG_PATH = "/worker/rest/api/tenant-configs";
   private final static String SITE_PATH = "/portal/site";
   private final static String IAM_PATH = "/portal/secured/iam";
   private final static String ACTIONS_PATH = "/portal/secured/actions";
+  
+  private final static AntPathMatcher matcher = new AntPathMatcher();
 
   @Override
   public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
@@ -67,11 +75,20 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
       log.debug("Login/logout path, authorized");
       return new AuthorizationDecision(true);    
     }
+    
+    if (path.equals(TENANT_CONFIG_PATH)) {
+      log.debug("Tenant config, authorized");
+      return new AuthorizationDecision(true);      
+    }
 
     // worker side
     if(path.startsWith(WORKER_PATH) && authClient.getUser().isAuthenticated()) {
-      log.debug("Worker REST API path, user authenticated, authorized");
-      return new AuthorizationDecision(true);      
+      final String method = context.getRequest().getMethod().toUpperCase();
+      Set<String> userRoles = authentication.get().getAuthorities().stream().map(auth->auth.getAuthority()).collect(Collectors.toSet());
+      log.debug("Worker REST API path, user authenticated, checking roles");
+      boolean access = findAccess(path, method, userRoles);
+      log.debug("Worker REST API path, access check result: {}", access);
+      return new AuthorizationDecision(access);      
     }
     
     // portal iam must be logged in
@@ -103,5 +120,13 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
     }
     log.debug("No match, not authorized");
     return new AuthorizationDecision(false);
+  }
+
+  protected boolean findAccess(final String path, final String method, Set<String> userRoles) {
+    return authProps.getWorker().stream().anyMatch(auth->{
+      return auth.getMethod().contains(method) 
+        && matcher.match(auth.getPathPattern(), path)
+        && auth.getRoles().stream().anyMatch(authRole->userRoles.contains(authRole));
+    });
   }
 }

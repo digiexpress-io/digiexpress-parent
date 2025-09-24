@@ -1,0 +1,55 @@
+spring:
+
+server:
+  port: 8080
+  use-forward-headers: true
+  servlet:
+    context-path: "/"
+    session.timeout: 7200
+  error:
+    include-stacktrace: never
+
+host: "http://localhost:${server.port}"
+
+management:
+  server:
+    servlet.context-path: "/manage"
+    add-application-context-header: false
+
+
+logging.level.org.eclipse.jgit.transport.sshd: DEBUG
+logging.level.io.digiexpress.eveli.appwrenchonly: DEBUG
+
+wrench.fake-security.enabled: true
+
+# -- inmemory - read following assets from classpath
+# --   classpath*:assets/**/migration/*.json
+# --   classpath*:assets/**/dump/*.json
+# --   classpath*:assets/**/dt/*.json
+# --   classpath*:assets/**/flowtask/*.json
+# --   classpath*:assets/**/flow/*.json
+wrench.assets.inmemory.enabled: false
+
+# -- git configuration
+wrench.assets.git.enabled: true
+wrench.assets.git.repository-url: "git@github.com:digiexpress-io/wrench-git-db.git"
+wrench.assets.git.branch-specifier: main
+wrench.assets.git.repository-path: /Users/olevmutso/Development/_wrench_only_persistence
+
+
+# basically "ssh" home folder that will be copied with 3 files in it: known_host, id_rsa, id_rsa.pub 
+wrench.assets.git.path: src/main/resources/git_auth
+# private key location from classpath
+wrench.assets.git.private-key: classpath:git_auth/id_rsa
+
+
+
+# -- postgresql configuration
+wrench.assets.pg.enabled: false
+wrench.assets.pg.autoCreate: true
+wrench.assets.pg.repositoryName: "test-repo-1"
+wrench.assets.pg.branchSpecifier: "main"
+wrench.assets.pg.pgHost: "localhost"
+wrench.assets.pg.pgDb: "postgres"
+wrench.assets.pg.pgUser: "postgres"
+wrench.assets.pg.pgPass: "example"

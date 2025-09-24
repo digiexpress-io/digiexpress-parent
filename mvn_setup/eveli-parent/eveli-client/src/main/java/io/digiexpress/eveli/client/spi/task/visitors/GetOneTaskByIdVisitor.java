@@ -28,12 +28,12 @@ import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimQueryActions.MissionQuery;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -51,7 +51,6 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
               GrimDocType.GRIM_COMMANDS, 
               GrimDocType.GRIM_COMMIT, 
               GrimDocType.GRIM_COMMIT_VIEWER, 
-              GrimDocType.GRIM_OBJECTIVE,
               GrimDocType.GRIM_OBJECTIVE_GOAL);
   }
 
@@ -76,6 +75,14 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
   @Override
   public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
     final var container = commit.iterator().next();
-    return Uni.createFrom().item(TaskMapper.map(container.getMission(), container.getAssignments().values(), container.getRemarks().values()));
+    final var task = TaskMapper.map(
+        container.getMission(), 
+        container.getAssignments().values(), 
+        container.getRemarks().values(),
+        container.getLinks().values(),
+        container.getMissionLabels().values(),
+        container.getObjectives().values());
+    
+    return Uni.createFrom().item(task);
   }
 }

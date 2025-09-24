@@ -29,9 +29,9 @@ import com.google.common.collect.ComparisonChain;
 
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
-import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.jackson.QuarkusJacksonJsonCodec;
 import io.vertx.core.json.JsonObject;
+
 
 public class ChannelPrinterVisitor {
   private final ThenaMqChannelState state;
@@ -66,39 +66,6 @@ public class ChannelPrinterVisitor {
       final var next = String.valueOf(replacements.size() + 1);
       replacements.put(id, next);
       return next;
-    };
-    
-    final Function<GrimOneOfRelations, String> RELS = (id) -> {
-
-      if(id == null) {
-        return "";
-      }
-      if(!isStatic) {
-        return id.getTargetId();
-      }
-
-      if(replacements.containsKey(id.getTargetId())) {
-        return replacements.get(id.getTargetId());
-      }
-      final var next = String.valueOf(replacements.size() + 1);
-      replacements.put(id.getTargetId(), next);
-      return next;
-    };
-
-    final Function<Object, String> TR = (input) -> {
-
-      if(input == null) {
-        return "null";
-      }
-      if(!isStatic) {
-        return "null";
-      }
-      final var id = JsonObject.mapFrom(input).encode();
-      if(wipes.containsKey(id)) {
-        return wipes.get(id);
-      }
-      wipes.put(id, "null");
-      return "null";
     };
     
     

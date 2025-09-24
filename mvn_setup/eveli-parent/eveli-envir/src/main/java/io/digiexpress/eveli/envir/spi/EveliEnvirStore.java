@@ -31,8 +31,8 @@ import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.spi.DocStoreImpl;
-import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.doc.api.ThenaDocConfig;
+import io.resys.thena.doc.spi.DocStoreImpl;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
 
@@ -42,17 +42,20 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
   public static String DOC_TYPE_DEPLOYMENT = "deployment";
   
   private final ExternalDeploymentProvider externalProvider;
+  private final boolean externalProviderOnly;
   
   public EveliEnvirStore(
       ThenaDocConfig config, 
       DocStoreFactory<EveliEnvirStore> factory,
-      ExternalDeploymentProvider externalProvider) {
+      ExternalDeploymentProvider externalProvider,
+      boolean externalProviderOnly) {
     super(config, factory);
     this.externalProvider = externalProvider;
+    this.externalProviderOnly = externalProviderOnly;
   }
 
-  public static Builder<EveliEnvirStore> builder(ExternalDeploymentProvider externalProvider) {
-    final DocStoreFactory<EveliEnvirStore> factory = (config, delegate) -> new EveliEnvirStore(config, delegate, externalProvider);
+  public static Builder<EveliEnvirStore> builder(ExternalDeploymentProvider externalProvider, boolean externalProviderOnly) {
+    final DocStoreFactory<EveliEnvirStore> factory = (config, delegate) -> new EveliEnvirStore(config, delegate, externalProvider, externalProviderOnly);
     return new Builder<EveliEnvirStore>(factory);
   }
   
@@ -121,5 +124,9 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
 
   public ExternalDeploymentProvider getExternalProvider() {
     return externalProvider;
+  }
+
+  public boolean isExternalProviderOnly() {
+    return externalProviderOnly;
   }
 }

@@ -26,16 +26,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.actions.GitBranchActions;
-import io.resys.thena.api.actions.GitCommitActions;
-import io.resys.thena.api.actions.GitDiffActions;
-import io.resys.thena.api.actions.GitHistoryActions;
-import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitTagActions;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.git.api.GitBranchActions;
+import io.resys.thena.git.api.GitClient;
+import io.resys.thena.git.api.GitCommitActions;
+import io.resys.thena.git.api.GitDiffActions;
+import io.resys.thena.git.api.GitHistoryActions;
+import io.resys.thena.git.api.GitPullActions;
+import io.resys.thena.git.api.GitTagActions;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableBranch;
 import io.thestencil.client.api.ImmutableStencilConfig;
@@ -89,7 +89,7 @@ public class StencilStoreInMemory implements StencilStore {
     
   }
   
-  private static class ThenaClientInMemeory implements ThenaClient {
+  private static class ThenaClientInMemeory implements GitClient {
     @Override
     public TenantActions tenants() {
       throw new IllegalArgumentException("no read or writes supported!");
@@ -129,15 +129,6 @@ public class StencilStoreInMemory implements StencilStore {
         }
       };
     }
-    @Override
-    public DocStructuredTenant doc(String repoId) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public OrgStructuredTenant org(String repoId) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
 
     @Override
     public GitStructuredTenant git(TenantCommitResult repo) {
@@ -148,42 +139,6 @@ public class StencilStoreInMemory implements StencilStore {
     public GitStructuredTenant git(Tenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
-
-    @Override
-    public DocStructuredTenant doc(TenantCommitResult repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public DocStructuredTenant doc(Tenant repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public OrgStructuredTenant org(TenantCommitResult repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public OrgStructuredTenant org(Tenant repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public GrimStructuredTenant grim(String tenantIdOrName) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public GrimStructuredTenant grim(TenantCommitResult repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-
-    @Override
-    public GrimStructuredTenant grim(Tenant repo) {
-      throw new IllegalArgumentException("no read or writes supported!");
-    }
-    
   }
 
   @Override

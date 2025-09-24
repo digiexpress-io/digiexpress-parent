@@ -7,11 +7,22 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
 
+  <name>digiexpress-bom</name>
   <artifactId>digiexpress-bom</artifactId>
   <packaging>pom</packaging>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-user-profile</artifactId>
+        <version>${project.version}</version>
+      </dependency>  
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-permissions</artifactId>
+        <version>${project.version}</version>
+      </dependency>  
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>eveli-client</artifactId>
@@ -34,12 +45,42 @@
       </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-integration-git</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-integration-queue</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
         <artifactId>thena-db-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-mq-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-batch-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-grim-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-git-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-doc-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -52,7 +93,11 @@
         <artifactId>dialob-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>dialob-review</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>io.digiexpress</groupId>
@@ -64,6 +109,13 @@
         <artifactId>stencil-client</artifactId>
         <version>${project.version}</version>
       </dependency>
+      
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-sql-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
     </dependencies>
   </dependencyManagement>
 </project>

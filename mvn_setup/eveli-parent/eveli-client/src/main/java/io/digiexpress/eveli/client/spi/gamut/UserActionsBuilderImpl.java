@@ -31,7 +31,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.rest.IdAndRevision;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient.DialobFormNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
@@ -41,10 +42,12 @@ import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import io.vertx.core.json.JsonObject;
@@ -60,17 +63,32 @@ import lombok.extern.slf4j.Slf4j;
 public class UserActionsBuilderImpl implements UserActionBuilder {
   private final ProcessClient hdesCommands;  
   private final DialobClient dialobCommands;
-  private final CrmClient auth;
   private final EveliEnvirClient envir;
   private boolean anon = false;
+  private boolean customerAssignment = false;
+  private Optional<Customer> customer = Optional.empty();
+  private Optional<CustomerRoles> customerRoles = Optional.empty();
+  private Optional<InitUserAction> externalUserActionInit = Optional.empty();
+  
   private String actionId;
+  private String taskId;
   private String clientLocale; 
   private String inputContextId;
   private String inputParentContextId;
   private final UserActionLogger userActionLogger = new UserActionLogger();
   
-  
-  
+  public UserActionBuilder externalUserActionInit(InitUserAction customer) {
+    this.externalUserActionInit = Optional.ofNullable(customer);
+    return this;
+  }
+  public UserActionBuilder customer(Customer customer) {
+    this.customer = Optional.ofNullable(customer);
+    return this;
+  }
+  public UserActionBuilder customerRoles(CustomerRoles customerRoles) {
+    this.customerRoles = Optional.ofNullable(customerRoles);
+    return this;
+  }
   public Uni<UserAction> createOne() throws UserActionNotAllowedException, WorkflowNotFoundException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(clientLocale, () -> "clientLocale can't be null!");
@@ -97,26 +115,28 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     final var expiresInSeconds = meta.getExpiresInSeconds();
     
     
-    userActionLogger.startAuth();
-    if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
-      final var userRoles = auth.getCustomerRoles().getRoles();
-      userActionLogger.endAuth();
-      
-      userActionLogger.startWrenchAllowedRoles();
-      final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
-          .addAllUserRoles(userRoles)
-          .build()).getAllowedProcessNames();
-      userActionLogger.endWrenchAllowedRoles();
-      
-       if(!(
-           allowed.contains(stencilService.getValue()) ||
-           allowed.contains(actionId) ||
-           allowed.contains(stencilService.getName())
-        )) {
-         throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
-       }
-    } else {
-      userActionLogger.endAuth();
+    if(customer.isPresent()) {
+      userActionLogger.startAuth();
+      if(customer.get().getPrincipal().getRepresentedId() != null) {
+        final var userRoles = customerRoles.get().getRoles();
+        userActionLogger.endAuth();
+        
+        userActionLogger.startWrenchAllowedRoles();
+        final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
+            .addAllUserRoles(userRoles)
+            .build()).getAllowedProcessNames();
+        userActionLogger.endWrenchAllowedRoles();
+        
+         if(!(
+             allowed.contains(stencilService.getValue()) ||
+             allowed.contains(actionId) ||
+             allowed.contains(stencilService.getName())
+          )) {
+           throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
+         }
+      } else {
+        userActionLogger.endAuth();
+      }
     }
 
     
@@ -125,7 +145,10 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .append("Can't find stencil service for locale: '").append(clientLocale).append("'!")
           .toString());
     }
-    final var request = visitRequest();
+    
+    final var request = customer.isPresent() ? visitRequest(customer.get()) : externalUserActionInit.orElseThrow(() -> 
+      new UserActionNotAllowedException("Process: " + actionId + " blocked, there is no customer data, 'Customer' or 'InitUserAction'!")     
+    );
     
     
     return visitForm(request, stencilService).onItem().transform(revision -> {
@@ -138,6 +161,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .expiresInSeconds(expiresInSeconds)
           .expiresAt(stencilService.getEndDate() != null ? stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime() : null)
           .anon(anon)
+          .taskId(taskId)
           
           .workflowName(stencilService.getValue())
           .articleName(request.getInputContextId())
@@ -148,6 +172,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .formTagName(stencilService.getFormTag())
           .stencilTagName(runtime.getStencilTagName())
           .wrenchTagName(runtime.getWrenchTagName())
+          .customerAssignment(customerAssignment)
           
           .create();
       
@@ -163,7 +188,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .inputParentContextId(process.getParentArticleName())
           .formId(process.getQuestionnaireId())
           .formInProgress(true)
+          .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
           .viewed(true)
+          .taskId(process.getTaskId())
           
           // deprecated
           .messagesUri("not-needed")
@@ -171,6 +198,28 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .formUri("not-needed")
           .build();
     });
+  }
+  
+  public static UserAction map(ProcessInstance process) {
+    return ImmutableUserAction.builder()
+        .id(process.getId().toString())
+        .status(process.getStatus().name())
+        .created(process.getCreated())
+        .updated(process.getUpdated())
+        .name(process.getWorkflowName())
+        .inputContextId(visitArticleName(process.getArticleName()))
+        .inputParentContextId(process.getParentArticleName())
+        .formId(process.getQuestionnaireId())
+        .formInProgress(true)
+        .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
+        .viewed(true)
+        .taskId(process.getTaskId())
+        
+        // deprecated
+        .messagesUri("not-needed")
+        .reviewUri("not-needed")
+        .formUri("not-needed")
+        .build();
   }
 
   private Uni<String> getFormId(final TopicLink stencilService) {
@@ -224,8 +273,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     });
   }
 
-  private String visitArticleName(String articleName) {
-    if(StringUtils.isEmpty(articleName)) {
+  private static String visitArticleName(String articleName) {
+    if(StringUtils.isEmpty(articleName) || articleName.length() < 3) {
       return null;
     }
     if(articleName.charAt(3) == '_') {
@@ -287,8 +336,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
 
   }
 
-  private InitUserAction visitRequest() {
-    final var user = auth.getCustomer().getPrincipal();
+  private InitUserAction visitRequest(Customer customer) {
+    final var user = customer.getPrincipal();
     final var person = user.getRepresentedPerson();
     final var company = user.getRepresentedCompany();
     
@@ -337,7 +386,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   @Value.Immutable
   @JsonSerialize(as = ImmutableInitUserAction.class)
   @JsonDeserialize(as = ImmutableInitUserAction.class)
-  interface InitUserAction {
+  public interface InitUserAction {
     String getIdentity();
     String getWorkflowName();
     Boolean getProtectionOrder();    

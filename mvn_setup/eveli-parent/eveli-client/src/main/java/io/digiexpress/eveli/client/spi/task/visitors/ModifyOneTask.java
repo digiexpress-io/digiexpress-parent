@@ -35,11 +35,11 @@ import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,11 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
     previousVersion = TaskMapper.map(
         merge.getCurrentState().getMission(), 
         merge.getCurrentState().getAssignments().values(),
-        merge.getCurrentState().getRemarks().values());
+        merge.getCurrentState().getRemarks().values(),
+        merge.getCurrentState().getLinks().values(),
+        merge.getCurrentState().getMissionLabels().values(),
+        merge.getCurrentState().getObjectives().values()
+        );
     
     if(command.getVersion() != null && !previousVersion.getVersion().equals(command.getVersion())) {
       throw TaskException.builder("MODIFY_ONE_TASK_FAIL_LOCK_VERSION_MISMATCH")
@@ -86,6 +90,20 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
           .build());
     }
     
+    
+    // overwrite additional info    
+    if(command.getAdditionalInfo() == null) {
+      merge.setAllLinks(TaskMapper.LINK_TYPE_ADDITIONAL_INFO, Collections.emptyList(), null);
+    } else {
+      merge.setAllLinks(
+          TaskMapper.LINK_TYPE_ADDITIONAL_INFO, 
+          Arrays.asList(command.getAdditionalInfo()), 
+          newlink -> (builder) -> builder
+          .linkType(TaskMapper.LINK_TYPE_ADDITIONAL_INFO)
+          .linkValue(command.getAdditionalInfo())
+          .build());
+    }
+    
     merge
       
       // overwrite roles
@@ -98,7 +116,7 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
           .build())
       
       // change is viewed by worker who created it
-      .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).build())
+      .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
       
       // normal data
       .reporterId(command.getClientIdentificator())
@@ -130,7 +148,13 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(),
+        commited.getLinks(),
+        commited.getLabels(),
+        commited.getObjectives());
     notificator.handleTaskUpdate(task, previousVersion, email);
     return Uni.createFrom().item(task);
   }

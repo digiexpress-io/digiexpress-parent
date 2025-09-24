@@ -63,14 +63,22 @@ public class ProcessInstanceBodyBuilderImpl implements ProcessInstanceBodyBuilde
     ProcessAssert.notNull(processInstanceId, () -> "processInstanceId must be defined!");
     final var entity = processRepository.findById(processInstanceId).orElseThrow(() -> new ProcessException("Can't find process with id: " + processInstanceId + "!"));
     
-    if(formBody != null) {
-      entity.setFormBody(formBody.orElse(null));
-    }
-    if(flowBody != null) {
-      entity.setFlowBody(flowBody.orElse(null));
-    }    
+    var update = false;
     
-    return CreateProcessInstanceImpl.map(processRepository.save(entity));
+    if(formBody != null && entity.getFormBody() == null) {
+      entity.setFormBody(formBody.orElse(null));
+      update = true;
+    }
+    if(flowBody != null && entity.getFlowBody() == null) {
+      entity.setFlowBody(flowBody.orElse(null));
+      update = true;
+    }
+    
+    if(update) {
+      return CreateProcessInstanceImpl.map(processRepository.save(entity));
+    }
+    
+    return CreateProcessInstanceImpl.map(entity);
   }
 
 

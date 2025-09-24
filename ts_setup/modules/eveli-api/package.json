@@ -1,0 +1,28 @@
+{
+  "name": "@dxs-ts/eveli-api",
+  "version": "${project.version}",
+  "description": "",
+  "type": "module",
+  "private": false,
+  "dependencies": {
+    "@dxs-ts/envir-fetch": "*",
+    "@dxs-ts/envir-util": "*",
+    "@dxs-ts/wrench-api": "*",
+    "@dxs-ts/stencil-api": "*",
+    "@dxs-ts/eveli-intl": "*",
+    "@dxs-ts/task-api": "*",
+    "@dxs-ts/gamut-theme": "*",
+    "@dxs-ts/user-profile": "*",
+    "@dxs-ts/task-feedback": "*",
+    "@dxs-ts/xui-table": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@tanstack/react-query": "*",
+    "@mui/material": "*",
+    "notistack": "*",
+    "react-intl": "*",
+    "@material-table/core": "^6.4.4"
+  },
+  "keywords": ["eveli", "api", "data", "business-logic"]
+}

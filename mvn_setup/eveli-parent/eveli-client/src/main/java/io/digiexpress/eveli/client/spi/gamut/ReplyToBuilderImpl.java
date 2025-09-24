@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
@@ -30,7 +30,9 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -41,7 +43,8 @@ import lombok.experimental.Accessors;
 public class ReplyToBuilderImpl implements ReplyToBuilder {
   private final ProcessClient processRepository;
   private final TaskClient taskClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
+  private final MqEventPublisher mqEventPublisher;
   private String actionId;
   private ReplayToInit from;
 
@@ -65,10 +68,13 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
         .external(true)
         .source(TaskCommentSource.PORTAL)
         .build())
+       .onItem().transformToUni(comment -> {
+         return taskClient.queryTasks().getOneById(taskId).onItem().transform(task -> Tuple2.of(comment, task));
+       })
        .await().atMost(TaskMapper.atMost);
-    ;
-    
-    return UserMessagesQueryImpl.visitUserMessage(savedComment, authClient.getCustomer());
+
+    mqEventPublisher.publishMqEvent(savedComment.getItem2(), TaskCommentSource.PORTAL);    
+    return UserMessagesQueryImpl.visitUserMessage(savedComment.getItem1(), authClient.getCustomer());
   }
 
 }

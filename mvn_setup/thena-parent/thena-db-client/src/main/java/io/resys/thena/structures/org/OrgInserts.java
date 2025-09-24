@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.org.OrgCommit;
 import io.resys.thena.api.entities.org.OrgCommitTree;
 import io.resys.thena.api.entities.org.OrgMember;
@@ -33,7 +34,6 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.envelope.Message;
-import io.resys.thena.structures.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface OrgInserts {

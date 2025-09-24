@@ -2,6 +2,7 @@ package io.digiexpress.eveli.app.authentication;
 
 import java.io.ByteArrayInputStream;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -63,7 +64,8 @@ public class AuthenticationConfigJWT {
   
   @Bean
   public SpringJwtAuthClient authClientJwt() {
-    return new SpringJwtAuthClient();
+    SpringJwtAuthClient springJwtAuthClient = new SpringJwtAuthClient(jwtProps.getAdminRoles() == null ? Collections.emptyList() : jwtProps.getAdminRoles(), true);
+    return springJwtAuthClient;
   }
 
   @Bean

@@ -1,0 +1,1 @@
+export { EveliErrorNotFound } from './EveliErrorNotFound';

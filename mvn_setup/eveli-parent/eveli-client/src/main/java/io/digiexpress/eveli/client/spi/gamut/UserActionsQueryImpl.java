@@ -23,45 +23,72 @@ package io.digiexpress.eveli.client.spi.gamut;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerId;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
+import io.digiexpress.eveli.client.api.GamutClient.UserSubAction;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
+import io.digiexpress.eveli.client.api.ImmutableUserSubAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
+import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 
+@Slf4j
 @RequiredArgsConstructor
 public class UserActionsQueryImpl implements UserActionQuery {
   
   private final ProcessClient hdesCommands;
   private final TaskClient taskClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final AttachmentCommands attachmentsCommands;
   private final Duration atMost = Duration.ofSeconds(30);
   
+  
+  @Override
+  public Optional<UserAction> findOneById(String id) {
+    final var customer = authClient.getCustomer().getCustomerId();
+    final List<ProcessInstance> processes = hdesCommands.queryInstances()
+        .findOneById(id).map(e -> Arrays.asList(e))
+        .orElse(Collections.emptyList());
+    final var tasks = visitTasks(processes, customer);
+    final var auth = visitAuthorization();
+    
+    return processes.stream()
+        .filter(proc -> customer.getHolderId().equals(proc.getUserId()))
+        .filter(process -> isAuthorizedProcess(process, auth))
+        .map(process -> visitUserAction(process, tasks))
+        .findFirst();
+  }
+  
   @Override
   public List<UserAction> findAll() {
-    final var ssn = visitUserId();
-    final var processes = hdesCommands.queryInstances().findAllByUserId(ssn);
-    final var tasks = visitTasks(processes, ssn);
+    final var customer = authClient.getCustomer().getCustomerId();
+    final var processes = hdesCommands.queryInstances().findAllByUserId(customer.getHolderId());
+    final var tasks = visitTasks(processes, customer);
     final var auth = visitAuthorization();
     
     return processes.stream()
@@ -77,22 +104,14 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .stream().filter(process -> Boolean.TRUE.equals(process.getAnon()))
         .toList();
     final var tasks = new TasksContext(
-        Collections.emptyMap(), 
-        Collections.emptyList()
+        Collections.emptyMap(),
+        Collections.emptyMap()
     );
     return processes.stream()
         .map(process -> visitUserAction(process, tasks))
         .findFirst();
   }
-  
-  private String visitUserId() {
-    final var customer = authClient.getCustomer().getPrincipal();
-    if(customer.getRepresentedId() != null) {
-      return customer.getRepresentedId();
-    }
-    return customer.getSsn();
-  }
-  
+
   private AttachmentsContext visitAttachments(ProcessInstance process) {
     final List<AttachmentCommands.Attachment> processAttachments = attachmentsCommands.query().processId(process.getId().toString());
     final List<AttachmentCommands.Attachment> taskAttachments = process.getTaskId() == null ? 
@@ -115,14 +134,20 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .build();
   }
   
-  private TasksContext visitTasks(List<ProcessInstance> processes, String userId) {
+  private TasksContext visitTasks(List<ProcessInstance> processes, CustomerId userId) {
+    final var config = taskClient.unwrap().getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    
+    
     final var taskIds = processes.stream().filter(t -> t.getTaskId() != null).map(t -> t.getTaskId()).toList();
-    final var unreadTasks = taskClient.queryUnreadUserTasks().userId(userId).findAll().await().atMost(atMost);
+    final var unreadTasks = grim.find().commitViewersQuery().usedBy(userId.getSafeId()).findAll().await().atMost(atMost);
+    
+    
     final var allTasks = taskClient.queryTasks().findAll(taskIds).await().atMost(atMost);    
     
     return new TasksContext(
         allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), 
-        unreadTasks
+        unreadTasks.getObjects().stream().collect(Collectors.groupingBy(GrimCommitViewer::getMissionId))
     );
   }
   
@@ -145,8 +170,13 @@ public class UserActionsQueryImpl implements UserActionQuery {
       return new UserMessagesContext(Collections.emptyList(), true, process.getUpdated());
     }
     final var user = authClient.getCustomer();
-    
     final var task = tasks.getTasksById().get(process.getTaskId());
+    
+    if(task == null) {
+      log.error("Process id: {} has no task with id: {}", process.getId(), process.getTaskId());
+      return new UserMessagesContext(Collections.emptyList(), true, process.getUpdated());
+    }
+    
     var lastUpdate = process.getUpdated();
     final var userMessages = new ArrayList<UserMessage>();
     for(final var msg : task.getComments()) {
@@ -162,8 +192,15 @@ public class UserActionsQueryImpl implements UserActionQuery {
       }
     }
     
-    final var viewed = userMessages.isEmpty() || tasks.getUnreadTaskIds().contains(task.getId());
-    return new UserMessagesContext(userMessages, viewed, lastUpdate);
+    final var taskViewedLastAt = tasks.getViews().getOrDefault(task.getId(), Collections.emptyList())
+        .stream().map(e -> e.getCreatedAt())
+        .max(Comparator.naturalOrder())
+        .orElse(lastUpdate);
+    
+    final var isMessagingDisabled = userMessages.isEmpty();
+    
+    final var isViewed = isMessagingDisabled || taskViewedLastAt.isAfter(lastUpdate);
+    return new UserMessagesContext(userMessages, isViewed, lastUpdate);
   }
   
 
@@ -176,7 +213,19 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .map(t -> t.getTaskRef())
         .orElse(null);
     
-    
+    final List<UserSubAction> subActions = task
+        .map(t -> t.getCustomerAssignments())
+        .orElse(Collections.emptyList()).stream()
+        .filter(e -> e.getProcessId() != null)
+        .filter(e -> e.getStatus() != TaskAssignmentStatus.CANCELLED)
+        .filter(e -> e.getStatus() != TaskAssignmentStatus.NEW)
+        .map(assignment -> {
+          final UserSubAction action = ImmutableUserSubAction.builder()
+              .id(assignment.getProcessId())
+              .formInProgress(assignment.getStatus() == TaskAssignmentStatus.OPEN)
+              .build();
+          return action;
+        }).toList();
     
     final var att = visitAttachments(process);
     
@@ -189,16 +238,18 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .name(process.getWorkflowName())
         .inputContextId(process.getArticleName())
         .inputParentContextId(process.getParentArticleName())
-        .formId(process.getQuestionnaireId())
+        .formId(process.getQuestionnaireId() == null ? null : process.getQuestionnaireId())
         .formInProgress(process.getStatus() == ProcessStatus.ANSWERING || process.getStatus() == ProcessStatus.CREATED)        
         .taskRef(taskRef)
         .taskStatus(task.map(t -> t.getStatus().name()).orElse(null))
         .taskCreated(task.map(t -> t.getCreated()).orElse(null))
         .taskUpdated(task.map(t -> t.getUpdated()).orElse(null))
+        .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
         .viewed(messages.isViewed())
         .updated(messages.getUpdated())
         .addAllAttachments(att.getProcessAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
         .addAllAttachments(att.getTaskAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
+        .subActions(subActions)
         .addAllMessages(messages.getMessages())
         
         // deprecated
@@ -220,7 +271,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   @RequiredArgsConstructor
   private static class TasksContext {
     private final Map<String, Task> tasksById;
-    private final List<String> unreadTaskIds;
+    private final Map<String, List<GrimCommitViewer>> views;
   }
   
   
@@ -237,4 +288,5 @@ public class UserActionsQueryImpl implements UserActionQuery {
     private final boolean viewed;
     private final OffsetDateTime updated;
   }
+
 }

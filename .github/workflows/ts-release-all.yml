@@ -1,0 +1,82 @@
+on:
+#  push:
+#    paths:
+#      - 'ts_setup/**'
+#    branches:
+#      - dev
+  workflow_call: # Enables manual triggering
+  workflow_dispatch: #manual trigger
+permissions:
+  contents: write
+  id-token: write
+    
+name: Release all ts projects
+jobs:
+    build:
+      runs-on: ubuntu-latest  # windows-latest || macos-latest
+      defaults:
+        run:
+          working-directory: ts_setup
+      env:
+        NODE_ENV: production
+        CI: true
+        
+      name: Release TS projects into NPMJS 
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 501
+        - uses: pnpm/action-setup@v2
+          name: install pnpm
+          with:
+            version: 10
+
+        - name: Debug environment
+          run: |
+            echo "NODE_ENV: $NODE_ENV"
+            node --version
+            npm --version
+
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 22
+            cache: 'pnpm'
+            cache-dependency-path: ts_setup/pnpm-lock.yaml
+            registry-url: 'https://registry.npmjs.org/'
+
+        - name: Install dependencies 📦
+          run: pnpm install --frozen-lockfile
+#        - name: Test
+#          run: pnpm test -r
+
+        - name: Run 'release-all.sh'  
+          run: ./.release-scripts/release-all.sh
+          env:
+            CI: false # 
+            BOT_EMAIL: jocelyn.mutso@resys.io 
+            BOT_NAME: jocelyn.mutso
+            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+
+        - name: Generate Magnificent Build Summary ✨
+          run: |
+            # Make the script executable
+            chmod +x ./.release-scripts/generate-summary.sh
+            # Run our summary generator
+            ./.release-scripts/generate-summary.sh
+          env:
+            GITHUB_STEP_SUMMARY: ${{ runner.temp }}/build-summary.md
+
+        - name: Create Release with Build Summary 🚀
+          run: |
+            # Generate release tag with timestamp
+            RELEASE_TAG="build-$(date +%Y%m%d-%H%M%S)"
+            RELEASE_TITLE="Build Summary - $(date +'%Y-%m-%d %H:%M')"
+            
+            # Create release with summary
+            gh release create $RELEASE_TAG \
+              --title "$RELEASE_TITLE" \
+              --notes-file "${GITHUB_STEP_SUMMARY:-build-summary.md}" \
+              --prerelease \
+              --generate-notes
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

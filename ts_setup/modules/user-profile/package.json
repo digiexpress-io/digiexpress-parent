@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/user-profile",
+  "version": "${project.version}",
+  "description": "User profile, user configured settings",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "keywords": ["user-profile"],
+  "private": true
+}

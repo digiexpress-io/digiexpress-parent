@@ -1,0 +1,34 @@
+{
+  "name": "@dxs-ts/gamut-demo-app",
+  "version": "${project.version}",
+  "description": "Gamut demo application",
+  "type": "module",
+  "private": false,
+  "dependencies": {
+    "@dxs-ts/envir-util": "*",
+    "@dxs-ts/gamut": "*",
+    "@dxs-ts/gamut-api": "*",
+    "@dxs-ts/gamut-md": "*",
+    "@dxs-ts/gamut-primitives": "*",
+    "@dxs-ts/gamut-form-review": "*",
+    "@dxs-ts/gamut-form": "*",
+    "@dxs-ts/gamut-shell": "*",
+    "@dxs-ts/gamut-intl": "*",
+    "@dxs-ts/gamut-routes": "*",
+    "@dxs-ts/gamut-theme": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-intl": "*",
+    "@tanstack/react-router": "*",
+    "@tanstack/react-query": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*"
+  },
+  "keywords": [
+    "gamut",
+    "demo-app"
+  ]
+
+}

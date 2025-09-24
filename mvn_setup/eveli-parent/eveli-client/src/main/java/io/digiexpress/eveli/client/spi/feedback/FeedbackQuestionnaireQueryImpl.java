@@ -27,7 +27,9 @@ import java.util.Optional;
 
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaire;
+import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireQuery;
+import io.digiexpress.eveli.client.api.ImmutableFeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -37,9 +39,11 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobClient.ProxyAnswer;
 import io.digiexpress.eveli.dialob.spi.QuestionnaireWrapperImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuery {
 
   private final TaskClient taskClient;
@@ -50,8 +54,8 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
   
   
   @Override
-  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId) {
-    final var task = taskClient.queryTasks().getOneById(taskId).await().atMost(atMost);
+  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskIdOrRef) {
+    final var task = taskClient.queryTasks().getOneById(taskIdOrRef).await().atMost(atMost);
     final var comments = taskClient.queryTaskComments().findAllByTaskId(task.getId()).await().atMost(atMost);
 
     final var process = processClient.queryInstances().findOneByTaskId(task.getId());
@@ -59,18 +63,20 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
       return Optional.empty();
     }
 
-    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(taskId);
+    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(task.getId());
     if(processQuestionnaire.isEmpty()) {
       return Optional.empty();
     }
 
     final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
-    return Optional.of(new FeedbackQuestionnaireImpl(dialobClient, process.get(), comments, questionnaire, configProps));
+    return Optional.of(new FeedbackQuestionnaireImpl(dialobClient,task, process.get(), comments, questionnaire, configProps));
   }
 
   @RequiredArgsConstructor
   public static class FeedbackQuestionnaireImpl implements FeedbackQuestionnaire {
     private final DialobClient dialobClient;
+    
+    private final TaskClient.Task task;
     private final ProcessInstance process;
     private final List<TaskComment> comments;
     private final Questionnaire questionnaire;
@@ -139,16 +145,40 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
       return getSubCat().map(e -> e.getValueSetLabel().orElse(null)).orElse("-");
     }
     @Override
-    public String getContent() {
-      return new StringBuilder()
-          .append(getTitle().map(e -> formatText(e)).orElse("- no title -"))
-          
-          .append(formatMainCat())
-          
-          .append(getSubCat().map(e -> formatSelection(e)).orElse(""))
-          .append(getQuestion().map(e -> formatText(e)).orElse("- no question -"))
-          .toString();
+    public FeedbackQuestionnaireContent getContent() {
+      
+      final String mainCat = getMainCat()
+          .map(proxy -> getSelectionAnswer(proxy))
+          .orElse("- no main category: '" + String.join(",", configProps.getCategoryMain()) + "' -");
+      
+      return ImmutableFeedbackQuestionnaireContent.builder()
+          .title(getTitle().map(e -> getStringAnswer(e)).orElse("- no title -"))
+          .main(mainCat)
+          .sub(getSubCat().map(e -> getSelectionAnswer(e)).orElse(""))
+          .question(getQuestion().map(e -> getStringAnswer(e)).orElse("- no question -"))
+          .build(); 
     }
+    
+    
+    private String getStringAnswer(ProxyAnswer proxyAnswer) {
+      try {
+        final var answer = Optional.ofNullable(proxyAnswer.getAnswer().getValue()).map(Object::toString).orElse("-not-answered-");
+        return answer;
+      } catch(Exception e) {
+        log.error("Failed to resolve value in dialob answer, tried to parse text, error: {}!", e.getMessage(), e);
+        return "failed-to-resolve-string";
+      }
+    }
+    private String getSelectionAnswer(ProxyAnswer proxyAnswer) {
+      try {
+        final var answer = proxyAnswer.getValueSetLabel().orElse("");
+        return answer;
+      } catch(Exception e) {
+        log.error("Failed to resolve value in dialob answer, tried to parse selection, error: {}!", e.getMessage(), e);
+        return "failed-to-resolve-selection";
+      }
+    }
+    
     @Override
     public String getCustomerTitle() {
       final var title = getTitle();
@@ -162,16 +192,6 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
       }
 
       return answer.toString();
-    }
-
-    private String formatMainCat() {
-      
-      final ProxyAnswer mainCat = getMainCat().orElse(null);
-      if(mainCat == null) {
-        return "- no main category: '" + String.join(",", configProps.getCategoryMain()) + "' -";
-      }
-      
-      return formatSelection(mainCat);
     }
     
     @Override    
@@ -222,25 +242,10 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     
     private String formatReply(TaskComment comment) {
       return new StringBuilder().append(comment.getCommentText()).toString();
+    }
+    @Override
+    public String getTaskRef() {
+      return task.getTaskRef();
     } 
-    private String formatText(ProxyAnswer proxyAnswer) {
-      final var lang = questionnaire.getMetadata().getLanguage();
-      final var question = proxyAnswer.getFormItem().getLabel().get(lang);
-      final var answer = Optional.ofNullable(proxyAnswer.getAnswer().getValue()).map(Object::toString).orElse("-not-answered-");
-      return new StringBuilder()
-        .append("#### ").append(question).append("  ").append(System.lineSeparator())
-        .append(answer).append("  ").append(System.lineSeparator()).append(System.lineSeparator())
-      .toString();
-    }
-    private String formatSelection(ProxyAnswer proxyAnswer) {
-      final var lang = questionnaire.getMetadata().getLanguage();
-      final var question = proxyAnswer.getFormItem().getLabel().get(lang);
-      final var answer = proxyAnswer.getValueSetLabel().orElse("");
-      
-      return new StringBuilder()
-        .append("#### ").append(question).append("  ").append(System.lineSeparator())
-        .append(answer).append("  ").append(System.lineSeparator()).append(System.lineSeparator())
-      .toString();
-    }
   }
 }

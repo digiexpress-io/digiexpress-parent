@@ -1,0 +1,68 @@
+import { DateTime } from 'luxon';
+import { ProductApi } from '../api-product';
+
+export namespace CommsApi {
+
+}
+
+export declare namespace CommsApi {
+
+
+  export type SubjectId = string;
+  export type SubjectSortOrder = 'ASC' | 'DESC';
+
+  export interface Subject {
+    id: SubjectId; // internally process id
+    created: DateTime;
+    contractId: string; // internally task id
+    product: ProductApi.Product;
+    formId: string;
+    name: string;
+    exchange: readonly Message[]; // all messages, ordered by created asc
+    lastExchange?: Message; // THE LAST message chronologically 
+    documents: readonly SubjectDocument[];
+    isViewed: boolean;
+  }
+
+  export interface SubjectDocument {
+    id: string;
+    name: string;
+    created: DateTime;
+    size: number
+  }
+
+  export interface Message {
+    id: string;
+    created: DateTime;
+    replyToId?: string;
+    commentText: string;
+    userName: string;
+    isMyMessage: boolean;
+  }
+
+  export interface ReplyTo {
+    subjectId: SubjectId;
+    text: string;
+  }
+
+  export type ViewSubjectFetchPUT = (subjectId: SubjectId) => Promise<Response>;
+  export type GetSubjectsFetchGET = () => Promise<Response>;
+  export type ReplyToFetchPOST = (comment: ReplyTo) => Promise<Response>;
+
+  export interface CommsContextType {
+    subjects: readonly Subject[];
+    isPending: boolean;
+    subjectStats: {
+      exchanges: number; // number of tasks with any messanging, does not matter if they are viewed or not 
+      unread: number; // number of tasks with messages that have not been viewed
+    },
+    getSubject(contractId: SubjectId): Subject | undefined;
+
+    toggleSubjectSortOrder(): void;
+    sortOrder: SubjectSortOrder;
+
+    markViewed(contractId: SubjectId): Promise<void>; 
+    replyTo(comment: ReplyTo): Promise<void>; 
+    refresh(): Promise<void>;
+  }
+}

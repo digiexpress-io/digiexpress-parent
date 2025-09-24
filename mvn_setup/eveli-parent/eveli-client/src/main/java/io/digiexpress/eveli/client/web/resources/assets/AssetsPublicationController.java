@@ -43,7 +43,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
@@ -81,7 +81,7 @@ public class AssetsPublicationController {
   private final StencilClient stencilClient;
   private final HdesClient wrenchClient;
   private final DialobClient dialobClient;
-  private final AuthClient securityClient;
+  private final WorkerAuthClient securityClient;
   private final ApplicationEventPublisher publisher;
 
   @Value.Immutable
@@ -99,7 +99,7 @@ public class AssetsPublicationController {
   
   
   @Getter @RequiredArgsConstructor
-  private static class CompileEvent {
+  public static class CompileEvent {
     private final String deploymentId;
     private final String userId;
   }
@@ -197,17 +197,19 @@ public class AssetsPublicationController {
       .toList();
     
     return Multi.createFrom().items(workflows.stream())
-        .onItem().transform(this::getFormIdById)
-        .collect().asList();
+        .onItem().transform(form -> Optional.of(getFormIdById(form)))
+        .onFailure().recoverWithItem(() -> Optional.<Form>empty())
+        .collect().asList().onItem().transform(items -> items.stream().filter(f -> f.isPresent()).map(e -> e.get()).toList());
   }
 
   private Form getFormIdById(final Entity<Workflow> stencilService) {
     try {
       return dialobClient.getFormById(stencilService.getBody().getFormId());
     } catch(Exception e) {
-      throw new DialobFormNotFoundException(
-          "Can't resolve for by tag or form name, will try by form id for topic: " + 
-          JsonObject.mapFrom(stencilService).encodePrettily());
+      final var msg = "Can't resolve for by tag or form name, will try by form id for topic: " + 
+          JsonObject.mapFrom(stencilService).encodePrettily();
+      log.error(msg + e.getMessage(), e);
+      throw new DialobFormNotFoundException(msg);
     }
   }
   

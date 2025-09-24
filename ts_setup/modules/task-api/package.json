@@ -1,0 +1,16 @@
+{
+  "name": "@dxs-ts/task-api",
+  "version": "${project.version}",
+  "description": "Task API",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*"
+  },
+  "keywords": ["task", "api"],
+  "private": true
+}

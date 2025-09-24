@@ -7,6 +7,7 @@
     <artifactId>stencil-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
+  <name>stencil-client</name>
   <artifactId>stencil-client</artifactId>
   <dependencies>
     <dependency>
@@ -33,7 +34,7 @@
     
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-db-client</artifactId>
+      <artifactId>thena-git-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

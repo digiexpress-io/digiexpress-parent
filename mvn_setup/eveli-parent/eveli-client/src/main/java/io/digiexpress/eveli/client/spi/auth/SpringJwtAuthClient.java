@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.auth;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,12 +31,16 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import lombok.RequiredArgsConstructor;
 
-public class SpringJwtAuthClient implements AuthClient {
+@RequiredArgsConstructor
+public class SpringJwtAuthClient implements WorkerAuthClient {
+  private final List<String> adminRoles;
+  private final Boolean everybodyIsAdmin;
 
   @Override
   public User getUser() {
@@ -44,21 +49,26 @@ public class SpringJwtAuthClient implements AuthClient {
       return ImmutableUser.builder()
           .isAuthenticated(false)
           .principal(ImmutableUserPrincipal.builder()
+              .sub("")
+              .email("")
               .isAdmin(false)
               .username("UNAUTHENTICATED")
-              .email("")
               .build())
           .build();
     }
     
     final Jwt token = (Jwt) authentication.getPrincipal();
+    final var roles = authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList());
+    final var isAdmin = everybodyIsAdmin == null ? roles.stream().filter(role -> adminRoles.contains(role)).findAny().isPresent() : everybodyIsAdmin;
+    
     return ImmutableUser.builder()
         .isAuthenticated(true)
         .principal(ImmutableUserPrincipal.builder()
-            .isAdmin(true)
+            .isAdmin(isAdmin)
+            .sub(getSub(token))
             .username(getUserName(token))
             .email(getEmail(token))
-            .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
+            .roles(roles)
             .build())
         .build();
   }
@@ -93,4 +103,13 @@ public class SpringJwtAuthClient implements AuthClient {
     return userName;
       
   }
+  
+  private String getSub(Jwt principal) {
+    String sub = "";
+    if(principal != null) {
+      sub = Objects.toString(principal.getSubject(), "");
+    }
+    return sub;
+  }
+
 }

@@ -74,6 +74,7 @@ public class AssetsWorkflowController {
   @JsonIgnoreProperties(ignoreUnknown = true)
   public interface WorkflowBody {
     String getName();
+    @Nullable Boolean getDisabled();
     @Nullable String getFormId();
     @Nullable String getFormName();
     @Nullable String getFormTag();
@@ -85,6 +86,7 @@ public class AssetsWorkflowController {
   @JsonDeserialize(as = ImmutableWorkflowMutator.class)
   public interface WorkflowMutator {
     String getId();
+    @Nullable Boolean getDisabled();
     @Nullable String getName();
     @Nullable String getFormName();
     @Nullable String getFormTag();
@@ -102,6 +104,7 @@ public class AssetsWorkflowController {
               .formTag(release.getBody().getFormTag())
               .flowName(release.getBody().getFlowName())
               .name(release.getBody().getValue())
+              .disabled(release.getBody().getDisabled())
               .build();
           
           final Workflow result = ImmutableWorkflow.builder()
@@ -130,6 +133,7 @@ public class AssetsWorkflowController {
         .formId(formId)
         .formTag(workflow.getFormTag())
         .formName(workflow.getFormName())
+        .disabled(workflow.getDisabled())
         .build();
     return new StencilComposerImpl(stencilClient)
         .update().workflow(command)

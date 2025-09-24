@@ -73,19 +73,18 @@ public class FeedbackTest extends FeedbackEnvirSetup {
         
         .reply("super-reply-by-worker")
         .build(), "super-user");
-    
+        
     Assertions.assertEquals("same,vimes", template.getReporterNames());
     
     
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
     Assertions.assertTrue(feedbackClient.queryFeedbacks().findAll().size() == 1, "Can't find created feedback");
-    final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(taskId);
+    final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(template.getTaskId());
     Assertions.assertTrue(queryFeedbackById.isPresent(), "Can't find created feedback");
     
     Assertions.assertEquals("same,vimes", queryFeedback.get().getReporterNames());
     Assertions.assertEquals("thanks, was great", queryFeedback.get().getCustomerTitle());
-
     
     
     // rate feedback as thumbs down    
@@ -159,7 +158,7 @@ public class FeedbackTest extends FeedbackEnvirSetup {
     
     
     feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
-        .replyIds(Arrays.asList(taskId))
+        .replyIds(Arrays.asList(template.getTaskId()))
         .build(), "userId");
     
     Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().size());
