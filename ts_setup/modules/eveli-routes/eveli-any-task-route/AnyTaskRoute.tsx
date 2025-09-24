@@ -1,10 +1,15 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router'
 
 
-import { useEveliPermissions, EveliDatePicker as DateTimePicker, EveliDateTimeFormatter as DateTimeFormatter } from "@dxs-ts/eveli-primitives";
+//import { useEveliPermissions, EveliDatePicker as DateTimePicker, EveliDateTimeFormatter as DateTimeFormatter } from "@dxs-ts/eveli-primitives";
+import { useEveliPermissions } from "@dxs-ts/eveli-primitives";
+import { DatePicker as XuiDatePicker } from "@dxs-ts/xui-datetime";
+import { DateTimeFormatter as XuiDateTimeFormatter } from "@dxs-ts/xui-datetime";
+import { DateTime } from "luxon";
+
 import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 import { FeedbackProvider } from '@dxs-ts/task-feedback';
 import { TaskApi, TaskBackendProvider, TaskBackendProviderProps } from '@dxs-ts/task-api';
@@ -31,6 +36,40 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
     email: user.email || ""
   }), [user.name, user?.email]);
 
+  const SlotDateTimePicker: React.FC<{
+    value?: string | Date | null;
+    onChange?: (d: Date | null) => void;
+    onKeyDown?: React.KeyboardEventHandler;
+    readonly?: boolean;
+    fullWidth?: boolean;
+    size?: "small" | "medium";
+    label?: React.ReactNode;
+  }> = ({ value, onChange, onKeyDown, readonly, fullWidth = true, size = "small" }) => {
+    const normalized: Date | null =
+      typeof value === "string"
+        ? value
+          ? DateTime.fromISO(value).toJSDate()
+          : null
+        : value ?? null;
+  
+    return (
+      <Box onKeyDown={onKeyDown}>
+        <XuiDatePicker
+          variant="mui-like"
+          fullWidth={fullWidth}
+          size={size}
+          value={normalized}
+          onChange={readonly ? () => {} : (d) => onChange?.(d)}
+          sx={{ pointerEvents: readonly ? "none" : "auto" }}
+        />
+      </Box>
+    );
+  };  
+
+  const SlotDateTimeFormatter: React.FC<{ value: any; variant?: "text" }> = ({
+    value,
+    variant,
+  }) => <XuiDateTimeFormatter value={value} variant={variant} />;
 
 
   function handleClose() {
@@ -47,8 +86,8 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
       roles={groups}
       features={features}
       slots={{
-        DateTimeFormatter,
-        DateTimePicker,
+        DateTimeFormatter: SlotDateTimeFormatter,
+        DateTimePicker: SlotDateTimePicker,
         DialobReview,
         DialobReviewButton
       }}
