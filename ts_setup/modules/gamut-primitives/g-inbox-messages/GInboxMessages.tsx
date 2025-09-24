@@ -9,7 +9,7 @@ import { GInboxNewMessageProps, GInboxNewMessage } from './GInboxNewMessage';
 import { GInboxMessage, GInboxMessageProps } from './GInboxMessage';
 import { GInboxMessageNotAllowed } from './GInboxMessageNotAllowed';
 
-import { useComms, CommsApi } from '@dxs-ts/gamut-api';
+import { useComms, CommsApi, OfferApi } from '@dxs-ts/gamut-api';
 import { useContracts } from '@dxs-ts/gamut-api';
 import { useOffers } from '@dxs-ts/gamut-api';
 import { useSite } from '@dxs-ts/gamut-api';
@@ -18,6 +18,7 @@ import { useSite } from '@dxs-ts/gamut-api';
 
 export interface GInboxMessagesProps {
   subjectId: string;
+  onOpenOffer: (offer: OfferApi.Offer) => void;
   slots?: {
     formReview?: React.ElementType<GInboxFormReviewProps>
     message?: React.ElementType<GInboxMessageProps>;
@@ -43,12 +44,12 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { getSubject } = useComms();
-  const { getLocalisedOfferName } = useOffers();
+  const { getLocalisedOfferName, getOffer } = useOffers();
   const { site } = useSite();
   const { replyTo, markViewed, refresh } = useComms();
   const { getContract } = useContracts();
 
-  const { subjectId } = props;
+  const { subjectId, onOpenOffer } = props;
   const subject = getSubject(subjectId);
   const isViewed = !!subject?.isViewed;
   const contract = subject ? getContract(subject.contractId) : undefined;
@@ -84,9 +85,11 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
         <Typography><FormattedMessage id='gamut.inbox.subjectAttachment.title' /></Typography>
       </Box>
       <>
-        <div className={classes.header}>
-          <FormReview formName={offerName} formId={contract.offer.formId} />
 
+        <div className={classes.header}>
+          { contract.offer.formId &&
+            (<FormReview formName={offerName} formId={contract.offer.formId} />)
+          }
           {subject?.documents.map((doc) => (
             <Attachments name={doc.name}
               subjectId={subject.id}
@@ -97,12 +100,34 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
           ))}
 
         </div>
-        <Box className={classes.title}>
-          <Typography>
-            {intl.formatMessage({ id: 'gamut.inbox.subjectAttachmentAssignedNotCompleted.title', defaultMessage: 'Forms assigned to me but not yet completed' })}
-          </Typography>
-          FORMS LIST HERE
-        </Box>
+
+        { contract.subforms.length > 0 && (
+          <Box className={classes.title}>
+            <Typography>
+              {intl.formatMessage({ id: 'gamut.inbox.subjectAttachmentAssignedNotCompleted.title', defaultMessage: 'Forms assigned to me but not yet completed' })}
+            </Typography>
+            {
+              contract.subforms.map(entry => {
+                const subOffer = getOffer(entry.id);
+                if(!subOffer?.formId) {
+                  return (<></>)
+                }
+
+                if(entry.formInProgress) {
+                  const name = getLocalisedOfferName(site, entry.id);
+                  return (<>
+                    <div onClick={() => onOpenOffer(subOffer)}>{name}</div>
+                  </>)
+                }
+            
+                if(subOffer?.formId) {
+                  return ((<FormReview formName={offerName} formId={subOffer.formId} />))
+                }
+                
+              })
+            }
+          </Box>)
+        }
 
 
         <Divider />

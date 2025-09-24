@@ -19,7 +19,7 @@ export declare namespace OfferApi {
     updated: DateTime;
 
     formUri: string;
-    formId: string;
+    formId: string | undefined;
 
     productId: string; // link id which was clicked to trigger form filling
     pageId: string;

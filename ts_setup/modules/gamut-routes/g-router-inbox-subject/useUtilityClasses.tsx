@@ -8,7 +8,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 
 import { GUserOverviewMenuView, GInboxMessages } from '@dxs-ts/gamut-primitives';
-import { CommsApi, useComms, ContractApi, useContracts, useSite, useOffers } from '@dxs-ts/gamut-api';
+import { CommsApi, useComms, ContractApi, useContracts, useSite, useOffers, OfferApi } from '@dxs-ts/gamut-api';
 
 
 
@@ -164,13 +164,40 @@ export const Top: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) 
 
 
 export const Left: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
+  const nav = useNavigate();
   function handleAttachmentClick(subjectId: string, attachmentId: string) { }
   const { subjectId } = ownerState;
+
+  function handleOnOpenOffer(offer: OfferApi.Offer) {
+
+    const offerId = offer.id;
+    const pageId = offer.pageId;
+    const productId = offer.productId;
+
+
+    if(!!productId) {
+      nav({
+        from: '/secured/$locale/views/$viewId',
+        params: { offerId, pageId, productId },
+        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+      })
+    } else if(offer.otherLocales.length > 0) {
+      nav({
+        from: '/secured/$locale/views/$viewId',
+        params: { offerId, pageId, productId: offer.otherLocales[0].productId, locale: offer.otherLocales[0].locale },
+        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+      })
+    } else {
+      // TODO: polite error msgs
+      alert('Form not available!');
+    }
+  }
+
 
   return (
     <>
       <Divider />
-      <GInboxMessages subjectId={subjectId}
+      <GInboxMessages subjectId={subjectId} onOpenOffer={handleOnOpenOffer}
         slotProps={{
           formReview: {},
           attachments: { onClick: handleAttachmentClick },

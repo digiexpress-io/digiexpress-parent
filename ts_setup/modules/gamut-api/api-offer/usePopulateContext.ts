@@ -49,7 +49,12 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   
 
   // Get the offer (form) name based on the topic link
-  const getLocalisedOfferName = (site: SiteApi.Site, workflowName: string | undefined): string => {
+  const getLocalisedOfferName = (site: SiteApi.Site, workflowNameOrProcId: string | undefined): string => {
+
+    const fromProcess = (processes ?? []).find(proc => proc.id);
+
+    const workflowName = fromProcess ? fromProcess.name : workflowNameOrProcId;
+
     const link = Object.values(site.links).find(link => link?.value === workflowName);
     if(!link && workflowName) { 
 
@@ -65,7 +70,11 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
         return product.name;
       }
     }
-    return link ? link.name : '-';
+    if(link) {
+      return link.name;
+    }
+
+    return '-';
   };
 
 

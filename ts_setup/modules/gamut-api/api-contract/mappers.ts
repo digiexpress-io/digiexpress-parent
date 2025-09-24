@@ -64,9 +64,7 @@ function mapToContract(data: LegacyProcessApi.Process, grouped: LegacyProcessApi
     documents: docs,
     product: {} as any,
     offer: OfferApi.mapper(data, site),
-
     assigned: data.assigned,
-
     subforms: data.subActions,
     booking: undefined,
     created: DateTime.fromISO(data.taskCreated!),
