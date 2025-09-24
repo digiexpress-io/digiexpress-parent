@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Badge, Box, Grid, Typography, useThemeProps, Tooltip } from '@mui/material';
+import { Avatar, Box, Grid, Typography, useThemeProps, Tooltip } from '@mui/material';
 import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 
