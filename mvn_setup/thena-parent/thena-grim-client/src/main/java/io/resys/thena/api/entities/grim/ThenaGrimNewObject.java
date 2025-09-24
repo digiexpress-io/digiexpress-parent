@@ -21,6 +21,7 @@ package io.resys.thena.api.entities.grim;
  */
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -85,13 +86,35 @@ public interface ThenaGrimNewObject {
     MergeLink linkValue(String linkValue);
     MergeLink linkBody(@Nullable JsonObject linkBody);
     void build();
-  }  
+  }
+  
+  interface NewProcess {
+    NewProcess workflowName(String name);
+    
+    NewProcess questionnaireId(@Nullable String questionnaire);
+    NewProcess userId(@Nullable String userId);
+    NewProcess expiresInSeconds(@Nullable Long expires_in_seconds);
+    NewProcess expiresAt(@Nullable OffsetDateTime expiresAt);    
+    NewProcess anon(@Nullable Boolean anon);
+    NewProcess articleName(@Nullable String articleName);
+    NewProcess parentArticleName(@Nullable String parentArticleName);
+    NewProcess formName(@Nullable String formName);
+    NewProcess flowName(@Nullable String flowName);
+
+    NewProcess formTagName(@Nullable String formTagName);
+    NewProcess stencilTagName(@Nullable String stencilTagName);
+    NewProcess wrenchTagName(@Nullable String wrenchTagName);
+    void build();
+  }
+  
   // support interface inside of callback
   interface NewObjective {
     NewObjective title(String title);
     NewObjective description(String description);
     NewObjective type(@Nullable String type);
     NewObjective externalId(@Nullable String externalId);
+    NewObjective processId(@Nullable String processId);
+    NewObjective questionnaireId(@Nullable String questionnaireId);
     NewObjective status(@Nullable String status);
     NewObjective startDate(@Nullable LocalDate startDate);
     NewObjective dueDate(@Nullable LocalDate dueDate);

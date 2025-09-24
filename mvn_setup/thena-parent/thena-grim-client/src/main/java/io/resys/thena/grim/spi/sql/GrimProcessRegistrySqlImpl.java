@@ -104,7 +104,8 @@ WHERE id = $9""").ln()
         .append("INSERT INTO ").append(options.getGrimProcesses()).append(" ").ln()
         .append(" (").ln()        
         .append("""
-  (id,
+  (
+
   type,
   created,
   updated,
@@ -122,11 +123,11 @@ WHERE id = $9""").ln()
   form_tag_name,
   stencil_tag_name,
   wrench_tag_name)""").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)").ln()
         .build())
         .props(procs.stream()
-            .map(proc -> Tuple.from(new Object[]{ 
-                proc.getId(),
+            .map(proc -> Tuple.from(new Object[]{
+                // proc.getId(), ... great, can't create fully qualified object without DB
                 proc.getType(),
                 proc.getCreated(),
                 proc.getUpdated(),
@@ -318,4 +319,23 @@ WHERE id = $9""").ln()
     };
   }
 
+  @Override
+  public Sql getNextSequence() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement()
+        .append("select nextval('").append(options.getGrimProcessSeq()).append("')")
+        .build())
+        .build();
+  }
+
+  @Override
+  public SqlTuple getNextSequence(long howMany) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("select nextval('").append(options.getGrimProcessSeq()).append("')").ln()
+        .append(" from generate_series(1, $1)")
+        .build())
+        .props(Tuple.of(howMany))
+        .build();
+  }
 }

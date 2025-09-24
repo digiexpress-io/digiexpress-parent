@@ -55,6 +55,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
@@ -63,13 +64,13 @@ import io.resys.thena.grim.spi.create.NewMissionCommitViewerBuilder;
 import io.resys.thena.grim.spi.create.NewMissionLabelBuilder;
 import io.resys.thena.grim.spi.create.NewMissionLinkBuilder;
 import io.resys.thena.grim.spi.create.NewObjectiveBuilder;
+import io.resys.thena.grim.spi.create.NewProcessBuilder;
 import io.resys.thena.grim.spi.create.NewRemarkBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 
 public class MergeMissionBuilder implements MergeMission {
-  
   private final GrimMissionContainer container;
   private final GrimCommitBuilder logger;
   private final ImmutableGrimBatchMissions.Builder batch;
@@ -82,6 +83,7 @@ public class MergeMissionBuilder implements MergeMission {
   
   public MergeMissionBuilder(GrimMissionContainer container, GrimCommitBuilder logger) {
     super();
+
     final var start = container.getMissions().values().iterator().next();
     this.nextTransitives = ImmutableGrimMissionTransitives.builder()
         .from(start.getTransitives());
@@ -380,6 +382,18 @@ public class MergeMissionBuilder implements MergeMission {
     updateVersion();
     return this;
   }
+  @Override
+  public MergeMission addProcess(Consumer<NewProcess> process) {
+    final var builder = new NewProcessBuilder(logger, missionId);
+    process.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    
+    // no version update... since this "kind of exists" outside and not in the ctx of mission 
+    // updateVersion();
+    return this;
+  }
+  
   @Override
   public MergeMission addViewer(Consumer<NewMissionCommitViewer> viewer) {
     final var delegate = new NewMissionCommitViewerBuilder(logger.getCreatedAt(), missionId, logger.getCommitId(), container.getMission().getUpdatedTreeWithCommitId());

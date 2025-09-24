@@ -1,12 +1,10 @@
-package io.digiexpress.eveli.client.spi.process;
-
-import java.time.OffsetDateTime;
+package io.digiexpress.eveli.client.spi.dialob;
 
 /*-
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,47 +20,32 @@ import java.time.OffsetDateTime;
  * #L%
  */
 
-import java.util.concurrent.TimeUnit;
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import io.dialob.api.proto.Action;
 import io.dialob.api.proto.Actions;
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RequiredArgsConstructor
-public class DialobScheduler {
-  
+public class DialobFillEventPublisher {
+  private final ApplicationEventPublisher publisher;
   private final ProcessClient processClient;
   private final DialobClient dialobClient;
   private final SyncDialobAndProcess syncDialobAndProcess;
   
-  
-  
-  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
-  public void executeFlow() {
-    for(final var instance : processClient.queryInstances().findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))) {
-      syncDialobAndProcess.executeFlowForInstance(instance);
-    }
+  public void publishEvent(UserActionFillEvent event) {
+    publisher.publishEvent(event);
   }
   
-  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
-  public void rejectProcessesWithDeadline() {
-    processClient.queryInstances().findAllExpired().forEach(instance -> {
-      log.warn("Expiry for process instance: {}, e: {}!", instance.getId());
-      processClient.changeInstanceStatus().rejected(instance.getId().toString());
-    });
-  }
   
   @Async
   @EventListener

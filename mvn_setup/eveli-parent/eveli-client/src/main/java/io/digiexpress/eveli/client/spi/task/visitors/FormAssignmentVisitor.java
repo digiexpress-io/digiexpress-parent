@@ -22,7 +22,6 @@ package io.digiexpress.eveli.client.spi.task.visitors;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.ImmutableFormAssignment;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -30,7 +29,6 @@ import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -46,9 +44,8 @@ public class FormAssignmentVisitor {
         .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));    
   }
   
-  
   private List<TaskClient.FormAssignment> mapToForms(EveliRuntime runtime) {
-    final var grouped_by_form_id = runtime.getStencil(OffsetDateTime.now())
+    return runtime.getStencil(OffsetDateTime.now())
       .getSites().values().stream()
       .flatMap(site -> {
         final var locale = site.getLocale();
@@ -58,27 +55,22 @@ public class FormAssignmentVisitor {
           .filter(link -> link.getFormId() != null)
           .filter(link -> link.getFormName() != null)
           .filter(link -> link.getFormTag() != null)
-          .map(link -> Tuple2.of(locale, link))
+          .map(link -> {
+            
+            final TaskClient.FormAssignment result = ImmutableFormAssignment.builder()
+                .serviceName(link.getName())
+                .locale(locale)
+                .formId(link.getFormId())
+                .formName(link.getFormName())
+                .formTag(link.getFormTag())
+                .id(link.getId())
+                .build();
+            
+            return result;
+          })
           .toList();
         
         return links.stream();
-      }).collect(Collectors.groupingBy(tuple -> tuple.getItem2().getName()));
-    
-    return grouped_by_form_id.entrySet().stream()
-        .map(entry -> {
-          final var locales = entry.getValue().stream().map(tuple -> tuple.getItem1()).toList();
-          final var firstForm = entry.getValue().stream().map(tuple -> tuple.getItem2()).findFirst().get();
-          
-          final TaskClient.FormAssignment result = ImmutableFormAssignment.builder()
-              .serviceName(entry.getKey())
-              .locales(locales)
-              .formId(firstForm.getFormId())
-              .formName(firstForm.getFormName())
-              .formTag(firstForm.getFormTag())
-              .build();
-          
-          return result;
-        })
-        .toList();
+      }).toList();
   }
 }

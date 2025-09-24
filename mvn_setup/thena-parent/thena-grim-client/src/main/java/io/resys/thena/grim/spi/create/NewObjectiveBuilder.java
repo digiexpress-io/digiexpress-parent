@@ -128,6 +128,17 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
     return this;
   }
   @Override
+  public NewObjective processId(String processId) {
+    this.objective.processId(processId);
+    return this;
+  }
+  @Override
+  public NewObjective questionnaireId(String questionnaireId) {
+    this.objective.questionnaireId(questionnaireId);
+    return this;
+  }
+
+  @Override
   public NewObjective addAssignees(Consumer<NewAssignment> assignment) {
     final var all_assignments = this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewAssignmentBuilder(logger, missionId, childRel, all_assignments);
@@ -159,5 +170,4 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
     
     return this.batch.build();
   }
-
 }

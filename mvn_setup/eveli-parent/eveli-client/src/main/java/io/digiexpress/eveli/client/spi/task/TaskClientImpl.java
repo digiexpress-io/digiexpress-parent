@@ -40,8 +40,10 @@ import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
+import io.digiexpress.eveli.client.spi.task.visitors.AddFormToCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.AddWorkerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
+import io.digiexpress.eveli.client.spi.task.visitors.CreateCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
@@ -207,7 +209,23 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new CompleteCustomerAssignment(userId, userEmail, notificator, taskId, command));
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new CompleteCustomerAssignment(userId, taskId, command));
+      }
+      @Override
+      public Uni<Task> createCustomerAssignment(String taskId, List<CreateCustomerAssignmentCommand> command) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        
+        return envirClient.runtimeQuery().getOne()
+            .onItem().transform(runtime -> runtime.getStencil(OffsetDateTime.now()))
+            .onItem().transformToUni(sites -> ctx.getConfig().accept(new CreateCustomerAssignment(userId, taskId, command, sites)));
+      }
+      @Override
+      public Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command) {
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        
+        return ctx.getConfig().accept(new AddFormToCustomerAssignment(userId, taskId, command));
       }
     };
   }

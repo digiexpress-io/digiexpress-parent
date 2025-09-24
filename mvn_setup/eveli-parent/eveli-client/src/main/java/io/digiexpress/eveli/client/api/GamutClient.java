@@ -30,6 +30,8 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
@@ -107,7 +109,10 @@ public interface GamutClient {
   }
   
   interface UserActionBuilder {
+    UserActionBuilder customer(Customer customer);
+    UserActionBuilder customerRoles(CustomerRoles customerRoles);
     UserActionBuilder actionId(String actionId);
+    UserActionBuilder taskId(@Nullable String taskId);
     UserActionBuilder anon(boolean anon);
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);

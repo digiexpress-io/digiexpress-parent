@@ -31,7 +31,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.rest.IdAndRevision;
-import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient.DialobFormNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
@@ -60,17 +61,31 @@ import lombok.extern.slf4j.Slf4j;
 public class UserActionsBuilderImpl implements UserActionBuilder {
   private final ProcessClient hdesCommands;  
   private final DialobClient dialobCommands;
-  private final GamutAuthClient auth;
   private final EveliEnvirClient envir;
   private boolean anon = false;
+  private Optional<Customer> customer = Optional.empty();
+  private Optional<CustomerRoles> customerRoles = Optional.empty();
+  private Optional<InitUserAction> externalUserActionInit = Optional.empty();
+  
   private String actionId;
+  private String taskId;
   private String clientLocale; 
   private String inputContextId;
   private String inputParentContextId;
   private final UserActionLogger userActionLogger = new UserActionLogger();
   
-  
-  
+  public UserActionBuilder externalUserActionInit(InitUserAction customer) {
+    this.externalUserActionInit = Optional.ofNullable(customer);
+    return this;
+  }
+  public UserActionBuilder customer(Customer customer) {
+    this.customer = Optional.ofNullable(customer);
+    return this;
+  }
+  public UserActionBuilder customerRoles(CustomerRoles customerRoles) {
+    this.customerRoles = Optional.ofNullable(customerRoles);
+    return this;
+  }
   public Uni<UserAction> createOne() throws UserActionNotAllowedException, WorkflowNotFoundException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(clientLocale, () -> "clientLocale can't be null!");
@@ -97,26 +112,28 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     final var expiresInSeconds = meta.getExpiresInSeconds();
     
     
-    userActionLogger.startAuth();
-    if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
-      final var userRoles = auth.getCustomerRoles().getRoles();
-      userActionLogger.endAuth();
-      
-      userActionLogger.startWrenchAllowedRoles();
-      final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
-          .addAllUserRoles(userRoles)
-          .build()).getAllowedProcessNames();
-      userActionLogger.endWrenchAllowedRoles();
-      
-       if(!(
-           allowed.contains(stencilService.getValue()) ||
-           allowed.contains(actionId) ||
-           allowed.contains(stencilService.getName())
-        )) {
-         throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
-       }
-    } else {
-      userActionLogger.endAuth();
+    if(customer.isPresent()) {
+      userActionLogger.startAuth();
+      if(customer.get().getPrincipal().getRepresentedId() != null) {
+        final var userRoles = customerRoles.get().getRoles();
+        userActionLogger.endAuth();
+        
+        userActionLogger.startWrenchAllowedRoles();
+        final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
+            .addAllUserRoles(userRoles)
+            .build()).getAllowedProcessNames();
+        userActionLogger.endWrenchAllowedRoles();
+        
+         if(!(
+             allowed.contains(stencilService.getValue()) ||
+             allowed.contains(actionId) ||
+             allowed.contains(stencilService.getName())
+          )) {
+           throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
+         }
+      } else {
+        userActionLogger.endAuth();
+      }
     }
 
     
@@ -125,7 +142,10 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .append("Can't find stencil service for locale: '").append(clientLocale).append("'!")
           .toString());
     }
-    final var request = visitRequest();
+    
+    final var request = customer.isPresent() ? visitRequest(customer.get()) : externalUserActionInit.orElseThrow(() -> 
+      new UserActionNotAllowedException("Process: " + actionId + " blocked, there is no customer data, 'Customer' or 'InitUserAction'!")     
+    );
     
     
     return visitForm(request, stencilService).onItem().transform(revision -> {
@@ -138,6 +158,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .expiresInSeconds(expiresInSeconds)
           .expiresAt(stencilService.getEndDate() != null ? stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime() : null)
           .anon(anon)
+          .taskId(taskId)
           
           .workflowName(stencilService.getValue())
           .articleName(request.getInputContextId())
@@ -164,6 +185,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .formId(process.getQuestionnaireId())
           .formInProgress(true)
           .viewed(true)
+          .taskId(taskId)
           
           // deprecated
           .messagesUri("not-needed")
@@ -287,8 +309,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
 
   }
 
-  private InitUserAction visitRequest() {
-    final var user = auth.getCustomer().getPrincipal();
+  private InitUserAction visitRequest(Customer customer) {
+    final var user = customer.getPrincipal();
     final var person = user.getRepresentedPerson();
     final var company = user.getRepresentedCompany();
     
@@ -337,7 +359,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   @Value.Immutable
   @JsonSerialize(as = ImmutableInitUserAction.class)
   @JsonDeserialize(as = ImmutableInitUserAction.class)
-  interface InitUserAction {
+  public interface InitUserAction {
     String getIdentity();
     String getWorkflowName();
     Boolean getProtectionOrder();    

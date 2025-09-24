@@ -47,6 +47,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -67,6 +68,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/worker/rest/api/tasks")
 @Slf4j
 public class TaskApiController {    
+  private final DialobCreateEventPublisher dialobCreateEventPublisher;
   private final WorkerAuthClient securityClient;
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
@@ -142,6 +144,12 @@ public class TaskApiController {
   public Multi<FormAssignment> getPossibleCustomerTaskAssignments(@PathVariable("id") String id) {
     return taskClient.queryFormAssignments().findAll(id);
   }
+
+  @PostMapping("/{id}/form-assignments")
+  public Uni<Task> createCustomerTaskAssignments(@PathVariable("id") String id, @RequestBody List<TaskClient.CreateCustomerAssignmentCommand> commands) {
+    return taskClient.taskBuilder().createCustomerAssignment(id, commands)
+        .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishCreateEvent(modifiedTask));
+  }
   
 
   @PostMapping
@@ -153,6 +161,7 @@ public class TaskApiController {
         .onItem().invoke(newTask -> {
           mqEventPublisher.publishMqEvent(newTask, TaskCommentSource.FRONTDESK);
         })
+        .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishCreateEvent(modifiedTask))
         .onItem().transform(newTask -> {
           return new ResponseEntity<>(newTask, HttpStatus.CREATED);
         });
@@ -166,9 +175,11 @@ public class TaskApiController {
       .userId(worker.getUsername(), worker.getEmail())
       .modifyTask(id, command)
       .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask, TaskCommentSource.FRONTDESK))
+      .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishCreateEvent(modifiedTask))
       .onItem().transform(modifiedTask -> {
         return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
       });
+      
   }
   
   @PutMapping("/{id}/transfers")

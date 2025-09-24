@@ -72,6 +72,9 @@ public class TaskMapper {
   public static final String TASK_FEATURE_ANON = "anon";
   
   
+  public static final String OBJECTIVE_TYPE_CUSTOMER_ASSIGNMENT = "customer_assignment";
+  
+  
   
   
   public final static String DEFAULT_CLIENT_LANG = "fi";

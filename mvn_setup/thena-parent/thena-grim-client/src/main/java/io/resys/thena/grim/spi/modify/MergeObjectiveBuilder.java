@@ -134,7 +134,16 @@ public class MergeObjectiveBuilder implements MergeObjective {
     this.nextObjective.dueDate(dueDate);
     return this;
   }
-  
+  @Override
+  public MergeObjective processId(String processId) {
+    this.nextObjective.processId(processId);
+    return this;
+  }
+  @Override
+  public MergeObjective questionnaireId(String questionnaireId) {
+    this.nextObjective.questionnaireId(questionnaireId);
+    return this;
+  }
   private boolean isGoalRelation(GrimOneOfRelations rel) {
     if(rel == null) {
       return false;

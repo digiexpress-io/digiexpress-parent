@@ -49,7 +49,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private boolean anon = false;
   private String formName;
   private String flowName;
-
+  private String taskId;
   private String formTagName;
   private String stencilTagName;
   private String wrenchTagName;
@@ -81,6 +81,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setAnon(anon)
       .setFormName(formName)
       .setFlowName(flowName)
+      .setTaskId(taskId)
       
       .setFormTagName(formTagName)
       .setStencilTagName(stencilTagName)

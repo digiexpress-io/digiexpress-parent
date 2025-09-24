@@ -53,7 +53,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, authClient, envir);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, envir);
   }
 
   @Override

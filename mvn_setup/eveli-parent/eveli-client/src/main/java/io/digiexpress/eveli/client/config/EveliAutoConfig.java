@@ -60,15 +60,15 @@ import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
+import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
+import io.digiexpress.eveli.client.spi.dialob.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
-import io.digiexpress.eveli.client.spi.process.DialobScheduler;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
-import io.digiexpress.eveli.client.spi.process.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
@@ -292,13 +292,8 @@ public class EveliAutoConfig {
   }
 
   @Bean
-  public DialobScheduler dialobScheduler(
-      ProcessClient processClient, 
-      DialobClient dialobClient,
-      ObjectMapper objectMapper,
-      SyncDialobAndProcess sync) {
-    
-    return new DialobScheduler(processClient, dialobClient, sync);
+  public DialobScheduler dialobScheduler(ProcessClient processClient, SyncDialobAndProcess sync) {
+    return new DialobScheduler(processClient, sync);
   }
   
 

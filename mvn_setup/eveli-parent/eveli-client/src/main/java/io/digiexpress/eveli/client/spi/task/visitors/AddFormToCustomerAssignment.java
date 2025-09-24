@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -21,7 +23,7 @@ package io.digiexpress.eveli.client.spi.task.visitors;
  */
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.CompleteCustomerAssignmentCommand;
+import io.digiexpress.eveli.client.api.TaskClient.AddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
@@ -35,10 +37,10 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CompleteCustomerAssignment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
+public class AddFormToCustomerAssignment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
-  private final CompleteCustomerAssignmentCommand command;
+  private final List<AddFormToCustomerAssignmentCommand> commands;
   
   private TaskClient.Task previousVersion;
   
@@ -52,21 +54,28 @@ public class CompleteCustomerAssignment implements TaskStoreConfig.MergeTaskVisi
         merge.getCurrentState().getObjectives().values()
         );
     
-    if(command.getTaskVersion() != null && !previousVersion.getVersion().equals(command.getTaskVersion())) {
-      throw TaskException.builder("MODIFY_ONE_TASK_ASSIGNMENT_FAIL_LOCK_VERSION_MISMATCH")
-      .add("locking failed", 
-          "Can't modify old version, locking failed",
-          JsonObject
-          .of("provided", command.getTaskVersion(),
-              "expected", previousVersion.getVersion())
-      )
-      .build(); 
+    for(final var command : commands) {
+      if(command.getTaskVersion() != null && !previousVersion.getVersion().equals(command.getTaskVersion())) {
+        throw TaskException.builder("MODIFY_ONE_TASK_ASSIGNMENT_FAIL_LOCK_VERSION_MISMATCH")
+        .add("locking failed", 
+            "Can't modify old version, locking failed",
+            JsonObject
+            .of("provided", command.getTaskVersion(),
+                "expected", previousVersion.getVersion())
+        )
+        .build(); 
+      }
+    
+      merge.modifyObjective(command.getAssignmentId(), objective -> {
+        objective
+          .status(TaskClient.TaskAssignmentStatus.OPEN.name())
+          .questionnaireId(command.getQuestionnaireId())
+          .processId(command.getProcessId());
+      });
     }
     
+    merge.build();
     
-    merge.modifyObjective(command.getAssignmentId(), objective -> {
-      objective.status(TaskClient.TaskAssignmentStatus.COMPLETED.name());
-    }).build();
   }
   
   @Override
@@ -74,7 +83,7 @@ public class CompleteCustomerAssignment implements TaskStoreConfig.MergeTaskVisi
     builder.missionId(taskId).modifyMission(merge -> modify(merge));
     return builder
         .commitAuthor(userId)
-        .commitMessage("Update task by: " + CompleteCustomerAssignment.class.getSimpleName());
+        .commitMessage("Update task by: " + AddFormToCustomerAssignment.class.getSimpleName());
   }
 
   @Override

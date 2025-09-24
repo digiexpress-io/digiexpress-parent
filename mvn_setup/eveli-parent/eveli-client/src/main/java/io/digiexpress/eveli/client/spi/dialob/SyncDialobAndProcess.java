@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.process;
+package io.digiexpress.eveli.client.spi.dialob;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;

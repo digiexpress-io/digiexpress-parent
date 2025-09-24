@@ -32,6 +32,7 @@ import org.immutables.value.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -100,14 +101,16 @@ public interface TaskClient {
   interface TaskCommandBuilder {
     TaskCommandBuilder userId(String userId, String userEmail);
     
-    
     Uni<Task> createTask(CreateTaskCommand command);
     Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
     
     Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
     Uni<Task> deleteTask(String taskId);
     Uni<Task> transferTask(String taskId, TransferTaskCommand command);
+    
     Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command);
+    Uni<Task> createCustomerAssignment(String taskId, List<CreateCustomerAssignmentCommand> command);
+    Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command);
     
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
@@ -253,8 +256,29 @@ public interface TaskClient {
   @Value.Immutable
   interface CompleteCustomerAssignmentCommand {
     String getAssignmentId(); 
-    String getTaskVersion();
+    @Nullable String getTaskVersion(); // perform version check if not null
     ZonedDateTime getTargetDate();
+  }
+  
+  @JsonSerialize(as = ImmutableCreateCustomerAssignmentCommand.class)
+  @JsonDeserialize(as = ImmutableCreateCustomerAssignmentCommand.class)
+  @Value.Immutable
+  interface CreateCustomerAssignmentCommand {
+    String getServiceId();
+    String getTaskId();
+    @Nullable String getTaskVersion(); // perform version check if not null
+  }
+  
+  @JsonSerialize(as = ImmutableAddFormToCustomerAssignmentCommand.class)
+  @JsonDeserialize(as = ImmutableAddFormToCustomerAssignmentCommand.class)
+  @Value.Immutable
+  interface AddFormToCustomerAssignmentCommand {
+    String getAssignmentId();
+    String getTaskId();
+    @Nullable String getTaskVersion(); // perform version check if not null
+    
+    String getQuestionnaireId();
+    String getProcessId();
   }
   
   
@@ -262,7 +286,12 @@ public interface TaskClient {
   enum TaskStatus { NEW, OPEN, COMPLETED, TRANSFERRED, REJECTED, DELEGATED, WAITING }
   enum TaskPriority { LOW, NORMAL, HIGH }
   enum TaskCommentSource { FRONTDESK, PORTAL }
-  enum TaskAssignmentStatus { OPEN, COMPLETED }
+  enum TaskAssignmentStatus { 
+    NEW,  // waiting for the form to be created
+    OPEN, // ready to be filled by the user 
+    COMPLETED, // filled by the user
+    CANCELLED  // cancelled, not gonna be filled
+  }
   
   @JsonSerialize(as = ImmutableTask.class)
   @JsonDeserialize(as = ImmutableTask.class)
@@ -305,6 +334,11 @@ public interface TaskClient {
 
     List<TaskComment> getComments();
     List<TaskCustomerAssignment> getCustomerAssignments();
+    
+    @JsonIgnore
+    default boolean isNewCustomerAssignment() {
+      return this.getCustomerAssignments().stream().filter(t -> t.getStatus() == TaskAssignmentStatus.NEW).findAny().isPresent();
+    }
   }
   
   @JsonSerialize(as = ImmutableTaskCustomerAssignment.class)
@@ -312,9 +346,17 @@ public interface TaskClient {
   @Value.Immutable
   interface TaskCustomerAssignment {
     String getId();
+    String getServiceName();
+    String getDescription();
+    String getLocale();
+    
+    
+    @Nullable String getQuestionnaireId();
+    @Nullable String getProcessId();
+    
     ZonedDateTime getCreated();
     TaskAssignmentStatus getStatus();
-    String getQuestionnaireId();
+    String getExternalId();
   }
   
   
@@ -322,8 +364,8 @@ public interface TaskClient {
   @JsonDeserialize(as = ImmutableFormAssignment.class)
   @Value.Immutable
   interface FormAssignment {
-    List<String> getLocales();
-    
+    String getId();
+    String getLocale();
     String getServiceName();
     String getFormId();
     String getFormName();

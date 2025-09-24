@@ -85,6 +85,7 @@ public interface GrimDataSource extends TenantDataSource {
     InternalCommitTreeQuery commitTree();
     InternalCommitQuery commit();
     InternalProcQuery missionProcs();
+    InternalProcessSequence processSequences();
     InternalMissionSequence missionSequences();
     InternalMissionRemarkQuery missionRemarks();
   }
@@ -130,6 +131,10 @@ public interface GrimDataSource extends TenantDataSource {
     Uni<GrimMissionContainer> findAllByReporterId(String reporterId);
   }
   interface InternalMissionSequence {
+    Uni<Long> nextVal();
+    Uni<List<Long>> nextVal(long howMany);
+  }
+  interface InternalProcessSequence {
     Uni<Long> nextVal();
     Uni<List<Long>> nextVal(long howMany);
   }

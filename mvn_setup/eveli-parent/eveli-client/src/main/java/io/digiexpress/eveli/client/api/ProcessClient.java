@@ -73,7 +73,7 @@ public interface ProcessClient {
     CreateProcessInstance articleName(String articleName);
     CreateProcessInstance parentArticleName(String parentArticleName);
     
-
+    CreateProcessInstance taskId(@Nullable String taskId);
     CreateProcessInstance formName(String formName);
     CreateProcessInstance flowName(String flowName);
 

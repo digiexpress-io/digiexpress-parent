@@ -25,7 +25,6 @@ import java.util.Collections;
 
 import java.util.List;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +37,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,8 @@ public class GamutFeedbackController {
   private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final DialobClient dialob;
-  private final ApplicationEventPublisher publisher;
+  private final DialobFillEventPublisher publisher;
+  private final GamutAuthClient authClient;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -111,6 +113,9 @@ public class GamutFeedbackController {
       @RequestParam("inputParentContextId") String inputParentContextId,
       @RequestParam("actionLocale") String actionLocale) {
     
+    final var customer = authClient.getCustomer();
+    final var customerRoles = authClient.getCustomerRoles();
+    
     return gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale)
       .getOne().onItem().transform(meta -> {
         if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
@@ -120,6 +125,8 @@ public class GamutFeedbackController {
           return ResponseEntity.ok(gamutClient.userActionBuilder()
             .actionId(actionId)
             .anon(true)
+            .customer(customer)
+            .customerRoles(customerRoles)
             .clientLocale(actionLocale)
             .inputContextId(inputContextId)
             .inputParentContextId(inputParentContextId)

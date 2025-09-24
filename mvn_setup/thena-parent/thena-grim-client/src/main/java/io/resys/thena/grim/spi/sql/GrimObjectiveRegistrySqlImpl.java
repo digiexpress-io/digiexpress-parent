@@ -167,9 +167,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("  objective_start_date,").ln()
         .append("  objective_title,").ln()
         .append("  objective_description,").ln()
-        .append("  objective_due_date)").ln()
+        .append("  objective_due_date,").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .append("  objective_process_id,").ln()
+        .append("  objective_questionnaire_id)").ln()
+        
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -182,7 +185,10 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
                 doc.getStartDate(),
                 doc.getTitle(),
                 doc.getDescription(),
-                doc.getDueDate()
+                doc.getDueDate(),
+
+                doc.getProcessId(),
+                doc.getQuestionnaireId()
              }))
             .collect(Collectors.toList()))
         .build();
@@ -200,8 +206,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("  objective_start_date = $3,").ln()
         .append("  objective_due_date = $4,").ln()
         .append("  objective_title = $5,").ln()
-        .append("  objective_description = $6").ln()
-        .append(" WHERE id = $7")
+        .append("  objective_description = $6,").ln()
+        
+        .append("  objective_process_id = $7,").ln()
+        .append("  objective_questionnaire_id = $8").ln()
+        
+        .append(" WHERE id = $9")
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -211,7 +221,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
                 doc.getDueDate(),
                 doc.getTitle(),
                 doc.getDescription(),
-                
+                doc.getProcessId(),
+                doc.getQuestionnaireId(),
                 doc.getId(), 
              }))
             .collect(Collectors.toList()))
@@ -228,7 +239,9 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_status VARCHAR(100),").ln()
     .append("  objective_type VARCHAR(100),").ln()
-    .append("  objective_external_id VARCHAR(255),").ln()
+    .append("  objective_external_id VARCHAR(255),").ln()    
+    .append("  objective_process_id VARCHAR(255),").ln()
+    .append("  objective_questionnaire_id VARCHAR(255),").ln()
     .append("  objective_start_date DATE,").ln()
     .append("  objective_due_date DATE,").ln()
     .append("  objective_title TEXT NOT NULL,").ln()
@@ -243,6 +256,12 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     
     .append("CREATE INDEX ").append(options.getGrimObjective()).append("_STATUS_INDEX")
     .append(" ON ").append(options.getGrimObjective()).append(" (objective_status);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimObjective()).append("_PROC_INDEX")
+    .append(" ON ").append(options.getGrimObjective()).append(" (objective_process_id);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimObjective()).append("_QUESTIONNAIRE_INDEX")
+    .append(" ON ").append(options.getGrimObjective()).append(" (objective_questionnaire_id);").ln()
     
     .build()).build();
   }
@@ -275,6 +294,9 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           
           .type(row.getString("objective_type"))
           .externalId(row.getString("objective_external_id"))
+          
+          .processId(row.getString("objective_process_id"))
+          .questionnaireId(row.getString("objective_questionnaire_id"))
           
           .transitives(ImmutableGrimObjectiveTransitives.builder()
             .dataExtension(row.getJsonObject("data_extension"))

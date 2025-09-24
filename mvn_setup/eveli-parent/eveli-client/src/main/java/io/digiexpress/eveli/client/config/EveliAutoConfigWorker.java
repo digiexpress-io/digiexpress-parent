@@ -34,8 +34,9 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
+import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
+import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
-import io.digiexpress.eveli.client.spi.process.DialobScheduler;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
@@ -47,6 +48,7 @@ import io.digiexpress.eveli.client.web.resources.worker.UserProfileController;
 import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobReviewClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 
 
@@ -82,9 +84,10 @@ public class EveliAutoConfigWorker {
       DialobReviewClient dialobReviewClient,
       MqEventPublisher mqEventPublisher,
       TaskViewerPublisher viewerEventPublisher,
-      TaskAuditClient taskAuditClient) {
+      TaskAuditClient taskAuditClient,
+      DialobCreateEventPublisher dialobCreateEventPublisher) {
     
-    return new TaskApiController(security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher, taskAuditClient);
+    return new TaskApiController(dialobCreateEventPublisher, security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher, taskAuditClient);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient procClient, TaskClient taskClient) {
@@ -106,6 +109,18 @@ public class EveliAutoConfigWorker {
   public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {
     return new MqEventPublisher(publisher);
   }
+  @Bean
+  public DialobCreateEventPublisher dialobCreateEventPublisher(
+      ApplicationEventPublisher publisher,
+      TaskClient taskClient,
+      ProcessClient processClient,
+      DialobClient dialobClient,
+      EveliEnvirClient envir,
+      MqEventPublisher mqEventPublisher
+  ) {
+    return new DialobCreateEventPublisher(publisher, taskClient, processClient, dialobClient, envir, mqEventPublisher);
+  }
+  
   
   @Bean
   public TaskViewerPublisher viewerEventPublisher(ApplicationEventPublisher publisher, TaskClient client) {

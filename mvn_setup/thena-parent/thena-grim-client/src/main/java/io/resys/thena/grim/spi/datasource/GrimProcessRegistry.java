@@ -31,6 +31,10 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
+  
+  ThenaSqlClient.Sql getNextSequence();
+  ThenaSqlClient.SqlTuple getNextSequence(long howMany);
+  
   ThenaSqlClient.SqlTuple getById(String id);
   ThenaSqlClient.SqlTuple findOneByMissionId(String missionId);
 

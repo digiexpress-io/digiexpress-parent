@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.spi.process.DialobScheduler;
+import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import lombok.RequiredArgsConstructor;
 
 @RestController

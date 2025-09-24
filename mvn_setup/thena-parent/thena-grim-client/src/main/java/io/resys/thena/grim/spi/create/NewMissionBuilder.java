@@ -263,6 +263,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     final var mission = batch.getMissions().iterator().next();
     final var builders = ImmutableGrimMissionContainer.builder().putMissions(mission.getId(), mission);
 
+    batch.getProcs().forEach(proc -> builders.putProcs(proc.getId(), proc));
     batch.getMissionLabels().forEach(label -> builders.putMissionLabels(label.getId(), label));
     batch.getLinks().forEach(link -> builders.putLinks(link.getId(), link));
     batch.getRemarks().forEach(remark -> builders.putRemarks(remark.getId(), remark));
@@ -272,6 +273,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     batch.getAssignments().forEach(assignment -> builders.putAssignments(assignment.getId(), assignment));
     batch.getCommands().forEach(commands -> builders.putCommands(commands.getId(), commands));
     batch.getCommits().forEach(commit -> builders.putCommits(commit.getCommitId(), commit));
+    
     final var container = builders.build();
     handleNewState.accept(container);
   }

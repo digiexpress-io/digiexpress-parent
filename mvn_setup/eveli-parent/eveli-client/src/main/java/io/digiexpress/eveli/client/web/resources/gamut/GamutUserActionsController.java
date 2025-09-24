@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.immutables.value.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,10 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
@@ -58,6 +57,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/secured/actions")
 @RequiredArgsConstructor
 public class GamutUserActionsController {
-  private final ApplicationEventPublisher publisher;
+  private final DialobFillEventPublisher publisher;
   private final GamutClient gamutClient;
   private final GamutAuthClient authClient;
   private final DialobClient dialob;
@@ -226,6 +226,8 @@ public class GamutUserActionsController {
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)
+          .customer(authClient.getCustomer())
+          .customerRoles(authClient.getCustomerRoles())
           .createOne().onItem().transform(e -> ResponseEntity.ok(e));
       
     } catch(UserActionNotAllowedException e) {

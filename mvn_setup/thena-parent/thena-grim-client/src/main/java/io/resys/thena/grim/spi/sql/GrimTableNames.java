@@ -36,6 +36,8 @@ public abstract class GrimTableNames {
   public abstract String getGrimCommitViewer();
   public abstract String getGrimMission();
   public abstract String getGrimMissionRef();
+  public abstract String getGrimProcessSeq();
+  
   public abstract String getGrimMissionData();
   public abstract String getGrimMissionLabel();
   public abstract String getGrimMissionLink();
@@ -56,6 +58,7 @@ public abstract class GrimTableNames {
         
         // does not support actual tenant struct.
         .grimProcesses(DEFAULTS.getGrimProcesses())
+        .grimProcessSeq(DEFAULTS.getGrimProcessSeq())
         
         // supports tenants struct.
         .grimAssignment(    prefix + DEFAULTS.getGrimAssignment())
@@ -81,6 +84,7 @@ public abstract class GrimTableNames {
     return ImmutableGrimTableNames.builder()
         .prefix("")
         .grimProcesses("process")
+        .grimProcessSeq("process_id_seq")
         .grimAssignment("grim_assignment")
         .grimCommit("grim_commit")
         .grimCommitTree("grim_commit_tree")
