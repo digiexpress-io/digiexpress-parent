@@ -128,6 +128,8 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
   const { pdfTaskCallback } = useFetch('worker/rest/api/pdf.POST', {});
   const { getTaskFormAssignment } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.GET', []);
+  const { createManyTaskCustomerAssignments } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.POST', []);
+
 
   const unit:  TaskBackendProviderProps['persistence'] = {
     findAllUnreadTasks: async function (): Promise<string[]> {
@@ -164,9 +166,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
     createOneComment: saveComment,
     getOneTaskPdf: pdfTaskCallback,
     findAllTaskFormAssignments: getTaskFormAssignment,
-    createManyTaskCustomerAssignments: function (request: TaskApi.CreateTaskCustomerAssignmentCommand[]): Promise<TaskApi.Task> {
-      throw new Error('Function not implemented.');
-    }
+    createManyTaskCustomerAssignments: createManyTaskCustomerAssignments
   }
 
   return unit;

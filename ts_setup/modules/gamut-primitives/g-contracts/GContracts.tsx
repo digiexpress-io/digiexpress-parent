@@ -45,6 +45,7 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
       referenceId: contract.referenceId,
       exchangeId: contract.exchangeId,
       name: offerName,
+      assigned: contract.assigned,
       lastModified: contract.updated!,
       status: contract.status,
       documents: contract.documents.length,

@@ -70,7 +70,8 @@ public class AddFormToCustomerAssignment implements TaskStoreConfig.MergeTaskVis
         objective
           .status(TaskClient.TaskAssignmentStatus.OPEN.name())
           .questionnaireId(command.getQuestionnaireId())
-          .processId(command.getProcessId());
+          .processId(command.getProcessId())
+          .build();
       });
     }
     

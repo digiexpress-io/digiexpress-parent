@@ -121,12 +121,17 @@ public class MergeObjectiveBuilder implements MergeObjective {
   }
   @Override
   public MergeObjective status(String status) {
-    this.nextObjective.objectiveStatus(status);
+    this.nextObjective.status(status);
     return this;
   }
   @Override
   public MergeObjective startDate(LocalDate startDate) {
     this.nextObjective.startDate(startDate);
+    return this;
+  }
+  @Override
+  public MergeObjective locale(String locale) {
+    this.nextObjective.locale(locale);
     return this;
   }
   @Override

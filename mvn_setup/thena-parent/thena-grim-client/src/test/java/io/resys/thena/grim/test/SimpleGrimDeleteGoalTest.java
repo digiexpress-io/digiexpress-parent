@@ -268,7 +268,7 @@ author: jane.doe@morgue.com, message: batching tests
   + 9::GRIM_OBJECTIVE_GOAL
     {"docType":"GRIM_OBJECTIVE_GOAL","id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom"}
   + 8::GRIM_OBJECTIVE
-    {"docType":"GRIM_OBJECTIVE","id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"title":"interior design ideas"}
+    {"docType":"GRIM_OBJECTIVE","id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","status":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"locale":null,"title":"interior design ideas"}
   + 5::GRIM_MISSION
     {"docType":"GRIM_MISSION","id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
 
@@ -353,7 +353,7 @@ author: jane.doe@morgue.com, message: remove remark #2
   - 21::GRIM_MISSION_LABEL
     {"docType":"GRIM_MISSION_LABEL","id":"21","commitId":"4","labelType":"keyword","labelValue":"roofing","labelBody":null,"missionId":"5","relation":null}
   - 8::GRIM_OBJECTIVE
-    {"docType":"GRIM_OBJECTIVE","id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"title":"interior design ideas"}
+    {"docType":"GRIM_OBJECTIVE","id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","status":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"locale":null,"title":"interior design ideas"}
   - 9::GRIM_OBJECTIVE_GOAL
     {"docType":"GRIM_OBJECTIVE_GOAL","id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom"}
   - 16::GRIM_ASSIGNMENT

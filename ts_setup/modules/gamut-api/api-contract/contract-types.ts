@@ -43,6 +43,7 @@ export declare namespace ContractApi {
     product: ProductApi.Product;
     offer: OfferApi.Offer;
     booking: BookingApi.Booking | undefined;
+    assigned: boolean;
   }
 
   export type GetContractFetchGET = () => Promise<Response>;

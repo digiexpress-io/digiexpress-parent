@@ -113,6 +113,7 @@ public interface ThenaGrimMergeObject {
     MergeObjective startDate(@Nullable LocalDate startDate);
     MergeObjective dueDate(@Nullable LocalDate dueDate);
     
+    MergeObjective locale(@Nullable String locale);
     MergeObjective processId(@Nullable String processId);
     MergeObjective questionnaireId(@Nullable String questionnaireId);
     

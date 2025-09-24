@@ -17,6 +17,8 @@ export interface GContractsClasses {
   filesCount: string;
   noValue: string;
   newMsgIndicator: string;
+  assigned: string;
+  assignedIndicator: string;
 }
 export type GContractsClassKey = keyof GContractsClasses;
 
@@ -34,6 +36,9 @@ export const useUtilityClasses = () => {
     filesCount: ['filesCount'],
     noValue: ['noValue'],
     newMsgIndicator: ['newMsgIndicator'],
+    assigned: ['assigned'],
+    assignedIndicator: ['assignedIndicator'],
+
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -55,10 +60,29 @@ export const GContractItem = styled("div", {
 
   return {
 
-    '& .MuiGrid-item': {
-      display: 'flex',
-      flexDirection: 'row',
+    '& .GContracts-assigned .MuiSvgIcon-root': {
+      marginRight: theme.spacing(1),
+      color: theme.palette.error.main,
+      fontSize: '1.5rem'
+    },
+
+    '& .GContracts-assigned': {
+
+    },
+
+    '& .GContracts-assigned .MuiTypography-subtitle1': {
+      color: theme.palette.error.main
+    },
+    '& .GContracts-assignedIndicator': {
+      marginTop: theme.spacing(0.5),
       alignItems: 'center',
+      display: 'flex',
+      borderRadius: theme.spacing(1),
+      border: `2px solid ${alpha(theme.palette.warning.main, 0.9)}`,
+      backgroundColor: alpha(theme.palette.warning.light, 0.1),
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      width: 'fit-content'
     },
     '& .GContracts-status': {
       fontWeight: 'bold',

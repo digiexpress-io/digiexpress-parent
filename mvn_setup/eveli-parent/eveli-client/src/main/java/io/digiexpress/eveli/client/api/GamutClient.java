@@ -117,6 +117,7 @@ public interface GamutClient {
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);
     UserActionBuilder inputParentContextId(String inputParentContextId);
+    UserActionBuilder customerAssignment(boolean isCustomerAssignment); 
     Uni<UserAction> createOne();
   }
   
@@ -184,7 +185,7 @@ public interface GamutClient {
     @Nullable
     ZonedDateTime getTaskUpdated();
     
-    
+    Boolean getAssigned();    
     Boolean getViewed();
     List<UserMessage> getMessages();
     List<UserActionAttachment> getAttachments();

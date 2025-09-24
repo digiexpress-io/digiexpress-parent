@@ -36,6 +36,7 @@ import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +64,7 @@ public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
     final var validLinks = new HashSet<String>();
     for(final var command : commands) {
       validLinks.add(command.getServiceId());
-      if(command.getTaskId().equals(taskId)) {
+      if(!command.getTaskId().equals(taskId)) {
         throw TaskException.builder("MODIFY_ONE_TASK_FAIL_TASK_ID_MISMATCH")
         .add("inconsistent data", 
             "Can't have different task id on commands",
@@ -87,10 +88,10 @@ public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
     }
   
     final var templates = stencil.getSites().values().stream()
-      .flatMap(e -> e.getLinks().values().stream())
-      .filter(e -> Boolean.TRUE.equals(e.getAssignable()))
-      .filter(e -> validLinks.contains(e.getId()))
-      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      .flatMap(e -> e.getLinks().values().stream().map(l -> Tuple2.of(e.getLocale(), l)))
+      .filter(e -> Boolean.TRUE.equals(e.getItem2().getAssignable()))
+      .filter(e -> validLinks.contains(e.getItem2().getId()))
+      .collect(Collectors.toMap(e -> e.getItem2().getId(), e -> e));
     
     if(templates.size() != validLinks.size()) {
       throw TaskException.builder("MODIFY_ONE_TASK_FAIL_CANT_FIND_ALL_STENCIL_SERVICES")
@@ -104,12 +105,14 @@ public class CreateCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
     }
     
     for(final var command : commands) {
-      final var template = templates.get(command.getServiceId());
+      final var template = templates.get(command.getServiceId()).getItem2();
+      final var locale = templates.get(command.getServiceId()).getItem1();
       merge.addObjective(newObjective -> newObjective
           .type(TaskMapper.OBJECTIVE_TYPE_CUSTOMER_ASSIGNMENT)
           .startDate(LocalDate.now())
           .title(template.getValue())
           .description(template.getName())
+          .locale(locale)
           .status(TaskClient.TaskAssignmentStatus.NEW.name())
           .externalId(template.getId())
           .build());

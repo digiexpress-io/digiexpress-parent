@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Grid, Typography, useThemeProps } from '@mui/material';
+import { Box, Button, Grid, Typography, useThemeProps } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
@@ -17,6 +17,7 @@ export interface GOfferItemProps {
   created: DateTime;
   updated: DateTime;
   offerId: string;
+  assigned: boolean | undefined;
   onOpen: (offer: OfferApi.Offer) => void;
   onCancel: (offerId: string) => void;
   slotProps?: {
@@ -36,7 +37,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     name: MUI_NAME,
   });
 
-  const { created, updated, name, offerId, slotProps = {}, onOpen } = props;
+  const { created, updated, name, assigned, offerId, slotProps = {}, onOpen } = props;
   const ownerState = {
     ...props,
     dateVariant: slotProps.date?.variant ?? 'date-only'
@@ -71,44 +72,58 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     />
     <GOfferItemRoot className={classes.root} ownerState={ownerState}>
       <GFlex variant='body'>
-        <Grid container onClick={() => onOpen(offers.getOffer(offerId)!)}>
-          <Grid item xs={12} sm={12} md={12} lg={5} xl={4}>
-            <Typography>{name}</Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={12} md={12} lg={2} xl={3}>
-            <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
-              <Typography component='span' className={classes.started}>
-                {intl.formatMessage({ id: 'gamut.forms.started' })}
+        <Box className={assigned ? classes.assigned : undefined}>
+          <Grid container onClick={() => onOpen(offers.getOffer(offerId)!)}>
+            {assigned ? (
+              <Grid item xs={12} sm={12} md={12} lg={5} xl={4} display='flex'>
+                <Box display='flex' justifyContent='flex-start' flexDirection='column'>
+                  <Typography>{name}</Typography>
+                  <Box className={classes.assignedIndicator}>
+                    <TransferWithinAStationIcon />
+                    <Typography variant='subtitle1'>{intl.formatMessage({ id: 'gamut.offers.assignedToMe', defaultMessage: 'Assigned to me' })}</Typography>
+                  </Box>
+                </Box>
+              </Grid>
+            ) : (
+                <Grid item xs={12} sm={12} md={12} lg={5} xl={4}>
+                  <Typography>{name}</Typography>
+                </Grid>
+            )
+            }
+            <Grid item xs={12} sm={12} md={12} lg={2} xl={3}>
+              <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
+                <Typography component='span' className={classes.started}>
+                  {intl.formatMessage({ id: 'gamut.forms.started' })}
+                </Typography>
+              </GFlex>
+              <Typography component='span'>
+                <GDate variant={ownerState.dateVariant} date={created} />
               </Typography>
-            </GFlex>
-            <Typography component='span'>
-              <GDate variant={ownerState.dateVariant} date={created} />
-            </Typography>
-          </Grid>
+            </Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-            <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
-              <Typography component='span' className={classes.lastModified}>
-                {intl.formatMessage({ id: 'gamut.forms.lastModified' })}
+            <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+              <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
+                <Typography component='span' className={classes.lastModified}>
+                  {intl.formatMessage({ id: 'gamut.forms.lastModified' })}
+                </Typography>
+              </GFlex>
+              <Typography component='span'>
+                <GDate variant={ownerState.dateVariant} date={updated} />
               </Typography>
-            </GFlex>
-            <Typography component='span'>
-              <GDate variant={ownerState.dateVariant} date={updated} />
-            </Typography>
-          </Grid>
+            </Grid>
 
 
-          <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
-            <Button startIcon={<DeleteForeverIcon />} className={classes.cancel}
-              onClick={(event) => {
-                event.stopPropagation(); // prevent clicking the grid from overriding the button click
-                handleToggleDialog();
-              }}>
-              <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
-            </Button>
+            <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
+              <Button startIcon={<DeleteForeverIcon />} className={classes.cancel}
+                onClick={(event) => {
+                  event.stopPropagation(); // prevent clicking the grid from overriding the button click
+                  handleToggleDialog();
+                }}>
+                <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </GFlex>
     </GOfferItemRoot>
   </>

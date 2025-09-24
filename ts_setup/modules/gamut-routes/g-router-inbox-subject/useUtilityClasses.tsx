@@ -74,7 +74,8 @@ export interface GRouterInboxSubjectClasses {
   title: string,
   topTitle: string,
   topTitleIcon: string,
-  topTitleLayout: string
+  topTitleLayout: string,
+  taskRef: string
 }
 export type GRouterInboxSubjectClassKey = keyof GRouterInboxSubjectClasses;
 
@@ -84,7 +85,8 @@ export const useUtilityClasses = () => {
     title: ['title'],
     topTitle: ['topTitle'],
     topTitleIcon: ['topTitleIcon'],
-    topTitleLayout: ['topTitleLayout']
+    topTitleLayout: ['topTitleLayout'],
+    taskRef: ['taskRef']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -121,7 +123,11 @@ export const GRouterInboxSubjectRoot = styled("div", {
       fontSize: '20pt'
     },
     '.GRouterInboxSubject-title': {
-      ...theme.typography.h1
+      ...theme.typography.h1,
+    },
+    '.GRouterInboxSubject-taskRef': {
+      ...theme.typography.h3,
+      color: theme.palette.primary.dark 
     }
   };
 });
@@ -144,7 +150,7 @@ export const Bread: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }
 }
 
 export const Top: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
-  const { offerName } = ownerState;
+  const { offerName, contract } = ownerState;
   const classes = useUtilityClasses();
 
   return (
@@ -152,7 +158,7 @@ export const Top: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) 
       <Avatar className={classes.topTitle}>
         <MailOutlineIcon className={classes.topTitleIcon} />
       </Avatar>
-      <Typography className={classes.title}>{offerName}</Typography>
+      <Typography className={classes.title}>{offerName}{": "}{contract.referenceId}</Typography>
     </Box>);
 }
 

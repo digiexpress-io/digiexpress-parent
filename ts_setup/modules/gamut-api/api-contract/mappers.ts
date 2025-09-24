@@ -17,7 +17,7 @@ export function mapToContractData(data: LegacyProcessApi.Process[], site: SiteAp
 
   for (const proc of data) {
     
-    if (!proc.taskId) {
+    if (!proc.taskId || proc.assigned) {
       continue;
     }
     const contract = mapToContract(proc, site);
@@ -64,6 +64,8 @@ function mapToContract(data: LegacyProcessApi.Process, site: SiteApi.Site | unde
     documents: docs,
     product: {} as any,
     offer: OfferApi.mapper(data, site),
+
+    assigned: data.assigned,
 
     booking: undefined,
     created: DateTime.fromISO(data.taskCreated!),

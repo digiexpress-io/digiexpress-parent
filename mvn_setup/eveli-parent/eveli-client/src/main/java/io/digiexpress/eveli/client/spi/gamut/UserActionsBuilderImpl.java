@@ -42,6 +42,7 @@ import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
@@ -63,6 +64,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private final DialobClient dialobCommands;
   private final EveliEnvirClient envir;
   private boolean anon = false;
+  private boolean customerAssignment = false;
   private Optional<Customer> customer = Optional.empty();
   private Optional<CustomerRoles> customerRoles = Optional.empty();
   private Optional<InitUserAction> externalUserActionInit = Optional.empty();
@@ -169,6 +171,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .formTagName(stencilService.getFormTag())
           .stencilTagName(runtime.getStencilTagName())
           .wrenchTagName(runtime.getWrenchTagName())
+          .customerAssignment(customerAssignment)
           
           .create();
       
@@ -184,6 +187,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .inputParentContextId(process.getParentArticleName())
           .formId(process.getQuestionnaireId())
           .formInProgress(true)
+          .assigned(process.getType() == ProcessType.CUSTOMER_ASSIGNMENT ? true : false)
           .viewed(true)
           .taskId(taskId)
           

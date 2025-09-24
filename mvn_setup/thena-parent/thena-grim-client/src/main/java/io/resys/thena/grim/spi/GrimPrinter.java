@@ -174,7 +174,7 @@ public class GrimPrinter {
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
                 .compare(a.getTitle(), b.getTitle())
-                .compare(a.getObjectiveStatus()+ "", b.getObjectiveStatus()+ "")
+                .compare(a.getStatus()+ "", b.getStatus()+ "")
                 .compare(a.getStartDate()+ "", b.getStartDate()+ "")
                 .compare(a.getDueDate()+ "", b.getDueDate()+ "")
                 .compare(a.getDueDate()+ "", b.getDueDate()+ "")

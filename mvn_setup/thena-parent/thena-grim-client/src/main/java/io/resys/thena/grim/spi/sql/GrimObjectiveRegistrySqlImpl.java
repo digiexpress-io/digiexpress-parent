@@ -168,11 +168,13 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("  objective_title,").ln()
         .append("  objective_description,").ln()
         .append("  objective_due_date,").ln()
-        
+        .append("  objective_locale,").ln()
         .append("  objective_process_id,").ln()
-        .append("  objective_questionnaire_id)").ln()
+        .append("  objective_questionnaire_id,").ln()
+        .append("  objective_external_id,").ln()
+        .append("  objective_type)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)").ln()
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -181,14 +183,17 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
                 doc.getCreatedWithCommitId(),
                 
                 doc.getMissionId(),
-                doc.getObjectiveStatus(),
+                doc.getStatus(),
                 doc.getStartDate(),
                 doc.getTitle(),
                 doc.getDescription(),
                 doc.getDueDate(),
-
+                doc.getLocale(),
                 doc.getProcessId(),
-                doc.getQuestionnaireId()
+                doc.getQuestionnaireId(),
+                doc.getExternalId(),
+                doc.getType(),
+                
              }))
             .collect(Collectors.toList()))
         .build();
@@ -207,22 +212,25 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("  objective_due_date = $4,").ln()
         .append("  objective_title = $5,").ln()
         .append("  objective_description = $6,").ln()
-        
         .append("  objective_process_id = $7,").ln()
-        .append("  objective_questionnaire_id = $8").ln()
+        .append("  objective_questionnaire_id = $8,").ln()
+        .append("  objective_locale = $9,")
+        .append("  objective_external_id = $10")
         
-        .append(" WHERE id = $9")
+        .append(" WHERE id = $11")
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getCommitId(),
-                doc.getObjectiveStatus(),
+                doc.getStatus(),
                 doc.getStartDate(),
                 doc.getDueDate(),
                 doc.getTitle(),
                 doc.getDescription(),
                 doc.getProcessId(),
                 doc.getQuestionnaireId(),
+                doc.getLocale(),
+                doc.getExternalId(),
                 doc.getId(), 
              }))
             .collect(Collectors.toList()))
@@ -238,6 +246,7 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_status VARCHAR(100),").ln()
+    .append("  objective_locale VARCHAR(100),").ln()
     .append("  objective_type VARCHAR(100),").ln()
     .append("  objective_external_id VARCHAR(255),").ln()    
     .append("  objective_process_id VARCHAR(255),").ln()
@@ -294,6 +303,7 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           
           .type(row.getString("objective_type"))
           .externalId(row.getString("objective_external_id"))
+          .locale(row.getString("objective_locale"))
           
           .processId(row.getString("objective_process_id"))
           .questionnaireId(row.getString("objective_questionnaire_id"))
@@ -305,7 +315,7 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
             .build()
           )
 
-          .objectiveStatus(row.getString("objective_status"))
+          .status(row.getString("objective_status"))
           .startDate(row.getLocalDate("objective_start_date"))
           .dueDate(row.getLocalDate("objective_due_date"))
 

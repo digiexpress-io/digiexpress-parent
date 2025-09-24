@@ -25,7 +25,7 @@ import { TaskAssigneeReadOnly } from '../task-assignee';
 import { TaskPriorityReadOnly } from '../task-priority';
 import { FilesReadOnly, FilesEditDialog } from '../task-files';
 import { NotesEditDialog, NotesTruncated } from '../task-notes';
-import { TaskAssignmentEditDialog, TaskAssignmentReadOnly } from '../task_assignable';
+import { TaskAssignmentEditDialog, TaskAssignmentReadOnly } from '../task-assignable';
 import { AssigneeRolesEditDialog } from '../task-assignee-roles-edit';
 import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
@@ -279,13 +279,13 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showEditOnMenu={true}
             showEditButton={true}
             showReviewOnMenu={true}
-            titleNotifier={3}
+            titleNotifier={task.customerAssignments.length}
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={AssignmentIndOutlinedIcon} />}
             onDoubleClick={handleEdit}
             editDialog={isEditOpen && (<TaskAssignmentEditDialog open onClose={handleEditClose} taskId={task.id} />)}
           >
-            <TaskAssignmentReadOnly />
+            <TaskAssignmentReadOnly task={task} />
           </TaskCard>
         </TaskFeature>
       );

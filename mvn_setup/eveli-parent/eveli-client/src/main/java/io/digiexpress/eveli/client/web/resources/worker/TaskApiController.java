@@ -147,7 +147,10 @@ public class TaskApiController {
 
   @PostMapping("/{id}/form-assignments")
   public Uni<Task> createCustomerTaskAssignments(@PathVariable("id") String id, @RequestBody List<TaskClient.CreateCustomerAssignmentCommand> commands) {
-    return taskClient.taskBuilder().createCustomerAssignment(id, commands)
+    final var worker = securityClient.getUser().getPrincipal();
+    return taskClient.taskBuilder()
+        .userId(worker.getUsername(), worker.getEmail())
+        .createCustomerAssignment(id, commands)
         .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishCreateEvent(modifiedTask));
   }
   

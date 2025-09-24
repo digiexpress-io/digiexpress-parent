@@ -106,9 +106,9 @@ public class DialobCreateEventPublisher {
     }).toList();
     
     return taskClient.taskBuilder()
+        .userId(DialobCreateEventPublisher.class.getSimpleName(), null)
         .addFormToCustomerAssignment(taskUpdate.getTask().getId(), updates);
   }
-  
   
   private Uni<TaskUpdate> createFormsAndProcesses(TaskClient.Task task) {
     final var assignments = task.getCustomerAssignments().stream()
@@ -120,6 +120,9 @@ public class DialobCreateEventPublisher {
 
     final var requests = assignments.stream().map(assignment -> 
       new UserActionsBuilderImpl(processClient, dialobClient, envir)
+          .inputContextId("_")
+          .inputParentContextId("_")
+          .customerAssignment(true)
           .externalUserActionInit(ImmutableInitUserAction.builder()
               .identity(task.getClientIdentificator())
               .workflowName(assignment.getServiceName())

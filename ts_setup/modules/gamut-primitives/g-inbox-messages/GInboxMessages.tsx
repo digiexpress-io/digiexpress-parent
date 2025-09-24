@@ -81,13 +81,6 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   return (
     <GInboxMessagesRoot className={classes.root}>
       <Box className={classes.title}>
-        <Typography>
-          {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
-          {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
-          {contract.referenceId}
-        </Typography>
-      </Box>
-      <Box className={classes.title}>
         <Typography><FormattedMessage id='gamut.inbox.subjectAttachment.title' /></Typography>
       </Box>
       <>
@@ -102,7 +95,15 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
               key={subject.id}
             />
           ))}
+
         </div>
+        <Box className={classes.title}>
+          <Typography>
+            {intl.formatMessage({ id: 'gamut.inbox.subjectAttachmentAssignedNotCompleted.title', defaultMessage: 'Forms assigned to me but not yet completed' })}
+          </Typography>
+          FORMS LIST HERE
+        </Box>
+
 
         <Divider />
         <Box className={classes.title}>

@@ -44,7 +44,7 @@ export interface TaskBackendContextType {
     getOneTaskAudit: (taskId: string) => Promise<TaskApi.TaskAuditLog>;
     modifyOneTask: (newData: TaskApi.Task) => Promise<TaskApi.Task>;
     deleteOneTask: (taskId: string) => Promise<unknown>;
-    createManyTaskCustomerAssignments: (request: TaskApi.CreateTaskCustomerAssignmentCommand[]) => Promise<TaskApi.Task>;
+    createManyTaskCustomerAssignments: (taskId: string, request: TaskApi.CreateTaskCustomerAssignmentCommand[]) => Promise<TaskApi.Task>;
     createOneTask: (request: Partial<TaskApi.Task>) => Promise<TaskApi.Task>;
     createOneComment: (commentText: string, replyToId: number | undefined, task: TaskApi.Task, isExternalThread: boolean | undefined) => Promise<TaskApi.Comment>
   },

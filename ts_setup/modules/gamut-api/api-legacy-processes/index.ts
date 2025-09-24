@@ -38,6 +38,7 @@ export namespace LegacyProcessApi {
     messages: ProcessComment[];
     attachments: ProcessAttachment[];
     messagesUri: string;
+    assigned: boolean;
   }
 
   export interface ProcessAttachment {

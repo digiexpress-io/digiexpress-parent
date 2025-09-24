@@ -212,7 +212,7 @@ author: jane.doe@morgue.com, message: batching tests
   + 11::GRIM_OBJECTIVE_GOAL
     {"docType":"GRIM_OBJECTIVE_GOAL","id":"11","commitId":"4","createdWithCommitId":"4","objectiveId":"10","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom"}
   + 10::GRIM_OBJECTIVE
-    {"docType":"GRIM_OBJECTIVE","id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"title":"interior design ideas"}
+    {"docType":"GRIM_OBJECTIVE","id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","status":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"locale":null,"title":"interior design ideas"}
   + 5::GRIM_MISSION
     {"docType":"GRIM_MISSION","id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"9","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
 
@@ -238,8 +238,8 @@ author: jane.doe@morgue.com, message: forgot to add comments to things
    +  {"docType":"GRIM_REMARK","id":"14","commitId":"7","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Main task for building customer #C19837 house","reporterId":"jane.doe","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null}
    diff: remarkText :: Created main task for building a house! -> Main task for building customer #C19837 house
   +- 10::GRIM_OBJECTIVE
-   -  {"docType":"GRIM_OBJECTIVE","id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"title":"interior design ideas"}
-   +  {"docType":"GRIM_OBJECTIVE","id":"10","commitId":"7","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"White marble everywhere!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"title":"Interior Definition"}
+   -  {"docType":"GRIM_OBJECTIVE","id":"10","commitId":"4","createdWithCommitId":"4","missionId":"5","status":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"locale":null,"title":"interior design ideas"}
+   +  {"docType":"GRIM_OBJECTIVE","id":"10","commitId":"7","createdWithCommitId":"4","missionId":"5","status":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"White marble everywhere!","type":null,"externalId":null,"questionnaireId":null,"processId":null,"locale":null,"title":"Interior Definition"}
    diff: description :: all ideas are welcome how we should design kitchen and bathroom! -> White marble everywhere!
    diff: title :: interior design ideas -> Interior Definition
   +- 12::GRIM_OBJECTIVE_GOAL

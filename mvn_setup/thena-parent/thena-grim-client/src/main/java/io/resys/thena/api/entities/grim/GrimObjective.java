@@ -58,15 +58,16 @@ public interface GrimObjective extends IsGrimObject, TenantEntity {
   @Transient @JsonIgnore
   @Nullable GrimObjectiveTransitives getTransitives();
   
-  @Nullable String getObjectiveStatus();
+  @Nullable String getStatus();
   @Nullable LocalDate getStartDate();
   @Nullable LocalDate getDueDate();
   @Nullable String getDescription(); // free form description
-  @Nullable String getType(); // free form description
+  @Nullable String getType(); // user given mapping enum
   @Nullable String getExternalId();
   
   @Nullable String getQuestionnaireId();
   @Nullable String getProcessId();
+  @Nullable String getLocale();
   
   String getTitle(); // task title
   

@@ -26,6 +26,7 @@ import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
@@ -109,6 +110,7 @@ public class GamutClientImpl implements GamutClient {
             .inputParentContextId(process.getParentArticleName())
             .formId(process.getQuestionnaireId())
             .formInProgress(true)
+            .assigned(process.getType() == ProcessType.CUSTOMER_ASSIGNMENT ? true : false)
             .viewed(true)
             
             // deprecated

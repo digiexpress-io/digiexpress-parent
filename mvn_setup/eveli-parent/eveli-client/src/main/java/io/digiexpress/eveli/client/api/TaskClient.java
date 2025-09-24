@@ -354,7 +354,7 @@ public interface TaskClient {
     @Nullable String getQuestionnaireId();
     @Nullable String getProcessId();
     
-    ZonedDateTime getCreated();
+    OffsetDateTime getCreated();
     TaskAssignmentStatus getStatus();
     String getExternalId();
   }

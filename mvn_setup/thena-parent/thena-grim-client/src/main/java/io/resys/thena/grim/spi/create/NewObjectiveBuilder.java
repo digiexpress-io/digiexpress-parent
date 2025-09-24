@@ -107,7 +107,7 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
   }
   @Override
   public NewObjective status(String status) {
-    this.objective.objectiveStatus(status);
+    this.objective.status(status);
     return this;
   }
   @Override
@@ -137,7 +137,11 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
     this.objective.questionnaireId(questionnaireId);
     return this;
   }
-
+  @Override
+  public NewObjective locale(String locale) {
+    this.objective.locale(locale);
+    return this;
+  }
   @Override
   public NewObjective addAssignees(Consumer<NewAssignment> assignment) {
     final var all_assignments = this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));

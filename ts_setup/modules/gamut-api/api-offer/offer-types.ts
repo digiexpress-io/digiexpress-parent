@@ -25,6 +25,7 @@ export declare namespace OfferApi {
     pageId: string;
     parentPageId: string | undefined;
 
+    assigned: boolean;
     
     otherLocales: {
       locale: string;

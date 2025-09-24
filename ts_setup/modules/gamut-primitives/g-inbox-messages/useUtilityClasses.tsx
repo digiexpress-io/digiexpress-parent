@@ -76,7 +76,7 @@ export const GInboxMessagesRoot = styled("div", {
 })(({ theme }) => {
 
   return {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
 
     '& .GInboxMessages-newMessage': {
       padding: theme.spacing(1),
@@ -87,7 +87,6 @@ export const GInboxMessagesRoot = styled("div", {
     },
     '& .GInboxMessages-title .MuiTypography-root': {
       fontWeight: 'bold',
-      marginLeft: theme.spacing(2)
     },
     '& .GInboxMessages-addButton': {
       display: 'flex',
@@ -99,12 +98,10 @@ export const GInboxMessagesRoot = styled("div", {
         flexWrap: 'wrap'
       },
       display: 'flex',
-      flexDirection: 'row',
       alignItems: 'center',
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(5),
+      gap: theme.spacing(1),
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
     },
 
     '& .GInboxMessages-messages': {

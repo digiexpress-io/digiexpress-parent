@@ -89,6 +89,7 @@ export function mapToOffer(data: LegacyProcessApi.Process, site: SiteApi.Site | 
     updated: DateTime.fromISO(data.updated),
     formId: data.formId,
     formUri: data.formUri,
+    assigned: data.assigned,
 
     id: data.id,
     name: data.name,

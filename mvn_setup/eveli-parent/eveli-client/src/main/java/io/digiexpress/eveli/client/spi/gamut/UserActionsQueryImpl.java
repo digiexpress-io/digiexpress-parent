@@ -44,6 +44,7 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
@@ -228,6 +229,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .taskStatus(task.map(t -> t.getStatus().name()).orElse(null))
         .taskCreated(task.map(t -> t.getCreated()).orElse(null))
         .taskUpdated(task.map(t -> t.getUpdated()).orElse(null))
+        .assigned(process.getType() == ProcessType.CUSTOMER_ASSIGNMENT ? true : false)
         .viewed(messages.isViewed())
         .updated(messages.getUpdated())
         .addAllAttachments(att.getProcessAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())

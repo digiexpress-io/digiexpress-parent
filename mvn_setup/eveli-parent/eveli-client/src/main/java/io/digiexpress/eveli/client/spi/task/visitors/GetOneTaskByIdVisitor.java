@@ -51,7 +51,6 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
               GrimDocType.GRIM_COMMANDS, 
               GrimDocType.GRIM_COMMIT, 
               GrimDocType.GRIM_COMMIT_VIEWER, 
-              GrimDocType.GRIM_OBJECTIVE,
               GrimDocType.GRIM_OBJECTIVE_GOAL);
   }
 

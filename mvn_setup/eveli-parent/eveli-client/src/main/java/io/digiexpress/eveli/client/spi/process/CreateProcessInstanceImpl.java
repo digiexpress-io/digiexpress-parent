@@ -26,6 +26,7 @@ import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
@@ -47,6 +48,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private Long expiresInSeconds;
   
   private boolean anon = false;
+  private boolean customerAssignment = false;
   private String formName;
   private String flowName;
   private String taskId;
@@ -60,11 +62,13 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
     ProcessAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
     ProcessAssert.notNull(userId, () -> "userId must be defined!");
     ProcessAssert.notNull(workflowName, () -> "workflowName must be defined!");
-    ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
     ProcessAssert.notNull(formName, () -> "formName must be defined!");
-    ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
     ProcessAssert.notNull(anon, () -> "anon must be defined!");
     
+    if(!customerAssignment) {
+      ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
+      ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
+    }
     
     final var entity = processRepository.save(new ProcessEntity()
       .setExpiresAt(expiresAt)
@@ -86,6 +90,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setFormTagName(formTagName)
       .setStencilTagName(stencilTagName)
       .setWrenchTagName(wrenchTagName)
+      .setType(customerAssignment ? ProcessType.CUSTOMER_ASSIGNMENT : null)
       );
 
     return map(entity);

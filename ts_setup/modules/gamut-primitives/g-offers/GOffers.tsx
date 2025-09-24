@@ -45,6 +45,7 @@ export const GOffers: React.FC<GOffersProps> = (initProps) => {
       updated: offer.updated,
       name: offerName,
       offerId: offer.id,
+      assigned: offer.assigned,
       onOpen: props.slotProps?.item?.onOpen ?? ((offer: OfferApi.Offer) => { console.log("Do nothing on offer", offer) }),
       onCancel: props.slotProps?.item?.onCancel ?? cancelOffer,
       ...(props.slotProps?.item ?? {}),

@@ -167,9 +167,14 @@ export declare namespace TaskApi {
 
   export interface TaskCustomerAssignment {
     id: string;
-    created: Date;
-    status: 'OPEN' | 'COMPLETED';
-    questionnaireId: string;
+    serviceName: string,
+    description: string,
+    locale: string,
+    externalId: string,
+    created: Date,
+    status: 'NEW' | 'OPEN' | 'COMPLETED' | 'CANCELLED',
+    questionnaireId?: string,
+    processId?: string,
   }
 
   export type TaskFeatureType = 'feedback' | 'transfer' | 'anon' | 'assignable';
@@ -179,10 +184,9 @@ export declare namespace TaskApi {
   }
 
   export interface CreateTaskCustomerAssignmentCommand {
-    id: string;
-    created: Date;
-    status: 'OPEN' | 'COMPLETED';
-    questionnaireId: string;
+    serviceId: string;
+    taskId: string;
+    taskVersion?: string;
   }
 
   export interface TaskDasboard {
@@ -294,9 +298,9 @@ export declare namespace TaskApi {
   }
 
   export interface FormAssignment {
-    locales: string[];
+    id: string;
+    locale: string;
     serviceName: string;
-
     formId: string;
     formName: string;
     formTag: string;

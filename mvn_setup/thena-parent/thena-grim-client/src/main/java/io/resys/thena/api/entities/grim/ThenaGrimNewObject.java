@@ -112,6 +112,7 @@ public interface ThenaGrimNewObject {
     NewObjective title(String title);
     NewObjective description(String description);
     NewObjective type(@Nullable String type);
+    NewObjective locale(@Nullable String locale);
     NewObjective externalId(@Nullable String externalId);
     NewObjective processId(@Nullable String processId);
     NewObjective questionnaireId(@Nullable String questionnaireId);

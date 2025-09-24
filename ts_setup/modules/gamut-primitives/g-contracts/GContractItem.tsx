@@ -1,6 +1,8 @@
 import React from 'react';
 import { Avatar, Badge, Box, Grid, Typography, useThemeProps, Tooltip } from '@mui/material';
 import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
+
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
@@ -13,6 +15,7 @@ export interface GContractItemProps {
   referenceId: string;
   name: string;
   status: string;
+  assigned: boolean | undefined;
   lastModified: DateTime;
   documents?: number | undefined;
   messages?: number | undefined;
@@ -33,7 +36,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const { lastModified, name, status, documents, messages, hasUnviewedMessages, onClick, slotProps = {}, exchangeId, referenceId } = props;
+  const { lastModified, name, status, assigned, documents, messages, hasUnviewedMessages, onClick, slotProps = {}, exchangeId, referenceId } = props;
 
   const ownerState = {
     ...props,
@@ -64,11 +67,24 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
   return (
     <ContractItem className={classes.contractItem} ownerState={ownerState} onClick={() => onClick(exchangeId)}>
       <GFlex variant='body'>
+        <Box className={assigned ? classes.assigned : undefined}>
         <Grid container>
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-            <Typography>{name}</Typography>
-          </Grid>
-
+            {assigned ? (
+              <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                <Box display='flex' flexDirection='column'>
+                  <Typography>{name}</Typography>
+                  <Box className={classes.assignedIndicator}>
+                    <TransferWithinAStationIcon />
+                    <Typography variant='subtitle1'>{intl.formatMessage({ id: 'gamut.offers.assignedToMe', defaultMessage: 'Assigned to me:' })} 1/3 completed</Typography>
+                  </Box>
+                </Box>
+              </Grid>
+            ) : (
+                <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                  <Typography>{name}</Typography>
+                </Grid>
+            )
+            }
           <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
             <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
               <Typography component='span' className={classes.taskRefId}>
@@ -89,7 +105,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={1} xl={1}>
+            <Grid item xs={12} sm={12} md={12} lg={1} xl={1} display='flex' alignItems='center'>
             <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
               <Typography component='span' className={classes.files}>
                 {intl.formatMessage({ id: 'gamut.forms.files' })}
@@ -143,11 +159,13 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
             <Typography component='span'>
               <GDate variant={ownerState.dateVariant} date={lastModified} />
             </Typography>
-          </Grid>
-
+            </Grid>
           {/* Dummy item to compensate for GFlexBody css .MuiGrid-item:last-of-type */}
           <Grid item xs={12} sm={12} md={12} lg={1} xl={1} />
+
         </Grid>
+        </Box>
+
       </GFlex>
     </ContractItem>
   );

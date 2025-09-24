@@ -32,9 +32,11 @@ import org.apache.commons.codec.binary.StringUtils;
 import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
+import io.digiexpress.eveli.client.api.ImmutableTaskCustomerAssignment;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
@@ -184,6 +186,24 @@ public class TaskMapper {
         .findFirst();
     
     
+    final var customerAssignments = objectives.stream()
+        .filter(objective -> OBJECTIVE_TYPE_CUSTOMER_ASSIGNMENT.equals(objective.getType()))
+        .map(objective -> {
+          final TaskClient.TaskCustomerAssignment assignemnt = ImmutableTaskCustomerAssignment.builder()
+              .id(objective.getId())
+              .serviceName(objective.getTitle())
+              .description(objective.getDescription())
+              .questionnaireId(objective.getQuestionnaireId())
+              .processId(objective.getProcessId())
+              .created(objective.getTransitives().getCreatedAt())
+              .status(TaskAssignmentStatus.valueOf(objective.getStatus()))
+              .externalId(objective.getExternalId())
+              .locale(objective.getLocale())
+              .build();
+          return assignemnt;
+        })
+        .toList();
+    
     
     final var task = ImmutableTask.builder()
       .version(commited.getCommitId())
@@ -214,6 +234,8 @@ public class TaskMapper {
       .transferredProps(transferredProps.orElse(null))
       
       .documentProperties(docProps.orElse(Collections.emptyMap()))
+      
+      .customerAssignments(customerAssignments)
       
       .keyWords(keywords)
       .features(features)
