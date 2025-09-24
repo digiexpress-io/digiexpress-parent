@@ -35,6 +35,12 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-reactive-pg-client</artifactId>
+      <exclusions>
+      	<exclusion>
+      		<groupId>org.jboss.slf4j</groupId>
+      		<artifactId>slf4j-jboss-logmanager</artifactId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>

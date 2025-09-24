@@ -148,7 +148,6 @@
             </execution>
           </executions>
         </plugin>
-
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${resource.plugin.version}</version>
@@ -223,23 +222,6 @@
       <artifactId>mockito-junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5-internal</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna</artifactId>
-      <scope>test</scope>
-    </dependency>
-    
   </dependencies>
 
   <dependencyManagement>
