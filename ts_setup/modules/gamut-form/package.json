@@ -7,13 +7,12 @@
   "dependencies": {
     "@dxs-ts/gamut-api": "*",
     "@dxs-ts/gamut-md": "*",
-    "@dxs-ts/xui-datetime": "workspace:*"
+    "@dxs-ts/xui-datetime": "*"
   },
   "peerDependencies": {
     "react": "*",
     "react-intl": "*",
     "react-leaflet": "*",
-    "react-time-picker": "*",
     "@mui/material": "*",
     "@mui/icons-material": "*",
     "@mui/utils": "*",

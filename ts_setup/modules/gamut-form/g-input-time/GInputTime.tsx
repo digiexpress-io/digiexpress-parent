@@ -1,6 +1,3 @@
-import 'react-time-picker/dist/TimePicker.css';
-import 'react-clock/dist/Clock.css';
-
 import React from 'react';
 
 import { useThemeProps } from '@mui/material';

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
+//import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime'; //TODO
+import { DatePicker as XuiDatePicker } from '../../xui-datetime/date-picker';
 
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';

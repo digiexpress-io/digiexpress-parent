@@ -10,6 +10,9 @@
       ],
       "@dxs-ts/gamut-md": [
         "../gamut-md/index.ts"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
       ]
     }
   },
@@ -20,6 +23,9 @@
     },
     {
       "path": "../gamut-md"
+    },
+    { 
+      "path": "../xui-datetime" 
     }
   ],
   "_generated": {
