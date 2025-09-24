@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -148,7 +149,7 @@ public interface ProcessClient {
     @Nullable String getTaskId();
     @Nullable String getTaskRef();
     @Nullable String getUserId();
-    @Nullable ProcessType getType();
+    @Nullable GrimProcessType getType();
 
     
     Boolean getAnon();
@@ -159,9 +160,7 @@ public interface ProcessClient {
     @Nullable String getWrenchTagName();
   }
   
-  enum ProcessType {
-    CUSTOMER_ASSIGNMENT
-  }
+
 
   enum ProcessStatus {
     

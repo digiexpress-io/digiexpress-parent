@@ -166,7 +166,7 @@ public interface GamutClient {
     String getReviewUri();
     String getMessagesUri();
     String getFormUri();
-    String getFormId();
+    @Nullable String getFormId();
     OffsetDateTime getCreated();
     OffsetDateTime getUpdated();
     
@@ -189,6 +189,16 @@ public interface GamutClient {
     Boolean getViewed();
     List<UserMessage> getMessages();
     List<UserActionAttachment> getAttachments();
+    List<UserSubAction> getSubActions();
+    Boolean getFormInProgress();
+  }
+  
+  
+  @JsonSerialize(as = ImmutableUserSubAction.class)
+  @JsonDeserialize(as = ImmutableUserSubAction.class)
+  @Value.Immutable
+  interface UserSubAction {
+    String getId();
     Boolean getFormInProgress();
   }
   

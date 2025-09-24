@@ -42,11 +42,12 @@ import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import io.vertx.core.json.JsonObject;
@@ -187,9 +188,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .inputParentContextId(process.getParentArticleName())
           .formId(process.getQuestionnaireId())
           .formInProgress(true)
-          .assigned(process.getType() == ProcessType.CUSTOMER_ASSIGNMENT ? true : false)
+          .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
           .viewed(true)
-          .taskId(taskId)
+          .taskId(process.getTaskId())
           
           // deprecated
           .messagesUri("not-needed")
@@ -197,6 +198,28 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .formUri("not-needed")
           .build();
     });
+  }
+  
+  public static UserAction map(ProcessInstance process) {
+    return ImmutableUserAction.builder()
+        .id(process.getId().toString())
+        .status(process.getStatus().name())
+        .created(process.getCreated())
+        .updated(process.getUpdated())
+        .name(process.getWorkflowName())
+        .inputContextId(visitArticleName(process.getArticleName()))
+        .inputParentContextId(process.getParentArticleName())
+        .formId(process.getQuestionnaireId())
+        .formInProgress(true)
+        .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
+        .viewed(true)
+        .taskId(process.getTaskId())
+        
+        // deprecated
+        .messagesUri("not-needed")
+        .reviewUri("not-needed")
+        .formUri("not-needed")
+        .build();
   }
 
   private Uni<String> getFormId(final TopicLink stencilService) {
@@ -250,8 +273,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     });
   }
 
-  private String visitArticleName(String articleName) {
-    if(StringUtils.isEmpty(articleName)) {
+  private static String visitArticleName(String articleName) {
+    if(StringUtils.isEmpty(articleName) || articleName.length() < 3) {
       return null;
     }
     if(articleName.charAt(3) == '_') {

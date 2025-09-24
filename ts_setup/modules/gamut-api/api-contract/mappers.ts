@@ -14,13 +14,13 @@ export function mapToContractData(data: LegacyProcessApi.Process[], site: SiteAp
 } {
   const md5 = new Md5();
   const contracts: ContractApi.Contract[] = [];
+  const groupedByTaskId = groupBy(data.filter(d => d.assigned), 'taskId');
 
   for (const proc of data) {
-    
     if (!proc.taskId || proc.assigned) {
       continue;
     }
-    const contract = mapToContract(proc, site);
+    const contract = mapToContract(proc, groupedByTaskId[proc.taskId], site);
     md5
       .appendStr(proc.id)
       .appendStr(proc.taskStatus ?? '')
@@ -47,7 +47,7 @@ export function mapToContractData(data: LegacyProcessApi.Process[], site: SiteAp
   return { contracts: Object.freeze(contracts), hash: md5.end() + '' };
 }
 
-function mapToContract(data: LegacyProcessApi.Process, site: SiteApi.Site | undefined): ContractApi.Contract {
+function mapToContract(data: LegacyProcessApi.Process, grouped: LegacyProcessApi.Process[] | undefined, site: SiteApi.Site | undefined): ContractApi.Contract {
   const docs: readonly ContractApi.ContractDocument[] = Object.freeze(data.attachments.map(({ id, name, size, created }) => Object.freeze({
     id,
     name,
@@ -67,8 +67,21 @@ function mapToContract(data: LegacyProcessApi.Process, site: SiteApi.Site | unde
 
     assigned: data.assigned,
 
+    subforms: data.subActions,
     booking: undefined,
     created: DateTime.fromISO(data.taskCreated!),
     updated: data.taskUpdated ? DateTime.fromISO(data.taskUpdated) : undefined
   });
+}
+
+
+function groupBy<T, K extends keyof T>(array: T[], key: K): Record<string, T[]> {
+  return array.reduce((groups, item) => {
+    const groupKey = String(item[key]);
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(item);
+    return groups;
+  }, {} as Record<string, T[]>);
 }

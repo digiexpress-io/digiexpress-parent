@@ -33,10 +33,10 @@ import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
 import io.digiexpress.eveli.client.api.ImmutableCompleteCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -144,7 +144,7 @@ public class SyncDialobAndProcess {
       if(instance.getType() == null) {
         executeUserTask(questionnaire, instance);
         
-      } else if(instance.getType() == ProcessType.CUSTOMER_ASSIGNMENT) {
+      } else if(instance.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT) {
         executeCustomerAssignment(questionnaire, instance);
       }
 

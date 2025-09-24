@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.dialob;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * eveli-client
@@ -22,6 +24,7 @@ package io.digiexpress.eveli.client.spi.dialob;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -74,7 +77,13 @@ public class DialobCreateEventPublisher {
   @Async
   @EventListener
   public CompletableFuture<?> handleFillCompleted(CreateProcessAndFormEvent event) {
-    return taskClient.queryTasks().getOneById(event.getTaskId())
+    
+    
+    
+    return Uni.combine().all().unis(
+          taskClient.queryTasks().getOneById(event.getTaskId()),
+          taskClient.queryTaskProcesess().findOneByTaskId(event.getTaskId())
+        ).asTuple()
         .onItem().transformToUni(this::createFormsAndProcesses)
         .onItem().transformToUni(this::syncWithTask)
         .onItem().invoke(task -> {
@@ -87,61 +96,96 @@ public class DialobCreateEventPublisher {
   
   
   
-  private Uni<TaskClient.Task> syncWithTask(TaskUpdate taskUpdate) {
+  private Uni<TaskClient.Task> syncWithTask(TaskUpdate taskUpdate) {        
     if(taskUpdate.getValues().isEmpty()) {
       return Uni.createFrom().item(taskUpdate.getTask());
     }
     
-    final var updates = taskUpdate.getValues().stream().map(update -> {
-      
-      final AddFormToCustomerAssignmentCommand command = ImmutableAddFormToCustomerAssignmentCommand.builder()
-          .assignmentId(update.getItem1().getId())
-          .taskId(taskUpdate.getTask().getId())
-          .taskVersion(taskUpdate.getTask().getVersion())
-          .processId(update.getItem2().getId())
-          .questionnaireId(update.getItem2().getFormId())
-          .build();
-      
-      return command;
-    }).toList();
+    final var updates = taskUpdate.getValues().stream()
+        .filter(update -> update.getItem1().isPresent())
+        .map(update -> {
+          final AddFormToCustomerAssignmentCommand command = ImmutableAddFormToCustomerAssignmentCommand.builder()
+              .assignmentId(update.getItem1().get().getId())
+              .taskId(taskUpdate.getTask().getId())
+              .taskVersion(taskUpdate.getTask().getVersion())
+              .processId(update.getItem2().getId())
+              .questionnaireId(update.getItem2().getFormId())
+              .build();
+          
+          return command;
+        }).toList();
     
     return taskClient.taskBuilder()
         .userId(DialobCreateEventPublisher.class.getSimpleName(), null)
         .addFormToCustomerAssignment(taskUpdate.getTask().getId(), updates);
   }
   
-  private Uni<TaskUpdate> createFormsAndProcesses(TaskClient.Task task) {
-    final var assignments = task.getCustomerAssignments().stream()
+  private Uni<TaskUpdate> createFormsAndProcesses(Tuple2<TaskClient.Task, Optional<ProcessClient.ProcessInstance>> task) {
+    final var assignments = task.getItem1().getCustomerAssignments().stream()
         .filter(e -> e.getStatus() == TaskAssignmentStatus.NEW)
         .toList();
-    if(assignments.isEmpty()) {
-      return Uni.createFrom().item(new TaskUpdate(task, Collections.emptyList()));
+    
+    final var isMainOptional = task.getItem1().getCustomerAssignments().isEmpty() && assignments.isEmpty();
+    final var isMainCreated = task.getItem2().isPresent() || isMainOptional;
+    
+    if(assignments.isEmpty() && isMainCreated) {
+      return Uni.createFrom().item(new TaskUpdate(task.getItem1(), task.getItem2(), Collections.emptyList()));
     }
-
-    final var requests = assignments.stream().map(assignment -> 
-      new UserActionsBuilderImpl(processClient, dialobClient, envir)
+    
+    final var requests = new ArrayList<>(assignments.stream().map(assignment -> 
+        new UserActionsBuilderImpl(processClient, dialobClient, envir)
           .inputContextId("_")
           .inputParentContextId("_")
           .customerAssignment(true)
           .externalUserActionInit(ImmutableInitUserAction.builder()
-              .identity(task.getClientIdentificator())
+              .identity(task.getItem1().getClientIdentificator())
               .workflowName(assignment.getServiceName())
               .protectionOrder(false)
               .build())
           .actionId(assignment.getExternalId())
-          .taskId(task.getId())
+          .taskId(task.getItem1().getId())
           .clientLocale(assignment.getLocale())
-          .createOne().onItem().transform(action -> Tuple2.of(assignment, action))
-      ).toList();
+          .createOne().onItem().transform(action -> Tuple2.of(Optional.of(assignment), action))
+    ).toList());
+    
+    if(!isMainCreated) {
+      final var mainRequest = Uni.createFrom().item(() -> processClient.createInstance()
+          .anon(false)
+          .taskId(task.getItem1().getId())
+          .userId(task.getItem1().getClientIdentificator())
+
+          .anon(false)
+          .customerAssignment(false)
+          
+          .workflowName("_")
+          .articleName("_")
+          .parentArticleName("_")
+
+          .expiresInSeconds(null)
+          .expiresAt(null)
+          
+          .flowName(null)
+          .formName(null)
+          
+          .formTagName(null)
+          .stencilTagName(null)
+          .wrenchTagName(null)
+          .create())
+          .onItem().transform(UserActionsBuilderImpl::map)
+          .onItem().transform(action -> Tuple2.of(Optional.<TaskCustomerAssignment>empty(), action));
+  
+      requests.add(mainRequest);
+    }
     
     return Uni.join().all(requests).usingConcurrencyOf(4).andCollectFailures()
-        .onItem().transform(values -> new TaskUpdate(task, values));
+        .onItem().transform(values -> new TaskUpdate(task.getItem1(), task.getItem2(), values));
   } 
   
   @Data @RequiredArgsConstructor
   private static class TaskUpdate {
     private final TaskClient.Task task;
-    private final List<Tuple2<TaskCustomerAssignment, UserAction>> values;
+    private final Optional<ProcessClient.ProcessInstance> process;
+    private final List<Tuple2<Optional<TaskCustomerAssignment>, UserAction>> values;
   }
 
 }

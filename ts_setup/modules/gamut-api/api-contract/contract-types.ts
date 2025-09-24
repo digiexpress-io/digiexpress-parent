@@ -44,6 +44,8 @@ export declare namespace ContractApi {
     offer: OfferApi.Offer;
     booking: BookingApi.Booking | undefined;
     assigned: boolean;
+
+    subforms: { formInProgress: boolean, id: string } [];
   }
 
   export type GetContractFetchGET = () => Promise<Response>;

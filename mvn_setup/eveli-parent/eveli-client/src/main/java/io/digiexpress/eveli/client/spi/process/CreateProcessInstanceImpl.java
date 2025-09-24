@@ -26,10 +26,10 @@ import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -58,18 +58,17 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   
   
   public ProcessInstance create() {
-    
-    ProcessAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
-    ProcessAssert.notNull(userId, () -> "userId must be defined!");
     ProcessAssert.notNull(workflowName, () -> "workflowName must be defined!");
-    ProcessAssert.notNull(formName, () -> "formName must be defined!");
+    ProcessAssert.notNull(userId, () -> "userId must be defined!");
     ProcessAssert.notNull(anon, () -> "anon must be defined!");
     
-    if(!customerAssignment) {
+    if(taskId == null) {
+      ProcessAssert.notNull(formName, () -> "formName must be defined!");
+      ProcessAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
       ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
       ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
     }
-    
+        
     final var entity = processRepository.save(new ProcessEntity()
       .setExpiresAt(expiresAt)
       .setStatus(ProcessStatus.CREATED)
@@ -90,7 +89,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setFormTagName(formTagName)
       .setStencilTagName(stencilTagName)
       .setWrenchTagName(wrenchTagName)
-      .setType(customerAssignment ? ProcessType.CUSTOMER_ASSIGNMENT : null)
+      .setType(customerAssignment ? GrimProcessType.CUSTOMER_ASSIGNMENT : null)
       );
 
     return map(entity);

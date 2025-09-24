@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,7 +65,7 @@ public class ProcessEntity {
   
   @Column(name="type")
   @Enumerated(EnumType.STRING)
-  private ProcessType type;
+  private GrimProcessType type;
   
   @Column(name="created", nullable = false, updatable = false)
   private OffsetDateTime created;

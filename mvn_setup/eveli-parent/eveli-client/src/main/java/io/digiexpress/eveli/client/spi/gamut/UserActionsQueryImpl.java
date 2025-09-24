@@ -37,17 +37,20 @@ import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerId;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
+import io.digiexpress.eveli.client.api.GamutClient.UserSubAction;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
+import io.digiexpress.eveli.client.api.ImmutableUserSubAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessType;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -210,7 +213,19 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .map(t -> t.getTaskRef())
         .orElse(null);
     
-    
+    final List<UserSubAction> subActions = task
+        .map(t -> t.getCustomerAssignments())
+        .orElse(Collections.emptyList()).stream()
+        .filter(e -> e.getProcessId() != null)
+        .filter(e -> e.getStatus() != TaskAssignmentStatus.CANCELLED)
+        .filter(e -> e.getStatus() != TaskAssignmentStatus.NEW)
+        .map(assignment -> {
+          final UserSubAction action = ImmutableUserSubAction.builder()
+              .id(assignment.getProcessId())
+              .formInProgress(assignment.getStatus() == TaskAssignmentStatus.OPEN)
+              .build();
+          return action;
+        }).toList();
     
     final var att = visitAttachments(process);
     
@@ -223,17 +238,18 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .name(process.getWorkflowName())
         .inputContextId(process.getArticleName())
         .inputParentContextId(process.getParentArticleName())
-        .formId(process.getQuestionnaireId())
+        .formId(process.getQuestionnaireId() == null ? null : process.getQuestionnaireId())
         .formInProgress(process.getStatus() == ProcessStatus.ANSWERING || process.getStatus() == ProcessStatus.CREATED)        
         .taskRef(taskRef)
         .taskStatus(task.map(t -> t.getStatus().name()).orElse(null))
         .taskCreated(task.map(t -> t.getCreated()).orElse(null))
         .taskUpdated(task.map(t -> t.getUpdated()).orElse(null))
-        .assigned(process.getType() == ProcessType.CUSTOMER_ASSIGNMENT ? true : false)
+        .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
         .viewed(messages.isViewed())
         .updated(messages.getUpdated())
         .addAllAttachments(att.getProcessAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
         .addAllAttachments(att.getTaskAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
+        .subActions(subActions)
         .addAllMessages(messages.getMessages())
         
         // deprecated

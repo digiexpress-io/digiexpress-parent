@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -56,7 +57,7 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
         .append(" ON(procs.task_id = mission.id)").ln()
         
-        .append(" WHERE procs.task_id = $1").ln()
+        .append(" WHERE procs.task_id = $1 and procs.type is null").ln()
         .build())
         .props(Tuple.of(missionId))
         .build();
@@ -128,7 +129,7 @@ WHERE id = $9""").ln()
         .props(procs.stream()
             .map(proc -> Tuple.from(new Object[]{
                 // proc.getId(), ... great, can't create fully qualified object without DB
-                proc.getType(),
+                Optional.ofNullable(proc.getType()).map(e -> e.name()).orElse(null),
                 proc.getCreated(),
                 proc.getUpdated(),
                 proc.getFlowName(),
@@ -293,7 +294,7 @@ WHERE id = $9""").ln()
 
           .articleName(row.getString("article_name"))
           .created(row.getOffsetDateTime("created"))
-          .type(row.getString("type"))
+          .type(Optional.ofNullable(row.getString("type")).map(e -> GrimProcessType.valueOf(e)).orElse(null))
           .expiresAt(row.getOffsetDateTime("expires_at"))
           .expiresInSeconds(row.getLong("expires_in_seconds"))
           .flowBody(Optional.ofNullable(row.getJsonObject("flow_body")).map(e -> e.encode()).orElse(null))
