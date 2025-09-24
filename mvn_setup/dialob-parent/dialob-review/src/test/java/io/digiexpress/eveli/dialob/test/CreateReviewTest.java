@@ -20,6 +20,8 @@ package io.digiexpress.eveli.dialob.test;
  * #L%
  */
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +29,6 @@ import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.digiexpress.eveli.dialob.spi.DialobReviewClientImpl;
-import io.vertx.core.json.JsonObject;
 
 
 public class CreateReviewTest {
@@ -35,10 +36,11 @@ public class CreateReviewTest {
   DialobReviewClient client = new DialobReviewClientImpl();
   
   @Test
-  public void createSession() {
+  public void createSession() throws JsonProcessingException {
+    var mapper = new ObjectMapper();
     
-    final var form = new JsonObject(DialobReviewConfig.toExpectedFile("form_1.json")).mapTo(Form.class);
-    final var formData = new JsonObject(DialobReviewConfig.toExpectedFile("session_1.json")).mapTo(Questionnaire.class);
+    final var form = mapper.readValue(DialobReviewConfig.toExpectedFile("form_1.json"), Form.class);
+    final var formData = mapper.readValue(DialobReviewConfig.toExpectedFile("session_1.json"), Questionnaire.class);
     final var actions = client.createReview().form(form).formData(formData).build();
     
     Assertions.assertNotNull(actions);
