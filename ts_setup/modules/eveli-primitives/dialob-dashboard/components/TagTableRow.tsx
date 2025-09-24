@@ -7,7 +7,7 @@ import { LabelChips } from './LabelChips';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
-import { EveliDatePicker } from '../../eveli-datepicker';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 export interface TagTableRowProps {
   filters: FormConfigurationFilters;
@@ -65,10 +65,10 @@ export const TagTableRow: React.FC<TagTableRowProps> = ({
           </TableCell>
           <TableCell>{formConfiguration?.latestTagName}</TableCell>
           <TableCell>
-            <EveliDatePicker readonly value={formConfiguration?.latestTagDate}/>
+            <DateTimeFormatter value={formConfiguration?.latestTagDate} />
           </TableCell>
           <TableCell>
-            <EveliDatePicker readonly value={formConfiguration.metadata.lastSaved}/>
+            <DateTimeFormatter value={formConfiguration.metadata.lastSaved} />
           </TableCell>
           <TableCell>
             <LabelChips labels={formConfiguration.metadata.labels} onUpdate={updateLabels} />

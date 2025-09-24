@@ -28,7 +28,6 @@
     "@tanstack/react-table": "*",
     "notistack": "*",
     "luxon": "*",
-    "moment": "*",
     "numbro": "*",
     "file-saver": "*"
   }
