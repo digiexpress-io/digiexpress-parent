@@ -1,25 +1,23 @@
 import * as React from 'react';
 import { FormControl, FormLabel } from '@mui/material';
+import { DateTime } from 'luxon';
 import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
 
 type XuiProps = React.ComponentProps<typeof XuiDatePicker>;
 
 export type CustomDatePickerProps = Omit<XuiProps, 'value' | 'onChange'> & {
-  /** Allow undefined at call sites; normalize to null for XuiDatePicker */
-  value?: Date | null;
+  value?: string | Date | null;
   onChange?: (d: Date | null) => void;
 
-  /** Legacy ergonomics from old wrapper */
   label?: React.ReactNode;
   fullWidth?: boolean;
   readonly?: boolean;
 
-  /** Old API: called when user clears the date */
   handleDateClear?: () => void;
-  /** Old API: (sometimes used) external error state */
   error?: boolean;
-  /** Old API: default small height for compact tables/forms */
   size?: 'small' | 'medium';
+
+  onKeyDown?: React.KeyboardEventHandler;
 };
 
 export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
@@ -31,14 +29,16 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   readonly,
   handleDateClear,
   error,
+  onKeyDown,
   ...rest
 }) => {
-  const normalized = value ?? null;
+  const normalized: Date | null =
+    typeof value === 'string'
+      ? (value ? DateTime.fromISO(value).toJSDate() : null)
+      : (value ?? null);
 
   const wrappedOnChange = (d: Date | null) => {
-    if (d == null) {
-      handleDateClear?.();
-    }
+    if (d == null) handleDateClear?.();
     onChange?.(d);
   };
 
@@ -49,10 +49,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         width: fullWidth ? '100%' : 'auto',
         opacity: readonly ? 0.7 : 1,
       }}
+      onKeyDown={onKeyDown}
     >
       {label ? <FormLabel>{label}</FormLabel> : null}
       <XuiDatePicker
-        variant="mui-like"            // opt-in; keeps other screens unchanged by default
+        variant="mui-like"
         fullWidth={fullWidth}
         size={size}
         value={normalized}
