@@ -19,7 +19,7 @@
  
     <resource.plugin.version>3.3.1</resource.plugin.version>
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
-    <surefire.plugin.version>3.3.1</surefire.plugin.version>
+    <surefire.plugin.version>3.5.4</surefire.plugin.version>
 
     <spring.boot.version>3.4.2</spring.boot.version>
     <spring.security.version>6.4.2</spring.security.version>
