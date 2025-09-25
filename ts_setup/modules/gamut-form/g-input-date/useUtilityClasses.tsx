@@ -20,7 +20,13 @@ export const GInputDateRoot = styled('div', {
       '& .MuiSvgIcon-root': { display: 'none' }
     };
   }
-  return {};
+  return {
+    '.MuiPaper-root': {
+      backgroundColor: 'red'
+    }
+
+
+  };
 });
 
 export const GInputDateInput = styled('div', {

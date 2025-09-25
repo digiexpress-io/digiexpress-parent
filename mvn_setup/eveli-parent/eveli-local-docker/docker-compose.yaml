@@ -86,8 +86,8 @@ services:
       - DIALOB_TENANT_FIXED_ID=00000000-0000-0000-0000-000000000000
       - QUESTIONNAIRE_REST_URL=/session/dialob
       - COMPOSER_ADMINAPPURL=/ui/forms
-#      - COMPOSER_FILLING_APP_URL=http://localhost:3001/secured/fi/forms
-      - COMPOSER_FILLING_APP_URL=http://localhost:3000/secured/en/assets/forms
+      - COMPOSER_FILLING_APP_URL=http://localhost:3001/secured/fi/forms
+#     - COMPOSER_FILLING_APP_URL=http://localhost:3000/secured/en/assets/forms
       - COMPOSER_TENANTS_DEFAULT_TEMPLATE=https://s3.eu-central-1.amazonaws.com/cdn.resys.io/dialob-composer-material/dev/index.html
     networks:
       - dialob-backend
