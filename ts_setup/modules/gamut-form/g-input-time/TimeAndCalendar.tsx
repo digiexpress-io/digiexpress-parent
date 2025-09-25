@@ -19,8 +19,22 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
 
   const { format = 'HH:mm' } = props;
   const ownerState = { variant: props.variant ?? 'time' };
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const step = /s/.test(format) ? 1 : 60;
+
+  const openNativePicker = () => {
+    const el = inputRef.current;
+    if (!el) return;
+    if (typeof el.showPicker === 'function') {
+      requestAnimationFrame(() => {
+        el.showPicker();
+      });
+      return;
+    }
+    el.focus();
+    el.click();
+  };
 
   return (
     <GInputTimeInput ownerState={ownerState} className={classes.input}>
@@ -32,6 +46,17 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
         size="small"
         value={value ?? ''}
         disabled={props.disabled}
+        inputRef={inputRef}
+        sx={{
+          // Hide the native time picker UI so only our endAdornment shows
+          '& input[type="time"]::-webkit-calendar-picker-indicator': { display: 'none' },
+          '& input[type="time"]::-webkit-clear-button': { display: 'none' },
+          '& input[type="time"]::-webkit-inner-spin-button': { display: 'none' },
+          '& input[type="time"]::-webkit-outer-spin-button': { display: 'none' },
+          '& input[type="time"]::-ms-clear': { display: 'none' },
+          '& input[type="time"]::-ms-reveal': { display: 'none' },
+          '& input[type="time"]': { MozAppearance: 'textfield' as any },
+        }}
         onChange={(e) => {
           const next = e.target.value || null;
           setValue(next);
@@ -51,7 +76,16 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
               >
                 <ClearIcon fontSize="small" />
               </IconButton>
-              <AccessTimeIcon fontSize="small" sx={{ ml: 0.5 }} />
+              <IconButton
+                size="small"
+                onClick={openNativePicker}
+                disabled={props.disabled}
+                aria-label={intl.formatMessage({ id: 'gamut.openTimePicker', defaultMessage: 'Open time picker' })}
+                edge="end"
+                sx={{ ml: 0.5 }}
+              >
+                <AccessTimeIcon fontSize="small" />
+              </IconButton>
             </InputAdornment>
           ),
         }}
