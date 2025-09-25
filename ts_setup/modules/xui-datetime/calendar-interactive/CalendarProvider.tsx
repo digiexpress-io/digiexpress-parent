@@ -17,7 +17,8 @@ const DateNamesContext = React.createContext<DateNamesContextType>({
 
 const NOW = DateTime.now();
 
-export const CalendarProvider: React.FC<{
+
+export interface CalendarProviderProps {
   inline?: boolean | undefined;
   value: Date | null;
   locale: string;
@@ -25,8 +26,9 @@ export const CalendarProvider: React.FC<{
 
   onClose: () => void;
   onChange: (value: Date | null) => void;
+}
 
-}> = ({
+export const CalendarProvider: React.FC<CalendarProviderProps> = ({
   locale,
   inline,
   value: selectedDate,

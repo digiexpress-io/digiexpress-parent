@@ -1,7 +1,7 @@
 import React from 'react';
 
-//import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime'; //TODO
-import { DatePicker as XuiDatePicker } from '../../xui-datetime/date-picker';
+
+import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
 
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
@@ -9,6 +9,7 @@ import { useIntl } from 'react-intl';
 import { GInputDateProps } from './GInputDate';
 import { InputHidden } from './InputHidden';
 import { GInputDateInput, useUtilityClasses } from './useUtilityClasses';
+import { OutlinedInput } from '@mui/material';
 
 function parseInit(value: string | undefined) {
   if (value) {
@@ -36,15 +37,22 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>
       <InputHidden dateTime={value} onChange={props.onChange} id={props.id} />
-
-      <XuiDatePicker
-        variant="mui-like"
+      <OutlinedInput
         fullWidth
-        size="small"
-        value={value ? value.toJSDate() : null}
-        onChange={(d) => {
-          const next = d ? DateTime.fromJSDate(d) : null;
-          setValue(next);
+        slots={{
+          input: () => (
+            <XuiDatePicker
+              inline={false}
+              popover={true}
+              variant="mui-like"
+              fullWidth
+              value={value ? value.toJSDate() : null}
+              onChange={(d) => {
+                const next = d ? DateTime.fromJSDate(d) : null;
+                setValue(next);
+              }}
+            />
+          )
         }}
       />
     </GInputDateInput>
