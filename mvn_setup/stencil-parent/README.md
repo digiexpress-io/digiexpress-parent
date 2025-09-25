@@ -4,13 +4,13 @@
      
 # Local Development Environment
 
-## Prerequisites Java 11+, Maven 3.6.2+
+## Prerequisites Java 21+, Maven 3.9.2+
 It's recommended to install them using [SDKMAN](https://sdkman.io/install)
 ```
 curl -s "https://get.sdkman.io" | bash
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 sdk version
-sdk install java 11.0.7-zulu
+sdk install java 21.0.8-zulu
 sdk install maven
 ```
 
@@ -43,7 +43,7 @@ TODO
 
 Copy `/the-stencil-parent/dev-tools/demo-app`
 
-Create/configure local (postgre) database by following the steps in [README_PG.MD](README_PG.MD) 
+Create/configure local (postgresql) database by following the steps in [README_PG.MD](README_PG.MD) 
 
 Configure `/dev-tools/demo-app/src/resources/application.yaml`
 
