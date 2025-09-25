@@ -33,7 +33,7 @@
     <lombok.version>1.18.34</lombok.version>
     
     <immutables.version>2.10.1</immutables.version>
-    <guava.version>33.3.0-jre</guava.version>
+    <guava.version>33.5.0-jre</guava.version>
     <groovy.version>4.0.25</groovy.version>
     <jsonassert.version>1.5.3</jsonassert.version>
 
