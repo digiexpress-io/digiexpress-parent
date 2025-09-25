@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, FormControl, IconButton, OutlinedInput, useTheme } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import TodayIcon from '@mui/icons-material/Today';
@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl';
 
 import { CalendarInput, CalendarInputProvider, useCalendarInput } from '../calendar-input';
 import { CalendarProvider } from '../calendar-interactive';
+import { MUI_NAME, useUtilityClasses, XuiDateFieldRoot } from './useUtilityClasses';
 
 /**
  * DatePicker
@@ -34,7 +35,7 @@ type FieldProps = {
   onOpen: () => void;
   size: 'small' | 'medium';
   error?: boolean;
-  variant?: 'classic' | 'mui-like';
+  variant?: DatePickerProps['variant'];
 };
 
 /** Internal field container that draws the border and holds the input + buttons */
@@ -93,13 +94,13 @@ const DateFieldContainer: React.FC<FieldProps> = ({ onClear, onOpen, size, error
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
-  inline = false,
+  error,
+  sx,
   onChange,
+  inline = false,
   fullWidth = false,
   size = 'medium',
-  error,
   variant = 'classic',
-  sx,
 }) => {
   const { locale } = useIntl();
   const [open, setOpen] = React.useState(false);
@@ -110,15 +111,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     onChange(date);
   };
   const handleCalendarOpen = () => setOpen(true);
-
+  const classes = useUtilityClasses();
+  
   return (
     <>
       {!open && (
         <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
-          <Box
-            width={fullWidth ? '100%' : (variant === 'classic' ? 'fit-content' : '100%')}
-            sx={{ ...sx, px: 1 }}
-          >
+          <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ variant, fullWidth }} className={classes.root}>
             <DateFieldContainer
               onClear={() => handleDateChange(null)}
               onOpen={handleCalendarOpen}
@@ -126,7 +125,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               error={error}
               variant={variant}
             />
-          </Box>
+          </XuiDateFieldRoot>
         </CalendarInputProvider>
       )}
 

@@ -569,10 +569,8 @@
           "@tanstack/react-router": "*",
           "@tanstack/react-query": "*",
           "@tanstack/react-table": "*",
-          "react-date-picker": "*",
           "notistack": "*",
           "luxon": "*",
-          "moment": "*",
           "numbro": "*",
           "file-saver": "*"
         }
@@ -595,10 +593,8 @@
         "@tanstack/react-router",
         "@tanstack/react-query",
         "@tanstack/react-table",
-        "react-date-picker",
         "notistack",
         "luxon",
-        "moment",
         "numbro",
         "file-saver"
       ],
@@ -614,10 +610,8 @@
         "@tanstack/react-router",
         "@tanstack/react-query",
         "@tanstack/react-table",
-        "react-date-picker",
         "notistack",
         "luxon",
-        "moment",
         "numbro",
         "file-saver"
       ],
@@ -633,10 +627,8 @@
         "@tanstack/react-router",
         "@tanstack/react-query",
         "@tanstack/react-table",
-        "react-date-picker",
         "notistack",
         "luxon",
-        "moment",
         "numbro",
         "file-saver"
       ],
@@ -653,8 +645,8 @@
         "react-intl",
         "@mui/icons-material",
         "@mui/material",
-        "react-date-picker",
         "luxon",
+        "@dxs-ts/xui-datetime",
         "file-saver",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
@@ -666,7 +658,6 @@
         "@tanstack/react-query",
         "numbro",
         "@tanstack/react-router",
-        "moment",
         "@mui/system",
         "@mui/x-tree-view"
       ],
@@ -675,7 +666,6 @@
         "react-intl",
         "@mui/icons-material",
         "@mui/material",
-        "react-date-picker",
         "luxon",
         "file-saver",
         "@tanstack/react-table",
@@ -684,11 +674,11 @@
         "@tanstack/react-query",
         "numbro",
         "@tanstack/react-router",
-        "moment",
         "@mui/system",
         "@mui/x-tree-view"
       ],
       "actualInternalDependencies": [
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
@@ -696,7 +686,6 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/user-profile",
         "ts-md5"
       ]
@@ -860,6 +849,8 @@
         "@dxs-ts/gamut-theme",
         "@tanstack/react-router",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-datetime",
+        "luxon",
         "@dxs-ts/eveli-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
@@ -868,7 +859,6 @@
         "@mui/icons-material",
         "@dxs-ts/xui-table",
         "@tanstack/react-table",
-        "luxon",
         "@mui/utils",
         "@monaco-editor/react",
         "yaml",
@@ -889,9 +879,9 @@
         "@mui/material",
         "react-intl",
         "@tanstack/react-router",
+        "luxon",
         "@mui/icons-material",
         "@tanstack/react-table",
-        "luxon",
         "@mui/utils",
         "@monaco-editor/react",
         "yaml",
@@ -907,6 +897,7 @@
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
@@ -920,7 +911,9 @@
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/xui-datetime"
+      ],
       "unusedDependencies": [
         "moment"
       ]
@@ -1028,14 +1021,13 @@
         "type": "module",
         "dependencies": {
           "@dxs-ts/gamut-api": "*",
-          "@dxs-ts/gamut-md": "*"
+          "@dxs-ts/gamut-md": "*",
+          "@dxs-ts/xui-datetime": "*"
         },
         "peerDependencies": {
           "react": "*",
           "react-intl": "*",
           "react-leaflet": "*",
-          "react-date-picker": "*",
-          "react-time-picker": "*",
           "@mui/material": "*",
           "@mui/icons-material": "*",
           "@mui/utils": "*",
@@ -1056,11 +1048,10 @@
       "dependencies": [
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
+        "@dxs-ts/xui-datetime",
         "react",
         "react-intl",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
@@ -1073,8 +1064,6 @@
         "react",
         "react-intl",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
@@ -1087,8 +1076,6 @@
         "react",
         "react-intl",
         "react-leaflet",
-        "react-date-picker",
-        "react-time-picker",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils",
@@ -1099,7 +1086,8 @@
       ],
       "internalDependencies": [
         "@dxs-ts/gamut-api",
-        "@dxs-ts/gamut-md"
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/xui-datetime"
       ],
       "actualDependencies": [
         "react",
@@ -1112,10 +1100,9 @@
         "@mui/types",
         "leaflet",
         "react-leaflet",
-        "react-date-picker",
+        "@dxs-ts/xui-datetime",
         "luxon",
-        "numbro",
-        "react-time-picker"
+        "numbro"
       ],
       "actualExternalDependencies": [
         "react",
@@ -1126,14 +1113,13 @@
         "@mui/types",
         "leaflet",
         "react-leaflet",
-        "react-date-picker",
         "luxon",
-        "numbro",
-        "react-time-picker"
+        "numbro"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/gamut-api",
-        "@dxs-ts/gamut-md"
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/xui-datetime"
       ],
       "missingDependencies": [],
       "unusedDependencies": []
@@ -1863,7 +1849,8 @@
           "@dxs-ts/gamut-shell": "*",
           "@dxs-ts/gamut-intl": "*",
           "@dxs-ts/gamut-routes": "*",
-          "@dxs-ts/gamut-theme": "*"
+          "@dxs-ts/gamut-theme": "*",
+          "@dxs-ts/xui-datetime": "*"
         },
         "peerDependencies": {},
         "keywords": [
@@ -1883,7 +1870,8 @@
         "@dxs-ts/gamut-shell",
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-routes",
-        "@dxs-ts/gamut-theme"
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/xui-datetime"
       ],
       "peerDependencies": [],
       "externalDependencies": [],
@@ -1897,7 +1885,8 @@
         "@dxs-ts/gamut-shell",
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-routes",
-        "@dxs-ts/gamut-theme"
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/xui-datetime"
       ],
       "actualDependencies": [
         "@dxs-ts/gamut-api",
@@ -1925,7 +1914,9 @@
         "@dxs-ts/envir-util"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/xui-datetime"
+      ]
     },
     "@dxs-ts/stencil-api": {
       "name": "@dxs-ts/stencil-api",
@@ -2078,6 +2069,7 @@
         "@dxs-ts/xui-table",
         "@tanstack/react-router",
         "js-file-download",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/envir-fetch"
       ],
       "actualExternalDependencies": [
@@ -2099,9 +2091,12 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/envir-fetch"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/xui-datetime"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/task-api": {
@@ -2662,6 +2657,7 @@
         "@mui/utils",
         "monaco-editor",
         "@tanstack/react-router",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
         "@xyflow/react",
         "elkjs"
@@ -2689,9 +2685,12 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/wrench-api",
         "@dxs-ts/envir-fetch",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/xui-datetime"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/xui-datetime": {
@@ -2746,17 +2745,21 @@
         "react",
         "@mui/icons-material",
         "react-intl",
-        "luxon"
+        "luxon",
+        "@mui/utils"
       ],
       "actualExternalDependencies": [
         "@mui/material",
         "react",
         "@mui/icons-material",
         "react-intl",
-        "luxon"
+        "luxon",
+        "@mui/utils"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@mui/utils"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/xui-table": {
@@ -2950,7 +2953,8 @@
       ],
       "@dxs-ts/gamut-form": [
         "@dxs-ts/gamut-api",
-        "@dxs-ts/gamut-md"
+        "@dxs-ts/gamut-md",
+        "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/gamut-form-review": [
         "@dxs-ts/gamut-api",
@@ -3014,7 +3018,8 @@
         "@dxs-ts/gamut-shell",
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-routes",
-        "@dxs-ts/gamut-theme"
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/stencil-api": [],
       "@dxs-ts/stencil-routes": [
@@ -3235,7 +3240,9 @@
       "@dxs-ts/xui-datetime": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/gamut-form",
         "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-table"
@@ -3312,11 +3319,9 @@
         "notistack",
         "numbro",
         "react",
-        "react-date-picker",
         "react-intl",
         "react-leaflet",
         "react-markdown",
-        "react-time-picker",
         "recharts",
         "ts-md5",
         "yaml"
@@ -3338,7 +3343,8 @@
         "@dxs-ts/gamut-shell",
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-routes",
-        "@dxs-ts/gamut-theme"
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/xui-datetime"
       ],
       "externalDependencies": [
         "@mui/icons-material",
@@ -3363,6 +3369,6 @@
       ]
     }
   },
-  "checksum": "b799a90a1d6b09caf2abff64c90f68cd1b9e98f62d47dfa5b8d3b8ba5233f47b",
-  "generatedAt": "2025-09-18T09:48:48.014Z"
+  "checksum": "2b6a05c4fe0fc66602d4750fe39a6dbaea7547f5e4b68c5782fc9a2bbf1bb004",
+  "generatedAt": "2025-09-25T09:06:25.921Z"
 }

@@ -28,5 +28,8 @@ export const GInputDateInput = styled('div', {
   slot: 'Input',
   overridesResolver: (props, styles) => [styles.root, useVariantOverride(props, styles)],
 })<{ ownerState: { variant: string } }>(() => {
-  return {};
+  return {
+
+    
+  };
 });
