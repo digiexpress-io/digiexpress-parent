@@ -16,6 +16,9 @@
       ],
       "@dxs-ts/eveli-primitives": [
         "../eveli-primitives/index.ts"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
       ]
     }
   },
@@ -32,16 +35,19 @@
     },
     {
       "path": "../eveli-primitives"
+    },
+    {
+      "path": "../xui-datetime"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T08:29:08.097Z",
+    "at": "2025-09-25T12:40:57.061Z",
     "forModule": "@dxs-ts/wrench-routes",
-    "fromRegistry": "308e7ad54407",
+    "fromRegistry": "5dbc9bc879a7",
     "alias": {
       "@dxs-ts/wrench-routes": [
-        "../eveli-primitives"
+        "../xui-datetime"
       ]
     }
   }
