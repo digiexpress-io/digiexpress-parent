@@ -22,7 +22,8 @@
     "@dxs-ts/task-feedback": "*",
     "@dxs-ts/task-composer-v1": "*",
     "@dxs-ts/task-composer-v2": "*",
-    "@dxs-ts/xui-table": "*"
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/xui-datetime": "*"
   },
   "peerDependencies": {
     "react": "*",

@@ -11,6 +11,7 @@
     "react": "*",
     "react-intl": "*",
     "@mui/material": "*",
+    "@mui/utils": "*",
     "@mui/icons-material": "*",
     "luxon": "*"
 

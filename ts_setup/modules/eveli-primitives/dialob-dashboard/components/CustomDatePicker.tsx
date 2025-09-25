@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormControl, FormLabel } from '@mui/material';
 import { DateTime } from 'luxon';
 import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
@@ -53,7 +53,6 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     >
       {label ? <FormLabel>{label}</FormLabel> : null}
       <XuiDatePicker
-        variant="mui-like"
         fullWidth={fullWidth}
         size={size}
         value={normalized}

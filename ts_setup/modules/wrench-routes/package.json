@@ -8,7 +8,8 @@
     "@dxs-ts/wrench-api": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/envir-fetch": "*",
-    "@dxs-ts/eveli-primitives": "*"
+    "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/xui-datetime": "*"
   },
   "peerDependencies": {
     "react": "*",

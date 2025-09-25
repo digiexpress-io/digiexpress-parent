@@ -25,7 +25,6 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
     return (<XuiDatePicker
       inline={false}
       popover={true}
-      variant="mui-like"
       fullWidth
       value={value ? value.toJSDate() : null}
       onChange={(d) => {

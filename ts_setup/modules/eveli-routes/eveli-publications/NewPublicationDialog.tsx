@@ -96,7 +96,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
           <FormControl sx={{ minHeight: 72 }}>
             <FormLabel>{intl.formatMessage({ id: 'publications.liveDate' })}</FormLabel>
             <XuiDatePicker
-              variant="mui-like"
               fullWidth
               size="small"
               value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}

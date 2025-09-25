@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router'
 
 import { useEveliPermissions } from "@dxs-ts/eveli-primitives";
-import { DatePicker as XuiDatePicker } from "@dxs-ts/xui-datetime";
-import { DateTimeFormatter as XuiDateTimeFormatter } from "@dxs-ts/xui-datetime";
+import { DatePicker as XuiDatePicker, DateTimeFormatter as XuiDateTimeFormatter } from "@dxs-ts/xui-datetime";
 import { DateTime } from "luxon";
 
 import { useFeedbackBackend, useIam, EveliTenantFeatureEnabled, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
@@ -53,7 +52,6 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
     return (
       <Box onKeyDown={onKeyDown}>
         <XuiDatePicker
-          variant="mui-like"
           fullWidth={fullWidth}
           size={size}
           value={normalized}

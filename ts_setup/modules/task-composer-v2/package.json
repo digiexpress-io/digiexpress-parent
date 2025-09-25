@@ -19,6 +19,7 @@
     "@mui/system": "*",
     "@mui/icons-material": "*",
     "@tanstack/react-table": "*",
+    "@tanstack/react-query": "*",
     "@monaco-editor/react": "*",
     "yaml": "*"
   },

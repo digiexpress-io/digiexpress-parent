@@ -42,7 +42,6 @@ export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({
     >
       {label ? <FormLabel>{label}</FormLabel> : null}
       <XuiDatePicker
-        variant="mui-like"
         fullWidth={fullWidth}
         size={size}
         value={normalized}
