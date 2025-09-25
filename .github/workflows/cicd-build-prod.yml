@@ -5,7 +5,7 @@ on:
     paths:
       - 'mvn_setup/**'
     branches:
-      - prod_1.x
+      - dev
 
   push:
     paths:
