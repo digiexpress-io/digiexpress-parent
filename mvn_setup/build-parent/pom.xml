@@ -21,12 +21,12 @@
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
     <surefire.plugin.version>3.5.4</surefire.plugin.version>
 
-    <spring.boot.version>3.4.10</spring.boot.version>
-    <spring.security.version>6.4.11</spring.security.version>
+    <spring.boot.version>3.5.6</spring.boot.version>
+    <spring.security.version>6.5.5</spring.security.version>
 
-    <spring.cloud.version>2024.0.2</spring.cloud.version>
-    <spring-cloud-gcp.version>6.3.4</spring-cloud-gcp.version>
-    <jackson.version>2.18.4</jackson.version>
+    <spring.cloud.version>2025.0.0</spring.cloud.version>
+    <spring-cloud-gcp.version>7.3.1</spring-cloud-gcp.version>
+    <jackson.version>2.19.2</jackson.version>
 
     <quarkus.version>3.15.3</quarkus.version>
     <lombok.version>1.18.42</lombok.version>
