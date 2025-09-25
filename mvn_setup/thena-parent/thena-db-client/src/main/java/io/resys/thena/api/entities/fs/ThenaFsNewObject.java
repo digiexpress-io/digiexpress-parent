@@ -22,7 +22,7 @@ package io.resys.thena.api.entities.fs;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import io.resys.thena.api.entities.fs.FsDirent.DirentType;
 import io.resys.thena.api.entities.fs.ThenaFsContainers.FsDirentContainer;

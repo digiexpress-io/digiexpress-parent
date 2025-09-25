@@ -32,7 +32,7 @@ import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.TypeDef;
 import org.immutables.value.Value;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

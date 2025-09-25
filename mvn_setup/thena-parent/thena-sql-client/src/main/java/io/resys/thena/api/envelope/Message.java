@@ -1,6 +1,6 @@
 package io.resys.thena.api.envelope;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /*-
  * #%L

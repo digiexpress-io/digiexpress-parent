@@ -23,7 +23,7 @@ package io.resys.thena.api.entities.git;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 

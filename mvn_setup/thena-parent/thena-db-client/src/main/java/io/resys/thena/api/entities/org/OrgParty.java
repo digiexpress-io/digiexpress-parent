@@ -22,7 +22,7 @@ package io.resys.thena.api.entities.org;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 

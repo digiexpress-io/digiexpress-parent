@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.BlobCommit;

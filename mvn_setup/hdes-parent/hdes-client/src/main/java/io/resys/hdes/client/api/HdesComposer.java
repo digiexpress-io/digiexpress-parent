@@ -42,7 +42,7 @@ import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
 import io.smallrye.mutiny.Uni;
 import org.immutables.value.Value;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;

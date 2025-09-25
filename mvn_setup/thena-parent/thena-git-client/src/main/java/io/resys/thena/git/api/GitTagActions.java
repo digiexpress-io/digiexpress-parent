@@ -23,7 +23,7 @@ package io.resys.thena.git.api;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 

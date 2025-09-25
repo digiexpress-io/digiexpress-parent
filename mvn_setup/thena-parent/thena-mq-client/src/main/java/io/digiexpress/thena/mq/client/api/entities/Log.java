@@ -20,7 +20,7 @@ package io.digiexpress.thena.mq.client.api.entities;
  * #L%
  */
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 

@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 

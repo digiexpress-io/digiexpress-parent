@@ -22,7 +22,7 @@ package io.resys.thena.doc.api;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import io.resys.thena.api.entities.doc.DocContainer.DocObject;
 import io.resys.thena.api.entities.doc.DocContainer.DocTenantObjects;

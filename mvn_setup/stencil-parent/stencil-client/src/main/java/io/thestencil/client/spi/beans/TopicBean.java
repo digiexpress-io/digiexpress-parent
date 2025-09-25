@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;

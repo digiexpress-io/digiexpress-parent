@@ -2,7 +2,7 @@ package io.resys.hdes.client.api.ast;
 
 import java.io.Serializable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 

@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
