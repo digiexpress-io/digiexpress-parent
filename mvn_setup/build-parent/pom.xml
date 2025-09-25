@@ -30,7 +30,7 @@
     <jackson.version>2.18.2</jackson.version>
 
     <quarkus.version>3.15.3</quarkus.version>
-    <lombok.version>1.18.34</lombok.version>
+    <lombok.version>1.18.42</lombok.version>
 
     <immutables.version>2.11.3</immutables.version>
     <guava.version>33.5.0-jre</guava.version>
