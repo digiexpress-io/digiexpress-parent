@@ -12,7 +12,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <jdk.version>17</jdk.version>
+    <jdk.version>21</jdk.version>
     <maven.compiler.target>${jdk.version}</maven.compiler.target>
     <maven.compiler.source>${jdk.version}</maven.compiler.source>
     <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
