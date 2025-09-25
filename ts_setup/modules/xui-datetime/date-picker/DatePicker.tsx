@@ -1,9 +1,9 @@
 import React from 'react';
-import type { SxProps, Theme } from '@mui/material';
+import { Popover, type SxProps, type Theme } from '@mui/material';
 import { useIntl } from 'react-intl';
 
 import { CalendarInputProvider } from '../calendar-input';
-import { CalendarProvider, CalendarProviderProps } from '../calendar-interactive';
+import { CalendarProvider } from '../calendar-interactive';
 import { useUtilityClasses, XuiDateFieldRoot } from './useUtilityClasses';
 import { DateFieldContainer } from './DateFieldContainer';
 
@@ -53,15 +53,15 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   };
   const handleCalendarOpen = () => setOpen(true);
   const classes = useUtilityClasses();
-  
-  const isFieldEnabled = !isPickerOpen || popover;
 
+  const isFieldEnabled = !isPickerOpen || popover;
+  const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
     <>
       {isFieldEnabled && (
         <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
-          <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ variant, fullWidth }} className={classes.root}>
+          <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ variant, fullWidth }} className={classes.root} ref={anchorRef}>
             <DateFieldContainer
               onClear={() => handleDateChange(null)}
               onOpen={handleCalendarOpen}
@@ -73,7 +73,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         </CalendarInputProvider>
       )}
 
-      <PickerFactory open={isPickerOpen} popover={popover}>
+      <PickerFactory open={isPickerOpen} popover={popover} onClose={handleClose} anchorEl={anchorRef.current}>
         <CalendarProvider
           inline={inline}
           locale={locale}
@@ -87,26 +87,51 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 }
 
 
-const PickerFactory: React.FC<{ children: React.ReactNode, open: boolean, popover: boolean }> = ({
-  children, popover, open
+const PickerFactory: React.FC<{
+  children: React.ReactNode,
+  open: boolean,
+  popover: boolean,
+  onClose: () => void,
+  anchorEl: HTMLElement | null
+}> = ({
+  children, popover, open, onClose, anchorEl
 }) => {
   if (!open) {
     return (<></>)
   }
 
   if (popover) {
-    return (<PickerPopover children={children} />)
-  }
+      return (<PickerPopover children={children} open={open} onClose={onClose} anchorEl={anchorEl} />)
+    }
 
   return (<>{children}</>);
 }
 
 
 
-const PickerPopover: React.FC<{ children: React.ReactNode }> = ({
-  children
-}) => {
+const PickerPopover: React.FC<{
+  children: React.ReactNode,
+  open: boolean,
+  onClose: () => void,
+  anchorEl: HTMLElement | null;
 
-  return (<>fdf</>)
+}> = ({ children, onClose, open, anchorEl }) => {
+
+  return (
+    <Popover
+      open={open}
+      onClose={onClose}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+    >
+      {children}
+    </Popover>)
 }
 
