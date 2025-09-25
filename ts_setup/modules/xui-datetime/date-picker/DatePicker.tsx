@@ -115,7 +115,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     <>
       {!open && (
         <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
-          <Box width={fullWidth ? '100%' : (variant === 'classic' ? 'fit-content' : '100%')} sx={sx}>
+          <Box
+            width={fullWidth ? '100%' : (variant === 'classic' ? 'fit-content' : '100%')}
+            sx={{ ...sx, px: 1 }}
+          >
             <DateFieldContainer
               onClear={() => handleDateChange(null)}
               onOpen={handleCalendarOpen}
