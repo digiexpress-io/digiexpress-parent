@@ -57,4 +57,8 @@ export const GInputTimeInputContainer = styled('div', {
   '& .MuiInputAdornment-root .MuiIconButton-root + .MuiIconButton-root': {
     marginLeft: theme.spacing(0.5),
   },
+  '& .MuiInputAdornment-root.MuiInputAdornment-positionEnd': {
+    paddingRight: theme.spacing(1.4),
+  },
+
 }));
