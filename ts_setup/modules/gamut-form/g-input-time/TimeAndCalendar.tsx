@@ -1,55 +1,79 @@
 import React from 'react';
-
-import TimePicker from 'react-time-picker';
 import ClearIcon from '@mui/icons-material/Clear';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
-import { useIntl } from "react-intl";
-import { GInputTimeProps } from "./GInputTime";
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { useIntl } from 'react-intl';
+import { GInputTimeProps } from './GInputTime';
 import { InputHidden } from './InputHidden';
-
-import { GInputTimeInput, useUtilityClasses } from './useUtilityClasses';
-
+import { useUtilityClasses, GInputTimeInputContainer } from './useUtilityClasses';
 
 function parseInit(value: string | undefined) {
-  if (value) {
-    return value;
-  }
-  return null;
+  return value ?? null;
 }
-
 
 export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
   const intl = useIntl();
-  const classes = useUtilityClasses(props.id, props.variant)
+  const classes = useUtilityClasses(props.id, props.variant);
   const [value, setValue] = React.useState<string | null>(parseInit(props.value));
 
   const { format = 'HH:mm' } = props;
+  const ownerState = { variant: props.variant ?? 'time' };
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const step = /s/.test(format) ? 1 : 60;
 
-  const ownerState = {
-    variant: props.variant ?? 'time',
-  }
+  const openNativePicker = () => {
+    const el = inputRef.current;
+    if (!el) return;
+    if (typeof (el as any).showPicker === 'function') {
+      requestAnimationFrame(() => (el as any).showPicker());
+      return;
+    }
+    el.focus();
+    el.click();
+  };
 
   return (
-    <GInputTimeInput ownerState={ownerState} className={classes.input}>
-      <InputHidden time={value} onChange={props.onChange} id={props.id} /> 
+    <GInputTimeInputContainer ownerState={ownerState} className={classes.inputContainer}>
+      <InputHidden time={value} onChange={props.onChange} id={props.id} />
 
-      <TimePicker 
+      <TextField
+        type="time"
+        fullWidth
+        value={value ?? ''}
         disabled={props.disabled}
-        value={value} 
-        onChange={(newValue) => setValue(newValue)} 
-        format={format}
-        
-        clockIcon={<AccessTimeIcon />}
-        clearIcon={<ClearIcon />}
-
-        hourPlaceholder={intl.formatMessage({ id: 'gamut.forms.answer.date.placeholder.hour' })}
-        minutePlaceholder={intl.formatMessage({ id: 'gamut.forms.answer.date.placeholder.minute' })}
-
-        className='MuiInputBase-root'
+        inputRef={inputRef}
+        onChange={(e) => {
+          const next = e.target.value || null;
+          setValue(next);
+        }}
+        inputProps={{ step, className: classes.input }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end" className={classes.endAdornment}>
+              <IconButton
+                size="small"
+                onClick={() => setValue(null)}
+                disabled={!value || props.disabled}
+                aria-label={intl.formatMessage({ id: 'common.clear', defaultMessage: 'Clear' })}
+                edge="end"
+                className={classes.clearButton}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={openNativePicker}
+                disabled={props.disabled}
+                aria-label={intl.formatMessage({ id: 'gamut.openTimePicker', defaultMessage: 'Open time picker' })}
+                edge="end"
+                className={classes.timeButton}
+              >
+                <AccessTimeIcon fontSize="small" />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
-
-    </GInputTimeInput>
-
+    </GInputTimeInputContainer>
   );
-}
+};

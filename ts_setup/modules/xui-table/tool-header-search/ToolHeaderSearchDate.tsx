@@ -53,7 +53,8 @@ export const ToolHeaderSearchDate: React.FC<ToolHeaderSearchDateProps> = ({ head
     <>
       <FilterByStringSlot className={classes.filterByString}>
         <Typography>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateGte', defaultMessage: 'Items after or on ' })}{title}</Typography>
-        <DatePicker value={currentFilter} onChange={handleDateChange} inline/>
+
+        <DatePicker value={currentFilter} onChange={handleDateChange} popover sx={{ mx: 4, my: 2 }}/>
       </FilterByStringSlot>
     </>
   );

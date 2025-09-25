@@ -154,7 +154,6 @@ function _resolvedExternalDeps(input: Command_ResolvePackageVersions.Input): str
     .filter(value => !value.startsWith("@mui/icons-material/"))
     .filter(value => !value.startsWith("@mui/material/"))
     .filter(value => !value.startsWith("@mui/utils/"))
-    .filter(value => !value.startsWith("react-date-picker/"))
 
     .filter(value => !value.startsWith("react/jsx-runtime"))
     .filter(value => !value.endsWith(".css"))

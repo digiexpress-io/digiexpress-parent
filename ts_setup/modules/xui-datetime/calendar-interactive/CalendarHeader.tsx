@@ -1,11 +1,10 @@
-import { Typography, Box, IconButton, Button, Divider } from '@mui/material';
+import React from 'react';
+import { Box, IconButton, useTheme } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { SQUARE_WIDTH } from './calendar_constants';
 
 export interface CalendarHeaderProps {
   currentDate: Date;
@@ -22,12 +21,12 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onYearClick,
   showYearPicker = false,
 }) => {
-  const width = (SQUARE_WIDTH + 8) * 7;
 
+  const theme = useTheme();
   return (
-    <Box minWidth={width} width={width}>
+    <Box>
       <Box display="flex" alignItems="center" justifyContent="space-between" px={1}>
-        
+
         {/* Left slot: month navigation (hidden when year picker active) */}
         <Box display="flex" alignItems="center">
           {!showYearPicker && (
@@ -40,13 +39,13 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
                   <KeyboardArrowRightIcon />
                 </IconButton>
               </Box>
-              <Box
-                sx={{
-                  fontSize: '1.2rem',
-                  fontWeight: 700,
-                  letterSpacing: '-0.25px',
-                  lineHeight: 1.2,
-                }}
+              <Box sx={{
+                fontWeight: 700,
+                lineHeight: 1.2,
+                [theme.breakpoints.down('md')]: {
+                  marginRight: 1
+                }
+              }}
               >
                 <FormattedMessage id={`calendar.month.${currentDate.getMonth()}`} />
               </Box>
@@ -61,9 +60,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             display: 'flex',
             alignItems: 'center',
             cursor: 'pointer',
-            fontSize: '1.2rem',
             fontWeight: 700,
-            letterSpacing: '-0.25px',
             color: 'text.primary',
             '&:hover': { color: 'primary.main' },
           }}

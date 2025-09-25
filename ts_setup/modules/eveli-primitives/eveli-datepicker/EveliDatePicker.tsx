@@ -1,95 +1,56 @@
-import React from 'react';
-import { styled, TextField } from '@mui/material';
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-import ClearIcon from '@mui/icons-material/Clear';
+import * as React from 'react';
+import { FormControl, FormLabel } from '@mui/material';
+import { DateTime } from 'luxon';
+import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
 
+type XuiProps = React.ComponentProps<typeof XuiDatePicker>;
 
-import { DateTime } from 'luxon'; 
-import { useIntl } from 'react-intl';
-import DatePicker from 'react-date-picker';
+export type EveliDatePickerProps = Omit<XuiProps, 'value' | 'onChange'> & {
+  /** Slot contract: allow string | Date | null | undefined */
+  value?: string | Date | null;
+  onChange?: (d: Date | null) => void;
 
-import 'react-date-picker/dist/DatePicker.css';
-import { useLocale } from '@dxs-ts/eveli-api';
+  /** Legacy ergonomics from old wrapper */
+  label?: React.ReactNode;
+  fullWidth?: boolean;
+  readonly?: boolean;
 
+  /** Slots often pass this through; accept it to satisfy ElementType signature */
+  onKeyDown?: React.KeyboardEventHandler;
+};
 
-/// deprecated
-export type EveliDatePickerProps = {
-  label?: string | React.ReactNode,
-  readonly?: boolean,
-  fullWidth?: boolean,
-  value: string | Date | undefined | null;
-  onChange?: (newValue: Date | null) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-}
-
-
-const dateFormat = 'dd.MM.yyyy';
-
-const DatePickerStyles = styled("div")(({ theme }) => {
-  return {
-    '& .react-date-picker': {
-      zIndex: 100,
-      alignItems: 'center',
-      width: '100%',
-      boxSizing: 'border-box', // Prevent padding issue with fullWidth.
-      padding: '4px 0 5px',
-      border: '1px solid rgba(0, 0, 0, 0.23)',
-      outline: '1px solid rgb(0,0,0, 0.0)',
-      borderRadius: theme.spacing(0.5),
-    },
-
-    '& .react-date-picker__wrapper': {
-      border: 'unset'
-    },
-
-    '& .react-date-picker__inputGroup__input': {
-      ...theme.typography.body1
-    },
-  };
-});
-
-
-export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({label, readonly, fullWidth, value, onChange, onKeyDown}) => {
-  const dateValue: Date | null = value ? new Date(value) : null;
-  const { localeForDate } = useLocale();
-  const intl = useIntl();
-  
-  if (readonly) {    
-    const date = dateValue ? DateTime.fromJSDate(dateValue).setLocale(localeForDate).toFormat(dateFormat) : '';
-    if(!label) {
-      return date;
-    }
-
-
-    return (
-      <TextField label={label} fullWidth={fullWidth} value={date} 
-        inputProps={{ readOnly : true }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-    );
-  }
+export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({
+  label,
+  fullWidth = true,
+  size = 'small',
+  value,
+  onChange,
+  readonly,
+  onKeyDown,
+  ...rest
+}) => {
+  // Normalize to Date | null for xui picker
+  const normalized: Date | null =
+    typeof value === 'string'
+      ? (value ? DateTime.fromISO(value).toJSDate() : null)
+      : (value ?? null);
 
   return (
-    <DatePickerStyles>
-      <DatePicker 
-        onChange={(newValue) => {
-          if(!onChange) {
-            return;
-          }
-          onChange(newValue ? DateTime.fromJSDate(newValue as Date).toJSDate() : null)
-        }}
-        value={dateValue} 
-        calendarIcon={<EditCalendarIcon />}
-        clearIcon={<ClearIcon />}
-        format={dateFormat}
-        className='MuiInputBase-root'
-        onKeyDown={onKeyDown}
-        dayPlaceholder={intl.formatMessage({ id: 'date.placeholder.day', defaultMessage: 'Day' })}
-        monthPlaceholder={intl.formatMessage({ id: 'date.placeholder.month', defaultMessage: 'Month' })}
-        yearPlaceholder={intl.formatMessage({ id: 'date.placeholder.year', defaultMessage: 'Year' })}
+    <FormControl
+      sx={{ minHeight: 72, width: fullWidth ? '100%' : 'auto', opacity: readonly ? 0.7 : 1 }}
+      onKeyDown={onKeyDown}
+    >
+      {label ? <FormLabel>{label}</FormLabel> : null}
+      <XuiDatePicker
+        fullWidth={fullWidth}
+        size={size}
+        value={normalized}
+        onChange={readonly ? () => {} : (d) => onChange?.(d)}
+        sx={{ pointerEvents: readonly ? 'none' : 'auto' }}
+        {...rest}
       />
-  </DatePickerStyles>
+    </FormControl>
   );
-}
+};
+
+export default EveliDatePicker;

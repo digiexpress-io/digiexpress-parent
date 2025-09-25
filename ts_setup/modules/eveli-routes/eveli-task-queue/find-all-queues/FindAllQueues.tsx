@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Divider, List, ListItem, ListItemButton, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useQueue, QueueApi } from '@dxs-ts/eveli-api';
-import { EveliDateTimeFormatter } from '@dxs-ts/eveli-primitives';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 
 
@@ -35,7 +35,7 @@ export const FindAllQueues: React.FC<FindAllQueuesProps> = () => {
                   </Box>
                   <Box width='20%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.createdAt' })}</Typography>
-                    <Typography><EveliDateTimeFormatter value={queue.createdAt} /></Typography>
+                    <Typography><DateTimeFormatter value={queue.createdAt} /></Typography>
                   </Box>
                   <Box width='10%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.createdBy' })}</Typography>
@@ -67,7 +67,7 @@ export const FindAllQueues: React.FC<FindAllQueuesProps> = () => {
                   </Box>
                   <Box width='20%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.createdAt' })}</Typography>
-                    <Typography><EveliDateTimeFormatter value={consumer.createdAt} /></Typography>
+                    <Typography><DateTimeFormatter value={consumer.createdAt} /></Typography>
                   </Box>
                   <Box width='10%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.consumerStatus' })}</Typography>
