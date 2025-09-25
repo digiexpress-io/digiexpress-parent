@@ -23,10 +23,10 @@ jobs:
         
       name: Release TS projects into NPMJS 
       steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v5
           with:
             fetch-depth: 501
-        - uses: pnpm/action-setup@v2
+        - uses: pnpm/action-setup@v4
           name: install pnpm
           with:
             version: 10
@@ -37,7 +37,7 @@ jobs:
             node --version
             npm --version
 
-        - uses: actions/setup-node@v4
+        - uses: actions/setup-node@v5
           with:
             node-version: 22
             cache: 'pnpm'
