@@ -1,7 +1,9 @@
-import { Box, useTheme } from "@mui/material";
 import React from "react";
+import { Box } from "@mui/material";
+
 import { Input } from "./Input";
 import { useCalendarInput } from "./CalendarInputProvider";
+
 
 // Field components using context
 const DayField: React.FC = () => {
@@ -78,7 +80,6 @@ const ErrorMessage: React.FC = () => {
 // Container component that uses context
 const CalendarInputInternal: React.FC<{ className: string }> = ({ className }) => {
   const { handleContainerClick } = useCalendarInput();
-  const theme = useTheme();
   
   return (
     <Box

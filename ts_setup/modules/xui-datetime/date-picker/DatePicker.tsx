@@ -25,12 +25,9 @@ export interface DatePickerProps {
   size?: 'small' | 'medium';
   /** Force error visuals (in addition to internal invalid state) */
   error?: boolean;
-  /** Visual style: keep "classic" as default to avoid regressions */
-  variant?: 'classic' | 'mui-like';
   /** Extra Box sx for outer wrapper */
   sx?: SxProps<Theme>;
 }
-
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
@@ -40,8 +37,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   popover = false,
   inline = false,
   fullWidth = false,
-  size = 'medium',
-  variant = 'classic',
+  size = 'medium'
 }) => {
   const { locale } = useIntl();
   const [isPickerOpen, setOpen] = React.useState(false);
@@ -61,13 +57,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     <>
       {isFieldEnabled && (
         <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
-          <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ variant, fullWidth }} className={classes.root} ref={anchorRef}>
+          <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ fullWidth }} className={classes.root} ref={anchorRef}>
             <DateFieldContainer
               onClear={() => handleDateChange(null)}
               onOpen={handleCalendarOpen}
               size={size}
               error={error}
-              variant={variant}
             />
           </XuiDateFieldRoot>
         </CalendarInputProvider>

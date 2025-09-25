@@ -2,7 +2,8 @@ import { Box, Button, Grid2, Typography, alpha } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { SQUARE_WIDTH } from "./calendar_constants";
 
-const WIDTH = `${SQUARE_WIDTH}px`;
+
+
 
 // Day Grid Component
 export const DayGrid: React.FC<{
@@ -76,17 +77,47 @@ export const DayGrid: React.FC<{
                 onClick={() => handleDateClick(day)}
                 disabled={isDateDisabled(day)}
                 sx={(theme) => ({
-                  minWidth: WIDTH,
-                  width: WIDTH,
-                  height: WIDTH,
+                  [theme.breakpoints.only('xs')]: {
+                    width: '10px',
+                    height: '10px',
+                    minWidth: '10px',
+                  },
+                  [theme.breakpoints.only('sm')]: {
+                    width: SQUARE_WIDTH,
+                    height: SQUARE_WIDTH,
+                    minWidth: SQUARE_WIDTH,
+                  },
+                  [theme.breakpoints.only('md')]: {
+                    width: SQUARE_WIDTH,
+                    height: SQUARE_WIDTH,
+                    minWidth: SQUARE_WIDTH,
+                  },
+                  [theme.breakpoints.only('lg')]: {
+                    width: SQUARE_WIDTH,
+                    height: SQUARE_WIDTH,
+                    minWidth: SQUARE_WIDTH,
+                  },
+                  [theme.breakpoints.only('xl')]: {
+                    width: SQUARE_WIDTH,
+                    height: SQUARE_WIDTH,
+                    minWidth: SQUARE_WIDTH,
+                  },
                   borderRadius: '50%',
                   fontWeight: 500,
                   color: isDateSelected(day)
                     ? theme.palette.common.white
                     : theme.palette.text.primary,
-                  backgroundColor: isDateSelected(day)
-                    ? theme.palette.primary.main
-                    : 'transparent',
+                  [theme.breakpoints.up('sm')]: {
+                    backgroundColor: isDateSelected(day) ? theme.palette.primary.main : 'transparent',
+                  },
+                  [theme.breakpoints.down('sm')]: {
+                    backgroundColor: isDateSelected(day) ? theme.palette.primary.main : 'transparent',
+                    minWidth: '28px',
+                    minHeight: '28px',
+                    borderRadius: '50%',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  },
                   '&:hover': {
                     backgroundColor: isDateSelected(day)
                       ? theme.palette.primary.dark
@@ -98,7 +129,7 @@ export const DayGrid: React.FC<{
                   },
                 })}
               >
-                {day}
+                <Typography>{day}</Typography>
               </Button>
             )}
           </Box>

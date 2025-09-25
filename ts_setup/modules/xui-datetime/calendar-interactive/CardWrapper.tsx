@@ -9,11 +9,7 @@ export const CardWrapper: React.FC<{inline: boolean, children: React.ReactNode}>
     return <>{children}</>
   }
   return (
-    <Card variant="outlined" sx={{
-      width: 'fit-content',     // Fits width to content
-      height: 'fit-content',    // Fits height to content
-      display: 'inline-block'   // Prevents full-width behavior
-    }}>
+    <Card variant="outlined">
       <CardContent>
         {children}
       </CardContent>
