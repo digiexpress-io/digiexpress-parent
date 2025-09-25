@@ -22,14 +22,15 @@ export interface GInputDateProps {
   id: string;
   disabled: boolean;
   value: string | undefined;
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition;
   description: string | undefined;
   format: string | undefined;
-
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
+
+  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  setExtendedErrors?: (extendedErrors: DialobApi.ActionError[]) => void;
 
   variant: OverridableStringUnion<
     'date',
@@ -50,10 +51,22 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
+  const [extendedErrors, setExtendedErrors] = React.useState<DialobApi.ActionError[]>([])
+  const handleExtendedErrors = React.useCallback((nextErrors: DialobApi.ActionError[] | undefined) => {
+    setExtendedErrors(prevErrors => {
+      const s1 = JSON.stringify(nextErrors ?? []);
+      const s2 = JSON.stringify(prevErrors ?? []);
+      return s1 === s2 ? prevErrors : (nextErrors ?? []);
+    });
 
-  const { id, label, variant = 'date', labelPosition, errors } = props;
+  }, [setExtendedErrors])
+
+  const errors: DialobApi.ActionError[] = [...extendedErrors, ...(props.errors ?? [])]
+
+  const { id, label, variant = 'date', labelPosition } = props;
   const ownerState = { ...props, variant };
   const classes = useUtilityClasses(id, variant);
+
 
   const slots: GInputBaseProps<GInputDateProps> = {
     id,
@@ -65,7 +78,7 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     },
     slotProps: {
       error: { id, errors },
-      input: { ...ownerState, name: id },
+      input: { ...ownerState, name: id, setExtendedErrors: handleExtendedErrors },
       label: { id, children: label ?? '', labelPosition },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }

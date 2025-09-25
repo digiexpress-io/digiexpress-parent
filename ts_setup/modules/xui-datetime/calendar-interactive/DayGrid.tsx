@@ -55,9 +55,10 @@ export const DayGrid: React.FC<{
   
   const handleDateClick = (day: number) => {
     if (isDateDisabled(day)) return;
-    const date = new Date(year, month, day);
+
+    const date = new Date(year, month, day, 15);
     onDateSelect(date);
-    };
+  };
 
     return (
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, px: 1 }}>

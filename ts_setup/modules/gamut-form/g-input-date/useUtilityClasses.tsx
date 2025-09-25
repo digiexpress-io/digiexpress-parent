@@ -1,7 +1,6 @@
 import { generateUtilityClass, styled } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
 import { useVariantOverride } from '@dxs-ts/gamut-api';
-import { borderRadius } from '@mui/system';
 
 export const MUI_NAME = 'GInputDate';
 

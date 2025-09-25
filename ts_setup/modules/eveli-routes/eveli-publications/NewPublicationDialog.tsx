@@ -11,7 +11,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { PublicationApi } from '@dxs-ts/eveli-api';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
-import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
+import { DatePicker } from '@dxs-ts/xui-datetime';
 
 const NEW_TAG_VALUE = '-1';
 
@@ -93,11 +93,10 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
       <DialogContent>
         <Stack spacing={1}>
-          <FormControl sx={{ minHeight: 72 }}>
+          <FormControl >
             <FormLabel>{intl.formatMessage({ id: 'publications.liveDate' })}</FormLabel>
-            <XuiDatePicker
+            <DatePicker
               fullWidth
-              size="small"
               value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
               onChange={(date) =>
                 setForm(prev => ({

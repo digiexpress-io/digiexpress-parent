@@ -91,7 +91,9 @@ export const CalendarInputProvider: React.FC<{
       return;
     }
     if (machine.state === 'valid' && machine.resultDate) {
-      onChange(machine.resultDate);
+      const finalDate = new Date(machine.resultDate);
+      finalDate.setHours(15);
+      onChange(finalDate);
     } else if (machine.state === 'empty') {
       onChange(null);
     }
@@ -115,7 +117,17 @@ export const CalendarInputProvider: React.FC<{
   };
 
   const blurField = (field: DateField) => {
-    setMachine(prev => prev.blurField(field));
+
+    setTimeout(() => {
+      setMachine(prev => {
+        if (prev.focusedField !== field) {
+          return prev;
+        }
+        return prev.blurField(field)
+      });
+
+    }, 250);
+
   };
 
   const clear = () => {

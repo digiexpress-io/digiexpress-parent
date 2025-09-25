@@ -4,10 +4,8 @@ import { Card, CardContent } from '@mui/material';
 
 
 // Main Calendar Component
-export const CardWrapper: React.FC<{inline: boolean, children: React.ReactNode}> = ({ inline, children }) => {
-  if(inline) {
-    return <>{children}</>
-  }
+export const CardWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
   return (
     <Card variant="outlined">
       <CardContent>

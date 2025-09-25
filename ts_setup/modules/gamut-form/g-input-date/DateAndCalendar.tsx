@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import { GInputDateProps } from './GInputDate';
 import { InputHidden } from './InputHidden';
 import { GInputDateInput, useUtilityClasses } from './useUtilityClasses';
+import { useIntl } from 'react-intl';
 
 
 function parseInit(value: string | undefined) {
@@ -17,15 +18,25 @@ function parseInit(value: string | undefined) {
 }
 
 export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
+  const intl = useIntl();
   const classes = useUtilityClasses(props.id, props.variant);
   const [value, setValue] = React.useState<DateTime | null>(parseInit(props.value));
   const ownerState = { variant: props.variant ?? 'date' };
 
-  const input = React.forwardRef<any, {}>((itemProps, ref) => {
+  const input = React.forwardRef<any, {}>((_itemProps, _ref) => {
+    function handleValidity(isError: boolean) {
+      if (!props.setExtendedErrors) {
+        return;
+      }
+      props.setExtendedErrors(isError ? [{
+        id: "invalid-date",
+        code: "invalid-date",
+        description: intl.formatMessage({ id: 'xui.datetime.value.invalid', defaultMessage: 'Invalid date, check format: dd.MM.yyyy' })
+      }] : [])
+    }
     return (<XuiDatePicker
-      inline={false}
-      popover={true}
       fullWidth
+      onValidity={handleValidity}
       value={value ? value.toJSDate() : null}
       onChange={(d) => {
         const next = d ? DateTime.fromJSDate(d) : null;

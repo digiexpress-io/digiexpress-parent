@@ -12,7 +12,6 @@ export interface CalendarProps {
   selectedDate?: Date | null;
   minDate?: Date;
   maxDate?: Date;
-  inline?: boolean | undefined;
   onDateSelect: (date: Date) => void;
   onClose?: () => void;
 }
@@ -22,7 +21,6 @@ export const Calendar: React.FC<CalendarProps> = ({
   initialDate,
   selectedDate,
   minDate, maxDate,
-  inline,
   onDateSelect,
   onClose
 }) => {
@@ -68,7 +66,7 @@ export const Calendar: React.FC<CalendarProps> = ({
 
 
   return (
-    <CardWrapper inline={inline ? true : false}>
+    <CardWrapper>
       <CalendarHeader
         currentDate={currentDate}
         onPreviousMonth={handlePreviousMonth}

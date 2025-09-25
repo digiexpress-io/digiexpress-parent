@@ -4,6 +4,7 @@ import { FormattedMessage } from "react-intl";
 import { TaskFormDelegateProps } from "./TaskFormState";
 import { FormReviewButton } from "./TaskFooter";
 import { useTaskBackend } from "@dxs-ts/task-api";
+import { DateTime } from "luxon";
 
 
 const classes = {
@@ -69,7 +70,12 @@ export const TaskHeader: React.FC<TaskHeaderProps> = (props) => {
             fullWidth={true}
             readonly={readOnly}
             value={currentState.dueDate}
-            onChange={newDate => setFieldValue('dueDate', newDate)}
+            onChange={newDate => {
+
+              console.log(DateTime.fromJSDate(newDate!).toISODate());
+
+              setFieldValue('dueDate', newDate)
+            }}
           />
         </Grid2>
       </Grid2>

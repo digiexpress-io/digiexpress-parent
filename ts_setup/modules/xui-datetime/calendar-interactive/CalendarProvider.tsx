@@ -19,7 +19,7 @@ const NOW = DateTime.now();
 
 
 export interface CalendarProviderProps {
-  inline?: boolean | undefined;
+
   value: Date | null;
   locale: string;
   open: boolean;
@@ -30,7 +30,6 @@ export interface CalendarProviderProps {
 
 export const CalendarProvider: React.FC<CalendarProviderProps> = ({
   locale,
-  inline,
   value: selectedDate,
   open: showCalendar,
   onChange, onClose,
@@ -48,7 +47,6 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({
           error: null
         }}>
           <Calendar
-            inline={inline}
             initialDate={selectedDate ?? NOW.toJSDate()}
             selectedDate={selectedDate}
             onDateSelect={onChange}

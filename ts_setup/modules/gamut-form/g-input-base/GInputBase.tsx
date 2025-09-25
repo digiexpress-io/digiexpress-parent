@@ -4,6 +4,7 @@ import { GInputLabelProps } from '../g-input-label'
 import { GInputErrorProps } from '../g-input-error'
 import { GInputAdornmentProps } from '../g-input-adornment'
 import { useThemeInfra, GInputBaseRoot } from './useThemeInfra'
+import { DialobApi } from '@dxs-ts/gamut-api'
 
 
 
@@ -35,7 +36,7 @@ export interface GInputBaseProps<InputProps = {}> {
   slotProps: {
     label: GInputLabelProps,
     error: GInputErrorProps;
-    input: GInputBaseAnyProps & InputProps;
+    input: GInputBaseAnyProps & InputProps & { setExtendedErrors?: (newErrors: DialobApi.ActionError[]) => void };
     adornment?: GInputAdornmentProps;
     secondary?: GInputBaseAnyProps & InputProps;
   };

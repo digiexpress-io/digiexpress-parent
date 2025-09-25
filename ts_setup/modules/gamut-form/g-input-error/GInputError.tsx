@@ -20,7 +20,6 @@ export const GInputError: React.FC<GInputErrorProps> = (initProps) => {
 
   return (<GInputErrorRoot className={classes.root} ownerState={ownerState} as={props.component}>
     {props.errors!.map(e => <FormHelperText error key={`${e.id}-${e.code}`}>{e.description}</FormHelperText>)}
-    
   </GInputErrorRoot>);
 }
 

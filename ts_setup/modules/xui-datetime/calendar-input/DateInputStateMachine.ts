@@ -14,7 +14,7 @@ export interface DateInputData {
 }
 
 export class DateInputStateMachine {
-  private data: DateInputData;
+  data: DateInputData;
 
   constructor(initialData?: Partial<DateInputData>) {
     this.data = {

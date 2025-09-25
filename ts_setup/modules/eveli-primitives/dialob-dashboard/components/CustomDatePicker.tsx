@@ -56,7 +56,6 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         fullWidth={fullWidth}
         size={size}
         value={normalized}
-        error={error}
         onChange={readonly ? () => {} : wrappedOnChange}
         sx={{ pointerEvents: readonly ? 'none' : 'auto' }}
         {...rest}

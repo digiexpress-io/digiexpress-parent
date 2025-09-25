@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Chip, IconButton, OutlinedInput, SvgIcon } from '@mui/material';
+import { Box, Chip, IconButton, OutlinedInput } from '@mui/material';
 import { LabelAction } from '../util';
 import { Cancel as CancelIcon, Add as AddIcon } from '@mui/icons-material';
 
@@ -38,7 +38,7 @@ export const LabelChips: React.FC<LabelChipsProps> = ({ labels, onUpdate }) => {
         />
       ))}
       <IconButton size="small" onClick={() => setShowInput(true)}>
-        <SvgIcon fontSize="small"><AddIcon /></SvgIcon>
+        <AddIcon fontSize="small" />
       </IconButton>
       {showInput && (
         <OutlinedInput

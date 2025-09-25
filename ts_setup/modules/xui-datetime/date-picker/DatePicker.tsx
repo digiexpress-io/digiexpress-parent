@@ -14,30 +14,26 @@ import { DateFieldContainer } from './DateFieldContainer';
  */
 export interface DatePickerProps {
   value: Date | null;
-  inline?: boolean;
   onChange: (newDate: Date | null) => void;
   /** Stretch to container width (used in "mui-like" UIs) */
   fullWidth?: boolean;
 
-  popover?: boolean;
-
   /** Control input height similar to MUI TextField */
   size?: 'small' | 'medium';
-  /** Force error visuals (in addition to internal invalid state) */
-  error?: boolean;
   /** Extra Box sx for outer wrapper */
   sx?: SxProps<Theme>;
+
+  onValidity?: (isError: boolean) => void;
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
-  error,
   sx,
   onChange,
-  popover = false,
-  inline = false,
+  onValidity,
   fullWidth = false,
-  size = 'medium'
+  size = 'medium',
+
 }) => {
   const { locale } = useIntl();
   const [isPickerOpen, setOpen] = React.useState(false);
@@ -50,83 +46,44 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const handleCalendarOpen = () => setOpen(true);
   const classes = useUtilityClasses();
 
-  const isFieldEnabled = !isPickerOpen || popover;
+
   const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
     <>
-      {isFieldEnabled && (
-        <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
-          <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ fullWidth }} className={classes.root} ref={anchorRef}>
-            <DateFieldContainer
-              onClear={() => handleDateChange(null)}
-              onOpen={handleCalendarOpen}
-              size={size}
-              error={error}
-            />
-          </XuiDateFieldRoot>
-        </CalendarInputProvider>
-      )}
+      <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
+        <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ fullWidth }} className={classes.root} ref={anchorRef}>
+          <DateFieldContainer
+            onClear={() => handleDateChange(null)}
+            onOpen={handleCalendarOpen}
+            size={size}
+            onValidity={onValidity ?? (() => { })}
+          />
+        </XuiDateFieldRoot>
+      </CalendarInputProvider>
 
-      <PickerFactory open={isPickerOpen} popover={popover} onClose={handleClose} anchorEl={anchorRef.current}>
+      <Popover
+        open={isPickerOpen}
+        onClose={handleClose}
+        anchorEl={anchorRef.current}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
         <CalendarProvider
-          inline={inline}
           locale={locale}
           open={isPickerOpen}
           onClose={handleClose}
           value={value}
           onChange={handleDateChange} />
-      </PickerFactory>
+      </Popover>
     </>
   );
 }
 
-
-const PickerFactory: React.FC<{
-  children: React.ReactNode,
-  open: boolean,
-  popover: boolean,
-  onClose: () => void,
-  anchorEl: HTMLElement | null
-}> = ({
-  children, popover, open, onClose, anchorEl
-}) => {
-  if (!open) {
-    return (<></>)
-  }
-
-  if (popover) {
-      return (<PickerPopover children={children} open={open} onClose={onClose} anchorEl={anchorEl} />)
-    }
-
-  return (<>{children}</>);
-}
-
-
-
-const PickerPopover: React.FC<{
-  children: React.ReactNode,
-  open: boolean,
-  onClose: () => void,
-  anchorEl: HTMLElement | null;
-
-}> = ({ children, onClose, open, anchorEl }) => {
-
-  return (
-    <Popover
-      open={open}
-      onClose={onClose}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-    >
-      {children}
-    </Popover>)
-}
 

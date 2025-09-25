@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, IconButton, Link, SvgIcon, TableCell, TableRow, Tooltip } from '@mui/material';
+import { Box, IconButton, Link, TableCell, TableRow, Tooltip } from '@mui/material';
 import type { FormConfiguration, FormConfigurationFilters, DialobAdminConfig } from '../types';
 import { useIntl } from 'react-intl';
 import { useFormTagOptions } from '../util';
@@ -82,7 +82,7 @@ export const TagTableRow: React.FC<TagTableRowProps> = ({
                     copyFormConfiguration(formConfiguration)
                   }}
                 >
-                  <SvgIcon fontSize="small"><ContentCopyIcon /></SvgIcon>
+                  <ContentCopyIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
               <Tooltip title={intl.formatMessage({ id: "adminUI.table.tooltip.delete" })} placement='top-end' arrow>
@@ -93,7 +93,7 @@ export const TagTableRow: React.FC<TagTableRowProps> = ({
                   }}
                   color='error'
                 >
-                  <SvgIcon fontSize="small"><CloseIcon /></SvgIcon>
+                  <CloseIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
               <Tooltip title={intl.formatMessage({ id: "download" })} placement='top-end' arrow>
@@ -103,7 +103,7 @@ export const TagTableRow: React.FC<TagTableRowProps> = ({
                     downloadFormConfiguration();
                   }}
                 >
-                  <SvgIcon fontSize="small"><DownloadIcon /></SvgIcon>
+                  <DownloadIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Box>

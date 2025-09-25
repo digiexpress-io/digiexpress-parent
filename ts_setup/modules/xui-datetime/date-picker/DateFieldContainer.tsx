@@ -12,17 +12,25 @@ import { useIntl } from 'react-intl';
 export interface DateFieldContainerProps {
   onClear: () => void;
   onOpen: () => void;
+  onValidity: (isError: boolean) => void;
   size: 'small' | 'medium';
-  error?: boolean;
 };
 
 /** Internal field container that draws the border and holds the input + buttons */
-export const DateFieldContainer: React.FC<DateFieldContainerProps> = ({ onClear, onOpen, size, error }) => {
+export const DateFieldContainer: React.FC<DateFieldContainerProps> = ({ onClear, onOpen, size, onValidity }) => {
   const { machine } = useCalendarInput();
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const isPartiallyFilled = machine.day !== '' || machine.month !== '' || machine.year !== '';
-  const isError = (!!error) || (!machine.isValid && isPartiallyFilled);
+  const isBlurred: boolean = machine.focusedField === undefined || machine.focusedField === null;
+  const isValidationRequired: boolean = machine.data.day !== '' || machine.data.month !== '' || machine.data.year !== '';
+  const isError: boolean = (!machine.isValid && isValidationRequired);
+  const isEffect = isError && isValidationRequired && isBlurred;
+
+  React.useEffect(() => {
+    if (isBlurred && isValidationRequired) {
+      onValidity(isError);
+    }
+  }, [isEffect])
 
   return (
     <XuiDateFieldInput className={classes.input} ownerState={{ isError, size  }}>
