@@ -15,7 +15,8 @@
     "@dxs-ts/gamut-shell": "*",
     "@dxs-ts/gamut-intl": "*",
     "@dxs-ts/gamut-routes": "*",
-    "@dxs-ts/gamut-theme": "*"
+    "@dxs-ts/gamut-theme": "*",
+    "@dxs-ts/xui-datetime": "*"
   },
   "peerDependencies": {
     "react": "*",

@@ -1,12 +1,11 @@
 import React from 'react';
-
 import ClearIcon from '@mui/icons-material/Clear';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
-import { useIntl } from "react-intl";
-import { GInputTimeProps } from "./GInputTime";
+import { useIntl } from 'react-intl';
+import { GInputTimeProps } from './GInputTime';
 import { InputHidden } from './InputHidden';
-import { GInputTimeInput, useUtilityClasses } from './useUtilityClasses';
+import { useUtilityClasses, GInputTimeInputContainer } from './useUtilityClasses';
 
 function parseInit(value: string | undefined) {
   return value ?? null;
@@ -20,16 +19,13 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
   const { format = 'HH:mm' } = props;
   const ownerState = { variant: props.variant ?? 'time' };
   const inputRef = React.useRef<HTMLInputElement | null>(null);
-
   const step = /s/.test(format) ? 1 : 60;
 
   const openNativePicker = () => {
     const el = inputRef.current;
     if (!el) return;
-    if (typeof el.showPicker === 'function') {
-      requestAnimationFrame(() => {
-        el.showPicker();
-      });
+    if (typeof (el as any).showPicker === 'function') {
+      requestAnimationFrame(() => (el as any).showPicker());
       return;
     }
     el.focus();
@@ -37,42 +33,30 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
   };
 
   return (
-    <GInputTimeInput ownerState={ownerState} className={classes.input}>
+    <GInputTimeInputContainer ownerState={ownerState} className={classes.inputContainer}>
       <InputHidden time={value} onChange={props.onChange} id={props.id} />
 
       <TextField
         type="time"
         fullWidth
-        size="small"
         value={value ?? ''}
         disabled={props.disabled}
         inputRef={inputRef}
-        sx={{
-          // Hide the native time picker UI so only our endAdornment shows
-          '& input[type="time"]::-webkit-calendar-picker-indicator': { display: 'none' },
-          '& input[type="time"]::-webkit-clear-button': { display: 'none' },
-          '& input[type="time"]::-webkit-inner-spin-button': { display: 'none' },
-          '& input[type="time"]::-webkit-outer-spin-button': { display: 'none' },
-          '& input[type="time"]::-ms-clear': { display: 'none' },
-          '& input[type="time"]::-ms-reveal': { display: 'none' },
-          '& input[type="time"]': { MozAppearance: 'textfield' as any },
-        }}
         onChange={(e) => {
           const next = e.target.value || null;
           setValue(next);
         }}
-        inputProps={{
-          step,
-        }}
+        inputProps={{ step, className: classes.input }}
         InputProps={{
           endAdornment: (
-            <InputAdornment position="end">
+            <InputAdornment position="end" className={classes.endAdornment}>
               <IconButton
                 size="small"
                 onClick={() => setValue(null)}
                 disabled={!value || props.disabled}
                 aria-label={intl.formatMessage({ id: 'common.clear', defaultMessage: 'Clear' })}
                 edge="end"
+                className={classes.clearButton}
               >
                 <ClearIcon fontSize="small" />
               </IconButton>
@@ -82,15 +66,14 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
                 disabled={props.disabled}
                 aria-label={intl.formatMessage({ id: 'gamut.openTimePicker', defaultMessage: 'Open time picker' })}
                 edge="end"
-                sx={{ ml: 0.5 }}
+                className={classes.timeButton}
               >
                 <AccessTimeIcon fontSize="small" />
               </IconButton>
             </InputAdornment>
           ),
         }}
-        className="MuiInputBase-root"
       />
-    </GInputTimeInput>
+    </GInputTimeInputContainer>
   );
 };
