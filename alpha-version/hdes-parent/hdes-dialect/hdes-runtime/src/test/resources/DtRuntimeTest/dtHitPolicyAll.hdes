@@ -1,7 +1,0 @@
-decision-table ExpressionDT({ value0: INTEGER, value1: INTEGER }): { score: INTEGER } {  
-  findAll({ 
-    when ( _ > 10, _ <= 20 )            add ({ 4571 }) 
-    when ( _ > 10, _ <= 20 and _ > 10 ) add ({ 4572 })
-    when ( _ = 6 , _ != 20 and _ > 10 ) add ({ 4573 }) 
-  })
-}

@@ -1,4 +1,0 @@
-  decision-table basic({ name, lastName: STRING, value?: INTEGER }) : { } { 
-    map(STRING) to(INTEGER) when()
-  }
-   

@@ -1,3 +1,0 @@
-flow x({ arg1: integer, arg2: integer }):{} {
-  firstTask() { bestServiceTask({}) return {} } 
-}

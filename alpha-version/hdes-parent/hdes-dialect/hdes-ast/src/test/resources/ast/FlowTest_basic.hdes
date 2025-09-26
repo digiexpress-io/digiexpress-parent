@@ -1,4 +1,0 @@
-flow x1 ({}):{} {}
-flow x2 ({ arg1: integer, arg2: integer }):{} {}
-flow x3 ({ arg0: {}}):{} {}
-flow x4 ({ person: { firstName: integer, lastName: integer }}):{} {}

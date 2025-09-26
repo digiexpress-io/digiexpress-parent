@@ -1,7 +1,0 @@
-decision-table basic({ firstName: STRING lastName: STRING }):{} {
-  map(string) to(integer)
-  when( _ = 'bob', _ = 'sam', _ = 'viv' )
-  
-  firstName({1, 2, 3 })
-  lastName({3, 10, 20 })
-}
