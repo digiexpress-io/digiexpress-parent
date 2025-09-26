@@ -46,10 +46,18 @@ export const DialogCreate: React.FC<DialogCreateProps> = ({ onClose }) => {
   }
 
   const handleSubmit = async () => {
-    setSubmitting(false);
-    createForm({ label, name, template });
-    setSubmitting(true); 
-  }
+    if (isErrors) return;
+  
+    setSubmitting(true);
+    try {
+      await createForm({ label, name, template });
+      onClose();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };  
 
   return (
     <Dialog maxWidth='md' open={true} onClose={onClose}>
