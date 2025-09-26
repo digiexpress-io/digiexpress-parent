@@ -40,7 +40,9 @@ export type TenantFeature = typeof tenant_features[number];
 const INITIAL_CONFIG: TenantConfigContextType = {
   features: [],
   gamutThemeOptions: GThemeOptions,
-  hardcodedFeatures: []
+  hardcodedFeatures: [],
+  userTenantConfig: undefined,
+  setUserTenantConfig: () => {}
 }
 
 export interface TenantConfigContextProviderProps {
@@ -51,69 +53,42 @@ export interface TenantConfigContextProviderProps {
 
 export interface TenantConfigContextType extends TenantConfig {
   hardcodedFeatures: TenantFeature[];
+  userTenantConfig: TenantFeature[] | undefined
+  setUserTenantConfig: React.Dispatch<React.SetStateAction<TenantFeature[] | undefined>>;
 }
 
 export const TenantConfigContext = createContext<TenantConfigContextType>(INITIAL_CONFIG);
 
 const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = ({ children, features: _features, gamutThemeOptions }) => {
   const {tenantConfig, pending} = useFetch('worker/rest/api/tenant-configs.GET', {}); 
-  const profile = useFetch('worker/rest/api/userprofiles/$profileId.GET', {}); 
   const [userTenantConfig, setUserTenantConfig] = React.useState<TenantFeature[]>();
   
-
   const contextValue: TenantConfigContextType = React.useMemo(() => {
     if(pending) {
-      return Object.freeze({ ...INITIAL_CONFIG, hardcodedFeatures: _features ?? [] })
+      return Object.freeze({ ...INITIAL_CONFIG, hardcodedFeatures: _features ?? [], setUserTenantConfig, userTenantConfig })
     }
+
     const hardcodedFeatures = Array.from(new Set([...(tenantConfig?.features ?? []), ...(_features ?? [])]));
 
     const mergedTheme = gamutThemeOptions ?? GThemeOptions;
     const features = Array.from(new Set([ ...(tenantConfig?.features ?? []), ...(_features ?? []), ...(userTenantConfig ?? []) ]));
 
-    return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features, hardcodedFeatures })
-  }, [tenantConfig, pending, userTenantConfig, _features]);
-
-  React.useEffect(() => {
-    if(pending || userTenantConfig) {
-      return;
-    }
-    const createIfNotDefined = contextValue.features.includes('user_profile');
-    profile.restApi.currentUserProfile(createIfNotDefined)
-      .then(profile => {
-        console.groupCollapsed('user profile');
-
-        if(!profile) {
-          console.log('User profile disabled');
-          setUserTenantConfig((prev) => prev ?? []);
-          return;
-        }
-        console.log('Checking user profile', profile);
-        setUserTenantConfig(profile.tenantFeatures?.map(e => e as TenantFeature) ?? [])
-      })
-      .catch((e) => {
-        console.log('User profile disabled');
-        setUserTenantConfig((prev) => prev ?? []);
-      }).finally(() => console.groupEnd());
-
-  }, [pending, contextValue, userTenantConfig]);
-
-
+    return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features, hardcodedFeatures, userTenantConfig, setUserTenantConfig })
+  }, [tenantConfig, pending, userTenantConfig, _features, setUserTenantConfig]);
 
   return (
     <TenantConfigContext.Provider value={contextValue}>
       {!pending && children}
     </TenantConfigContext.Provider>
   );
-};
-
+}
 
 export const TenantConfigContextProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = (props) => {
   if(props.disabled === true) {
     return (<>{props.children}</>)
   }
   return (<WithProvider {...props}/>);
-};
-
+}
 
 export const useTenantConfig = () => useContext(TenantConfigContext);
 export const useTenantConfigFeatures = () => {

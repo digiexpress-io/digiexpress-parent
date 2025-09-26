@@ -6,6 +6,7 @@ import { UserProfileApi } from '@dxs-ts/user-profile';
 import { IamForcedLogin } from './IamForcedLogin';
 import { useConfig } from '../api-config';
 import { SmartTableIntegration } from './SmartTableIntegration';
+import { TenantFeature, useTenantConfig } from '../api-tenant-config';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -64,11 +65,42 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
         </SmartTableIntegration>
       </UserProfileApi.Provider>
       <IamLiveness onExpire={onExpire} user={user}/>
+      <CreateUserProfile />
     </>
   </IamBackendContext.Provider>);
 }
 
 
+const CreateUserProfile: React.FC<{}> = (props) => {
+  const { setUserTenantConfig, features, userTenantConfig } = useTenantConfig();
+  const profile = useFetch('worker/rest/api/userprofiles/$profileId.GET', {}); 
+
+  React.useEffect(() => {
+    if(userTenantConfig) {
+      return;
+    }
+    const createIfNotDefined = features.includes('user_profile');
+    profile.restApi.currentUserProfile(createIfNotDefined)
+      .then(profile => {
+        console.groupCollapsed('user profile');
+
+        if(!profile) {
+          console.log('User profile disabled');
+          setUserTenantConfig((prev) => prev ?? []);
+          return;
+        }
+        console.log('Checking user profile', profile);
+        setUserTenantConfig(profile.tenantFeatures?.map(e => e as TenantFeature) ?? [])
+      })
+      .catch((e) => {
+        console.log('User profile disabled');
+        setUserTenantConfig((prev) => prev ?? []);
+      }).finally(() => console.groupEnd());
+
+  }, [setUserTenantConfig, userTenantConfig]);
+
+  return (<></>);
+}
 
 
 export const useIam = () => {
