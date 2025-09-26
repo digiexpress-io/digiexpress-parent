@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>dialob-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>5.1.98</version>
   </parent>
   <artifactId>dialob-client</artifactId>
   <name>dialob-client</name>
