@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.auth;
  */
 
 import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
 import io.vertx.core.json.JsonArray;
@@ -70,9 +71,13 @@ public class SpringJwtCrmClient implements GamutAuthClient {
 
   @Override
   public CustomerRoles getCustomerRoles() {
-    try (var logger = createLogger()) {
-      return new CustomerRoleVisitor(logger, rest, serviceUrlCompany, serviceUrlPerson).accept();
+    final var customer = getCustomer();
+    if(customer.getType() == CustomerType.REP_COMPANY || customer.getType() == CustomerType.REP_PERSON) {
+      try (var logger = createLogger()) {
+        return new CustomerRoleVisitor(logger, rest, serviceUrlCompany, serviceUrlPerson).accept();
+      }      
     }
+    return ImmutableCustomerRoles.builder().build();
   }
 
   @Override
