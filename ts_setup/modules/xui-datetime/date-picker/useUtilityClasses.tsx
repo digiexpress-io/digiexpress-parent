@@ -43,20 +43,21 @@ export const XuiDateFieldInput = styled('div', {
 
   return {
     height,
-    border: `1px solid ${isError ? theme.palette.error.main : 'rgba(0,0,0,0.23)'}`,
+    border: `1px solid ${theme.palette.action.disabled}`,
+
+    ...(isError && { border: `1px solid ${theme.palette.error.main}` }),
+    '&:focus-within': !isError ? {
+      border: `1px solid ${theme.palette.primary.main}`,
+      boxShadow: `0 0 0 1px ${theme.palette.primary.main}`
+    } : undefined,
     borderRadius: theme.shape.borderRadius,
     
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
 
     width: '100%',
-    boxSizing: 'border-box',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    '&:focus-within': {
-      borderColor: isError ? theme.palette.error.main : theme.palette.primary.main,
-      boxShadow: `0 0 0 2px ${theme.palette.action.focus}`,
-    },
   };
 });

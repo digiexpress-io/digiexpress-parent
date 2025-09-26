@@ -38,9 +38,10 @@ export const GInputDateInput = styled('div', {
       borderRadius: 'unset',
       paddingLeft: theme.spacing(2),
       '&:focus-within': {
-        borderColor: 'unset',
-        boxShadow: 'unset',
+        border: `2px solid ${theme.palette.primary.main}`,
+        borderRadius: theme.spacing(0.5)
       }
     }
+
   };
 });

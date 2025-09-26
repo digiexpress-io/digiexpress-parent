@@ -2,7 +2,8 @@ import React from 'react';
 
 import {
   Dialog, DialogActions, DialogContent, DialogTitle,
-  MenuItem, Stack, Button, TextField, FormControl, FormLabel
+  MenuItem, Stack, Button, TextField, FormLabel,
+  useTheme
 } from '@mui/material';
 
 import { DateTime } from 'luxon';
@@ -27,6 +28,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
   const { contentTags } = useFetch('worker/rest/api/assets/any-tags/stencil-tags.GET', {});
   const { savePublication } = useFetch('worker/rest/api/assets/publications.POST', {});
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
+  const theme = useTheme();
 
   const [form, setForm] = React.useState<PublicationApi.PublicationInit>({
     name: '',
@@ -61,6 +63,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     tags?: PublicationApi.AssetTag[],
     newTag: string
   }> = ({ name, labelId, tags, newTag }) => (
+
     <TextField
       select
       name={name}
@@ -93,22 +96,30 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
       <DialogContent>
         <Stack spacing={1}>
-          <FormControl >
-            <FormLabel>{intl.formatMessage({ id: 'publications.liveDate' })}</FormLabel>
-            <DatePicker
-              fullWidth
-              value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
-              onChange={(date) =>
-                setForm(prev => ({
-                  ...prev,
-                  liveDate: date
-                    ? DateTime.fromJSDate(date).plus({ seconds: 1 }).toLocal()
-                        .toISO({ includeOffset: false })
-                    : null
-                }))
-              }
-            />
-          </FormControl>
+          <FormLabel>{intl.formatMessage({ id: 'publications.liveDate' })}</FormLabel>
+          <DatePicker 
+            /* sx={{
+               border: '2px solid transparent',
+               ':focus-within': {
+                 border: `2px solid ${theme.palette.primary.main}`,
+                 borderRadius: theme.spacing(0.5),
+                 '.XuiDatePicker-input': {
+                   border: 'transparent'
+                 }
+               }
+             }}
+               */
+            fullWidth value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
+            onChange={(date) =>
+              setForm(prev => ({
+                ...prev,
+                liveDate: date
+                  ? DateTime.fromJSDate(date).plus({ seconds: 1 }).toLocal()
+                    .toISO({ includeOffset: false })
+                  : null
+              }))
+            }
+          />
 
           <TextField
             fullWidth
@@ -140,7 +151,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
       <DialogActions>
         <CancelButton onClick={handleClose} />
         <Button variant='contained' onClick={handleSubmit} disabled={isSubmitting || !isValid}>
-          <FormattedMessage id='button.accept'/>
+          <FormattedMessage id='button.accept' />
         </Button>
       </DialogActions>
     </Dialog>

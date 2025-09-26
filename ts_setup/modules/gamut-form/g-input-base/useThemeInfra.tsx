@@ -14,7 +14,7 @@ export function useThemeInfra<T>(initProps: GInputBaseProps<T>) {
     props: initProps,
     name: MUI_NAME,
   })
-  
+
   const ownerState = { ...props };
   const classes = useUtilityClasses(ownerState);
   return { classes, ownerState, props };
@@ -47,9 +47,13 @@ export const GInputBaseRoot = styled(Grid, {
     ];
   },
 })<{ ownerState: GInputBaseProps<any> }>(({ theme, ownerState }) => {
+
   return {
+    '& .MuiInputBase-root': {
+      padding: 0,
+    },
     '.GInputLabel-root': {
-      paddingRight: ownerState.slotProps.adornment?.children ? 'unset' : undefined
+      paddingRight: ownerState.slotProps.adornment?.children ? 'unset' : undefined,
     }
   };
 })
