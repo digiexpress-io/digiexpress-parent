@@ -76,15 +76,5 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       svgr({}),
       mockDevServerPlugin(),
     ],
-
-    // material sometimes messes up variable loading order
-    optimizeDeps: {
-      include: ['@mui/material', '@mui/icons-material'],
-      force: true,
-      exclude: [
-        'modules/demo-app-eveli/node_modules/.vite'
-      ]
-    },
-
   }
 }

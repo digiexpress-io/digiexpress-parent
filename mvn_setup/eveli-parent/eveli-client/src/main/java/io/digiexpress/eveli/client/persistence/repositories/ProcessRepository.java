@@ -37,8 +37,15 @@ import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
   Optional<ProcessEntity> findByQuestionnaireId(String questionnaireId);
-  Optional<ProcessEntity> findByTaskId(String taskId);
   Optional<ProcessEntity> findById(Long id);
+
+  
+  @Query(nativeQuery = true, value =
+"""
+SELECT * FROM process 
+WHERE task_id = :taskId and type is null
+""")
+  Optional<ProcessEntity> findByTaskId(@Param("taskId") String taskId);
   
     
   @Query(nativeQuery = true, value =

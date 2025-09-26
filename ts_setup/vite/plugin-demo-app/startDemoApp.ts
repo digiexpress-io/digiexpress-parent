@@ -52,8 +52,17 @@ export function startDemoApp(options: {
           include: [
             '@mui/material/CssBaseline',
             '@mui/material/Box',
+            '@mui/material', 
+            '@mui/icons-material',
+            '@tanstack/react-router'
           ],
-          force: true
+          force: true,
+      
+      
+          exclude: [
+            'modules/demo-app-eveli/node_modules/.vite'
+          ]
+
         },
         define: {
           // react redux error

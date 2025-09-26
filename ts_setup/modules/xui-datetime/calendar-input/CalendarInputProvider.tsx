@@ -68,11 +68,13 @@ export const CalendarInputProvider: React.FC<{
 
   // Handle external value changes (like from a calendar picker)
   React.useEffect(() => {
-    
-    if (machine.resultDate?.getTime() !== value?.getTime()) {
-      setMachine(prev => prev.setFromDate(value || null));
-    }
-  }, [value, machine.resultDate]);
+    setMachine(prev => {
+      if (prev.resultDate?.getTime() !== value?.getTime()) {
+        return prev.setFromDate(value || null);
+      }
+      return prev;
+    });
+  }, [value]);
 
   // Handle auto-advance focus
   React.useEffect(() => {
@@ -117,7 +119,6 @@ export const CalendarInputProvider: React.FC<{
   };
 
   const blurField = (field: DateField) => {
-
     setTimeout(() => {
       setMachine(prev => {
         if (prev.focusedField !== field) {
@@ -127,7 +128,6 @@ export const CalendarInputProvider: React.FC<{
       });
 
     }, 250);
-
   };
 
   const clear = () => {
@@ -178,8 +178,6 @@ export const CalendarInputProvider: React.FC<{
   };
 
   const handleContainerClick = (e: React.MouseEvent) => {
-
-
     if ((e.target as HTMLElement).tagName === 'INPUT') {
       return;
     }

@@ -128,6 +128,7 @@ export class DateInputStateMachine {
     }
     if (field === 'month' && this.data.month.length === 1) {
       newData.month = this.data.month.padStart(2, '0');
+            console.log('next value', newData.month)
     }
     
     // Clear focus if leaving the component entirely
@@ -163,6 +164,13 @@ export class DateInputStateMachine {
         resultDate: undefined,
         isUserChange: false  // UNLOAD the user change flag
       });
+    }
+
+    if( date.getMonth() === this.data.resultDate?.getMonth() &&
+        date.getDay() === this.data.resultDate?.getDay() &&
+        date.getFullYear() === this.data.resultDate?.getFullYear()
+    ) {
+      return this;
     }
 
     return new DateInputStateMachine({
