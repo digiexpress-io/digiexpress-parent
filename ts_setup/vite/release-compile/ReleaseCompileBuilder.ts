@@ -8,6 +8,7 @@ export interface ReleaseCompileOptions {
   registryPath?: string;
   skipValidation?: boolean;
   rootPath?: string;
+  onRegistry?: (registry: ModuleRegistry) => void;
 }
 
 export interface ReleaseCompileResult {
@@ -24,6 +25,7 @@ export class ReleaseCompileBuilder {
       registryPath: '.modules/registry.json',
       skipValidation: false,
       rootPath: '.',
+      onRegistry: () => {},
       ...options
     };
   }
@@ -40,8 +42,10 @@ export class ReleaseCompileBuilder {
 
     // Step 1: Validate registry
     const { registry } = validateRegistryCmd.execute({
-      registryPath: this.options.registryPath
+      registryPath: this.options.registryPath,
     });
+    this.options.onRegistry(registry);
+
 
     const buildProfiles = Object.values(registry.buildProfiles);
 
