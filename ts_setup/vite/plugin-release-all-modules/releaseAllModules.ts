@@ -19,19 +19,14 @@ export function releaseAllModules(options: {
       const rootPath: string = process.cwd();
 
       // Step 1: Build all profiles
-      const does_it_compile_in_first_place = new ReleaseCompileBuilder({
+      const { successfulBuilds, registry, buildProfiles }  = new ReleaseCompileBuilder({
         skipValidation: options.skipValidation, rootPath
       }).build();
 
       // Step 2: Run versioning
-      const versioningResult = new ReleasePrepareBuilder().build(does_it_compile_in_first_place.registry);
+      const versioningResult = new ReleasePrepareBuilder().build(registry);
 
-      // Step 3: Recompile everything with trace and versioning info
-      const { successfulBuilds, registry, buildProfiles } = new ReleaseCompileBuilder({
-        skipValidation: options.skipValidation, rootPath
-      }).build();
-
-      // Step 4: Publish changed modules
+      // Step 3: Publish changed modules
       published = new ReleasePublishBuilder().build({
         dryRun: options.dryRun,
         buildProfiles,
