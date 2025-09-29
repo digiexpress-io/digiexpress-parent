@@ -19,14 +19,14 @@ export function releaseAllModules(options: {
       const rootPath: string = process.cwd();
       
       let versioningResult: VersioningResult | undefined;
-      function generateNewVersion() {
-        // Step 2: Run versioning
-        versioningResult = new ReleasePrepareBuilder().build(registry);
-      }
 
       // Step 1: Build all profiles
       const { successfulBuilds, registry, buildProfiles } = new ReleaseCompileBuilder({
-        skipValidation: options.skipValidation, rootPath, onRegistry: generateNewVersion
+        skipValidation: options.skipValidation, rootPath, 
+        onRegistry: (created) => {
+        // Step 2: Run versioning
+          versioningResult = new ReleasePrepareBuilder().build(created);
+        }
       }).build();
 
       if(!versioningResult) {
