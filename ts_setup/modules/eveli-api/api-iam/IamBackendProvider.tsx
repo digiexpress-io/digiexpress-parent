@@ -65,7 +65,7 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
         </SmartTableIntegration>
       </UserProfileApi.Provider>
       <IamLiveness onExpire={onExpire} user={user}/>
-      <CreateUserProfile />
+      {contextValue.authType === 'USER' && <CreateUserProfile /> }
     </>
   </IamBackendContext.Provider>);
 }
