@@ -4,8 +4,6 @@ import { Command_ResolveInitialVersions } from './Command_ResolveInitialVersions
 import { Command_HashBuildProfiles } from './Command_HashBuildProfiles'
 import { Command_DetectChangesAndBump } from './Command_DetectChangesAndBump'
 import { Command_UpdateAllPackageJson } from './Command_UpdateAllPackageJson'
-import { Command_UpdateAllPackageJsonTsVersions } from './Command_UpdateAllPackageJsonTsVersions'
-import { Command_SaveVersionsFile } from './Command_SaveVersionsFile'
 import { Command_BackupPackageJson } from './Command_BackupPackageJson'
 import { Command_ExtractGitHistory } from "./Command_ExtractGitHistory";
 import { Command_SaveLogFile } from "./Command_SaveLogFile";
@@ -22,7 +20,6 @@ export interface VersioningResult {
   unchangedProfiles: string[];
   updatedVersions: VersionsFile;
   updatedPackages: string[];
-  versionsFilePath: string;
   summary: {
     totalProfiles: number;
     changedCount: number;
@@ -63,9 +60,7 @@ export class ReleasePrepareBuilder {
     const hashProfilesCmd = new Command_HashBuildProfiles();
     const detectChangesCmd = new Command_DetectChangesAndBump();
     const updatePackageJsonCmd = new Command_UpdateAllPackageJson();
-    const saveVersionsCmd = new Command_SaveVersionsFile();
     const commitLogCmd = new Command_ExtractGitHistory();
-    const versionTsCmd = new Command_UpdateAllPackageJsonTsVersions();
     const saveCommitLogCmd = new Command_SaveLogFile();
 
 
@@ -99,24 +94,11 @@ export class ReleasePrepareBuilder {
       registry,
       updatedVersions,
       changedProfiles,
-      rootPath: this.options.rootPath
-    });
- 
-    versionTsCmd.execute({
-      registry,
-      updatedVersions,
-      changedProfiles,
-      trace,
-      rootPath: this.options.rootPath
+      rootPath: this.options.rootPath,
+      dryRun: false
     });
 
-    // Step 6: Save updated versions file
-    const { savedPath } = saveVersionsCmd.execute({
-      versionsFile: updatedVersions,
-      versionsFilePath: this.options.versionsFilePath
-    });
-
-    // Step 7: Save commit log
+    // Step 6: Save commit log
     const { moduleLogs } = commitLogCmd.execute({ registry, rootPath: this.options.rootPath });
     const {} = saveCommitLogCmd.execute({
       versionsFile: updatedVersions,
@@ -149,7 +131,6 @@ export class ReleasePrepareBuilder {
       unchangedProfiles,
       updatedVersions,
       updatedPackages,
-      versionsFilePath: savedPath,
       summary
     };
 

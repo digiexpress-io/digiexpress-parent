@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 
 import { ReleaseCompileBuilder } from '../release-compile';
-import { ReleasePrepareBuilder } from '../release-prepare';
+import { ReleasePrepareBuilder, VersionTsBuilder } from '../release-prepare';
 import { ReleasePublishBuilder, ReleasePublishResult } from '../release-publish';
 
 
@@ -17,6 +17,16 @@ export function releaseAllModules(options: {
     name: 'release-all-modules',
     buildStart() {
       const rootPath: string = process.cwd();
+
+
+      // do the semi dry run, where we generate version info and what is actually used in the compiler
+      {
+       const { registry }  = new ReleaseCompileBuilder({
+          skipValidation: options.skipValidation, rootPath
+        }).build();
+        new VersionTsBuilder().build(JSON.parse(JSON.stringify(registry)));
+      }
+
 
       // Step 1: Build all profiles
       const { successfulBuilds, registry, buildProfiles }  = new ReleaseCompileBuilder({

@@ -12,6 +12,7 @@ export declare namespace Command_UpdateAllPackageJson {
     registry: ModuleRegistry;
     updatedVersions: VersionsFile;
     changedProfiles: string[];
+    dryRun: boolean;
   }
   
   export interface Result {
@@ -57,7 +58,9 @@ export class Command_UpdateAllPackageJson {
       packageJson.files = ["dist"];
       packageJson.repository = rootPackageJson.repository;
 
-      writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf-8');
+      if(!input.dryRun) {
+        writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf-8');
+      }
       updatedPackages.push(versionEntry.moduleName);
       
       console.log(`   ✅ ${versionEntry.moduleName}: updated to v${versionEntry.version}`);
