@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 
 import { ReleaseCompileBuilder } from '../release-compile';
-import { ReleasePrepareBuilder, VersioningResult } from '../release-prepare';
+import { ReleasePrepareBuilder } from '../release-prepare';
 import { ReleasePublishBuilder, ReleasePublishResult } from '../release-publish';
 
 
@@ -17,24 +17,21 @@ export function releaseAllModules(options: {
     name: 'release-all-modules',
     buildStart() {
       const rootPath: string = process.cwd();
-      
-      let versioningResult: VersioningResult | undefined;
 
       // Step 1: Build all profiles
-      const { successfulBuilds, registry, buildProfiles } = new ReleaseCompileBuilder({
-        skipValidation: options.skipValidation, rootPath, 
-        onRegistry: (created) => {
-        // Step 2: Run versioning
-          versioningResult = new ReleasePrepareBuilder().build(created);
-        }
+      const does_it_compile_in_first_place = new ReleaseCompileBuilder({
+        skipValidation: options.skipValidation, rootPath
       }).build();
 
-      if(!versioningResult) {
-        throw new Error('Failed to update version info');
-      }
+      // Step 2: Run versioning
+      const versioningResult = new ReleasePrepareBuilder().build(does_it_compile_in_first_place.registry);
 
+      // Step 3: Recompile everything with trace and versioning info
+      const { successfulBuilds, registry, buildProfiles } = new ReleaseCompileBuilder({
+        skipValidation: options.skipValidation, rootPath
+      }).build();
 
-      // Step 3: Publish changed modules
+      // Step 4: Publish changed modules
       published = new ReleasePublishBuilder().build({
         dryRun: options.dryRun,
         buildProfiles,
