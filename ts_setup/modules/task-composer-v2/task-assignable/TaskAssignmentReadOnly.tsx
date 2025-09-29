@@ -3,6 +3,7 @@ import { Box, Divider, generateUtilityClass, Grid2, styled, Typography } from '@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import RadioButtonUncheckedOutlinedIcon from '@mui/icons-material/RadioButtonUncheckedOutlined';
 import composeClasses from '@mui/utils/composeClasses';
+
 import { TaskApi } from '@dxs-ts/task-api';
 
 
@@ -11,30 +12,33 @@ import { TaskApi } from '@dxs-ts/task-api';
 export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
   const classes = useUtilityClasses();
 
-  return (
+  return (<>
     <StyledTaskAssignmentReadOnly className={classes.root}>
-      {task.customerAssignments.map((option) => (<>
-        <Grid2 key={option.id} container alignItems="center" mb={1}>
-
-
-          <Grid2 size={{ xs: 12, sm: 12, md: 7, lg: 7, xl: 7 }}>
-            <Box display="flex" alignItems="center" gap={1}>
-              {option.status === "COMPLETED" ? (
-                <CheckCircleOutlineOutlinedIcon color="success" />
-              ) : (
-                <RadioButtonUncheckedOutlinedIcon color="disabled" />
-              )}
-              <Typography fontWeight={500}>{option.description}</Typography>
-            </Box>
+      {task.customerAssignments.map((option) => (
+        <>
+          <Grid2 key={option.id} container alignItems="center" mb={1}>
+            <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 8 }}>
+              <Box display="flex" alignItems="center" gap={1}>
+                {option.status === "COMPLETED" ? (
+                  <CheckCircleOutlineOutlinedIcon color="success" />
+                ) : (
+                  <RadioButtonUncheckedOutlinedIcon color="disabled" />
+                )}
+                <Typography fontWeight={500}>{option.description}</Typography>
+              </Box>
+            </Grid2>
+            <Grid2 size={{ xs: 6, sm: 6, md: 2, lg: 2, xl: 2 }}>
+              <Typography>{option.locale}</Typography>
+            </Grid2>
+            <Grid2 size={{ xs: 6, sm: 2, md: 2, lg: 2, xl: 2 }}>
+              <Typography>{option.status}</Typography>
+            </Grid2>
           </Grid2>
-          <Grid2 size={{ xs: 12, sm: 12, md: 5, lg: 5, xl: 5 }}>
-            <Typography>{option.status}</Typography>
-          </Grid2>
-        </Grid2>
-        <Divider />
-      </>
+          <Divider />
+        </>
       ))}
     </StyledTaskAssignmentReadOnly>
+  </>
   )
 }
 
@@ -56,7 +60,7 @@ const StyledTaskAssignmentReadOnly = styled('div', {
   '.MuiDivider-root': {
     marginTop: theme.spacing(0.5),
     marginBottom: theme.spacing(0.5)
-  },
+  }
 
 }));
 

@@ -18,7 +18,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
   },
   h3: {
     fontSize: "1.6rem",
-    fontWeight: 300,
+    fontWeight: 500,
     lineHeight: 1,
     paddingTop: 15,
     paddingBottom: 15,
