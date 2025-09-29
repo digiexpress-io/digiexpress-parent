@@ -9,33 +9,21 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.thestencil.client.api.StencilClient.Article;
-import io.thestencil.client.api.StencilClient.Entity;
-import io.thestencil.client.api.StencilClient.Link;
-import io.thestencil.client.api.StencilClient.Locale;
-import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
-import io.thestencil.client.api.StencilClient.Template;
-import io.thestencil.client.api.StencilClient.Workflow;
-import io.thestencil.client.api.StencilComposer.SiteContentType;
 import jakarta.annotation.Nullable;
 
 
 
 public interface TagomiContainer {
   String getTagName();
+  
   @Nullable String getCommitId(); //only when available
   @Nullable LocalDateTime getCommitAt(); //only when available
 
-  Map<String, Entity<Release>> getReleases();
-  Map<String, Entity<Locale>> getLocales();
-  Map<String, Entity<Page>> getPages();
-  Map<String, Entity<Link>> getLinks();
-  Map<String, Entity<Article>> getArticles();
-  Map<String, Entity<Workflow>> getWorkflows();
-  Map<String, Entity<Template>> getTemplates();
-  
-  
+  Map<String, Service> getReleases();
+  Map<String, Article> getLocales();
+  Map<String, Template> getPages();
+  Map<String, Resource> getLinks();
+  Map<String, Tag> getArticles();
   
   interface IsTagomiObject { String getId(); TagomiDocType getDocType(); }
   
