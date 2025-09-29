@@ -122,20 +122,30 @@ public class UserProfileCommandVisitor {
     if(splitAt <= 0) {
       return email;
     }
-    return email.substring(splitAt);
+    return email.substring(0, splitAt);
   }
   private String createFirstName(CreateUserProfile command) {
-    final var email = command.getEmail();
-    final var frags = email.split("\\.");
-    return StringUtils.capitalize(frags[0]);
+    try {
+      final var part_1 = command.getEmail().split("@");
+      final var frags = part_1[0].split("\\.");
+      return StringUtils.capitalize(frags[0]);
+    } catch(Exception e) {
+      // it's ok, just N/A
+      return "NA";
+    }
   }
   private String createLastName(CreateUserProfile command) {
-    final var userName = createUserName(command);
-    final var frags = userName.split("\\.");
-    if(frags.length == 1) {
-      return StringUtils.capitalize(frags[0]);
+    try {
+      final var part_1 = command.getEmail().split("@");
+      final var frags = part_1[0].split("\\.");
+      if(frags.length == 1) {
+        return "";
+      }
+      return StringUtils.capitalize(frags[1]);
+    } catch(Exception e) {
+      // it's ok, just N/A
+      return "NA";
     }
-    return StringUtils.capitalize(frags[1]);
   }
   private UserProfile visitCreateUserProfile(CreateUserProfile command) {
     final var id = command.getId();
