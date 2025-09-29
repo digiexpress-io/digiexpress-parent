@@ -48,11 +48,5 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>hdes-client</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 </project>

@@ -52,6 +52,7 @@
     <junit.jupiter.version>5.13.4</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
     <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
+    <text-tree.version>2.1.2</text-tree.version>
   </properties>
 
   <build>
@@ -61,12 +62,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
         <configuration>
-          <argLine>
-            --add-opens java.base/java.lang=ALL-UNNAMED 
-            --add-opens java.base/java.io=ALL-UNNAMED 
-            --add-opens java.base/java.util=ALL-UNNAMED 
-            --add-opens java.base/java.util.concurrent=ALL-UNNAMED
-          </argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <quarkus.log.level>INFO</quarkus.log.level>
@@ -123,16 +118,11 @@
       <plugins>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.4.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.4.2</version>
         </plugin>
         <plugin>
           <groupId>org.springframework.boot</groupId>
@@ -197,12 +187,6 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- Only required to run tests in an IDE that bundles an older version -->
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-engine</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -383,6 +367,12 @@
         <version>${junit.jupiter.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.barfuin.texttree</groupId>
+        <artifactId>text-tree</artifactId>
+        <version>${text-tree.version}</version>
       </dependency>
 
       <dependency>
