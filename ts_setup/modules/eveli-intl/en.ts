@@ -24,6 +24,7 @@ export const en = {
   'task.assignable.cancel': 'Cancel assigned forms',
   'task.assignable.cancel.desc': 'Assigned forms cannot be cancelled after the customer has completed them!',
   'task.assignable.selectForms': 'Select forms',
+  'task.assignable.cancel.formsList.desc': 'The following form(s) will be cancelled!',
   'button.cancelSelected': 'Cancel selected forms ({count})',
   'button.acceptSelected': 'Assigned selected forms ({count})',
   'task.priority.low': 'Low',
