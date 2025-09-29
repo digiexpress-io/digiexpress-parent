@@ -26,7 +26,6 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
   const intl = useIntl();
   const [assignedForms, setAssignedForms] = React.useState<TaskApi.FormAssignment[]>([]);
   const [cancelledForms, setCancelledForms] = React.useState<TaskApi.TaskCustomerAssignment[]>([]);
-
   const [selectedLocale, setSelectedLocale] = React.useState<string>("");
 
   const { task } = useTaskDashboard();
@@ -131,7 +130,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
               fullWidth
               multiple
               disableCloseOnSelect
-              options={task.customerAssignments}
+              options={task.customerAssignments.filter(c => c.status !== 'CANCELLED' && c.status !== 'COMPLETED')}
               value={cancelledForms}
               getOptionLabel={option => `${option.description} - ${option.locale}`}
               onChange={(_event, newValue) => setCancelledForms(newValue)}
@@ -152,7 +151,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
               {cancelledForms.length > 0 && <Typography color='error.main' fontWeight={500}>{intl.formatMessage({ id: 'task.assignable.cancel.formsList.desc', defaultMessage: 'The following form(s) will be cancelled!' })}</Typography>}
               {cancelledForms.map((form, index) => (
                 <Box key={form.id} sx={{ backgroundColor: index % 2 === 0 ? 'action.hover' : 'background.default', p: 0.5, display: 'flex' }}>
-                  <Typography>{form.description}{" - "}{form.locale}</Typography>
+                  <Typography>{form.description}{" - "}{form.locale}{" - "}{form.status}</Typography>
                 </Box>
               ))}
             </Box>
