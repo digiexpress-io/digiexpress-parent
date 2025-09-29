@@ -21,6 +21,7 @@ export const GInputTimeDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       label={element.label}
       description={desc}
       errors={errors}
+      required={!!element.required}
       value={element.value}
       variant='time'
       labelPosition={labelPosition}

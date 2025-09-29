@@ -22,6 +22,7 @@ export const GInputIntDialob: React.FC<GFormBaseElementProps> = ({ disabled, act
       label={element.label}
       description={desc}
       errors={errors}
+      required={!!element.required}
       value={element.value}
       variant='int'
       onChange={onChange}

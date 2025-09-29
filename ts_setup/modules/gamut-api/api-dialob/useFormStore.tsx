@@ -54,12 +54,12 @@ export function useFormStore(props: {id: string}): DialobApi.FormStore {
     queueAction({ type: 'DELETE_ROW', id: rowId });
   }, [queueAction]);
 
-  const complete: () => void = React.useCallback(() => {
-    queueAction({ type: 'COMPLETE' });
+  const complete: (then: () => void) => void = React.useCallback((then) => {
+    queueAction({ type: 'COMPLETE', then });
   }, [queueAction]);
 
-  const next: () => void = React.useCallback(() => {
-    queueAction({ type: 'NEXT' });
+  const next: (then: () => void) => void = React.useCallback((then) => {
+    queueAction({ type: 'NEXT', then });
   }, [queueAction]);
 
   const previous: () => void = React.useCallback(() => {

@@ -27,22 +27,22 @@ export const GForm: React.FC<GFormProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  
-  if(themeProps.component) {
+
+  if (themeProps.component) {
     const Root = themeProps.component;
-    return <Root {...initProps} ownerState={themeProps} className=''/>
+    return <Root {...initProps} ownerState={themeProps} className='' />
   }
 
-  return (<FormProvider 
+  return (<FormProvider
     onCancel={themeProps.onCancel}
-    debugFormId={themeProps.debugFormId} 
-    variant={themeProps.variant} 
-    executionId={themeProps.executionId} 
-    onAfterComplete={themeProps.onAfterComplete} 
+    debugFormId={themeProps.debugFormId}
+    variant={themeProps.variant}
+    executionId={themeProps.executionId}
+    onAfterComplete={themeProps.onAfterComplete}
     formUnavailable={themeProps.formUnavailable}>
-
       <GFormTip {...themeProps} />
-    </FormProvider>);
+
+  </FormProvider>);
 }
 
 // Internal component to access the provider

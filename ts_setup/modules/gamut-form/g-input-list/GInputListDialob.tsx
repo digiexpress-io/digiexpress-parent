@@ -32,6 +32,7 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       disabled={disabled}
       label={element.label}
       description={desc}
+      required={!!element.required}
       errors={errors}
       variant={variant}
       undefinedValue={intl.formatMessage({ id: UNDEFINED_SELECTION_VALUE })}

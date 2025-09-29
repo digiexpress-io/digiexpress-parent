@@ -30,8 +30,7 @@ export interface GInputUploadProps {
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
-  required?: boolean | undefined;
-
+  required: boolean;
 
   variant: OverridableStringUnion<
     'upload',
@@ -70,7 +69,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { name: id, ...props },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: description, title: label ?? '', disabled: props.disabled }
     }
   }

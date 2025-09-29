@@ -29,6 +29,7 @@ export interface GInputBooleanProps {
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
+  required: boolean;
 
   variant: OverridableStringUnion<
     'checkbox',
@@ -67,7 +68,7 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }

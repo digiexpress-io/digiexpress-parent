@@ -31,7 +31,7 @@ export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.S
     } else if (offer.otherLocales.length > 0) {
       // OK
     } else {
-      console.error('Form not available! ', offer);
+      //console.error('Form not available! ', offer);
       continue;
     }
 

@@ -28,6 +28,7 @@ export interface GInputDateProps {
   format: string | undefined;
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
+  required: boolean;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setExtendedErrors?: (extendedErrors: DialobApi.ActionError[]) => void;
@@ -79,7 +80,7 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id, setExtendedErrors: handleExtendedErrors },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }

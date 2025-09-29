@@ -21,6 +21,7 @@ export const GInputTextDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       label={element.label}
       description={desc}
       errors={errors}
+      required={!!element.required}
       value={element.value}
       variant='text'
       labelPosition={labelPosition}

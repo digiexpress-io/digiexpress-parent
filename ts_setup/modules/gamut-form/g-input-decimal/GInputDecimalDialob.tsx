@@ -20,6 +20,7 @@ export const GInputDecimalDialob: React.FC<GFormBaseElementProps> = ({ disabled,
       label={element.label}
       description={desc}
       errors={errors}
+      required={!!element.required}
       value={element.value}
       variant='decimal'
       onChange={onChange}

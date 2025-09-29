@@ -5,7 +5,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { FormattedMessage } from 'react-intl';
-import { useLocale } from '@dxs-ts/gamut-api';
 
 import { GFormStepper } from '../g-form-stepper'
 import {
@@ -13,6 +12,7 @@ import {
   GFormPageRoot, GFormPageTitle, GFormPageSubTitle,
   GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter
 } from './useUtilityClasses';
+import { useGFormErrorVisibility } from '../g-form-error-visibility';
 
 
 
@@ -51,9 +51,9 @@ export interface GFormPageProps {
 export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  const { locale } = useLocale();
   const { ownerState, classes, props } = useThemeInfra(initProps);
+
+  const { isErrorsVisible } = useGFormErrorVisibility();
 
 
   function handlePageChange(id: string) {
@@ -129,17 +129,19 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
         }
 
         {props.pages.length !== props.pageNumber &&
-          <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>
+          <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />} disabled={!props.proceedAllowed && isErrorsVisible}>
             <FormattedMessage id='gamut.forms.page.next' />
           </Button>
         }
 
         {!props.disabled && (
-          <Button onClick={handleComplete} variant='contained' color='primary' disabled={!props.completeAllowed}>
+          <Button onClick={handleComplete} variant='contained' color='primary' disabled={!props.completeAllowed && isErrorsVisible}>
             <FormattedMessage id='gamut.forms.page.complete' />
           </Button>)
         }
+
       </GFormPageFooter>
-    </GFormPageRoot>)
+    </GFormPageRoot >
+  )
 }
 

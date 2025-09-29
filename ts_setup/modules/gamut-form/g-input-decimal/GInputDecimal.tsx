@@ -24,6 +24,7 @@ export interface GInputDecimalProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   disabled: boolean;
+  required: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -66,7 +67,7 @@ export const GInputDecimal: React.FC<GInputDecimalProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }

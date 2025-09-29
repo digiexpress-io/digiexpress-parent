@@ -10,6 +10,7 @@ export interface GInputListProps {
   value: string;
   datasource: DialobApi.ActionValueSet | undefined;
   disabled: boolean;
+  required: boolean;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;

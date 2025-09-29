@@ -22,9 +22,9 @@ export declare namespace DialobApi {
     { type: 'ADD_ROW'; id: string; } |
     { type: 'DELETE_ROW'; id: string; } |
     { type: 'PREVIOUS'; } |
-    { type: 'NEXT'; } |
+    { type: 'NEXT'; then?: () => void } |
     { type: 'GOTO'; id: string; } |
-    { type: 'COMPLETE'; } |
+    { type: 'COMPLETE'; then?: () => void } |
     { type: 'ERROR'; error: ActionError; } |
     { type: 'REMOVE_ERROR'; error: ActionError } |
     { type: 'VALUE_SET'; valueSet: ActionValueSet } |
@@ -215,8 +215,8 @@ export declare namespace DialobApi {
     addRowToGroup(rowGroupId: string): void
     deleteRow(rowId: string): void
 
-    complete(): void
-    next(): void;
+    complete(then: () => void): void
+    next(then: () => void): void;
     previous(): void;
 
     goToPage(pageId: string): void;

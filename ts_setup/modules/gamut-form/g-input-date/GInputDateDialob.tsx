@@ -26,6 +26,7 @@ export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
       value={element.value}
       labelPosition={labelPosition}
       format={undefined}
+      required={!!element.required}
       onChange={onChange}
     />);
 }

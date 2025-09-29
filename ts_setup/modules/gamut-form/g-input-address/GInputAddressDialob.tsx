@@ -21,6 +21,7 @@ export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled,
       label={element.label}
       description={desc}
       errors={errors}
+      required={!!element.required}
       value={element.value}
       variant='address'
       onChange={onChange}

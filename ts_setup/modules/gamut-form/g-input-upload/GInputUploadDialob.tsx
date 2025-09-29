@@ -23,6 +23,7 @@ export const GInputUploadDialob: React.FC<GFormBaseElementProps> = ({ disabled, 
       errors={errors}
       value={element.value}
       variant={'upload'}
+      required={!!element.required}
       labelPosition={labelPosition}
       onChange={onChange}
     />);

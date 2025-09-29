@@ -37,7 +37,7 @@ export interface GInputAddressProps {
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
-  required?: boolean | undefined;
+  required: boolean;
 
 
   variant: OverridableStringUnion<
@@ -94,7 +94,7 @@ export const GInputAddress: React.FC<GInputAddressProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { name: id, ...props, options: { ...options, defaultValue, defaultCountryCodes, mapHeight } },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: description, title: label ?? '', disabled: props.disabled },
       secondary: { name: id, ...props, options: { ...options, defaultValue, defaultCountryCodes, mapHeight } }
     }

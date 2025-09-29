@@ -20,7 +20,7 @@ export interface GInputTextAreaProps {
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
-  required?: boolean | undefined;
+  required: boolean;
   rows?: number | undefined;
 
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { GInputErrorRoot, useThemeInfra} from './useThemeInfra'
 import { DialobApi } from '@dxs-ts/gamut-api';
 import { FormHelperText } from '@mui/material';
+import { useGFormErrorVisibility } from '../g-form-error-visibility';
 
 
 export interface GInputErrorProps {
@@ -13,8 +14,8 @@ export interface GInputErrorProps {
 
 export const GInputError: React.FC<GInputErrorProps> = (initProps) => {
   const {classes, ownerState, props} = useThemeInfra(initProps);
-
-  if((props.errors?.length ?? 0) === 0) {
+  const { isErrorsVisible } = useGFormErrorVisibility();
+  if ((props.errors?.length ?? 0) === 0 || !isErrorsVisible) {
     return (<></>)
   }
 

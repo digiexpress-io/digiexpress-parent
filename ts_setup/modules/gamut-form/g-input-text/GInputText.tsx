@@ -24,9 +24,9 @@ export interface GInputTextProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
+  required: boolean;
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
-  required?: boolean | undefined;
 
 
   variant: OverridableStringUnion<
@@ -66,7 +66,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { name: id, ...props },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: description, title: label ?? '', disabled: props.disabled }
     }
   }

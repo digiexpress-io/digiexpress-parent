@@ -131,6 +131,19 @@ export class ActionsQueue {
           throw new ActionsQueueRequestError('Failure during fetch', response.status);
         }
         const json = await response.json();
+
+        try {
+          syncedActions
+            .filter(a => a.type === 'NEXT' || a.type === 'COMPLETE')
+            .forEach(a => {
+              if (a.then) {
+                a.then();
+              }
+            })
+        } catch (e) {
+          console.error(e);
+        }
+
         return json;
       });
       this.inSync = false;

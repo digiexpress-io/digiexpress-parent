@@ -27,6 +27,7 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
       label={element.label}
       description={desc}
       variant='checkbox'
+      required={!!element.required}
       errors={errors}
       value={element.value}
       onChange={onChange}

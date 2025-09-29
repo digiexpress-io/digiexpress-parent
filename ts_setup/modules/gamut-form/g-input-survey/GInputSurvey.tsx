@@ -16,6 +16,7 @@ export interface GInputSurveyProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   children: React.ReactNode;
+  required: boolean;
 
   options: { id: string, label: string, description?: undefined | string }[];
   questions: { id: string, label: string, description?: undefined | string, value: undefined | string }[];
@@ -70,7 +71,7 @@ export const GInputSurvey: React.FC<GInputSurveyProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       secondary: { ...ownerState, name: id },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }

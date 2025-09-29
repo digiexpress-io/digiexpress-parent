@@ -24,6 +24,7 @@ export interface GInputIntProps {
   label: string | undefined;
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
+  required: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
@@ -66,7 +67,7 @@ export const GInputInt: React.FC<GInputIntProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition },
+      label: { id, children: label ?? '', labelPosition, required: props.required },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }
