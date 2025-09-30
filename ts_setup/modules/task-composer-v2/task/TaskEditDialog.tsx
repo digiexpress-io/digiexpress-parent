@@ -1,38 +1,32 @@
 import React from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  generateUtilityClass, Grid2, styled, TextField, Typography, Zoom
-} from '@mui/material';
-import composeClasses from '@mui/utils/composeClasses';
+import { Button, DialogActions, DialogContent, DialogTitle, Grid2, Typography, Zoom } from '@mui/material';
 import { useIntl } from 'react-intl';
 
 import { TaskProperties } from './TaskProperties';
 import { useTaskDashboard } from '../task-dashboard';
-import { DatePicker } from '@dxs-ts/xui-datetime'; // ⟵ add picker
+import { DatePicker } from '@dxs-ts/xui-datetime';
+import { MUI_NAME, useUtilityClasses, StyledTaskEditDialog, StyledTextField } from './useUtilityClasses';
 
 export interface TaskEditDialogProps {
   open: boolean,
   onClose: () => void
 }
 
-
 function useSubjectErrors(subject: string | undefined): undefined | string {
   const intl = useIntl();
   if (!subject) {
     return intl.formatMessage({ id: 'error.valueRequired' })
-}
+  }
   if (subject.length < 3) {
     return intl.formatMessage({ id: 'error.minTextLength' }, { minLength: 3 })
   }
 }
-
 
 export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const { task, saveTask, isTaskChanged } = useTaskDashboard();
 
-  // Accept Date | string | null/undefined from backend and normalize to Date | null
   const initialDueDate: Date | null =
     task.dueDate instanceof Date
       ? task.dueDate
@@ -110,55 +104,24 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.metaData' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <TaskProperties task={task}/>
+            <TaskProperties task={task} />
           </Grid2>
         </Grid2>
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={handleSave}
-          disabled={!isTaskChanged({ additionalInfo: addInfo, dueDate: dueDate ?? undefined, subject }) || !!subjectErrors}>
+        <Button
+          onClick={handleSave}
+          disabled={
+            !isTaskChanged({
+              additionalInfo: addInfo,
+              dueDate: dueDate ?? undefined,
+              subject,
+            }) || !!subjectErrors
+          }>
           {intl.formatMessage({ id: 'button.save' })}
         </Button>
       </DialogActions>
     </StyledTaskEditDialog>
   )
-}
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  '& .MuiInputBase-input': {
-    height: '2.5rem',
-    padding: '0 12px'
-  },
-  '& .MuiInputBase-multiline': {
-    paddingLeft: '0px',
-    paddingRight: '0px'
-  },
-}));
-
-
-
-const MUI_NAME = 'TaskEditDialog';
-const StyledTaskEditDialog = styled(Dialog, {
-  name: MUI_NAME,
-  slot: 'EditDialog',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.editDialog
-    ];
-  },
-
-})(({ theme }) => {
-
-  return {};
-})
-
-
-const useUtilityClasses = () => {
-  const slots = {
-    editDialog: ['editDialog'],
-  };
-  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
-  return composeClasses(slots, getUtilityClass, {});
 }
