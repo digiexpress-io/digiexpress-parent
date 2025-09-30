@@ -1,7 +1,5 @@
 package io.digiexpress.tagomi.spi;
 
-import java.util.List;
-
 /*-
  * #%L
  * stencil-persistence
@@ -29,37 +27,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.TagomiDocType;
 import io.resys.thena.git.api.GitClient;
-import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface TagomiConfig {
+public interface TagomiStoreConfig {
   GitClient getClient();
-  String getRepoName();
+  String getTenantName();
   String getHeadName();
   AuthorProvider getAuthorProvider();
   ObjectMapper getObjectMapper();
   Serializer getSerializer();
-  Deserializer getDeserializer();
-  
-  
-  interface Commands {
-    <T extends TagomiContainer.IsTagomiObject> Uni<T> delete(T toBeDeleted);
-    <T extends TagomiContainer.IsTagomiObject> Uni<T> get(String blobId);
-    <T extends TagomiContainer.IsTagomiObject> Uni<T> save(T toBeSaved);
-    <T extends TagomiContainer.IsTagomiObject> Uni<T> create(T toBeSaved);
-    Uni<List<? extends TagomiContainer.IsTagomiObject>> saveAll(List<TagomiContainer.IsTagomiObject> toBeSaved);
-    Uni<List<? extends TagomiContainer.IsTagomiObject>> batch(BatchCommand batch);
-  }  
-    
-  
-  @Value.Immutable
-  interface BatchCommand {
-    List<TagomiContainer.IsTagomiObject> getToBeCreated();
-    List<TagomiContainer.IsTagomiObject> getToBeSaved();
-    List<TagomiContainer.IsTagomiObject> getToBeDeleted();
-  }
-  
+  Deserializer getDeserializer();    
+
   @FunctionalInterface
   interface AuthorProvider {
     String getAuthor();
