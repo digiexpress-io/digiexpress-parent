@@ -1,11 +1,14 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, Grid2, styled, TextField, Typography, Zoom } from '@mui/material';
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  generateUtilityClass, Grid2, styled, TextField, Typography, Zoom
+} from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
 import { TaskProperties } from './TaskProperties';
 import { useTaskDashboard } from '../task-dashboard';
-
+import { DatePicker } from '@dxs-ts/xui-datetime'; // ⟵ add picker
 
 export interface TaskEditDialogProps {
   open: boolean,
@@ -17,7 +20,7 @@ function useSubjectErrors(subject: string | undefined): undefined | string {
   const intl = useIntl();
   if (!subject) {
     return intl.formatMessage({ id: 'error.valueRequired' })
-  }
+}
   if (subject.length < 3) {
     return intl.formatMessage({ id: 'error.minTextLength' }, { minLength: 3 })
   }
@@ -28,15 +31,17 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
   const classes = useUtilityClasses();
   const intl = useIntl();
   const { task, saveTask, isTaskChanged } = useTaskDashboard();
-  const [dueDate, setDueDate] = React.useState(task.dueDate); 
+
+  // Accept Date | string | null/undefined from backend and normalize to Date | null
+  const initialDueDate: Date | null =
+    task.dueDate instanceof Date
+      ? task.dueDate
+      : (task.dueDate ? new Date(task.dueDate as any) : null);
+
+  const [dueDate, setDueDate] = React.useState<Date | null>(initialDueDate);
   const [addInfo, setAddInfo] = React.useState(task.additionalInfo);
   const [subject, setSubject] = React.useState(task.subject);
-  const subjectErrors = useSubjectErrors(subject)
-
-  //TODO
-  function handleDueDate() {
-
-  }
+  const subjectErrors = useSubjectErrors(subject);
 
   function handleSetAddInfo(event: React.ChangeEvent<HTMLInputElement>) {
     setAddInfo(event.target.value);
@@ -45,26 +50,39 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
     setSubject(event.target.value);
   }
   async function handleSave() {
-    await saveTask({ dueDate, subject, additionalInfo: addInfo });
+    await saveTask({
+      dueDate: dueDate ?? undefined,
+      subject,
+      additionalInfo: addInfo,
+    });
     onClose();
   }
 
   return (
-    <StyledTaskEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
+    <StyledTaskEditDialog
+      className={classes.editDialog}
+      open={open}
+      onClose={onClose}
+      maxWidth='md'
+      slots={{ transition: Zoom }}
+    >
       <DialogTitle>
-        {intl.formatMessage({ id: 'task.edit' })}
-        {" "}
-        {task.taskRef ?? 'no task reference id'}
+        {intl.formatMessage({ id: 'task.edit' })} {task.taskRef ?? 'no task reference id'}
       </DialogTitle>
 
       <DialogContent>
         <Grid2 container display='flex' alignItems='center'>
-
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.dueDate' })}</Typography>
+            <Typography fontWeight='bold'>
+              {intl.formatMessage({ id: 'task.dueDate' })}
+            </Typography>
           </Grid2>
           <Grid2 size={{ md: 7, lg: 7, xl: 7 }}>
-            <StyledTextField value={dueDate} onChange={() => { }} />
+            <DatePicker
+              fullWidth
+              value={dueDate}
+              onChange={(date) => setDueDate(date)}
+            />
           </Grid2>
 
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
@@ -99,7 +117,7 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={handleSave}
-          disabled={!isTaskChanged({ additionalInfo: addInfo, dueDate, subject }) || !!subjectErrors}>
+          disabled={!isTaskChanged({ additionalInfo: addInfo, dueDate: dueDate ?? undefined, subject }) || !!subjectErrors}>
           {intl.formatMessage({ id: 'button.save' })}
         </Button>
       </DialogActions>
