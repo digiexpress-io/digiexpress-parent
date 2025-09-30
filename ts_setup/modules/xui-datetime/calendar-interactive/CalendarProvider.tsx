@@ -40,6 +40,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({
       return (<></>)
     }
 
+
     return (
       <IntlProvider locale={locale} messages={messages}>
         <DateNamesContext.Provider value={{
@@ -51,8 +52,8 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({
             selectedDate={selectedDate}
             onDateSelect={onChange}
             onClose={onClose}
-            minDate={ NOW.minus({ years: 10 }).toJSDate() }
-            maxDate={ NOW.plus({ years: 2 }).toJSDate() }
+            minDate={NOW.minus({ years: 101 }).toJSDate()} // 1925
+            maxDate={NOW.plus({ years: 75 }).toJSDate()} // 2100
           />
         </DateNamesContext.Provider>
       </IntlProvider>

@@ -207,7 +207,7 @@ export class DateInputStateMachine {
     // Basic range validation
     if (dayNum < 1 || dayNum > 31 || 
         monthNum < 1 || monthNum > 12 || 
-        yearNum < 1970 || yearNum > 2100) {
+      yearNum <= 1925 || yearNum >= 2100) {
       newData.state = 'error';
       newData.error = 'Invalid date range';
       return new DateInputStateMachine(newData);
