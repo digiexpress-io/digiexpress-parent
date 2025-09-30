@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { TaskProperties } from './TaskProperties';
 import { useTaskDashboard } from '../task-dashboard';
 import { DatePicker } from '@dxs-ts/xui-datetime';
-import { MUI_NAME, useUtilityClasses, StyledTaskEditDialog, StyledTextField } from './useUtilityClasses';
+import { useUtilityClasses, StyledTaskEditDialog, StyledTextField, StyledDatePicker } from './useUtilityClasses';
 
 export interface TaskEditDialogProps {
   open: boolean,
@@ -71,9 +71,10 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
               {intl.formatMessage({ id: 'task.dueDate' })}
             </Typography>
           </Grid2>
-          <Grid2 size={{ md: 7, lg: 7, xl: 7 }}>
-            <DatePicker
+          <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
+            <StyledDatePicker
               fullWidth
+              size="small"
               value={dueDate}
               onChange={(date) => setDueDate(date)}
             />
