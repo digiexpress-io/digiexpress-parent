@@ -1,5 +1,5 @@
 import React from 'react';
-import { OutlinedInput, TextField, useTheme } from '@mui/material';
+import { OutlinedInput } from '@mui/material';
 import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
 import { DateTime } from 'luxon';
 
@@ -32,7 +32,7 @@ const input = React.forwardRef<any, DelegateInputProps>((props, _ref) => {
     props.setExtendedErrors(isError ? [{
       id: "invalid-date",
       code: "invalid-date",
-      description: intl.formatMessage({ id: 'xui.datetime.value.invalid', defaultMessage: 'Invalid date, check format: dd.MM.yyyy' })
+      description: intl.formatMessage({ id: 'xui.datetime.value.invalid', defaultMessage: 'Invalid date format or range--check format: dd.MM.yyyy' })
     }] : [])
   }
   return (<XuiDatePicker
@@ -51,29 +51,6 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   const [value, setValue] = React.useState<DateTime | null>(parseInit(props.value));
   const ownerState = { variant: props.variant ?? 'date' };
   const { setExtendedErrors } = props;
-const intl = useIntl();
-
-  const input = React.forwardRef<any, {}>((_itemProps, _ref) => {
-    function handleValidity(isError: boolean) {
-      if (!props.setExtendedErrors) {
-        return;
-      }
-      props.setExtendedErrors(isError ? [{
-        id: "invalid-date",
-        code: "invalid-date",
-        description: intl.formatMessage({ id: 'xui.datetime.value.invalid', defaultMessage: 'Invalid date, check format: dd.MM.yyyy' })
-      }] : [])
-    }
-    return (<XuiDatePicker
-      fullWidth
-      onValidity={handleValidity}
-      value={value ? value.toJSDate() : null}
-      onChange={(d) => {
-        const next = d ? DateTime.fromJSDate(d) : null;
-        setValue(next);
-      }}
-    />)
-  })
 
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>

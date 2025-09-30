@@ -1,5 +1,6 @@
 package io.digiexpress.tagomi.api.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,9 @@ public interface TagomiContainer {
 
   Map<String, Service> getReleases();
   Map<String, Article> getLocales();
-  Map<String, Template> getPages();
+  Map<String, Template> getTemplates();
   Map<String, Resource> getLinks();
-  Map<String, Tag> getArticles();
+  Map<String, Article> getArticles();
   
   interface IsTagomiObject { String getId(); TagomiDocType getDocType(); }
   
@@ -32,6 +33,7 @@ public interface TagomiContainer {
     TEMPLATE, // holds markup for pdf in specific locale
     RESOURCE, // some static asset like image to be embedded in printout
     SERVICE,  // final product, that links article for syntax and data for input
+    LOCALE
   }
   
   
@@ -42,7 +44,7 @@ public interface TagomiContainer {
     String getId();
     String getServiceName(); // human readable name, what IS this PDF
     String getOrchestratorName(); // external name/id that will be called to resolve data
-
+    List<LocaleAndLabel> getLabels();
     @Override default public TagomiDocType getDocType() { return TagomiDocType.SERVICE; };
 
   }
@@ -66,7 +68,7 @@ public interface TagomiContainer {
     
     String getLocale();
     String getContent();
-
+    
     String getArticleId();
     List<String> getResourceIds(); // id-s to ResourceLink
     
@@ -87,13 +89,34 @@ public interface TagomiContainer {
   }
 
   
+
   @Value.Immutable
-  @JsonSerialize(as = ImmutableTag.class)
-  @JsonDeserialize(as = ImmutableTag.class)
-  interface Tag {
+  @JsonSerialize(as = ImmutableLocale.class)
+  @JsonDeserialize(as = ImmutableLocale.class)
+  interface Locale extends IsTagomiObject {
     String getId();
-    String getExternalLocation();
-    String getResourceName();
+    
+    String getValue();
+    Boolean getEnabled();
+
+    @Override default public TagomiDocType getDocType() { return TagomiDocType.LOCALE; };
+  }
+  
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableBranch.class)
+  @JsonDeserialize(as = ImmutableBranch.class)
+  interface Branch {
+    String getCommitId();
+    String getName();
   }
 
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableLocaleAndLabel.class)
+  @JsonDeserialize(as = ImmutableLocaleAndLabel.class)
+  interface LocaleAndLabel extends Serializable {
+    String getLocale();     // locale id
+    String getLabelValue(); // translation in locale
+  }
 }
