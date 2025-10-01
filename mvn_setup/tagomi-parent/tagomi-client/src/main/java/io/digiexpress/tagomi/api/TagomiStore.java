@@ -1,6 +1,7 @@
 package io.digiexpress.tagomi.api;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -13,10 +14,17 @@ public interface TagomiStore {
   BranchQuery queryBranches();
   UpsertBuilder upsertBuilder();
   TenantBuilder tenantBuilder();
-  
+  CurrentStateQuery currentStateQuery();
   
   interface BranchQuery {
-    Uni<List<TagomiContainer.Branch>> findAll();
+    Uni<Optional<io.resys.thena.api.entities.git.Branch>> findOneBranch();
+    Uni<List<TagomiContainer.Tag>> findAllTags();
+  }
+  
+  interface CurrentStateQuery {
+    Uni<TagomiContainer> getState();
+    Uni<TagomiContainer> getStateByCommitId(String commitId);
+    Uni<TagomiContainer> findAllStateObjectsById(List<String> ids, TagomiContainer.TagomiDocType type);
   }
   
   interface UpsertBuilder {
@@ -43,4 +51,5 @@ public interface TagomiStore {
     List<TagomiContainer.IsTagomiObject> getToBeSaved();
     List<TagomiContainer.IsTagomiObject> getToBeDeleted();
   }
+
 }

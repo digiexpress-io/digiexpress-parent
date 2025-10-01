@@ -26,10 +26,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
+import io.resys.thena.api.envelope.Message;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Singular;
 import lombok.experimental.Accessors;
 
 public class StoreException extends RuntimeException {
@@ -40,20 +45,20 @@ public class StoreException extends RuntimeException {
   private final Optional<TagomiContainer.IsTagomiObject> target;
   private final List<StoreExceptionMsg> messages = new ArrayList<>();
   
-  public StoreException(Exception e, String code, TagomiContainer.IsTagomiObject target) {
+  public StoreException(Exception e, String code, @Nullable TagomiContainer.IsTagomiObject target) {
     super(e.getMessage(), e);
     this.code = code;
     this.target = Optional.ofNullable(target);
   }
 
-  public StoreException(Exception e, String code, TagomiContainer.IsTagomiObject target, StoreExceptionMsg ... msg) {
+  public StoreException(Exception e, String code, @Nullable TagomiContainer.IsTagomiObject target, StoreExceptionMsg ... msg) {
     super(e.getMessage(), e);
     this.code = code;
     this.target = Optional.ofNullable(target);
     this.messages.addAll(Arrays.asList(msg));
   }
     
-  public StoreException(String code, TagomiContainer.IsTagomiObject target) {
+  public StoreException(String code, @Nullable TagomiContainer.IsTagomiObject target) {
     super();
     this.code = code;
     this.target = Optional.ofNullable(target);
@@ -70,18 +75,32 @@ public class StoreException extends RuntimeException {
     final var builder = new StringBuilder()
         .append(System.lineSeparator())
         .append("Store operation failed with:").append(System.lineSeparator())
-        .append("  - code: ").append("'" + code + "'").append(System.lineSeparator());
+        .append("  code: ").append("'" + code + "'").append(System.lineSeparator());
     
     if(target != null) {
-      builder.append("  - entity id: ").append("'" + target.getId() + "'").append(System.lineSeparator());
+      builder.append("  entity id: ").append("'" + target.getId() + "'").append(System.lineSeparator());
     }
     
     
     for(final var m : msg) {
       builder
-        .append("  - msg id: '").append(m.getId()).append("'").append(System.lineSeparator())
-        .append("  - msg value: '").append(m.getValue()).append("'").append(System.lineSeparator())
-        .append("  - msg additional info: ").append(System.lineSeparator());
+        .append("  - ").append(m.getId()).append(System.lineSeparator())
+        .append("    value: '").append(m.getValue()).append("'").append(System.lineSeparator())
+        .append("    msg additional info: ").append(System.lineSeparator());
+      
+      
+      for(final var arg : m.getMessages()) {
+        builder
+          .append("    - error: ").append(arg.getText()).append(System.lineSeparator());
+        
+        if(arg.getException() != null) {
+          builder
+            .append("      exception message: ").append(arg.getException().getMessage())
+            .append("      stack trace: ").append(System.lineSeparator())
+            .append(ExceptionUtils.getStackTrace(arg.getException()))
+            .append(System.lineSeparator());
+        }
+      }
       
       for(final var arg : m.getArgs()) {
         final var nested = Arrays.asList(arg.trim()
@@ -128,7 +147,10 @@ public class StoreException extends RuntimeException {
   public static class StoreExceptionMsg {
     private final String id;
     private final String value;
+    @Singular
     private final List<String> args;
+    @Singular
+    private final List<Message> messages;
   }
   
 }

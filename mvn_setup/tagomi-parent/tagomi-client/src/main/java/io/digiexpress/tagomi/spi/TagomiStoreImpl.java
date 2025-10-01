@@ -2,17 +2,19 @@ package io.digiexpress.tagomi.spi;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.tagomi.api.TagomiStore;
-import io.digiexpress.tagomi.api.entities.ImmutableBranch;
+import io.digiexpress.tagomi.api.entities.ImmutableTag;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
-import io.digiexpress.tagomi.api.entities.TagomiContainer.Branch;
+import io.digiexpress.tagomi.spi.builders.UpsertBuilderImpl;
 import io.digiexpress.tagomi.spi.support.RepoException;
 import io.digiexpress.tagomi.spi.support.StoreException;
 import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -37,7 +39,7 @@ public class TagomiStoreImpl implements TagomiStore {
   public TagomiStore.BranchQuery queryBranches() {
     return new TagomiStore.BranchQuery() {
       @Override
-      public Uni<List<TagomiContainer.Branch>> findAll() {
+      public Uni<List<TagomiContainer.Tag>> findAllTags() {
         return config.getClient().git(config.getTenantName()).tenants()
             .get().onItem().transform(objects -> {
               if(objects.getStatus() != QueryEnvelopeStatus.OK) {
@@ -51,13 +53,19 @@ public class TagomiStoreImpl implements TagomiStore {
               
               return objects.getObjects().getBranches().values().stream()
                   .map(branch -> {
-                    final Branch result = ImmutableBranch.builder()
+                    final TagomiContainer.Tag result = ImmutableTag.builder()
                         .commitId(branch.getCommit())
                         .name(branch.getName()).build();
                     return result;
                   })
                   .toList();
             });
+      }
+
+      @Override
+      public Uni<Optional<Branch>> findOneBranch() {
+        // TODO Auto-generated method stub
+        return null;
       }
     };
   }
@@ -115,6 +123,13 @@ public class TagomiStoreImpl implements TagomiStore {
   }
   
   @Override
+  public CurrentStateQuery currentStateQuery() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
+  
+  @Override
   public UpsertBuilder upsertBuilder() {
     return new UpsertBuilderImpl(config);
   }
@@ -122,4 +137,5 @@ public class TagomiStoreImpl implements TagomiStore {
   protected TagomiStoreImpl createWithNewConfig(TagomiStoreConfig config) {
     return new TagomiStoreImpl(config);
   }
+
 }

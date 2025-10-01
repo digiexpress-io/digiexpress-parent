@@ -1,4 +1,4 @@
-package io.digiexpress.tagomi.spi;
+package io.digiexpress.tagomi.spi.builders;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import io.digiexpress.tagomi.api.TagomiStore.BatchCommand;
 import io.digiexpress.tagomi.api.TagomiStore.UpsertBuilder;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.IsTagomiObject;
+import io.digiexpress.tagomi.spi.TagomiStoreConfig;
 import io.digiexpress.tagomi.spi.support.StoreException;
 import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
 import io.resys.thena.api.entities.CommitResultStatus;

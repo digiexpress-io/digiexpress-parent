@@ -13,18 +13,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 
 
-
+@Value.Immutable
+@JsonSerialize(as = ImmutableTagomiContainer.class)
+@JsonDeserialize(as = ImmutableTagomiContainer.class)
 public interface TagomiContainer {
   String getTagName();
   
   @Nullable String getCommitId(); //only when available
   @Nullable LocalDateTime getCommitAt(); //only when available
 
-  Map<String, Service> getReleases();
-  Map<String, Article> getLocales();
+  Map<String, Tag> getTags();
+  Map<String, Locale> getLocales();
   Map<String, Template> getTemplates();
-  Map<String, Resource> getLinks();
+  Map<String, Resource> getResources();
   Map<String, Article> getArticles();
+  Map<String, Service> getServices();
   
   interface IsTagomiObject { String getId(); TagomiDocType getDocType(); }
   
@@ -33,7 +36,8 @@ public interface TagomiContainer {
     TEMPLATE, // holds markup for pdf in specific locale
     RESOURCE, // some static asset like image to be embedded in printout
     SERVICE,  // final product, that links article for syntax and data for input
-    LOCALE
+    LOCALE,   // locale code and enabled/disabled flag
+    TAG       // very small meta object for holding some commit data
   }
   
   
@@ -98,17 +102,20 @@ public interface TagomiContainer {
     
     String getValue();
     Boolean getEnabled();
+    Boolean getDefault();
 
     @Override default public TagomiDocType getDocType() { return TagomiDocType.LOCALE; };
   }
   
   
   @Value.Immutable
-  @JsonSerialize(as = ImmutableBranch.class)
-  @JsonDeserialize(as = ImmutableBranch.class)
-  interface Branch {
+  @JsonSerialize(as = ImmutableTag.class)
+  @JsonDeserialize(as = ImmutableTag.class)
+  interface Tag extends IsTagomiObject {
     String getCommitId();
     String getName();
+    
+    @Override default public TagomiDocType getDocType() { return TagomiDocType.TAG; };
   }
 
   
