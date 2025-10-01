@@ -1,3 +1,4 @@
+import { Md5 } from 'ts-md5';
 import { DialobApi } from './dialob-types';
 
 export function parsePage(currentPageId: string, session: DialobApi.Form): DialobApi.ControlPage {
@@ -38,6 +39,8 @@ export function parsePage(currentPageId: string, session: DialobApi.Form): Dialo
   }
 
 
+  const { firstErrorControlId, errorChecksum } = getErrorSummary(currentPageId, session);
+
 
   const currentPage: DialobApi.ControlPage = {
     id: currentPageId,
@@ -49,9 +52,48 @@ export function parsePage(currentPageId: string, session: DialobApi.Form): Dialo
     singular,
     order: getPageNumber(allPageIds, currentPageId, session),
     nextPageId: isLastPage ? undefined : allPageIds[allPageIds.indexOf(currentPageId) + 1],
+    firstErrorControlId, errorChecksum
   };
 
   return currentPage;
+}
+
+function getErrorSummary(currentPageId: string, session: DialobApi.Form): {
+  firstErrorControlId: DialobApi.ControlId | undefined;
+  errorChecksum: string | undefined;
+} {
+
+  const md5 = new Md5();
+  let firstErrorControlId: string | undefined;
+
+  function traceErrors(start: { items: string[] | undefined }) {
+    for (const itemId of start.items ?? []) {
+      const item = session.getItem(itemId);
+      if (!item) {
+        continue;
+      }
+      const errors = session.toErrors(itemId)
+        .map(error => `${error.id}/${error.code}/${error.description}`)
+        .sort();
+
+      if (errors.length === 0) {
+        traceErrors({ items: item.items });
+        continue;
+      }
+
+      if (!firstErrorControlId) {
+        firstErrorControlId = itemId;
+      }
+
+      for (const error of errors) {
+        md5.appendStr(error);
+      }
+      traceErrors({ items: item.items });
+    }
+  }
+
+  traceErrors({ items: session.getItem(currentPageId)?.items });
+  return { firstErrorControlId, errorChecksum: md5.end() + '' }
 }
 
 function getLastPageId(session: DialobApi.Form, availableItems: string[]): string | undefined {

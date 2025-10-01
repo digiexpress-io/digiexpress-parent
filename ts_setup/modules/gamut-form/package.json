@@ -20,9 +20,8 @@
     "@mui/types": "*",
     "luxon": "*",
     "numbro": "*",
-    "leaflet": "*"
-    
-
+    "leaflet": "*",
+    "@tanstack/react-store": "*"
   },
   "keywords": ["gamut", "dialob", "ui", "primitives", "components"],
   "private": true

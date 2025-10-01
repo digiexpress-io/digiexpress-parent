@@ -43,6 +43,7 @@
           "notistack": "*",
           "@tanstack/react-router": "*",
           "@tanstack/react-query": "*",
+          "@tanstack/react-store": "*",
           "@mui/material": "*",
           "@mui/utils": "*"
         },
@@ -83,6 +84,7 @@
         "notistack",
         "@tanstack/react-router",
         "@tanstack/react-query",
+        "@tanstack/react-store",
         "@mui/material",
         "@mui/utils"
       ],
@@ -93,6 +95,7 @@
         "notistack",
         "@tanstack/react-router",
         "@tanstack/react-query",
+        "@tanstack/react-store",
         "@mui/material",
         "@mui/utils"
       ],
@@ -103,6 +106,7 @@
         "notistack",
         "@tanstack/react-router",
         "@tanstack/react-query",
+        "@tanstack/react-store",
         "@mui/material",
         "@mui/utils"
       ],
@@ -194,6 +198,7 @@
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
+        "@tanstack/react-store",
         "@mui/utils"
       ]
     },
@@ -226,6 +231,7 @@
           "react-intl": "*",
           "@tanstack/react-router": "*",
           "@tanstack/react-query": "*",
+          "@tanstack/react-store": "*",
           "@mui/material": "*",
           "@mui/utils": "*"
         },
@@ -252,6 +258,7 @@
         "react-intl",
         "@tanstack/react-router",
         "@tanstack/react-query",
+        "@tanstack/react-store",
         "@mui/material",
         "@mui/utils"
       ],
@@ -261,6 +268,7 @@
         "react-intl",
         "@tanstack/react-router",
         "@tanstack/react-query",
+        "@tanstack/react-store",
         "@mui/material",
         "@mui/utils"
       ],
@@ -270,6 +278,7 @@
         "react-intl",
         "@tanstack/react-router",
         "@tanstack/react-query",
+        "@tanstack/react-store",
         "@mui/material",
         "@mui/utils"
       ],
@@ -321,7 +330,8 @@
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-routes",
         "@dxs-ts/gamut-theme",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@tanstack/react-store"
       ]
     },
     "@dxs-ts/envir-fetch": {
@@ -1040,7 +1050,8 @@
           "@mui/types": "*",
           "luxon": "*",
           "numbro": "*",
-          "leaflet": "*"
+          "leaflet": "*",
+          "@tanstack/react-store": "*"
         },
         "keywords": [
           "gamut",
@@ -1065,7 +1076,8 @@
         "@mui/types",
         "luxon",
         "numbro",
-        "leaflet"
+        "leaflet",
+        "@tanstack/react-store"
       ],
       "peerDependencies": [
         "react",
@@ -1078,7 +1090,8 @@
         "@mui/types",
         "luxon",
         "numbro",
-        "leaflet"
+        "leaflet",
+        "@tanstack/react-store"
       ],
       "externalDependencies": [
         "react",
@@ -1091,7 +1104,8 @@
         "@mui/types",
         "luxon",
         "numbro",
-        "leaflet"
+        "leaflet",
+        "@tanstack/react-store"
       ],
       "internalDependencies": [
         "@dxs-ts/gamut-api",
@@ -1103,6 +1117,7 @@
         "@dxs-ts/gamut-api",
         "@mui/material",
         "@mui/utils",
+        "@tanstack/react-store",
         "@mui/icons-material",
         "@dxs-ts/gamut-md",
         "react-intl",
@@ -1117,6 +1132,7 @@
         "react",
         "@mui/material",
         "@mui/utils",
+        "@tanstack/react-store",
         "@mui/icons-material",
         "react-intl",
         "@mui/types",
@@ -2340,9 +2356,9 @@
       "actualDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils",
         "react-intl",
         "@dxs-ts/xui-datetime",
+        "@mui/utils",
         "@mui/icons-material",
         "luxon",
         "@dxs-ts/task-api",
@@ -2356,8 +2372,8 @@
       "actualExternalDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils",
         "react-intl",
+        "@mui/utils",
         "@mui/icons-material",
         "luxon",
         "@tanstack/react-query",
@@ -3330,6 +3346,7 @@
         "@mui/x-tree-view",
         "@tanstack/react-query",
         "@tanstack/react-router",
+        "@tanstack/react-store",
         "@tanstack/react-table",
         "@uiw/react-md-editor",
         "@xyflow/react",
@@ -3380,6 +3397,7 @@
         "@mui/utils",
         "@tanstack/react-query",
         "@tanstack/react-router",
+        "@tanstack/react-store",
         "leaflet",
         "leaflet-geosearch",
         "luxon",
@@ -3395,6 +3413,6 @@
       ]
     }
   },
-  "checksum": "1c3fbee68ed2ea5a9930cd6734bf8eb47af1b452511f2457933f36940cfdacb5",
-  "generatedAt": "2025-09-29T06:55:40.930Z"
+  "checksum": "f0d98d3eac036fcabb4dfb75b986324947b3abad02730e7532283d6567bd374b",
+  "generatedAt": "2025-10-01T14:26:55.439Z"
 }
