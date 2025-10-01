@@ -22,10 +22,7 @@ package io.digiexpress.tagomi.spi;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
-import io.digiexpress.tagomi.api.entities.TagomiContainer.TagomiDocType;
 import io.resys.thena.git.api.GitClient;
 import io.vertx.core.json.JsonObject;
 
@@ -35,7 +32,6 @@ public interface TagomiStoreConfig {
   String getTenantName();
   String getHeadName();
   AuthorProvider getAuthorProvider();
-  ObjectMapper getObjectMapper();
   Serializer getSerializer();
   Deserializer getDeserializer();    
 
@@ -51,7 +47,6 @@ public interface TagomiStoreConfig {
   
   interface Deserializer {
     <T extends TagomiContainer.IsTagomiObject> T fromString(JsonObject value);
-    <T extends TagomiContainer.IsTagomiObject> T fromString(TagomiDocType type, JsonObject value);
   }
   
 }

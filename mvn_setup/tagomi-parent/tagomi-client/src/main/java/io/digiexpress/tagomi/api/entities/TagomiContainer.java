@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -29,7 +32,24 @@ public interface TagomiContainer {
   Map<String, Article> getArticles();
   Map<String, Service> getServices();
   
-  interface IsTagomiObject { String getId(); TagomiDocType getDocType(); }
+  
+  
+  @JsonTypeInfo(
+      use = JsonTypeInfo.Id.NAME,
+      include = JsonTypeInfo.As.PROPERTY,
+      property = "docType")
+  @JsonSubTypes({
+    @Type(value = ImmutableArticle.class, name = "ARTICLE"), 
+    @Type(value = ImmutableTemplate.class, name = "TEMPLATE"), 
+    @Type(value = ImmutableResource.class, name = "RESOURCE"), 
+    @Type(value = ImmutableService.class, name = "SERVICE"), 
+    @Type(value = ImmutableLocale.class, name = "LOCALE"), 
+    @Type(value = ImmutableTag.class, name = "TAG")
+  })
+  interface IsTagomiObject { 
+    String getId(); 
+    TagomiDocType getDocType(); 
+  }
   
   enum TagomiDocType {
     ARTICLE,  // main grouping for locale based templates
