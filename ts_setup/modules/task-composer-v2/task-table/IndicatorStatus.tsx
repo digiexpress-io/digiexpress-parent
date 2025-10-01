@@ -1,27 +1,29 @@
 import React from 'react';
 import { alpha, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
+import { FormattedMessage } from 'react-intl';
+
 import { TaskApi } from '@dxs-ts/task-api';
 
 
 function renderStatus(type: TaskApi.TaskStatus): { label: string, color: string } {
   switch (type) {
     case TaskApi.TaskStatus.NEW:
-      return { label: 'New', color: '#ffb703' };
+      return { label: 'task.status.new', color: '#ffb703' };
     case TaskApi.TaskStatus.OPEN:
-      return { label: 'Open', color: '#70e000' };
+      return { label: 'task.status.open', color: '#70e000' };
     case TaskApi.TaskStatus.COMPLETED:
-      return { label: 'Completed', color: '#48bfe3' };
+      return { label: 'task.status.completed', color: '#48bfe3' };
     case TaskApi.TaskStatus.REJECTED:
-      return { label: 'Rejected', color: '#d90429' };
+      return { label: 'task.status.rejected', color: '#d90429' };
     case TaskApi.TaskStatus.TRANSFERRED:
-      return { label: 'Transferred', color: '#d90429' };
+      return { label: 'task.status.transferred', color: '#d90429' };
     case TaskApi.TaskStatus.DELEGATED:
-      return { label: 'Delegated', color: '#d90429' };
+      return { label: 'task.status.delegated', color: '#d90429' };
     case TaskApi.TaskStatus.WAITING:
-      return { label: 'Waiting', color: '#ffff00' };
+      return { label: 'task.status.waiting', color: '#ffff00' };
     default:
-      return { label: 'No status', color: '#ccc5b9' };
+      return { label: 'eveli.noValueIndicator', color: '#ccc5b9' };
   }
 };
 
@@ -33,7 +35,7 @@ export const IndicatorStatus: React.FC<{
 
   return (
     <IndicatorStatusRoot className={classes.root} ownerState={{ ...props, color: values.color }}>
-      <Typography>{values.label}</Typography>
+      <Typography><FormattedMessage id={values.label} /></Typography>
     </IndicatorStatusRoot>
   )
 }
