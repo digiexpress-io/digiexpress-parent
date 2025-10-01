@@ -18,6 +18,7 @@ import { IndicatorAssignee } from './IndicatorAssignee';
 import { IndicatorSubject } from './IndicatorSubject';
 
 import { filterFormattedDateFn, filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
+import { IndicatorRole } from './IndicatorRole';
 
 export const TASK_TABLE_QUERY_KEY = 'find-all-tasks';
 
@@ -122,6 +123,7 @@ export const TaskTable: React.FC = () => {
       filterFn: filterStringOrArrayFn,
       size: 150,
       minSize: 150,
+      cell: (assignedRoles) => flexRender(IndicatorRole, { taskRoles: assignedRoles.getValue(), roles: backend.roles }),
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
