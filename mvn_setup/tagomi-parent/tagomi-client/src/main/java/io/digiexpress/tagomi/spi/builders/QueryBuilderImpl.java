@@ -134,7 +134,7 @@ public class QueryBuilderImpl implements TagomiStore.StateQuery {
   }
   
   
-  private static void mapAnyObject(IsTagomiObject entity, ImmutableTagomiContainer.Builder builder) {
+  public static void mapAnyObject(IsTagomiObject entity, ImmutableTagomiContainer.Builder builder) {
     final var id = entity.getId();
     switch (entity.getDocType()) {
     case RESOURCE:

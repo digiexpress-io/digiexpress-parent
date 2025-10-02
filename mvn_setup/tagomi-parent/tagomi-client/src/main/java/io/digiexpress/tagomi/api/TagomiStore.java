@@ -27,7 +27,6 @@ public interface TagomiStore {
   
   interface StateQuery {
     Uni<TagomiEntityContainer> getEntityState(String blobId, TagomiDocType type);
-    
     Uni<TagomiContainer> getState();
     Uni<TagomiContainer> getStateByCommitId(String commitId);
     Uni<TagomiContainer> findAllStateObjectsById(List<String> ids, TagomiContainer.TagomiDocType type);
@@ -35,7 +34,6 @@ public interface TagomiStore {
   
   interface UpsertBuilder {
     <T extends TagomiContainer.IsTagomiObject> Uni<T> delete(T toBeDeleted);
-    <T extends TagomiContainer.IsTagomiObject> Uni<T> get(String blobId);
     <T extends TagomiContainer.IsTagomiObject> Uni<T> save(T toBeSaved);
     <T extends TagomiContainer.IsTagomiObject> Uni<T> create(T toBeSaved);
     Uni<List<? extends TagomiContainer.IsTagomiObject>> saveAll(List<TagomiContainer.IsTagomiObject> toBeSaved);
