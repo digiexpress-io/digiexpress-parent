@@ -119,10 +119,12 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public QueryTasks requireAnyRoles(List<String> roles) {
-        if(roles == null) {
-          roles = new ArrayList<>();
+        if (roles != null) {
+          if(requireAnyRoles == null) {
+            requireAnyRoles = new ArrayList<>();
+          }
+          requireAnyRoles.addAll(roles);
         }
-        this.requireAnyRoles.addAll(roles);
         return this;
       }
       @Override
