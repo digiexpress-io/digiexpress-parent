@@ -23,7 +23,10 @@ import java.util.ArrayList;
  */
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import io.digiexpress.tagomi.api.TagomiImageStorage;
+import io.digiexpress.tagomi.api.TagomiImageStorage.OperationStatus;
 import io.digiexpress.tagomi.api.TagomiStore;
 import io.digiexpress.tagomi.api.commands.TagomiCreateCommands;
 import io.digiexpress.tagomi.api.entities.ImmutableLocale;
@@ -34,6 +37,8 @@ import io.digiexpress.tagomi.api.entities.ImmutableTag;
 import io.digiexpress.tagomi.api.entities.ImmutableTemplate;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.spi.support.ConstraintException;
+import io.digiexpress.tagomi.spi.support.StoreException;
+import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +47,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
   private final TagomiStore store;
-
+  private final TagomiImageStorage imageStorage;
+  
   @Override
   public Uni<TagomiContainer.Tag> tag(CreateTag init) {
     return store.stateQuery().getState()
@@ -115,29 +121,44 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
   }
   @Override
   public Uni<TagomiContainer.Resource> resource(CreateResource init) {
-    return store.stateQuery().getState()
-        .onItem().transform(state -> {
-            final var gid = OidUtils.gen();
-            final var link = ImmutableResource.builder()
-                .id(gid)
-                .externalLocation(init.getExternalLocation())
-                .resourceName(init.getResourceName());
-            
-            final var templateIds = new ArrayList<String>();
-            for(final var templateId : init.getTemplateIds()) {
-              final var template = Optional.of(state.getTemplates().get(templateId));
-  
-              if(template.isEmpty()) {
-                throw new ConstraintException(
-                    link.build(), 
-                    "Template with id: '" + template + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");          
-              }
-              templateIds.add(template.get().getId());
+    // predefine id
+    final var gid = OidUtils.gen();    
+    
+    return imageStorage.write(init.getUploadBody())
+      .onItem().transform(image -> {
+        if(image.getOperationStatus() == OperationStatus.OK) {
+          return image.getObject();  
+        }
+        throw new StoreException("FAILED_TO_STORE_IMAGE", null, 
+            StoreExceptionMsg.builder()
+            .id("image-store-error")
+            .value("Can't save image because of unknown error!")
+            .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
+            .build()); 
+      })
+      .onItem().transformToUni(image -> store.stateQuery().getState()
+      .onItem().transform(state -> {
+
+          final var link = ImmutableResource.builder()
+              .id(gid)
+              .externalLocation(image.getId())
+              .resourceName(init.getResourceName());
+          
+          final var templateIds = new ArrayList<String>();
+          for(final var templateId : init.getTemplateIds()) {
+            final var template = Optional.of(state.getTemplates().get(templateId));
+
+            if(template.isEmpty()) {
+              throw new ConstraintException(
+                  link.build(), 
+                  "Template with id: '" + template + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");          
             }
-            link.templateIds(templateIds);
-            return assertUniqueId(link.build(), state);
-        })
-        .onItem().transformToUni(request -> store.upsertBuilder().create(request));
+            templateIds.add(template.get().getId());
+          }
+          link.templateIds(templateIds);
+          return assertUniqueId(link.build(), state);
+      }))
+      .onItem().transformToUni(request -> store.upsertBuilder().create(request));
   }
   @Override
   public Uni<TagomiContainer.Service> service(CreateService init) {

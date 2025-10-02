@@ -48,7 +48,6 @@ public interface TagomiCreateCommands {
   @JsonDeserialize(as = ImmutableCreateResource.class)
   interface CreateResource extends Command {
     @Nullable String getId();
-    String getExternalLocation();
     String getResourceName();
     byte[] getUploadBody(); // some static asset...
     List<String> getTemplateIds();

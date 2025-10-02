@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
 import io.digiexpress.tagomi.api.TagomiStore;
-import io.digiexpress.tagomi.spi.ImmutableTagomiStoreConfig;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
 import io.digiexpress.tagomi.spi.json.ToJsonObject;

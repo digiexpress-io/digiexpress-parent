@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import io.digiexpress.tagomi.api.TagomiStore;
+import io.digiexpress.tagomi.api.TagomiStoreConfig;
 import io.digiexpress.tagomi.api.entities.ImmutableTagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.IsTagomiObject;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.TagomiDocType;
 import io.digiexpress.tagomi.api.entities.TagomiEntityContainer;
-import io.digiexpress.tagomi.spi.TagomiStoreConfig;
 import io.digiexpress.tagomi.spi.support.StoreException;
 import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
 import io.resys.thena.api.entities.git.Blob;

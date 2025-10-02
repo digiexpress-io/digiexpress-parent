@@ -49,7 +49,6 @@ public interface TagomiUpdateCommands {
   interface ResourceMutator {
     String getResourceId();
     @Nullable String getResourceName();
-    @Nullable String getExternalLocation();
     @Nullable byte[] getUploadBody(); // some static asset...
     @Nullable List<String> getTemplateIds();
 

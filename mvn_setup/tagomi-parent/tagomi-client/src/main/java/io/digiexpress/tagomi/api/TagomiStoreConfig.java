@@ -1,4 +1,4 @@
-package io.digiexpress.tagomi.spi;
+package io.digiexpress.tagomi.api;
 
 /*-
  * #%L
@@ -29,9 +29,11 @@ import io.vertx.core.json.JsonObject;
 @Value.Immutable
 public interface TagomiStoreConfig {
   GitClient getClient();
+  TagomiImageStorage getImageStorage();
   String getTenantName();
   String getHeadName();
   AuthorProvider getAuthorProvider();
+
   Serializer getSerializer();
   Deserializer getDeserializer();    
 
@@ -44,9 +46,8 @@ public interface TagomiStoreConfig {
   interface Serializer {
     JsonObject toString(TagomiContainer.IsTagomiObject entity);
   }
-  
+  @FunctionalInterface
   interface Deserializer {
     <T extends TagomiContainer.IsTagomiObject> T fromString(JsonObject value);
   }
-  
 }

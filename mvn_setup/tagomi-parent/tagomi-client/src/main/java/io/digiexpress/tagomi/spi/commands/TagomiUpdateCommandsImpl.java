@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.digiexpress.tagomi.api.TagomiImageStorage;
+import io.digiexpress.tagomi.api.TagomiImageStorage.Image;
+import io.digiexpress.tagomi.api.TagomiImageStorage.OperationStatus;
 import io.digiexpress.tagomi.api.TagomiStore;
 import io.digiexpress.tagomi.api.commands.TagomiUpdateCommands;
 import io.digiexpress.tagomi.api.entities.ImmutableLocale;
@@ -40,6 +43,8 @@ import io.digiexpress.tagomi.api.entities.TagomiContainer.Resource;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.Service;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.Template;
 import io.digiexpress.tagomi.spi.support.ConstraintException;
+import io.digiexpress.tagomi.spi.support.StoreException;
+import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +56,7 @@ import lombok.RequiredArgsConstructor;
 public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
 
   private final TagomiStore client;
+  private final TagomiImageStorage imageStorage;
   
   @Override
   public Uni<Locale> locale(LocaleMutator changes) {
@@ -155,11 +161,29 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
 
   @Override
   public Uni<Resource> resource(ResourceMutator changes) {
-    return client.stateQuery().getState()
-        .onItem().transformToUni(state -> client.upsertBuilder().save(changeLink(state, changes)));
+    
+    if(changes.getUploadBody() == null) {
+      return client.stateQuery().getState()
+          .onItem().transformToUni(state -> client.upsertBuilder().save(changeLink(state, changes, null)));
+    }
+
+    return imageStorage.write(changes.getUploadBody())
+        .onItem().transform(image -> {
+          if(image.getOperationStatus() == OperationStatus.OK) {
+            return image.getObject();  
+          }
+          throw new StoreException("FAILED_TO_STORE_IMAGE", null, 
+              StoreExceptionMsg.builder()
+              .id("image-store-error")
+              .value("Can't save image because of unknown error!")
+              .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
+              .build()); 
+        })
+        .onItem().transformToUni(image -> client.stateQuery().getState()
+        .onItem().transformToUni(state -> client.upsertBuilder().save(changeLink(state, changes, image))));
   }
   
-  private Resource changeLink(TagomiContainer site, ResourceMutator changes) {
+  private Resource changeLink(TagomiContainer site, ResourceMutator changes, Image image) {
     final var start = site.getResources().get(changes.getResourceId());
     
     if(changes.getTemplateIds() != null ) {
@@ -183,7 +207,7 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
     return ImmutableResource.builder()
         .from(start)
         .resourceName(changes.getResourceName() == null ? changes.getResourceName() : start.getResourceName())
-        .externalLocation(changes.getExternalLocation() == null ? changes.getExternalLocation() : start.getExternalLocation())
+        .externalLocation(image == null ? start.getExternalLocation() : image.getId())
         .templateIds(changes.getTemplateIds() == null ? start.getTemplateIds() : new HashSet<>(changes.getTemplateIds()))
         .build();
   }
