@@ -16,10 +16,10 @@ import jakarta.annotation.Nullable;
 
 public interface TagomiUpdateCommands {
   
-  Uni<TagomiContainer.Article> article(ArticleMutator changes);
   Uni<TagomiContainer.Locale> locale(LocaleMutator changes);
   Uni<TagomiContainer.Template> template(TemplateMutator changes);
   Uni<List<TagomiContainer.Template>> templates(List<TemplateMutator> changes);
+  
   Uni<TagomiContainer.Resource> resource(ResourceMutator changes);
   Uni<TagomiContainer.Service> service(ServiceMutator changes);
 
@@ -34,14 +34,6 @@ public interface TagomiUpdateCommands {
   }
   
   @Value.Immutable
-  @JsonSerialize(as = ImmutableArticleMutator.class)
-  @JsonDeserialize(as = ImmutableArticleMutator.class)
-  interface ArticleMutator {
-    String getArticleId();
-    String getArticleName();
-  }
-  
-  @Value.Immutable
   @JsonSerialize(as = ImmutableTemplateMutator.class)
   @JsonDeserialize(as = ImmutableTemplateMutator.class)
   interface TemplateMutator {
@@ -50,16 +42,16 @@ public interface TagomiUpdateCommands {
     String getLocale();
     @Nullable List<String> getResourceIds(); // id-s to ResourceLink
   }
+  
   @Value.Immutable
   @JsonSerialize(as = ImmutableResourceMutator.class)
   @JsonDeserialize(as = ImmutableResourceMutator.class)
   interface ResourceMutator {
     String getResourceId();
-    String getExternalLocation();
-    String getResourceName();
-    byte[] getUploadBody(); // some static asset...
-
-    @Nullable List<String> getArticles();
+    @Nullable String getResourceName();
+    @Nullable String getExternalLocation();
+    @Nullable byte[] getUploadBody(); // some static asset...
+    @Nullable List<String> getTemplateIds();
 
   }
   @Value.Immutable
@@ -71,6 +63,5 @@ public interface TagomiUpdateCommands {
     String getOrchestratorName();
   
     @Nullable List<LocaleAndLabel> getLabels();
-    @Nullable List<String> getArticles();
   }
 }
