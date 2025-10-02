@@ -24,6 +24,7 @@
     "react-intl": "*",
     "@tanstack/react-router": "*",
     "@tanstack/react-query": "*",
+    "@tanstack/react-store": "*",
     "@mui/material": "*",
     "@mui/utils": "*"
   },

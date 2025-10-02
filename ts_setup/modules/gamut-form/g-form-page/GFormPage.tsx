@@ -129,13 +129,13 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
         }
 
         {props.pages.length !== props.pageNumber &&
-          <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />} disabled={!props.proceedAllowed && isErrorsVisible}>
+          <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>
             <FormattedMessage id='gamut.forms.page.next' />
           </Button>
         }
 
         {!props.disabled && (
-          <Button onClick={handleComplete} variant='contained' color='primary' disabled={!props.completeAllowed && isErrorsVisible}>
+          <Button onClick={handleComplete} variant='contained' color='primary'>
             <FormattedMessage id='gamut.forms.page.complete' />
           </Button>)
         }

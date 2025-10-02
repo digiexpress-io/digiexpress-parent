@@ -137,6 +137,9 @@ export declare namespace DialobApi {
     submitted: boolean;
     singular: boolean;
     order: number;
+
+    firstErrorControlId: ControlId | undefined;
+    errorChecksum: string | undefined;
   }
 
 
@@ -187,10 +190,7 @@ export declare namespace DialobApi {
     toParent(id: ControlId): ActionItem | undefined;
 
     toParents(id: ControlId): ActionItem[];
-
-
     toLabelPosition(id: ControlId): ControlLabelPosition;
-
 
     proceedAllowed: boolean;
     completeAllowed: boolean;

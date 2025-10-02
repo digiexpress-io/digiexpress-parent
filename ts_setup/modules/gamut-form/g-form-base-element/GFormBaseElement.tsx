@@ -23,7 +23,7 @@ import { GInputGroupRowDialob } from '../g-input-group-row';
 import { GInputSurveyDialob } from '../g-input-survey';
 import { GInputSurveyQuestionDialob } from '../g-input-survey-question';
 import { GFormBaseSlotVariant, useSlotVariant } from './useSlotVariant';
-
+import { useGFormErrorVisibility } from '../g-form-error-visibility';
 
 export interface GFormBaseElementClasses {
   root: string;
@@ -68,10 +68,23 @@ export const GFormBaseElement: React.FC<GFormBaseElementProps> = (initProps) => 
     props: initProps,
     name: MUI_NAME,
   });
-
-  const { actionItem: element, formStore: store} = props;
+  const ref = React.useRef<any>();
+  const { actionItem: element, formStore: store } = props;
+  const { id } = element;
   const { variant } = useSlotVariant(element, store);
+  const { register, unregister } = useGFormErrorVisibility();
+
+  React.useEffect(() => {
+    register({ id, ref })
+    return () => unregister({ id });
+  }, [id, ref]);
 
   const Component: React.ElementType<GFormBaseElementProps> = Slots[variant] ?? UnknownSlot;
-  return (<Component {...props} disabled={props.disabled}>{props.children}</Component>);
+  return (
+    <>
+      <div ref={ref} id={`${initProps.actionItem.id}-ref`} />
+      <Component {...props} disabled={props.disabled}>
+        {props.children}
+      </Component>
+    </>);
 }
