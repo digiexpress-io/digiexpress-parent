@@ -206,6 +206,7 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
     
     return ImmutableResource.builder()
         .from(start)
+        .contentType(changes.getContentType() == null ? changes.getContentType() : start.getContentType())
         .resourceName(changes.getResourceName() == null ? changes.getResourceName() : start.getResourceName())
         .externalLocation(image == null ? start.getExternalLocation() : image.getId())
         .templateIds(changes.getTemplateIds() == null ? start.getTemplateIds() : new HashSet<>(changes.getTemplateIds()))

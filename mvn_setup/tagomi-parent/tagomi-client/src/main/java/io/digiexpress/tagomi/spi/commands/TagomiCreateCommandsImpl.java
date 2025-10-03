@@ -142,7 +142,9 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
           final var link = ImmutableResource.builder()
               .id(gid)
               .externalLocation(image.getId())
-              .resourceName(init.getResourceName());
+              .resourceName(init.getResourceName())
+              .contentType(init.getContentType())
+              ;
           
           final var templateIds = new ArrayList<String>();
           for(final var templateId : init.getTemplateIds()) {
