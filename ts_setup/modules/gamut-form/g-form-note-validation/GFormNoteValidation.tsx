@@ -34,7 +34,7 @@ export const GFormNoteValidation: React.FC<GFormNoteValidationProps> = (initProp
 
   return (
     <>
-      <GFormNoteValidationRoot ownerState={ownerState} as={ownerState.component} className={classes.root} severity={props.style}
+      <GFormNoteValidationRoot ownerState={ownerState} as={ownerState.component} className={classes.root} severity={ownerState.style}
         icon={
           props.description ? (
             <IconButton onClick={handleClick}>
