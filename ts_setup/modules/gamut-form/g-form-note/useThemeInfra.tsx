@@ -1,4 +1,4 @@
-import { generateUtilityClass, styled, useThemeProps, Alert, Typography } from '@mui/material';
+import { generateUtilityClass, styled, useThemeProps, Alert } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '@dxs-ts/gamut-api';
 import { GFormNoteProps } from './GFormNote';
@@ -17,7 +17,6 @@ export function useThemeInfra(initProps: GFormNoteProps) {
 }
 
 
-// ------------------- MATERIAL INFRA, CSS CLASS NAMES FOR SELECTORS -------
 const useUtilityClasses = (ownerState: GFormNoteProps) => {
   const slots = {
     root: ['root', ownerState.id],
@@ -27,7 +26,6 @@ const useUtilityClasses = (ownerState: GFormNoteProps) => {
 }
 
 
-// ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GFormNoteRoot = styled(Alert, {
   name: MUI_NAME,
   slot: 'Root',
@@ -37,8 +35,24 @@ export const GFormNoteRoot = styled(Alert, {
       ...useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: GFormNoteProps }>(({ theme }) => {
-  return {
+})<{ ownerState: GFormNoteProps }>(({ theme, ownerState }) => {
+  const severity = (ownerState.style ?? 'info') as 'error' | 'success' | 'warning' | 'info';
+  const severityColor = theme.palette[severity]?.main ?? theme.palette.text.primary;
 
+  return {
+    display: 'flex',
+    alignItems: 'center',
+
+    '& .GMarkdown-root .MuiTypography-root': {
+      marginBottom: '0 !important',
+      color: severity === 'warning' ? theme.palette.text.primary : severityColor
+    },
+    '& .MuiAlert-icon .MuiIconButton-root .MuiSvgIcon-root': {
+      color: severityColor,
+    },
+    '& .MuiPaper-root.MuiPopover-paper': {
+      backgroundColor: 'pink',
+      padding: theme.spacing(2)
+    }
   };
 });

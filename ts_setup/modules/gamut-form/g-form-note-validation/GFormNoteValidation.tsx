@@ -32,7 +32,6 @@ export const GFormNoteValidation: React.FC<GFormNoteValidationProps> = (initProp
     setAnchorEl(null);
   };
 
-  const open = Boolean(anchorEl);
   return (
     <>
       <GFormNoteValidationRoot ownerState={ownerState} as={ownerState.component} className={classes.root} severity={props.style}
@@ -49,7 +48,7 @@ export const GFormNoteValidation: React.FC<GFormNoteValidationProps> = (initProp
       </GFormNoteValidationRoot>
 
       <Popover
-        open={open}
+        open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={handleClose}
         sx={{

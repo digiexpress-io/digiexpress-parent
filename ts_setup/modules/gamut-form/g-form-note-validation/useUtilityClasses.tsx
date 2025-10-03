@@ -46,7 +46,7 @@ export const GFormNoteValidationRoot = styled(Alert, {
 
     '& .GMarkdown-root .MuiTypography-root': {
       marginBottom: '0 !important',
-      color: severityColor
+      color: severity === 'warning' ? theme.palette.text.primary : severityColor
     },
     '& .MuiAlert-icon .MuiIconButton-root .MuiSvgIcon-root': {
       color: severityColor,
