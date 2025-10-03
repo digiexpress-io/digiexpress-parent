@@ -39,6 +39,7 @@ export declare namespace DialobApi {
     'questionnaire' 
     | 'group' 
     | 'note' 
+    | 'note-validation'
     | 'row' 
     | 'rowgroup' 
     | 'context' 
