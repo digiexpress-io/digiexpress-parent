@@ -40,7 +40,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     slotProps: {
       error: { id, errors },
       input: { name: id, onChange, value: value ?? '', rows, multiline: true, error: (props.errors?.length ?? 0) > 0, disabled: props.disabled },
-      label: { id, children: label ?? '', labelPosition, required: initProps.required },
+      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: props.errors },
       adornment: { id, children: props.description, title: label ?? '', disabled: props.disabled }
     }
   }

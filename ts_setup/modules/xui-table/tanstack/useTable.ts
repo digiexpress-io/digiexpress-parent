@@ -13,7 +13,6 @@ import {
   ColumnOrderState
 } from '@tanstack/react-table';
 
-import { tableSizeFn } from './tableSizeFn';
 import { TableState } from '../table-state';
 
 

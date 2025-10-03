@@ -69,7 +69,7 @@ export const GInputUpload: React.FC<GInputUploadProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { name: id, ...props },
-      label: { id, children: label ?? '', labelPosition, required: props.required },
+      label: { id, children: label ?? '', labelPosition, required: props.required, errors: props.errors },
       adornment: { id, children: description, title: label ?? '', disabled: props.disabled }
     }
   }

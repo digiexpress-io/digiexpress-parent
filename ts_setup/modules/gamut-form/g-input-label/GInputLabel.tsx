@@ -11,13 +11,14 @@ export interface GInputLabelProps {
   children: string;
   braced?: boolean | undefined;
   required: boolean;
+  errors: DialobApi.ActionError[] | undefined;
   component?: React.ElementType<GInputLabelProps>;
 }
 
 export const GInputLabel: React.FC<GInputLabelProps> = (initProps) => {
   const { classes, props, ownerState } = useThemeInfra(initProps);
   const { labelPosition } = ownerState;
-  const requiredColor = props.required ? 'error.main' : 'text.primary';
+  const requiredColor = (props.required && props.errors && props.errors?.length > 0) ? 'error.main' : 'text.primary';
 
   return (<GInputLabelRoot className={classes.root} ownerState={ownerState} as={props.component}>
     <>

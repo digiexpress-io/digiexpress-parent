@@ -828,6 +828,8 @@ export const fi = {
   'taskTable.col.header.due': 'Määräaika',
   'taskTable.col.header.created': 'Luotu',
   'taskTable.col.header.archive': 'Arkistoi',
+  'taskTable.button.archive.confirm': 'which will remove it from the active tasks. Are you sure you want to continue?',
+  'taskTable.colToolItem.LOW': 'Ei kiireellinen',
   'eveli.batches.batchView.averageRunTime': 'Average run time',
   'eveli.batches.batchView.averageRunTime.ms': 'ms',
   'taskcard.style.COMPACT': 'Compact',

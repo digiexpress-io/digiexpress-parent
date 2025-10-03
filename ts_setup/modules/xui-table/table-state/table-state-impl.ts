@@ -1,4 +1,4 @@
-import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, Updater, PaginationState, ColumnOrderState } from "@tanstack/react-table";
+import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, Updater, PaginationState, ColumnOrderState, ColumnDef } from "@tanstack/react-table";
 import { TableState, TableStateInitWith } from "./table-state-types";
 import React from "react";
 import { Md5 } from 'ts-md5';
@@ -200,7 +200,7 @@ function initTableState(props: {
 
 
 
-export function useTableState(props: { initialPageSize: number, tableId: string }) {
+export function useTableState(props: { initialPageSize: number, tableId: string, columns: ColumnDef<any, unknown>[], }) {
   
   const [loading, setLoading] = React.useState(true);
   const lastTableState = useLastTableState(props.tableId);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { alpha, Chip, styled, Typography } from '@mui/material';
+import { Chip, styled, Typography } from '@mui/material';
 import { TaskApi } from '@dxs-ts/task-api';
 
 
@@ -15,10 +15,16 @@ export const IndicatorRole: React.FC<IndicatorRoleProps> = ({ taskRoles, roles }
         <Typography>--</Typography>
       </IndicatorRoleRoot>)
   }
- 
+
   return (
     <IndicatorRoleRoot>
-      {taskRoles.map(taskRole => <Chip variant='outlined' size='small' label={roles.find(role=>role.id === taskRole)?.groupName ?? taskRole}/>)}
+      {taskRoles.map((taskRole, index) => (
+        <Chip
+          key={index}
+          variant='outlined'
+          size='small'
+          label={roles.find(role => role.id === taskRole)?.groupName ?? taskRole}
+        />))}
     </IndicatorRoleRoot>
   )
 }
