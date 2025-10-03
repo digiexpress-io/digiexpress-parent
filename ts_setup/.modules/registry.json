@@ -2367,8 +2367,7 @@
         "@monaco-editor/react",
         "yaml",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-feedback",
-        "@eveli-primitives/eveli-theme"
+        "@dxs-ts/task-feedback"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2380,8 +2379,7 @@
         "@tanstack/react-query",
         "@tanstack/react-table",
         "@monaco-editor/react",
-        "yaml",
-        "@eveli-primitives/eveli-theme"
+        "yaml"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-datetime",
@@ -2389,9 +2387,7 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/task-feedback"
       ],
-      "missingDependencies": [
-        "@eveli-primitives/eveli-theme"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@mui/system"
       ]
@@ -3417,6 +3413,6 @@
       ]
     }
   },
-  "checksum": "9b82020b66d726ffc18fcfa763139140d1fc20008b4b83517893dbe028c86e13",
-  "generatedAt": "2025-10-03T11:16:07.114Z"
+  "checksum": "f0d98d3eac036fcabb4dfb75b986324947b3abad02730e7532283d6567bd374b",
+  "generatedAt": "2025-10-03T15:27:44.548Z"
 }
