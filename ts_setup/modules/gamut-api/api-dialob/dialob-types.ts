@@ -193,6 +193,8 @@ export declare namespace DialobApi {
     toParents(id: ControlId): ActionItem[];
     toLabelPosition(id: ControlId): ControlLabelPosition;
 
+    isItemEdited(id: ControlId): boolean;
+
     proceedAllowed: boolean;
     completeAllowed: boolean;
 

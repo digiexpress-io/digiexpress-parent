@@ -45,8 +45,18 @@ export const GFormErrorVisibilityProvider: React.FC<{ children: React.ReactNode,
   return (<GFormErrorVisibilityContext.Provider value={contextValue}>{children}</GFormErrorVisibilityContext.Provider>)
 }
 
-export const useGFormErrorVisibility = () => {
+export const useGFormErrorVisibility = (props?: { controlId: string }) => {
+  const { store } = useForm();
   const ctx: GFormErrorVisibilityContextType = React.useContext(GFormErrorVisibilityContext);
+
+  if (props) {
+    const isFieldEdited = store.form.isItemEdited(props.controlId);
+    return {
+      ...ctx,
+      isErrorsVisible: ctx.isErrorsVisible || isFieldEdited
+    }
+  }
+
   return ctx;
 }
 
