@@ -5,11 +5,23 @@ import { parseInputRow } from './parseInputRow';
 
 export class FormImpl implements DialobApi.Form {
   private _state: Readonly<DialobApi.FormState>; // internal state used by backend
+  private _dirty: DialobApi.ControlId[];
   private _id: string;
-  constructor(id: string, state: Readonly<DialobApi.FormState>) {
+  constructor(id: string, state: Readonly<DialobApi.FormState>, dirty?: DialobApi.ControlId[]) {
     this._state = state;
     this._id = id;
+    const newDirty = Object.values(state.items).filter(e => !!e.value).map(e => e.id);
+    this._dirty = Array.from(new Set([...dirty ?? [], ...newDirty]));
   }
+
+  public isItemEdited(id: DialobApi.ControlId): boolean {
+    const item = this.getItem(id);
+    if (item) {
+      return !!item.value || this._dirty.includes(id);
+    }
+    return false;
+  }
+
   public getItem(id: string): DialobApi.ActionItem | undefined {
     return this.state.items[id];
   }
@@ -24,7 +36,7 @@ export class FormImpl implements DialobApi.Form {
     return this._state;
   }
   public withState(next: Readonly<DialobApi.FormState>) {
-    return new FormImpl(this._id, next);
+    return new FormImpl(this._id, next, this._dirty);
   }
 
   public toParents(id: string): DialobApi.ActionItem[] {

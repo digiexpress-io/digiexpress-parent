@@ -73,7 +73,9 @@ export class Visitor_UploadFormJson {
 
   private parseJson(content: string): any {
     try {
-      const json = JSON.parse(content);
+      const raw = JSON.parse(content);
+      const json = Array.isArray(raw) ? raw[0] : raw;
+
       if (Array.isArray(json)) {
         throw new Error('JSON must contain an object, not an array');
       }

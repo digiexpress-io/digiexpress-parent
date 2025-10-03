@@ -39,7 +39,7 @@ export const GInputAdornment: React.FC<GInputAdornmentProps> = (initProps) => {
 
   return (
     <GInputAdornmentRoot ownerState={ownerState} as={ownerState.component} className={classes.root}>
-      <IconButton disabled={props.disabled} onClick={handleOpen}><HelpOutlineIcon color='disabled' /></IconButton>
+      <IconButton disabled={props.disabled} onClick={handleOpen}><HelpOutlineIcon /></IconButton>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>

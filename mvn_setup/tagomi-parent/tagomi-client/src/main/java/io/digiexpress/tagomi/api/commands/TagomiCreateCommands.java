@@ -17,41 +17,20 @@ import jakarta.annotation.Nullable;
 
 
 public interface TagomiCreateCommands {
-
-  Uni<TagomiContainer.Article> article(CreateArticle init);
   Uni<TagomiContainer.Locale> locale(CreateLocale init);
-  Uni<TagomiContainer.Template> page(CreateTemplate init);
+  Uni<TagomiContainer.Template> template(CreateTemplate init);
   Uni<TagomiContainer.Resource> resource(CreateResource init);
   Uni<TagomiContainer.Service> service(CreateService init);  
-  Uni<List<TagomiContainer.IsTagomiObject>> batch(BatchSite batch);
+  Uni<TagomiContainer.Tag> tag(CreateTag init);
   
   interface Command extends Serializable {}
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableBatchSite.class)
-  @JsonDeserialize(as = ImmutableBatchSite.class)
-  interface BatchSite extends Command {
-    List<CreateLocale> getLocales();
-    List<CreateTemplate> getTemplates();
-    List<CreateArticle> getArticles();
-    List<CreateService> getServices();
-    List<CreateResource> getResources();
-  }
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCreateArticle.class)
-  @JsonDeserialize(as = ImmutableCreateArticle.class)
-  interface CreateArticle extends Command {
-    @Nullable String getId();
-    String getName();
-  }
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableCreateLocale.class)
   @JsonDeserialize(as = ImmutableCreateLocale.class)
   interface CreateLocale extends Command {
     @Nullable String getId();
-    String getLocale();
+    String getLocaleCode();
   }
   
   @Value.Immutable
@@ -59,7 +38,7 @@ public interface TagomiCreateCommands {
   @JsonDeserialize(as = ImmutableCreateTemplate.class)
   interface CreateTemplate extends Command {
     @Nullable String getId();
-    String getArticleId();
+    String getServiceId();
     String getLocale();
     @Nullable String getContent();
   }
@@ -70,8 +49,9 @@ public interface TagomiCreateCommands {
   interface CreateResource extends Command {
     @Nullable String getId();
     String getResourceName();
+    String getContentType();
     byte[] getUploadBody(); // some static asset...
-    List<String> getArticles();
+    List<String> getTemplateIds();
   }
   
   @Value.Immutable
@@ -79,11 +59,19 @@ public interface TagomiCreateCommands {
   @JsonDeserialize(as = ImmutableCreateService.class)
   interface CreateService extends Command {
     @Nullable String getId();
-    List<String> getArticles();
     List<LocaleAndLabel> getLabels();
     
     String getServiceName();
     String getOrchestratorName();
   }
 
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableCreateTag.class)
+  @JsonDeserialize(as = ImmutableCreateTag.class)
+  interface CreateTag extends Command {
+    @Nullable String getId();
+    String getTagName();
+    String getCommitId();
+  }
 }

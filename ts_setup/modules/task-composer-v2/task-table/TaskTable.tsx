@@ -51,21 +51,20 @@ export const TaskTable: React.FC = () => {
       setArchiveId(undefined);
     }
   };
-
   const columns: ColumnDef<TaskApi.Task, any>[] = [
     {
       header: intl.formatMessage({ id: 'taskTable.col.header.priority', defaultMessage: 'Priority' }),
-      accessorKey: 'priority',
+      accessorKey: 'priorityIntl',
       filterFn: filterStringOrArrayFn,
       sortingFn: taskSortingFn,
-      cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
+      cell: (cell) => flexRender(IndicatorPriority, { type: cell.row.original.priority! }),
       size: 150,
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
       meta: {
-        enableSelection: true
+        enableSelection: true,
       }
     },
     {
@@ -104,11 +103,11 @@ export const TaskTable: React.FC = () => {
     },
     {
       header: intl.formatMessage({ id: 'taskTable.col.header.status', defaultMessage: 'Status' }),
-      accessorKey: 'status',
+      accessorKey: 'statusIntl',
       filterFn: filterStringOrArrayFn,
       size: 150,
       minSize: 150,
-      cell: (status) => flexRender(IndicatorStatus, { status: status.getValue() }),
+      cell: (cell) => flexRender(IndicatorStatus, { status: cell.row.original.status! }),
       sortingFn: taskSortingFn,
       enableSorting: true,
       enableColumnFilter: true,
@@ -223,7 +222,7 @@ const ArchiveConfirmationDialog: React.FC<ArchiveConfirmationDialogProps> = ({ t
 
   return (
     <Dialog open={!!deleteId} onClose={handleCancelArchive}>
-      <DialogTitle>{intl.formatMessage({ id: 'task.confirmArchive.title', defaultMessage: `Confirm archive task: ${task?.taskRef ?? ''}` })}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'taskTable.confirmArchive.title', defaultMessage: `Confirm archive task: ${task?.taskRef ?? ''}` })}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           {intl.formatMessage({

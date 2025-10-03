@@ -72,9 +72,16 @@ function getErrorSummary(currentPageId: string, session: DialobApi.Form): {
       if (!item) {
         continue;
       }
-      const errors = session.toErrors(itemId)
-        .map(error => `${error.id}/${error.code}/${error.description}`)
-        .sort();
+
+      const fakeErrors: string[] = [];
+      if (item.type === 'note' && item.view === 'validation') {
+        firstErrorControlId = itemId;
+        fakeErrors.push(firstErrorControlId)
+      }
+
+      const actionErrors = session.toErrors(itemId)
+        .map(error => `${error.id}/${error.code}/${error.description}`);
+      const errors: string[] = [...actionErrors, ...fakeErrors].sort();
 
       if (errors.length === 0) {
         traceErrors({ items: item.items });

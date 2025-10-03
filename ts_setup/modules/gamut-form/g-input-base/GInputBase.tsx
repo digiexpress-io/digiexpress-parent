@@ -47,7 +47,8 @@ export interface GInputBaseProps<InputProps = {}> {
 
 export function GInputBase<InputProps = {}>(initProps: GInputBaseProps<InputProps>) {
   const { props, classes, ownerState } = useThemeInfra<InputProps>(initProps);
-  const { isErrorsVisible } = useGFormErrorVisibility();
+  const { isErrorsVisible } = useGFormErrorVisibility({ controlId: initProps.id });
+
   const Input: React.ElementType = props.slots.input;
   const Error: React.ElementType = props.slots.error;
   const Label: React.ElementType = props.slots.label;

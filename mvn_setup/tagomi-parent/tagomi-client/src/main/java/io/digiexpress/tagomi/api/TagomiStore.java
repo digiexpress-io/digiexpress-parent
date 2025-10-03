@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
+import io.digiexpress.tagomi.api.entities.TagomiContainer.TagomiDocType;
+import io.digiexpress.tagomi.api.entities.TagomiEntityContainer;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 
@@ -14,14 +16,17 @@ public interface TagomiStore {
   BranchQuery queryBranches();
   UpsertBuilder upsertBuilder();
   TenantBuilder tenantBuilder();
-  CurrentStateQuery currentStateQuery();
+  
+  StateQuery stateQuery();
+
   
   interface BranchQuery {
     Uni<Optional<io.resys.thena.api.entities.git.Branch>> findOneBranch();
     Uni<List<TagomiContainer.Tag>> findAllTags();
   }
   
-  interface CurrentStateQuery {
+  interface StateQuery {
+    Uni<TagomiEntityContainer> getEntityState(String blobId, TagomiDocType type);
     Uni<TagomiContainer> getState();
     Uni<TagomiContainer> getStateByCommitId(String commitId);
     Uni<TagomiContainer> findAllStateObjectsById(List<String> ids, TagomiContainer.TagomiDocType type);
@@ -29,11 +34,10 @@ public interface TagomiStore {
   
   interface UpsertBuilder {
     <T extends TagomiContainer.IsTagomiObject> Uni<T> delete(T toBeDeleted);
-    <T extends TagomiContainer.IsTagomiObject> Uni<T> get(String blobId);
     <T extends TagomiContainer.IsTagomiObject> Uni<T> save(T toBeSaved);
     <T extends TagomiContainer.IsTagomiObject> Uni<T> create(T toBeSaved);
     Uni<List<? extends TagomiContainer.IsTagomiObject>> saveAll(List<TagomiContainer.IsTagomiObject> toBeSaved);
-    Uni<List<? extends TagomiContainer.IsTagomiObject>> batch(BatchCommand batch);
+    Uni<TagomiContainer> batch(BatchCommand batch);
   }
   
   

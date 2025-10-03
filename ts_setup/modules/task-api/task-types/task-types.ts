@@ -150,6 +150,9 @@ export declare namespace TaskApi {
     transferredId?: string | undefined;
     transferredProps?: object | undefined;
 
+    priorityIntl?: string;
+    statusIntl?: string;
+
     features?: TaskFeatureType[];
     keyWords?: string[];
     taskLinks?: TaskLink[];

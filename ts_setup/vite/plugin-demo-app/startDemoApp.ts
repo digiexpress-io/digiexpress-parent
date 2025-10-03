@@ -52,6 +52,7 @@ export function startDemoApp(options: {
           include: [
             '@mui/material/CssBaseline',
             '@mui/material/Box',
+            '@mui/material/SvgIcon',
             '@mui/material', 
             '@mui/icons-material',
             '@tanstack/react-router'

@@ -71,7 +71,7 @@ export const GInputSurvey: React.FC<GInputSurveyProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition, required: props.required },
+      label: { id, children: label ?? '', labelPosition, required: props.required, errors: props.errors },
       secondary: { ...ownerState, name: id },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }

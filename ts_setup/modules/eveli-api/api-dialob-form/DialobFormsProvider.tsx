@@ -71,7 +71,7 @@ export const DialobFormsProvider: React.FC<DialobFormsProviderProps> = (props) =
     // UPLOAD FORM JSON
     async function uploadJsonForm(file: File): Promise<DialobFormsOperationResult> {
       const result = await new Visitor_UploadFormJson().accept(backend, { file, allForms: state.forms });
-      await refetch();
+      setTimeout(() => refetch(), 250)
       return result;
     }
 

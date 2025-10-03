@@ -5,7 +5,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
 import io.digiexpress.tagomi.api.TagomiStore;
+import io.digiexpress.tagomi.api.TagomiStoreConfig;
 import io.digiexpress.tagomi.api.entities.ImmutableTag;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.spi.builders.UpsertBuilderImpl;
@@ -123,19 +125,17 @@ public class TagomiStoreImpl implements TagomiStore {
   }
   
   @Override
-  public CurrentStateQuery currentStateQuery() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  
-  
-  @Override
   public UpsertBuilder upsertBuilder() {
     return new UpsertBuilderImpl(config);
   }
 
+  @Override
+  public StateQuery stateQuery() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
   protected TagomiStoreImpl createWithNewConfig(TagomiStoreConfig config) {
     return new TagomiStoreImpl(config);
   }
-
 }

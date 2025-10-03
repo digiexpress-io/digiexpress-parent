@@ -1,6 +1,7 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { QueryResult } from '@material-table/core'
 import { TaskApi } from '@dxs-ts/task-api';
+import { useIntl } from 'react-intl';
 
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
@@ -10,7 +11,7 @@ export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
 function hook(props: {}) {
   const params = Hook.useParams();
   const { path, contextPath, method, url } = params;
-
+  const intl = useIntl();
 
   return {
     dashboard: async (): Promise<TaskApi.TaskDasboard> => {
@@ -20,7 +21,15 @@ function hook(props: {}) {
 
     findAll: async (): Promise<TaskApi.Task[]> => {
       return params.fetch(url({}) + `/all`)
-        .then(response => response.json());
+        .then(response => response.json())
+        .then((tasks: TaskApi.Task[]) => tasks.map(task => {
+
+          return {
+            ...task,
+            priorityIntl: intl.formatMessage({ id: `task.priority.${task.priority?.toLowerCase()}`, defaultMessage: task.priority }),
+            statusIntl: intl.formatMessage({ id: `task.status.${task.status?.toLowerCase()}`, defaultMessage: task.status })
+          }
+        }));
     },
 
     getTasks: async (page=0, size=20): Promise<QueryResult<TaskApi.Task>> => {

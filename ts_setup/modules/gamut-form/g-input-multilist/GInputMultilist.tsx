@@ -57,7 +57,7 @@ export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id },
-      label: { id, children: label ?? '', labelPosition, required: props.required },
+      label: { id, children: label ?? '', labelPosition, required: props.required, errors: props.errors },
       adornment: { id, children: props.description, title: label, disabled: props.disabled }
     }
   }

@@ -29,7 +29,6 @@ public interface TagomiContainer {
   Map<String, Locale> getLocales();
   Map<String, Template> getTemplates();
   Map<String, Resource> getResources();
-  Map<String, Article> getArticles();
   Map<String, Service> getServices();
   
   
@@ -39,7 +38,6 @@ public interface TagomiContainer {
       include = JsonTypeInfo.As.PROPERTY,
       property = "docType")
   @JsonSubTypes({
-    @Type(value = ImmutableArticle.class, name = "ARTICLE"), 
     @Type(value = ImmutableTemplate.class, name = "TEMPLATE"), 
     @Type(value = ImmutableResource.class, name = "RESOURCE"), 
     @Type(value = ImmutableService.class, name = "SERVICE"), 
@@ -52,10 +50,9 @@ public interface TagomiContainer {
   }
   
   enum TagomiDocType {
-    ARTICLE,  // main grouping for locale based templates
     TEMPLATE, // holds markup for pdf in specific locale
     RESOURCE, // some static asset like image to be embedded in printout
-    SERVICE,  // final product, that links article for syntax and data for input
+    SERVICE,  // final product, that links article for syntax and data for input, main grouping for locale based templates
     LOCALE,   // locale code and enabled/disabled flag
     TAG       // very small meta object for holding some commit data
   }
@@ -67,34 +64,23 @@ public interface TagomiContainer {
   interface Service extends IsTagomiObject {
     String getId();
     String getServiceName(); // human readable name, what IS this PDF
-    String getOrchestratorName(); // external name/id that will be called to resolve data
-    List<LocaleAndLabel> getLabels();
+    String getOrchestratorName(); // external name/id that will be called to resolve data/ most likely wrench flow name
+    
+    List<LocaleAndLabel> getLabels(); // localized labels, human readable names
     @Override default public TagomiDocType getDocType() { return TagomiDocType.SERVICE; };
 
   }
   
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableArticle.class)
-  @JsonDeserialize(as = ImmutableArticle.class)
-  interface Article extends IsTagomiObject {
-    String getId();
-    String getArticleName();
-    
-    @Override default public TagomiDocType getDocType() { return TagomiDocType.ARTICLE; };
-  }  
-  
+
   @Value.Immutable
   @JsonSerialize(as = ImmutableTemplate.class)
   @JsonDeserialize(as = ImmutableTemplate.class)
   interface Template extends IsTagomiObject {
     String getId();
+    String getContent(); // the markdown definition
     
-    String getLocale();
-    String getContent();
-    
-    String getArticleId();
-    List<String> getResourceIds(); // id-s to ResourceLink
+    String getLocaleId();
+    String getServiceId();
     
     @Override default public TagomiDocType getDocType() { return TagomiDocType.TEMPLATE; };
   }
@@ -107,7 +93,8 @@ public interface TagomiContainer {
     String getId();
     String getExternalLocation();
     String getResourceName();
-    
+    String getContentType();
+    List<String> getTemplateIds();
     @Override default public TagomiDocType getDocType() { return TagomiDocType.RESOURCE; };
 
   }
@@ -120,7 +107,7 @@ public interface TagomiContainer {
   interface Locale extends IsTagomiObject {
     String getId();
     
-    String getValue();
+    String getLocaleCode();
     Boolean getEnabled();
     Boolean getDefault();
 

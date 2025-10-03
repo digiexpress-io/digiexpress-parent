@@ -24,6 +24,7 @@ import { GInputSurveyDialob } from '../g-input-survey';
 import { GInputSurveyQuestionDialob } from '../g-input-survey-question';
 import { GFormBaseSlotVariant, useSlotVariant } from './useSlotVariant';
 import { useGFormErrorVisibility } from '../g-form-error-visibility';
+import { GFormNoteValidationDialob } from '../g-form-note-validation';
 
 export interface GFormBaseElementClasses {
   root: string;
@@ -60,7 +61,8 @@ const Slots: Record<GFormBaseSlotVariant, React.ElementType<GFormBaseElementProp
   'boolean': GInputBooleanDialob,
   'list': GInputListDialob,
   'multichoice': GInputMultilistDialob,
-  'note': GFormNoteDialob  
+  'note': GFormNoteDialob,
+  'note-validation': GFormNoteValidationDialob
 }
 
 export const GFormBaseElement: React.FC<GFormBaseElementProps> = (initProps) => {

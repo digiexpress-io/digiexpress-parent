@@ -14,7 +14,9 @@ export interface GInputErrorProps {
 
 export const GInputError: React.FC<GInputErrorProps> = (initProps) => {
   const {classes, ownerState, props} = useThemeInfra(initProps);
-  const { isErrorsVisible } = useGFormErrorVisibility();
+  const { isErrorsVisible } = useGFormErrorVisibility({ controlId: initProps.id });
+
+
   if ((props.errors?.length ?? 0) === 0 || !isErrorsVisible) {
     return (<></>)
   }

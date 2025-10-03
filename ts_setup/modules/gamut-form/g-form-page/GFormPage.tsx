@@ -12,11 +12,6 @@ import {
   GFormPageRoot, GFormPageTitle, GFormPageSubTitle,
   GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter
 } from './useUtilityClasses';
-import { useGFormErrorVisibility } from '../g-form-error-visibility';
-
-
-
-
 
 export interface GFormPageClasses {
   root: string;
@@ -52,9 +47,6 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { ownerState, classes, props } = useThemeInfra(initProps);
-
-  const { isErrorsVisible } = useGFormErrorVisibility();
-
 
   function handlePageChange(id: string) {
     setAnchorEl(null);

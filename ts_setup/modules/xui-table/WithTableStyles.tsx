@@ -39,7 +39,7 @@ export function WithTableStyles<DataType extends object>(props: {
 
   const { tableId } = props.options;
   const initialPageSize = props.options.initialPageSize ?? 20 
-  const { loading, state } = useTableState({ initialPageSize, tableId });
+  const { loading, state } = useTableState({ initialPageSize, tableId, columns: props.columns });
 
   if(loading) {
     return <CircularProgress />

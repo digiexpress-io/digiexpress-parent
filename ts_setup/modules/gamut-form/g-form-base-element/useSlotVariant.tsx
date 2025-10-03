@@ -24,10 +24,14 @@ export type GFormBaseSlotVariant = (
 
   'boolean' |
   'list' |
+
   'note' |
+  'note-validation' |
+
   'date' |
   'time' |
-  'multichoice'
+  'multichoice' 
+
 )
 
 export interface SlotVariant {
@@ -45,6 +49,9 @@ export function useSlotVariant(element: DialobApi.ActionItem, store: DialobApi.F
   }
   if(element.type === 'text' && element.view === 'text') {
     return { variant: 'text' };
+  }
+  if (element.type === 'note' && element.view === 'validation') {
+    return { variant: 'note-validation' }
   }
   /*
   if (element.type === 'list' && element.view === 'radio') {

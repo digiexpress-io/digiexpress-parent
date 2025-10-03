@@ -1,14 +1,16 @@
 package io.digiexpress.tagomi.spi.builders;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import io.digiexpress.tagomi.api.TagomiStore;
+import io.digiexpress.tagomi.api.TagomiStoreConfig;
 import io.digiexpress.tagomi.api.entities.ImmutableTagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.IsTagomiObject;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.TagomiDocType;
-import io.digiexpress.tagomi.spi.TagomiStoreConfig;
+import io.digiexpress.tagomi.api.entities.TagomiEntityContainer;
 import io.digiexpress.tagomi.spi.support.StoreException;
 import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
 import io.resys.thena.api.entities.git.Blob;
@@ -20,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class QueryBuilderImpl implements TagomiStore.CurrentStateQuery {
+public class QueryBuilderImpl implements TagomiStore.StateQuery {
   private final TagomiStoreConfig config;
 
   @Override
@@ -132,12 +134,9 @@ public class QueryBuilderImpl implements TagomiStore.CurrentStateQuery {
   }
   
   
-  private static void mapAnyObject(IsTagomiObject entity, ImmutableTagomiContainer.Builder builder) {
+  public static void mapAnyObject(IsTagomiObject entity, ImmutableTagomiContainer.Builder builder) {
     final var id = entity.getId();
     switch (entity.getDocType()) {
-    case ARTICLE:
-      builder.putArticles(id, (TagomiContainer.Article) entity);
-      break;
     case RESOURCE:
       builder.putResources(id, (TagomiContainer.Resource) entity);
       break;
@@ -155,5 +154,29 @@ public class QueryBuilderImpl implements TagomiStore.CurrentStateQuery {
       break;
     default: throw new RuntimeException("Don't know how to convert entity: " + entity.toString() + "!");
     }
+  }
+
+  @Override
+  public Uni<TagomiEntityContainer> getEntityState(String blobId, TagomiDocType type) {
+    return config.getClient().git(config.getTenantName())
+        .pull().pullQuery()
+        .branchNameOrCommitOrTag(config.getHeadName())
+        .docId(blobId)
+        .get().onItem()
+        .transform(state -> {
+          if(state.getStatus() != QueryEnvelopeStatus.OK) {
+            throw new StoreException(
+                "Can't find object: '" + type + "' with id: '" + blobId + "'!", 
+                null,
+                StoreExceptionMsg.builder()
+                  .id("failed-to-query-object-by-id")
+                  .value("Failed to find target object by id and type!")
+                  .messages(state.getMessages())
+                  .args(Arrays.asList(blobId, type.name()))
+                  .build()
+            );
+          }
+          return config.getDeserializer().fromString(state.getObjects().getBlob().getValue());
+        });
   }
 }

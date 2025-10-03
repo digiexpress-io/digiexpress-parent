@@ -1,12 +1,12 @@
-import { generateUtilityClass, styled, useThemeProps, Alert } from '@mui/material';
+import { generateUtilityClass, styled, useThemeProps, Alert, Typography, Popover, Paper } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '@dxs-ts/gamut-api';
-import { GFormNoteProps } from './GFormNote';
+import { GFormNoteValidationProps } from './GFormNoteValidation';
 
-const MUI_NAME = 'GFormNote';
+const MUI_NAME = 'GFormNoteValidation';
 
 
-export function useThemeInfra(initProps: GFormNoteProps) {
+export function useThemeInfra(initProps: GFormNoteValidationProps) {
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
@@ -17,16 +17,17 @@ export function useThemeInfra(initProps: GFormNoteProps) {
 }
 
 
-const useUtilityClasses = (ownerState: GFormNoteProps) => {
+const useUtilityClasses = (ownerState: GFormNoteValidationProps) => {
   const slots = {
     root: ['root', ownerState.id],
+    popover: ['popover']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
 
 
-export const GFormNoteRoot = styled(Alert, {
+export const GFormNoteValidationRoot = styled(Alert, {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (props, styles) => {
@@ -35,7 +36,7 @@ export const GFormNoteRoot = styled(Alert, {
       ...useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: GFormNoteProps }>(({ theme, ownerState }) => {
+})<{ ownerState: GFormNoteValidationProps }>(({ theme, ownerState }) => {
   const severity = (ownerState.style ?? 'info') as 'error' | 'success' | 'warning' | 'info';
   const severityColor = theme.palette[severity]?.main ?? theme.palette.text.primary;
 
@@ -56,3 +57,5 @@ export const GFormNoteRoot = styled(Alert, {
     }
   };
 });
+
+

@@ -43,11 +43,19 @@ const Internal: React.FC<GFormBaseElementProps> = ({ actionItem: element, formSt
   }
 
   function onNextPage() {
-    store.next(setErrorsVisible);
+    if (store.form.proceedAllowed) {
+      store.next(setErrorsVisible);
+    } else {
+      setErrorsVisible();
+    }
   }
 
   function onComplete() {
-    store.complete(setErrorsVisible);
+    if (store.form.completeAllowed) {
+      store.complete(setErrorsVisible);      
+    } else {
+      setErrorsVisible();
+    }
   }
 
   return (
