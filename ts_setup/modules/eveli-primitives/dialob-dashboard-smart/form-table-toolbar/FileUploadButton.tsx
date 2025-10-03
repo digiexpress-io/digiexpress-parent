@@ -11,6 +11,7 @@ export const FileUploadButton: React.FC<{
 
   const { enqueueSnackbar } = useSnackbar();
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    
     const file = event.target.files?.[0];
     if (!file) {
       // prolly should be actual error messsage now this!!!
