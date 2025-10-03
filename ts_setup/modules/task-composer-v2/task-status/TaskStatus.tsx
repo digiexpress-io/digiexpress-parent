@@ -3,26 +3,9 @@ import { Box, generateUtilityClass, MenuItem, Select, SelectChangeEvent, styled,
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { TaskApi } from '@dxs-ts/task-api';
+import { StatusHex } from '../../eveli-primitives/eveli-theme';
 
-const getStatusColor = (status: TaskApi.TaskStatus): string => {
-  const colorEnum = TaskApi.task_status_colors[status];
-
-  switch (colorEnum) {
-    case TaskApi.Colors.RED:
-      return '#f44336';
-    case TaskApi.Colors.BLUE:
-      return '#2196f3';
-    case TaskApi.Colors.GREEN:
-      return '#4caf50';
-    case TaskApi.Colors.YELLOW:
-      return '#ffeb3b';
-    case TaskApi.Colors.GREY:
-      return '#9e9e9e';
-    default:
-      return '#ccc';
-  }
-};
-
+const getStatusColor = (status: TaskApi.TaskStatus): string => StatusHex[status];
 
 const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) => {
   const intl = useIntl();

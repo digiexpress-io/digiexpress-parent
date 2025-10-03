@@ -5,35 +5,9 @@ import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@dxs-ts/task-api';
 import { useTaskDashboard } from '../task-dashboard';
-
+import { PriorityHex, getContrastText } from '../../eveli-primitives/eveli-theme';
 
 type Priority = TaskApi.TaskPriority;
-
-const getPriorityColor = (priority: Priority): string => {
-  const colorEnum = TaskApi.task_priority_colors[priority];
-  switch (colorEnum) {
-    case TaskApi.Colors.RED:
-      return '#f44336';
-    case TaskApi.Colors.BLUE:
-      return '#2196f3';
-    case TaskApi.Colors.GREEN:
-      return '#4caf50';
-    default:
-      return '#ccc';
-  }
-};
-
-
-const getContrastText = (hex: string): string => {
-  const c = hex.substring(1);
-  const rgb = parseInt(c, 16);
-  const r = (rgb >> 16) & 0xff;
-  const g = (rgb >> 8) & 0xff;
-  const b = rgb & 0xff;
-
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.6 ? '#000000' : '#ffffff';
-};
 
 export const TaskPriorityReadOnly: React.FC = () => {
   const intl = useIntl();
@@ -47,8 +21,6 @@ export const TaskPriorityReadOnly: React.FC = () => {
   );
 };
 
-
-
 const MUI_NAME = 'TaskPriorityRoot';
 const TaskPriorityRoot = styled('div', {
   name: MUI_NAME,
@@ -60,12 +32,12 @@ const TaskPriorityRoot = styled('div', {
   },
 
 })<{ task: TaskApi.Task }>(({ theme, task }) => {
-  const bgColor = getPriorityColor(task.priority!);
+  const bgColor = PriorityHex[task.priority!];
   const textColor = getContrastText(bgColor);
 
   return {
     '& .MuiChip-root': {
-      backgroundColor: getPriorityColor(task.priority!),
+      backgroundColor: PriorityHex[task.priority!],
       color: textColor,
     }
   }

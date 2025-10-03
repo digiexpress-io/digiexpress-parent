@@ -3,7 +3,7 @@ import { palette } from "./palette";
 import { typography } from "./typography";
 
 
-
+export * from './statusPriorityColors';
 
 export const eveliTheme = {
   components, palette, typography,
@@ -40,3 +40,4 @@ export const eveliTheme = {
     '0px 24px 72px rgba(0,0,0,0.1)',
   ],
 }
+
