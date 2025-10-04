@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +37,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
 import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,7 +57,9 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedbackApiController {
   private final WorkerAuthClient securityClient;
   private final FeedbackClient feedbackClient;
-
+  private final TaskClient taskClient;
+  private static final Duration timeout = Duration.ofMillis(10000);
+  
   @GetMapping
   public ResponseEntity<List<Feedback>> findAllFeedback()
   {
@@ -64,12 +69,22 @@ public class FeedbackApiController {
   @GetMapping("/{taskIdOrFeedbackId}")
   public ResponseEntity<Feedback> getOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
   {
-    final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
-    if(feedback.isEmpty()) {
-     return ResponseEntity.notFound().build(); 
+    var feedback = feedbackClient.queryFeedbacks().findOneById(id);
+    if(feedback.isPresent()) {
+      return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
     }
     
-    return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+    
+    final var task = taskClient.queryTasks().findAll(Arrays.asList(id)).await().atMost(timeout);
+    if(!task.isEmpty()) {
+      feedback = feedbackClient.queryFeedbacks().findOneById(task.iterator().next().getTaskRef());
+    }
+    if(feedback.isPresent()) {
+      return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+    }
+    
+    
+    return ResponseEntity.notFound().build();
   }
   @PutMapping(value = "/{taskIdOrFeedbackId}", consumes = "application/json")
   public ResponseEntity<Feedback> modifyOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody ModifyOneFeedbackCommand body) 
