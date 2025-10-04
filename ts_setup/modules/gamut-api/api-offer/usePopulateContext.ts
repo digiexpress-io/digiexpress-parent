@@ -50,11 +50,16 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
 
   // Get the offer (form) name based on the topic link
   const getLocalisedOfferName = (site: SiteApi.Site, workflowNameOrProcId: string | undefined): string => {
-
-    const fromProcess = (processes ?? []).find(proc => proc.id);
-
+    if (!workflowNameOrProcId || !processes) {
+      return '-';
+    }
+    const fromProcess = processes.find(proc => (
+      proc.id === workflowNameOrProcId ||
+      proc.name === workflowNameOrProcId ||
+      proc.taskId === workflowNameOrProcId ||
+      proc.taskRef === workflowNameOrProcId
+    ));
     const workflowName = fromProcess ? fromProcess.name : workflowNameOrProcId;
-
     const link = Object.values(site.links).find(link => link?.value === workflowName);
     if(!link && workflowName) { 
 
