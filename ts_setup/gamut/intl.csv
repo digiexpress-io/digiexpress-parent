@@ -9,19 +9,19 @@ cust.email,,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@
 header.userIdentity.label,,You are logged in as,Kirjauduttu käyttäjänä,Inloggad som,Sedang masuk sebagai,Prijavljeni ste kao
 document.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress,DigiExpress
 // -------------------- CUSTOMER FOOTER --------------------------,,,,#VALUE!,,
-footer.column2.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress,DigiExpress
-footer.column2.subtitle,,Open source platform for digitalisation services,Avoimen lähdekoodin alusta palvelujen digitalisointiin,Öppen källkodsplattform för digitaliseringstjänster,Platform sumber terbuka untuk perkhidmatan pendigitalan,Open-source platforma za usluge digitalizacije
-footer.column3.title,,Quick links,Pikalinkkejä,Snabblänkar,Pautan pantas,Brzi linkovi
-footer.column3.link.acessibility,,Accessibility statement,Saavutettavuus seloste,Tillgänglighetsförklaring,Kenyataan kebolehcapaian,Izjava o pristupačnosti
-footer.column3.link.dataProtection,,Data protection,Tietosuoja,Dataskydd,Perlindungan data,Zaštita podataka
-footer.column3.link.feedback,,Feedback and development ideas,Palautteet,Feedback och utvecklingsidéer,Maklum balas dan idea pembangunan,Povratne informacije i razvojne ideje
-footer.column3.link.siteInfo,,Information about the site,Lisätieto tästä sivustosta,Information om webbplatsen,Maklumat mengenai tapak,Informacije o stranici
-footer.column3.link.newsletter,,Subscribe to the newsletter,Tilaa uutiskirje,Prenumerera på nyhetsbrevet,Langgan surat berita,Pretplatite se na newsletter
-footer.column4.title,,DigiExpress info,DigiExpress info,DigiExpress info,Maklumat DigiExpress,DigiExpress info
-footer.column4.email,,Email: info@digiExpress.io,Sähköposti: info@digiExpress.io,E-post: info@digiExpress.io,E-mel: info@digiExpress.io,Email: info@digiExpress.io
-footer.column4.phone,,Phone: 123 456 7890,Phone: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890
-footer.column4.address,,Visiting address: 1234 Any Street MyTown,"Käyntiosoite: 1234 Suomentie 4, Suomi",Besöksadress: 1234 Any Street MyTown,Alamat lawatan: 1234 Any Street MyTown,Adresa za posjetu: 1234 Any Street MyTown
-footer.column4.postalCode,,Postal code: 1234,Postinumero: 1234,Postnummer: 1234,Poskod: 1234,Poštanski broj: 1234
+footer.column2.title,Footer,DigiExpress,DigiExpress,DigiExpress,DigiExpress,DigiExpress
+footer.column2.subtitle,Footer,Open source platform for digitalisation services,Avoimen lähdekoodin alusta palvelujen digitalisointiin,Öppen källkodsplattform för digitaliseringstjänster,Platform sumber terbuka untuk perkhidmatan pendigitalan,Open-source platforma za usluge digitalizacije
+footer.column3.title,Footer,Quick links,Pikalinkkejä,Snabblänkar,Pautan pantas,Brzi linkovi
+footer.column3.link.acessibility,Footer,Accessibility statement,Saavutettavuus seloste,Tillgänglighetsförklaring,Kenyataan kebolehcapaian,Izjava o pristupačnosti
+footer.column3.link.dataProtection,Footer,Data protection,Tietosuoja,Dataskydd,Perlindungan data,Zaštita podataka
+footer.column3.link.feedback,Footer,Feedback and development ideas,Palautteet,Feedback och utvecklingsidéer,Maklum balas dan idea pembangunan,Povratne informacije i razvojne ideje
+footer.column3.link.siteInfo,Footer,Information about the site,Lisätieto tästä sivustosta,Information om webbplatsen,Maklumat mengenai tapak,Informacije o stranici
+footer.column3.link.newsletter,Footer,Subscribe to the newsletter,Tilaa uutiskirje,Prenumerera på nyhetsbrevet,Langgan surat berita,Pretplatite se na newsletter
+footer.column4.title,Footer,DigiExpress info,DigiExpress info,DigiExpress info,Maklumat DigiExpress,DigiExpress info
+footer.column4.email,Footer,Email: info@digiExpress.io,Sähköposti: info@digiExpress.io,E-post: info@digiExpress.io,E-mel: info@digiExpress.io,Email: info@digiExpress.io
+footer.column4.phone,Footer,Phone: 123 456 7890,Phone: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890
+footer.column4.address,Footer,Visiting address: 1234 Any Street MyTown,"Käyntiosoite: 1234 Suomentie 4, Suomi",Besöksadress: 1234 Any Street MyTown,Alamat lawatan: 1234 Any Street MyTown,Adresa za posjetu: 1234 Any Street MyTown
+footer.column4.postalCode,Footer,Postal code: 1234,Postinumero: 1234,Postnummer: 1234,Poskod: 1234,Poštanski broj: 1234
 // --------------------END CUSTOMER-SPECIFIC --------------------------,,,,,,
 // ------------------- GAMUT GENERAL ----------------------,,,,,,
 gamut.forms,,Forms,Lomake,Formulär,Borang,Obrasci
@@ -75,7 +75,7 @@ gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang,Obrasci
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan,Linkovi
 // -------------------- GAMUT FORMS ---------------------------,,,,#VALUE!,,
 gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama,Ime
-gamut.forms.taskRefId,,Reference Id,Viitetunnus,"Referens ID",Id Rujukan,Referentni broj
+gamut.forms.taskRefId,,Reference Id,Viitetunnus,Referens ID,Id Rujukan,Referentni broj
 gamut.forms.started,,Started,Aloitettu,Startade,Bermula,Započeto
 gamut.forms.attachments,,Attachments,Attachments,,,
 gamut.forms.status,,Status,Tila,Status,Status,Status
@@ -145,8 +145,8 @@ gamut.inbox.newMessage.placeholder,,Please write your message,Kirjoita viestisi,
 gamut.inbox.newMessage.replyingTo,,Replying to,Vastaa viestiin,Svarar på,Membalas kepada,Odgovor na
 gamut.inbox.newMessage.sendNew,,Send a new message,Lähetä uusi viesti,Skicka ett nytt meddelande,Hantar mesej baharu,Pošalji novu poruku
 gamut.inbox.newMessage.replyingTo.subject,,Subject,Aihe,Ämne,Subjek,Predmet
-gamut.inbox.newMessage.notAllowed1,,Messages are not enabled.,Viestit eivät ole käytössä.,Messages are not enabled.,Mesej tidak didayakan.,Ovaj obrazac je uspješno obrađen i slanje novih poruka je onemogućeno.
-gamut.inbox.newMessage.notAllowed2,,We apologize for the inconvenience.,Pahoittelemme häiriötä.,Vi ber om ursäkt för besväret.,Kami memohon maaf atas kesulitan ini.,Izvinjavamo se zbog neugodnosti.
+gamut.inbox.newMessage.notAllowed1,,The messaging function related to this case has not been activated yet.,Tähän asiontitapahtumaan liittyvä viestitoiminto ei ole vielä aktivoitu.,Den meddelandefunktion som är kopplad till denna transaktion är inte aktiverad ännu.,Mesej tidak didayakan.,Ovaj obrazac je uspješno obrađen i slanje novih poruka je onemogućeno.
+gamut.inbox.newMessage.notAllowed2,,It will be activated as soon as your case is opened.,Se aktivoituu heti kun asiasi otetaan käsittelyyn.,Det aktiveras så snart ditt ärende tas upp till behandling.,Kami memohon maaf atas kesulitan ini.,Izvinjavamo se zbog neugodnosti.
 gamut.inbox.newMessage.notAllowed.questions,,Please contact us by phone or email with further questions.,"Ota meihin yhteyttä puhelimitse tai sähköpostitse, jos sinulla on lisäkysymyksiä.",Kontakta oss gärna via telefon eller e-post med ytterligare frågor.,Sila hubungi kami melalui telefon atau e-mel untuk pertanyaan lanjut.,Za dodatna pitanja moguće je kontaktirati telefonom ili e-mailom.
 gamut.inbox.noMessages,,No messages,Ei viestejä,Inga meddelanden,Tiada mesej,Nema poruka
 gamut.inbox.newMessageFrom,,New message from,Uusi viesti,Ny meddelande från,Mesej baharu daripada,Nova poruka od
