@@ -23,6 +23,7 @@ export interface UpdateOneFeedbackProps {
   }
 }
 
+
 export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, taskRef, taskId, onComplete, onDelete, allowDelete = true }) => {
 
   const intl = useIntl();
@@ -39,19 +40,22 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
   const [sub, setSub] = React.useState({ subLabelKey: '', subLabelValue: '' });
 
 
+  const mapToLocalState = React.useCallback((resp: FeedbackApi.Feedback | undefined) => {
+    setFeedback(resp);
+    setReply(resp?.replyText ?? '');
+    setQuestion(resp?.content?.question ?? '');
+    setSavedReply(resp?.replyText ?? '');
+
+    setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
+    setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
+
+    setCustomerTitle(resp?.customerTitle ?? '')
+  }, []);
+
+
+
   React.useEffect(() => {
-    getOneFeedback(taskRef)
-      .then((resp) => {
-        setFeedback(resp);
-        setReply(resp?.replyText ?? '');
-        setQuestion(resp?.content?.question ?? '');
-        setSavedReply(resp?.replyText ?? '');
-
-        setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
-        setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
-
-        setCustomerTitle(resp?.customerTitle ?? '')
-      });
+    getOneFeedback(taskRef).then(mapToLocalState);
   }, []);
 
   const handlePublish = React.useCallback(async function() {
@@ -77,6 +81,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
     return modifyOneFeedback(taskRef, command).then(updatedFeedback => {
       onComplete(updatedFeedback);
       setSavedReply(reply);
+      mapToLocalState(updatedFeedback)
     });
   }, [main, sub, customerTitle, taskRef, reply, question, feedback?.id])
 
@@ -91,6 +96,16 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
   if (!feedback) {
     return (<CircularProgress />)
   }
+
+  const isChanged = (
+    reply !== savedReply ||
+    question !== feedback.content?.question ||
+    customerTitle !== feedback?.customerTitle ||
+    main.labelKey !== feedback?.labelKey ||
+    main.labelValue !== feedback?.labelValue ||
+    sub.subLabelKey !== feedback?.subLabelKey ||
+    sub.subLabelValue !== feedback?.subLabelValue
+  );
 
   const AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.AcceptButton ?? SaveFeedback;
   const CancelButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> =  slots?.CancelButton ?? CancelFeedback;
@@ -173,11 +188,11 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
           </>
         )}
 
-        <CancelButton onClick={async () => setReply(savedReply)} disabled={reply === savedReply}>
+        <CancelButton onClick={async () => setReply(savedReply)} disabled={!isChanged}>
           <FormattedMessage id='button.cancel' />
         </CancelButton>
 
-        <AcceptButton onClick={handlePublish} disabled={reply === savedReply}>
+        <AcceptButton onClick={handlePublish} disabled={!isChanged}>
           <FormattedMessage id='button.update' />
         </AcceptButton>
       </Box>
@@ -213,16 +228,16 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
 
 const SaveFeedback: React.FC<{ disabled: boolean, onClick: () => Promise<void> }> = ({ disabled, onClick }) => {
   return (
-    <Button variant="outlined" onClick={onClick} disabled={disabled}>
-      <FormattedMessage id='button.cancel' />
+    <Button variant='contained' onClick={onClick} disabled={disabled}>
+      <FormattedMessage id='button.update' />
     </Button>
   )
 }
 
 const CancelFeedback: React.FC<{ disabled: boolean, onClick: () => Promise<void> }> = ({ disabled, onClick }) => {
   return (
-    <Button variant='contained' onClick={onClick} disabled={disabled}>
-      <FormattedMessage id='button.update' />
+    <Button variant="outlined" onClick={onClick} disabled={disabled}>
+      <FormattedMessage id='button.cancel' />
     </Button>
   )
 }

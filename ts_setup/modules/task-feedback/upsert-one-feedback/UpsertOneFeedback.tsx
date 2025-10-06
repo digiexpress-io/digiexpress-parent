@@ -32,12 +32,12 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
 
     isTaskFeedbackEnabled(props.taskRef).then((enabled) => {
       if(enabled) {
-        getOneFeedback(props.taskRef).then(feedback => {
-          setFeedback(feedback);
-          setEnabled(!!feedback);  
-        })
+        getOneFeedback(props.taskRef).then((existing => {
+          setFeedback(existing);
+          setEnabled(true)
+        }))
       } else {
-        setEnabled(enabled);
+        setEnabled(false)
       }
     });
   }, [props.taskRef, props.reload])
@@ -49,7 +49,6 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
       props.onComplete(upsertedFeedback);
     });
   }
-
 
   const ownerState = {...props, onComplete: handleOnComplete, enabled, version: props.reload};
   const feedbackExists = feedback ? true : false;

@@ -102,8 +102,8 @@ public class EveliAutoConfigWorker {
     return new WorkerIamController(authClient);
   } 
   @Bean 
-  public FeedbackApiController feedbackApiController(WorkerAuthClient authClient, FeedbackClient feedbackClient) {
-    return new FeedbackApiController(authClient, feedbackClient);
+  public FeedbackApiController feedbackApiController(WorkerAuthClient authClient, FeedbackClient feedbackClient, TaskClient taskClient) {
+    return new FeedbackApiController(authClient, feedbackClient, taskClient);
   }
   @Bean
   public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {

@@ -6,7 +6,7 @@ import { GFormNoteValidation } from './GFormNoteValidation';
 
 export const GFormNoteValidationDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
 
-  const style = element.props.style;
+  const style = element.props?.style;
 
   return (
     <GFormNoteValidation

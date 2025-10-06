@@ -93,7 +93,10 @@ export const TaskBody: React.FC<TaskBodyProps> = (props) => {
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={classes.accordionDetails}>
-              <UpsertOneFeedback taskRef={task.taskRef!}reload={0} allowDelete={false} 
+              <UpsertOneFeedback
+                taskRef={task.taskRef!}
+                reload={0}
+                allowDelete={false} 
                 onComplete={() => { }} 
                 onCancel={onFeedbackCancel}
                 onDelete={onFeedbackCancel}
