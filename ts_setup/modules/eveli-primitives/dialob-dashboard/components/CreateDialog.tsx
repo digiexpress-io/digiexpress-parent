@@ -5,6 +5,7 @@ import { useAdminBackend } from '../backend';
 import { checkHttpResponse, handleRejection } from '../middleware';
 import type { DefaultForm, FormConfiguration, DialobAdminConfig } from '../types';
 import { DEFAULT_FORM } from '../util';
+import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 export interface CreateDialogProps {
   createModalOpen: boolean;
@@ -166,7 +167,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
               {errors.label && <FormHelperText error>{errors.label}</FormHelperText>}
             </Box>
             <Box sx={{ display: "flex", mt: 2, justifyContent: "space-between" }}>
-              <Button onClick={handleCreateModalClose}><FormattedMessage id={'button.cancel'} /></Button>
+              <CancelButton onClick={handleCreateModalClose} />
               <Button onClick={handleSubmit} disabled={isSubmitting || !values.name || !!errors.name || !!errors.label} ><FormattedMessage id={'button.accept'} /></Button>
             </Box>
           </Box>
