@@ -74,6 +74,9 @@ export const FormTable: React.FC<{}> = () => {
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
+      meta: {
+        enableSelection: true
+      },
       cell: row => <FormTableLabelRow value={row.row.original} />,
     },
     {
