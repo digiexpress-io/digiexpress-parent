@@ -4,6 +4,7 @@ import { DialogContent, DialogTitle, TextField, Typography, FormHelperText, Butt
 
 import { Visitor_CreateNewForm, DialobRestApi } from '@dxs-ts/eveli-api';
 import { useDialobForms } from '@dxs-ts/eveli-api';
+import { CancelButton } from '@dxs-ts/eveli-primitives';
 
  
 const template: DialobRestApi.CreateFormRequest = {
@@ -88,7 +89,7 @@ export const DialogCreate: React.FC<DialogCreateProps> = ({ onClose }) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}><FormattedMessage id={'button.cancel'} /></Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleSubmit} disabled={isSubmitting || isErrors} ><FormattedMessage id={'button.accept'} /></Button>
       </DialogActions>
     </Dialog>
