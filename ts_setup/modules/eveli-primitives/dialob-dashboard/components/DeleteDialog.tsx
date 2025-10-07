@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useCallback, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, Box, Divider, Typography, DialogActions, Button, Dialog } from '@mui/material';
 import { checkHttpResponse, handleRejection } from '../middleware';
 import type { FormConfiguration, DialobAdminConfig } from '../types';
 import { useAdminBackend } from '../backend';
+import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 export interface DeleteDialogProps {
   deleteModalOpen: boolean;
@@ -18,26 +19,62 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
   deleteModalOpen,
   handleDeleteModalClose,
   formConfiguration,
-  config
+  config,
 }) => {
   const intl = useIntl();
-
   const { deleteAdminFormConfiguration } = useAdminBackend(config);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const deleteDialog = async () => {
-    if (formConfiguration) {
-      deleteAdminFormConfiguration(formConfiguration.id)
-        .then((response: Response) => checkHttpResponse(response, config.setLoginRequired))
-        .then((response: { json: () => any; }) => response.json())
-        .then((response: any) => {
-          handleDeleteModalClose();
-          setFetchAgain(prevState => !prevState);
-        })
-        .catch((ex: any) => {
-          handleRejection(ex, config.setTechnicalError);
-        });
+  const titleText = useMemo(
+    () =>
+      formConfiguration?.metadata?.label ||
+      intl.formatMessage({ id: 'adminUI.dialog.emptyTitle' }),
+    [formConfiguration, intl]
+  );
+
+  const checkHttpResponseAsync = useCallback(
+    async (response: any) => {
+      try {
+        return await checkHttpResponse(response, config.setLoginRequired);
+      } catch (ex) {
+        handleRejection(ex, config.setTechnicalError);
+        throw ex;
+      }
+    },
+    [config]
+  );
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (!formConfiguration) return;
+    setIsSubmitting(true);
+    try {
+      const resp = await deleteAdminFormConfiguration(formConfiguration.id);
+      await checkHttpResponseAsync(resp);
+      setFetchAgain((prev) => !prev);
+      handleDeleteModalClose();
+    } catch (ex) {
+      handleRejection(ex, config.setTechnicalError);
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  }, [
+    formConfiguration,
+    deleteAdminFormConfiguration,
+    checkHttpResponseAsync,
+    setFetchAgain,
+    handleDeleteModalClose,
+    config,
+  ]);
+
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !isSubmitting) {
+        e.preventDefault();
+        handleConfirmDelete();
+      }
+    },
+    [isSubmitting, handleConfirmDelete]
+  );
 
   return (
     <Box>
@@ -46,30 +83,37 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
           padding: '0 20px 20px 20px',
           border: 'none',
           height: '50%',
-          top: "20%"
+          top: '20%',
         }}
         open={deleteModalOpen}
         onClose={handleDeleteModalClose}
-        maxWidth={'lg'}
+        onKeyDown={onKeyDown}
+        maxWidth="lg"
+        aria-labelledby="delete-dialog-title"
       >
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          <Typography variant="h4" component="div"><FormattedMessage id='heading.deleteDialog' /></Typography>
+        <DialogTitle sx={{ p: 3 }} id="delete-dialog-title">
+          <Typography variant="h4" component="div">
+            <FormattedMessage id="heading.deleteDialog" />
+          </Typography>
         </DialogTitle>
         <Divider />
-        <DialogContent>
-          <Typography sx={{ padding: "20px 4px 4px 2px" }}><FormattedMessage id="adminUI.dialog.deleteQuestion" /> {`"${formConfiguration?.metadata.label || intl.formatMessage({ id: "adminUI.dialog.emptyTitle" })}"?`}</Typography>
+        <DialogContent sx={{ p: 3 }}>
+          <Typography sx={{ my: 1 }}>
+            <FormattedMessage id="adminUI.dialog.deleteQuestion" /> {`"${titleText}"?`}
+          </Typography>
         </DialogContent>
         <Divider />
-        <DialogActions sx={{ display: "flex", justifyContent: "space-between", padding: "12px" }}>
-          <Button onClick={handleDeleteModalClose}><FormattedMessage id={'button.cancel'} /></Button>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between', p: '12px' }}>
+          <CancelButton onClick={handleDeleteModalClose} />
           <Button
-            color='error'
-            onClick={() => deleteDialog()}
+            color="error"
+            onClick={handleConfirmDelete}
+            disabled={isSubmitting || !formConfiguration}
           >
-            <FormattedMessage id={'button.accept'} />
+            <FormattedMessage id="button.accept" />
           </Button>
         </DialogActions>
       </Dialog>
     </Box>
-  )
-}
+  );
+};
