@@ -1,43 +1,59 @@
-
-import { DialogContent, DialogTitle, Button, Dialog, DialogActions, Stack } from '@mui/material';
+import { DialogContent, DialogTitle, Button, Dialog, DialogActions, Stack, Typography } from '@mui/material';
 import { DialobRestApi, useDialobForms } from '@dxs-ts/eveli-api';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
+import { CancelButton } from '@dxs-ts/eveli-primitives';
 
-
-
-export interface DialobActionCreateProps {
+export interface DialogDeleteProps {
   onClose: () => void;
-  source: DialobRestApi.FormListItem
+  source: DialobRestApi.FormListItem;
 }
 
-export const DialobActionDelete: React.FC<DialobActionCreateProps> = ({ onClose, source }) => {
+export const DialogDelete: React.FC<DialogDeleteProps> = ({ onClose, source }) => {
   const { deleteForm } = useDialobForms();
   const [isSubmitting, setSubmitting] = React.useState(false);
+
   const handleSubmit = async () => {
-    setSubmitting(false);
-    deleteForm({form: source});
-    setSubmitting(true); 
-  }
+    if (isSubmitting) return;
+    setSubmitting(true);
+    try {
+      await deleteForm({ form: source });
+      onClose();
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isSubmitting) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const title = source?.metadata?.label;
+
   return (
-    <Dialog open={true} maxWidth='md' onClose={onClose}>
+    <Dialog open maxWidth="md" onClose={onClose} onKeyDown={onKeyDown}>
       <DialogTitle>
-        <FormattedMessage id='heading.deleteDialog' />
+        <FormattedMessage id="heading.deleteDialog" />
       </DialogTitle>
 
       <DialogContent>
         <Stack spacing={1}>
-          <div>
-            <FormattedMessage id='adminUI.dialog.deleteQuestion' /> 
-            {source.metadata.label || <FormattedMessage id='adminUI.dialog.emptyTitle' />}
-            {"?"}
-          </div>
+          <Typography>
+            <FormattedMessage id="adminUI.dialog.deleteQuestion" />{' '}
+            {title || <FormattedMessage id="adminUI.dialog.emptyTitle" />}?
+          </Typography>
         </Stack>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}><FormattedMessage id='button.cancel' /></Button>
-        <Button disabled={isSubmitting} color='error' onClick={handleSubmit}><FormattedMessage id={'button.accept'} /></Button>
+        <CancelButton onClick={onClose} />
+        <Button color="error" disabled={isSubmitting} onClick={handleSubmit}>
+          <FormattedMessage id="button.accept" />
+        </Button>
       </DialogActions>
-    </Dialog>);
-}
+    </Dialog>
+  );
+};
