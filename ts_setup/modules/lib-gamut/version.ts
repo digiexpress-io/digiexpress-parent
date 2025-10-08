@@ -1,9 +1,9 @@
 import { VersionInfoApi } from "@dxs-ts/envir-util";
-export const version = '2.0.32';export const build_time = '10/04/2025, 15:57:26';
+export const version = '2.0.33';export const build_time = '10/08/2025, 12:55:01';
 export const renderVersion = () => VersionInfoApi.builder()
           .setLogo('logo_1_great_ones_wisdom')
           .setTheme('red')
-          .setProjectInfo('@dxs-ts/gamut', '2.0.32', '10/04/2025, 15:57:26')
+          .setProjectInfo('@dxs-ts/gamut', '2.0.33', '10/08/2025, 12:55:01')
           .addInternalComponents(['@dxs-ts/envir-util','@dxs-ts/gamut-api','@dxs-ts/gamut-md','@dxs-ts/gamut-primitives','@dxs-ts/gamut-form-review','@dxs-ts/gamut-form','@dxs-ts/gamut-shell','@dxs-ts/gamut-intl','@dxs-ts/gamut-routes','@dxs-ts/gamut-theme','@dxs-ts/xui-datetime'])
           .addExternalComponents(['@mui/icons-material@6.5.0','@mui/material@6.5.0','@mui/system@6.5.0','@mui/utils@6.4.9','@tanstack/react-query@5.83.0','@tanstack/react-router@1.130.2','@tanstack/react-store@0.7.7','leaflet-geosearch@4.2.0','luxon@3.7.1','numbro@2.5.0','react@18.3.1','react-intl@6.8.9','react-leaflet@4.2.1','react-markdown@10.1.0','ts-md5@1.3.1'])
           .render();
