@@ -121,6 +121,7 @@ public interface TagomiContainer {
   interface Tag extends IsTagomiObject {
     String getCommitId();
     String getName();
+    String getNote();
     
     @Override default public TagomiDocType getDocType() { return TagomiDocType.TAG; };
   }

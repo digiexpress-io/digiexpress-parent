@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.tagomi.api.TagomiImageStorage;
@@ -95,12 +97,14 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
   
   private Tuple2<Template, List<IsTagomiObject>> changeTemplate(TagomiContainer site, TemplateMutator changes) {
     final Template start = site.getTemplates().get(changes.getTemplateId());
-
+    final var targetLocale = Optional.ofNullable(changes.getLocale()).orElse(start.getLocaleId());
+    
+    
     final var locale = site.getLocales().values().stream()
         .filter(p -> 
-          p.getLocaleCode().equals(changes.getLocale()) || 
-          p.getId().equals(changes.getLocale()))
-        .findFirst();
+          p.getLocaleCode().equals(targetLocale) || 
+          p.getId().equals(targetLocale)
+        ).findFirst();
     
     if(locale.isEmpty()) {
       throw new ConstraintException(start, "Template, locale: '" + changes.getLocale() + "' does not exist!");
@@ -186,6 +190,12 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
   private Resource changeLink(TagomiContainer site, ResourceMutator changes, Image image) {
     final var start = site.getResources().get(changes.getResourceId());
     
+
+    if(start == null) {
+      throw new ConstraintException("Can't find resource: '" + changes.getResourceId() + "' to update!");
+    }
+    
+    
     if(changes.getTemplateIds() != null ) {
       for(final var templateId : changes.getTemplateIds()) {
         if(!site.getTemplates().containsKey(templateId)) {
@@ -206,8 +216,8 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
     
     return ImmutableResource.builder()
         .from(start)
-        .contentType(changes.getContentType() == null ? changes.getContentType() : start.getContentType())
-        .resourceName(changes.getResourceName() == null ? changes.getResourceName() : start.getResourceName())
+        .contentType(changes.getContentType() == null ? start.getContentType() : changes.getContentType())
+        .resourceName(changes.getResourceName() == null ? start.getResourceName() : changes.getResourceName())
         .externalLocation(image == null ? start.getExternalLocation() : image.getId())
         .templateIds(changes.getTemplateIds() == null ? start.getTemplateIds() : new HashSet<>(changes.getTemplateIds()))
         .build();
@@ -221,6 +231,11 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
   
   private Service changeService(TagomiContainer site, ServiceMutator changes) {
     final var start = site.getServices().get(changes.getServiceId());
+    
+    if(start == null) {
+      throw new ConstraintException("Can't find service: '" + changes.getServiceId() + "' to update!");
+    }
+    
     if(changes.getLabels() != null ) {
       for(final var label : changes.getLabels()) {
         final var localeId = label.getLocale();

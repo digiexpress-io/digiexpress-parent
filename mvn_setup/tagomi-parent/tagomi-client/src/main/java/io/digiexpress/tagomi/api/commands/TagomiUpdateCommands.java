@@ -39,7 +39,7 @@ public interface TagomiUpdateCommands {
   interface TemplateMutator {
     String getTemplateId();
     String getContent();
-    String getLocale();
+    @Nullable String getLocale();
     @Nullable List<String> getResourceIds(); // id-s to ResourceLink
   }
   

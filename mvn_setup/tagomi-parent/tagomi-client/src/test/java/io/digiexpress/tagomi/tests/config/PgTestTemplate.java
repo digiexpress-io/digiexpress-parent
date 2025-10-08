@@ -1,13 +1,20 @@
 package io.digiexpress.tagomi.tests.config;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import io.digiexpress.tagomi.api.ImmutableImage;
+import io.digiexpress.tagomi.api.ImmutableImageEnvlope;
 import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
-import io.digiexpress.tagomi.api.TagomiStore;
+import io.digiexpress.tagomi.api.TagomiComposer;
+import io.digiexpress.tagomi.api.TagomiImageStorage;
+import io.digiexpress.tagomi.spi.TagomiComposerImpl;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
 import io.digiexpress.tagomi.spi.json.ToJsonObject;
@@ -20,6 +27,7 @@ import io.resys.thena.git.api.GitClient;
 import io.resys.thena.git.api.GitDataSource;
 import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.resys.thena.git.spi.GitPrinter;
+import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -79,13 +87,15 @@ public class PgTestTemplate {
   public String toRepoExport(String repoId) {
     Tenant repo = getClient().git(repoId).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
-    final String result = new GitPrinter(createState()).print(repo);
+    final String result = new GitPrinter(createState()).printWithStaticIds(repo);
+    
+    
     return result;
   }
 
   
   @SuppressWarnings("unused")
-  public TagomiStore getPersistence(String repoId) {
+  public TagomiComposer createTenant(String repoId) {
     
     final GitClient client = getClient();
     final TenantCommitResult repo = getClient()
@@ -103,9 +113,39 @@ public class PgTestTemplate {
       .deserializer(new FromJsonObject())
       .serializer(new ToJsonObject())
       .authorProvider(() -> "junit-test")
+      .imageStorage(new TagomiImageStorage() {
+        @Override
+        public Uni<ImageEnvlope> write(byte[] body) {
+          return Uni.createFrom()
+              .item(ImmutableImageEnvlope.builder()
+              .operationStatus(OperationStatus.OK)
+              .object(ImmutableImage.builder().id("1234")
+                  .body(body)
+                  .build())
+              .build());
+        }
+        @Override
+        public Uni<ImageEnvlope> read(String id) {
+          return Uni.createFrom().item(ImmutableImageEnvlope
+              .builder()
+              .operationStatus(OperationStatus.OK)
+              .object(ImmutableImage.builder().id("1234")
+                  .body(new byte[] {})
+                  .build())
+              .build());
+        }
+      })
       .build();
     
-    return new TagomiStoreImpl(config);
+    return new TagomiComposerImpl(new TagomiStoreImpl(config), config.getImageStorage());
   }
+ 
   
+  public static String toString( String resource) {
+    try {
+      return IOUtils.toString(PgTestTemplate.class.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
 }

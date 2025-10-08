@@ -7,6 +7,7 @@ import java.util.Map;
 import io.digiexpress.tagomi.api.TagomiStore;
 import io.digiexpress.tagomi.api.TagomiStoreConfig;
 import io.digiexpress.tagomi.api.entities.ImmutableTagomiContainer;
+import io.digiexpress.tagomi.api.entities.ImmutableTagomiEntityContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.IsTagomiObject;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.TagomiDocType;
@@ -176,7 +177,12 @@ public class QueryBuilderImpl implements TagomiStore.StateQuery {
                   .build()
             );
           }
-          return config.getDeserializer().fromString(state.getObjects().getBlob().getValue());
+          return ImmutableTagomiEntityContainer.builder()
+              .entity(config.getDeserializer().fromString(state.getObjects().getBlob().getValue()))
+              .src(state.getObjects())
+              .build(); 
+              
+              
         });
   }
 }

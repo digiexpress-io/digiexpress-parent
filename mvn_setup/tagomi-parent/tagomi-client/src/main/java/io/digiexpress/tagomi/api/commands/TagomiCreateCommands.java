@@ -72,6 +72,7 @@ public interface TagomiCreateCommands {
   interface CreateTag extends Command {
     @Nullable String getId();
     String getTagName();
-    String getCommitId();
+    String getNote();
+    @Nullable String getCommitId();
   }
 }

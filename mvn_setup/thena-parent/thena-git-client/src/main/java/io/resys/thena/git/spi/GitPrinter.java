@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.collect.ComparisonChain;
+
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Diff;
 import io.resys.thena.git.api.GitDataSource;
@@ -170,7 +172,40 @@ public class GitPrinter {
       return next;
     };
 
-    final var ctx = state.toGitState(repo);
+    final var ctx = state.toGitState(repo);    
+    
+    
+    // blob id-s
+    final var blobs = ctx.query().blobs().findAll().collect().asList().await().indefinitely();
+    blobs.forEach(item -> ID.apply(item.getId()));
+    
+    // tree id-s
+    final var trees = ctx.query().trees().findAll().collect().asList().await().indefinitely()
+        .stream()
+        .sorted((a, b) -> ComparisonChain.start()
+            .compare(
+                ID.apply(a.getId()), 
+                ID.apply(b.getId())
+            ).result())
+        .toList();
+    
+    trees.forEach(item -> {
+      ID.apply(item.getId());
+      
+      item.getValues().values().stream()
+      .sorted((a, b) -> ComparisonChain.start()
+          .compare(
+              ID.apply(a.getBlob()), 
+              ID.apply(b.getBlob())
+          ).result())
+      .forEach(e -> {
+        ID.apply(e.getBlob());
+        ID.apply(e.getName());
+      });
+    });
+    
+    
+    
     
     StringBuilder result = new StringBuilder();
 
@@ -207,7 +242,7 @@ public class GitPrinter {
       result.append("  - id: ").append(item.getName())
       .append(System.lineSeparator())
       .append("    commit: ").append(ID.apply(item.getCommit()))
-      .append(", message: ").append(item.getMessage())
+      .append(", message: ").append(replaceContent(item.getMessage(), replacements))
       .append(System.lineSeparator());
       
       return item;
@@ -224,7 +259,7 @@ public class GitPrinter {
       .append(System.lineSeparator())
       .append("    tree: ").append(ID.apply(item.getTree()))
       .append(", parent: ").append(item.getParent().map(e -> ID.apply(e)).orElse(""))
-      .append(", message: ").append(item.getMessage())
+      .append(", message: ").append(replaceContent(item.getMessage(), replacements))
       .append(System.lineSeparator());
       
       return item;
@@ -235,34 +270,53 @@ public class GitPrinter {
     .append(System.lineSeparator())
     .append("Trees").append(System.lineSeparator());
     
-    ctx.query().trees()
-    .findAll().onItem()
-    .transform(item -> {
+    trees.forEach(item -> {
       result.append("  - id: ").append(ID.apply(item.getId())).append(System.lineSeparator());
-      item.getValues().entrySet().forEach(e -> {
+      
+      
+      
+      item.getValues().values().stream()
+      .sorted((a, b) -> ComparisonChain.start()
+          .compare(
+              ID.apply(a.getBlob()), 
+              ID.apply(b.getBlob())
+          ).result())
+      .forEach(e -> {
         result.append("    ")
-          .append(e.getValue().getBlob())
+          .append(ID.apply(e.getBlob()))
           .append(": ")
-          .append(e.getValue().getName())
+          .append(ID.apply(e.getName()))
           .append(System.lineSeparator());
       });
-      
-      return item;
-    }).collect().asList().await().indefinitely();
-    
-    
+    });
     
     result
     .append(System.lineSeparator())
     .append("Blobs").append(System.lineSeparator());
     
-    ctx.query().blobs()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - ").append(item.getId()).append(": ").append(item.getValue()).append(System.lineSeparator());
-      return item;
-    }).collect().asList().await().indefinitely();
+    
+    blobs.forEach(item -> {
+      result
+        .append("  - ")
+        .append(ID.apply(item.getId())).append(": ")
+        .append(replaceContent(item.getValue().encode(), replacements))
+        .append(System.lineSeparator());
+    });
     
     return result.toString();
   }
+  
+  
+  public static String replaceContent(String text, Map<String, String> replacements) {
+    try {
+      var newText = text;
+      for(Map.Entry<String, String> entry : replacements.entrySet()) {
+        newText = newText.replaceAll(entry.getKey(), entry.getValue());
+      }
+      return newText;
+    } catch(Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
 }
