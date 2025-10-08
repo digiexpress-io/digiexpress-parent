@@ -19,7 +19,7 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
   return (<GInputSurveyQuestion 
     id={element.id}
     disabled={disabled}
-    label={element.label}
+    label={store.form.toLabel(element.id)}
     description={description}
     index={index}
     value={element.value}

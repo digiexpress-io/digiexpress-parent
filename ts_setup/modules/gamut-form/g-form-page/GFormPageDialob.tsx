@@ -61,7 +61,7 @@ const Internal: React.FC<GFormBaseElementProps> = ({ actionItem: element, formSt
   return (
     <GFormPage
       id={element.id}
-      title={element.label}
+      title={store.form.toLabel(element.id)}
       children={children}
       active={meta.active}
       pageNumber={meta.order}

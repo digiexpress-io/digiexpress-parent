@@ -11,7 +11,7 @@ export const GFormNoteValidationDialob: React.FC<GFormBaseElementProps> = ({ act
   return (
     <GFormNoteValidation
       id={element.id}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       style={style}
       description={element.description}
     />);

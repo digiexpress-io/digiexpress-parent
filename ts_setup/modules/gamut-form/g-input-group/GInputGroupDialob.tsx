@@ -13,7 +13,7 @@ export const GInputGroupDialob: React.FC<GFormBaseElementProps> = ({ disabled, a
     <GInputGroup
       disabled={disabled}
       id={element.id}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={description}
       children={children}
       onAddRow={(id: string) => store.addRowToGroup(id)}

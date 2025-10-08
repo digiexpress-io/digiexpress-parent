@@ -10,7 +10,7 @@ export const GFormNoteDialob: React.FC<GFormBaseElementProps> = ({ actionItem: e
   return (
     <GFormNote
       id={element.id}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={element.description}
       style={style}
     />);

@@ -33,7 +33,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ disable
     <GInputMultilist
       id={element.id}
       disabled={disabled}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={desc}
       required={!!element.required}
       variant={element.props?.variant ?? 'multilist'}

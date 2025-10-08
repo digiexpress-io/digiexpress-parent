@@ -51,7 +51,7 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
     <GInputTextArea
       id={element.id}
       disabled={disabled}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={desc}
       errors={errors}
       required={!!element.required}

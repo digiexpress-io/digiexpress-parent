@@ -3,6 +3,15 @@ import { parsePage } from './parsePage';
 import { parseInputRow } from './parseInputRow';
 
 
+
+function withLinebreaks(content: string | undefined): string | undefined {
+  if (!content) {
+    return content;
+  }
+  return content.replaceAll('\n\n', '\n\n&nbsp;\n\n');
+}
+
+
 export class FormImpl implements DialobApi.Form {
   private _state: Readonly<DialobApi.FormState>; // internal state used by backend
   private _dirty: DialobApi.ControlId[];
@@ -120,10 +129,20 @@ export class FormImpl implements DialobApi.Form {
     if (sessionItem.description.replace(/\r\n/g, '').replace(/\n/g, '').replace(/\u200B/g, '').trim().length === 0) {
       return undefined;
     }
-    return sessionItem.description;
+    return withLinebreaks(sessionItem.description);
   }
-  
-  
+  public toLabel(id: string): string | undefined {
+    const sessionItem = this.getItem(id)!
+    if (!sessionItem.label || sessionItem.label?.trim().length === 0) {
+      return undefined;
+    }
+    // \r\n = windows line break, \n = unix line break, \u200B = unicode zero-width space
+    if (sessionItem.label.replace(/\r\n/g, '').replace(/\n/g, '').replace(/\u200B/g, '').trim().length === 0) {
+      return undefined;
+    }
+    return withLinebreaks(sessionItem.label);
+  }
+
   public get pages(): readonly DialobApi.ControlPage[] {
     return Object.freeze(this.pagesIds
       .map(id => this.toPage(id))
