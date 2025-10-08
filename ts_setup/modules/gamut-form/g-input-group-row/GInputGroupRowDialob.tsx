@@ -12,7 +12,7 @@ export const GInputGroupRowDialob: React.FC<GFormBaseElementProps> = ({ disabled
     <GInputGroupRow
       id={element.id}
       disabled={disabled}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={description}
       children={children}
       order={meta.order}

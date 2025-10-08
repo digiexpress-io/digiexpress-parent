@@ -51,24 +51,41 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
   
   @Override
   public Uni<TagomiContainer.Tag> tag(CreateTag init) {
-    return store.stateQuery().getState()
+    
+    
+    final Uni<TagomiContainer.Tag> command = store.stateQuery().getState()
         .onItem().transform(state -> {
           final var gid = OidUtils.gen();
           final var release = ImmutableTag.builder()
               .id(gid)
               .name(init.getTagName())
-              .commitId(state.getCommitId())
+              .commitId(Optional.ofNullable(state.getCommitId()).orElse(state.getCommitId()))
+              .note(init.getNote())
               .build();
           return assertUniqueId(release, state);
         })
         .onItem().transformToUni(request -> store.upsertBuilder().create(request));
+    
+    
+    if(init.getCommitId() == null) {
+      return command;
+    } 
+    
+    // validate commit id
+    return store.stateQuery().getStateByCommitId(init.getCommitId())
+        .onItem().transformToUni((ignore) -> command);
   }
   @Override
   public Uni<TagomiContainer.Locale> locale(CreateLocale init) {
     return store.stateQuery().getState()
         .onItem().transform(state -> {
           final var gid = OidUtils.gen();
-          final var locale = ImmutableLocale.builder().id(gid).localeCode(init.getLocaleCode()).enabled(true).build();
+          final var locale = ImmutableLocale.builder()
+              .id(gid)
+              .localeCode(init.getLocaleCode())
+              .enabled(true)
+              .getDefault(Boolean.FALSE)
+              .build();
 
           final var duplicate = state.getLocales().values().stream()
               .filter(p -> p.getLocaleCode().equals(init.getLocaleCode()))

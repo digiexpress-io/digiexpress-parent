@@ -30,7 +30,7 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
     <GInputList
       id={element.id}
       disabled={disabled}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={desc}
       required={!!element.required}
       errors={errors}

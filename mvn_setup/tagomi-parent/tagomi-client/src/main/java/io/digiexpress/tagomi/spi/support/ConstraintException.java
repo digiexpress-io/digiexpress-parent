@@ -22,6 +22,7 @@ package io.digiexpress.tagomi.spi.support;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
@@ -36,6 +37,10 @@ public class ConstraintException extends RuntimeException {
     this.entity.add(entity);
   }
   
+  public ConstraintException(String msg) {
+    super(msg(Collections.emptyList(), msg));
+  }
+  
   public List<TagomiContainer.IsTagomiObject> getEntity() {
     return entity;
   }
@@ -44,6 +49,9 @@ public class ConstraintException extends RuntimeException {
     StringBuilder messages = new StringBuilder()
       .append(System.lineSeparator())
       .append("  - ").append(msg);
+    if(entity.isEmpty()) {
+      return messages.toString();
+    }
     return new StringBuilder("Can't save entity: ")
         .append(entity.get(0).getDocType())
         .append(", because of: ").append(messages)

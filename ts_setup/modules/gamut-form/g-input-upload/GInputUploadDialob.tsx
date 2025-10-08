@@ -18,7 +18,7 @@ export const GInputUploadDialob: React.FC<GFormBaseElementProps> = ({ disabled, 
     <GInputUpload
       id={element.id}
       disabled={disabled}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={desc}
       errors={errors}
       value={element.value}

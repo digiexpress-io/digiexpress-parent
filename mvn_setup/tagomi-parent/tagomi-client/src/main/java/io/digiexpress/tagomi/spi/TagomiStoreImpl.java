@@ -2,7 +2,6 @@ package io.digiexpress.tagomi.spi;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
@@ -10,6 +9,7 @@ import io.digiexpress.tagomi.api.TagomiStore;
 import io.digiexpress.tagomi.api.TagomiStoreConfig;
 import io.digiexpress.tagomi.api.entities.ImmutableTag;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
+import io.digiexpress.tagomi.spi.builders.QueryBuilderImpl;
 import io.digiexpress.tagomi.spi.builders.UpsertBuilderImpl;
 import io.digiexpress.tagomi.spi.support.RepoException;
 import io.digiexpress.tagomi.spi.support.StoreException;
@@ -45,11 +45,11 @@ public class TagomiStoreImpl implements TagomiStore {
         return config.getClient().git(config.getTenantName()).tenants()
             .get().onItem().transform(objects -> {
               if(objects.getStatus() != QueryEnvelopeStatus.OK) {
-                throw new StoreException("TAGOMI_BRANCH_QUERY_FAIL", null, 
+                throw new StoreException("TAGOMI_TAG_QUERY_FAIL", null, 
                     StoreExceptionMsg.builder()
                     .id(objects.getRepo().getId())
                     .value(objects.getRepo().getName())
-                    .args(objects.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
+                    .args(objects.getMessages().stream().map(message -> message.getText()).collect(Collectors.toList()))
                     .build()); 
               }
               
@@ -65,9 +65,19 @@ public class TagomiStoreImpl implements TagomiStore {
       }
 
       @Override
-      public Uni<Optional<Branch>> findOneBranch() {
-        // TODO Auto-generated method stub
-        return null;
+      public Uni<List<Branch>> findOneBranch() {
+        return config.getClient().git(config.getTenantName()).tenants()
+            .get().onItem().transform(objects -> {
+              if(objects.getStatus() != QueryEnvelopeStatus.OK) {
+                throw new StoreException("TAGOMI_BRANCH_QUERY_FAIL", null, 
+                    StoreExceptionMsg.builder()
+                    .id(objects.getRepo().getId())
+                    .value(objects.getRepo().getName())
+                    .args(objects.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
+                    .build()); 
+              }
+              return objects.getObjects().getBranches().values().stream().toList();
+            });
       }
     };
   }
@@ -131,8 +141,7 @@ public class TagomiStoreImpl implements TagomiStore {
 
   @Override
   public StateQuery stateQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new QueryBuilderImpl(config);
   }
   
   protected TagomiStoreImpl createWithNewConfig(TagomiStoreConfig config) {

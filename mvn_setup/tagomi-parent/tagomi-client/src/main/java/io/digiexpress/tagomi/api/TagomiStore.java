@@ -1,7 +1,6 @@
 package io.digiexpress.tagomi.api;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -21,7 +20,7 @@ public interface TagomiStore {
 
   
   interface BranchQuery {
-    Uni<Optional<io.resys.thena.api.entities.git.Branch>> findOneBranch();
+    Uni<List<io.resys.thena.api.entities.git.Branch>> findOneBranch();
     Uni<List<TagomiContainer.Tag>> findAllTags();
   }
   

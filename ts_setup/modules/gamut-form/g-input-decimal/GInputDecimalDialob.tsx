@@ -17,7 +17,7 @@ export const GInputDecimalDialob: React.FC<GFormBaseElementProps> = ({ disabled,
     <GInputDecimal
       id={element.id}
       disabled={disabled}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={desc}
       errors={errors}
       required={!!element.required}

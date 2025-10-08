@@ -16,7 +16,7 @@ export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
   return (
     <GFormGroup
       id={element.id}
-      label={element.label}
+      label={store.form.toLabel(element.id)}
       description={desc}
       children={children}
       level={parents.length}

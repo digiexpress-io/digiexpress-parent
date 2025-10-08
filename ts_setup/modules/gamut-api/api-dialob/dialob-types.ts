@@ -183,6 +183,8 @@ export declare namespace DialobApi {
     getValueSet(id: string): ActionValueSet | undefined;
 
     toDescription(id: ControlId): string | undefined;
+    toLabel(id: ControlId): string | undefined;
+
     toErrors(id: ControlId): ActionError[];
     toPage(id: ControlId): ControlPage;
     toValueSet(id: ControlId): ActionValueSet | undefined;
