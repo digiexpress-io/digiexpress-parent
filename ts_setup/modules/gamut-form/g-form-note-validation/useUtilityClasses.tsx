@@ -20,7 +20,6 @@ export function useThemeInfra(initProps: GFormNoteValidationProps) {
 const useUtilityClasses = (ownerState: GFormNoteValidationProps) => {
   const slots = {
     root: ['root', ownerState.id],
-    popover: ['popover']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -50,12 +49,21 @@ export const GFormNoteValidationRoot = styled(Alert, {
     },
     '& .MuiAlert-icon .MuiIconButton-root .MuiSvgIcon-root': {
       color: severityColor,
-    },
-    '& .MuiPaper-root.MuiPopover-paper': {
-      backgroundColor: 'pink',
-      padding: theme.spacing(2)
     }
   };
 });
+
+
+export const StyledPopover = styled(Popover)(({ theme }) => ({
+  wordBreak: 'break-word',
+  maxWidth: '70vw',
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '100vw',
+  },
+  '& .MuiPaper-root': {
+    padding: theme.spacing(2),
+    boxShadow: '0px 8px 24px rgba(0,0,0,0.2)'
+  }
+}));
 
 

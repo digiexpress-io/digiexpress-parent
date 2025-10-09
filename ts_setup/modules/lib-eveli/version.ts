@@ -1,9 +1,9 @@
 import { VersionInfoApi } from "@dxs-ts/envir-util";
-export const version = '2.0.32';export const build_time = '10/04/2025, 15:57:26';
+export const version = '2.0.34';export const build_time = '10/08/2025, 13:50:09';
 export const renderVersion = () => VersionInfoApi.builder()
           .setLogo('logo_1_great_ones_wisdom')
           .setTheme('red')
-          .setProjectInfo('@dxs-ts/eveli-ide', '2.0.32', '10/04/2025, 15:57:26')
+          .setProjectInfo('@dxs-ts/eveli-ide', '2.0.34', '10/08/2025, 13:50:09')
           .addInternalComponents(['@dxs-ts/gamut-api','@dxs-ts/gamut-theme','@dxs-ts/gamut-form','@dxs-ts/gamut-md','@dxs-ts/gamut-shell','@dxs-ts/gamut-form-review','@dxs-ts/gamut-intl','@dxs-ts/envir-fetch','@dxs-ts/envir-util','@dxs-ts/user-profile','@dxs-ts/wrench-api','@dxs-ts/wrench-routes','@dxs-ts/stencil-api','@dxs-ts/stencil-routes','@dxs-ts/task-api','@dxs-ts/task-feedback','@dxs-ts/eveli-api','@dxs-ts/eveli-primitives','@dxs-ts/eveli-intl','@dxs-ts/eveli-routes','@dxs-ts/xui-datetime','@dxs-ts/xui-table','@dxs-ts/task-composer-v1','@dxs-ts/task-composer-v2'])
           .addExternalComponents(['@material-table/core@6.4.4','@monaco-editor/react@4.7.0','@mui/icons-material@6.5.0','@mui/material@6.5.0','@mui/system@6.5.0','@mui/x-tree-view@7.29.1','@tanstack/react-query@5.83.0','@tanstack/react-router@1.130.2','@tanstack/react-store@0.7.7','@tanstack/react-table@8.21.3','@uiw/react-md-editor@4.0.8','@xyflow/react@12.8.2','diff2html@3.4.52','elkjs/lib/elk.bundled.js@0.9.3','file-saver@2.0.5','js-file-download@0.4.12','leaflet-geosearch@4.2.0','luxon@3.7.1','monaco-editor@0.52.2','notistack@3.0.2','numbro@2.5.0','react@18.3.1','react-intl@6.8.9','react-leaflet@4.2.1','react-markdown@10.1.0','recharts@2.15.4','ts-md5@1.3.1','yaml@2.8.1'])
           .render();

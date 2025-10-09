@@ -38,6 +38,7 @@ export const GInputAdornmentRoot = styled('div', {
   overridesResolver: (props, styles) => {
     return [
       styles.root,
+      styles.contentText,
       ...useVariantOverride(props, styles)
     ];
   },

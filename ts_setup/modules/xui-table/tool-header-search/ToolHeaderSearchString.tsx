@@ -21,6 +21,7 @@ export const ToolHeaderSearchString: React.FC<ToolHeaderSearchStringProps> = ({ 
   const intl = useIntl();
   const search = useHeaderSearchState(header);
   const items = useHeaderItems(header.column);
+
   const title: string = header.column.columnDef.header?.toString().toLowerCase() ?? '';
   
   function handleClearFilters() {
@@ -47,10 +48,11 @@ export const ToolHeaderSearchString: React.FC<ToolHeaderSearchStringProps> = ({ 
   }
 
 
+
   return (
     <>
       <FilterByStringSlot className={classes.filterByString}>
-        <Typography>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterBy', defaultMessage: 'Filter by ' })}{title}</Typography>
+        <Typography>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterBy' }, { title })}</Typography>
         <TextField placeholder='Search' value={search.valueAsString ?? ''} onChange={handleStringChange} onKeyDown={_disableMaterialUIFocusOnUl}
           slotProps={{
             input: {

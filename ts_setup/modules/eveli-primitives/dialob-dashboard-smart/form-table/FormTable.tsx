@@ -77,21 +77,32 @@ export const FormTable: React.FC<{}> = () => {
       meta: {
         enableSelection: true
       },
+      filterFn: (row, _columnId, filterValue) => {
+        const labels: string[] = row.original.metadata?.labels ?? [];
+        if (!filterValue || filterValue.length === 0) {
+          return true;
+        }
+        return (
+          filterValue.some((val: string) => labels.includes(val))
+        );
+      },
       cell: row => <FormTableLabelRow value={row.row.original} />,
     },
     {
       header: '',
-      accessorKey: 'metadata.labels',
+      accessorKey: 'metadata.tools',
       size: 100,
+      enableColumnFilter: false,
+      enableSorting: false,
       minSize: 100,
       cell: row => <FormTableToolbarRow value={row.row.original} />,
     }
   ]
 
   return (
-    <WithTableStyles 
+    <WithTableStyles
       data={forms} columns={columns} options={{ tableId: 'dialob_dashboard' }}
-      slots={{ drawer: { 'export-data': FormTableDownloadAll }}}
+      slots={{ drawer: { 'export-data': FormTableDownloadAll } }}
     />
   );
 }
