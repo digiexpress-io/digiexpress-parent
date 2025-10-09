@@ -1,0 +1,60 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/envir-fetch": [
+        "../envir-fetch/index.ts"
+      ],
+      "@dxs-ts/tagomi-api": [
+        "../tagomi-api/index.ts"
+      ],
+      "@dxs-ts/eveli-api": [
+        "../eveli-api/index.ts"
+      ],
+      "@dxs-ts/eveli-primitives": [
+        "../eveli-primitives/index.ts"
+      ],
+      "@dxs-ts/xui-table": [
+        "../xui-table/index.ts"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../envir-fetch"
+    },
+    {
+      "path": "../tagomi-api"
+    },
+    {
+      "path": "../eveli-api"
+    },
+    {
+      "path": "../eveli-primitives"
+    },
+    {
+      "path": "../xui-table"
+    },
+    {
+      "path": "../xui-datetime"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-10-09T12:39:29.154Z",
+    "forModule": "@dxs-ts/tagomi-routes",
+    "fromRegistry": "90c574ee9340",
+    "alias": {
+      "@dxs-ts/tagomi-routes": [
+        "../xui-datetime"
+      ]
+    }
+  }
+}
