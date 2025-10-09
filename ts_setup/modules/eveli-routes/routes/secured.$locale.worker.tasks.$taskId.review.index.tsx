@@ -65,7 +65,7 @@ const PdfOptionsSelect: React.FC<{
         <Box display='flex' justifyContent='space-between' alignItems='flex-end'>
           <Stack direction='column'>
             <Typography fontWeight={500}>
-              {intl.formatMessage({ id: 'task.pdf.options.select' })}WWWWWWW
+              {intl.formatMessage({ id: 'task.pdf.options.select' })}
             </Typography>
             <Typography variant='subtitle2'>
               {intl.formatMessage({ id: 'task.pdf.options.select.desc' })}
