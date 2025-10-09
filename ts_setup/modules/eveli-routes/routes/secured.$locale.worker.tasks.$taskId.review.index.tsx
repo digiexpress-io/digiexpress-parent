@@ -25,8 +25,17 @@ function Component() {
 
   return (
     <Container>
-      <div className='GFormPage-root'><PdfOptionsSelect state={options} onPdfCreate={handlePdfClick} /></div>
-      {React.useMemo(() => <DialobReviewBasedOnForm taskId={taskId} questionnaireId={''} onClose={() => { }} />, [taskId])}
+      {React.useMemo(() => (
+        <DialobReviewBasedOnForm
+          taskId={taskId}
+          questionnaireId={''}
+          onClose={() => { }}
+        />
+      ), [taskId])}
+
+      <Box mt={3} className='GFormPage-root'>
+        <PdfOptionsSelect state={options} onPdfCreate={handlePdfClick} />
+      </Box>
     </Container>
   )
 }
@@ -56,7 +65,7 @@ const PdfOptionsSelect: React.FC<{
         <Box display='flex' justifyContent='space-between' alignItems='flex-end'>
           <Stack direction='column'>
             <Typography fontWeight={500}>
-              {intl.formatMessage({ id: 'task.pdf.options.select' })}
+              {intl.formatMessage({ id: 'task.pdf.options.select' })}WWWWWWW
             </Typography>
             <Typography variant='subtitle2'>
               {intl.formatMessage({ id: 'task.pdf.options.select.desc' })}
