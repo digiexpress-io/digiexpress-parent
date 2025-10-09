@@ -3,7 +3,7 @@ import React from 'react';
 import { IconButton, Popover, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { GMarkdown } from '@dxs-ts/gamut-md';
-import { GFormNoteValidationRoot } from './useUtilityClasses';
+import { GFormNoteValidationRoot, StyledPopover } from './useUtilityClasses';
 import { useThemeInfra } from './useUtilityClasses';
 
 export interface GFormNoteValidationClasses {
@@ -47,27 +47,27 @@ export const GFormNoteValidation: React.FC<GFormNoteValidationProps> = (initProp
         <GMarkdown>{props.label}</GMarkdown>
       </GFormNoteValidationRoot>
 
-      <Popover
+      <StyledPopover
         open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={handleClose}
-        sx={{
-          maxWidth: '60vw',
-          textWrap: 'wrap',
-          wordBreak: 'break-word',
-          '.MuiPaper-root': {
-            padding: 2
-          }
-        }}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
         }}
       >
-        <Typography>
+        <GMarkdown
+          overrides={{
+            p: ({ children }) => (
+              <Typography sx={{ marginBottom: '0px !important' }} >
+                {children}
+              </Typography>
+            ),
+          }}
+        >
           {props.description}
-        </Typography>
-      </Popover>
+        </GMarkdown >
+      </StyledPopover>
     </>
   )
 }

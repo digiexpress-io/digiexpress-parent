@@ -1,7 +1,7 @@
 import React from 'react';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useThemeInfra, GInputAdornmentRoot } from './useThemeInfra';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { GMarkdown } from '@dxs-ts/gamut-md';
 
@@ -41,11 +41,19 @@ export const GInputAdornment: React.FC<GInputAdornmentProps> = (initProps) => {
     <GInputAdornmentRoot ownerState={ownerState} as={ownerState.component} className={classes.root}>
       <IconButton disabled={props.disabled} onClick={handleOpen}><HelpOutlineIcon /></IconButton>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{props.title}</DialogTitle>
+        <DialogTitle variant='h2'>{props.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            <GMarkdown>{props.children}</GMarkdown>
-          </DialogContentText>
+          <GMarkdown
+            overrides={{
+              p: ({ children }) => (
+                <Typography sx={{ marginBottom: '0px !important' }}>
+                  {children}
+                </Typography>
+              ),
+            }}
+          >
+            {props.children}
+          </GMarkdown>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} autoFocus variant='contained'><FormattedMessage id='gamut.buttons.close' /></Button>
