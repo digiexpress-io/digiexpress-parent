@@ -33,7 +33,7 @@ export declare namespace TagomiComposerApi {
   interface ContextType {
     session: Session;
     actions: Actions;
-    backend: TagomiApi.TagomiRestApi;
+    backend: TagomiApi.Backend;
   }
 
   interface TemplateUpdate {
@@ -82,7 +82,7 @@ export namespace TagomiComposerApi {
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
     actions: {} as Actions,
-    backend: {} as TagomiApi.TagomiRestApi
+    backend: {} as TagomiApi.Backend
   });
 
   export const useUnsaved = (article: TagomiApi.Service) => {
@@ -119,7 +119,7 @@ export namespace TagomiComposerApi {
   }
 
 
-  export const Provider: React.FC<{ children: React.ReactNode, backend: TagomiApi.TagomiRestApi }> = ({ children, backend }) => {
+  export const Provider: React.FC<{ children: React.ReactNode, backend: TagomiApi.Backend }> = ({ children, backend }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
     const actions = React.useMemo(() => {
       return new ReducerDispatch(dispatch, backend)

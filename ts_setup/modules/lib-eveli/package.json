@@ -23,6 +23,8 @@
     "@dxs-ts/wrench-routes": "*",
     "@dxs-ts/stencil-api": "*",
     "@dxs-ts/stencil-routes": "*",
+    "@dxs-ts/tagomi-api": "*",
+    "@dxs-ts/tagomi-routes": "*",
 
     "@dxs-ts/task-api": "*",
     "@dxs-ts/task-feedback": "*",

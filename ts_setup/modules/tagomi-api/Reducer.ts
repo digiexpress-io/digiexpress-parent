@@ -25,9 +25,9 @@ const ActionBuilder = {
 class ReducerDispatch implements TagomiComposerApi.Actions {
 
   private _sessionDispatch: React.Dispatch<Action>;
-  private _service: TagomiApi.TagomiRestApi;
+  private _service: TagomiApi.Backend;
   
-  constructor(session: React.Dispatch<Action>, service: TagomiApi.TagomiRestApi) {
+  constructor(session: React.Dispatch<Action>, service: TagomiApi.Backend) {
     this._sessionDispatch = session;
     this._service = service;
   }

@@ -127,7 +127,8 @@ export const FrontdeskApp: React.FC = () => {
                     'eveli_publication_only',
                     'smart_tables',
                     'user_profile',
-                    'batches']}>
+                    'batches',
+                    'tagomi']}>
 
                     <IamBackendProvider onExpire={handleExpire}>
                       <RouterProvider router={router} />

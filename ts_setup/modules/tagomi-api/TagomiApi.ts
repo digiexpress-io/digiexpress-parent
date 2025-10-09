@@ -224,9 +224,8 @@ export declare namespace TagomiApi {
   // REST API Interface
   // ============================================================================
 
-  export interface TagomiRestApi {
+  export interface Backend {
     // Query operations
-    getRoot(): Promise<TagomiContainer>;
     getSites(): Promise<TagomiContainer>;
     
     // Resource operations
