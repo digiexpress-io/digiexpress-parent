@@ -38,12 +38,22 @@ import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsMigrationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsTagomiController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir;
+import io.digiexpress.tagomi.api.ImmutableImage;
+import io.digiexpress.tagomi.api.ImmutableImageEnvlope;
+import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
+import io.digiexpress.tagomi.api.TagomiImageStorage;
+import io.digiexpress.tagomi.api.TagomiStoreConfig;
+import io.digiexpress.tagomi.spi.TagomiComposerImpl;
+import io.digiexpress.tagomi.spi.TagomiStoreImpl;
+import io.digiexpress.tagomi.spi.json.FromJsonObject;
+import io.digiexpress.tagomi.spi.json.ToJsonObject;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -83,9 +93,19 @@ public class EveliAutoConfigAssets {
     private final StencilClient stencil;
     private final HdesClient wrench;
     private final EveliPropsAssets assetProps;
+    private final TagomiStoreConfig tagomi;
   }
 
-  
+  @Bean
+  public AssetsTagomiController assetsTagomiController(
+      EveliEditEnvir context, 
+      WorkerAuthClient security, 
+      DialobClient dialobClient,
+      EveliEnvirClient envir
+  ) {
+
+    return new AssetsTagomiController(new TagomiComposerImpl(new TagomiStoreImpl(context.getTagomi()), context.getTagomi().getImageStorage()), envir);
+  }
   @Bean
   public AssetsAnyTagController assetsAnyTagController(
       EveliEditEnvir context, 
@@ -196,8 +216,39 @@ public class EveliAutoConfigAssets {
             .gidProvider(type -> UUID.randomUUID().toString())
             .authorProvider(() -> "eveli")
         ).build());
+    
+    final var tagomi = ImmutableTagomiStoreConfig.builder()
+        .client(GitDataSourceImpl.create().client(pgPool).build())
+        .tenantName("tagomi-assets")
+        .headName("main")
+        .deserializer(new FromJsonObject())
+        .serializer(new ToJsonObject())
+        .authorProvider(() -> "junit-test")
+        .imageStorage(new TagomiImageStorage() {
+          @Override
+          public Uni<ImageEnvlope> write(byte[] body) {
+            return Uni.createFrom()
+                .item(ImmutableImageEnvlope.builder()
+                .operationStatus(OperationStatus.OK)
+                .object(ImmutableImage.builder().id("1234")
+                    .body(body)
+                    .build())
+                .build());
+          }
+          @Override
+          public Uni<ImageEnvlope> read(String id) {
+            return Uni.createFrom().item(ImmutableImageEnvlope
+                .builder()
+                .operationStatus(OperationStatus.OK)
+                .object(ImmutableImage.builder().id("1234")
+                    .body(new byte[] {})
+                    .build())
+                .build());
+          }
+        })
+        .build();
 
-    return new EveliEditEnvir(stencilClient, wrenchClient, assetProps);
+    return new EveliEditEnvir(stencilClient, wrenchClient, assetProps, tagomi);
   }
   
   /**
@@ -213,8 +264,12 @@ public class EveliAutoConfigAssets {
         );
         */
     final var createdStencil = envir.getStencil().repo().create();
+    
+    final var createTagomi = new TagomiStoreImpl(envir.getTagomi()).tenantBuilder().createIfNot();
+    
+    
     return Uni.combine().all()
-        .unis(createdWrench, createdStencil)
+        .unis(createdWrench, createdStencil, createTagomi)
         .asTuple().onItem().transform(e -> envir);
   }
 }

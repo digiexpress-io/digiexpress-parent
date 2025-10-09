@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/tagomi-api",
+  "version": "${project.version}",
+  "description": "Tagomi API layer - data fetching, business logic, state management",
+  "main": "./index.ts",
+  "type": "module",
+
+  "note": "No internal dependencies - this is the foundation layer",
+  "dependencies": { },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "keywords": ["tagomi", "api", "data", "business-logic"],
+  "private": true
+}

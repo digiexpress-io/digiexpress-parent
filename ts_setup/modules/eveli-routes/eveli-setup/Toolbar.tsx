@@ -103,6 +103,23 @@ export const Toolbar: React.FC<{}> = ({ }) => {
         </EveliPermissions>
       </EveliTenantFeatureEnabled>
 
+      <EveliTenantFeatureEnabled id='TAGOMI_ENABLED'>
+        <EveliPermissions id='NAV_TO_TAGOMI'>
+          <div>
+            <IconButton
+              {...(location.pathname.includes('tagomi') ? { disabled: true, className: classes.itemActive } : {})}
+              onClick={() => navigate({
+                from: '/secured/$locale',
+                to: '/secured/$locale/assets/tagomi',
+                search: { explorer: [] }
+              })}>
+              <EditNoteOutlinedIcon />
+            </IconButton>
+            <Typography><FormattedMessage id='toolbar.tagomi' /></Typography>
+          </div>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
+
       <EveliPermissions id='NAV_TO_RELEASES'>
         <div>
           <IconButton {...(location.pathname.endsWith('publications') ? { disabled: true, className: classes.itemActive } : {})}

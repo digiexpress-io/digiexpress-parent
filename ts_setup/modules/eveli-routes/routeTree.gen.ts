@@ -29,6 +29,7 @@ import { Route as SecuredLocaleWorkerFeedbackIndexRouteImport } from './routes/s
 import { Route as SecuredLocaleWorkerDashboardIndexRouteImport } from './routes/secured.$locale.worker.dashboard.index'
 import { Route as SecuredLocaleWorkerBatchesIndexRouteImport } from './routes/secured.$locale.worker.batches.index'
 import { Route as SecuredLocaleAssetsWrenchIndexRouteImport } from './routes/secured.$locale.assets.wrench.index'
+import { Route as SecuredLocaleAssetsTagomiIndexRouteImport } from './routes/secured.$locale.assets.tagomi.index'
 import { Route as SecuredLocaleAssetsStencilIndexRouteImport } from './routes/secured.$locale.assets.stencil.index'
 import { Route as SecuredLocaleAssetsMigrateIndexRouteImport } from './routes/secured.$locale.assets.migrate.index'
 import { Route as SecuredLocaleAssetsFormsIndexRouteImport } from './routes/secured.$locale.assets.forms.index'
@@ -157,6 +158,12 @@ const SecuredLocaleAssetsWrenchIndexRoute =
     path: '/wrench/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
+const SecuredLocaleAssetsTagomiIndexRoute =
+  SecuredLocaleAssetsTagomiIndexRouteImport.update({
+    id: '/tagomi/',
+    path: '/tagomi/',
+    getParentRoute: () => SecuredLocaleAssetsRoute,
+  } as any)
 const SecuredLocaleAssetsStencilIndexRoute =
   SecuredLocaleAssetsStencilIndexRouteImport.update({
     id: '/stencil/',
@@ -251,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
   '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
+  '/secured/$locale/assets/tagomi': typeof SecuredLocaleAssetsTagomiIndexRoute
   '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
@@ -283,6 +291,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
   '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
+  '/secured/$locale/assets/tagomi': typeof SecuredLocaleAssetsTagomiIndexRoute
   '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesIndexRoute
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
@@ -319,6 +328,7 @@ export interface FileRoutesById {
   '/secured/$locale/assets/forms/': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate/': typeof SecuredLocaleAssetsMigrateIndexRoute
   '/secured/$locale/assets/stencil/': typeof SecuredLocaleAssetsStencilIndexRoute
+  '/secured/$locale/assets/tagomi/': typeof SecuredLocaleAssetsTagomiIndexRoute
   '/secured/$locale/assets/wrench/': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
   '/secured/$locale/worker/dashboard/': typeof SecuredLocaleWorkerDashboardIndexRoute
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/migrate'
     | '/secured/$locale/assets/stencil'
+    | '/secured/$locale/assets/tagomi'
     | '/secured/$locale/assets/wrench'
     | '/secured/$locale/worker/batches/'
     | '/secured/$locale/worker/dashboard'
@@ -388,6 +399,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/migrate'
     | '/secured/$locale/assets/stencil'
+    | '/secured/$locale/assets/tagomi'
     | '/secured/$locale/assets/wrench'
     | '/secured/$locale/worker/batches'
     | '/secured/$locale/worker/dashboard'
@@ -423,6 +435,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/forms/'
     | '/secured/$locale/assets/migrate/'
     | '/secured/$locale/assets/stencil/'
+    | '/secured/$locale/assets/tagomi/'
     | '/secured/$locale/assets/wrench/'
     | '/secured/$locale/worker/batches/'
     | '/secured/$locale/worker/dashboard/'
@@ -592,6 +605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleAssetsWrenchIndexRouteImport
       parentRoute: typeof SecuredLocaleAssetsRoute
     }
+    '/secured/$locale/assets/tagomi/': {
+      id: '/secured/$locale/assets/tagomi/'
+      path: '/tagomi'
+      fullPath: '/secured/$locale/assets/tagomi'
+      preLoaderRoute: typeof SecuredLocaleAssetsTagomiIndexRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
+    }
     '/secured/$locale/assets/stencil/': {
       id: '/secured/$locale/assets/stencil/'
       path: '/stencil'
@@ -691,6 +711,7 @@ interface SecuredLocaleAssetsRouteChildren {
   SecuredLocaleAssetsFormsIndexRoute: typeof SecuredLocaleAssetsFormsIndexRoute
   SecuredLocaleAssetsMigrateIndexRoute: typeof SecuredLocaleAssetsMigrateIndexRoute
   SecuredLocaleAssetsStencilIndexRoute: typeof SecuredLocaleAssetsStencilIndexRoute
+  SecuredLocaleAssetsTagomiIndexRoute: typeof SecuredLocaleAssetsTagomiIndexRoute
   SecuredLocaleAssetsWrenchIndexRoute: typeof SecuredLocaleAssetsWrenchIndexRoute
 }
 
@@ -699,6 +720,7 @@ const SecuredLocaleAssetsRouteChildren: SecuredLocaleAssetsRouteChildren = {
   SecuredLocaleAssetsFormsIndexRoute: SecuredLocaleAssetsFormsIndexRoute,
   SecuredLocaleAssetsMigrateIndexRoute: SecuredLocaleAssetsMigrateIndexRoute,
   SecuredLocaleAssetsStencilIndexRoute: SecuredLocaleAssetsStencilIndexRoute,
+  SecuredLocaleAssetsTagomiIndexRoute: SecuredLocaleAssetsTagomiIndexRoute,
   SecuredLocaleAssetsWrenchIndexRoute: SecuredLocaleAssetsWrenchIndexRoute,
 }
 

@@ -2127,6 +2127,48 @@
       "missingDependencies": [],
       "unusedDependencies": []
     },
+    "@dxs-ts/tagomi-api": {
+      "name": "@dxs-ts/tagomi-api",
+      "path": "modules/tagomi-api",
+      "packageJson": {
+        "name": "@dxs-ts/tagomi-api",
+        "version": "${project.version}",
+        "description": "Tagomi API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "tagomi",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
     "@dxs-ts/task-api": {
       "name": "@dxs-ts/task-api",
       "path": "modules/task-api",
@@ -3066,6 +3108,7 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
+      "@dxs-ts/tagomi-api": [],
       "@dxs-ts/task-api": [],
       "@dxs-ts/task-composer-v1": [
         "@dxs-ts/task-feedback",
@@ -3229,6 +3272,7 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide"
       ],
+      "@dxs-ts/tagomi-api": [],
       "@dxs-ts/task-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
@@ -3413,6 +3457,6 @@
       ]
     }
   },
-  "checksum": "f0d98d3eac036fcabb4dfb75b986324947b3abad02730e7532283d6567bd374b",
-  "generatedAt": "2025-10-03T15:27:44.548Z"
+  "checksum": "5299537a72b57b2553a96dd21d15975b4b5096fd17f8e16d87c6cfd0a6033ee7",
+  "generatedAt": "2025-10-09T11:45:17.757Z"
 }
