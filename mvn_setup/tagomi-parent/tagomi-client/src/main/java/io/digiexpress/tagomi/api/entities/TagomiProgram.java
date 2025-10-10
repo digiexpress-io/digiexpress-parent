@@ -32,6 +32,7 @@ import jakarta.annotation.Nullable;
 
 public interface TagomiProgram {
 
+  String getId();
   String getName();
   String getLocale();
 

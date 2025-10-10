@@ -1,4 +1,4 @@
-package io.digiexpress.tagomi.api;
+package io.digiexpress.tagomi.rust.entities;
 
 /*-
  * #%L
@@ -20,24 +20,19 @@ package io.digiexpress.tagomi.api;
  * #L%
  */
 
-import io.digiexpress.tagomi.api.entities.TagomiContainer;
-import io.digiexpress.tagomi.api.entities.TagomiWorld;
-import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
-import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public interface TagomiClient {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-  WorldBuilder createWorld();
-  
-  interface WorldBuilder {
-    WorldBuilder container(TagomiContainer container);
-    WorldBuilder datasource(@Nullable WorldDatasource datasource); // overwrite system default
-    Uni<TagomiWorld> build();
-  }
-  
-  @FunctionalInterface
-  interface WorldDatasource {
-    Uni<JsonObject> get(TagomiContainer.Service service, JsonObject props);
-  }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PdfResponse {
+    private String main;
+    private String base64;
+    
+    @JsonProperty("cost_in_millis")
+    private Long costInMillis;
 }

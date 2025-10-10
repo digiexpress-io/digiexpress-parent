@@ -20,31 +20,26 @@ package io.digiexpress.tagomi.api.entities;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 // world state after compilation 
 public interface TagomiWorld {
   Map<String, List<TagomiProgram>> getProgramsByName();
+  PdfCompiler compiler();
 
   interface PdfCompiler {
-    PdfCompiler inputField(String name, Serializable value);
-    PdfCompiler inputMap(Map<String, Serializable> input);
-    PdfCompiler inputEntity(Object inputObject);
-    PdfCompiler inputList(List<Object> inputObject);
-    PdfCompiler inputJson(JsonNode json);
+    PdfCompiler inputJson(JsonObject json);
     PdfCompiler locale(String locale);
-    
     Uni<PdfEnvelope> compile(String programIdOrName);
   }
   
@@ -53,13 +48,18 @@ public interface TagomiWorld {
   @JsonDeserialize(as = ImmutablePdfEnvelope.class)
   interface PdfEnvelope {
     TagomiPdfStatus getStatus();
+    @Nullable String getStatusMessage();
     @Nullable Pdf getValue();
   }
   
+  @Value.Immutable
+  @JsonSerialize(as = ImmutablePdf.class)
+  @JsonDeserialize(as = ImmutablePdf.class)
   interface Pdf {
     String getName();
+    @Nullable String getLocalisedName();
     String getLocale();
-    byte[] getBody();
+    String getBodyBase64(); 
   }
   
   enum TagomiPdfStatus {

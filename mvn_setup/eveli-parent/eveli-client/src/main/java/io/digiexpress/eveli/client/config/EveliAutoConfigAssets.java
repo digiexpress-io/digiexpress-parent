@@ -21,13 +21,16 @@ package io.digiexpress.eveli.client.config;
  */
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,8 +51,11 @@ import io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir;
 import io.digiexpress.tagomi.api.ImmutableImage;
 import io.digiexpress.tagomi.api.ImmutableImageEnvlope;
 import io.digiexpress.tagomi.api.ImmutableTagomiStoreConfig;
+import io.digiexpress.tagomi.api.TagomiClient;
 import io.digiexpress.tagomi.api.TagomiImageStorage;
 import io.digiexpress.tagomi.api.TagomiStoreConfig;
+import io.digiexpress.tagomi.api.entities.TagomiContainer.Service;
+import io.digiexpress.tagomi.spi.TagomiClientImpl;
 import io.digiexpress.tagomi.spi.TagomiComposerImpl;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
@@ -81,6 +87,8 @@ import lombok.extern.slf4j.Slf4j;
 public class EveliAutoConfigAssets {
   public static final String BEAN_NAME = "eveliEditEnvir";
   
+  
+  
   // TODO @Value("${app.version}")
   private String version = "alpha";
 
@@ -101,10 +109,31 @@ public class EveliAutoConfigAssets {
       EveliEditEnvir context, 
       WorkerAuthClient security, 
       DialobClient dialobClient,
-      EveliEnvirClient envir
+      EveliEnvirClient envir,
+      EveliPropsTagomi tagomiProps,
+      RestTemplate restTemplate,
+      ObjectMapper objectMapper
   ) {
-
-    return new AssetsTagomiController(new TagomiComposerImpl(new TagomiStoreImpl(context.getTagomi()), context.getTagomi().getImageStorage()), envir);
+    final var datasource = new TagomiClient.WorldDatasource() {
+      @Override
+      public Uni<JsonObject> get(Service service, JsonObject props) {
+        if(StringUtils.isEmpty(service.getOrchestratorName())) {
+          return Uni.createFrom().item(new JsonObject());
+        }
+        return envir.runtimeQuery().getOne()
+            .onItem().transform(runtime -> runtime.getWrench()
+                .inputJson(props)
+                .flow(service.getOrchestratorName())
+                .andGetBody())
+            .onItem().transform(result -> new JsonObject(new HashMap<>(result.getReturns())));
+      }
+    }; 
+    
+    final var tagomiClient = new TagomiClientImpl(objectMapper, datasource, restTemplate, tagomiProps.getServiceUrl());
+    return new AssetsTagomiController(
+        tagomiClient,
+        new TagomiComposerImpl(new TagomiStoreImpl(context.getTagomi()), context.getTagomi().getImageStorage()), 
+        envir);
   }
   @Bean
   public AssetsAnyTagController assetsAnyTagController(
