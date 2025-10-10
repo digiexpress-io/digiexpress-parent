@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import jakarta.annotation.Nullable;
-
 /*-
  * #%L
  * hdes-client-api
@@ -57,6 +55,8 @@ import io.resys.hdes.client.api.programs.ServiceProgram;
 import io.resys.hdes.client.api.programs.ServiceProgram.ServiceResult;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 public interface HdesClient {
   AstBuilder ast();
@@ -171,6 +171,8 @@ public interface HdesClient {
     ExecutorBuilder inputEntity(Object inputObject);
     ExecutorBuilder inputList(List<Object> inputObject);
     ExecutorBuilder inputJson(JsonNode json);
+    ExecutorBuilder inputJson(JsonObject json);
+    
     ExecutorBuilder input(ExecutorInput input);
     
     List<String> getFlowNames();

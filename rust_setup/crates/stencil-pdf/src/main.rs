@@ -33,8 +33,8 @@ async fn main() {
         .route("/compile", post(compile_pdf))
         .layer(CorsLayer::permissive());
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    info!("Server running on http://0.0.0.0:3000");
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8085").await.unwrap();
+    info!("Server running on http://0.0.0.0:8085");
     
     axum::serve(listener, app).await.unwrap();
 }

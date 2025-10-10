@@ -97,14 +97,14 @@ export namespace TagomiComposerApi {
 
   export const useComposer = () => {
     const result: ContextType = React.useContext(ComposerContext);
-    const isArticleSaved = (article: TagomiApi.Service): boolean => isSaved(article, result);
+    const isServiceSaved = (article: TagomiApi.Service): boolean => isSaved(article, result);
 
     return {
       session: result.session, 
       backend: result.backend, 
       actions: result.actions, 
       site: result.session.site,
-      isArticleSaved
+      isServiceSaved
     };
   }
 

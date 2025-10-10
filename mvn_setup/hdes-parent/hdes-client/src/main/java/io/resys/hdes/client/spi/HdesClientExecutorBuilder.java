@@ -51,6 +51,7 @@ import io.resys.hdes.client.spi.decision.DecisionProgramExecutor;
 import io.resys.hdes.client.spi.flow.FlowProgramExecutor;
 import io.resys.hdes.client.spi.groovy.ServiceProgramExecutor;
 import io.resys.hdes.client.spi.util.HdesAssert;
+import io.vertx.core.json.JsonObject;
 
 public class HdesClientExecutorBuilder implements ExecutorBuilder {
   private final ProgramEnvir envir;
@@ -97,6 +98,12 @@ public class HdesClientExecutorBuilder implements ExecutorBuilder {
   @Override
   public ExecutorBuilder inputJson(JsonNode inputObject) {
     this.data.entity(inputObject);
+    return this;
+  }
+
+  @Override
+  public ExecutorBuilder inputJson(JsonObject json) {
+    this.data.entity(json.mapTo(Map.class));
     return this;
   }
   @Override
