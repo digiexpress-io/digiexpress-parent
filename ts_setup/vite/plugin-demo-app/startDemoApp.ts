@@ -61,7 +61,8 @@ export function startDemoApp(options: {
       
       
           exclude: [
-            'modules/demo-app-eveli/node_modules/.vite'
+            'modules/demo-app-eveli/node_modules/.vite',
+            'modules/demo-app-eveli/node_modules/.vite/*'
           ]
 
         },
