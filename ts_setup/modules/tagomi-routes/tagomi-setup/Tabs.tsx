@@ -12,14 +12,14 @@ import { useIntl } from 'react-intl';
 
 const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const theme = useTheme();
-  const { isArticleSaved, session } = TagomiComposerApi.useComposer();
+  const { isServiceSaved, session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
     const view = session.services.find(view => view.service.id === item.article);
     if (!view) {
       return (<></>)
     }
-    const saved = isArticleSaved(view.service);
+    const saved = isServiceSaved(view.service);
     return (
       <SaveOutlined sx={saved ? { display: 'none' } : {
         display: 'inherit',
