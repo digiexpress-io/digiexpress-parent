@@ -18,7 +18,6 @@ import { LocalesOverview } from './LocalesOverview';
 import { StencilApi, StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 
 import { CancelButton, EveliPermissions, Switch } from '@dxs-ts/eveli-primitives';
-import { useStencilNav } from '../stencil-nav';
 import { LocaleComposer } from './LocaleComposer';
 
 
@@ -36,7 +35,6 @@ const LocalesView: React.FC<{}> = () => {
   const [editLocale, setEditLocale] = React.useState<StencilApi.SiteLocale | undefined>();
   const locales = Object.values(site.locales);
   const title = useIntl().formatMessage({ id: "locales" });
-  const { onTabCurrentClose } = useStencilNav();
   const [createLocaleOpen, setCreateLocaleOpen] = React.useState(false);
 
   const handleEnable = (locale: StencilApi.SiteLocale, enabled: boolean) => {
@@ -78,20 +76,21 @@ const LocalesView: React.FC<{}> = () => {
       </Dialog>) : null
     }
 
-    <Box display="flex" alignItems="center" my={1}>
+    <Box display="flex" alignItems="center" justifyContent="space-between" my={1}>
       <Box>
-        <Typography variant="h1">{title}{": "}{locales.length}</Typography>
-        <Typography variant="body2"><FormattedMessage id='locales.overview.description' /></Typography>
+        <Typography variant="h1">
+          {title}: {locales.length}
+        </Typography>
+        <Typography variant="body2">
+          <FormattedMessage id="locales.overview.description" />
+        </Typography>
       </Box>
-      <Box flexGrow={1} />
-      <Box display="flex" gap={1}>
-        <CancelButton onClick={() => onTabCurrentClose()} />
-        <EveliPermissions id='CREATE_STENCIL_ASSET'>
+
+      <EveliPermissions id="CREATE_STENCIL_ASSET">
         <Button variant="contained" onClick={() => setCreateLocaleOpen(true)}>
           <FormattedMessage id="button.create" />
         </Button>
-        </EveliPermissions>
-      </Box>
+      </EveliPermissions>
     </Box>
 
     <TableContainer component={Paper}>

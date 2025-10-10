@@ -9,7 +9,6 @@ import { OutputFormatType } from "diff2html/lib/types";
 
 import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
 import * as Burger from '@dxs-ts/eveli-primitives';
-import { useWrenchNav } from "../wrench-nav";
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 
@@ -121,7 +120,6 @@ const CompareView: React.FC = () => {
   const [disabled, setDisabled] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState<boolean>(false);
   const [diff, setDiff] = React.useState<HdesApi.DiffResponse>();
-  const { onTabCurrentClose } = useWrenchNav();
 
   React.useEffect(() => {
     if (base) {
@@ -155,7 +153,6 @@ const CompareView: React.FC = () => {
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <CancelButton onClick={() => onTabCurrentClose()} />
           <Button variant='contained'  onClick={() => setOpen(true)} disabled={disabled} ><FormattedMessage id='activities.compare.view'/></Button>
         </Box>
       </Box>

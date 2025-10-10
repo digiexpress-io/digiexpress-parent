@@ -8,12 +8,11 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { FormattedMessage } from 'react-intl';
 
 import { StencilApi, StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
-import { CancelButton, EveliPermissions } from '@dxs-ts/eveli-primitives';
+import { EveliPermissions } from '@dxs-ts/eveli-primitives';
 
 import { TemplateComposer } from './TemplateComposer';
 import { TemplateDelete } from './TemplateDelete';
 import { TemplateEdit } from './TemplateEdit';
-import { useStencilNav } from '../stencil-nav';
 
 
 
@@ -24,7 +23,6 @@ const TemplatesView: React.FC<{}> = () => {
   const [templateComposer, setTemplateComposer] = React.useState(false);
   const [templateDelete, setTemplateDelete] = React.useState<StencilApi.TemplateId>();
   const [templateEdit, setTemplateEdit] = React.useState<StencilApi.TemplateId>();
-  const { onTabCurrentClose } = useStencilNav();
 
 
   return (<>
@@ -37,17 +35,16 @@ const TemplatesView: React.FC<{}> = () => {
       <FormattedMessage id="templates" />
     </Typography>
 
-    <Box display='flex' alignItems='center' my={1}>
-      <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
-      <Box flexGrow={1} />
-      <Box display="flex" gap={1}>
-        <CancelButton onClick={() => onTabCurrentClose()} />
-        <EveliPermissions id='CREATE_STENCIL_ASSET'>
-          <Button variant='contained' onClick={() => setTemplateComposer(true)} >
-            <FormattedMessage id='button.create' />
-          </Button>
-        </EveliPermissions>
-      </Box>
+    <Box display="flex" alignItems="center" justifyContent="space-between" my={1}>
+      <Typography variant="body2" sx={{ mr: 2, flex: '1 1 auto' }}>
+        <FormattedMessage id="templates.templatesview.description" />
+      </Typography>
+
+      <EveliPermissions id="CREATE_STENCIL_ASSET">
+        <Button variant="contained" onClick={() => setTemplateComposer(true)}>
+          <FormattedMessage id="button.create" />
+        </Button>
+      </EveliPermissions>
     </Box>
 
     <TableContainer component={Paper}>
