@@ -96,6 +96,34 @@ export namespace TaskApi {
     DELEGATED: Colors.GREY,
     WAITING: Colors.GREY
   };
+
+  export const color_hex: Record<Colors, string> = {
+    [Colors.RED]:    '#f44336',
+    [Colors.BLUE]:   '#2196f3',
+    [Colors.GREEN]:  '#4caf50',
+    [Colors.YELLOW]: '#ffeb3b',
+    [Colors.GREY]:   '#9e9e9e',
+  };
+
+  export const task_priority_hex = Object.fromEntries(
+    Object.entries(task_priority_colors).map(([k, apiColor]) => [
+      k, color_hex[apiColor as Colors]
+    ])
+  ) as Record<TaskPriority, string>;
+
+  export const task_status_hex = Object.fromEntries(
+    Object.entries(task_status_colors).map(([k, apiColor]) => [
+      k, color_hex[apiColor as Colors]
+    ])
+  ) as Record<TaskStatus, string>;
+
+  export const get_contrast_text = (hex: string): string => {
+    const c = hex.replace('#', '');
+    const rgb = parseInt(c, 16);
+    const r = (rgb >> 16) & 0xff, g = (rgb >> 8) & 0xff, b = rgb & 0xff;
+    const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return luminance > 0.6 ? '#000000' : '#ffffff';
+  };
 }
 
 export declare namespace TaskApi {

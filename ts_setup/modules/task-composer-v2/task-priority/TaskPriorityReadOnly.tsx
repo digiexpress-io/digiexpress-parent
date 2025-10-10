@@ -5,7 +5,6 @@ import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@dxs-ts/task-api';
 import { useTaskDashboard } from '../task-dashboard';
-import { PriorityHex, getContrastText } from '../../eveli-primitives/eveli-theme';
 
 type Priority = TaskApi.TaskPriority;
 
@@ -32,17 +31,16 @@ const TaskPriorityRoot = styled('div', {
   },
 
 })<{ task: TaskApi.Task }>(({ theme, task }) => {
-  const bgColor = PriorityHex[task.priority!];
-  const textColor = getContrastText(bgColor);
+  const bgColor = TaskApi.task_priority_hex[task.priority!];
+  const textColor = TaskApi.get_contrast_text(bgColor);
 
   return {
     '& .MuiChip-root': {
-      backgroundColor: PriorityHex[task.priority!],
+      backgroundColor: bgColor,
       color: textColor,
     }
   }
 })
-
 
 export const useUtilityClasses = () => {
   const slots = {

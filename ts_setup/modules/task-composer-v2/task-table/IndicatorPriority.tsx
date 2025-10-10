@@ -3,7 +3,6 @@ import { alpha, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FormattedMessage } from 'react-intl';
 import { TaskApi } from '@dxs-ts/task-api';
-import { PriorityHex } from '../../eveli-primitives/eveli-theme';
 
 type PriorityType = 'HIGH' | 'NORMAL' | 'LOW';
 
@@ -17,7 +16,7 @@ export const IndicatorPriority: React.FC<{ type: PriorityType }> = ({ type }) =>
   const classes = useUtilityClasses();
 
   const apiPriority = mapToApiKey[type];
-  const color = PriorityHex[apiPriority];
+  const color = TaskApi.task_priority_hex[apiPriority];
   const labelId = `task.priority.${type.toLowerCase()}`;
 
   return (

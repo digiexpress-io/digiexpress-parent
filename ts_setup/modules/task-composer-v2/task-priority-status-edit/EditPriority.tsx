@@ -3,7 +3,6 @@ import { Button, ButtonGroup, generateUtilityClass, Stack, styled, Typography } 
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { TaskApi } from '@dxs-ts/task-api';
-import { PriorityHex } from '../../eveli-primitives/eveli-theme';
 
 export const EditPriority: React.FC<{
   priority: TaskApi.TaskPriority;
@@ -23,7 +22,7 @@ export const EditPriority: React.FC<{
         <ButtonGroup fullWidth className={classes.prioritySelect} disableElevation>
           {Object.entries(TaskApi.task_priority_messages).map(([key, message]) => {
             const level = key as TaskApi.TaskPriority;
-            const color = PriorityHex[level];
+            const color = TaskApi.task_priority_hex[level];
             const isActive = priority === level;
             return (
               <Button

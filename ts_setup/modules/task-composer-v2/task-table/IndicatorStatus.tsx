@@ -3,7 +3,6 @@ import { alpha, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FormattedMessage } from 'react-intl';
 import { TaskApi } from '@dxs-ts/task-api';
-import { StatusHex } from '../../eveli-primitives/eveli-theme';
 
 type Props = { status?: TaskApi.TaskStatus };
 
@@ -11,7 +10,7 @@ export const IndicatorStatus: React.FC<Props> = ({ status }) => {
   const classes = useUtilityClasses();
   if (!status) return null;
 
-  const color = StatusHex[status] ?? '#ccc5b9';
+  const color = TaskApi.task_status_hex[status] ?? '#ccc5b9';
 
   return (
     <Root className={classes.root} ownerState={{ color }}>
