@@ -109,13 +109,13 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
           <Typography>
             {intl.formatMessage({ id: 'eveli.batches.batchView.stepStatus.sucess', defaultMessage: 'Success' })}
             {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-            {metric?.valueStructured?.map.successCount}
+            {metric?.valueStructured?.successCount}
           </Typography>
 
           <Typography>
             {intl.formatMessage({ id: 'eveli.batches.batchView.stepStatus.failure', defaultMessage: 'Fail' })}
             {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-            {metric?.valueStructured?.map.failCount}
+            {metric?.valueStructured?.failCount}
           </Typography>
         </>
       )}

@@ -17,6 +17,7 @@ export const EveliFeatureMapping = {
   'LOGIN_BUTTON': notOneOf(['wrench-only']),
   'STENCIL_ENABLED': notOneOf(['stencil-disabled']),
   'WRENCH_ENABLED': notOneOf(['wrench-disabled']),
+  'TAGOMI_ENABLED': oneOf(['tagomi']),                    
   'PUBLICATION_UPDATE': notOneOf(['external-deployment']),                    
 
   'STENCIL_LOCALE_FILTER': oneOf(['stencil_locale_filter']),                  

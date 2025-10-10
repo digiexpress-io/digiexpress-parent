@@ -23,6 +23,8 @@
           "@dxs-ts/wrench-routes": "*",
           "@dxs-ts/stencil-api": "*",
           "@dxs-ts/stencil-routes": "*",
+          "@dxs-ts/tagomi-api": "*",
+          "@dxs-ts/tagomi-routes": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/eveli-intl": "*",
@@ -66,6 +68,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
@@ -124,6 +128,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
@@ -144,19 +150,6 @@
         "@tanstack/react-query",
         "react-intl",
         "notistack",
-        "@dxs-ts/gamut-api",
-        "@dxs-ts/gamut-theme",
-        "@dxs-ts/gamut-form",
-        "@dxs-ts/gamut-md",
-        "@dxs-ts/gamut-shell",
-        "@dxs-ts/gamut-form-review",
-        "@dxs-ts/gamut-intl",
-        "@dxs-ts/envir-fetch",
-        "@dxs-ts/envir-util",
-        "@dxs-ts/wrench-api",
-        "@dxs-ts/wrench-routes",
-        "@dxs-ts/stencil-api",
-        "@dxs-ts/stencil-routes",
         "react-dom",
         "@dxs-ts/eveli-ide"
       ],
@@ -170,6 +163,10 @@
         "react-dom"
       ],
       "actualInternalDependencies": [
+        "@dxs-ts/eveli-ide"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -183,10 +180,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
-        "@dxs-ts/eveli-ide"
-      ],
-      "missingDependencies": [],
-      "unusedDependencies": [
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
@@ -414,6 +409,7 @@
           "@dxs-ts/stencil-api": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/task-api": "*",
+          "@dxs-ts/tagomi-api": "*",
           "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/task-feedback": "*",
@@ -441,6 +437,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
@@ -475,6 +472,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
@@ -493,6 +491,7 @@
         "@dxs-ts/gamut-theme",
         "notistack",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
         "@dxs-ts/task-api",
         "@material-table/core"
@@ -513,6 +512,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
         "@dxs-ts/task-api"
       ],
@@ -723,6 +723,8 @@
           "@dxs-ts/stencil-routes": "*",
           "@dxs-ts/wrench-api": "*",
           "@dxs-ts/wrench-routes": "*",
+          "@dxs-ts/tagomi-api": "*",
+          "@dxs-ts/tagomi-routes": "*",
           "@dxs-ts/envir-fetch": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/eveli-api": "*",
@@ -770,6 +772,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -843,6 +847,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -887,6 +893,8 @@
         "notistack",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes"
       ],
@@ -925,6 +933,8 @@
         "@dxs-ts/gamut-shell",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes"
       ],
@@ -1732,6 +1742,8 @@
           "@dxs-ts/wrench-routes": "*",
           "@dxs-ts/stencil-api": "*",
           "@dxs-ts/stencil-routes": "*",
+          "@dxs-ts/tagomi-api": "*",
+          "@dxs-ts/tagomi-routes": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/eveli-api": "*",
@@ -1766,6 +1778,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -1794,6 +1808,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -1847,6 +1863,8 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/user-profile",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-datetime",
@@ -2126,6 +2144,184 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": []
+    },
+    "@dxs-ts/tagomi-api": {
+      "name": "@dxs-ts/tagomi-api",
+      "path": "modules/tagomi-api",
+      "packageJson": {
+        "name": "@dxs-ts/tagomi-api",
+        "version": "${project.version}",
+        "description": "Tagomi API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "tagomi",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
+    },
+    "@dxs-ts/tagomi-routes": {
+      "name": "@dxs-ts/tagomi-routes",
+      "path": "modules/tagomi-routes",
+      "packageJson": {
+        "name": "@dxs-ts/tagomi-routes",
+        "version": "${project.version}",
+        "description": "Tagomi route components - full page layouts, navigation",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/envir-fetch": "*",
+          "@dxs-ts/tagomi-api": "*",
+          "@dxs-ts/eveli-api": "*",
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/xui-table": "*",
+          "@dxs-ts/xui-datetime": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "luxon": "*",
+          "notistack": "*",
+          "@tanstack/react-router": "*",
+          "@tanstack/react-table": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/x-tree-view": "*",
+          "@mui/utils": "*",
+          "react-intl": "*",
+          "@uiw/react-md-editor": "*",
+          "js-file-download": "*"
+        },
+        "keywords": [
+          "tagomi",
+          "routes",
+          "navigation",
+          "layouts"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "react",
+        "luxon",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "react-intl",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ],
+      "peerDependencies": [
+        "react",
+        "luxon",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "react-intl",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ],
+      "externalDependencies": [
+        "react",
+        "luxon",
+        "notistack",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "react-intl",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
+      "actualDependencies": [
+        "@tanstack/react-router",
+        "react",
+        "@mui/material",
+        "notistack",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/stencil-api",
+        "react-intl",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/eveli-api",
+        "@mui/icons-material"
+      ],
+      "actualExternalDependencies": [
+        "@tanstack/react-router",
+        "react",
+        "@mui/material",
+        "notistack",
+        "react-intl",
+        "@mui/icons-material"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/stencil-api",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/eveli-api"
+      ],
+      "missingDependencies": [
+        "@dxs-ts/stencil-api"
+      ],
+      "unusedDependencies": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "luxon",
+        "@tanstack/react-table",
+        "@mui/x-tree-view",
+        "@mui/utils",
+        "@uiw/react-md-editor",
+        "js-file-download"
+      ]
     },
     "@dxs-ts/task-api": {
       "name": "@dxs-ts/task-api",
@@ -2913,6 +3109,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-intl",
@@ -2949,6 +3147,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
@@ -2973,6 +3172,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
@@ -3033,6 +3234,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3061,6 +3264,15 @@
       "@dxs-ts/stencil-routes": [
         "@dxs-ts/envir-fetch",
         "@dxs-ts/stencil-api",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
+      "@dxs-ts/tagomi-api": [],
+      "@dxs-ts/tagomi-routes": [
+        "@dxs-ts/envir-fetch",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-table",
@@ -3105,6 +3317,7 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-routes"
       ],
       "@dxs-ts/envir-util": [
@@ -3120,6 +3333,7 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-routes"
       ],
       "@dxs-ts/eveli-intl": [
@@ -3132,6 +3346,7 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-routes"
       ],
       "@dxs-ts/eveli-routes": [
@@ -3229,6 +3444,18 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide"
       ],
+      "@dxs-ts/tagomi-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/tagomi-routes"
+      ],
+      "@dxs-ts/tagomi-routes": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
       "@dxs-ts/task-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
@@ -3284,6 +3511,7 @@
         "@dxs-ts/eveli-ide",
         "@dxs-ts/gamut",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/wrench-routes",
@@ -3296,6 +3524,7 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback"
       ]
@@ -3324,6 +3553,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/stencil-api",
         "@dxs-ts/stencil-routes",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3413,6 +3644,6 @@
       ]
     }
   },
-  "checksum": "f0d98d3eac036fcabb4dfb75b986324947b3abad02730e7532283d6567bd374b",
-  "generatedAt": "2025-10-03T15:27:44.548Z"
+  "checksum": "4f7fc5d74cf75cf38d802e7678fdec48c96c0d353fc9f7eb88003cb81da396cb",
+  "generatedAt": "2025-10-10T06:12:23.799Z"
 }

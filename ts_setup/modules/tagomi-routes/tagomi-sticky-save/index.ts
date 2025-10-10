@@ -1,0 +1,1 @@
+export { TagomiStickySave } from './TagomiStickySave';

@@ -47,6 +47,12 @@
       "@dxs-ts/stencil-routes": [
         "../stencil-routes/index.ts"
       ],
+      "@dxs-ts/tagomi-api": [
+        "../tagomi-api/index.ts"
+      ],
+      "@dxs-ts/tagomi-routes": [
+        "../tagomi-routes/index.ts"
+      ],
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
@@ -124,6 +130,12 @@
       "path": "../stencil-routes"
     },
     {
+      "path": "../tagomi-api"
+    },
+    {
+      "path": "../tagomi-routes"
+    },
+    {
       "path": "../task-api"
     },
     {
@@ -156,9 +168,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-28T09:40:29.814Z",
+    "at": "2025-10-09T12:41:20.856Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "84d234dfa593",
+    "fromRegistry": "fc0ffdaca068",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

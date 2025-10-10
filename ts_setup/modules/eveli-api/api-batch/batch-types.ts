@@ -101,15 +101,15 @@ export declare namespace BatchApi {
     createdAt: string;
     updatedAt: string | undefined;
     valueStructured: {
-      map: {
-        cheapId: string | undefined;
-        maxCost: number | undefined;
-        minCost: number | undefined;
-        stepName: string | undefined;
-        failCount: number | undefined;
-        expensiveId: string | undefined;
-        successCount: number | undefined;
-      }
+      
+      cheapId: string | undefined;
+      maxCost: number | undefined;
+      minCost: number | undefined;
+      stepName: string | undefined;
+      failCount: number | undefined;
+      expensiveId: string | undefined;
+      successCount: number | undefined;
+    
     } | undefined;
  
   }

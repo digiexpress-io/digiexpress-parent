@@ -30,7 +30,9 @@ export const tenant_features = [
   'eveli_publication_only',
   'visual_accommodation',
   'dialob_dashboard_smart',
-  'batches'
+  'batches',
+  
+  'tagomi'
 ] as const;
 
 export type TenantFeature = typeof tenant_features[number];
