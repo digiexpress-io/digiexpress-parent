@@ -7,6 +7,7 @@ import { EveliActivities } from '@dxs-ts/eveli-primitives';
 
 import { useTagomiNav } from '../tagomi-nav';
 import { ServiceComposer } from '../tagomi-service';
+import { LocaleComposer } from '../tagomi-locale';
 
 
 export interface ActivityProps {
@@ -48,10 +49,18 @@ export function useActivities(): ActivityProps[] {
     {
       composer: ServiceComposer,
       onView: () => nav.onNav({ type: 'SERVICES' }),
-      title: <FormattedMessage id="activities.article.title" />,
-      desc: <FormattedMessage id="activities.article.desc" />,
-      buttonCreate: <FormattedMessage id="article.create" />,
+      title: <FormattedMessage id="tagomi.services.title" />,
+      desc: <FormattedMessage id="tagomi.services.desc" />,
+      buttonCreate: <FormattedMessage id="tagomi.service.create" />,
       buttonViewAll: undefined
+    },
+    {
+      composer: LocaleComposer,
+      onView: () => nav.onNav({ type: 'LOCALES' }),
+      title: <FormattedMessage id="tagomi.locales.title" />,
+      desc: <FormattedMessage id="tagomi.locales.desc" />,
+      buttonCreate: <FormattedMessage id="tagomi.locale.create" />,
+      buttonViewAll: undefined,
     },
   ])
 }

@@ -104,11 +104,11 @@ export declare namespace TagomiApi {
     services: Record<string, Service>;
   }
 
-  export interface Service {
+  export interface Service {  // container for locales/localised content
     id: string;
     docType: 'SERVICE';
     serviceName: string;
-    orchestratorName: string;
+    orchestratorName: string; // flow name where content data comes from
     labels: LocaleAndLabel[];
   }
 
@@ -120,7 +120,7 @@ export declare namespace TagomiApi {
     serviceId: string;
   }
 
-  export interface Resource {
+  export interface Resource { // aka image to include in content
     id: string;
     docType: 'RESOURCE';
     externalLocation: string;
