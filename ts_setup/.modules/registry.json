@@ -2286,27 +2286,31 @@
         "@tanstack/react-router",
         "react",
         "@mui/material",
-        "react-intl",
+        "notistack",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/stencil-api",
+        "react-intl",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/eveli-api",
-        "@mui/icons-material",
-        "notistack"
+        "@mui/icons-material"
       ],
       "actualExternalDependencies": [
         "@tanstack/react-router",
         "react",
         "@mui/material",
+        "notistack",
         "react-intl",
-        "@mui/icons-material",
-        "notistack"
+        "@mui/icons-material"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@dxs-ts/stencil-api"
+      ],
       "unusedDependencies": [
         "@dxs-ts/envir-fetch",
         "@dxs-ts/xui-table",
@@ -3640,6 +3644,6 @@
       ]
     }
   },
-  "checksum": "4b5ff2821ad23db6430fb9ef9373b51b0d238c5316190299dd3a1abe5f001dca",
-  "generatedAt": "2025-10-09T13:13:01.206Z"
+  "checksum": "4f7fc5d74cf75cf38d802e7678fdec48c96c0d353fc9f7eb88003cb81da396cb",
+  "generatedAt": "2025-10-10T06:12:23.799Z"
 }

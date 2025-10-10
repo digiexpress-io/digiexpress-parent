@@ -3,10 +3,10 @@ import React from 'react';
 import { Card, CardHeader, CardActions, CardContent, Box, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { EveliPermissions, EveliPermissionType, EveliActivities } from '@dxs-ts/eveli-primitives';
+import { EveliActivities } from '@dxs-ts/eveli-primitives';
 
 import { useTagomiNav } from '../tagomi-nav';
-
+import { ServiceComposer } from '../tagomi-service';
 
 
 export interface ActivityProps {
@@ -14,8 +14,6 @@ export interface ActivityProps {
   desc: React.ReactNode;
   buttonCreate: React.ReactNode;
   buttonViewAll?: React.ReactNode;
-  permissionTypeCreate: EveliPermissionType;
-  permissionTypeView: EveliPermissionType;
   onView?: () => void;
   composer: React.FC<{ onClose: () => void }>;
 }
@@ -35,13 +33,8 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
         <CardContent>{props.data.desc}</CardContent>
 
         <CardActions>
-          <EveliPermissions id={props.data.permissionTypeView}>
-            {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={props.data.buttonViewAll} /> : <Box />}
-          </EveliPermissions>
-
-          <EveliPermissions id={props.data.permissionTypeCreate}>
-            <Button onClick={handleOpen} children={props.data.buttonCreate} />
-          </EveliPermissions>
+          {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={props.data.buttonViewAll} /> : <Box />}
+          <Button onClick={handleOpen} children={props.data.buttonCreate} />
         </CardActions>
       </Card>
     </>
@@ -50,7 +43,17 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
 
 export function useActivities(): ActivityProps[] {
   const nav = useTagomiNav();
-  return ([])
+  return ([
+
+    {
+      composer: ServiceComposer,
+      onView: () => nav.onNav({ type: 'SERVICES' }),
+      title: <FormattedMessage id="activities.article.title" />,
+      desc: <FormattedMessage id="activities.article.desc" />,
+      buttonCreate: <FormattedMessage id="article.create" />,
+      buttonViewAll: undefined
+    },
+  ])
 }
 
 

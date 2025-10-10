@@ -28,7 +28,6 @@ export function toExplorerId(data: ExplorerItem): string {
       if (data.type === 'SERVICES') {
         return key === 'type';
       }
-
       return key === 'type' || key === 'services'
     })
     .reduce((result, [, value]) => result + '/' + value, ''));

@@ -1,6 +1,6 @@
 import React from 'react';
-import { MenuList, MenuItem, ListItemText } from '@mui/material';
-
+import { MenuList, MenuItem, ListItemText, Button } from '@mui/material';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { useIntl } from 'react-intl';
 
 
@@ -32,7 +32,7 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps, onClick: () => void }>
   )
 }
 
-const Secondary: React.FC<{}> = () => {
+export const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { activeItem, onNav } = useTagomiNav();
@@ -58,11 +58,14 @@ const Secondary: React.FC<{}> = () => {
 
 
       <EveliShellExplorer>
-        <>...</>
+        <Button startIcon={<CreateOutlinedIcon />}
+          className={classes.composeButton}
+          onClick={handleComposeSelectClick}>
+          {intl.formatMessage({ id: 'menu.compose' })}
+        </Button>
       </EveliShellExplorer>
     </>
   )
 }
-export { Secondary }
 
 
