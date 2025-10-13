@@ -10,6 +10,7 @@ import * as Burger from '@dxs-ts/eveli-primitives';
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
 import { useTagomiNav } from '../tagomi-nav';
 import { ServiceEdit } from './ServiceEdit';
+import { ServiceDelete } from './ServiceDelete';
 
 interface ServiceOptionsProps {
   service: TagomiApi.Service,
@@ -19,12 +20,11 @@ interface ServiceOptionsProps {
       { dialogOpen === 'NewPage' ? <NewPage articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'PageEdit' ? <PageEdit articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'PageDelete' ? <PageDelete articleId={article.id} onClose={handleDialogClose} /> : null}
-      { dialogOpen === 'ArticleDelete' ? <ArticleDelete articleId={article.id} onClose={handleDialogClose} /> : null}
  */
 
 export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const theme = useTheme();
-  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewPage' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ArticleDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
+  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewPage' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ServiceDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
 
   const { site, backend } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
@@ -35,6 +35,7 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   return (
     <>
       {dialogOpen === 'ServiceEdit' ? <ServiceEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
 
 
       {/** Article options */}
@@ -47,8 +48,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
         color='primary'
         icon={DeleteOutlineOutlinedIcon}
-        onClick={() => setDialogOpen('ArticleDelete')}
-        labelText={<FormattedMessage id="article.delete.title" />}>
+        onClick={() => setDialogOpen('ServiceDelete')}
+        labelText={<FormattedMessage id="tagomi.service.delete.title" />}>
       </Burger.TreeItemOption>
 
       {/** Page options */}

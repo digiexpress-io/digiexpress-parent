@@ -11,8 +11,6 @@ import { useFetch } from '@dxs-ts/envir-fetch';
 import { LocaleLabels } from '../tagomi-locale';
 
 
-
-
 const ServiceEdit: React.FC<{ serviceId: TagomiApi.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
   const { actions, site, backend } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
@@ -35,11 +33,7 @@ const ServiceEdit: React.FC<{ serviceId: TagomiApi.ServiceId, onClose: () => voi
     });
   }
 
-
   const updateDisabled = !serviceName || changeInProgress;
-
-  console.log("dddd", labels)
-
 
   return (
     <Dialog open={true} onClose={onClose}>
