@@ -10,17 +10,17 @@ import { useTagomiNav } from '../tagomi-nav';
 import { TagomiApi, TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 
-export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.TemplateId }> = (props) => {
+export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.ServiceId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { actions, site, backend } = Composer.useComposer();
   const [locale, setLocale] = React.useState('');
-  const [serviceId, setServiceId] = React.useState(props.serviceId ? props.serviceId : '');
+  const [serviceId, setServiceId] = React.useState<TagomiApi.ServiceId>(props.serviceId || '');
   const { onNav } = useTagomiNav();
 
   const service = serviceId ? site.services[serviceId] : undefined;
 
   const handleCreate = () => {
-    const entity: TagomiApi.CreateTemplate = { serviceId, locale, content: '' };
+    const entity: TagomiApi.CreateTemplate = { serviceId: service!.id, locale, content: '' };
     backend.createTemplate(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -36,7 +36,7 @@ export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: Tago
 
   const definedLocales: TagomiApi.LocaleId[] = service ?
     Object.values(site.templates)
-      .filter(template => template.serviceId === service.id)
+      .filter(template => template.id === service.id)
       .map(template => template.localeId) : [];
 
   const availableLocaleLabels = service ? service.labels.filter((label) => !definedLocales.includes(label.locale)) : [];
@@ -51,7 +51,7 @@ export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: Tago
         <Burger.Select
           selected={serviceId}
           onChange={setServiceId}
-          label='tagomi.service.newTemplate.name'
+          label='tagomi.service.name'
           items={Object.values(site.services).map((service) => ({
             id: service.id,
             value: service.serviceName
@@ -62,7 +62,7 @@ export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: Tago
           selected={locale}
           onChange={setLocale}
           disabled={!service || availableLocaleLabels.length === 0}
-          label='tagomi.locale.label.select'
+          label='tagomi.service.newTemplate.localeLabel.select'
           items={availableLocaleLabels.map((item) => ({
             id: item.locale,
             value: item.labelValue
