@@ -62,19 +62,16 @@ const WorkflowItem: React.FC<WorkflowItemProps> = (props) => {
 
 
 
-const ServiceItem: React.FC<{
-  serviceId: TagomiApi.ServiceId,
-  nodeId?: string,
-}> = ({ serviceId, nodeId }) => {
-  const theme = useTheme();
-  const intl = useIntl();
+const ServiceItem: React.FC<{ serviceId: TagomiApi.ServiceId, nodeId?: string }> = ({ serviceId, nodeId }) => {
 
+  const theme = useTheme();
   const { session, isServiceSaved } = Composer.useComposer();
   const view = session.getServiceView(serviceId);
   const { service, labels, templates } = view;
   const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
 
   const saved = isServiceSaved(service);
+
 
   return (
     <>
