@@ -166,6 +166,7 @@ public class UpdateBuilderImpl implements UpdateBuilder {
         .from(start)
         .body(ImmutableArticle.builder()
             .from(start.getBody())
+            .authOnly(changes.getAuthOnly())
             .devMode(changes.getDevMode())
             .name(changes.getName())
             .order(changes.getOrder())

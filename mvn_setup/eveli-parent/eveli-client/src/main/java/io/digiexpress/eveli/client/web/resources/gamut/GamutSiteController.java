@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableLocalizedSite;
@@ -45,11 +47,15 @@ public class GamutSiteController {
   
   private final EveliEnvirClient envir;
   private final FeedbackClient feedback;
+  private final GamutAuthClient auth;
 
   @GetMapping
   public Uni<LocalizedSite> getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
+    
+    final var isAuth = auth.getCustomer().getType() != CustomerType.ANON; 
+    
     return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
-      final var data = runtime.getStencil(OffsetDateTime.now()).getSites().get(locale);
+      final var data = runtime.getStencil(OffsetDateTime.now(), isAuth).getSites().get(locale);
       if(data == null) {
         final LocalizedSite failsafe = ImmutableLocalizedSite.builder().id("not-found")
             .images("images")

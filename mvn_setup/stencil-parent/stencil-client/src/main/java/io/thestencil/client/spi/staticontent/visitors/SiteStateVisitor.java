@@ -318,8 +318,14 @@ public class SiteStateVisitor {
         LOGGER.error("Failed to parse article '" + article.getBody().getName() + "', markdown must have atleast one h1(line starting with one # my super menu)");
       }
       
+      
+      Optional.ofNullable(article.getBody().getParentId())
+        .map(parentId -> entity.getArticles().get(parentId))
+        .map(parent -> parent.getBody().getAuthOnly());
+      
       result.add(ImmutableMarkdown.builder()
           .path(path)
+          .auth(isAuth(article, null))
           .locale(locale.get().getBody().getValue())
           .value(content)
           .addAllHeadings(ast.getHeadings())
@@ -327,6 +333,26 @@ public class SiteStateVisitor {
     }
     
     return result;
+  }
+  
+  private Boolean isAuth(Entity<Article> src, List<String> visited)  {
+
+    final var delegate = Optional.ofNullable(visited).orElse(new ArrayList<>());
+    if(delegate.contains(src.getId())) {
+      return false;
+    }
+    delegate.add(src.getId());
+    
+    if(Boolean.TRUE.equals(src.getBody().getAuthOnly())) {
+      return true;
+    }
+    final var parentId = src.getBody().getParentId();
+    if(parentId == null) {
+      return false;
+    }
+    
+    final var parent = this.entity.getArticles().get(parentId);
+    return isAuth(parent, delegate);
   }
   
   private String visitArticlePath(Entity<Article> src) {

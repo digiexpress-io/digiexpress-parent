@@ -25,18 +25,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
+import jakarta.annotation.Nullable;
 
 
 public interface MigrationBuilder {
@@ -74,17 +73,20 @@ public interface MigrationBuilder {
     String getValue();
   }
 
-  @JsonSerialize(as = TopicBean.class)
-  @JsonDeserialize(as = TopicBean.class)
+  @JsonSerialize(as = ImmutableTopic.class)
+  @JsonDeserialize(as = ImmutableTopic.class)
+  @Value.Immutable
   interface Topic {
     String getId();
     String getName();
+    
     List<String> getLinks();
     List<TopicHeading> getHeadings();
-    @Nullable
-    String getParent();
-    @Nullable
-    String getBlob();
+    @Nullable String getParent();
+    @Nullable String getBlob();
+    
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = JsonOnlyTrue.class)
+    @Nullable Boolean getAuth();
   }
 
   @JsonSerialize(as = TopicHeadingBean.class)
@@ -116,5 +118,13 @@ public interface MigrationBuilder {
     @Nullable String getFormName();
     @Nullable String getFormTag();
     @Nullable String getFlowName();
+  }
+  
+  public static class JsonOnlyTrue {
+    @Override
+    public boolean equals(Object obj) {
+      // Include in JSON only if value is true
+      return obj == null || !Boolean.TRUE.equals(obj);
+    }
   }
 }

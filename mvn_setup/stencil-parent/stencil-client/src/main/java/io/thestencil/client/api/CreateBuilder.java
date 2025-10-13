@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 
 import java.util.List;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -43,6 +41,7 @@ import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import jakarta.annotation.Nullable;
 
 public interface CreateBuilder {
   
@@ -82,6 +81,8 @@ public interface CreateBuilder {
     Integer getOrder();
     @Nullable
     Boolean getDevMode();
+    @Nullable
+    Boolean getAuthOnly();
   }
   
   @Value.Immutable

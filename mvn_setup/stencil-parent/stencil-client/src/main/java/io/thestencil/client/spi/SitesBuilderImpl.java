@@ -42,6 +42,8 @@ public class SitesBuilderImpl implements SitesBuilder {
   private Long created;
   private Markdowns markdowns;
   private String tagName;
+  private boolean auth = true;
+  
   @Override
   public SitesBuilder source(Markdowns markdowns) {
     this.markdowns = markdowns;
@@ -62,6 +64,12 @@ public class SitesBuilderImpl implements SitesBuilder {
     this.created = created;
     return this;
   }
+  @Override
+  public SitesBuilder auth(boolean auth) {
+    this.auth = auth;
+    return this;
+  }
+
   private SitesBuilder topic(
       Function<ImmutableTopicData.Builder, TopicData> newTopic) {
     visitor.visitTopicData(newTopic.apply(ImmutableTopicData.builder()));
@@ -80,13 +88,22 @@ public class SitesBuilderImpl implements SitesBuilder {
     ParserAssert.notNull(tagName, () -> "tagName can't be empty!");
 
     markdowns.getValues()
-    .forEach(value -> topic(builder -> builder
-    .path(value.getPath())
-    .locale(value.getLocale())
-    .headings(value.getHeadings())
-    .images(value.getImages())
-    .value(value.getValue())
-    .build()));
+      .stream().filter(topic -> {
+        boolean requiredAuth = Boolean.TRUE.equals(topic.getAuth());
+        boolean isUserAuthenticated = this.auth;
+        if(requiredAuth) {
+          return isUserAuthenticated;  
+        }
+        return true;
+      })
+      .forEach(value -> topic(builder -> builder
+      .auth(value.getAuth())
+      .path(value.getPath())
+      .locale(value.getLocale())
+      .headings(value.getHeadings())
+      .images(value.getImages())
+      .value(value.getValue())
+      .build()));
     
   
     markdowns.getLinks()
@@ -121,5 +138,4 @@ public class SitesBuilderImpl implements SitesBuilder {
         .tagName(tagName)
         .build();
   }
-
 }

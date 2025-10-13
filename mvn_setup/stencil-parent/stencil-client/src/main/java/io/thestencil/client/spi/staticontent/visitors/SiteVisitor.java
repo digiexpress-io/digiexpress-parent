@@ -58,6 +58,7 @@ public interface SiteVisitor {
     String getPath();
     String getLocale();
     String getValue();
+    Boolean getAuth();
     List<Heading> getHeadings();
     List<ImageTag> getImages();
   }

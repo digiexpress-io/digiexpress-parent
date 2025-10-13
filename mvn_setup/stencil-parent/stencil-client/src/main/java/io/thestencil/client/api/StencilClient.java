@@ -48,7 +48,8 @@ public interface StencilClient {
   
   interface SitesBuilder {
     SitesBuilder imagePath(String imagePath);
-    SitesBuilder created(long created);    
+    SitesBuilder created(long created);
+    SitesBuilder auth(boolean auth); // is user authenticated .... if true show all
     SitesBuilder source(Markdowns markdowns);
     SitesBuilder tagName(String tagName);
     Sites build();
@@ -102,6 +103,9 @@ public interface StencilClient {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Boolean getDevMode();
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    Boolean getAuthOnly();
     String getName();
     Integer getOrder();
   }
