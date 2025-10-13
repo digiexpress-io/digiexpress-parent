@@ -25,12 +25,13 @@
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
     "@mui/system": "^6.1.1",
-    "@mui/types": "^7.2.17",
+    "@mui/types": "^7.4.7",
     "@mui/utils": "^6.1.1",
     "@mui/x-tree-view": "^7.20.0",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-router": "^1.128.3",
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-store": "^0.8.0",
     "@uiw/react-md-editor": "^4.0.4",
     "@xyflow/react": "^12.4.4",
     "diff2html": "^3.4.48",
@@ -40,8 +41,6 @@
     "js-yaml": "^4.1.0",
     "leaflet-geosearch": "^4.0.0",
     "luxon": "^3.4.4",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.46",
     "monaco-editor": "^0.52.2",
     "notistack": "^3.0.1",
     "numbro": "^2.5.0",
@@ -53,9 +52,8 @@
     "react-leaflet": "^4.2.1",
     "react-markdown": "^10.1.0",
     "react-scrollable-feed": "^1.3.2",
-    "react-time-picker": "^7.0.0",
     "recharts": "^2.13.0",
-    "ts-md5": "^1.3.1",
+    "ts-md5": "^2.0.1",
     "yaml": "^2.6.0"
   },
   "devDependencies": {
@@ -71,7 +69,7 @@
     "@types/react-dom": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
-    "@vitejs/plugin-react": "^4.5.2",
+    "@vitejs/plugin-react": "^5.0.4",
     "csv-parser": "^3.2.0",
     "eslint": "^9.31.0",
     "eslint-plugin-react": "^7.37.5",
@@ -79,15 +77,11 @@
     "glob": "^11.0.3",
     "typescript": "^5.6.3",
     "unplugin-dts": "1.0.0-beta.4",
-    "vite": "^6.3.6",
-    "vite-plugin-checker": "^0.6.2",
+    "vite": "^7.1.9",
+    "vite-plugin-checker": "^0.11.0",
     "vite-plugin-dts": "^4.5.4",
-    "vite-plugin-mock-dev-server": "^1.8.0",
-    "vite-plugin-svgr": "^4.2.0",
-    "yalc": "1.0.0-pre.53"
+    "vite-plugin-mock-dev-server": "^2.0.1",
+    "vite-plugin-svgr": "^4.2.0"
   },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
-  "dependencies": {
-    "@tanstack/react-store": "^0.7.7"
-  }
+  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }

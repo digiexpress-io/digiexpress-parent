@@ -750,7 +750,6 @@
           "@monaco-editor/react": "*",
           "yaml": "*",
           "luxon": "*",
-          "moment": "*",
           "notistack": "*",
           "recharts": "*"
         },
@@ -797,7 +796,6 @@
         "@monaco-editor/react",
         "yaml",
         "luxon",
-        "moment",
         "notistack",
         "recharts"
       ],
@@ -815,7 +813,6 @@
         "@monaco-editor/react",
         "yaml",
         "luxon",
-        "moment",
         "notistack",
         "recharts"
       ],
@@ -833,7 +830,6 @@
         "@monaco-editor/react",
         "yaml",
         "luxon",
-        "moment",
         "notistack",
         "recharts"
       ],
@@ -939,9 +935,7 @@
         "@dxs-ts/wrench-routes"
       ],
       "missingDependencies": [],
-      "unusedDependencies": [
-        "moment"
-      ]
+      "unusedDependencies": []
     },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
@@ -2291,6 +2285,9 @@
         "@dxs-ts/eveli-primitives",
         "@mui/icons-material",
         "@tanstack/react-router",
+        "@dxs-ts/envir-fetch",
+        "@mui/x-tree-view",
+        "@mui/utils",
         "@dxs-ts/eveli-api"
       ],
       "actualExternalDependencies": [
@@ -2299,22 +2296,22 @@
         "react-intl",
         "@mui/material",
         "@mui/icons-material",
-        "@tanstack/react-router"
+        "@tanstack/react-router",
+        "@mui/x-tree-view",
+        "@mui/utils"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/tagomi-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/envir-fetch",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
         "luxon",
         "@tanstack/react-table",
-        "@mui/x-tree-view",
-        "@mui/utils",
         "@uiw/react-md-editor",
         "js-file-download"
       ]
@@ -3584,7 +3581,6 @@
         "leaflet",
         "leaflet-geosearch",
         "luxon",
-        "moment",
         "monaco-editor",
         "notistack",
         "numbro",
@@ -3640,6 +3636,6 @@
       ]
     }
   },
-  "checksum": "4b5ff2821ad23db6430fb9ef9373b51b0d238c5316190299dd3a1abe5f001dca",
-  "generatedAt": "2025-10-10T09:03:23.952Z"
+  "checksum": "fc2bad50db260273c1a05c60981867631c8167d8b8293f390e50cdadf9ddb1b9",
+  "generatedAt": "2025-10-13T09:46:14.379Z"
 }

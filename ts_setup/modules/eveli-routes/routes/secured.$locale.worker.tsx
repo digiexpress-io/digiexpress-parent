@@ -19,7 +19,7 @@ function Component() {
     return (<EveliApp contentOnly drawerOpen={false} main={Main} secondary={() => <></>} toolbar={() => <></>} />)
   }
 
-  return (<EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />)
+  return (<EveliApp main={() => <></>} secondary={Secondary} toolbar={Toolbar} />)
 }
 
 

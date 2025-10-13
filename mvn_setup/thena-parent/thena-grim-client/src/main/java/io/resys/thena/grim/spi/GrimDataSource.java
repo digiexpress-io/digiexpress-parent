@@ -103,9 +103,11 @@ public interface GrimDataSource extends TenantDataSource {
   
   interface InternalProcQuery {
     Uni<GrimProcess> getOneById(String id);
+    Uni<Optional<GrimProcess>> findOneById(String id);
     Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
     Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
+    Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
   }
   
   interface InternalCommitQuery {

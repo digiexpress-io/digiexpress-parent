@@ -406,6 +406,32 @@ public class TaskClientImpl implements TaskClient {
           .findOneByMissionId(taskId)
           .onItem().transform(optional -> optional.map(TaskMapper::map));
       }
+      @Override
+      public Uni<ProcessInstance> getOneById(String processId) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .getOneById(processId)
+          .onItem().transform(TaskMapper::map);
+      }
+
+      @Override
+      public Uni<Optional<ProcessInstance>> findOneById(String processId) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findOneById(processId)
+          .onItem().transform(optional -> optional.map(TaskMapper::map));
+      }
+
+      @Override
+      public Multi<ProcessInstance> findAllNotArchivedyUserId(String userId) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .findAllNotArchivedyUserId(userId)
+          .onItem().transform(TaskMapper::map);
+      }
     };
 
   }

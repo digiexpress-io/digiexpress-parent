@@ -71,9 +71,12 @@ public class UserActionsQueryImpl implements UserActionQuery {
   @Override
   public Optional<UserAction> findOneById(String id) {
     final var customer = authClient.getCustomer().getCustomerId();
-    final List<ProcessInstance> processes = hdesCommands.queryInstances()
-        .findOneById(id).map(e -> Arrays.asList(e))
+    final List<ProcessInstance> processes = taskClient.queryTaskProcesess().findOneById(id)
+        .await().atMost(atMost)
+        .map(e -> Arrays.asList(e))
         .orElse(Collections.emptyList());
+    ;
+    
     final var tasks = visitTasks(processes, customer);
     final var auth = visitAuthorization();
     
@@ -87,7 +90,11 @@ public class UserActionsQueryImpl implements UserActionQuery {
   @Override
   public List<UserAction> findAll() {
     final var customer = authClient.getCustomer().getCustomerId();
-    final var processes = hdesCommands.queryInstances().findAllByUserId(customer.getHolderId());
+    final var processes = taskClient.queryTaskProcesess()
+        .findAllNotArchivedyUserId(customer.getHolderId())
+        .collect().asList()
+        .await().atMost(atMost);
+    
     final var tasks = visitTasks(processes, customer);
     final var auth = visitAuthorization();
     
@@ -143,7 +150,9 @@ public class UserActionsQueryImpl implements UserActionQuery {
     final var unreadTasks = grim.find().commitViewersQuery().usedBy(userId.getSafeId()).findAll().await().atMost(atMost);
     
     
-    final var allTasks = taskClient.queryTasks().findAll(taskIds).await().atMost(atMost);    
+    final var allTasks = taskClient.queryTasks()
+        .findAll(taskIds)
+        .await().atMost(atMost);    
     
     return new TasksContext(
         allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), 

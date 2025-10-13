@@ -2,7 +2,7 @@ import React from 'react';
 import { IconButton, Typography } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import ListIcon from '@mui/icons-material/ListAlt';
-import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
+import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import BeenhereOutlinedIcon from '@mui/icons-material/BeenhereOutlined';

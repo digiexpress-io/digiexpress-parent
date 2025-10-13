@@ -36,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskCommand.TaskUpdateCommand;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
@@ -84,7 +85,10 @@ public interface TaskClient {
   interface QueryTaskProcesess {
     Uni<Optional<ProcessClient.ProcessInstance>> findOneByTaskId(String taskId);
     Multi<ProcessClient.ProcessInstance> findLast6Months();
-    Multi<ProcessClient.ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen); 
+    Multi<ProcessClient.ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen);
+    Uni<ProcessInstance> getOneById(String processId); 
+    Uni<Optional<ProcessInstance>> findOneById(String processId); 
+    Multi<ProcessClient.ProcessInstance> findAllNotArchivedyUserId(String userId);
   }
   
   interface QueryTaskDasboard {

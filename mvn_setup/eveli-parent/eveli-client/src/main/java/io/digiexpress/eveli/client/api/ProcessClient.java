@@ -109,7 +109,6 @@ public interface ProcessClient {
     List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom);
     
     List<ProcessInstance> findAllExpired();
-    List<ProcessInstance> findAllByUserId(String userId);    
   }
   
   interface ProcessQuestionnaireQuery {

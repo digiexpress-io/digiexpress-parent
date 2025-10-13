@@ -2,7 +2,7 @@ import * as React from "react";
 import { Typography, Box, Divider, styled, Badge } from "@mui/material";
 
 import { TreeItem2, TreeItemProps, treeItemClasses } from "@mui/x-tree-view";
-import { SvgIconProps } from "@mui/material/SvgIcon";
+import { SvgIconProps } from "@mui/material";
 
 
 const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({

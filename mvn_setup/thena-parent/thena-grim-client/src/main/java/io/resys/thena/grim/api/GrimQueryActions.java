@@ -62,6 +62,9 @@ public interface GrimQueryActions {
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
     Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
     Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
+    Uni<Optional<GrimProcess>> findOneById(String processId);
+    Uni<GrimProcess> getOneById(String processId);
+    Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
   }
   
   interface MissionDeleteQuery {

@@ -64,6 +64,22 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
   }
   
   @Override
+  public SqlTuple findNotArchivedByUserId(String userId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(procs.task_id = mission.id)").ln()
+        
+        .append(" WHERE procs.user_id = $1 and mission.archived_at is null").ln()
+        .build())
+        .props(Tuple.of(userId))
+        .build();
+  }
+  
+  @Override
   public SqlTupleList updateAll(Collection<GrimProcess> procs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()

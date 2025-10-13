@@ -126,4 +126,42 @@ public class InternalProcQueryImpl implements InternalProcQuery {
         })
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
   }
+
+  @Override
+  public Uni<Optional<GrimProcess>> findOneById(String id) {
+    final var sql = registry.processes().getById(id);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findOneById query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform(rowset -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return Optional.of(it.next());
+          }
+          return Optional.<GrimProcess>empty();
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+
+  @Override
+  public Multi<GrimProcess> findAllNotArchivedyUserId(String userId) {
+    final var sql = registry.processes().findNotArchivedByUserId(userId);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findActiveByUserId query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
 }

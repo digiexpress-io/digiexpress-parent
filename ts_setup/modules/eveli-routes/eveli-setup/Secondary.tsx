@@ -1,17 +1,16 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
+import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
+import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
+import { NetworkCheck as NetworkCheckIcon } from '@mui/icons-material';
+import { ThumbUpAltOutlined as ThumbUpAltOutlinedIcon } from '@mui/icons-material';
+import { CloudQueue as CloudQueueIcon } from '@mui/icons-material';
+import { SupervisedUserCircleOutlined as SupervisedUserCircleOutlinedIcon } from '@mui/icons-material';
+import { HealthAndSafetyOutlined as HealthAndSafetyOutlinedIcon } from '@mui/icons-material';
 
-import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
-import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
-import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import CloudQueueIcon from '@mui/icons-material/CloudQueue';
-import SupervisedUserCircleOutlinedIcon from '@mui/icons-material/SupervisedUserCircleOutlined';
-import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined';
-
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import { PersonOutlineOutlined as PersonOutlineOutlinedIcon } from '@mui/icons-material';
+import { WorkOutlineOutlined as WorkOutlineOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'

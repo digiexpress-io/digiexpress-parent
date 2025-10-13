@@ -45,24 +45,37 @@ export function startDemoApp(options: {
           outDir: './build/'+ options.moduleName,
           assetsDir: 'static/'+options.moduleName,
         },
+        server: {
+          fs: {
+            allow: ['./modules']
+          }
+        },
         resolve: { alias },
         optimizeDeps: {
           //https://github.com/vitejs/vite/issues/12423
           //https://github.com/mui/material-ui/issues/32727
+          //https://github.com/mui/material-ui/issues/44180
           include: [
+            '@mui/material/SvgIcon',
             '@mui/material/CssBaseline',
             '@mui/material/Box',
-            '@mui/material/SvgIcon',
             '@mui/material', 
             '@mui/icons-material',
             '@tanstack/react-router'
           ],
           force: true,
       
-      
+          // wite bug ...
+          // https://github.com/vitejs/vite/discussions/17738
           exclude: [
             'modules/demo-app-eveli/node_modules/.vite',
-            'modules/demo-app-eveli/node_modules/.vite/deps'
+            'modules/demo-app-eveli/node_modules/.vite/*',
+            'modules/demo-app-eveli/node_modules/.vite/deps',
+ 
+            'node_modules/.vite',
+            'node_modules/.vite/*',
+            'node_modules/.vite/deps',
+            '../../node_modules/.vite/deps',
           ]
 
         },

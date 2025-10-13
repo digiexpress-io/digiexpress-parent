@@ -38,6 +38,7 @@ public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, i
   ThenaSqlClient.SqlTuple getById(String id);
   ThenaSqlClient.SqlTuple findOneByMissionId(String missionId);
 
+  ThenaSqlClient.SqlTuple findNotArchivedByUserId(String userId);
   ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter);
   ThenaSqlClient.SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
   
