@@ -9,39 +9,42 @@ import * as Burger from '@dxs-ts/eveli-primitives';
 
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
 import { useTagomiNav } from '../tagomi-nav';
+import { ServiceEdit } from './ServiceEdit';
 
-interface ArticleOptionsProps {
+interface ServiceOptionsProps {
   service: TagomiApi.Service,
 }
 
 /** TODO
-      { dialogOpen === 'ArticleEdit' ? <ArticleEdit articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'NewPage' ? <NewPage articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'PageEdit' ? <PageEdit articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'PageDelete' ? <PageDelete articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'ArticleDelete' ? <ArticleDelete articleId={article.id} onClose={handleDialogClose} /> : null}
  */
 
-export const ServiceOptions: React.FC<ArticleOptionsProps> = ({ service: article }) => {
+export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const theme = useTheme();
-  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ArticleEdit' | 'NewPage' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ArticleDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
+  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewPage' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ArticleDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
 
-  const { site } = Composer.useComposer();
+  const { site, backend } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { activeItem, onNav } = useTagomiNav();
 
+
+
   return (
     <>
+      {dialogOpen === 'ServiceEdit' ? <ServiceEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
 
 
       {/** Article options */}
-      <Burger.TreeItemOption nodeId={article.id + 'edit-nested'}
+      <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
         color='primary'
         icon={EditIcon}
-        onClick={() => setDialogOpen('ArticleEdit')}
-        labelText={<FormattedMessage id="article.edit.title" />}>
+        onClick={() => setDialogOpen('ServiceEdit')}
+        labelText={<FormattedMessage id="tagomi.service.edit.title" />}>
       </Burger.TreeItemOption>
-      <Burger.TreeItemOption nodeId={article.id + 'delete-nested'}
+      <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
         color='primary'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ArticleDelete')}
@@ -49,26 +52,26 @@ export const ServiceOptions: React.FC<ArticleOptionsProps> = ({ service: article
       </Burger.TreeItemOption>
 
       {/** Page options */}
-      <Burger.TreeItemOption nodeId={article.id + 'pages.add'}
+      <Burger.TreeItemOption nodeId={service.id + 'pages.add'}
         color='page'
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('NewPage')}
         labelText={<FormattedMessage id="pages.add" />}>
       </Burger.TreeItemOption>
-      <Burger.TreeItemOption nodeId={article.id + 'pages.change'}
+      <Burger.TreeItemOption nodeId={service.id + 'pages.change'}
         color='page'
         icon={EditIcon}
         onClick={() => setDialogOpen('PageEdit')}
         labelText={<FormattedMessage id="pages.change" />}>
       </Burger.TreeItemOption>
 
-      <Burger.TreeItemOption nodeId={article.id + 'pages.delete'}
+      <Burger.TreeItemOption nodeId={service.id + 'pages.delete'}
         color='page'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('PageDelete')}
         labelText={<FormattedMessage id="pages.delete" />}>
       </Burger.TreeItemOption>
-      <Burger.TreeItemOption nodeId={article.id + 'resource.create.workflows'}
+      <Burger.TreeItemOption nodeId={service.id + 'resource.create.workflows'}
         color={theme.palette.primary.dark}
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('WorkflowComposer')}
