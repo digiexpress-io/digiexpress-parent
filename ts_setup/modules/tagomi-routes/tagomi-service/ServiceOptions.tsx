@@ -11,20 +11,19 @@ import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
 import { useTagomiNav } from '../tagomi-nav';
 import { ServiceEdit } from './ServiceEdit';
 import { ServiceDelete } from './ServiceDelete';
-import { NewTagomiTemplate } from '../tagomi-template';
+import { NewTagomiTemplate, TagomiTemplateEdit } from '../tagomi-template';
 
 interface ServiceOptionsProps {
   service: TagomiApi.Service,
 }
 
 /** TODO
-      { dialogOpen === 'PageEdit' ? <PageEdit articleId={article.id} onClose={handleDialogClose} /> : null}
       { dialogOpen === 'PageDelete' ? <PageDelete articleId={article.id} onClose={handleDialogClose} /> : null}
  */
 
 export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const theme = useTheme();
-  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewTemplate' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ServiceDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
+  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewTemplate' | 'TemplateEdit' | 'PageEditDev' | 'PageDelete' | 'ServiceDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
 
   const { site, backend } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
@@ -37,6 +36,7 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       {dialogOpen === 'ServiceEdit' ? <ServiceEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'NewTemplate' ? <NewTagomiTemplate serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'TemplateEdit' ? <TagomiTemplateEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
 
 
       {/** Article options */}
@@ -63,8 +63,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       <Burger.TreeItemOption nodeId={service.id + 'pages.change'}
         color='page'
         icon={EditIcon}
-        onClick={() => setDialogOpen('PageEdit')}
-        labelText={<FormattedMessage id="pages.change" />}>
+        onClick={() => setDialogOpen('TemplateEdit')}
+        labelText={<FormattedMessage id="tagomi.service.template.change" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={service.id + 'pages.delete'}

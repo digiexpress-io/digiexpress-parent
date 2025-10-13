@@ -36,7 +36,7 @@ export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: Tago
 
   const definedLocales: TagomiApi.LocaleId[] = service ?
     Object.values(site.templates)
-      .filter(template => template.id === service.id)
+      .filter(template => template.serviceId === service.id)
       .map(template => template.localeId) : [];
 
   const availableLocaleLabels = service ? service.labels.filter((label) => !definedLocales.includes(label.locale)) : [];

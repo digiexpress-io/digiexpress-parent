@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -263,12 +262,26 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
     }
     
     return client.stateQuery().getState().onItem().transformToUni(state -> {
-      final var toBeSaved = state.getTemplates().values().stream()
-        .map(start -> {
-          final var mutator = changes.get(start.getId());
+      final var toBeSaved = mutators.stream()
+        .map(mutator -> {
+          
+          final var start = state.getTemplates().get(mutator.getTemplateId());
+          final var targetLocale = Optional.ofNullable(mutator.getLocale()).orElse(start.getLocaleId());
+          final var locale = state.getLocales().values().stream()
+              .filter(p -> 
+                p.getLocaleCode().equals(targetLocale) || 
+                p.getId().equals(targetLocale)
+              ).findFirst();
+          
+          if(locale.isEmpty()) {
+            throw new ConstraintException(start, "Template, locale: '" + mutator.getLocale() + "' does not exist!");
+          }
+          
+
           final var end = ImmutableTemplate.builder()
               .from(start)
               // only content change
+              .localeId(mutator.getLocale())
               .content(mutator.getContent())
               .build();
           return end;
