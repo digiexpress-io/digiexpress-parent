@@ -1,9 +1,9 @@
 import React from 'react';
 import { IconButton, MenuItem, TextField, Typography } from '@mui/material';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import LastPageIcon from '@mui/icons-material/LastPage';
+import { KeyboardArrowRight as KeyboardArrowRightIcon } from '@mui/icons-material';
+import { KeyboardArrowLeft as KeyboardArrowLeftIcon } from '@mui/icons-material';
+import { FirstPage as FirstPageIcon } from '@mui/icons-material';
+import { LastPage as LastPageIcon } from '@mui/icons-material';
 
 import { Table } from '@tanstack/react-table';
 

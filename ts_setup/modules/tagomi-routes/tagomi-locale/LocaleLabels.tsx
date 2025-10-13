@@ -3,11 +3,11 @@ import {
   Box, Typography, IconButton, Popover, List, ListItem, ListItemText, ListItemButton, ListItemIcon,
   Grid2, useTheme, Divider, TextField
 } from '@mui/material';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import EditIcon from '@mui/icons-material/Create';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
-import CheckIcon from '@mui/icons-material/Check';
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
+import { AddCircleOutline as AddCircleOutlineIcon } from '@mui/icons-material';
+import { Create as EditIcon } from '@mui/icons-material';
+import { WarningAmberRounded as WarningAmberRoundedIcon } from '@mui/icons-material';
+import { Check as CheckIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';

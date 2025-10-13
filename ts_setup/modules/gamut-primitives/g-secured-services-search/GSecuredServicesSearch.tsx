@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, useThemeProps } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Search as SearchIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { useUtilityClasses, GSecuredServicesSearchRoot, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';

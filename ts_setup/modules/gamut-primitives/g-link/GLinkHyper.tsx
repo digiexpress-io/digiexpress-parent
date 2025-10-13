@@ -3,7 +3,7 @@ import { Link, styled, useThemeProps } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 
 export interface GLinkHyperClasses {

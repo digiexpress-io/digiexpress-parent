@@ -1,5 +1,5 @@
 import React from 'react';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { HelpOutline as HelpOutlineIcon } from '@mui/icons-material';
 import { useThemeInfra, GInputAdornmentRoot } from './useThemeInfra';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';

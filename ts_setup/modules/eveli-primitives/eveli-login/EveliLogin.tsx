@@ -1,8 +1,8 @@
 import React from 'react';
 import { useThemeProps, Button, SvgIconTypeMap, Typography, Stack } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { PersonOutlined as PersonOutlinedIcon } from '@mui/icons-material';
+import { Logout as LogoutIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { EveliLoginRoot, EveliLogoutButton, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 

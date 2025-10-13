@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, useTheme } from "@mui/material";
 import { FormattedMessage } from 'react-intl';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
+import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
+import { ScienceOutlined as ScienceOutlinedIcon } from '@mui/icons-material';
 
 import { useSnackbar } from 'notistack';
 import * as Burger from '@dxs-ts/eveli-primitives';

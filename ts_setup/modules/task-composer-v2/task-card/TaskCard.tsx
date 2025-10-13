@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Box, styled, generateUtilityClass, IconButton, alpha, SxProps, Avatar, Collapse, Button, lighten, darken } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { MoreVert as MoreVertIcon } from '@mui/icons-material';
+import { DragHandle as DragHandleIcon } from '@mui/icons-material';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { TaskCardMenu } from './TaskCardMenu';

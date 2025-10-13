@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Link, Typography, useThemeProps } from '@mui/material';
 import { EveliBatchStepRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { BatchApi } from '@dxs-ts/eveli-api';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { WithTableStyles } from '@dxs-ts/xui-table';

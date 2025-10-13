@@ -1,6 +1,6 @@
 import { Box, Button, Grid2, IconButton, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 
 const CURRENT_YEAR = new Date().getFullYear();

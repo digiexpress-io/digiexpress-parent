@@ -3,8 +3,8 @@ import React from 'react'
 import { OverridableStringUnion } from '@mui/types'
 import { CircularProgress, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Tooltip, useThemeProps } from '@mui/material'
 
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 
 import { DialobApi, useDialob, useForm } from '@dxs-ts/gamut-api'
 import { GInputError } from '../g-input-error'

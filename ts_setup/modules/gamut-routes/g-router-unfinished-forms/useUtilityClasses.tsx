@@ -1,7 +1,7 @@
 import { Avatar, Box, Breadcrumbs, generateUtilityClass, Link, styled, Typography } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
-import HomeIcon from '@mui/icons-material/Home';
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import { Home as HomeIcon } from '@mui/icons-material';
+import { HourglassEmpty as HourglassEmptyIcon } from '@mui/icons-material';
 
 import { useIntl } from "react-intl";
 

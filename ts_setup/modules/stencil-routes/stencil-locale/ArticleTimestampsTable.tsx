@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { DateTime } from 'luxon';

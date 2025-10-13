@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Tabs as MuiTabs, Tab, Stack, useTheme } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { ExplorerItem, useTagomiNav, useTagomiTabChange, useTagomiTabClose, toExplorerId } from '../tagomi-nav';
 import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { SaveOutlined } from '@mui/icons-material';

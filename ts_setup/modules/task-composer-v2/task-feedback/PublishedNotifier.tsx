@@ -1,7 +1,7 @@
 import React from 'react';
 import { alpha, generateUtilityClass, styled } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Check as CheckIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { useIntl } from 'react-intl';

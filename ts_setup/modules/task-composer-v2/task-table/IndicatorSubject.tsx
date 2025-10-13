@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Link } from '@mui/material';
-import LockIcon from '@mui/icons-material/Lock';
-import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
+import { Lock as LockIcon } from '@mui/icons-material';
+import { EmojiPeopleOutlined as EmojiPeopleOutlinedIcon } from '@mui/icons-material';
 
 import { useTaskBackend } from '@dxs-ts/task-api';
 

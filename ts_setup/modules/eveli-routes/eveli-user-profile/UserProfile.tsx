@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Divider, Button, Box } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
-import EditIcon from '@mui/icons-material/Edit';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Person as PersonIcon } from '@mui/icons-material';
+import { Edit as EditIcon } from '@mui/icons-material';
+import { Settings as SettingsIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DateTime } from 'luxon';

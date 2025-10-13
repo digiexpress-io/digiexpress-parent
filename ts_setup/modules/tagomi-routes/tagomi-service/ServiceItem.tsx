@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Box, Tooltip, Typography, useTheme } from "@mui/material";
 
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import FaceIcon from '@mui/icons-material/Face';
-import ConstructionIcon from '@mui/icons-material/Construction';
+import { NotInterested as NotInterestedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { MenuBookOutlined as MenuBookOutlinedIcon } from '@mui/icons-material';
+import { Face as FaceIcon } from '@mui/icons-material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 

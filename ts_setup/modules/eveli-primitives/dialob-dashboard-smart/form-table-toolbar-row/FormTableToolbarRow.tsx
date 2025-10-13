@@ -1,8 +1,8 @@
 import { DashboardItem, useDialobForms } from '@dxs-ts/eveli-api';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CloseIcon from '@mui/icons-material/Close';
-import DownloadIcon from '@mui/icons-material/Download';
+import { ContentCopy as ContentCopyIcon } from '@mui/icons-material';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Download as DownloadIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import FileSaver from 'file-saver';
 import React from 'react';

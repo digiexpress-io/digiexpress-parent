@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 

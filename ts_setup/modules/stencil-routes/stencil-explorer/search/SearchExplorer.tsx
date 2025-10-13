@@ -3,15 +3,15 @@ import { Box, Typography, TextField, TextFieldProps, InputAdornment, useTheme } 
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import SearchIcon from '@mui/icons-material/Search';
-import LinkIcon from '@mui/icons-material/Link';
-import EditIcon from '@mui/icons-material/ModeEdit';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { Link as LinkIcon } from '@mui/icons-material';
+import { ModeEdit as EditIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import ConstructionIcon from '@mui/icons-material/Construction';
+import { ArticleOutlined as ArticleOutlinedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
 
 import { ArticleEdit } from '../../stencil-article';
 import { WorkflowEdit } from '../../stencil-workflow/';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import TodayIcon from '@mui/icons-material/Today';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Today as TodayIcon } from '@mui/icons-material';
 
 import { CalendarInput, useCalendarInput } from '../calendar-input';
 

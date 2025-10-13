@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Tabs as MuiTabs, Tab, Stack, useTheme } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { ExplorerItem, useStencilNav, useStencilTabChange, useStencilTabClose, toExplorerId } from '../stencil-nav';
 import { StencilComposerApi } from '@dxs-ts/stencil-api';
 import { SaveOutlined } from '@mui/icons-material';

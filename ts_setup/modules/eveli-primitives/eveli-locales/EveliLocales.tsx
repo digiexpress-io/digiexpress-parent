@@ -1,6 +1,6 @@
 import React from 'react';
 import { useThemeProps, Typography, IconButton, Divider, MenuList, ListItemText, MenuItem } from '@mui/material';
-import LanguageIcon from '@mui/icons-material/Language';
+import { Language as LanguageIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useLocale, EveliOverridableComponent } from '@dxs-ts/eveli-api';

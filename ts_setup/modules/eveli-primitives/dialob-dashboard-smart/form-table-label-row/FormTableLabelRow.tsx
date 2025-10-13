@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Chip, IconButton } from '@mui/material';
 import { DashboardItem, useDialobForms } from '@dxs-ts/eveli-api';
-import CancelIcon from '@mui/icons-material/Cancel';
-import AddIcon from '@mui/icons-material/Add';
+import { Cancel as CancelIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { DialogAddLabel } from '../dialog-add-label';
 
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
+import { AddCircleOutline as AddCircleOutlineIcon } from '@mui/icons-material';
+import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
+import { ModeEdit as EditIcon } from '@mui/icons-material';
 
 import { LinkComposer } from '../../stencil-link';
 import { WorkflowComposer } from '../../stencil-workflow';

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Box, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl'
 
 import { HdesApi } from '@dxs-ts/wrench-api';

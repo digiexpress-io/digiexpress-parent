@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Box, Table, TableCell, TableBody, TableHead, TableRow, IconButton, Collapse } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
+import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import MonacoReact from '@monaco-editor/react';
 
 import { FormattedMessage } from 'react-intl'

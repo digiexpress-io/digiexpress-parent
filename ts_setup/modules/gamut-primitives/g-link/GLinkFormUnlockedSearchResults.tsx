@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, styled, useThemeProps, generateUtilityClass, Link } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
+import { Circle as CircleIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 

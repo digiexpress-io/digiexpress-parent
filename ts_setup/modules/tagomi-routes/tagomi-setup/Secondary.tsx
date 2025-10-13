@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuList, MenuItem, ListItemText, Button } from '@mui/material';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 

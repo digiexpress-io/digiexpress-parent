@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Box, Button, Grid2, Paper, Stack, Typography, useTheme, lighten } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Check as CheckIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';

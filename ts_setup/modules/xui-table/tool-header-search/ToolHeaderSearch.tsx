@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge, IconButton } from '@mui/material';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import { FilterList as FilterListIcon } from '@mui/icons-material';
 
 import { Header } from '@tanstack/react-table';
 

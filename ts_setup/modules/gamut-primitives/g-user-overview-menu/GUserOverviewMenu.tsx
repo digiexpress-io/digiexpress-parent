@@ -1,13 +1,13 @@
 import React from 'react';
 import { useThemeProps, ListItemButton, ListItemIcon, Avatar, Typography, Box } from '@mui/material';
 
-import SearchIcon from '@mui/icons-material/Search';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { HomeOutlined as HomeOutlinedIcon } from '@mui/icons-material';
+import { LogoutOutlined as LogoutOutlinedIcon } from '@mui/icons-material';
+import { LoginOutlined as LoginOutlinedIcon } from '@mui/icons-material';
+import { AdminPanelSettingsOutlined as AdminPanelSettingsOutlinedIcon } from '@mui/icons-material';
+import { BusinessOutlined as BusinessOutlinedIcon } from '@mui/icons-material';
+import { AccountCircleOutlined as AccountCircleOutlinedIcon } from '@mui/icons-material';
 
 
 import { FormattedMessage } from 'react-intl';

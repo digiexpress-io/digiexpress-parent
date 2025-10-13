@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, List, ListItem, ListItemIcon, ListItemText, Alert, AlertTitle } from '@mui/material';
 
-import SaveIcon from '@mui/icons-material/Save';
+import { Save as SaveIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 import { useIam } from '@dxs-ts/gamut-api';

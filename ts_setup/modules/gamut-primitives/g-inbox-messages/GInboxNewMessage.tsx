@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Paper, TextField, Typography, useThemeProps } from '@mui/material';
-import ReplyIcon from '@mui/icons-material/Reply';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { Reply as ReplyIcon } from '@mui/icons-material';
+import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
+import { AttachFile as AttachFileIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';

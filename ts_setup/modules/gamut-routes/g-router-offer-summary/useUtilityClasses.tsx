@@ -1,9 +1,9 @@
 import { Box, Button, Divider, generateUtilityClass, List, ListItem, ListItemIcon, ListItemText, styled, Typography } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
-import UpdateIcon from '@mui/icons-material/Update';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import FilePresentIcon from '@mui/icons-material/FilePresent';
-import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
+import { Update as UpdateIcon } from '@mui/icons-material';
+import { MailOutline as MailOutlineIcon } from '@mui/icons-material';
+import { FilePresent as FilePresentIcon } from '@mui/icons-material';
+import { PhoneEnabled as PhoneEnabledIcon } from '@mui/icons-material';
 
 import { useIntl } from "react-intl";
 import { SiteApi } from "@dxs-ts/gamut-api";

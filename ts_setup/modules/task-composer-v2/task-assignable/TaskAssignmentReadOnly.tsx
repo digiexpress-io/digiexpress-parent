@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Divider, generateUtilityClass, Grid2, styled, Typography } from '@mui/material';
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import RadioButtonUncheckedOutlinedIcon from '@mui/icons-material/RadioButtonUncheckedOutlined';
+import { CheckCircleOutlineOutlined as CheckCircleOutlineOutlinedIcon } from '@mui/icons-material';
+import { RadioButtonUncheckedOutlined as RadioButtonUncheckedOutlinedIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { TaskApi } from '@dxs-ts/task-api';

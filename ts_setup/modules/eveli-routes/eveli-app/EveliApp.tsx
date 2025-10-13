@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Container as MuiContainer, Drawer, AppBar, IconButton, Typography, Divider } from '@mui/material';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import { MenuOutlined as MenuOutlinedIcon } from '@mui/icons-material';
 
 import { 
   EveliShell, EveliShellClassName, 

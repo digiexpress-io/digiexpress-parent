@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography, Button } from '@mui/material';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
 
 import { GInputBaseAnyProps } from '../g-input-base';
 

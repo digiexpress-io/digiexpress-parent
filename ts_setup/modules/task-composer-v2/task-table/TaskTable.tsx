@@ -3,8 +3,8 @@ import { Box, Typography, IconButton, Tooltip, Dialog, DialogTitle, DialogConten
 
 import { CellContext, ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Add as AddIcon } from '@mui/icons-material';
+import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
 
 import { useIntl, FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';

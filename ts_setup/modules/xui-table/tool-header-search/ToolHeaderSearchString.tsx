@@ -1,8 +1,8 @@
 import React from 'react';
 import { InputAdornment, ListItemIcon, MenuItem, TextField, Typography } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import SearchIcon from '@mui/icons-material/Search';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { Search as SearchIcon } from '@mui/icons-material';
 
 import { Header } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';

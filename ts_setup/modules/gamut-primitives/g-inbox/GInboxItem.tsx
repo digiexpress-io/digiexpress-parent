@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip, Typography, useThemeProps, Grid2 } from '@mui/material';
-import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
+import { MarkEmailUnreadOutlined as MarkEmailUnreadOutlinedIcon } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 

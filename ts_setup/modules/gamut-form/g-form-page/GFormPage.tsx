@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, IconButton, Fade, MenuItem, ListItemIcon, Button } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CheckIcon from '@mui/icons-material/Check';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { Check as CheckIcon } from '@mui/icons-material';
+import { ChevronRight as ChevronRightIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

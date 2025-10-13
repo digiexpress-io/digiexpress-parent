@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, MenuList, MenuItem, ListItemText } from '@mui/material';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
-import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
-import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
-import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
+import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
+import { MenuBookOutlined as MenuBookOutlinedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { InsertLinkOutlined as InsertLinkOutlinedIcon } from '@mui/icons-material';
+import { TranslateOutlined as TranslateOutlinedIcon } from '@mui/icons-material';
+import { FormatShapesOutlined as FormatShapesOutlinedIcon } from '@mui/icons-material';
+import { NewReleasesOutlined as NewReleasesOutlinedIcon } from '@mui/icons-material';
+import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
+import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, TableCell, Typography, useTheme, lighten, alpha, darken, Button, ButtonGroup, Tooltip } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon } from '@mui/icons-material';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
 import { CellEditIntl } from '../editors/CellEditIntl';

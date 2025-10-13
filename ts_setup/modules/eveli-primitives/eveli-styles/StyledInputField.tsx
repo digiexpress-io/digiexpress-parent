@@ -3,8 +3,8 @@ import {
   TextField, FormControl,
   FormControlProps, InputLabel, Typography, Button, styled
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import UploadIcon from '@mui/icons-material/Upload';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { Upload as UploadIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

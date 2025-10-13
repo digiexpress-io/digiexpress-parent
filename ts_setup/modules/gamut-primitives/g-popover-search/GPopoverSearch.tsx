@@ -1,8 +1,8 @@
 import React from 'react';
 import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import CircleIcon from '@mui/icons-material/Circle';
-import CloseIcon from '@mui/icons-material/Close';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { Circle as CircleIcon } from '@mui/icons-material';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useThemeProps, Divider, Link, Box, useMediaQuery, useTheme, Theme } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CircleIcon from '@mui/icons-material/Circle';
-import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
+import { Circle as CircleIcon } from '@mui/icons-material';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { KeyboardArrowRight as KeyboardArrowRightIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl'
 import { GDivider } from '../g-divider';
 import { SiteApi, useSite } from '@dxs-ts/gamut-api';

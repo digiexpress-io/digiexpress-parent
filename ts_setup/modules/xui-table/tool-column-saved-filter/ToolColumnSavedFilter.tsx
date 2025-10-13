@@ -4,9 +4,9 @@ import {
   Typography, Box, ListItem, ListItemText, ListItemButton,
   styled,
 } from '@mui/material';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { ModeEditOutlineOutlined as ModeEditOutlineOutlinedIcon } from '@mui/icons-material';
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
+import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 
 
 import { Column, Table } from '@tanstack/react-table';

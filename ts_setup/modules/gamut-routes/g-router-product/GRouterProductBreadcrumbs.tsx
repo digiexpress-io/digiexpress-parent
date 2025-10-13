@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Typography, Breadcrumbs } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
+import { Home as HomeIcon } from '@mui/icons-material';
 
 
 import { useNavigate } from '@tanstack/react-router';

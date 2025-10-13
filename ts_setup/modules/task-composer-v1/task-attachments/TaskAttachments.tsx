@@ -3,8 +3,8 @@ import React, { useRef } from 'react';
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedTime, useIntl, } from 'react-intl';
 import MaterialTable, { Column, MTableAction } from '@material-table/core';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Download as DownloadIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { useMaterialTableLabels } from '../api-mui-table';

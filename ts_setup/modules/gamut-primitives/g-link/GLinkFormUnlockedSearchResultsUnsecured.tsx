@@ -6,8 +6,8 @@ import {
   generateUtilityClass,
   Link
 } from '@mui/material';
-import ForwardIcon from '@mui/icons-material/Forward';
-import LockIcon from '@mui/icons-material/Lock';
+import { Forward as ForwardIcon } from '@mui/icons-material';
+import { Lock as LockIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 import { IamApi } from '@dxs-ts/gamut-api';

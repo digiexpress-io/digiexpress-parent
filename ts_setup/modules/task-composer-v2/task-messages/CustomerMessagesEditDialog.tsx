@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, styled, Typography, Zoom } from '@mui/material';
-import HistoryIcon from '@mui/icons-material/History';
+import { History as HistoryIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 

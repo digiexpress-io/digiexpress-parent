@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Box, IconButton, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { Add as AddIcon } from '@mui/icons-material';
+import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

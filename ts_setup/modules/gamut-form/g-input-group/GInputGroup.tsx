@@ -1,6 +1,6 @@
 import React from 'react'
 import { useThemeProps, Typography, Divider, IconButton } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
+import { Add as AddIcon } from '@mui/icons-material';
 import { MUI_NAME, useUtilityClasses, GInputGroupRoot, GInputGroupLabel, GInputGroupBody } from './useUtilityClasses';
 
 

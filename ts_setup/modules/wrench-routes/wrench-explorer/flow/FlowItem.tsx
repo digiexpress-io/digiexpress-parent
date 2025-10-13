@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import LinkIcon from '@mui/icons-material/Link';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { ArticleOutlined as ArticleOutlinedIcon } from '@mui/icons-material';
+import { Link as LinkIcon } from '@mui/icons-material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
+import { PriorityHigh as PriorityHighIcon } from '@mui/icons-material';
+import { LowPriority as LowPriorityIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

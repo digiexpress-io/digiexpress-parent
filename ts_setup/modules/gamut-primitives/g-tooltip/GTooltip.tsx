@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip, useThemeProps } from '@mui/material';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
 import { useUtilityClasses, MUI_NAME, GTooltipRoot } from './useUtilityClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 

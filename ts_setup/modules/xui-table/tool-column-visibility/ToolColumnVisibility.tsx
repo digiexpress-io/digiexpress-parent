@@ -1,9 +1,9 @@
 import React from 'react';
 import { alpha, Box, Button, Typography, useTheme } from '@mui/material';
 import { Root, ColumnSlot, useUtilityClasses } from './useUtilityClasses';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { DragIndicator as DragIndicatorIcon } from '@mui/icons-material';
 import { Table } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { generateUtilityClass, styled, Typography, Drawer, useMediaQuery, useTheme, Box, IconButton, ButtonGroup } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import PictureAsPdfRoundedIcon from '@mui/icons-material/PictureAsPdfRounded';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { PictureAsPdfRounded as PictureAsPdfRoundedIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { useTaskBackend } from '@dxs-ts/task-api';

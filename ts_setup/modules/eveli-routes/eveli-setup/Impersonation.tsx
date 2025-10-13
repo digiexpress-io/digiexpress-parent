@@ -1,6 +1,6 @@
 import { Button, Popover, Box, Grid2, Typography, Divider } from '@mui/material';
 import React from 'react';
-import PersonIcon from '@mui/icons-material/Person';
+import { Person as PersonIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { mapIamRole, useIam } from '@dxs-ts/eveli-api';
 

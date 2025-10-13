@@ -4,8 +4,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import MaterialTable, { Column, Query } from '@material-table/core';
 
 import { alpha, Container, Typography, useTheme } from '@mui/material';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import AddIcon from '@mui/icons-material/Add';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { createMuiTableQueryString, useMaterialTableLabels } from '../api-mui-table';

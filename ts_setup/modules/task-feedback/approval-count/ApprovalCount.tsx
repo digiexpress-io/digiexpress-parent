@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Stack } from '@mui/material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
+import { ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 

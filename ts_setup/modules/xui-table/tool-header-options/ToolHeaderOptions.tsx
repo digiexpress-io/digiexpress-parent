@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { ArrowUpward as ArrowUpwardIcon } from '@mui/icons-material';
+import { ArrowDownward as ArrowDownwardIcon } from '@mui/icons-material';
 
 import { Header, Table } from '@tanstack/react-table';
 

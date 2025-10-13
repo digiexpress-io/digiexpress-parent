@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Box, Tooltip, useTheme } from '@mui/material';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import LinkIcon from '@mui/icons-material/Link';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
+import { Link as LinkIcon } from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 

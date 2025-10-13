@@ -4,9 +4,9 @@ import type { FormConfiguration, FormConfigurationFilters, DialobAdminConfig } f
 import { useIntl } from 'react-intl';
 import { useFormTagOptions } from '../util';
 import { LabelChips } from './LabelChips';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CloseIcon from '@mui/icons-material/Close';
-import DownloadIcon from '@mui/icons-material/Download';
+import { ContentCopy as ContentCopyIcon } from '@mui/icons-material';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Download as DownloadIcon } from '@mui/icons-material';
 import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 export interface TagTableRowProps {

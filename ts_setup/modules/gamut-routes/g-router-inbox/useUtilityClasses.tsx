@@ -1,8 +1,8 @@
 import React from 'react';
 import { Avatar, Box, Breadcrumbs, generateUtilityClass, Link, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import HomeIcon from '@mui/icons-material/Home';
+import { MailOutline as MailOutlineIcon } from '@mui/icons-material';
+import { Home as HomeIcon } from '@mui/icons-material';
 
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';

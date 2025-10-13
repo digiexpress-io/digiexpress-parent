@@ -2,8 +2,8 @@ import React from 'react';
 import { Button } from '@mui/material';
 import { GSortRoot, useUtilityClasses } from './useUtilityClasses';
 
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { ArrowDownward as ArrowDownwardIcon } from '@mui/icons-material';
+import { ArrowUpward as ArrowUpwardIcon } from '@mui/icons-material';
 
 export interface GSortProps {
   onClick: () => void;

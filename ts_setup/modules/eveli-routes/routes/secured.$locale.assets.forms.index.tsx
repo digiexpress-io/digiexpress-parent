@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import React from 'react'
 import { Box, useTheme } from '@mui/system';
 import { Button } from '@mui/material';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl, IntlProvider } from "react-intl";
 import { useSnackbar } from "notistack";

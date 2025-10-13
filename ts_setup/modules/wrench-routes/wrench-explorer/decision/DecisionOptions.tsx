@@ -2,9 +2,9 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
+import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
+import { ScienceOutlined as ScienceOutlinedIcon } from '@mui/icons-material';
+import { ModeEdit as EditIcon } from '@mui/icons-material';
 
 import { useSnackbar } from 'notistack';
 

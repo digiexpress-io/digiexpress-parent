@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import { TableChartOutlined as TableChartOutlinedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

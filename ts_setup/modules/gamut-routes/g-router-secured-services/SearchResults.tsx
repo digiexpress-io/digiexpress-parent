@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Divider, Link, List, ListItem, Typography } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
+import { Circle as CircleIcon } from '@mui/icons-material';
 
 import { GLinkPhone, GLinkHyper, GLinkFormUnlockedSearchResults, GLinkFormLocked } from '@dxs-ts/gamut-primitives';
 import  { useIam, SearchApi, SiteApi, useSite  } from '@dxs-ts/gamut-api';

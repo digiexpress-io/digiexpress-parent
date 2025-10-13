@@ -1,7 +1,7 @@
 import { Avatar, Box, Breadcrumbs, generateUtilityClass, Link, styled, Typography } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
-import HomeIcon from '@mui/icons-material/Home';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { Home as HomeIcon } from '@mui/icons-material';
+import { CalendarMonth as CalendarMonthIcon } from '@mui/icons-material';
 
 import { useNavigate } from "@tanstack/react-router";
 import { useIntl } from "react-intl";

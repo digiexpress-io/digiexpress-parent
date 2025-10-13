@@ -1,11 +1,11 @@
 import React from 'react';
 import { IconButton, Typography } from '@mui/material';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import ListIcon from '@mui/icons-material/ListAlt';
+import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
+import { ListAlt as ListIcon } from '@mui/icons-material';
 import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
-import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import BeenhereOutlinedIcon from '@mui/icons-material/BeenhereOutlined';
+import { BuildOutlined as BuildOutlinedIcon } from '@mui/icons-material';
+import { EditNoteOutlined as EditNoteOutlinedIcon } from '@mui/icons-material';
+import { BeenhereOutlined as BeenhereOutlinedIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -16,7 +16,7 @@ import { EveliLocales, EveliPermissions } from '@dxs-ts/eveli-primitives';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 
 import { ToolbarBuildInfoRoot, useUtilityClasses as useBuildInfoClasses } from './useUtilityClasses';

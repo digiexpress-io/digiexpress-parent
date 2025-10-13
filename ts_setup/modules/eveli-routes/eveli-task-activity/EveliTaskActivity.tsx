@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Box, Typography } from '@mui/material';
-import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import { OpenInNewOutlined as OpenInNewOutlinedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 import { useFetch } from '@dxs-ts/envir-fetch';

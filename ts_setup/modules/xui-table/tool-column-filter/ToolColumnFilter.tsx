@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Button, generateUtilityClass, styled, Typography } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
 
 import composeClasses from '@mui/utils/composeClasses';
 import { Column, Table } from '@tanstack/react-table';

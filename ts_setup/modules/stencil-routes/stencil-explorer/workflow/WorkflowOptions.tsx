@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
+import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
+import { ModeEdit as EditIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 import { WorkflowDelete } from '../../stencil-workflow/WorkflowDelete';

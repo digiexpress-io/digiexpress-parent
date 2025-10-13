@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { IconButton, Typography } from '@mui/material';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { SettingsOutlined as SettingsOutlinedIcon } from '@mui/icons-material';
 
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import { _eveli_shell_useUtilityClasses as useUtilityClasses } from '@dxs-ts/eveli-primitives';

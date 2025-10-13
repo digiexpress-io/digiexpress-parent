@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Grid2, generateUtilityClass, styled, useThemeProps } from '@mui/material';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { EmailOutlined as EmailOutlinedIcon } from '@mui/icons-material';
+import { DescriptionOutlined as DescriptionOutlinedIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
 

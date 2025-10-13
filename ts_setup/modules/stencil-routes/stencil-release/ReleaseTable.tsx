@@ -1,6 +1,6 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, IconButton } from "@mui/material";
-import GetAppIcon from '@mui/icons-material/GetApp';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { GetApp as GetAppIcon } from '@mui/icons-material';
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
 import fileDownload from 'js-file-download'
 
 import React from "react";
