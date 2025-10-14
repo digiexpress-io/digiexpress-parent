@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 //import { LinkEdit } from '../../stencil-link/LinkEdit';
 //import { WorkflowEdit } from '../../stencil-workflow/WorkflowEdit';
 
-import { ExplorerItemArticle, useTagomiNav } from '../tagomi-nav';
+import { ExplorerItemService, useTagomiNav } from '../tagomi-nav';
 import { ServicesListRoot, useUtilityClasses } from './useUtilityClasses';
 import { TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 import { TagomiApi } from '@dxs-ts/tagomi-api';
@@ -34,8 +34,8 @@ const EndIcon: React.FC = () => {
 export const ServicesList: React.FC<{ searchString: string }> = ({ searchString }) => {
   const intl = useIntl();
   const { session, backend } = Composer.useComposer();
-  const { getArticle, onNav } = useTagomiNav();
-  const expanded = getArticle().expanded ?? [];
+  const { getService, onNav } = useTagomiNav();
+  const expanded = getService().expanded ?? [];
    // const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilApi.WorkflowId>(undefined);
   //const serviceItemOptions: ServiceItemOptions = { setEditWorkflow };
 

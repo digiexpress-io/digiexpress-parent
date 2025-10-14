@@ -2288,7 +2288,9 @@
         "@dxs-ts/envir-fetch",
         "@mui/x-tree-view",
         "@mui/utils",
-        "@dxs-ts/eveli-api"
+        "@dxs-ts/eveli-api",
+        "@monaco-editor/react",
+        "monaco-editor"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2298,7 +2300,9 @@
         "@mui/icons-material",
         "@tanstack/react-router",
         "@mui/x-tree-view",
-        "@mui/utils"
+        "@mui/utils",
+        "@monaco-editor/react",
+        "monaco-editor"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/tagomi-api",
@@ -2306,7 +2310,10 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@monaco-editor/react",
+        "monaco-editor"
+      ],
       "unusedDependencies": [
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
@@ -3636,6 +3643,6 @@
       ]
     }
   },
-  "checksum": "fc2bad50db260273c1a05c60981867631c8167d8b8293f390e50cdadf9ddb1b9",
-  "generatedAt": "2025-10-13T09:46:14.379Z"
+  "checksum": "bd441030a3130edcafe114830a943411f435b78dcbd380add965361f5b837f68",
+  "generatedAt": "2025-10-14T10:18:31.557Z"
 }

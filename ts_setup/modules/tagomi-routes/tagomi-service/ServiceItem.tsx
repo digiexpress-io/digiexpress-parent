@@ -10,10 +10,11 @@ import { Construction as ConstructionIcon } from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 
-import { EveliPermissions, TreeItem, TreeItemRoot } from "@dxs-ts/eveli-primitives";
+import { TreeItem, TreeItemRoot } from "@dxs-ts/eveli-primitives";
 
 import { TagomiApi, TagomiComposerApi as Composer } from "@dxs-ts/tagomi-api";
 import { ServiceOptions } from "./ServiceOptions";
+import { TemplateEditMenuItem } from "../tagomi-template";
 
 //import { ArticleOptions } from './ArticleOptions';
 //import ArticlePageItem from './ArticlePageItem';
@@ -90,12 +91,12 @@ const ServiceItem: React.FC<{ serviceId: TagomiApi.ServiceId, nodeId?: string }>
           <ServiceOptions service={service} />
         </TreeItem>
 
-        {/** Pages */}
+        {/** Templates */}
         <TreeItem itemId={service.id + 'pages-nested'}
-          labelText={<FormattedMessage id="pages" />}
+          labelText={<FormattedMessage id="templates" />}
           labelInfo={`${templates.length}`}
           labelcolor={saved ? "page" : "secondary.light"}>
-          {templates.map(template => (<Box>{template.locale.localeCode}</Box>))}
+          {templates.map(template => (<TemplateEditMenuItem service={view} template={template} />))}
         </TreeItem>
  
 
