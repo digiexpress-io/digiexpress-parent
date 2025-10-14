@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { ExplorerItem, useTagomiNav } from '../tagomi-nav';
 import { ServicesView } from '../tagomi-service';
+import { TemplateEditor } from '../tagomi-template';
 
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
@@ -20,10 +21,20 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}></Box>)
     }
     const explorer: ExplorerItem | undefined = activeItem;
-    if(!explorer) {
-      return (<Box sx={root}></Box>)
-    }
+    if (explorer?.type === 'SERVICE_TEMPLATES') {
 
+      const serviceId = explorer.article;
+      const localeId = explorer.locale1;
+
+      const template = Object.values(site.templates)
+        .filter(template => template.serviceId === serviceId)
+        .filter(template => template.localeId === localeId)
+      if (template.length === 0) {
+        return (<>Template not found!!!</>)
+      }
+
+      return <TemplateEditor serviceId={serviceId} templateId={template[0].id} />
+    }
     return (<Box sx={root}><ServicesView /></Box>)
   }, [activeItem, site]);
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 
@@ -12,10 +12,12 @@ import { TagomiApi, TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 export const NewTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.ServiceId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
+  const intl = useIntl();
   const { actions, site, backend } = Composer.useComposer();
   const [locale, setLocale] = React.useState('');
   const [serviceId, setServiceId] = React.useState<TagomiApi.ServiceId>(props.serviceId || '');
   const { onNav } = useTagomiNav();
+  const message = intl.formatMessage({ id: 'snack.template.createdMessage' })
 
   const service = serviceId ? site.services[serviceId] : undefined;
 
@@ -32,7 +34,6 @@ export const NewTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.
 
     })
   }
-  const message = <FormattedMessage id="snack.page.createdMessage" />
 
   const definedLocales: TagomiApi.LocaleId[] = service ?
     Object.values(site.templates)
@@ -44,14 +45,14 @@ export const NewTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.
 
   return (
     <Dialog open={true} onClose={props.onClose}>
-      <DialogTitle><FormattedMessage id='tagomi.newTemplate.title' /></DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'tagomi.template.create.dialog.title' })}</DialogTitle>
       <DialogContent>
-        <FormattedMessage id='tagomi.newTemplate.desc' />
+        {intl.formatMessage({ id: 'tagomi.template.create.dialog.desc' })}
 
         <Burger.Select
           selected={serviceId}
           onChange={setServiceId}
-          label='tagomi.service.name'
+          label='tagomi.template.create.dialog.service.name'
           items={Object.values(site.services).map((service) => ({
             id: service.id,
             value: service.serviceName
@@ -62,19 +63,19 @@ export const NewTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.
           selected={locale}
           onChange={setLocale}
           disabled={!service || availableLocaleLabels.length === 0}
-          label='tagomi.service.newTemplate.localeLabel.select'
+          label='tagomi.template.create.dialog.localeLabel.select'
           items={availableLocaleLabels.map((item) => ({
             id: item.locale,
             value: item.labelValue
           }))}
-          helperText={service && availableLocaleLabels.length === 0 ? 'All locales already have templates for this service.' : undefined}
+          helperText={service && availableLocaleLabels.length === 0 ? intl.formatMessage({ id: 'tagomi.template.create.dialog.noLocales' }) : undefined} 
         />
 
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={props.onClose} />
         <Button onClick={handleCreate} disabled={!locale}>
-          <FormattedMessage id='button.create' />
+          {intl.formatMessage({ id: 'button.create' })}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,9 +1,9 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
-export const ArticlesViewClassName = 'ArticlesView';
+export const ServicesViewClassName = 'ServicesView';
 export const ServicesListClassName = 'ServicesList';
-export const ArticleViewRootClassName = 'ArticleViewRoot';
+export const ServicesViewRootClassName = 'ServicesViewRoot';
 
 export interface ArticleListClasses {
   root: string;
@@ -22,14 +22,14 @@ export const useUtilityClasses = () => {
     searchField: ['searchField'],
     searchFieldContainer: ['searchFieldContainer']
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(ArticlesViewClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(ServicesViewClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
 
 
 export const ServicesViewRoot = styled("div", {
-  name: ArticlesViewClassName,
-  slot: 'AllArticles',
+  name: ServicesViewClassName,
+  slot: 'AllServices',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
@@ -42,12 +42,12 @@ export const ServicesViewRoot = styled("div", {
 })<{}>(({ theme }) => {
   return {
 
-    '& .ArticlesView-title': {
+    '& .ServicesView-title': {
       marginLeft: theme.spacing(1),
       ...theme.typography.h1
     },
 
-    '& .ArticlesView-searchField': {
+    '& .ServicesView-searchField': {
       width: '50%',
       borderRadius: theme.spacing(3),
       alignSelf: 'center'
@@ -57,7 +57,7 @@ export const ServicesViewRoot = styled("div", {
       borderRadius: theme.spacing(3),
     },
 
-    '& .ArticlesView-searchFieldContainer': {
+    '& .ServicesView-searchFieldContainer': {
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column'

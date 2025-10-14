@@ -36,7 +36,7 @@ const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const { session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
-    return intl.formatMessage({ id: 'explorer.pages' })
+    return intl.formatMessage({ id: 'tagomi.templates.templateTab' })
   }
   return (<>{item.type}</>)
 }

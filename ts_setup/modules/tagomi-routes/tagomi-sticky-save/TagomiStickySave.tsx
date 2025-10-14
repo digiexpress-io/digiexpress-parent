@@ -24,7 +24,7 @@ function useSave() {
   const unsavedArticlePages: TagomiComposerApi.TemplateUpdate[] = (article ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.serviceId === article.id) : []);
 
   const enabled = unsavedArticlePages.length > 0;
-  const message = <FormattedMessage id="snack.page.savedMessage" />
+  const message = <FormattedMessage id="snack.template.savedMessage" />
 
 
   const onSave = (_event: React.SyntheticEvent) => {

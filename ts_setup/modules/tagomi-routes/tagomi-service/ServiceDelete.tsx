@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { CancelButton } from '@dxs-ts/eveli-primitives';
@@ -14,30 +14,30 @@ interface ServiceDeleteProps {
 
 export const ServiceDelete: React.FC<ServiceDeleteProps> = ({ serviceId, onClose }) => {
   const { site, actions, backend } = Composer.useComposer();
+  const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const service = site.services[serviceId];
 
-  const message = <FormattedMessage id="snack.service.deletedMessage" />
+  const message = intl.formatMessage({ id: 'snack.service.deletedMessage' });
 
   backend.deleteService
   const handleDelete = () => {
     backend.deleteService(service.id).then(_success => {
-      enqueueSnackbar(message, { variant: 'warning' });
+      enqueueSnackbar(message, { variant: 'success' });
       onClose();
       actions.handleLoadSite();
     });
   }
   return (
     <Dialog open={true} onClose={onClose}>
-      <DialogTitle><FormattedMessage id='tagomi.service.delete.title' /></DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'tagomi.service.delete.dialog.title' })}{" "}{service.serviceName}</DialogTitle>
       <DialogContent>
-        <Typography>{service.serviceName}</Typography>
-        <Typography><FormattedMessage id='tagomi.service.delete.description' /></Typography>
+        <Typography>{intl.formatMessage({ id: 'tagomi.service.delete.dialog.desc' })}</Typography>
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
         <Button onClick={handleDelete} >
-          <FormattedMessage id='tagomi.button.delete.service' />
+          {intl.formatMessage({ id: 'tagomi.service.delete.dialog.button' })}
         </Button>
       </DialogActions>
     </Dialog>

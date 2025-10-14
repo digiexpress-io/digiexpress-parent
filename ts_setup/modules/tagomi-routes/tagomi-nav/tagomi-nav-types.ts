@@ -1,19 +1,19 @@
-export interface ExplorerItemArticlePages {
+export interface ExplorerItemServiceTemplates {
   type: 'SERVICE_TEMPLATES';
   article: string;
   locale1: string;
   locale2?: string | undefined;
 }
 
-export interface ExplorerItemArticle {
+export interface ExplorerItemService {
   type: 'SERVICES';
   article?: string | undefined,
   expanded?: string[]
 }
 
 export type ExplorerItem = (
-  ExplorerItemArticlePages |
-  ExplorerItemArticle |
+  ExplorerItemServiceTemplates |
+  ExplorerItemService |
 
   { type: 'RESOURCES' } |
   { type: 'LOCALES' } |

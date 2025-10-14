@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemArticle, mergeTagomiSearchParams, TagomiRouteSearchParams, toExplorerId } from './tagomi-nav-types';
+import { ExplorerItem, ExplorerItemService, mergeTagomiSearchParams, TagomiRouteSearchParams, toExplorerId } from './tagomi-nav-types';
 import { useTagomiTabClose } from './useTagomiTabClose';
 
 
@@ -10,7 +10,7 @@ export function useTagomiNav(): {
   onNav: (newItem: ExplorerItem) => void;
 
   findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
-  getArticle: () => ExplorerItemArticle;
+  getService: () => ExplorerItemService;
   onTabCurrentClose: () => void;
   onTabClose: (tab: ExplorerItem) => void;
   explorer: ExplorerItem[];
@@ -40,8 +40,8 @@ export function useTagomiNav(): {
       .find((tab: ExplorerItem) => serviceId ? (tab as any)['service'] === serviceId : true);
   }
 
-  function getArticle(): ExplorerItemArticle {
-    const article: ExplorerItemArticle | undefined = explorer.find(({ type }) => type === 'SERVICES') as ExplorerItemArticle | undefined;
+  function getService(): ExplorerItemService {
+    const article: ExplorerItemService | undefined = explorer.find(({ type }) => type === 'SERVICES') as ExplorerItemService | undefined;
     return article ?? { type: 'SERVICES', article: undefined, expanded: []};
   }
 
@@ -49,5 +49,5 @@ export function useTagomiNav(): {
     onTabClose(activeItem);
   }
 
-  return { activeItem, activeItemId, explorer, onNav, onTabCurrentClose, findTab, getArticle, onTabClose }
+  return { activeItem, activeItemId, explorer, onNav, onTabCurrentClose, findTab, getService, onTabClose }
 }
