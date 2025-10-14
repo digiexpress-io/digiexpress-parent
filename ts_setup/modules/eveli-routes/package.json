@@ -41,7 +41,6 @@
     "@monaco-editor/react": "*",
     "yaml": "*",
     "luxon": "*",
-    "moment": "*",
     "notistack": "*",
     "recharts": "*"
   },

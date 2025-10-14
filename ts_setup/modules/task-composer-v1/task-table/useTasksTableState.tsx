@@ -2,7 +2,7 @@ import React from "react";
 import { useIntl, FormattedDate } from "react-intl";
 import { Column } from '@material-table/core';
 import { IconButton } from '@mui/material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
 
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 

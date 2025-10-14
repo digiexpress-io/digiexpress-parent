@@ -1,7 +1,7 @@
 import React from 'react';
 import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography } from '@mui/material';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { ThumbDown as ThumbDownIcon } from '@mui/icons-material';
+import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 import { SiteApi, useSite } from '@dxs-ts/gamut-api';

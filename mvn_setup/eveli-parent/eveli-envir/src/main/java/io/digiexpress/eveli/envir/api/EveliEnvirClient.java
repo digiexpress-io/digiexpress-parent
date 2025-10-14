@@ -143,5 +143,6 @@ public interface EveliEnvirClient {
     
     ExecutorBuilder getWrench();
     Sites getStencil(OffsetDateTime now);
+    Sites getStencil(OffsetDateTime now, boolean auth);
   }
 }

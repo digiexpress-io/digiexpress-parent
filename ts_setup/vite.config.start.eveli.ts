@@ -1,6 +1,6 @@
 import { ConfigEnv, ServerOptions, UserConfig } from 'vite';
 import { tanstackRouter } from '@tanstack/router-vite-plugin';
-import mockDevServerPlugin from 'vite-plugin-mock-dev-server';
+import { mockDevServerPlugin } from 'vite-plugin-mock-dev-server';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
@@ -45,6 +45,12 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
   return {
     base: process.env.PUBLIC_URL || '',
     mode: 'development',
+    server: {
+      fs: {
+        allow: ['../../modules']
+      }
+    },
+    
     plugins: [
       startDemoApp({ moduleName: '@dxs-ts/eveli-demo-app', server }),
       tanstackRouter({

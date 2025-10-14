@@ -2,7 +2,7 @@ import React from 'react';
 import { IconButton, Popover, Typography, Tooltip, ListItem } from '@mui/material';
 
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import { FormatListNumbered as FormatListNumberedIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 

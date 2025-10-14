@@ -2,9 +2,9 @@ import React from 'react';
 import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import UploadIcon from '@mui/icons-material/Upload';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { Edit as EditIcon } from '@mui/icons-material';
+import { Upload as UploadIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

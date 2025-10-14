@@ -3,11 +3,11 @@ import React from 'react';
 import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton, Button } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import EditIcon from '@mui/icons-material/Edit';
-import DoubleArrowRoundedIcon from '@mui/icons-material/DoubleArrowRounded';
-import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded';
-import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
-import UploadIcon from '@mui/icons-material/Upload';
+import { Edit as EditIcon } from '@mui/icons-material';
+import { DoubleArrowRounded as DoubleArrowRoundedIcon } from '@mui/icons-material';
+import { CompareArrowsRounded as CompareArrowsRoundedIcon } from '@mui/icons-material';
+import { FileDownloadDone as FileDownloadDoneIcon } from '@mui/icons-material';
+import { Upload as UploadIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 

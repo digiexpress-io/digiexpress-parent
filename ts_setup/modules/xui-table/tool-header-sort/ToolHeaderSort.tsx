@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Divider, IconButton, ListItemIcon, MenuItem } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import { MoreVert as MoreVertIcon } from '@mui/icons-material';
+import { ArrowUpward as ArrowUpwardIcon } from '@mui/icons-material';
+import { ArrowDownward as ArrowDownwardIcon } from '@mui/icons-material';
+import { TableChartOutlined as TableChartOutlinedIcon } from '@mui/icons-material';
+import { RestartAlt as RestartAltIcon } from '@mui/icons-material';
+import { NotInterested as NotInterestedIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { Header, Table } from '@tanstack/react-table';

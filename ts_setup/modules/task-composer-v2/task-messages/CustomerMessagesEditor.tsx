@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';

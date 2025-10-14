@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Accordion, AccordionDetails, AccordionSummary, Badge, Box, Grid2, Typography } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { DriveFileMoveOutlined as DriveFileMoveOutlinedIcon } from '@mui/icons-material';
 import { FormattedMessage } from "react-intl";
 
 import { TaskApi, TaskFeature, useTaskBackend } from '@dxs-ts/task-api';

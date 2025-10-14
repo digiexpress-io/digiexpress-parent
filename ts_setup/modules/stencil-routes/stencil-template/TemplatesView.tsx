@@ -3,8 +3,8 @@ import {
   Box, Typography, IconButton, Table, TableBody,
   TableCell, TableContainer, TableRow, TableHead, Paper, Button
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { Edit as EditIcon } from '@mui/icons-material';
+import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 import { StencilApi, StencilComposerApi as Composer } from '@dxs-ts/stencil-api';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Tooltip, useTheme } from '@mui/material';
-import DoneIcon from '@mui/icons-material/Done';
-import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
+import { Done as DoneIcon } from '@mui/icons-material';
+import { DoNotDisturbAlt as DoNotDisturbAltIcon } from '@mui/icons-material';
 import { FeedbackApi, useFeedback } from '../api-feedback';
 import { useIntl } from 'react-intl';
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Grid2, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StringBuilder } from './'
 

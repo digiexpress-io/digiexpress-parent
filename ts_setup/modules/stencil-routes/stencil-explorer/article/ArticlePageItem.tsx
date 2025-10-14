@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Typography, Theme, useTheme, Grid2 } from "@mui/material";
-import SwitchRightIcon from '@mui/icons-material/SwitchRight';
-import SwitchLeftIcon from '@mui/icons-material/SwitchLeft';
-import ConstructionIcon from '@mui/icons-material/Construction';
+import { SwitchRight as SwitchRightIcon } from '@mui/icons-material';
+import { SwitchLeft as SwitchLeftIcon } from '@mui/icons-material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
 
 import { useIntl } from "react-intl";
 

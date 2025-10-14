@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Divider, Paper, Typography, useThemeProps } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import EmailIcon from '@mui/icons-material/Email';
+import { Info as InfoIcon } from '@mui/icons-material';
+import { LocalPhone as LocalPhoneIcon } from '@mui/icons-material';
+import { Email as EmailIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';

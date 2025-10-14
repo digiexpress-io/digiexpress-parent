@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid2, Typography, Paper } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 const NewTaskAccordionMsg: React.FC<{ id: string }> = ({ id }) => {

@@ -68,6 +68,7 @@ public interface Markdowns {
     String getLocale();
     String getPath();
     String getValue();
+    Boolean getAuth();
     List<Heading> getHeadings();
     List<ImageTag> getImages();
   }

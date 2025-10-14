@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { ArrowUpward as ArrowUpwardIcon } from '@mui/icons-material';
+import { ArrowDownward as ArrowDownwardIcon } from '@mui/icons-material';
 
 export interface SortFieldProps {
   active: boolean;

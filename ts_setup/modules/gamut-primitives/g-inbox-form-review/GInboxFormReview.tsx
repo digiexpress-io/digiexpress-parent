@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Chip, useThemeProps, Dialog, Button, DialogTitle, Box, IconButton, DialogContent, Typography, Divider } from '@mui/material';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import CloseIcon from '@mui/icons-material/Close';
+import { DescriptionOutlined as DescriptionOutlinedIcon } from '@mui/icons-material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 import { GInboxFormReviewRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';

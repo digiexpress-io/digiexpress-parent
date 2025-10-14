@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, IconButton, useTheme } from '@mui/material';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { KeyboardArrowLeft as KeyboardArrowLeftIcon } from '@mui/icons-material';
+import { KeyboardArrowRight as KeyboardArrowRightIcon } from '@mui/icons-material';
+import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
+import { ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 export interface CalendarHeaderProps {

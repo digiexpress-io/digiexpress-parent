@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme, Typography, styled, useThemeProps, generateUtilityClass } from '@mui/material';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import { LocalPhone as LocalPhoneIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 

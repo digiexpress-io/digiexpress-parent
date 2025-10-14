@@ -5,7 +5,7 @@ import { flexRender, ColumnDef, RowData, Table } from '@tanstack/react-table';
 import { useTable } from './tanstack';
 import { EveliTable } from './table';
 
-import { ToolColumnVisibilityDialog, ToolColumnVisibilitySelection } from './tool-column-visibility';
+import { ToolColumnConfigDialog, ToolColumnConfig } from './tool-column-config';
 import { ToolPagination } from './tool-pagination';
 import { ToolHeaderOptions } from './tool-header-options';
 import { ToolColumnFilter } from './tool-column-filter';
@@ -90,7 +90,7 @@ function RenderTable<DataType extends object>(props: {
           body: {
             'export-data': ExportDataSlot ? <ExportDataSlot table={table} /> : undefined,
             'saved-filters': <ToolColumnSavedFilter table={table} state={props.state} tableId={props.options.tableId} onClearAll={onClearAll} />,
-            'columns': <ToolColumnVisibilitySelection table={table} />,
+            'columns': <ToolColumnConfig table={table} />,
             'filters': <ToolColumnFilter table={table} />,
           }
         }
@@ -99,7 +99,7 @@ function RenderTable<DataType extends object>(props: {
 
       <>
         {/** Choose columns that are visible in full screen dialob */}
-        <ToolColumnVisibilityDialog open={filterDialogOpen} onClose={onColumnFilter} table={table} />
+        <ToolColumnConfigDialog open={filterDialogOpen} onClose={onColumnFilter} table={table} />
       </>
     </>
   )

@@ -1,6 +1,6 @@
 import { Table } from '@tanstack/react-table'
 import { Box, Button, styled } from '@mui/material';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { FileDownload as FileDownloadIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 import FileSaver from 'file-saver';

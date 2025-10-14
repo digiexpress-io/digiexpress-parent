@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, styled, useThemeProps, generateUtilityClass, Link } from '@mui/material';
-import LockPersonIcon from '@mui/icons-material/LockPerson';
+import { LockPerson as LockPersonIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
 

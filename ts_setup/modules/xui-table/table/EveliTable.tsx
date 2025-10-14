@@ -3,10 +3,10 @@ import React from 'react';
 
 import { BodyRowSlot, HeaderRowSlot, FooterSlot, Root, useUtilityClasses, DrawerSlot, DrawerButtonBarSlot, DrawerButtonSlot } from './useUtilityClasses';
 import { Box, Button, IconButton, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
-import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { TableChartOutlined as TableChartOutlinedIcon } from '@mui/icons-material';
+import { FilterListOutlined as FilterListOutlinedIcon } from '@mui/icons-material';
+import { FavoriteBorder as FavoriteBorderIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { FillerRows } from './FillerRows';

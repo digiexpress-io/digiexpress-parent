@@ -8,6 +8,7 @@ import { EveliActivities } from '@dxs-ts/eveli-primitives';
 import { useTagomiNav } from '../tagomi-nav';
 import { ServiceComposer } from '../tagomi-service';
 import { LocaleComposer } from '../tagomi-locale';
+import { NewTemplate } from '../tagomi-template';
 
 
 export interface ActivityProps {
@@ -60,6 +61,14 @@ export function useActivities(): ActivityProps[] {
       title: <FormattedMessage id="tagomi.locales.title" />,
       desc: <FormattedMessage id="tagomi.locales.desc" />,
       buttonCreate: <FormattedMessage id="tagomi.locale.create" />,
+      buttonViewAll: undefined,
+    },
+    {
+      composer: NewTemplate,
+      onView: () => nav.onNav({ type: 'TEMPLATES' }),
+      title: <FormattedMessage id="tagomi.templates.title" />,
+      desc: <FormattedMessage id="tagomi.templates.desc" />,
+      buttonCreate: <FormattedMessage id="tagomi.template.create" />,
       buttonViewAll: undefined,
     },
   ])

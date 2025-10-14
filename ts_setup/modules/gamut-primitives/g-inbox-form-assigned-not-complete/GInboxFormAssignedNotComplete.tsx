@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Chip, useThemeProps } from '@mui/material';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { DescriptionOutlined as DescriptionOutlinedIcon } from '@mui/icons-material';
 import { GInboxFormAssignedNotCompleteRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 

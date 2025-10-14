@@ -3,8 +3,8 @@ import { Table, Tooltip, Paper, TableHead } from '@mui/material';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { CheckCircleOutline as CheckCircleOutlineIcon } from '@mui/icons-material';
+import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 import { StencilApi } from '@dxs-ts/stencil-api';

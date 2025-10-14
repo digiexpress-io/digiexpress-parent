@@ -1,9 +1,9 @@
 import React from 'react';
 import { alpha, Box, generateUtilityClass, IconButton, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import DescriptionIcon from '@mui/icons-material/Description';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DownloadIcon from '@mui/icons-material/Download';
+import { Description as DescriptionIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { Download as DownloadIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@dxs-ts/task-api';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Chip, Typography, useThemeProps } from '@mui/material';
-import FilePresentIcon from '@mui/icons-material/FilePresent';
+import { FilePresent as FilePresentIcon } from '@mui/icons-material';
 import { GInboxAttachmentsRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { useContracts } from '@dxs-ts/gamut-api';
 

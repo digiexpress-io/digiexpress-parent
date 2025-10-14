@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
+import { Circle as CircleIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 

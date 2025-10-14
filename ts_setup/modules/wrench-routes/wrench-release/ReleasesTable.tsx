@@ -4,10 +4,10 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
   DialogActions, Dialog, Button, DialogTitle, DialogContent, Typography, Box
   
 } from "@mui/material";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ForkRightIcon from '@mui/icons-material/ForkRight';
+import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
+import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@mui/icons-material';
+import { ForkRight as ForkRightIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from "react-intl";
 import fileDownload from 'js-file-download'

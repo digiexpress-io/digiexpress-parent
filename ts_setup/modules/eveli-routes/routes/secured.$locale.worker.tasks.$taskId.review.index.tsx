@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Container, MenuItem, FormControl, ListItemText, Select, Checkbox, Chip, Stack, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
-import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import { LocalPrintshop as LocalPrintshopIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { createFileRoute } from '@tanstack/react-router'
 import { DialobReviewBasedOnForm } from '../dialob-review';

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { IconButton, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Add as AddIcon } from '@mui/icons-material';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
 

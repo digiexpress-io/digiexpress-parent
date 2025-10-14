@@ -94,6 +94,7 @@ public class MarkdownBuilderImpl implements MarkdownBuilder {
       }
       
       fromFiles.addValues(ImmutableMarkdown.builder()
+          .auth(false)
           .path(cleanPath)
           .locale(locale)
           .value(content)

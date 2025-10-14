@@ -92,26 +92,26 @@ public class WkStartDateEndDateTest extends PgTestTemplate {
 
     // one second too early for workflow
     Assertions.assertEquals(0, 
-        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 02, 01, 05, 59), ZoneOffset.UTC))
+        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 02, 01, 05, 59), ZoneOffset.UTC), false)
         .getSites().get("en").getLinks().size()
     );
     
     Assertions.assertEquals(1, 
-        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 02, 01, 06, 00), ZoneOffset.UTC))
+        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 02, 01, 06, 00), ZoneOffset.UTC), false)
         .getSites().get("en").getLinks().size()
     );
     
     Assertions.assertEquals(1, 
-        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 02, 01, 07, 00), ZoneOffset.UTC))
+        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 02, 01, 07, 00), ZoneOffset.UTC), false)
         .getSites().get("en").getLinks().size());
     
     Assertions.assertEquals(1, 
-        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 03, 01, 05, 59), ZoneOffset.UTC))
+        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 03, 01, 05, 59), ZoneOffset.UTC), false)
         .getSites().get("en").getLinks().size()
     );
     
     Assertions.assertEquals(0, 
-        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 03, 01, 06, 00), ZoneOffset.UTC))
+        envir.get(OffsetDateTime.of(LocalDateTime.of(2025, 03, 01, 06, 00), ZoneOffset.UTC), false)
         .getSites().get("en").getLinks().size()
     );
   }

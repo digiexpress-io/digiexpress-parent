@@ -1,7 +1,7 @@
 import React from 'react';
 import { GFormGroupProps } from './g-form-group-types';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { GFormGroupLabel, useUtilityClasses } from './useThemeInfra';
 
 

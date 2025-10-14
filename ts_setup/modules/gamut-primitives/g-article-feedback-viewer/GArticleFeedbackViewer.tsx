@@ -5,11 +5,11 @@ import {
   Alert
 } from '@mui/material';
 
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import InfoIcon from '@mui/icons-material/Info';
+import { ThumbDownOffAlt as ThumbDownOffAltIcon } from '@mui/icons-material';
+import { ThumbUpOffAlt as ThumbUpOffAltIcon } from '@mui/icons-material';
+import { ThumbDown as ThumbDownIcon } from '@mui/icons-material';
+import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import { SiteApi, useSite } from '@dxs-ts/gamut-api';
 import { useIntl } from 'react-intl';

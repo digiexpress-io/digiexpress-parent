@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import { PersonOutlined as PersonOutlinedIcon } from '@mui/icons-material';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 

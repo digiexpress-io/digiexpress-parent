@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Box, Grid, Typography, useThemeProps, Tooltip } from '@mui/material';
-import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
-import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
+import { MarkEmailUnreadOutlined as MarkEmailUnreadOutlinedIcon } from '@mui/icons-material';
+import { TransferWithinAStation as TransferWithinAStationIcon } from '@mui/icons-material';
 
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';

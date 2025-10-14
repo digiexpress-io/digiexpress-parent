@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, AlertTitle } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 import { EveliAlertRoot, useUtilityClasses } from './useUtilityClasses';
 
 

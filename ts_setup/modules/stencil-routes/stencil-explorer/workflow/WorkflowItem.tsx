@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Box, Tooltip, useTheme } from '@mui/material';
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import FaceIcon from '@mui/icons-material/Face';
+import { FolderOutlined as FolderOutlinedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { ModeEdit as EditIcon } from '@mui/icons-material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
+import { NotInterested as NotInterestedIcon } from '@mui/icons-material';
+import { AssignmentInd as AssignmentIndIcon } from '@mui/icons-material';
+import { Face as FaceIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 

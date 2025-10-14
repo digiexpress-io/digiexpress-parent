@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
+import { CodeOutlined as CodeOutlinedIcon } from '@mui/icons-material';
 
-import DangerousOutlinedIcon from '@mui/icons-material/DangerousOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import { DangerousOutlined as DangerousOutlinedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { PriorityHigh as PriorityHighIcon } from '@mui/icons-material';
+import { LowPriority as LowPriorityIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 

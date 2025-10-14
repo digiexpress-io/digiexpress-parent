@@ -4,12 +4,12 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 
-import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import CircleIcon from '@mui/icons-material/Circle';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Save as SaveIcon } from '@mui/icons-material';
+import { FileUpload as FileUploadIcon } from '@mui/icons-material';
+import { Circle as CircleIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { Send as SendIcon } from '@mui/icons-material';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { useConfig, PublicationApi, EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 import { CancelButton, EveliPermissions } from '@dxs-ts/eveli-primitives';

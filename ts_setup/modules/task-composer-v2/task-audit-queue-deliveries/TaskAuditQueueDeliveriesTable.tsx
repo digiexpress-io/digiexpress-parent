@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import { OpenInNewOutlined as OpenInNewOutlinedIcon } from '@mui/icons-material';
 
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';

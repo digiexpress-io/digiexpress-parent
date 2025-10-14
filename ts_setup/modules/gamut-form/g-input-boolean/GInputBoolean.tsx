@@ -1,8 +1,8 @@
 import React from 'react';
 import { useThemeProps, Button, Typography } from '@mui/material';
 import { OverridableStringUnion } from '@mui/types';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
 
 import { GInputBase, GInputBaseAnyProps, GInputBaseProps } from '../g-input-base';
 import { DialobApi } from '@dxs-ts/gamut-api';

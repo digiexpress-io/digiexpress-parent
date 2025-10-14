@@ -67,10 +67,6 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   public Optional<ProcessClient.ProcessInstance> findOneByTaskId(String id) {
     return processJPA.findByTaskId(id).map(CreateProcessInstanceImpl::map);
   }
-  @Override
-  public List<ProcessClient.ProcessInstance> findAllByUserId(String userId) {
-    return processJPA.findAllByUserId(userId).stream().map(CreateProcessInstanceImpl::map).toList();
-  }
 
   @Override
   public void deleteOneById(Long id) {

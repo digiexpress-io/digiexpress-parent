@@ -88,6 +88,8 @@ public interface UpdateBuilder {
     List<String> getWorkflows();
     @Nullable
     Boolean getDevMode();
+    @Nullable
+    Boolean getAuthOnly();
   }
   @Value.Immutable
   @JsonSerialize(as = ImmutablePageMutator.class)

@@ -1,7 +1,7 @@
 import React from 'react';
 import { generateUtilityClass, Typography, styled, Button } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import { PersonOutlined as PersonOutlinedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 

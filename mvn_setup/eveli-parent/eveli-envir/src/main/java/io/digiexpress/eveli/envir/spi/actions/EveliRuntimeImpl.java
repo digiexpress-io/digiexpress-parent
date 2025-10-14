@@ -76,8 +76,12 @@ public class EveliRuntimeImpl implements EveliRuntime {
     return new HdesClientExecutorBuilder(wrenchEnvir, hdesClientConfig.getTypes(), hdesClientConfig.getDependencyInjectionContext());
   }
   @Override
+  public Sites getStencil(OffsetDateTime now, boolean auth) {
+    return stencilEnvir.get(now, auth);
+  }
+  @Override
   public Sites getStencil(OffsetDateTime now) {
-    return stencilEnvir.get(now);
+    return stencilEnvir.get(now, true);
   }
   public boolean isDev() {
     return isDev;
@@ -95,4 +99,6 @@ public class EveliRuntimeImpl implements EveliRuntime {
   public OffsetDateTime getStartsAt() {
     return deployment.getStartsAt();
   }
+
+
 }

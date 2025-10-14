@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from '@mui/material';
-import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import { OpenInNewOutlined as OpenInNewOutlinedIcon } from '@mui/icons-material';
 import { Editor } from '@monaco-editor/react';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { useQuery } from "@tanstack/react-query";

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AutocompleteOwnerState, AutocompleteRenderOptionState, Checkbox } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
 import { useOptions } from './GInputAutocompleteProvider';
 import { MaterialOptionType } from './useOwnerState';
 

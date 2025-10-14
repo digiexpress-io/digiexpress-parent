@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton, Popover, Typography } from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { HelpOutline as HelpOutlineIcon } from '@mui/icons-material';
 
 import { useThemeInfra, GFormNoteRoot } from './useThemeInfra';
 import { GMarkdown } from '@dxs-ts/gamut-md'

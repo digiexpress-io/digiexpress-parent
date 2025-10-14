@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, lighten, Typography, useTheme } from '@mui/material';
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import { SaveOutlined as SaveOutlinedIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';

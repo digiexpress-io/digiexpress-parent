@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Grid, Typography, useThemeProps } from '@mui/material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
+import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
+import { TransferWithinAStation as TransferWithinAStationIcon } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 

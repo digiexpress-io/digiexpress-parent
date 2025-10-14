@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useThemeProps, Typography, Divider, IconButton } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 
 import { MUI_NAME, useUtilityClasses, GInputGroupRowRoot, GInputGroupRowLabel, GInputGroupRowBody } from './useUtilityClasses';
 

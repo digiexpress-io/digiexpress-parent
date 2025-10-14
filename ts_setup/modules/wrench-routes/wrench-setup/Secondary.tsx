@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, ListItemText, MenuItem, MenuList } from '@mui/material';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
-import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
-import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
-import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
+import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
+import { CodeOutlined as CodeOutlinedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { TableChartOutlined as TableChartOutlinedIcon } from '@mui/icons-material';
+import { BugReportOutlined as BugReportOutlinedIcon } from '@mui/icons-material';
+import { NewReleasesOutlined as NewReleasesOutlinedIcon } from '@mui/icons-material';
+import { CompareArrowsOutlined as CompareArrowsOutlinedIcon } from '@mui/icons-material';
+import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
+import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';

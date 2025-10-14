@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Grid, Typography, useThemeProps } from '@mui/material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 

@@ -6,9 +6,9 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl';
 import type { FormConfiguration } from './types';
 import { SortField, CustomDatePicker, Spinner, CreateDialog, DeleteDialog, TagTableRow } from './components';
-import AddIcon from '@mui/icons-material/Add';
-import DownloadIcon from '@mui/icons-material/Download';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Download as DownloadIcon } from '@mui/icons-material';
+import { FileUpload as FileUploadIcon } from '@mui/icons-material';
 import { useDialobDashboardState } from './context/DialobDashboardStateContext';
 
 export const DialobAdminView: React.FC = () => {

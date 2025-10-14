@@ -1,6 +1,6 @@
 import React from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { Clear as ClearIcon } from '@mui/icons-material';
+import { AccessTime as AccessTimeIcon } from '@mui/icons-material';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { GInputTimeProps } from './GInputTime';

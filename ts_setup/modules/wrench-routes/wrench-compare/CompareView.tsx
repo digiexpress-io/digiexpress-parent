@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, ListItemText, Typography, Dialog, DialogTitle, DialogContent, DialogActions, ListItem, List, ButtonGroup } from "@mui/material";
 import { FormattedMessage, useIntl } from "react-intl";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 
 import * as Diff2Html from "diff2html";
 import "diff2html/bundles/css/diff2html.min.css";

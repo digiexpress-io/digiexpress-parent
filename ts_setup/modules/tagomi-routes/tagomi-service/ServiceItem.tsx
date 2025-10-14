@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Box, Tooltip, Typography, useTheme } from "@mui/material";
 
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import FaceIcon from '@mui/icons-material/Face';
-import ConstructionIcon from '@mui/icons-material/Construction';
+import { NotInterested as NotInterestedIcon } from '@mui/icons-material';
+import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
+import { MenuBookOutlined as MenuBookOutlinedIcon } from '@mui/icons-material';
+import { Face as FaceIcon } from '@mui/icons-material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -62,19 +62,16 @@ const WorkflowItem: React.FC<WorkflowItemProps> = (props) => {
 
 
 
-const ServiceItem: React.FC<{
-  serviceId: TagomiApi.ServiceId,
-  nodeId?: string,
-}> = ({ serviceId, nodeId }) => {
-  const theme = useTheme();
-  const intl = useIntl();
+const ServiceItem: React.FC<{ serviceId: TagomiApi.ServiceId, nodeId?: string }> = ({ serviceId, nodeId }) => {
 
+  const theme = useTheme();
   const { session, isServiceSaved } = Composer.useComposer();
   const view = session.getServiceView(serviceId);
   const { service, labels, templates } = view;
   const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
 
   const saved = isServiceSaved(service);
+
 
   return (
     <>

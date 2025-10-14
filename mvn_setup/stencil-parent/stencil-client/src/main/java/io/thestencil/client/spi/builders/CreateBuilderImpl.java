@@ -146,6 +146,7 @@ public class CreateBuilderImpl implements CreateBuilder {
   public static Entity<Article> article(CreateArticle init, SiteState state, StencilClient client) {
     final var gid = client.getStore().gid(EntityType.ARTICLE);
     final var article = ImmutableArticle.builder()
+        .authOnly(init.getAuthOnly())
         .devMode(init.getDevMode())
         .name(init.getName())
         .parentId(init.getParentId())

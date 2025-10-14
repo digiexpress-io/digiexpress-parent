@@ -4,9 +4,9 @@ import {
   DialogContent, DialogTitle, Divider, FormControl,
   generateUtilityClass, MenuItem, Select, Stack, styled, TextField, Typography, Zoom
 } from '@mui/material';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 import { useTaskDashboard } from '../task-dashboard';

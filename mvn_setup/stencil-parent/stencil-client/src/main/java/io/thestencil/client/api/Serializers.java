@@ -23,7 +23,6 @@ package io.thestencil.client.api;
 import java.util.Arrays;
 import java.util.List;
 
-import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
 
@@ -33,7 +32,7 @@ public class Serializers {
     ImmutableSites.class, 
     ImmutableLocalizedSite.class,
     TopicBlobBean.class,
-    TopicBean.class,
+    ImmutableTopic.class,
     TopicHeadingBean.class,
     ImmutableTopicLink.class,
     

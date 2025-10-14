@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Divider, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import DescriptionIcon from '@mui/icons-material/Description';
+import { Description as DescriptionIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 

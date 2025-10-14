@@ -33,6 +33,8 @@ import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.api.StencilEnvir;
 import io.thestencil.client.spi.MarkdownBuilderImpl;
 import io.thestencil.client.spi.SitesBuilderImpl;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 
@@ -45,8 +47,14 @@ public class StencilEnvirImpl implements StencilEnvir {
   private final List<UniqueTimePeriod> uniqueTimes;
 
   private List<UniqueTimePeriod> activeAt;
-  private Sites active;
+  private ActiveSite active;
   
+  
+  @Data @Builder @RequiredArgsConstructor
+  private static class ActiveSite {
+    private final Sites anon; 
+    private final Sites auth;
+  }
   
   private static class UniqueTimePeriod {
     private final String id;
@@ -113,7 +121,7 @@ public class StencilEnvirImpl implements StencilEnvir {
 
 
   @Override
-  public Sites get(OffsetDateTime now) {
+  public Sites get(OffsetDateTime now, boolean auth) {
     final var matchAt = now.toLocalDateTime();
     final var activeAt = uniqueTimes.stream().filter(time -> time.isMatch(matchAt)).toList();
     final boolean rebuild;
@@ -133,14 +141,24 @@ public class StencilEnvirImpl implements StencilEnvir {
         .build();
       
       this.activeAt = activeAt;
-      this.active = new SitesBuilderImpl()
+      final var anonSite = new SitesBuilderImpl()
           .imagePath("images")
           .created(System.currentTimeMillis())
           .source(markdowns)
           .tagName(tagName)
+          .auth(false)
           .build();
+      
+      final var authSite = new SitesBuilderImpl()
+          .imagePath("images")
+          .created(System.currentTimeMillis())
+          .source(markdowns)
+          .tagName(tagName)
+          .auth(true)
+          .build();
+      
+      this.active = ActiveSite.builder().anon(anonSite).auth(authSite).build();
     }
-    
-    return this.active;
+    return auth ? this.active.getAuth() : this.active.getAnon();
   }
 }

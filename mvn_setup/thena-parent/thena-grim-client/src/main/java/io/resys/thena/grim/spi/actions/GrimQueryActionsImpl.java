@@ -136,6 +136,21 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return startingState.toGrimState(repoId)
             .onItem().transformToUni(state -> state.missionProcs().findOneByMissionId(missionId));
       }
+      @Override
+      public Uni<GrimProcess> getOneById(String processId) {
+        return startingState.toGrimState(repoId)
+            .onItem().transformToUni(state -> state.missionProcs().getOneById(processId));
+      }
+      @Override
+      public Uni<Optional<GrimProcess>> findOneById(String processId) {
+        return startingState.toGrimState(repoId)
+            .onItem().transformToUni(state -> state.missionProcs().findOneById(processId));
+      }
+      @Override
+      public Multi<GrimProcess> findAllNotArchivedyUserId(String userId) {
+        return startingState.toGrimState(repoId)
+            .onItem().transformToMulti(state -> state.missionProcs().findAllNotArchivedyUserId(userId));
+      }
     };
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Search as SearchIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 import { WorkflowsViewRoot, useUtilityClasses } from '../stencil-explorer/workflow/useUtilityClasses';

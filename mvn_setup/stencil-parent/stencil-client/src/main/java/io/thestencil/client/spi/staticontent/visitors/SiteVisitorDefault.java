@@ -29,13 +29,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.thestencil.client.api.ImmutableLocalizedSite;
+import io.thestencil.client.api.ImmutableTopic;
 import io.thestencil.client.api.ImmutableTopicLink;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Topic;
 import io.thestencil.client.api.MigrationBuilder.TopicBlob;
 import io.thestencil.client.api.MigrationBuilder.TopicHeading;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
-import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
 import io.thestencil.client.spi.staticontent.support.ParserAssert;
@@ -120,10 +120,11 @@ public class SiteVisitorDefault implements SiteVisitor {
       final var blob = visitTopicBlob(src);
       final var topicLinks = visitTopicLinks(topicId, locale);
       final var topicHeadings = visitTopicHeadings(src);
-      final var topic = TopicBean.builder()
+      
+      final var topic = ImmutableTopic.builder()
           .id(topicId)
           .name(name)
-          
+          .auth(src.getAuth())
           .links(topicLinks)
           .parent(parent)
           .blob(blob)
@@ -158,7 +159,7 @@ public class SiteVisitorDefault implements SiteVisitor {
       final var id = parent;
       final var name = visitTopicName(parent, locale);
       final var topicLinks = visitTopicLinks(id, locale);
-      final var topic = TopicBean.builder()
+      final var topic = ImmutableTopic.builder()
           .id(id)
           .name(name)
           .links(topicLinks)

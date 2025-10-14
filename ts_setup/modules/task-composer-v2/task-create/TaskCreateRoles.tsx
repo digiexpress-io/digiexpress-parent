@@ -2,8 +2,8 @@ import React from "react";
 
 import { TaskApi } from "@dxs-ts/task-api";
 import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
+import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
 import { useIntl } from "react-intl";
 
 

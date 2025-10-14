@@ -1,6 +1,6 @@
 import React from 'react'
 import { SelectChangeEvent } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
+import { Check as CheckIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 import { DialobApi } from '@dxs-ts/gamut-api';

@@ -97,8 +97,8 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutSiteController gamutSiteController(EveliEnvirClient envir, FeedbackClient feedback) {
-    return new GamutSiteController(envir, feedback);
+  public GamutSiteController gamutSiteController(EveliEnvirClient envir, FeedbackClient feedback, GamutAuthClient auth) {
+    return new GamutSiteController(envir, feedback, auth);
   }
   
   @Bean

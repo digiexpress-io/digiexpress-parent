@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Divider, generateUtilityClass, styled, TextField, Typography } from '@mui/material';
-import CircleIcon from '@mui/icons-material/Circle';
-import EditIcon from '@mui/icons-material/Edit';
+import { Circle as CircleIcon } from '@mui/icons-material';
+import { Edit as EditIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
 import { TaskApi } from '@dxs-ts/task-api';
