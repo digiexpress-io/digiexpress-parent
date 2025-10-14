@@ -34,6 +34,8 @@ export const TemplateLocaleEdit: React.FC<{ onClose: () => void, serviceId: Tago
     value: `${site.locales[template.localeId]?.localeCode ?? template.localeId} - ${service.labels.find(l => l.locale === template.localeId)?.labelValue ?? ''}`
   }));
 
+  const noTemplates = serviceTemplates.length === 0;
+  const noAvailableLocales = availableLocales.length === 0;
 
   const handleUpdate = () => {
     const entity: TagomiApi.TemplateMutator = { locale: newLocale, templateId, content: '#content', resourceIds: [] };
@@ -46,22 +48,26 @@ export const TemplateLocaleEdit: React.FC<{ onClose: () => void, serviceId: Tago
 
   return (
     <Dialog open={true} onClose={props.onClose}>
-      <DialogTitle><FormattedMessage id='tagomi.template.change.title' /></DialogTitle>
+      <DialogTitle><FormattedMessage id='tagomi.template.change.dialog.title' /></DialogTitle>
       <DialogContent>
-        <FormattedMessage id='tagomi.template.change.desc' />
+        <FormattedMessage id='tagomi.template.change.dialog.desc' />
 
         <Burger.Select
           selected={templateId}
           onChange={setTemplateId}
-          label={intl.formatMessage({ id: 'tagomi.template.change.selectOrigin' })}
+          label={intl.formatMessage({ id: 'tagomi.template.change.dialog.selectOrigin' })}
           items={templateItems}
+          disabled={noTemplates}
+          helperText={noTemplates ? intl.formatMessage({ id: 'tagomi.template.change.dialog.noTemplates' }) : undefined}
         />
 
         <Burger.Select
           selected={newLocale}
           onChange={setNewLocale}
-          label={intl.formatMessage({ id: 'tagomi.template.change.selectTarget' })}
+          label={intl.formatMessage({ id: 'tagomi.template.change.dialog.selectTarget' })}
           items={availableLocales}
+          disabled={noAvailableLocales || noTemplates}
+          helperText={noAvailableLocales ? intl.formatMessage({ id: 'tagomi.template.change.dialog.noLocales' }) : undefined}
         />
       </DialogContent>
 

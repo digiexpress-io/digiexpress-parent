@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import { useSnackbar } from 'notistack';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
@@ -12,12 +12,14 @@ import { useTagomiNav } from '../tagomi-nav';
 
 export const TemplateDelete: React.FC<{ onClose: () => void, serviceId: TagomiApi.ServiceId }> = ({ onClose, serviceId }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const intl = useIntl();
   const { site, backend, actions } = Composer.useComposer();
   const [pageId, setPageId] = React.useState('');
   const { onTabClose, findTab } = useTagomiNav();
   const service = site.services[serviceId];
   const templates = Object.values(site.templates).filter((template) => template.serviceId === serviceId);
   const message = <FormattedMessage id="snack.page.deletedMessage" />
+  const noTemplates = templates.length === 0;
 
 
 
@@ -50,19 +52,21 @@ export const TemplateDelete: React.FC<{ onClose: () => void, serviceId: TagomiAp
   return (
     <Dialog open={true} onClose={onClose}>
       <DialogTitle><FormattedMessage id='tagomi.template.delete.dialog.title' />
-        <FormattedMessage id='eveli.textSeparatorColon' />
+        {" "}
         {service.serviceName}
       </DialogTitle>
       <DialogContent>
         <FormattedMessage id='tagomi.template.delete.desc' />
         <Burger.Select
           selected={pageId}
+          disabled={noTemplates}
           onChange={setPageId}
           label='tagomi.template.selectTemplate'
           items={templates.map(template => ({
             id: template.id,
             value: `${getLocaleCode(template)} - ${getLocaleLabel(template)}`
           }))}
+          helperText={noTemplates ? intl.formatMessage({ id: 'tagomi.template.delete.noTemplates.helperText' }) : undefined}
         />
       </DialogContent>
       <DialogActions>
