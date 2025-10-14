@@ -11,19 +11,15 @@ import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
 import { useTagomiNav } from '../tagomi-nav';
 import { ServiceEdit } from './ServiceEdit';
 import { ServiceDelete } from './ServiceDelete';
-import { NewTagomiTemplate, TagomiTemplateEdit } from '../tagomi-template';
+import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../tagomi-template';
 
 interface ServiceOptionsProps {
   service: TagomiApi.Service,
 }
 
-/** TODO
-      { dialogOpen === 'PageDelete' ? <PageDelete articleId={article.id} onClose={handleDialogClose} /> : null}
- */
-
 export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const theme = useTheme();
-  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewTemplate' | 'TemplateEdit' | 'PageEditDev' | 'PageDelete' | 'ServiceDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
+  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewTemplate' | 'TemplateEdit' | 'TemplateDelete' | 'ServiceDelete'>(undefined);
 
   const { site, backend } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
@@ -35,8 +31,9 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
     <>
       {dialogOpen === 'ServiceEdit' ? <ServiceEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
-      {dialogOpen === 'NewTemplate' ? <NewTagomiTemplate serviceId={service.id} onClose={handleDialogClose} /> : null}
-      {dialogOpen === 'TemplateEdit' ? <TagomiTemplateEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'NewTemplate' ? <NewTemplate serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'TemplateEdit' ? <TemplateLocaleEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'TemplateDelete' ? <TemplateDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
 
 
       {/** Article options */}
@@ -70,14 +67,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       <Burger.TreeItemOption nodeId={service.id + 'pages.delete'}
         color='page'
         icon={DeleteOutlineOutlinedIcon}
-        onClick={() => setDialogOpen('PageDelete')}
-        labelText={<FormattedMessage id="pages.delete" />}>
-      </Burger.TreeItemOption>
-      <Burger.TreeItemOption nodeId={service.id + 'resource.create.workflows'}
-        color={theme.palette.primary.dark}
-        icon={AddCircleOutlineIcon}
-        onClick={() => setDialogOpen('WorkflowComposer')}
-        labelText={<FormattedMessage id="services.add" />}>
+        onClick={() => setDialogOpen('TemplateDelete')}
+        labelText={<FormattedMessage id="tagomi.service.template.delete" />}>
       </Burger.TreeItemOption>
     </>
   );

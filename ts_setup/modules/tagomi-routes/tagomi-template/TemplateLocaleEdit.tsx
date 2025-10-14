@@ -9,7 +9,7 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 import { TagomiApi, TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 
-export const TagomiTemplateEdit: React.FC<{ onClose: () => void, serviceId: TagomiApi.ServiceId }> = (props) => {
+export const TemplateLocaleEdit: React.FC<{ onClose: () => void, serviceId: TagomiApi.ServiceId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const intl = useIntl();
   const { backend, actions, site } = Composer.useComposer();

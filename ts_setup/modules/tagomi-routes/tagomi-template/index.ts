@@ -1,2 +1,3 @@
-export * from './NewTagomiTemplate';
-export * from './TagomiTemplateEdit';
+export * from './TemplateLocaleEdit';
+export * from './TemplateDelete';
+export * from './NewTemplate';

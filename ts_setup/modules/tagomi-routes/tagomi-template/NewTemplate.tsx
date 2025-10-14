@@ -10,7 +10,7 @@ import { useTagomiNav } from '../tagomi-nav';
 import { TagomiApi, TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 
-export const NewTagomiTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.ServiceId }> = (props) => {
+export const NewTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.ServiceId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { actions, site, backend } = Composer.useComposer();
   const [locale, setLocale] = React.useState('');
