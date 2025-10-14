@@ -53,7 +53,7 @@ export const FormTableToolbarRow: React.FC<{ value: DashboardItem }> = ({ value 
         </IconButton>
       </Tooltip>
 
-      <Tooltip title={intl.formatMessage({ id: 'download' })} placement="top-end" arrow>
+      <Tooltip title={intl.formatMessage({ id: 'adminUI.table.tooltip.download' })} placement="top-end" arrow>
         <IconButton size="small" onClick={handleDownload}>
           <DownloadIcon fontSize="small" />
         </IconButton>

@@ -4,12 +4,12 @@ import { Box, useTheme } from '@mui/system';
 import { Button } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
-import { useIntl, IntlProvider } from "react-intl";
+import { useIntl } from "react-intl";
 import { useSnackbar } from "notistack";
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { useTenantConfigFeatures } from '@dxs-ts/eveli-api';
-import { DialobDashboardSmart, DialobAdminView, dialob_messages, DialobDashboardFetchProvider, DialobDashboardStateProvider, DialobAdminConfig  } from '@dxs-ts/eveli-primitives';
+import { DialobDashboardSmart, DialobAdminView, DialobDashboardFetchProvider, DialobDashboardStateProvider, DialobAdminConfig  } from '@dxs-ts/eveli-primitives';
 
 import { EveliSetup } from '../eveli-setup';
 import { EveliApp } from '../eveli-app';
@@ -56,14 +56,12 @@ const Main: React.FC<{}> = () => {
   }, [dialobUrl, intl.locale])
 
   return (<Box sx={{ p: theme.spacing(1) }}>
-    
+
 
     <DialobDashboardFetchProvider>
-      <IntlProvider locale={config.language || 'en'} messages={dialob_messages[config.language]}>
-        <DialobDashboardStateProvider config={config} showNotification={enqueueSnackbar}>
-          <DialobAdminView />
-        </DialobDashboardStateProvider>
-      </IntlProvider>
+      <DialobDashboardStateProvider config={config} showNotification={enqueueSnackbar}>
+        <DialobAdminView />
+      </DialobDashboardStateProvider>
     </DialobDashboardFetchProvider>
 
   </Box>)

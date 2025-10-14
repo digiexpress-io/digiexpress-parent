@@ -1,8 +1,6 @@
 
 export { DialobAdminView } from './DialobAdminView';
 
-export { dialob_messages } from './intl';
-
 export * from './components'
 export * from './context';
 export * from './backend';
