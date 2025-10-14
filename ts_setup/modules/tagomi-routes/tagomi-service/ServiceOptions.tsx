@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { AddCircleOutline as AddCircleOutlineIcon } from '@mui/icons-material';
 import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
 import { ModeEdit as EditIcon } from '@mui/icons-material';
@@ -18,7 +18,7 @@ interface ServiceOptionsProps {
 }
 
 export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
-  const theme = useTheme();
+  const intl = useIntl();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewTemplate' | 'TemplateEdit' | 'TemplateDelete' | 'ServiceDelete'>(undefined);
 
   const { site, backend } = Composer.useComposer();
@@ -41,13 +41,14 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         color='primary'
         icon={EditIcon}
         onClick={() => setDialogOpen('ServiceEdit')}
-        labelText={<FormattedMessage id="tagomi.service.edit.title" />}>
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.edit' })}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
         color='primary'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ServiceDelete')}
-        labelText={<FormattedMessage id="tagomi.service.delete.title" />}>
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.delete' })
+        }>
       </Burger.TreeItemOption>
 
       {/** Template options */}
@@ -55,20 +56,20 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         color='page'
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('NewTemplate')}
-        labelText={<FormattedMessage id="tagomi.service.templates.add" />}>
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.templates.create' })} >
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'pages.change'}
         color='page'
         icon={EditIcon}
         onClick={() => setDialogOpen('TemplateEdit')}
-        labelText={<FormattedMessage id="tagomi.service.template.change" />}>
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.template.changeLocale' })}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={service.id + 'pages.delete'}
         color='page'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('TemplateDelete')}
-        labelText={<FormattedMessage id="tagomi.service.template.delete" />}>
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.template.delete' })}>
       </Burger.TreeItemOption>
     </>
   );

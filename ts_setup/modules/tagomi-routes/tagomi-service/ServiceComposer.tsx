@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
@@ -11,15 +11,15 @@ import { useFetch } from '@dxs-ts/envir-fetch';
 
 
 export const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-
   const { backend, actions } = Composer.useComposer();
+  const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const [serviceName, setServiceName] = React.useState("");
   const [orchestratorName, setOrchestratorName] = React.useState("");
   const [labels, setLabels] = React.useState<TagomiApi.LocaleAndLabel[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
 
-  const message = <FormattedMessage id="snack.tagomi.services.createdMessage" values={{ serviceName, orchestratorName }} />
+  const message = intl.formatMessage({ id: 'snack.service.createdMessage' }, { serviceName, orchestratorName });
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
 
   const handleCreate = () => {
@@ -35,11 +35,11 @@ export const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) 
 
   return (
     <Dialog open={true} onClose={onClose}>
-      <DialogTitle><FormattedMessage id='tagomi.service.composer.title' /></DialogTitle>
-      <DialogContent>
+      <DialogTitle>{intl.formatMessage({ id: 'tagomi.service.create.dialog.title' })}</DialogTitle>
 
-        <Burger.TextField label='tagomi.service.composer.serviceName' onChange={setServiceName} value={serviceName} />
-        <Burger.Select label="tagomi.service.composer.orchestratorName" onChange={setOrchestratorName}
+      <DialogContent>
+        <Burger.TextField label='tagomi.service.create.dialog.serviceName' onChange={setServiceName} value={serviceName ? serviceName : ''} />
+        <Burger.Select label="tagomi.service.create.dialog.orchestratorName" onChange={setOrchestratorName}
           selected={orchestratorName}
           items={allFlows.map((flow) => { return { id: flow, value: flow } })}
         />
@@ -58,7 +58,7 @@ export const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) 
       <DialogActions>
         <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={!serviceName || changeInProgress}>
-          <FormattedMessage id='tagomi.service.composer.create' />
+          {intl.formatMessage({ id: 'button.save' })}
         </Button>
       </DialogActions>
     </Dialog>

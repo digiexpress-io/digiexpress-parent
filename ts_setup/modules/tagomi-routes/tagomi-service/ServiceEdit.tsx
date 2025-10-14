@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
@@ -12,9 +12,10 @@ import { LocaleLabels } from '../tagomi-locale';
 
 
 const ServiceEdit: React.FC<{ serviceId: TagomiApi.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
-  const { actions, site, backend } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
+  const intl = useIntl();
 
+  const { actions, site, backend } = Composer.useComposer();
   const service = site.services[serviceId];
   const [serviceName, setServiceName] = React.useState(service.serviceName);
   const [orchestratorName, setOrchestratorName] = React.useState(service.orchestratorName);
@@ -22,7 +23,7 @@ const ServiceEdit: React.FC<{ serviceId: TagomiApi.ServiceId, onClose: () => voi
   const [changeInProgress, setChangeInProgress] = React.useState(false);
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
 
-  const message = <FormattedMessage id="snack.services.editedMessage" />
+  const message = intl.formatMessage({ id: 'snack.services.editedMessage' })
 
   const handleUpdate = () => {
     const entity: TagomiApi.ServiceMutator = { serviceId, serviceName, orchestratorName, labels };
@@ -37,11 +38,11 @@ const ServiceEdit: React.FC<{ serviceId: TagomiApi.ServiceId, onClose: () => voi
 
   return (
     <Dialog open={true} onClose={onClose}>
-      <DialogTitle><FormattedMessage id='tagomi.service.edit.title' /></DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'tagomi.service.edit.dialog.title' })}{" "}{service.serviceName}</DialogTitle>
       <DialogContent>
 
-        <Burger.TextField label="tagomi.service.name" required value={serviceName} onChange={setServiceName} />
-        <Burger.Select label="tagomi.service.orchestratorName" onChange={setOrchestratorName}
+        <Burger.TextField label="tagomi.service.edit.dialog.name" required value={serviceName} onChange={setServiceName} />
+        <Burger.Select label="tagomi.service.edit.dialog.orchestratorName" onChange={setOrchestratorName}
           selected={orchestratorName}
           items={allFlows.map((flow) => { return { id: flow, value: flow } })}
         />
@@ -61,7 +62,7 @@ const ServiceEdit: React.FC<{ serviceId: TagomiApi.ServiceId, onClose: () => voi
       <DialogActions>
         <CancelButton onClick={onClose} />
         <Button onClick={handleUpdate} disabled={updateDisabled}>
-          <FormattedMessage id='button.update' />
+          {intl.formatMessage({ id: 'button.update' })}
         </Button>
       </DialogActions>
     </Dialog>);
