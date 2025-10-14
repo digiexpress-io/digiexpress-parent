@@ -205,7 +205,7 @@ export function useTableState(props: { initialPageSize: number, tableId: string,
   const [loading, setLoading] = React.useState(true);
   const lastTableState = useLastTableState(props.tableId);
 
-  const state = React.useState(initTableState({ 
+  const state = React.useState(() => initTableState({ 
     initialPageSize: props.initialPageSize, 
     onNext: lastTableState.onNext 
   }));
