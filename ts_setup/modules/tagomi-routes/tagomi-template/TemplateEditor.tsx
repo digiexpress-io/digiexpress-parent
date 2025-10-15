@@ -20,6 +20,8 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const messages: Message[] = [];
   const monaco: typeof monaco_editor | null = useMonaco();
   const { site } = TagomiComposerApi.useComposer();
+  const composer = TagomiComposerApi.useComposer();
+
   const template = site.templates[templateId];
   const service = site.services[serviceId];
   const localeLabel = service.labels.find(l => l.locale === template.localeId)?.labelValue ?? '';
@@ -61,8 +63,11 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   }, [messages, monaco]);
 
   const handleChange: OnChange = (newValue) => {
-    setSrc(newValue ?? '');
-  }
+    const content = newValue ?? '';
+    setSrc(content);
+
+    composer.actions.handleTemplateUpdate(templateId, content);
+  };
 
   return (
     <Box height="calc(100vh - 64px)" p={2}>
