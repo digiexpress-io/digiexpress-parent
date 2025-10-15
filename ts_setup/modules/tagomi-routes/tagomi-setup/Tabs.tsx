@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs as MuiTabs, Tab, Stack, useTheme } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { ExplorerItem, useTagomiNav, useTagomiTabChange, useTagomiTabClose, toExplorerId } from '../tagomi-nav';
-import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
+import { TagomiApi, TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { SaveOutlined } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
@@ -31,12 +31,25 @@ const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
 }
 
 
+
 const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const intl = useIntl();
   const { session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
-    return (<>{intl.formatMessage({ id: 'tagomi.templates.templateTab' })}</>)
+    const suffix = getLabelSuffix(item);
+
+    function getLabelSuffix(item: ExplorerItem) {
+      switch (item.type) {
+        case 'SERVICE_TEMPLATES': return (intl.formatMessage({ id: 'tagomi.templates.templateTab' }));
+      }
+    }
+    const view = session.services.find(view => view.service.id === item.service);
+    if (!view) {
+      throw new Error(`Can't find template for: ${item.service}`);
+    }
+
+    return <>{view!.service.serviceName}{" "}{suffix}</>;
   }
   return (<>{item.type}</>)
 }

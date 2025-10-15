@@ -19,7 +19,6 @@ export type ExplorerItem = (
   { type: 'LOCALES' } |
   { type: 'TEMPLATES' } |
   { type: 'TAGS' }
-
 )
 
 export function toExplorerId(data: ExplorerItem): string {
