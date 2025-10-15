@@ -57,19 +57,19 @@ Each of these records is called a "commit" - like taking a snapshot of what chan
 
 ## How the System Remembers Changes
 
-The system works like a photo album where photos are connected in order:
+The system works like keeping copies of a form as it gets filled out and processed:
 
 ```
-Photo 1          Photo 2          Photo 3          Photo 4
+Form Copy 1      Form Copy 2      Form Copy 3      Form Copy 4
 (Created) -----> (Assigned) ----> (Updated) -----> (Completed)
    |                |                 |                 |
    └── Shows what   └── Shows what    └── Shows what   └── Shows what
        was created      changed         changed next     was finished
 ```
 
-Each "photo" (commit) contains:
-- **Before picture**: What things looked like before the change
-- **After picture**: What things look like after the change
+Each form copy (commit) contains:
+- **Before state**: What the form looked like before the change
+- **After state**: What the form looks like after the change
 - **Timestamp**: Exactly when it happened
 - **Who did it**: Which worker made the change (or if a citizen made it)
 - **Description**: What happened in simple words
