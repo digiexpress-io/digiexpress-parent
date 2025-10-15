@@ -1,14 +1,14 @@
 import React from 'react';
 import { Box, Typography, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 
-import { CellContext, ColumnDef, flexRender } from '@tanstack/react-table';
+import { CellContext, ColumnDef, FilterFnOption, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { Add as AddIcon } from '@mui/icons-material';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 
 import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { WithTableStyles } from '@dxs-ts/xui-table';
+import { anyDateFilter, TableDateFilter, WithTableStyles } from '@dxs-ts/xui-table';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 
 
@@ -17,7 +17,7 @@ import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
 import { IndicatorSubject } from './IndicatorSubject';
 
-import { filterFormattedDateFn, filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
+import { filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 import { IndicatorRole } from './IndicatorRole';
 
 export const TASK_TABLE_QUERY_KEY = 'find-all-tasks';
@@ -148,36 +148,35 @@ export const TaskTable: React.FC = () => {
     {
       header: intl.formatMessage({ id: 'taskTable.col.header.due', defaultMessage: 'Due' }),
       accessorKey: 'dueDate',
-      filterFn: filterFormattedDateFn,
       size: 150,
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: { isDate: true },
+      filterFn: filterDueDate,
       cell: (dueDate) => flexRender(AnyTaskDateTimeShort, { value: dueDate.getValue() })
     },
     {
       header: intl.formatMessage({ id: 'taskTable.col.header.created', defaultMessage: 'Created' }),
       accessorKey: 'created',
-      filterFn: filterFormattedDateFn,
       size: 150,
       minSize: 150,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: { isDate: true },
+      filterFn: filterCreated,
       cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },
     ...(backend.permissions.isDeleteTaskAllowed ? [{
       header: intl.formatMessage({ id: 'taskTable.col.header.archive', defaultMessage: 'Archive' }),
-      filterFn: filterFormattedDateFn,
       size: 100,
       minSize: 100,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: {
-        enableSelection: true
-      },
+      meta: { enableSelection: true },
       cell: ({ row }: CellContext<TaskApi.Task, unknown>) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <IconButton color='error' onClick={() => confirmArchive(row.original.id)} size="small">
@@ -248,4 +247,14 @@ const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
 
   return <div>{formatted}</div>;
+}
+
+const filterDueDate: FilterFnOption<TaskApi.Task> = (row, _columnId: string, filterValue: TableDateFilter) => {
+  const latestTagDate = row.original.dueDate;
+  return anyDateFilter(latestTagDate, filterValue);
+}
+
+const filterCreated: FilterFnOption<TaskApi.Task> = (row, _columnId: string, filterValue: TableDateFilter) => {
+  const lastSaved = row.original.created;
+  return anyDateFilter(lastSaved, filterValue);
 }

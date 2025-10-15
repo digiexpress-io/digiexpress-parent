@@ -1,6 +1,6 @@
 
 import React from "react";
-import { TableState, TableStateInitWith } from "./table-state-types";
+import { TableState, TableStateInitWith } from "../table-api";
 import { useTable } from "../table-provider";
 const dataId = 'last-table-state';
 

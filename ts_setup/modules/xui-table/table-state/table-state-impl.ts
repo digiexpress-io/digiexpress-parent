@@ -1,5 +1,5 @@
 import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, Updater, PaginationState, ColumnOrderState, ColumnDef } from "@tanstack/react-table";
-import { TableState, TableStateInitWith } from "./table-state-types";
+import { TableState, TableStateInitWith } from "../table-api";
 import React from "react";
 import { Md5 } from 'ts-md5';
 import { useLastTableState } from "./last-table-state";

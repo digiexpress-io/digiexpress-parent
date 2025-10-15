@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { TableState, TableStateInitWith } from "./table-state-types";
+import { TableState, TableStateInitWith } from "../table-api";
 import { useTable, TableConfig } from "../table-provider";
 
 

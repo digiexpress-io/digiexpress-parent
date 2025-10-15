@@ -10,8 +10,9 @@ import { ToolPagination } from './tool-pagination';
 import { ToolHeaderOptions } from './tool-header-options';
 import { ToolColumnFilter } from './tool-column-filter';
 import { CircularProgress } from '@mui/material';
-import { TableState, useTableState } from './table-state';
+import { useTableState } from './table-state';
 import { ToolColumnSavedFilter } from './tool-column-saved-filter';
+import { TableState } from './table-api';
 
 
 
@@ -20,7 +21,7 @@ declare module "@tanstack/react-table" {
   // @ts-ignore
   export interface ColumnMeta<TData extends RowData, TValue> {
     enableSelection?: boolean;
-    enableDateGTE?: boolean; // allow to cut data that is greate or equal then given date value
+    isDate?: boolean; // allow to cut data that is greate or equal then given date value
   }
 }
 
