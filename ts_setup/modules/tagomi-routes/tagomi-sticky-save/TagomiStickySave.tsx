@@ -20,10 +20,10 @@ function useSave() {
   }
 
   const service = activeItem?.type === "SERVICE_TEMPLATES" ? composer.site.services[activeItem.service] : undefined;
-  const unsavedPages = Object.values(composer.session.templates).filter(p => !p.saved);
-  const unsavedArticlePages: TagomiComposerApi.TemplateUpdate[] = (service ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.serviceId === service.id) : []);
+  const unsavedTemplates = Object.values(composer.session.templates).filter(p => !p.saved);
+  const unsavedServiceTemplates: TagomiComposerApi.TemplateUpdate[] = (service ? unsavedTemplates.filter(p => !p.saved).filter(p => p.origin.serviceId === service.id) : []);
 
-  const enabled = unsavedArticlePages.length > 0;
+  const enabled = unsavedServiceTemplates.length > 0;
   const message = <FormattedMessage id="snack.template.savedMessage" />
 
 
@@ -33,10 +33,10 @@ function useSave() {
     }
 
     if (service) {
-      if (unsavedArticlePages.length === 0) {
+      if (unsavedServiceTemplates.length === 0) {
         return;
       }
-      const update: TagomiApi.TemplateMutator[] = unsavedArticlePages
+      const update: TagomiApi.TemplateMutator[] = unsavedServiceTemplates
         .map(p => ({ templateId: p.origin.id, locale: p.origin.localeId, content: p.value }));
 
       composer.backend.updateTemplate(update).then(success => {

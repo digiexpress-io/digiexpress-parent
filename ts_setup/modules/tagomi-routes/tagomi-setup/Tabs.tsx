@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs as MuiTabs, Tab, Stack, useTheme } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { ExplorerItem, useTagomiNav, useTagomiTabChange, useTagomiTabClose, toExplorerId } from '../tagomi-nav';
-import { TagomiApi, TagomiComposerApi } from '@dxs-ts/tagomi-api';
+import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { SaveOutlined } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
@@ -38,7 +38,9 @@ const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
 
   if (item.type === 'SERVICE_TEMPLATES') {
     const suffix = getLabelSuffix(item);
-
+    if (!session.services || session.services.length === 0) {
+      return <>Loading...</>;
+    }
     function getLabelSuffix(item: ExplorerItem) {
       switch (item.type) {
         case 'SERVICE_TEMPLATES': return (intl.formatMessage({ id: 'tagomi.templates.templateTab' }));
@@ -49,7 +51,7 @@ const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
       throw new Error(`Can't find template for: ${item.service}`);
     }
 
-    return <>{view!.service.serviceName}{" "}{suffix}</>;
+    return <>{view.service.serviceName}{" "}{suffix}</>;
   }
   return (<>{item.type}</>)
 }

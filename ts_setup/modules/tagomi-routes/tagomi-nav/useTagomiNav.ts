@@ -9,7 +9,7 @@ export function useTagomiNav(): {
   activeItemId: string | undefined;
   onNav: (newItem: ExplorerItem) => void;
 
-  findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
+  findTab: (newItem: ExplorerItem['type'], serviceId?: string) => ExplorerItem | undefined;
   getService: () => ExplorerItemService;
   onTabCurrentClose: () => void;
   onTabClose: (tab: ExplorerItem) => void;
