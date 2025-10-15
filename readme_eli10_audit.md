@@ -134,11 +134,11 @@ The recycling bin is emptied. The data is truly gone.
 
 This audit system ensures:
 
-✓ **Citizens trust the platform** - They know who accessed their information
-✓ **Workers are accountable** - Every action is recorded
-✓ **Problems can be investigated** - We can always look back and see what happened
-✓ **Privacy is protected** - Citizen identities are kept private in access logs
-✓ **Data can be removed** - When required by law, data can be properly deleted
+✓ **Citizens trust the platform** - They know who accessed their information  
+✓ **Workers are accountable** - Every action is recorded  
+✓ **Problems can be investigated** - We can always look back and see what happened  
+✓ **Privacy is protected** - Citizen identities are kept private in access logs  
+✓ **Data can be removed** - When required by law, data can be properly deleted  
 
 ## Summary
 
