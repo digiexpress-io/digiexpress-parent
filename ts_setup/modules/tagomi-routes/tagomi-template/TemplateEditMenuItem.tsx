@@ -56,14 +56,14 @@ export const TemplateEditMenuItem: React.FC<{ service: Composer.ServiceView, tem
 
   const template = props.template.template;
   const service = props.service.service;
-  const activeColor = theme.palette.primary.main;
+  const locale = site.locales[template.localeId];
   const nav: ExplorerItemServiceTemplates | undefined = findTab('SERVICE_TEMPLATES', service.id) as any;
   const onLeftEdit = () => onNav({ article: service.id, type: "SERVICE_TEMPLATES", locale1: template.localeId })
-  const isPrimary = template.localeId === nav?.locale1;
+  const localeLabelValue = service.labels.find(l => l.locale === template.localeId);
 
-  console.log(props.template.title)
-  
-  
+  const isPrimary = template.localeId === nav?.locale1;
+  const activeColor = theme.palette.primary.main;
+
   /* 
       
     const isPageSaved = () => {
@@ -89,7 +89,6 @@ export const TemplateEditMenuItem: React.FC<{ service: Composer.ServiceView, tem
       }
     }
   
-    const isPrimary = nav?.locale1 === page.body.locale;
       */
 
 
@@ -101,10 +100,10 @@ export const TemplateEditMenuItem: React.FC<{ service: Composer.ServiceView, tem
           {/* Show 2-letter locale code and dev mode if applicable */}
           <Grid2 size={{ md: 5, lg: 5, xl: 5 }} display='flex'>
             <Typography variant="body2" sx={{ fontWeight: "bold", mr: 1 }}>
-              {template.localeId}
+              {locale.localeCode}
               {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
             </Typography>
-            <Typography variant="body2" sx={{ fontWeight: "inherit", ml: 1 }}>label here</Typography>
+            <Typography variant="body2" sx={{ fontWeight: "inherit", ml: 1 }}>{localeLabelValue?.labelValue}</Typography>
           </Grid2>
 
           {/* Edit primary */}
@@ -113,12 +112,12 @@ export const TemplateEditMenuItem: React.FC<{ service: Composer.ServiceView, tem
             {isPrimary ?
               <>
                 <SwitchRightIcon />
-                <Typography variant='subtitle2' fontWeight='bold'>{intl.formatMessage({ id: 'pages.edit.currentlyEditing.language1' })}</Typography>
+                <Typography variant='subtitle2' fontWeight='bold'>{intl.formatMessage({ id: 'tagomi.template.edit.currentlyEditing.language1' })}</Typography>
               </>
               :
               <>
                 <SwitchRightIcon sx={{ visibility: 'hidden' }} />
-                <Typography variant='subtitle2'>{intl.formatMessage({ id: 'pages.edit.language1' })}</Typography>
+                <Typography variant='subtitle2'>{intl.formatMessage({ id: 'tagomi.template.edit.language1' })}</Typography>
               </>
             }
           </Grid2>
