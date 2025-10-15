@@ -873,5 +873,6 @@ export const fi = {
   'eveli.batches.batchView.averageRunTime.ms': 'ms',
   'taskcard.style.COMPACT': 'Kompakti',
   'taskcard.style.DEFAULT': 'Oletus',
-  'taskcard.style.LARGE': 'Suuri'
+  'taskcard.style.LARGE': 'Suuri',
+  'tagomi.template.create.dialog.noLocales': 'or no locales defined!'
 }

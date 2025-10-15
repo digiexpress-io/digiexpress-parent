@@ -875,6 +875,7 @@ export const en = {
   'taskcard.style.DEFAULT': 'Default',
   'taskcard.style.LARGE': 'Large',
   'toolbar.tagomi': 'Tagomi',
+  'tagomi.services.searchAll': 'Search all Tagomi services',
   'tagomi.main.services.all': 'All services',
   'tagomi.templates.templateTab': 'Template',
   'tagomi.services.title': 'Services',
@@ -915,9 +916,12 @@ export const en = {
   'tagomi.template.create.dialog.desc': 'A template contains your language-specific pdf content',
   'tagomi.template.create.dialog.service.name': 'Service name',
   'tagomi.template.create.dialog.localeLabel.select': 'Locale label: Associate a language to your template',
-  'tagomi.template.create.dialog.noLocales': 'No unassigned locales to assign to your template',
+  'tagomi.template.create.dialog.noLocales': 'All available locales have already been assigned to other templates',
   'tagomi.service.delete.dialog.title': 'Delete service:',
   'tagomi.service.delete.dialog.desc': 'You are about to delete this service. Its contents will no longer be available for use.',
   'tagomi.service.delete.dialog.button': 'Delete',
-  'snack.service.deletedMessage': 'Service deleted'
+  'snack.template.savedMessage': 'Template saved successfully',
+  'snack.service.deletedMessage': 'Service deleted',
+  'tagomi.locale.select.alreadyDefined': 'Locale is already defined',
+  'tagomi.locale.label.editLocaleValue': 'Edit locale label value'
 }
