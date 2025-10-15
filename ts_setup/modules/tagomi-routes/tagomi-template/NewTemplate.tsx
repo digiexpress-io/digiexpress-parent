@@ -29,7 +29,7 @@ export const NewTemplate: React.FC<{ onClose: () => void, serviceId?: TagomiApi.
       props.onClose();
       actions.handleLoadSite().then(() => {
         const service = site.services[serviceId];
-        onNav({ article: service.id, type: "SERVICE_TEMPLATES", locale1: locale })
+        onNav({ service: service.id, type: "SERVICE_TEMPLATES", locale1: locale })
       });
 
     })

@@ -15,7 +15,7 @@ const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const { isServiceSaved, session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
-    const view = session.services.find(view => view.service.id === item.article);
+    const view = session.services.find(view => view.service.id === item.service);
     if (!view) {
       return (<></>)
     }
@@ -36,7 +36,7 @@ const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const { session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
-    return intl.formatMessage({ id: 'tagomi.templates.templateTab' })
+    return (<>{intl.formatMessage({ id: 'tagomi.templates.templateTab' })}</>)
   }
   return (<>{item.type}</>)
 }

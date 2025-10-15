@@ -48,7 +48,7 @@ export const ServicesList: React.FC<{ searchString: string }> = ({ searchString 
     if (active !== newId && active && newId) {
       nodeIds.splice(nodeIds.indexOf(active), 1);
     }
-    onNav({ type: 'SERVICES', article: active, expanded: [...nodeIds] })
+    onNav({ type: 'SERVICES', service: active, expanded: [...nodeIds] })
   }
 
 

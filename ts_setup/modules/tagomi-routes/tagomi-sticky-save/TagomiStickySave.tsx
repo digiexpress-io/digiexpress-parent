@@ -19,20 +19,20 @@ function useSave() {
     return { enabled: false, onSave: () => { } }
   }
 
-  const article = activeItem?.type === "SERVICE_TEMPLATES" ? composer.site.services[activeItem.article] : undefined;
+  const service = activeItem?.type === "SERVICE_TEMPLATES" ? composer.site.services[activeItem.service] : undefined;
   const unsavedPages = Object.values(composer.session.templates).filter(p => !p.saved);
-  const unsavedArticlePages: TagomiComposerApi.TemplateUpdate[] = (article ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.serviceId === article.id) : []);
+  const unsavedArticlePages: TagomiComposerApi.TemplateUpdate[] = (service ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.serviceId === service.id) : []);
 
   const enabled = unsavedArticlePages.length > 0;
   const message = <FormattedMessage id="snack.template.savedMessage" />
 
 
   const onSave = (_event: React.SyntheticEvent) => {
-    if (!enabled || !article) {
+    if (!enabled || !service) {
       return;
     }
 
-    if (article) {
+    if (service) {
       if (unsavedArticlePages.length === 0) {
         return;
       }

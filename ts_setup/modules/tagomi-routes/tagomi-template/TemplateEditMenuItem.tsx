@@ -51,14 +51,14 @@ export const TemplateEditMenuItem: React.FC<{ service: Composer.ServiceView, tem
 
   const theme = useTheme<Theme>();
   const { onNav, findTab } = useTagomiNav();
-  const { session, site } = Composer.useComposer();
+  const { site } = Composer.useComposer();
   const intl = useIntl();
 
   const template = props.template.template;
   const service = props.service.service;
   const locale = site.locales[template.localeId];
   const nav: ExplorerItemServiceTemplates | undefined = findTab('SERVICE_TEMPLATES', service.id) as any;
-  const onLeftEdit = () => onNav({ article: service.id, type: "SERVICE_TEMPLATES", locale1: template.localeId })
+  const onLeftEdit = () => onNav({ service: service.id, type: "SERVICE_TEMPLATES", locale1: template.localeId })
   const localeLabelValue = service.labels.find(l => l.locale === template.localeId);
 
   const isPrimary = template.localeId === nav?.locale1;
