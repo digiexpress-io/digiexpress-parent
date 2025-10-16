@@ -919,5 +919,6 @@ export const en = {
   'tagomi.service.delete.dialog.title': 'Delete service:',
   'tagomi.service.delete.dialog.desc': 'You are about to delete this service. Its contents will no longer be available for use.',
   'tagomi.service.delete.dialog.button': 'Delete',
+  'snack.template.savedMessage': 'Template saved successfully',
   'snack.service.deletedMessage': 'Service deleted'
 }

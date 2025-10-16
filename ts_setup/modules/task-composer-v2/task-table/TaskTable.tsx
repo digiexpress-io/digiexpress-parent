@@ -4,9 +4,9 @@ import { Box, Typography, IconButton, Tooltip, Dialog, DialogTitle, DialogConten
 import { CellContext, ColumnDef, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { Add as AddIcon } from '@mui/icons-material';
-import { DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
+import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 
-import { useIntl, FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
@@ -181,7 +181,7 @@ export const TaskTable: React.FC = () => {
       cell: ({ row }: CellContext<TaskApi.Task, unknown>) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <IconButton color='error' onClick={() => confirmArchive(row.original.id)} size="small">
-            <DeleteForeverIcon color="error" fontSize="small" />
+          <Inventory2TwoToneIcon color="error" fontSize="small" />
           </IconButton>
         </div>
       )
