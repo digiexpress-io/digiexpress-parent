@@ -15,7 +15,7 @@ const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const { isServiceSaved, session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
-    const view = session.services.find(view => view.service.id === item.article);
+    const view = session.services.find(view => view.service.id === item.service);
     if (!view) {
       return (<></>)
     }
@@ -31,12 +31,27 @@ const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
 }
 
 
+
 const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
   const intl = useIntl();
   const { session } = TagomiComposerApi.useComposer();
 
   if (item.type === 'SERVICE_TEMPLATES') {
-    return intl.formatMessage({ id: 'tagomi.templates.templateTab' })
+    const suffix = getLabelSuffix(item);
+    if (!session.services || session.services.length === 0) {
+      return <>Loading...</>;
+    }
+    function getLabelSuffix(item: ExplorerItem) {
+      switch (item.type) {
+        case 'SERVICE_TEMPLATES': return (intl.formatMessage({ id: 'tagomi.templates.templateTab' }));
+      }
+    }
+    const view = session.services.find(view => view.service.id === item.service);
+    if (!view) {
+      throw new Error(`Can't find template for: ${item.service}`);
+    }
+
+    return <>{view.service.serviceName}{" "}{suffix}</>;
   }
   return (<>{item.type}</>)
 }

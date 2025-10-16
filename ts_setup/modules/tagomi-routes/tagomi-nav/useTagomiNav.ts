@@ -9,7 +9,7 @@ export function useTagomiNav(): {
   activeItemId: string | undefined;
   onNav: (newItem: ExplorerItem) => void;
 
-  findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
+  findTab: (newItem: ExplorerItem['type'], serviceId?: string) => ExplorerItem | undefined;
   getService: () => ExplorerItemService;
   onTabCurrentClose: () => void;
   onTabClose: (tab: ExplorerItem) => void;
@@ -41,8 +41,8 @@ export function useTagomiNav(): {
   }
 
   function getService(): ExplorerItemService {
-    const article: ExplorerItemService | undefined = explorer.find(({ type }) => type === 'SERVICES') as ExplorerItemService | undefined;
-    return article ?? { type: 'SERVICES', article: undefined, expanded: []};
+    const service: ExplorerItemService | undefined = explorer.find(({ type }) => type === 'SERVICES') as ExplorerItemService | undefined;
+    return service ?? { type: 'SERVICES', service: undefined, expanded: [] };
   }
 
   function onTabCurrentClose() {

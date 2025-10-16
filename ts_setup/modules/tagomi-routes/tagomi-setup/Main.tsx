@@ -1,7 +1,5 @@
 import React from 'react';
 import { Box } from '@mui/material';
-
-
 import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { ExplorerItem, useTagomiNav } from '../tagomi-nav';
 import { ServicesView } from '../tagomi-service';
@@ -23,7 +21,7 @@ const Main: React.FC<{}> = () => {
     const explorer: ExplorerItem | undefined = activeItem;
     if (explorer?.type === 'SERVICE_TEMPLATES') {
 
-      const serviceId = explorer.article;
+      const serviceId = explorer.service;
       const localeId = explorer.locale1;
 
       const template = Object.values(site.templates)

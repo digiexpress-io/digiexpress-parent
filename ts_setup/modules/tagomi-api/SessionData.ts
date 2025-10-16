@@ -16,7 +16,7 @@ class SiteCache {
     this._site = site;
     Object.values(site.templates).sort((l0, l1) => l0.id.localeCompare(l1.id)).forEach(link => this.visitTemplate(link))
     Object.values(site.resources).sort((l0, l1) => l0.resourceName.localeCompare(l1.resourceName)).forEach(workflow => this.visitLink(workflow))
-    Object.values(site.services).sort((l0, l1) => l0.serviceName.localeCompare(l1.serviceName)).forEach(page => this.visitService(page))
+    Object.values(site.services).sort((l0, l1) => l0.serviceName.localeCompare(l1.serviceName)).forEach(template => this.visitService(template))
   }
   getServices() {
     return this._services;
@@ -27,19 +27,19 @@ class SiteCache {
   getTemplates() {
     return this._templates;
   }
-  private visitTemplate(page: TagomiApi.Template) {
+  private visitTemplate(template: TagomiApi.Template) {
     const site = this._site;
-    const resources = Object.values(this._site.resources).filter(r => r.templateIds.includes(page.id))
-    const view = new ImmutableTemplateView({ page, locale: site.locales[page.localeId], resources });
-    this._templates[page.id] = view;
+    const resources = Object.values(this._site.resources).filter(r => r.templateIds.includes(template.id))
+    const view = new ImmutableTemplateView({ template, locale: site.locales[template.localeId], resources });
+    this._templates[template.id] = view;
 
-    const articleId = page.serviceId;
-    let articlePages = this._templatesByService[articleId];
-    if (!articlePages) {
-      articlePages = [];
-      this._templatesByService[articleId] = articlePages;
+    const serviceId = template.serviceId;
+    let serviceTemplates = this._templatesByService[serviceId];
+    if (!serviceTemplates) {
+      serviceTemplates = [];
+      this._templatesByService[serviceId] = serviceTemplates;
     }
-    articlePages.push(view);
+    serviceTemplates.push(view);
   }
 
   private visitLink(link: TagomiApi.Resource) {
@@ -50,37 +50,37 @@ class SiteCache {
     });
 
     this._resources[link.id] = view;
-    for (const articleId of link.templateIds) {
-      let articleLinks = this._resourcesByTemplate[articleId];
-      if (!articleLinks) {
-        articleLinks = [];
-        this._resourcesByTemplate[articleId] = articleLinks;
+    for (const serviceId of link.templateIds) {
+      let serviceLinks = this._resourcesByTemplate[serviceId];
+      if (!serviceLinks) {
+        serviceLinks = [];
+        this._resourcesByTemplate[serviceId] = serviceLinks;
       }
-      articleLinks.push(view);
+      serviceLinks.push(view);
     }
   }
-  private visitService(article: TagomiApi.Service) {
-    const articleId = article.id;
+  private visitService(service: TagomiApi.Service) {
+    const serviceId = service.id;
     const site = this._site;
-    const pages: TagomiComposerApi.TemplateView[] = this._templatesByService[articleId] ?? [];
-    const resources: TagomiComposerApi.ResourceView[] = Array.from(new Map(pages
+    const templates: TagomiComposerApi.TemplateView[] = this._templatesByService[serviceId] ?? [];
+    const resources: TagomiComposerApi.ResourceView[] = Array.from(new Map(templates
       .flatMap(t => this._resourcesByTemplate[t.template.id] ?? []).reverse()
       .map(item => [item.resource.id, item]))
       .values());
 
     const labels: TagomiComposerApi.LabelView[] = [];
 
-    const canCreate: TagomiApi.Locale[] = Object.values(site.locales).filter(locale => pages.filter(p => p.locale.id === locale.id).length === 0);
+    const canCreate: TagomiApi.Locale[] = Object.values(site.locales).filter(locale => templates.filter(p => p.locale.id === locale.id).length === 0);
     const view = new ImmutableServiceView({
-      article, 
-      pages, 
+      service,
+      templates, 
       canCreate,
       resources,
       labels,
       displayOrder: 0
     });
 
-    this._services[articleId] = view;
+    this._services[serviceId] = view;
   }
 }
 
@@ -114,10 +114,10 @@ class SessionData implements TagomiComposerApi.Session {
   }
 
   getServicesForLocale(locale: TagomiApi.LocaleId): TagomiApi.Service[] {
-    const pages = Object.values(this._site.templates)
-    return locale ? Object.values(this._site.services).filter(article => {
-      for (const page of pages) {
-        if (page.serviceId === article.id && page.localeId === locale) {
+    const templates = Object.values(this._site.templates)
+    return locale ? Object.values(this._site.services).filter(service => {
+      for (const template of templates) {
+        if (template.serviceId === service.id && template.localeId === locale) {
           return true;
         }
       }
@@ -125,10 +125,10 @@ class SessionData implements TagomiComposerApi.Session {
     }) : []
   }
   getServicesForLocales(locales: TagomiApi.LocaleId[]): TagomiApi.Service[] {
-    const pages = Object.values(this._site.templates)
-    return locales && locales.length > 0 ? Object.values(this._site.services).filter(article => {
-      for (const page of pages) {
-        if (page.serviceId === article.id && locales.includes(page.localeId)) {
+    const templates = Object.values(this._site.templates)
+    return locales && locales.length > 0 ? Object.values(this._site.services).filter(service => {
+      for (const template of templates) {
+        if (template.serviceId === service.id && locales.includes(template.localeId)) {
           return true;
         }
       }
@@ -139,33 +139,33 @@ class SessionData implements TagomiComposerApi.Session {
   withSite(site: TagomiApi.TagomiContainer): TagomiComposerApi.Session {
     return new SessionData({ site: site, templates: this._templates });
   }
-  withoutTemplates(pageIds: TagomiApi.TemplateId[]): TagomiComposerApi.Session {
-    const pages: Record<string, TagomiComposerApi.TemplateUpdate> = {};
-    for (const page of Object.values(this._templates)) {
-      if (pageIds.includes(page.origin.id)) {
+  withoutTemplates(templateIds: TagomiApi.TemplateId[]): TagomiComposerApi.Session {
+    const templates: Record<string, TagomiComposerApi.TemplateUpdate> = {};
+    for (const template of Object.values(this._templates)) {
+      if (templateIds.includes(template.origin.id)) {
         continue;
       }
-      pages[page.origin.id] = page;
+      templates[template.origin.id] = template;
     }
-    return new SessionData({ site: this._site, templates: pages, cache: this._cache });
+    return new SessionData({ site: this._site, templates: templates, cache: this._cache });
   }
-  withTemplate(page: TagomiApi.TemplateId): TagomiComposerApi.Session {
-    if (this._templates[page]) {
+  withTemplate(template: TagomiApi.TemplateId): TagomiComposerApi.Session {
+    if (this._templates[template]) {
       return this;
     }
-    const pages = Object.assign({}, this._templates);
-    const origin = this._site.templates[page];
-    pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: origin.content });
-    return new SessionData({ site: this._site, templates: pages, cache: this._cache });
+    const templates = Object.assign({}, this._templates);
+    const origin = this._site.templates[template];
+    templates[template] = new ImmutablePageUpdate({ origin, saved: true, value: origin.content });
+    return new SessionData({ site: this._site, templates: templates, cache: this._cache });
   }
-  withTemplateValue(page: TagomiApi.TemplateId, value: TagomiApi.LocalisedContent): TagomiComposerApi.Session {
-    const session = this.withTemplate(page);
-    const pageUpdate = session.templates[page];
+  withTemplateValue(template: TagomiApi.TemplateId, value: TagomiApi.LocalisedContent): TagomiComposerApi.Session {
+    const session = this.withTemplate(template);
+    const templateUpdate = session.templates[template];
 
-    const pages = Object.assign({}, session.templates);
-    pages[page] = pageUpdate.withValue(value);
+    const templates = Object.assign({}, session.templates);
+    templates[template] = templateUpdate.withValue(value);
 
-    return new SessionData({ site: session.site, templates: pages, cache: this._cache });
+    return new SessionData({ site: session.site, templates: templates, cache: this._cache });
   }
 }
 
@@ -200,23 +200,23 @@ class ImmutablePageUpdate implements TagomiComposerApi.TemplateUpdate {
 
 
 class ImmutableServiceView implements TagomiComposerApi.ServiceView {
-  private _article: TagomiApi.Service;
-  private _pages: TagomiComposerApi.TemplateView[];
+  private _service: TagomiApi.Service;
+  private _templates: TagomiComposerApi.TemplateView[];
   private _canCreate: TagomiApi.Locale[];
   private _resources: TagomiComposerApi.ResourceView[];
   private _displayOrder: number;
   private _labels: TagomiComposerApi.LabelView[];
 
   constructor(props: {
-    article: TagomiApi.Service;
-    pages: TagomiComposerApi.TemplateView[];
+    service: TagomiApi.Service;
+    templates: TagomiComposerApi.TemplateView[];
     canCreate: TagomiApi.Locale[];
     resources: TagomiComposerApi.ResourceView[];
     labels: TagomiComposerApi.LabelView[];
     displayOrder: number;
   }) {
-    this._article = props.article;
-    this._pages = props.pages;
+    this._service = props.service;
+    this._templates = props.templates;
     this._canCreate = props.canCreate;
     this._resources = props.resources;
     this._labels = props.labels;
@@ -224,70 +224,70 @@ class ImmutableServiceView implements TagomiComposerApi.ServiceView {
   }
 
   get displayOrder(): number { return this._displayOrder };
-  get service(): TagomiApi.Service { return this._article };
-  get templates(): TagomiComposerApi.TemplateView[] { return this._pages };
+  get service(): TagomiApi.Service { return this._service };
+  get templates(): TagomiComposerApi.TemplateView[] { return this._templates };
   get canCreate(): TagomiApi.Locale[] { return this._canCreate };
   get resources(): TagomiComposerApi.ResourceView[] { return this._resources };
   get labels(): TagomiComposerApi.LabelView[] { return this._labels };
   
   getTemplateById(id: TagomiApi.TemplateId): TagomiComposerApi.TemplateView {
-    const found = this._pages.find(p => p.template.id === id);
+    const found = this._templates.find(p => p.template.id === id);
     if(!found) {
-      throw new Error(`No page with page id: {id}!`);
+      throw new Error(`No template with template id: {id}!`);
     }
     return found;
   }
   getTemplateByLocaleId(id: TagomiApi.LocaleId): TagomiComposerApi.TemplateView {
     const found = this.findTemplateByLocaleId(id);
     if(!found) {
-      throw new Error(`No page with locale id: {id}!`);
+      throw new Error(`No template with locale id: {id}!`);
     }
     return found;
   }
   findTemplateByLocaleId(id: TagomiApi.LocaleId): TagomiComposerApi.TemplateView | undefined {
-    return this._pages.find(p => p.locale.id === id);
+    return this._templates.find(p => p.locale.id === id);
   }
 }
 
 class ImmutableTemplateView implements TagomiComposerApi.TemplateView {
-  private _page: TagomiApi.Template;
+  private _template: TagomiApi.Template;
   private _locale: TagomiApi.Locale;
   private _title: string;
   private _resources: TagomiApi.Resource[];
 
   constructor(props: {
-    page: TagomiApi.Template;
+    template: TagomiApi.Template;
     locale: TagomiApi.Locale;
     resources: TagomiApi.Resource[];
   }) {
-    this._page = props.page;
+    this._template = props.template;
     this._locale = props.locale;
-    this._title = this.getTitle(props.page);
+    this._title = this.getTitle(props.template);
     this._resources = props.resources;
   }
 
-  private getTitle(page: TagomiApi.Template) {
-    const heading1 = page.content.indexOf("# ");
+  private getTitle(template: TagomiApi.Template) {
+    const heading1 = template.content.indexOf("# ");
 
     if (heading1 === -1) {
-      return page.content.substring(0, Math.min(page.content.length, 30));
+      return template.content.substring(0, Math.min(template.content.length, 30));
     }
-    const lineBreak1 = page.content.indexOf("\n", heading1)
+    const lineBreak1 = template.content.indexOf("\n", heading1)
     if (lineBreak1 > 0) {
-      return page.content.substring(0, Math.min(lineBreak1, 30)).substring(2);
+      return template.content.substring(0, Math.min(lineBreak1, 30)).substring(2);
     }
 
-    const lineBreak2 = page.content.indexOf("\r\n", heading1)
+    const lineBreak2 = template.content.indexOf("\r\n", heading1)
     if (lineBreak2 > 0) {
-      return page.content.substring(0, Math.min(lineBreak2, 30)).substring(2);
+      return template.content.substring(0, Math.min(lineBreak2, 30)).substring(2);
     }
 
-    return page.content.substring(2);
+    return template.content.substring(2);
 
   }
   get resources(): TagomiApi.Resource[] { return this._resources };
   get title(): string { return this._title };
-  get template(): TagomiApi.Template { return this._page };
+  get template(): TagomiApi.Template { return this._template };
   get locale(): TagomiApi.Locale { return this._locale };
 }
 

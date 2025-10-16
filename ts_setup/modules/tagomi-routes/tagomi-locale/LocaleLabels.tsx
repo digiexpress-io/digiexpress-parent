@@ -44,7 +44,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
   const intl = useIntl();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [selected, setSelected] = React.useState<Record<string, SelectedValue>>(toSelectedRecord(props.selected));
-  const alreadyDefinedLabel = intl.formatMessage({ id: "tagomi.locale.label.select.alreadyDefined" });
+  const alreadyDefinedLabel = intl.formatMessage({ id: "tagomi.locale.select.alreadyDefined" });
   const [edit, setEdit] = React.useState<SelectedValue | null>(null);
 
   const selection: { id: TagomiApi.LocaleId; value: string, added: boolean }[] = Object.values(site.locales)
@@ -70,7 +70,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
   }
 
   const handleAddLabel = (id: TagomiApi.LocaleId) => {
-    const newLabel: SelectedValue = { locale: id, value: 'new-text-here' };
+    const newLabel: SelectedValue = { locale: id, value: 'my-locale-label' };
     const newSelection: Record<string, SelectedValue> = {};
     Object.values(selected).forEach(s => newSelection[s.locale] = s);
     newSelection[newLabel.locale] = newLabel;
@@ -90,7 +90,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
     <TextField
       fullWidth
       variant="outlined"
-      label={intl.formatMessage({ id: "tagomi.locale.label.table.editLocaleValue" })}
+      label={intl.formatMessage({ id: "tagomi.locale.label.editLocaleValue" })}
       value={edit.value}
       onChange={(e) => setEdit({ locale: edit.locale, value: e.target.value })}
       onKeyDown={(event) => {

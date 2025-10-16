@@ -875,6 +875,7 @@ export const en = {
   'taskcard.style.DEFAULT': 'Default',
   'taskcard.style.LARGE': 'Large',
   'toolbar.tagomi': 'Tagomi',
+  'tagomi.services.searchAll': 'Search all Tagomi services',
   'tagomi.main.services.all': 'All services',
   'tagomi.templates.templateTab': 'Template',
   'tagomi.services.title': 'Services',
@@ -897,6 +898,8 @@ export const en = {
   'tagomi.service.edit.dialog.title': 'Edit service:',
   'tagomi.service.edit.dialog.name': 'Service name',
   'tagomi.service.edit.dialog.orchestratorName': 'Orchestrator name',
+  'tagomi.template.edit.currentlyEditing.language1': 'Currently editing',
+  'tagomi.template.edit.language1': 'Edit content for this language',
   'tagomi.template.change.dialog.title': 'Change template locale',
   'tagomi.template.change.dialog.desc': 'Choosing an available locale will change this template language from its original to the new one you select',
   'tagomi.template.change.dialog.selectOrigin': 'Select current template',
@@ -915,10 +918,12 @@ export const en = {
   'tagomi.template.create.dialog.desc': 'A template contains your language-specific pdf content',
   'tagomi.template.create.dialog.service.name': 'Service name',
   'tagomi.template.create.dialog.localeLabel.select': 'Locale label: Associate a language to your template',
-  'tagomi.template.create.dialog.noLocales': 'No unassigned locales to assign to your template',
+  'tagomi.template.create.dialog.noLocales': 'All available locales have already been assigned to other templates',
   'tagomi.service.delete.dialog.title': 'Delete service:',
   'tagomi.service.delete.dialog.desc': 'You are about to delete this service. Its contents will no longer be available for use.',
   'tagomi.service.delete.dialog.button': 'Delete',
   'snack.template.savedMessage': 'Template saved successfully',
-  'snack.service.deletedMessage': 'Service deleted'
+  'snack.service.deletedMessage': 'Service deleted',
+  'tagomi.locale.select.alreadyDefined': 'Locale is already defined',
+  'tagomi.locale.label.editLocaleValue': 'Edit locale label value'
 }

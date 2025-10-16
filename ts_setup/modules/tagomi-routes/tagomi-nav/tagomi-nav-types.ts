@@ -1,13 +1,13 @@
 export interface ExplorerItemServiceTemplates {
   type: 'SERVICE_TEMPLATES';
-  article: string;
+  service: string;
   locale1: string;
   locale2?: string | undefined;
 }
 
 export interface ExplorerItemService {
   type: 'SERVICES';
-  article?: string | undefined,
+  service?: string | undefined,
   expanded?: string[]
 }
 
@@ -19,7 +19,6 @@ export type ExplorerItem = (
   { type: 'LOCALES' } |
   { type: 'TEMPLATES' } |
   { type: 'TAGS' }
-
 )
 
 export function toExplorerId(data: ExplorerItem): string {

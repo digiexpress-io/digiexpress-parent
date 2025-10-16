@@ -96,7 +96,7 @@ const ServiceItem: React.FC<{ serviceId: TagomiApi.ServiceId, nodeId?: string }>
           labelText={<FormattedMessage id="templates" />}
           labelInfo={`${templates.length}`}
           labelcolor={saved ? "page" : "secondary.light"}>
-          {templates.map(template => (<TemplateEditMenuItem service={view} template={template} />))}
+          {templates.map(template => (<TemplateEditMenuItem key={template.template.id} service={view} template={template} />))}
         </TreeItem>
  
 
