@@ -21,7 +21,6 @@ package io.digiexpress.thena.batch.client.spi.persistence;
  */
 
 import java.util.List;
-import java.util.function.Function;
 
 import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.resys.thena.api.annotations.TenantSql;
@@ -104,7 +103,7 @@ public interface BatchConsumerRegistry {
   )
   SqlTuple findAllEnabledByAppId(String appId);
   
-  @TenantSql.Insert(
+  @TenantSql.InsertAll(
     sql = """
       INSERT INTO {batch_consumers}
       (id, app_id, batch_name,
@@ -117,7 +116,7 @@ public interface BatchConsumerRegistry {
   )
   SqlTupleList insertMany(List<BatchConsumer> users);
   
-  @TenantSql.Update(
+  @TenantSql.UpdateAll(
     sql = """
       UPDATE {batch_consumers}
        SET consumer_qualified_java_name = $1, consumer_status = $2, batch_name = $3,
@@ -145,7 +144,6 @@ public interface BatchConsumerRegistry {
   )
   SqlTuple deleteById(String id);
   
-  Function<Row, BatchConsumer> defaultMapper();
   
   
   // Mapper classes needed:

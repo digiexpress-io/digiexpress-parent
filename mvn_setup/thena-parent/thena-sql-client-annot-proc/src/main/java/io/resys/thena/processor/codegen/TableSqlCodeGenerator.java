@@ -119,7 +119,6 @@ public class TableSqlCodeGenerator {
   
   private MethodSpec generateLifecycleMethod(SqlMethod method, TableModel model) {
     final var builder = MethodSpec.methodBuilder(method.getMethodName())
-      .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
       .returns(ClassName.get(Sql.class));
     
@@ -211,16 +210,16 @@ public class TableSqlCodeGenerator {
     final var collectionParam = method.getParameters().get(0).getName();
     final var resolvedSql = resolveSqlPlaceholders(method.getSqlTemplate(), method.getTableNames());
     
+    builder.addStatement("final var mapper = new $T()", ClassName.bestGuess(method.getMapperClassName()));
     builder.addStatement("return $T.builder()\n" +
       "  .value($L)\n" +
       "  .props($L.stream()\n" +
-      "    .map(new $T())\n" +
+      "    .map(mapper::apply)\n" +
       "    .collect($T.toList()))\n" +
       "  .build()",
       ClassName.get(ImmutableSqlTupleList.class),
       resolvedSql,
       collectionParam,
-      ClassName.bestGuess(method.getMapperClassName()),
       ClassName.get("java.util.stream", "Collectors"));
     
     return builder.build();
