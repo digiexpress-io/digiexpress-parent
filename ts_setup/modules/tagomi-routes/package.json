@@ -24,7 +24,9 @@
     "@mui/utils": "*",
     "react-intl": "*",
     "@uiw/react-md-editor": "*",
-    "js-file-download": "*"
+    "js-file-download": "*",
+    "@monaco-editor/react": "*",
+    "monaco-editor": "*"
   },
   "keywords": ["tagomi", "routes", "navigation", "layouts"],
   "private": true

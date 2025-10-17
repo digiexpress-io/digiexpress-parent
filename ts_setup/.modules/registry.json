@@ -2210,7 +2210,9 @@
           "@mui/utils": "*",
           "react-intl": "*",
           "@uiw/react-md-editor": "*",
-          "js-file-download": "*"
+          "js-file-download": "*",
+          "@monaco-editor/react": "*",
+          "monaco-editor": "*"
         },
         "keywords": [
           "tagomi",
@@ -2238,7 +2240,9 @@
         "@mui/utils",
         "react-intl",
         "@uiw/react-md-editor",
-        "js-file-download"
+        "js-file-download",
+        "@monaco-editor/react",
+        "monaco-editor"
       ],
       "peerDependencies": [
         "react",
@@ -2252,7 +2256,9 @@
         "@mui/utils",
         "react-intl",
         "@uiw/react-md-editor",
-        "js-file-download"
+        "js-file-download",
+        "@monaco-editor/react",
+        "monaco-editor"
       ],
       "externalDependencies": [
         "react",
@@ -2266,7 +2272,9 @@
         "@mui/utils",
         "react-intl",
         "@uiw/react-md-editor",
-        "js-file-download"
+        "js-file-download",
+        "@monaco-editor/react",
+        "monaco-editor"
       ],
       "internalDependencies": [
         "@dxs-ts/envir-fetch",
@@ -2310,10 +2318,7 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [
-        "@monaco-editor/react",
-        "monaco-editor"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
@@ -3643,6 +3648,6 @@
       ]
     }
   },
-  "checksum": "bd441030a3130edcafe114830a943411f435b78dcbd380add965361f5b837f68",
-  "generatedAt": "2025-10-14T10:18:31.557Z"
+  "checksum": "b4961bc1c56a11a12b95d150ced71705c8dd67af2148af1dd45666b88c2f4b16",
+  "generatedAt": "2025-10-17T11:55:12.713Z"
 }
