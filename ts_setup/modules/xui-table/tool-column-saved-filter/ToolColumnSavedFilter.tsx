@@ -37,11 +37,27 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
   const filters = (backend.filters ?? []);
 
   function handleSaveDefault() {
-    backend.onSave(tableState, {
-      type: 'CREATE',
-      label: 'default'
-    })
+    const CUSTOM = intl.formatMessage({
+      id: 'eveli.table.defaultSettings',
+      defaultMessage: 'Default Settings',
+    });
+  
+    const existing = filters.find(f => f.name?.toLowerCase() === CUSTOM.toLowerCase());
+  
+    if (existing) {
+      backend.onSave(tableState, {
+        type: 'UPDATE',
+        dataId: existing.id,
+        label: CUSTOM,
+      });
+    } else {
+      backend.onSave(tableState, {
+        type: 'CREATE',
+        label: CUSTOM,
+      });
+    }
   }
+  
   function handleOpenSaveAs() {
     setDialog({ type: 'CREATE' });
   }

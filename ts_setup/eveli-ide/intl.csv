@@ -804,6 +804,7 @@ eveli.table.drawer.title.export-data,Task smart tabel,Export data,Vie tiedot,Exp
 eveli.table.clearFilters,Task smart tabel,Clear all filters,Nollaa kaikki suodattimet,Rensa alla filter,
 eveli.table.drawer.buttons.savedFiltersButton,Task smart tabel,My saved setting,Minun näkymät,Min sparade inställning,
 eveli.table.saveasdefault,Task smart tabel,Save as default,Tallenna perusastuksena,Spara som standard,
+eveli.table.defaultSettings,Task smart tabel,Default Settings,Oletusasetukset,Standardinställningar,
 eveli.table.saveas,Task smart tabel,New filter from current,Tee uusi näkymä tästä,Nytt filter från nuvarande,
 eveli.error.general,Task smart tabel,"Ooops, we have encountered an error!","Hups, havaitsimme virheen!","Oj, vi har stött på ett fel!",
 eveli.error.notFound,Task smart tabel,"Ooops, the thing you are looking for is not found!","Hups, etsimääsi asiaa ei löydy!","Oj, det du letar efter hittas inte!",
