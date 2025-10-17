@@ -195,7 +195,13 @@ public class TransactionSaveSqlCodeGenerator {
     
     final var methodName = "visit" + capitalize(operationName);
     final var getterName = "get" + capitalize(operationName);
-    final var registryMethod = determineRegistryMethod(table, operationName);
+    
+    // Find the actual SQL method for this operation
+    final var sqlMethod = table.getSqlMethods().stream()
+      .filter(m -> buildOperationFieldName(table, m.getType()) != null)
+      .filter(m -> buildOperationFieldName(table, m.getType()).equals(operationName))
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException("No SQL method found for operation: " + operationName));
     
     final var method = MethodSpec.methodBuilder(methodName)
       .addModifiers(Modifier.PRIVATE)
@@ -208,7 +214,7 @@ public class TransactionSaveSqlCodeGenerator {
     method.addStatement("final var data = entries.$L()", getterName);
     method.addStatement("final var sql = registry.$L().$L(data)", 
       pluralize(table.getTableName()),
-      registryMethod);
+      sqlMethod.getMethodName());
     method.addStatement("return visitExecution(sql, $T.class)", entityType);
     
     return method.build();
@@ -386,23 +392,13 @@ public class TransactionSaveSqlCodeGenerator {
     final var baseName = toCamelCase(table.getTableName());
     
     return switch (type) {
-      case INSERT, INSERT_ALL -> baseName + "Inserts";
-      case UPDATE, UPDATE_ALL -> baseName + "Updates";
-      case DELETE, DELETE_ALL -> baseName + "Deletes";
+      case INSERT_ALL -> baseName + "Inserts";
+      case UPDATE_ALL -> baseName + "Updates";
+      case DELETE_ALL -> baseName + "Deletes";
       default -> null;
     };
   }
   
-  private String determineRegistryMethod(TableModel table, String operationName) {
-    if (operationName.endsWith("Inserts")) {
-      return "insertAll";
-    } else if (operationName.endsWith("Updates")) {
-      return "updateAll";
-    } else if (operationName.endsWith("Deletes")) {
-      return "deleteAll";
-    }
-    return "unknown";
-  }
   
   private TypeName extractEntityType(SqlMethod method) {
     if (method.getParameters().isEmpty()) {
