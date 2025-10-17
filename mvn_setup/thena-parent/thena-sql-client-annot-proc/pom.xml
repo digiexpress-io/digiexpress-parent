@@ -6,31 +6,34 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <name>thena-batch-client</name>
-  <artifactId>thena-batch-client</artifactId>
+  <name>thena-sql-client-annot-proc</name>
+  <artifactId>thena-sql-client-annot-proc</artifactId>
 
 
   <dependencies>
     <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client</artifactId>
     </dependency>
+  
     <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>thena-sql-client-annot-proc</artifactId>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
+      <groupId>com.squareup</groupId>
+      <artifactId>javapoet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
 </project>
