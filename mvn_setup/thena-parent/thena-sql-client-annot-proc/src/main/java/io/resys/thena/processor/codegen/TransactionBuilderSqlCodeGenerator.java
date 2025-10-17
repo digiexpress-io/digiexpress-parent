@@ -48,7 +48,12 @@ public class TransactionBuilderSqlCodeGenerator {
     final var operations = extractOperations(tables);
     
     final var classBuilder = TypeSpec.classBuilder(className)
-      .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+      .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+      .addAnnotation(ClassName.get("lombok", "Value"))
+      .addAnnotation(ClassName.get("lombok", "Builder"));
+    
+    // Add metadata fields first
+    addMetadataFields(classBuilder);
     
     // Add operation fields
     for (final var entry : operations.entrySet()) {
@@ -57,39 +62,12 @@ public class TransactionBuilderSqlCodeGenerator {
       
       classBuilder.addField(FieldSpec.builder(
         ParameterizedTypeName.get(ClassName.get(List.class), entityType),
-        fieldName,
-        Modifier.PRIVATE, Modifier.FINAL
-      ).build());
+        fieldName
+      ).addAnnotation(ClassName.bestGuess("lombok.Builder.Default"))
+       .initializer("new $T<>()", ArrayList.class)
+       .build());
     }
     
-    // Add metadata fields
-    addMetadataFields(classBuilder);
-    
-    // Add private constructor
-    classBuilder.addMethod(generateContainerConstructor(className, operations));
-    
-    // Add static builder() method
-    classBuilder.addMethod(MethodSpec.methodBuilder("builder")
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .returns(ClassName.get(registry.getPackageName(), className, "Builder"))
-      .addStatement("return new Builder()")
-      .build());
-    
-    // Add getters
-    for (final var entry : operations.entrySet()) {
-      final var fieldName = entry.getKey();
-      final var entityType = entry.getValue();
-      final var getterName = "get" + capitalize(fieldName);
-      
-      classBuilder.addMethod(MethodSpec.methodBuilder(getterName)
-        .addModifiers(Modifier.PUBLIC)
-        .returns(ParameterizedTypeName.get(ClassName.get(List.class), entityType))
-        .addStatement("return $L", fieldName)
-        .build());
-    }
-    
-    // Add metadata getters
-    addMetadataGetters(classBuilder);
     
     // Add merge method
     classBuilder.addMethod(generateMergeMethod(registry, className, operations));
@@ -97,110 +75,11 @@ public class TransactionBuilderSqlCodeGenerator {
     // Add helper method for merge
     classBuilder.addMethod(generateMergeListsHelper(operations));
     
-    // Add nested Builder class
-    classBuilder.addType(generateBuilderClass(registry, className, operations));
-    
     return JavaFile.builder(registry.getPackageName(), classBuilder.build())
       .indent("  ")
       .build();
   }
   
-  private TypeSpec generateBuilderClass(RegistryModel registry, String parentClassName, Map<String, TypeName> operations) {
-    final var builderClass = TypeSpec.classBuilder("Builder")
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
-    
-    // Add operation fields (mutable lists)
-    for (final var entry : operations.entrySet()) {
-      final var fieldName = entry.getKey();
-      final var entityType = entry.getValue();
-      
-      builderClass.addField(FieldSpec.builder(
-        ParameterizedTypeName.get(ClassName.get(List.class), entityType),
-        fieldName,
-        Modifier.PRIVATE, Modifier.FINAL
-      ).initializer("new $T<>()", ArrayList.class).build());
-    }
-    
-    // Add metadata fields
-    builderClass.addField(FieldSpec.builder(String.class, "tenantId", Modifier.PRIVATE).build());
-    builderClass.addField(FieldSpec.builder(
-      ClassName.get(BatchStatus.class),
-      "status",
-      Modifier.PRIVATE
-    ).build());
-    builderClass.addField(FieldSpec.builder(String.class, "log", Modifier.PRIVATE).build());
-    builderClass.addField(FieldSpec.builder(
-      ParameterizedTypeName.get(
-        ClassName.get(List.class),
-        ClassName.get(BatchLog.class)
-      ),
-      "messages",
-      Modifier.PRIVATE, Modifier.FINAL
-    ).initializer("new $T<>()", ArrayList.class).build());
-    
-    // Add adder methods for operations
-    for (final var entry : operations.entrySet()) {
-      final var fieldName = entry.getKey();
-      final var entityType = entry.getValue();
-      final var methodBaseName = capitalize(fieldName);
-      
-      // Single add
-      builderClass.addMethod(MethodSpec.methodBuilder("add" + methodBaseName)
-        .addModifiers(Modifier.PUBLIC)
-        .addParameter(entityType, "item")
-        .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-        .addStatement("this.$L.add(item)", fieldName)
-        .addStatement("return this")
-        .build());
-      
-      // Bulk add
-      builderClass.addMethod(MethodSpec.methodBuilder("add" + methodBaseName + "s")
-        .addModifiers(Modifier.PUBLIC)
-        .addParameter(ParameterizedTypeName.get(ClassName.get(java.util.Collection.class), entityType), "items")
-        .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-        .addStatement("this.$L.addAll(items)", fieldName)
-        .addStatement("return this")
-        .build());
-    }
-    
-    // Add metadata setters
-    builderClass.addMethod(MethodSpec.methodBuilder("tenantId")
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(String.class, "tenantId")
-      .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-      .addStatement("this.tenantId = tenantId")
-      .addStatement("return this")
-      .build());
-    
-    builderClass.addMethod(MethodSpec.methodBuilder("status")
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(BatchStatus.class), "status")
-      .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-      .addStatement("this.status = status")
-      .addStatement("return this")
-      .build());
-    
-    builderClass.addMethod(MethodSpec.methodBuilder("log")
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(String.class, "log")
-      .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-      .addStatement("this.log = log")
-      .addStatement("return this")
-      .build());
-    
-    builderClass.addMethod(MethodSpec.methodBuilder("addMessage")
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(BatchLog.class), "message")
-      .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-      .addStatement("this.messages.add(message)")
-      .addStatement("return this")
-      .build());
-    
-    // Add build method
-    builderClass.addMethod(generateBuildMethod(registry, parentClassName, operations));
-    
-    return builderClass.build();
-  }
   
   private Map<String, TypeName> extractOperations(List<TableModel> tables) {
     final var operations = new HashMap<String, TypeName>();
@@ -253,101 +132,25 @@ public class TransactionBuilderSqlCodeGenerator {
   }
   
   private void addMetadataFields(TypeSpec.Builder classBuilder) {
-    classBuilder.addField(FieldSpec.builder(String.class, "tenantId", Modifier.PRIVATE, Modifier.FINAL).build());
+    classBuilder.addField(FieldSpec.builder(String.class, "tenantId").build());
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(BatchStatus.class),
-      "status",
-      Modifier.PRIVATE, Modifier.FINAL
+      "status"
     ).build());
-    classBuilder.addField(FieldSpec.builder(String.class, "log", Modifier.PRIVATE, Modifier.FINAL).build());
+    classBuilder.addField(FieldSpec.builder(String.class, "log").build());
     classBuilder.addField(FieldSpec.builder(
       ParameterizedTypeName.get(
         ClassName.get(List.class),
         ClassName.get(BatchLog.class)
       ),
-      "messages",
-      Modifier.PRIVATE, Modifier.FINAL
-    ).build());
+      "messages"
+    ).addAnnotation(ClassName.bestGuess("lombok.Builder.Default"))
+     .initializer("new $T<>()", ArrayList.class)
+     .build());
   }
   
-  private void addMetadataGetters(TypeSpec.Builder classBuilder) {
-    classBuilder.addMethod(MethodSpec.methodBuilder("getTenantId")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(String.class)
-      .addStatement("return tenantId")
-      .build());
-    
-    classBuilder.addMethod(MethodSpec.methodBuilder("getStatus")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(BatchStatus.class))
-      .addStatement("return status")
-      .build());
-    
-    classBuilder.addMethod(MethodSpec.methodBuilder("getLog")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(String.class)
-      .addStatement("return log")
-      .build());
-    
-    classBuilder.addMethod(MethodSpec.methodBuilder("getMessages")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(ParameterizedTypeName.get(
-        ClassName.get(List.class),
-        ClassName.get(BatchLog.class)
-      ))
-      .addStatement("return messages")
-      .build());
-  }
   
-  private MethodSpec generateContainerConstructor(String className, Map<String, TypeName> operations) {
-    final var constructor = MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PRIVATE)
-      .addParameter(String.class, "tenantId")
-      .addParameter(ClassName.get(BatchStatus.class), "status")
-      .addParameter(String.class, "log")
-      .addParameter(
-        ParameterizedTypeName.get(
-          ClassName.get(List.class),
-          ClassName.get(BatchLog.class)
-        ),
-        "messages"
-      );
-    
-    constructor.addStatement("this.tenantId = tenantId");
-    constructor.addStatement("this.status = status");
-    constructor.addStatement("this.log = log");
-    constructor.addStatement("this.messages = new $T<>(messages)", ArrayList.class);
-    
-    for (final var entry : operations.entrySet()) {
-      final var fieldName = entry.getKey();
-      final var entityType = entry.getValue();
-      
-      constructor.addParameter(ParameterizedTypeName.get(ClassName.get(List.class), entityType), fieldName);
-      constructor.addStatement("this.$L = new $T<>($L)", fieldName, ArrayList.class, fieldName);
-    }
-    
-    return constructor.build();
-  }
   
-  private MethodSpec generateBuildMethod(RegistryModel registry, String containerClassName, Map<String, TypeName> operations) {
-    final var method = MethodSpec.methodBuilder("build")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(registry.getPackageName(), containerClassName));
-    
-    method.addCode("return new $L(\n", containerClassName);
-    method.addCode("  tenantId,\n");
-    method.addCode("  status,\n");
-    method.addCode("  log,\n");
-    method.addCode("  messages");
-    
-    for (final var fieldName : operations.keySet()) {
-      method.addCode(",\n  $L", fieldName);
-    }
-    
-    method.addStatement("\n)");
-    
-    return method.build();
-  }
   
   private MethodSpec generateMergeMethod(RegistryModel registry, String className, Map<String, TypeName> operations) {
     final var method = MethodSpec.methodBuilder("merge")

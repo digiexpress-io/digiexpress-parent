@@ -39,23 +39,19 @@ public class RegistryFactorySqlCodeGenerator {
     final var className = registry.getRegistryClassName();
     
     final var classBuilder = TypeSpec.classBuilder(className)
-      .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+      .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+      .addAnnotation(ClassName.get("lombok", "Value"));
     
-    // Add private final fields
+    // Add fields
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(registry.getPackageName(), registry.getTableClassName()),
-      "tables",
-      Modifier.PRIVATE, Modifier.FINAL
+      "tables"
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(ThenaSqlDataSource.class),
-      "dataSource",
-      Modifier.PRIVATE, Modifier.FINAL
+      "dataSource"
     ).build());
-    
-    // Add constructor
-    classBuilder.addMethod(generateConstructor(registry));
     
     // Add factory method for each table
     for (final var table : tables) {
@@ -64,16 +60,6 @@ public class RegistryFactorySqlCodeGenerator {
     
     return JavaFile.builder(registry.getPackageName(), classBuilder.build())
       .indent("  ")
-      .build();
-  }
-  
-  private MethodSpec generateConstructor(RegistryModel registry) {
-    return MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(registry.getPackageName(), registry.getTableClassName()), "tables")
-      .addParameter(ClassName.get(ThenaSqlDataSource.class), "dataSource")
-      .addStatement("this.tables = tables")
-      .addStatement("this.dataSource = dataSource")
       .build();
   }
   

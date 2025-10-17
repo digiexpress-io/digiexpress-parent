@@ -79,6 +79,11 @@
           <parameters>true</parameters>
           <annotationProcessorPaths>
             <path>
+              <groupId>io.digiexpress</groupId>
+              <artifactId>thena-sql-client-annot-proc</artifactId>
+              <version>${project.version}</version>
+            </path>
+            <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
               <version>${lombok.version}</version>
@@ -87,11 +92,6 @@
               <groupId>org.immutables</groupId>
               <artifactId>value</artifactId>
               <version>${immutables.version}</version>
-            </path>
-            <path>
-              <groupId>io.digiexpress</groupId>
-              <artifactId>thena-sql-client-annot-proc</artifactId>
-              <version>${project.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>

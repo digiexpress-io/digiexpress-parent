@@ -40,7 +40,9 @@ public class TableNameSqlCodeGenerator {
     final var className = registry.getTableClassName();
     
     final var classBuilder = TypeSpec.classBuilder(className)
-      .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+      .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+      .addAnnotation(ClassName.get("lombok", "Value"))
+      .addAnnotation(ClassName.get("lombok", "Builder"));
     
     // Add DEFAULTS static field
     classBuilder.addField(FieldSpec.builder(
@@ -49,44 +51,13 @@ public class TableNameSqlCodeGenerator {
       Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
     ).initializer("defaults()").build());
     
-    // Add private final fields
-    classBuilder.addField(FieldSpec.builder(String.class, "prefix", Modifier.PRIVATE, Modifier.FINAL).build());
+    // Add fields
+    classBuilder.addField(FieldSpec.builder(String.class, "prefix").build());
     
     for (final var table : tables) {
       final var fieldName = uncapitalize(table.getTableName());
-      classBuilder.addField(FieldSpec.builder(String.class, fieldName, Modifier.PRIVATE, Modifier.FINAL).build());
+      classBuilder.addField(FieldSpec.builder(String.class, fieldName).build());
     }
-    
-    // Add private constructor
-    classBuilder.addMethod(generateConstructor(registry, tables));
-    
-    // Add prefix getter
-    classBuilder.addMethod(MethodSpec.methodBuilder("getPrefix")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(String.class)
-      .addStatement("return prefix")
-      .build());
-    
-    // Add getter for each table
-    for (final var table : tables) {
-      final var fieldName = uncapitalize(table.getTableName());
-      final var getterName = "get" + capitalize(table.getTableName());
-      classBuilder.addMethod(MethodSpec.methodBuilder(getterName)
-        .addModifiers(Modifier.PUBLIC)
-        .returns(String.class)
-        .addStatement("return $L", fieldName)
-        .build());
-    }
-    
-    // Add builder() static method
-    classBuilder.addMethod(MethodSpec.methodBuilder("builder")
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .returns(ClassName.get(registry.getPackageName(), className, "Builder"))
-      .addStatement("return new Builder()")
-      .build());
-    
-    // Add nested Builder class
-    classBuilder.addType(generateBuilderClass(registry, tables, className));
     
     // Add toRepo(Tenant) method
     classBuilder.addMethod(generateToRepoTenantMethod(registry, className));
@@ -100,74 +71,6 @@ public class TableNameSqlCodeGenerator {
     return JavaFile.builder(registry.getPackageName(), classBuilder.build())
       .indent("  ")
       .build();
-  }
-  
-  private MethodSpec generateConstructor(RegistryModel registry, List<TableModel> tables) {
-    final var constructor = MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PRIVATE)
-      .addParameter(String.class, "prefix");
-    
-    constructor.addStatement("this.prefix = prefix");
-    
-    for (final var table : tables) {
-      final var fieldName = uncapitalize(table.getTableName());
-      constructor.addParameter(String.class, fieldName);
-      constructor.addStatement("this.$L = $L", fieldName, fieldName);
-    }
-    
-    return constructor.build();
-  }
-  
-  private TypeSpec generateBuilderClass(RegistryModel registry, List<TableModel> tables, String parentClassName) {
-    final var builderClass = TypeSpec.classBuilder("Builder")
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
-    
-    // Add fields
-    builderClass.addField(FieldSpec.builder(String.class, "prefix", Modifier.PRIVATE).build());
-    
-    for (final var table : tables) {
-      final var fieldName = uncapitalize(table.getTableName());
-      builderClass.addField(FieldSpec.builder(String.class, fieldName, Modifier.PRIVATE).build());
-    }
-    
-    // Add prefix setter
-    builderClass.addMethod(MethodSpec.methodBuilder("prefix")
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(String.class, "prefix")
-      .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-      .addStatement("this.prefix = prefix")
-      .addStatement("return this")
-      .build());
-    
-    // Add setter for each table
-    for (final var table : tables) {
-      final var fieldName = uncapitalize(table.getTableName());
-      builderClass.addMethod(MethodSpec.methodBuilder(fieldName)
-        .addModifiers(Modifier.PUBLIC)
-        .addParameter(String.class, fieldName)
-        .returns(ClassName.get(registry.getPackageName(), parentClassName, "Builder"))
-        .addStatement("this.$L = $L", fieldName, fieldName)
-        .addStatement("return this")
-        .build());
-    }
-    
-    // Add build() method
-    final var buildMethod = MethodSpec.methodBuilder("build")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(registry.getPackageName(), parentClassName));
-    
-    // Build constructor call
-    buildMethod.addCode("return new $L(\n", parentClassName);
-    buildMethod.addCode("  prefix");
-    for (final var table : tables) {
-      final var fieldName = uncapitalize(table.getTableName());
-      buildMethod.addCode(",\n  $L", fieldName);
-    }
-    buildMethod.addStatement("\n)");
-    
-    builderClass.addMethod(buildMethod.build());
-    
-    return builderClass.build();
   }
   
   private MethodSpec generateToRepoTenantMethod(RegistryModel registry, String className) {

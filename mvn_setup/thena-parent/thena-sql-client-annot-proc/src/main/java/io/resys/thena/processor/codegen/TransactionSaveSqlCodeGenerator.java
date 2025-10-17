@@ -58,30 +58,27 @@ public class TransactionSaveSqlCodeGenerator {
     // Add logger
     classBuilder.addField(generateLoggerField(registry));
     
-    // Add fields
+    // Add fields (no modifiers for Lombok)
     classBuilder.addField(FieldSpec.builder(
       ClassName.get("io.resys.thena.datasource", "ThenaSqlClient"),
-      "tx",
-      Modifier.PRIVATE, Modifier.FINAL
+      "tx"
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       ClassName.get("io.resys.thena.datasource", "ThenaSqlDataSource"),
-      "dataSource",
-      Modifier.PRIVATE, Modifier.FINAL
+      "dataSource"
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(registry.getPackageName(), registryClassName),
-      "registry",
-      Modifier.PRIVATE, Modifier.FINAL
+      "registry"
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       StringBuilder.class,
-      "txLog",
-      Modifier.PRIVATE, Modifier.FINAL
-    ).initializer("new $T()", StringBuilder.class).build());
+      "txLog"
+    ).addAnnotation(ClassName.bestGuess("lombok.Builder.Default"))
+     .initializer("new $T()", StringBuilder.class).build());
     
     // Add constructor
     classBuilder.addMethod(generateConstructor(registry, className, registryClassName));

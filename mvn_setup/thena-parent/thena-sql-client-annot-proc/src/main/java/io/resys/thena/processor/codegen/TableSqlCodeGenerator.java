@@ -54,7 +54,9 @@ public class TableSqlCodeGenerator {
     final var classBuilder = TypeSpec.classBuilder(model.getImplClassName())
       .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
       .addSuperinterface(ClassName.get(model.getPackageName(), model.getInterfaceName()))
-      .addAnnotation(Slf4j.class);
+      .addAnnotation(Slf4j.class)
+      .addAnnotation(ClassName.get("lombok", "Value"))
+      .addAnnotation(ClassName.get("lombok", "AllArgsConstructor"));
     
     // Add fields
     addFields(classBuilder, registry);
@@ -75,20 +77,17 @@ public class TableSqlCodeGenerator {
   private void addFields(TypeSpec.Builder classBuilder, RegistryModel registry) {
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(registry.getPackageName(), registry.getTableClassName()),
-      "tables",
-      Modifier.PRIVATE, Modifier.FINAL
+      "tables"
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(ThenaSqlDataSource.class),
-      "dataSource",
-      Modifier.PRIVATE, Modifier.FINAL
+      "dataSource"
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(ThenaSqlDataSourceErrorHandler.class),
-      "errorHandler",
-      Modifier.PRIVATE, Modifier.FINAL
+      "errorHandler"
     ).build());
   }
   
