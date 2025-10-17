@@ -284,20 +284,24 @@ public class TableSqlCodeGenerator {
   }
   
   private String resolveSqlPlaceholders(String sql, java.util.List<String> tableNames) {
+    // Normalize SQL - replace newlines and excess whitespace
+    var normalizedSql = sql.replaceAll("\\s+", " ").trim();
+    
     if (tableNames.isEmpty()) {
-      return "\"" + sql + "\"";
+      return "\"" + normalizedSql + "\"";
     }
     
     // Build the SQL string with table name replacements
     final var result = new StringBuilder("\"");
-    var current = sql;
+    var current = normalizedSql;
     
     for (final var tableName : tableNames) {
       final var placeholder = "{" + tableName + "}";
       final var parts = current.split(java.util.regex.Pattern.quote(placeholder), -1);
       
       if (parts.length > 1) {
-        current = String.join("\" + tables.get" + capitalize(tableName) + "() + \"", parts);
+        final var getterName = toCamelCaseCapitalized(tableName);
+        current = String.join("\" + tables.get" + getterName + "() + \"", parts);
       }
     }
     
@@ -305,11 +309,16 @@ public class TableSqlCodeGenerator {
     return result.toString();
   }
   
-  private String capitalize(String str) {
-    if (str == null || str.isEmpty()) {
-      return str;
+  private String toCamelCaseCapitalized(String snakeCase) {
+    final var parts = snakeCase.split("_");
+    final var result = new StringBuilder();
+    for (final var part : parts) {
+      if (!part.isEmpty()) {
+        result.append(Character.toUpperCase(part.charAt(0)))
+              .append(part.substring(1));
+      }
     }
-    return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+    return result.toString();
   }
   
   private ClassName getDirectReturnType(SqlPropsType propsType) {

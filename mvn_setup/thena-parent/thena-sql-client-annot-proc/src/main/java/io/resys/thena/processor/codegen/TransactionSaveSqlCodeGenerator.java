@@ -34,9 +34,11 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.WildcardTypeName;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.ImmutableBatchLog;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.processor.model.TableModel;
@@ -58,27 +60,30 @@ public class TransactionSaveSqlCodeGenerator {
     // Add logger
     classBuilder.addField(generateLoggerField(registry));
     
-    // Add fields (no modifiers for Lombok)
+    // Add fields
     classBuilder.addField(FieldSpec.builder(
-      ClassName.get("io.resys.thena.datasource", "ThenaSqlClient"),
-      "tx"
+      ClassName.get(ThenaSqlClient.class),
+      "tx",
+      Modifier.PRIVATE, Modifier.FINAL
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
-      ClassName.get("io.resys.thena.datasource", "ThenaSqlDataSource"),
-      "dataSource"
+      ClassName.get(ThenaSqlDataSource.class),
+      "dataSource",
+      Modifier.PRIVATE, Modifier.FINAL
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(registry.getPackageName(), registryClassName),
-      "registry"
+      "registry",
+      Modifier.PRIVATE, Modifier.FINAL
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
       StringBuilder.class,
-      "txLog"
-    ).addAnnotation(ClassName.bestGuess("lombok.Builder.Default"))
-     .initializer("new $T()", StringBuilder.class).build());
+      "txLog",
+      Modifier.PRIVATE, Modifier.FINAL
+    ).build());
     
     // Add constructor
     classBuilder.addMethod(generateConstructor(registry, className, registryClassName));
@@ -134,11 +139,12 @@ public class TransactionSaveSqlCodeGenerator {
   private MethodSpec generateConstructor(RegistryModel registry, String className, String registryClassName) {
     return MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
+      .addParameter(ClassName.get(registry.getPackageName(), registryClassName), "registry")
       .addParameter(ClassName.get(ThenaSqlDataSource.class), "dataSource")
+      .addStatement("this.registry = registry")
       .addStatement("this.dataSource = dataSource")
       .addStatement("this.tx = dataSource.getClient()")
-      .addStatement("this.registry = new $L(dataSource.getRegistry(), dataSource)", 
-        registryClassName)
+      .addStatement("this.txLog = new $T()", StringBuilder.class)
       .build();
   }
   
@@ -214,7 +220,7 @@ public class TransactionSaveSqlCodeGenerator {
       .addParameter(ClassName.get(SqlTupleList.class), "sql")
       .addParameter(ParameterizedTypeName.get(
         ClassName.get(Class.class),
-        ClassName.get("?", "")
+        WildcardTypeName.subtypeOf(Object.class)
       ), "type")
       .returns(ParameterizedTypeName.get(
         ClassName.get("io.smallrye.mutiny", "Uni"),
@@ -236,12 +242,12 @@ public class TransactionSaveSqlCodeGenerator {
       ClassName.get("io.resys.thena.storesql.support", "Execute"));
     method.addCode("  .onItem().transform(row -> {\n");
     method.addCode("    final var text = \"Inserted \" + (row == null ? 0 : row.rowCount()) + \" \" + type.getSimpleName() + \" entries\";\n");
-    method.addCode("    return $T.builder()\n" +
-      "      .from(container)\n" +
-      "      .addMessage($T.builder().text(text).build())\n" +
-      "      .build();\n",
-      ClassName.get(registry.getPackageName(), containerClassName),
+    method.addCode("    final var updatedMessages = new $T<>(container.getMessages());\n", ArrayList.class);
+    method.addCode("    updatedMessages.add($T.builder().text(text).build());\n", 
       ClassName.get(ImmutableBatchLog.class));
+    method.addCode("    return container.toBuilder()\n");
+    method.addCode("      .messages(updatedMessages)\n");
+    method.addCode("      .build();\n");
     method.addCode("  })\n");
     method.addCode("  .onFailure().transform(t -> {\n");
     method.addCode("    final var text = \"Failed to insert \" + sql.getProps().size() + \" \" + type.getSimpleName() + \" entries\";\n");
@@ -258,7 +264,7 @@ public class TransactionSaveSqlCodeGenerator {
       .addParameter(ClassName.get("io.resys.thena.datasource.ThenaSqlClient", "SqlTupleList"), "sql")
       .addParameter(ParameterizedTypeName.get(
         ClassName.get(Class.class),
-        ClassName.get("?", "")
+        WildcardTypeName.subtypeOf(Object.class)
       ), "type");
     
     method.beginControlFlow("if(sql.getProps().isEmpty())");
@@ -319,12 +325,10 @@ public class TransactionSaveSqlCodeGenerator {
     
     method.addCode("\n");
     method.addStatement("return tx.rollback().onItem().transform(junk -> \n" +
-      "  $T.builder()\n" +
-      "    .from(batchError.getContainer())\n" +
+      "  batchError.getContainer().toBuilder()\n" +
       "    .log(msg)\n" +
       "    .build()\n" +
-      ")",
-      ClassName.get(registry.getPackageName(), containerClassName));
+      ")");
     
     return method.build();
   }

@@ -75,7 +75,7 @@ public interface BatchConsumerRegistry {
     sql = "SELECT * FROM {batch_consumers}",
     rowMapper = BatchConsumerMapper.class
   )
-  SqlTuple findAll();
+  Sql findAll();
   
   @TenantSql.Query(
     sql = """
@@ -85,13 +85,13 @@ public interface BatchConsumerRegistry {
     """,
     rowMapper = BatchConsumerMapper.class
   )
-  Sql getById(String id);
+  SqlTuple getById(String id);
   
   @TenantSql.Query(
     sql = "SELECT * FROM {batch_consumers} WHERE consumer_status = 'ENABLED'",
     rowMapper = BatchConsumerMapper.class
   )
-  SqlTuple findAllEnabled();
+  Sql findAllEnabled();
   
   @TenantSql.Query(
     sql = """

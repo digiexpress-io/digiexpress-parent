@@ -50,7 +50,9 @@ public class TransactionBuilderSqlCodeGenerator {
     final var classBuilder = TypeSpec.classBuilder(className)
       .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
       .addAnnotation(ClassName.get("lombok", "Value"))
-      .addAnnotation(ClassName.get("lombok", "Builder"));
+      .addAnnotation(com.squareup.javapoet.AnnotationSpec.builder(ClassName.get("lombok", "Builder"))
+        .addMember("toBuilder", "$L", true)
+        .build());
     
     // Add metadata fields first
     addMetadataFields(classBuilder);
