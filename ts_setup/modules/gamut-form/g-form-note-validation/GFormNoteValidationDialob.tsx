@@ -4,15 +4,19 @@ import { GFormNoteValidation } from './GFormNoteValidation';
 
 
 
-export const GFormNoteValidationDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GFormNoteValidationDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, navRef, navRefId }) => {
 
   const style = element.props?.style;
 
   return (
-    <GFormNoteValidation
-      id={element.id}
-      label={store.form.toLabel(element.id)}
-      style={style}
-      description={store.form.toDescription(element.id)}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GFormNoteValidation
+        id={element.id}
+        label={store.form.toLabel(element.id)}
+        style={style}
+        description={store.form.toDescription(element.id)}
+      />
+    </>
+  );
 }

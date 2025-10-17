@@ -31,6 +31,8 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
   disabled,
   actionItem: element,
   formStore: store,
+  navRef,
+  navRefId
 }) => {
 
 
@@ -48,19 +50,23 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
   const rows = safeParseRows(element.props?.rows);
 
   return (
-    <GInputTextArea
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      errors={errors}
-      required={!!element.required}
-      value={element.value ?? ''}
-      variant="textBox"
-      onChange={onChange}
-      labelPosition={labelPosition}
-      rows={rows}
-    />
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GInputTextArea
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        errors={errors}
+        required={!!element.required}
+        value={element.value ?? ''}
+        variant="textBox"
+        onChange={onChange}
+        labelPosition={labelPosition}
+        rows={rows}
+
+      />
+    </>
   );
 };
 

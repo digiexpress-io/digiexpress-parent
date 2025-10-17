@@ -40,7 +40,14 @@ export const GFormBase: React.FC<GFormBaseProps> = (initProps) => {
   const Root = ownerState.component ?? GFormBaseRoot;
   return (
     <Root className={classes.root} ownerState={ownerState}>
-      <GFormBaseElement disabled={disabled} onAfterComplete={onAfterComplete} formStore={formStore} actionItem={actionItem} form={form}>{props.children}</GFormBaseElement>
+      <GFormBaseElement
+        disabled={disabled}
+        onAfterComplete={onAfterComplete}
+        formStore={formStore}
+        actionItem={actionItem}
+        form={form}>
+        {props.children}
+      </GFormBaseElement>
     </Root>
   );
 }

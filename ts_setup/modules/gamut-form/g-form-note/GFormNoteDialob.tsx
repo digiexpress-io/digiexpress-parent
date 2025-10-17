@@ -4,14 +4,18 @@ import { GFormNote } from './GFormNote';
 
 
 
-export const GFormNoteDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GFormNoteDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, navRef, navRefId }) => {
   const style = element.props?.style;
 
   return (
-    <GFormNote
-      id={element.id}
-      label={store.form.toLabel(element.id)}
-      description={element.description}
-      style={style}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GFormNote
+        id={element.id}
+        label={store.form.toLabel(element.id)}
+        description={element.description}
+        style={style}
+      />
+    </>
+  );
 }

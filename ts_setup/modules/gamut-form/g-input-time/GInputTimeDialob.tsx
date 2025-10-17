@@ -4,7 +4,7 @@ import { GInputTime } from './GInputTime';
 
 
 
-export const GInputTimeDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputTimeDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -14,8 +14,9 @@ export const GInputTimeDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
     store.setAnswer(element.id, newValue ? newValue : undefined);
   }
 
-  return (
-    <GInputTime 
+  return (<>
+    <div ref={navRef} id={navRefId} />
+    <GInputTime
       id={element.id}
       disabled={disabled}
       label={store.form.toLabel(element.id)}
@@ -27,5 +28,6 @@ export const GInputTimeDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       labelPosition={labelPosition}
       format={undefined}
       onChange={onChange}
-    />);
+    />
+  </>);
 }

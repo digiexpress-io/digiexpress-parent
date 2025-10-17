@@ -26,6 +26,7 @@ import { GFormBaseSlotVariant, useSlotVariant } from './useSlotVariant';
 import { useGFormErrorVisibility } from '../g-form-error-visibility';
 import { GFormNoteValidationDialob } from '../g-form-note-validation';
 
+
 export interface GFormBaseElementClasses {
   root: string;
   variant: string;
@@ -39,6 +40,9 @@ export interface GFormBaseElementProps {
   formStore: DialobApi.FormStore;
   children?: React.ReactNode | undefined; 
   onAfterComplete: () => void;
+
+  navRef: React.MutableRefObject<any>;
+  navRefId: string;
 }
 
 const MUI_NAME = 'GFormBaseElement';
@@ -65,7 +69,7 @@ const Slots: Record<GFormBaseSlotVariant, React.ElementType<GFormBaseElementProp
   'note-validation': GFormNoteValidationDialob
 }
 
-export const GFormBaseElement: React.FC<GFormBaseElementProps> = (initProps) => {
+export const GFormBaseElement: React.FC<Omit<GFormBaseElementProps, 'navRef' | 'navRefId'>> = (initProps) => {
   const props = useDefaultProps({
     props: initProps,
     name: MUI_NAME,
@@ -84,8 +88,7 @@ export const GFormBaseElement: React.FC<GFormBaseElementProps> = (initProps) => 
   const Component: React.ElementType<GFormBaseElementProps> = Slots[variant] ?? UnknownSlot;
   return (
     <>
-      <div ref={ref} id={`${initProps.actionItem.id}-ref`} />
-      <Component {...props} disabled={props.disabled}>
+      <Component {...props} disabled={props.disabled} navRef={ref} navRefId={`${initProps.actionItem.id}-ref`}>
         {props.children}
       </Component>
     </>);

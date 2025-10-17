@@ -5,6 +5,7 @@ export interface UnknownSlotProps {
   id: string;
   children: React.ReactNode;
   element: any;
+  ref: React.MutableRefObject<any>;
 }
 
 

@@ -4,7 +4,7 @@ import { GInputUpload } from './GInputUpload';
 
 
 
-export const GInputUploadDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputUploadDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -15,16 +15,20 @@ export const GInputUploadDialob: React.FC<GFormBaseElementProps> = ({ disabled, 
   }
 
   return (
-    <GInputUpload
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      errors={errors}
-      value={element.value}
-      variant={'upload'}
-      required={!!element.required}
-      labelPosition={labelPosition}
-      onChange={onChange}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GInputUpload
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        errors={errors}
+        value={element.value}
+        variant={'upload'}
+        required={!!element.required}
+        labelPosition={labelPosition}
+        onChange={onChange}
+      />
+    </>
+  );
 }
