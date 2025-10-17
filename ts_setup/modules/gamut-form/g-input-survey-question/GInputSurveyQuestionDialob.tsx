@@ -15,6 +15,7 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
     const newValue = event.target.value;
     store.setAnswer(element.id, newValue);
   }
+  const errors = store.form.toErrors(element.id);
 
   return (
 
@@ -24,6 +25,8 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
       label={store.form.toLabel(element.id)}
       description={description}
       index={index}
+      errors={errors}
+      required={!!element.required}
       value={element.value}
       options={options?.entries.map(e => ({ id: e.key, label: e.value, description: undefined })) ?? []}
       onChange={onChange}

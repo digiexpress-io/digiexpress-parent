@@ -1,11 +1,13 @@
 import React from 'react'
-import { IconButton, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 
 import { GInputSurveyQuestionBody, GInputSurveyQuestionLabel, useUtilityClasses } from './useUtilityClasses'
 import { InputHidden } from './InputHidden'
 import { GInputAdornment } from '../g-input-adornment'
+import { DialobApi } from '@dxs-ts/gamut-api'
+import { GInputError } from '../g-input-error';
 
 
 export interface GInputSurveyQuestionProps {
@@ -20,13 +22,15 @@ export interface GInputSurveyQuestionProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   navref: React.MutableRefObject<any>;
   navrefid: string,
+  errors?: DialobApi.ActionError[] | undefined;
+  required: boolean;
 }
 
 
 
 export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props) => {
 
-  const { id, value, onChange, description, disabled, navref, navrefid } = props;
+  const { id, value, onChange, description, disabled, navref, navrefid, errors } = props;
   const classes = useUtilityClasses(id);
   const [internalValue, setInternalValue] = React.useState<string>(value ?? '');
 
@@ -36,12 +40,25 @@ export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props)
   const delegate: Omit<GInputSurveyQuestionProps, 'onChange'> = props;
 
   return (
-    <>  
+    <>
       <GInputSurveyQuestionLabel className={classes.label} {...delegate}>
-        <Typography ref={navref} id={navrefid}>{props.label}</Typography>
+
+        <Box display='flex' flexDirection='column'>
+          <GInputError errors={errors} id={id} />
+
+          <Box display='flex' flexDirection='row' justifyContent='flex-end'>
+            <Typography ref={navref} id={navrefid} color={props.errors?.length ? 'error' : 'inherit'}>{props.label}</Typography>
+            {props.required && (
+              <Box display='flex' alignItems='center'>
+                <Box ml={0.5}><Typography fontSize='15pt' fontWeight='bold' color='error.main'>*</Typography></Box>
+              </Box>
+            )}
+          </Box>
+        </Box>
         <GInputAdornment id={`${id}-label`} title={props.label} children={description} disabled={props.disabled} />
         <InputHidden id={id} choice={internalValue} onChange={onChange} />
       </GInputSurveyQuestionLabel>
+
 
       {props.options.map(e => (
         <GInputSurveyQuestionBody key={e.label} className={classes.body} {...delegate}>
