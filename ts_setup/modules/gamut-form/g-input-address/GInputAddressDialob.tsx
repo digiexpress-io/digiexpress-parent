@@ -4,7 +4,7 @@ import { GInputAddress } from './GInputAddress';
 
 
 
-export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -15,16 +15,20 @@ export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled,
   }
 
   return (
-    <GInputAddress
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      errors={errors}
-      required={!!element.required}
-      value={element.value}
-      variant='address'
-      onChange={onChange}
-      labelPosition={labelPosition}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GInputAddress
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        errors={errors}
+        required={!!element.required}
+        value={element.value}
+        variant='address'
+        onChange={onChange}
+        labelPosition={labelPosition}
+      />
+    </>
+  );
 }

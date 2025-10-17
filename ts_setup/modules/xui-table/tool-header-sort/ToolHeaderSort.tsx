@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Divider, IconButton, ListItemIcon, MenuItem } from '@mui/material';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 import { ArrowUpward as ArrowUpwardIcon } from '@mui/icons-material';

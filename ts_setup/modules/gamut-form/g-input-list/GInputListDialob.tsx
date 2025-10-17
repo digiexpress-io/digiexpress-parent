@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
  *  - defaults to `variant = autocomplete`
  */
 
-export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const intl = useIntl();
   const valueset = store.form.toValueSet(element.id);
   const desc = store.form.toDescription(element.id);
@@ -27,18 +27,22 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
   const variant = element.props?.variant ?? 'autocomplete';
 
   return (
-    <GInputList
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      required={!!element.required}
-      errors={errors}
-      variant={variant}
-      undefinedValue={intl.formatMessage({ id: UNDEFINED_SELECTION_VALUE })}
-      value={element.value}
-      datasource={valueset}
-      onChange={onChange}
-      labelPosition={labelPosition}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GInputList
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        required={!!element.required}
+        errors={errors}
+        variant={variant}
+        undefinedValue={intl.formatMessage({ id: UNDEFINED_SELECTION_VALUE })}
+        value={element.value}
+        datasource={valueset}
+        onChange={onChange}
+        labelPosition={labelPosition}
+      />
+    </>
+  );
 }

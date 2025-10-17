@@ -3,7 +3,7 @@ import { GFormBaseElementProps } from '../g-form-base-element';
 import { GInputSurveyQuestion } from './GInputSurveyQuestion';
 
 
-export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
 
   const description = store.form.toDescription(element.id);
   const parent = store.form.toParent(element.id)
@@ -16,14 +16,19 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
     store.setAnswer(element.id, newValue);
   }
 
-  return (<GInputSurveyQuestion 
-    id={element.id}
-    disabled={disabled}
-    label={store.form.toLabel(element.id)}
-    description={description}
-    index={index}
-    value={element.value}
-    options={options?.entries.map(e => ({ id: e.key, label: e.value, description: undefined })) ?? []}
-    onChange={onChange}
-  />)
+  return (
+
+    <GInputSurveyQuestion
+      id={element.id}
+      disabled={disabled}
+      label={store.form.toLabel(element.id)}
+      description={description}
+      index={index}
+      value={element.value}
+      options={options?.entries.map(e => ({ id: e.key, label: e.value, description: undefined })) ?? []}
+      onChange={onChange}
+      navref={navRef}
+      navrefid={navRefId}
+    />
+  )
 }

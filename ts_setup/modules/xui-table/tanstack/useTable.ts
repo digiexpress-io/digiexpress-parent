@@ -13,7 +13,7 @@ import {
   ColumnOrderState
 } from '@tanstack/react-table';
 
-import { TableState } from '../table-state';
+import { TableState } from '../table-api';
 
 
 export function useTable<DataType extends object>(

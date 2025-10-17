@@ -18,13 +18,15 @@ export interface GInputSurveyQuestionProps {
   disabled: boolean;
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  navref: React.MutableRefObject<any>;
+  navrefid: string,
 }
 
 
 
 export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props) => {
 
-  const { id, value, onChange, description, disabled } = props;
+  const { id, value, onChange, description, disabled, navref, navrefid } = props;
   const classes = useUtilityClasses(id);
   const [internalValue, setInternalValue] = React.useState<string>(value ?? '');
 
@@ -34,9 +36,9 @@ export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props)
   const delegate: Omit<GInputSurveyQuestionProps, 'onChange'> = props;
 
   return (
-    <>
+    <>  
       <GInputSurveyQuestionLabel className={classes.label} {...delegate}>
-        <Typography>{props.label}</Typography>
+        <Typography ref={navref} id={navrefid}>{props.label}</Typography>
         <GInputAdornment id={`${id}-label`} title={props.label} children={description} disabled={props.disabled} />
         <InputHidden id={id} choice={internalValue} onChange={onChange} />
       </GInputSurveyQuestionLabel>

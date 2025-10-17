@@ -4,7 +4,7 @@ import { GInputText } from './GInputText';
 
 
 
-export const GInputTextDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputTextDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -14,8 +14,9 @@ export const GInputTextDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
     store.setAnswer(element.id, newValue);
   }
 
-  return (
-    <GInputText 
+  return (<>
+    <div ref={navRef} id={navRefId} />
+    <GInputText
       disabled={disabled}
       id={element.id}
       label={store.form.toLabel(element.id)}
@@ -26,5 +27,6 @@ export const GInputTextDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       variant='text'
       labelPosition={labelPosition}
       onChange={onChange}
-    />);
+    />
+  </>);
 }

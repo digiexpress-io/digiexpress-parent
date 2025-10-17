@@ -11,29 +11,9 @@ import { FavoriteBorder as FavoriteBorderIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { FillerRows } from './FillerRows';
 import { useTable } from '../table-provider';
+import { EveliTableDrawerType, EveliTableProps } from '../table-api';
 
-export type EveliTableDrawerType = 'filters' | 'columns' | 'saved-filters' | 'export-data';
 
-export interface EveliTableProps {
-  slotProps: {
-    root: {
-      columnSizeVars: Record<string, number>
-    },
-    header: {
-      cells: { width: number, title: React.ReactNode, subTitle: React.ReactNode }[];
-    }
-    body: {
-      rows: { cells: { width: number, children: React.ReactNode }[] }[];
-    },
-    footer: {
-      pageSize: number;
-      children: React.ReactNode;
-    }
-    drawer: {
-      body: Record<EveliTableDrawerType, React.ReactNode | undefined>;
-    }
-  }
-}
 
 
 export function EveliTable(props: EveliTableProps): React.ReactNode {

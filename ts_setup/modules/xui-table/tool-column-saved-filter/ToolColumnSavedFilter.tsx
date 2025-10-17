@@ -9,9 +9,9 @@ import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 
 
-import { Column, Table } from '@tanstack/react-table';
+import { Table } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
-import { TableState } from '../table-state';
+import { TableState } from '../table-api';
 import { SavedFilter, useSavedTableFilters } from '../table-state/saved-table-filters';
 import { Root, StyledFilterItem, useUtilityClasses } from './useUtilityClasses';
 

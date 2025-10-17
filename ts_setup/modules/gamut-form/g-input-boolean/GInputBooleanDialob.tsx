@@ -4,7 +4,7 @@ import { GInputBoolean } from './GInputBoolean';
 
 
 
-export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -12,25 +12,29 @@ export const GInputBooleanDialob: React.FC<GFormBaseElementProps> = ({ disabled,
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const newValue: 'true' | 'false' | '' = event.target.value + '' as any;
 
-    if(newValue === 'true') {
+    if (newValue === 'true') {
       store.setAnswer(element.id, true);
-    } else if(newValue === 'false') {
+    } else if (newValue === 'false') {
       store.setAnswer(element.id, false);
     } else {
       store.setAnswer(element.id, undefined);
     }
   }
   return (
-    <GInputBoolean
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      variant='checkbox'
-      required={!!element.required}
-      errors={errors}
-      value={element.value}
-      onChange={onChange}
-      labelPosition={labelPosition}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GInputBoolean
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        variant='checkbox'
+        required={!!element.required}
+        errors={errors}
+        value={element.value}
+        onChange={onChange}
+        labelPosition={labelPosition}
+      />
+    </>
+  );
 }

@@ -3,7 +3,7 @@ import { GFormBaseElementProps } from '../g-form-base-element';
 import { GInputDecimal } from './GInputDecimal';
 
 
-export const GInputDecimalDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputDecimalDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -14,16 +14,21 @@ export const GInputDecimalDialob: React.FC<GFormBaseElementProps> = ({ disabled,
   }
 
   return (
-    <GInputDecimal
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      errors={errors}
-      required={!!element.required}
-      value={element.value}
-      variant='decimal'
-      onChange={onChange}
-      labelPosition={labelPosition}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+
+      <GInputDecimal
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        errors={errors}
+        required={!!element.required}
+        value={element.value}
+        variant='decimal'
+        onChange={onChange}
+        labelPosition={labelPosition}
+      />
+    </>
+  );
 }

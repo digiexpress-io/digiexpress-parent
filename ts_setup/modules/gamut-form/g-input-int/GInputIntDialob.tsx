@@ -5,7 +5,7 @@ import { GInputInt } from './GInputInt';
 
 
 
-export const GInputIntDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store }) => {
+export const GInputIntDialob: React.FC<GFormBaseElementProps> = ({ disabled, actionItem: element, formStore: store, navRef, navRefId }) => {
   const errors = store.form.toErrors(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -16,16 +16,20 @@ export const GInputIntDialob: React.FC<GFormBaseElementProps> = ({ disabled, act
   }
 
   return (
-    <GInputInt
-      id={element.id}
-      disabled={disabled}
-      label={store.form.toLabel(element.id)}
-      description={desc}
-      errors={errors}
-      required={!!element.required}
-      value={element.value}
-      variant='int'
-      onChange={onChange}
-      labelPosition={labelPosition}
-    />);
+    <>
+      <div ref={navRef} id={navRefId} />
+      <GInputInt
+        id={element.id}
+        disabled={disabled}
+        label={store.form.toLabel(element.id)}
+        description={desc}
+        errors={errors}
+        required={!!element.required}
+        value={element.value}
+        variant='int'
+        onChange={onChange}
+        labelPosition={labelPosition}
+      />
+    </>
+  );
 }
