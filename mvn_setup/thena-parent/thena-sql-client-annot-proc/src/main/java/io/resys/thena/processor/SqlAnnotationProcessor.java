@@ -69,7 +69,9 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       if (element.getKind() == ElementKind.PACKAGE) {
         final var packageElement = (PackageElement) element;
         final var registryConfig = extractRegistryConfig(packageElement);
-        registryModels.add(registryConfig);
+        if(registryConfig != null) {
+          registryModels.add(registryConfig);
+        }
       }
     }
     
@@ -99,6 +101,14 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         final var modelExtractor = new ModelExtractor(processingEnv);
         final var model = modelExtractor.extract((TypeElement) element);
         final var registry = findRegistryForTable(model, registryModels);
+        
+        if(registry == null) {
+          processingEnv.getMessager().printMessage(
+              javax.tools.Diagnostic.Kind.ERROR,
+              "Failed to process @TenantSql.Table: " + model.getTableName() + " is skipped because there is no registry!",
+              element
+            );
+        }
         
         processTableInterface(model, registry);
         tableModels.add(model);
@@ -208,6 +218,10 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     final var packageElement = (PackageElement) element;
     final var annotation = element.getAnnotation(TenantSql.Registry.class);
     final var packageName = packageElement.getQualifiedName().toString();
+    
+    if(packageName == null) {
+      return null;
+    }
     
     return RegistryModel.builder()
       .name(annotation.name())

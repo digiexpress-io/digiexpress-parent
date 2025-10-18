@@ -55,7 +55,7 @@ function parseDate(raw: any): Date | null {
 }
 
 function getFilterValue(raw: any): TableDateFilter {
-  const type = raw['type'] ?? 'GTE';
+  const type = (raw ? raw['type'] : undefined) ?? 'GTE';
   const date = parseDate(raw);
   
   return { date, type };

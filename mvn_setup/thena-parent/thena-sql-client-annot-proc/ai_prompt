@@ -1,0 +1,251 @@
+ # Java Annotation Processor Code Generation Rules
+
+  ## Communication Rules
+
+  ### RULE 0: DO NOT LIE
+  If you lie, mark it clearly and leave immediately.
+
+  ### RULE 1: Java 21
+  All code must target Java 21.
+
+  ### RULE 2: Code Generation with JavaPoet
+  Java code is generated using JavaPoet library.
+
+  ### RULE 3: No Preamble/Postamble
+  - Answer directly, concisely
+  - No explanations unless requested
+  - After working on files, just stop
+
+  ### RULE 4: No Git Access
+  NEVER use git commands. User manages git.
+
+  ### RULE 5: No Maven Access
+  NEVER run maven commands (mvn). User manages builds.
+
+  ---
+
+  ## Project Structure
+
+  ### Location
+  `/Users/olevmutso/Development/digiexpress-parent/mvn_setup/thena-parent/thena-sql-client-annot-proc`
+
+  ### Source Files (8 total)
+  src/main/java/io/resys/thena/processor/
+  ├── SqlAnnotationProcessor.java          # Entry point
+  ├── model/
+  │   ├── TableModel.java                  # Data model (@Value/@Builder)
+  │   └── ModelExtractor.java              # Extracts metadata from annotations
+  └── codegen/
+      ├── TableSqlCodeGenerator.java       # Generates table implementations
+      ├── RegistryFactorySqlCodeGenerator.java  # Generates registry
+      ├── TableNameSqlCodeGenerator.java   # Generates table name constants
+      ├── TransactionBuilderSqlCodeGenerator.java  # Generates transaction container
+      └── TransactionSaveSqlCodeGenerator.java     # Generates save transaction
+
+  ---
+
+  ## Annotations Processed
+
+  ### @TenantSql.Registry
+  - Applied to `package-info.java`
+  - Defines registry name and non-tenant tables
+  ```java
+  @TenantSql.Registry(name = "Batch2", nonTenantTables = {"process"})
+  package io.digiexpress.thena.batch.client.spi.persistence;
+
+  @TenantSql.Table
+
+  - Applied to interfaces
+  - Defines table DDL, constraints, drop SQL
+  @TenantSql.Table(
+    name = "batch_consumers",
+    ddl = "CREATE TABLE IF NOT EXISTS {batch_consumers} (...)",
+    constraints = "...",
+    drop = "DROP TABLE {batch_consumers};"
+  )
+  public interface BatchConsumerRegistry { }
+
+  SQL Method Annotations
+
+  - @TenantSql.Query - SELECT queries
+  - @TenantSql.Insert - Single insert
+  - @TenantSql.InsertAll - Batch insert
+  - @TenantSql.Update - Single update
+  - @TenantSql.UpdateAll - Batch update
+  - @TenantSql.Delete - Single delete
+  - @TenantSql.DeleteAll - Batch delete
+
+  ---
+  Generated Classes Per Registry
+
+  For registry Batch2:
+  1. Batch2TableNames - Table name constants with prefix support
+  2. Batch2Registry - Factory for table instances
+  3. Batch2TransactionContainer - Holds batch operations data
+  4. Batch2SaveTransaction - Persists transaction container
+  5. {TableName}Impl - Implementation for each @TenantSql.Table interface
+
+  ---
+  Lombok Usage Rules
+
+  Use Lombok For:
+
+  - {Name}TableNames: @Value + @Builder
+  - {Name}Registry: @Value (immutable factory)
+  - {Name}TransactionContainer: @Value + @Builder(toBuilder = true)
+  - Table Implementations: @Value + @AllArgsConstructor
+
+  DO NOT Use Lombok For:
+
+  - {Name}SaveTransaction: Regular class with private final fields, constructor initializes txLog = new StringBuilder()
+
+  Lombok Annotation Patterns
+
+  // Simple annotation
+  .addAnnotation(ClassName.get("lombok", "Value"))
+
+  // Annotation with parameters - USE AnnotationSpec
+  .addAnnotation(AnnotationSpec.builder(ClassName.get("lombok", "Builder"))
+    .addMember("toBuilder", "$L", true)
+    .build())
+
+  // Field-level annotation
+  .addAnnotation(ClassName.bestGuess("lombok.Builder.Default"))
+
+  ---
+  Critical Code Generation Rules
+
+  1. Table Name Placeholders
+
+  - SQL uses {table_name} placeholders
+  - Replace with getter calls: {batch_consumers} → tables.getBatchConsumers()
+  - Use toCamelCaseCapitalized() for getter names: batch_consumers → BatchConsumers
+
+  2. Multi-line SQL Normalization
+
+  SQL templates may contain newlines. Always normalize:
+  var normalizedSql = sql.replaceAll("\\s+", " ").trim();
+
+  3. Generic Wildcards in JavaPoet
+
+  // WRONG - creates "import ?;"
+  ClassName.get("?", "")
+
+  // CORRECT
+  WildcardTypeName.subtypeOf(Object.class)
+
+  4. Batch Mapper Instantiation
+
+  // WRONG
+  .map(new MapperClass())
+
+  // CORRECT
+  final var mapper = new MapperClass();
+  return builder.props(data.stream().map(mapper::apply).collect(Collectors.toList()))
+
+  5. Transaction Container Updates
+
+  Use toBuilder() pattern, merge collections:
+  // Merge messages (old + new)
+  final var updatedMessages = new ArrayList<>(container.getMessages());
+  updatedMessages.add(newMessage);
+  return container.toBuilder()
+    .messages(updatedMessages)
+    .build();
+
+  6. Lifecycle Methods
+
+  createTable(), dropTable(), createConstraints() should NOT have @Override annotation.
+
+  7. Transaction Save Operations
+
+  Only include INSERT_ALL, UPDATE_ALL, DELETE_ALL (not single-entity operations):
+  return switch (type) {
+    case INSERT_ALL -> baseName + "Inserts";
+    case UPDATE_ALL -> baseName + "Updates";
+    case DELETE_ALL -> baseName + "Deletes";
+    default -> null;
+  };
+
+  Use actual method names from the model, not hardcoded strings.
+
+  ---
+  Field Naming Conventions
+
+  Snake Case → Camel Case
+
+  batch_consumers → batchConsumers (field name)
+  batch_consumers → BatchConsumers (getter name)
+  batch_consumers → getBatchConsumers() (getter method)
+
+  Implementation
+
+  private String toCamelCaseCapitalized(String snakeCase) {
+    final var parts = snakeCase.split("_");
+    final var result = new StringBuilder();
+    for (final var part : parts) {
+      if (!part.isEmpty()) {
+        result.append(Character.toUpperCase(part.charAt(0)))
+              .append(part.substring(1));
+      }
+    }
+    return result.toString();
+  }
+
+  ---
+  SaveTransaction Constructor Pattern
+
+  public Batch2SaveTransaction(Batch2Registry registry, ThenaSqlDataSource dataSource) {
+    this.registry = registry;
+    this.dataSource = dataSource;
+    this.tx = dataSource.getClient();
+    this.txLog = new StringBuilder();
+  }
+
+  Fields are private final, txLog initialized in constructor, not as field initializer.
+
+  ---
+  Common JavaPoet Patterns
+
+  Fields
+
+  // With Lombok - no modifiers
+  FieldSpec.builder(String.class, "fieldName").build()
+
+  // Without Lombok - explicit modifiers
+  FieldSpec.builder(String.class, "fieldName", Modifier.PRIVATE, Modifier.FINAL).build()
+
+  Multi-Statement Method Bodies
+
+  method.addStatement("final var mapper = new $T()", MapperClass.class);
+  method.addStatement("return builder.props(data.stream().map(mapper::apply).collect($T.toList()))",
+    Collectors.class);
+
+  Importing Classes
+
+  // Add to imports at top of generator
+  import com.squareup.javapoet.WildcardTypeName;
+  import com.squareup.javapoet.AnnotationSpec;
+
+  ---
+  Testing Pattern
+
+  User will modify interface files and check generated output. Do not run Maven or compilation checks.
+
+  ---
+  Current State
+
+  All 5 code generators functional:
+  - ✅ Table implementations with Lombok
+  - ✅ Registry factory with Lombok
+  - ✅ Table names with Lombok + builder
+  - ✅ Transaction container with toBuilder()
+  - ✅ Save transaction (no Lombok, manual constructor)
+
+  Key fixes applied:
+  - ✅ Wildcard generics fixed (Class<?>)
+  - ✅ SQL normalization for multi-line strings
+  - ✅ Getter name generation (snake_case → camelCase)
+  - ✅ Mapper instantiation pattern
+  - ✅ Transaction container message merging
+  - ✅ Operation filtering (only *_ALL methods)

@@ -23,16 +23,11 @@ package io.resys.thena.grim.spi.datasource;
 import java.util.Collection;
 import java.util.function.Function;
 
-import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
-@TenantSql.Table(
-    name = "", 
-    ddl = """
 
-    """)
 public interface GrimAssignmentRegistry extends ThenaRegistryService<GrimAssignment, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
