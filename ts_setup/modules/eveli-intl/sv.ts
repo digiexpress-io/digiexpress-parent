@@ -804,6 +804,7 @@ export const sv = {
   'eveli.table.clearFilters': 'Rensa alla filter',
   'eveli.table.drawer.buttons.savedFiltersButton': 'Min sparade inställning',
   'eveli.table.saveasdefault': 'Spara som standard',
+  'eveli.table.defaultSettings': 'Standardinställningar',
   'eveli.table.saveas': 'Nytt filter från nuvarande',
   'eveli.error.general': 'Oj, vi har stött på ett fel!',
   'eveli.error.notFound': 'Oj, det du letar efter hittas inte!',

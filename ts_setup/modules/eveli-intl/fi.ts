@@ -804,6 +804,7 @@ export const fi = {
   'eveli.table.clearFilters': 'Nollaa kaikki suodattimet',
   'eveli.table.drawer.buttons.savedFiltersButton': 'Minun näkymät',
   'eveli.table.saveasdefault': 'Tallenna perusastuksena',
+  'eveli.table.defaultSettings': 'Oletusasetukset',
   'eveli.table.saveas': 'Tee uusi näkymä tästä',
   'eveli.error.general': 'Hups, havaitsimme virheen!',
   'eveli.error.notFound': 'Hups, etsimääsi asiaa ei löydy!',

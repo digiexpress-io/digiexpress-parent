@@ -804,6 +804,7 @@ export const en = {
   'eveli.table.clearFilters': 'Clear all filters',
   'eveli.table.drawer.buttons.savedFiltersButton': 'My saved setting',
   'eveli.table.saveasdefault': 'Save as default',
+  'eveli.table.defaultSettings': 'Default Settings',
   'eveli.table.saveas': 'New filter from current',
   'eveli.error.general': 'Ooops, we have encountered an error!',
   'eveli.error.notFound': 'Ooops, the thing you are looking for is not found!',
