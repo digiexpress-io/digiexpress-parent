@@ -106,7 +106,8 @@ public class TableSqlCodeGenerator {
   
   private MethodSpec generateMethod(SqlMethod method, TableModel model) {
     return switch (method.getType()) {
-      case QUERY -> generateQueryMethod(method, model);
+      case SELECT -> generateQueryMethod(method, model);
+      case SELECT_ALL -> generateQueryMethod(method, model);
       case INSERT -> generateSingleInsertMethod(method, model);
       case INSERT_ALL -> generateBatchMethod(method, model);
       case UPDATE -> generateSingleUpdateMethod(method, model);

@@ -77,6 +77,13 @@ public @interface TenantSql {
     String name();
     
     /**
+     * Processing order for table creation/deletion.
+     * Lower numbers processed first. Default is 0.
+     * Use for dependency ordering (e.g., foreign key constraints).
+     */
+    int order() default 0;
+    
+    /**
      * DDL SQL for creating the table and indexes.
      * Use {table_name} placeholders for tenant injection.
      * Example: "CREATE TABLE {grim_mission} (id VARCHAR(40) PRIMARY KEY);"
@@ -99,12 +106,37 @@ public @interface TenantSql {
   }
   
   /**
-   * Marks a method as a SQL query that returns data.
+   * Marks a method as a SQL query that returns a single result.
    * Generates execution code with RowMapper for result transformation.
    */
   @Target(ElementType.METHOD)
   @Retention(RetentionPolicy.SOURCE)
-  @interface Query {
+  @interface Find {
+    /**
+     * SQL query string with {table_name} placeholders for tenant injection.
+     * Use positional parameters ($1, $2, etc.) for method parameters.
+     */
+    String sql();
+    
+    /**
+     * Mapper that transforms database Row to domain object.
+     */
+    Class<? extends RowMapper<?>> rowMapper();
+    
+    /**
+     * Whether the result is optional (may return null/empty).
+     * Default is true.
+     */
+    boolean optional() default true;
+  }
+  
+  /**
+   * Marks a method as a SQL query that returns multiple results.
+   * Generates execution code with RowMapper for result transformation.
+   */
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.SOURCE)
+  @interface FindAll {
     /**
      * SQL query string with {table_name} placeholders for tenant injection.
      * Use positional parameters ($1, $2, etc.) for method parameters.

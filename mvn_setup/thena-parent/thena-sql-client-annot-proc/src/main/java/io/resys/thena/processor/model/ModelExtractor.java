@@ -71,8 +71,10 @@ public class ModelExtractor {
         final var method = (ExecutableElement) enclosed;
         
         // Check for all annotation types
-        if (method.getAnnotation(TenantSql.Query.class) != null) {
-          sqlMethods.add(extractQueryMethod(method));
+        if (method.getAnnotation(TenantSql.Find.class) != null) {
+          sqlMethods.add(extractFindMethod(method));
+        } else if (method.getAnnotation(TenantSql.FindAll.class) != null) {
+          sqlMethods.add(extractFindAllMethod(method));
         } else if (method.getAnnotation(TenantSql.Insert.class) != null) {
           sqlMethods.add(extractInsertMethod(method));
         } else if (method.getAnnotation(TenantSql.InsertAll.class) != null) {
@@ -98,6 +100,7 @@ public class ModelExtractor {
       .packageName(packageName)
       .implClassName(implClassName)
       .tableName(tableName)
+      .order(tableAnnotation.order())
       .ddlSql(tableAnnotation.ddl())
       .constraintsSql(tableAnnotation.constraints())
       .dropSql(tableAnnotation.drop())
@@ -105,12 +108,31 @@ public class ModelExtractor {
       .build();
   }
   
-  private SqlMethod extractQueryMethod(ExecutableElement method) {
-    final var annotation = method.getAnnotation(TenantSql.Query.class);
+  private SqlMethod extractFindMethod(ExecutableElement method) {
+    final var annotation = method.getAnnotation(TenantSql.Find.class);
     final var sql = annotation.sql();
     
     return SqlMethod.builder()
-      .type(SqlMethodType.QUERY)
+      .type(SqlMethodType.SELECT)
+      .methodName(method.getSimpleName().toString())
+      .sqlTemplate(sql)
+      .resolvedSql(sql)
+      .mapperClassName(extractRowMapperClassName(annotation))
+      .parameters(extractParameters(method))
+      .returnType(unwrapReturnType(method.getReturnType()))
+      .wrapperType(extractWrapperType(method.getReturnType()))
+      .propsType(determinePropsType(method))
+      .tableNames(extractTableNames(sql))
+      .optional(annotation.optional())
+      .build();
+  }
+  
+  private SqlMethod extractFindAllMethod(ExecutableElement method) {
+    final var annotation = method.getAnnotation(TenantSql.FindAll.class);
+    final var sql = annotation.sql();
+    
+    return SqlMethod.builder()
+      .type(SqlMethodType.SELECT_ALL)
       .methodName(method.getSimpleName().toString())
       .sqlTemplate(sql)
       .resolvedSql(sql)
@@ -123,10 +145,17 @@ public class ModelExtractor {
       .build();
   }
   
-  private String extractRowMapperClassName(TenantSql.Query annotation) {
+
+  private String extractRowMapperClassName(TenantSql.Find mapperClass) {
     try {
-      annotation.rowMapper();
-      return null;
+      return mapperClass.rowMapper().getName();
+    } catch (javax.lang.model.type.MirroredTypeException e) {
+      return e.getTypeMirror().toString();
+    }
+  }
+  private String extractRowMapperClassName(TenantSql.FindAll mapperClass) {
+    try {
+      return mapperClass.rowMapper().getName();
     } catch (javax.lang.model.type.MirroredTypeException e) {
       return e.getTypeMirror().toString();
     }
@@ -152,8 +181,7 @@ public class ModelExtractor {
   
   private String extractPropsMapperClassName(TenantSql.Insert annotation) {
     try {
-      annotation.propsMapper();
-      return null;
+      return annotation.propsMapper().getName();
     } catch (javax.lang.model.type.MirroredTypeException e) {
       return e.getTypeMirror().toString();
     }

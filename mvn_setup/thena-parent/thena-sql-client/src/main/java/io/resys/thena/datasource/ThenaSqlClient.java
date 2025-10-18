@@ -28,11 +28,13 @@ import java.util.function.Function;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.annotations.TenantSql.RowMapper;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleListFailed;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Tuple;
+import jakarta.annotation.Nullable;
 
 public interface ThenaSqlClient {
   Uni<Void> rollback();
@@ -58,6 +60,7 @@ public interface ThenaSqlClient {
   @Value.Immutable
   interface Sql {
     String getValue();
+    @Nullable RowMapper<?> getRowMapper();
     
     default SqlFailed failed(Throwable t, String message, Object ...args) {
       return new SqlFailed(message.formatted(args), this, t);
@@ -68,6 +71,8 @@ public interface ThenaSqlClient {
   interface SqlTuple {
     String getValue();
     Tuple getProps();
+    
+    @Nullable RowMapper<?> getRowMapper();
     
     default String getPropsDeepString() {
       return ThenaSqlClient.getPropsDeepString(getProps());

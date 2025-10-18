@@ -39,6 +39,7 @@ public class TableModel {
   String implClassName;
   
   String tableName;
+  int order;
   String ddlSql;
   String constraintsSql;
   String dropSql;
@@ -53,11 +54,13 @@ public class TableModel {
   }
   
   public enum SqlMethodType {
-    QUERY,
+
+    SELECT,
     INSERT,
     UPDATE,
     DELETE,
     
+    SELECT_ALL,
     INSERT_ALL,
     UPDATE_ALL,
     DELETE_ALL,
@@ -97,6 +100,9 @@ public class TableModel {
     
     @Builder.Default
     List<String> tableNames = List.of();  // NEW: extracted from {table_name} placeholders
+    
+    @Builder.Default
+    boolean optional = true;  // For @Find queries
   }
   
   
