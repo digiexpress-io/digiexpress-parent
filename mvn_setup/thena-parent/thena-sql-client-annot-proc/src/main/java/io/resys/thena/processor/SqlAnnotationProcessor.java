@@ -246,13 +246,17 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       return null;
     }
     
+    final var worldName = annotation.worldName() != null && !annotation.worldName().isEmpty() 
+      ? annotation.worldName() 
+      : "World";
+    
     return RegistryModel.builder()
       .name(annotation.name())
       .tableClassName(annotation.name() + "TableNames")
       .registryClassName(annotation.name() + "Registry")
       .transactionContainerClassName(annotation.name() + "TransactionContainer")
       .transactionSaveClassName(annotation.name() + "SaveTransaction")
-      .worldName(annotation.worldName())
+      .worldName(worldName)
       .packageName(packageName)
       .element(element)
       .nonTenantTables(List.of(annotation.nonTenantTables()))

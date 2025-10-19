@@ -21,10 +21,12 @@ package io.resys.thena.processor.codegen;
  */
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -48,7 +50,7 @@ public class DbQueryInterfaceSqlCodeGenerator {
       .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
       .returns(ParameterizedTypeName.get(
         ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), registry.getName() + "TenantContainer")
+        ClassName.bestGuess(registry.getWorldName())
       ))
       .build());
     
@@ -65,6 +67,9 @@ public class DbQueryInterfaceSqlCodeGenerator {
       // Generate nested query interface for this table
       interfaceBuilder.addType(generateTableQueryInterface(table, nestedInterfaceName));
     }
+    
+    // Generate World interface
+    interfaceBuilder.addType(generateWorldInterface(registry, tables));
     
     return JavaFile.builder(registry.getPackageName(), interfaceBuilder.build())
       .indent("  ")
@@ -119,6 +124,42 @@ public class DbQueryInterfaceSqlCodeGenerator {
     }
     
     return nestedInterface.build();
+  }
+  
+  private TypeSpec generateWorldInterface(RegistryModel registry, List<TableModel> tables) {
+    final var worldInterface = TypeSpec.interfaceBuilder(registry.getWorldName())
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+      .addAnnotation(AnnotationSpec.builder(ClassName.get("org.immutables.value", "Value", "Immutable")).build());
+    
+    for (final var table : tables) {
+      final var entityType = findEntityTypeForTable(table);
+      if (entityType != null) {
+        final var getterName = "get" + toPascalCase(table.getTableName());
+        final var returnType = ParameterizedTypeName.get(
+          ClassName.get(Map.class),
+          ClassName.get(String.class),
+          entityType
+        );
+        
+        worldInterface.addMethod(MethodSpec.methodBuilder(getterName)
+          .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+          .returns(returnType)
+          .build());
+      }
+    }
+    
+    return worldInterface.build();
+  }
+  
+  private ClassName findEntityTypeForTable(TableModel table) {
+    for (final var method : table.getSqlMethods()) {
+      if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
+        if (method.getReturnType() != null) {
+          return (ClassName) method.getReturnType();
+        }
+      }
+    }
+    return null;
   }
   
   private String toPascalCase(String snakeCase) {
