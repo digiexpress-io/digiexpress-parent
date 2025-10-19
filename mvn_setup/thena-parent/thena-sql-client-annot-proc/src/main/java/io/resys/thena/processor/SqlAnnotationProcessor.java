@@ -252,6 +252,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       .registryClassName(annotation.name() + "Registry")
       .transactionContainerClassName(annotation.name() + "TransactionContainer")
       .transactionSaveClassName(annotation.name() + "SaveTransaction")
+      .worldName(annotation.worldName())
       .packageName(packageName)
       .element(element)
       .nonTenantTables(List.of(annotation.nonTenantTables()))

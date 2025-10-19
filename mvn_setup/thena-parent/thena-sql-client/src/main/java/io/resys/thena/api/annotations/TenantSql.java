@@ -60,6 +60,13 @@ public @interface TenantSql {
      * If not specified, uses the package of the annotated element.
      */
     String packageName() default "";
+    
+    /**
+     * Optional: Name of the World container interface.
+     * If not specified, uses "World" as default.
+     * Example: "GrimMissionContainer"
+     */
+    String worldName() default "World";
   }
   
   

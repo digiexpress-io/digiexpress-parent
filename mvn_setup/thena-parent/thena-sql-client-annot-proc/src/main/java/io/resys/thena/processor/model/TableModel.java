@@ -116,6 +116,7 @@ public class TableModel {
     String registryClassName;
     String transactionContainerClassName;
     String transactionSaveClassName;
+    String worldName;
     @Builder.Default
     List<String> nonTenantTables = List.of();  // ["process", "process_id_seq"]
   }

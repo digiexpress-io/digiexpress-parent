@@ -86,7 +86,10 @@ public class DbInterfaceSqlCodeGenerator {
       .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
       .addTypeVariable(typeVarR)
       .addParameter(ClassName.get(TxScope.class), "scope")
-      .addParameter(ClassName.bestGuess(transactionInterfaceName), "callback")
+      .addParameter(ParameterizedTypeName.get(
+        ClassName.bestGuess(transactionInterfaceName),
+        typeVarR
+      ), "callback")
       .returns(ParameterizedTypeName.get(
         ClassName.get("io.smallrye.mutiny", "Uni"),
         typeVarR
