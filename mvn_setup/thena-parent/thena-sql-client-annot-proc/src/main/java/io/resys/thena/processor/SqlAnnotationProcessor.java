@@ -38,6 +38,8 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.processor.codegen.DbInterfaceSqlCodeGenerator;
+import io.resys.thena.processor.codegen.DbQueryInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.RegistryFactorySqlCodeGenerator;
 import io.resys.thena.processor.codegen.TableNameSqlCodeGenerator;
 import io.resys.thena.processor.codegen.TableSqlCodeGenerator;
@@ -189,6 +191,27 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         javax.tools.Diagnostic.Kind.NOTE,
         "Generated save: " + registryConfig.getTransactionSaveClassName() + " with " + 
         filteredTables.size() + " tables");
+    
+    
+    new DbInterfaceSqlCodeGenerator()
+      .generate(registryConfig)
+      .writeTo(processingEnv.getFiler());
+  
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated db interface: " + registryConfig.getTransactionSaveClassName() + " with " + 
+        filteredTables.size() + " tables");
+    
+    
+    new DbQueryInterfaceSqlCodeGenerator()
+      .generate(registryConfig, filteredTables)
+      .writeTo(processingEnv.getFiler());
+  
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated db interface: " + registryConfig.getTransactionSaveClassName() + " with " + 
+        filteredTables.size() + " tables");
+    
   }
   
   

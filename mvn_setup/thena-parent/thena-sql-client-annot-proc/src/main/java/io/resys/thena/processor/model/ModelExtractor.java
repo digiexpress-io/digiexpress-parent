@@ -119,7 +119,7 @@ public class ModelExtractor {
       .resolvedSql(sql)
       .mapperClassName(extractRowMapperClassName(annotation))
       .parameters(extractParameters(method))
-      .returnType(unwrapReturnType(method.getReturnType()))
+      .returnType(extractEntityTypeFromMapper(annotation))
       .wrapperType(extractWrapperType(method.getReturnType()))
       .propsType(determinePropsType(method))
       .tableNames(extractTableNames(sql))
@@ -138,7 +138,7 @@ public class ModelExtractor {
       .resolvedSql(sql)
       .mapperClassName(extractRowMapperClassName(annotation))
       .parameters(extractParameters(method))
-      .returnType(unwrapReturnType(method.getReturnType()))
+      .returnType(extractEntityTypeFromMapper(annotation))
       .wrapperType(extractWrapperType(method.getReturnType()))
       .propsType(determinePropsType(method))
       .tableNames(extractTableNames(sql))
@@ -153,12 +153,52 @@ public class ModelExtractor {
       return e.getTypeMirror().toString();
     }
   }
+  
   private String extractRowMapperClassName(TenantSql.FindAll mapperClass) {
     try {
       return mapperClass.rowMapper().getName();
     } catch (javax.lang.model.type.MirroredTypeException e) {
       return e.getTypeMirror().toString();
     }
+  }
+  
+  private TypeName extractEntityTypeFromMapper(TenantSql.Find annotation) {
+    try {
+      annotation.rowMapper();
+      return null;
+    } catch (javax.lang.model.type.MirroredTypeException e) {
+      return extractGenericFromRowMapper(e.getTypeMirror());
+    }
+  }
+  
+  private TypeName extractEntityTypeFromMapper(TenantSql.FindAll annotation) {
+    try {
+      annotation.rowMapper();
+      return null;
+    } catch (javax.lang.model.type.MirroredTypeException e) {
+      return extractGenericFromRowMapper(e.getTypeMirror());
+    }
+  }
+  
+  private TypeName extractGenericFromRowMapper(TypeMirror mapperType) {
+    if (mapperType instanceof DeclaredType) {
+      final var declaredType = (DeclaredType) mapperType;
+      
+      // Get superinterfaces to find RowMapper<T>
+      final var element = declaredType.asElement();
+      for (final var interfaceType : processingEnv.getTypeUtils().directSupertypes(mapperType)) {
+        if (interfaceType instanceof DeclaredType) {
+          final var interfaceDeclared = (DeclaredType) interfaceType;
+          final var typeArgs = interfaceDeclared.getTypeArguments();
+          
+          if (!typeArgs.isEmpty()) {
+            // Found RowMapper<T>, return T
+            return TypeName.get(typeArgs.get(0));
+          }
+        }
+      }
+    }
+    return null;
   }
   
   private SqlMethod extractInsertMethod(ExecutableElement method) {
