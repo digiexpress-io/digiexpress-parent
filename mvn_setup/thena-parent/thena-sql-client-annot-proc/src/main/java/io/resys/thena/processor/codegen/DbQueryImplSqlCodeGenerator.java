@@ -20,6 +20,7 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
@@ -80,7 +81,7 @@ public class DbQueryImplSqlCodeGenerator {
     ).build());
     
     classBuilder.addMethod(generateConstructor(registry));
-    classBuilder.addMethod(generateFindAllMethod(registry));
+    classBuilder.addMethod(generateFindAllMethod(registry, tables));
     
     for (final var table : tables) {
       classBuilder.addMethod(generateQueryTableMethod(registry, table));
@@ -104,17 +105,101 @@ public class DbQueryImplSqlCodeGenerator {
       .build();
   }
   
-  private MethodSpec generateFindAllMethod(RegistryModel registry) {
-    return MethodSpec.methodBuilder("findAll")
+  private MethodSpec generateFindAllMethod(RegistryModel registry, List<TableModel> tables) {
+    final var method = MethodSpec.methodBuilder("findAll")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
       .returns(ParameterizedTypeName.get(
         ClassName.get(Uni.class),
         ClassName.bestGuess(registry.getWorldName())
-      ))
-      .addComment("TODO Auto-generated method stub")
-      .addStatement("return null")
-      .build();
+      ));
+    
+    final var tablesWithFindAll = new ArrayList<TableModel>();
+    for (final var table : tables) {
+      if (findEntityTypeForTable(table) != null) {
+        tablesWithFindAll.add(table);
+      }
+    }
+    
+    if (tablesWithFindAll.isEmpty()) {
+      method.addStatement("return $T.createFrom().item($T.builder().build())", 
+        Uni.class, 
+        ClassName.get(registry.getPackageName(), "Immutable" + registry.getWorldName()));
+      return method.build();
+    }
+    
+    method.addCode("return $T.combine().all()\n", Uni.class);
+    method.addCode("$>.unis(\n");
+    method.addCode("$>");
+    
+    for (int i = 0; i < tablesWithFindAll.size(); i++) {
+      final var table = tablesWithFindAll.get(i);
+      final var methodName = "query" + toPascalCase(table.getTableName());
+      final var findAllMethod = findNoArgFindAllMethod(table);
+      
+      if (i > 0) method.addCode(",\n");
+      method.addCode("$L().$L()", methodName, findAllMethod.getMethodName());
+    }
+    
+    method.addCode("\n$<");
+    method.addCode(")\n$<");
+    method.addCode(".with(sets -> {\n");
+    method.addCode("$>final var builder = $T.builder();\n", 
+      ClassName.get(registry.getPackageName(), "Immutable" + registry.getWorldName()));
+    
+    for (int i = 0; i < tablesWithFindAll.size(); i++) {
+      final var table = tablesWithFindAll.get(i);
+      final var entityType = findEntityTypeForTable(table);
+      
+      method.addCode("final $T<$T> item_$L = ($T<$T>) sets.get($L);\n",
+        List.class, entityType,
+        i,
+        List.class, entityType,
+        i);
+    }
+    
+    method.addCode("\n");
+    
+    for (int i = 0; i < tablesWithFindAll.size(); i++) {
+      final var table = tablesWithFindAll.get(i);
+      final var builderMethodName = lowerCamelCase(toPascalCase(table.getTableName()));
+      
+      method.addCode("builder.$L(item_$L\n", builderMethodName, i);
+      method.addCode("$>.stream()\n");
+      method.addCode(".collect($T.toMap(\n", ClassName.get("java.util.stream", "Collectors"));
+      method.addCode("$>e -> e.getId(),\n");
+      method.addCode("e -> e\n$<");
+      method.addCode(")));$<\n");
+      
+      if (i < tablesWithFindAll.size() - 1) {
+        method.addCode("\n");
+      }
+    }
+    
+    method.addCode("\nreturn builder.build();\n$<");
+    method.addCode("});\n");
+    
+    return method.build();
+  }
+  
+  private ClassName findEntityTypeForTable(TableModel table) {
+    for (final var method : table.getSqlMethods()) {
+      if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
+        if (method.getReturnType() != null) {
+          return (ClassName) method.getReturnType();
+        }
+      }
+    }
+    return null;
+  }
+  
+  private TableModel.SqlMethod findNoArgFindAllMethod(TableModel table) {
+    for (final var method : table.getSqlMethods()) {
+      if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
+        return method;
+      }
+    }
+    return null;
   }
   
   private MethodSpec generateQueryTableMethod(RegistryModel registry, TableModel table) {
@@ -283,5 +368,12 @@ public class DbQueryImplSqlCodeGenerator {
     }
     
     return result.toString();
+  }
+  
+  private String lowerCamelCase(String pascalCase) {
+    if (pascalCase == null || pascalCase.isEmpty()) {
+      return pascalCase;
+    }
+    return Character.toLowerCase(pascalCase.charAt(0)) + pascalCase.substring(1);
   }
 }
