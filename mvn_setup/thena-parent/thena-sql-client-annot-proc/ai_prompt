@@ -1,251 +1,521 @@
- # Java Annotation Processor Code Generation Rules
+# Thena SQL Annotation Processor - Architecture & Implementation Guide
 
-  ## Communication Rules
+  ## Overview
+  This is a Java 21 annotation processor that generates SQL repository code using JavaPoet. It processes `@TenantSql` annotations to create type-safe, tenant-aware database access layers with reactive programming support (Smallrye Mutiny).
 
-  ### RULE 0: DO NOT LIE
-  If you lie, mark it clearly and leave immediately.
+  ## Architecture
 
-  ### RULE 1: Java 21
-  All code must target Java 21.
+  ### Core Concepts
 
-  ### RULE 2: Code Generation with JavaPoet
-  Java code is generated using JavaPoet library.
+  **Tenant-Aware SQL**: All table names use `{table_name}` placeholders that get replaced with tenant-prefixed names at runtime. This enables multi-tenancy where each tenant has isolated database tables.
 
-  ### RULE 3: No Preamble/Postamble
-  - Answer directly, concisely
-  - No explanations unless requested
-  - After working on files, just stop
+  **Generated Code Package Structure**:
+  - Base package: Contains interfaces (e.g., `Batch2DbQuery`, `Batch2DbBuilder`)
+  - `.spi` sub-package: Contains all implementations (e.g., `Batch2DbQueryImpl`, `BatchTableNames`, `BatchRegistry`)
 
-  ### RULE 4: No Git Access
-  NEVER use git commands. User manages git.
+  **Reactive Programming**: Uses Smallrye Mutiny with `Uni<T>` for single results and `Multi<T>` for streaming results.
 
-  ### RULE 5: No Maven Access
-  NEVER run maven commands (mvn). User manages builds.
+  ### Annotation Types
 
-  ---
+  1. **`@TenantSql.Registry`** - Marks a package/interface as registry holder
+     - Generates: TableNames class, Registry factory, Db interfaces and implementations
 
-  ## Project Structure
+  2. **`@TenantSql.Table`** - Marks an interface as a table definition
+     - Properties: `name`, `order`, `ddl`, `constraints`, `drop`
+     - Generates: Table implementation with all CRUD methods
 
-  ### Location
-  `/Users/olevmutso/Development/digiexpress-parent/mvn_setup/thena-parent/thena-sql-client-annot-proc`
+  3. **Query Annotations**:
+     - `@Find` - Single result: `Uni<Entity>` or `Uni<Optional<Entity>>`
+     - `@FindAll` - Multiple results: `Uni<List<Entity>>` or `Multi<Entity>`
+     - Properties: `sql`, `rowMapper`, `optional`, `wrapper`, `sqlBuilder`
 
-  ### Source Files (8 total)
-  src/main/java/io/resys/thena/processor/
-  ├── SqlAnnotationProcessor.java          # Entry point
-  ├── model/
-  │   ├── TableModel.java                  # Data model (@Value/@Builder)
-  │   └── ModelExtractor.java              # Extracts metadata from annotations
-  └── codegen/
-      ├── TableSqlCodeGenerator.java       # Generates table implementations
-      ├── RegistryFactorySqlCodeGenerator.java  # Generates registry
-      ├── TableNameSqlCodeGenerator.java   # Generates table name constants
-      ├── TransactionBuilderSqlCodeGenerator.java  # Generates transaction container
-      └── TransactionSaveSqlCodeGenerator.java     # Generates save transaction
+  4. **Mutation Annotations**:
+     - `@Insert` / `@InsertAll` - Insert operations
+     - `@Update` / `@UpdateAll` - Update operations
+     - `@Delete` / `@DeleteAll` - Delete operations
+     - Properties: `sql`, `propsMapper`
 
-  ---
+  ### Functional Interfaces
 
-  ## Annotations Processed
-
-  ### @TenantSql.Registry
-  - Applied to `package-info.java`
-  - Defines registry name and non-tenant tables
   ```java
-  @TenantSql.Registry(name = "Batch2", nonTenantTables = {"process"})
-  package io.digiexpress.thena.batch.client.spi.persistence;
+  // Transforms Row to entity
+  interface RowMapper<T> {
+    T apply(Row row);
+  }
 
-  @TenantSql.Table
+  // Transforms entity to Tuple for parameters
+  interface PropsMapper<T> {
+    Tuple apply(T object);
+  }
 
-  - Applied to interfaces
-  - Defines table DDL, constraints, drop SQL
-  @TenantSql.Table(
-    name = "batch_consumers",
-    ddl = "CREATE TABLE IF NOT EXISTS {batch_consumers} (...)",
-    constraints = "...",
-    drop = "DROP TABLE {batch_consumers};"
-  )
-  public interface BatchConsumerRegistry { }
+  // Custom SQL builder (optional, only when method has 1 parameter)
+  interface SqlBuilder<T> {
+    SqlTuple apply(Tenant tenant, T parameter);
+  }
 
-  SQL Method Annotations
+  Generated Code Structure
 
-  - @TenantSql.Query - SELECT queries
-  - @TenantSql.Insert - Single insert
-  - @TenantSql.InsertAll - Batch insert
-  - @TenantSql.Update - Single update
-  - @TenantSql.UpdateAll - Batch update
-  - @TenantSql.Delete - Single delete
-  - @TenantSql.DeleteAll - Batch delete
+  1. Table Implementation ({Table}Impl.java)
 
-  ---
-  Generated Classes Per Registry
+  Location: {package}.spi
 
-  For registry Batch2:
-  1. Batch2TableNames - Table name constants with prefix support
-  2. Batch2Registry - Factory for table instances
-  3. Batch2TransactionContainer - Holds batch operations data
-  4. Batch2SaveTransaction - Persists transaction container
-  5. {TableName}Impl - Implementation for each @TenantSql.Table interface
+  Purpose: Implements individual table operations
 
-  ---
-  Lombok Usage Rules
+  Key Features:
+  - SQL Builder Support: When sqlBuilder is specified on @Find/@FindAll with exactly 1 parameter:
+    a. Instantiates the custom SQL builder
+    b. Calls sqlBuilder.apply(dataSource.getTenant(), parameter)
+    c. Extracts value and props from returned SqlTuple
+    d. Performs case-insensitive table name replacement: {table_name} → tenant-prefixed name
+    e. Wraps in ImmutableSqlTuple with row mapper attached
+  - Standard SQL Generation: When no custom builder:
+    - Uses template SQL with table name placeholders
+    - Resolves placeholders at compile time where possible
+    - Returns Sql (no params), SqlTuple (single params), or SqlTupleList (batch params)
 
-  Use Lombok For:
+  Fields:
+  - tables - TableNames instance for tenant-prefixed names
+  - dataSource - Database connection
+  - errorHandler - Error handling
 
-  - {Name}TableNames: @Value + @Builder
-  - {Name}Registry: @Value (immutable factory)
-  - {Name}TransactionContainer: @Value + @Builder(toBuilder = true)
-  - Table Implementations: @Value + @AllArgsConstructor
+  Example Generated Method:
+  @Override
+  public SqlTuple findByAppId(String appId) {
+    final var sqlBuilder = new CustomSqlBuilder();
+    final var baseSql = sqlBuilder.apply(dataSource.getTenant(), appId);
 
-  DO NOT Use Lombok For:
+    var sqlValue = baseSql.getValue();
+    sqlValue = sqlValue.replaceAll("(?i)\\{batch_consumer\\}", tables.getBatchConsumer());
 
-  - {Name}SaveTransaction: Regular class with private final fields, constructor initializes txLog = new StringBuilder()
+    return ImmutableSqlTuple.builder()
+      .value(sqlValue)
+      .props(baseSql.getProps())
+      .rowMapper(new BatchConsumerMapper())
+      .build();
+  }
 
-  Lombok Annotation Patterns
+  2. Table Names ({Name}TableNames.java)
 
-  // Simple annotation
-  .addAnnotation(ClassName.get("lombok", "Value"))
+  Location: {package}.spi
 
-  // Annotation with parameters - USE AnnotationSpec
-  .addAnnotation(AnnotationSpec.builder(ClassName.get("lombok", "Builder"))
-    .addMember("toBuilder", "$L", true)
-    .build())
+  Purpose: Manages tenant-prefixed table names
 
-  // Field-level annotation
-  .addAnnotation(ClassName.bestGuess("lombok.Builder.Default"))
+  Key Methods:
+  - defaults() - Creates default names without tenant prefix
+  - toRepo(Tenant tenant) - Creates tenant-prefixed names
+  - get{TableName}() - Returns actual table name string
 
-  ---
-  Critical Code Generation Rules
+  Example:
+  public String getBatchConsumer() {
+    return tenantPrefix + "batch_consumer";
+  }
 
-  1. Table Name Placeholders
+  3. Registry Factory ({Name}Registry.java)
 
-  - SQL uses {table_name} placeholders
-  - Replace with getter calls: {batch_consumers} → tables.getBatchConsumers()
-  - Use toCamelCaseCapitalized() for getter names: batch_consumers → BatchConsumers
+  Location: {package}.spi
 
-  2. Multi-line SQL Normalization
+  Purpose: Factory for creating table implementations
 
-  SQL templates may contain newlines. Always normalize:
-  var normalizedSql = sql.replaceAll("\\s+", " ").trim();
+  Key Methods:
+  - get{TableNamePlural}() - Returns table implementation instance
+  - Each getter instantiates the table impl with names, dataSource, errorHandler
 
-  3. Generic Wildcards in JavaPoet
+  Example:
+  public BatchConsumersImpl getBatchConsumers() {
+    return new BatchConsumersImpl(names, dataSource, dataSource.getErrorHandler());
+  }
 
-  // WRONG - creates "import ?;"
-  ClassName.get("?", "")
+  4. Query Interface ({Name}DbQuery.java)
 
-  // CORRECT
-  WildcardTypeName.subtypeOf(Object.class)
+  Location: Base package
 
-  4. Batch Mapper Instantiation
+  Purpose: Defines query operations API
 
-  // WRONG
-  .map(new MapperClass())
+  Structure:
+  - findAll() - Returns Uni<World> with all data
+  - query{Table}() - Returns nested query interface for each table
+  - Nested interfaces: {Table}Query with all find methods
+  - World interface: Immutable container with Map<String, Entity> for each table
 
-  // CORRECT
-  final var mapper = new MapperClass();
-  return builder.props(data.stream().map(mapper::apply).collect(Collectors.toList()))
+  Example:
+  public interface Batch2DbQuery {
+    Uni<World> findAll();
 
-  5. Transaction Container Updates
+    BatchConsumersQuery queryBatchConsumers();
 
-  Use toBuilder() pattern, merge collections:
-  // Merge messages (old + new)
-  final var updatedMessages = new ArrayList<>(container.getMessages());
-  updatedMessages.add(newMessage);
-  return container.toBuilder()
-    .messages(updatedMessages)
-    .build();
-
-  6. Lifecycle Methods
-
-  createTable(), dropTable(), createConstraints() should NOT have @Override annotation.
-
-  7. Transaction Save Operations
-
-  Only include INSERT_ALL, UPDATE_ALL, DELETE_ALL (not single-entity operations):
-  return switch (type) {
-    case INSERT_ALL -> baseName + "Inserts";
-    case UPDATE_ALL -> baseName + "Updates";
-    case DELETE_ALL -> baseName + "Deletes";
-    default -> null;
-  };
-
-  Use actual method names from the model, not hardcoded strings.
-
-  ---
-  Field Naming Conventions
-
-  Snake Case → Camel Case
-
-  batch_consumers → batchConsumers (field name)
-  batch_consumers → BatchConsumers (getter name)
-  batch_consumers → getBatchConsumers() (getter method)
-
-  Implementation
-
-  private String toCamelCaseCapitalized(String snakeCase) {
-    final var parts = snakeCase.split("_");
-    final var result = new StringBuilder();
-    for (final var part : parts) {
-      if (!part.isEmpty()) {
-        result.append(Character.toUpperCase(part.charAt(0)))
-              .append(part.substring(1));
-      }
+    interface BatchConsumersQuery {
+      Uni<List<BatchConsumer>> findAllByAppId(String appId);
+      Multi<BatchConsumer> streamAll(); // when wrapper = MULTI
     }
-    return result.toString();
+
+    @Value.Immutable
+    interface World {
+      Map<String, BatchConsumer> getBatchConsumers();
+      // ... other tables
+    }
   }
 
-  ---
-  SaveTransaction Constructor Pattern
+  5. Query Implementation ({Name}DbQueryImpl.java)
 
-  public Batch2SaveTransaction(Batch2Registry registry, ThenaSqlDataSource dataSource) {
-    this.registry = registry;
+  Location: {package}.spi
+
+  Purpose: Implements query operations with reactive execution
+
+  Key Features:
+
+  Constructor:
+  public Batch2DbQueryImpl(ThenaSqlDataSource dataSource) {
     this.dataSource = dataSource;
-    this.tx = dataSource.getClient();
-    this.txLog = new StringBuilder();
+    final var names = BatchTableNames.defaults().toRepo(dataSource.getTenant());
+    this.registry = new BatchRegistry(names, dataSource);
+    this.errorHandler = dataSource.getErrorHandler();
   }
 
-  Fields are private final, txLog initialized in constructor, not as field initializer.
+  Query Execution Pattern:
+  1. Get SQL from registry: registry.getBatchConsumers().findAllByAppId(appId)
+  2. Log SQL if debug enabled
+  3. Extract row mapper with @SuppressWarnings("unchecked")
+  4. Execute via dataSource.getClient().preparedQuery(sql.getValue())
+  5. Map results using .mapping(mapper::apply)
+  6. Transform based on return type:
+    - SELECT + optional=true: Optional.of() or Optional.empty()
+    - SELECT + optional=false: Return entity or throw {Name}FindException
+    - SELECT_ALL + wrapper=MULTI: .transformToMulti(rowset -> Multi.createFrom().iterable(rowset))
+    - SELECT_ALL + wrapper=UNI: .transformToUni(rowset -> Multi.createFrom().iterable(rowset).collect().asList())
+  7. Handle failures with error handler
 
-  ---
-  Common JavaPoet Patterns
+  findAll() Implementation:
+  1. Finds all tables with no-arg findAll methods
+  2. Combines with Uni.combine().all().unis(...)
+  3. Uses .with(sets -> {...}) to merge results
+  4. Extracts typed lists: final List<BatchConsumer> item_0 = (List<BatchConsumer>) sets.get(0);
+  5. Builds World with Maps keyed by getId():
+  builder.batchConsumers(item_0
+    .stream()
+    .collect(Collectors.toMap(
+      e -> e.getId(),
+      e -> e
+    )));
 
-  Fields
+  Exception Handling:
+  - For @Find(optional=false): Throws {Name}FindException when not found
+  - Error handler invoked via errorHandler.deadEnd(new SqlFailed/SqlTupleFailed(...))
 
-  // With Lombok - no modifiers
-  FieldSpec.builder(String.class, "fieldName").build()
+  6. Builder Interface ({Name}DbBuilder.java)
 
-  // Without Lombok - explicit modifiers
-  FieldSpec.builder(String.class, "fieldName", Modifier.PRIVATE, Modifier.FINAL).build()
+  Location: Base package
 
-  Multi-Statement Method Bodies
+  Purpose: Defines builder API for persistence operations
 
-  method.addStatement("final var mapper = new $T()", MapperClass.class);
-  method.addStatement("return builder.props(data.stream().map(mapper::apply).collect($T.toList()))",
-    Collectors.class);
+  Structure:
+  - {table}() - Returns nested builder interface for each table
+  - Nested interfaces: {Table}Builder with insert/update/delete methods
+  - PersistenceUnit interface: Immutable container with List<Entity> for changes
+  - from(PersistenceUnit) - Load existing unit
+  - persist() - Returns Uni<PersistenceUnit> with saved data
 
-  Importing Classes
+  7. Builder Implementation ({Name}DbBuilderImpl.java)
 
-  // Add to imports at top of generator
-  import com.squareup.javapoet.WildcardTypeName;
-  import com.squareup.javapoet.AnnotationSpec;
+  Location: {package}.spi
 
-  ---
-  Testing Pattern
+  Purpose: Implements persistence operations with transaction support
 
-  User will modify interface files and check generated output. Do not run Maven or compilation checks.
+  Key Features:
+  - init field: ImmutablePersistenceUnit.Builder initialized at construction
+  - from() method: Calls init.from(unit) to load existing data
+  - persist() method:
+    a. Builds entries: final var entries = init.build();
+    b. Combines all operations with Uni.combine().all()
+    c. Executes inserts/updates/deletes via registry
+    d. Returns updated PersistenceUnit
 
-  ---
-  Current State
+  8. Main Db Interface ({Name}Db.java)
 
-  All 5 code generators functional:
-  - ✅ Table implementations with Lombok
-  - ✅ Registry factory with Lombok
-  - ✅ Table names with Lombok + builder
-  - ✅ Transaction container with toBuilder()
-  - ✅ Save transaction (no Lombok, manual constructor)
+  Location: Base package
 
-  Key fixes applied:
-  - ✅ Wildcard generics fixed (Class<?>)
-  - ✅ SQL normalization for multi-line strings
-  - ✅ Getter name generation (snake_case → camelCase)
-  - ✅ Mapper instantiation pattern
-  - ✅ Transaction container message merging
-  - ✅ Operation filtering (only *_ALL methods)
+  Purpose: Main entry point combining query and builder
+
+  Methods:
+  - query() - Returns {Name}DbQuery
+  - builder() - Returns {Name}DbBuilder
+
+  9. Main Db Implementation ({Name}DbImpl.java)
+
+  Location: {package}.spi
+
+  Purpose: Implements main Db interface
+
+  Simple delegation:
+  public Batch2DbQuery query() {
+    return new Batch2DbQueryImpl(dataSource);
+  }
+
+  public Batch2DbBuilder builder() {
+    return new Batch2DbBuilderImpl(dataSource);
+  }
+
+  10. Internal Tenant Query ({Name}DbInternalTenantQuery.java)
+
+  Location: {package}.spi
+
+  Purpose: Schema management operations
+
+  Methods:
+  - createTables() - Executes DDL for all tables in order
+  - createConstraints() - Adds foreign keys after all tables exist
+  - dropTables() - Drops tables in reverse order
+
+  11. Find Exception ({Name}FindException.java)
+
+  Location: {package}.spi
+
+  Purpose: Thrown when @Find(optional=false) query returns no result
+
+  Structure:
+  public class Batch2FindException extends RuntimeException {
+    public Batch2FindException(String message) { super(message); }
+    public Batch2FindException(String message, Throwable cause) { super(message, cause); }
+  }
+
+  Code Generation Flow
+
+  Processing Steps
+
+  1. Extract Registry Metadata (ModelExtractor)
+    - Processes @TenantSql.Registry annotations
+    - Builds RegistryModel with package, name, table class names
+  2. Extract Table Metadata (ModelExtractor)
+    - Processes @TenantSql.Table annotations
+    - Extracts all methods with SQL annotations
+    - Builds TableModel with SQL methods, parameters, return types
+    - Extracts table names from {table_name} placeholders
+    - Detects SQL builder usage via sqlBuilder property
+  3. Generate Code (SqlAnnotationProcessor)
+    - For each table: TableSqlCodeGenerator
+    - For registry: All other generators in sequence
+
+  Key Generator Classes
+
+  TableSqlCodeGenerator:
+  - Generates table implementation
+  - Handles SQL builder logic for custom queries
+  - Resolves table name placeholders
+  - Creates methods for all CRUD operations
+
+  TableNameSqlCodeGenerator:
+  - Generates TableNames class in .spi
+  - Creates getters for each table
+  - Handles tenant prefix logic
+
+  RegistryFactorySqlCodeGenerator:
+  - Generates Registry factory in .spi
+  - Creates getters with pluralized names
+  - Instantiates table implementations
+
+  DbQueryInterfaceSqlCodeGenerator:
+  - Generates query interface in base package
+  - Creates nested query interfaces per table
+  - Generates World interface with Map getters
+  - Determines return types based on wrapper and optional flags
+
+  DbQueryImplSqlCodeGenerator:
+  - Generates query implementation in .spi
+  - Creates anonymous inner classes for table queries
+  - Implements findAll() with Uni.combine() pattern
+  - Handles Multi vs Uni wrappers
+  - Implements optional vs required results
+  - Generates exception throwing for non-optional queries
+
+  DbBuilderInterfaceSqlCodeGenerator:
+  - Generates builder interface in base package
+  - Creates nested builder interfaces per table
+  - Generates PersistenceUnit interface
+
+  DbBuilderImplSqlCodeGenerator:
+  - Generates builder implementation in .spi
+  - Uses Immutables pattern with init field
+  - Implements from() and persist() methods
+
+  DbQueryExceptionSqlCodeGenerator:
+  - Generates custom exception class
+  - Simple RuntimeException extension
+
+  Important Patterns
+
+  Table Name Resolution
+
+  Compile Time (in table implementations):
+  // Template: "SELECT * FROM {batch_consumer} WHERE id = $1"
+  // Becomes: "SELECT * FROM " + tables.getBatchConsumer() + " WHERE id = $1"
+
+  Runtime with SQL Builder:
+  var sqlValue = baseSql.getValue();
+  sqlValue = sqlValue.replaceAll("(?i)\\{batch_consumer\\}", tables.getBatchConsumer());
+  // Case-insensitive replacement of {batch_consumer} with tenant-prefixed name
+
+  Mapper Extraction
+
+  All query implementations extract row mapper with unchecked cast:
+  @SuppressWarnings("unchecked")
+  final RowMapper<BatchConsumer> mapper = (RowMapper<BatchConsumer>) sql.getRowMapper();
+
+  Return Type Determination
+
+  - @Find:
+    - optional=true: Uni<Optional<Entity>>
+    - optional=false: Uni<Entity> (throws exception if not found)
+  - @FindAll:
+    - wrapper=UNI: Uni<List<Entity>>
+    - wrapper=MULTI: Multi<Entity>
+
+  SQL Builder Usage
+
+  When Used: @Find or @FindAll with sqlBuilder property AND exactly 1 parameter
+
+  Process:
+  1. Custom builder receives Tenant and parameter
+  2. Returns SqlTuple with SQL and Tuple
+  3. Processor performs table name replacement at runtime
+  4. Row mapper added to final SqlTuple
+
+  When NOT Used: Standard SQL template with compile-time table name resolution
+
+  Model Classes
+
+  TableModel
+
+  - interfaceName, packageName, implClassName
+  - tableName, order
+  - ddlSql, constraintsSql, dropSql
+  - List<SqlMethod> sqlMethods
+
+  SqlMethod
+
+  - SqlMethodType type - SELECT, INSERT, UPDATE, DELETE, etc.
+  - String methodName, sqlTemplate, resolvedSql
+  - String mapperClassName - Row or Props mapper
+  - List<MethodParameter> parameters
+  - TypeName returnType, wrapperType
+  - SqlPropsType propsType - SQL, SQL_TUPLE, SQL_TUPLE_LIST
+  - List<String> tableNames - Extracted from {table_name} placeholders
+  - boolean optional - For @Find queries
+  - boolean multiWrapper - For @FindAll (true = Multi, false = Uni)
+  - String sqlBuilderClassName - Optional custom SQL builder
+
+  RegistryModel
+
+  - String name - e.g., "Batch2"
+  - String packageName
+  - String tableClassName, registryClassName
+  - String worldName
+  - List<String> nonTenantTables - Tables without tenant prefix
+
+  File Locations
+
+  thena-sql-client/
+    src/main/java/io/resys/thena/api/annotations/
+      TenantSql.java - All annotations and interfaces
+
+  thena-sql-client-annot-proc/
+    src/main/java/io/resys/thena/processor/
+      SqlAnnotationProcessor.java - Main processor
+
+      model/
+        TableModel.java - Data models
+        ModelExtractor.java - Annotation extraction
+
+      codegen/
+        TableSqlCodeGenerator.java - Table implementations
+        TableNameSqlCodeGenerator.java - TableNames class
+        RegistryFactorySqlCodeGenerator.java - Registry factory
+        DbInterfaceSqlCodeGenerator.java - Main Db interface
+        DbQueryInterfaceSqlCodeGenerator.java - Query interface
+        DbQueryImplSqlCodeGenerator.java - Query implementation
+        DbBuilderInterfaceSqlCodeGenerator.java - Builder interface
+        DbBuilderImplSqlCodeGenerator.java - Builder implementation
+        DbImplSqlCodeGenerator.java - Main Db implementation
+        DbInternalTenantQuerySqlCodeGenerator.java - Schema management
+        DbQueryExceptionSqlCodeGenerator.java - Exception class
+
+  Usage Example
+
+  // Define registry
+  @TenantSql.Registry(
+    name = "Batch2",
+    worldName = "World",
+    nonTenantTables = {"process", "process_id_seq"}
+  )
+  package io.resys.batch2.spi.sql;
+
+  // Define table
+  @TenantSql.Table(
+    name = "batch_consumer",
+    order = 1,
+    ddl = "CREATE TABLE {batch_consumer} (id VARCHAR(40) PRIMARY KEY, ...)",
+    constraints = "ALTER TABLE {batch_consumer} ADD CONSTRAINT ...",
+    drop = "DROP TABLE {batch_consumer}"
+  )
+  public interface BatchConsumers {
+
+    @TenantSql.Find(
+      sql = "SELECT * FROM {batch_consumer} WHERE app_id = $1",
+      rowMapper = BatchConsumerMapper.class,
+      optional = false
+    )
+    Uni<BatchConsumer> findByAppId(String appId);
+
+    @TenantSql.FindAll(
+      sql = "SELECT * FROM {batch_consumer}",
+      rowMapper = BatchConsumerMapper.class,
+      wrapper = WrapperType.MULTI
+    )
+    Multi<BatchConsumer> findAll();
+
+    @TenantSql.FindAll(
+      sql = "", // SQL built by custom builder
+      rowMapper = BatchConsumerMapper.class,
+      sqlBuilder = CustomSearchBuilder.class
+    )
+    Uni<List<BatchConsumer>> search(SearchCriteria criteria);
+  }
+
+  // Custom SQL builder
+  public class CustomSearchBuilder implements TenantSql.SqlBuilder<SearchCriteria> {
+    @Override
+    public SqlTuple apply(Tenant tenant, SearchCriteria criteria) {
+      // Build dynamic SQL based on criteria
+      return ImmutableSqlTuple.builder()
+        .value("SELECT * FROM {batch_consumer} WHERE " + buildWhereClause(criteria))
+        .props(buildParams(criteria))
+        .build();
+    }
+  }
+
+  Key Technical Decisions
+
+  1. All implementations in .spi: Keeps public API clean
+  2. Anonymous inner classes for queries: Avoids cluttering package
+  3. Immutables for containers: Type-safe builders for World and PersistenceUnit
+  4. Unchecked cast for mappers: Unavoidable due to type erasure, suppressed warnings
+  5. Case-insensitive table replacement: Handles {TABLE}, {table}, {Table} uniformly
+  6. Multi vs Uni via annotation: Explicit control over streaming vs collection
+  7. Optional vs exception via annotation: Clear intent for required vs optional data
+  8. SQL builder receives Tenant: Full tenant context for dynamic queries
+
+  Development Workflow
+
+  1. Modify annotations in thena-sql-client
+  2. Compile annotations: cd thena-sql-client && mvn clean install -DskipTests
+  3. Modify processors in thena-sql-client-annot-proc
+  4. Compile processor: cd thena-sql-client-annot-proc && mvn clean compile
+  5. Test with actual table definitions
+  6. Verify generated code in target/generated-sources
+
+  Communication Rule: DR. HOUSE Pattern
+
+  - Rule 0: DO NOT LIE
+  - Rule 1: Java 21
+  - Rule 2: Annotation processor using JavaPoet
+  - NO git/maven commands unless explicitly allowed
+  - Direct, concise answers - no preamble or postamble
+  - DO NOT ADD COMMENTS unless asked

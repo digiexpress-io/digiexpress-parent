@@ -227,22 +227,46 @@ public class TableSqlCodeGenerator {
   }
   
   private void generateSqlReturnBody(MethodSpec.Builder builder, SqlMethod method, TableModel model) {
-    final var resolvedSql = resolveSqlPlaceholders(method.getSqlTemplate(), method.getTableNames());
-    
-    if (method.getPropsType() == SqlPropsType.SQL) {
-      builder.addStatement("return $T.builder().value($L).build()",
-        ClassName.get(ImmutableSql.class),
-        resolvedSql);
-    } else {
-      final var propsArgs = method.getParameters().stream()
-        .map(MethodParameter::getName)
-        .collect(Collectors.joining(", "));
+    if (method.getSqlBuilderClassName() != null && method.getParameters().size() == 1) {
+      final var param = method.getParameters().get(0);
       
-      builder.addStatement("return $T.builder().value($L).props($T.of($L)).build()",
+      builder.addStatement("final var sqlBuilder = new $T()", 
+        ClassName.bestGuess(method.getSqlBuilderClassName()));
+      builder.addStatement("final var baseSql = sqlBuilder.apply(dataSource.getTenant(), $L)", 
+        param.getName());
+      builder.addCode("\n");
+      builder.addStatement("var sqlValue = baseSql.getValue()");
+      
+      for (final var tableName : method.getTableNames()) {
+        final var getterName = toCamelCaseCapitalized(tableName);
+        builder.addStatement("sqlValue = sqlValue.replaceAll(\"(?i)\\\\{$L\\\\}\", tables.get$L())",
+          tableName, getterName);
+      }
+      
+      builder.addCode("\n");
+      builder.addStatement("return $T.builder().value(sqlValue).props(baseSql.getProps()).rowMapper(new $T()).build()",
         ClassName.get(ImmutableSqlTuple.class),
-        resolvedSql,
-        ClassName.get("io.vertx.mutiny.sqlclient", "Tuple"),
-        propsArgs);
+        ClassName.bestGuess(method.getMapperClassName()));
+    } else {
+      final var resolvedSql = resolveSqlPlaceholders(method.getSqlTemplate(), method.getTableNames());
+      
+      if (method.getPropsType() == SqlPropsType.SQL) {
+        builder.addStatement("return $T.builder().value($L).rowMapper(new $T()).build()",
+          ClassName.get(ImmutableSql.class),
+          resolvedSql,
+          ClassName.bestGuess(method.getMapperClassName()));
+      } else {
+        final var propsArgs = method.getParameters().stream()
+          .map(MethodParameter::getName)
+          .collect(Collectors.joining(", "));
+        
+        builder.addStatement("return $T.builder().value($L).props($T.of($L)).rowMapper(new $T()).build()",
+          ClassName.get(ImmutableSqlTuple.class),
+          resolvedSql,
+          ClassName.get("io.vertx.mutiny.sqlclient", "Tuple"),
+          propsArgs,
+          ClassName.bestGuess(method.getMapperClassName()));
+      }
     }
   }
   

@@ -106,6 +106,14 @@ public interface BatchConsumerTable {
     rowMapper = BatchConsumerMapper.class
   )
   SqlTuple findAllEnabledByAppId(String appId);
+  
+  
+@TenantSql.FindAll(
+    sql = "",
+    rowMapper = BatchConsumerMapper.class,
+    sqlBuilder = FindAllUsingSqlBuilder.class
+  )
+  SqlTuple findAllUsingSqlBuilder(FindAllFilter filter);
 
   @TenantSql.InsertAll(
     sql = """

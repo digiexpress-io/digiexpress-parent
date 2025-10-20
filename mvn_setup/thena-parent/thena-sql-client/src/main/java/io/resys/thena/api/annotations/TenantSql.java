@@ -25,6 +25,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
 
@@ -135,6 +137,13 @@ public @interface TenantSql {
      * Default is true.
      */
     boolean optional() default true;
+    
+    /**
+     * Optional SQL builder for custom SqlTuple construction.
+     * Only valid when method has exactly one parameter.
+     * Builder receives table names and the method parameter to construct SqlTuple.
+     */
+    Class<? extends SqlBuilder<?>> sqlBuilder() default DefaultSqlBuilder.class;
   }
   
   /**
@@ -161,6 +170,13 @@ public @interface TenantSql {
      * MULTI wraps result as Multi<Entity>
      */
     WrapperType wrapper() default WrapperType.UNI;
+    
+    /**
+     * Optional SQL builder for custom SqlTuple construction.
+     * Only valid when method has exactly one parameter.
+     * Builder receives table names and the method parameter to construct SqlTuple.
+     */
+    Class<? extends SqlBuilder<?>> sqlBuilder() default DefaultSqlBuilder.class;
   }
   
   enum WrapperType {
@@ -299,4 +315,24 @@ public @interface TenantSql {
   interface PropsMapper<T> {
     Tuple apply(T object);
   }
+  
+  /**
+   * Builds custom SqlTuple for query operations.
+   * Used in @Find and @FindAll when custom SQL construction is needed.
+   */
+  @FunctionalInterface
+  interface SqlBuilder<T> {
+    SqlTuple apply(Tenant tenant, T parameter);
+  }
+  
+  /**
+   * Marker class for default SQL builder (no custom builder).
+   */
+  final class DefaultSqlBuilder implements SqlBuilder<Object> {
+    @Override
+    public SqlTuple apply(Tenant tenant, Object parameter) {
+      throw new UnsupportedOperationException("Default SQL builder should not be called");
+    }
+  }
+
 }

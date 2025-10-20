@@ -124,6 +124,7 @@ public class ModelExtractor {
       .propsType(determinePropsType(method))
       .tableNames(extractTableNames(sql))
       .optional(annotation.optional())
+      .sqlBuilderClassName(extractSqlBuilderClassName(annotation))
       .build();
   }
   
@@ -144,6 +145,7 @@ public class ModelExtractor {
       .propsType(determinePropsType(method))
       .tableNames(extractTableNames(sql))
       .multiWrapper(isMultiWrapper)
+      .sqlBuilderClassName(extractSqlBuilderClassName(annotation))
       .build();
   }
   
@@ -504,5 +506,37 @@ public class ModelExtractor {
     }
     
     return tableNames;
+  }
+  
+  private String extractSqlBuilderClassName(TenantSql.Find annotation) {
+    try {
+      final var builderClass = annotation.sqlBuilder();
+      if (builderClass.getName().equals("io.resys.thena.api.annotations.TenantSql$DefaultSqlBuilder")) {
+        return null;
+      }
+      return builderClass.getName();
+    } catch (javax.lang.model.type.MirroredTypeException e) {
+      final var typeMirror = e.getTypeMirror().toString();
+      if (typeMirror.equals("io.resys.thena.api.annotations.TenantSql.DefaultSqlBuilder")) {
+        return null;
+      }
+      return typeMirror;
+    }
+  }
+  
+  private String extractSqlBuilderClassName(TenantSql.FindAll annotation) {
+    try {
+      final var builderClass = annotation.sqlBuilder();
+      if (builderClass.getName().equals("io.resys.thena.api.annotations.TenantSql$DefaultSqlBuilder")) {
+        return null;
+      }
+      return builderClass.getName();
+    } catch (javax.lang.model.type.MirroredTypeException e) {
+      final var typeMirror = e.getTypeMirror().toString();
+      if (typeMirror.equals("io.resys.thena.api.annotations.TenantSql.DefaultSqlBuilder")) {
+        return null;
+      }
+      return typeMirror;
+    }
   }
 }

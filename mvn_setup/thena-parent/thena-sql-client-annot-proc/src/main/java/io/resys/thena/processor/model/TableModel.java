@@ -106,6 +106,9 @@ public class TableModel {
     
     @Builder.Default
     boolean multiWrapper = false;  // For @FindAll queries: true = Multi<T>, false = Uni<List<T>>
+    
+    @Nullable
+    String sqlBuilderClassName;  // For custom SQL builder
   }
   
   
