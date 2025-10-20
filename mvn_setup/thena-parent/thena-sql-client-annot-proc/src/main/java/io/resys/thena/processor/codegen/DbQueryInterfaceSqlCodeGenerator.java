@@ -108,8 +108,14 @@ public class DbQueryInterfaceSqlCodeGenerator {
             ClassName.get("io.smallrye.mutiny", "Uni"),
             entityType
           ));
+        } else if (method.getType() == SqlMethodType.SELECT_ALL && method.isMultiWrapper()) {
+          // Multiple results with Multi: Multi<Entity>
+          methodBuilder.returns(ParameterizedTypeName.get(
+            ClassName.get("io.smallrye.mutiny", "Multi"),
+            entityType
+          ));
         } else {
-          // Multiple results: Uni<List<Entity>>
+          // Multiple results with Uni: Uni<List<Entity>>
           methodBuilder.returns(ParameterizedTypeName.get(
             ClassName.get("io.smallrye.mutiny", "Uni"),
             ParameterizedTypeName.get(

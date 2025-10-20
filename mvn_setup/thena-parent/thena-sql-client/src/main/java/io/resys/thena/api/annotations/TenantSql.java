@@ -154,6 +154,18 @@ public @interface TenantSql {
      * Mapper that transforms database Row to domain object.
      */
     Class<? extends RowMapper<?>> rowMapper();
+    
+    /**
+     * Wrapper type for the result.
+     * UNI wraps result as Uni<List<Entity>>
+     * MULTI wraps result as Multi<Entity>
+     */
+    WrapperType wrapper() default WrapperType.UNI;
+  }
+  
+  enum WrapperType {
+    UNI,
+    MULTI
   }
   
   /**

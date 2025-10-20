@@ -23,6 +23,7 @@ package io.resys.thena.client.sample;
 import java.util.List;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.client.sample.entities.BatchConsumer;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -89,6 +90,7 @@ public interface BatchConsumerTable {
   SqlTuple getById(String id);
 
   @TenantSql.FindAll(
+    wrapper = WrapperType.MULTI,
     sql = "SELECT * FROM {batch_consumers} WHERE consumer_status = 'ENABLED'",
     rowMapper = BatchConsumerMapper.class
   )

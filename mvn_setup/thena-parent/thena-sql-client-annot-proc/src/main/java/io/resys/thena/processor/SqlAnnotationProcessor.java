@@ -43,6 +43,7 @@ import io.resys.thena.processor.codegen.DbBuilderInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbImplSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbInternalTenantQuerySqlCodeGenerator;
+import io.resys.thena.processor.codegen.DbQueryImplSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbQueryInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.RegistryFactorySqlCodeGenerator;
 import io.resys.thena.processor.codegen.TableNameSqlCodeGenerator;
@@ -230,6 +231,15 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     processingEnv.getMessager().printMessage(
         javax.tools.Diagnostic.Kind.NOTE,
         "Generated db builder impl: " + registryConfig.getName() + "DbBuilderImpl");
+    
+    
+    new DbQueryImplSqlCodeGenerator()
+      .generate(registryConfig, filteredTables)
+      .writeTo(processingEnv.getFiler());
+  
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated db query impl: " + registryConfig.getName() + "DbQueryImpl");
     
   }
   

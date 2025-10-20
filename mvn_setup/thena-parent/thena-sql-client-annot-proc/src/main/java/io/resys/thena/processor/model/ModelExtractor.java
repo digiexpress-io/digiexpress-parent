@@ -130,6 +130,7 @@ public class ModelExtractor {
   private SqlMethod extractFindAllMethod(ExecutableElement method) {
     final var annotation = method.getAnnotation(TenantSql.FindAll.class);
     final var sql = annotation.sql();
+    final var isMultiWrapper = annotation.wrapper() == TenantSql.WrapperType.MULTI;
     
     return SqlMethod.builder()
       .type(SqlMethodType.SELECT_ALL)
@@ -142,6 +143,7 @@ public class ModelExtractor {
       .wrapperType(extractWrapperType(method.getReturnType()))
       .propsType(determinePropsType(method))
       .tableNames(extractTableNames(sql))
+      .multiWrapper(isMultiWrapper)
       .build();
   }
   

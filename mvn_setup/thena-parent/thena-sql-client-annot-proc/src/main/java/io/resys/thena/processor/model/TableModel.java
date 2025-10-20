@@ -103,6 +103,9 @@ public class TableModel {
     
     @Builder.Default
     boolean optional = true;  // For @Find queries
+    
+    @Builder.Default
+    boolean multiWrapper = false;  // For @FindAll queries: true = Multi<T>, false = Uni<List<T>>
   }
   
   
