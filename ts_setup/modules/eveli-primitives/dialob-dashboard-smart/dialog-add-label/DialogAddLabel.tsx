@@ -1,10 +1,7 @@
 import React from 'react'
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, TextField, Typography, Button, Dialog, DialogActions, FormHelperText } from '@mui/material';
-
 import { DialobRestApi, useDialobForms } from '@dxs-ts/eveli-api';
-
-
 
 
 export interface DialogAddLabelProps {

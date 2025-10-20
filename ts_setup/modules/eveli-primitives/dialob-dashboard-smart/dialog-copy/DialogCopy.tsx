@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, TextField, Typography, FormHelperText, Button, Dialog, Stack, DialogActions } from '@mui/material';
 import { DialobRestApi, useDialobForms, Visitor_CreateNewForm } from '@dxs-ts/eveli-api';
 
