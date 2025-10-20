@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
@@ -14,6 +14,7 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 const selectSub = { ml: 2, color: "article.dark" }
 
 const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => void }> = ({ articleId, onClose }) => {
+  const intl = useIntl();
   const { service, actions, session } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,6 +72,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
             value={order}
             placeholder={400}
           />
+            {!order && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
         </Box>
         <Box sx={{ width: '10%' }}>
           <ArticleOrderNumberViewer />
@@ -78,6 +80,8 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
       </Box>
 
       <Burger.TextField label="article.name" required value={name} onChange={setName} />
+        {!name && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+
       <Box maxWidth="50%" sx={{ ml: 1 }}>
         <Burger.Switch
           checked={devMode ? devMode : false}
@@ -89,7 +93,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
     </DialogContent>
     <DialogActions>
       <CancelButton onClick={onClose} />
-      <Button onClick={handleUpdate} disabled={!name}>
+        <Button onClick={handleUpdate} disabled={!name || !order}>
         <FormattedMessage id='button.update' />
       </Button>
     </DialogActions>
