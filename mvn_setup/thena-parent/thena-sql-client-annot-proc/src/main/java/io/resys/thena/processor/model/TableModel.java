@@ -114,6 +114,7 @@ public class TableModel {
     String packageName;             // "io.resys.thena.grim.spi.sql"
     String tableClassName;
     String registryClassName;
+    String internalTenantQueryClassName;
     String transactionContainerClassName;
     String transactionSaveClassName;
     String worldName;

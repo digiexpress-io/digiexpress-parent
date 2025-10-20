@@ -44,7 +44,7 @@ public class RegistryFactorySqlCodeGenerator {
     
     // Add fields
     classBuilder.addField(FieldSpec.builder(
-      ClassName.get(registry.getPackageName(), registry.getTableClassName()),
+      ClassName.bestGuess(registry.getTableClassName()),
       "tables"
     ).build());
     
@@ -58,27 +58,25 @@ public class RegistryFactorySqlCodeGenerator {
       classBuilder.addMethod(generateFactoryMethod(table));
     }
     
-    return JavaFile.builder(registry.getPackageName(), classBuilder.build())
+    return JavaFile.builder(registry.getPackageName() + ".spi", classBuilder.build())
       .indent("  ")
       .build();
   }
   
   private MethodSpec generateFactoryMethod(TableModel table) {
-    final var methodName = pluralize(table.getTableName());
     final var interfaceName = table.getInterfaceName();
-    final var implName = table.getImplClassName();
     final var interfaceClassName = ClassName.get(table.getPackageName(), table.getInterfaceName());
-
+    final var methodName = pluralize(table.getTableName());
+    final var implName = table.getImplClassName();
     
     return MethodSpec.methodBuilder(methodName)
       .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(table.getPackageName(), interfaceName))
-      .returns(interfaceClassName)  // Use ClassName with full package
+      .returns(ClassName.bestGuess(implName))
       .addStatement("return new $L(tables, dataSource)", implName)
       .build();
   }
   
-  private String pluralize(String tableName) {
+  public static String pluralize(String tableName) {
     // Convert snake_case to camelCase and attempt simple pluralization
     // grim_mission -> missions
     // grim_commit -> commits

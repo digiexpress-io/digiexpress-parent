@@ -69,14 +69,14 @@ public class TableSqlCodeGenerator {
       classBuilder.addMethod(generateMethod(method, model));
     }
     
-    return JavaFile.builder(model.getPackageName(), classBuilder.build())
+    return JavaFile.builder(model.getPackageName() + ".spi", classBuilder.build())
       .indent("  ")
       .build();
   }
   
   private void addFields(TypeSpec.Builder classBuilder, RegistryModel registry) {
     classBuilder.addField(FieldSpec.builder(
-      ClassName.get(registry.getPackageName(), registry.getTableClassName()),
+      ClassName.bestGuess(registry.getTableClassName()),
       "tables"
     ).build());
     
@@ -94,7 +94,7 @@ public class TableSqlCodeGenerator {
   private void addConstructor(TypeSpec.Builder classBuilder, RegistryModel registry) {
     final var constructor = MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(registry.getPackageName(), registry.getTableClassName()), "tables")
+      .addParameter(ClassName.bestGuess(registry.getTableClassName()), "tables")
       .addParameter(ClassName.get(ThenaSqlDataSource.class), "dataSource")
       .addStatement("this.tables = tables")
       .addStatement("this.dataSource = dataSource")

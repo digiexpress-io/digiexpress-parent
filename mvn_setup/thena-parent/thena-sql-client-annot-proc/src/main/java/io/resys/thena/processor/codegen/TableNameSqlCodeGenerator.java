@@ -46,7 +46,7 @@ public class TableNameSqlCodeGenerator {
     
     // Add DEFAULTS static field
     classBuilder.addField(FieldSpec.builder(
-      ClassName.get(registry.getPackageName(), className),
+      ClassName.bestGuess(className),
       "DEFAULTS",
       Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
     ).initializer("defaults()").build());
@@ -68,7 +68,7 @@ public class TableNameSqlCodeGenerator {
     // Add defaults() static method
     classBuilder.addMethod(generateDefaultsMethod(registry, tables, className));
     
-    return JavaFile.builder(registry.getPackageName(), classBuilder.build())
+    return JavaFile.builder(registry.getPackageName() + ".spi", classBuilder.build())
       .indent("  ")
       .build();
   }
@@ -77,7 +77,7 @@ public class TableNameSqlCodeGenerator {
     return MethodSpec.methodBuilder("toRepo")
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.get(Tenant.class), "repo")
-      .returns(ClassName.get(registry.getPackageName(), className))
+      .returns(ClassName.bestGuess(className))
       .addStatement("final var prefix = repo.getPrefix()")
       .addStatement("return toRepo(prefix)")
       .build();
@@ -91,7 +91,7 @@ public class TableNameSqlCodeGenerator {
     final var builder = MethodSpec.methodBuilder("toRepo")
       .addModifiers(Modifier.PUBLIC)
       .addParameter(String.class, "prefix")
-      .returns(ClassName.get(registry.getPackageName(), className));
+      .returns(ClassName.bestGuess(className));
     
     // Start builder chain
     builder.addCode("return $L.builder()\n", className);
@@ -124,7 +124,7 @@ public class TableNameSqlCodeGenerator {
     
     final var builder = MethodSpec.methodBuilder("defaults")
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-      .returns(ClassName.get(registry.getPackageName(), className));
+      .returns(ClassName.bestGuess(className));
     
     // Start builder chain
     builder.addCode("return $L.builder()\n", className);

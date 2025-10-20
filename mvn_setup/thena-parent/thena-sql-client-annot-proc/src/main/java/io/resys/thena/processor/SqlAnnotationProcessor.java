@@ -39,7 +39,9 @@ import javax.lang.model.element.TypeElement;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.processor.codegen.DbBuilderInterfaceSqlCodeGenerator;
+import io.resys.thena.processor.codegen.DbImplSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbInterfaceSqlCodeGenerator;
+import io.resys.thena.processor.codegen.DbInternalTenantQuerySqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbQueryInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.RegistryFactorySqlCodeGenerator;
 import io.resys.thena.processor.codegen.TableNameSqlCodeGenerator;
@@ -223,6 +225,24 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         "Generated db builder interface: " + registryConfig.getName() + "DbBuilder with " + 
         filteredTables.size() + " tables");
     
+    
+    new DbImplSqlCodeGenerator()
+      .generate(registryConfig)
+      .writeTo(processingEnv.getFiler());
+  
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated db impl: " + registryConfig.getName() + "DbImpl");
+    
+    
+    new DbInternalTenantQuerySqlCodeGenerator()
+      .generate(registryConfig, filteredTables)
+      .writeTo(processingEnv.getFiler());
+  
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated internal tenant query: " + registryConfig.getName() + "DbInternalTenantQuery");
+    
   }
   
   
@@ -267,6 +287,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       .registryClassName(annotation.name() + "Registry")
       .transactionContainerClassName(annotation.name() + "TransactionContainer")
       .transactionSaveClassName(annotation.name() + "SaveTransaction")
+      .internalTenantQueryClassName(annotation.name() + "DbInternalTenantQuery")
       .worldName(worldName)
       .packageName(packageName)
       .element(element)

@@ -45,7 +45,13 @@ public interface ThenaSqlDataSource extends ThenaDataSource {
   }
   
   boolean isTenantLoaded();
+  /// TODO:: really bad naming
   TenantContext getRegistry();
+  
+  default TenantContext getTenantContext() {
+    return getRegistry();
+  }
+  
   ThenaSqlDataSourceErrorHandler getErrorHandler();
   
   
