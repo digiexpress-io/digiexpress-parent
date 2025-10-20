@@ -1,6 +1,6 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl';
-import { DialogContent, DialogTitle, TextField, Typography, Button, Dialog, DialogActions } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { DialogContent, DialogTitle, TextField, Typography, Button, Dialog, DialogActions, FormHelperText } from '@mui/material';
 
 import { DialobRestApi, useDialobForms } from '@dxs-ts/eveli-api';
 
@@ -13,7 +13,7 @@ export interface DialogAddLabelProps {
 }
 
 export const DialogAddLabel: React.FC<DialogAddLabelProps> = ({ onClose, source }) => {
-
+  const intl = useIntl();
   const { addFormLabel } = useDialobForms();
   const [label, setLabel] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
@@ -32,9 +32,9 @@ export const DialogAddLabel: React.FC<DialogAddLabelProps> = ({ onClose, source 
 
   return (
     <Dialog maxWidth='md' open={true} onClose={onClose}>
-      <DialogTitle><FormattedMessage id='heading.addLabel' defaultMessage='Add new label' /> </DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: "adminUI.dialog.form.addFormLabel.title" })}</DialogTitle>
       <DialogContent>
-        <Typography><FormattedMessage id="adminUI.dialog.newLabel" defaultMessage='Value of the label' /></Typography>
+        <Typography>{intl.formatMessage({ id: "adminUI.dialog.form.addFormLabel.desc" })}</Typography>
         <TextField
           name='label'
           error={isErrors}
@@ -42,10 +42,11 @@ export const DialogAddLabel: React.FC<DialogAddLabelProps> = ({ onClose, source 
           onChange={handleChangeLabel}
           value={label}
         />
+        {isErrors && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}><FormattedMessage id={'button.cancel'} /></Button>
-        <Button onClick={handleSubmit} disabled={isSubmitting || isErrors} ><FormattedMessage id={'button.accept'} /></Button>
+        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button onClick={handleSubmit} disabled={isSubmitting || isErrors} >{intl.formatMessage({ id: 'button.accept' })}</Button>
       </DialogActions>
     </Dialog>
   )
