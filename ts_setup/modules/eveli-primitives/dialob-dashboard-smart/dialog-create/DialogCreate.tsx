@@ -1,10 +1,10 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, TextField, Typography, FormHelperText, Button, Dialog, Stack, DialogActions } from '@mui/material';
 
 import { Visitor_CreateNewForm, DialobRestApi } from '@dxs-ts/eveli-api';
 import { useDialobForms } from '@dxs-ts/eveli-api';
-import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { CancelButton } from '../../eveli-styles';
 
  
 const template: DialobRestApi.CreateFormRequest = {
@@ -28,8 +28,8 @@ export interface DialogCreateProps {
 }
 
 export const DialogCreate: React.FC<DialogCreateProps> = ({ onClose }) => {
-
-  const { createForm } = useDialobForms();
+  const intl = useIntl();
+  const { createForm } = useDialobForms();  
   
   const [label, setLabel] = React.useState('New form');
   const [name, setName] = React.useState('');
@@ -74,7 +74,7 @@ export const DialogCreate: React.FC<DialogCreateProps> = ({ onClose }) => {
             onChange={handleNameChange}
             value={name}
           />
-          {errors.name && <FormHelperText error>{errors.name}</FormHelperText>}
+          {errors.name && <FormHelperText error>{intl.formatMessage({ id: errors.name })}</FormHelperText>}
 
           <Typography><FormattedMessage id="adminUI.dialog.formLabel" /></Typography>
           <TextField

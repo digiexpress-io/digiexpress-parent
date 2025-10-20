@@ -2,7 +2,7 @@ import { DialogContent, DialogTitle, Button, Dialog, DialogActions, Stack, Typog
 import { DialobRestApi, useDialobForms } from '@dxs-ts/eveli-api';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { CancelButton } from '../../eveli-styles';
 
 export interface DialogDeleteProps {
   onClose: () => void;

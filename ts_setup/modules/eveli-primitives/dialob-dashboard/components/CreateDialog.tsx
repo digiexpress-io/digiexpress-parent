@@ -5,7 +5,7 @@ import { useAdminBackend } from '../backend';
 import { checkHttpResponse, handleRejection } from '../middleware';
 import type { DefaultForm, FormConfiguration, DialobAdminConfig } from '../types';
 import { DEFAULT_FORM } from '../util';
-import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { CancelButton } from '../../eveli-styles';
 
 export interface CreateDialogProps {
   createModalOpen: boolean;

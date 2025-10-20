@@ -4,7 +4,7 @@ import { DialogContent, DialogTitle, Box, Divider, Typography, DialogActions, Bu
 import { checkHttpResponse, handleRejection } from '../middleware';
 import type { FormConfiguration, DialobAdminConfig } from '../types';
 import { useAdminBackend } from '../backend';
-import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { CancelButton } from '../../eveli-styles';
 
 export interface DeleteDialogProps {
   deleteModalOpen: boolean;
