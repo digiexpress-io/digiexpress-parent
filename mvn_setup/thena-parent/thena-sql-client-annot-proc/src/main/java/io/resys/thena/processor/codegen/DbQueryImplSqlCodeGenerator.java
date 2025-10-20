@@ -243,7 +243,9 @@ public class DbQueryImplSqlCodeGenerator {
       code.add("return iterator.next();\n");
       code.unindent();
       code.add("}\n");
-      code.add("return null;\n");
+      code.add("throw new $T(\"$L not found!\");\n", 
+        ClassName.get(registry.getPackageName() + ".spi", registry.getName() + "FindException"),
+        entityType.toString());
       code.unindent();
       code.add("})\n");
     } else if (sqlMethod.getType() == SqlMethodType.SELECT_ALL && sqlMethod.isMultiWrapper()) {
