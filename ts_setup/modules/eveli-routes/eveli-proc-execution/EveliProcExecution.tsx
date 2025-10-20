@@ -43,6 +43,9 @@ export const EveliProcExecution: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      },
       cell: (workflowName) => workflowName.getValue(),
     },
     {
@@ -78,6 +81,9 @@ export const EveliProcExecution: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      },
       cell: (status) => {
         switch (status.getValue()) {
           case 'ANSWERED':

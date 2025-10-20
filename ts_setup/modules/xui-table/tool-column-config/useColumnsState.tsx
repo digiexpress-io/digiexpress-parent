@@ -56,11 +56,13 @@ export function useColumnState(table: Table<any>) {
     table.resetSorting();
   }
 
+  console.log(table.getAllColumns())
+
   const currentOrder = columnsOrder;
   const allVisible = table.getState().columnVisibility ? Object.values(table.getState().columnVisibility).every(v => v === true) : true;
   const orderUnchanged = currentOrder.join(',') === originalColsOrder.join(',');
   const isResetSortingAndVisibilityEnabled = !(allVisible && orderUnchanged);
-  const isResetSortingEnabled = table.getState().sorting.length === 0;
+  const isResetSortingEnabled = table.getState().sorting.length > 0;
 
 
   const columns = columnsOrder
