@@ -1,9 +1,8 @@
-@TenantSql.Registry(name = "Batch2")
-package io.digiexpress.thena.batch.client.api.example;
+package io.resys.thena.client.sample.entities;
 
 /*-
  * #%L
- * thena-batch-client
+ * thena-mq-client
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,4 +19,27 @@ package io.digiexpress.thena.batch.client.api.example;
  * limitations under the License.
  * #L%
  */
-import io.resys.thena.api.annotations.TenantSql;
+
+import java.time.OffsetDateTime;
+import java.util.Optional;
+
+import org.immutables.value.Value;
+
+@Value.Immutable
+public interface BatchConsumer {
+  String getId();
+  String getAppId();
+  String getConsumerName();
+  String getBatchName();
+  String getComment();
+  
+  OffsetDateTime getCreatedAt();
+  String getCreatedBy();
+
+
+  String getQualifiedJavaName();
+  
+  Optional<OffsetDateTime> getUpdatedAt();
+  Optional<String> getUpdatedBy();
+
+}

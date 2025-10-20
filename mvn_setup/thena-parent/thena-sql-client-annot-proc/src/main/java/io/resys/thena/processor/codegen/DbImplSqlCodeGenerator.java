@@ -49,6 +49,7 @@ import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
 import io.resys.thena.spi.TenantDataSource.TxScope;
+import io.resys.thena.spi.TenantException;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -235,7 +236,7 @@ public class DbImplSqlCodeGenerator {
         .indent()
         .add("final var msg = $T.join(\",\", commit.getMessages().stream().map(e -> e.getText()).toList());\n", String.class)
         .add("final var ex = commit.getMessages().stream().map(e -> e.getException()).filter(e -> e != null).toList();\n")
-        .add("throw new $T(\"Failed to create tenant: \" + msg, ex);\n", RuntimeException.class)
+        .add("throw new $T(\"Failed to create tenant: \" + msg, ex);\n", TenantException.class)
         .unindent()
         .add("}\n")
         .add("return withTenant(commit.getRepo());\n")

@@ -1,4 +1,4 @@
-package io.digiexpress.thena.batch.client.api.example;
+package io.resys.thena.client.sample;
 
 /*-
  * #%L
@@ -22,8 +22,8 @@ package io.digiexpress.thena.batch.client.api.example;
 
 import java.util.List;
 
-import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.client.sample.entities.BatchConsumer;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -166,7 +166,6 @@ public interface BatchConsumerTable {
         doc.getBatchName(),
         doc.getConsumerName(),
         doc.getQualifiedJavaName(),
-        doc.getStatus().name(),
         doc.getComment(),
         doc.getCreatedAt(),
         doc.getCreatedBy(),
@@ -181,7 +180,6 @@ public interface BatchConsumerTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(BatchConsumer doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         doc.getQualifiedJavaName(),
-        doc.getStatus().name(),
         doc.getBatchName(),
         doc.getUpdatedAt().orElse(null),
         doc.getUpdatedBy().orElse(null),

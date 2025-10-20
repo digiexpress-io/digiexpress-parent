@@ -38,6 +38,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.processor.codegen.DbBuilderImplSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbBuilderInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbImplSqlCodeGenerator;
 import io.resys.thena.processor.codegen.DbInterfaceSqlCodeGenerator;
@@ -46,8 +47,6 @@ import io.resys.thena.processor.codegen.DbQueryInterfaceSqlCodeGenerator;
 import io.resys.thena.processor.codegen.RegistryFactorySqlCodeGenerator;
 import io.resys.thena.processor.codegen.TableNameSqlCodeGenerator;
 import io.resys.thena.processor.codegen.TableSqlCodeGenerator;
-import io.resys.thena.processor.codegen.TransactionBuilderSqlCodeGenerator;
-import io.resys.thena.processor.codegen.TransactionSaveSqlCodeGenerator;
 import io.resys.thena.processor.model.ModelExtractor;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
@@ -176,26 +175,6 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     );
   
     
-    new TransactionBuilderSqlCodeGenerator()
-      .generate(registryConfig, tableModels)
-      .writeTo(processingEnv.getFiler());
-    
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated container: " + registryConfig.getTransactionContainerClassName() + " with " + 
-        filteredTables.size() + " tables");
-  
-  
-    new TransactionSaveSqlCodeGenerator()
-      .generate(registryConfig, tableModels)
-      .writeTo(processingEnv.getFiler());
-    
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated save: " + registryConfig.getTransactionSaveClassName() + " with " + 
-        filteredTables.size() + " tables");
-    
-    
     new DbInterfaceSqlCodeGenerator()
       .generate(registryConfig)
       .writeTo(processingEnv.getFiler());
@@ -242,6 +221,15 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     processingEnv.getMessager().printMessage(
         javax.tools.Diagnostic.Kind.NOTE,
         "Generated internal tenant query: " + registryConfig.getName() + "DbInternalTenantQuery");
+    
+    
+    new DbBuilderImplSqlCodeGenerator()
+      .generate(registryConfig, filteredTables)
+      .writeTo(processingEnv.getFiler());
+  
+    processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated db builder impl: " + registryConfig.getName() + "DbBuilderImpl");
     
   }
   

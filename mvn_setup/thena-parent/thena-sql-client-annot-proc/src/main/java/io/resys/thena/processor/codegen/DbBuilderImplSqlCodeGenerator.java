@@ -2,7 +2,7 @@ package io.resys.thena.processor.codegen;
 
 /*-
  * #%L
- * thena-sql-client
+ * thena-sql-client-annot-proc
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -45,22 +45,23 @@ import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.smallrye.mutiny.Uni;
 
-public class TransactionSaveSqlCodeGenerator {
+public class DbBuilderImplSqlCodeGenerator {
   
   public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
-    final var className = registry.getTransactionSaveClassName();
-    final var containerClassName = registry.getTransactionContainerClassName();
+    final var className = registry.getName() + "DbBuilderImpl";
+    final var builderInterfaceName = registry.getName() + "DbBuilder";
+    final var persistenceUnitName = builderInterfaceName + ".PersistenceUnit";
     final var registryClassName = registry.getRegistryClassName();
     final var operations = extractOperations(tables);
     
     final var classBuilder = TypeSpec.classBuilder(className)
-      .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+      .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+      .addSuperinterface(ClassName.get(registry.getPackageName(), builderInterfaceName));
     
-    // Add logger
     classBuilder.addField(generateLoggerField(registry));
     
-    // Add fields
     classBuilder.addField(FieldSpec.builder(
       ClassName.get(ThenaSqlClient.class),
       "tx",
@@ -74,7 +75,7 @@ public class TransactionSaveSqlCodeGenerator {
     ).build());
     
     classBuilder.addField(FieldSpec.builder(
-      ClassName.get(registry.getPackageName(), registryClassName),
+      ClassName.bestGuess(registryClassName),
       "registry",
       Modifier.PRIVATE, Modifier.FINAL
     ).build());
@@ -85,13 +86,16 @@ public class TransactionSaveSqlCodeGenerator {
       Modifier.PRIVATE, Modifier.FINAL
     ).build());
     
-    // Add constructor
-    classBuilder.addMethod(generateConstructor(registry, className, registryClassName));
+    classBuilder.addField(FieldSpec.builder(
+      ClassName.get(registry.getPackageName(), "ImmutablePersistenceUnit", "Builder"),
+      "init",
+      Modifier.PRIVATE, Modifier.FINAL
+    ).initializer("ImmutablePersistenceUnit.builder()").build());
     
-    // Add persist method
-    classBuilder.addMethod(generatePersistMethod(registry, containerClassName, operations, tables));
+    classBuilder.addMethod(generateConstructor(registry, registryClassName));
+    classBuilder.addMethod(generateFromMethod(registry, builderInterfaceName));
+    classBuilder.addMethod(generatePersistMethod(registry, builderInterfaceName, persistenceUnitName, operations, tables));
     
-    // Add visit methods for each operation
     for (final var entry : operations.entrySet()) {
       final var operation = entry.getKey();
       final var table = entry.getValue().table;
@@ -99,23 +103,21 @@ public class TransactionSaveSqlCodeGenerator {
       
       classBuilder.addMethod(generateVisitMethod(
         registry, 
-        containerClassName, 
+        persistenceUnitName, 
         operation, 
         table, 
         entityType
       ));
     }
     
-    // Add helper methods
-    classBuilder.addMethod(generateVisitExecutionMethod(registry, containerClassName));
+    classBuilder.addMethod(generateVisitExecutionMethod(registry, persistenceUnitName));
     classBuilder.addMethod(generateVisitTxLogMethod());
-    classBuilder.addMethod(generateVisitSuccessMethod(registry, containerClassName));
-    classBuilder.addMethod(generateVisitErrorMethod(registry, containerClassName));
+    classBuilder.addMethod(generateVisitSuccessMethod(registry, persistenceUnitName));
+    classBuilder.addMethod(generateVisitErrorMethod(registry, persistenceUnitName));
     
-    // Add exception class
-    classBuilder.addType(generateExceptionClass(registry, containerClassName));
+    classBuilder.addType(generateExceptionClass(registry, persistenceUnitName));
     
-    return JavaFile.builder(registry.getPackageName(), classBuilder.build())
+    return JavaFile.builder(registry.getPackageName() + ".spi", classBuilder.build())
       .indent("  ")
       .build();
   }
@@ -136,34 +138,49 @@ public class TransactionSaveSqlCodeGenerator {
     .build();
   }
   
-  private MethodSpec generateConstructor(RegistryModel registry, String className, String registryClassName) {
+  private MethodSpec generateConstructor(RegistryModel registry, String registryClassName) {
     return MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(registry.getPackageName(), registryClassName), "registry")
       .addParameter(ClassName.get(ThenaSqlDataSource.class), "dataSource")
-      .addStatement("this.registry = registry")
+      .addStatement("final var names = $T.defaults().toRepo(dataSource.getTenant())", 
+        ClassName.bestGuess(registry.getTableClassName()))
+      .addStatement("this.registry = new $T(names, dataSource)", 
+        ClassName.bestGuess(registryClassName))
       .addStatement("this.dataSource = dataSource")
       .addStatement("this.tx = dataSource.getClient()")
       .addStatement("this.txLog = new $T()", StringBuilder.class)
       .build();
   }
   
+  private MethodSpec generateFromMethod(RegistryModel registry, String builderInterfaceName) {
+    return MethodSpec.methodBuilder("from")
+      .addAnnotation(Override.class)
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(ClassName.bestGuess(builderInterfaceName + ".PersistenceUnit"), "unit")
+      .returns(ClassName.bestGuess(builderInterfaceName))
+      .addStatement("init.from(unit)")
+      .addStatement("return this")
+      .build();
+  }
+  
   private MethodSpec generatePersistMethod(
       RegistryModel registry, 
-      String containerClassName,
+      String builderInterfaceName,
+      String persistenceUnitName,
       Map<String, OperationInfo> operations,
       List<TableModel> tables) {
     
     final var method = MethodSpec.methodBuilder("persist")
+      .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(registry.getPackageName(), containerClassName), "entries")
       .returns(ParameterizedTypeName.get(
-        ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), containerClassName)
+        ClassName.get(Uni.class),
+        ClassName.bestGuess(persistenceUnitName)
       ));
     
-    // Build Uni.combine().all().unis(...)
-    method.addCode("return $T.combine().all()\n", ClassName.get("io.smallrye.mutiny", "Uni"));
+    method.addStatement("final var entries = init.build()");
+    method.addCode("\n");
+    method.addCode("return $T.combine().all()\n", ClassName.get(Uni.class));
     method.addCode("  .unis(\n");
     
     final var visitCalls = new ArrayList<String>();
@@ -174,13 +191,11 @@ public class TransactionSaveSqlCodeGenerator {
     method.addCode("    " + String.join(",\n    ", visitCalls));
     method.addCode("\n  )\n");
     
-    // Add with() combinator
     method.addCode("  .with($T.class, (items) -> visitSuccess(entries, items))\n", 
-      ClassName.get(registry.getPackageName(), containerClassName));
+      ClassName.bestGuess(persistenceUnitName));
     
-    // Add error handler
     method.addCode("  .onFailure($LException.class)\n", 
-      registry.getName() + "Transaction");
+      registry.getName() + "Builder");
     method.addStatement("  .recoverWithUni(this::visitError)");
     
     return method.build();
@@ -188,7 +203,7 @@ public class TransactionSaveSqlCodeGenerator {
   
   private MethodSpec generateVisitMethod(
       RegistryModel registry,
-      String containerClassName,
+      String persistenceUnitName,
       String operationName,
       TableModel table,
       TypeName entityType) {
@@ -196,7 +211,6 @@ public class TransactionSaveSqlCodeGenerator {
     final var methodName = "visit" + capitalize(operationName);
     final var getterName = "get" + capitalize(operationName);
     
-    // Find the actual SQL method for this operation
     final var sqlMethod = table.getSqlMethods().stream()
       .filter(m -> buildOperationFieldName(table, m.getType()) != null)
       .filter(m -> buildOperationFieldName(table, m.getType()).equals(operationName))
@@ -205,22 +219,22 @@ public class TransactionSaveSqlCodeGenerator {
     
     final var method = MethodSpec.methodBuilder(methodName)
       .addModifiers(Modifier.PRIVATE)
-      .addParameter(ClassName.get(registry.getPackageName(), containerClassName), "entries")
+      .addParameter(ClassName.bestGuess(persistenceUnitName), "entries")
       .returns(ParameterizedTypeName.get(
-        ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), containerClassName)
+        ClassName.get(Uni.class),
+        ClassName.bestGuess(persistenceUnitName)
       ));
     
     method.addStatement("final var data = entries.$L()", getterName);
     method.addStatement("final var sql = registry.$L().$L(data)", 
-      pluralize(table.getTableName()),
+      RegistryFactorySqlCodeGenerator.pluralize(table.getTableName()),
       sqlMethod.getMethodName());
     method.addStatement("return visitExecution(sql, $T.class)", entityType);
     
     return method.build();
   }
   
-  private MethodSpec generateVisitExecutionMethod(RegistryModel registry, String containerClassName) {
+  private MethodSpec generateVisitExecutionMethod(RegistryModel registry, String persistenceUnitName) {
     final var method = MethodSpec.methodBuilder("visitExecution")
       .addModifiers(Modifier.PRIVATE)
       .addParameter(ClassName.get(SqlTupleList.class), "sql")
@@ -229,18 +243,18 @@ public class TransactionSaveSqlCodeGenerator {
         WildcardTypeName.subtypeOf(Object.class)
       ), "type")
       .returns(ParameterizedTypeName.get(
-        ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), containerClassName)
+        ClassName.get(Uni.class),
+        ClassName.bestGuess(persistenceUnitName)
       ));
     
     method.addStatement("visitTxLog(sql, type)");
     method.addCode("\n");
-    method.addStatement("final var container = $T.builder()\n" +
+    method.addStatement("final var container = Immutable$L.builder()\n" +
       "  .tenantId(this.dataSource.getTenant().getId())\n" +
       "  .status($T.OK)\n" +
       "  .log(\"\")\n" +
       "  .build()",
-      ClassName.get(registry.getPackageName(), containerClassName),
+      "PersistenceUnit",
       ClassName.get(BatchStatus.class));
     
     method.addCode("\n");
@@ -248,17 +262,17 @@ public class TransactionSaveSqlCodeGenerator {
       ClassName.get("io.resys.thena.storesql.support", "Execute"));
     method.addCode("  .onItem().transform(row -> {\n");
     method.addCode("    final var text = \"Inserted \" + (row == null ? 0 : row.rowCount()) + \" \" + type.getSimpleName() + \" entries\";\n");
-    method.addCode("    final var updatedMessages = new $T<>(container.getMessages());\n", ArrayList.class);
+    method.addCode("    final var updatedMessages = new $T<>(container.getCommitLogs());\n", ArrayList.class);
     method.addCode("    updatedMessages.add($T.builder().text(text).build());\n", 
       ClassName.get(ImmutableBatchLog.class));
-    method.addCode("    return container.toBuilder()\n");
-    method.addCode("      .messages(updatedMessages)\n");
+    method.addCode("    return ($T) Immutable$L.builder().from(container)\n", ClassName.bestGuess(persistenceUnitName), "PersistenceUnit");
+    method.addCode("      .commitLogs(updatedMessages)\n");
     method.addCode("      .build();\n");
     method.addCode("  })\n");
     method.addCode("  .onFailure().transform(t -> {\n");
     method.addCode("    final var text = \"Failed to insert \" + sql.getProps().size() + \" \" + type.getSimpleName() + \" entries\";\n");
     method.addCode("    return new $LException(container, text, t);\n",
-      registry.getName() + "Transaction");
+      registry.getName() + "Builder");
     method.addStatement("  })");
     
     return method.build();
@@ -267,7 +281,7 @@ public class TransactionSaveSqlCodeGenerator {
   private MethodSpec generateVisitTxLogMethod() {
     final var method = MethodSpec.methodBuilder("visitTxLog")
       .addModifiers(Modifier.PRIVATE)
-      .addParameter(ClassName.get("io.resys.thena.datasource.ThenaSqlClient", "SqlTupleList"), "sql")
+      .addParameter(ClassName.get(SqlTupleList.class), "sql")
       .addParameter(ParameterizedTypeName.get(
         ClassName.get(Class.class),
         WildcardTypeName.subtypeOf(Object.class)
@@ -288,15 +302,15 @@ public class TransactionSaveSqlCodeGenerator {
     return method.build();
   }
   
-  private MethodSpec generateVisitSuccessMethod(RegistryModel registry, String containerClassName) {
+  private MethodSpec generateVisitSuccessMethod(RegistryModel registry, String persistenceUnitName) {
     final var method = MethodSpec.methodBuilder("visitSuccess")
       .addModifiers(Modifier.PRIVATE)
-      .addParameter(ClassName.get(registry.getPackageName(), containerClassName), "inputContainer")
+      .addParameter(ClassName.bestGuess(persistenceUnitName), "inputContainer")
       .addParameter(ParameterizedTypeName.get(
         ClassName.get(List.class),
-        ClassName.get(registry.getPackageName(), containerClassName)
+        ClassName.bestGuess(persistenceUnitName)
       ), "items")
-      .returns(ClassName.get(registry.getPackageName(), containerClassName));
+      .returns(ClassName.bestGuess(persistenceUnitName));
     
     method.addStatement("final var msg = $T.lineSeparator() + \"--- TX LOG\" + $T.lineSeparator() + txLog",
       System.class, System.class);
@@ -313,48 +327,49 @@ public class TransactionSaveSqlCodeGenerator {
     return method.build();
   }
   
-  private MethodSpec generateVisitErrorMethod(RegistryModel registry, String containerClassName) {
-    final var exceptionClassName = registry.getName() + "TransactionException";
+  private MethodSpec generateVisitErrorMethod(RegistryModel registry, String persistenceUnitName) {
+    final var exceptionClassName = registry.getName() + "BuilderException";
     
     final var method = MethodSpec.methodBuilder("visitError")
       .addModifiers(Modifier.PRIVATE)
       .addParameter(Throwable.class, "ex")
       .returns(ParameterizedTypeName.get(
-        ClassName.get("io.smallrye.mutiny", "Uni"),
-        ClassName.get(registry.getPackageName(), containerClassName)
+        ClassName.get(Uni.class),
+        ClassName.bestGuess(persistenceUnitName)
       ));
     
     method.addStatement("final var msg = $T.lineSeparator() + \"--- TX LOG\" + $T.lineSeparator() + txLog",
       System.class, System.class);
-    method.addStatement("final var batchError = ($L) ex", exceptionClassName);
-    method.addStatement("log.error(\"Failed to save transaction because of: {},\\r\\n{}\", ex.getMessage(), msg, ex)");
+    method.addStatement("final var builderError = ($L) ex", exceptionClassName);
+    method.addStatement("log.error(\"Failed to persist because of: {},\\r\\n{}\", ex.getMessage(), msg, ex)");
     
     method.addCode("\n");
     method.addStatement("return tx.rollback().onItem().transform(junk -> \n" +
-      "  batchError.getContainer().toBuilder()\n" +
+      "  Immutable$L.builder().from(builderError.getContainer())\n" +
       "    .log(msg)\n" +
       "    .build()\n" +
-      ")");
+      ")",
+      "PersistenceUnit");
     
     return method.build();
   }
   
-  private TypeSpec generateExceptionClass(RegistryModel registry, String containerClassName) {
-    final var exceptionClassName = registry.getName() + "TransactionException";
+  private TypeSpec generateExceptionClass(RegistryModel registry, String persistenceUnitName) {
+    final var exceptionClassName = registry.getName() + "BuilderException";
     
     final var exceptionClass = TypeSpec.classBuilder(exceptionClassName)
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
       .superclass(RuntimeException.class);
     
     exceptionClass.addField(FieldSpec.builder(
-      ClassName.get(registry.getPackageName(), containerClassName),
+      ClassName.bestGuess(persistenceUnitName),
       "container",
       Modifier.PRIVATE, Modifier.FINAL
     ).build());
     
     exceptionClass.addMethod(MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.get(registry.getPackageName(), containerClassName), "container")
+      .addParameter(ClassName.bestGuess(persistenceUnitName), "container")
       .addParameter(String.class, "message")
       .addParameter(Throwable.class, "cause")
       .addStatement("super(message, cause)")
@@ -363,7 +378,7 @@ public class TransactionSaveSqlCodeGenerator {
     
     exceptionClass.addMethod(MethodSpec.methodBuilder("getContainer")
       .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.get(registry.getPackageName(), containerClassName))
+      .returns(ClassName.bestGuess(persistenceUnitName))
       .addStatement("return container")
       .build());
     
@@ -398,7 +413,6 @@ public class TransactionSaveSqlCodeGenerator {
       default -> null;
     };
   }
-  
   
   private TypeName extractEntityType(SqlMethod method) {
     if (method.getParameters().isEmpty()) {
@@ -442,14 +456,6 @@ public class TransactionSaveSqlCodeGenerator {
     }
     
     return result.toString();
-  }
-  
-  private String pluralize(String tableName) {
-    final var camelCase = toCamelCase(tableName);
-    if (!camelCase.endsWith("s")) {
-      return camelCase + "s";
-    }
-    return camelCase;
   }
   
   private static class OperationInfo {
