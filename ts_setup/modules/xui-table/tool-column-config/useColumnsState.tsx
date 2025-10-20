@@ -56,8 +56,6 @@ export function useColumnState(table: Table<any>) {
     table.resetSorting();
   }
 
-  console.log(table.getAllColumns())
-
   const currentOrder = columnsOrder;
   const allVisible = table.getState().columnVisibility ? Object.values(table.getState().columnVisibility).every(v => v === true) : true;
   const orderUnchanged = currentOrder.join(',') === originalColsOrder.join(',');
