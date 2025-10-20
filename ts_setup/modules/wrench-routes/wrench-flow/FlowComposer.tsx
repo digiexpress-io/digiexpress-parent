@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, Box,  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormHelperText } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 
@@ -14,6 +14,7 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 
 const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const intl = useIntl();
   const { service, actions } = Composer.useComposer();
   const { onNav } = useWrenchNav();
 
@@ -59,6 +60,8 @@ const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         value={name}
         onChange={setName}
         onEnter={() => handleCreate()} />
+      {!name && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+
     </Typography>)
   }
 
@@ -69,7 +72,7 @@ const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={apply}>
+        <Button onClick={handleCreate} disabled={apply || !name}>
           <FormattedMessage id='buttons.create'/>
         </Button>
       </DialogActions>
