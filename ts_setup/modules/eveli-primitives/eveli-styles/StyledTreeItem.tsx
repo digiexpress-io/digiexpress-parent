@@ -49,9 +49,12 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
           {labelButton ? labelButton : (
             LabelIcon ? (<Box component={LabelIcon} sx={{ mr: 1, fontSize: 'medium' }} />) : null
           )}
-          <Typography noWrap={true} fontWeight='bold' pr={1}>
-            {labelText}
-          </Typography>
+          {typeof labelText === 'string' ? ( //prevent div-based labels from rendering inside <p>
+            <Typography noWrap={true} fontWeight='bold' pr={1}>
+              {labelText}
+            </Typography>
+          ) : (
+            <Box pr={1}>{labelText}</Box>)}
           <Box sx={{ marginLeft: 1, display: 'flex', alignItems: 'center' }}>{labelTypeToShow}</Box>
         </Box>
       }
