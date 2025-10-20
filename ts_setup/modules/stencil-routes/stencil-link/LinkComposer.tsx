@@ -1,8 +1,8 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import { StencilApi } from '@dxs-ts/stencil-api';
@@ -13,6 +13,7 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 const selectSub = { ml: 2, color: "article.dark" }
 
 const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const intl = useIntl();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
@@ -80,6 +81,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           required
           value={value}
           onChange={setValue} />
+        {!value && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
         <Divider sx={{ my: theme.spacing(2) }} />
 

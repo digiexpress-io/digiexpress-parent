@@ -183,7 +183,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
         {allowDelete && (
           <>
             <Button onClick={() => setConfirmOpen(true)} variant='text'>
-              <FormattedMessage id='button.delete' />
+              <FormattedMessage id='button.delete.feedback' />
             </Button>
           </>
         )}

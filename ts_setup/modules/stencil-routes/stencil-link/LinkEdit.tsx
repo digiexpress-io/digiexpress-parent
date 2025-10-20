@@ -1,8 +1,8 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
@@ -20,6 +20,7 @@ interface LinkEditProps {
 }
 
 const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
+  const intl = useIntl();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
@@ -90,6 +91,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
           required
           value={value}
           onChange={setValue} />
+        {!value && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
         <Divider sx={{ my: theme.spacing(2) }} />
 

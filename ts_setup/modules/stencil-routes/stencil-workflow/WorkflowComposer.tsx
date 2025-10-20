@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
@@ -16,6 +16,7 @@ import { WorkflowConfigOptions, WorkflowOptions } from './WorkflowConfigOptions'
 const selectSub = { ml: 2, color: "article.dark" }
 
 const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
@@ -125,6 +126,8 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           required
           value={technicalname}
           onChange={setTechnicalname} />
+        {!technicalname && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+
 
         <Box display="flex">
           <Box>
@@ -133,6 +136,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               items={allForms}
               helperText='services.formName.description'
             />
+            {!formName && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
           </Box>
           <Box sx={{ ml: 1 }}>
             <Burger.Select label="services.formTag" onChange={setFormTag}
@@ -140,12 +144,14 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               items={formTags}
               helperText='services.formTag.description'
             />
+            {!formTag && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
           </Box>
           <Box sx={{ ml: 1 }} flexGrow={1}>
             <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
               selected={flowName}
               items={allFlows.map((flow) => { return { id: flow, value: flow } })}
             />
+            {!flowName && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
           </Box>
         </Box>
 

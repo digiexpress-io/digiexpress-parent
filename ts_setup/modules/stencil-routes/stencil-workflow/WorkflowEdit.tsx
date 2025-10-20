@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider } from '@mui/material';
+import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Divider, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { StencilApi, StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import * as Burger from '@dxs-ts/eveli-primitives';
@@ -20,6 +20,7 @@ interface WorkflowEditProps {
 }
 
 const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
+  const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const { service, actions, site } = Composer.useComposer();
@@ -125,6 +126,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           required
           value={technicalname}
           onChange={setTechnicalname} />
+        {!technicalname && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
         <Box display="flex">
           <Box>
@@ -165,23 +167,23 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
         </Box>
 
         <Divider sx={{ my: theme.spacing(2) }} />
-          <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
-          <Burger.SelectMultiple label='composer.article.selected'
-            variant='ARTICLE_SELECT'
-            multiline
-            onChange={setArticleId}
-            selected={articleId}
-            renderValue={(selected) => (selected as StencilApi.ArticleId[]).map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
+        <Typography fontWeight='bold'><FormattedMessage id='composer.select.article' /></Typography>
+        <Burger.SelectMultiple label='composer.article.selected'
+          variant='ARTICLE_SELECT'
+          multiline
+          onChange={setArticleId}
+          selected={articleId}
+          renderValue={(selected) => (selected as StencilApi.ArticleId[]).map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
 
-            items={articles.map((article) => ({
-              id: article.id,
-              value: (<>
-                <Checkbox checked={articleId.indexOf(article.id) > -1} />
-                <ListItemText primary={article.value} />
-              </>
-              )
-            }))}
-          />
+          items={articles.map((article) => ({
+            id: article.id,
+            value: (<>
+              <Checkbox checked={articleId.indexOf(article.id) > -1} />
+              <ListItemText primary={article.value} />
+            </>
+            )
+          }))}
+        />
 
         <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
         <Box mb={theme.spacing(3)} />
