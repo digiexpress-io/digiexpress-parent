@@ -45,7 +45,7 @@ export const DialogAddLabel: React.FC<DialogAddLabelProps> = ({ onClose, source 
         {isErrors && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button variant='contained' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
         <Button onClick={handleSubmit} disabled={isSubmitting || isErrors} >{intl.formatMessage({ id: 'button.accept' })}</Button>
       </DialogActions>
     </Dialog>

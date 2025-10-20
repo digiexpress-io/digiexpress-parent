@@ -1,11 +1,7 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, TextField, Typography, FormHelperText, Button, Dialog, Stack, DialogActions } from '@mui/material';
-
-
 import { DialobRestApi, useDialobForms, Visitor_CreateNewForm } from '@dxs-ts/eveli-api';
-
-
 
 
 export interface DialogCopyProps {
@@ -14,13 +10,13 @@ export interface DialogCopyProps {
 }
 
 export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
-
+  const intl = useIntl();
   const { copyForm } = useDialobForms();
-  
+
   const [label, setLabel] = React.useState("Copy of " + source.metadata.label);
   const [name, setName] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
-  
+
   const errors = Visitor_CreateNewForm.validateInput({ name, label });
   const isErrors: boolean = !!(errors.label || errors.name);
 
@@ -35,16 +31,16 @@ export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
     setSubmitting(false);
     const copy = await copyForm({ newLabel: label, newName: name, sourceFormId: source.id });
     console.log('Form copied', copy);
-    setSubmitting(true); 
+    setSubmitting(true);
   }
 
   return (
     <Dialog maxWidth='md' open={true} onClose={onClose}>
-      <DialogTitle><FormattedMessage id='heading.copyDialog' /> </DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'heading.copyDialog' })}</DialogTitle>
       <DialogContent>
         <Stack spacing={1}>
-          
-          <Typography><FormattedMessage id="adminUI.dialog.formName" /></Typography>
+
+          <Typography>{intl.formatMessage({ id: "adminUI.dialog.formName" })}</Typography>
           <TextField
             name='name'
             error={!!errors.name}
@@ -52,9 +48,9 @@ export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
             onChange={handleNameChange}
             value={name}
           />
-          {errors.name && <FormHelperText error>{errors.name}</FormHelperText>}
+          {errors.name && <FormHelperText error>{intl.formatMessage({ id: errors.name })}</FormHelperText>}
 
-          <Typography><FormattedMessage id="adminUI.dialog.formLabel" /></Typography>
+          <Typography>{intl.formatMessage({ id: "adminUI.dialog.formLabel" })}</Typography>
           <TextField
             name='label'
             error={!!errors.label}
@@ -62,13 +58,14 @@ export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
             onChange={handleChangeLabel}
             value={label}
           />
-          {errors.label && <FormHelperText error>{errors.label}</FormHelperText>}
+          {errors.label && <FormHelperText error>{intl.formatMessage({ id: errors.label })}</FormHelperText>}
 
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}><FormattedMessage id={'button.cancel'} /></Button>
-        <Button onClick={handleSubmit} disabled={isSubmitting || isErrors} ><FormattedMessage id={'button.accept'} /></Button>
+        <Button onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button onClick={handleSubmit} disabled={isSubmitting || isErrors}>
+          {intl.formatMessage({ id: 'button.accept' })}</Button>
       </DialogActions>
     </Dialog>
   )
