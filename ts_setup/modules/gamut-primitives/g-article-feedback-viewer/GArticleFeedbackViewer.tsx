@@ -74,7 +74,7 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
           <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerTitle' })}</Typography>
           <Typography>
             {intl.formatMessage({ id: 'gamut.feedback.updatedOnDate' })}
-            {intl.formatMessage({ id: 'gamut.textSeparator' })}
+            {intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}
             {DateTime.fromJSDate(new Date(feedback.feedback.updatedOnDate))
               .setLocale(locale)
               .toLocaleString(DateTime.DATE_SHORT)}</Typography>

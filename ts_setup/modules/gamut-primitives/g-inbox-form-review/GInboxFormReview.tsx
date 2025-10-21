@@ -49,7 +49,7 @@ export const GInboxFormReview: React.FC<GInboxFormReviewProps> = (initProps) => 
           <Box display='flex'>
             <Typography alignContent='center'>
               <FormattedMessage id='dialob.review.title' />
-              <FormattedMessage id='gamut.textSeparator' />
+              <FormattedMessage id='gamut.textSeparator' defaultMessage=' ' />
               {props.formName}
             </Typography>
             <Box flexGrow={1} />

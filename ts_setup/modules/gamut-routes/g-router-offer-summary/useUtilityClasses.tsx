@@ -116,7 +116,7 @@ export const SummaryBox: React.FC<{
     <Box className={classes.summaryLayout}>
       <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.forms.filling.summary.thank-you' })}</Typography>
 
-      <Typography className={classes.subTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.summary' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink?.name ?? "-"}</Typography>
+      <Typography className={classes.subTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.summary' })}{intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}{topicLink?.name ?? "-"}</Typography>
       <Typography className={classes.bodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.summary.info1' })}</Typography>
 
       <div className={classes.spacer} />

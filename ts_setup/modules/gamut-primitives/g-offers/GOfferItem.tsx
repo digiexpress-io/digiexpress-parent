@@ -61,7 +61,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
       cancelItemName={props.name}
       cancelItemMeta={<>
         {intl.formatMessage({ id: 'gamut.forms.lastModified' })}
-        {intl.formatMessage({ id: 'gamut.textSeparator' })}
+        {intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}
         <GDate variant='date-only' date={props.updated} />
       </>
       }

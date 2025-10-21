@@ -49,7 +49,7 @@ export const GBookingItem: React.FC<GBookingItemProps> = (initProps) => {
       cancelItemName={props.name}
       cancelItemMeta={<>
         {intl.formatMessage({ id: 'gamut.bookings.bookingDateTime' })}
-        {intl.formatMessage({ id: 'gamut.textSeparator' })}
+        {intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}
         <GDate variant='date-only' date={props.scheduledAt} />
       </>
       }
