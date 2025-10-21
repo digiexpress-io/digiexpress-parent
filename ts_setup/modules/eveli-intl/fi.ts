@@ -803,6 +803,7 @@ export const fi = {
   'eveli.table.drawer.title.export-data': 'Vie tiedot',
   'eveli.table.clearFilters': 'Nollaa kaikki suodattimet',
   'eveli.table.drawer.buttons.savedFiltersButton': 'Minun näkymät',
+  'eveli.table.drawer.buttons.exportData': 'Vie tiedot',
   'eveli.table.saveasdefault': 'Tallenna perusastuksena',
   'eveli.table.defaultSettings': 'Oletusasetukset',
   'eveli.table.saveas': 'Tee uusi näkymä tästä',

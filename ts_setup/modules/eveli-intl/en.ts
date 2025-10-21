@@ -805,6 +805,7 @@ export const en = {
   'eveli.table.drawer.title.export-data': 'Export data',
   'eveli.table.clearFilters': 'Clear all filters',
   'eveli.table.drawer.buttons.savedFiltersButton': 'My saved setting',
+  'eveli.table.drawer.buttons.exportData': 'Export data',
   'eveli.table.saveasdefault': 'Save as default',
   'eveli.table.defaultSettings': 'Default Settings',
   'eveli.table.saveas': 'New filter from current',

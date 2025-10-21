@@ -803,6 +803,7 @@ export const sv = {
   'eveli.table.drawer.title.export-data': 'Exportera data',
   'eveli.table.clearFilters': 'Rensa alla filter',
   'eveli.table.drawer.buttons.savedFiltersButton': 'Min sparade inställning',
+  'eveli.table.drawer.buttons.exportData': 'Exportera data',
   'eveli.table.saveasdefault': 'Spara som standard',
   'eveli.table.defaultSettings': 'Standardinställningar',
   'eveli.table.saveas': 'Nytt filter från nuvarande',
