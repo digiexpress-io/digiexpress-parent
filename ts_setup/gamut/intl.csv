@@ -82,9 +82,9 @@ gamut.forms.status,,Status,Tila,Status,Status,Status
 gamut.forms.selectionUndefined,,Select,Select,,,
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
 gamut.forms.status.NEW,,Processing starts soon,Valmis käsittelyyn,Bearbetningen startar snart,Pemprosesan bermula tidak lama lagi,Obrada počinje uskoro
-gamut.forms.status.COMPLETED,,Completed,Valmis käsittelyyn,Avslutad,Selesai,Završeno
+gamut.forms.status.COMPLETED,,Completed,Käsitelty,Avslutad,Selesai,Završeno
 gamut.forms.status.REJECTED,,Rejected,Poistettu,Avvisad,Ditolak,Odbijeno
-gamut.forms.status.DELEGATED,,Completed,Valmis käsittelyyn,Avslutad,Selesai,Završeno
+gamut.forms.status.DELEGATED,,Completed,Käsitelty,Avslutad,Selesai,Završeno
 gamut.forms.status.TRANSFERRED,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
 gamut.forms.status.WAITING,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
 gamut.forms.lastModified,,Last modified,Viimeksi muutettu,Senast ändrad,Terakhir diubah suai,Zadnje izmijenjeno
@@ -202,3 +202,4 @@ gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,
 // ----------------------- DIALOB REVIEW -------------------------,,,,,,
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
 dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
+
