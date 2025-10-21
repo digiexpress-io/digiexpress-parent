@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { PictureAsPdf as PictureAsPdfIconIcon } from '@mui/icons-material';
 import { AddCircleOutline as AddCircleOutlineIcon } from '@mui/icons-material';
 import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
 import { ModeEdit as EditIcon } from '@mui/icons-material';
@@ -12,6 +12,8 @@ import { useTagomiNav } from '../tagomi-nav';
 import { ServiceEdit } from './ServiceEdit';
 import { ServiceDelete } from './ServiceDelete';
 import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../tagomi-template';
+import { DebugLocale } from '../tagomi-debug';
+
 
 interface ServiceOptionsProps {
   service: TagomiApi.Service,
@@ -19,13 +21,19 @@ interface ServiceOptionsProps {
 
 export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const intl = useIntl();
-  const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceEdit' | 'NewTemplate' | 'TemplateEdit' | 'TemplateDelete' | 'ServiceDelete'>(undefined);
-
   const { site, backend } = Composer.useComposer();
-  const handleDialogClose = () => setDialogOpen(undefined);
   const { activeItem, onNav } = useTagomiNav();
 
+  const [dialogOpen, setDialogOpen] = React.useState<undefined | 
+    'ServiceEdit' | 
+    'NewTemplate' | 
+    'TemplateEdit' | 
+    'TemplateDelete' | 
+    'ServiceDelete' |
+    'DebugLocale'
+  >(undefined);
 
+  const handleDialogClose = () => setDialogOpen(undefined);
 
   return (
     <>
@@ -34,7 +42,7 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       {dialogOpen === 'NewTemplate' ? <NewTemplate serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'TemplateEdit' ? <TemplateLocaleEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'TemplateDelete' ? <TemplateDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
-
+      {dialogOpen === 'DebugLocale' ? <DebugLocale serviceId={service.id} onClose={handleDialogClose} /> : null}
 
       {/** Article options */}
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
@@ -70,6 +78,14 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('TemplateDelete')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.template.delete' })}>
+      </Burger.TreeItemOption>
+
+
+      <Burger.TreeItemOption nodeId={service.id + 'pages.debug'}
+        color='page'
+        icon={PictureAsPdfIconIcon}
+        onClick={() => setDialogOpen('DebugLocale')}
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.template.debug' })}>
       </Burger.TreeItemOption>
     </>
   );

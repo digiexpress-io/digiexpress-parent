@@ -2193,6 +2193,7 @@
         "dependencies": {
           "@dxs-ts/envir-fetch": "*",
           "@dxs-ts/tagomi-api": "*",
+          "@dxs-ts/wrench-api": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
           "@dxs-ts/xui-table": "*",
@@ -2225,6 +2226,7 @@
       "dependencies": [
         "@dxs-ts/envir-fetch",
         "@dxs-ts/tagomi-api",
+        "@dxs-ts/wrench-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-table",
@@ -2279,6 +2281,7 @@
       "internalDependencies": [
         "@dxs-ts/envir-fetch",
         "@dxs-ts/tagomi-api",
+        "@dxs-ts/wrench-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-table",
@@ -2286,11 +2289,12 @@
       ],
       "actualDependencies": [
         "react",
-        "notistack",
-        "react-intl",
         "@mui/material",
-        "@dxs-ts/tagomi-api",
+        "react-intl",
+        "@dxs-ts/wrench-api",
         "@dxs-ts/eveli-primitives",
+        "notistack",
+        "@dxs-ts/tagomi-api",
         "@mui/icons-material",
         "@tanstack/react-router",
         "@dxs-ts/envir-fetch",
@@ -2302,9 +2306,9 @@
       ],
       "actualExternalDependencies": [
         "react",
-        "notistack",
-        "react-intl",
         "@mui/material",
+        "react-intl",
+        "notistack",
         "@mui/icons-material",
         "@tanstack/react-router",
         "@mui/x-tree-view",
@@ -2313,8 +2317,9 @@
         "monaco-editor"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/tagomi-api",
+        "@dxs-ts/wrench-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/tagomi-api",
         "@dxs-ts/envir-fetch",
         "@dxs-ts/eveli-api"
       ],
@@ -3278,6 +3283,7 @@
       "@dxs-ts/tagomi-routes": [
         "@dxs-ts/envir-fetch",
         "@dxs-ts/tagomi-api",
+        "@dxs-ts/wrench-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-table",
@@ -3500,6 +3506,7 @@
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide",
+        "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-routes"
       ],
       "@dxs-ts/wrench-routes": [
@@ -3648,6 +3655,6 @@
       ]
     }
   },
-  "checksum": "b4961bc1c56a11a12b95d150ced71705c8dd67af2148af1dd45666b88c2f4b16",
-  "generatedAt": "2025-10-17T11:55:12.713Z"
+  "checksum": "c0b714dd251c3485fc83c26bb558052caabb93d31253337b433f4ad730e9aa85",
+  "generatedAt": "2025-10-21T06:18:06.873Z"
 }
