@@ -312,7 +312,7 @@ export const en = {
   'adminUI.dialog.heading': 'Dialogs',
   'adminUI.dialog.deleteQuestion': 'Do you want to delete the dialog',
   'adminUI.dialog.form.addFormLabel.title': 'Add a new label',
-  'adminUI.dialog.form.addFormLabel.desc': 'Labels are short and simple descriptions for your forms to enhance sorting and searching',
+  'adminUI.dialog.form.addFormLabel.desc': 'Use labels for making sorting easier',
   'adminUI.table.tooltip.add': 'Add new dialog',
   'adminUI.table.tooltip.edit': 'Edit in Composer',
   'adminUI.table.tooltip.copy': 'Copy dialog',

@@ -311,6 +311,8 @@ export const fi = {
   'adminUI.dialog.emptyTitle': '(Nimetön)',
   'adminUI.dialog.heading': 'Lomakkeet',
   'adminUI.dialog.deleteQuestion': 'Haluatko poistaa lomakkeen',
+  'adminUI.dialog.form.addFormLabel.title': 'Lisää uusi tunniste',
+  'adminUI.dialog.form.addFormLabel.desc': 'Luo tunniste lajittelun helpottamiseksi',
   'adminUI.table.tooltip.add': 'Lisää uusi lomake',
   'adminUI.table.tooltip.edit': 'Muokkaa Composerissa',
   'adminUI.table.tooltip.copy': 'Kopioi lomake',

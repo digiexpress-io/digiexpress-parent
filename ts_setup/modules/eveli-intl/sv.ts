@@ -311,6 +311,8 @@ export const sv = {
   'adminUI.dialog.emptyTitle': '(Otitulerad)',
   'adminUI.dialog.heading': 'Dialoger',
   'adminUI.dialog.deleteQuestion': 'Vill du radera dialogen',
+  'adminUI.dialog.form.addFormLabel.title': 'Lägg till en ny etikett',
+  'adminUI.dialog.form.addFormLabel.desc': 'Använd etiketter för att göra sorteringen enklare',
   'adminUI.table.tooltip.add': 'Lägg till ny dialog',
   'adminUI.table.tooltip.edit': 'Redigera i Composer',
   'adminUI.table.tooltip.copy': 'Kopiera dialog',
