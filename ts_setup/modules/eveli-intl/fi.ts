@@ -202,7 +202,7 @@ export const fi = {
   'task.statistics.new_task_by_role': 'Uudet tehtävät rooleittain',
   'task.statistics.task_by_questionnaire': 'Tehtävät lomakkeittain',
   'task.statistics.open_task_by_role': 'Avoimet tehtävät rooleittain',
-  'feedback.create.title': 'Luo vastine asiakkaan palautteeseen',
+  'feedback.create.title': 'Julkaise vastine palautteeseen',
   'feedback.update.title': 'Muokkaa vastinetta asiakkaan palautteelle',
   'feedback.taskReferenceId': 'Tehtävän tunnus',
   'feedback.taskReferenceId.short': 'Tehtävän viite',
