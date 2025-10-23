@@ -22,7 +22,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const composer = TagomiComposerApi.useComposer();
   const [input, setInput] = React.useState<object>({});
   const [inputOpen, setInputOpen] = React.useState<boolean>(false);
-  const [base64, setBase64] = React.useState<string>(); 
+  const [base64, setBase64] = React.useState<string>();
 
   const template = composer.site.templates[templateId];
   const service = composer.site.services[serviceId];
@@ -31,7 +31,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
 
   async function handleCompile() {
     const pdf = await composer.backend.compileTemplate(serviceId, template.localeId, input);
-    if(pdf.status === 'OK') {
+    if (pdf.status === 'OK') {
       setBase64(pdf.value?.bodyBase64);
     } else {
       setBase64(undefined);
@@ -71,7 +71,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const handleChange: OnChange = (newValue) => {
     const content = newValue ?? '';
     setSrc(content);
-    
+
     composer.actions.handleTemplateUpdate(templateId, content);
   }
 
@@ -82,12 +82,14 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
         <Typography fontWeight={500}>{intl.formatMessage({ id: 'tagomi.template.editor.serviceName' })}{" "}{service.serviceName}</Typography>
         <Typography fontWeight={500}>{intl.formatMessage({ id: 'tagomi.template.editor.localeLabel' })}{" "}{localeLabel}</Typography>
 
-        <Button onClick={handleInputOpen}>
-          {intl.formatMessage({ id: 'tagomi.template.editor.fillInput' })}
-        </Button>
-        <Button onClick={handleCompile}>
-          {intl.formatMessage({ id: 'tagomi.template.editor.compile' })}
-        </Button>
+        <Box display='flex' justifyContent='center' gap={1} m={2} width='50%'>
+          <Button onClick={handleInputOpen}>
+            {intl.formatMessage({ id: 'tagomi.template.editor.fillInput' })}
+          </Button>
+          <Button onClick={handleCompile}>
+            {intl.formatMessage({ id: 'tagomi.template.editor.compile' })}
+          </Button>
+        </Box>
 
         <Dialog open={inputOpen} onClose={handleInputClose}>
           <DialogTitle>{intl.formatMessage({ id: 'tagomi.template.debug.dialog.title' })}
@@ -105,13 +107,13 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
           </DialogActions>
         </Dialog>
       </Box>
-      
+
       <Box height={'100%'} width={'100%'} display='flex'>
         <Box height={'100%'} width={'50%'}>
           <MonacoReact
             onChange={handleChange}
             value={src}
-            defaultLanguage='yaml' 
+            defaultLanguage='yaml'
             options={{
               wordBasedSuggestions: 'off',
               minimap: { enabled: false }
@@ -119,7 +121,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
           />
         </Box>
         <Box height={'100%'} width={'50%'}>
-          <DebugPdfViewer base64={base64 ?? ''}/>
+          <DebugPdfViewer base64={base64 ?? ''} />
         </Box>
       </Box>
     </Box>);
