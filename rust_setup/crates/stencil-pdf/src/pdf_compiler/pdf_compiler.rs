@@ -90,7 +90,13 @@ impl PdfCompiler for PdfCompilerImpl {
             )
         })?;
 
+
+
+
         let library = map_to_lib(&self.modules, &mut self.leakes);
+        //let fonts = Fonts::searcher()
+        //    .include_system_fonts(false)
+        //    .search_with(["./assets/fonts/"]);
         let fonts = Fonts::searcher().include_system_fonts(true).search();
 
         // Debug loaded fonts

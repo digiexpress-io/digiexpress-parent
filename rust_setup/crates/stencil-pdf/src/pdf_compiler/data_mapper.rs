@@ -1,7 +1,7 @@
 use ecow::EcoVec;
 use itertools::Itertools;
-use typst::foundations::{Dict, Module, Scope, Str, Value};
-use typst::{ Library };
+use typst::foundations::{Dict, Str, Value};
+use typst::{ Features, Library };
 
 
 use crate::pdf_compiler::{PdfDataModule};
@@ -55,37 +55,37 @@ fn group_modules(modules: Vec<PdfDataModule>) -> Vec<(String, Vec<PdfDataModule>
         grouped_modules
     }
 
-pub fn map_to_lib(modules: &Vec<PdfDataModule>, leakes:  &mut Vec<Box<str>>) -> Library {
-    
-    // build the input data into library
+pub fn map_to_lib(modules: &Vec<PdfDataModule>, leakes: &mut Vec<Box<str>>) -> Library {
+    // Build the input data into a Dict first
     let grouped_modules: Vec<(String, Vec<PdfDataModule>)> = group_modules(modules.clone());
-    
-    let mut library = Library::default();
-    let global = library.global.scope_mut();  
-    for (module_name, module_values) in grouped_modules {
-        
-        // create scope with data in it
-        let mut scope = Scope::new();
-        for data_module in module_values {
 
-            // memory leak
+    let mut inputs = Dict::new();
+
+    for (module_name, module_values) in grouped_modules {
+        let mut module_dict = Dict::new();
+
+        for data_module in module_values {
+            // Memory leak handling
             let key_box = data_module.value_key.into_boxed_str();
-            let key: &mut str = Box::leak(key_box.clone());
+            let key: &str = Box::leak(key_box.clone());
             leakes.push(key_box);
 
-            // scope data
-            scope.define(key, map_from_json_to_typst_value(data_module.value_data).clone());
+            // Add to module dict
+            module_dict.insert(key.into(), map_from_json_to_typst_value(data_module.value_data).unwrap_or(Value::None));
         }
 
-        // memory leak
+        // Memory leak handling
         let key_box = module_name.into_boxed_str();
-        let key: &mut str = Box::leak(key_box.clone());
+        let key: &str = Box::leak(key_box.clone());
         leakes.push(key_box);
 
-        // define module
-        let module = Module::new(&*key, scope);
-        global.define(key, module);
+        // Add module to inputs
+        inputs.insert(key.into(), Value::Dict(module_dict));
     }
 
-    library
+    // Build library with inputs AND features - this includes standard functions like underline
+    Library::builder()
+        .with_inputs(inputs)
+        .with_features(Features::default())
+        .build()
 }
