@@ -128,9 +128,9 @@ gamut.forms.answer.boolean.no,,No,Ei,Inga,Tidak,Ne
 gamut.forms.unfinished.none,,You do not have any unfinished forms,Sinulla ei ole keskeneräisiä lomakkeita,Du har inga oavslutade formulär,Anda tidak mempunyai sebarang borang yang belum selesai,Nema nedovršenih obrazaca
 gamut.forms.unfinished.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai,Nedovršeni obrasci
 gamut.forms.unfinished.subtitle,,Processing has not started - Please select a form to continue filling or cancel,Käsittelyä ei ole aloitettu - Valitse lomake jatkaaksesi täyttämistä tai peruuta,Bearbetningen har inte startat - Välj ett formulär för att fortsätta fylla eller avbryta,Pemprosesan belum bermula - Sila pilih borang untuk terus mengisi atau membatalkan,"Obrada nije započeta - Potrebno je odabrati formu za nastavak popunjavanja, ili otkazati"
-gamut.forms.awaitingDecision.title,,Forms awaiting decision,"Lomakkeet, jotka odottavast päätöstä",Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
-gamut.forms.awaitingDecision.subtitle,,Processing has begun - Our staff is working on your request,Palvelupyyntösi on otettu käsittelyyn,Behandlingen har påbörjats - Vår personal arbetar med din förfrågan,Pemprosesan telah bermula - Kakitangan kami sedang mengusahakan permintaan anda,Obrada je započeta - Naše osoblje radi na ovom zahtjevu
-gamut.forms.withDecision.title,,Forms with final decision,"Palvelupyyntösi, jotka odottavat päätöstä",Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa konačnom odlukom
+gamut.forms.awaitingDecision.title,,Forms awaiting decision,Palvelupyynnöt jotka odottavat käsittelyä,Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
+gamut.forms.awaitingDecision.subtitle,,Processing has begun - Our staff is working on your request,Palvelupyynnöt jotka on otettu käsittelyyn,Behandlingen har påbörjats - Vår personal arbetar med din förfrågan,Pemprosesan telah bermula - Kakitangan kami sedang mengusahakan permintaan anda,Obrada je započeta - Naše osoblje radi na ovom zahtjevu
+gamut.forms.withDecision.title,,Forms with final decision,Palvelupyynnöt jotka on käsitelty,Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa konačnom odlukom
 gamut.forms.withDecision.subtitle,,Processing is complete and finalised,Palvelupyyntösi on valmis,Bearbetningen är klar och slutförd,Pemprosesan selesai dan dimuktamadkan,Obrada je završena
 gamut.offers.deleteForm.title,,Delete unfinished form,Poista keskeneräiset lomakkeet,Ta bort oavslutat formulär,Padamkan borang yang belum selesai,Izbrisati nedovršene obrasce
 gamut.offers.deleteForm.content,,Are you sure you want to delete this form? You can not undo this action.,Haluatko varmasti poistaa tämän lomakkeen? Et voi kumota tätä toimintoa.,Är du säker på att du vill ta bort det här formuläret? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu memadamkan borang ini? Anda tidak boleh membuat asal tindakan ini.,Želiš li izbrisati ovu formu? Ova radnja se ne može poništiti.
@@ -178,8 +178,8 @@ gamut.userOverview.buttons.bookings,,Calendar reservations,Kalenterivaraukset,Ka
 gamut.userOverview.home,,User overview home,Käyttäjän tiedot,Användaröversikt hem,Rumah gambaran keseluruhan pengguna,Moj pregled
 gamut.userOverview.welcome.title,,Welcome to my Overview,Tervetuloa minun tietoihin,Välkommen till min översikt,Selamat datang ke Gambaran Keseluruhan saya,Dobrodošli na Moj pregled
 gamut.userOverview.unfinished-forms.detail.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai,Nedovršeni obrasci
-gamut.userOverview.waiting-forms.detail.title,,Forms awaiting decision,"Lomakkeet, jotka odottavat käsittelyä",Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
-gamut.userOverview.decided-forms.detail.title,,Forms with final decision,"Lomakkeet, jotka on käsitelty",Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa odlukom
+gamut.userOverview.waiting-forms.detail.title,,Forms awaiting decision,Palvelupyynnöt jotka odottavat käsittelyä,Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
+gamut.userOverview.decided-forms.detail.title,,Forms with final decision,Palvelupyynnöt jotka on käsitelty,Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa odlukom
 gamut.userOverview.inbox.detail.title,,Inbox,Viestit,Inkorg,Peti masuk,Dolazne poruke
 gamut.userOverview.bookings.detail.title,,Calendar bookings,Kalenteri varaukseni,Kalenderbokningar,Tempahan kalendar,Kalendarske rezervacije
 gamut.userOverview.welcome.desc,,From here you can search and apply for our services view the status of your applications send messages and files and book appointments with us,"Täältä voit etsiä ja hakea palveluitamme, tarkastella hakemustesi tilaa, lähettää viestejä ja tiedostoja sekä varata aikoja kanssamme.",Härifrån kan du söka och ansöka om våra tjänster se status för dina applikationer skicka meddelanden och filer och boka möten med oss,Dari sini anda boleh mencari dan memohon perkhidmatan kami melihat status aplikasi anda menghantar mesej dan fail serta menempah janji temu dengan kami,"Odavde je moguće pretraživati i prijaviti se za naše usluge, pregledati status prijava, slati poruke i datoteke, te rezervisati termine."
@@ -202,4 +202,3 @@ gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,
 // ----------------------- DIALOB REVIEW -------------------------,,,,,,
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
 dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
-
