@@ -63,6 +63,7 @@ export const bs = {
   'gamut.forms.formName': 'Ime',
   'gamut.forms.taskRefId': 'Referentni broj',
   'gamut.forms.started': 'Započeto',
+  'Li': 'Prilozi',
   'gamut.forms.status': 'Status',
   'gamut.forms.status.OPEN': 'U toku',
   'gamut.forms.status.NEW': 'Obrada počinje uskoro',

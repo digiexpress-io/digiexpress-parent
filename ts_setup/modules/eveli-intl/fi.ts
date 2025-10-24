@@ -192,7 +192,7 @@ export const fi = {
   'CustomerCreated': 'Asiakas luotu',
   'Internal': 'Sisäinen',
   'task.role.assignedAllUsers': 'Kaikki käyttäjät',
-  'task.feedback.published': 'Vastaus palautteelle',
+  'task.feedback.published': 'Julkaise vastine palautteelle',
   'confirm.close.title': 'Vahvistus vaaditaan',
   'confirm.unsavedChanges': 'Tallentamattomat muutokset menetetään. Haluatko jatkaa?',
   'task.statistics.statusCount': 'Tilan mukaan',
