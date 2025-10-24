@@ -77,7 +77,7 @@ gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan,Linkovi
 gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama,Ime
 gamut.forms.taskRefId,,Reference Id,Viitetunnus,Referens ID,Id Rujukan,Referentni broj
 gamut.forms.started,,Started,Aloitettu,Startade,Bermula,Započeto
-Li,,Attachments,Liitteet,Bilagor,Lampiran,Prilozi
+gamut.forms.attachments,,Attachments,Liitteet,Bilagor,Lampiran,Prilozi
 gamut.forms.status,,Status,Tila,Status,Status,Status
 gamut.forms.selectionUndefined,,Select,Select,,,
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
@@ -202,3 +202,4 @@ gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,
 // ----------------------- DIALOB REVIEW -------------------------,,,,,,
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
 dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
+
