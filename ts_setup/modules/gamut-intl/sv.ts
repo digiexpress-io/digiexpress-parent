@@ -64,7 +64,7 @@ export const sv = {
   'gamut.forms.formName': 'Namn',
   'gamut.forms.taskRefId': 'Referens ID',
   'gamut.forms.started': 'Startade',
-  'Li': 'Bilagor',
+  'gamut.forms.attachments': 'Bilagor',
   'gamut.forms.status': 'Status',
   'gamut.forms.status.OPEN': 'Pågår',
   'gamut.forms.status.NEW': 'Bearbetningen startar snart',

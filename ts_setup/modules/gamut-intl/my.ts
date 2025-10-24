@@ -64,7 +64,7 @@ export const my = {
   'gamut.forms.formName': 'Nama',
   'gamut.forms.taskRefId': 'Id Rujukan',
   'gamut.forms.started': 'Bermula',
-  'Li': 'Lampiran',
+  'gamut.forms.attachments': 'Lampiran',
   'gamut.forms.status': 'Status',
   'gamut.forms.status.OPEN': 'Sedang berlangsung',
   'gamut.forms.status.NEW': 'Pemprosesan bermula tidak lama lagi',
