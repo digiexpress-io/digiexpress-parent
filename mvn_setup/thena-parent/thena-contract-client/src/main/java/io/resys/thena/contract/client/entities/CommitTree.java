@@ -20,47 +20,27 @@ package io.resys.thena.contract.client.entities;
  * #L%
  */
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import jakarta.annotation.Nullable;
+import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableInvPlanAlloc.class)
-@JsonDeserialize(as = ImmutableInvPlanAlloc.class)
-public interface InvPlanAlloc extends ContractEntity {
+@JsonSerialize(as = ImmutableCommitTree.class)
+@JsonDeserialize(as = ImmutableCommitTree.class)
+public interface CommitTree extends ContractEntity {
   String getId();
-  String getInvPlanId();
-
   String getCommitId();
-  String getCreatedCommitId();
-
-  // Transitive data from joins
-  @Value.Auxiliary
-  @Nullable InvPlanAllocTransitives getTransitives();
-
-  String getInvPlanAllocCode();
-  String getInvPlanAllocName();
-  BigDecimal getInvPlanAllocPercentage();
-  String getInvPlanAllocStatus();
+  Optional<String> getOperationType();
+  Optional<JsonObject> getBodyAfter();
+  Optional<JsonObject> getBodyBefore();
 
   @Override 
   default ContractDocType getDocType() { 
-    return ContractDocType.INV_PLAN_ALLOC; 
-  }
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableInvPlanAllocTransitives.class)
-  @JsonDeserialize(as = ImmutableInvPlanAllocTransitives.class)
-  interface InvPlanAllocTransitives {
-    OffsetDateTime getCreatedAt();
-    OffsetDateTime getUpdatedAt();
-    // Virtual field from parent table
-    String getContractId();
+    return ContractDocType.COMMIT_TREE; 
   }
 }

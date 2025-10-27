@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -37,12 +36,12 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableInvPlan.class)
 @JsonDeserialize(as = ImmutableInvPlan.class)
 public interface InvPlan extends ContractEntity {
-  UUID getId();
-  UUID getContractId();
+  String getId();
+  String getContractId();
 
   String getExternalId();
-  UUID getCommitId();
-  UUID getCreatedCommitId();
+  String getCommitId();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

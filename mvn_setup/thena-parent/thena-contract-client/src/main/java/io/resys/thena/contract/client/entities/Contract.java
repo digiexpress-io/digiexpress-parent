@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -38,14 +37,14 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableContract.class)
 @JsonDeserialize(as = ImmutableContract.class)
 public interface Contract extends ContractEntity {
-  UUID getId();
-  Optional<UUID> getParentContractId();
+  String getId();
+  Optional<String> getParentContractId();
   String getContractNumber();
 
   Optional<String> getExternalId();
-  UUID getCommitId();
-  UUID getCreatedCommitId();
-  UUID getUpdatedTreeCommitId();
+  String getCommitId();
+  String getCreatedCommitId();
+  String getUpdatedTreeCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

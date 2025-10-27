@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.entities;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -35,12 +34,12 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableCapability.class)
 @JsonDeserialize(as = ImmutableCapability.class)
 public interface Capability extends ContractEntity {
-  UUID getId();
-  UUID getContractId();
+  String getId();
+  String getContractId();
 
   Optional<String> getExternalId();
-  UUID getCommitId();
-  UUID getCreatedCommitId();
+  String getCommitId();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

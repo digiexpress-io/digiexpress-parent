@@ -176,13 +176,13 @@ public interface CoverageTable {
       final String coverage_term_end_date_type = row.getString("coverage_term_end_date_type");
 
       return ImmutableCoverage.builder()
-          .id(UUID.fromString(row.getString("id")))
-          .contractId(UUID.fromString(row.getString("contract_id")))
-          .insuredId(UUID.fromString(row.getString("insured_id")))
+          .id(row.getString("id"))
+          .contractId(row.getString("contract_id"))
+          .insuredId(row.getString("insured_id"))
 
           .externalId(row.getString("external_id"))
-          .commitId(UUID.fromString(row.getString("commit_id")))
-          .createdCommitId(UUID.fromString(row.getString("created_commit_id")))
+          .commitId(row.getString("commit_id"))
+          .createdCommitId(row.getString("created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableCoverageTransitives.builder()

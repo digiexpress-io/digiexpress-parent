@@ -164,12 +164,12 @@ public interface PartyTable {
       final JsonObject party_data = row.getJsonObject("party_data");
 
       return ImmutableParty.builder()
-          .id(UUID.fromString(row.getString("id")))
-          .contractId(UUID.fromString(row.getString("contract_id")))
+          .id(row.getString("id"))
+          .contractId(row.getString("contract_id"))
 
           .externalId(row.getString("external_id"))
-          .commitId(UUID.fromString(row.getString("commit_id")))
-          .createdCommitId(UUID.fromString(row.getString("created_commit_id")))
+          .commitId(row.getString("commit_id"))
+          .createdCommitId(row.getString("created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutablePartyTransitives.builder()

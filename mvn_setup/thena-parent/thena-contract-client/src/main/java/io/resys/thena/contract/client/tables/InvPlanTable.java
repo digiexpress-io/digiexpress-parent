@@ -159,12 +159,12 @@ public interface InvPlanTable {
       final String inv_plan_end_date_type = row.getString("inv_plan_end_date_type");
 
       return ImmutableInvPlan.builder()
-          .id(UUID.fromString(row.getString("id")))
-          .contractId(UUID.fromString(row.getString("contract_id")))
+          .id(row.getString("id"))
+          .contractId(row.getString("contract_id"))
 
           .externalId(row.getString("external_id"))
-          .commitId(UUID.fromString(row.getString("commit_id")))
-          .createdCommitId(UUID.fromString(row.getString("created_commit_id")))
+          .commitId(row.getString("commit_id"))
+          .createdCommitId(row.getString("created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableInvPlanTransitives.builder()

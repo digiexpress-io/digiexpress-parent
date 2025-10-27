@@ -34,7 +34,6 @@ import io.resys.thena.contract.client.entities.Note;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -162,11 +161,11 @@ public interface NoteTable {
   class NoteMapper implements TenantSql.RowMapper<Note> {
     @Override
     public Note apply(Row row) {
-      final UUID inv_plan_id = row.get(UUID.class, "inv_plan_id");
-      final UUID inv_plan_alloc_id = row.get(UUID.class, "inv_plan_alloc_id");
-      final UUID coverage_id = row.get(UUID.class, "coverage_id");
-      final UUID party_id = row.get(UUID.class, "party_id");
-      final JsonObject note_body = row.getJsonObject("note_body");
+      final var inv_plan_id = row.getString("inv_plan_id");
+      final var inv_plan_alloc_id = row.getString("inv_plan_alloc_id");
+      final var coverage_id = row.getString("coverage_id");
+      final var party_id = row.getString("party_id");
+      final var note_body = row.getJsonObject("note_body");
 
       ContractOneOfRelations relations = null;
       if (inv_plan_id != null) {
@@ -192,12 +191,12 @@ public interface NoteTable {
       }
 
       return ImmutableNote.builder()
-          .id(UUID.fromString(row.getString("id")))
-          .contractId(UUID.fromString(row.getString("contract_id")))
+          .id(row.getString("id"))
+          .contractId(row.getString("contract_id"))
 
           .relations(relations)
-          .commitId(UUID.fromString(row.getString("commit_id")))
-          .createdCommitId(UUID.fromString(row.getString("created_commit_id")))
+          .commitId(row.getString("commit_id"))
+          .createdCommitId(row.getString("created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableNoteTransitives.builder()
@@ -217,10 +216,10 @@ public interface NoteTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Note doc) {
       final ContractOneOfRelations relations = doc.getRelations();
-      UUID inv_plan_id = null;
-      UUID inv_plan_alloc_id = null;
-      UUID coverage_id = null;
-      UUID party_id = null;
+      String inv_plan_id = null;
+      String inv_plan_alloc_id = null;
+      String coverage_id = null;
+      String party_id = null;
 
       if (relations != null) {
         switch (relations.getRelationType()) {
@@ -251,10 +250,10 @@ public interface NoteTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Note doc) {
       final ContractOneOfRelations relations = doc.getRelations();
-      UUID inv_plan_id = null;
-      UUID inv_plan_alloc_id = null;
-      UUID coverage_id = null;
-      UUID party_id = null;
+      String inv_plan_id = null;
+      String inv_plan_alloc_id = null;
+      String coverage_id = null;
+      String party_id = null;
 
       if (relations != null) {
         switch (relations.getRelationType()) {

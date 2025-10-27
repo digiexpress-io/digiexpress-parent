@@ -25,7 +25,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.immutables.value.Value;
 
@@ -38,12 +37,12 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutablePaymentPlan.class)
 @JsonDeserialize(as = ImmutablePaymentPlan.class)
 public interface PaymentPlan extends ContractEntity {
-  UUID getId();
-  UUID getContractId();
+  String getId();
+  String getContractId();
 
-  Optional<UUID> getPartyId();
-  UUID getCommitId();
-  UUID getCreatedCommitId();
+  Optional<String> getPartyId();
+  String getCommitId();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

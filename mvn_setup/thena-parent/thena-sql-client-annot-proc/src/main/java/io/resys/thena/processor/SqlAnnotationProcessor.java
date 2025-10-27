@@ -290,7 +290,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       ? annotation.worldName() 
       : "World";
     
-    final var domainName = NamingUtils.toCamelCaseCapitalized(annotation.name());
+    final var domainName = NamingUtils.toCamelCaseCapitalized(annotation.name().toLowerCase());
     
     return RegistryModel.builder()
       .name(domainName)

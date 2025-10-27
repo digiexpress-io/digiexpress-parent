@@ -1,6 +1,38 @@
 -- Contract System Schema
 -- Generated with expanded business date fields
 
+-- Commit table (versioning support)
+CREATE TABLE {commit} (
+  commit_id UUID PRIMARY KEY,
+  parent_id UUID,
+  contract_id UUID,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  commit_log TEXT NOT NULL,
+  commit_author VARCHAR(255) NOT NULL,
+  commit_message VARCHAR(255) NOT NULL
+);
+
+CREATE INDEX {commit}_PARENT_INDEX ON {commit} (parent_id);
+CREATE INDEX {commit}_CONTRACT_INDEX ON {commit} (contract_id);
+CREATE INDEX {commit}_AUTH_INDEX ON {commit} (commit_author);
+
+-- Commit tree table (operation logging)
+CREATE TABLE {commit_tree} (
+  id UUID PRIMARY KEY,
+  commit_id UUID NOT NULL,
+  operation_type VARCHAR(40),
+  body_after JSONB,
+  body_before JSONB
+);
+
+CREATE INDEX {commit_tree}_COMMIT_INDEX ON {commit_tree} (commit_id);
+
+-- Self-referencing FK for commit table
+ALTER TABLE {commit}
+  ADD CONSTRAINT {commit}_PARENT_FK
+  FOREIGN KEY (parent_id)
+  REFERENCES {commit} (commit_id);
+
 -- Contract table
 CREATE TABLE {contract} (
     id                              UUID PRIMARY KEY,
@@ -243,6 +275,54 @@ ALTER TABLE {inv_plan} ADD CONSTRAINT fk_inv_plan_contract
 
 ALTER TABLE {inv_plan_alloc} ADD CONSTRAINT fk_inv_plan_alloc_inv_plan 
     FOREIGN KEY (inv_plan_id) REFERENCES {inv_plan}(id);
+
+-- Commit FK constraints
+ALTER TABLE {contract} ADD CONSTRAINT fk_contract_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {contract} ADD CONSTRAINT fk_contract_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {contract} ADD CONSTRAINT fk_contract_updated_tree_commit 
+    FOREIGN KEY (updated_tree_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {party} ADD CONSTRAINT fk_party_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {party} ADD CONSTRAINT fk_party_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {coverage} ADD CONSTRAINT fk_coverage_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {coverage} ADD CONSTRAINT fk_coverage_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {capability} ADD CONSTRAINT fk_capability_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {capability} ADD CONSTRAINT fk_capability_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {reference} ADD CONSTRAINT fk_reference_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {reference} ADD CONSTRAINT fk_reference_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {note} ADD CONSTRAINT fk_note_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {note} ADD CONSTRAINT fk_note_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {payment_plan} ADD CONSTRAINT fk_payment_plan_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {payment_plan} ADD CONSTRAINT fk_payment_plan_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {inv_plan} ADD CONSTRAINT fk_inv_plan_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {inv_plan} ADD CONSTRAINT fk_inv_plan_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+
+ALTER TABLE {inv_plan_alloc} ADD CONSTRAINT fk_inv_plan_alloc_commit 
+    FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
+ALTER TABLE {inv_plan_alloc} ADD CONSTRAINT fk_inv_plan_alloc_created_commit 
+    FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
 
 -- Indexes
 CREATE INDEX idx_contract_status ON {contract}(contract_status);

@@ -187,14 +187,14 @@ public interface ContractTable {
       final JsonObject contract_data = row.getJsonObject("contract_data");
 
       return ImmutableContract.builder()
-          .id(UUID.fromString(row.getString("id")))
-          .parentContractId(Optional.ofNullable(parent_contract_id).map(UUID::fromString))
+          .id(row.getString("id"))
+          .parentContractId(Optional.ofNullable(parent_contract_id))
           .contractNumber(row.getString("contract_number"))
 
           .externalId(Optional.ofNullable(external_id))
-          .commitId(UUID.fromString(row.getString("commit_id")))
-          .createdCommitId(UUID.fromString(row.getString("created_commit_id")))
-          .updatedTreeCommitId(UUID.fromString(row.getString("updated_tree_commit_id")))
+          .commitId(row.getString("commit_id"))
+          .createdCommitId(row.getString("created_commit_id"))
+          .updatedTreeCommitId(row.getString("updated_tree_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableContractTransitives.builder()
