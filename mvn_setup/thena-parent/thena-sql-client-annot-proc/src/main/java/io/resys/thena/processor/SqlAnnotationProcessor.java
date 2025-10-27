@@ -49,6 +49,9 @@ import io.resys.thena.processor.codegen.Gen_Multi_QueryInterface;
 import io.resys.thena.processor.codegen.Gen_Multi_RegistryFactory;
 import io.resys.thena.processor.codegen.Gen_Multi_TableNames;
 import io.resys.thena.processor.codegen.Gen_Table_SqlImplementation;
+import io.resys.thena.processor.model.MultiTableCodeGenerator;
+import io.resys.thena.processor.model.RegistryCodeGenerator;
+import io.resys.thena.processor.model.TableCodeGenerator;
 import io.resys.thena.processor.model.ModelExtractor;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
@@ -156,102 +159,46 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     
     final var filteredTables = filterTablesForRegistry(registryConfig, tableModels);
     
-
-    new Gen_Multi_TableNames()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
+    // Registry-only generators (single RegistryModel parameter)
+    final var registryGenerators = List.of(
+      new Gen_Registry_DatabaseInterface(),
+      new Gen_Registry_DatabaseImplementation(),
+      new Gen_Registry_Exception()
+    );
+    
+    // Multi-table generators (RegistryModel + List<TableModel> parameters)
+    final var multiTableGenerators = List.of(
+      new Gen_Multi_TableNames(),
+      new Gen_Multi_RegistryFactory(),
+      new Gen_Multi_QueryInterface(),
+      new Gen_Multi_BuilderInterface(),
+      new Gen_Multi_InternalTenantQuery(),
+      new Gen_Multi_BuilderImplementation(),
+      new Gen_Multi_QueryImplementation()
+    );
+    
+    // Process registry-only generators
+    for (RegistryCodeGenerator generator : registryGenerators) {
+      final var javaFile = generator.generate(registryConfig);
+      javaFile.writeTo(processingEnv.getFiler());
       
-    processingEnv.getMessager().printMessage(
-      javax.tools.Diagnostic.Kind.NOTE,
-      "Generated names: " + registryConfig.getTableClassName() + " with " + 
-      filteredTables.size() + " tables"
-    );
-  
-    new Gen_Multi_RegistryFactory()
-        .generate(registryConfig, tableModels)
-        .writeTo(processingEnv.getFiler());
-    
-    processingEnv.getMessager().printMessage(
-      javax.tools.Diagnostic.Kind.NOTE,
-      "Generated registry: " + registryConfig.getRegistryClassName() + " with " + 
-      filteredTables.size() + " tables"
-    );
-  
-    
-    new Gen_Registry_DatabaseInterface()
-      .generate(registryConfig)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
+      processingEnv.getMessager().printMessage(
         javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db interface: " + registryConfig.getTransactionSaveClassName() + " with " + 
-        filteredTables.size() + " tables");
+        "Generated: " + javaFile.typeSpec.name + " using " + generator.getClass().getSimpleName()
+      );
+    }
     
-    
-    new Gen_Multi_QueryInterface()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
+    // Process multi-table generators
+    for (MultiTableCodeGenerator generator : multiTableGenerators) {
+      final var javaFile = generator.generate(registryConfig, filteredTables);
+      javaFile.writeTo(processingEnv.getFiler());
+      
+      processingEnv.getMessager().printMessage(
         javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db query interface: " + registryConfig.getName() + "DbQuery with " + 
-        filteredTables.size() + " tables");
-    
-    
-    new Gen_Multi_BuilderInterface()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db builder interface: " + registryConfig.getName() + "DbBuilder with " + 
-        filteredTables.size() + " tables");
-    
-    
-    new Gen_Registry_DatabaseImplementation()
-      .generate(registryConfig)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db impl: " + registryConfig.getName() + "DbImpl");
-    
-    
-    new Gen_Multi_InternalTenantQuery()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated internal tenant query: " + registryConfig.getName() + "DbInternalTenantQuery");
-    
-    
-    new Gen_Multi_BuilderImplementation()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db builder impl: " + registryConfig.getName() + "DbBuilderImpl");
-    
-    
-    new Gen_Multi_QueryImplementation()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db query impl: " + registryConfig.getName() + "DbQueryImpl");
-    
-    
-    new Gen_Registry_Exception()
-      .generate(registryConfig)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db query exception: " + registryConfig.getName() + "FindException");
-    
+        "Generated: " + javaFile.typeSpec.name + " using " + generator.getClass().getSimpleName() + 
+        " with " + filteredTables.size() + " tables"
+      );
+    }
   }
   
   
@@ -309,16 +256,14 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
 
   private void processTableInterface(TableModel model, RegistryModel registry) throws IOException {
     
-    final var codeGenerator = new Gen_Table_SqlImplementation();
+    final TableCodeGenerator codeGenerator = new Gen_Table_SqlImplementation();
     final var javaFile = codeGenerator.generate(model, registry);
     javaFile.writeTo(processingEnv.getFiler());
-    
-    
     
     // Log success
     processingEnv.getMessager().printMessage(
       javax.tools.Diagnostic.Kind.NOTE,
-      "Generated implementation: " + model.getImplClassName()
+      "Generated: " + javaFile.typeSpec.name + " using " + codeGenerator.getClass().getSimpleName()
     );
   }
   
