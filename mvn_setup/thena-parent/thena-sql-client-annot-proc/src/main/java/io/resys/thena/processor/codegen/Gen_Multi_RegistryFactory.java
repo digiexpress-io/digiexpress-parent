@@ -164,8 +164,7 @@ public class Gen_Multi_RegistryFactory implements MultiTableCodeGenerator {
   }
   
   private MethodSpec generateFactoryMethod(TableModel table) {
-    final var interfaceName = table.getInterfaceName();
-    final var interfaceClassName = ClassName.get(table.getPackageName(), table.getInterfaceName());
+    
     final var methodName = NamingUtils.pluralize(table.getTableName());
     final var implName = table.getImplClassName();
     

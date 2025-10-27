@@ -440,6 +440,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
   private static class OperationInfo {
     final TableModel table;
     final TypeName entityType;
+    @SuppressWarnings("unused")
     final SqlMethodType methodType;
     
     OperationInfo(TableModel table, TypeName entityType, SqlMethodType methodType) {
