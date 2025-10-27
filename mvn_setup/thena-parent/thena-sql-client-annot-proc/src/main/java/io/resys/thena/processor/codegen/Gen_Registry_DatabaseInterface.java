@@ -20,6 +20,53 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+/**
+ * Generates the main database transaction interface for a registry.
+ * 
+ * <p>This generator creates the primary interface that provides transaction-based 
+ * access to the database operations. It includes methods for creating queries, 
+ * managing transactions, and provides generic repository-style access patterns.
+ * 
+ * <h3>Generated Code Example:</h3>
+ * <pre>{@code
+ * public interface ContractSaveTransaction extends TransactionSave {
+ *   
+ *   ContractDbQuery queryBuilder();
+ *   ContractDbBuilder insertBuilder();
+ *   ContractDbBuilder updateBuilder();
+ *   ContractDbBuilder deleteBuilder();
+ *   
+ *   ContractSaveTransaction withTenantId(String tenantId);
+ *   
+ *   // Commit/rollback methods
+ *   Uni<Void> commit();
+ *   Uni<Void> rollback();
+ * }
+ * }</pre>
+ * 
+ * <h3>Key Features:</h3>
+ * <ul>
+ * <li>Extends base TransactionSave interface</li>
+ * <li>Provides builder pattern access to query/insert/update/delete operations</li>
+ * <li>Supports multi-tenancy with tenantId methods</li>
+ * <li>Includes transaction lifecycle management (commit/rollback)</li>
+ * <li>Type-safe access to domain-specific query builders</li>
+ * </ul>
+ * 
+ * <h3>Usage Pattern:</h3>
+ * <pre>{@code
+ * ContractSaveTransaction tx = registry.createTransaction();
+ * tx.queryBuilder()
+ *   .contracts()
+ *   .findByPartyId("party123")
+ *   .execute()
+ *   .flatMap(contracts -> {
+ *     // Process contracts
+ *     return tx.commit();
+ *   });
+ * }</pre>
+ */
+
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.ClassName;

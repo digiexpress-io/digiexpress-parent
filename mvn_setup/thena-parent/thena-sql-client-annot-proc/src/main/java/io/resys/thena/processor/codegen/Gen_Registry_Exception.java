@@ -20,6 +20,60 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+/**
+ * Generates domain-specific exception classes for database operations.
+ * 
+ * <p>This generator creates custom exception types that provide meaningful error 
+ * information for database operations within a specific domain registry. The exceptions
+ * are designed to wrap SQL errors and provide domain-specific context.
+ * 
+ * <h3>Generated Code Example:</h3>
+ * <pre>{@code
+ * public class ContractFindException extends RuntimeException {
+ * 
+ *   private static final long serialVersionUID = 1L;
+ *   
+ *   public ContractFindException(String message) {
+ *     super(message);
+ *   }
+ *   
+ *   public ContractFindException(String message, Throwable cause) {
+ *     super(message, cause);
+ *   }
+ *   
+ *   public static ContractFindException notFound(String id) {
+ *     return new ContractFindException("Contract not found with id: " + id);
+ *   }
+ *   
+ *   public static ContractFindException sqlError(String operation, Throwable cause) {
+ *     return new ContractFindException("SQL error during " + operation, cause);
+ *   }
+ * }
+ * }</pre>
+ * 
+ * <h3>Key Features:</h3>
+ * <ul>
+ * <li>Domain-specific exception naming (e.g., ContractFindException)</li>
+ * <li>Standard exception constructors with message and cause</li>
+ * <li>Static factory methods for common error scenarios</li>
+ * <li>Proper serialization support with serialVersionUID</li>
+ * <li>Meaningful error messages with domain context</li>
+ * </ul>
+ * 
+ * <h3>Usage Pattern:</h3>
+ * <pre>{@code
+ * try {
+ *   Contract contract = contractTable.findById(id);
+ *   if (contract == null) {
+ *     throw ContractFindException.notFound(id);
+ *   }
+ *   return contract;
+ * } catch (SQLException e) {
+ *   throw ContractFindException.sqlError("findById", e);
+ * }
+ * }</pre>
+ */
+
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.ClassName;

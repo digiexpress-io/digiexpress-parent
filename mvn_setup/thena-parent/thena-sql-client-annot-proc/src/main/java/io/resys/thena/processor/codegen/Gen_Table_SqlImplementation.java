@@ -20,6 +20,106 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+/**
+ * Generates the concrete SQL implementation class for individual table operations.
+ * 
+ * <p>This is the core generator that transforms a table interface (annotated with 
+ * @TenantSql.Table) into a complete SQL implementation class. It generates all the 
+ * SQL operations, row mapping, and provides type-safe database access for a single table.
+ * 
+ * <h3>Generated Code Example:</h3>
+ * <pre>{@code
+ * @Component
+ * public class ContractTableImpl implements ContractTable {
+ *   
+ *   private final io.vertx.mutiny.sqlclient.Pool client;
+ *   private final String tenantId;
+ *   
+ *   public ContractTableImpl(io.vertx.mutiny.sqlclient.Pool client, String tenantId) {
+ *     this.client = client;
+ *     this.tenantId = tenantId;
+ *   }
+ *   
+ *   @Override
+ *   public Uni<Contract> findById(String id) {
+ *     return client.preparedQuery("""
+ *         SELECT id, party_id, policy_number, created_commit_id, commit_id 
+ *         FROM contract 
+ *         WHERE id = $1 AND tenant_id = $2
+ *         """)
+ *         .execute(Tuple.of(id, tenantId))
+ *         .map(this::mapContract);
+ *   }
+ *   
+ *   @Override
+ *   public Uni<List<Contract>> findByPartyId(String partyId) {
+ *     return client.preparedQuery("""
+ *         SELECT id, party_id, policy_number, created_commit_id, commit_id 
+ *         FROM contract 
+ *         WHERE party_id = $1 AND tenant_id = $2
+ *         """)
+ *         .execute(Tuple.of(partyId, tenantId))
+ *         .map(rowSet -> StreamSupport.stream(rowSet.spliterator(), false)
+ *             .map(this::mapContract)
+ *             .collect(Collectors.toList()));
+ *   }
+ *   
+ *   @Override
+ *   public Uni<Contract> insertOne(Contract contract) {
+ *     return client.preparedQuery("""
+ *         INSERT INTO contract (id, party_id, policy_number, tenant_id, created_commit_id, commit_id) 
+ *         VALUES ($1, $2, $3, $4, $5, $6)
+ *         """)
+ *         .execute(Tuple.of(contract.getId(), contract.getPartyId(), 
+ *                          contract.getPolicyNumber(), tenantId,
+ *                          contract.getCreatedCommitId(), contract.getCommitId()))
+ *         .map(rows -> contract);
+ *   }
+ *   
+ *   private Contract mapContract(Row row) {
+ *     return ImmutableContract.builder()
+ *         .id(row.getString("id"))
+ *         .partyId(row.getString("party_id"))
+ *         .policyNumber(row.getString("policy_number"))
+ *         .createdCommitId(row.getString("created_commit_id"))
+ *         .commitId(row.getString("commit_id"))
+ *         .build();
+ *   }
+ * }
+ * }</pre>
+ * 
+ * <h3>Key Features:</h3>
+ * <ul>
+ * <li>Implements all methods defined in the table interface</li>
+ * <li>Generates type-safe SQL queries with proper parameter binding</li>
+ * <li>Creates row mappers that transform SQL results to domain objects</li>
+ * <li>Handles multi-tenancy with automatic tenant_id filtering</li>
+ * <li>Supports reactive patterns with Uni return types</li>
+ * <li>Includes CRUD operations (Create, Read, Update, Delete)</li>
+ * <li>Supports batch operations for bulk data processing</li>
+ * <li>Proper SQL injection prevention through prepared statements</li>
+ * </ul>
+ * 
+ * <h3>Usage Pattern:</h3>
+ * <pre>{@code
+ * @Inject ContractTable contractTable;
+ * 
+ * // Find by ID
+ * Uni<Contract> contract = contractTable.findById("contract123");
+ * 
+ * // Insert new contract
+ * Contract newContract = ImmutableContract.builder()
+ *     .id("new123")
+ *     .partyId("party456")
+ *     .policyNumber("POL789")
+ *     .build();
+ * Uni<Contract> inserted = contractTable.insertOne(newContract);
+ * 
+ * // Custom queries
+ * Uni<List<Contract>> activeContracts = contractTable.findByPartyId("party456");
+ * }</pre>
+ */
+
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;

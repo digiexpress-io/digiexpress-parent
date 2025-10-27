@@ -20,6 +20,71 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+/**
+ * Generates a centralized table names constants class for a registry.
+ * 
+ * <p>This generator creates a utility class that contains all table names as string 
+ * constants, providing a single source of truth for table names across the domain.
+ * This is essential for schema management, migrations, and avoiding magic strings.
+ * 
+ * <h3>Generated Code Example:</h3>
+ * <pre>{@code
+ * public class ContractTableNames {
+ * 
+ *   // Table name constants
+ *   public static final String CONTRACT = "contract";
+ *   public static final String PARTY = "party";
+ *   public static final String COVERAGE = "coverage";
+ *   public static final String COMMIT = "commit";
+ *   public static final String COMMIT_TREE = "commit_tree";
+ *   
+ *   // All table names in creation order (respects FK dependencies)
+ *   public static final List<String> ALL = List.of(
+ *     COMMIT,
+ *     COMMIT_TREE,
+ *     CONTRACT,
+ *     PARTY, 
+ *     COVERAGE
+ *   );
+ *   
+ *   // Tables in reverse order for dropping (handles FK constraints)
+ *   public static final List<String> ALL_REVERSE = List.of(
+ *     COVERAGE,
+ *     PARTY,
+ *     CONTRACT,
+ *     COMMIT_TREE,
+ *     COMMIT
+ *   );
+ * }
+ * }</pre>
+ * 
+ * <h3>Key Features:</h3>
+ * <ul>
+ * <li>String constants for all table names in the registry</li>
+ * <li>ALL list with tables in creation order (respects FK dependencies)</li>
+ * <li>ALL_REVERSE list for safe dropping order</li>
+ * <li>Prevents magic strings throughout the codebase</li>
+ * <li>Single source of truth for table naming</li>
+ * <li>Orders tables by their dependency relationships</li>
+ * </ul>
+ * 
+ * <h3>Usage Pattern:</h3>
+ * <pre>{@code
+ * // Schema creation
+ * for (String tableName : ContractTableNames.ALL) {
+ *   executeCreateTable(tableName);
+ * }
+ * 
+ * // Schema cleanup  
+ * for (String tableName : ContractTableNames.ALL_REVERSE) {
+ *   executeDropTable(tableName);
+ * }
+ * 
+ * // Reference in queries
+ * String sql = "SELECT * FROM " + ContractTableNames.CONTRACT + " WHERE id = ?";
+ * }</pre>
+ */
+
 import java.util.List;
 
 import javax.lang.model.element.Modifier;

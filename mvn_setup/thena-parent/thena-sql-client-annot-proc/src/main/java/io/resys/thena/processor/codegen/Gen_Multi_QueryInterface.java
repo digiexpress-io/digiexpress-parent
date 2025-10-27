@@ -20,6 +20,71 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+/**
+ * Generates the main query interface that provides read-only access to all tables.
+ * 
+ * <p>This generator creates a comprehensive query interface that provides fluent, 
+ * type-safe access to read operations across all tables in the registry. It serves
+ * as the primary entry point for all read queries and supports complex join operations.
+ * 
+ * <h3>Generated Code Example:</h3>
+ * <pre>{@code
+ * public interface ContractDbQuery {
+ *   
+ *   // Individual table access
+ *   ContractTable contracts();
+ *   PartyTable parties();
+ *   CoverageTable coverages();
+ *   CommitTable commits();
+ *   CommitTreeTable commitTrees();
+ *   
+ *   // Batch operations
+ *   Uni<List<Contract>> findAllContracts();
+ *   Uni<List<Party>> findAllParties();
+ *   
+ *   // Complex queries with joins
+ *   Uni<ContractWithParties> findContractWithParties(String contractId);
+ *   Uni<List<ContractSummary>> findContractSummaries(String tenantId);
+ *   
+ *   // Tenant-scoped queries
+ *   ContractDbQuery withTenantId(String tenantId);
+ *   
+ *   // Transaction control
+ *   Uni<Void> commit();
+ *   Uni<Void> rollback();
+ * }
+ * }</pre>
+ * 
+ * <h3>Key Features:</h3>
+ * <ul>
+ * <li>Fluent interface for all table access (e.g., query.contracts().findById())</li>
+ * <li>Type-safe method generation for each table in the registry</li>
+ * <li>Support for complex multi-table queries and joins</li>
+ * <li>Tenant-scoped query methods for multi-tenant applications</li>
+ * <li>Batch operation methods for efficient bulk reads</li>
+ * <li>Integration with reactive streams (Uni return types)</li>
+ * </ul>
+ * 
+ * <h3>Usage Pattern:</h3>
+ * <pre>{@code
+ * ContractDbQuery query = transaction.queryBuilder();
+ * 
+ * // Simple table access
+ * Uni<Contract> contract = query.contracts()
+ *   .findById("contract123");
+ * 
+ * // Complex queries
+ * Uni<List<ContractSummary>> summaries = query
+ *   .withTenantId("tenant456")
+ *   .findContractSummaries();
+ * 
+ * // Chained operations
+ * return query.contracts()
+ *   .findByPartyId("party789")
+ *   .flatMap(contracts -> query.parties().findById(contracts.get(0).getPartyId()));
+ * }</pre>
+ */
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

@@ -20,6 +20,103 @@ package io.resys.thena.processor.codegen;
  * #L%
  */
 
+/**
+ * Generates the main registry factory that serves as the entry point for database operations.
+ * 
+ * <p>This generator creates the central registry class that provides factory methods for 
+ * creating transactions, managing database connections, and orchestrating schema operations.
+ * It's the primary dependency injection target and main API entry point for the domain.
+ * 
+ * <h3>Generated Code Example:</h3>
+ * <pre>{@code
+ * @Component
+ * @Singleton
+ * public class ContractRegistry {
+ *   
+ *   private final io.vertx.mutiny.sqlclient.Pool sqlClient;
+ *   private final String worldName;
+ *   
+ *   public ContractRegistry(io.vertx.mutiny.sqlclient.Pool sqlClient) {
+ *     this.sqlClient = sqlClient;
+ *     this.worldName = "ContractWorld";
+ *   }
+ *   
+ *   // Transaction factory methods
+ *   public ContractSaveTransaction createTransaction() {
+ *     return new ContractSaveTransactionImpl(sqlClient);
+ *   }
+ *   
+ *   public ContractSaveTransaction createTransaction(String tenantId) {
+ *     return new ContractSaveTransactionImpl(sqlClient).withTenantId(tenantId);
+ *   }
+ *   
+ *   // Schema management
+ *   public Uni<Void> createTables() {
+ *     List<String> ddlStatements = List.of(
+ *       // DDL for all tables in dependency order
+ *       ContractTable.CREATE_TABLE,
+ *       PartyTable.CREATE_TABLE,
+ *       CoverageTable.CREATE_TABLE
+ *     );
+ *     
+ *     return executeStatements(ddlStatements);
+ *   }
+ *   
+ *   public Uni<Void> dropTables() {
+ *     List<String> dropStatements = List.of(
+ *       // DROP statements in reverse dependency order
+ *       CoverageTable.DROP_TABLE,
+ *       PartyTable.DROP_TABLE,
+ *       ContractTable.DROP_TABLE
+ *     );
+ *     
+ *     return executeStatements(dropStatements);
+ *   }
+ *   
+ *   // Utility methods
+ *   public String getWorldName() {
+ *     return worldName;
+ *   }
+ *   
+ *   public ContractTableNames getTableNames() {
+ *     return new ContractTableNames();
+ *   }
+ * }
+ * }</pre>
+ * 
+ * <h3>Key Features:</h3>
+ * <ul>
+ * <li>Central factory for creating database transactions</li>
+ * <li>Manages SQL connection pool and database resources</li>
+ * <li>Provides schema management operations (create/drop tables)</li>
+ * <li>Supports multi-tenancy with tenant-scoped transactions</li>
+ * <li>Dependency injection ready with proper annotations</li>
+ * <li>Handles table creation order based on foreign key dependencies</li>
+ * <li>Provides access to table name constants and metadata</li>
+ * </ul>
+ * 
+ * <h3>Usage Pattern:</h3>
+ * <pre>{@code
+ * @Inject ContractRegistry registry;
+ * 
+ * // Create transaction for specific tenant
+ * ContractSaveTransaction tx = registry.createTransaction("tenant123");
+ * 
+ * // Perform database operations
+ * return tx.queryBuilder()
+ *   .contracts()
+ *   .findById("contract456")
+ *   .flatMap(contract -> {
+ *     // Business logic
+ *     return tx.commit();
+ *   });
+ * 
+ * // Schema management
+ * Uni<Void> schemaSetup = registry.createTables();
+ * Uni<Void> schemaTeardown = registry.dropTables();
+ * }</pre>
+ */
+
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
