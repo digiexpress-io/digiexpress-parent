@@ -7,6 +7,14 @@ import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 import { TaskCardStyleDefinition } from '../task-card';
 import { FilesReadOnlyRoot, useFilesReadOnlyClasses } from './useUtilityClasses';
 
+const fiDate = new Intl.DateTimeFormat('fi-FI', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit'
+});
+const asDate = (v: any) => (v instanceof Date ? v : new Date(v));
+const formatTs = (file: TaskApi.Attachment) =>
+  fiDate.format(asDate((file as any).updated ?? (file as any).created ?? (file as any).createdAt));
+
 export interface FilesReadOnlyProps {
   task: TaskApi.Task;
   style: TaskCardStyleDefinition;
@@ -37,8 +45,10 @@ export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => 
           <Box className={classes.file}>
             <DescriptionIcon className={classes.fileIcon} />
             <Typography>{file.name}</Typography>
-            <Box flexGrow={1} /* or className={classes.grow} */ />
-            <Typography>{file.updated.toString()}</Typography>
+            <Box className={classes.grow} />
+            <Typography className={classes.timestamp}>
+              {formatTs(file)}
+            </Typography>
           </Box>
           <Divider />
         </div>

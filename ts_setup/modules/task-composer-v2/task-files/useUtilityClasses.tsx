@@ -189,6 +189,7 @@ export const useFilesReadOnlyClasses = () => {
         fileIcon: ['fileIcon'],
         empty: ['empty'],
         grow: ['grow'],
+        timestamp: ['timestamp'],
     };
     const getUtilityClass = (slot: string) => generateUtilityClass(FILES_READ_ONLY_MUI_NAME, slot);
     return composeClasses(slots, getUtilityClass, {});
@@ -224,6 +225,13 @@ export const FilesReadOnlyRoot = styled('div', {
 
         [`& .${FILES_READ_ONLY_MUI_NAME}-grow`]: {
             flexGrow: 1,
+        },
+
+        [`& .${FILES_READ_ONLY_MUI_NAME}-timestamp`]: {
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            ...style.bodyTypography,
         },
     };
 });
