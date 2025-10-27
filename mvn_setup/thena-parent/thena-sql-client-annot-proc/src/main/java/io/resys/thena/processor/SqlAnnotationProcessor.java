@@ -38,17 +38,17 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.processor.codegen.DbBuilderImplSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbBuilderInterfaceSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbImplSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbInterfaceSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbInternalTenantQuerySqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbQueryExceptionSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbQueryImplSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbQueryInterfaceSqlCodeGenerator;
-import io.resys.thena.processor.codegen.RegistryFactorySqlCodeGenerator;
-import io.resys.thena.processor.codegen.TableNameSqlCodeGenerator;
-import io.resys.thena.processor.codegen.TableSqlCodeGenerator;
+import io.resys.thena.processor.codegen.Gen_Multi_BuilderImplementation;
+import io.resys.thena.processor.codegen.Gen_Multi_BuilderInterface;
+import io.resys.thena.processor.codegen.Gen_Registry_DatabaseImplementation;
+import io.resys.thena.processor.codegen.Gen_Registry_DatabaseInterface;
+import io.resys.thena.processor.codegen.Gen_Multi_InternalTenantQuery;
+import io.resys.thena.processor.codegen.Gen_Registry_Exception;
+import io.resys.thena.processor.codegen.Gen_Multi_QueryImplementation;
+import io.resys.thena.processor.codegen.Gen_Multi_QueryInterface;
+import io.resys.thena.processor.codegen.Gen_Multi_RegistryFactory;
+import io.resys.thena.processor.codegen.Gen_Multi_TableNames;
+import io.resys.thena.processor.codegen.Gen_Table_SqlImplementation;
 import io.resys.thena.processor.model.ModelExtractor;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
@@ -157,7 +157,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     final var filteredTables = filterTablesForRegistry(registryConfig, tableModels);
     
 
-    new TableNameSqlCodeGenerator()
+    new Gen_Multi_TableNames()
       .generate(registryConfig, filteredTables)
       .writeTo(processingEnv.getFiler());
       
@@ -167,7 +167,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       filteredTables.size() + " tables"
     );
   
-    new RegistryFactorySqlCodeGenerator()
+    new Gen_Multi_RegistryFactory()
         .generate(registryConfig, tableModels)
         .writeTo(processingEnv.getFiler());
     
@@ -178,7 +178,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     );
   
     
-    new DbInterfaceSqlCodeGenerator()
+    new Gen_Registry_DatabaseInterface()
       .generate(registryConfig)
       .writeTo(processingEnv.getFiler());
   
@@ -188,7 +188,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         filteredTables.size() + " tables");
     
     
-    new DbQueryInterfaceSqlCodeGenerator()
+    new Gen_Multi_QueryInterface()
       .generate(registryConfig, filteredTables)
       .writeTo(processingEnv.getFiler());
   
@@ -198,7 +198,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         filteredTables.size() + " tables");
     
     
-    new DbBuilderInterfaceSqlCodeGenerator()
+    new Gen_Multi_BuilderInterface()
       .generate(registryConfig, filteredTables)
       .writeTo(processingEnv.getFiler());
   
@@ -208,7 +208,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         filteredTables.size() + " tables");
     
     
-    new DbImplSqlCodeGenerator()
+    new Gen_Registry_DatabaseImplementation()
       .generate(registryConfig)
       .writeTo(processingEnv.getFiler());
   
@@ -217,7 +217,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         "Generated db impl: " + registryConfig.getName() + "DbImpl");
     
     
-    new DbInternalTenantQuerySqlCodeGenerator()
+    new Gen_Multi_InternalTenantQuery()
       .generate(registryConfig, filteredTables)
       .writeTo(processingEnv.getFiler());
   
@@ -226,7 +226,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         "Generated internal tenant query: " + registryConfig.getName() + "DbInternalTenantQuery");
     
     
-    new DbBuilderImplSqlCodeGenerator()
+    new Gen_Multi_BuilderImplementation()
       .generate(registryConfig, filteredTables)
       .writeTo(processingEnv.getFiler());
   
@@ -235,7 +235,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         "Generated db builder impl: " + registryConfig.getName() + "DbBuilderImpl");
     
     
-    new DbQueryImplSqlCodeGenerator()
+    new Gen_Multi_QueryImplementation()
       .generate(registryConfig, filteredTables)
       .writeTo(processingEnv.getFiler());
   
@@ -244,7 +244,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
         "Generated db query impl: " + registryConfig.getName() + "DbQueryImpl");
     
     
-    new DbQueryExceptionSqlCodeGenerator()
+    new Gen_Registry_Exception()
       .generate(registryConfig)
       .writeTo(processingEnv.getFiler());
   
@@ -309,7 +309,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
 
   private void processTableInterface(TableModel model, RegistryModel registry) throws IOException {
     
-    final var codeGenerator = new TableSqlCodeGenerator();
+    final var codeGenerator = new Gen_Table_SqlImplementation();
     final var javaFile = codeGenerator.generate(model, registry);
     javaFile.writeTo(processingEnv.getFiler());
     
