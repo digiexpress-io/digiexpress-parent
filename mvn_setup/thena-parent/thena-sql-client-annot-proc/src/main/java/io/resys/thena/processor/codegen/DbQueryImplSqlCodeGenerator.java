@@ -43,6 +43,7 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.support.NamingUtils;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -134,7 +135,7 @@ public class DbQueryImplSqlCodeGenerator {
     
     for (int i = 0; i < tablesWithFindAll.size(); i++) {
       final var table = tablesWithFindAll.get(i);
-      final var methodName = "query" + toPascalCase(table.getTableName());
+      final var methodName = "query" + NamingUtils.toPascalCase(table.getTableName());
       final var findAllMethod = findNoArgFindAllMethod(table);
       
       if (i > 0) method.addCode(",\n");
@@ -162,7 +163,7 @@ public class DbQueryImplSqlCodeGenerator {
     
     for (int i = 0; i < tablesWithFindAll.size(); i++) {
       final var table = tablesWithFindAll.get(i);
-      final var builderMethodName = lowerCamelCase(toPascalCase(table.getTableName()));
+      final var builderMethodName = NamingUtils.lowerCamelCase(NamingUtils.toPascalCase(table.getTableName()));
       
       method.addCode("builder.$L(item_$L\n", builderMethodName, i);
       method.addCode("$>.stream()\n");
@@ -203,9 +204,9 @@ public class DbQueryImplSqlCodeGenerator {
   }
   
   private MethodSpec generateQueryTableMethod(RegistryModel registry, TableModel table) {
-    final var methodName = "query" + toPascalCase(table.getTableName());
-    final var nestedInterfaceName = toPascalCase(table.getTableName()) + "Query";
-    final var registryGetter = RegistryFactorySqlCodeGenerator.pluralize(table.getTableName());
+    final var methodName = "query" + NamingUtils.toPascalCase(table.getTableName());
+    final var nestedInterfaceName = NamingUtils.toPascalCase(table.getTableName()) + "Query";
+    final var registryGetter = NamingUtils.pluralize(table.getTableName());
     
     final var method = MethodSpec.methodBuilder(methodName)
       .addAnnotation(Override.class)
@@ -274,12 +275,12 @@ public class DbQueryImplSqlCodeGenerator {
     code.indent();
     if (sqlMethod.getParameters().isEmpty()) {
       code.add("log.debug(\"$L.$L.$L query, with props: {} \\r\\n{}\",\n", 
-        className, "query" + toPascalCase(table.getTableName()), sqlMethod.getMethodName());
+        className, "query" + NamingUtils.toPascalCase(table.getTableName()), sqlMethod.getMethodName());
       code.indent();
       code.add("\"\",\n");
     } else {
       code.add("log.debug(\"$L.$L.$L query, with props: {} \\r\\n{}\",\n",
-        className, "query" + toPascalCase(table.getTableName()), sqlMethod.getMethodName());
+        className, "query" + NamingUtils.toPascalCase(table.getTableName()), sqlMethod.getMethodName());
       code.indent();
       code.add("sql.getProps().deepToString(),\n");
     }
@@ -356,24 +357,7 @@ public class DbQueryImplSqlCodeGenerator {
     return code.build();
   }
   
-  private String toPascalCase(String snakeCase) {
-    final var parts = snakeCase.split("_");
-    final var result = new StringBuilder();
-    
-    for (final var part : parts) {
-      if (!part.isEmpty()) {
-        result.append(Character.toUpperCase(part.charAt(0)))
-              .append(part.substring(1));
-      }
-    }
-    
-    return result.toString();
-  }
+
   
-  private String lowerCamelCase(String pascalCase) {
-    if (pascalCase == null || pascalCase.isEmpty()) {
-      return pascalCase;
-    }
-    return Character.toLowerCase(pascalCase.charAt(0)) + pascalCase.substring(1);
-  }
+
 }

@@ -42,6 +42,7 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.support.NamingUtils;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.spi.InternalTenantQueryImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
@@ -120,12 +121,12 @@ public class DbInternalTenantQuerySqlCodeGenerator {
     code.add("tablesCreate\n");
     code.indent();
     for (final var table : sortedTables) {
-      final var getter = RegistryFactorySqlCodeGenerator.pluralize(table.getTableName());
+      final var getter = NamingUtils.pluralize(table.getTableName());
       code.add(".append(registry.$L().createTable().getValue())\n", getter);
     }
     code.add("\n");
     for (final var table : sortedTables) {
-      final var getter = RegistryFactorySqlCodeGenerator.pluralize(table.getTableName());
+      final var getter = NamingUtils.pluralize(table.getTableName());
       code.add(".append(registry.$L().createConstraints().getValue())\n", getter);
     }
     code.add(".toString();\n");
@@ -223,7 +224,7 @@ public class DbInternalTenantQuerySqlCodeGenerator {
     code.indent();
     final var reversedTables = sortedTables.reversed();
     for (final var table : reversedTables) {
-      final var getter = RegistryFactorySqlCodeGenerator.pluralize(table.getTableName());
+      final var getter = NamingUtils.pluralize(table.getTableName());
       code.add(".append(registry.$L().dropTable().getValue())\n", getter);
     }
     code.add(".toString();\n");

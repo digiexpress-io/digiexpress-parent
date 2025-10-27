@@ -45,6 +45,7 @@ import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.support.NamingUtils;
 import io.smallrye.mutiny.Uni;
 
 public class DbBuilderImplSqlCodeGenerator {
@@ -185,7 +186,7 @@ public class DbBuilderImplSqlCodeGenerator {
     
     final var visitCalls = new ArrayList<String>();
     for (final var operationName : operations.keySet()) {
-      visitCalls.add("visit" + capitalize(operationName) + "(entries)");
+      visitCalls.add("visit" + NamingUtils.capitalize(operationName) + "(entries)");
     }
     
     method.addCode("    " + String.join(",\n    ", visitCalls));
@@ -208,8 +209,8 @@ public class DbBuilderImplSqlCodeGenerator {
       TableModel table,
       TypeName entityType) {
     
-    final var methodName = "visit" + capitalize(operationName);
-    final var getterName = "get" + capitalize(operationName);
+    final var methodName = "visit" + NamingUtils.capitalize(operationName);
+    final var getterName = "get" + NamingUtils.capitalize(operationName);
     
     final var sqlMethod = table.getSqlMethods().stream()
       .filter(m -> buildOperationFieldName(table, m.getType()) != null)
@@ -227,7 +228,7 @@ public class DbBuilderImplSqlCodeGenerator {
     
     method.addStatement("final var data = entries.$L()", getterName);
     method.addStatement("final var sql = registry.$L().$L(data)", 
-      RegistryFactorySqlCodeGenerator.pluralize(table.getTableName()),
+        NamingUtils.pluralize(table.getTableName()),
       sqlMethod.getMethodName());
     method.addStatement("return visitExecution(sql, $T.class)", entityType);
     
@@ -404,7 +405,7 @@ public class DbBuilderImplSqlCodeGenerator {
   }
   
   private String buildOperationFieldName(TableModel table, SqlMethodType type) {
-    final var baseName = toCamelCase(table.getTableName());
+    final var baseName = NamingUtils.toCamelCase(table.getTableName());
     
     return switch (type) {
       case INSERT_ALL -> baseName + "Inserts";
@@ -432,31 +433,8 @@ public class DbBuilderImplSqlCodeGenerator {
     return paramType;
   }
   
-  private String capitalize(String str) {
-    if (str == null || str.isEmpty()) {
-      return str;
-    }
-    return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-  }
-  
-  private String toCamelCase(String snakeCase) {
-    final var parts = snakeCase.split("_");
-    final var result = new StringBuilder();
-    
-    for (int i = 0; i < parts.length; i++) {
-      final var part = parts[i];
-      if (!part.isEmpty()) {
-        if (i == 0) {
-          result.append(part);
-        } else {
-          result.append(Character.toUpperCase(part.charAt(0)))
-                .append(part.substring(1));
-        }
-      }
-    }
-    
-    return result.toString();
-  }
+
+
   
   private static class OperationInfo {
     final TableModel table;

@@ -36,6 +36,7 @@ import com.squareup.javapoet.TypeSpec;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.support.NamingUtils;
 
 public class DbQueryInterfaceSqlCodeGenerator {
   
@@ -56,8 +57,8 @@ public class DbQueryInterfaceSqlCodeGenerator {
     
     // Add query method for each table
     for (final var table : tables) {
-      final var queryMethodName = "query" + toPascalCase(table.getTableName());
-      final var nestedInterfaceName = toPascalCase(table.getTableName()) + "Query";
+      final var queryMethodName = "query" + NamingUtils.toPascalCase(table.getTableName());
+      final var nestedInterfaceName = NamingUtils.toPascalCase(table.getTableName()) + "Query";
       
       interfaceBuilder.addMethod(MethodSpec.methodBuilder(queryMethodName)
         .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
@@ -140,7 +141,7 @@ public class DbQueryInterfaceSqlCodeGenerator {
     for (final var table : tables) {
       final var entityType = findEntityTypeForTable(table);
       if (entityType != null) {
-        final var getterName = "get" + toPascalCase(table.getTableName());
+        final var getterName = "get" + NamingUtils.toPascalCase(table.getTableName());
         final var returnType = ParameterizedTypeName.get(
           ClassName.get(Map.class),
           ClassName.get(String.class),
@@ -166,19 +167,5 @@ public class DbQueryInterfaceSqlCodeGenerator {
       }
     }
     return null;
-  }
-  
-  private String toPascalCase(String snakeCase) {
-    final var parts = snakeCase.split("_");
-    final var result = new StringBuilder();
-    
-    for (final var part : parts) {
-      if (!part.isEmpty()) {
-        result.append(Character.toUpperCase(part.charAt(0)))
-              .append(part.substring(1));
-      }
-    }
-    
-    return result.toString();
   }
 }

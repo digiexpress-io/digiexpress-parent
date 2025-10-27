@@ -44,6 +44,7 @@ import io.resys.thena.processor.model.TableModel.MethodParameter;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlPropsType;
+import io.resys.thena.processor.support.NamingUtils;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -238,7 +239,7 @@ public class TableSqlCodeGenerator {
       builder.addStatement("var sqlValue = baseSql.getValue()");
       
       for (final var tableName : method.getTableNames()) {
-        final var getterName = toCamelCaseCapitalized(tableName);
+        final var getterName = NamingUtils.toCamelCaseCapitalized(tableName);
         builder.addStatement("sqlValue = sqlValue.replaceAll(\"(?i)\\\\{$L\\\\}\", tables.get$L())",
           tableName, getterName);
       }
@@ -324,24 +325,12 @@ public class TableSqlCodeGenerator {
       final var parts = current.split(java.util.regex.Pattern.quote(placeholder), -1);
       
       if (parts.length > 1) {
-        final var getterName = toCamelCaseCapitalized(tableName);
+        final var getterName = NamingUtils.toCamelCaseCapitalized(tableName);
         current = String.join("\" + tables.get" + getterName + "() + \"", parts);
       }
     }
     
     result.append(current).append("\"");
-    return result.toString();
-  }
-  
-  private String toCamelCaseCapitalized(String snakeCase) {
-    final var parts = snakeCase.split("_");
-    final var result = new StringBuilder();
-    for (final var part : parts) {
-      if (!part.isEmpty()) {
-        result.append(Character.toUpperCase(part.charAt(0)))
-              .append(part.substring(1));
-      }
-    }
     return result.toString();
   }
   

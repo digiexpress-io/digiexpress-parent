@@ -41,6 +41,7 @@ import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.support.NamingUtils;
 
 public class DbBuilderInterfaceSqlCodeGenerator {
   
@@ -97,7 +98,7 @@ public class DbBuilderInterfaceSqlCodeGenerator {
   }
   
   private String buildOperationFieldName(TableModel table, SqlMethodType type) {
-    final var baseName = toPascalCase(table.getTableName());
+    final var baseName = NamingUtils.toPascalCase(table.getTableName());
     
     return switch (type) {
       case INSERT_ALL -> baseName + "Inserts";
@@ -228,18 +229,5 @@ public class DbBuilderInterfaceSqlCodeGenerator {
     method.addCode(code.build());
     return method.build();
   }
-  
-  private String toPascalCase(String snakeCase) {
-    final var parts = snakeCase.split("_");
-    final var result = new StringBuilder();
-    
-    for (final var part : parts) {
-      if (!part.isEmpty()) {
-        result.append(Character.toUpperCase(part.charAt(0)))
-              .append(part.substring(1));
-      }
-    }
-    
-    return result.toString();
-  }
+
 }

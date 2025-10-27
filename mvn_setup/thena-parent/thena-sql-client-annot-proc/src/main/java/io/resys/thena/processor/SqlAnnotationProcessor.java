@@ -52,6 +52,7 @@ import io.resys.thena.processor.codegen.TableSqlCodeGenerator;
 import io.resys.thena.processor.model.ModelExtractor;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.support.NamingUtils;
 
 
 
@@ -289,13 +290,15 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       ? annotation.worldName() 
       : "World";
     
+    final var domainName = NamingUtils.toCamelCaseCapitalized(annotation.name());
+    
     return RegistryModel.builder()
-      .name(annotation.name())
-      .tableClassName(annotation.name() + "TableNames")
-      .registryClassName(annotation.name() + "Registry")
-      .transactionContainerClassName(annotation.name() + "TransactionContainer")
-      .transactionSaveClassName(annotation.name() + "SaveTransaction")
-      .internalTenantQueryClassName(annotation.name() + "DbInternalTenantQuery")
+      .name(domainName)
+      .tableClassName(domainName + "TableNames")
+      .registryClassName(domainName + "Registry")
+      .transactionContainerClassName(domainName + "TransactionContainer")
+      .transactionSaveClassName(domainName + "SaveTransaction")
+      .internalTenantQueryClassName(domainName + "DbInternalTenantQuery")
       .worldName(worldName)
       .packageName(packageName)
       .element(element)
