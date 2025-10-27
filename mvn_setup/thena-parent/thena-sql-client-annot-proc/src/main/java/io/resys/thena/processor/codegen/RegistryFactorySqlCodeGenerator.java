@@ -77,6 +77,4 @@ public class RegistryFactorySqlCodeGenerator {
       .addStatement("return new $L(tables, dataSource)", implName)
       .build();
   }
-  
-
 }
