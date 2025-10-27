@@ -12,26 +12,18 @@ export const FILES_EDITOR_MUI_NAME = 'FilesEditor';
 export const useFilesEditorClasses = () => {
     const slots = {
         root: ['root'],
-
-        // layout slots
         headerRow: ['headerRow'],
         fileRow: ['fileRow'],
-
-        // columns
         colName: ['colName'],
         colDate: ['colDate'],
         colAction: ['colAction'],
         colNameRow: ['colNameRow'],
         colDateRow: ['colDateRow'],
-
-        // text & icons
         fileIcon: ['fileIcon'],
         fileName: ['fileName'],
         noWrapEllipsis: ['noWrapEllipsis'],
         deleteIcon: ['deleteIcon'],
         downloadIcon: ['downloadIcon'],
-
-        // empty state
         noFiles: ['noFiles'],
     };
     const getUtilityClass = (slot: string) => generateUtilityClass(FILES_EDITOR_MUI_NAME, slot);
@@ -47,7 +39,6 @@ export const FilesEditorRoot = styled('div', {
     return {
         width: '100%',
 
-        // header
         [`& .${FILES_EDITOR_MUI_NAME}-headerRow`]: {
             display: 'flex',
             alignItems: 'center',
@@ -56,7 +47,6 @@ export const FilesEditorRoot = styled('div', {
             borderBottom: `1px solid ${theme.palette.divider}`,
         },
 
-        // rows
         [`& .${FILES_EDITOR_MUI_NAME}-fileRow`]: {
             display: 'flex',
             alignItems: 'center',
@@ -64,7 +54,6 @@ export const FilesEditorRoot = styled('div', {
             borderBottom: border,
         },
 
-        // columns layout
         [`& .${FILES_EDITOR_MUI_NAME}-colName`]: {
             flex: 1,
             minWidth: 0,
@@ -83,7 +72,6 @@ export const FilesEditorRoot = styled('div', {
             flexShrink: 0,
         },
 
-        // name + icon in rows
         [`& .${FILES_EDITOR_MUI_NAME}-colNameRow`]: {
             display: 'flex',
             alignItems: 'center',
@@ -101,14 +89,12 @@ export const FilesEditorRoot = styled('div', {
             whiteSpace: 'nowrap',
         },
 
-        // date text
         [`& .${FILES_EDITOR_MUI_NAME}-noWrapEllipsis`]: {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
         },
 
-        // icons
         [`& .${FILES_EDITOR_MUI_NAME}-deleteIcon`]: {
             color: theme.palette.error.main,
         },
@@ -116,7 +102,6 @@ export const FilesEditorRoot = styled('div', {
             color: theme.palette.primary.main,
         },
 
-        // empty state
         [`& .${FILES_EDITOR_MUI_NAME}-noFiles`]: {
             padding: theme.spacing(1),
             color: theme.palette.text.secondary,
@@ -135,16 +120,12 @@ export const FILES_EDIT_DIALOG_MUI_NAME = 'FilesEditDialog';
 export const useFilesEditDialogClasses = () => {
     const slots = {
         root: ['root'],
-
-        // title & actions
         titleRow: ['titleRow'],
         actionsRow: ['actionsRow'],
         grow: ['grow'],
         hiddenInput: ['hiddenInput'],
         uploadBtn: ['uploadBtn'],
         mockedBadge: ['mockedBadge'],
-
-        // content & actions
         content: ['content'],
         dialogActions: ['dialogActions'],
     };
@@ -158,10 +139,8 @@ export const FilesEditDialogRoot = styled(Dialog, {
     overridesResolver: (_props, styles) => [styles.root],
 })(({ theme }) => {
     return {
-        // Root area
         [`&.${FILES_EDIT_DIALOG_MUI_NAME}-root`]: {},
 
-        // Title row layout
         [`& .${FILES_EDIT_DIALOG_MUI_NAME}-titleRow`]: {
             display: 'flex',
             alignItems: 'center',
@@ -209,7 +188,6 @@ export const useFilesReadOnlyClasses = () => {
         file: ['file'],
         fileIcon: ['fileIcon'],
         empty: ['empty'],
-        // optional: 'grow' if you want a class instead of <Box flexGrow={1} />
         grow: ['grow'],
     };
     const getUtilityClass = (slot: string) => generateUtilityClass(FILES_READ_ONLY_MUI_NAME, slot);
@@ -222,33 +200,28 @@ export const FilesReadOnlyRoot = styled('div', {
     overridesResolver: (_props, styles) => [styles.root],
 })<{ style: TaskCardStyleDefinition }>(({ theme, style }) => {
     return {
-        // one row
         [`& .${FILES_READ_ONLY_MUI_NAME}-file`]: {
             padding: theme.spacing(1),
             display: 'flex',
             alignItems: 'center',
             width: '100%',
-            // apply TaskCard's typography to all Typography in the row
             '.MuiTypography-root': {
                 ...style.bodyTypography,
             },
         },
 
-        // file icon
         [`& .${FILES_READ_ONLY_MUI_NAME}-fileIcon`]: {
             marginRight: theme.spacing(1),
             color: theme.palette.primary.main,
             flexShrink: 0,
         },
 
-        // empty state
         [`& .${FILES_READ_ONLY_MUI_NAME}-empty`]: {
             padding: theme.spacing(1),
             color: theme.palette.error.main,
             ...style.bodyTypography,
         },
 
-        // optional grow helper (if you want a class instead of <Box flexGrow={1} />)
         [`& .${FILES_READ_ONLY_MUI_NAME}-grow`]: {
             flexGrow: 1,
         },

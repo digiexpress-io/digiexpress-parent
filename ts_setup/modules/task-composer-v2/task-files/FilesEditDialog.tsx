@@ -173,7 +173,7 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
           <span>
             {intl.formatMessage({ id: 'task.attachments', defaultMessage: 'Task attached files' })}
             {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-            {task.taskRef ?? 'no task reference id'}
+            {task.taskRef ?? intl.formatMessage({ id: 'task.noTaskReferenceId', defaultMessage: 'No task reference id' })}
           </span>
 
           <Box className={classes.grow} />
