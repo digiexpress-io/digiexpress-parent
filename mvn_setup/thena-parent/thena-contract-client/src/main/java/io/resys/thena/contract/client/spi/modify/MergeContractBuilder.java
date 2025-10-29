@@ -225,7 +225,7 @@ public class MergeContractBuilder implements MergeContract {
     for(final var replacement : replacements) {
       final var party = callbacks.apply(replacement);
       
-      final var builder = new NewPartyBuilder(logger, contractId, Collections.unmodifiableMap(allParties));
+      final var builder = new NewPartyBuilder(logger, contractId, this.batch.build() ,container);
       party.accept(builder);
       final var built = builder.close();
       
@@ -272,7 +272,7 @@ public class MergeContractBuilder implements MergeContract {
     for(final var replacement : replacements) {
       final var coverage = callbacks.apply(replacement);
       
-      final var builder = new NewCoverageBuilder(logger, contractId, Collections.unmodifiableMap(allCoverages));
+      final var builder = new NewCoverageBuilder(logger, contractId, this.batch.build(), container);
       coverage.accept(builder);
       final var built = builder.close();
       
@@ -319,7 +319,7 @@ public class MergeContractBuilder implements MergeContract {
     for(final var replacement : replacements) {
       final var reference = callbacks.apply(replacement);
       
-      final var builder = new NewReferenceBuilder(logger, contractId, null, Collections.unmodifiableMap(allReferences));
+      final var builder = new NewReferenceBuilder(logger, contractId, null, this.batch.build(), container);
       reference.accept(builder);
       final var built = builder.close();
       
@@ -365,7 +365,7 @@ public class MergeContractBuilder implements MergeContract {
     for(final var replacement : replacements) {
       final var note = callbacks.apply(replacement);
       
-      final var builder = new NewNoteBuilder(logger, contractId, null, Collections.unmodifiableMap(allNotes));
+      final var builder = new NewNoteBuilder(logger, contractId, null, this.batch.build(), container);
       note.accept(builder);
       final var built = builder.close();
       
@@ -411,7 +411,7 @@ public class MergeContractBuilder implements MergeContract {
     for(final var replacement : replacements) {
       final var capability = callbacks.apply(replacement);
       
-      final var builder = new NewCapabilityBuilder(logger, contractId, Collections.unmodifiableMap(allCapabilities));
+      final var builder = new NewCapabilityBuilder(logger, contractId, this.batch.build(), container);
       capability.accept(builder);
       final var built = builder.close();
       
@@ -527,8 +527,7 @@ public class MergeContractBuilder implements MergeContract {
   // Add methods - delegate to New builders
   @Override
   public MergeContract addParty(Consumer<NewParty> party) {
-    final var allParties = this.batch.build().getParties().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewPartyBuilder(logger, contractId, allParties, this.batch.build(), this.container);
+    final var builder = new NewPartyBuilder(logger, contractId, this.batch.build(), this.container);
     party.accept(builder);
     final var built = builder.close();
     this.batch.addParties(built);
@@ -538,7 +537,6 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract addCoverage(Consumer<NewCoverage> coverage) {
-    final var allCoverages = this.batch.build().getCoverages().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewCoverageBuilder(logger, contractId, this.batch.build(), this.container);
     coverage.accept(builder);
     final var built = builder.close();
@@ -549,8 +547,8 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract addReference(Consumer<NewReference> reference) {
-    final var allReferences = this.batch.build().getReferences().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewReferenceBuilder(logger, contractId, null, allReferences);
+
+    final var builder = new NewReferenceBuilder(logger, contractId, null, this.batch.build(), container);
     reference.accept(builder);
     final var built = builder.close();
     this.batch.addReferences(built);
@@ -560,8 +558,8 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract addNote(Consumer<NewNote> note) {
-    final var allNotes = this.batch.build().getNotes().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewNoteBuilder(logger, contractId, null, Collections.unmodifiableMap(allNotes));
+
+    final var builder = new NewNoteBuilder(logger, contractId, null, this.batch.build(), container);
     note.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
@@ -571,8 +569,7 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract addCapability(Consumer<NewCapability> capability) {
-    final var allCapabilities = this.batch.build().getCapabilities().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewCapabilityBuilder(logger, contractId, allCapabilities);
+    final var builder = new NewCapabilityBuilder(logger, contractId, this.batch.build(), container);
     capability.accept(builder);
     final var built = builder.close();
     this.batch.addCapabilities(built);
