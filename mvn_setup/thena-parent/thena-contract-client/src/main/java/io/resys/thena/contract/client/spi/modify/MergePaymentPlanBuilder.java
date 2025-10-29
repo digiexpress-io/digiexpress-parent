@@ -23,7 +23,11 @@ package io.resys.thena.contract.client.spi.modify;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
@@ -56,7 +60,25 @@ public class MergePaymentPlanBuilder implements MergePaymentPlan {
         .orElse(null);
     RepoAssert.notNull(currentPaymentPlan, () -> "Can't find payment plan with id: '" + paymentPlanId + "' for contract: '" + contractId + "'!");
     this.nextPaymentPlan = ImmutablePaymentPlan.builder().from(currentPaymentPlan);
-    this.allPaymentPlans = allPaymentPlans;
+    
+    final var updates = currentTx.getPaymentPlanUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getPaymentPlanDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allPaymentPlans = Stream.of(
+        // from current TX
+        currentTx.getPaymentPlanInserts().stream(),
+        currentTx.getPaymentPlanUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getPaymentPlans())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
   }
 
   @Override

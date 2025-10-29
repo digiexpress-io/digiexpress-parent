@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.spi.modify;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-contract-client
@@ -21,6 +23,9 @@ package io.resys.thena.contract.client.spi.modify;
  */
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
@@ -55,7 +60,25 @@ public class MergeReferenceBuilder implements MergeReference {
         .orElse(null);
     RepoAssert.notNull(currentReference, () -> "Can't find reference with id: '" + referenceId + "' for contract: '" + contractId + "'!");
     this.nextReference = ImmutableReference.builder().from(currentReference);
-    this.allReferences = allReferences;
+    
+    final var updates = currentTx.getReferenceUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getReferenceDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allReferences = Stream.of(
+        // from current TX
+        currentTx.getReferenceInserts().stream(),
+        currentTx.getReferenceUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getReferences())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
   }
 
   @Override

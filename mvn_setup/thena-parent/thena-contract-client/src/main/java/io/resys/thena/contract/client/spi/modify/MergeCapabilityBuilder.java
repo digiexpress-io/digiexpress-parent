@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.spi.modify;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-contract-client
@@ -21,6 +23,9 @@ package io.resys.thena.contract.client.spi.modify;
  */
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
@@ -57,7 +62,26 @@ public class MergeCapabilityBuilder implements MergeCapability {
         .orElse(null);
     RepoAssert.notNull(currentCapability, () -> "Can't find capability with id: '" + capabilityId + "' for contract: '" + contractId + "'!");
     this.nextCapability = ImmutableCapability.builder().from(currentCapability);
-    this.allCapabilities = allCapabilities;
+    
+    final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allCapabilities = Stream.of(
+        // from current TX
+        currentTx.getCapabilityInserts().stream(),
+        currentTx.getCapabilityUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getCapabilities())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+    
   }
 
   @Override

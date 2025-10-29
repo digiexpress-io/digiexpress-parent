@@ -63,8 +63,8 @@ public class NewReferenceBuilder implements NewReference {
         .contractId(contractId);
     
     
-    final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
-    final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
+    final var updates = currentTx.getReferenceUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getReferenceDeletes().stream().map(e -> e.getId()).toList();
     
     this.allReferences = Stream.of(
         // from current TX

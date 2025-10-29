@@ -68,8 +68,8 @@ public class NewNoteBuilder implements NewNote {
         .contractId(contractId)
         .relations(relation);
     
-    final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
-    final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
+    final var updates = currentTx.getNoteUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getNoteDeletes().stream().map(e -> e.getId()).toList();
     
     this.allNotes = Stream.of(
         // from current TX

@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.spi.modify;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-contract-client
@@ -21,6 +23,9 @@ package io.resys.thena.contract.client.spi.modify;
  */
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
@@ -57,7 +62,26 @@ public class MergeNoteBuilder implements MergeNote {
         .orElse(null);
     RepoAssert.notNull(currentNote, () -> "Can't find note with id: '" + noteId + "' for contract: '" + contractId + "'!");
     this.nextNote = ImmutableNote.builder().from(currentNote);
-    this.allNotes = allNotes;
+
+    
+    final var updates = currentTx.getNoteUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getNoteDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allNotes = Stream.of(
+        // from current TX
+        currentTx.getNoteInserts().stream(),
+        currentTx.getNoteUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getNotes())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
   }
 
   @Override
