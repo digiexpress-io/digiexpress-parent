@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -205,46 +204,39 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public <T> MergeContract setAllParties(String partyType, List<T> replacements, Function<T, Consumer<NewParty>> callbacks) {
-    // clear old
-    final var intermed = this.batch.build()
-        .getParties().stream()
-        .filter(p -> !p.getPartyType().equals(partyType))
+    // current tx
+    final List<Party> saved = this.batch.build().getPartyInserts().stream()
+        .filter(e -> !e.getPartyType().equals(partyType))
         .toList();
-    this.batch.parties(intermed);
-    final var allParties = new HashMap<String, Party>();
+    this.batch.partyInserts(Collections.emptyList());
     
-    // delete old
-    final var toBeDeleted = new ArrayList<>(container.getParties().stream()
-        .filter(p -> p.getPartyType().equals(partyType))
-        .map(p -> {
-          logger.rm(p);
-          return p;
-        })
-        .toList());
-
-    // add new
-    for(final var replacement : replacements) {
-      final var party = callbacks.apply(replacement);
-      
-      final var builder = new NewPartyBuilder(logger, contractId, this.batch.build() ,container);
-      party.accept(builder);
-      final var built = builder.close();
-      
-      // previous version exists and is exactly the same
-      final var previous = toBeDeleted.stream()
-          .filter(p -> p.getPartyType().equals(built.getPartyType()))
-          .filter(p -> p.getExternalId().equals(built.getExternalId()))
-          .findFirst();
-      
-      if(previous.isPresent()) {
-        toBeDeleted.remove(previous.get());
-      } else {
-        allParties.put(built.getId(), built);
-        this.batch.addParties(built);        
-      }
+    
+    final var incorrect_updates = this.batch.build().getPartyUpdates().stream()
+      .filter(e -> e.getPartyType().equals(partyType))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update party and then delete it by setting all contract parties to new values!");
     }
     
-    this.batch.addAllDeleteParties(toBeDeleted);
+  
+    final var all_parties = new HashMap<String, Party>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllPartyDeletes(container.getParties().stream()
+        .filter(e -> e.getPartyType().equals(partyType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_party = callbacks.apply(replacement);
+      
+      final var builder = new NewPartyBuilder(logger, contractId, batch.build(), container);
+      new_party.accept(builder);
+
+      final var built = builder.close();
+      all_parties.put(built.getId(), built);
+      this.batch.addPartyInserts(built);
+    }
     updateVersion();
     return this;
   }
@@ -252,93 +244,81 @@ public class MergeContractBuilder implements MergeContract {
   // Add other setAll methods following same pattern...
   @Override
   public <T> MergeContract setAllCoverages(String coverageType, List<T> replacements, Function<T, Consumer<NewCoverage>> callbacks) {
-    // clear old
-    final var intermed = this.batch.build()
-        .getCoverages().stream()
-        .filter(c -> !c.getCoverageType().equals(coverageType))
+    // current tx
+    final List<Coverage> saved = this.batch.build().getCoverageInserts().stream()
+        .filter(e -> !e.getCoverageType().equals(coverageType))
         .toList();
-    this.batch.coverages(intermed);
-    final var allCoverages = new HashMap<String, Coverage>();
+    this.batch.coverageInserts(Collections.emptyList());
     
-    // delete old
-    final var toBeDeleted = new ArrayList<>(container.getCoverages().stream()
-        .filter(c -> c.getCoverageType().equals(coverageType))
-        .map(c -> {
-          logger.rm(c);
-          return c;
-        })
-        .toList());
-
-    // add new
-    for(final var replacement : replacements) {
-      final var coverage = callbacks.apply(replacement);
-      
-      final var builder = new NewCoverageBuilder(logger, contractId, this.batch.build(), container);
-      coverage.accept(builder);
-      final var built = builder.close();
-      
-      // previous version exists and is exactly the same
-      final var previous = toBeDeleted.stream()
-          .filter(c -> c.getCoverageType().equals(built.getCoverageType()))
-          .filter(c -> Objects.equals(c.getInsuredId(), built.getInsuredId()))
-          .filter(c -> Objects.equals(c.getCoverageCode(), built.getCoverageCode()))
-          .findFirst();
-      
-      if(previous.isPresent()) {
-        toBeDeleted.remove(previous.get());
-      } else {
-        allCoverages.put(built.getId(), built);
-        this.batch.addCoverages(built);        
-      }
+    
+    final var incorrect_updates = this.batch.build().getCoverageUpdates().stream()
+      .filter(e -> e.getCoverageType().equals(coverageType))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update coverage and then delete it by setting all contract coverages to new values!");
     }
     
-    this.batch.addAllDeleteCoverages(toBeDeleted);
+  
+    final var all_coverages = new HashMap<String, Coverage>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllCoverageDeletes(container.getCoverages().stream()
+        .filter(e -> e.getCoverageType().equals(coverageType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_coverage = callbacks.apply(replacement);
+      
+      final var builder = new NewCoverageBuilder(logger, contractId, batch.build(), container);
+      new_coverage.accept(builder);
+
+      final var built = builder.close();
+      all_coverages.put(built.getId(), built);
+      this.batch.addCoverageInserts(built);
+    }
     updateVersion();
     return this;
   }
   
   @Override
   public <T> MergeContract setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> callbacks) {
-    // clear old
-    final var intermed = this.batch.build()
-        .getReferences().stream()
-        .filter(r -> !r.getReferenceType().equals(referenceType))
+    // current tx
+    final List<Reference> saved = this.batch.build().getReferenceInserts().stream()
+        .filter(e -> !e.getReferenceType().equals(referenceType))
+        .filter(a -> a.getRelations() != null)
         .toList();
-    this.batch.references(intermed);
-    final var allReferences = new HashMap<String, Reference>();
+    this.batch.referenceInserts(Collections.emptyList());
     
-    // delete old
-    final var toBeDeleted = new ArrayList<>(container.getReferences().stream()
-        .filter(r -> r.getReferenceType().equals(referenceType))
-        .map(r -> {
-          logger.rm(r);
-          return r;
-        })
-        .toList());
-
-    // add new
-    for(final var replacement : replacements) {
-      final var reference = callbacks.apply(replacement);
-      
-      final var builder = new NewReferenceBuilder(logger, contractId, null, this.batch.build(), container);
-      reference.accept(builder);
-      final var built = builder.close();
-      
-      // previous version exists and is exactly the same
-      final var previous = toBeDeleted.stream()
-          .filter(r -> r.getReferenceType().equals(built.getReferenceType()))
-          .filter(r -> Objects.equals(r.getReferenceCode(), built.getReferenceCode()))
-          .findFirst();
-      
-      if(previous.isPresent()) {
-        toBeDeleted.remove(previous.get());
-      } else {
-        allReferences.put(built.getId(), built);
-        this.batch.addReferences(built);        
-      }
+    
+    final var incorrect_updates = this.batch.build().getReferenceUpdates().stream()
+      .filter(e -> e.getReferenceType().equals(referenceType))
+      .filter(a -> a.getRelations() == null)
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update reference and then delete it by setting all contract references to new values!");
     }
     
-    this.batch.addAllDeleteReferences(toBeDeleted);
+  
+    final var all_references = new HashMap<String, Reference>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllReferenceDeletes(container.getReferences().stream()
+        .filter(a -> a.getRelations() == null)
+        .filter(e -> e.getReferenceType().equals(referenceType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_reference = callbacks.apply(replacement);
+      
+      final var builder = new NewReferenceBuilder(logger, contractId, null, batch.build(), container);
+      new_reference.accept(builder);
+
+      final var built = builder.close();
+      all_references.put(built.getId(), built);
+      this.batch.addReferenceInserts(built);
+    }
     updateVersion();
     return this;
   }
@@ -388,16 +368,10 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public <T> MergeContract setAllCapabilities(List<T> replacements, Function<T, Consumer<NewCapability>> callbacks) {
     // clear old
-    final var intermed = this.batch.build()
-        .getCapabilities().stream()
-        .filter(c -> !c.getCapabilityCode().equals(capabilityType))
-        .toList();
-    this.batch.capabilities(intermed);
     final var allCapabilities = new HashMap<String, Capability>();
     
     // delete old
     final var toBeDeleted = new ArrayList<>(container.getCapabilities().stream()
-        .filter(c -> c.getCapabilityCode().equals(capabilityType))
         .map(c -> {
           logger.rm(c);
           return c;
@@ -421,28 +395,22 @@ public class MergeContractBuilder implements MergeContract {
         toBeDeleted.remove(previous.get());
       } else {
         allCapabilities.put(built.getId(), built);
-        this.batch.addCapabilities(built);        
+        this.batch.addCapabilityInserts(built);        
       }
     }
     
-    this.batch.addAllDeleteCapabilities(toBeDeleted);
+    this.batch.addAllCapabilityDeletes(toBeDeleted);
     updateVersion();
     return this;
   }
   
   @Override
   public <T> MergeContract setAllInvPlans(List<T> replacements, Function<T, Consumer<NewInvPlan>> callbacks) {
-    // clear old
-    final var intermed = this.batch.build()
-        .getInvPlans().stream()
-        .filter(i -> !i.getInvPlanCode().equals(invPlanCode))
-        .toList();
-    this.batch.invPlans(intermed);
+
     final var allInvPlans = new HashMap<String, io.resys.thena.contract.client.entities.InvPlan>();
     
     // delete old
     final var toBeDeleted = new ArrayList<>(container.getInvPlans().stream()
-        .filter(i -> i.getInvPlanCode().equals(invPlanCode))
         .map(i -> {
           logger.rm(i);
           return i;
@@ -453,41 +421,25 @@ public class MergeContractBuilder implements MergeContract {
     for(final var replacement : replacements) {
       final var invPlan = callbacks.apply(replacement);
       
-      final var builder = new NewInvPlanBuilder(logger, contractId);
+      final var builder = new NewInvPlanBuilder(logger, contractId, batch.build(), container);
       invPlan.accept(builder);
       final var built = builder.close();
       
-      // previous version exists and is exactly the same
-      final var previous = toBeDeleted.stream()
-          .filter(i -> i.getInvPlanCode().equals(built.getInvPlan().getInvPlanCode()))
-          .findFirst();
-      
-      if(previous.isPresent()) {
-        toBeDeleted.remove(previous.get());
-      } else {
-        allInvPlans.put(built.getInvPlan().getId(), built.getInvPlan());
-        this.batch.from(built);        
-      }
+      final var next = built.getInvPlanInserts().get(0);
+      allInvPlans.put(next.getId(), next);
+      this.batch.from(built);       
     }
     
-    this.batch.addAllDeleteInvPlans(toBeDeleted);
+    this.batch.addAllInvPlanDeletes(toBeDeleted);
     updateVersion();
     return this;
   }
   
   @Override
   public <T> MergeContract setAllPaymentPlans(List<T> replacements, Function<T, Consumer<NewPaymentPlan>> callbacks) {
-    // clear old
-    final var intermed = this.batch.build()
-        .getPaymentPlans().stream()
-        .filter(p -> !p.getPaymentPlanStatus().equals(paymentPlanStatus))
-        .toList();
-    this.batch.paymentPlans(intermed);
-    final var allPaymentPlans = new HashMap<String, PaymentPlan>();
     
     // delete old
     final var toBeDeleted = new ArrayList<>(container.getPaymentPlans().stream()
-        .filter(p -> p.getPaymentPlanStatus().equals(paymentPlanStatus))
         .map(p -> {
           logger.rm(p);
           return p;
@@ -495,28 +447,28 @@ public class MergeContractBuilder implements MergeContract {
         .toList());
 
     // add new
+    final var allPaymentPlans = new HashMap<String, PaymentPlan>();    
     for(final var replacement : replacements) {
       final var paymentPlan = callbacks.apply(replacement);
       
-      final var builder = new NewPaymentPlanBuilder(logger, contractId, Collections.unmodifiableMap(allPaymentPlans));
+      final var builder = new NewPaymentPlanBuilder(logger, contractId, batch.build(), container);
       paymentPlan.accept(builder);
       final var built = builder.close();
       
       // previous version exists and is exactly the same
       final var previous = toBeDeleted.stream()
           .filter(p -> p.getPaymentPlanStatus().equals(built.getPaymentPlanStatus()))
-          .filter(p -> Objects.equals(p.getPaymentPlanCode(), built.getPaymentPlanCode()))
           .findFirst();
       
       if(previous.isPresent()) {
         toBeDeleted.remove(previous.get());
       } else {
         allPaymentPlans.put(built.getId(), built);
-        this.batch.addPaymentPlans(built);        
+        this.batch.addPaymentPlanInserts(built);        
       }
     }
     
-    this.batch.addAllDeletePaymentPlans(toBeDeleted);
+    this.batch.addAllPaymentPlanDeletes(toBeDeleted);
     updateVersion();
     return this;
   }
@@ -576,7 +528,7 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract addInvPlan(Consumer<NewInvPlan> invPlan) {
-    final var builder = new NewInvPlanBuilder(logger, contractId);
+    final var builder = new NewInvPlanBuilder(logger, contractId, this.batch.build(), container);
     invPlan.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
