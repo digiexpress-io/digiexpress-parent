@@ -23,7 +23,11 @@ package io.resys.thena.contract.client.spi.create;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewPaymentPlan;
@@ -51,12 +55,31 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
     super();
     this.logger = logger;
     this.contractId = contractId;
-    this.allPaymentPlans = allPaymentPlans;
     this.next = ImmutablePaymentPlan.builder()
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId);
+    
+  
+    final var updates = currentTx.getPaymentPlanUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getPaymentPlanDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allPaymentPlans = Stream.of(
+        // from current TX
+        currentTx.getPaymentPlanInserts().stream(),
+        currentTx.getPaymentPlanUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getPaymentPlans())
+          .orElse(Collections.emptyList())
+          .stream()
+      )
+      .flatMap(e -> e)
+      .filter(saved -> !deletes.contains(saved.getId()))
+      .filter(saved -> !updates.contains(saved.getId()))
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
   }
 
   @Override

@@ -78,9 +78,9 @@ public interface ThenaContractMergeObject {
     <T> MergeContract setAllCoverages(String coverageType, List<T> replacements, Function<T, Consumer<NewCoverage>> coverage);
     <T> MergeContract setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference);
     <T> MergeContract setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note);
-    <T> MergeContract setAllCapabilities(String capabilityType, List<T> replacements, Function<T, Consumer<NewCapability>> capability);
-    <T> MergeContract setAllInvPlans(String invPlanCode, List<T> replacements, Function<T, Consumer<NewInvPlan>> invPlan);
-    <T> MergeContract setAllPaymentPlans(String paymentPlanStatus, List<T> replacements, Function<T, Consumer<NewPaymentPlan>> paymentPlan);
+    <T> MergeContract setAllCapabilities(List<T> replacements, Function<T, Consumer<NewCapability>> capability);
+    <T> MergeContract setAllInvPlans(List<T> replacements, Function<T, Consumer<NewInvPlan>> invPlan);
+    <T> MergeContract setAllPaymentPlans(List<T> replacements, Function<T, Consumer<NewPaymentPlan>> paymentPlan);
     
     // Add new child entities
     MergeContract addParty(Consumer<NewParty> party);

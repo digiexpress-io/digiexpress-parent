@@ -235,7 +235,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract addInvPlan(Consumer<NewInvPlan> invPlan) {
-    final var builder = new NewInvPlanBuilder(logger, contractId);
+    final var builder = new NewInvPlanBuilder(logger, contractId, this.next.build(), null);
     invPlan.accept(builder);
     final var built = builder.close();
     this.next.from(built);
@@ -244,8 +244,8 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan) {
-    final var allPaymentPlans = this.next.build().getPaymentPlanInserts().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewPaymentPlanBuilder(logger, contractId, allPaymentPlans);
+    final var allPaymentPlans = this.next.build();
+    final var builder = new NewPaymentPlanBuilder(logger, contractId, allPaymentPlans, null);
     paymentPlan.accept(builder);
     final var built = builder.close();
     this.next.addPaymentPlanInserts(built);

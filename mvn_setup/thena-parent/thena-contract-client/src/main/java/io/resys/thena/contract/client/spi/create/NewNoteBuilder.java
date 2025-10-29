@@ -57,6 +57,16 @@ public class NewNoteBuilder implements NewNote {
   ) {
     
     super();
+    this.logger = logger;
+    this.contractId = contractId;
+    this.relation = relation;
+    this.noteId = OidUtils.gen();
+    this.next = ImmutableNote.builder()
+        .id(noteId)
+        .commitId(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
+        .contractId(contractId)
+        .relations(relation);
     
     final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
@@ -78,16 +88,6 @@ public class NewNoteBuilder implements NewNote {
       .collect(Collectors.toMap(e -> e.getId(), e -> e));
     
     
-    this.logger = logger;
-    this.contractId = contractId;
-    this.relation = relation;
-    this.noteId = OidUtils.gen();
-    this.next = ImmutableNote.builder()
-        .id(noteId)
-        .commitId(logger.getCommitId())
-        .createdCommitId(logger.getCommitId())
-        .contractId(contractId)
-        .relations(relation);
   }
 
   @Override

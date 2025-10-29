@@ -54,7 +54,11 @@ public class NewCapabilityBuilder implements NewCapability {
     super();
     this.logger = logger;
     this.contractId = contractId;
-    
+    this.next = ImmutableCapability.builder()
+        .id(OidUtils.gen())
+        .commitId(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
+        .contractId(contractId);
     
     final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
@@ -75,12 +79,6 @@ public class NewCapabilityBuilder implements NewCapability {
       )
       .flatMap(e -> e)
       .collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-    this.next = ImmutableCapability.builder()
-        .id(OidUtils.gen())
-        .commitId(logger.getCommitId())
-        .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
   }
 
   @Override

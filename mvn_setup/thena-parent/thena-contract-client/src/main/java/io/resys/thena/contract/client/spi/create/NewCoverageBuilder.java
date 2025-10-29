@@ -64,7 +64,11 @@ public class NewCoverageBuilder implements NewCoverage {
     this.contractId = contractId;
     this.currentTx = currentTx;
     this.savedState = savedState;
-    
+    this.next = ImmutableCoverage.builder()
+        .id(OidUtils.gen())
+        .commitId(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
+        .contractId(contractId);
     
     final var updates = currentTx.getCoverageUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCoverageDeletes().stream().map(e -> e.getId()).toList();
@@ -84,12 +88,7 @@ public class NewCoverageBuilder implements NewCoverage {
       )
       .flatMap(e -> e)
       .collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-    this.next = ImmutableCoverage.builder()
-        .id(OidUtils.gen())
-        .commitId(logger.getCommitId())
-        .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
+
   }
 
   @Override

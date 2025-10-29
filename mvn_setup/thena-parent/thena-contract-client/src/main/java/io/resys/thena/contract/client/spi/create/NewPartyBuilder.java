@@ -65,6 +65,11 @@ public class NewPartyBuilder implements NewParty {
     this.contractId = contractId;
     this.currentTx = currentTx;
     this.savedState = savedState;
+    this.next = ImmutableParty.builder()
+        .id(OidUtils.gen())
+        .commitId(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
+        .contractId(contractId);
     
     final var updates = currentTx.getPartyUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getPartyDeletes().stream().map(e -> e.getId()).toList();
@@ -84,14 +89,6 @@ public class NewPartyBuilder implements NewParty {
       )
       .flatMap(e -> e)
       .collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-    
-    this.next = ImmutableParty.builder()
-        .id(OidUtils.gen())
-        .commitId(logger.getCommitId())
-        .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
-    
     
     
   }

@@ -21,7 +21,11 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
@@ -49,12 +53,33 @@ public class NewInvPlanAllocBuilder implements NewInvPlanAlloc {
     super();
     this.logger = logger;
     this.invPlanId = invPlanId;
-    this.allAllocations = allAllocations;
+    
     this.next = ImmutableInvPlanAlloc.builder()
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .invPlanId(invPlanId);
+    
+    
+    final var updates = currentTx.getInvPlanAllocUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getInvPlanAllocDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allAllocations = Stream.of(
+        // from current TX
+        currentTx.getInvPlanAllocInserts().stream(),
+        currentTx.getInvPlanAllocUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getInvPlanAllocations().get(invPlanId))
+          .orElse(Collections.emptyList())
+          .stream()
+      )
+      .flatMap(e -> e)
+      .filter(saved -> invPlanId.equals(saved.getInvPlanId()))
+      .filter(saved -> !deletes.contains(saved.getId()))
+      .filter(saved -> !updates.contains(saved.getId()))
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
   }
 
   @Override

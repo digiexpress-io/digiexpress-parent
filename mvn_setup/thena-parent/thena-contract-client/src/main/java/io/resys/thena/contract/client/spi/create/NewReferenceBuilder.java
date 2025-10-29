@@ -55,7 +55,14 @@ public class NewReferenceBuilder implements NewReference {
     
     super();
     this.logger = logger;
-
+    this.next = ImmutableReference.builder()
+        .id(OidUtils.gen())
+        .commitId(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
+        .relations(rel)
+        .contractId(contractId);
+    
+    
     final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
     
@@ -74,16 +81,6 @@ public class NewReferenceBuilder implements NewReference {
       )
       .flatMap(e -> e)
       .collect(Collectors.toMap(e -> e.getId(), e -> e));
-    
-
-    
-    this.next = ImmutableReference.builder()
-        .id(OidUtils.gen())
-        .commitId(logger.getCommitId())
-        .createdCommitId(logger.getCommitId())
-        .relations(rel)
-        .contractId(contractId);
-    
   }
 
   @Override
