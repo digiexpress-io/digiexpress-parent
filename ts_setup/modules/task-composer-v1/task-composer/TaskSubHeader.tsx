@@ -95,7 +95,8 @@ export const TaskSubHeader: React.FC<TaskSubHeader> = (props) => {
   const backend = useTaskBackend();
   const [userList, setUserList] = React.useState<TaskApi.User[]>([]);
   const groups = backend.roles;
-  
+
+
 
   React.useEffect(() => {
     if (assignedRoles && assignedRoles.length > 0) {
@@ -105,31 +106,30 @@ export const TaskSubHeader: React.FC<TaskSubHeader> = (props) => {
     }
   }, [assignedRoles])
 
-  return (<>
+  return (
+    <>
+      <Box sx={{ p: 2, mb: 2, mt: 2 }}>
+        <Grid2 container spacing={2}>
+          {!!groups.length &&
+            <Grid2 size={{ xs: 12, md: 6 }}>
 
-    <Box sx={{ p: 2, mb: 2, mt: 2 }}>
-      <Grid2 container spacing={2}>
-        {!!groups.length &&
-          <Grid2 size={{ xs: 12, md: 6 }}>
-
-            <TaskRoleSelect assignedRoles={assignedRoles ?? []} groups={groups}
-              acceptNewRoles={(roles: TaskApi.Role[]) => {
-                const groupList = roles.map(r => r.id);
-                setFieldValue("assignedRoles", groupList);
-              }}
-            />
-          </Grid2>
-        }
-        {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }}>
-          {!readOnly &&
-            <Autocomplete
-              id="assignedUser"
-              freeSolo
+              <TaskRoleSelect assignedRoles={assignedRoles ?? []} groups={groups}
+                acceptNewRoles={(roles: TaskApi.Role[]) => {
+                  const groupList = roles.map(r => r.id);
+                  setFieldValue("assignedRoles", groupList);
+                }}
+              />
+            </Grid2>
+          }
+          {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }}>
+            {!readOnly &&
+              <Autocomplete
+                id="assignedUser"
               options={userList}
               getOptionLabel={option => (typeof option === "string") ? option : option.userName ?? ''}
               value={{ userName: currentState.assignedUser, userEmail: currentState.assignedUserEmail }}
-              onInputChange={(event, newInputValue) => {
 
+              onInputChange={(event, newInputValue) => {
                 if (newInputValue === currentState.assignedUser) {
                   return;
                 }
@@ -138,64 +138,87 @@ export const TaskSubHeader: React.FC<TaskSubHeader> = (props) => {
               }}
               renderInput={(params) => (
                 <TextField {...params}
-                  name='assignedUser'
-                  fullWidth={true}
-                  label={<FormattedMessage id='taskDialog.assignedUser' />}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  error={!!errors.assignedUser}
-                  helperText={errors.assignedUser}
-                />
-              )}
-            />
-          }
-          {readOnly && (
-            <TextField
-              sx={{ marginTop: 1 }}
-              name='assignedUser'
-              value={currentState.assignedUser}
-              fullWidth={true}
-              inputProps={{
-                readOnly: readOnly
-              }}
-              label={<FormattedMessage id='taskDialog.assignedUser' />}
-              InputLabelProps={{ shrink: true }}
-            >
-            </TextField>
-          )
-          }
-        </Grid2>
-        }
+                    onBlur={() => {
+                      const currentValue = (currentState.assignedUser || "").trim();
 
-        <Grid2 size={{ xs: 12, md: 6 }}>
-          <Box display='flex' flexDirection='row' alignItems='flex-end' gap={2}>
+                      const isValid = userList.some(
+                        (u) => u.userName.toLowerCase() === currentValue.toLowerCase()
+                      );
+
+                      if (!isValid) {
+                        setFieldValue("assignedUser", "");
+                        setFieldValue("assignedUserEmail", "");
+                      } else {
+                        const matchedUser = userList.find(
+                          (u) => u.userName.toLowerCase() === currentValue.toLowerCase()
+                        );
+                        setFieldValue("assignedUserEmail", matchedUser?.userEmail || "");
+                      }
+                    }}
+                    name='assignedUser'
+                    fullWidth={true}
+                    label={<FormattedMessage id='taskDialog.assignedUser' />}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true
+                      }
+                    }}
+                    error={!!errors.assignedUser}
+                    helperText={errors.assignedUser}
+                  />
+                )}
+              />
+            }
+            {readOnly && (
+              <TextField
+                sx={{ marginTop: 1 }}
+                name='assignedUser'
+                value={currentState.assignedUser}
+                fullWidth={true}
+                slotProps={{
+                  input: {
+                    readOnly: true
+                  },
+                  inputLabel: {
+                    shrink: true
+                  }
+                }}
+                label={<FormattedMessage id='taskDialog.assignedUser' />}
+              >
+              </TextField>
+            )
+            }
+          </Grid2>
+          }
+
+          <Grid2 size={{ xs: 12, md: 6 }}>
+            <Box display='flex' flexDirection='row' alignItems='flex-end' gap={2}>
+              <RadioGroupPopover
+                label={<FormattedMessage id='taskDialog.status' />}
+                readonly={readOnly}
+                messages={TaskApi.task_status_messages}
+                colorMap={TaskApi.task_status_colors}
+                invalidValues={[TaskApi.TaskStatus.TRANSFERRED]}
+                handleCallback={newValue => setFieldValue('status', newValue as any)}
+                value={currentState.status}
+              />
+              <Box>{props.slots.statusExtra}</Box>
+            </Box>
+
+          </Grid2>
+
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <RadioGroupPopover
-              label={<FormattedMessage id='taskDialog.status' />}
+              label={<FormattedMessage id='taskDialog.priority' />}
               readonly={readOnly}
-              messages={TaskApi.task_status_messages}
-              colorMap={TaskApi.task_status_colors}
-              invalidValues={[TaskApi.TaskStatus.TRANSFERRED]}
-              handleCallback={newValue => setFieldValue('status', newValue as any)}
-              value={currentState.status}
+              messages={TaskApi.task_priority_messages}
+              colorMap={TaskApi.task_priority_colors}
+              value={currentState.priority}
+              handleCallback={newValue => setFieldValue('priority', newValue as any)}
             />
-            <Box>{props.slots.statusExtra}</Box>
-          </Box>
-
+          </Grid2>
         </Grid2>
-
-        <Grid2 size={{ xs: 12, md: 6 }}>
-          <RadioGroupPopover
-            label={<FormattedMessage id='taskDialog.priority' />}
-            readonly={readOnly}
-            messages={TaskApi.task_priority_messages}
-            colorMap={TaskApi.task_priority_colors}
-            value={currentState.priority}
-            handleCallback={newValue => setFieldValue('priority', newValue as any)}
-          />
-        </Grid2>
-      </Grid2>
-    </Box>
-  </>
+      </Box>
+    </>
   );
 }

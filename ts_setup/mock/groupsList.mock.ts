@@ -13,7 +13,7 @@ export default defineMock({
   body: [
     {
       name: 'defineMock-AdminGroup',
-      description: 'defineMock-AdminGroupDescription'
+      description: 'defineMock-AdminGroupDescription',
     }
   ]
 })

@@ -869,7 +869,7 @@ export const en = {
   'taskTable.col.header.status': 'Status',
   'taskTable.col.header.roles': 'Role',
   'taskTable.col.header.assignee': 'Assigned',
-  'taskTable.col.header.due': 'Duedate',
+  'taskTable.col.header.due': 'Due date',
   'taskTable.col.header.created': 'Created',
   'taskTable.col.header.archive': 'Archive',
   'taskTable.button.archive.confirm': 'You are about to archive this task. Are you sure you want to continue?',

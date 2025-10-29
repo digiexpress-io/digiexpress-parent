@@ -12,7 +12,6 @@ export const TaskCreateAssignee: React.FC<TaskCreateAssigneeProps> = ({ value, u
   return (
     <Autocomplete
       id="assignedUser"
-      freeSolo
       options={userList}
       value={value}
       getOptionLabel={(option: any) => (typeof option === 'string' ? option : option.userName ?? '')}

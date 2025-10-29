@@ -47,17 +47,6 @@ function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof w
   }
 }
 
-
-function fetchGroupMembership(parentFetch: typeof window.fetch): typeof window.fetch {
-  return async (input: RequestInfo | URL, init?: RequestInit) => {
-    const resp: Response = {
-      ok: true,
-      json: async () => []
-    } as any;
-    return resp;
-  }
-}
-
 const globalEvents: {}[] = [];
 console.groupCollapsed('global fetch');
 console.log(globalEvents);
@@ -117,8 +106,7 @@ export const FrontdeskApp: React.FC = () => {
                 tree={fetchtree.withFetch(globalFetchOverride)} 
                 initContextPath='/'
                 overrides={{
-                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
-                  '$org/groupMembership.GET': fetchGroupMembership,
+                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments
                 }}>
                 <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
                   <TenantConfigContextProvider features={[

@@ -27,6 +27,11 @@ const server: ServerOptions = {
       changeOrigin: false,
       secure: false,
     },
+    '/groupMembership': {
+      target: 'http://localhost:8080',
+      changeOrigin: false,
+      secure: false,
+    },
     '/worker/rest/api/': {
       target: 'http://localhost:8080',
       changeOrigin: false,
