@@ -26,17 +26,17 @@ import java.util.function.Consumer;
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.contract.client.api.ContractCommitActions.CreateOneContract;
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
-import io.resys.thena.contract.client.api.CreateOneContract;
+import io.resys.thena.contract.client.api.ImmutableContractContainer;
 import io.resys.thena.contract.client.api.ImmutableOneContractEnvelope;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.entities.ImmutableCommit;
-import io.resys.thena.contract.client.spi.ContractDataSource;
-import io.resys.thena.contract.client.spi.ContractDataSource.ContractState;
-import io.resys.thena.contract.client.spi.actions.CreateOneContractImpl.CreateOneContractException;
-import io.resys.thena.contract.client.spi.commitlog.ContractBatchOperations;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.create.NewContractBuilder;
+import io.resys.thena.contract.client.tables.ContractDb;
+import io.resys.thena.contract.client.tables.ContractDbBuilder.PersistenceUnit;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -46,7 +46,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateOneContractImpl implements CreateOneContract {
 
-  private final ContractDataSource state;
+  private final ContractDb state;
   private final String tenantId;
   
   private String author;
@@ -80,10 +80,10 @@ public class CreateOneContractImpl implements CreateOneContract {
     RepoAssert.notNull(contract, () -> "contract can't be empty!");
 
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(tenantId).build();
-    return this.state.withContractTransaction(scope, this::doInTx);
+    return this.state.withTransaction(scope, this::doInTx);
   }
 
-  private Uni<OneContractEnvelope> doInTx(ContractState tx) {
+  private Uni<OneContractEnvelope> doInTx(ContractDb tx) {
     return createRequest(tx)
         .onItem().transformToUni(request -> createResponse(tx, request))
         .onFailure(CreateOneContractException.class).recoverWithItem(ex -> {
@@ -103,37 +103,42 @@ public class CreateOneContractImpl implements CreateOneContract {
         });
   }
   
-  private Uni<OneContractEnvelope> createResponse(ContractState tx, ContractBatchOperations request) {
-    return tx.batchMany(request).onItem().transform(rsp -> {
+  private Uni<OneContractEnvelope> createResponse(ContractDb tx, PersistenceUnit request) {
+    return tx.builder().from(request).persist().onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
         throw new CreateOneContractException("Failed to create contract!", rsp);
       }
       
       final OneContractEnvelope result = ImmutableOneContractEnvelope.builder()
           .repoId(tenantId)
-          .contract(rsp.getContracts().iterator().next())
-          .parties(rsp.getParties())
-          .coverages(rsp.getCoverages())
-          .addAllReferences(rsp.getReferences())
-          .addAllNotes(rsp.getNotes())
-          .addAllCapabilities(rsp.getCapabilities())
-          .addAllInvPlans(rsp.getInvPlans())
-          .addAllPaymentPlans(rsp.getPaymentPlans())
-          .addAllMessages(rsp.getMessages())
+          .contract(ImmutableContractContainer.builder()
+            .contract(rsp.getContractInserts().iterator().next())
+            .parties(rsp.getPartyInserts())
+            .coverages(rsp.getCoverageInserts())
+            .addAllReferences(rsp.getReferenceInserts())
+            .addAllNotes(rsp.getNoteInserts())
+            .addAllCapabilities(rsp.getCapabilityInserts())
+            .addAllInvPlans(rsp.getInvPlanInserts())
+            .addAllPaymentPlans(rsp.getPaymentPlanInserts())
+            .build())
+          .addAllMessages(rsp.getCommitLogs().stream().map(log -> ImmutableMessage.builder()
+              .exception(log.getException())
+              .text(log.getText())
+              .build()).toList())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build();
       return result;
     });
   }
   
-  private Uni<ContractBatchOperations> createRequest(ContractState tx) {
-    final var start = ContractBatchOperations.builder()
+  private Uni<ImmutablePersistenceUnit> createRequest(ContractDb tx) {
+    final var start = ImmutablePersistenceUnit.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
         .log("")
         .build();
     final var createdAt = OffsetDateTime.now();
-    ContractBatchOperations next = start;
+    ImmutablePersistenceUnit next = start;
 
     final var logger = new ContractCommitBuilder(tenantId, 
         ImmutableCommit.builder()
@@ -152,9 +157,9 @@ public class CreateOneContractImpl implements CreateOneContract {
     this.contract.accept(newContract);
     final var created = newContract.close();
     
-    final var contractId = created.getContracts().iterator().next().getId();
+    final var contractId = created.getContractInserts().iterator().next().getId();
     
-    next = ContractBatchOperations.builder()
+    next = ImmutablePersistenceUnit.builder()
         .from(start)
         .from(created)
         .from(logger.withContractId(contractId).close())
@@ -171,17 +176,17 @@ public class CreateOneContractImpl implements CreateOneContract {
   
   public static class CreateOneContractException extends RuntimeException {
     private static final long serialVersionUID = -6202574733069488724L;
-    private final ContractBatchOperations batch;
+    private final PersistenceUnit batch;
     
-    public CreateOneContractException(String message, ContractBatchOperations batch) {
+    public CreateOneContractException(String message, PersistenceUnit batch) {
       super(message + System.lineSeparator() + " " +
-          String.join(System.lineSeparator() + " ", batch.getMessages().stream().map(e -> e.getText()).toList()));
+          String.join(System.lineSeparator() + " ", batch.getCommitLogs().stream().map(e -> e.getText()).toList()));
       
-      batch.getMessages().stream().filter(e -> e.getException() != null).forEach(e -> addSuppressed(e.getException()));
+      batch.getCommitLogs().stream().filter(e -> e.getException() != null).forEach(e -> addSuppressed(e.getException()));
       this.batch = batch;
     }
     
-    public ContractBatchOperations getBatch() {
+    public PersistenceUnit getBatch() {
       return batch;
     }
   }

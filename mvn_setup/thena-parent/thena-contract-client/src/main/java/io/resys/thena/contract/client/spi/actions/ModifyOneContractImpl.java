@@ -35,11 +35,12 @@ import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContai
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeContract;
 import io.resys.thena.contract.client.entities.ContractDocType;
 import io.resys.thena.contract.client.entities.ImmutableCommit;
-import io.resys.thena.contract.client.spi.ContractDataSource;
 import io.resys.thena.contract.client.spi.ContractDataSource.ContractState;
+import io.resys.thena.contract.client.spi.actions.ModifyOneContractImpl.ModifyOneContractException;
 import io.resys.thena.contract.client.spi.commitlog.ContractBatchOperations;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.modify.MergeContractBuilder;
+import io.resys.thena.contract.client.tables.ContractDb;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -50,7 +51,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ModifyOneContractImpl implements ModifyOneContract {
 
-  private final ContractDataSource state;
+  private final ContractDb state;
   private final String tenantId;
   
   private String author;
