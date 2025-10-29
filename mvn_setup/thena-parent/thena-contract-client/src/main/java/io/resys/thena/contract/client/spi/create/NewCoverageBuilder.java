@@ -23,15 +23,21 @@ package io.resys.thena.contract.client.spi.create;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
 import io.resys.thena.contract.client.entities.Coverage;
 import io.resys.thena.contract.client.entities.ImmutableCoverage;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
@@ -46,12 +52,33 @@ public class NewCoverageBuilder implements NewCoverage {
   public NewCoverageBuilder(
       ContractCommitBuilder logger, 
       String contractId, 
-      Map<String, Coverage> allCoverages) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     
     super();
     this.logger = logger;
     this.contractId = contractId;
-    this.allCoverages = allCoverages;
+    
+    
+    final var updates = currentTx.getCoverageUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getCoverageDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allCoverages = Stream.of(
+        // from current TX
+        currentTx.getCoverageInserts().stream(),
+        currentTx.getCoverageUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getCoverages())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+    
     this.next = ImmutableCoverage.builder()
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())

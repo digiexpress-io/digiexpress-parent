@@ -29,8 +29,8 @@ import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
 import io.resys.thena.contract.client.entities.ImmutableInvPlan;
-import io.resys.thena.contract.client.spi.commitlog.ContractBatchOperations;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
@@ -40,7 +40,7 @@ public class NewInvPlanBuilder implements NewInvPlan {
   private final String contractId;
   private final String invPlanId;
   private final ImmutableInvPlan.Builder next;
-  private ContractBatchOperations.Builder batch;
+  private ImmutablePersistenceUnit.Builder batch;
   private boolean built;
   
   public NewInvPlanBuilder(ContractCommitBuilder logger, String contractId) {
@@ -54,7 +54,7 @@ public class NewInvPlanBuilder implements NewInvPlan {
         .createdCommitId(logger.getCommitId())
         .contractId(contractId);
     
-    this.batch = ContractBatchOperations.builder()
+    this.batch = ImmutablePersistenceUnit.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
@@ -122,12 +122,12 @@ public class NewInvPlanBuilder implements NewInvPlan {
 
   @Override
   public NewInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation) {
-    final var allAllocations = this.batch.build().getInvPlanAllocations().stream()
+    final var allAllocations = this.batch.build().getInvPlanAllocInserts().stream()
         .collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewInvPlanAllocBuilder(logger, invPlanId, allAllocations);
     allocation.accept(builder);
     final var built = builder.close();
-    this.batch.addInvPlanAllocations(built);
+    this.batch.addInvPlanAllocInserts(built);
     return this;
   }
 
@@ -136,13 +136,13 @@ public class NewInvPlanBuilder implements NewInvPlan {
     this.built = true;
   }
 
-  public ContractBatchOperations close() {
+  public ImmutablePersistenceUnit close() {
     RepoAssert.isTrue(built, () -> "you must call NewInvPlan.build() to finalize investment plan CREATE!");
     
     final var invPlan = next.build();
     
     this.logger.add(invPlan);
     
-    return batch.addInvPlans(invPlan).build();
+    return batch.addInvPlanInserts(invPlan).build();
   }
 }

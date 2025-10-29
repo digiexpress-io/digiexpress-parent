@@ -23,14 +23,29 @@ package io.resys.thena.contract.client.spi.modify;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCoverage;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
 import io.resys.thena.contract.client.entities.Coverage;
+import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableCoverage;
+import io.resys.thena.contract.client.entities.Note;
+import io.resys.thena.contract.client.entities.Reference;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.spi.create.NewNoteBuilder;
+import io.resys.thena.contract.client.spi.create.NewReferenceBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
 
@@ -38,14 +53,23 @@ public class MergeCoverageBuilder implements MergeCoverage {
 
   private final ContractCommitBuilder logger;
   private final ImmutablePersistenceUnit.Builder batch;
+  private final ImmutableContractOneOfRelations childRel;
   private final Coverage currentCoverage; 
   private final ImmutableCoverage.Builder nextCoverage;
-  private final Map<String, Coverage> allCoverages;
+  private final ContractContainer container;
+  private final String contractId;
+
   private boolean built;
 
-  public MergeCoverageBuilder(ContractContainer container, ContractCommitBuilder logger, String contractId, String coverageId,
-      Map<String, Coverage> allCoverages) {
+  public MergeCoverageBuilder(
+      ContractContainer container, 
+      ContractCommitBuilder logger, 
+      String contractId, 
+      String coverageId,
+      Map<String, Coverage> all_coverages,
+      Map<String, Reference> all_references) {
     super();
+    this.contractId = contractId;
     this.logger = logger;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     this.currentCoverage = container.getCoverages().stream()
@@ -54,7 +78,8 @@ public class MergeCoverageBuilder implements MergeCoverage {
         .orElse(null);
     RepoAssert.notNull(currentCoverage, () -> "Can't find coverage with id: '" + coverageId + "' for contract: '" + contractId + "'!");
     this.nextCoverage = ImmutableCoverage.builder().from(currentCoverage);
-    this.allCoverages = allCoverages;
+    this.container = container;
+    this.childRel = ImmutableContractOneOfRelations.builder().relationType(ContractRelationType.COVERAGE).coverageId(currentCoverage.getId()).build();
   }
 
   @Override
@@ -154,6 +179,113 @@ public class MergeCoverageBuilder implements MergeCoverage {
   }
 
   @Override
+  public <T> MergeCoverage setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note) {
+    // current tx
+    final List<Note> saved = this.batch.build().getNoteInserts().stream()
+        .filter(e -> !e.getNoteType().equals(noteType))
+        .filter(a -> !isCoverageRelation(a.getRelations()))
+        .toList();
+    this.batch.noteInserts(Collections.emptyList());
+    
+    
+    final var incorrect_updates = this.batch.build().getNoteUpdates().stream()
+      .filter(e -> e.getNoteType().equals(noteType))
+      .filter(a -> isCoverageRelation(a.getRelations()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update note and then delete it by setting all coverage notes to new values!");
+    }
+    
+  
+    final var all_notes = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllNoteDeletes(container.getNotes().stream()
+        .filter(a -> isCoverageRelation(a.getRelations()))
+        .filter(e -> e.getNoteType().equals(noteType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_note = note.apply(replacement);
+      
+      final var builder = new NewNoteBuilder(logger, contractId, childRel, batch.build(), container);
+      new_note.accept(builder);
+
+      final var built = builder.close();
+      all_notes.put(built.getId(), built);
+      this.batch.addNoteInserts(built);
+    }
+    return this;
+  }
+  @Override
+  public <T> MergeCoverage setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference) {
+    // current tx
+    final List<Reference> saved = this.batch.build().getReferenceInserts().stream()
+        .filter(e -> !e.getReferenceType().equals(referenceType))
+        .filter(a -> !isCoverageRelation(a.getRelations()))
+        .toList();
+    this.batch.noteInserts(Collections.emptyList());
+    
+    
+    final var incorrect_updates = this.batch.build().getReferenceUpdates().stream()
+      .filter(e -> e.getReferenceType().equals(referenceType))
+      .filter(a -> isCoverageRelation(a.getRelations()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update reference and then delete it by setting all coverage references to new values!");
+    }
+    
+  
+    final var all_references = new HashMap<String, Reference>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllReferenceDeletes(container.getReferences().stream()
+        .filter(a -> isCoverageRelation(a.getRelations()))
+        .filter(e -> e.getReferenceType().equals(referenceType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_note = reference.apply(replacement);
+      
+      final var builder = new NewReferenceBuilder(logger, contractId, childRel, batch.build(), container);
+      new_note.accept(builder);
+
+      final var built = builder.close();
+      all_references.put(built.getId(), built);
+      this.batch.addReferenceInserts(built);
+    }
+    return this;
+  }
+  
+  @Override
+  public MergeCoverage addReference(Consumer<NewReference> reference) {
+    final var builder = new NewReferenceBuilder(
+        logger, contractId, childRel,
+        batch.build(),
+        container
+    );
+    reference.accept(builder);
+    final var built = builder.close();
+    this.batch.addReferenceInserts(built);
+    return this;
+  }
+
+  @Override
+  public MergeCoverage addNote(Consumer<NewNote> note) {
+    final var builder = new NewNoteBuilder(
+        logger, contractId, childRel,
+        batch.build(),
+        container
+    );
+    note.accept(builder);
+    final var built = builder.close();
+    this.batch.addNoteInserts(built);
+    return this;
+  }
+
+  @Override
   public void build() {
     this.built = true;
   }
@@ -172,5 +304,13 @@ public class MergeCoverageBuilder implements MergeCoverage {
       batch.addCoverageUpdates(nextCoverage);
     }
     return batch.build();
+  }
+  
+  private boolean isCoverageRelation(ContractOneOfRelations rel) {
+    if(rel == null) {
+      return false;
+    }
+    return rel.getRelationType() == ContractRelationType.COVERAGE && 
+        rel.getCoverageId().equals(this.currentCoverage.getId());
   }
 }

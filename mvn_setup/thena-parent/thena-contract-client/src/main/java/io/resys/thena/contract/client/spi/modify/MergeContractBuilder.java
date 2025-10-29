@@ -605,7 +605,8 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public MergeContract modifyParty(String partyId, Consumer<MergeParty> party) {
     final var allParties = this.batch.build().getParties().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new MergePartyBuilder(container, logger, contractId, partyId, allParties);
+    final var allReferences = this.batch.build().getReferences().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
+    final var builder = new MergePartyBuilder(container, logger, contractId, partyId, allParties, allReferences);
     party.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
@@ -616,7 +617,8 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public MergeContract modifyCoverage(String coverageId, Consumer<MergeCoverage> coverage) {
     final var allCoverages = this.batch.build().getCoverages().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new MergeCoverageBuilder(container, logger, contractId, coverageId, allCoverages);
+    final var allReferences = this.batch.build().getReferences().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
+    final var builder = new MergeCoverageBuilder(container, logger, contractId, coverageId, allCoverages, allReferences);
     coverage.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
@@ -660,7 +662,8 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public MergeContract modifyInvPlan(String invPlanId, Consumer<MergeInvPlan> invPlan) {
     final var allInvPlans = this.batch.build().getInvPlans().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new MergeInvPlanBuilder(container, logger, contractId, invPlanId, allInvPlans);
+    final var allReferences = this.batch.build().getReferences().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
+    final var builder = new MergeInvPlanBuilder(container, logger, contractId, invPlanId, allInvPlans, allReferences);
     invPlan.accept(builder);
     final var built = builder.close();
     this.batch.from(built);

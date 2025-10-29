@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.spi.create;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-contract-client
@@ -21,6 +23,9 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
@@ -37,8 +42,6 @@ import jakarta.annotation.Nullable;
 
 public class NewReferenceBuilder implements NewReference {
   private final ContractCommitBuilder logger;
-  private final String contractId;
-  private final @Nullable String parentId; // for party/coverage references
   private final Map<String, Reference> allReferences;
   private final ImmutableReference.Builder next;
   private boolean built;
@@ -46,25 +49,41 @@ public class NewReferenceBuilder implements NewReference {
   public NewReferenceBuilder(
       ContractCommitBuilder logger, 
       String contractId,
-      @Nullable ImmutableContractOneOfRelations parentId,
+      @Nullable ImmutableContractOneOfRelations rel,
       ImmutablePersistenceUnit currentTx,
       @Nullable ContractContainer savedState) {
     
     super();
     this.logger = logger;
-    this.contractId = contractId;
-    this.parentId = parentId;
-    this.allReferences = allReferences;
+
+    final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allReferences = Stream.of(
+        // from current TX
+        currentTx.getReferenceInserts().stream(),
+        currentTx.getReferenceUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getReferences())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+    
+
+    
     this.next = ImmutableReference.builder()
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
+        .relations(rel)
         .contractId(contractId);
     
-    // Set parent relation if provided
-    if (parentId != null) {
-      // TODO: Set parent relation based on parent type (party/coverage)
-    }
   }
 
   @Override

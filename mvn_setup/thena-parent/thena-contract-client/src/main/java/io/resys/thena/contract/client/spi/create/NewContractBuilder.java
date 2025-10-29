@@ -23,7 +23,6 @@ package io.resys.thena.contract.client.spi.create;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -41,12 +40,15 @@ import io.resys.thena.contract.client.api.ThenaContractNewObject.NewPaymentPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
 import io.resys.thena.contract.client.entities.ImmutableContract;
 import io.resys.thena.contract.client.entities.ImmutableContractTransitives;
-import io.resys.thena.contract.client.spi.commitlog.ContractBatchOperations;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ContractDbBuilder.PersistenceUnit;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
+
+
 
 public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   private final ContractCommitBuilder logger;
@@ -55,13 +57,13 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   private final String commitId;
   private final OffsetDateTime createdAt;
   
-  private ContractBatchOperations.Builder next;
+  private ImmutablePersistenceUnit.Builder next;
   private Consumer<ContractContainer> handleNewState;
   private boolean built;
   
   public NewContractBuilder(ContractCommitBuilder logger, String contractNumber) {
     super();
-    this.next = ContractBatchOperations.builder()
+    this.next = ImmutablePersistenceUnit.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
@@ -183,51 +185,51 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract addParty(Consumer<NewParty> party) {
-    final var allParties = this.next.build().getParties().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var allParties = this.next.build().getPartyInserts().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewPartyBuilder(logger, contractId, allParties);
     party.accept(builder);
     final var built = builder.close();
-    this.next.addParties(built);
+    this.next.addPartyInserts(built);
     return this;
   }
 
   @Override
   public NewContract addCoverage(Consumer<NewCoverage> coverage) {
-    final var allCoverages = this.next.build().getCoverages().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewCoverageBuilder(logger, contractId, allCoverages);
+    final var allCoverages = this.next.build();
+    final var builder = new NewCoverageBuilder(logger, contractId, allCoverages, null);
     coverage.accept(builder);
     final var built = builder.close();
-    this.next.addCoverages(built);
+    this.next.addCoverageInserts(built);
     return this;
   }
 
   @Override
   public NewContract addReference(Consumer<NewReference> reference) {
-    final var allReferences = this.next.build().getReferences().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewReferenceBuilder(logger, contractId, null, allReferences);
+    final var allReferences = this.next.build();
+    final var builder = new NewReferenceBuilder(logger, contractId, null, allReferences, null);
     reference.accept(builder);
     final var built = builder.close();
-    this.next.addReferences(built);
+    this.next.addReferenceInserts(built);
     return this;
   }
 
   @Override
   public NewContract addNote(Consumer<NewNote> note) {
-    final var allNotes = this.next.build().getNotes().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewNoteBuilder(logger, contractId, null, Collections.unmodifiableMap(allNotes));
+    final var allNotes = this.next.build();
+    final var builder = new NewNoteBuilder(logger, contractId, null, allNotes, null);
     note.accept(builder);
     final var built = builder.close();
-    this.next.from(built);
+    this.next.addNoteInserts(built);
     return this;
   }
 
   @Override
   public NewContract addCapability(Consumer<NewCapability> capability) {
-    final var allCapabilities = this.next.build().getCapabilities().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewCapabilityBuilder(logger, contractId, allCapabilities);
+    final var allCapabilities = this.next.build();
+    final var builder = new NewCapabilityBuilder(logger, contractId, allCapabilities, null);
     capability.accept(builder);
     final var built = builder.close();
-    this.next.addCapabilities(built);
+    this.next.addCapabilityInserts(built);
     return this;
   }
 
@@ -242,11 +244,11 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan) {
-    final var allPaymentPlans = this.next.build().getPaymentPlans().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var allPaymentPlans = this.next.build().getPaymentPlanInserts().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
     final var builder = new NewPaymentPlanBuilder(logger, contractId, allPaymentPlans);
     paymentPlan.accept(builder);
     final var built = builder.close();
-    this.next.addPaymentPlans(built);
+    this.next.addPaymentPlanInserts(built);
     return this;
   }
 
@@ -261,7 +263,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     this.built = true;
   }
 
-  public ContractBatchOperations close() {
+  public PersistenceUnit close() {
     RepoAssert.isTrue(built, () -> "you must call NewContract.build() to finalize contract CREATE!");
 
     final var contract = this.contract
@@ -274,7 +276,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     
     logger.add(contract);
     
-    next.addContracts(contract);
+    next.addContractInserts(contract);
     final var batch = next.build();
     
     onNewState(batch);
@@ -282,21 +284,21 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return batch;
   }
   
-  private void onNewState(ContractBatchOperations batch) {
+  private void onNewState(PersistenceUnit batch) {
     if(handleNewState == null) {
       return;
     }
-    final var contract = batch.getContracts().iterator().next();
+    final var contract = batch.getContractInserts().iterator().next();
     final var container = ImmutableContractContainer.builder()
         .contract(contract)
-        .parties(batch.getParties())
-        .coverages(batch.getCoverages())
-        .references(batch.getReferences())
-        .notes(batch.getNotes())
-        .capabilities(batch.getCapabilities())
-        .invPlans(batch.getInvPlans())
-        .paymentPlans(batch.getPaymentPlans())
-        .invPlanAllocations(batch.getInvPlanAllocations().stream()
+        .parties(batch.getPartyInserts())
+        .coverages(batch.getCoverageInserts())
+        .references(batch.getReferenceInserts())
+        .notes(batch.getNoteInserts())
+        .capabilities(batch.getCapabilityInserts())
+        .invPlans(batch.getInvPlanInserts())
+        .paymentPlans(batch.getPaymentPlanInserts())
+        .invPlanAllocations(batch.getInvPlanAllocInserts().stream()
             .collect(Collectors.groupingBy(alloc -> alloc.getInvPlanId())))
         .build();
     

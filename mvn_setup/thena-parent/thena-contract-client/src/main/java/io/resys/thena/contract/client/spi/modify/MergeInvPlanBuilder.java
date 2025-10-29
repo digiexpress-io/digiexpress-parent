@@ -34,11 +34,20 @@ import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
+import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableInvPlan;
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
+import io.resys.thena.contract.client.entities.Note;
+import io.resys.thena.contract.client.entities.Reference;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.create.NewInvPlanAllocBuilder;
+import io.resys.thena.contract.client.spi.create.NewNoteBuilder;
+import io.resys.thena.contract.client.spi.create.NewReferenceBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
 
@@ -46,15 +55,23 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
 
   private final ContractCommitBuilder logger;
   private final ImmutablePersistenceUnit.Builder batch;
+  private final ImmutableContractOneOfRelations childRel;
   private final InvPlan currentInvPlan;
   private final ImmutableInvPlan.Builder nextInvPlan;
-  private final Map<String, InvPlan> allInvPlans;
+  private final ContractContainer container;
   private final String contractId;
+
   private boolean built;
 
-  public MergeInvPlanBuilder(ContractContainer container, ContractCommitBuilder logger, String contractId, String invPlanId,
-      Map<String, InvPlan> allInvPlans) {
+  public MergeInvPlanBuilder(
+      ContractContainer container, 
+      ContractCommitBuilder logger, 
+      String contractId, 
+      String invPlanId,
+      Map<String, InvPlan> all_invPlans,
+      Map<String, Reference> all_references) {
     super();
+    this.contractId = contractId;
     this.logger = logger;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     this.currentInvPlan = container.getInvPlans().stream()
@@ -63,8 +80,8 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
         .orElse(null);
     RepoAssert.notNull(currentInvPlan, () -> "Can't find investment plan with id: '" + invPlanId + "' for contract: '" + contractId + "'!");
     this.nextInvPlan = ImmutableInvPlan.builder().from(currentInvPlan);
-    this.allInvPlans = allInvPlans;
-    this.contractId = contractId;
+    this.container = container;
+    this.childRel = ImmutableContractOneOfRelations.builder().relationType(ContractRelationType.INVESTMENT_PLAN).invPlanId(currentInvPlan.getId()).build();
   }
 
   @Override
@@ -118,7 +135,7 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     return this;
   }
   @Override
-  public <T> MergeInvPlan setAllAllocations(List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> callbacks) {
+  public <T> MergeInvPlan setAllAllocations(String allocCode, List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> callbacks) {
     // clear old
     this.batch.invPlanAllocs(Collections.emptyList());
     final var allAllocations = new HashMap<String, InvPlanAlloc>();
@@ -152,6 +169,145 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     return this;
   }
   @Override
+  public MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAllocBuilder> allocation) {
+    // Find the allocation
+    final var current = this.batch.build().getInvPlanAllocs().stream()
+        .filter(a -> a.getId().equals(allocId))
+        .findFirst()
+        .orElse(null);
+    
+    if (current == null) {
+      throw new IllegalArgumentException("Cannot find allocation with id: '" + allocId + "'");
+    }
+    
+    final var builder = new MergeInvPlanAllocBuilder(current, logger);
+    allocation.accept(builder);
+    final var built = builder.close();
+    this.batch.addInvPlanAllocUpdates(built);
+    return this;
+  }
+  
+  @Override
+  public MergeInvPlan removeAllocation(String allocId) {
+    final var current = this.batch.build().getInvPlanAllocs().stream()
+        .filter(a -> a.getId().equals(allocId))
+        .findFirst()
+        .orElse(null);
+    
+    if (current != null) {
+      this.batch.addDeleteInvPlanAllocs(current);
+    }
+    return this;
+  }
+  
+  @Override
+  public <T> MergeInvPlan setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note) {
+    // current tx
+    final List<Note> saved = this.batch.build().getNoteInserts().stream()
+        .filter(e -> !e.getNoteType().equals(noteType))
+        .filter(a -> !isInvPlanRelation(a.getRelations()))
+        .toList();
+    this.batch.noteInserts(Collections.emptyList());
+    
+    
+    final var incorrect_updates = this.batch.build().getNoteUpdates().stream()
+      .filter(e -> e.getNoteType().equals(noteType))
+      .filter(a -> isInvPlanRelation(a.getRelations()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update note and then delete it by setting all investment plan notes to new values!");
+    }
+    
+  
+    final var all_notes = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllNoteDeletes(container.getNotes().stream()
+        .filter(a -> isInvPlanRelation(a.getRelations()))
+        .filter(e -> e.getNoteType().equals(noteType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_note = note.apply(replacement);
+      
+      final var builder = new NewNoteBuilder(logger, contractId, childRel, batch.build(), container);
+      new_note.accept(builder);
+
+      final var built = builder.close();
+      all_notes.put(built.getId(), built);
+      this.batch.addNoteInserts(built);
+    }
+    return this;
+  }
+  @Override
+  public <T> MergeInvPlan setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference) {
+    // current tx
+    final List<Reference> saved = this.batch.build().getReferenceInserts().stream()
+        .filter(e -> !e.getReferenceType().equals(referenceType))
+        .filter(a -> !isInvPlanRelation(a.getRelations()))
+        .toList();
+    this.batch.noteInserts(Collections.emptyList());
+    
+    
+    final var incorrect_updates = this.batch.build().getReferenceUpdates().stream()
+      .filter(e -> e.getReferenceType().equals(referenceType))
+      .filter(a -> isInvPlanRelation(a.getRelations()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update reference and then delete it by setting all investment plan references to new values!");
+    }
+    
+  
+    final var all_references = new HashMap<String, Reference>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllReferenceDeletes(container.getReferences().stream()
+        .filter(a -> isInvPlanRelation(a.getRelations()))
+        .filter(e -> e.getReferenceType().equals(referenceType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_note = reference.apply(replacement);
+      
+      final var builder = new NewReferenceBuilder(logger, contractId, childRel, batch.build(), container);
+      new_note.accept(builder);
+
+      final var built = builder.close();
+      all_references.put(built.getId(), built);
+      this.batch.addReferenceInserts(built);
+    }
+    return this;
+  }
+  
+  @Override
+  public MergeInvPlan addReference(Consumer<NewReference> reference) {
+    final var builder = new NewReferenceBuilder(
+        logger, contractId, childRel,
+        batch.build(),
+        container
+    );
+    reference.accept(builder);
+    final var built = builder.close();
+    this.batch.addReferenceInserts(built);
+    return this;
+  }
+
+  @Override
+  public MergeInvPlan addNote(Consumer<NewNote> note) {
+    final var builder = new NewNoteBuilder(
+        logger, contractId, childRel,
+        batch.build(),
+        container
+    );
+    note.accept(builder);
+    final var built = builder.close();
+    this.batch.addNoteInserts(built);
+    return this;
+  }
+
+  @Override
   public void build() {
     this.built = true;
   }
@@ -170,5 +326,13 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
       batch.addInvPlanUpdates(nextInvPlan);
     }
     return batch.build();
+  }
+  
+  private boolean isInvPlanRelation(ContractOneOfRelations rel) {
+    if(rel == null) {
+      return false;
+    }
+    return rel.getRelationType() == ContractRelationType.INVESTMENT_PLAN && 
+        rel.getInvPlanId().equals(this.currentInvPlan.getId());
   }
 }

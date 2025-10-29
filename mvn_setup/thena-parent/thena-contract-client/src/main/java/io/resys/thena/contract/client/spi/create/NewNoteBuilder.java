@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.spi.create;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-contract-client
@@ -21,6 +23,9 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
@@ -37,7 +42,7 @@ import jakarta.annotation.Nullable;
 public class NewNoteBuilder implements NewNote {
   private final ContractCommitBuilder logger;
   private final String contractId;
-  private final @Nullable String parentId; // for party/coverage notes
+  private final @Nullable ContractOneOfRelations relation; // for party/coverage notes
   private final Map<String, Note> allNotes;
   private final ImmutableNote.Builder next;
   private final String noteId;
@@ -47,34 +52,42 @@ public class NewNoteBuilder implements NewNote {
       ContractCommitBuilder logger, 
       String contractId,
       ContractOneOfRelations relation,
-      
-      
       ImmutablePersistenceUnit currentTx,
       @Nullable ContractContainer savedState
-      
-      ) {
+  ) {
     
     super();
     
-    /**
-     * final var all_notes = this.batch.build().getNoteInserts().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-     */
+    final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
+    
+    this.allNotes = Stream.of(
+        // from current TX
+        currentTx.getNoteInserts().stream(),
+        currentTx.getNoteUpdates().stream(),
+        
+        // previously saved
+        Optional.ofNullable(savedState)
+          .map(saved -> saved.getNotes())
+          .orElse(Collections.emptyList())
+          .stream()
+          .filter(saved -> !deletes.contains(saved.getId()))
+          .filter(saved -> !updates.contains(saved.getId()))
+      )
+      .flatMap(e -> e)
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+    
     
     this.logger = logger;
     this.contractId = contractId;
-    this.parentId = parentId;
-    this.allNotes = allNotes;
+    this.relation = relation;
     this.noteId = OidUtils.gen();
     this.next = ImmutableNote.builder()
         .id(noteId)
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
-    
-    // Set parent relation if provided
-    if (parentId != null) {
-      // TODO: Set parent relation based on parent type (party/coverage)
-    }
+        .contractId(contractId)
+        .relations(relation);
   }
 
   @Override
