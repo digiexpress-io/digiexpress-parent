@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
@@ -343,47 +344,43 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public <T> MergeContract setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> callbacks) {
-    // clear old
-    final var intermed = this.batch.build()
-        .getNotes().stream()
-        .filter(n -> !n.getNoteType().equals(noteType))
+  public <T> MergeContract setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note) {
+    // current tx
+    final List<Note> saved = this.batch.build().getNoteInserts().stream()
+        .filter(e -> !e.getNoteType().equals(noteType))
+        .filter(a -> a.getRelations() != null)
         .toList();
-    this.batch.notes(intermed);
-    final var allNotes = new HashMap<String, Note>();
+    this.batch.noteInserts(Collections.emptyList());
     
-    // delete old
-    final var toBeDeleted = new ArrayList<>(container.getNotes().stream()
-        .filter(n -> n.getNoteType().equals(noteType))
-        .map(n -> {
-          logger.rm(n);
-          return n;
-        })
-        .toList());
-
-    // add new
-    for(final var replacement : replacements) {
-      final var note = callbacks.apply(replacement);
-      
-      final var builder = new NewNoteBuilder(logger, contractId, null, this.batch.build(), container);
-      note.accept(builder);
-      final var built = builder.close();
-      
-      // previous version exists and is exactly the same
-      final var previous = toBeDeleted.stream()
-          .filter(n -> n.getNoteType().equals(built.getNoteType()))
-          .filter(n -> Objects.equals(n.getNoteCode(), built.getNoteCode()))
-          .findFirst();
-      
-      if(previous.isPresent()) {
-        toBeDeleted.remove(previous.get());
-      } else {
-        allNotes.put(built.getId(), built);
-        this.batch.addNotes(built);        
-      }
+    
+    final var incorrect_updates = this.batch.build().getNoteUpdates().stream()
+      .filter(e -> e.getNoteType().equals(noteType))
+      .filter(a -> a.getRelations() == null)
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update note and then delete it by setting all contract notes to new values!");
     }
     
-    this.batch.addAllDeleteNotes(toBeDeleted);
+  
+    final var all_notes = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllNoteDeletes(container.getNotes().stream()
+        .filter(a -> a.getRelations() == null)
+        .filter(e -> e.getNoteType().equals(noteType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_note = note.apply(replacement);
+      
+      final var builder = new NewNoteBuilder(logger, contractId, null, batch.build(), container);
+      new_note.accept(builder);
+
+      final var built = builder.close();
+      all_notes.put(built.getId(), built);
+      this.batch.addNoteInserts(built);
+    }
     updateVersion();
     return this;
   }
