@@ -185,8 +185,8 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract addParty(Consumer<NewParty> party) {
-    final var allParties = this.next.build().getPartyInserts().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewPartyBuilder(logger, contractId, allParties);
+    final var allParties = this.next.build();
+    final var builder = new NewPartyBuilder(logger, contractId, allParties, null);
     party.accept(builder);
     final var built = builder.close();
     this.next.addPartyInserts(built);

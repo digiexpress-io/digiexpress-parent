@@ -34,7 +34,9 @@ import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContai
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
 import io.resys.thena.contract.client.entities.Coverage;
+import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableCoverage;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
@@ -47,6 +49,8 @@ public class NewCoverageBuilder implements NewCoverage {
   private final String contractId;
   private final Map<String, Coverage> allCoverages;
   private final ImmutableCoverage.Builder next;
+  private final ImmutablePersistenceUnit currentTx;
+  private final ContractContainer savedState;
   private boolean built;
   
   public NewCoverageBuilder(
@@ -58,6 +62,8 @@ public class NewCoverageBuilder implements NewCoverage {
     super();
     this.logger = logger;
     this.contractId = contractId;
+    this.currentTx = currentTx;
+    this.savedState = savedState;
     
     
     final var updates = currentTx.getCoverageUpdates().stream().map(e -> e.getId()).toList();
@@ -184,13 +190,29 @@ public class NewCoverageBuilder implements NewCoverage {
 
   @Override
   public NewCoverage addNote(Consumer<NewNote> note) {
-    // TODO: Implement nested note builder
+    final var coverageRel = ImmutableContractOneOfRelations.builder()
+        .relationType(ContractRelationType.COVERAGE)
+        .coverageId(this.next.build().getId())
+        .build();
+    
+    final var builder = new NewNoteBuilder(logger, contractId, coverageRel, currentTx, savedState);
+    note.accept(builder);
+    final var built = builder.close();
+    this.logger.add(built);
     return this;
   }
 
   @Override
   public NewCoverage addReference(Consumer<NewReference> reference) {
-    // TODO: Implement nested reference builder
+    final var coverageRel = ImmutableContractOneOfRelations.builder()
+        .relationType(ContractRelationType.COVERAGE)
+        .coverageId(this.next.build().getId())
+        .build();
+    
+    final var builder = new NewReferenceBuilder(logger, contractId, coverageRel, currentTx, savedState);
+    reference.accept(builder);
+    final var built = builder.close();
+    this.logger.add(built);
     return this;
   }
 

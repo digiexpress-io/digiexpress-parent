@@ -528,7 +528,7 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public MergeContract addParty(Consumer<NewParty> party) {
     final var allParties = this.batch.build().getParties().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewPartyBuilder(logger, contractId, allParties);
+    final var builder = new NewPartyBuilder(logger, contractId, allParties, this.batch.build(), this.container);
     party.accept(builder);
     final var built = builder.close();
     this.batch.addParties(built);
@@ -539,7 +539,7 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public MergeContract addCoverage(Consumer<NewCoverage> coverage) {
     final var allCoverages = this.batch.build().getCoverages().stream().collect(java.util.stream.Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewCoverageBuilder(logger, contractId, allCoverages);
+    final var builder = new NewCoverageBuilder(logger, contractId, this.batch.build(), this.container);
     coverage.accept(builder);
     final var built = builder.close();
     this.batch.addCoverages(built);
