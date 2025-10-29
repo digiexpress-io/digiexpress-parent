@@ -389,7 +389,7 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public <T> MergeContract setAllCapabilities(String capabilityType, List<T> replacements, Function<T, Consumer<NewCapability>> callbacks) {
+  public <T> MergeContract setAllCapabilities(List<T> replacements, Function<T, Consumer<NewCapability>> callbacks) {
     // clear old
     final var intermed = this.batch.build()
         .getCapabilities().stream()
@@ -434,7 +434,7 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public <T> MergeContract setAllInvPlans(String invPlanCode, List<T> replacements, Function<T, Consumer<NewInvPlan>> callbacks) {
+  public <T> MergeContract setAllInvPlans(List<T> replacements, Function<T, Consumer<NewInvPlan>> callbacks) {
     // clear old
     final var intermed = this.batch.build()
         .getInvPlans().stream()
@@ -479,7 +479,7 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public <T> MergeContract setAllPaymentPlans(String paymentPlanStatus, List<T> replacements, Function<T, Consumer<NewPaymentPlan>> callbacks) {
+  public <T> MergeContract setAllPaymentPlans(List<T> replacements, Function<T, Consumer<NewPaymentPlan>> callbacks) {
     // clear old
     final var intermed = this.batch.build()
         .getPaymentPlans().stream()
