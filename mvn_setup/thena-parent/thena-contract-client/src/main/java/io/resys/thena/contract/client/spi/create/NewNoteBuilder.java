@@ -45,7 +45,7 @@ public class NewNoteBuilder implements NewNote {
   public NewNoteBuilder(
       ContractCommitBuilder logger, 
       String contractId,
-      @Nullable String parentId,
+      ContractOneOfRelations relation,
       Map<String, Note> allNotes) {
     
     super();
@@ -96,16 +96,13 @@ public class NewNoteBuilder implements NewNote {
     return noteId;
   }
 
-  public ContractBatchOperations close() {
+  public ImmutableNote close() {
     RepoAssert.isTrue(built, () -> "you must call NewNote.build() to finalize note CREATE!");
     
     final var note = next.build();
     
     this.logger.add(note);
     
-    return ContractBatchOperations.builder()
-        .tenantId(logger.getTenantId())
-        .addNotes(note)
-        .build();
+    return note;
   }
 }

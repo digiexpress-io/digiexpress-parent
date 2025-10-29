@@ -37,6 +37,7 @@ import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
+import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableParty;
 import io.resys.thena.contract.client.entities.Note;
 import io.resys.thena.contract.client.entities.Party;
@@ -50,6 +51,7 @@ public class MergePartyBuilder implements MergeParty {
 
   private final ContractCommitBuilder logger;
   private final ImmutablePersistenceUnit.Builder batch;
+  private final ImmutableContractOneOfRelations childRel;
   private final Party currentParty; 
   private final ImmutableParty.Builder nextParty;
   private final Map<String, Party> allParties;
@@ -76,6 +78,7 @@ public class MergePartyBuilder implements MergeParty {
     this.nextParty = ImmutableParty.builder().from(currentParty);
     this.allParties = allParties;
     this.container = container;
+    this.childRel = ImmutableContractOneOfRelations.builder().relationType(ContractRelationType.PARTY).partyId(currentParty.getId()).build();
   }
 
   @Override
@@ -146,16 +149,15 @@ public class MergePartyBuilder implements MergeParty {
   
   @Override
   public <T> MergeParty setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note) {
-    // clear old
-    
+    // current tx
     final List<Note> saved = this.batch.build().getNoteInserts().stream()
-        .filter(e -> !e.getLabelType().equals(labelType))
+        .filter(e -> !e.getNoteType().equals(noteType))
+        .filter(a -> !isPartyRelation(a.getRelations()))
         .toList();
-    this.batch.missionLabels(Collections.emptyList());
+    this.batch.noteInserts(Collections.emptyList());
   
     
-    
-    final var all_mission_label = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    final var all_notes = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     // delete old
     this.batch.addAllNoteDeletes(container.getNotes().stream()
@@ -165,13 +167,13 @@ public class MergePartyBuilder implements MergeParty {
     
     // add new
     for(final var replacement : replacements) {
-      final var label = note.apply(replacement);
+      final var new_note = note.apply(replacement);
       
-      final var builder = new NewNoteBuilder(logger, missionId, childRel,  all_mission_label);
-      label.accept(builder);
+      final var builder = new NewNoteBuilder(logger, contractId, childRel, all_notes);
+      new_note.accept(builder);
 
       final var built = builder.close();
-      all_mission_label.put(built.getId(), built);
+      all_notes.put(built.getId(), built);
       this.batch.addNoteInserts(built);
     }
     return this;
