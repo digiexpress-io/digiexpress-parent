@@ -41,8 +41,10 @@ import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableParty;
 import io.resys.thena.contract.client.entities.Note;
 import io.resys.thena.contract.client.entities.Party;
+import io.resys.thena.contract.client.entities.Reference;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.create.NewNoteBuilder;
+import io.resys.thena.contract.client.spi.create.NewReferenceBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
@@ -54,7 +56,6 @@ public class MergePartyBuilder implements MergeParty {
   private final ImmutableContractOneOfRelations childRel;
   private final Party currentParty; 
   private final ImmutableParty.Builder nextParty;
-  private final Map<String, Party> allParties;
   private final ContractContainer container;
   private final String contractId;
 
@@ -65,7 +66,8 @@ public class MergePartyBuilder implements MergeParty {
       ContractCommitBuilder logger, 
       String contractId, 
       String partyId,
-      Map<String, Party> allParties) {
+      Map<String, Party> all_parties,
+      Map<String, Reference> all_references) {
     super();
     this.contractId = contractId;
     this.logger = logger;
@@ -76,7 +78,6 @@ public class MergePartyBuilder implements MergeParty {
         .orElse(null);
     RepoAssert.notNull(currentParty, () -> "Can't find party with id: '" + partyId + "' for contract: '" + contractId + "'!");
     this.nextParty = ImmutableParty.builder().from(currentParty);
-    this.allParties = allParties;
     this.container = container;
     this.childRel = ImmutableContractOneOfRelations.builder().relationType(ContractRelationType.PARTY).partyId(currentParty.getId()).build();
   }
@@ -155,8 +156,17 @@ public class MergePartyBuilder implements MergeParty {
         .filter(a -> !isPartyRelation(a.getRelations()))
         .toList();
     this.batch.noteInserts(Collections.emptyList());
-  
     
+    
+    final var incorrect_updates = this.batch.build().getNoteUpdates().stream()
+      .filter(e -> e.getNoteType().equals(noteType))
+      .filter(a -> isPartyRelation(a.getRelations()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update note and then delete it by setting all party notes to new values!");
+    }
+    
+  
     final var all_notes = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     // delete old
@@ -169,7 +179,7 @@ public class MergePartyBuilder implements MergeParty {
     for(final var replacement : replacements) {
       final var new_note = note.apply(replacement);
       
-      final var builder = new NewNoteBuilder(logger, contractId, childRel, all_notes);
+      final var builder = new NewNoteBuilder(logger, contractId, childRel, batch.build(), container);
       new_note.accept(builder);
 
       final var built = builder.close();
@@ -180,19 +190,69 @@ public class MergePartyBuilder implements MergeParty {
   }
   @Override
   public <T> MergeParty setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference) {
-    // TODO Auto-generated method stub
-    return null;
+    // current tx
+    final List<Reference> saved = this.batch.build().getReferenceInserts().stream()
+        .filter(e -> !e.getReferenceType().equals(referenceType))
+        .filter(a -> !isPartyRelation(a.getRelations()))
+        .toList();
+    this.batch.noteInserts(Collections.emptyList());
+    
+    
+    final var incorrect_updates = this.batch.build().getReferenceUpdates().stream()
+      .filter(e -> e.getReferenceType().equals(referenceType))
+      .filter(a -> isPartyRelation(a.getRelations()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update reference and then delete it by setting all party references to new values!");
+    }
+    
+  
+    final var all_references = new HashMap<String, Reference>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllReferenceDeletes(container.getReferences().stream()
+        .filter(a -> isPartyRelation(a.getRelations()))
+        .filter(e -> e.getReferenceType().equals(referenceType))
+        .toList());
+    
+    // add new
+    for(final var replacement : replacements) {
+      final var new_note = reference.apply(replacement);
+      
+      final var builder = new NewReferenceBuilder(logger, contractId, childRel, batch.build(), container);
+      new_note.accept(builder);
+
+      final var built = builder.close();
+      all_references.put(built.getId(), built);
+      this.batch.addReferenceInserts(built);
+    }
+    return this;
   }
+  
   @Override
   public MergeParty addReference(Consumer<NewReference> reference) {
-    // TODO Auto-generated method stub
-    return null;
+    final var builder = new NewReferenceBuilder(
+        logger, contractId, childRel,
+        batch.build(),
+        container
+    );
+    reference.accept(builder);
+    final var built = builder.close();
+    this.batch.addReferenceInserts(built);
+    return this;
   }
 
   @Override
   public MergeParty addNote(Consumer<NewNote> note) {
-    // TODO Auto-generated method stub
-    return null;
+    final var builder = new NewNoteBuilder(
+        logger, contractId, childRel,
+        batch.build(),
+        container
+    );
+    note.accept(builder);
+    final var built = builder.close();
+    this.batch.addNoteInserts(built);
+    return this;
   }
 
   @Override

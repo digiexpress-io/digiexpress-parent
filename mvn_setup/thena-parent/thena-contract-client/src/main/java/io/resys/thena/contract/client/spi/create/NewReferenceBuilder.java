@@ -22,11 +22,14 @@ package io.resys.thena.contract.client.spi.create;
 
 import java.util.Map;
 
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
+import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableReference;
 import io.resys.thena.contract.client.entities.Reference;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
@@ -43,8 +46,9 @@ public class NewReferenceBuilder implements NewReference {
   public NewReferenceBuilder(
       ContractCommitBuilder logger, 
       String contractId,
-      @Nullable String parentId,
-      Map<String, Reference> allReferences) {
+      @Nullable ImmutableContractOneOfRelations parentId,
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     
     super();
     this.logger = logger;

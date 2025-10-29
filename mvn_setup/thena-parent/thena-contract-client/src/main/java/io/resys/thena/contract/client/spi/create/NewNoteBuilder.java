@@ -22,12 +22,13 @@ package io.resys.thena.contract.client.spi.create;
 
 import java.util.Map;
 
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
 import io.resys.thena.contract.client.entities.ImmutableNote;
 import io.resys.thena.contract.client.entities.Note;
-import io.resys.thena.contract.client.spi.commitlog.ContractBatchOperations;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
@@ -46,9 +47,19 @@ public class NewNoteBuilder implements NewNote {
       ContractCommitBuilder logger, 
       String contractId,
       ContractOneOfRelations relation,
-      Map<String, Note> allNotes) {
+      
+      
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState
+      
+      ) {
     
     super();
+    
+    /**
+     * final var all_notes = this.batch.build().getNoteInserts().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+     */
+    
     this.logger = logger;
     this.contractId = contractId;
     this.parentId = parentId;
