@@ -92,8 +92,8 @@ gamut.forms.files,,Files,Liitteet,Filer,Fail,Datoteke
 gamut.forms.messages,,Messages,Viestit,Meddelanden,Mesej,Poruke
 gamut.forms.page.subtitle,,Next:{nextPageTitle},Seuraava:{nextPageTitle},Nästa:{nextPageTitle},Seterusnya:{nextPageTitle},Sljedeće:{nextPageTitle}
 gamut.forms.page.subtitle.complete,,Next: Complete,Seuraava: Valmis,Nästa: Komplett,Seterusnya: Lengkap,Sljedeće: Završi
-gamut.forms.page.stepper,,{start} of {end},{start} of {end},{start} av {slut},{start} of {end},{start] od {end}
-gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {stepNumber} out of {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps},Korak {stepNumber} od {totalSteps}
+gamut.forms.page.stepper,,{start} of {end},{start} sivu {end},{start} av {slut},{start} of {end},{start] od {end}
+gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Vaihe {stepNumber} vaiheista {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps},Korak {stepNumber} od {totalSteps}
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya,Sledeći
 gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap,Završi
 gamut.forms.page.cancel,,Cancel,Peruuta,Avboka,Batal,Otkaži
@@ -105,10 +105,10 @@ gamut.forms.filling.proceed_to_form_anonUser,,By selecting Continue with form 
 gamut.forms.filling.anonUser_and_welcome,,Hello!,Terve!,Hej!,Hello!,Hello!
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini,Popunjavanje obrasca započinje
 gamut.forms.filling.login-then-start.button,,Log in now,Kirjaudu sisään,Logga in nu,Log in now,Prijavi se sada
-gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi,Obrazac se automatski sprema tokom popunjavanja
+gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake tallentuu automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi,Obrazac se automatski sprema tokom popunjavanja
 gamut.forms.filling.start.button,,Continue to form,Jatka lomakkeella,Fortsätt att bilda,Teruskan membentuk,Nastavak na obrazac
 gamut.forms.filling.cancel.button,,Cancel,Peruuta,Avboka,Batal,Otkaži
-gamut.forms.filling.summary,,You have completed the form,Lomake on valmis,Du har fyllt i formuläret,Anda telah melengkapkan borang,Obrazac je uspješno popunjen
+gamut.forms.filling.summary,,You have completed the form,Olemme vastaanottaneet lomakkeesi,Vi har tagit emot ditt formulär,Anda telah melengkapkan borang,Obrazac je uspješno popunjen
 gamut.forms.filling.summary.thank-you,,Thank you!,Kiitos!,Tack!,terima kasih!,Hvala!
 gamut.forms.filling.summary.info1,,Our staff has been notified of your request and will begin processing soon.,Saat ilmoituksen kun asiontipyyntösi on otettu käsittelyyn,Vår personal har underrättats om din förfrågan och kommer att börja behandla snart.,Kakitangan kami telah dimaklumkan tentang permintaan anda dan akan mula memproses tidak lama lagi.,Osoblje je obaviješteno o zahtjevu i uskoro će početi s obradom.
 gamut.forms.filling.summary.info2,,Be sure to check My Overview regularly for,Muistahan välillä tarkistaa Minun asiat osiota,Se till att kontrollera Min översikt regelbundet för,Pastikan anda menyemak Gambaran Keseluruhan Saya dengan kerap untuk,Preporučuje se redovno provjeravati Moj pregled
