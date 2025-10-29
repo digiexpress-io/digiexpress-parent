@@ -1,0 +1,215 @@
+#set text(
+  font: "Liberation Sans",
+  size: 11pt,
+)
+
+#set page(
+  paper: "a4",
+  margin: (x: 1.5cm, y: 1cm),
+)
+
+#set par(
+  justify: true,
+  leading: 0.5em
+)
+
+#set stack(
+  spacing: 0.5em
+)
+
+#set grid(
+  rows:0.1em,
+  gutter: 3em,
+)
+
+#set rect(
+  fill: rgb("e4e5ea"),
+  width: 100%,
+)
+
+
+#let labelValueRow(label, labelWeight, value, valueWeight) = {
+  stack(dir: ltr, spacing: 1em)[
+    #text(weight: labelWeight)[#label]
+    #text(weight: valueWeight)[#value]
+  ]
+}
+
+#let headerCenterBoxText = stack(
+  dir: ttb,
+  spacing: 1em,
+  text(16pt, weight: "extrabold")[Liite],
+  text(14pt)[Sisäinen],
+  text(14pt)[29.09.2022],
+)
+
+#let headerLogoBox = box(
+  height: 10%,
+  width: 100%,
+  align(bottom + left)[Sipoon kunta]                      
+)
+
+#let headerCenterBox = box(
+  height: 10%,
+  width: 100%,
+  align(bottom + left)[#headerCenterBoxText]
+)
+
+#let headerRightBox = box(
+  height: 10%,
+  width: 100%,
+  align(top + right)[#text(10pt, baseline: 1.5em)[52331c724d74efaba4876479da47a9cf1(1)]]
+)
+
+
+
+// ---------------------------- PDF START -------------------------------
+
+#grid(
+  columns: (6cm, 4cm, 1fr),
+  rows: (auto, 10pt),
+  gutter: 1pt,
+  headerLogoBox,
+  headerCenterBox,
+  headerRightBox
+)
+
+#show heading: set block(below: 0.7em)
+#show heading: set text(weight:"extrabold", size: 12pt )
+
+= Kirjautuneena
+
+#stack(
+  labelValueRow("Henkilötunnus:", "regular", "070770-905D", "bold"),
+  labelValueRow("Nimi:", "regular", "Antero OP Asiakas", "bold"),
+  labelValueRow("Osoite::", "regular", "Sepänkatu 11 A 5, 70100 KUOPIO", "bold"),
+)
+
+
+#v(0.5em)
+= Haluan tilata seuraavat aineistot
+
+#grid(
+  columns: (1.5fr, 1fr),
+  align: left,
+   text[Rahu-raportti (Rakennus- ja huoneistorekisteriote):],
+   text[Kyllä]
+)
+
+#let myArrayValues = ("Asemapiirustus", "Leikkauspiirustus", "Käyttöönottokatselmus")
+#let mapped = myArrayValues.map(value => list[#value])
+
+#grid(
+  columns: (1.5fr, 1fr),
+  align: left,
+  gutter: 5em,
+  rows: 3em,
+  text[Lupapiirustukset):],
+  stack(
+   dir: ttb,
+   ..(mapped),
+ )
+)
+
+#grid(
+  columns: (1.5fr, 1fr),
+  align: left,
+   text[Muut tilaamani aineistot:],
+   text[value here]
+)
+
+#grid(
+  columns: (1.5fr, 1fr),
+  align: left,
+   text[Pöytäkirjat:],
+   text[another value here]
+)
+
+#v(0.5em)
+= Kiinteistöntiedot
+
+#grid(
+  columns: (1.5fr, 1fr),
+  align: left,
+  rows: auto,
+   text[Kiinteistötunnus (muodossa 753-4xx-xxxx-xxxx) tai rakennuspaikan osoite (katusoite,postinumero japostitoimipaikka):],
+   align(bottom)[
+    #text[513425123]
+  ]
+)
+
+#grid(
+  columns: (1.5fr, 1fr),
+  align: left,
+  rows: auto,
+   text[Tilaukseni koskee seuraavia rakennuksia:],
+   text[Sdfasdf]
+)
+
+#v(0.5em)
+= Tiedot toimitusta ja laskutusta varten
+
+#stack(dir: ttb,
+  labelValueRow("Laskutusosoite:", "regular", "someValue", "regular"),
+  labelValueRow("Nimi:", "regular", "Antero OP Asiakas", "bold"),
+  labelValueRow("Osoite:","regular", "Sepänkatu 11 A 5, 70100 KUOPIO", "regular"),
+  labelValueRow("Laskutustietoni ovat oikein:","regular", "Some value", "regular"),
+  labelValueRow("Laskutusosoitteeni on:", "regular", "Some value", "regular"),
+  labelValueRow("Haluan laskun verkkolaskuna:", "regular", "Some value", "regular"),
+  labelValueRow("Verkkolaskutusosoite (nimi, verkkolaskuosoite, OVT-tunnus, välittäjä, välittäjän tunnus):,","regular", "", "regular"),
+  labelValueRow("Tilaajaviite laskutusta varten:","regular", "Some value", "regular"),
+  labelValueRow("Nimi:", "regular", "Some value", "regular"),
+  labelValueRow("Minut tavoittaa puhelimitse numerosta:","regular", "", "regular"),
+  labelValueRow("Sähköpostiosoitteeni on:", "regular", "Some value", "regular"),
+)
+
+#v(0.5em)
+= Liitteet
+
+ #stack(dir: ttb,
+  text[
+    Voit lisätä laskutusohjeen liitteeksi klikkaamalla oikealta löytyvää plus -kuvaketta.       Hyväksymme perinteiset tiedostomuodot kuten pdf, jpeg ja png. Ennen liittämistä, varmistathan että tiedostot ovat oikeat ja ne mitä asiasi käsittelyyn liittyen on pyydetty. Emme käsittele liitteitä, jotka eivät liity asiaasi],
+  text[:],
+  text[some value]
+)
+
+#labelValueRow("Lisäksi haluan kertoa että:","regular", "some value", "regular")
+
+// --------------------------- FOOTER ---------------------------
+
+#v(3cm)
+#show text: set text(size: 8pt, )
+#grid(
+  columns: (2cm, 6cm, 2.5cm, 3cm, 3cm), rows: (0.5em), gutter: 1em, 
+  text[Sipoon kunta],
+  text[Lukkarinmäentie 2, PL7, 04131 Sipoo],
+  text[www.sipoo.fi],
+  text[Vaihde 09 23531],
+  text[Faksi 09 2353 6209]
+ )
+
+#v(-0.5em)
+#grid(
+  columns: (2cm, 6cm, 2.5cm, 3cm, 3cm), rows: (0.5em), gutter: 1em, 
+  text[Sibbo kommun],
+  text[Klockarbackavägen 2, PB 7, 04131 Sibbo],
+  text[www.sibbo.fi],
+  text[Växel 09 23531],
+  text[Fax 09 2353 6209]
+)
+
+
+/*
+  
+#stack(
+  dir: ttb,
+  ..(myArrayValues).map(value => rect[#value]),
+)
+
+#stack(
+  dir: ttb,
+  ..for value in (myArrayValues) {
+    (rect[#value],)
+  }
+)
+*/
