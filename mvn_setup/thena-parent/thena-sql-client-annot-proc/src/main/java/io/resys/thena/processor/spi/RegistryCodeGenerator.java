@@ -1,4 +1,4 @@
-package io.resys.thena.processor.model;
+package io.resys.thena.processor.spi;
 
 /*-
  * #%L
@@ -20,15 +20,13 @@ package io.resys.thena.processor.model;
  * #L%
  */
 
-import java.util.List;
-
 import com.squareup.javapoet.JavaFile;
 
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 
 /**
- * Code generators that work with RegistryModel and List of TableModels
+ * Code generators that work with only RegistryModel
  */
-public interface MultiTableCodeGenerator {
-  JavaFile generate(RegistryModel registry, List<TableModel> tables);
+public interface RegistryCodeGenerator {
+  JavaFile generate(RegistryModel registry);
 }

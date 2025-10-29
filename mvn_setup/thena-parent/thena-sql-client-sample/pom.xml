@@ -8,9 +8,10 @@
   <packaging>jar</packaging>
   <name>thena-sql-client-sample</name>
   <artifactId>thena-sql-client-sample</artifactId>
+  
 
 
-  <dependencies>
+  <dependencies>              
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>

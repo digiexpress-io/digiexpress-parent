@@ -77,8 +77,8 @@ import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.processor.model.RegistryCodeGenerator;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.spi.RegistryCodeGenerator;
 import io.resys.thena.spi.TenantDataSource;
 import io.resys.thena.spi.TenantDataSource.TxScope;
 

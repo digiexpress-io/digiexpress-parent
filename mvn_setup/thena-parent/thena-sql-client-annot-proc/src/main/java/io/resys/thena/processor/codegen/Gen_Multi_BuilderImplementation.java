@@ -41,11 +41,11 @@ import io.resys.thena.api.entities.ImmutableBatchLog;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
-import io.resys.thena.processor.model.MultiTableCodeGenerator;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 import io.smallrye.mutiny.Uni;
 

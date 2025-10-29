@@ -96,9 +96,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.processor.model.MultiTableCodeGenerator;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 
 public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
   

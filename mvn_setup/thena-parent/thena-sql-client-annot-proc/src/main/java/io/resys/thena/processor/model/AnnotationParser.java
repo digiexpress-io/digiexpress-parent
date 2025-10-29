@@ -41,12 +41,12 @@ import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
 import io.resys.thena.processor.model.TableModel.SqlPropsType;
 
-public class ModelExtractor {
+public class AnnotationParser {
   private static final Pattern TABLE_NAME_PATTERN = Pattern.compile("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}");
   
   private final ProcessingEnvironment processingEnv;
   
-  public ModelExtractor(ProcessingEnvironment processingEnv) {
+  public AnnotationParser(ProcessingEnvironment processingEnv) {
     this.processingEnv = processingEnv;
   }
   

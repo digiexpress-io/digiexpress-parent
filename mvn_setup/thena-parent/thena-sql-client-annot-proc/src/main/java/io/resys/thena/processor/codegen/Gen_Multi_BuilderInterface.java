@@ -37,11 +37,11 @@ import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.entities.BatchLog;
 import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.processor.model.MultiTableCodeGenerator;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {

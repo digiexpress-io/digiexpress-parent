@@ -197,7 +197,7 @@ public class MetaModel {
       }
       
       // Extract table model using existing ModelExtractor
-      final var modelExtractor = new ModelExtractor(processingEnv);
+      final var modelExtractor = new AnnotationParser(processingEnv);
       return modelExtractor.extract((TypeElement) element);
     }
     

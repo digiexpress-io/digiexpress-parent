@@ -80,8 +80,8 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import io.resys.thena.processor.model.RegistryCodeGenerator;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.spi.RegistryCodeGenerator;
 
 public class Gen_Registry_Exception implements RegistryCodeGenerator {
   

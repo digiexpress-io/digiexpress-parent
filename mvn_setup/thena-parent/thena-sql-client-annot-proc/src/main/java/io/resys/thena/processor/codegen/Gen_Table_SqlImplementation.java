@@ -139,14 +139,13 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.processor.model.TableCodeGenerator;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.MethodParameter;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.model.TableModel.SqlMethod;
 import io.resys.thena.processor.model.TableModel.SqlPropsType;
+import io.resys.thena.processor.spi.TableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
-import lombok.extern.slf4j.Slf4j;
 
 
 
@@ -156,7 +155,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     final var classBuilder = TypeSpec.classBuilder(model.getImplClassName())
       .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
       .addSuperinterface(ClassName.get(model.getPackageName(), model.getInterfaceName()))
-      .addAnnotation(Slf4j.class)
+      .addAnnotation(ClassName.get("lombok.extern.slf4j", "Slf4j"))
       .addAnnotation(ClassName.get("lombok", "Value"))
       .addAnnotation(ClassName.get("lombok", "AllArgsConstructor"));
     

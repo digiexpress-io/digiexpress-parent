@@ -27,35 +27,41 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+
+import com.google.auto.service.AutoService;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.processor.codegen.Gen_Multi_BuilderImplementation;
 import io.resys.thena.processor.codegen.Gen_Multi_BuilderInterface;
-import io.resys.thena.processor.codegen.Gen_Registry_DatabaseImplementation;
-import io.resys.thena.processor.codegen.Gen_Registry_DatabaseInterface;
 import io.resys.thena.processor.codegen.Gen_Multi_InternalTenantQuery;
-import io.resys.thena.processor.codegen.Gen_Registry_Exception;
 import io.resys.thena.processor.codegen.Gen_Multi_QueryImplementation;
 import io.resys.thena.processor.codegen.Gen_Multi_QueryInterface;
 import io.resys.thena.processor.codegen.Gen_Multi_RegistryFactory;
 import io.resys.thena.processor.codegen.Gen_Multi_TableNames;
+import io.resys.thena.processor.codegen.Gen_Registry_DatabaseImplementation;
+import io.resys.thena.processor.codegen.Gen_Registry_DatabaseInterface;
+import io.resys.thena.processor.codegen.Gen_Registry_Exception;
 import io.resys.thena.processor.codegen.Gen_Table_SqlImplementation;
-import io.resys.thena.processor.model.MultiTableCodeGenerator;
-import io.resys.thena.processor.model.RegistryCodeGenerator;
-import io.resys.thena.processor.model.TableCodeGenerator;
 import io.resys.thena.processor.model.MetaModel;
 import io.resys.thena.processor.model.TableModel;
 import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.spi.MultiTableCodeGenerator;
+import io.resys.thena.processor.spi.RegistryCodeGenerator;
+import io.resys.thena.processor.spi.TableCodeGenerator;
 
 
-
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
+@AutoService(Processor.class)
 public class SqlAnnotationProcessor extends AbstractProcessor {
 
+  @Override
+  public SourceVersion getSupportedSourceVersion() {
+    return SourceVersion.latest();
+  }
+  
   @Override
   public Set<String> getSupportedAnnotationTypes() {
     return new HashSet<>(Arrays.asList(
