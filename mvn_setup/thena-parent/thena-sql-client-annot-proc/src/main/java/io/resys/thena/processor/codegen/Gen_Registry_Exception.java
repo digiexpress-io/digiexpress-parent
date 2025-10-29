@@ -80,12 +80,12 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.spi.RegistryCodeGenerator;
 
 public class Gen_Registry_Exception implements RegistryCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry) {
+  public JavaFile generate(RegistryMetamodel registry) {
     final var className = registry.getName() + "FindException";
     final var packageName = registry.getPackageName() + ".spi";
     

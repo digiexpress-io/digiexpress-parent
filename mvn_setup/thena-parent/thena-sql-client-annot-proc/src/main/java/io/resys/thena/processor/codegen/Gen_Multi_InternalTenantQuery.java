@@ -40,8 +40,8 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
@@ -52,12 +52,12 @@ import io.smallrye.mutiny.Uni;
 
 public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var className = registry.getInternalTenantQueryClassName();
     final var packageName = registry.getPackageName() + ".spi";
     
     final var sortedTables = tables.stream()
-      .sorted(Comparator.comparingInt(TableModel::getOrder))
+      .sorted(Comparator.comparingInt(TableMetamodel::getOrder))
       .toList();
     
     final var classBuilder = TypeSpec.classBuilder(className)
@@ -85,7 +85,7 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
       .build();
   }
   
-  private MethodSpec generateInsert(RegistryModel registry, List<TableModel> sortedTables) {
+  private MethodSpec generateInsert(RegistryMetamodel registry, List<TableMetamodel> sortedTables) {
     return MethodSpec.methodBuilder("insert")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -98,7 +98,7 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
       .build();
   }
   
-  private CodeBlock generateInsertBody(RegistryModel registry, List<TableModel> sortedTables) {
+  private CodeBlock generateInsertBody(RegistryMetamodel registry, List<TableMetamodel> sortedTables) {
     final var code = CodeBlock.builder();
     //     final var registry = new Batch2Registry(Batch2TableNames.defaults().toRepo(newRepo), next);
     
@@ -188,7 +188,7 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     return code.build();
   }
   
-  private MethodSpec generateDelete(RegistryModel registry, List<TableModel> sortedTables) {
+  private MethodSpec generateDelete(RegistryMetamodel registry, List<TableMetamodel> sortedTables) {
     return MethodSpec.methodBuilder("delete")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -201,7 +201,7 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
       .build();
   }
   
-  private CodeBlock generateDeleteBody(RegistryModel registry, List<TableModel> sortedTables) {
+  private CodeBlock generateDeleteBody(RegistryMetamodel registry, List<TableMetamodel> sortedTables) {
     final var code = CodeBlock.builder();
     
     code.add("final var names = $T.defaults().toRepo(newRepo);\n", ClassName.bestGuess(registry.getTableClassName()));

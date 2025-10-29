@@ -23,8 +23,6 @@ package io.resys.thena.processor.model;
 
 import java.util.List;
 
-import javax.lang.model.element.Element;
-
 import com.squareup.javapoet.TypeName;
 
 import jakarta.annotation.Nullable;
@@ -33,7 +31,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class TableModel {
+public class TableMetamodel {
   String interfaceName;
   String packageName;
   String implClassName;
@@ -111,20 +109,5 @@ public class TableModel {
     String sqlBuilderClassName;  // For custom SQL builder
   }
   
-  
-  @Value
-  @Builder
-  public static class RegistryModel {
-    Element element;
-    String name;                    // "Grim"
-    String packageName;             // "io.resys.thena.grim.spi.sql"
-    String tableClassName;
-    String registryClassName;
-    String internalTenantQueryClassName;
-    String transactionContainerClassName;
-    String transactionSaveClassName;
-    String worldName;
-    @Builder.Default
-    List<String> nonTenantTables = List.of();  // ["process", "process_id_seq"]
-  }
+
 }

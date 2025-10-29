@@ -37,16 +37,16 @@ import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.entities.BatchLog;
 import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
-import io.resys.thena.processor.model.TableModel.SqlMethod;
-import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var className = registry.getName() + "DbBuilder";
     final var persistenceUnitName = "PersistenceUnit";
     
@@ -75,7 +75,7 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
       .build();
   }
   
-  private Map<String, TypeName> extractOperations(List<TableModel> tables) {
+  private Map<String, TypeName> extractOperations(List<TableMetamodel> tables) {
     final var operations = new HashMap<String, TypeName>();
     
     for (final var table : tables) {
@@ -98,7 +98,7 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
     return operations;
   }
   
-  private String buildOperationFieldName(TableModel table, SqlMethodType type) {
+  private String buildOperationFieldName(TableMetamodel table, SqlMethodType type) {
     final var baseName = NamingUtils.toPascalCase(table.getTableName());
     
     return switch (type) {

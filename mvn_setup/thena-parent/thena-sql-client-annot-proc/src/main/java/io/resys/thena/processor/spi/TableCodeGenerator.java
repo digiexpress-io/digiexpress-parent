@@ -22,12 +22,12 @@ package io.resys.thena.processor.spi;
 
 import com.squareup.javapoet.JavaFile;
 
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
 
 /**
  * Code generators that work with a single TableModel and RegistryModel
  */
 public interface TableCodeGenerator {
-  JavaFile generate(TableModel model, RegistryModel registry);
+  JavaFile generate(TableMetamodel model, RegistryMetamodel registry);
 }

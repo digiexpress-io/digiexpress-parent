@@ -45,7 +45,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.spi.RegistryCodeGenerator;
 import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
@@ -57,7 +57,7 @@ import io.smallrye.mutiny.Uni;
 
 public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry) {
+  public JavaFile generate(RegistryMetamodel registry) {
     final var className = registry.getName() + "DbImpl";
     final var interfaceName = registry.getName() + "Db";
     final var packageName = registry.getPackageName() + ".spi";
@@ -103,7 +103,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateTenant(RegistryModel registry) {
+  private MethodSpec generateTenant(RegistryMetamodel registry) {
     return MethodSpec.methodBuilder("tenant")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -112,7 +112,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateWithTenantString(RegistryModel registry, String interfaceName) {
+  private MethodSpec generateWithTenantString(RegistryMetamodel registry, String interfaceName) {
     return MethodSpec.methodBuilder("withTenant")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -136,7 +136,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateWithTenantObject(RegistryModel registry, String className, String interfaceName) {
+  private MethodSpec generateWithTenantObject(RegistryMetamodel registry, String className, String interfaceName) {
     return MethodSpec.methodBuilder("withTenant")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -146,7 +146,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateWithTenantDefault(RegistryModel registry, String interfaceName) {
+  private MethodSpec generateWithTenantDefault(RegistryMetamodel registry, String interfaceName) {
     return MethodSpec.methodBuilder("withTenant")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -165,7 +165,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateWithTransaction(RegistryModel registry, String className, String interfaceName) {
+  private MethodSpec generateWithTransaction(RegistryMetamodel registry, String className, String interfaceName) {
     final var typeVarR = TypeVariableName.get("R");
     
     return MethodSpec.methodBuilder("withTransaction")
@@ -191,7 +191,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateQuery(RegistryModel registry) {
+  private MethodSpec generateQuery(RegistryMetamodel registry) {
     return MethodSpec.methodBuilder("query")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -201,7 +201,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateBuilder(RegistryModel registry) {
+  private MethodSpec generateBuilder(RegistryMetamodel registry) {
     return MethodSpec.methodBuilder("builder")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -211,7 +211,7 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateCreateIfNot(RegistryModel registry, String interfaceName) {
+  private MethodSpec generateCreateIfNot(RegistryMetamodel registry, String interfaceName) {
     return MethodSpec.methodBuilder("createIfNot")
       .addModifiers(Modifier.PUBLIC)
       .returns(ParameterizedTypeName.get(

@@ -96,13 +96,13 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 
 public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var className = registry.getTableClassName();
     
     final var classBuilder = TypeSpec.classBuilder(className)
@@ -139,7 +139,7 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
       .build();
   }
   
-  private MethodSpec generateToRepoTenantMethod(RegistryModel registry, String className) {
+  private MethodSpec generateToRepoTenantMethod(RegistryMetamodel registry, String className) {
     return MethodSpec.methodBuilder("toRepo")
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.get(Tenant.class), "repo")
@@ -150,8 +150,8 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
   }
   
   private MethodSpec generateToRepoStringMethod(
-      RegistryModel registry, 
-      List<TableModel> tables, 
+      RegistryMetamodel registry, 
+      List<TableMetamodel> tables, 
       String className) {
     
     final var builder = MethodSpec.methodBuilder("toRepo")
@@ -184,8 +184,8 @@ public class Gen_Multi_TableNames implements MultiTableCodeGenerator {
   }
   
   private MethodSpec generateDefaultsMethod(
-      RegistryModel registry,
-      List<TableModel> tables,
+      RegistryMetamodel registry,
+      List<TableMetamodel> tables,
       String className) {
     
     final var builder = MethodSpec.methodBuilder("defaults")

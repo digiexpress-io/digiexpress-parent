@@ -40,9 +40,9 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
-import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 import io.smallrye.mutiny.Multi;
@@ -51,7 +51,7 @@ import io.vertx.mutiny.sqlclient.RowSet;
 
 public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var className = registry.getName() + "DbQueryImpl";
     final var interfaceName = registry.getName() + "DbQuery";
     final var packageName = registry.getPackageName() + ".spi";
@@ -94,7 +94,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
       .build();
   }
   
-  private MethodSpec generateConstructor(RegistryModel registry) {
+  private MethodSpec generateConstructor(RegistryMetamodel registry) {
     return MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.get(ThenaSqlDataSource.class), "dataSource")
@@ -107,7 +107,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
       .build();
   }
   
-  private MethodSpec generateFindAllMethod(RegistryModel registry, List<TableModel> tables) {
+  private MethodSpec generateFindAllMethod(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var method = MethodSpec.methodBuilder("findAll")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -116,7 +116,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
         ClassName.bestGuess(registry.getWorldName())
       ));
     
-    final var tablesWithFindAll = new ArrayList<TableModel>();
+    final var tablesWithFindAll = new ArrayList<TableMetamodel>();
     for (final var table : tables) {
       if (findEntityTypeForTable(table) != null) {
         tablesWithFindAll.add(table);
@@ -184,7 +184,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
     return method.build();
   }
   
-  private ClassName findEntityTypeForTable(TableModel table) {
+  private ClassName findEntityTypeForTable(TableMetamodel table) {
     for (final var method : table.getSqlMethods()) {
       if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
         if (method.getReturnType() != null) {
@@ -195,7 +195,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
     return null;
   }
   
-  private TableModel.SqlMethod findNoArgFindAllMethod(TableModel table) {
+  private TableMetamodel.SqlMethod findNoArgFindAllMethod(TableMetamodel table) {
     for (final var method : table.getSqlMethods()) {
       if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
         return method;
@@ -204,7 +204,7 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
     return null;
   }
   
-  private MethodSpec generateQueryTableMethod(RegistryModel registry, TableModel table) {
+  private MethodSpec generateQueryTableMethod(RegistryMetamodel registry, TableMetamodel table) {
     final var methodName = "query" + NamingUtils.toPascalCase(table.getTableName());
     final var nestedInterfaceName = NamingUtils.toPascalCase(table.getTableName()) + "Query";
     final var registryGetter = NamingUtils.pluralize(table.getTableName());
@@ -231,9 +231,9 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
   }
   
   private CodeBlock generateQueryMethodImpl(
-      RegistryModel registry, 
-      TableModel table,
-      TableModel.SqlMethod sqlMethod,
+      RegistryMetamodel registry, 
+      TableMetamodel table,
+      TableMetamodel.SqlMethod sqlMethod,
       String registryGetter) {
     
     final var code = CodeBlock.builder();

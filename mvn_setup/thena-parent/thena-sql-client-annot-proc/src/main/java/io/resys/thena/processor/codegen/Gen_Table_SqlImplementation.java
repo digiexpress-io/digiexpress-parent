@@ -139,11 +139,11 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.MethodParameter;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
-import io.resys.thena.processor.model.TableModel.SqlMethod;
-import io.resys.thena.processor.model.TableModel.SqlPropsType;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
+import io.resys.thena.processor.model.TableMetamodel.MethodParameter;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
+import io.resys.thena.processor.model.TableMetamodel.SqlPropsType;
 import io.resys.thena.processor.spi.TableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 
@@ -151,7 +151,7 @@ import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Table_SqlImplementation implements TableCodeGenerator {
   
-  public JavaFile generate(TableModel model, RegistryModel registry) {
+  public JavaFile generate(TableMetamodel model, RegistryMetamodel registry) {
     final var classBuilder = TypeSpec.classBuilder(model.getImplClassName())
       .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
       .addSuperinterface(ClassName.get(model.getPackageName(), model.getInterfaceName()))
@@ -175,7 +175,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
       .build();
   }
   
-  private void addFields(TypeSpec.Builder classBuilder, RegistryModel registry) {
+  private void addFields(TypeSpec.Builder classBuilder, RegistryMetamodel registry) {
     classBuilder.addField(FieldSpec.builder(
       ClassName.bestGuess(registry.getTableClassName()),
       "tables"
@@ -192,7 +192,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     ).build());
   }
   
-  private void addConstructor(TypeSpec.Builder classBuilder, RegistryModel registry) {
+  private void addConstructor(TypeSpec.Builder classBuilder, RegistryMetamodel registry) {
     final var constructor = MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.bestGuess(registry.getTableClassName()), "tables")
@@ -205,7 +205,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     classBuilder.addMethod(constructor);
   }
   
-  private MethodSpec generateMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateMethod(SqlMethod method, TableMetamodel model) {
     return switch (method.getType()) {
       case SELECT -> generateQueryMethod(method, model);
       case SELECT_ALL -> generateQueryMethod(method, model);
@@ -219,7 +219,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     };
   }
   
-  private MethodSpec generateLifecycleMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateLifecycleMethod(SqlMethod method, TableMetamodel model) {
     final var builder = MethodSpec.methodBuilder(method.getMethodName())
       .addModifiers(Modifier.PUBLIC)
       .returns(ClassName.get(Sql.class));
@@ -234,7 +234,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     return builder.build();
   }
   
-  private MethodSpec generateQueryMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateQueryMethod(SqlMethod method, TableMetamodel model) {
     final var builder = MethodSpec.methodBuilder(method.getMethodName())
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC);
@@ -260,19 +260,19 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     return builder.build();
   }
   
-  private MethodSpec generateSingleInsertMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateSingleInsertMethod(SqlMethod method, TableMetamodel model) {
     return generateSinglePropsMethod(method, model);
   }
   
-  private MethodSpec generateSingleUpdateMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateSingleUpdateMethod(SqlMethod method, TableMetamodel model) {
     return generateSinglePropsMethod(method, model);
   }
   
-  private MethodSpec generateSingleDeleteMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateSingleDeleteMethod(SqlMethod method, TableMetamodel model) {
     return generateSinglePropsMethod(method, model);
   }
   
-  private MethodSpec generateSinglePropsMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateSinglePropsMethod(SqlMethod method, TableMetamodel model) {
     final var builder = MethodSpec.methodBuilder(method.getMethodName())
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -298,7 +298,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     return builder.build();
   }
   
-  private MethodSpec generateBatchMethod(SqlMethod method, TableModel model) {
+  private MethodSpec generateBatchMethod(SqlMethod method, TableMetamodel model) {
     final var builder = MethodSpec.methodBuilder(method.getMethodName())
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -327,7 +327,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     return builder.build();
   }
   
-  private void generateSqlReturnBody(MethodSpec.Builder builder, SqlMethod method, TableModel model) {
+  private void generateSqlReturnBody(MethodSpec.Builder builder, SqlMethod method, TableMetamodel model) {
     if (method.getSqlBuilderClassName() != null && method.getParameters().size() == 1) {
       final var param = method.getParameters().get(0);
       
@@ -371,7 +371,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
     }
   }
   
-  private void generateExecutionBody(MethodSpec.Builder builder, SqlMethod method, TableModel model) {
+  private void generateExecutionBody(MethodSpec.Builder builder, SqlMethod method, TableMetamodel model) {
     final var resolvedSql = resolveSqlPlaceholders(method.getSqlTemplate(), method.getTableNames());
     
     // Layer 1: Build SQL

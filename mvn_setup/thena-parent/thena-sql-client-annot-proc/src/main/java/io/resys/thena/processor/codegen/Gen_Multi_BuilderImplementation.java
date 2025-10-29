@@ -41,17 +41,17 @@ import io.resys.thena.api.entities.ImmutableBatchLog;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
-import io.resys.thena.processor.model.TableModel.SqlMethod;
-import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 import io.smallrye.mutiny.Uni;
 
 public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var className = registry.getName() + "DbBuilderImpl";
     final var builderInterfaceName = registry.getName() + "DbBuilder";
     final var persistenceUnitName = builderInterfaceName + ".PersistenceUnit";
@@ -124,7 +124,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
       .build();
   }
   
-  private FieldSpec generateLoggerField(RegistryModel registry) {
+  private FieldSpec generateLoggerField(RegistryMetamodel registry) {
     final var loggerTopic = registry.getPackageName() + "." + 
                             registry.getName().toLowerCase() + ".show_sql";
     
@@ -140,7 +140,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     .build();
   }
   
-  private MethodSpec generateConstructor(RegistryModel registry, String registryClassName) {
+  private MethodSpec generateConstructor(RegistryMetamodel registry, String registryClassName) {
     return MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
       .addParameter(ClassName.get(ThenaSqlDataSource.class), "dataSource")
@@ -154,7 +154,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
       .build();
   }
   
-  private MethodSpec generateFromMethod(RegistryModel registry, String builderInterfaceName) {
+  private MethodSpec generateFromMethod(RegistryMetamodel registry, String builderInterfaceName) {
     return MethodSpec.methodBuilder("from")
       .addAnnotation(Override.class)
       .addModifiers(Modifier.PUBLIC)
@@ -166,11 +166,11 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
   }
   
   private MethodSpec generatePersistMethod(
-      RegistryModel registry, 
+      RegistryMetamodel registry, 
       String builderInterfaceName,
       String persistenceUnitName,
       Map<String, OperationInfo> operations,
-      List<TableModel> tables) {
+      List<TableMetamodel> tables) {
     
     final var method = MethodSpec.methodBuilder("persist")
       .addAnnotation(Override.class)
@@ -204,10 +204,10 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
   }
   
   private MethodSpec generateVisitMethod(
-      RegistryModel registry,
+      RegistryMetamodel registry,
       String persistenceUnitName,
       String operationName,
-      TableModel table,
+      TableMetamodel table,
       TypeName entityType) {
     
     final var methodName = "visit" + NamingUtils.capitalize(operationName);
@@ -236,7 +236,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     return method.build();
   }
   
-  private MethodSpec generateVisitExecutionMethod(RegistryModel registry, String persistenceUnitName) {
+  private MethodSpec generateVisitExecutionMethod(RegistryMetamodel registry, String persistenceUnitName) {
     final var method = MethodSpec.methodBuilder("visitExecution")
       .addModifiers(Modifier.PRIVATE)
       .addParameter(ClassName.get(SqlTupleList.class), "sql")
@@ -304,7 +304,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     return method.build();
   }
   
-  private MethodSpec generateVisitSuccessMethod(RegistryModel registry, String persistenceUnitName) {
+  private MethodSpec generateVisitSuccessMethod(RegistryMetamodel registry, String persistenceUnitName) {
     final var method = MethodSpec.methodBuilder("visitSuccess")
       .addModifiers(Modifier.PRIVATE)
       .addParameter(ClassName.bestGuess(persistenceUnitName), "inputContainer")
@@ -329,7 +329,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     return method.build();
   }
   
-  private MethodSpec generateVisitErrorMethod(RegistryModel registry, String persistenceUnitName) {
+  private MethodSpec generateVisitErrorMethod(RegistryMetamodel registry, String persistenceUnitName) {
     final var exceptionClassName = registry.getName() + "BuilderException";
     
     final var method = MethodSpec.methodBuilder("visitError")
@@ -356,7 +356,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     return method.build();
   }
   
-  private TypeSpec generateExceptionClass(RegistryModel registry, String persistenceUnitName) {
+  private TypeSpec generateExceptionClass(RegistryMetamodel registry, String persistenceUnitName) {
     final var exceptionClassName = registry.getName() + "BuilderException";
     
     final var exceptionClass = TypeSpec.classBuilder(exceptionClassName)
@@ -387,7 +387,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     return exceptionClass.build();
   }
   
-  private Map<String, OperationInfo> extractOperations(List<TableModel> tables) {
+  private Map<String, OperationInfo> extractOperations(List<TableMetamodel> tables) {
     final var operations = new HashMap<String, OperationInfo>();
     
     for (final var table : tables) {
@@ -405,7 +405,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     return operations;
   }
   
-  private String buildOperationFieldName(TableModel table, SqlMethodType type) {
+  private String buildOperationFieldName(TableMetamodel table, SqlMethodType type) {
     final var baseName = NamingUtils.toCamelCase(table.getTableName());
     
     return switch (type) {
@@ -438,12 +438,12 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
 
   
   private static class OperationInfo {
-    final TableModel table;
+    final TableMetamodel table;
     final TypeName entityType;
     @SuppressWarnings("unused")
     final SqlMethodType methodType;
     
-    OperationInfo(TableModel table, TypeName entityType, SqlMethodType methodType) {
+    OperationInfo(TableMetamodel table, TypeName entityType, SqlMethodType methodType) {
       this.table = table;
       this.entityType = entityType;
       this.methodType = methodType;

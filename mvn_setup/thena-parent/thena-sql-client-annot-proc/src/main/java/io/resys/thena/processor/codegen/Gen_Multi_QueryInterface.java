@@ -98,15 +98,15 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
-import io.resys.thena.processor.model.TableModel.SqlMethodType;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
 
 public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry, List<TableModel> tables) {
+  public JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var className = registry.getName() + "DbQuery";
     
     final var interfaceBuilder = TypeSpec.interfaceBuilder(className)
@@ -143,7 +143,7 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
       .build();
   }
   
-  private TypeSpec generateTableQueryInterface(TableModel table, String interfaceName) {
+  private TypeSpec generateTableQueryInterface(TableMetamodel table, String interfaceName) {
     final var nestedInterface = TypeSpec.interfaceBuilder(interfaceName)
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     
@@ -199,7 +199,7 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
     return nestedInterface.build();
   }
   
-  private TypeSpec generateWorldInterface(RegistryModel registry, List<TableModel> tables) {
+  private TypeSpec generateWorldInterface(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var worldInterface = TypeSpec.interfaceBuilder(registry.getWorldName())
       .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
       .addAnnotation(AnnotationSpec.builder(ClassName.get("org.immutables.value", "Value", "Immutable")).build());
@@ -224,7 +224,7 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
     return worldInterface.build();
   }
   
-  private ClassName findEntityTypeForTable(TableModel table) {
+  private ClassName findEntityTypeForTable(TableMetamodel table) {
     for (final var method : table.getSqlMethods()) {
       if (method.getType() == SqlMethodType.SELECT_ALL && method.getParameters().isEmpty()) {
         if (method.getReturnType() != null) {

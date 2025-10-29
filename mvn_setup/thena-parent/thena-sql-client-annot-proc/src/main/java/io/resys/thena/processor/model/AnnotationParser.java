@@ -36,10 +36,10 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.processor.model.TableModel.MethodParameter;
-import io.resys.thena.processor.model.TableModel.SqlMethod;
-import io.resys.thena.processor.model.TableModel.SqlMethodType;
-import io.resys.thena.processor.model.TableModel.SqlPropsType;
+import io.resys.thena.processor.model.TableMetamodel.MethodParameter;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
+import io.resys.thena.processor.model.TableMetamodel.SqlMethodType;
+import io.resys.thena.processor.model.TableMetamodel.SqlPropsType;
 
 public class AnnotationParser {
   private static final Pattern TABLE_NAME_PATTERN = Pattern.compile("\\{([a-zA-Z_][a-zA-Z0-9_]*)\\}");
@@ -50,7 +50,7 @@ public class AnnotationParser {
     this.processingEnv = processingEnv;
   }
   
-  public TableModel extract(TypeElement interfaceElement) {
+  public TableMetamodel extract(TypeElement interfaceElement) {
     // Step 1: Extract @TenantSql.Table annotation
     final var tableAnnotation = interfaceElement.getAnnotation(TenantSql.Table.class);
     
@@ -95,7 +95,7 @@ public class AnnotationParser {
     sqlMethods.addAll(generateLifecycleMethods(tableAnnotation));
     
     // Step 5: Build and return TableModel
-    return TableModel.builder()
+    return TableMetamodel.builder()
       .interfaceName(interfaceName)
       .packageName(packageName)
       .implClassName(implClassName)
@@ -186,10 +186,8 @@ public class AnnotationParser {
   
   private TypeName extractGenericFromRowMapper(TypeMirror mapperType) {
     if (mapperType instanceof DeclaredType) {
-      final var declaredType = (DeclaredType) mapperType;
       
       // Get superinterfaces to find RowMapper<T>
-      final var element = declaredType.asElement();
       for (final var interfaceType : processingEnv.getTypeUtils().directSupertypes(mapperType)) {
         if (interfaceType instanceof DeclaredType) {
           final var interfaceDeclared = (DeclaredType) interfaceType;
@@ -433,22 +431,6 @@ public class AnnotationParser {
     }
     
     return parameters;
-  }
-  
-  private TypeName unwrapReturnType(TypeMirror returnType) {
-    // Check if it's a generic type like Uni<T> or Multi<T>
-    if (returnType instanceof DeclaredType) {
-      final var declaredType = (DeclaredType) returnType;
-      final List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-      
-      if (!typeArguments.isEmpty()) {
-        // Return the first type argument (the T in Uni<T>)
-        return TypeName.get(typeArguments.get(0));
-      }
-    }
-    
-    // No unwrapping needed
-    return null;
   }
   
   private TypeName extractWrapperType(TypeMirror returnType) {

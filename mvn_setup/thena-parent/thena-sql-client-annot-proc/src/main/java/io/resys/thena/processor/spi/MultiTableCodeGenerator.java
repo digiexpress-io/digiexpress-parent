@@ -24,12 +24,12 @@ import java.util.List;
 
 import com.squareup.javapoet.JavaFile;
 
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
 
 /**
  * Code generators that work with RegistryModel and List of TableModels
  */
 public interface MultiTableCodeGenerator {
-  JavaFile generate(RegistryModel registry, List<TableModel> tables);
+  JavaFile generate(RegistryMetamodel registry, List<TableMetamodel> tables);
 }

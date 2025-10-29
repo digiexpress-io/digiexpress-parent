@@ -46,9 +46,9 @@ import io.resys.thena.processor.codegen.Gen_Registry_DatabaseImplementation;
 import io.resys.thena.processor.codegen.Gen_Registry_DatabaseInterface;
 import io.resys.thena.processor.codegen.Gen_Registry_Exception;
 import io.resys.thena.processor.codegen.Gen_Table_SqlImplementation;
-import io.resys.thena.processor.model.MetaModel;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.Metamodel;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.spi.RegistryCodeGenerator;
 import io.resys.thena.processor.spi.TableCodeGenerator;
@@ -74,7 +74,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     
     // Build centralized metadata model
-    final var metaModel = MetaModel.builder(processingEnv)
+    final var metaModel = Metamodel.builder(processingEnv)
       .addAllRegistries(roundEnv.getElementsAnnotatedWith(TenantSql.Registry.class))
       .addAllTables(roundEnv.getElementsAnnotatedWith(TenantSql.Table.class))
       .build();
@@ -113,7 +113,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
     return true; // We claim this annotation
   }
   
-  private void processRegistry(RegistryModel registryConfig, List<TableModel> tableModels) throws IOException {
+  private void processRegistry(RegistryMetamodel registryConfig, List<TableMetamodel> tableModels) throws IOException {
     // Generate registry if we have config
     if (tableModels.isEmpty()) {
       return;
@@ -167,7 +167,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
   
   
 
-  private void processTableInterface(TableModel model, RegistryModel registry) throws IOException {
+  private void processTableInterface(TableMetamodel model, RegistryMetamodel registry) throws IOException {
     
     final TableCodeGenerator codeGenerator = new Gen_Table_SqlImplementation();
     final var javaFile = codeGenerator.generate(model, registry);

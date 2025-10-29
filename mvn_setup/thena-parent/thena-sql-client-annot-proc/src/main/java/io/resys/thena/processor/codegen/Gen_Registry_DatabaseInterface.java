@@ -77,14 +77,14 @@ import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.spi.RegistryCodeGenerator;
 import io.resys.thena.spi.TenantDataSource;
 import io.resys.thena.spi.TenantDataSource.TxScope;
 
 public class Gen_Registry_DatabaseInterface implements RegistryCodeGenerator {
   
-  public JavaFile generate(RegistryModel registry) {
+  public JavaFile generate(RegistryMetamodel registry) {
     final var className = registry.getName() + "Db";
     final var transactionInterfaceName = "Transaction";
     

@@ -32,14 +32,13 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
 import io.resys.thena.processor.support.NamingUtils;
 import lombok.Value;
 
 @Value
-public class MetaModel {
-  List<RegistryModel> registries;
-  List<TableModel> tables;
+public class Metamodel {
+  List<RegistryMetamodel> registries;
+  List<TableMetamodel> tables;
   
   public static MetaModelBuilder builder(ProcessingEnvironment processingEnv) {
     return new MetaModelBuilder(processingEnv);
@@ -48,7 +47,7 @@ public class MetaModel {
   /**
    * Get tables that belong to a specific registry
    */
-  public List<TableModel> getTablesForRegistry(RegistryModel registry) {
+  public List<TableMetamodel> getTablesForRegistry(RegistryMetamodel registry) {
     final var registryPackage = registry.getPackageName();
     
     return tables.stream()
@@ -64,7 +63,7 @@ public class MetaModel {
   /**
    * Find the registry that owns a specific table
    */
-  public RegistryModel findRegistryForTable(TableModel table) {
+  public RegistryMetamodel findRegistryForTable(TableMetamodel table) {
     final var tablePackage = table.getPackageName();
     
     return registries.stream()
@@ -79,8 +78,8 @@ public class MetaModel {
   
   public static class MetaModelBuilder {
     private final ProcessingEnvironment processingEnv;
-    private final List<RegistryModel> registries = new ArrayList<>();
-    private final List<TableModel> tables = new ArrayList<>();
+    private final List<RegistryMetamodel> registries = new ArrayList<>();
+    private final List<TableMetamodel> tables = new ArrayList<>();
     
     public MetaModelBuilder(ProcessingEnvironment processingEnv) {
       this.processingEnv = processingEnv;
@@ -132,9 +131,9 @@ public class MetaModel {
       return this;
     }
     
-    public MetaModel build() {
+    public Metamodel build() {
       // Validate that all tables have corresponding registries
-      for (TableModel table : tables) {
+      for (TableMetamodel table : tables) {
         final var registry = findRegistryForTable(table);
         if (registry == null) {
           processingEnv.getMessager().printMessage(
@@ -144,10 +143,10 @@ public class MetaModel {
         }
       }
       
-      return new MetaModel(registries, tables);
+      return new Metamodel(registries, tables);
     }
     
-    private RegistryModel extractRegistryConfig(Element element) {
+    private RegistryMetamodel extractRegistryConfig(Element element) {
       if (element.getKind() != ElementKind.PACKAGE) {
         processingEnv.getMessager().printMessage(
           javax.tools.Diagnostic.Kind.ERROR,
@@ -171,7 +170,7 @@ public class MetaModel {
       
       final var domainName = NamingUtils.toCamelCaseCapitalized(annotation.name().toLowerCase());
       
-      return RegistryModel.builder()
+      return RegistryMetamodel.builder()
         .name(domainName)
         .tableClassName(domainName + "TableNames")
         .registryClassName(domainName + "Registry")
@@ -185,7 +184,7 @@ public class MetaModel {
         .build();
     }
     
-    private TableModel extractTableModel(Element element) {
+    private TableMetamodel extractTableModel(Element element) {
       // Validate element type
       if (element.getKind() != ElementKind.INTERFACE) {
         processingEnv.getMessager().printMessage(
@@ -201,7 +200,7 @@ public class MetaModel {
       return modelExtractor.extract((TypeElement) element);
     }
     
-    private RegistryModel findRegistryForTable(TableModel table) {
+    private RegistryMetamodel findRegistryForTable(TableMetamodel table) {
       final var tablePackage = table.getPackageName();
       
       return registries.stream()
