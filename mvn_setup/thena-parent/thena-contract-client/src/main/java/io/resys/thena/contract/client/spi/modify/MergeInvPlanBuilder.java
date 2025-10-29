@@ -136,43 +136,57 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     return this;
   }
   @Override
-  public <T> MergeInvPlan setAllAllocations(String allocCode, List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> callbacks) {
-    // clear old
-    this.batch.invPlanAllocs(Collections.emptyList());
-    final var allAllocations = new HashMap<String, InvPlanAlloc>();
+  public <T> MergeInvPlan setAllAllocations(List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> callbacks) {
+    // current tx
+    final List<InvPlanAlloc> saved = this.batch.build().getInvPlanAllocInserts().stream()
+        .filter(e -> !e.getInvPlanId().equals(currentInvPlan.getId()))
+        .toList();
+    this.batch.noteInserts(Collections.emptyList());
     
-    // delete old - find all existing allocations for this investment plan
-    final var existingAllocs = this.batch.build().getInvPlanAllocs().stream()
-        .filter(a -> a.getInvPlanId().equals(currentInvPlan.getId()))
-        .collect(Collectors.toList());
-    this.batch.addAllDeleteInvPlanAllocs(existingAllocs);
+    
+    final var incorrect_updates = this.batch.build().getInvPlanAllocUpdates().stream()
+      .filter(e -> e.getInvPlanId().equals(currentInvPlan.getId()))
+      .toList();
+    if(!incorrect_updates.isEmpty()) {
+      throw new IllegalModificationException("You are trying to update allocation and then delete it by setting all allocations to new values!");
+    }
+    
+  
+    final var allAllocations = new HashMap<String, InvPlanAlloc>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    
+    // delete old
+    this.batch.addAllInvPlanAllocDeletes(container.getInvPlanAllocations().values().stream()
+        .flatMap(e -> e.stream())
+        .filter(e -> e.getInvPlanId().equals(currentInvPlan.getId()))
+        .toList());
     
     // add new
     for(final var replacement : replacements) {
       final var allocation = callbacks.apply(replacement);
       
-      final var builder = new NewInvPlanAllocBuilder(logger, currentInvPlan.getId(), Collections.unmodifiableMap(allAllocations));
+      final var builder = new NewInvPlanAllocBuilder(logger, currentInvPlan.getId(), this.batch.build(), container);
       allocation.accept(builder);
       final var built = builder.close();
       allAllocations.put(built.getId(), built);
-      this.batch.addInvPlanAllocs(built);
+      this.batch.addInvPlanAllocInserts(built);
     }
     return this;
   }
   @Override
   public MergeInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation) {
-    final var allAllocations = this.batch.build().getInvPlanAllocs().stream()
-        .collect(Collectors.toMap(e -> e.getId(), e -> e));
-    final var builder = new NewInvPlanAllocBuilder(logger, currentInvPlan.getId(), allAllocations);
+    final var allAllocations = this.batch.build();
+    
+    final var builder = new NewInvPlanAllocBuilder(logger, currentInvPlan.getId(), allAllocations, container);
     allocation.accept(builder);
     final var built = builder.close();
-    this.batch.addInvPlanAllocs(built);
+    this.batch.addInvPlanAllocInserts(built);
     return this;
   }
   @Override
   public MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAlloc> allocation) {
     // Find the allocation
-    final var current = this.batch.build().getInvPlanAllocs().stream()
+    final var current = this.container.getInvPlanAllocations().values().stream()
+        .flatMap(e -> e.stream())
         .filter(a -> a.getId().equals(allocId))
         .findFirst()
         .orElse(null);
@@ -190,14 +204,16 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
   
   @Override
   public MergeInvPlan removeAllocation(String allocId) {
-    final var current = this.batch.build().getInvPlanAllocs().stream()
+    final var current = this.container.getInvPlanAllocations().values().stream()
+        .flatMap(e -> e.stream())
         .filter(a -> a.getId().equals(allocId))
         .findFirst()
         .orElse(null);
     
-    if (current != null) {
-      this.batch.addDeleteInvPlanAllocs(current);
+    if (current == null) {
+      throw new IllegalArgumentException("Cannot find allocation with id: '" + allocId + "'");
     }
+    this.batch.addInvPlanAllocDeletes(current);
     return this;
   }
   

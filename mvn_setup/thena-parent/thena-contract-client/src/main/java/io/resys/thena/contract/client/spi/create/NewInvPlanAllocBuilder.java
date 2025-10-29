@@ -23,12 +23,15 @@ package io.resys.thena.contract.client.spi.create;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
 import io.resys.thena.contract.client.entities.ImmutableInvPlanAlloc;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
+import jakarta.annotation.Nullable;
 
 public class NewInvPlanAllocBuilder implements NewInvPlanAlloc {
   private final ContractCommitBuilder logger;
@@ -40,7 +43,8 @@ public class NewInvPlanAllocBuilder implements NewInvPlanAlloc {
   public NewInvPlanAllocBuilder(
       ContractCommitBuilder logger, 
       String invPlanId,
-      Map<String, InvPlanAlloc> allAllocations) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     
     super();
     this.logger = logger;

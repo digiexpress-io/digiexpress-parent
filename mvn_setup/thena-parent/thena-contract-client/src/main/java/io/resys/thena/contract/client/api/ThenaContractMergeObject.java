@@ -212,7 +212,7 @@ public interface ThenaContractMergeObject {
     MergeInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // Collection operations for investment plan allocations
-    <T> MergeInvPlan setAllAllocations(String allocCode, List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> allocation);
+    <T> MergeInvPlan setAllAllocations(List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> allocation);
     MergeInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation);
     MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAlloc> allocation);
     MergeInvPlan removeAllocation(String allocId);
