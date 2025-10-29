@@ -818,7 +818,7 @@ export const en = {
   'eveli.table.resetColumnSorting': 'Reset column sorting',
   'eveli.table.menu.filter.filterByDateEqual': 'Date is equal',
   'eveli.table.menu.filter.filterByDateLt': 'Date is before',
-  'eveli.table.menu.filter.filterByDateGte': 'Date is greater then or equal',
+  'eveli.table.menu.filter.filterByDateGte': 'Date is greater than or equal',
   'eveli.userProfile.title': 'User Profile',
   'eveli.userProfile.id': 'Id',
   'eveli.userProfile.displayName': 'Display name',

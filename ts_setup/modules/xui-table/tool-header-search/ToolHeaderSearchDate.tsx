@@ -96,7 +96,7 @@ export const ToolHeaderSearchDate: React.FC<ToolHeaderSearchDateProps> = ({ head
         <RadioGroup value={currentType}>
           <FormControlLabel value="EQUAL" control={<Radio onClick={() => handleDateType('EQUAL')} />} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateEqual', defaultMessage: 'Date is equal' })} />
           <FormControlLabel value="LT" control={<Radio onClick={() => handleDateType('LT')}/>} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateLt', defaultMessage: 'Date is before' })} />
-          <FormControlLabel value="GTE" control={<Radio onClick={() => handleDateType('GTE')}/>} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateGte', defaultMessage: 'Date is greater then or equal' })} />
+          <FormControlLabel value="GTE" control={<Radio onClick={() => handleDateType('GTE')} />} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateGte', defaultMessage: 'Date is greater than or equal' })} />
         </RadioGroup>
       </FormControl>
 
