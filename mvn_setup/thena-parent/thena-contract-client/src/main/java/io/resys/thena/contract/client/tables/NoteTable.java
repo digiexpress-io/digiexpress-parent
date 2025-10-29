@@ -20,6 +20,7 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -157,6 +158,12 @@ public interface NoteTable {
   )
   SqlTupleList updateMany(List<Note> notes);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {note} WHERE id = $1",
+    propsMapper = NoteDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<Note> notes);
+
   // Mapper classes
   class NoteMapper implements TenantSql.RowMapper<Note> {
     @Override
@@ -275,6 +282,15 @@ public interface NoteTable {
         doc.getNoteType(),
         doc.getNoteBody().orElse(null),
         doc.getId()
+      });
+    }
+  }
+
+  class NoteDeleteMapper implements TenantSql.PropsMapper<Note> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(Note note) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        note.getId()
       });
     }
   }

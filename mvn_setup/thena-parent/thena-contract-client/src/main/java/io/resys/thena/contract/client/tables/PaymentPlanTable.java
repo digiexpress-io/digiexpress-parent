@@ -23,6 +23,7 @@ package io.resys.thena.contract.client.tables;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -155,6 +156,12 @@ public interface PaymentPlanTable {
   )
   SqlTupleList updateMany(List<PaymentPlan> paymentPlans);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {payment_plan} WHERE id = $1",
+    propsMapper = PaymentPlanDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<PaymentPlan> paymentPlans);
+
   // Mapper classes
   class PaymentPlanMapper implements TenantSql.RowMapper<PaymentPlan> {
     @Override
@@ -234,6 +241,15 @@ public interface PaymentPlanTable {
         doc.getPaymentPlanEndDateInterval().orElse(null),
         doc.getPaymentPlanEndDateType().orElse(null),
         doc.getId()
+      });
+    }
+  }
+
+  class PaymentPlanDeleteMapper implements TenantSql.PropsMapper<PaymentPlan> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan paymentPlan) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        paymentPlan.getId()
       });
     }
   }

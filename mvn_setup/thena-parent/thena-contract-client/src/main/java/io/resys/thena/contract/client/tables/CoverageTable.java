@@ -23,6 +23,7 @@ package io.resys.thena.contract.client.tables;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -163,6 +164,12 @@ public interface CoverageTable {
   )
   SqlTupleList updateMany(List<Coverage> coverages);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {coverage} WHERE id = $1",
+    propsMapper = CoverageDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<Coverage> coverages);
+
   // Mapper classes
   class CoverageMapper implements TenantSql.RowMapper<Coverage> {
     @Override
@@ -263,6 +270,15 @@ public interface CoverageTable {
         doc.getCoverageTermEndDateInterval().orElse(null),
         doc.getCoverageTermEndDateType().orElse(null),
         doc.getId()
+      });
+    }
+  }
+
+  class CoverageDeleteMapper implements TenantSql.PropsMapper<Coverage> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(Coverage coverage) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        coverage.getId()
       });
     }
   }

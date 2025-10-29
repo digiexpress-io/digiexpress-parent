@@ -22,6 +22,7 @@ package io.resys.thena.contract.client.tables;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -153,6 +154,12 @@ public interface PartyTable {
   )
   SqlTupleList updateMany(List<Party> parties);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {party} WHERE id = $1",
+    propsMapper = PartyDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<Party> parties);
+
   // Mapper classes
   class PartyMapper implements TenantSql.RowMapper<Party> {
     @Override
@@ -236,6 +243,15 @@ public interface PartyTable {
         doc.getPartyTermEndDateType().orElse(null),
         doc.getPartyData().orElse(null),
         doc.getId()
+      });
+    }
+  }
+
+  class PartyDeleteMapper implements TenantSql.PropsMapper<Party> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(Party party) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        party.getId()
       });
     }
   }

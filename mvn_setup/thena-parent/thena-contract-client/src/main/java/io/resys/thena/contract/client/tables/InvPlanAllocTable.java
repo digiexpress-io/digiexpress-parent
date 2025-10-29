@@ -21,6 +21,7 @@ package io.resys.thena.contract.client.tables;
  */
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -142,6 +143,12 @@ public interface InvPlanAllocTable {
   )
   SqlTupleList updateMany(List<InvPlanAlloc> invPlanAllocs);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {inv_plan_alloc} WHERE id = $1",
+    propsMapper = InvPlanAllocDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<InvPlanAlloc> invPlanAllocs);
+
   // Mapper classes
   class InvPlanAllocMapper implements TenantSql.RowMapper<InvPlanAlloc> {
     @Override
@@ -196,6 +203,15 @@ public interface InvPlanAllocTable {
         doc.getInvPlanAllocPercentage(),
         doc.getInvPlanAllocStatus(),
         doc.getId()
+      });
+    }
+  }
+
+  class InvPlanAllocDeleteMapper implements TenantSql.PropsMapper<InvPlanAlloc> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(InvPlanAlloc invPlanAlloc) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        invPlanAlloc.getId()
       });
     }
   }

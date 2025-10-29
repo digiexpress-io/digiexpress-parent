@@ -1,5 +1,7 @@
 package io.resys.thena.client.sample;
 
+import java.util.Collection;
+
 /*-
  * #%L
  * thena-batch-client
@@ -156,7 +158,12 @@ public interface BatchConsumerTable {
   )
   SqlTuple deleteById(String id);
 
-
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {batch_consumers} WHERE id = $1",
+    propsMapper = BatchConsumerDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<BatchConsumer> missionId);
+  
 
   // Mapper classes
   class BatchConsumerMapper implements TenantSql.RowMapper<BatchConsumer> {
@@ -203,6 +210,14 @@ public interface BatchConsumerTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(String id) {
       return io.vertx.mutiny.sqlclient.Tuple.of(id);
+    }
+  }
+  class BatchConsumerDeleteMapper implements TenantSql.PropsMapper<BatchConsumer> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(BatchConsumer consumers) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        consumers.getId()
+      });
     }
   }
 }

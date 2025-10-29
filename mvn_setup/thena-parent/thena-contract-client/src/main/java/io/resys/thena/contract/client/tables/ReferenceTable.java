@@ -20,6 +20,7 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -157,6 +158,12 @@ public interface ReferenceTable {
   )
   SqlTupleList updateMany(List<Reference> references);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {reference} WHERE id = $1",
+    propsMapper = ReferenceDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<Reference> references);
+
   // Mapper classes
   class ReferenceMapper implements TenantSql.RowMapper<Reference> {
     @Override
@@ -275,6 +282,15 @@ public interface ReferenceTable {
         doc.getReferenceType(),
         doc.getReferenceBody().orElse(null),
         doc.getId()
+      });
+    }
+  }
+
+  class ReferenceDeleteMapper implements TenantSql.PropsMapper<Reference> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(Reference reference) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        reference.getId()
       });
     }
   }

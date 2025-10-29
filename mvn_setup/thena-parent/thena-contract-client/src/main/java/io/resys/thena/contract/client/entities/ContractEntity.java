@@ -29,6 +29,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 
 public interface ContractEntity {
+  
+  String getId();
+  
   @JsonIgnore
   ContractDocType getDocType();
 

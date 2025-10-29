@@ -20,11 +20,13 @@ package io.resys.thena.contract.client.api;
  * #L%
  */
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -95,22 +97,25 @@ public interface ThenaContractNewObject {
   
   // support interface for coverage creation
   interface NewCoverage {
-    NewCoverage externalId(@Nullable String externalId);
+    NewCoverage insuredId(String insuredId);
+    NewCoverage externalId(String externalId);
     NewCoverage coverageType(String coverageType);
-    NewCoverage coverageSubType(@Nullable String coverageSubType);
+    NewCoverage coverageCode(String coverageCode);
+    NewCoverage coverageSumInsured(@Nullable BigDecimal coverageSumInsured);
+    NewCoverage coverageRate(@Nullable BigDecimal coverageRate);
+    NewCoverage coverageRateType(@Nullable String coverageRateType);
     NewCoverage coverageStatus(String coverageStatus);
+    NewCoverage coverageEffectiveFrom(LocalDate coverageEffectiveFrom);
+    NewCoverage coverageEffectiveTo(@Nullable LocalDate coverageEffectiveTo);
     
-    // Business dates
-    NewCoverage coverageStartDate(LocalDate coverageStartDate);
-    NewCoverage coverageStartDateInterval(@Nullable Duration coverageStartDateInterval);
-    NewCoverage coverageStartDateType(@Nullable String coverageStartDateType);
+    // Business term dates
+    NewCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
+    NewCoverage coverageTermStartDateInterval(@Nullable Duration coverageTermStartDateInterval);
+    NewCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
     
-    NewCoverage coverageEndDate(@Nullable LocalDate coverageEndDate);
-    NewCoverage coverageEndDateInterval(@Nullable Duration coverageEndDateInterval);
-    NewCoverage coverageEndDateType(@Nullable String coverageEndDateType);
-    
-    NewCoverage coverageAmount(@Nullable String coverageAmount);
-    NewCoverage coverageData(@Nullable JsonObject coverageData);
+    NewCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
+    NewCoverage coverageTermEndDateInterval(@Nullable Duration coverageTermEndDateInterval);
+    NewCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // nested entities
     NewCoverage addNote(Consumer<NewNote> note);
@@ -120,34 +125,47 @@ public interface ThenaContractNewObject {
   
   // support interface for reference creation
   interface NewReference {
+    NewReference relations(@Nullable ContractOneOfRelations relations);
     NewReference referenceType(String referenceType);
     NewReference referenceValue(String referenceValue);
-    NewReference referenceData(@Nullable JsonObject referenceData);
+    NewReference referenceBody(@Nullable JsonObject referenceBody);
     void build();
   }
   
   // support interface for note creation
   interface NewNote {
+    NewNote relations(@Nullable ContractOneOfRelations relations);
     NewNote noteType(String noteType);
-    NewNote noteText(String noteText);
-    NewNote noteData(@Nullable JsonObject noteData);
+    NewNote noteValue(String noteValue);
+    NewNote noteBody(@Nullable JsonObject noteBody);
     String build(); // returns generated note id
   }
   
   // support interface for capability creation
   interface NewCapability {
+    NewCapability externalId(@Nullable String externalId);
+    NewCapability capabilityCode(String capabilityCode);
+    NewCapability capabilityName(String capabilityName);
     NewCapability capabilityType(String capabilityType);
-    NewCapability capabilityStatus(String capabilityStatus);
-    NewCapability capabilityData(@Nullable JsonObject capabilityData);
+    NewCapability capabilityEnabled(Boolean capabilityEnabled);
     void build();
   }
   
   // support interface for investment plan creation
   interface NewInvPlan {
-    NewInvPlan externalId(@Nullable String externalId);
-    NewInvPlan invPlanType(String invPlanType);
+    NewInvPlan externalId(String externalId);
+    NewInvPlan invPlanCode(String invPlanCode);
+    NewInvPlan invPlanName(String invPlanName);
     NewInvPlan invPlanStatus(String invPlanStatus);
-    NewInvPlan invPlanData(@Nullable JsonObject invPlanData);
+    
+    // Business dates
+    NewInvPlan invPlanStartDate(LocalDate invPlanStartDate);
+    NewInvPlan invPlanStartDateInterval(@Nullable Duration invPlanStartDateInterval);
+    NewInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
+    
+    NewInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
+    NewInvPlan invPlanEndDateInterval(@Nullable Duration invPlanEndDateInterval);
+    NewInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // nested allocation
     NewInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation);
@@ -156,22 +174,28 @@ public interface ThenaContractNewObject {
   
   // support interface for investment plan allocation
   interface NewInvPlanAlloc {
-    NewInvPlanAlloc allocType(String allocType);
-    NewInvPlanAlloc allocAmount(String allocAmount);
-    NewInvPlanAlloc allocPercentage(@Nullable String allocPercentage);
-    NewInvPlanAlloc allocData(@Nullable JsonObject allocData);
+    NewInvPlanAlloc invPlanAllocCode(String invPlanAllocCode);
+    NewInvPlanAlloc invPlanAllocName(String invPlanAllocName);
+    NewInvPlanAlloc invPlanAllocPercentage(BigDecimal invPlanAllocPercentage);
+    NewInvPlanAlloc invPlanAllocStatus(String invPlanAllocStatus);
     void build();
   }
   
   // support interface for payment plan creation
   interface NewPaymentPlan {
-    NewPaymentPlan externalId(@Nullable String externalId);
-    NewPaymentPlan paymentType(String paymentType);
-    NewPaymentPlan paymentAmount(String paymentAmount);
-    NewPaymentPlan paymentFrequency(String paymentFrequency);
-    NewPaymentPlan paymentStartDate(LocalDate paymentStartDate);
-    NewPaymentPlan paymentEndDate(@Nullable LocalDate paymentEndDate);
-    NewPaymentPlan paymentData(@Nullable JsonObject paymentData);
+    NewPaymentPlan partyId(@Nullable String partyId);
+    NewPaymentPlan paymentPlanStatus(String paymentPlanStatus);
+    NewPaymentPlan paymentPlanFrequency(String paymentPlanFrequency);
+    NewPaymentPlan paymentPlanAmount(BigDecimal paymentPlanAmount);
+    
+    // Business dates
+    NewPaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
+    NewPaymentPlan paymentPlanStartDateInterval(@Nullable Duration paymentPlanStartDateInterval);
+    NewPaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
+    
+    NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
+    NewPaymentPlan paymentPlanEndDateInterval(@Nullable Duration paymentPlanEndDateInterval);
+    NewPaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
     void build();
   }
   

@@ -20,6 +20,7 @@ package io.resys.thena.contract.client.api;
  * #L%
  */
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.function.Function;
 import jakarta.annotation.Nullable;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
@@ -78,8 +80,8 @@ public interface ThenaContractMergeObject {
     <T> MergeContract setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference);
     <T> MergeContract setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note);
     <T> MergeContract setAllCapabilities(String capabilityType, List<T> replacements, Function<T, Consumer<NewCapability>> capability);
-    <T> MergeContract setAllInvPlans(String invPlanType, List<T> replacements, Function<T, Consumer<NewInvPlan>> invPlan);
-    <T> MergeContract setAllPaymentPlans(String paymentType, List<T> replacements, Function<T, Consumer<NewPaymentPlan>> paymentPlan);
+    <T> MergeContract setAllInvPlans(String invPlanCode, List<T> replacements, Function<T, Consumer<NewInvPlan>> invPlan);
+    <T> MergeContract setAllPaymentPlans(String paymentPlanStatus, List<T> replacements, Function<T, Consumer<NewPaymentPlan>> paymentPlan);
     
     // Add new child entities
     MergeContract addParty(Consumer<NewParty> party);
@@ -140,22 +142,25 @@ public interface ThenaContractMergeObject {
   }
   
   interface MergeCoverage {
-    MergeCoverage externalId(@Nullable String externalId);
+    MergeCoverage insuredId(String insuredId);
+    MergeCoverage externalId(String externalId);
     MergeCoverage coverageType(String coverageType);
-    MergeCoverage coverageSubType(@Nullable String coverageSubType);
+    MergeCoverage coverageCode(String coverageCode);
+    MergeCoverage coverageSumInsured(@Nullable BigDecimal coverageSumInsured);
+    MergeCoverage coverageRate(@Nullable BigDecimal coverageRate);
+    MergeCoverage coverageRateType(@Nullable String coverageRateType);
     MergeCoverage coverageStatus(String coverageStatus);
+    MergeCoverage coverageEffectiveFrom(LocalDate coverageEffectiveFrom);
+    MergeCoverage coverageEffectiveTo(@Nullable LocalDate coverageEffectiveTo);
     
-    // Business dates
-    MergeCoverage coverageStartDate(LocalDate coverageStartDate);
-    MergeCoverage coverageStartDateInterval(@Nullable Duration coverageStartDateInterval);
-    MergeCoverage coverageStartDateType(@Nullable String coverageStartDateType);
+    // Business term dates
+    MergeCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
+    MergeCoverage coverageTermStartDateInterval(@Nullable Duration coverageTermStartDateInterval);
+    MergeCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
     
-    MergeCoverage coverageEndDate(@Nullable LocalDate coverageEndDate);
-    MergeCoverage coverageEndDateInterval(@Nullable Duration coverageEndDateInterval);
-    MergeCoverage coverageEndDateType(@Nullable String coverageEndDateType);
-    
-    MergeCoverage coverageAmount(@Nullable String coverageAmount);
-    MergeCoverage coverageData(@Nullable JsonObject coverageData);
+    MergeCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
+    MergeCoverage coverageTermEndDateInterval(@Nullable Duration coverageTermEndDateInterval);
+    MergeCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // Collection operations for coverage's child entities
     <T> MergeCoverage setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference);
@@ -168,34 +173,47 @@ public interface ThenaContractMergeObject {
   }
   
   interface MergeReference {
+    MergeReference relations(@Nullable ContractOneOfRelations relations);
     MergeReference referenceType(String referenceType);
     MergeReference referenceValue(String referenceValue);
-    MergeReference referenceData(@Nullable JsonObject referenceData);
+    MergeReference referenceBody(@Nullable JsonObject referenceBody);
     void build();
   }
   
   interface MergeNote {
+    MergeNote relations(@Nullable ContractOneOfRelations relations);
     MergeNote noteType(String noteType);
-    MergeNote noteText(String noteText);
-    MergeNote noteData(@Nullable JsonObject noteData);
+    MergeNote noteValue(String noteValue);
+    MergeNote noteBody(@Nullable JsonObject noteBody);
     void build();
   }
   
   interface MergeCapability {
+    MergeCapability externalId(@Nullable String externalId);
+    MergeCapability capabilityCode(String capabilityCode);
+    MergeCapability capabilityName(String capabilityName);
     MergeCapability capabilityType(String capabilityType);
-    MergeCapability capabilityStatus(String capabilityStatus);
-    MergeCapability capabilityData(@Nullable JsonObject capabilityData);
+    MergeCapability capabilityEnabled(Boolean capabilityEnabled);
     void build();
   }
   
   interface MergeInvPlan {
-    MergeInvPlan externalId(@Nullable String externalId);
-    MergeInvPlan invPlanType(String invPlanType);
+    MergeInvPlan externalId(String externalId);
+    MergeInvPlan invPlanCode(String invPlanCode);
+    MergeInvPlan invPlanName(String invPlanName);
     MergeInvPlan invPlanStatus(String invPlanStatus);
-    MergeInvPlan invPlanData(@Nullable JsonObject invPlanData);
+    
+    // Business dates
+    MergeInvPlan invPlanStartDate(LocalDate invPlanStartDate);
+    MergeInvPlan invPlanStartDateInterval(@Nullable Duration invPlanStartDateInterval);
+    MergeInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
+    
+    MergeInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
+    MergeInvPlan invPlanEndDateInterval(@Nullable Duration invPlanEndDateInterval);
+    MergeInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // Collection operations for investment plan allocations
-    <T> MergeInvPlan setAllAllocations(String allocType, List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> allocation);
+    <T> MergeInvPlan setAllAllocations(String allocCode, List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> allocation);
     MergeInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation);
     MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAlloc> allocation);
     MergeInvPlan removeAllocation(String allocId);
@@ -204,21 +222,27 @@ public interface ThenaContractMergeObject {
   }
   
   interface MergeInvPlanAlloc {
-    MergeInvPlanAlloc allocType(String allocType);
-    MergeInvPlanAlloc allocAmount(String allocAmount);
-    MergeInvPlanAlloc allocPercentage(@Nullable String allocPercentage);
-    MergeInvPlanAlloc allocData(@Nullable JsonObject allocData);
+    MergeInvPlanAlloc invPlanAllocCode(String invPlanAllocCode);
+    MergeInvPlanAlloc invPlanAllocName(String invPlanAllocName);
+    MergeInvPlanAlloc invPlanAllocPercentage(BigDecimal invPlanAllocPercentage);
+    MergeInvPlanAlloc invPlanAllocStatus(String invPlanAllocStatus);
     void build();
   }
   
   interface MergePaymentPlan {
-    MergePaymentPlan externalId(@Nullable String externalId);
-    MergePaymentPlan paymentType(String paymentType);
-    MergePaymentPlan paymentAmount(String paymentAmount);
-    MergePaymentPlan paymentFrequency(String paymentFrequency);
-    MergePaymentPlan paymentStartDate(LocalDate paymentStartDate);
-    MergePaymentPlan paymentEndDate(@Nullable LocalDate paymentEndDate);
-    MergePaymentPlan paymentData(@Nullable JsonObject paymentData);
+    MergePaymentPlan partyId(@Nullable String partyId);
+    MergePaymentPlan paymentPlanStatus(String paymentPlanStatus);
+    MergePaymentPlan paymentPlanFrequency(String paymentPlanFrequency);
+    MergePaymentPlan paymentPlanAmount(BigDecimal paymentPlanAmount);
+    
+    // Business dates
+    MergePaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
+    MergePaymentPlan paymentPlanStartDateInterval(@Nullable Duration paymentPlanStartDateInterval);
+    MergePaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
+    
+    MergePaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
+    MergePaymentPlan paymentPlanEndDateInterval(@Nullable Duration paymentPlanEndDateInterval);
+    MergePaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
     void build();
   }
 }

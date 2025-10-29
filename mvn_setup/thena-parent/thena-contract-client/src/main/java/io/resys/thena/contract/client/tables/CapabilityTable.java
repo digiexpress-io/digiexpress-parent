@@ -20,6 +20,7 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -135,6 +136,12 @@ public interface CapabilityTable {
   )
   SqlTupleList updateMany(List<Capability> capabilities);
 
+  @TenantSql.DeleteAll(
+    sql = "DELETE FROM {capability} WHERE id = $1",
+    propsMapper = CapabilityDeleteMapper.class
+  )
+  SqlTupleList deleteAll(Collection<Capability> capabilities);
+
   // Mapper classes
   class CapabilityMapper implements TenantSql.RowMapper<Capability> {
     @Override
@@ -193,6 +200,15 @@ public interface CapabilityTable {
         doc.getCapabilityType(),
         doc.getCapabilityEnabled(),
         doc.getId()
+      });
+    }
+  }
+
+  class CapabilityDeleteMapper implements TenantSql.PropsMapper<Capability> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(Capability capability) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        capability.getId()
       });
     }
   }
