@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.contract.client.entities.CommitTree;
+import io.resys.thena.contract.client.entities.CommitTree.CommitTreeOperation;
 import io.resys.thena.contract.client.entities.ImmutableCommitTree;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -131,7 +132,7 @@ public interface CommitTreeTable {
       return ImmutableCommitTree.builder()
           .id(row.getString("id"))
           .commitId(row.getString("commit_id"))
-          .operationType(Optional.ofNullable(operation_type))
+          .operationType(CommitTreeOperation.valueOf(operation_type))
           .bodyAfter(Optional.ofNullable(body_after))
           .bodyBefore(Optional.ofNullable(body_before))
           .build();
@@ -144,7 +145,7 @@ public interface CommitTreeTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         doc.getId(),
         doc.getCommitId(),
-        doc.getOperationType().orElse(null),
+        doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null)
       });
@@ -156,7 +157,7 @@ public interface CommitTreeTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(CommitTree doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         doc.getCommitId(),
-        doc.getOperationType().orElse(null),
+        doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null),
         doc.getId()

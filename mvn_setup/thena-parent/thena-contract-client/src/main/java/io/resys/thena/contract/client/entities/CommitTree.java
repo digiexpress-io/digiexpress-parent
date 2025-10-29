@@ -35,12 +35,16 @@ import io.vertx.core.json.JsonObject;
 public interface CommitTree extends ContractEntity {
   String getId();
   String getCommitId();
-  Optional<String> getOperationType();
+  CommitTreeOperation getOperationType();
   Optional<JsonObject> getBodyAfter();
   Optional<JsonObject> getBodyBefore();
 
   @Override 
   default ContractDocType getDocType() { 
     return ContractDocType.COMMIT_TREE; 
+  }
+  
+  enum CommitTreeOperation {
+    ADD, REMOVE, MERGE
   }
 }

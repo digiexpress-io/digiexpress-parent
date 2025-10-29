@@ -25,11 +25,11 @@ import java.time.OffsetDateTime;
 import com.google.common.base.Objects;
 
 import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.grim.GrimCommitTree.GrimCommitTreeOperation;
-import io.resys.thena.api.entities.grim.ImmutableGrimCommitTree;
 import io.resys.thena.contract.client.entities.Commit;
+import io.resys.thena.contract.client.entities.CommitTree.CommitTreeOperation;
 import io.resys.thena.contract.client.entities.ContractEntity;
 import io.resys.thena.contract.client.entities.ImmutableCommit;
+import io.resys.thena.contract.client.entities.ImmutableCommitTree;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.vertx.core.json.JsonObject;
@@ -71,10 +71,10 @@ public class ContractCommitBuilder {
   }
   public ContractCommitBuilder add(ContractEntity entity) {
     isTreePresent = true;
-    this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
+    this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
-        .operationType(GrimCommitTreeOperation.ADD)
+        .operationType(CommitTreeOperation.ADD)
         .bodyAfter(JsonObject.mapFrom(entity))
         .build());
     this.logger.add(entity);
@@ -95,10 +95,10 @@ public class ContractCommitBuilder {
     }
     
     isTreePresent = true;
-    this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
+    this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
-        .operationType(GrimCommitTreeOperation.MERGE)
+        .operationType(CommitTreeOperation.MERGE)
         .bodyBefore(JsonObject.mapFrom(previous))
         .bodyAfter(JsonObject.mapFrom(next))
         .build());
@@ -107,12 +107,12 @@ public class ContractCommitBuilder {
   }
   public ContractCommitBuilder rm(ContractEntity current) {
     isTreePresent = true;
-    this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
+    this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
-        .operationType(GrimCommitTreeOperation.REMOVE)
+        .operationType(CommitTreeOperation.REMOVE)
         .bodyBefore(JsonObject.mapFrom(current))
-        .bodyAfter(null)
+        .bodyAfter((JsonObject) null)
         .build());
     this.logger.remove(current);
     return this;
@@ -123,7 +123,7 @@ public class ContractCommitBuilder {
   }
   public ImmutablePersistenceUnit close() {
     if(this.isTreePresent) {
-      this.next.addCommits(this.commit.commitLog(this.logger.build()).build());
+      this.next.addCommitInserts(this.commit.commitLog(this.logger.build()).build());
     }
     
     return this.next.log("").build();
