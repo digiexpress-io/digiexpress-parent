@@ -51,6 +51,7 @@ import io.resys.thena.contract.client.spi.create.NewNoteBuilder;
 import io.resys.thena.contract.client.spi.create.NewReferenceBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
+import jakarta.annotation.Nullable;
 
 public class MergeInvPlanBuilder implements MergeInvPlan {
 
@@ -69,8 +70,8 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
       ContractCommitBuilder logger, 
       String contractId, 
       String invPlanId,
-      Map<String, InvPlan> all_invPlans,
-      Map<String, Reference> all_references) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.contractId = contractId;
     this.logger = logger;

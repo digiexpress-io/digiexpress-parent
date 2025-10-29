@@ -32,6 +32,7 @@ import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 public class MergeReferenceBuilder implements MergeReference {
 
@@ -43,7 +44,8 @@ public class MergeReferenceBuilder implements MergeReference {
   private boolean built;
 
   public MergeReferenceBuilder(ContractContainer container, ContractCommitBuilder logger, String contractId, String referenceId,
-      Map<String, Reference> allReferences) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.logger = logger;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);

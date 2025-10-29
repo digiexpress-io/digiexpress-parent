@@ -48,6 +48,7 @@ import io.resys.thena.contract.client.spi.create.NewReferenceBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 public class MergePartyBuilder implements MergeParty {
 
@@ -66,8 +67,8 @@ public class MergePartyBuilder implements MergeParty {
       ContractCommitBuilder logger, 
       String contractId, 
       String partyId,
-      Map<String, Party> all_parties,
-      Map<String, Reference> all_references) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.contractId = contractId;
     this.logger = logger;

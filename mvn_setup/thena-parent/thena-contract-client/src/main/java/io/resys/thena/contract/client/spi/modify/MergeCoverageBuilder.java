@@ -48,6 +48,7 @@ import io.resys.thena.contract.client.spi.create.NewNoteBuilder;
 import io.resys.thena.contract.client.spi.create.NewReferenceBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
+import jakarta.annotation.Nullable;
 
 public class MergeCoverageBuilder implements MergeCoverage {
 
@@ -66,8 +67,8 @@ public class MergeCoverageBuilder implements MergeCoverage {
       ContractCommitBuilder logger, 
       String contractId, 
       String coverageId,
-      Map<String, Coverage> all_coverages,
-      Map<String, Reference> all_references) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.contractId = contractId;
     this.logger = logger;

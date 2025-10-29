@@ -30,6 +30,7 @@ import io.resys.thena.contract.client.entities.ImmutableCapability;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
+import jakarta.annotation.Nullable;
 
 public class MergeCapabilityBuilder implements MergeCapability {
 
@@ -45,7 +46,8 @@ public class MergeCapabilityBuilder implements MergeCapability {
       ContractCommitBuilder logger, 
       String contractId, 
       String capabilityId,
-      Map<String, Capability> allCapabilities) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.logger = logger;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);

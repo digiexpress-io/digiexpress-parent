@@ -32,6 +32,7 @@ import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 public class MergeNoteBuilder implements MergeNote {
 
@@ -44,7 +45,9 @@ public class MergeNoteBuilder implements MergeNote {
 
   public MergeNoteBuilder(
       ContractContainer container, ContractCommitBuilder logger, 
-      String contractId, String noteId, Map<String, Note> allNotes) {
+      String contractId, String noteId, 
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.logger = logger;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);

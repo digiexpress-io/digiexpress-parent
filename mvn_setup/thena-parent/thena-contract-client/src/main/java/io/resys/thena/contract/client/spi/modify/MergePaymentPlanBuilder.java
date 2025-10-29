@@ -33,6 +33,7 @@ import io.resys.thena.contract.client.entities.PaymentPlan;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
+import jakarta.annotation.Nullable;
 
 public class MergePaymentPlanBuilder implements MergePaymentPlan {
 
@@ -44,7 +45,8 @@ public class MergePaymentPlanBuilder implements MergePaymentPlan {
   private boolean built;
 
   public MergePaymentPlanBuilder(ContractContainer container, ContractCommitBuilder logger, String contractId, String paymentPlanId,
-      Map<String, PaymentPlan> allPaymentPlans) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     super();
     this.logger = logger;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);

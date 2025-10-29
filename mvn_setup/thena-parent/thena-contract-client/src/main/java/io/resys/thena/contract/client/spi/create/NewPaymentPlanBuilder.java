@@ -25,10 +25,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Map;
 
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewPaymentPlan;
 import io.resys.thena.contract.client.entities.ImmutablePaymentPlan;
 import io.resys.thena.contract.client.entities.PaymentPlan;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
@@ -43,7 +45,8 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
   public NewPaymentPlanBuilder(
       ContractCommitBuilder logger, 
       String contractId, 
-      Map<String, PaymentPlan> allPaymentPlans) {
+      ImmutablePersistenceUnit currentTx,
+      @Nullable ContractContainer savedState) {
     
     super();
     this.logger = logger;
