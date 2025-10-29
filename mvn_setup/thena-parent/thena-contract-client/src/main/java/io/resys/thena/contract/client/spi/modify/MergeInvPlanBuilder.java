@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeInvPlan;
+import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeInvPlanAlloc;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
@@ -81,7 +82,7 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     RepoAssert.notNull(currentInvPlan, () -> "Can't find investment plan with id: '" + invPlanId + "' for contract: '" + contractId + "'!");
     this.nextInvPlan = ImmutableInvPlan.builder().from(currentInvPlan);
     this.container = container;
-    this.childRel = ImmutableContractOneOfRelations.builder().relationType(ContractRelationType.INVESTMENT_PLAN).invPlanId(currentInvPlan.getId()).build();
+    this.childRel = ImmutableContractOneOfRelations.builder().relationType(ContractRelationType.INV_PLAN).invPlanId(currentInvPlan.getId()).build();
   }
 
   @Override
@@ -169,7 +170,7 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     return this;
   }
   @Override
-  public MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAllocBuilder> allocation) {
+  public MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAlloc> allocation) {
     // Find the allocation
     final var current = this.batch.build().getInvPlanAllocs().stream()
         .filter(a -> a.getId().equals(allocId))
@@ -332,7 +333,7 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     if(rel == null) {
       return false;
     }
-    return rel.getRelationType() == ContractRelationType.INVESTMENT_PLAN && 
+    return rel.getRelationType() == ContractRelationType.INV_PLAN && 
         rel.getInvPlanId().equals(this.currentInvPlan.getId());
   }
 }

@@ -27,10 +27,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import jakarta.annotation.Nullable;
-
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
-import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
@@ -39,7 +36,9 @@ import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewParty;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewPaymentPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewReference;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 // Generic interfaces for create/update/delete operations 
 public interface ThenaContractMergeObject {
@@ -217,6 +216,12 @@ public interface ThenaContractMergeObject {
     MergeInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation);
     MergeInvPlan modifyAllocation(String allocId, Consumer<MergeInvPlanAlloc> allocation);
     MergeInvPlan removeAllocation(String allocId);
+    
+    <T> MergeInvPlan setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note);
+    <T> MergeInvPlan setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference);
+    
+    MergeInvPlan addReference(Consumer<NewReference> reference);
+    MergeInvPlan addNote(Consumer<NewNote> note);
     
     void build();
   }
