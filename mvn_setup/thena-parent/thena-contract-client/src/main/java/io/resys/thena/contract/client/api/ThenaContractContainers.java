@@ -28,6 +28,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.contract.client.entities.Capability;
 import io.resys.thena.contract.client.entities.Contract;
 import io.resys.thena.contract.client.entities.Coverage;
@@ -47,7 +48,7 @@ public interface ThenaContractContainers {
   @Value.Immutable
   @JsonSerialize(as = ImmutableContractContainer.class)
   @JsonDeserialize(as = ImmutableContractContainer.class)
-  interface ContractContainer {
+  interface ContractContainer extends ThenaContainer {
     Contract getContract();
     List<Party> getParties();
     List<Coverage> getCoverages();

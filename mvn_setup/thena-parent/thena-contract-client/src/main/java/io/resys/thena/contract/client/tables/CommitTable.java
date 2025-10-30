@@ -121,7 +121,7 @@ public interface CommitTable {
 
       return ImmutableCommit.builder()
           .commitId(row.getString("commit_id"))
-          .parentId(Optional.ofNullable(parent_id))
+          .parentCommitId(Optional.ofNullable(parent_id))
           .contractId(Optional.ofNullable(contract_id))
           .createdAt(row.getOffsetDateTime("created_at"))
           .commitLog(row.getString("commit_log"))
@@ -136,7 +136,7 @@ public interface CommitTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         doc.getCommitId(),
-        doc.getParentId().orElse(null),
+        doc.getParentCommitId().orElse(null),
         doc.getContractId().orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),
@@ -150,7 +150,7 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentId().orElse(null),
+        doc.getParentCommitId().orElse(null),
         doc.getContractId().orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),

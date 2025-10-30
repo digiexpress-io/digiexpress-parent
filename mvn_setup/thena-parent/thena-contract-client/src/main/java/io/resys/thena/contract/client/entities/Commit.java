@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface Commit extends ContractEntity {
   
   String getCommitId();
-  Optional<String> getParentId();
+  Optional<String> getParentCommitId();
   Optional<String> getContractId();
   OffsetDateTime getCreatedAt();
   String getCommitLog();

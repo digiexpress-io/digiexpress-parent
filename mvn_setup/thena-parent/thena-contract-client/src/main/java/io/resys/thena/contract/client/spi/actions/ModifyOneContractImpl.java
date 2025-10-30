@@ -21,13 +21,13 @@ package io.resys.thena.contract.client.spi.actions;
  */
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.contract.client.api.ContractCommitActions.ModifyOneContract;
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
 import io.resys.thena.contract.client.api.ImmutableOneContractEnvelope;
@@ -35,16 +35,15 @@ import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContai
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeContract;
 import io.resys.thena.contract.client.entities.ContractDocType;
 import io.resys.thena.contract.client.entities.ImmutableCommit;
-import io.resys.thena.contract.client.spi.ContractDataSource.ContractState;
-import io.resys.thena.contract.client.spi.actions.ModifyOneContractImpl.ModifyOneContractException;
-import io.resys.thena.contract.client.spi.commitlog.ContractBatchOperations;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.modify.MergeContractBuilder;
+import io.resys.thena.contract.client.spi.queries.ContractQueryImpl;
 import io.resys.thena.contract.client.tables.ContractDb;
+import io.resys.thena.contract.client.tables.ContractDbBuilder.PersistenceUnit;
+import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -93,12 +92,11 @@ public class ModifyOneContractImpl implements ModifyOneContract {
     RepoAssert.notEmpty(contractId, () -> "contractId can't be empty!");
     
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(tenantId).build();
-    return this.state.withContractTransaction(scope, this::doInTx);
+    return this.state.withTransaction(scope, this::doInTx);
   }
 
-  private Uni<OneContractEnvelope> doInTx(ContractState tx) {
+  private Uni<OneContractEnvelope> doInTx(ContractDb tx) {
     return createRequest(tx)
-        .collect().asList()
         .onItem().transformToUni(request -> createResponse(tx, request))
         .onFailure(ModifyOneContractException.class).recoverWithItem(ex -> {
           final ModifyOneContractException error = (ModifyOneContractException) ex;          
@@ -117,91 +115,65 @@ public class ModifyOneContractImpl implements ModifyOneContract {
         });
   }
 
-  private OneContractEnvelope validateRequest(ContractState tx, List<ContractBatchOperations> request) {
-    if(request.size() != 1) {
-      return ImmutableOneContractEnvelope.builder()
-            .repoId(tenantId)
-            .addMessages(ImmutableMessage.builder()
-                .text(new StringBuilder()
-                  .append("Commit to: '").append(tenantId).append("'")
-                  .append(" is rejected.")
-                  .append(" Could not find contract, expected: '1' but found: '").append(request.size()).append("'!\\r\\n")
-                  .append("  - not found: ").append(String.join(",", contractId))
-                  .toString())
-                .build())
-            .status(CommitResultStatus.ERROR)
-            .build();
-    }
-    return null;
-  }
+
   
-  private Uni<OneContractEnvelope> createResponse(ContractState tx, List<ContractBatchOperations> request) {
-    final var isErrors = validateRequest(tx, request);
-    if(isErrors != null) {
-      return Uni.createFrom().item(isErrors);
-    }
-    
+  private Uni<OneContractEnvelope> createResponse(ContractDb tx, PersistenceUnit request) {
+
     // Merge requests
-    final var start = ContractBatchOperations.builder()
+    final var start = ImmutablePersistenceUnit.builder()
         .tenantId(tenantId)
         .log("")
-        .status(BatchStatus.OK);
-    
-    request.forEach(r -> start.from(r));
+        .status(BatchStatus.OK)
+        .from(request);
     
     // Patch all in current TX
-    return tx.batchMany(start.build()).onItem().transformToUni(rsp -> {
+    return tx.builder().from(start.build()).persist().onItem().transformToUni(rsp -> {
       
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
         throw new ModifyOneContractException("Failed to modify contract!", rsp);
       }
 
-      return tx.contracts()
-          .contractId(this.contractId)
+      return ContractQueryImpl.of(tx)
+          .addContractId(this.contractId)
           .excludeDocs(ContractDocType.COMMIT)
-          .findAll().collect().asList()
+          .findAll()
           .onItem().transform(container -> {
-            final var item = container.iterator().next();
-            return ImmutableOneContractEnvelope.builder()
+            final var item = container.getObjects().iterator().next();
+            final OneContractEnvelope env = ImmutableOneContractEnvelope.builder()
               .repoId(tenantId)
-              .contract(item.getContract())
-              .parties(item.getParties())
-              .coverages(item.getCoverages())
-              .addAllReferences(item.getReferences())
-              .addAllNotes(item.getNotes())
-              .addAllCapabilities(item.getCapabilities())
-              .addAllInvPlans(item.getInvPlans())
-              .addAllPaymentPlans(item.getPaymentPlans())
-              .addAllMessages(rsp.getMessages())
+              .contract(item)
+              .addAllMessages(container.getMessages())
               .status(BatchStatus.mapStatus(rsp.getStatus()))
               .build();
+            return env;
           });
             
     });
   }
   
-  private Multi<ContractBatchOperations> createRequest(ContractState tx) {
-    return tx.contracts()
-    .contractId(this.contractId)
-    .lockForUpdate()
-    .excludeDocs(ContractDocType.COMMIT)
-    .findAll().onItem().transform(container -> createRequest(tx, container));
+  private Uni<PersistenceUnit> createRequest(ContractDb tx) {
+    return ContractQueryImpl.of(tx)
+      .addContractId(this.contractId)
+      .lockForUpdate()
+      .excludeDocs(ContractDocType.COMMIT)
+      .findAll().onItem()
+      .transform(container -> createRequest(tx, container));
   }
   
-  private ContractBatchOperations createRequest(ContractState tx, ContractContainer container) {
-    RepoAssert.isTrue(container.getContracts().size() == 1, () -> "Contract container must be grouped by contracts, one contract per container!");
+  private ImmutablePersistenceUnit createRequest(ContractDb tx, QueryEnvelopeList<ContractContainer> env) {
+    RepoAssert.isTrue(env.getObjects().size() == 1, () -> "Contract container must be grouped by contracts, one contract per container!");
     
-    final var contract = container.getContracts().values().iterator().next();
+    final var contract = env.getObjects().get(0).getContract();
     final var contractId = contract.getId();
     
-    final var start = ContractBatchOperations.builder()
+    final var start = ImmutablePersistenceUnit.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
         .log("")
         .build();
     final var createdAt = OffsetDateTime.now();
     
-    ContractBatchOperations next = start;    
+    ImmutablePersistenceUnit next = start;    
     final var logger = new ContractCommitBuilder(tenantId, 
         ImmutableCommit.builder()
           .commitId(OidUtils.gen())
@@ -213,11 +185,11 @@ public class ModifyOneContractImpl implements ModifyOneContract {
           .build()
     );
     
-    final var mergeContract = new MergeContractBuilder(container, logger);
+    final var mergeContract = new MergeContractBuilder(env.getObjects().get(0), logger);
     this.contract.accept(mergeContract);
     final var created = mergeContract.close();
     
-    next = ContractBatchOperations.builder()
+    next = ImmutablePersistenceUnit.builder()
         .from(start)
         .from(created)
         .from(logger.withContractId(contractId).close())
@@ -227,14 +199,14 @@ public class ModifyOneContractImpl implements ModifyOneContract {
   
   public static class ModifyOneContractException extends RuntimeException {
     private static final long serialVersionUID = -6202574733069488724L;
-    private final ContractBatchOperations batch;
+    private final PersistenceUnit batch;
     
-    public ModifyOneContractException(String message, ContractBatchOperations batch) {
+    public ModifyOneContractException(String message, PersistenceUnit batch) {
       super(message);
       this.batch = batch;
     }
     
-    public ContractBatchOperations getBatch() {
+    public PersistenceUnit getBatch() {
       return batch;
     }
   }
