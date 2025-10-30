@@ -94,7 +94,7 @@ export const sv = {
   'gamut.forms.filling.start.info1': 'Dina formulärförlopp sparas automatiskt när du går',
   'gamut.forms.filling.start.button': 'Fortsätt att bilda',
   'gamut.forms.filling.cancel.button': 'Avboka',
-  'gamut.forms.filling.summary': 'Du har fyllt i formuläret',
+  'gamut.forms.filling.summary': 'Vi har tagit emot ditt formulär',
   'gamut.forms.filling.summary.thank-you': 'Tack!',
   'gamut.forms.filling.summary.info1': 'Vår personal har underrättats om din förfrågan och kommer att börja behandla snart.',
   'gamut.forms.filling.summary.info2': 'Se till att kontrollera Min översikt regelbundet för',
