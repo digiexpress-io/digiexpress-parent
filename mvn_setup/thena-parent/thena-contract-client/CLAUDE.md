@@ -169,6 +169,156 @@ mvn test
 # Review schema.sql for any syntax errors
 ```
 
+## Builder Pattern Architecture (Grim-inspired)
+
+The system implements a sophisticated builder pattern inspired by the Grim task management domain, adapted for contract policy management.
+
+### Builder Interface Structure
+
+**Create Builders** (`ThenaContractNewObject.java`):
+- Use `Consumer<T>` callback pattern for domain-specific language
+- Support nested entity creation with `addNote()`, `addReference()` methods
+- Transaction-aware with `currentTx` and `savedState` parameters
+
+**Modify Builders** (`ThenaContractMergeObject.java`):
+- State-aware modification with lock-for-update pattern
+- Hierarchical child entity management
+- Conflict detection for transaction safety
+
+### Builder Implementation Patterns
+
+**1. Create Pattern** (`spi/create/`):
+```java
+// NewEntityBuilder constructor
+public NewEntityBuilder(
+    ContractCommitBuilder logger,
+    String contractId, 
+    ImmutablePersistenceUnit currentTx,
+    @Nullable ContractContainer savedState) {
+  // State tracking for all entities in transaction
+}
+
+// Child entity creation with relations
+public NewEntity addNote(Consumer<NewNote> note) {
+  final var entityRel = ImmutableContractOneOfRelations.builder()
+      .relationType(ContractRelationType.ENTITY_TYPE)
+      .entityId(this.next.build().getId())
+      .build();
+  
+  final var builder = new NewNoteBuilder(logger, contractId, entityRel, currentTx, savedState);
+  note.accept(builder);
+  final var built = builder.close();
+  this.logger.add(built);
+  return this;
+}
+```
+
+**2. Modify Pattern** (`spi/modify/`):
+```java
+// MergeEntityBuilder with sophisticated hierarchical pattern
+public class MergeEntityBuilder implements MergeEntity {
+  private final ImmutableContractOneOfRelations childRel;
+  private final ContractContainer container;
+  private final String contractId;
+
+  // Constructor creates child relation context
+  this.childRel = ImmutableContractOneOfRelations.builder()
+      .relationType(ContractRelationType.ENTITY_TYPE)
+      .entityId(currentEntity.getId())
+      .build();
+}
+
+// Sophisticated setAll pattern with conflict detection
+public <T> MergeEntity setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note) {
+  // 1. Save current transaction inserts that don't match filter
+  final List<Note> saved = this.batch.build().getNoteInserts().stream()
+      .filter(e -> !e.getNoteType().equals(noteType))
+      .filter(a -> !isEntityRelation(a.getRelations()))
+      .toList();
+  this.batch.noteInserts(Collections.emptyList());
+  
+  // 2. Check for conflicting updates
+  final var incorrect_updates = this.batch.build().getNoteUpdates().stream()
+    .filter(e -> e.getNoteType().equals(noteType))
+    .filter(a -> isEntityRelation(a.getRelations()))
+    .toList();
+  if(!incorrect_updates.isEmpty()) {
+    throw new IllegalModificationException("Conflict detected!");
+  }
+  
+  // 3. Create tracking map
+  final var all_notes = new HashMap<String, Note>(saved.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+  
+  // 4. Delete old entities matching criteria
+  this.batch.addAllNoteDeletes(container.getNotes().stream()
+      .filter(a -> isEntityRelation(a.getRelations()))
+      .filter(e -> e.getNoteType().equals(noteType))
+      .toList());
+  
+  // 5. Add new entities with proper relation context
+  for(final var replacement : replacements) {
+    final var new_note = note.apply(replacement);
+    final var builder = new NewNoteBuilder(logger, contractId, childRel, batch.build(), container);
+    new_note.accept(builder);
+    final var built = builder.close();
+    all_notes.put(built.getId(), built);
+    this.batch.addNoteInserts(built);
+  }
+  return this;
+}
+
+// Helper method for relation checking
+private boolean isEntityRelation(ContractOneOfRelations rel) {
+  if(rel == null) return false;
+  return rel.getRelationType() == ContractRelationType.ENTITY_TYPE && 
+      rel.getEntityId().equals(this.currentEntity.getId());
+}
+```
+
+### SetAll Method Types
+
+**Context-Specific SetAll** (need sophisticated pattern):
+- `setAllNotes(String noteType, ...)` - only replaces notes of specific type
+- `setAllReferences(String referenceType, ...)` - only replaces references of specific type  
+- `setAllCoverages(String coverageType, ...)` - only replaces coverages of specific type
+- `setAllParties(String partyType, ...)` - only replaces parties of specific type
+
+These require sophisticated transaction-safe pattern with conflict detection and filtered operations.
+
+**Full-Scope SetAll** (simple transaction-safe):
+- `setAllCapabilities(...)` - replaces ALL capabilities for contract
+- `setAllInvPlans(...)` - replaces ALL investment plans for contract  
+- `setAllPaymentPlans(...)` - replaces ALL payment plans for contract
+
+These use simpler "delete all + add new" approach since they replace everything in their category.
+
+### Implementation Files Structure
+
+```
+spi/
+├── create/
+│   ├── NewContractBuilder.java        # Main contract creation orchestrator
+│   ├── NewEntityBuilder.java         # Individual entity builders
+│   └── ...
+├── modify/
+│   ├── ModifyOneContractImpl.java     # Main modify orchestrator with lock-for-update
+│   ├── MergeContractBuilder.java      # Contract modification with setAll methods
+│   ├── MergeEntityBuilder.java       # Individual entity merge builders
+│   └── IllegalModificationException.java # Conflict detection exception
+└── commitlog/
+    └── ContractCommitBuilder.java     # Commit logging and versioning
+```
+
+### Key Technical Concepts
+
+1. **Commit Chaining**: parentCommitId for versioning history
+2. **Optimistic Locking**: Version management with conflict detection
+3. **ContractOneOfRelations**: Multi-FK relationships for notes/references
+4. **ImmutablePersistenceUnit**: Table suffix architecture for batch operations
+5. **Relation-Aware Creation**: Child entities created with proper parent context
+6. **Transaction-Safe Operations**: Prevent update+delete conflicts
+7. **Hierarchical Entity Management**: Parent-child relationships with proper isolation
+
 ## Notes for AI Assistant
 
 - Always increment order values sequentially
@@ -178,3 +328,8 @@ mvn test
 - Update ContractDocType enum when adding entities
 - Never break existing foreign key relationships
 - Test SQL joins work with existing commit table structure
+- **Use sophisticated setAll pattern for context-specific operations**
+- **Use simple setAll pattern for full-scope replacements**
+- **Always implement child relation management in merge builders**
+- **Add conflict detection for transaction safety**
+- **Maintain proper ContractOneOfRelations for multi-FK entities**
