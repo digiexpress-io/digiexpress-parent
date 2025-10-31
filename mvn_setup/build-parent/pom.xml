@@ -83,6 +83,7 @@
               <artifactId>auto-service</artifactId>
               <version>${autoservice.version}</version>
             </path>
+            
             <path>
               <groupId>io.digiexpress</groupId>
               <artifactId>thena-sql-client-annot-proc</artifactId>
