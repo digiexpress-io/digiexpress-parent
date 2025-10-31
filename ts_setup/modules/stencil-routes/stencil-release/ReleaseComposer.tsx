@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 
-import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormHelperText } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { StencilApi, StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import { CancelButton, EveliPermissions, TextField } from '@dxs-ts/eveli-primitives';
 
@@ -12,6 +12,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, session } = Composer.useComposer();
   const { site } = session;
+  const intl = useIntl();
 
 
   const [name, setName] = React.useState('');
@@ -44,6 +45,11 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         }}>
           <FormattedMessage id={'site.content.empty'} /></Typography> : null}
         <TextField label='release.composer.label' onChange={setName} value={name} />
+        {!name && (
+          <FormHelperText error>
+            {intl.formatMessage({ id: 'error.valueRequired' })}
+          </FormHelperText>
+        )}
         <TextField label='release.composer.note' helperText='release.composer.helper' onChange={setNote} value={note} />
       </DialogContent>
       <DialogActions>
