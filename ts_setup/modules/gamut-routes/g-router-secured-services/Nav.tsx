@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumbs, Link, Typography } from '@mui/material';
+import { Breadcrumbs, Link, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Home as HomeIcon } from '@mui/icons-material';
 import { useNavigate } from '@tanstack/react-router';
 
@@ -21,6 +21,7 @@ export interface GRouterSecuredServicesProps {
 
 export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const intl = useIntl();
+  const theme = useTheme();
   const { topic } = ownerState;
   const classes = useUtilityClasses();
   const nav = useNavigate();
@@ -36,19 +37,17 @@ export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
     })
   }
 
-
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <Breadcrumbs className={classes.servicesBreadcrumbs}>
       <Link onClick={() => handleNav('user-overview')}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}
       </Link>
-      <Typography>
+      <Link onClick={() => handleNav('services')}>
         {intl.formatMessage({ id: 'gamut.services' })}
-      </Typography>
-      <Typography>
-        {topic?.name}
-      </Typography>
+      </Link>
+      {(ownerState.activeTopicId && topic?.name || !isMobile) && (<Typography>{topic?.name}</Typography>)}
     </Breadcrumbs>);
 }
 

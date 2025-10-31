@@ -23,7 +23,6 @@ export interface GRouterSecuredServicesProps {
   locale: string;
   viewId: GUserOverviewMenuView;
   defaultViewId?: string;
-
   activeTopicId?: string | undefined;
 }
 
@@ -56,6 +55,7 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
 
   const ownerState: OwnerState = {
     defaultViewId,
+    activeTopicId: props.activeTopicId,
     locale: props.locale,
     viewId: props.viewId,
     topic,
@@ -94,16 +94,19 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
 
   const breadcrumbs = React.useCallback(() => <Nav ownerState={ownerState} />, [ownerState]);
 
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isIndex: boolean = (topic?.id === '000_index' || !topic) && !props.activeTopicId && isMobile;
+  const isDrawer = isIndex && !ownerState.withDrawer;
+
   const leftContents = (<>
-    {!topic && !ownerState.withDrawer && (
+    {isDrawer && (
       <>
         <SearchFilters ownerState={ownerState} />
         <SearchResults ownerState={ownerState} />
       </>
     )}
-    {!!topic && <GArticle>{topic}</GArticle>}
+    {!!topic && !isIndex && <GArticle>{topic}</GArticle>}
   </>);
-
 
   return (
     <SearchApi.SearchProvider>
