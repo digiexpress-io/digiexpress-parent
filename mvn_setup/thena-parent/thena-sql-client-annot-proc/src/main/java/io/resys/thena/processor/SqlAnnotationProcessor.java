@@ -21,43 +21,47 @@ package io.resys.thena.processor;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
+import com.google.auto.service.AutoService;
+
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.processor.codegen.DbBuilderImplSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbBuilderInterfaceSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbImplSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbInterfaceSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbInternalTenantQuerySqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbQueryExceptionSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbQueryImplSqlCodeGenerator;
-import io.resys.thena.processor.codegen.DbQueryInterfaceSqlCodeGenerator;
-import io.resys.thena.processor.codegen.RegistryFactorySqlCodeGenerator;
-import io.resys.thena.processor.codegen.TableNameSqlCodeGenerator;
-import io.resys.thena.processor.codegen.TableSqlCodeGenerator;
-import io.resys.thena.processor.model.ModelExtractor;
-import io.resys.thena.processor.model.TableModel;
-import io.resys.thena.processor.model.TableModel.RegistryModel;
+import io.resys.thena.processor.codegen.Gen_Multi_BuilderImplementation;
+import io.resys.thena.processor.codegen.Gen_Multi_BuilderInterface;
+import io.resys.thena.processor.codegen.Gen_Multi_InternalTenantQuery;
+import io.resys.thena.processor.codegen.Gen_Multi_QueryImplementation;
+import io.resys.thena.processor.codegen.Gen_Multi_QueryInterface;
+import io.resys.thena.processor.codegen.Gen_Multi_RegistryFactory;
+import io.resys.thena.processor.codegen.Gen_Multi_TableNames;
+import io.resys.thena.processor.codegen.Gen_Registry_DatabaseImplementation;
+import io.resys.thena.processor.codegen.Gen_Registry_DatabaseInterface;
+import io.resys.thena.processor.codegen.Gen_Registry_Exception;
+import io.resys.thena.processor.codegen.Gen_Table_SqlImplementation;
+import io.resys.thena.processor.model.Metamodel;
+import io.resys.thena.processor.model.RegistryMetamodel;
+import io.resys.thena.processor.model.TableMetamodel;
+import io.resys.thena.processor.spi.MultiTableCodeGenerator;
+import io.resys.thena.processor.spi.RegistryCodeGenerator;
+import io.resys.thena.processor.spi.TableCodeGenerator;
 
 
-
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
+@AutoService(Processor.class)
 public class SqlAnnotationProcessor extends AbstractProcessor {
 
+  @Override
+  public SourceVersion getSupportedSourceVersion() {
+    return SourceVersion.latest();
+  }
+  
   @Override
   public Set<String> getSupportedAnnotationTypes() {
     return new HashSet<>(Arrays.asList(
@@ -69,267 +73,111 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     
-    // Step 0: Find all @TenantSql.Registry interfaces
-    final var registryModels = new ArrayList<RegistryModel>();
-    for (Element element : roundEnv.getElementsAnnotatedWith(TenantSql.Registry.class)) {
-      if (element.getKind() == ElementKind.PACKAGE) {
-        final var packageElement = (PackageElement) element;
-        final var registryConfig = extractRegistryConfig(packageElement);
-        if(registryConfig != null) {
-          registryModels.add(registryConfig);
-        }
-      }
-    }
+    // Build centralized metadata model
+    final var metaModel = Metamodel.builder(processingEnv)
+      .addAllRegistries(roundEnv.getElementsAnnotatedWith(TenantSql.Registry.class))
+      .addAllTables(roundEnv.getElementsAnnotatedWith(TenantSql.Table.class))
+      .build();
     
-    
-    // Step 1: Find all @TenantSql.Table interfaces
-    final var tableModels = new ArrayList<TableModel>();
-    for (Element element : roundEnv.getElementsAnnotatedWith(TenantSql.Table.class)) {
-      
-      processingEnv.getMessager().printMessage(
-          javax.tools.Diagnostic.Kind.NOTE,
-          "Analysing SQL TABLE: " + element.getSimpleName()
-        );
-      
-      // Step 2: Validate
-      if (element.getKind() != ElementKind.INTERFACE) {
-        // Log error and continue
-        
-        processingEnv.getMessager().printMessage(
-            javax.tools.Diagnostic.Kind.ERROR,
-            "Skipping expecting interface but got class: " + element.getSimpleName()
-          );
-        continue;
-      }
-      
-      // Step 3: Process tables
-      try {
-        final var modelExtractor = new ModelExtractor(processingEnv);
-        final var model = modelExtractor.extract((TypeElement) element);
-        final var registry = findRegistryForTable(model, registryModels);
-        
-        if(registry == null) {
+    // Process individual table generators
+    for (final var table : metaModel.getTables()) {
+      final var registry = metaModel.findRegistryForTable(table);
+      if (registry != null) {
+        try {
+          processTableInterface(table, registry);
+        } catch (Exception e) {
           processingEnv.getMessager().printMessage(
-              javax.tools.Diagnostic.Kind.ERROR,
-              "Failed to process @TenantSql.Table: " + model.getTableName() + " is skipped because there is no registry!",
-              element
-            );
-        }
-        
-        processTableInterface(model, registry);
-        tableModels.add(model);
-        
-      } catch (Exception e) {
-        processingEnv.getMessager().printMessage(
             javax.tools.Diagnostic.Kind.ERROR,
-            "Failed to process @TenantSql.Table: " + e.getMessage(),
-            element
+            "Failed to process table " + table.getTableName() + ": " + e.getMessage()
           );
-          e.printStackTrace(); // Also print stack trace to console for debugging
+          e.printStackTrace();
+        }
       }
     }
     
-    
-    // Step 4: Process factories
-    for (final var registryConfig : registryModels) {
-      final var tables = filterTablesForRegistry(registryConfig, tableModels);
+    // Process registry generators
+    for (final var registry : metaModel.getRegistries()) {
+      final var tables = metaModel.getTablesForRegistry(registry);
       try {
-        processRegistry(registryConfig, tables);
+        processRegistry(registry, tables);
       } catch (Exception e) {
         processingEnv.getMessager().printMessage(
-            javax.tools.Diagnostic.Kind.ERROR,
-            "Failed to process @TenantSql.Registry: " + e.getMessage(),
-            registryConfig.getElement()
-          );
-          e.printStackTrace(); // Also print stack trace to console for debugging
-      }      
+          javax.tools.Diagnostic.Kind.ERROR,
+          "Failed to process registry " + registry.getName() + ": " + e.getMessage(),
+          registry.getElement()
+        );
+        e.printStackTrace();
+      }
     }
+    
     return true; // We claim this annotation
   }
   
-  private void processRegistry(RegistryModel registryConfig, List<TableModel> tableModels) throws IOException {
-    // Step 3: Generate registry if we have config
+  private void processRegistry(RegistryMetamodel registryConfig, List<TableMetamodel> tableModels) throws IOException {
+    // Generate registry if we have config
     if (tableModels.isEmpty()) {
       return;
     }
     
-    final var filteredTables = filterTablesForRegistry(registryConfig, tableModels);
+    final var filteredTables = tableModels;
     
-
-    new TableNameSqlCodeGenerator()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
+    // Registry-only generators (single RegistryModel parameter)
+    final var registryGenerators = List.of(
+      new Gen_Registry_DatabaseInterface(),
+      new Gen_Registry_DatabaseImplementation(),
+      new Gen_Registry_Exception()
+    );
+    
+    // Multi-table generators (RegistryModel + List<TableModel> parameters)
+    final var multiTableGenerators = List.of(
+      new Gen_Multi_TableNames(),
+      new Gen_Multi_RegistryFactory(),
+      new Gen_Multi_QueryInterface(),
+      new Gen_Multi_BuilderInterface(),
+      new Gen_Multi_InternalTenantQuery(),
+      new Gen_Multi_BuilderImplementation(),
+      new Gen_Multi_QueryImplementation()
+    );
+    
+    // Process registry-only generators
+    for (RegistryCodeGenerator generator : registryGenerators) {
+      final var javaFile = generator.generate(registryConfig);
+      javaFile.writeTo(processingEnv.getFiler());
       
-    processingEnv.getMessager().printMessage(
-      javax.tools.Diagnostic.Kind.NOTE,
-      "Generated names: " + registryConfig.getTableClassName() + " with " + 
-      filteredTables.size() + " tables"
-    );
-  
-    new RegistryFactorySqlCodeGenerator()
-        .generate(registryConfig, tableModels)
-        .writeTo(processingEnv.getFiler());
-    
-    processingEnv.getMessager().printMessage(
-      javax.tools.Diagnostic.Kind.NOTE,
-      "Generated registry: " + registryConfig.getRegistryClassName() + " with " + 
-      filteredTables.size() + " tables"
-    );
-  
-    
-    new DbInterfaceSqlCodeGenerator()
-      .generate(registryConfig)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db interface: " + registryConfig.getTransactionSaveClassName() + " with " + 
-        filteredTables.size() + " tables");
-    
-    
-    new DbQueryInterfaceSqlCodeGenerator()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db query interface: " + registryConfig.getName() + "DbQuery with " + 
-        filteredTables.size() + " tables");
-    
-    
-    new DbBuilderInterfaceSqlCodeGenerator()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db builder interface: " + registryConfig.getName() + "DbBuilder with " + 
-        filteredTables.size() + " tables");
-    
-    
-    new DbImplSqlCodeGenerator()
-      .generate(registryConfig)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db impl: " + registryConfig.getName() + "DbImpl");
-    
-    
-    new DbInternalTenantQuerySqlCodeGenerator()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated internal tenant query: " + registryConfig.getName() + "DbInternalTenantQuery");
-    
-    
-    new DbBuilderImplSqlCodeGenerator()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db builder impl: " + registryConfig.getName() + "DbBuilderImpl");
-    
-    
-    new DbQueryImplSqlCodeGenerator()
-      .generate(registryConfig, filteredTables)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db query impl: " + registryConfig.getName() + "DbQueryImpl");
-    
-    
-    new DbQueryExceptionSqlCodeGenerator()
-      .generate(registryConfig)
-      .writeTo(processingEnv.getFiler());
-  
-    processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.NOTE,
-        "Generated db query exception: " + registryConfig.getName() + "FindException");
-    
-  }
-  
-  
-  private List<TableModel> filterTablesForRegistry(RegistryModel config, List<TableModel> allTables) {
-    final var registryPackage = config.getPackageName();
-    
-    return allTables.stream()
-      .filter(table -> {
-        final var tablePackage = table.getPackageName();
-        // Include if same package or child package
-        return tablePackage.equals(registryPackage) || 
-               tablePackage.startsWith(registryPackage + ".");
-      })
-      .collect(Collectors.toList());
-  }
-  
-  private RegistryModel extractRegistryConfig(Element element) {
-    if (element.getKind() != ElementKind.PACKAGE) {
       processingEnv.getMessager().printMessage(
-        javax.tools.Diagnostic.Kind.ERROR,
-        "@TenantSql.Registry can only be applied to packages (via package-info.java)",
-        element
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated: " + javaFile.typeSpec.name + " using " + generator.getClass().getSimpleName()
       );
-      return null;
     }
     
-    final var packageElement = (PackageElement) element;
-    final var annotation = element.getAnnotation(TenantSql.Registry.class);
-    final var packageName = packageElement.getQualifiedName().toString();
-    
-    if(packageName == null) {
-      return null;
+    // Process multi-table generators
+    for (MultiTableCodeGenerator generator : multiTableGenerators) {
+      final var javaFile = generator.generate(registryConfig, filteredTables);
+      javaFile.writeTo(processingEnv.getFiler());
+      
+      processingEnv.getMessager().printMessage(
+        javax.tools.Diagnostic.Kind.NOTE,
+        "Generated: " + javaFile.typeSpec.name + " using " + generator.getClass().getSimpleName() + 
+        " with " + filteredTables.size() + " tables"
+      );
     }
-    
-    final var worldName = annotation.worldName() != null && !annotation.worldName().isEmpty() 
-      ? annotation.worldName() 
-      : "World";
-    
-    return RegistryModel.builder()
-      .name(annotation.name())
-      .tableClassName(annotation.name() + "TableNames")
-      .registryClassName(annotation.name() + "Registry")
-      .transactionContainerClassName(annotation.name() + "TransactionContainer")
-      .transactionSaveClassName(annotation.name() + "SaveTransaction")
-      .internalTenantQueryClassName(annotation.name() + "DbInternalTenantQuery")
-      .worldName(worldName)
-      .packageName(packageName)
-      .element(element)
-      .nonTenantTables(List.of(annotation.nonTenantTables()))
-      .build();
   }
+  
+  
+  
   
 
-  private void processTableInterface(TableModel model, RegistryModel registry) throws IOException {
+  private void processTableInterface(TableMetamodel model, RegistryMetamodel registry) throws IOException {
     
-    final var codeGenerator = new TableSqlCodeGenerator();
+    final TableCodeGenerator codeGenerator = new Gen_Table_SqlImplementation();
     final var javaFile = codeGenerator.generate(model, registry);
     javaFile.writeTo(processingEnv.getFiler());
-    
-    
     
     // Log success
     processingEnv.getMessager().printMessage(
       javax.tools.Diagnostic.Kind.NOTE,
-      "Generated implementation: " + model.getImplClassName()
+      "Generated: " + javaFile.typeSpec.name + " using " + codeGenerator.getClass().getSimpleName()
     );
   }
   
-  private RegistryModel findRegistryForTable(TableModel table, List<RegistryModel> registries) {
-    final var tablePackage = table.getPackageName();
-    
-    // Find registry where table is in same package or child package
-    return registries.stream()
-      .filter(registry -> {
-        final var registryPackage = registry.getPackageName();
-        return tablePackage.equals(registryPackage) || 
-               tablePackage.startsWith(registryPackage + ".");
-      })
-      .findFirst()
-      .orElse(null);
-  }
 }

@@ -17,6 +17,7 @@
   <modules>
     <module>thena-sql-client</module>
     <module>thena-sql-client-annot-proc</module>
+    <module>thena-sql-client-sample</module>
     <module>thena-db-client</module>
     <module>thena-grim-client</module>
     <module>thena-mq-client</module>

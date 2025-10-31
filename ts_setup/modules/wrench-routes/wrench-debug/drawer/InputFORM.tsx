@@ -76,31 +76,31 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
   const elements = asset?.ast ? asset.ast.headers.acceptDefs : [];
 
   return (
-  <Dialog open={true} onClose={onClose}>
-    <DialogTitle><FormattedMessage id='debug.input.form' /></DialogTitle>
-    <DialogContent>
-      <Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.formTitle"} /></Typography></Box>
-      {!selected ? (<Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.noAsset"} /></Typography></Box>) : null}
-      {!selected ? null : (
-        <Grid2 container spacing={2}>
-          {elements.map((typeDef, index) => (
-            <Grid2 size={{ xs: 4 }} key={index}>
-              <InputFORMField typeDef={typeDef} value={getValueFromJson(typeDef, json)} onChange={handleChange} />
-            </Grid2>)
-          )}
-        </Grid2>
-      )}
-    </DialogContent>
-    <DialogActions>
-      <CancelButton onClick={onClose} />
-      <Button onClick={() => {
-          onSelect(json);
-          onClose();
-        }}>
-        <FormattedMessage id='buttons.apply'/>
-      </Button>
-    </DialogActions>
-  </Dialog>);
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='debug.input.form' /></DialogTitle>
+      <DialogContent>
+        <Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.formTitle"} /></Typography></Box>
+        {!selected ? (<Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.noAsset"} /></Typography></Box>) : null}
+        {!selected ? null : (
+          <Grid2 container spacing={2}>
+            {elements.map((typeDef, index) => (
+              <Grid2 size={{ xs: 4 }} key={index}>
+                <InputFORMField typeDef={typeDef} value={getValueFromJson(typeDef, json)} onChange={handleChange} />
+              </Grid2>)
+            )}
+          </Grid2>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <CancelButton onClick={onClose} />
+        <Button onClick={() => {
+            onSelect(json);
+            onClose();
+          }}>
+          <FormattedMessage id='buttons.apply'/>
+        </Button>
+      </DialogActions>
+    </Dialog>);
 }
 
 export type { InputFORMProps };

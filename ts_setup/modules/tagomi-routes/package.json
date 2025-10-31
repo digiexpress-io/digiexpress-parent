@@ -7,6 +7,7 @@
   "dependencies": {
     "@dxs-ts/envir-fetch": "*",
     "@dxs-ts/tagomi-api": "*",
+    "@dxs-ts/wrench-api": "*",
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
     "@dxs-ts/xui-table": "*",

@@ -11,6 +11,9 @@
       "@dxs-ts/tagomi-api": [
         "../tagomi-api/index.ts"
       ],
+      "@dxs-ts/wrench-api": [
+        "../wrench-api/index.ts"
+      ],
       "@dxs-ts/eveli-api": [
         "../eveli-api/index.ts"
       ],
@@ -34,6 +37,9 @@
       "path": "../tagomi-api"
     },
     {
+      "path": "../wrench-api"
+    },
+    {
       "path": "../eveli-api"
     },
     {
@@ -48,9 +54,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-10-09T12:39:29.154Z",
+    "at": "2025-10-21T06:18:06.875Z",
     "forModule": "@dxs-ts/tagomi-routes",
-    "fromRegistry": "90c574ee9340",
+    "fromRegistry": "c0b714dd251c",
     "alias": {
       "@dxs-ts/tagomi-routes": [
         "../xui-datetime"

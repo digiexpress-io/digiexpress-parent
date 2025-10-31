@@ -102,11 +102,13 @@ public class TagomiWorldImpl implements TagomiWorld {
         .onItem().transform(resolved -> {
           final var props = new ArrayList<PdfProps>();
           props.add(PdfProps.builder()
+              .moduleName("wrench")
               .bodyName("flow")
               .bodyValue(resolved.mapTo(Map.class))
               .build());
           
           props.add(PdfProps.builder()
+              .moduleName("service")
               .bodyName("props")
               .bodyValue(this.props.mapTo(Map.class))
               .build());

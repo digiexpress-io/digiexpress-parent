@@ -79,6 +79,11 @@
           <parameters>true</parameters>
           <annotationProcessorPaths>
             <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>${autoservice.version}</version>
+            </path>
+            <path>
               <groupId>io.digiexpress</groupId>
               <artifactId>thena-sql-client-annot-proc</artifactId>
               <version>${project.version}</version>

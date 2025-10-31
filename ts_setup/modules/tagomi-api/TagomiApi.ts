@@ -105,7 +105,7 @@ export declare namespace TagomiApi {
   }
 
   export interface Service {  // container for locales/localised content
-    id: string;
+    id: ServiceId;
     docType: 'SERVICE';
     serviceName: string;
     orchestratorName: string; // flow name where content data comes from
@@ -220,6 +220,21 @@ export declare namespace TagomiApi {
     labels?: LocaleAndLabel[];
   }
 
+
+  export interface PdfEnvelope {
+    status: 'OK' | 'ERROR';
+    statusMessage: string | undefined;
+    value: Pdf | undefined;
+  }
+  
+  export interface Pdf {
+    name: string;
+    localisedName: string | undefined;
+    locale: string;
+    bodyBase64: string; 
+  }
+
+
   // ============================================================================
   // REST API Interface
   // ============================================================================
@@ -247,6 +262,8 @@ export declare namespace TagomiApi {
     createTemplate(body: CreateTemplate): Promise<Template>;
     updateTemplate(body: TemplateMutator[]): Promise<Template[]>;
     deleteTemplate(id: string): Promise<Template>;
+
+    compileTemplate(id: ServiceId, locale: LocaleId | string, props: object): Promise<PdfEnvelope>;
     
     // Tag operations
     createTag(body: CreateTag): Promise<Tag>;

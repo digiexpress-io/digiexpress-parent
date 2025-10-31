@@ -20,8 +20,6 @@ package io.digiexpress.tagomi.rust;
  * #L%
  */
 
-import java.util.Base64;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

@@ -26,10 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import jakarta.annotation.Nullable;
-
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
-import io.resys.thena.api.entities.grim.ThenaGrimNewObject.MergeLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
@@ -39,6 +36,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 // Generic interfaces for create/update/delete operations 
 public interface ThenaGrimMergeObject {  
@@ -100,6 +98,13 @@ public interface ThenaGrimMergeObject {
     MergeMission removeObjective(String objectiveId);
     MergeMission removeRemark(String remarkId);
 
+    void build();
+  }
+  
+  interface MergeLink {
+    MergeLink linkType(String linkType);
+    MergeLink linkValue(String linkValue);
+    MergeLink linkBody(@Nullable JsonObject linkBody);
     void build();
   }
   

@@ -81,12 +81,6 @@ public interface ThenaGrimNewObject {
     NewLink linkBody(@Nullable JsonObject linkBody);
     void build();
   }
-  interface MergeLink {
-    MergeLink linkType(String linkType);
-    MergeLink linkValue(String linkValue);
-    MergeLink linkBody(@Nullable JsonObject linkBody);
-    void build();
-  }
   
   interface NewProcess {
     NewProcess workflowName(String name);

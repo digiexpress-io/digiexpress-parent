@@ -13,6 +13,7 @@ class TagomiRestApiImpl implements TagomiApi.Backend {
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
   }
+
   private async fetch<T>(path: string, method: string, body?: any): Promise<T> {
     const url = `${this.baseUrl}${path}`;
     const init: RequestInit = {
@@ -98,6 +99,10 @@ class TagomiRestApiImpl implements TagomiApi.Backend {
 
   deleteTag(id: string): Promise<TagomiApi.Tag> {
     return this.fetch(`/tags/${id}`, 'DELETE');
+  }
+
+  compileTemplate(id: TagomiApi.ServiceId, locale: TagomiApi.LocaleId | string, props: object): Promise<TagomiApi.PdfEnvelope> {
+    return this.fetch(`/services/${id}/pdf/${locale}`, 'POST', props);
   }
 }
 
