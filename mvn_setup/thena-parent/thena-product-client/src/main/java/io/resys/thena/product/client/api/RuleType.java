@@ -1,8 +1,8 @@
-package io.resys.thena.processor.model;
+package io.resys.thena.product.client.api;
 
 /*-
  * #%L
- * thena-sql-client-annot-proc
+ * thena-product-client
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,25 +20,21 @@ package io.resys.thena.processor.model;
  * #L%
  */
 
-import java.util.List;
-
-import javax.lang.model.element.Element;
-
-import lombok.Builder;
-import lombok.Value;
-
-@Value
-@Builder
-public class RegistryMetamodel {
-  Element element;
-  String name;                    // "Grim"
-  String packageName;             // "io.resys.thena.grim.spi.sql"
-  String tableClassName;
-  String registryClassName;
-  String internalTenantQueryClassName;
-  String transactionContainerClassName;
-  String transactionSaveClassName;
-  String worldName;
-  @Builder.Default
-  List<String> nonTenantTables = List.of();  // ["process", "process_id_seq"]
+public enum RuleType {
+  
+  ELIGIBILITY("Eligibility requirements and restrictions"),
+  CONTRIBUTION("Contribution amounts, limits and payment rules"),
+  FEE("Fee structures and cost calculations"),
+  INVESTMENT("Investment options and allocation rules"),
+  CLAIM("Claim processing, withdrawals and payouts");
+  
+  private final String description;
+  
+  RuleType(String description) {
+    this.description = description;
+  }
+  
+  public String getDescription() {
+    return description;
+  }
 }

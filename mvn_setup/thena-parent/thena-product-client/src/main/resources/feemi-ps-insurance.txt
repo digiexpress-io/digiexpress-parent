@@ -1,0 +1,169 @@
+================================================================================
+PRODUCT SPECIFICATION: Feemi PS-vakuutus (Pitkäaikaissäästäminen)
+================================================================================
+
+PRODUCT CODE: FEEMI_PS_001
+PRODUCT NAME: PS-vakuutus (Long-term Savings Insurance)
+CATEGORY:     Government Incentivized Long-term Savings
+TARGET:       Long-term wealth accumulation with government bonus
+
+--------------------------------------------------------------------------------
+ELIGIBILITY REQUIREMENTS
+--------------------------------------------------------------------------------
+Age Range:           18 - 62 years at inception
+                     Must convert before age 68
+Residency:           Finnish tax resident required
+Employment:          Any status (income documentation for large contributions)
+Health:              No medical underwriting required
+Existing PS:         Cannot have active PS-vakuutus with another provider
+
+--------------------------------------------------------------------------------
+CONTRIBUTION STRUCTURE  
+--------------------------------------------------------------------------------
+Initial Payment:     EUR 50 - EUR 5,000
+Regular Payments:    EUR 50 - EUR 416 per month (EUR 5,000 ÷ 12)
+                     OR EUR 600 - EUR 5,000 per year
+Lump Sum Additions:  EUR 50 minimum, subject to annual limit
+Payment Methods:     Bank transfer, direct debit
+
+Annual Limits:       EUR 5,000 maximum per year (government limit)
+Min to Maintain:     EUR 50 per year (or contract converts to regular savings)
+Total Lifetime Max:  EUR 50,000 (across all providers)
+
+GOVERNMENT BONUS:
+- 4.5% annually on contributions up to EUR 5,000
+- Paid by Finnish government directly to account
+- Calculated monthly on contribution balance
+- Bonus stops at age 68 or early withdrawal
+
+--------------------------------------------------------------------------------
+INVESTMENT OPTIONS
+--------------------------------------------------------------------------------
+1. GUARANTEED OPTION
+   - Name: "Taattu PS-tuotto"
+   - Return: 1.5% guaranteed annually + 4.5% government bonus
+   - Risk: None
+   - Fees: 0.5% annual management fee
+   
+2. CONSERVATIVE PS FUND
+   - Name: "Maltillinen PS-rahasto"
+   - Asset Mix: 70% bonds, 30% equity
+   - Expected Return: 3-4% annually + 4.5% government bonus
+   - Risk: Low
+   - Fees: 0.8% annual management fee
+   
+3. BALANCED PS FUND
+   - Name: "Tasapainoinen PS-rahasto"
+   - Asset Mix: 50% bonds, 50% equity
+   - Expected Return: 4-6% annually + 4.5% government bonus
+   - Risk: Medium
+   - Fees: 1.0% annual management fee
+
+4. GROWTH PS FUND
+   - Name: "Kasvu PS-rahasto"
+   - Asset Mix: 20% bonds, 80% equity
+   - Expected Return: 5-8% annually + 4.5% government bonus
+   - Risk: High
+   - Fees: 1.2% annual management fee
+
+ALLOCATION RULES:
+- Minimum 25% per fund if multiple selected
+- Maximum 100% in any single fund
+- Changes allowed twice per year
+- Automatic lifecycle option available
+
+--------------------------------------------------------------------------------
+PS-VAKUUTUS WITHDRAWAL RULES
+--------------------------------------------------------------------------------
+Minimum Holding:     10 years from first contribution
+Early Withdrawal:    Allowed but forfeits government bonus + penalties
+                     20% penalty on government bonus portion
+                     Normal capital gains tax on investment growth
+
+CONVERSION AT MATURITY (Age 68 or 10+ years):
+1. FULL WITHDRAWAL
+   - Account value + accumulated government bonus
+   - Tax-free government bonus portion
+   - Capital gains tax (30%) on investment growth only
+   
+2. PENSION CONVERSION
+   - Convert to life annuity
+   - Government bonus remains tax-free
+   - Monthly payments taxed as pension income
+   
+3. PARTIAL WITHDRAWAL + ANNUITY
+   - Take up to 50% as lump sum
+   - Convert remainder to annuity
+   - Government bonus pro-rated
+
+--------------------------------------------------------------------------------
+TAX TREATMENT (Finnish Tax Code 2024)
+--------------------------------------------------------------------------------
+Contributions:       NOT tax deductible (unlike pension insurance)
+Government Bonus:    TAX-FREE (4.5% annually)
+Investment Growth:   Tax-free inside contract
+Withdrawals:         Capital gains tax (30%) on growth portion only
+                     Government bonus portion always tax-free
+Early Withdrawal:    20% penalty on government bonus + normal taxes
+
+SPECIAL RULES:
+- Government bonus earned only while Finnish tax resident
+- Residency change: Can keep existing but no new bonus
+- Death before conversion: Beneficiary gets full account + bonus
+
+--------------------------------------------------------------------------------
+FEES STRUCTURE
+--------------------------------------------------------------------------------
+Setup Fee:           EUR 0
+Annual Policy Fee:   EUR 24 (EUR 2 per month)
+Management Fee:      0.5% - 1.2% depending on investment choice
+Conversion Fee:      EUR 0 (government subsidized)
+Early Withdrawal:    EUR 200 + 20% penalty on government bonus
+
+Transaction Fees:
+- Regular Contribution: EUR 0
+- Lump Sum Addition:    EUR 10
+- Investment Switch:    EUR 15 (2 free changes per year)
+
+Government Admin:    EUR 0 (covered by government)
+
+--------------------------------------------------------------------------------
+BUSINESS RULES & VALIDATION
+--------------------------------------------------------------------------------
+1. Maximum EUR 5,000 contributions per calendar year
+2. Cannot contribute after age 68
+3. Must hold minimum 10 years to get full government bonus
+4. Early withdrawal forfeits government bonus + penalties
+5. Only one PS-vakuutus allowed per person (across all providers)
+6. Automatic conversion to pension at age 68 if no action taken
+7. Government bonus calculated monthly, paid quarterly
+8. Beneficiary designation required but can be changed anytime
+
+--------------------------------------------------------------------------------
+REQUIRED DATA FIELDS
+--------------------------------------------------------------------------------
+POLICYHOLDER:
+- Full name, Henkilötunnus
+- Current age, employment status
+- Annual income (for compliance reporting)
+- Finnish bank account (IBAN)
+- Tax advisor contact (recommended for high earners)
+
+BENEFICIARY:
+- Primary beneficiary (mandatory)
+- Secondary beneficiary (optional)
+- Relationship, contact information
+
+CONTRACT:
+- Contribution amount & frequency
+- Investment allocation (minimum 25% per fund)
+- Conversion preference at maturity
+- Communication language (Finnish/Swedish)
+
+GOVERNMENT REPORTING:
+- Yearly contribution totals
+- Government bonus calculations
+- Tax reporting for early withdrawals
+- Cross-provider verification (EUR 50,000 lifetime limit)
+
+================================================================================

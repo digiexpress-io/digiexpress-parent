@@ -1,0 +1,168 @@
+================================================================================
+PRODUCT SPECIFICATION: Feemi Vapaaehtoinen Eläkevakuutus
+================================================================================
+
+PRODUCT CODE: FEEMI_PEN_001
+PRODUCT NAME: Vapaaehtoinen eläkevakuutus
+CATEGORY:     Individual Pension Insurance
+TARGET:       Retirement savings with tax benefits
+
+--------------------------------------------------------------------------------
+ELIGIBILITY REQUIREMENTS
+--------------------------------------------------------------------------------
+Age Range:           18 - 62 years at inception
+                     Must start payments before age 68
+Residency:           Finnish tax resident required
+Employment:          Any status (income verification for large contributions)
+Existing Pension:    Can supplement TyEL/other statutory pensions
+Max Policies:        One active pension insurance per person
+
+--------------------------------------------------------------------------------
+CONTRIBUTION STRUCTURE  
+--------------------------------------------------------------------------------
+Initial Payment:     EUR 500 - EUR 8,500 (annual tax limit)
+Regular Payments:    EUR 25 - EUR 708 per month (EUR 8,500 ÷ 12)
+                     OR EUR 300 - EUR 8,500 per year
+Lump Sum Additions:  EUR 100 minimum, subject to annual limit
+Payment Methods:     Bank transfer, direct debit, employer deduction
+
+ANNUAL TAX LIMITS (2024):
+Max Deductible:      EUR 8,500 per year (Finnish tax code)
+Employer Contrib:    Additional EUR 8,500 if employer-sponsored
+Combined Max:        EUR 17,000 per year (employee + employer)
+
+Minimum to Maintain: EUR 300 per year (or contract lapses)
+
+--------------------------------------------------------------------------------
+INVESTMENT OPTIONS
+--------------------------------------------------------------------------------
+1. GUARANTEED PENSION
+   - Name: "Taattu eläketuotto"
+   - Return: 1.0% guaranteed annually
+   - Risk: None
+   - Fees: 0.9% annual management fee
+   
+2. CONSERVATIVE MIX
+   - Name: "Maltillinen eläkesalkku"
+   - Asset Mix: 80% bonds, 20% equity
+   - Expected Return: 3-5% annually
+   - Risk: Low-Medium
+   - Fees: 1.1% annual management fee
+   
+3. BALANCED PENSION
+   - Name: "Tasapainoinen eläkesalkku"
+   - Asset Mix: 50% bonds, 50% equity
+   - Expected Return: 4-7% annually
+   - Risk: Medium
+   - Fees: 1.3% annual management fee
+
+4. GROWTH PENSION
+   - Name: "Kasvueläkesalkku"
+   - Asset Mix: 20% bonds, 80% equity
+   - Expected Return: 5-9% annually
+   - Risk: High
+   - Fees: 1.4% annual management fee
+
+LIFECYCLE OPTION:
+- Automatic rebalancing based on age
+- Age 18-40: 80% equity, 20% bonds
+- Age 40-55: 60% equity, 40% bonds  
+- Age 55-68: 40% equity, 60% bonds
+- Fee: 1.2% annually
+
+--------------------------------------------------------------------------------
+RETIREMENT & PAYOUT OPTIONS
+--------------------------------------------------------------------------------
+Retirement Age:      62 - 68 years (flexible)
+Mandatory Start:     Age 68 (Finnish law)
+
+PAYOUT OPTIONS:
+1. LIFE ANNUITY
+   - Monthly payments for life
+   - Amount based on account value + life expectancy
+   - Guaranteed minimum 10 years of payments
+   
+2. TERM CERTAIN ANNUITY  
+   - Fixed period: 5, 10, 15, or 20 years
+   - Higher monthly amount than life annuity
+   - Payments stop at end of term
+   
+3. JOINT LIFE ANNUITY
+   - Payments continue for survivor
+   - 50%, 75%, or 100% survivor benefit
+   - Lower initial payments
+   
+4. PARTIAL LUMP SUM + ANNUITY
+   - Take up to 25% as lump sum
+   - Remaining 75% as annuity
+   - Lump sum taxed as income
+
+EARLY WITHDRAWAL:
+- Before age 62: 20% penalty + income tax
+- Medical emergency exception (serious illness)
+- Unemployment exception (> 12 months, partial withdrawal)
+
+--------------------------------------------------------------------------------
+TAX TREATMENT (Finnish Tax Code 2024)
+--------------------------------------------------------------------------------
+Contributions:       FULLY tax deductible (up to EUR 8,500)
+Growth:              Tax-free inside contract
+Retirement Payments: Taxed as INCOME (marginal tax rate)
+Lump Sum:            Taxed as income in year received
+Death Benefit:       Taxed as income to beneficiaries
+
+SPECIAL RULES:
+- Employer contributions: Taxable benefit unless within limits
+- Early withdrawal: Income tax + 20% penalty
+- Transfer between providers: Tax-free if direct transfer
+
+--------------------------------------------------------------------------------
+FEES STRUCTURE
+--------------------------------------------------------------------------------
+Setup Fee:           EUR 0
+Annual Policy Fee:   EUR 48 (EUR 4 per month)
+Management Fee:      0.9% - 1.4% depending on investment choice
+Conversion Fee:      EUR 100 (when converting to annuity)
+Early Withdrawal:    EUR 150 + 20% penalty
+
+Transaction Fees:
+- Regular Contribution: EUR 0
+- Lump Sum Addition:    EUR 15
+- Investment Switch:    EUR 25 (max 2 free per year)
+
+--------------------------------------------------------------------------------
+BUSINESS RULES & VALIDATION
+--------------------------------------------------------------------------------
+1. Cannot contribute after age 68
+2. Must start receiving payments by age 68
+3. Annual contributions cannot exceed EUR 8,500 tax limit
+4. Early withdrawal requires medical/unemployment documentation
+5. Beneficiary designation required (spouse gets preference)
+6. Cannot have multiple pension policies with same provider
+7. Minimum 5-year contribution period before retirement
+8. Investment allocation changes limited to 4 times per year
+
+--------------------------------------------------------------------------------
+REQUIRED DATA FIELDS
+--------------------------------------------------------------------------------
+POLICYHOLDER:
+- Full name, Henkilötunnus
+- Current age, desired retirement age
+- Employment status, annual income
+- Existing pension arrangements (TyEL, other)
+- Finnish bank account
+- Tax advisor contact (if applicable)
+
+BENEFICIARY:
+- Primary and secondary beneficiaries
+- Relationship, percentage split
+- Contact information
+
+CONTRACT:
+- Contribution amount & frequency
+- Investment allocation
+- Desired retirement age
+- Preferred payout method
+- Employer involvement (Y/N)
+
+================================================================================

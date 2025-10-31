@@ -1,0 +1,146 @@
+================================================================================
+PRODUCT SPECIFICATION: Feemi Säästö- ja Sijoitusvakuutus
+================================================================================
+
+PRODUCT CODE: FEEMI_SAV_001
+PRODUCT NAME: Säästö- ja sijoitusvakuutus  
+CATEGORY:     Investment/Savings Insurance
+TARGET:       Individual wealth accumulation with tax benefits
+
+--------------------------------------------------------------------------------
+ELIGIBILITY REQUIREMENTS
+--------------------------------------------------------------------------------
+Age Range:           18 - 75 years at inception
+                     Maximum age 85 at maturity
+Residency:           Finnish tax resident required
+Health:              No medical underwriting required
+Min Net Worth:       No minimum requirement
+Employment:          Any (employed, self-employed, unemployed, retired)
+
+--------------------------------------------------------------------------------
+CONTRIBUTION STRUCTURE  
+--------------------------------------------------------------------------------
+Initial Payment:     EUR 1,000 - EUR 50,000
+Regular Payments:    EUR 50 - EUR 5,000 per month
+                     OR EUR 600 - EUR 60,000 per year
+Lump Sum Additions:  EUR 500 minimum, no maximum
+Payment Methods:     Bank transfer, direct debit
+Payment Frequency:   Monthly, quarterly, semi-annual, annual
+
+Max Annual Total:    EUR 60,000 (regulatory limit)
+Min Contract Value:  EUR 1,000 (below this = forced closure)
+
+--------------------------------------------------------------------------------
+INVESTMENT OPTIONS
+--------------------------------------------------------------------------------
+1. GUARANTEED OPTION
+   - Name: "Taattu tuotto"
+   - Return: 0.5% guaranteed annually  
+   - Risk: None
+   - Fees: 0.8% annual management fee
+   
+2. BALANCED FUND
+   - Name: "Tasapainoinen rahasto"
+   - Asset Mix: 60% bonds, 40% equity
+   - Expected Return: 4-6% annually
+   - Risk: Medium
+   - Fees: 1.2% annual management fee
+   
+3. EQUITY FUND  
+   - Name: "Osakerahasto"
+   - Asset Mix: 90% global equity, 10% cash
+   - Expected Return: 6-8% annually  
+   - Risk: High
+   - Fees: 1.5% annual management fee
+
+4. INDEX FUND
+   - Name: "Indeksirahasto" 
+   - Asset Mix: Tracks MSCI World Index
+   - Expected Return: Market return
+   - Risk: High
+   - Fees: 0.6% annual management fee
+
+ALLOCATION RULES:
+- Minimum 10% per fund if selected
+- Maximum 100% in any single fund
+- Rebalancing allowed 4 times per year
+- Changes take effect next business day
+
+--------------------------------------------------------------------------------
+CONTRACT TERMS
+--------------------------------------------------------------------------------
+Contract Duration:   No fixed term (flexible)
+Min Holding Period:  None (but tax implications if < 3 years)
+Surrender:           Full surrender allowed anytime
+Partial Withdrawal: Minimum EUR 500, must leave EUR 1,000 minimum
+
+DEATH BENEFIT:
+- Beneficiary receives: Account value + 1,000 EUR death benefit
+- No medical questions if death benefit ≤ EUR 50,000
+- Above EUR 50,000: Medical questionnaire required
+
+--------------------------------------------------------------------------------
+TAX TREATMENT (Finnish Tax Code 2024)
+--------------------------------------------------------------------------------
+Contributions:       NOT tax deductible
+Growth:              Tax-free inside contract  
+Withdrawals:         Capital gains tax (30% currently)
+                     Only on gains portion, not contributions
+Death Benefit:       Tax-free to beneficiaries
+
+Special Rules:
+- If held < 3 years: Full withdrawal taxed as income
+- If held > 10 years: Reduced capital gains rate (consideration)
+
+--------------------------------------------------------------------------------
+FEES STRUCTURE
+--------------------------------------------------------------------------------
+Setup Fee:           EUR 0 (promotional, normally EUR 50)
+Annual Policy Fee:   EUR 36 (EUR 3 per month)
+Management Fee:      0.6% - 1.5% depending on fund choice
+Surrender Fee:       0% if held > 2 years
+                     2% if surrendered in year 1
+                     1% if surrendered in year 2
+
+Transaction Fees:
+- Contribution:      EUR 0
+- Withdrawal:        EUR 25 per transaction
+- Rebalancing:       EUR 0 (up to 4 times/year)
+
+--------------------------------------------------------------------------------
+BUSINESS RULES & VALIDATION
+--------------------------------------------------------------------------------
+1. Age + Contract Duration cannot exceed 85 years
+2. Monthly contributions must be sustainable (income verification if > EUR 1,000/month)
+3. Total annual contributions across all Finnish insurance savings cannot exceed EUR 60,000
+4. Beneficiary designation required at inception
+5. Address changes require proof of continued Finnish tax residency
+6. Investment allocation must total 100%
+7. Partial withdrawals cannot leave account below EUR 1,000
+8. Death benefit increase > EUR 50,000 triggers underwriting
+
+--------------------------------------------------------------------------------
+REQUIRED DATA FIELDS
+--------------------------------------------------------------------------------
+POLICYHOLDER:
+- Full name (as per Finnish ID)
+- Henkilötunnus (Finnish personal ID)
+- Address (Finnish address required)
+- Phone, email
+- Employment status & income (if contributions > EUR 12,000/year)
+- Bank account (Finnish IBAN)
+
+BENEFICIARY:
+- Full name  
+- Relationship to policyholder
+- Henkilötunnus or passport number
+- Address
+
+CONTRACT:
+- Initial contribution amount
+- Regular contribution amount & frequency  
+- Investment allocation percentages
+- Beneficiary designation
+- Preferred communication language (Finnish/Swedish)
+
+================================================================================

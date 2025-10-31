@@ -21,11 +21,6 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>thena-sql-client-annot-proc</artifactId>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>io.quarkus</groupId>
