@@ -1,0 +1,196 @@
+================================================================================
+PRODUCT SPECIFICATION: Nova Virtus Endowment Insurance
+================================================================================
+
+PRODUCT CODE: NOVA_VIR_001
+PRODUCT NAME: Nova Virtus Säästöhenkivakuutus
+CATEGORY:     Unit-linked Endowment Insurance
+TARGET:       Long-term wealth accumulation with inheritance planning
+ISSUER:       Nova Life Assurance Finland Ltd (Business ID 0927072-8)
+
+--------------------------------------------------------------------------------
+ELIGIBILITY REQUIREMENTS
+--------------------------------------------------------------------------------
+Age Range:           No specific limits mentioned in source materials
+Residency:           Available to Finnish residents
+Health:              Not specified in available materials
+Employment:          Any (no restrictions mentioned)
+Min Investment:      EUR 10 (minimum amount for investment)
+
+--------------------------------------------------------------------------------
+FEE STRUCTURE (Valid as of 27 January 2025)
+--------------------------------------------------------------------------------
+MANAGEMENT FEES:
+- Standard customers: 0.40% annually up to EUR 100,000
+                     0.10% annually above EUR 100,000
+- Under 30 years:    0.20% annually up to EUR 100,000  
+                     0.10% annually above EUR 100,000
+
+MAXIMUM MANAGEMENT FEE:
+- Insurance company entitled to raise to maximum 1% of insurance savings
+
+ADDITIONAL FEES:
+- Investment fund fees: As per individual fund rules
+- ETF trading fee: 0.15% of transaction amount (one-off)
+- ETF custody fee: No separate custody fee charged
+- Pledging confirmation: EUR 50
+- Extra account statement: EUR 10
+
+INHERITANCE COVER FEES:
+- Charged from savings to maintain life insurance cover
+- Only charged if savings < invested capital
+- Free if savings have grown above invested capital
+
+INDEXATION:
+- Insurance company entitled to increase euro-denominated charges 
+  in accordance with cost-of-living index changes
+
+--------------------------------------------------------------------------------
+INVESTMENT OPTIONS
+--------------------------------------------------------------------------------
+INVESTMENT BASKETS (40+ options):
+1. GRANITE PORTFOLIOS
+   - Broadly diversified and actively managed
+   - Risk-return ratio enhanced through real estate investments
+   
+2. GLOBE BASKETS  
+   - Promote environmental or social characteristics
+   - Excellent diversification across asset classes
+   - Great value for money
+
+INVESTMENT FUNDS:
+- Nearly 400 investment funds available
+- Various risk tolerance and goal matching options
+
+ETFs:
+- 35 exchange-traded funds available
+- Monthly saving agreements possible
+- No minimum investment amounts for monthly saving
+
+EQUITY BASKETS:
+- 14 companies from Nasdaq OMX Helsinki exchange
+- Personal equity portfolio building
+- Each basket consists of shares of one listed company
+- Performance tracks total return of the specific share
+
+INSURANCE ACCOUNT:
+- Low-risk temporary parking option
+- Current yield: 1-week Euribor rate minus 0.4% costs
+- Useful during market volatility or while searching for investments
+
+INHERITANCE COVER INVESTMENT OPTIONS:
+- Tuottokori (Return Basket)
+- Allokaatio Korko (Allocation Interest)
+- Allokaatio Maltti (Allocation Moderate)
+- Allokaatio Maltti Maailma (Allocation Moderate World)
+- Vastuullinen Allokaatio Maltti (Responsible Allocation Moderate)
+
+--------------------------------------------------------------------------------
+TAX TREATMENT (As of 1 January 2025)
+--------------------------------------------------------------------------------
+INVESTMENT SWITCHING:
+- Can switch investments without immediate capital gains taxation
+- No need to declare investment changes on tax return
+
+WITHDRAWAL TAXATION:
+- Gains taxed when withdrawing funds or when policy expires
+- Tax withheld automatically on partial withdrawals
+- Net amount paid to bank account
+
+CAPITAL/RETURN CALCULATION:
+- Proportional calculation between capital and taxable return
+- Example: EUR 10,000 invested → EUR 12,000 value
+  - EUR 1,200 withdrawal = EUR 1,000 capital + EUR 200 taxable return
+
+POLICY EXPIRY:
+- Losses are tax-deductible (considering partial surrenders)
+- Loss deductible from capital income if policy doesn't expire due to death
+- Premiums for death cover included in invested amount calculation
+
+INHERITANCE TAXATION:
+- Death benefit to next-of-kin: Subject to inheritance tax in entirety
+- Next-of-kin definition: Spouse, direct heirs, adopted children and their heirs, 
+  foster children, spouse's children
+- Non-next-of-kin beneficiaries: Capital income tax rate applied
+- Estate as beneficiary: Capital income tax withheld
+
+ESTATE PROCEDURES:
+- Benefit amount and beneficiary clause declared in estate inventory
+- Benefit NOT recorded under deceased's assets
+- Exception: If estate is beneficiary, record under deceased's assets
+- Insurance company informs Tax Administration of benefit payments
+
+--------------------------------------------------------------------------------
+INHERITANCE PLANNING FEATURES
+--------------------------------------------------------------------------------
+BENEFICIARY CLAUSE:
+- Choose asset distribution without separate will
+- Can distribute directly to grandchildren
+- Flexible and easy to amend according to life situation
+- Can exclude marital rights of beneficiaries' spouses
+- Keeps assets within family if desired
+
+INHERITANCE COVER:
+- Protects invested capital for loved ones
+- Guarantees beneficiaries receive at least invested capital
+- Protection against market fluctuations
+- Only charged if savings < invested capital
+- Free if savings have grown above invested amount
+
+ESTATE PLANNING BENEFITS:
+- Direct and quick benefit payment to heirs
+- Helps heirs pay inheritance tax
+- Useful when inherited assets difficult to liquidate
+- Avoids market timing issues for asset sales
+
+--------------------------------------------------------------------------------
+BUSINESS RULES & VALIDATION
+--------------------------------------------------------------------------------
+1. Minimum investment amount: EUR 10
+2. Management fee structure based on age (under/over 30)
+3. Management fee tiers based on amount (EUR 100,000 threshold)
+4. ETF trading requires 0.15% transaction fee
+5. Inheritance Cover only charged when needed
+6. Investment switching allowed without tax implications
+7. Beneficiary clauses can be modified flexibly
+8. Estate planning benefits require proper beneficiary designation
+9. Tax treatment varies by beneficiary relationship to deceased
+10. Charges can be adjusted for cost-of-living index changes
+
+--------------------------------------------------------------------------------
+REQUIRED DATA FIELDS
+--------------------------------------------------------------------------------
+POLICYHOLDER:
+- Personal identification (Finnish requirements)
+- Age (for management fee calculation)
+- Investment goals and risk tolerance
+- Contact information
+- Bank account details
+
+BENEFICIARIES:
+- Primary and secondary beneficiaries
+- Relationship to policyholder (affects tax treatment)
+- Personal identification
+- Marital rights exclusion preferences
+- Contact information
+
+CONTRACT:
+- Investment selection from available options
+- Investment allocation percentages
+- Inheritance Cover election (optional)
+- Beneficiary clause specifications
+- Communication preferences
+
+LEGAL ENTITIES:
+- Nova Life Assurance Finland Ltd (Issuer)
+- Nova Bank Abp (Agent and Investment Bond Issuer)
+- Nova Funds Ltd (Investment Fund Manager)
+
+REGULATORY COMPLIANCE:
+- Not covered by deposit guarantee scheme
+- Not covered by Investors' Compensation Fund
+- Investment risk warnings required
+- Past performance disclaimers
+- Tax situation change warnings
+
+================================================================================

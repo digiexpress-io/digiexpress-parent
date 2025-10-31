@@ -8,8 +8,8 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <artifactId>thena-grim-client</artifactId>
-  <name>thena-grim-client</name>
+  <artifactId>thena-product-client</artifactId>
+  <name>thena-product-client</name>
 
   <dependencies>
     
@@ -17,6 +17,12 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-sql-client-annot-proc</artifactId>
+    </dependency>
+      
+
 
     <dependency>
       <groupId>org.apache.commons</groupId>
