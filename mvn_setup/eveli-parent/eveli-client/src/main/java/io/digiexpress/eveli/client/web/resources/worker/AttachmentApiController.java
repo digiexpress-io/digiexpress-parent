@@ -123,7 +123,7 @@ public class AttachmentApiController {
       throws URISyntaxException 
   {
     final var authentication = securityClient.getUser();
-    log.debug("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    log.info("Attachment file DELETE API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
     }
@@ -153,7 +153,7 @@ public class AttachmentApiController {
       throws URISyntaxException 
   {
     final var authentication = securityClient.getUser();
-    log.debug("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    log.info("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
     }

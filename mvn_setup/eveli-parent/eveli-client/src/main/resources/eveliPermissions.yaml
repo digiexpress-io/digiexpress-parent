@@ -7,6 +7,9 @@ eveli:
     - path-pattern: /worker/rest/api/tasks/**
       method: DELETE
       roles: ROLE_TASK_ADMIN
+    - path-pattern: /worker/rest/api/tasks/*/files/*
+      method: DELETE
+      roles: ROLE_TASK_WORKER
     - path-pattern: /worker/rest/api/comments/**
       method: GET
       roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN

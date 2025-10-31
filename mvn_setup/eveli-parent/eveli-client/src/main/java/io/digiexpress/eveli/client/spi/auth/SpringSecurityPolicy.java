@@ -87,7 +87,12 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
       Set<String> userRoles = authentication.get().getAuthorities().stream().map(auth->auth.getAuthority()).collect(Collectors.toSet());
       log.debug("Worker REST API path, user authenticated, checking roles");
       boolean access = findAccess(path, method, userRoles);
-      log.debug("Worker REST API path, access check result: {}", access);
+      if (access) {
+        log.debug("Worker REST API path, access check result: {}", access);
+      }
+      else {
+        log.warn("Authorization check for path: {}, auth user: {}, access to worker path denied", path, authClient.getUser());
+      }
       return new AuthorizationDecision(access);      
     }
     
@@ -118,7 +123,7 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
       log.debug("Portal path, authorized");
       return new AuthorizationDecision(true);    
     }
-    log.debug("No match, not authorized");
+    log.warn("Authorization check for path: {}, auth user: {}, portal user: {}: access denied", path, authClient.getUser(), crmClient.getCustomer());
     return new AuthorizationDecision(false);
   }
 
