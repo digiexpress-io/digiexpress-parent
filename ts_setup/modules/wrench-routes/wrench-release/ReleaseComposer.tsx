@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormHelperText } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 
@@ -12,6 +12,7 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 
 const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const intl = useIntl();
   const { service, actions } = Composer.useComposer();
   const { onNav } = useWrenchNav();
 
@@ -57,11 +58,19 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           label='releases.composer.assetName'
           value={name}
           onChange={setName}
+          onEnter={() => handleCreate()}
         />
+        {!name && (
+          <FormHelperText error>
+            {intl.formatMessage({ id: 'error.valueRequired' })}
+          </FormHelperText>
+        )}
         <Burger.TextField
           label='releases.composer.assetDesc'
           value={desc}
-          onChange={setDesc} />
+          onChange={setDesc} 
+          helperText='release.composer.helper.optionalDesc'
+        />
       </Typography>)
   }
 
@@ -72,7 +81,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={apply}>
+        <Button onClick={handleCreate} disabled={apply || !name}>
           <FormattedMessage id='buttons.create' />
         </Button>
       </DialogActions>

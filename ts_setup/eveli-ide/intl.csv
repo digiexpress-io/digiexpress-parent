@@ -528,6 +528,7 @@ release.composer.title,,Create a new release,Luo uusi julkaisu,Skapa en ny versi
 release.composer.label,,Tag Name,Version nimi nimi,Taggnamn,
 release.composer.note,,Note,Info,Notera,
 release.composer.helper,,Optional additional information for future reference,Valinnainen lisätieto tulevaa käyttöä varten,Valfri ytterligare information för framtida referens,
+release.composer.helper.optionalDesc,,Optional description,Valinnainen kuvaus,Valfri beskrivning,
 release.desc,,"View all releases and download all site content in JSON format. For more detailed information on specific releases and their content, view the Graph.",Katso kaikki julkaisut ja lataa kaikki sivuston sisältö JSON-muodossa. Tarkempia tietoja tietyistä julkaisuista ja niiden sisällöstä on kaaviossa.,"Visa alla utgåvor och ladda ner allt innehåll på webbplatsen i JSON-format. För mer detaljerad information om specifika utgåvor och deras innehåll, se diagrammet.",
 release.delete.title,,Delete release,Poista päivitys?,Ta bort release,
 release.delete.desc,,Delete this release permanently from site data?,Haluatko poista päivityksen pysyvästi,Vill du ta bort den här versionen permanent från webbplatsdata?,

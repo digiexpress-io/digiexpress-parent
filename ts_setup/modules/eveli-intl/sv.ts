@@ -526,6 +526,7 @@ export const sv = {
   'release.composer.label': 'Taggnamn',
   'release.composer.note': 'Notera',
   'release.composer.helper': 'Valfri ytterligare information för framtida referens',
+  'release.composer.helper.optionalDesc': 'Valfri beskrivning',
   'release.desc': 'Visa alla utgåvor och ladda ner allt innehåll på webbplatsen i JSON-format. För mer detaljerad information om specifika utgåvor och deras innehåll, se diagrammet.',
   'release.delete.title': 'Ta bort release',
   'release.delete.desc': 'Vill du ta bort den här versionen permanent från webbplatsdata?',

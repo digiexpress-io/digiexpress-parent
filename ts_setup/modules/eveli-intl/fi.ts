@@ -526,6 +526,7 @@ export const fi = {
   'release.composer.label': 'Version nimi nimi',
   'release.composer.note': 'Info',
   'release.composer.helper': 'Valinnainen lisätieto tulevaa käyttöä varten',
+  'release.composer.helper.optionalDesc': 'Valinnainen kuvaus',
   'release.desc': 'Katso kaikki julkaisut ja lataa kaikki sivuston sisältö JSON-muodossa. Tarkempia tietoja tietyistä julkaisuista ja niiden sisällöstä on kaaviossa.',
   'release.delete.title': 'Poista päivitys?',
   'release.delete.desc': 'Haluatko poista päivityksen pysyvästi',
