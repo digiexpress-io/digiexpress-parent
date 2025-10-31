@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { ProcExecutionApi } from '@dxs-ts/eveli-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
@@ -8,19 +8,25 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 
 
-
-
-const formatDate = (time: any) => {
-  if (time) {
-    const localTime = new Date(time);
-    return (
-      <React.Fragment>
-        <FormattedDate value={localTime} /> - <FormattedTime value={localTime} />
-      </React.Fragment>
-    )
-  }
-  return "-";
-}
+const formatDate = (time: unknown) => {
+    if (!time) return '-';
+    const dt = new Date(time as any);
+    if (Number.isNaN(dt.getTime())) return '-';
+  
+    const date = new Intl.DateTimeFormat('fi-FI', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(dt);
+  
+    const clock = new Intl.DateTimeFormat('fi-FI', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(dt);
+  
+    return <>{date} - {clock}</>;
+  };
 
 export const EveliProcExecution: React.FC = () => {
   const intl = useIntl();
