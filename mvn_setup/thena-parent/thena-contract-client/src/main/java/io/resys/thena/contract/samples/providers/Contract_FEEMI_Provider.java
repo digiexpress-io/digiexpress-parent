@@ -60,6 +60,8 @@ public class Contract_FEEMI_Provider {
           System.out.println("Coverages: " + newState.getCoverages().size());
           System.out.println("Investment Plans: " + newState.getInvPlans().size());
         })
+        .commitAuthor(Contract_FEEMI_Provider.class.getName())
+        .commitMessage("Sample data")
         .build();
   }
   

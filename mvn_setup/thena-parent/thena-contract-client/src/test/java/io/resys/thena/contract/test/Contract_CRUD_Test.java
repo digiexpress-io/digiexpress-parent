@@ -29,6 +29,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.contract.samples.providers.Contract_FEEMI_Provider;
 import io.resys.thena.contract.test.config.DbTestTemplate;
 import io.resys.thena.contract.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -42,10 +44,15 @@ public class Contract_CRUD_Test extends DbTestTemplate {
   private static String TENANT_ID = "Contract_CRUD_Test";  
   
   
-  
-  
   @Test
-  public void createTestData() {
+  public void feemiTest() {
+    final var tenant = createTenant();
+    Contract_FEEMI_Provider.newSavings(getClient(), tenant.getId());
+    super.printRepo(tenant);
+  }
+  
+
+  public Tenant createTenant() {
     // create project
     TenantCommitResult repo = getClient().tenants().commit()
         .name(TENANT_ID)
@@ -53,5 +60,7 @@ public class Contract_CRUD_Test extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
     Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    
+    return repo.getRepo();
   }
 }
