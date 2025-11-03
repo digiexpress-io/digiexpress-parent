@@ -24,6 +24,8 @@
     <module>thena-batch-client</module>
     <module>thena-doc-client</module>
     <module>thena-git-client</module>
+    <module>thena-sql-product</module>
+    <module>thena-sql-contract</module>
   </modules>
 
 </project>

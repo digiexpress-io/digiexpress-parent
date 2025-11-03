@@ -1,8 +1,10 @@
-package io.resys.thena.api.entities;
+package io.resys.thena.contract.test.config;
+
+import java.util.Map;
 
 /*-
  * #%L
- * thena-docdb-api
+ * thena-docdb-pgsql
  * %%
  * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
@@ -20,19 +22,20 @@ package io.resys.thena.api.entities;
  * #L%
  */
 
-import org.immutables.value.Value;
+import io.quarkus.test.junit.QuarkusTestProfile;
 
-import jakarta.annotation.Nullable;
+public class PgProfile implements QuarkusTestProfile {
+  @Override
+  public Map<String, String> getConfigOverrides() {
+    return Map.of(
+      "quarkus.datasource.db-kind", "pg",
+      "quarkus.datasource.reactive.max-size", "20",
+      "quarkus.datasource.devservices.image-name", "postgres:17"
+    );
+  }
 
-
-@Value.Immutable
-public interface Tenant extends TenantEntity {
-  String getId();
-  String getRev();
-  String getPrefix();
-  String getName();
-  @Nullable String getExternalId();
-  StructureType getType();
-  
-  enum StructureType { doc, git, org, grim, fs, batch, contract }
+  @Override
+  public String getConfigProfile() {
+    return "pg-profile";
+  }
 }
