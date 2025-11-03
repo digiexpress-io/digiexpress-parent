@@ -80,7 +80,7 @@ export const TaskTable: React.FC = () => {
       enableHiding: true,
       enableResizing: true,
       meta: {
-        enableSelection: true
+        enableSelection: false
       }
     },
     {
