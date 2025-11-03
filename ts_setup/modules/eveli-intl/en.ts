@@ -192,7 +192,7 @@ export const en = {
   'CustomerCreated': 'Customer created',
   'Internal': 'Internal',
   'task.role.assignedAllUsers': 'All users',
-  'task.feedback.published': 'Replay to feedback',
+  'task.feedback.published': 'Reply to feedback',
   'confirm.close.title': 'Confirmation required',
   'confirm.unsavedChanges': 'Unsaved changes will be lost, do you want to continue?',
   'task.statistics.statusCount': 'By status',

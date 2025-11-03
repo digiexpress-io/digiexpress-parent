@@ -1,7 +1,8 @@
 import React from 'react';
 import { Avatar, Tooltip, useTheme } from '@mui/material';
 import { Done as DoneIcon } from '@mui/icons-material';
-import { DoNotDisturbAlt as DoNotDisturbAltIcon } from '@mui/icons-material';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+
 import { FeedbackApi, useFeedback } from '../api-feedback';
 import { useIntl } from 'react-intl';
 
@@ -28,7 +29,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.notPublished' })}>
         <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.error.main }}>
-          <DoNotDisturbAltIcon fontSize='inherit' />
+          <RateReviewIcon fontSize='inherit' />
         </Avatar>
       </Tooltip>
     )
@@ -38,7 +39,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.notPublished' })}>
         <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.error.main }}>
-          <DoNotDisturbAltIcon fontSize='small' />
+          <RateReviewIcon fontSize='small' />
         </Avatar>
       </Tooltip>)
   }
@@ -47,7 +48,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.isPublished' })}>
         <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.success.main }}>
-          <DoneIcon fontSize='inherit' />
+          <RateReviewIcon fontSize='inherit' />
         </Avatar>
       </Tooltip>
     )
@@ -56,7 +57,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   return (
     <Tooltip title={intl.formatMessage({ id: 'feedback.isPublished' })}>
       <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.success.main }}>
-        <DoneIcon fontSize='small' />
+        <RateReviewIcon fontSize='small' />
       </Avatar>
     </Tooltip>
   )
