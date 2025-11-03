@@ -84,7 +84,7 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
       final var registry = metaModel.findRegistryForTable(table);
       if (registry != null) {
         try {
-          processTableInterface(table, registry);
+          processTableInterface(table, registry, metaModel);
         } catch (Exception e) {
           processingEnv.getMessager().printMessage(
             javax.tools.Diagnostic.Kind.ERROR,
@@ -167,9 +167,9 @@ public class SqlAnnotationProcessor extends AbstractProcessor {
   
   
 
-  private void processTableInterface(TableMetamodel model, RegistryMetamodel registry) throws IOException {
+  private void processTableInterface(TableMetamodel model, RegistryMetamodel registry, Metamodel metaModel) throws IOException {
     
-    final TableCodeGenerator codeGenerator = new Gen_Table_SqlImplementation();
+    final TableCodeGenerator codeGenerator = new Gen_Table_SqlImplementation(metaModel);
     final var javaFile = codeGenerator.generate(model, registry);
     javaFile.writeTo(processingEnv.getFiler());
     
