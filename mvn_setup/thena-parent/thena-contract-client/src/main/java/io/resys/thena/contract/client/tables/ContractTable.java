@@ -131,20 +131,19 @@ public interface ContractTable {
   
   @TenantSql.FindAll(
       sql = """
-        SELECT c.*, 
+        SELECT contract.*, 
                updated_commit.created_at as updated_at,
                created_commit.created_at as created_at,
                updated_tree_commit.created_at as updated_tree_at
-        FROM {contract} c
-        LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-        LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id  
-        LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
-        WHERE c.id = ANY($1)
-        FOR UPDATE OF c
+        FROM {contract} contract
+        LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.id
+        LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.id  
+        LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.id
       """,
-      rowMapper = ContractMapper.class
+      rowMapper = ContractMapper.class,
+      sqlBuilder = ContractTableFilter.SQL.class
     )
-    SqlTuple findAllByContractIdsWithLock(UUID[] contractId);
+    SqlTuple findAllByFilter(ContractTableFilter filter);
 
   @TenantSql.Find(
     optional = false,
