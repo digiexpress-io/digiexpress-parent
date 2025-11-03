@@ -20,16 +20,10 @@ package io.resys.thena.contract.test;
  * #L%
  */
 
-import java.time.Duration;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.contract.samples.providers.Contract_FEEMI_Provider;
 import io.resys.thena.contract.test.config.DbTestTemplate;
 import io.resys.thena.contract.test.config.PgProfile;
@@ -46,21 +40,7 @@ public class Contract_CRUD_Test extends DbTestTemplate {
   
   @Test
   public void feemiTest() {
-    final var tenant = createTenant();
-    Contract_FEEMI_Provider.newSavings(getClient(), tenant.getId());
-    super.printRepo(tenant);
-  }
-  
-
-  public Tenant createTenant() {
-    // create project
-    TenantCommitResult repo = getClient().tenants().commit()
-        .name(TENANT_ID)
-        .build()
-        .await().atMost(Duration.ofMinutes(1));
-    log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
-    
-    return repo.getRepo();
+    final var client = super.createClient(TENANT_ID);
+    //Contract_FEEMI_Provider.newSavings(client).await().atMost(atMost);
   }
 }

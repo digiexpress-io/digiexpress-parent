@@ -21,13 +21,10 @@ package io.resys.thena.contract.samples.providers;
  */
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.javafaker.Faker;
 
 import io.vertx.core.json.JsonObject;
@@ -38,7 +35,6 @@ import lombok.extern.jackson.Jacksonized;
 public class CRM_Provider {
   
   private static final Random RANDOM = new Random();
-  private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Faker FAKER = new Faker(Locale.of("fi", "FI"));
   
   
@@ -64,27 +60,9 @@ public class CRM_Provider {
     private String riskTolerance;
     private String investmentExperience;
     
+    @JsonIgnore
     public JsonObject toJson() {
-      try {
-        String json = MAPPER.writeValueAsString(this);
-        return new JsonObject(json);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Failed to convert Person to JSON", e);
-      }
-    }
-    
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("personalId", personalId);
-      map.put("fullName", fullName);
-      map.put("dateOfBirth", dateOfBirth.toString());
-      map.put("address", address.toMap());
-      map.put("contact", contact.toMap());
-      map.put("employment", employment.toMap());
-      map.put("banking", banking.toMap());
-      map.put("riskTolerance", riskTolerance);
-      map.put("investmentExperience", investmentExperience);
-      return map;
+      return JsonObject.mapFrom(this);
     }
   }
   
@@ -97,13 +75,9 @@ public class CRM_Provider {
     private String city;
     private String country;
     
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("street", street);
-      map.put("postalCode", postalCode);
-      map.put("city", city);
-      map.put("country", country);
-      return map;
+    @JsonIgnore
+    public JsonObject toJson() {
+      return JsonObject.mapFrom(this);
     }
   }
   
@@ -114,11 +88,9 @@ public class CRM_Provider {
     private String phone;
     private String email;
     
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("phone", phone);
-      map.put("email", email);
-      return map;
+    @JsonIgnore
+    public JsonObject toJson() {
+      return JsonObject.mapFrom(this);
     }
   }
   
@@ -129,13 +101,9 @@ public class CRM_Provider {
     private String status;
     private int annualIncome;
     private String employer;
-    
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("status", status);
-      map.put("annualIncome", annualIncome);
-      map.put("employer", employer);
-      return map;
+    @JsonIgnore
+    public JsonObject toJson() {
+      return JsonObject.mapFrom(this);
     }
   }
   
@@ -145,12 +113,9 @@ public class CRM_Provider {
   public static class Banking {
     private String iban;
     private String bankName;
-    
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("iban", iban);
-      map.put("bankName", bankName);
-      return map;
+    @JsonIgnore
+    public JsonObject toJson() {
+      return JsonObject.mapFrom(this);
     }
   }
   
@@ -168,25 +133,9 @@ public class CRM_Provider {
     private boolean maritalRightsExcluded;
     private Address address;
     
+    @JsonIgnore
     public JsonObject toJson() {
-      try {
-        String json = MAPPER.writeValueAsString(this);
-        return new JsonObject(json);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Failed to convert Beneficiary to JSON", e);
-      }
-    }
-    
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("personalId", personalId);
-      map.put("fullName", fullName);
-      map.put("relationship", relationship);
-      map.put("relationshipType", relationshipType);
-      map.put("percentage", percentage);
-      map.put("maritalRightsExcluded", maritalRightsExcluded);
-      map.put("address", address.toMap());
-      return map;
+      return JsonObject.mapFrom(this);
     }
   }
   

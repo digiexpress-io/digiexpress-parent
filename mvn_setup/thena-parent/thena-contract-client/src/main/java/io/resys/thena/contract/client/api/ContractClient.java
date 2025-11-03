@@ -27,6 +27,7 @@ import io.resys.thena.api.entities.Tenant;
 public interface ContractClient {
   TenantActions tenants();
   
+  ContractTenant withTenant();
   ContractTenant withTenant(String tenantIdOrName);
   ContractTenant withTenant(TenantCommitResult repo);
   ContractTenant withTenant(Tenant repo);

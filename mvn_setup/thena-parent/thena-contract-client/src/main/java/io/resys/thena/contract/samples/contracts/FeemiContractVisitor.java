@@ -1,11 +1,30 @@
 package io.resys.thena.contract.samples.contracts;
 
+/*-
+ * #%L
+ * thena-contract-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.LocalDate;
 
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.ProductConstraints;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
 import io.resys.thena.contract.samples.providers.Fund_Provider;
 import io.resys.thena.product.client.api.Product;
@@ -41,7 +60,8 @@ public class FeemiContractVisitor {
               .partyType("POLICYHOLDER")
               .partyEffectiveFrom(contractData.contract.startDate)
               .partyTermStartDate(contractData.contract.startDate)
-              .partyData(contractData.policyholder.partyData);
+              .partyData(contractData.policyholder.partyData)
+              .build();
         })
         
         // Add beneficiary if present
@@ -52,7 +72,8 @@ public class FeemiContractVisitor {
                 .partyType("BENEFICIARY")
                 .partyEffectiveFrom(contractData.contract.startDate)
                 .partyTermStartDate(contractData.contract.startDate)
-                .partyData(contractData.beneficiary.partyData);
+                .partyData(contractData.beneficiary.partyData)
+                .build();
           }
         })
         
@@ -66,7 +87,8 @@ public class FeemiContractVisitor {
               .coverageSumInsured(contractData.coverage.sumInsured)
               .coverageStatus("ACTIVE")
               .coverageEffectiveFrom(contractData.contract.startDate)
-              .coverageTermStartDate(contractData.contract.startDate);
+              .coverageTermStartDate(contractData.contract.startDate)
+              .build();
         })
         
         // Add payment plan
@@ -75,7 +97,8 @@ public class FeemiContractVisitor {
               .paymentPlanStatus("ACTIVE")
               .paymentPlanFrequency(contractData.paymentPlan.frequency)
               .paymentPlanAmount(contractData.paymentPlan.monthlyAmount)
-              .paymentPlanStartDate(contractData.paymentPlan.startDate);
+              .paymentPlanStartDate(contractData.paymentPlan.startDate)
+              .build();
         })
         
         // Add investment plan with allocations
@@ -85,7 +108,8 @@ public class FeemiContractVisitor {
               .invPlanCode("FEEMI_SAVINGS_PLAN")
               .invPlanName("Feemi Savings Investment Plan")
               .invPlanStatus("ACTIVE")
-              .invPlanStartDate(contractData.contract.startDate);
+              .invPlanStartDate(contractData.contract.startDate)
+              .build();
           
           // Add allocations
           for (FeemiSavingsContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
@@ -94,7 +118,8 @@ public class FeemiContractVisitor {
                   .invPlanAllocCode(allocation.fundCode)
                   .invPlanAllocName(allocation.fundName)
                   .invPlanAllocPercentage(allocation.percentage)
-                  .invPlanAllocStatus("ACTIVE");
+                  .invPlanAllocStatus("ACTIVE")
+                  .build();
             });
           }
         })
@@ -103,14 +128,16 @@ public class FeemiContractVisitor {
         .addReference(reference -> {
           reference
               .referenceType("PRODUCT_CODE")
-              .referenceValue(product.getProductCode());
+              .referenceValue(product.getProductCode())
+              .build();
         })
         
         // Add generation note
         .addNote(note -> {
           note
               .noteType("GENERATION_INFO")
-              .noteValue("Generated using FeemiContractVisitor with realistic Finnish demographic data");
+              .noteValue("Generated using FeemiContractVisitor with realistic Finnish demographic data")
+              .build();
         });
   }
   
@@ -145,7 +172,8 @@ public class FeemiContractVisitor {
               .partyType("POLICYHOLDER")
               .partyEffectiveFrom(LocalDate.now())
               .partyTermStartDate(LocalDate.now())
-              .partyData(person.toJson());
+              .partyData(person.toJson())
+              .build();
         })
         
         // Add disability coverage
@@ -158,7 +186,8 @@ public class FeemiContractVisitor {
               .coverageSumInsured(coverage.getSumInsured())
               .coverageStatus("ACTIVE")
               .coverageEffectiveFrom(LocalDate.now())
-              .coverageTermStartDate(LocalDate.now());
+              .coverageTermStartDate(LocalDate.now())
+              .build();
         })
         
         // Add payment plan
@@ -167,14 +196,16 @@ public class FeemiContractVisitor {
               .paymentPlanStatus("ACTIVE")
               .paymentPlanFrequency(paymentPlan.getFrequency())
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
-              .paymentPlanStartDate(paymentPlan.getStartDate());
+              .paymentPlanStartDate(paymentPlan.getStartDate())
+              .build();
         })
         
         // Add product reference
         .addReference(reference -> {
           reference
               .referenceType("PRODUCT_CODE")
-              .referenceValue(product.getProductCode());
+              .referenceValue(product.getProductCode())
+              .build();
         });
   }
   
@@ -210,7 +241,8 @@ public class FeemiContractVisitor {
               .partyType("POLICYHOLDER")
               .partyEffectiveFrom(LocalDate.now())
               .partyTermStartDate(LocalDate.now())
-              .partyData(person.toJson());
+              .partyData(person.toJson())
+              .build();
         })
         
         // Add government bonus coverage
@@ -224,7 +256,8 @@ public class FeemiContractVisitor {
               .coverageStatus("ACTIVE")
               .coverageEffectiveFrom(LocalDate.now())
               .coverageTermStartDate(LocalDate.now())
-              .coverageTermEndDate(LocalDate.now().plusYears(10));
+              .coverageTermEndDate(LocalDate.now().plusYears(10))
+              .build();
         })
         
         // Add payment plan
@@ -233,21 +266,24 @@ public class FeemiContractVisitor {
               .paymentPlanStatus("ACTIVE")
               .paymentPlanFrequency(paymentPlan.getFrequency())
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
-              .paymentPlanStartDate(paymentPlan.getStartDate());
+              .paymentPlanStartDate(paymentPlan.getStartDate())
+              .build();
         })
         
         // Add product reference
         .addReference(reference -> {
           reference
               .referenceType("PRODUCT_CODE")
-              .referenceValue(product.getProductCode());
+              .referenceValue(product.getProductCode())
+              .build();
         })
         
         // Add PS-specific note
         .addNote(note -> {
           note
               .noteType("GOVERNMENT_BONUS")
-              .noteValue("Eligible for 4.5% annual government bonus with 10-year commitment");
+              .noteValue("Eligible for 4.5% annual government bonus with 10-year commitment")
+              .build();
         });
   }
 }

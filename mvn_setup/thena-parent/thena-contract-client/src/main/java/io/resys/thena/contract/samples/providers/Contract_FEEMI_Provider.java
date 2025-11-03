@@ -21,11 +21,13 @@ package io.resys.thena.contract.samples.providers;
  */
 
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
 import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
 import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
 import io.resys.thena.contract.samples.contracts.FeemiContractVisitor;
 import io.resys.thena.product.client.samples.Product_Feemi_Savings;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Example demonstrating how to use FeemiContractVisitor to generate 
@@ -36,7 +38,7 @@ public class Contract_FEEMI_Provider {
   /**
    * Generate and persist a Feemi Savings contract with default options
    */
-  public static void newSavings(ContractClient contractClient, String tenantId) {
+  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient) {
     // Create generation options
     GenerationOptions options = GenerationOptions.builder()
         .ageRange(AgeRange.of(25, 65))
@@ -49,7 +51,7 @@ public class Contract_FEEMI_Provider {
     final var product = Product_Feemi_Savings.create();
     
     // Generate and commit the contract
-    contractClient.withTenant(tenantId).commit()
+    return contractClient.withTenant().commit()
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitSavingsContract(contract, product, options))
         .onNewContract(newState -> {

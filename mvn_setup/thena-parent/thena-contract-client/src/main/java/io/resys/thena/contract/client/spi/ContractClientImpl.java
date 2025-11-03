@@ -56,6 +56,10 @@ public class ContractClientImpl implements ContractClient {
     };
   }
   @Override
+  public ContractTenant withTenant() {
+    return withTenant(startingState.getDataSource().getTenant().getName());
+  }
+  @Override
   public ContractTenant withTenant(TenantCommitResult repo) {
     return withTenant(repo.getRepo().getId());
   }

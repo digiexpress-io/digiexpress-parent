@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.contract.client.api.ContractClient;
@@ -55,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DbTestTemplate {
 	private boolean STORE_TO_DEBUG_DB = false;
   private ContractClient client;
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
+  protected @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
   protected static Duration atMost = Duration.ofMinutes(1);
   
@@ -165,4 +167,23 @@ public class DbTestTemplate {
     return new ContractPrinter(createState()).printWithStaticIds(client, replacements);
   }
   
+  
+  public ContractClient createClient(String tenantId) {
+    // create project
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name(tenantId)
+        .build()
+        .await().atMost(atMost);
+    log.debug("created repo {}", repo);
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    
+    final var tenant = repo.getRepo();
+    
+    return ContractClientImpl.create()
+        .client(pgPool)
+        .db(tenant.getId())
+        .errorHandler(new PgErrors())
+        .build();
+    
+  }
 }
