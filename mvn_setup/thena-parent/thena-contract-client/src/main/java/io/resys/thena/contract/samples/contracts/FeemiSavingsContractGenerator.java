@@ -1,4 +1,4 @@
-package io.resys.thena.contract.samples;
+package io.resys.thena.contract.samples.contracts;
 
 /*-
  * #%L
@@ -28,11 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
 import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
-import io.resys.thena.contract.samples.ProductConstraintExtractor.AllocationRules;
-import io.resys.thena.contract.samples.ProductConstraintExtractor.InvestmentOption;
-import io.resys.thena.contract.samples.ProductConstraintExtractor.ProductConstraints;
+import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
+import io.resys.thena.contract.samples.products.ProductConstraintExtractor.AllocationRules;
+import io.resys.thena.contract.samples.products.ProductConstraintExtractor.InvestmentOption;
+import io.resys.thena.contract.samples.products.ProductConstraintExtractor.ProductConstraints;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
 import io.resys.thena.contract.samples.providers.Fund_Provider;
 import io.resys.thena.product.client.api.Product;

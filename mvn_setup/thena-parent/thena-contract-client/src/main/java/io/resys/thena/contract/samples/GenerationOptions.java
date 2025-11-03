@@ -34,10 +34,13 @@ public interface GenerationOptions {
   
   Optional<AgeRange> getAgeRange();
   Optional<IncomeRange> getIncomeRange();
+  
   @Value.Default
   default boolean isIncludeBeneficiaries() { return true; }
+  
   @Value.Default
   default String getRiskProfile() { return "MODERATE"; }
+  
   
   static ImmutableGenerationOptions.Builder builder() {
     return ImmutableGenerationOptions.builder();

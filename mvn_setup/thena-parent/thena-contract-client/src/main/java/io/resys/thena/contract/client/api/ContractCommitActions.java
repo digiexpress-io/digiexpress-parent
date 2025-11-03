@@ -44,6 +44,7 @@ public interface ContractCommitActions {
     CreateOneContract commitAuthor(String author);
     CreateOneContract commitMessage(String message);
     CreateOneContract contract(Consumer<NewContract> addContract);
+    CreateOneContract onNewContract(Consumer<ContractContainer> handleNewState);
     Uni<OneContractEnvelope> build();
   }
   
