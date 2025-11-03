@@ -17,11 +17,10 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.spi.ContractClientImpl;
+import io.resys.thena.contract.client.spi.ContractPrinter;
 import io.resys.thena.contract.client.tables.ContractDb;
-import io.resys.thena.contract.client.tables.spi.ContractDbImpl;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
-import io.resys.thena.grim.spi.GrimPrinter;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
@@ -127,7 +126,7 @@ public class DbTestTemplate {
   }
   
   public void printRepo(Tenant repo) {
-    final String result = new GrimPrinter(createState()).print(repo);
+    final String result = new ContractPrinter(createState()).print(repo);
     log.debug(result);
   }
   public Tenant getRepo() {
@@ -160,7 +159,7 @@ public class DbTestTemplate {
   }
   
   public String toStaticData(Tenant client) {    
-    return new GrimPrinter(createState()).printWithStaticIds(client, replacements);
+    return new ContractPrinter(createState()).printWithStaticIds(client, replacements);
   }
   
 }

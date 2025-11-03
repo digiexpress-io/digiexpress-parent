@@ -1,4 +1,4 @@
-package io.resys.thena.contract.client.api;
+package io.resys.thena.contract.client.spi;
 
 /*-
  * #%L
@@ -20,23 +20,19 @@ package io.resys.thena.contract.client.api;
  * #L%
  */
 
-import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.contract.client.api.ContractQueryActions;
+import io.resys.thena.contract.client.spi.queries.ContractQueryImpl;
+import io.resys.thena.contract.client.tables.ContractDb;
+import lombok.RequiredArgsConstructor;
 
-public interface ContractClient {
-  TenantActions tenants();
+@RequiredArgsConstructor
+public class ContractQueryActionsImpl implements ContractQueryActions {
+  private final ContractDb startingState;
+  private final String repoId;
   
-  ContractTenant withTenant(String tenantIdOrName);
-  ContractTenant withTenant(TenantCommitResult repo);
-  ContractTenant withTenant(Tenant repo);
-
-  
-  // workflow/task like structure
-  interface ContractTenant {
-    String getTenantId();
-    ContractCommitActions commit();
-    ContractQueryActions find();
+  @Override
+  public ContractQuery contractQuery() {
+    final var state = startingState.withTenant(repoId);
+    return new ContractQueryImpl(state);
   }
-
 }

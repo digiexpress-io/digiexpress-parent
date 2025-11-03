@@ -27,6 +27,8 @@ import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.contract.client.api.ContractCommitActions;
+import io.resys.thena.contract.client.api.ContractQueryActions;
 import io.resys.thena.contract.client.tables.ContractDb;
 import io.resys.thena.contract.client.tables.spi.ContractDbImpl;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -35,10 +37,6 @@ import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
-import io.resys.thena.grim.api.GrimCommitActions;
-import io.resys.thena.grim.api.GrimQueryActions;
-import io.resys.thena.grim.spi.actions.GrimCommitActionsImpl;
-import io.resys.thena.grim.spi.actions.GrimQueryActionsImpl;
 import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
@@ -50,22 +48,21 @@ public class ContractClientImpl implements ContractClient {
   private final ContractDb startingState;
   
   @Override
-  public GrimStructuredTenant grim(String repoId) {
+  public ContractTenant withTenant(String repoId) {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new GrimStructuredTenant() {
-      @Override public GrimQueryActions find() { return new GrimQueryActionsImpl(startingState, repoId); }
-      @Override public GrimCommitActions commit() { return new GrimCommitActionsImpl(startingState, repoId); }
-      @Override public GrimProjectQuery tenants() { return null; }
+    return new ContractTenant() {
+      @Override public ContractQueryActions find() { return new ContractQueryActionsImpl(startingState, repoId); }
+      @Override public ContractCommitActions commit() { return new ContractCommitActionsImpl(startingState, repoId); }
       @Override public String getTenantId() { return repoId; }
     };
   }
   @Override
-  public GrimStructuredTenant grim(TenantCommitResult repo) {
-    return grim(repo.getRepo().getId());
+  public ContractTenant withTenant(TenantCommitResult repo) {
+    return withTenant(repo.getRepo().getId());
   }
   @Override
-  public GrimStructuredTenant grim(Tenant repo) {
-    return this.grim(repo.getId());
+  public ContractTenant withTenant(Tenant repo) {
+    return this.withTenant(repo.getId());
   }
   @Override
   public TenantActions tenants() {
