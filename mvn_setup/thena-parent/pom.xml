@@ -16,6 +16,7 @@
 
   <modules>
     <module>thena-sql-client</module>
+    <module>thena-sql-client-pg</module>
     <module>thena-sql-client-annot-proc</module>
     <module>thena-sql-client-sample</module>
     <module>thena-db-client</module>
@@ -24,8 +25,9 @@
     <module>thena-batch-client</module>
     <module>thena-doc-client</module>
     <module>thena-git-client</module>
-    <module>thena-sql-product</module>
-    <module>thena-sql-contract</module>
+    
+    <module>thena-product-client</module>
+    <module>thena-contract-client</module>
   </modules>
 
 </project>

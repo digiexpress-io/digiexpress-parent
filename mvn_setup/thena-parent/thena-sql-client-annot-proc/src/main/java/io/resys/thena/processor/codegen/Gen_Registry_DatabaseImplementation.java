@@ -51,7 +51,6 @@ import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
 import io.resys.thena.spi.TenantDataSource.TxScope;
 import io.resys.thena.spi.TenantException;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 
@@ -286,9 +285,10 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .addParameter(ClassName.get(TenantContext.class), "names")
       .addParameter(ClassName.get("io.vertx.mutiny.sqlclient", "Pool"), "client")
       .addParameter(ClassName.get(TenantCache.class), "tenantCache")
+      .addParameter(ClassName.get(ThenaSqlDataSourceErrorHandler.class), "errorHandler")
+      
       .returns(ClassName.bestGuess(className))
       .addStatement("final var pool = new $T(client)", ClassName.get(ThenaSqlPoolVertx.class))
-      .addStatement("final var errorHandler = new $T()", ClassName.get(PgErrors.class))
       .addCode(CodeBlock.builder()
         .add("final var dataSource = new $T(\n", ClassName.get(ThenaSqlDataSourceImpl.class))
         .indent()
@@ -356,10 +356,10 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .returns(ClassName.bestGuess(className))
       .addStatement("$T.notNull(client, () -> \"client must be defined!\")", ClassName.get(RepoAssert.class))
       .addStatement("$T.notNull(db, () -> \"db must be defined!\")", ClassName.get(RepoAssert.class))
+      .addStatement("$T.notNull(errorHandler, () -> \"errorHandler must be defined!\")", ClassName.get(RepoAssert.class))
       .addCode("\n")
       .addStatement("final var tenantCache = this.tenantCache == null ? new $T() : this.tenantCache", ClassName.get(TenantCacheImpl.class))
       .addStatement("final var ctx = $T.defaults(db)", ClassName.get(TenantContext.class))
-      .addStatement("this.errorHandler = new $T()", ClassName.get(PgErrors.class))
       .addStatement("final var pool = new $T(client)", ClassName.get(ThenaSqlPoolVertx.class))
       .addCode("\n")
       .addCode(CodeBlock.builder()

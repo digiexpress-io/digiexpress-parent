@@ -21,6 +21,7 @@ import io.resys.thena.contract.client.spi.ContractPrinter;
 import io.resys.thena.contract.client.tables.ContractDb;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.storesql.PgErrors;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
@@ -92,7 +93,9 @@ public class DbTestTemplate {
   	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
-    this.client = ContractClientImpl.create().db("junit").client(pgPool).build();
+    this.client = ContractClientImpl.create().db("junit").client(pgPool)
+        .errorHandler(new PgErrors())
+        .build();
     if(callback != null) {
       repo = this.client.tenants().commit()
           .name("junit" + index.incrementAndGet(), StructureType.git)
@@ -122,7 +125,7 @@ public class DbTestTemplate {
   
   public ContractDb createState() {
     final var ctx = TenantContext.defaults(db);
-    return ContractClientImpl.create(ctx, pgPool, new TenantCacheImpl());
+    return ContractClientImpl.create(ctx, pgPool, new TenantCacheImpl(), new PgErrors());
   }
   
   public void printRepo(Tenant repo) {

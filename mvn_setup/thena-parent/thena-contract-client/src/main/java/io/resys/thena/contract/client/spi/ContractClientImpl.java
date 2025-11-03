@@ -38,7 +38,6 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.TenantActionsImpl;
-import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
 
@@ -70,11 +69,11 @@ public class ContractClientImpl implements ContractClient {
   }
   
   
-  public static ContractDb create(TenantContext names, io.vertx.mutiny.sqlclient.Pool client, TenantCache tenantCache) {
+  public static ContractDb create(TenantContext names, io.vertx.mutiny.sqlclient.Pool client, TenantCache tenantCache, ThenaSqlDataSourceErrorHandler errorHAndler) {
     final var pool = new ThenaSqlPoolVertx(client);
-    final var errorHandler = new PgErrors();
+
     final var dataSource = new ThenaSqlDataSourceImpl(
-        "", names, pool, errorHandler, 
+        "", names, pool, errorHAndler, 
         Optional.empty(),
         tenantCache
     );
@@ -100,11 +99,11 @@ public class ContractClientImpl implements ContractClient {
     public ContractClientImpl build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(db, () -> "db must be defined!");
+      RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
       
       final var tenantCache = this.tenantCache == null ? new TenantCacheImpl() : this.tenantCache;
       
       final var ctx = TenantContext.defaults(db);
-      this.errorHandler = new PgErrors();
       
       
       final var pool = new ThenaSqlPoolVertx(client);
