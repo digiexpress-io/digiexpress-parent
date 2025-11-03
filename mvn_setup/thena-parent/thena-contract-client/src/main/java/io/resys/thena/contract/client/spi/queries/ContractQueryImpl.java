@@ -95,4 +95,9 @@ public class ContractQueryImpl implements ContractQuery {
                   .build());
         });
   }
+  
+  
+  public static ContractQueryImpl of(ContractDb db) {
+    return new ContractQueryImpl(Uni.createFrom().item(db));
+  }
 }
