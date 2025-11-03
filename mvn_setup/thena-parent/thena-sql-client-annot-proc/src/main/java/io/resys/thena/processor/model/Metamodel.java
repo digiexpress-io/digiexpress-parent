@@ -172,6 +172,7 @@ public class Metamodel {
       
       return RegistryMetamodel.builder()
         .name(domainName)
+        .tenantType(annotation.tenantType().name())
         .tableClassName(domainName + "TableNames")
         .registryClassName(domainName + "Registry")
         .transactionContainerClassName(domainName + "TransactionContainer")

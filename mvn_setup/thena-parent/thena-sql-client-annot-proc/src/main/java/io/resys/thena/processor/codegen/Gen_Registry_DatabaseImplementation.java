@@ -224,9 +224,10 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
         .indent()
         .add("if(repo.isEmpty()) {\n")
         .indent()
-        .add("return new $T(this, $T.batch)\n", 
+        .add("return new $T(this, $T.$L)\n", 
           ClassName.get(TenantActionsImpl.class),
-          ClassName.get(StructureType.class))
+          ClassName.get(StructureType.class),
+          registry.getTenantType())
         .indent()
         .add(".commit()\n")
         .add(".name(this.dataSource.getTenant().getName())\n")

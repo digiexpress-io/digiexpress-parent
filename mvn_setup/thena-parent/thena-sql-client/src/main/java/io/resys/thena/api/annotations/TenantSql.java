@@ -51,6 +51,11 @@ public @interface TenantSql {
     String name();
     
     /**
+     * Unique enum for given tenant, will be used as a classified in tenant table
+     */
+    Tenant.StructureType tenantType();
+    
+    /**
      * Optional: List of table names that should NOT be tenant-prefixed.
      * These tables remain constant across all tenants.
      * Example: {"process", "process_id_seq"}

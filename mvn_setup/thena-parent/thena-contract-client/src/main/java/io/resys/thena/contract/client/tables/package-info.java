@@ -1,4 +1,4 @@
-@TenantSql.Registry(name = "CONTRACT")
+@TenantSql.Registry(name = "CONTRACT", tenantType = StructureType.contract)
 package io.resys.thena.contract.client.tables;
 
 /*-
@@ -21,3 +21,4 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.entities.Tenant.StructureType;

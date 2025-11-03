@@ -115,9 +115,11 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     
     code.add("final var tenantInsert = sqlQuery.insertOne(newRepo);\n");
     code.add("final var tablesCreate = new $T();\n", StringBuilder.class);
-    code.add("$T.isTrue(newRepo.getType() == $T.batch, () -> \"Tenant type must be batch\");\n\n",
+    code.add("$T.isTrue(newRepo.getType() == $T.$L, () -> \"Tenant type must be $L\");\n\n",
       ClassName.get(RepoAssert.class),
-      ClassName.get(StructureType.class));
+      ClassName.get(StructureType.class),
+      registry.getTenantType(),
+      registry.getTenantType());
     
     code.add("tablesCreate\n");
     code.indent();
@@ -217,9 +219,11 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     
     code.add("final var tenantDelete = sqlQuery.deleteOne(newRepo);\n");
     code.add("final var tablesDrop = new $T();\n", StringBuilder.class);
-    code.add("$T.isTrue(newRepo.getType() == $T.batch, () -> \"Tenant type must be batch\");\n\n",
+    code.add("$T.isTrue(newRepo.getType() == $T.$L, () -> \"Tenant type must be $L\");\n\n",
       ClassName.get(RepoAssert.class),
-      ClassName.get(StructureType.class));
+      ClassName.get(StructureType.class),
+      registry.getTenantType(),
+      registry.getTenantType());
     
     code.add("tablesDrop\n");
     code.indent();
