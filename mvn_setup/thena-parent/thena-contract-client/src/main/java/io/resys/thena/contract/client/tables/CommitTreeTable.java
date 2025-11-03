@@ -84,6 +84,18 @@ public interface CommitTreeTable {
 
   @TenantSql.FindAll(
     sql = """
+      SELECT committree.*
+      FROM {commit_tree} committree
+      LEFT JOIN {commit} commit ON committree.commit_id = commit.commit_id
+      LEFT JOIN {contract} contract ON commit.contract_id = contract.id
+    """,
+    rowMapper = CommitTreeMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
       SELECT * FROM {commit_tree}
       WHERE commit_id = $1
     """,

@@ -121,6 +121,21 @@ public interface ReferenceTable {
   )
   SqlTuple findAllByContractId(UUID contractId);
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT reference.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {reference} reference
+      LEFT JOIN {commit} updated_commit ON reference.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON reference.created_commit_id = created_commit.id
+      LEFT JOIN {contract} contract ON reference.contract_id = contract.id
+    """,
+    rowMapper = ReferenceMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
   @TenantSql.Find(
     optional = false,
     sql = """

@@ -121,6 +121,21 @@ public interface CoverageTable {
   )
   SqlTuple findAllByContractId(UUID contractId);
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT coverage.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {coverage} coverage
+      LEFT JOIN {commit} updated_commit ON coverage.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON coverage.created_commit_id = created_commit.id
+      LEFT JOIN {contract} contract ON coverage.contract_id = contract.id
+    """,
+    rowMapper = CoverageMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
   @TenantSql.Find(
     optional = false,
     sql = """

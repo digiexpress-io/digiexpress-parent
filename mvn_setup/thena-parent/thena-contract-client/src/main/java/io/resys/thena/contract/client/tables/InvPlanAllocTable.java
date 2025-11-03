@@ -104,6 +104,23 @@ public interface InvPlanAllocTable {
   )
   SqlTuple findAllByContractId(UUID contractId);
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT invplanalloc.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at,
+             invplan.contract_id as contract_id
+      FROM {inv_plan_alloc} invplanalloc
+      LEFT JOIN {commit} updated_commit ON invplanalloc.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON invplanalloc.created_commit_id = created_commit.id
+      LEFT JOIN {inv_plan} invplan ON invplanalloc.inv_plan_id = invplan.id
+      LEFT JOIN {contract} contract ON invplan.contract_id = contract.id
+    """,
+    rowMapper = InvPlanAllocMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
   @TenantSql.Find(
     optional = false,
     sql = """

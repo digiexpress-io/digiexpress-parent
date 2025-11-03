@@ -99,6 +99,22 @@ public interface ContractTable {
 
   @TenantSql.FindAll(
     sql = """
+      SELECT contract.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at,
+             updated_tree_commit.created_at as updated_tree_at
+      FROM {contract} contract
+      LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.id  
+      LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.id
+    """,
+    rowMapper = ContractMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+  
+  @TenantSql.FindAll(
+    sql = """
       SELECT c.*,
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at,
@@ -127,23 +143,7 @@ public interface ContractTable {
     rowMapper = ContractMapper.class
   )
   SqlTuple findAllByContractId(UUID contractId);
-  
-  
-  @TenantSql.FindAll(
-      sql = """
-        SELECT contract.*, 
-               updated_commit.created_at as updated_at,
-               created_commit.created_at as created_at,
-               updated_tree_commit.created_at as updated_tree_at
-        FROM {contract} contract
-        LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.id
-        LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.id  
-        LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.id
-      """,
-      rowMapper = ContractMapper.class,
-      sqlBuilder = ContractTableFilter.SQL.class
-    )
-    SqlTuple findAllByFilter(ContractTableFilter filter);
+
 
   @TenantSql.Find(
     optional = false,

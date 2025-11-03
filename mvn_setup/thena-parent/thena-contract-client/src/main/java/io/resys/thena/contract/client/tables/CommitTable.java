@@ -82,6 +82,18 @@ public interface CommitTable {
   )
   SqlTuple findAllByContractId(String contractId);
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT commit.*
+      FROM {commit} commit
+      LEFT JOIN {contract} contract ON commit.contract_id = contract.id
+      ORDER BY commit.created_at DESC
+    """,
+    rowMapper = CommitMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
   @TenantSql.Find(
     optional = false,
     sql = """

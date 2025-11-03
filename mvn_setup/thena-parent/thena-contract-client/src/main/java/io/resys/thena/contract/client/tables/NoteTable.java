@@ -121,6 +121,21 @@ public interface NoteTable {
   )
   SqlTuple findAllByContractId(UUID contractId);
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT note.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {note} note
+      LEFT JOIN {commit} updated_commit ON note.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON note.created_commit_id = created_commit.id
+      LEFT JOIN {contract} contract ON note.contract_id = contract.id
+    """,
+    rowMapper = NoteMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
   @TenantSql.Find(
     optional = false,
     sql = """
