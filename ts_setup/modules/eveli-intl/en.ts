@@ -123,8 +123,9 @@ export const en = {
   'profile.user.email': 'e-mail:',
   'profile.user.role': 'Role:',
   'button.cancel': 'Cancel',
+  'button.archive': 'Archive',
   'button.confirmDelete': 'Delete',
-  'button.delete': 'Delete this feedback',
+  'button.delete.feedback': 'Delete this feedback',
   'button.delete.template': 'Delete this template',
   'button.delete.link': 'Delete this link',
   'button.delete.article': 'Delete this article',
@@ -502,6 +503,7 @@ export const en = {
   'locales.nopage': 'There is no page for this locale in this Article',
   'locales.label.table.locale': 'Language code',
   'newpage.title': 'Create a new page',
+  'newpage.template.select': 'Template',
   'newpage.info': 'A page consists of localised content and must be associated with an Article.',
   'newpage.article.info': 'Confirm creation of page for: {article} with locale: {locale}',
   'page.create': 'Create page',
@@ -817,6 +819,7 @@ export const en = {
   'eveli.table.menu.filter.filterByDateEqual': 'Date is equal',
   'eveli.table.menu.filter.filterByDateLt': 'Date is before',
   'eveli.table.menu.filter.filterByDateGte': 'Date is greater than or equal',
+  'eveli.table.menu.filter.filterByDateTitle': 'Date filtering',
   'eveli.userProfile.title': 'User Profile',
   'eveli.userProfile.id': 'Id',
   'eveli.userProfile.displayName': 'Display name',
@@ -934,5 +937,8 @@ export const en = {
   'tagomi.service.delete.dialog.desc': 'You are about to delete this service. Its contents will no longer be available for use.',
   'tagomi.service.delete.dialog.button': 'Delete',
   'tagomi.locale.select.alreadyDefined': 'Locale is already defined',
-  'tagomi.locale.label.editLocaleValue': 'Edit locale label value'
+  'tagomi.locale.label.editLocaleValue': 'Edit locale label value',
+  'xui.calendarInput.mask.placeholder.day': 'dd',
+  'xui.calendarInput.mask.placeholder.month': 'mm',
+  'xui.calendarInput.mask.placeholder.year': 'yyyy'
 }

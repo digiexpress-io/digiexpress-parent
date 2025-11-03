@@ -124,7 +124,7 @@ export const fi = {
   'profile.user.role': 'Rooli:',
   'button.cancel': 'Peruuta',
   'button.confirmDelete': 'Poista',
-  'button.delete': 'Poista tämä palaute',
+  'button.delete.feedback': 'Poista tämä palaute',
   'button.delete.template': 'Poista tämä valmispohja',
   'button.delete.link': 'Poista tämä linkki',
   'button.delete.article': 'Poista tämä artikkeli',

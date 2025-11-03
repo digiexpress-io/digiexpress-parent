@@ -124,7 +124,7 @@ export const sv = {
   'profile.user.role': 'Roll:',
   'button.cancel': 'Avboka',
   'button.confirmDelete': 'Ta bort',
-  'button.delete': 'Ta bort denna feedback',
+  'button.delete.feedback': 'Ta bort denna feedback',
   'button.delete.template': 'Ta bort denna mall',
   'button.delete.link': 'Avlägsna denna länk',
   'button.delete.article': 'Avlägsna denna artikel',

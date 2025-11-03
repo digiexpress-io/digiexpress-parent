@@ -92,7 +92,7 @@ export const ToolHeaderSearchDate: React.FC<ToolHeaderSearchDateProps> = ({ head
   return (
     <FilterByStringSlot className={classes.filterByString}>
       <FormControl>
-        <FormLabel>{intl.formatMessage({ id: 'eveli.table.menu.filter.title', defaultMessage: 'Date filtering' })}</FormLabel>
+        <FormLabel>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateTitle', defaultMessage: 'Date filtering' })}</FormLabel>
         <RadioGroup value={currentType}>
           <FormControlLabel value="EQUAL" control={<Radio onClick={() => handleDateType('EQUAL')} />} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateEqual', defaultMessage: 'Date is equal' })} />
           <FormControlLabel value="LT" control={<Radio onClick={() => handleDateType('LT')}/>} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateLt', defaultMessage: 'Date is before' })} />

@@ -1,5 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
+import { useIntl } from "react-intl";
 
 import { Input } from "./Input";
 import { useCalendarInput } from "./CalendarInputProvider";
@@ -7,6 +8,8 @@ import { useCalendarInput } from "./CalendarInputProvider";
 
 // Field components using context
 const DayField: React.FC = () => {
+  const intl = useIntl();
+
   const { machine, dayRef, handleKeyDown, focusField, blurField, typeDayDigit } = useCalendarInput();
   return (
     <Input
@@ -18,7 +21,7 @@ const DayField: React.FC = () => {
       onChange={(e) => typeDayDigit(e.target.value)}
       onKeyDown={(e) => { e.stopPropagation(); handleKeyDown(e, 'day'); }}
       onClick={(e) => e.stopPropagation()}
-      placeholder="dd"
+      placeholder={intl.formatMessage({ id: 'xui.calendarInput.mask.placeholder.day', defaultMessage: 'dd' })}
       maxLength={2}
       style={{ width: '2ch', textAlign: 'center' }}
     />
@@ -26,6 +29,7 @@ const DayField: React.FC = () => {
 };
 
 const MonthField: React.FC = () => {
+  const intl = useIntl();
   const { machine, monthRef, handleKeyDown, focusField, blurField, typeMonthDigit } = useCalendarInput();
   return (
     <Input
@@ -37,7 +41,7 @@ const MonthField: React.FC = () => {
       onChange={(e) => typeMonthDigit(e.target.value)}
       onKeyDown={(e) => { e.stopPropagation(); handleKeyDown(e, 'month'); }}
       onClick={(e) => e.stopPropagation()}
-      placeholder="mm"
+      placeholder={intl.formatMessage({ id: 'xui.calendarInput.mask.placeholder.month', defaultMessage: 'mm' })}
       maxLength={2}
       style={{ width: '3ch', textAlign: 'center' }}
     />
@@ -45,6 +49,7 @@ const MonthField: React.FC = () => {
 };
 
 const YearField: React.FC = () => {
+  const intl = useIntl();
   const { machine, yearRef, handleKeyDown, focusField, blurField, typeYearDigit } = useCalendarInput();
   return (
     <Input
@@ -56,7 +61,7 @@ const YearField: React.FC = () => {
       onChange={(e) => typeYearDigit(e.target.value)}
       onKeyDown={(e) => { e.stopPropagation(); handleKeyDown(e, 'year'); }}
       onClick={(e) => e.stopPropagation()}
-      placeholder="yyyy"
+      placeholder={intl.formatMessage({ id: 'xui.calendarInput.mask.placeholder.year', defaultMessage: 'yyyy' })}
       maxLength={4}
       style={{ width: '4ch', textAlign: 'center' }}
     />

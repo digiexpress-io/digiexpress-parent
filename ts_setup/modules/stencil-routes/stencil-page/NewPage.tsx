@@ -71,7 +71,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
           <Burger.Select
             selected={template}
             onChange={setTemplate}
-            label='template'
+            label='newpage.template.select'
             empty={{ id: '', label: 'template.newpage.none' }}
             items={templates.map((template) => ({ id: template.id, value: template.body.name }))}
           />
