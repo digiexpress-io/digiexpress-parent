@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, IconButton, Tooltip, Typography, Stack, Button, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
-import { WithTableStyles } from '@dxs-ts/xui-table';
+import { WithTableStyles, anyDateFilter, TableDateFilter } from '@dxs-ts/xui-table';
 
 import { Add as AddIcon } from '@mui/icons-material';
 import { Save as SaveIcon } from '@mui/icons-material';
@@ -17,7 +17,15 @@ import { DateTime } from 'luxon';
 
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
+import type { FilterFnOption } from '@tanstack/react-table';
 
+const filterStartsAt: FilterFnOption<PublicationApi.Publication> = (row, _colId, filterValue: TableDateFilter) => {
+  return anyDateFilter(row.original.startsAt, filterValue);
+};
+
+const filterCreatedAt: FilterFnOption<PublicationApi.Publication> = (row, _colId, filterValue: TableDateFilter) => {
+  return anyDateFilter(row.original.createdAt, filterValue);
+};
 
 const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) => {
   const [open, setOpen] = useState(false);
@@ -113,7 +121,7 @@ const PublicationDateTimeFi: React.FC<{ value: any }> = ({ value }) => {
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
   const config = useConfig();
-  const { assetReleases, refreshAssetReleases, isLoading } = useFetch('worker/rest/api/assets/publications.GET', {});
+  const { assetReleases, refreshAssetReleases } = useFetch('worker/rest/api/assets/publications.GET', {});
   const { getRelease } = useFetch('worker/rest/api/assets/deployments/$deploymentId.GET', {});
 
   const [newDialogOpen, setNewDialogOpen] = useState(false);
@@ -150,6 +158,9 @@ export const PublicationsTable: React.FC = () => {
       cell: info => <PublicationDateTimeFi value={info.getValue()} />,
       size: 160,
       minSize: 140,
+      enableColumnFilter: true,
+      meta: { isDate: true },
+      filterFn: filterStartsAt,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
@@ -158,6 +169,9 @@ export const PublicationsTable: React.FC = () => {
       cell: info => <PublicationDateTimeFi value={info.getValue()} />,
       size: 160,
       minSize: 140,
+      enableColumnFilter: true,
+      meta: { isDate: true },
+      filterFn: filterCreatedAt,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
