@@ -26,11 +26,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
     </dependency>
-        
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-mutiny-reactive-streams-operators</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.barfuin.texttree</groupId>
       <artifactId>text-tree</artifactId>
