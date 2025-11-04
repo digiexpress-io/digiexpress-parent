@@ -30,8 +30,8 @@ export declare namespace FeedbackApi {
     origin: string;
     customerTitle: string | undefined;
     labelKey: string;
-    subLabelKey: string | undefined;
     labelValue: string;
+    subLabelKey: string | undefined;
     subLabelValue: string | undefined;
 
     locale: string;
@@ -39,7 +39,7 @@ export declare namespace FeedbackApi {
     content: {
       title: string;
       main: string | undefined;
-      sub: string | undefined;
+      sub?: string | undefined;
       question: string | undefined;
     }
   }
@@ -89,7 +89,7 @@ export declare namespace FeedbackApi {
     content: {
       title: string;
       main: string | undefined;
-      sub: string | undefined;
+      sub?: string | undefined;
       question: string | undefined;
     };
     reply: string;

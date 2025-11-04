@@ -207,7 +207,6 @@ feedback.update.title,,Edit public reply to customer feedback,Muokkaa vastinetta
 feedback.taskReferenceId,,Task Reference ID,Tehtävän tunnus,Ärende-ID,
 feedback.taskReferenceId.short,,Task Ref,Tehtävän viite,Task Ref,
 feedback.mainCategory,,Subject,Aihe,Ämne,
-feedback.subCategory,,Specific topic area,Tarkempi aihealue,Specifikt ämnesområde,
 feedback.feedbackValue,,Customer feedback,Asiakkaan palaute,Kundfeedback,
 feedback.customerTitle,,Feedback title,Palautteen otsikko,Feedback titel,
 feedback.myReply,,Reply to customer,Vastaa asiakkaalle,Svara kunden,

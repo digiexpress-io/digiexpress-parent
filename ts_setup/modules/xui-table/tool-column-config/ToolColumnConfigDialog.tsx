@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import { Table } from '@tanstack/react-table';
 
 import { useIntl } from 'react-intl';
-import { DndColumns } from './DndColumns';
+import { ToolColumnConfig } from './ToolColumnConfig';
 
 
 export interface ToolColumnConfigDialogProps {
@@ -21,7 +21,7 @@ export const ToolColumnConfigDialog: React.FC<ToolColumnConfigDialogProps> = ({ 
     <Dialog open={open} onClose={onClose} maxWidth='xs'>
       <DialogTitle>{intl.formatMessage({ id: 'eveli.table.menu.sort.chooseCols', defaultMessage: 'Select columns' })}</DialogTitle>
       <DialogContent>
-        <DndColumns table={table} />
+        <ToolColumnConfig table={table} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{intl.formatMessage({ id: 'buttons.close', defaultMessage: 'Close' })}</Button>

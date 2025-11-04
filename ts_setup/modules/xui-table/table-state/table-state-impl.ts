@@ -215,7 +215,7 @@ export function useTableState(props: { initialPageSize: number, tableId: string,
       setLoading(false);
       return;
     }
-    lastTableState.onRestore().then(config => {
+    lastTableState.onRestore(props.columns).then(config => {
       if(config) {
         state[1]((prev) => prev.restore(config));
       }

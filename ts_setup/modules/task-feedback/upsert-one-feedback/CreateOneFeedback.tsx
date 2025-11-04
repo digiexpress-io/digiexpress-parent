@@ -34,8 +34,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
         processId: template.processId,
         taskId: template.taskId,
         userId: template.userId,
-        subLabelKey: template.subLabelKey,
-        subLabelValue: template.subLabelValue,
         reply: template.replys?.join("\r\n\r\n") ?? '',
         customerTitle: template.customerTitle,
         question: template.content?.question ?? '' 

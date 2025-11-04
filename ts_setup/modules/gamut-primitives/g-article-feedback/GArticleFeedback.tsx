@@ -102,10 +102,6 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
                 <FormattedMessage id='gamut.feedback.table.topic' />
               </GArticleFeedbackTableHead>
 
-              <GArticleFeedbackTableHead cellName='subLabelValue' ownerState={reducer}>
-                <FormattedMessage id='gamut.feedback.table.subtopic' />
-              </GArticleFeedbackTableHead>
-
               <GArticleFeedbackTableHead cellName='updatedOnDate' ownerState={reducer}>
                 <FormattedMessage id='gamut.feedback.table.updatedOnDate' />
               </GArticleFeedbackTableHead>
@@ -117,9 +113,8 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
           <TableBody>
             {reducer[0].visibleRows.map((row) => (
               <TableRow hover tabIndex={-1} key={row.feedback.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
-                <TableCell component="th" scope="row" padding="none">{row.feedback.content.title ? row.feedback.content.title : "-"}</TableCell>
-                <TableCell component="th" scope="row" padding="none">{row.feedback.content.main}</TableCell>
-                <TableCell component="th" scope="row" align="left" padding="none">{row.feedback.content.sub}</TableCell>
+                <TableCell className={classes.colWidth} component="th" scope="row" padding="none">{row.feedback.content.title ? row.feedback.content.title : "-"}</TableCell>
+                <TableCell className={classes.colWidth} component="th" scope="row" padding="none">{row.feedback.content.main}</TableCell>
                 <TableCell component="th" scope="row" align="left" padding="none">
                   {DateTime.fromJSDate(new Date(row.feedback.updatedOnDate))
                     .setLocale(locale)

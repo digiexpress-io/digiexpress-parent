@@ -37,7 +37,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [savedReply, setSavedReply] = React.useState<string>('');
   const [main, setMain] = React.useState({ labelKey: '', labelValue: '' });
-  const [sub, setSub] = React.useState({ subLabelKey: '', subLabelValue: '' });
 
 
   const mapToLocalState = React.useCallback((resp: FeedbackApi.Feedback | undefined) => {
@@ -45,10 +44,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
     setReply(resp?.replyText ?? '');
     setQuestion(resp?.content?.question ?? '');
     setSavedReply(resp?.replyText ?? '');
-
     setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
-    setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
-
     setCustomerTitle(resp?.customerTitle ?? '')
   }, []);
 
@@ -72,9 +68,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       labelKey: main.labelKey,
       labelValue: main.labelValue,
 
-      subLabelKey: sub.subLabelKey,
-      subLabelValue: sub.subLabelValue,
-
       customerTitle: customerTitle
     };
 
@@ -83,7 +76,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       setSavedReply(reply);
       mapToLocalState(updatedFeedback)
     });
-  }, [main, sub, customerTitle, taskRef, reply, question, feedback?.id])
+  }, [main, customerTitle, taskRef, reply, question, feedback?.id])
 
 
   function confirmDelete() {
@@ -102,9 +95,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
     question !== feedback.content?.question ||
     customerTitle !== feedback?.customerTitle ||
     main.labelKey !== feedback?.labelKey ||
-    main.labelValue !== feedback?.labelValue ||
-    sub.subLabelKey !== feedback?.subLabelKey ||
-    sub.subLabelValue !== feedback?.subLabelValue
+    main.labelValue !== feedback?.labelValue
   );
 
   const AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.AcceptButton ?? SaveFeedback;
@@ -148,15 +139,11 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
 
       <Divider sx={{ my: 2 }} />
 
-      <FeedbackContent feedback={{ ...feedback, ...main, ...sub, customerTitle }} onChange={(props) => {
+      <FeedbackContent feedback={{ ...feedback, ...main, customerTitle }} onChange={(props) => {
         setMain({
           labelKey: props.labelKey,
           labelValue: props.labelValue,
         })
-        setSub({
-          subLabelKey: props.subLabelKey ?? '',
-          subLabelValue: props.subLabelValue ?? '',
-        }),
           setCustomerTitle(props.customerTitle)
       }} />
 

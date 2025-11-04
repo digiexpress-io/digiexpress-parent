@@ -5,13 +5,6 @@ import { useIntl } from 'react-intl';
 import { FeedbackApi, useFeedback } from '../api-feedback';
 
 
-  /*
-  Mistä aiheesta haluat antaa palautetta? = main
-  Valitse aihe = sub
-  Otsikko = title
-  Kuvaus = question
-  */
-
 
 export const FeedbackContent: React.FC<{
   feedback: FeedbackApi.FeedbackContent
@@ -44,17 +37,6 @@ export const FeedbackContent: React.FC<{
     })
   }
 
-
-  const handleSubChange = (value: FeedbackApi.FeedbackTopicItem) => {
-    onChange({
-      labelKey: feedback.labelKey,
-      labelValue: feedback.labelValue,
-      subLabelKey: value.labelKey,
-      subLabelValue: value.labelValue,
-      customerTitle: feedback.customerTitle ?? ''
-    })
-  }
-
   const handleCustomerTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       labelKey: feedback.labelKey,
@@ -78,15 +60,6 @@ export const FeedbackContent: React.FC<{
         values={feedbackTopics?.main ?? []}
       />
     </div>
-
-    <div style={{ marginBottom: 10 }}>
-      <FeedbackTopicSelect onChange={handleSubChange}
-        label={intl.formatMessage({ id: 'feedback.subCategory' })}
-        value={feedback.subLabelKey ?? ''}
-        values={feedbackTopics?.sub ?? []}
-      />
-    </div>
-
 
     <div style={{ marginBottom: 10 }}>
       <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerTitle' })}</Typography>
