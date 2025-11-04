@@ -253,10 +253,10 @@ public interface CoverageTable {
         doc.getCoverageEffectiveFrom(),
         doc.getCoverageEffectiveTo().orElse(null),
         doc.getCoverageTermStartDate(),
-        doc.getCoverageTermStartDateInterval(),
+        TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
         doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        doc.getCoverageTermEndDateInterval().orElse(null),
+        doc.getCoverageTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getCoverageTermEndDateType().orElse(null)
       });
     }
@@ -279,10 +279,10 @@ public interface CoverageTable {
         doc.getCoverageEffectiveFrom(),
         doc.getCoverageEffectiveTo().orElse(null),
         doc.getCoverageTermStartDate(),
-        doc.getCoverageTermStartDateInterval(),
+        TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
         doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        doc.getCoverageTermEndDateInterval().orElse(null),
+        doc.getCoverageTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getCoverageTermEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });

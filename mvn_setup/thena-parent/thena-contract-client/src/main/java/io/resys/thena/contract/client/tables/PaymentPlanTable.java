@@ -230,10 +230,10 @@ public interface PaymentPlanTable {
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
         doc.getPaymentPlanStartDate(),
-        doc.getPaymentPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
         doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        doc.getPaymentPlanEndDateInterval().orElse(null),
+        doc.getPaymentPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getPaymentPlanEndDateType().orElse(null)
       });
     }
@@ -250,10 +250,10 @@ public interface PaymentPlanTable {
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
         doc.getPaymentPlanStartDate(),
-        doc.getPaymentPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
         doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        doc.getPaymentPlanEndDateInterval().orElse(null),
+        doc.getPaymentPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getPaymentPlanEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });

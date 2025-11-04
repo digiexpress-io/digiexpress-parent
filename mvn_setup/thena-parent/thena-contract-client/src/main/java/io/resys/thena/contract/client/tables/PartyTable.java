@@ -230,10 +230,10 @@ public interface PartyTable {
         doc.getPartyEffectiveFrom(),
         doc.getPartyEffectiveTo().orElse(null),
         doc.getPartyTermStartDate(),
-        doc.getPartyTermStartDateInterval(),
+        TableUtils.toInterval(doc.getPartyTermStartDateInterval()),
         doc.getPartyTermStartDateType(),
         doc.getPartyTermEndDate().orElse(null),
-        doc.getPartyTermEndDateInterval().orElse(null),
+        doc.getPartyTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getPartyTermEndDateType().orElse(null),
         doc.getPartyData().orElse(null)
       });
@@ -251,10 +251,10 @@ public interface PartyTable {
         doc.getPartyEffectiveFrom(),
         doc.getPartyEffectiveTo().orElse(null),
         doc.getPartyTermStartDate(),
-        doc.getPartyTermStartDateInterval(),
+        TableUtils.toInterval(doc.getPartyTermStartDateInterval()),
         doc.getPartyTermStartDateType(),
         doc.getPartyTermEndDate().orElse(null),
-        doc.getPartyTermEndDateInterval().orElse(null),
+        doc.getPartyTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getPartyTermEndDateType().orElse(null),
         doc.getPartyData().orElse(null),
         TableUtils.toUuid(doc.getId())

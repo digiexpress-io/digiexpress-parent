@@ -1,6 +1,8 @@
 package io.resys.thena.contract.client.tables;
 
+import java.time.Duration;
 import java.util.UUID;
+import io.vertx.pgclient.data.Interval;
 
 public class TableUtils {
 
@@ -80,5 +82,60 @@ public class TableUtils {
    */
   public static UUID toUuidSafe(String uuidString) {
     return uuidString == null ? null : toUuid(uuidString);
+  }
+  
+  /**
+   * Converts a Duration to PostgreSQL Interval for database storage.
+   * 
+   * @param duration the Duration to convert
+   * @return Interval object
+   * @throws IllegalArgumentException if the duration is null
+   */
+  public static Interval toInterval(Duration duration) {
+    if (duration == null) {
+      throw new IllegalArgumentException("Duration cannot be null");
+    }
+    
+    long totalSeconds = duration.getSeconds();
+    int nanos = duration.getNano();
+    
+    // Handle negative durations
+    boolean isNegative = totalSeconds < 0 || (totalSeconds == 0 && nanos < 0);
+    if (isNegative) {
+      totalSeconds = Math.abs(totalSeconds);
+      nanos = Math.abs(nanos);
+    }
+    
+    int days = (int) (totalSeconds / 86400);
+    totalSeconds %= 86400;
+    
+    int hours = (int) (totalSeconds / 3600);
+    totalSeconds %= 3600;
+    
+    int minutes = (int) (totalSeconds / 60);
+    int seconds = (int) (totalSeconds % 60);
+    
+    int microseconds = nanos / 1000;
+    
+    Interval interval = new io.vertx.pgclient.data.Interval()
+        .days(days)
+        .hours(hours)
+        .minutes(minutes)
+        .seconds(seconds)
+        .microseconds(microseconds);
+
+    
+    return interval;
+  }
+  
+  /**
+   * Safely converts a Duration to PostgreSQL Interval, returning null for null input.
+   * 
+   * @param duration the Duration to convert (can be null)
+   * @return Interval object or null if input is null
+   * @throws IllegalArgumentException if the duration is not null but cannot be converted
+   */
+  public static Interval toIntervalSafe(Duration duration) {
+    return duration == null ? null : toInterval(duration);
   }
 }

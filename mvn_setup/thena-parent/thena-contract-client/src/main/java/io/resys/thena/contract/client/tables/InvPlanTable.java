@@ -224,10 +224,10 @@ public interface InvPlanTable {
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        doc.getInvPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
         doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        doc.getInvPlanEndDateInterval().orElse(null),
+        doc.getInvPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getInvPlanEndDateType().orElse(null)
       });
     }
@@ -244,10 +244,10 @@ public interface InvPlanTable {
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        doc.getInvPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
         doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        doc.getInvPlanEndDateInterval().orElse(null),
+        doc.getInvPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
         doc.getInvPlanEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });
