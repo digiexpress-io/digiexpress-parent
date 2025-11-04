@@ -247,13 +247,13 @@ public interface ContractTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Contract doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getId()),
-        doc.getParentContractId().map(UUID::fromString).orElse(null),
+        TableUtils.toUuid(doc.getId()),
+        doc.getParentContractId().map(TableUtils::toUuid).orElse(null),
         doc.getContractNumber(),
         doc.getExternalId().orElse(null),
-        UUID.fromString(doc.getCommitId()),
-        UUID.fromString(doc.getCreatedCommitId()),
-        UUID.fromString(doc.getUpdatedTreeCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         doc.getContractIssueDate(),
         doc.getContractIssueDateInterval(),
         doc.getContractIssueDateType(),
@@ -276,11 +276,11 @@ public interface ContractTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Contract doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentContractId().map(UUID::fromString).orElse(null),
+        doc.getParentContractId().map(TableUtils::toUuid).orElse(null),
         doc.getContractNumber(),
         doc.getExternalId().orElse(null),
-        UUID.fromString(doc.getCommitId()),
-        UUID.fromString(doc.getUpdatedTreeCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         doc.getContractIssueDate(),
         doc.getContractIssueDateInterval(),
         doc.getContractIssueDateType(),
@@ -295,7 +295,7 @@ public interface ContractTable {
         doc.getContractType(),
         doc.getContractSubType().orElse(null),
         doc.getContractData().orElse(null),
-        UUID.fromString(doc.getId())
+        TableUtils.toUuid(doc.getId())
       });
     }
   }

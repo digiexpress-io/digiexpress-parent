@@ -24,8 +24,11 @@ import java.time.Duration;
 
 import java.time.LocalDate;
 
+import org.apache.commons.lang3.mutable.MutableObject;
+
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.entities.ContractDocType;
+import io.resys.thena.contract.client.entities.Party;
 import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
@@ -46,6 +49,9 @@ public class FeemiContractVisitor {
     FeemiSavingsContractGenerator.GeneratedContractData contractData = 
         FeemiSavingsContractGenerator.generate(product, options);
     
+    
+    final var policyholder = new MutableObject<Party>();
+    
     // Build the contract using the NewContract interface
     newContract
         .contractNumber(contractData.contract.contractNumber)
@@ -64,7 +70,7 @@ public class FeemiContractVisitor {
         
         // Add policyholder as primary party
         .addParty(party -> {
-          party
+          final var built = party
               .externalId(contractData.policyholder.personalId)
               .partyType("POLICYHOLDER")
               
@@ -75,6 +81,8 @@ public class FeemiContractVisitor {
               
               .partyData(contractData.policyholder.partyData)
               .build();
+          
+          policyholder.setValue(built);
         })
         
         // Add beneficiary if present
@@ -95,7 +103,7 @@ public class FeemiContractVisitor {
         // Add coverage
         .addCoverage(coverage -> {
           coverage
-              .insuredId(contractData.policyholder.personalId)
+              .insuredId(policyholder.get().getId())
               .externalId(contractData.coverage.coverageCode)
               .coverageType(contractData.coverage.coverageType)
               .coverageCode(contractData.coverage.coverageCode)

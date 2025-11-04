@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.tables;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.contract.client.entities.Commit;
@@ -148,9 +147,9 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getCommitId()),
-        doc.getParentCommitId().map(UUID::fromString).orElse(null),
-        doc.getContractId().map(UUID::fromString).orElse(null),
+        TableUtils.toUuid(doc.getCommitId()),
+        doc.getParentCommitId().map(TableUtils::toUuid).orElse(null),
+        doc.getContractId().map(TableUtils::toUuid).orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),
         doc.getCommitAuthor(),
@@ -163,13 +162,13 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentCommitId().map(UUID::fromString).orElse(null),
-        doc.getContractId().map(UUID::fromString).orElse(null),
+        doc.getParentCommitId().map(TableUtils::toUuid).orElse(null),
+        doc.getContractId().map(TableUtils::toUuid).orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),
         doc.getCommitAuthor(),
         doc.getCommitMessage(),
-        UUID.fromString(doc.getCommitId())
+        TableUtils.toUuid(doc.getCommitId())
       });
     }
   }

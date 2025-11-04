@@ -215,11 +215,11 @@ public interface InvPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getId()),
-        UUID.fromString(doc.getContractId()),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
         doc.getExternalId(),
-        UUID.fromString(doc.getCommitId()),
-        UUID.fromString(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getInvPlanStatus(),
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
@@ -237,9 +237,9 @@ public interface InvPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getContractId()),
+        TableUtils.toUuid(doc.getContractId()),
         doc.getExternalId(),
-        UUID.fromString(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getInvPlanStatus(),
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
@@ -249,7 +249,7 @@ public interface InvPlanTable {
         doc.getInvPlanEndDate().orElse(null),
         doc.getInvPlanEndDateInterval().orElse(null),
         doc.getInvPlanEndDateType().orElse(null),
-        UUID.fromString(doc.getId())
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -258,7 +258,7 @@ public interface InvPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan invPlan) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        UUID.fromString(invPlan.getId())
+        TableUtils.toUuid(invPlan.getId())
       });
     }
   }

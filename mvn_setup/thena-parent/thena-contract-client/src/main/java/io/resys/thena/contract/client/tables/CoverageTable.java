@@ -238,12 +238,12 @@ public interface CoverageTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Coverage doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getId()),
-        UUID.fromString(doc.getContractId()),
-        UUID.fromString(doc.getInsuredId()),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
+        TableUtils.toUuid(doc.getInsuredId()),
         doc.getExternalId(),
-        UUID.fromString(doc.getCommitId()),
-        UUID.fromString(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getCoverageType(),
         doc.getCoverageCode(),
         doc.getCoverageSumInsured().orElse(null),
@@ -266,10 +266,10 @@ public interface CoverageTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Coverage doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getContractId()),
-        UUID.fromString(doc.getInsuredId()),
+        TableUtils.toUuid(doc.getContractId()),
+        TableUtils.toUuid(doc.getInsuredId()),
         doc.getExternalId(),
-        UUID.fromString(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getCoverageType(),
         doc.getCoverageCode(),
         doc.getCoverageSumInsured().orElse(null),
@@ -284,7 +284,7 @@ public interface CoverageTable {
         doc.getCoverageTermEndDate().orElse(null),
         doc.getCoverageTermEndDateInterval().orElse(null),
         doc.getCoverageTermEndDateType().orElse(null),
-        UUID.fromString(doc.getId())
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -293,7 +293,7 @@ public interface CoverageTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Coverage coverage) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        UUID.fromString(coverage.getId())
+        TableUtils.toUuid(coverage.getId())
       });
     }
   }

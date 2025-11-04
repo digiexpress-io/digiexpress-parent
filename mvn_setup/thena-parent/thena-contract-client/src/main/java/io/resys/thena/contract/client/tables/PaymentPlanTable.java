@@ -221,11 +221,11 @@ public interface PaymentPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getId()),
-        UUID.fromString(doc.getContractId()),
-        doc.getPartyId().map(UUID::fromString).orElse(null),
-        UUID.fromString(doc.getCommitId()),
-        UUID.fromString(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
+        doc.getPartyId().map(TableUtils::toUuid).orElse(null),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getPaymentPlanStatus(),
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
@@ -243,9 +243,9 @@ public interface PaymentPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getContractId()),
-        doc.getPartyId().map(UUID::fromString).orElse(null),
-        UUID.fromString(doc.getCommitId()),
+        TableUtils.toUuid(doc.getContractId()),
+        doc.getPartyId().map(TableUtils::toUuid).orElse(null),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getPaymentPlanStatus(),
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
@@ -255,7 +255,7 @@ public interface PaymentPlanTable {
         doc.getPaymentPlanEndDate().orElse(null),
         doc.getPaymentPlanEndDateInterval().orElse(null),
         doc.getPaymentPlanEndDateType().orElse(null),
-        UUID.fromString(doc.getId())
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -264,7 +264,7 @@ public interface PaymentPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan paymentPlan) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        UUID.fromString(paymentPlan.getId())
+        TableUtils.toUuid(paymentPlan.getId())
       });
     }
   }

@@ -52,6 +52,7 @@ public class NewPartyBuilder implements NewParty {
   private final ImmutablePersistenceUnit currentTx;
   private final ContractContainer savedState;
   private boolean built;
+  private ImmutableParty result;
   
   public NewPartyBuilder(
       ContractCommitBuilder logger, 
@@ -193,23 +194,23 @@ public class NewPartyBuilder implements NewParty {
   }
 
   @Override
-  public void build() {
+  public Party build() {
     this.built = true;
-  }
-
-  public ImmutableParty close() {
-    RepoAssert.isTrue(built, () -> "you must call NewParty.build() to finalize party CREATE!");
-    
-    final var built = next.build();
+    result = next.build();
     
     // Validate uniqueness - no duplicate parties with same external ID
     RepoAssert.isTrue(
         this.allParties.values().stream()
-        .filter(p -> p.getExternalId().equals(built.getExternalId()))
+        .filter(p -> p.getExternalId().equals(result.getExternalId()))
         .count() == 0
         , () -> "can't have duplicate parties with same external ID!");
 
-    this.logger.add(built);
-    return built;
+    this.logger.add(result);
+    return result;
+  }
+
+  public ImmutableParty close() {
+    RepoAssert.isTrue(built, () -> "you must call NewParty.build() to finalize party CREATE!");
+    return result;
   }
 }

@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractOneOfRelations;
+import io.resys.thena.contract.client.entities.Party;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -92,7 +93,7 @@ public interface ThenaContractNewObject {
     // nested entities
     NewParty addNote(Consumer<NewNote> note);
     NewParty addReference(Consumer<NewReference> reference);
-    void build();
+    Party build();
   }
   
   // support interface for coverage creation

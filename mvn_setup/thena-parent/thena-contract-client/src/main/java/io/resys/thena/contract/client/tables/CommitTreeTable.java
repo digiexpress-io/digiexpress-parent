@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.tables;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.contract.client.entities.CommitTree;
@@ -156,8 +155,8 @@ public interface CommitTreeTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(CommitTree doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getId()),
-        UUID.fromString(doc.getCommitId()),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null)
@@ -169,11 +168,11 @@ public interface CommitTreeTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(CommitTree doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null),
-        UUID.fromString(doc.getId())
+        TableUtils.toUuid(doc.getId())
       });
     }
   }

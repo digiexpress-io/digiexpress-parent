@@ -192,11 +192,11 @@ public interface CapabilityTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Capability doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getId()),
-        UUID.fromString(doc.getContractId()),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
         doc.getExternalId().orElse(null),
-        UUID.fromString(doc.getCommitId()),
-        UUID.fromString(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getCapabilityCode(),
         doc.getCapabilityName(),
         doc.getCapabilityType(),
@@ -209,14 +209,14 @@ public interface CapabilityTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Capability doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(doc.getContractId()),
+        TableUtils.toUuid(doc.getContractId()),
         doc.getExternalId().orElse(null),
-        UUID.fromString(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getCapabilityCode(),
         doc.getCapabilityName(),
         doc.getCapabilityType(),
         doc.getCapabilityEnabled(),
-        UUID.fromString(doc.getId())
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -225,7 +225,7 @@ public interface CapabilityTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Capability capability) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        UUID.fromString(capability.getId())
+        TableUtils.toUuid(capability.getId())
       });
     }
   }
