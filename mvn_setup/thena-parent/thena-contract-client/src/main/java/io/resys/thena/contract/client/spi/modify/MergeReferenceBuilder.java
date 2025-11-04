@@ -93,7 +93,7 @@ public class MergeReferenceBuilder implements MergeReference {
   }
   @Override
   public MergeReference referenceBody(JsonObject referenceBody) {
-    this.nextReference.referenceBody(referenceBody);
+    this.nextReference.referenceBody(Optional.ofNullable(referenceBody));
     return this;
   }
   @Override

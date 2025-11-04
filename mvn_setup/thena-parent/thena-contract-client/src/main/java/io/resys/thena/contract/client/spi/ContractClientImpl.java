@@ -90,30 +90,29 @@ public class ContractClientImpl implements ContractClient {
 
   public static class Builder {
     private io.vertx.mutiny.sqlclient.Pool client;
-    private String db = "docdb";
+    private String tenantName = "docdb";
     private ThenaSqlDataSourceErrorHandler errorHandler;
 
     private TenantCache tenantCache;    
     public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
-    public Builder db(String db) { this.db = db; return this; }
+    public Builder tenantName(String tenantName) { this.tenantName = tenantName; return this; }
     public Builder tenantCache(TenantCache tenantCache) { this.tenantCache = tenantCache; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
 
     
     public ContractClientImpl build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
-      RepoAssert.notNull(db, () -> "db must be defined!");
+      RepoAssert.notNull(tenantName, () -> "tenantName must be defined!");
       RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
       
       final var tenantCache = this.tenantCache == null ? new TenantCacheImpl() : this.tenantCache;
-      
-      final var ctx = TenantContext.defaults(db);
+      final var ctx = TenantContext.defaults(tenantName);
       
       
       final var pool = new ThenaSqlPoolVertx(client);
       
       final var dataSource = new ThenaSqlDataSourceImpl(
-          db, ctx, pool, errorHandler, 
+          tenantName, ctx, pool, errorHandler, 
           Optional.empty(),
           tenantCache
       );

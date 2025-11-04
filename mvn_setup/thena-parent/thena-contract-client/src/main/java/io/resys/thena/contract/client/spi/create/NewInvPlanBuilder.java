@@ -66,7 +66,10 @@ public class NewInvPlanBuilder implements NewInvPlan {
         .id(invPlanId)
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
+        .contractId(contractId)
+        .invPlanEndDate(Optional.empty())
+        .invPlanEndDateInterval(Optional.empty())
+        .invPlanEndDateType(Optional.empty());
     
     this.batch = ImmutablePersistenceUnit.builder()
         .tenantId(logger.getTenantId())
@@ -138,19 +141,19 @@ public class NewInvPlanBuilder implements NewInvPlan {
 
   @Override
   public NewInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate) {
-    this.next.invPlanEndDate(invPlanEndDate);
+    this.next.invPlanEndDate(Optional.ofNullable(invPlanEndDate));
     return this;
   }
 
   @Override
   public NewInvPlan invPlanEndDateInterval(@Nullable Duration invPlanEndDateInterval) {
-    this.next.invPlanEndDateInterval(invPlanEndDateInterval);
+    this.next.invPlanEndDateInterval(Optional.ofNullable(invPlanEndDateInterval));
     return this;
   }
 
   @Override
   public NewInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType) {
-    this.next.invPlanEndDateType(invPlanEndDateType);
+    this.next.invPlanEndDateType(Optional.ofNullable(invPlanEndDateType));
     return this;
   }
 

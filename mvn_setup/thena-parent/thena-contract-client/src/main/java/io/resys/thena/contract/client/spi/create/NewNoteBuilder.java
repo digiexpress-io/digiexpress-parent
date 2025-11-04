@@ -66,7 +66,8 @@ public class NewNoteBuilder implements NewNote {
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)
-        .relations(relation);
+        .relations(relation)
+        .noteBody(Optional.empty());
     
     final var updates = currentTx.getNoteUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getNoteDeletes().stream().map(e -> e.getId()).toList();
@@ -110,7 +111,7 @@ public class NewNoteBuilder implements NewNote {
 
   @Override
   public NewNote noteBody(@Nullable JsonObject noteBody) {
-    this.next.noteBody(noteBody);
+    this.next.noteBody(Optional.ofNullable(noteBody));
     return this;
   }
 

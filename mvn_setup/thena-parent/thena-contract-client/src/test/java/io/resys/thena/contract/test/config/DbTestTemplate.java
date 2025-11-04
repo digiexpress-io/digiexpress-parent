@@ -95,7 +95,7 @@ public class DbTestTemplate {
   	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
-    this.client = ContractClientImpl.create().db("junit").client(pgPool)
+    this.client = ContractClientImpl.create().tenantName("junit").client(pgPool)
         .errorHandler(new PgErrors())
         .build();
     if(callback != null) {
@@ -181,7 +181,7 @@ public class DbTestTemplate {
     
     return ContractClientImpl.create()
         .client(pgPool)
-        .db(tenant.getId())
+        .tenantName(tenant.getName())
         .errorHandler(new PgErrors())
         .build();
     

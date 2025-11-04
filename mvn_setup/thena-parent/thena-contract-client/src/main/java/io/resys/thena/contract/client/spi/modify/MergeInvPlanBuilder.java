@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -123,17 +123,17 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
   }
   @Override
   public MergeInvPlan invPlanEndDate(LocalDate invPlanEndDate) {
-    this.nextInvPlan.invPlanEndDate(invPlanEndDate);
+    this.nextInvPlan.invPlanEndDate(Optional.ofNullable(invPlanEndDate));
     return this;
   }
   @Override
   public MergeInvPlan invPlanEndDateInterval(Duration invPlanEndDateInterval) {
-    this.nextInvPlan.invPlanEndDateInterval(invPlanEndDateInterval);
+    this.nextInvPlan.invPlanEndDateInterval(Optional.ofNullable(invPlanEndDateInterval));
     return this;
   }
   @Override
   public MergeInvPlan invPlanEndDateType(String invPlanEndDateType) {
-    this.nextInvPlan.invPlanEndDateType(invPlanEndDateType);
+    this.nextInvPlan.invPlanEndDateType(Optional.ofNullable(invPlanEndDateType));
     return this;
   }
   @Override

@@ -69,7 +69,12 @@ public class NewPartyBuilder implements NewParty {
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
+        .contractId(contractId)
+        .partyEffectiveTo(Optional.empty())
+        .partyTermEndDate(Optional.empty())
+        .partyTermEndDateInterval(Optional.empty())
+        .partyTermEndDateType(Optional.empty())
+        .partyData(Optional.empty());
     
     final var updates = currentTx.getPartyUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getPartyDeletes().stream().map(e -> e.getId()).toList();
@@ -113,7 +118,7 @@ public class NewPartyBuilder implements NewParty {
 
   @Override
   public NewParty partyEffectiveTo(@Nullable LocalDate partyEffectiveTo) {
-    this.next.partyEffectiveTo(partyEffectiveTo);
+    this.next.partyEffectiveTo(Optional.ofNullable(partyEffectiveTo));
     return this;
   }
 

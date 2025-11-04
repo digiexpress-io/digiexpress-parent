@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -109,19 +109,19 @@ public class MergeCoverageBuilder implements MergeCoverage {
 
   @Override
   public MergeCoverage coverageSumInsured(BigDecimal coverageSumInsured) {
-    this.nextCoverage.coverageSumInsured(coverageSumInsured);
+    this.nextCoverage.coverageSumInsured(Optional.ofNullable(coverageSumInsured));
     return this;
   }
 
   @Override
   public MergeCoverage coverageRate(BigDecimal coverageRate) {
-    this.nextCoverage.coverageRate(coverageRate);
+    this.nextCoverage.coverageRate(Optional.ofNullable(coverageRate));
     return this;
   }
 
   @Override
   public MergeCoverage coverageRateType(String coverageRateType) {
-    this.nextCoverage.coverageRateType(coverageRateType);
+    this.nextCoverage.coverageRateType(Optional.ofNullable(coverageRateType));
     return this;
   }
 
@@ -139,7 +139,7 @@ public class MergeCoverageBuilder implements MergeCoverage {
 
   @Override
   public MergeCoverage coverageEffectiveTo(LocalDate coverageEffectiveTo) {
-    this.nextCoverage.coverageEffectiveTo(coverageEffectiveTo);
+    this.nextCoverage.coverageEffectiveTo(Optional.ofNullable(coverageEffectiveTo));
     return this;
   }
 
@@ -163,19 +163,19 @@ public class MergeCoverageBuilder implements MergeCoverage {
 
   @Override
   public MergeCoverage coverageTermEndDate(LocalDate coverageTermEndDate) {
-    this.nextCoverage.coverageTermEndDate(coverageTermEndDate);
+    this.nextCoverage.coverageTermEndDate(Optional.ofNullable(coverageTermEndDate));
     return this;
   }
 
   @Override
   public MergeCoverage coverageTermEndDateInterval(Duration coverageTermEndDateInterval) {
-    this.nextCoverage.coverageTermEndDateInterval(coverageTermEndDateInterval);
+    this.nextCoverage.coverageTermEndDateInterval(Optional.ofNullable(coverageTermEndDateInterval));
     return this;
   }
 
   @Override
   public MergeCoverage coverageTermEndDateType(String coverageTermEndDateType) {
-    this.nextCoverage.coverageTermEndDateType(coverageTermEndDateType);
+    this.nextCoverage.coverageTermEndDateType(Optional.ofNullable(coverageTermEndDateType));
     return this;
   }
 

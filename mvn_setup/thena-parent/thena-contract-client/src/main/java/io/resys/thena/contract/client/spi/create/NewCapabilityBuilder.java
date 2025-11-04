@@ -58,7 +58,8 @@ public class NewCapabilityBuilder implements NewCapability {
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
+        .contractId(contractId)
+        .externalId(Optional.empty());
     
     final var updates = currentTx.getCapabilityUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCapabilityDeletes().stream().map(e -> e.getId()).toList();
@@ -83,7 +84,7 @@ public class NewCapabilityBuilder implements NewCapability {
 
   @Override
   public NewCapability externalId(@Nullable String externalId) {
-    this.next.externalId(externalId);
+    this.next.externalId(Optional.ofNullable(externalId));
     return this;
   }
 

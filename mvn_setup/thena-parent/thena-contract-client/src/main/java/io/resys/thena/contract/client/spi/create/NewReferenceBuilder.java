@@ -60,7 +60,8 @@ public class NewReferenceBuilder implements NewReference {
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .relations(rel)
-        .contractId(contractId);
+        .contractId(contractId)
+        .referenceBody(Optional.empty());
     
     
     final var updates = currentTx.getReferenceUpdates().stream().map(e -> e.getId()).toList();
@@ -103,7 +104,7 @@ public class NewReferenceBuilder implements NewReference {
 
   @Override
   public NewReference referenceBody(@Nullable JsonObject referenceBody) {
-    this.next.referenceBody(referenceBody);
+    this.next.referenceBody(Optional.ofNullable(referenceBody));
     return this;
   }
 

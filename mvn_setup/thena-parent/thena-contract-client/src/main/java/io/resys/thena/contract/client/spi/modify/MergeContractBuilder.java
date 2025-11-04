@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -112,14 +113,14 @@ public class MergeContractBuilder implements MergeContract {
   @Override
   public MergeContract parentContractId(String parentContractId) {
     RepoAssert.isTrue(parentContractId == null || !parentContractId.equals(contractId), () -> "parent contract id can't be itself!");
-    this.nextContract.parentContractId(parentContractId);
+    this.nextContract.parentContractId(Optional.ofNullable(parentContractId));
     updateVersion();
     return this;
   }
   
   @Override
   public MergeContract externalId(String externalId) {
-    this.nextContract.externalId(externalId);
+    this.nextContract.externalId(Optional.ofNullable(externalId));
     updateVersion();
     return this;
   }
@@ -168,21 +169,21 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract contractMaturityDate(LocalDate contractMaturityDate) {
-    this.nextContract.contractMaturityDate(contractMaturityDate);
+    this.nextContract.contractMaturityDate(Optional.ofNullable(contractMaturityDate));
     updateVersion();
     return this;
   }
   
   @Override
   public MergeContract contractMaturityDateInterval(Duration contractMaturityDateInterval) {
-    this.nextContract.contractMaturityDateInterval(contractMaturityDateInterval);
+    this.nextContract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
     updateVersion();
     return this;
   }
   
   @Override
   public MergeContract contractMaturityDateType(String contractMaturityDateType) {
-    this.nextContract.contractMaturityDateType(contractMaturityDateType);
+    this.nextContract.contractMaturityDateType(Optional.ofNullable(contractMaturityDateType));
     updateVersion();
     return this;
   }
@@ -196,7 +197,7 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract contractSubStatus(String contractSubStatus) {
-    this.nextContract.contractSubStatus(contractSubStatus);
+    this.nextContract.contractSubStatus(Optional.ofNullable(contractSubStatus));
     updateVersion();
     return this;
   }
@@ -210,14 +211,14 @@ public class MergeContractBuilder implements MergeContract {
   
   @Override
   public MergeContract contractSubType(String contractSubType) {
-    this.nextContract.contractSubType(contractSubType);
+    this.nextContract.contractSubType(Optional.ofNullable(contractSubType));
     updateVersion();
     return this;
   }
   
   @Override
   public MergeContract contractData(JsonObject contractData) {
-    this.nextContract.contractData(contractData);
+    this.nextContract.contractData(Optional.ofNullable(contractData));
     updateVersion();
     return this;
   }
