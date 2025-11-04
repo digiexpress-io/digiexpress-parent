@@ -29,6 +29,7 @@ import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.contract.client.entities.Capability;
 import io.resys.thena.contract.client.entities.ImmutableCapability;
 import io.resys.thena.contract.client.entities.ImmutableCapabilityTransitives;
+import io.resys.thena.contract.client.tables.ContractTable.ContractMapper;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -72,6 +73,22 @@ import io.vertx.mutiny.sqlclient.Row;
 )
 public interface CapabilityTable {
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT capability.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {capability} capability
+      LEFT JOIN {commit} updated_commit ON capability.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON capability.created_commit_id = created_commit.id
+      LEFT JOIN {contract} created_commit ON capability.contract_id = contract.id
+    """,
+    rowMapper = ContractMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+  
+  
   @TenantSql.FindAll(
     sql = """
       SELECT c.*, 

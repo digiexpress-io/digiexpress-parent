@@ -15,15 +15,18 @@
     
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>thena-product-client</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-sql-client-annot-proc</artifactId>
+      <artifactId>thena-sql-client-pg</artifactId>
     </dependency>
       
-
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
@@ -32,6 +35,10 @@
     <dependency>
       <groupId>org.barfuin.texttree</groupId>
       <artifactId>text-tree</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
     </dependency>
 
     <dependency>

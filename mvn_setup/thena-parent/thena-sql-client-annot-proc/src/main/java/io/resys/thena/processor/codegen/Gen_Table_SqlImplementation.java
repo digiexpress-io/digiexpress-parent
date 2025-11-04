@@ -139,6 +139,7 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.processor.model.Metamodel;
 import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.model.TableMetamodel.MethodParameter;
@@ -146,11 +147,15 @@ import io.resys.thena.processor.model.TableMetamodel.SqlMethod;
 import io.resys.thena.processor.model.TableMetamodel.SqlPropsType;
 import io.resys.thena.processor.spi.TableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
+import lombok.RequiredArgsConstructor;
 
 
 
+@RequiredArgsConstructor
 public class Gen_Table_SqlImplementation implements TableCodeGenerator {
   
+  private final Metamodel metamodel;
+
   public JavaFile generate(TableMetamodel model, RegistryMetamodel registry) {
     final var classBuilder = TypeSpec.classBuilder(model.getImplClassName())
       .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
@@ -338,7 +343,13 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
       builder.addCode("\n");
       builder.addStatement("var sqlValue = baseSql.getValue()");
       
-      for (final var tableName : method.getTableNames()) {
+      // Replace ALL tables from registry (sorted by order) for sqlBuilder methods
+      final var tablesOrderedByOrder = metamodel.getTables().stream()
+        .sorted((a, b) -> Integer.compare(a.getOrder(), b.getOrder()))
+        .collect(java.util.stream.Collectors.toList());
+      
+      for (final var table : tablesOrderedByOrder) {
+        final var tableName = table.getTableName();
         final var getterName = NamingUtils.toCamelCaseCapitalized(tableName);
         builder.addStatement("sqlValue = sqlValue.replaceAll(\"(?i)\\\\{$L\\\\}\", tables.get$L())",
           tableName, getterName);

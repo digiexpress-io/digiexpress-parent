@@ -30,6 +30,7 @@ import io.resys.thena.contract.client.api.ContractCommitActions.CreateOneContrac
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
 import io.resys.thena.contract.client.api.ImmutableContractContainer;
 import io.resys.thena.contract.client.api.ImmutableOneContractEnvelope;
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.entities.ImmutableCommit;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
@@ -52,6 +53,7 @@ public class CreateOneContractImpl implements CreateOneContract {
   private String author;
   private String message;
   private Consumer<NewContract> contract;
+  private Consumer<ContractContainer> handleNewState;
   
   @Override
   public CreateOneContract commitAuthor(String author) {
@@ -81,6 +83,12 @@ public class CreateOneContractImpl implements CreateOneContract {
 
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(tenantId).build();
     return this.state.withTransaction(scope, this::doInTx);
+  }
+  
+  @Override
+  public CreateOneContract onNewContract(Consumer<ContractContainer> handleNewState) {
+    this.handleNewState = handleNewState;
+    return this;
   }
 
   private Uni<OneContractEnvelope> doInTx(ContractDb tx) {
@@ -128,6 +136,11 @@ public class CreateOneContractImpl implements CreateOneContract {
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build();
       return result;
+    })
+    .onItem().invoke(newState -> {
+      if(handleNewState != null) {
+        handleNewState.accept(newState.getContract());
+      }
     });
   }
   

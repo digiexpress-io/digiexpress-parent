@@ -1,4 +1,4 @@
-@TenantSql.Registry(name = "Batch2")
+@TenantSql.Registry(name = "Batch2", tenantType = StructureType.batch)
 package io.resys.thena.client.sample;
 
 /*-
@@ -21,3 +21,4 @@ package io.resys.thena.client.sample;
  * #L%
  */
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.entities.Tenant.StructureType;

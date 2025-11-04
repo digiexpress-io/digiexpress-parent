@@ -46,6 +46,8 @@
     <dialob.version>3.0.1</dialob.version>
     <dialob-b.version>2.2.9</dialob-b.version>
     
+    <javafaker.version>1.0.2</javafaker.version>
+    
     <flexmark.version>0.62.2</flexmark.version>
     <jgit.version>7.2.1.202505142326-r</jgit.version>
 
@@ -289,6 +291,12 @@
         <version>${jackson.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.javafaker</groupId>
+        <artifactId>javafaker</artifactId>
+        <version>${javafaker.version}</version>
       </dependency>
 
       <!-- Commons -->

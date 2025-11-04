@@ -29,7 +29,7 @@ import io.resys.thena.product.client.api.Product;
 public class ProductSamples {
   
   public static Product feemiSavingsInsurance() {
-    return new Product_Feemi_Savings().build();
+    return Product_Feemi_Savings.create();
   }
   
   public static Product feemiPensionInsurance() {

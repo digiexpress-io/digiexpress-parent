@@ -18,10 +18,9 @@
       <artifactId>thena-sql-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>thena-sql-client-annot-proc</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
-      
 
 
     <dependency>

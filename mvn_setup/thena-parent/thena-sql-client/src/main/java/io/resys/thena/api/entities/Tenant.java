@@ -34,5 +34,5 @@ public interface Tenant extends TenantEntity {
   @Nullable String getExternalId();
   StructureType getType();
   
-  enum StructureType { doc, git, org, grim, fs, batch }
+  enum StructureType { doc, git, org, grim, fs, batch, contract }
 }

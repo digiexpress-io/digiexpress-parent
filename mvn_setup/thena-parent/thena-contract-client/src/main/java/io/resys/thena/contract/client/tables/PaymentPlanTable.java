@@ -115,6 +115,21 @@ public interface PaymentPlanTable {
   )
   SqlTuple findAllByContractId(UUID contractId);
 
+  @TenantSql.FindAll(
+    sql = """
+      SELECT paymentplan.*, 
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {payment_plan} paymentplan
+      LEFT JOIN {commit} updated_commit ON paymentplan.commit_id = updated_commit.id
+      LEFT JOIN {commit} created_commit ON paymentplan.created_commit_id = created_commit.id
+      LEFT JOIN {contract} contract ON paymentplan.contract_id = contract.id
+    """,
+    rowMapper = PaymentPlanMapper.class,
+    sqlBuilder = ContractTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(ContractTableFilter filter);
+
   @TenantSql.Find(
     optional = false,
     sql = """

@@ -13,6 +13,18 @@
 
   <dependencyManagement>
     <dependencies>
+    
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-contract-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-product-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>eveli-user-profile</artifactId>
@@ -115,7 +127,12 @@
         <artifactId>stencil-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-sql-client-pg</artifactId>
+        <version>${project.version}</version>
+      </dependency>      
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-sql-client</artifactId>
