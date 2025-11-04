@@ -1,14 +1,15 @@
 import React from 'react';
-import { Typography, Button, Box, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Typography, Button, Box, Dialog, DialogTitle, DialogContent, DialogActions, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import { StencilApi } from '@dxs-ts/stencil-api';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { TemplateComposerRoot, useTemplateComposerUtilityClasses } from './useUtilityClasses';
 
 
 interface TemplateComposerProps {
@@ -16,7 +17,9 @@ interface TemplateComposerProps {
 }
 
 const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
+  const classes = useTemplateComposerUtilityClasses();
   const { enqueueSnackbar } = useSnackbar();
+  const intl = useIntl();
   const [name, setName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [content, setContent] = React.useState('');
@@ -41,45 +44,61 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
 
 
   return (
-  <Dialog open={true} onClose={onClose}>
-    <DialogTitle><FormattedMessage id='template.create' /></DialogTitle>
-    <DialogContent>
-      <Typography variant="body2" ><FormattedMessage id={"template.description"} /></Typography>
-      <Burger.TextField label='template.name' helperText='template.name.desc'
-        value={name}
-        onChange={setName} />
-  
-      <Burger.Select label='template.type'
-        selected={templateType}
-        onChange={setTemplateType}
-        helperText={"template.page.desc"}
-  
-        items={[
-          { id: 'page', value: <FormattedMessage id='template.page' /> },
-        ]} />
-  
-      <Burger.TextField label='template.desc' helperText='template.description.desc'
-        value={description}
-        onChange={setDescription} />
-  
-      <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold' }}><FormattedMessage id={"templates.intro"} /></Typography>
-  
-      <Box display="flex" flexDirection="row" flexWrap="wrap" sx={{ mt: 2 }}>
-        <Box flex="1" sx={{ paddingRight: 1 }}>
-          <MDEditor key={1} value={content} onChange={handleContentChange}
-            textareaProps={{ placeholder: '# Level 1 Header' }}
-            height={300}
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='template.create' /></DialogTitle>
+      <DialogContent>
+        <TemplateComposerRoot className={classes.root}>
+          <Typography variant="body2"><FormattedMessage id={"template.description"} /></Typography>
+          <Burger.TextField
+            label='template.name'
+            value={name}
+            onChange={setName}
           />
-        </Box>
-      </Box>
-    </DialogContent>
-    <DialogActions>
-      <CancelButton onClick={onClose} />
-      <Button onClick={handleCreate} disabled={!name || !content}>
-        <FormattedMessage id='button.add'/>
-      </Button>
-    </DialogActions>
-  </Dialog>
+          <Box className={classes.nameHelperRow}>
+            <FormHelperText className={classes.nameDesc}>
+              <FormattedMessage id='template.name.desc' />
+            </FormHelperText>
+            {!name && (
+              <FormHelperText error className={classes.nameError}>
+                {intl.formatMessage({ id: 'error.valueRequired' })}
+              </FormHelperText>
+            )}
+          </Box>
+
+          <Burger.Select label='template.type'
+            selected={templateType}
+            onChange={setTemplateType}
+            helperText={"template.page.desc"}
+
+            items={[
+              { id: 'page', value: <FormattedMessage id='template.page' /> },
+            ]} />
+
+          <Burger.TextField label='template.desc' helperText='template.description.desc'
+            value={description}
+            onChange={setDescription} />
+
+          <Typography variant="body2" className={classes.sectionTitle}>
+            <FormattedMessage id={"templates.intro"} />
+          </Typography>
+
+          <Box className={classes.editorRow}>
+            <Box className={classes.editorCol}>
+              <MDEditor key={1} value={content} onChange={handleContentChange}
+                textareaProps={{ placeholder: '# Level 1 Header' }}
+                height={300}
+              />
+            </Box>
+          </Box>
+        </TemplateComposerRoot>
+      </DialogContent>
+      <DialogActions>
+        <CancelButton onClick={onClose} />
+        <Button onClick={handleCreate} disabled={!name || !content}>
+          <FormattedMessage id='button.add' />
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
