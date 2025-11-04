@@ -233,7 +233,7 @@ public interface PaymentPlanTable {
         TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
         doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        doc.getPaymentPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getPaymentPlanEndDateInterval()),
         doc.getPaymentPlanEndDateType().orElse(null)
       });
     }
@@ -253,7 +253,7 @@ public interface PaymentPlanTable {
         TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
         doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        doc.getPaymentPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getPaymentPlanEndDateInterval()),
         doc.getPaymentPlanEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });

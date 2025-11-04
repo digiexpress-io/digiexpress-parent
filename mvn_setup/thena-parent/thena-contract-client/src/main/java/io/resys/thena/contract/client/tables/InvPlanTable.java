@@ -227,7 +227,7 @@ public interface InvPlanTable {
         TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
         doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        doc.getInvPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getInvPlanEndDateInterval()),
         doc.getInvPlanEndDateType().orElse(null)
       });
     }
@@ -247,7 +247,7 @@ public interface InvPlanTable {
         TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
         doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        doc.getInvPlanEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getInvPlanEndDateInterval()),
         doc.getInvPlanEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });

@@ -256,7 +256,7 @@ public interface CoverageTable {
         TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
         doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        doc.getCoverageTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getCoverageTermEndDateInterval()),
         doc.getCoverageTermEndDateType().orElse(null)
       });
     }
@@ -282,7 +282,7 @@ public interface CoverageTable {
         TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
         doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        doc.getCoverageTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getCoverageTermEndDateInterval()),
         doc.getCoverageTermEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });

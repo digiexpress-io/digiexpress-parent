@@ -233,7 +233,7 @@ public interface PartyTable {
         TableUtils.toInterval(doc.getPartyTermStartDateInterval()),
         doc.getPartyTermStartDateType(),
         doc.getPartyTermEndDate().orElse(null),
-        doc.getPartyTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getPartyTermEndDateInterval()),
         doc.getPartyTermEndDateType().orElse(null),
         doc.getPartyData().orElse(null)
       });
@@ -254,7 +254,7 @@ public interface PartyTable {
         TableUtils.toInterval(doc.getPartyTermStartDateInterval()),
         doc.getPartyTermStartDateType(),
         doc.getPartyTermEndDate().orElse(null),
-        doc.getPartyTermEndDateInterval().map(TableUtils::toInterval).orElse(null),
+        TableUtils.toIntervalOptional(doc.getPartyTermEndDateInterval()),
         doc.getPartyTermEndDateType().orElse(null),
         doc.getPartyData().orElse(null),
         TableUtils.toUuid(doc.getId())

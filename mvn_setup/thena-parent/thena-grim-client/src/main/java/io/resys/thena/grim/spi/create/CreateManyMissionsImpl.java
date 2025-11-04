@@ -39,7 +39,6 @@ import io.resys.thena.grim.spi.GrimDataSource.GrimBatchMissions;
 import io.resys.thena.grim.spi.GrimDataSource.GrimState;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
-import io.resys.thena.grim.spi.create.CreateOneMissionsImpl.CreateOneMissionException;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -90,8 +89,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
         tx.missionSequences().nextVal(this.missions.size())
         .onItem().transformToUni(nextVal -> createRequest(tx, nextVal))
         .onItem().transformToUni(request -> createResponse(tx, request))
-        .onFailure(CreateManyMissionException.class).recoverWithItem(ex -> {
-          final CreateOneMissionException error = (CreateOneMissionException) ex;          
+        .onFailure(CreateManyMissionException.class).recoverWithItem(error -> {
           return ImmutableManyMissionsEnvelope.builder()
             .repoId(tenantId)
             .addMessages(ImmutableMessage.builder()
@@ -110,7 +108,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   private Uni<ManyMissionsEnvelope> createResponse(GrimState tx, GrimBatchMissions request) {
     return tx.batchMany(request).onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-        throw new CreateOneMissionException("Failed to create missions!", rsp);
+        throw new CreateManyMissionException("Failed to create missions!", rsp);
       }
       
       final ManyMissionsEnvelope result = ImmutableManyMissionsEnvelope.builder()

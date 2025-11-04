@@ -1,8 +1,31 @@
 package io.resys.thena.contract.client.tables;
 
+/*-
+ * #%L
+ * thena-contract-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
+
 import io.vertx.pgclient.data.Interval;
+import io.vertx.sqlclient.data.NullValue;
 
 public class TableUtils {
 
@@ -129,13 +152,27 @@ public class TableUtils {
   }
   
   /**
-   * Safely converts a Duration to PostgreSQL Interval, returning null for null input.
+   * Converts an Optional Duration to PostgreSQL Interval or NullValue.
+   * 
+   * @param optionalDuration the Optional Duration to convert
+   * @return Interval object or NullValue.of(Interval.class) if empty
+   * @throws IllegalArgumentException if the duration is present but cannot be converted
+   */
+  public static Object toIntervalOptional(Optional<Duration> optionalDuration) {
+    if(optionalDuration.isEmpty()) {
+      return NullValue.of(Interval.class);
+    }
+    return optionalDuration.map(TableUtils::toInterval);
+  }
+  
+  /**
+   * Safely converts a Duration to PostgreSQL Interval, returning NullValue for null input.
    * 
    * @param duration the Duration to convert (can be null)
-   * @return Interval object or null if input is null
+   * @return Interval object or NullValue.of(Interval.class) if input is null
    * @throws IllegalArgumentException if the duration is not null but cannot be converted
    */
-  public static Interval toIntervalSafe(Duration duration) {
-    return duration == null ? null : toInterval(duration);
+  public static Object toIntervalSafe(Duration duration) {
+    return duration == null ? NullValue.of(Interval.class) : toInterval(duration);
   }
 }
