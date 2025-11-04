@@ -197,10 +197,10 @@ public interface InvPlanAllocTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlanAlloc doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getInvPlanId(),
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
+        UUID.fromString(doc.getId()),
+        UUID.fromString(doc.getInvPlanId()),
+        UUID.fromString(doc.getCommitId()),
+        UUID.fromString(doc.getCreatedCommitId()),
         doc.getInvPlanAllocCode(),
         doc.getInvPlanAllocName(),
         doc.getInvPlanAllocPercentage(),
@@ -213,13 +213,13 @@ public interface InvPlanAllocTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlanAlloc doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getInvPlanId(),
-        doc.getCommitId(),
+        UUID.fromString(doc.getInvPlanId()),
+        UUID.fromString(doc.getCommitId()),
         doc.getInvPlanAllocCode(),
         doc.getInvPlanAllocName(),
         doc.getInvPlanAllocPercentage(),
         doc.getInvPlanAllocStatus(),
-        doc.getId()
+        UUID.fromString(doc.getId())
       });
     }
   }
@@ -228,7 +228,7 @@ public interface InvPlanAllocTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlanAlloc invPlanAlloc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        invPlanAlloc.getId()
+        UUID.fromString(invPlanAlloc.getId())
       });
     }
   }

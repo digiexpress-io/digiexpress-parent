@@ -221,11 +221,11 @@ public interface PartyTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Party doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getContractId(),
+        UUID.fromString(doc.getId()),
+        UUID.fromString(doc.getContractId()),
         doc.getExternalId(),
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
+        UUID.fromString(doc.getCommitId()),
+        UUID.fromString(doc.getCreatedCommitId()),
         doc.getPartyType(),
         doc.getPartyEffectiveFrom(),
         doc.getPartyEffectiveTo().orElse(null),
@@ -244,9 +244,9 @@ public interface PartyTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Party doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getContractId(),
+        UUID.fromString(doc.getContractId()),
         doc.getExternalId(),
-        doc.getCommitId(),
+        UUID.fromString(doc.getCommitId()),
         doc.getPartyType(),
         doc.getPartyEffectiveFrom(),
         doc.getPartyEffectiveTo().orElse(null),
@@ -257,7 +257,7 @@ public interface PartyTable {
         doc.getPartyTermEndDateInterval().orElse(null),
         doc.getPartyTermEndDateType().orElse(null),
         doc.getPartyData().orElse(null),
-        doc.getId()
+        UUID.fromString(doc.getId())
       });
     }
   }
@@ -266,7 +266,7 @@ public interface PartyTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Party party) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        party.getId()
+        UUID.fromString(party.getId())
       });
     }
   }

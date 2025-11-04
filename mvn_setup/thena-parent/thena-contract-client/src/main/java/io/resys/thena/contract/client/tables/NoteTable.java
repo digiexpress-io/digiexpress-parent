@@ -253,14 +253,14 @@ public interface NoteTable {
       }
 
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getContractId(),
-        inv_plan_id,
-        inv_plan_alloc_id,
-        coverage_id,
-        party_id,
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
+        UUID.fromString(doc.getId()),
+        UUID.fromString(doc.getContractId()),
+        inv_plan_id != null ? UUID.fromString(inv_plan_id) : null,
+        inv_plan_alloc_id != null ? UUID.fromString(inv_plan_alloc_id) : null,
+        coverage_id != null ? UUID.fromString(coverage_id) : null,
+        party_id != null ? UUID.fromString(party_id) : null,
+        UUID.fromString(doc.getCommitId()),
+        UUID.fromString(doc.getCreatedCommitId()),
         doc.getNoteValue(),
         doc.getNoteType(),
         doc.getNoteBody().orElse(null)
@@ -287,16 +287,16 @@ public interface NoteTable {
       }
 
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getContractId(),
-        inv_plan_id,
-        inv_plan_alloc_id,
-        coverage_id,
-        party_id,
-        doc.getCommitId(),
+        UUID.fromString(doc.getContractId()),
+        inv_plan_id != null ? UUID.fromString(inv_plan_id) : null,
+        inv_plan_alloc_id != null ? UUID.fromString(inv_plan_alloc_id) : null,
+        coverage_id != null ? UUID.fromString(coverage_id) : null,
+        party_id != null ? UUID.fromString(party_id) : null,
+        UUID.fromString(doc.getCommitId()),
         doc.getNoteValue(),
         doc.getNoteType(),
         doc.getNoteBody().orElse(null),
-        doc.getId()
+        UUID.fromString(doc.getId())
       });
     }
   }
@@ -305,7 +305,7 @@ public interface NoteTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Note note) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        note.getId()
+        UUID.fromString(note.getId())
       });
     }
   }
