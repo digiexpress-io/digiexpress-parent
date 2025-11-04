@@ -122,7 +122,7 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
 
       </DialogTitle>
       <DialogContent>
-        <Typography className={classes.subTitle}>{feedback.feedback.content.title}</Typography>
+        <Typography className={classes.subTitle}>{feedback.feedback.customerTitle}</Typography>
         <Typography>{feedback.feedback.content.question}</Typography>
 
         <Divider className={classes.contentDivider} />

@@ -105,7 +105,7 @@ VALUES
      categeoryStm.setString(2, JsonObject.mapFrom(command.getContent()).encode());
      categeoryStm.setString(3, command.getLocale());
      categeoryStm.setString(4, command.getLabelValue().trim());
-     categeoryStm.setObject(5, command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());
+     categeoryStm.setObject(5, command.getSubLabelValue() == null || command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());
      categeoryStm.setString(6, command.getTaskId());
      
      categeoryStm.setObject(7, now);
@@ -139,7 +139,7 @@ VALUES
     ProcessAssert.notEmpty(userId, () -> "user id can't be empty!");
     
     final var labelKey = command.getLabelKey().trim().toUpperCase();
-    final var labelSubKey = command.getSubLabelKey().isBlank() ? null : command.getSubLabelKey().trim().toUpperCase();
+    final var labelSubKey = command.getSubLabelKey() == null || command.getSubLabelKey().isBlank() ? null : command.getSubLabelKey().trim().toUpperCase();
     
     
     jdbc.execute((Connection connection) -> connection.prepareStatement(
