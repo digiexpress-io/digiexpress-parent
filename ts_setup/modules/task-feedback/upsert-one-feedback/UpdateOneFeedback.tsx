@@ -37,6 +37,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [savedReply, setSavedReply] = React.useState<string>('');
   const [main, setMain] = React.useState({ labelKey: '', labelValue: '' });
+  const [sub, setSub] = React.useState({ subLabelKey: '', subLabelValue: '' });
 
 
   const mapToLocalState = React.useCallback((resp: FeedbackApi.Feedback | undefined) => {
@@ -45,6 +46,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
     setQuestion(resp?.content?.question ?? '');
     setSavedReply(resp?.replyText ?? '');
     setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
+    setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
     setCustomerTitle(resp?.customerTitle ?? '')
   }, []);
 
@@ -67,6 +69,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
 
       labelKey: main.labelKey,
       labelValue: main.labelValue,
+      subLabelKey: sub.subLabelKey,
+      subLabelValue: sub.subLabelValue,
 
       customerTitle: customerTitle
     };
