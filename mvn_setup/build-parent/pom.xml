@@ -28,7 +28,7 @@
     <spring-cloud-gcp.version>7.3.1</spring-cloud-gcp.version>
     <jackson.version>2.19.2</jackson.version>
 
-    <quarkus.version>3.15.3</quarkus.version>
+    <quarkus.version>3.29.0</quarkus.version>
     <lombok.version>1.18.42</lombok.version>
 
     <immutables.version>2.11.3</immutables.version>
