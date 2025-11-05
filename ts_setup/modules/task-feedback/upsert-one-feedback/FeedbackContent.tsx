@@ -74,16 +74,12 @@ export const FeedbackContent: React.FC<{
 const FeedbackTopicSelect: React.FC<{
   onChange: (value: FeedbackApi.FeedbackTopicItem) => void,
   label: string;
-  values: FeedbackApi.FeedbackTopicItem[],
   value: string;
-}> = ({ onChange, value: initValue, values, label }) => {
+  values: FeedbackApi.FeedbackTopicItem[],
+}> = ({ onChange, value, values, label }) => {
 
-  const value = initValue.toLocaleLowerCase();
-  const invalid = !values.find(topic => topic.labelKey === value);
 
-  if (invalid) {
-    //console.error("CANT FIND VALUE", value);
-  }
+  const found = values.find(topic => topic.labelKey.endsWith(`.${value}`))?.labelKey;
 
   return (
     <Box sx={{ minWidth: 120 }}>
@@ -91,17 +87,21 @@ const FeedbackTopicSelect: React.FC<{
         <InputLabel>
           <Typography fontWeight='bold'>{label}</Typography>
         </InputLabel>
-        <Select value={value} label={label}>
-          {invalid && (
-            <MenuItem key={value} value={value} onClick={() => { }}>
-              * not translated {value}
-            </MenuItem>)
+        <Select value={found ?? value} label={label}>
+          {values
+            .filter(({ labelKey }) => {
+              const isFailsafe = labelKey === value;
+              if(found && isFailsafe) {
+                return false
+              }
+              return true;
+            })
+            .map(topic => (
+              <MenuItem key={topic.labelKey} value={topic.labelKey} onClick={() => onChange(topic)}>
+                {topic.labelValue}
+              </MenuItem>
+            ))
           }
-          {values.map(topic => (
-            <MenuItem key={topic.labelKey} value={topic.labelKey} onClick={() => onChange(topic)}>
-              {topic.labelValue}
-            </MenuItem>
-          ))}
         </Select>
       </FormControl>
     </Box>
