@@ -5,24 +5,22 @@ export const TemplateComposerClassName = 'TemplateComposer';
 
 export interface TemplateComposerClasses {
   root: string;
-  nameHelperRow: string;
   nameDesc: string;
-  nameError: string;
   sectionTitle: string;
   editorRow: string;
   editorCol: string;
+  helperText: string;
 }
 export type TemplateComposerClassKey = keyof TemplateComposerClasses;
 
 export const useTemplateComposerUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    nameHelperRow: ['nameHelperRow'],
     nameDesc: ['nameDesc'],
-    nameError: ['nameError'],
     sectionTitle: ['sectionTitle'],
     editorRow: ['editorRow'],
     editorCol: ['editorCol'],
+    helperText: ['helperText']
   };
   const getUtilityClass = (slot: string) =>
     generateUtilityClass(TemplateComposerClassName, slot);
@@ -36,31 +34,18 @@ export const TemplateComposerRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => [
     styles.root,
-    styles.nameHelperRow,
     styles.nameDesc,
-    styles.nameError,
     styles.sectionTitle,
     styles.editorRow,
     styles.editorCol,
   ],
 })(({ theme }) => ({
-  '& .TemplateComposer-nameHelperRow': {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    marginTop: theme.spacing(0.5),
-    marginLeft: theme.spacing(2),
-    gap: theme.spacing(1),
-  },
-
   '& .TemplateComposer-nameDesc': {
     margin: 0,
   },
-
-  '& .TemplateComposer-nameError': {
-    margin: 0,
+  '& .TemplateComposer-helperText': {
     marginLeft: theme.spacing(2),
   },
-
   '& .TemplateComposer-sectionTitle': {
     marginTop: theme.spacing(2),
     fontWeight: 700,

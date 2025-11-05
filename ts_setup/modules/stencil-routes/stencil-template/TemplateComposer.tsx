@@ -54,25 +54,16 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
             value={name}
             onChange={setName}
           />
-          <Box className={classes.nameHelperRow}>
-            <FormHelperText className={classes.nameDesc}>
-              <FormattedMessage id='template.name.desc' />
-            </FormHelperText>
-            {!name && (
-              <FormHelperText error className={classes.nameError}>
-                {intl.formatMessage({ id: 'error.valueRequired' })}
-              </FormHelperText>
-            )}
+          <Box>
+            {!name && <FormHelperText error className={classes.helperText}>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
           </Box>
 
           <Burger.Select label='template.type'
             selected={templateType}
             onChange={setTemplateType}
-            helperText={"template.page.desc"}
-
-            items={[
-              { id: 'page', value: <FormattedMessage id='template.page' /> },
-            ]} />
+            helperText="template.page.desc"
+            items={[{ id: 'page', value: <FormattedMessage id='template.page' /> }]}
+          />
 
           <Burger.TextField label='template.desc' helperText='template.description.desc'
             value={description}
