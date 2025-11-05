@@ -84,13 +84,12 @@ import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
-import io.quarkus.vertx.runtime.jackson.JsonArrayDeserializer;
-import io.quarkus.vertx.runtime.jackson.JsonArraySerializer;
-import io.quarkus.vertx.runtime.jackson.JsonObjectDeserializer;
-import io.quarkus.vertx.runtime.jackson.JsonObjectSerializer;
 import io.resys.thena.grim.spi.GrimClientImpl;
+import io.resys.thena.jackson.JsonArrayDeserializer;
+import io.resys.thena.jackson.JsonObjectDeserializer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
@@ -270,9 +269,7 @@ public class EveliAutoConfig {
 
   @Bean
   public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
-      SimpleModule module = new SimpleModule("vertx-module-json");
-      module.addSerializer(JsonObject.class, new JsonObjectSerializer());
-      module.addSerializer(JsonArray.class, new JsonArraySerializer());
+      SimpleModule module = new VertxModule();
       module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
       module.addDeserializer(JsonArray.class, new JsonArrayDeserializer());
       

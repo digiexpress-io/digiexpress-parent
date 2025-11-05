@@ -23,9 +23,7 @@ package io.resys.hdes.client.test.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
 
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesComposer;
@@ -43,8 +41,6 @@ import io.resys.thena.git.api.GitDataSource;
 import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.resys.thena.git.spi.GitPrinter;
 import io.resys.thena.test.ThenaTest;
-import io.vertx.mutiny.sqlclient.Pool;
-import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

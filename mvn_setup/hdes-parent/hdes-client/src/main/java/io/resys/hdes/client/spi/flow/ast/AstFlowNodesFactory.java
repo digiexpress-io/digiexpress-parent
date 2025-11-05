@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import io.quarkus.logging.Log;
 import io.resys.hdes.client.api.HdesAstTypes.DataTypeAstBuilder;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
