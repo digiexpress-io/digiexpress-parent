@@ -28,7 +28,7 @@
     <spring-cloud-gcp.version>7.3.1</spring-cloud-gcp.version>
     <jackson.version>2.19.2</jackson.version>
 
-    <quarkus.version>3.29.0</quarkus.version>
+
     <lombok.version>1.18.42</lombok.version>
 
     <immutables.version>2.11.3</immutables.version>
@@ -45,6 +45,7 @@
     
     <dialob.version>3.0.1</dialob.version>
     <dialob-b.version>2.2.9</dialob-b.version>
+    <expressly.version>6.0.0</expressly.version>
     
     <javafaker.version>1.0.2</javafaker.version>
     
@@ -66,13 +67,6 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <quarkus.log.level>INFO</quarkus.log.level>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -241,7 +235,8 @@
         <artifactId>dialob-api</artifactId>
         <version>${dialob.version}</version>
       </dependency>
-      
+
+    
       <dependency>
         <groupId>io.dialob</groupId>
         <artifactId>dialob-bom</artifactId>
@@ -249,7 +244,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-    
+      <dependency>
+        <groupId>org.glassfish.expressly</groupId>
+        <artifactId>expressly</artifactId>
+        <version>${expressly.version}</version>
+      </dependency>
+      
     
       <dependency>
         <groupId>io.digiexpress</groupId>
@@ -390,13 +390,6 @@
       
       
       <!-- Quarkus -->
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bom</artifactId>
-        <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>io.smallrye.reactive</groupId>
         <artifactId>mutiny-bom</artifactId>
