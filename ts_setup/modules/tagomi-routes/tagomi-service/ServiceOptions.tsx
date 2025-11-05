@@ -12,6 +12,7 @@ import { useTagomiNav } from '../tagomi-nav';
 import { ServiceEdit } from './ServiceEdit';
 import { ServiceDelete } from './ServiceDelete';
 import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../tagomi-template';
+import { TemplateDependenciesAdd } from '../tagomi-dependencies';
 import { DebugLocale } from '../tagomi-debug';
 
 
@@ -30,7 +31,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
     'TemplateEdit' | 
     'TemplateDelete' | 
     'ServiceDelete' |
-    'DebugLocale'
+    'DebugLocale' |
+    'DependenciesAdd'
   >(undefined);
 
   const handleDialogClose = () => setDialogOpen(undefined);
@@ -43,6 +45,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       {dialogOpen === 'TemplateEdit' ? <TemplateLocaleEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'TemplateDelete' ? <TemplateDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'DebugLocale' ? <DebugLocale serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'DependenciesAdd' ? <TemplateDependenciesAdd serviceId={service.id} onClose={handleDialogClose} /> : null}
+
 
       {/** Article options */}
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
@@ -51,6 +55,7 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         onClick={() => setDialogOpen('ServiceEdit')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.edit' })}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
         color='primary'
         icon={DeleteOutlineOutlinedIcon}
@@ -66,11 +71,19 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         onClick={() => setDialogOpen('NewTemplate')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.templates.create' })} >
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={service.id + 'pages.change'}
         color='page'
         icon={EditIcon}
         onClick={() => setDialogOpen('TemplateEdit')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.template.changeLocale' })}>
+      </Burger.TreeItemOption>
+
+      <Burger.TreeItemOption nodeId={service.id + 'dependencies.add'}
+        color='page'
+        icon={EditIcon}
+        onClick={() => setDialogOpen('DependenciesAdd')}
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.template.addDependencies' })}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={service.id + 'pages.delete'}
@@ -79,7 +92,6 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         onClick={() => setDialogOpen('TemplateDelete')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.template.delete' })}>
       </Burger.TreeItemOption>
-
 
       <Burger.TreeItemOption nodeId={service.id + 'pages.debug'}
         color='page'
