@@ -24,21 +24,12 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 
-import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableNotificationSetting;
-import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettingForConfig;
-import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUpsertUiSettings;
-import io.digiexpress.eveli.userprofile.client.api.model.UserProfile;
-import io.digiexpress.eveli.userprofile.client.tests.config.UserProfilePgProfile;
 import io.digiexpress.eveli.userprofile.client.tests.config.UserProfileTestCase;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@QuarkusTest
-@TestProfile(UserProfilePgProfile.class)
 public class UiSettingsCreateTest extends UserProfileTestCase {
 
 

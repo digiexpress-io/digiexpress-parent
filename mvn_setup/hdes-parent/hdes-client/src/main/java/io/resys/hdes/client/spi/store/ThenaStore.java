@@ -109,7 +109,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
     private ObjectMapper objectMapper;
     private ThenaConfig.GidProvider gidProvider;
     private ThenaConfig.AuthorProvider authorProvider;
-    private io.vertx.mutiny.pgclient.PgPool pgPool;
+    private io.vertx.mutiny.sqlclient.Pool pgPool;
     private String pgHost;
     private String pgDb;
     private Integer pgPort;
@@ -133,7 +133,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
       this.authorProvider = authorProvider;
       return this;
     }
-    public Builder pgPool(io.vertx.mutiny.pgclient.PgPool pgPool) {
+    public Builder pgPool(io.vertx.mutiny.sqlclient.Pool pgPool) {
       this.pgPool = pgPool;
       return this;
     }
@@ -241,7 +241,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
         final PoolOptions poolOptions = new PoolOptions()
             .setMaxSize(pgPoolSize);
         
-        final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
+        final io.vertx.mutiny.sqlclient.Pool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
         
         thena = GitDataSourceImpl.create().client(pgPool).db(repoName).build();
       } else {

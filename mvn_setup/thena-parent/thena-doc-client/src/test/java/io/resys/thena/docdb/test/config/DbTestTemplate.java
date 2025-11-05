@@ -1,41 +1,10 @@
 package io.resys.thena.docdb.test.config;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
-
-import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.datasource.TenantCacheImpl;
-import io.resys.thena.datasource.TenantContext;
-import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
-import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
-import io.resys.thena.doc.api.DocClient;
-import io.resys.thena.doc.api.DocDataSource;
-import io.resys.thena.doc.spi.DocClientImpl;
-import io.resys.thena.doc.spi.DocDataSourceImpl;
-import io.resys.thena.doc.spi.support.DocDbPrinter;
-import io.resys.thena.storesql.PgErrors;
-import io.vertx.core.json.JsonObject;
-import io.vertx.mutiny.sqlclient.Pool;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
-
 /*-
  * #%L
- * thena-docdb-pgsql
+ * thena-doc-client
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,21 +20,45 @@ import io.vertx.sqlclient.PoolOptions;
  * #L%
  */
 
-import jakarta.inject.Inject;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.TenantCacheImpl;
+import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
+import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
+import io.resys.thena.doc.api.DocClient;
+import io.resys.thena.doc.api.DocDataSource;
+import io.resys.thena.doc.spi.DocClientImpl;
+import io.resys.thena.doc.spi.DocDataSourceImpl;
+import io.resys.thena.doc.spi.support.DocDbPrinter;
+import io.resys.thena.storesql.PgErrors;
+import io.resys.thena.test.ThenaTest;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
+@ThenaTest
 public class DbTestTemplate {
-	private boolean STORE_TO_DEBUG_DB = false;
   private DocClient client;
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
-  @Inject io.vertx.mutiny.core.Vertx vertx;
+  io.vertx.mutiny.sqlclient.Pool pgPool;
   protected static Duration atMost = Duration.ofMinutes(1);
   
   private static AtomicInteger index = new AtomicInteger(1);
   private BiConsumer<DocClient, Tenant> callback;
-  private String db;
   private Tenant repo;
   private final Map<String, String> replacements = new HashMap<>();
 
@@ -76,26 +69,12 @@ public class DbTestTemplate {
     this.callback = callback;
   }  
   
-  private void connectToDebugDb() {
-  	if(!STORE_TO_DEBUG_DB) {
-  		return;
-  	}
-  	
-  	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("eveli-app")
-        .setHost("localhost")
-        .setPort(5433)
-        .setUser("eveli-app")
-        .setPassword("password123");
-    final var poolOptions = new PoolOptions().setMaxSize(6);
-    this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
-  }
+
   
   @BeforeEach
-  public void setUp(TestInfo testInfo) throws InterruptedException {
-    replacements.clear();
-  	connectToDebugDb();
-    waitUntilPostgresqlAcceptsConnections(pgPool);
+  public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) throws InterruptedException {
+    this.pgPool = pgPool;
+    this.replacements.clear();
 
     final var repoName = "junit";
     final var tenantCache = new TenantCacheImpl();
@@ -118,15 +97,6 @@ public class DbTestTemplate {
     }
   }
 
-  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
-    // On some platforms there may be some delay before postgresql starts to respond.
-    // Try until postgresql connection is successfully opened.
-    var connection = pool.getConnection()
-      .onFailure()
-      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
-      .await().atMost(Duration.ofSeconds(60));
-    connection.closeAndForget();
-  }
 
   @AfterEach
   public void tearDown() {

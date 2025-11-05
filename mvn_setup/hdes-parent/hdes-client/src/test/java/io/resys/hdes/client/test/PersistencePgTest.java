@@ -26,8 +26,6 @@ import java.time.Duration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ImmutableCreateStoreEntity;
 import io.resys.hdes.client.api.ImmutableDeleteAstType;
@@ -36,11 +34,9 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
 import io.resys.hdes.client.api.ast.ImmutableAstCommand;
 import io.resys.hdes.client.spi.util.RepositoryToStaticData;
-import io.resys.hdes.client.test.config.PgProfile;
 import io.resys.hdes.client.test.config.PgTestTemplate;
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+
 public class PersistencePgTest extends PgTestTemplate {
 
   @Test

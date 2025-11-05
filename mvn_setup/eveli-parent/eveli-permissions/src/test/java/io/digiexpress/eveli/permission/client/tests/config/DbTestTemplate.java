@@ -1,38 +1,10 @@
 package io.digiexpress.eveli.permission.client.tests.config;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
-
-import io.digiexpress.eveli.permission.client.api.PermissionClient;
-import io.digiexpress.eveli.permission.client.spi.PermissionClientImpl;
-import io.digiexpress.eveli.permission.client.spi.PermissionStore;
-import io.digiexpress.eveli.permission.client.spi.PermissionStoreImpl;
-import io.resys.thena.api.ThenaClient;
-import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.datasource.TenantCacheImpl;
-import io.resys.thena.datasource.TenantContext;
-import io.resys.thena.spi.DbState;
-import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.support.OrgDbPrinter;
-import io.vertx.core.json.JsonObject;
-import io.vertx.mutiny.sqlclient.Pool;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
-
 /*-
  * #%L
- * thena-docdb-pgsql
+ * eveli-permissions
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,16 +20,39 @@ import io.vertx.sqlclient.PoolOptions;
  * #L%
  */
 
-import jakarta.inject.Inject;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+
+import io.digiexpress.eveli.permission.client.api.PermissionClient;
+import io.digiexpress.eveli.permission.client.spi.PermissionClientImpl;
+import io.digiexpress.eveli.permission.client.spi.PermissionStore;
+import io.digiexpress.eveli.permission.client.spi.PermissionStoreImpl;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.TenantCacheImpl;
+import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.spi.DbState;
+import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.support.OrgDbPrinter;
+import io.resys.thena.test.ThenaTest;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Pool;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
+@ThenaTest
 public class DbTestTemplate {
-	private boolean STORE_TO_DEBUG_DB = false;
   private ThenaClient docDb;
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
-  @Inject io.vertx.mutiny.core.Vertx vertx;
+  io.vertx.mutiny.sqlclient.Pool pgPool;
   
   private String db;
   private static final String DB = "junit-perm-"; 
@@ -68,25 +63,11 @@ public class DbTestTemplate {
   private final Map<String, String> replacements = new HashMap<>();
   
 
-  private void connectToDebugDb() {
-  	if(!STORE_TO_DEBUG_DB) {
-  		return;
-  	}
-  	
-  	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("debug_org_db")
-        .setHost("localhost")
-        .setPort(5432)
-        .setUser("postgres")
-        .setPassword("postgres");
-    final var poolOptions = new PoolOptions().setMaxSize(6);
-    this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
-  }
-  
   @BeforeEach
-  public void setUp(TestInfo testInfo) throws InterruptedException {
-    replacements.clear();
-  	connectToDebugDb();
+  public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) throws InterruptedException {
+    this.pgPool = pgPool;
+    this.replacements.clear();
+
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
 

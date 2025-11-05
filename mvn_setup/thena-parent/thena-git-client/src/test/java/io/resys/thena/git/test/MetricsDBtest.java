@@ -26,25 +26,18 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.git.test.config.DbTestTemplate;
-import io.resys.thena.git.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
-//-Djava.util.logging.manager=org.jboss.logmanager.LogManager
 
 @Disabled
 @Slf4j
-@QuarkusTest
-@TestProfile(PgProfile.class)
-@SuppressWarnings("unused")
 public class MetricsDBtest extends DbTestTemplate {
 
   //@org.junit.jupiter.api.Test

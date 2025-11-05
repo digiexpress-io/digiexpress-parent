@@ -27,20 +27,15 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.git.api.GitPullActions.MatchCriteriaType;
 import io.resys.thena.git.api.ImmutableMatchCriteria;
 import io.resys.thena.git.test.config.DbTestTemplate;
-import io.resys.thena.git.test.config.PgProfile;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@QuarkusTest
-@TestProfile(PgProfile.class)
 public class SearchBlobFromHistoryDBTest extends DbTestTemplate {
 
   

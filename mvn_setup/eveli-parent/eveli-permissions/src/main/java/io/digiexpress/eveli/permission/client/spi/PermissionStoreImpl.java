@@ -169,7 +169,7 @@ public class PermissionStoreImpl implements PermissionStore {
     private String repoName;
     private ObjectMapper objectMapper;
     private PermissionAuthorProvider authorProvider;
-    private io.vertx.mutiny.pgclient.PgPool pgPool;
+    private io.vertx.mutiny.sqlclient.Pool pgPool;
     private String pgHost;
     private String pgDb;
     private Integer pgPort;

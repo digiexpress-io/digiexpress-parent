@@ -32,16 +32,11 @@ import io.digiexpress.eveli.permission.client.api.model.ImmutableCreateRole;
 import io.digiexpress.eveli.permission.client.api.model.Principal.Permission;
 import io.digiexpress.eveli.permission.client.api.model.Principal.Role;
 import io.digiexpress.eveli.permission.client.tests.config.DbTestTemplate;
-import io.digiexpress.eveli.permission.client.tests.config.OrgPgProfile;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.vertx.core.json.Json;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@QuarkusTest
-@TestProfile(OrgPgProfile.class)
 public class PrincipalHierarchyTest extends DbTestTemplate {
   
   private Permission createPermission(PermissionClient client, String name) {

@@ -11,7 +11,6 @@ import java.util.function.BiConsumer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
@@ -22,10 +21,8 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.fs.FsPrinter;
 import io.resys.thena.support.OrgDbPrinter;
+import io.resys.thena.test.ThenaTest;
 import io.vertx.core.json.JsonObject;
-import io.vertx.mutiny.sqlclient.Pool;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
 
 /*-
  * #%L
@@ -52,11 +49,11 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
+@ThenaTest
 public class DbTestTemplate {
-	private boolean STORE_TO_DEBUG_DB = false;
   private ThenaClient client;
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
-  @Inject io.vertx.mutiny.core.Vertx vertx;
+  @Inject io.vertx.mutiny.sqlclient.Pool pgPool;
+
   protected static Duration atMost = Duration.ofMinutes(1);
   
   private static AtomicInteger index = new AtomicInteger(1);
@@ -72,26 +69,11 @@ public class DbTestTemplate {
     this.callback = callback;
   }  
   
-  private void connectToDebugDb() {
-  	if(!STORE_TO_DEBUG_DB) {
-  		return;
-  	}
-  	
-  	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("eveli-app")
-        .setHost("localhost")
-        .setPort(5433)
-        .setUser("eveli-app")
-        .setPassword("password123");
-    final var poolOptions = new PoolOptions().setMaxSize(6);
-    this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
-  }
-  
+
   @BeforeEach
-  public void setUp(TestInfo testInfo) throws InterruptedException {
-    replacements.clear();
-  	connectToDebugDb();
-    waitUntilPostgresqlAcceptsConnections(pgPool);
+  public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) throws InterruptedException {
+    this.replacements.clear();
+    this.pgPool = pgPool;
 
     this.client = DbStateSqlImpl.create().db("junit").client(pgPool).build();
     if(callback != null) {
@@ -101,16 +83,6 @@ public class DbTestTemplate {
           .await().atMost(Duration.ofSeconds(10)).getRepo();
       callback.accept(client, repo);
     }
-  }
-
-  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
-    // On some platforms there may be some delay before postgresql starts to respond.
-    // Try until postgresql connection is successfully opened.
-    var connection = pool.getConnection()
-      .onFailure()
-      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
-      .await().atMost(Duration.ofSeconds(60));
-    connection.closeAndForget();
   }
 
   @AfterEach

@@ -40,15 +40,15 @@ import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.resys.thena.doc.spi.support.DocDbPrinter;
+import io.resys.thena.test.ThenaTest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
-import io.vertx.mutiny.sqlclient.Pool;
-import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@ThenaTest
 public class UserProfileTestCase {
-  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
+  io.vertx.mutiny.sqlclient.Pool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
   private UserProfileStore store;
@@ -58,8 +58,8 @@ public class UserProfileTestCase {
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
   
   @BeforeEach
-  public void setUp() {
-    waitUntilPostgresqlAcceptsConnections(pgPool);
+  public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) {
+    this.pgPool = pgPool;
     final var db = DB + DB_ID.getAndIncrement();
     store = UserProfileStore.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
@@ -67,16 +67,6 @@ public class UserProfileTestCase {
     client = new UserProfileClientImpl(store);
     objectMapper();
     
-  }
-
-  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
-    // On some platforms there may be some delay before postgresql starts to respond.
-    // Try until postgresql connection is successfully opened.
-    var connection = pool.getConnection()
-      .onFailure()
-      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
-      .await().atMost(Duration.ofSeconds(60));
-    connection.closeAndForget();
   }
 
   public static ObjectMapper objectMapper() {

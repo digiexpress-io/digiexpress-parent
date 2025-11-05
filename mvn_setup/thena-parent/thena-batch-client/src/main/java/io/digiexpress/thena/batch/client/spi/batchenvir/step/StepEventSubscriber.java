@@ -36,6 +36,7 @@ import io.vertx.core.json.JsonObject;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -149,6 +150,7 @@ public class StepEventSubscriber implements MultiSubscriber<StepEvent> {
   }
   
   
+  @Jacksonized
   @Data @Builder
   public static class MetricBody {
     private final String stepName;

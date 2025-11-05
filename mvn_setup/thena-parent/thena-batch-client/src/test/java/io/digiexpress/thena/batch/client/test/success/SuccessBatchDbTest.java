@@ -32,15 +32,10 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeExe
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepEventSubscriber.MetricBody;
 import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
-import io.digiexpress.thena.batch.client.test.config.PgProfile;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
 @Slf4j
 public class SuccessBatchDbTest extends DbTestTemplate {
   final String batchName = "run-all-dialob-related-tasks";
@@ -50,10 +45,7 @@ public class SuccessBatchDbTest extends DbTestTemplate {
   public void setUp() {
     client = getOrCreateTenant("success-batch-test");
   }
-  
-
-
-  
+    
   @Test
   public void CreateOneBatch() {
     setUp();

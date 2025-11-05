@@ -37,6 +37,12 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>thena-test-client</artifactId>
+    </dependency>
+    
+    
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-git-client</artifactId>
     </dependency>
     <dependency>
@@ -93,10 +99,5 @@
       <artifactId>java-diff-utils</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 </project>

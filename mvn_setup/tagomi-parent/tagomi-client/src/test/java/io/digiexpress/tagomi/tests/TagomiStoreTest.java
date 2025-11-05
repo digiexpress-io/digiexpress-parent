@@ -34,13 +34,9 @@ import io.digiexpress.tagomi.api.commands.ImmutableCreateTemplate;
 import io.digiexpress.tagomi.api.commands.ImmutableLocaleMutator;
 import io.digiexpress.tagomi.api.commands.ImmutableResourceMutator;
 import io.digiexpress.tagomi.api.commands.ImmutableTemplateMutator;
-import io.digiexpress.tagomi.tests.config.PgProfile;
 import io.digiexpress.tagomi.tests.config.PgTestTemplate;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+
 public class TagomiStoreTest extends PgTestTemplate {
   
 
