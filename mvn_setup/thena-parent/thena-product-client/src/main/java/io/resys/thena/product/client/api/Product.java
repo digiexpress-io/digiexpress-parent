@@ -83,7 +83,7 @@ public interface Product {
     return Optional.empty();
   }
   
-  default List<InvestmentOption> extractInvestmentOptions() {
+  default List<InvestmentOption> getInvestmentOptions() {
     List<ProductRule> investmentRules = this.getRulesBySubType(RuleSubType.OPTIONS)
       .stream()
       .filter(rule -> rule.getType() == RuleType.INVESTMENT)
@@ -106,7 +106,7 @@ public interface Product {
       .collect(Collectors.toList());
   }
   
-  default AllocationRules extractAllocationRules() {
+  default AllocationRules getAllocationRules() {
     final Optional<ProductRule> allocationRule = this.getRuleByCode(ProductRuleCodes.CODE_INVESTMENT_013_ALLOCATION_MIN);
     
     BigDecimal minPercentage = BigDecimal.ZERO;

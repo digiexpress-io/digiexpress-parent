@@ -149,7 +149,7 @@ public class Contract_Provider {
    * Determines risk profile based on product's investment options
    */
   private static String determineRiskProfile(Product product) {
-    final var investmentOptions = product.extractInvestmentOptions();
+    final var investmentOptions = product.getInvestmentOptions();
     
     // Count risk levels
     final long conservativeCount = investmentOptions.stream()
@@ -174,7 +174,7 @@ public class Contract_Provider {
    */
   private static void logProductBasedContract(String productName, Product product, ContractContainer container) {
     final var coverOptions = product.getCoverOptions();
-    final var investmentOptions = product.extractInvestmentOptions();
+    final var investmentOptions = product.getInvestmentOptions();
     final var ageRange = product.getAgeRange();
     
     log.info("✅ Generated {} Contract:", productName);
