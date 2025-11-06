@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
 import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
 import io.resys.thena.product.client.api.Product;

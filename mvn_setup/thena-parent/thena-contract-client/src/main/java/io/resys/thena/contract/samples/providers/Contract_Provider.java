@@ -26,6 +26,7 @@ import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
 import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
 import io.resys.thena.contract.samples.contracts.FeemiContractVisitor;
+import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
 import io.resys.thena.product.client.samples.Product_Feemi_Savings;
 import io.resys.thena.product.client.samples.Product_Feemi_Pension;
 import io.resys.thena.product.client.samples.Product_Feemi_PS;
@@ -44,14 +45,15 @@ public class Contract_Provider {
    * Generate and persist a Feemi Savings contract with default options
    */
   public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient) {
+    final var product = Product_Feemi_Savings.create();
+    final var constraints = ProductConstraintExtractor.extractConstraints(product);
+    
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(AgeRange.of(25, 65))
+        .ageRange(constraints.ageRange)  // Extract age range from product rules
         .incomeRange(IncomeRange.of(30000, 80000))
         .isIncludeBeneficiaries(true)
         .riskProfile("MODERATE")
         .build();
-    
-    final var product = Product_Feemi_Savings.create();
     
     return contractClient.withTenant().commit()
         .createOneContract()
@@ -73,14 +75,15 @@ public class Contract_Provider {
    * Generate and persist a Feemi Pension contract with default options
    */
   public static Uni<OneContractEnvelope> newPension(ContractClient contractClient) {
+    final var product = Product_Feemi_Pension.create();
+    final var constraints = ProductConstraintExtractor.extractConstraints(product);
+    
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(AgeRange.of(25, 60))
+        .ageRange(constraints.ageRange)  // Extract age range from product rules
         .incomeRange(IncomeRange.of(35000, 90000))
         .isIncludeBeneficiaries(false)
         .riskProfile("CONSERVATIVE")
         .build();
-    
-    final var product = Product_Feemi_Pension.create();
     
     return contractClient.withTenant().commit()
         .createOneContract()
@@ -102,14 +105,15 @@ public class Contract_Provider {
    * Generate and persist a Feemi PS contract with default options
    */
   public static Uni<OneContractEnvelope> newPS(ContractClient contractClient) {
+    final var product = Product_Feemi_PS.create();
+    final var constraints = ProductConstraintExtractor.extractConstraints(product);
+    
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(AgeRange.of(20, 55))
+        .ageRange(constraints.ageRange)  // Extract age range from product rules
         .incomeRange(IncomeRange.of(25000, 75000))
         .isIncludeBeneficiaries(false)
         .riskProfile("MODERATE")
         .build();
-    
-    final var product = Product_Feemi_PS.create();
     
     return contractClient.withTenant().commit()
         .createOneContract()
@@ -132,14 +136,15 @@ public class Contract_Provider {
    * Generate and persist a Nova Virtus contract with default options
    */
   public static Uni<OneContractEnvelope> newNovaVirtus(ContractClient contractClient) {
+    final var product = Product_Nova_Virtus.create();
+    final var constraints = ProductConstraintExtractor.extractConstraints(product);
+    
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(AgeRange.of(30, 70))
+        .ageRange(constraints.ageRange)  // Extract age range from product rules (fallback 18-70 for Nova Virtus)
         .incomeRange(IncomeRange.of(40000, 120000))
         .isIncludeBeneficiaries(true)
         .riskProfile("AGGRESSIVE")
         .build();
-    
-    final var product = Product_Nova_Virtus.create();
     
     return contractClient.withTenant().commit()
         .createOneContract()
