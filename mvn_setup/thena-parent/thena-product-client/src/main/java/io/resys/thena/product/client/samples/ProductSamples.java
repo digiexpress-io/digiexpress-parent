@@ -33,15 +33,15 @@ public class ProductSamples {
   }
   
   public static Product feemiPensionInsurance() {
-    return new Product_Feemi_Pension().build();
+    return Product_Feemi_Pension.create();
   }
   
   public static Product feemiPsInsurance() {
-    return new Product_Feemi_PS().build();
+    return Product_Feemi_PS.create();
   }
   
   public static Product novaVirtusEndowment() {
-    return new Product_Nova_Virtus().build();
+    return Product_Nova_Virtus.create();
   }
   
   protected static String loadResourceText(String resourcePath) {

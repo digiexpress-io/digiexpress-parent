@@ -321,4 +321,166 @@ public class FeemiContractVisitor {
               .build();
         });
   }
+  
+  public static void visitNovaVirtusContract(NewContract newContract, Product product, GenerationOptions options) {
+    // Extract constraints from product rules
+    ProductConstraintExtractor.ProductConstraints constraints = ProductConstraintExtractor.extractConstraints(product);
+    
+    // Generate person data
+    CRM_Provider.Person person = CRM_Provider.generatePerson(
+        options.getAgeRange().orElse(constraints.ageRange).getMinAge(),
+        options.getIncomeRange().orElse(constraints.contributionRange).getMinIncome(),
+        options.getIncomeRange().orElse(constraints.contributionRange).getMaxIncome()
+    );
+    
+    // Generate beneficiary if enabled
+    CRM_Provider.Beneficiary beneficiary = null;
+    if (options.isIncludeBeneficiaries()) {
+      beneficiary = CRM_Provider.generateBeneficiary("SPOUSE", 100);
+    }
+    
+    // Generate fund data
+    Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
+    Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("NOVA_VIR_001");
+    
+    final var policyholder = new MutableObject<Party>();
+    
+    // Build Nova Virtus endowment contract
+    newContract
+        .contractNumber("NVE-" + String.format("%08d", System.currentTimeMillis() % 100000000))
+        .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
+        .contractIssueDateInterval(Duration.ZERO)
+        .contractIssueDateType(ContractDocType.CONTRACT.name())
+        
+        .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
+        .contractStartDateInterval(Duration.ZERO)
+        .contractStartDateType(ContractDocType.CONTRACT.name())
+        
+        .contractStatus("ACTIVE")
+        .contractType("ENDOWMENT_INSURANCE")
+        .contractSubType("NOVA_VIRTUS")
+        
+        // Add policyholder
+        .addParty(party -> {
+          final var built = party
+              .externalId(person.getPersonalId())
+              .partyType("POLICYHOLDER")
+              .partyEffectiveFrom(LocalDate.now())
+              .partyTermStartDate(LocalDate.now())
+              .partyTermStartDateType(ContractDocType.CONTRACT.name())
+              .partyTermStartDateInterval(Duration.ZERO)
+              .partyData(person.toJson())
+              .build();
+          
+          policyholder.setValue(built);
+        })
+        
+        // Add beneficiary if present
+        .addParty(party -> {
+          if (beneficiary != null) {
+            party
+                .externalId(beneficiary.getPersonalId())
+                .partyType("BENEFICIARY")
+                .partyEffectiveFrom(LocalDate.now())
+                .partyTermStartDate(LocalDate.now())
+                .partyTermStartDateType(ContractDocType.CONTRACT.name())
+                .partyTermStartDateInterval(Duration.ZERO)
+                .partyData(beneficiary.toJson())
+                .build();
+          }
+        })
+        
+        // Add inheritance cover
+        .addCoverage(coverageBuilder -> {
+          coverageBuilder
+              .insuredId(policyholder.get().getId())
+              .externalId(coverage.getCoverageCode())
+              .coverageType("INHERITANCE_COVER")
+              .coverageCode(coverage.getCoverageCode())
+              .coverageSumInsured(coverage.getSumInsured())
+              .coverageStatus("ACTIVE")
+              .coverageEffectiveFrom(LocalDate.now())
+              .coverageTermStartDate(LocalDate.now())
+              .coverageTermStartDateType(ContractDocType.CONTRACT.name())
+              .coverageTermStartDateInterval(Duration.ZERO)
+              .build();
+        })
+        
+        // Add payment plan
+        .addPaymentPlan(paymentPlanBuilder -> {
+          paymentPlanBuilder
+              .paymentPlanStatus("ACTIVE")
+              .paymentPlanFrequency(paymentPlan.getFrequency())
+              .paymentPlanAmount(paymentPlan.getMonthlyAmount())
+              .paymentPlanStartDate(paymentPlan.getStartDate())
+              .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
+              .paymentPlanStartDateInterval(Duration.ZERO)
+              .build();
+        })
+        
+        // Add investment plan with Nova Virtus specific options
+        .addInvPlan(invPlan -> {
+          invPlan
+              .externalId("NOVA_PLAN_" + System.currentTimeMillis())
+              .invPlanCode("NOVA_VIRTUS_PLAN")
+              .invPlanName("Nova Virtus Investment Plan")
+              .invPlanStatus("ACTIVE")
+              .invPlanStartDate(LocalDate.now())
+              .invPlanStartDateType(ContractDocType.CONTRACT.name())
+              .invPlanStartDateInterval(Duration.ZERO)
+              .build();
+          
+          // Add Nova Virtus specific allocations (Granite/Globe portfolios, ETFs)
+          invPlan.addAllocation(alloc -> {
+            alloc
+                .invPlanAllocCode("GRANITE_PORTFOLIO")
+                .invPlanAllocName("Granite Portfolio - Diversified Real Estate Enhanced")
+                .invPlanAllocPercentage(new java.math.BigDecimal("0.40"))
+                .invPlanAllocStatus("ACTIVE")
+                .build();
+          });
+          
+          invPlan.addAllocation(alloc -> {
+            alloc
+                .invPlanAllocCode("GLOBE_BASKET_ESG")
+                .invPlanAllocName("Globe Basket - ESG Focused")
+                .invPlanAllocPercentage(new java.math.BigDecimal("0.35"))
+                .invPlanAllocStatus("ACTIVE")
+                .build();
+          });
+          
+          invPlan.addAllocation(alloc -> {
+            alloc
+                .invPlanAllocCode("ETF_SELECTION")
+                .invPlanAllocName("ETF Selection - Monthly Savings")
+                .invPlanAllocPercentage(new java.math.BigDecimal("0.25"))
+                .invPlanAllocStatus("ACTIVE")
+                .build();
+          });
+        })
+        
+        // Add product reference
+        .addReference(reference -> {
+          reference
+              .referenceType("PRODUCT_CODE")
+              .referenceValue(product.getProductCode())
+              .build();
+        })
+        
+        // Add inheritance planning note
+        .addNote(note -> {
+          note
+              .noteType("INHERITANCE_PLANNING")
+              .noteValue("Unit-linked endowment with flexible inheritance planning and tax-efficient wealth transfer")
+              .build();
+        })
+        
+        // Add beneficiary clause note
+        .addNote(note -> {
+          note
+              .noteType("BENEFICIARY_CLAUSE")
+              .noteValue("Beneficiary clause allows distribution without separate will, marital rights can be excluded")
+              .build();
+        });
+  }
 }

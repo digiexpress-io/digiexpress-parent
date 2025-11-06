@@ -30,7 +30,7 @@ import io.resys.thena.product.client.api.RuleType;
 
 public class Product_Feemi_PS {
   
-  public Product build() {
+  public static Product create() {
     return Product.builder()
         .productCode("FEEMI_PS_001")
         .productName("PS-vakuutus (Long-term Savings Insurance)")

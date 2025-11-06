@@ -30,7 +30,7 @@ import io.resys.thena.product.client.api.RuleType;
 
 public class Product_Nova_Virtus {
   
-  public Product build() {
+  public static Product create() {
     return Product.builder()
         .productCode("NOVA_VIR_001")
         .productName("Nova Virtus Säästöhenkivakuutus")

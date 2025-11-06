@@ -1,0 +1,158 @@
+package io.resys.thena.contract.samples.providers;
+
+/*-
+ * #%L
+ * thena-contract-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
+import io.resys.thena.contract.samples.GenerationOptions;
+import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
+import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
+import io.resys.thena.contract.samples.contracts.FeemiContractVisitor;
+import io.resys.thena.product.client.samples.Product_Feemi_Savings;
+import io.resys.thena.product.client.samples.Product_Feemi_Pension;
+import io.resys.thena.product.client.samples.Product_Feemi_PS;
+import io.resys.thena.product.client.samples.Product_Nova_Virtus;
+import io.smallrye.mutiny.Uni;
+
+/**
+ * Central provider for generating realistic Finnish insurance contracts 
+ * for all available products and persisting them to the database.
+ */
+public class Contract_Provider {
+
+  /**
+   * Generate and persist a Feemi Savings contract with default options
+   */
+  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient) {
+    GenerationOptions options = GenerationOptions.builder()
+        .ageRange(AgeRange.of(25, 65))
+        .incomeRange(IncomeRange.of(30000, 80000))
+        .isIncludeBeneficiaries(true)
+        .riskProfile("MODERATE")
+        .build();
+    
+    final var product = Product_Feemi_Savings.create();
+    
+    return contractClient.withTenant().commit()
+        .createOneContract()
+        .contract(contract -> FeemiContractVisitor.visitSavingsContract(contract, product, options))
+        .onNewContract(newState -> {
+          System.out.println("Generated Feemi Savings Contract:");
+          System.out.println("Contract ID: " + newState.getContract().getId());
+          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
+          System.out.println("Parties: " + newState.getParties().size());
+          System.out.println("Coverages: " + newState.getCoverages().size());
+          System.out.println("Investment Plans: " + newState.getInvPlans().size());
+        })
+        .commitAuthor(Contract_Provider.class.getName())
+        .commitMessage("Generated Feemi Savings contract")
+        .build();
+  }
+
+  /**
+   * Generate and persist a Feemi Pension contract with default options
+   */
+  public static Uni<OneContractEnvelope> newPension(ContractClient contractClient) {
+    GenerationOptions options = GenerationOptions.builder()
+        .ageRange(AgeRange.of(25, 60))
+        .incomeRange(IncomeRange.of(35000, 90000))
+        .isIncludeBeneficiaries(false)
+        .riskProfile("CONSERVATIVE")
+        .build();
+    
+    final var product = Product_Feemi_Pension.create();
+    
+    return contractClient.withTenant().commit()
+        .createOneContract()
+        .contract(contract -> FeemiContractVisitor.visitPensionContract(contract, product, options))
+        .onNewContract(newState -> {
+          System.out.println("Generated Feemi Pension Contract:");
+          System.out.println("Contract ID: " + newState.getContract().getId());
+          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
+          System.out.println("Parties: " + newState.getParties().size());
+          System.out.println("Coverages: " + newState.getCoverages().size());
+          System.out.println("Payment Plans: " + newState.getPaymentPlans().size());
+        })
+        .commitAuthor(Contract_Provider.class.getName())
+        .commitMessage("Generated Feemi Pension contract")
+        .build();
+  }
+
+  /**
+   * Generate and persist a Feemi PS contract with default options
+   */
+  public static Uni<OneContractEnvelope> newPS(ContractClient contractClient) {
+    GenerationOptions options = GenerationOptions.builder()
+        .ageRange(AgeRange.of(20, 55))
+        .incomeRange(IncomeRange.of(25000, 75000))
+        .isIncludeBeneficiaries(false)
+        .riskProfile("MODERATE")
+        .build();
+    
+    final var product = Product_Feemi_PS.create();
+    
+    return contractClient.withTenant().commit()
+        .createOneContract()
+        .contract(contract -> FeemiContractVisitor.visitPSContract(contract, product, options))
+        .onNewContract(newState -> {
+          System.out.println("Generated Feemi PS Contract:");
+          System.out.println("Contract ID: " + newState.getContract().getId());
+          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
+          System.out.println("Parties: " + newState.getParties().size());
+          System.out.println("Coverages: " + newState.getCoverages().size());
+          System.out.println("Payment Plans: " + newState.getPaymentPlans().size());
+          System.out.println("Notes: " + newState.getNotes().size());
+        })
+        .commitAuthor(Contract_Provider.class.getName())
+        .commitMessage("Generated Feemi PS contract")
+        .build();
+  }
+
+  /**
+   * Generate and persist a Nova Virtus contract with default options
+   */
+  public static Uni<OneContractEnvelope> newNovaVirtus(ContractClient contractClient) {
+    GenerationOptions options = GenerationOptions.builder()
+        .ageRange(AgeRange.of(30, 70))
+        .incomeRange(IncomeRange.of(40000, 120000))
+        .isIncludeBeneficiaries(true)
+        .riskProfile("AGGRESSIVE")
+        .build();
+    
+    final var product = Product_Nova_Virtus.create();
+    
+    return contractClient.withTenant().commit()
+        .createOneContract()
+        .contract(contract -> FeemiContractVisitor.visitNovaVirtusContract(contract, product, options))
+        .onNewContract(newState -> {
+          System.out.println("Generated Nova Virtus Contract:");
+          System.out.println("Contract ID: " + newState.getContract().getId());
+          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
+          System.out.println("Parties: " + newState.getParties().size());
+          System.out.println("Coverages: " + newState.getCoverages().size());
+          System.out.println("Investment Plans: " + newState.getInvPlans().size());
+          System.out.println("References: " + newState.getReferences().size());
+        })
+        .commitAuthor(Contract_Provider.class.getName())
+        .commitMessage("Generated Nova Virtus endowment contract")
+        .build();
+  }
+}
