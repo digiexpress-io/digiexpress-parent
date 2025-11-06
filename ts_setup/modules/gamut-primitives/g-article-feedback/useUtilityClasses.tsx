@@ -23,6 +23,7 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     noData: ['noData'],
     toolbar: ['toolbar'],
     vote: ['vote'],
+    colWidth: ['colWidth']
   };
 
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -55,6 +56,12 @@ export const GArticleFeedbackRoot = styled("div", {
 
     '& .GArticleFeedback-emptyRow': {
       height: 33 * reducer[0].emptyRows
+    },
+    '& .GArticleFeedback-colWidth': {
+      [theme.breakpoints.up('sm')]: {
+        width: '35%'
+      },
+
     },
     '& .GArticleFeedback-pagination .MuiToolbar-root': {
       paddingLeft: 0
@@ -99,6 +106,6 @@ export const GArticleFeedbackRoot = styled("div", {
         textAlign: 'center',
         lineHeight: 1,
       }
-    },         
+    },
   };
 });

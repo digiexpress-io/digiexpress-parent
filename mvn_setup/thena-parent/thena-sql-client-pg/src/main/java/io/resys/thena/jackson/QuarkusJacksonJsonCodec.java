@@ -23,7 +23,6 @@ package io.resys.thena.jackson;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -37,23 +36,12 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.netty.buffer.ByteBufInputStream;
-import io.quarkus.arc.Arc;
-import io.quarkus.arc.ArcContainer;
-import io.quarkus.vertx.runtime.jackson.BufferDeserializer;
-import io.quarkus.vertx.runtime.jackson.BufferSerializer;
-import io.quarkus.vertx.runtime.jackson.ByteArrayDeserializer;
-import io.quarkus.vertx.runtime.jackson.ByteArraySerializer;
-import io.quarkus.vertx.runtime.jackson.InstantDeserializer;
-import io.quarkus.vertx.runtime.jackson.InstantSerializer;
-import io.quarkus.vertx.runtime.jackson.JsonArrayDeserializer;
-import io.quarkus.vertx.runtime.jackson.JsonArraySerializer;
-import io.quarkus.vertx.runtime.jackson.JsonObjectDeserializer;
-import io.quarkus.vertx.runtime.jackson.JsonObjectSerializer;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.EncodeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.core.spi.json.JsonCodec;
 
 /**
@@ -67,56 +55,27 @@ public class QuarkusJacksonJsonCodec implements JsonCodec {
     private static volatile ObjectMapper prettyMapper;
 
     static {
-        ArcContainer container = Arc.container();
-        if (container == null) {
-            // this can happen in QuarkusUnitTest
-            mapper = new ObjectMapper();
-        } else {
-            ObjectMapper managedMapper = container.instance(ObjectMapper.class).get();
-            if (managedMapper == null) {
-                // TODO: is this too heavy-handed? It should never happen but even if it does, it's a mostly recoverable state
-                throw new IllegalStateException("There was no ObjectMapper bean configured");
-            }
-            // We don't want to change settings the settings of the User configured ObjectMapper,
-            // but we do want to inherit all the user's custom settings, so we copy the ObjectMapper.
-            // Theoretically we could have checked to see if each of the settings
-            // we want to apply is already applied, but in practice it doesn't make sense
-            // as at the very least InstantSerializer and InstantDeserializer will be different from those provided by the
-            // (always included with quarkus-jackson) JavaTimeModule.
-            mapper = managedMapper.copy();
-        }
+      mapper = new ObjectMapper();
 
-        // Non-standard JSON but we allow C style comments in our JSON
-        mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-        
-        
-        SimpleModule module = new SimpleModule("vertx-module");
-        // quarkus objects
-        module.addSerializer(JsonObject.class, new JsonObjectSerializer());
-        module.addSerializer(JsonArray.class, new JsonArraySerializer());
-        module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
-        module.addDeserializer(JsonArray.class, new JsonArrayDeserializer());
-        
-        // we have 2 extensions: RFC-7493
-        module.addSerializer(Instant.class, new InstantSerializer());
-        module.addDeserializer(Instant.class, new InstantDeserializer());
-        module.addSerializer(byte[].class, new ByteArraySerializer());
-        module.addDeserializer(byte[].class, new ByteArrayDeserializer());
-        module.addSerializer(Buffer.class, new BufferSerializer());
-        module.addDeserializer(Buffer.class, new BufferDeserializer());
+      // Non-standard JSON but we allow C style comments in our JSON
+      mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+      
+      SimpleModule module = new VertxModule();
+      module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
+      module.addDeserializer(JsonArray.class, new JsonArrayDeserializer());
 
 
-        mapper.registerModule(module);
-        
-        // additional modules
-        mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new Jdk8Module());
-        mapper.registerModule(new GuavaModule());
-        
-        
-        // false = 2025-01-15T09:51:17.113535Z
-        // true = 1736934713.942034000
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+      mapper.registerModule(module);
+      
+      // additional modules
+      mapper.registerModule(new JavaTimeModule());
+      mapper.registerModule(new Jdk8Module());
+      mapper.registerModule(new GuavaModule());
+      
+      
+      // false = 2025-01-15T09:51:17.113535Z
+      // true = 1736934713.942034000
+      mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         
     }
 

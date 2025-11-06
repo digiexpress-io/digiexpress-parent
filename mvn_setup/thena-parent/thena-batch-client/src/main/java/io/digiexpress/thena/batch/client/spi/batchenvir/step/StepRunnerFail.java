@@ -22,6 +22,8 @@ package io.digiexpress.thena.batch.client.spi.batchenvir.step;
 
 import java.time.OffsetDateTime;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig.BatchConfigWithExecutor;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeStep;
@@ -35,7 +37,6 @@ import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.spi.batchenvir.BatchEnvirLogger;
 import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepRunner.ThreadPoolTerminatedException;
-import io.quarkus.runtime.util.ExceptionUtil;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -122,7 +123,7 @@ public class StepRunnerFail {
       .level(ExecutionLogLevel.ERROR)
       .formatType(BatchEnvirLogger.STEP_ERROR.getName())
       .format("Batch execution step crashed")
-      .stack(ExceptionUtil.generateStackTrace(throwable))
+      .stack(ExceptionUtils.getStackTrace(throwable))
       .extra(JsonObject.mapFrom(config.getBatchConsumer()))
       .build();
   }

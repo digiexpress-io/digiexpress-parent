@@ -28,15 +28,10 @@ import io.digiexpress.eveli.userprofile.client.api.model.ImmutableCreateUserProf
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUpsertUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfile;
-import io.digiexpress.eveli.userprofile.client.tests.config.UserProfilePgProfile;
 import io.digiexpress.eveli.userprofile.client.tests.config.UserProfileTestCase;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@QuarkusTest
-@TestProfile(UserProfilePgProfile.class)
 public class UserProfileUpdateTest extends UserProfileTestCase {
 
   private UserProfile createUserProfileForUpdating(UserProfileClient client) {

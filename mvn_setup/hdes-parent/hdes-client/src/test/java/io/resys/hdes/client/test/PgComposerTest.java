@@ -27,8 +27,6 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.hdes.client.api.ImmutableCreateEntity;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstCommand;
@@ -38,12 +36,10 @@ import io.resys.hdes.client.api.ast.ImmutableAstCommand;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.util.FileUtils;
-import io.resys.hdes.client.test.config.PgProfile;
 import io.resys.hdes.client.test.config.PgTestTemplate;
 import io.resys.hdes.client.test.config.TestUtils;
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+
 public class PgComposerTest extends PgTestTemplate {
 
   @Test

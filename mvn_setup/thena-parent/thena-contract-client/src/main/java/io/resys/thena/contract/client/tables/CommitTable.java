@@ -147,9 +147,9 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getCommitId(),
-        doc.getParentCommitId().orElse(null),
-        doc.getContractId().orElse(null),
+        TableUtils.toUuid(doc.getCommitId()),
+        doc.getParentCommitId().map(TableUtils::toUuid).orElse(null),
+        doc.getContractId().map(TableUtils::toUuid).orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),
         doc.getCommitAuthor(),
@@ -162,13 +162,13 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentCommitId().orElse(null),
-        doc.getContractId().orElse(null),
+        doc.getParentCommitId().map(TableUtils::toUuid).orElse(null),
+        doc.getContractId().map(TableUtils::toUuid).orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),
         doc.getCommitAuthor(),
         doc.getCommitMessage(),
-        doc.getCommitId()
+        TableUtils.toUuid(doc.getCommitId())
       });
     }
   }

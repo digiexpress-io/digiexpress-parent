@@ -37,7 +37,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [savedReply, setSavedReply] = React.useState<string>('');
   const [main, setMain] = React.useState({ labelKey: '', labelValue: '' });
-  const [sub, setSub] = React.useState({ subLabelKey: '', subLabelValue: '' });
 
 
   const mapToLocalState = React.useCallback((resp: FeedbackApi.Feedback | undefined) => {
@@ -45,10 +44,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
     setReply(resp?.replyText ?? '');
     setQuestion(resp?.content?.question ?? '');
     setSavedReply(resp?.replyText ?? '');
-
     setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
-    setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
-
     setCustomerTitle(resp?.customerTitle ?? '')
   }, []);
 
@@ -68,13 +64,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       commandType: 'MODIFY_ONE_FEEDBACK_REPLY',
       reply: reply,
       question: question,
-
       labelKey: main.labelKey,
       labelValue: main.labelValue,
-
-      subLabelKey: sub.subLabelKey,
-      subLabelValue: sub.subLabelValue,
-
       customerTitle: customerTitle
     };
 
@@ -83,7 +74,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       setSavedReply(reply);
       mapToLocalState(updatedFeedback)
     });
-  }, [main, sub, customerTitle, taskRef, reply, question, feedback?.id])
+  }, [main, customerTitle, taskRef, reply, question, feedback?.id])
 
 
   function confirmDelete() {
@@ -102,9 +93,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
     question !== feedback.content?.question ||
     customerTitle !== feedback?.customerTitle ||
     main.labelKey !== feedback?.labelKey ||
-    main.labelValue !== feedback?.labelValue ||
-    sub.subLabelKey !== feedback?.subLabelKey ||
-    sub.subLabelValue !== feedback?.subLabelValue
+    main.labelValue !== feedback?.labelValue
   );
 
   const AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.AcceptButton ?? SaveFeedback;
@@ -125,7 +114,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
           {intl.formatMessage({ id: 'feedback.taskReferenceId' })}
-          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+          {": "}
         </Box>
         {taskRef}
       </Typography>
@@ -133,7 +122,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
           {intl.formatMessage({ id: 'feedback.updated' })}
-          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+          {": "}
         </Box>
         <DateTimeFormatter value={feedback.updatedOnDate} variant='text' />
       </Typography>
@@ -141,22 +130,18 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
           {intl.formatMessage({ id: 'feedback.updatedBy' })}
-          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+          {": "}
         </Box>
         {feedback.updatedBy}
-      </Typography>
+      </Typography> 
 
       <Divider sx={{ my: 2 }} />
 
-      <FeedbackContent feedback={{ ...feedback, ...main, ...sub, customerTitle }} onChange={(props) => {
+      <FeedbackContent feedback={{ ...feedback, ...main, customerTitle }} onChange={(props) => {
         setMain({
           labelKey: props.labelKey,
           labelValue: props.labelValue,
         })
-        setSub({
-          subLabelKey: props.subLabelKey ?? '',
-          subLabelValue: props.subLabelValue ?? '',
-        }),
           setCustomerTitle(props.customerTitle)
       }} />
 
@@ -165,7 +150,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
         sx={{ mb: 3 }}
         multiline
         minRows={4}
-        placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder', defaultMessage: 'Customer question' })}
+        placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder' })}
         value={question}
       />
 
@@ -175,7 +160,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
         sx={{ mb: 3 }}
         multiline
         minRows={4}
-        placeholder='Write a reply here'
+        placeholder={intl.formatMessage({ id: 'feedback.myReply.placeholder' })}
         value={reply}
       />
 

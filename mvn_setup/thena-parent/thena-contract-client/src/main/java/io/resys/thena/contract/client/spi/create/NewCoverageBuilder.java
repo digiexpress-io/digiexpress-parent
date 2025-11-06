@@ -68,7 +68,14 @@ public class NewCoverageBuilder implements NewCoverage {
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
+        .contractId(contractId)
+        .coverageSumInsured(Optional.empty())
+        .coverageRate(Optional.empty())
+        .coverageRateType(Optional.empty())
+        .coverageEffectiveTo(Optional.empty())
+        .coverageTermEndDate(Optional.empty())
+        .coverageTermEndDateInterval(Optional.empty())
+        .coverageTermEndDateType(Optional.empty());
     
     final var updates = currentTx.getCoverageUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCoverageDeletes().stream().map(e -> e.getId()).toList();
@@ -117,19 +124,19 @@ public class NewCoverageBuilder implements NewCoverage {
 
   @Override
   public NewCoverage coverageSumInsured(@Nullable BigDecimal coverageSumInsured) {
-    this.next.coverageSumInsured(coverageSumInsured);
+    this.next.coverageSumInsured(Optional.ofNullable(coverageSumInsured));
     return this;
   }
 
   @Override
   public NewCoverage coverageRate(@Nullable BigDecimal coverageRate) {
-    this.next.coverageRate(coverageRate);
+    this.next.coverageRate(Optional.ofNullable(coverageRate));
     return this;
   }
 
   @Override
   public NewCoverage coverageRateType(@Nullable String coverageRateType) {
-    this.next.coverageRateType(coverageRateType);
+    this.next.coverageRateType(Optional.ofNullable(coverageRateType));
     return this;
   }
 
@@ -147,7 +154,7 @@ public class NewCoverageBuilder implements NewCoverage {
 
   @Override
   public NewCoverage coverageEffectiveTo(@Nullable LocalDate coverageEffectiveTo) {
-    this.next.coverageEffectiveTo(coverageEffectiveTo);
+    this.next.coverageEffectiveTo(Optional.ofNullable(coverageEffectiveTo));
     return this;
   }
 
@@ -171,19 +178,19 @@ public class NewCoverageBuilder implements NewCoverage {
 
   @Override
   public NewCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate) {
-    this.next.coverageTermEndDate(coverageTermEndDate);
+    this.next.coverageTermEndDate(Optional.ofNullable(coverageTermEndDate));
     return this;
   }
 
   @Override
   public NewCoverage coverageTermEndDateInterval(@Nullable Duration coverageTermEndDateInterval) {
-    this.next.coverageTermEndDateInterval(coverageTermEndDateInterval);
+    this.next.coverageTermEndDateInterval(Optional.ofNullable(coverageTermEndDateInterval));
     return this;
   }
 
   @Override
   public NewCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType) {
-    this.next.coverageTermEndDateType(coverageTermEndDateType);
+    this.next.coverageTermEndDateType(Optional.ofNullable(coverageTermEndDateType));
     return this;
   }
 

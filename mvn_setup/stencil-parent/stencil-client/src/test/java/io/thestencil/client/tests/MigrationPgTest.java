@@ -28,16 +28,12 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.thestencil.client.api.ImmutableSites;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.tests.util.PgProfile;
 import io.thestencil.client.tests.util.PgTestTemplate;
 import io.thestencil.client.tests.util.TestExporter;
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+
 public class MigrationPgTest extends PgTestTemplate {
 
   @Test

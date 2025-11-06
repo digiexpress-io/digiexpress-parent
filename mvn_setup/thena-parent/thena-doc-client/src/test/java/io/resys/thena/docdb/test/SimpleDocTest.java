@@ -28,8 +28,6 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant.StructureType;
@@ -37,13 +35,10 @@ import io.resys.thena.api.entities.doc.Doc.DocStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.doc.api.DocQueryActions.IncludeInQuery;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
-import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
 @Slf4j
 public class SimpleDocTest extends DbTestTemplate {
 

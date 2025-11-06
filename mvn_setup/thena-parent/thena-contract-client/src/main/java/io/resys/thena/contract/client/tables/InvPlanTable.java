@@ -215,19 +215,19 @@ public interface InvPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getContractId(),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
         doc.getExternalId(),
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getInvPlanStatus(),
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        doc.getInvPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
         doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        doc.getInvPlanEndDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getInvPlanEndDateInterval()),
         doc.getInvPlanEndDateType().orElse(null)
       });
     }
@@ -237,19 +237,19 @@ public interface InvPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getContractId(),
+        TableUtils.toUuid(doc.getContractId()),
         doc.getExternalId(),
-        doc.getCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getInvPlanStatus(),
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        doc.getInvPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
         doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        doc.getInvPlanEndDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getInvPlanEndDateInterval()),
         doc.getInvPlanEndDateType().orElse(null),
-        doc.getId()
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -258,7 +258,7 @@ public interface InvPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan invPlan) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        invPlan.getId()
+        TableUtils.toUuid(invPlan.getId())
       });
     }
   }

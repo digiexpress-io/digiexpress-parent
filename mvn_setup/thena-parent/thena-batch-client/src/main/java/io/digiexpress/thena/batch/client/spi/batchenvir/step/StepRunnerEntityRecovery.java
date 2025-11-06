@@ -22,6 +22,8 @@ package io.digiexpress.thena.batch.client.spi.batchenvir.step;
 
 import java.time.OffsetDateTime;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig.BatchConfigWithExecutor;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeExecutionStatus;
@@ -32,7 +34,6 @@ import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity.ExecutorEntityStatus;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorEntity;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
-import io.quarkus.runtime.util.ExceptionUtil;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -65,7 +66,7 @@ public class StepRunnerEntityRecovery {
         .endedAt(OffsetDateTime.now())
         .output(JsonObject.of(
           "errorMsg", event.getThrowable().get().getMessage(),
-          "errorCause", ExceptionUtil.generateStackTrace(event.getThrowable().get())
+          "errorCause", ExceptionUtils.getStackTrace(event.getThrowable().get())
         ))
         .build();
     

@@ -11,6 +11,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-mq-client</artifactId>
     </dependency>
@@ -134,7 +139,6 @@
     <dependency>
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
-      <version>1.0.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>

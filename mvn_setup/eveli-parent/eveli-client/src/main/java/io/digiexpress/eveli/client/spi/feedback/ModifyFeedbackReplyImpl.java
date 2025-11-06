@@ -128,7 +128,7 @@ WHERE
      ProcessAssert.notEmpty(userId, () -> "user id can't be empty!");
      
      final var labelKey = command.getLabelKey().trim().toUpperCase();
-     final var labelSubKey = command.getSubLabelKey().isBlank() ? null : command.getSubLabelKey().trim().toUpperCase();
+     final var labelSubKey = command.getSubLabelKey() == null || command.getSubLabelKey().isBlank() ? null : command.getSubLabelKey().trim().toUpperCase();
      
      jdbc.execute((Connection connection) -> connection.prepareStatement(
  """

@@ -1,5 +1,4 @@
 package io.digiexpress.eveli.permission.client.api;
-
 /*-
  * #%L
  * eveli-permissions
@@ -19,8 +18,15 @@ package io.digiexpress.eveli.permission.client.api;
  * limitations under the License.
  * #L%
  */
-
 import java.util.List;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.digiexpress.eveli.permission.client.api.model.Principal;
 import io.digiexpress.eveli.permission.client.api.model.PermissionCommand.CreatePermission;
@@ -32,52 +38,44 @@ import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.Princip
 import io.digiexpress.eveli.permission.client.api.model.RoleCommand.CreateRole;
 import io.digiexpress.eveli.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.smallrye.mutiny.Uni;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 
-
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public interface PermissionRestApi {
   
-  @GET @Path("principals") @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping("/principals")
   Uni<List<Principal>> findAllPrincipals();
   
-  @GET @Path("principals/{principalId}") @Produces(MediaType.APPLICATION_JSON)
-  Uni<Principal> getPrincipalById(@PathParam("principalId") String principalId);
+  @GetMapping("/principals/{principalId}")
+  Uni<Principal> getPrincipalById(@PathVariable("principalId") String principalId);
   
-  @PUT @Path("principals/{principalId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Principal> updatePrincipal(@PathParam("principalId") String principalId, List<PrincipalUpdateCommand> commands);
+  @PutMapping(path = "/principals/{principalId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  Uni<Principal> updatePrincipal(@PathVariable("principalId") String principalId, @RequestBody List<PrincipalUpdateCommand> commands);
   
-  @POST @Path("principals") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Principal> createPrincipal(CreatePrincipal command);
+  @PostMapping(path = "/principals", consumes = MediaType.APPLICATION_JSON_VALUE)
+  Uni<Principal> createPrincipal(@RequestBody CreatePrincipal command);
   
-  @GET @Path("permissions") @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping("/permissions")
   Uni<List<Permission>> findAllPermissions();
   
-  @POST @Path("permissions") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Permission> createPermission(CreatePermission command);
+  @PostMapping(path = "/permissions", consumes = MediaType.APPLICATION_JSON_VALUE)
+  Uni<Permission> createPermission(@RequestBody CreatePermission command);
   
-  @GET @Path("permissions/{permissionId}") @Produces(MediaType.APPLICATION_JSON)
-  Uni<Permission> getPermissionById(@PathParam("permissionId") String permissionId);
+  @GetMapping("/permissions/{permissionId}")
+  Uni<Permission> getPermissionById(@PathVariable("permissionId") String permissionId);
   
-  @PUT @Path("permissions/{permissionId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Permission> updatePermission(@PathParam("permissionId") String permissionId, List<PermissionUpdateCommand> commands);
+  @PutMapping(path = "/permissions/{permissionId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  Uni<Permission> updatePermission(@PathVariable("permissionId") String permissionId, @RequestBody List<PermissionUpdateCommand> commands);
   
-  @GET @Path("roles") @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping("/roles")
   Uni<List<Role>> findAllRoles();
   
-  @POST @Path("roles") @Produces(MediaType.APPLICATION_JSON)
-  Uni<Role> createRole(CreateRole command);
+  @PostMapping("/roles")
+  Uni<Role> createRole(@RequestBody CreateRole command);
   
-  @PUT @Path("roles/{roleId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Role> updateRole(@PathParam("roleId") String roleId, List<RoleUpdateCommand> commands);
+  @PutMapping(path = "/roles/{roleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  Uni<Role> updateRole(@PathVariable("roleId") String roleId, @RequestBody List<RoleUpdateCommand> commands);
   
-  @GET @Path("roles/{roleId}") @Produces(MediaType.APPLICATION_JSON)
-  Uni<Role> getRoleById(@PathParam("roleId") String roleId);
+  @GetMapping("/roles/{roleId}")
+  Uni<Role> getRoleById(@PathVariable("roleId") String roleId);
   
 }

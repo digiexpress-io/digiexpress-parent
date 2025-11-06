@@ -2,9 +2,9 @@ package io.thestencil.client.tests;
 
 /*-
  * #%L
- * stencil-persistence
+ * stencil-client
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,38 @@ package io.thestencil.client.tests;
  * #L%
  */
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
-import io.thestencil.client.api.*;
-import io.thestencil.client.api.StencilClient.*;
-import io.thestencil.client.tests.util.PgProfile;
-import io.thestencil.client.tests.util.PgTestTemplate;
-import io.thestencil.client.tests.util.TestExporter;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 import java.util.Collections;
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.thestencil.client.api.ImmutableArticleMutator;
+import io.thestencil.client.api.ImmutableCreateArticle;
+import io.thestencil.client.api.ImmutableCreateLink;
+import io.thestencil.client.api.ImmutableCreateLocale;
+import io.thestencil.client.api.ImmutableCreatePage;
+import io.thestencil.client.api.ImmutableCreateRelease;
+import io.thestencil.client.api.ImmutableCreateTemplate;
+import io.thestencil.client.api.ImmutableCreateWorkflow;
+import io.thestencil.client.api.ImmutableLinkMutator;
+import io.thestencil.client.api.ImmutableLocaleLabel;
+import io.thestencil.client.api.ImmutableLocaleMutator;
+import io.thestencil.client.api.ImmutablePageMutator;
+import io.thestencil.client.api.ImmutableTemplateMutator;
+import io.thestencil.client.api.ImmutableWorkflowMutator;
+import io.thestencil.client.api.StencilClient.Article;
+import io.thestencil.client.api.StencilClient.Entity;
+import io.thestencil.client.api.StencilClient.Link;
+import io.thestencil.client.api.StencilClient.Locale;
+import io.thestencil.client.api.StencilClient.Page;
+import io.thestencil.client.api.StencilClient.Template;
+import io.thestencil.client.api.StencilClient.Workflow;
+import io.thestencil.client.tests.util.PgTestTemplate;
+import io.thestencil.client.tests.util.TestExporter;
+
+
+
 public class PersistencePgCustomIdTest extends PgTestTemplate {
   
 

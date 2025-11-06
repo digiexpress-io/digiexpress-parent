@@ -98,7 +98,7 @@ public class MergeNoteBuilder implements MergeNote {
 
   @Override
   public MergeNote noteBody(JsonObject noteBody) {
-    this.nextNote.noteBody(noteBody);
+    this.nextNote.noteBody(Optional.ofNullable(noteBody));
     return this;
   }
 

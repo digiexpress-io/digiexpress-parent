@@ -86,7 +86,7 @@ public class MergeCapabilityBuilder implements MergeCapability {
 
   @Override
   public MergeCapability externalId(String externalId) {
-    this.nextCapability.externalId(externalId);
+    this.nextCapability.externalId(Optional.ofNullable(externalId));
     return this;
   }
 

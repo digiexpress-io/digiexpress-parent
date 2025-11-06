@@ -28,7 +28,7 @@
     <spring-cloud-gcp.version>7.3.1</spring-cloud-gcp.version>
     <jackson.version>2.19.2</jackson.version>
 
-    <quarkus.version>3.15.3</quarkus.version>
+
     <lombok.version>1.18.42</lombok.version>
 
     <immutables.version>2.11.3</immutables.version>
@@ -45,11 +45,13 @@
     
     <dialob.version>3.0.1</dialob.version>
     <dialob-b.version>2.2.9</dialob-b.version>
+    <expressly.version>6.0.0</expressly.version>
     
     <javafaker.version>1.0.2</javafaker.version>
     
     <flexmark.version>0.62.2</flexmark.version>
     <jgit.version>7.2.1.202505142326-r</jgit.version>
+    <jakartamail.version>2.0.2</jakartamail.version>
 
     <junit.jupiter.version>5.13.4</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
@@ -65,13 +67,6 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <quarkus.log.level>INFO</quarkus.log.level>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -165,7 +160,6 @@
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-commons</artifactId>
@@ -241,7 +235,8 @@
         <artifactId>dialob-api</artifactId>
         <version>${dialob.version}</version>
       </dependency>
-      
+
+    
       <dependency>
         <groupId>io.dialob</groupId>
         <artifactId>dialob-bom</artifactId>
@@ -249,7 +244,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-    
+      <dependency>
+        <groupId>org.glassfish.expressly</groupId>
+        <artifactId>expressly</artifactId>
+        <version>${expressly.version}</version>
+      </dependency>
+      
     
       <dependency>
         <groupId>io.digiexpress</groupId>
@@ -257,6 +257,13 @@
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>jakarta.mail</artifactId>
+        <version>${jakartamail.version}</version>
       </dependency>
 
       <!-- Utils -->
@@ -348,21 +355,7 @@
         <version>${jgit.version}</version>
       </dependency>
 
-      <!-- Quarkus -->
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bom</artifactId>
-        <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bom-test</artifactId>
-        <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+
 
       <!-- spring -->
       <dependency>
@@ -391,6 +384,23 @@
         <groupId>com.google.cloud</groupId>
         <artifactId>spring-cloud-gcp-dependencies</artifactId>
         <version>${spring-cloud-gcp.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      
+      
+      <!-- Quarkus -->
+      <dependency>
+        <groupId>io.smallrye.reactive</groupId>
+        <artifactId>mutiny-bom</artifactId>
+        <version>2.7.0</version> <!-- Latest stable -->
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.smallrye.reactive</groupId>
+        <artifactId>vertx-mutiny-clients-bom</artifactId>
+        <version>3.19.0</version> <!-- Check for latest -->
         <type>pom</type>
         <scope>import</scope>
       </dependency>

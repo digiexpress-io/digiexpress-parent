@@ -164,7 +164,10 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
       .build();
   }
   
-  private MethodSpec generateWithTransaction(RegistryMetamodel registry, String className, String interfaceName) {
+  private MethodSpec generateWithTransaction(
+      RegistryMetamodel registry, String className, String interfaceName
+  ) {
+    
     final var typeVarR = TypeVariableName.get("R");
     
     return MethodSpec.methodBuilder("withTransaction")
@@ -181,9 +184,10 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
         typeVarR
       ))
       .addCode(CodeBlock.builder()
-        .add("return dataSource.getPool().withTransaction(conn -> {\n")
+        .add("return withTenant(scope.getTenantId()).onItem().transformToUni(state -> {\n")
         .indent()
-        .add("return callback.apply(new $T(dataSource.withTx(conn)));\n", ClassName.bestGuess(className))
+        .add("final var source = ($T) state.getDataSource();\n", ClassName.get(ThenaSqlDataSource.class))
+        .add("return source.getPool().withTransaction(conn -> callback.apply(new $T(source.withTx(conn))));\n", ClassName.bestGuess(className))
         .unindent()
         .add("});\n")
         .build())

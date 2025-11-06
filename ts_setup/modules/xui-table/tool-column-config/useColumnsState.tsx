@@ -64,8 +64,9 @@ export function useColumnState(table: Table<any>) {
 
 
   const columns = columnsOrder
-    .map(colId => {
-      const orig = allColumns.find(c => c.id === colId)!;
+    .map(colId => ({ colId, orig: allColumns.find(c => c.id === colId)! }))
+    .filter(({ orig }) => !!orig)
+    .map(({ orig, colId }) => {
       return { ...orig, isVisible: table.getColumn(colId)?.getIsVisible() ?? true };
     });
 

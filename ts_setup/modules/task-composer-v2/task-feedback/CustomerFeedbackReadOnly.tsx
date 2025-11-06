@@ -38,7 +38,6 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
       <Box display='flex' flexDirection='row' justifyContent='space-between'>
         <Box flexDirection='column' alignItems='center'>
           <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.main}</Typography>
-          <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.sub}</Typography>
         </Box>
         <Box alignItems='top'>
           <PublishedNotifier task={task} style={style} />

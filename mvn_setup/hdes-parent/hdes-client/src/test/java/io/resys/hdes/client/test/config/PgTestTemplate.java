@@ -23,9 +23,7 @@ package io.resys.hdes.client.test.config;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
 
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesComposer;
@@ -42,41 +40,26 @@ import io.resys.thena.git.api.GitClient;
 import io.resys.thena.git.api.GitDataSource;
 import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.resys.thena.git.spi.GitPrinter;
-import io.vertx.mutiny.sqlclient.Pool;
-import jakarta.inject.Inject;
+import io.resys.thena.test.ThenaTest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@ThenaTest
 public class PgTestTemplate {
   private ThenaStore store;
   
-  @Inject
-  io.vertx.mutiny.pgclient.PgPool pgPool;
+  io.vertx.mutiny.sqlclient.Pool pgPool;
 
   @BeforeEach
-  public void setUp(TestInfo testInfo) {
+  public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) {
+    this.pgPool = pgPool;
     final AtomicInteger gid = new AtomicInteger(0);
-    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.store = ThenaStore.builder()
         .repoName("")
         .pgPool(pgPool)
         .objectMapper(TestUtils.objectMapper)
         .gidProvider((type) -> type + "-" + gid.incrementAndGet())
         .build();
-  }
-  
-  @AfterEach
-  public void tearDown() {
-  }
-
-  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
-    // On some platforms there may be some delay before postgresql starts to respond.
-    // Try until postgresql connection is successfully opened.
-    var connection = pool.getConnection()
-      .onFailure()
-      .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
-      .await().atMost(Duration.ofSeconds(60));
-    connection.closeAndForget();
   }
 
   private GitDataSource createState(String repoName) {

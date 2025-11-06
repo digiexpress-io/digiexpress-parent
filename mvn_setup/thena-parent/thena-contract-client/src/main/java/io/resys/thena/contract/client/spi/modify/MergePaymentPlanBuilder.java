@@ -83,7 +83,7 @@ public class MergePaymentPlanBuilder implements MergePaymentPlan {
 
   @Override
   public MergePaymentPlan partyId(String partyId) {
-    this.nextPaymentPlan.partyId(partyId);
+    this.nextPaymentPlan.partyId(Optional.ofNullable(partyId));
     return this;
   }
 
@@ -125,19 +125,19 @@ public class MergePaymentPlanBuilder implements MergePaymentPlan {
 
   @Override
   public MergePaymentPlan paymentPlanEndDate(LocalDate paymentPlanEndDate) {
-    this.nextPaymentPlan.paymentPlanEndDate(paymentPlanEndDate);
+    this.nextPaymentPlan.paymentPlanEndDate(Optional.ofNullable(paymentPlanEndDate));
     return this;
   }
 
   @Override
   public MergePaymentPlan paymentPlanEndDateInterval(Duration paymentPlanEndDateInterval) {
-    this.nextPaymentPlan.paymentPlanEndDateInterval(paymentPlanEndDateInterval);
+    this.nextPaymentPlan.paymentPlanEndDateInterval(Optional.ofNullable(paymentPlanEndDateInterval));
     return this;
   }
 
   @Override
   public MergePaymentPlan paymentPlanEndDateType(String paymentPlanEndDateType) {
-    this.nextPaymentPlan.paymentPlanEndDateType(paymentPlanEndDateType);
+    this.nextPaymentPlan.paymentPlanEndDateType(Optional.ofNullable(paymentPlanEndDateType));
     return this;
   }
 

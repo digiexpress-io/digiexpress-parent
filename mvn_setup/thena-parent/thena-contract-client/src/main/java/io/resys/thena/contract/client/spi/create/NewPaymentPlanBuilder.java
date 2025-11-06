@@ -59,7 +59,11 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
         .id(OidUtils.gen())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
-        .contractId(contractId);
+        .contractId(contractId)
+        .partyId(Optional.empty())
+        .paymentPlanEndDate(Optional.empty())
+        .paymentPlanEndDateInterval(Optional.empty())
+        .paymentPlanEndDateType(Optional.empty());
     
   
     final var updates = currentTx.getPaymentPlanUpdates().stream().map(e -> e.getId()).toList();
@@ -84,7 +88,7 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
 
   @Override
   public NewPaymentPlan partyId(@Nullable String partyId) {
-    this.next.partyId(partyId);
+    this.next.partyId(Optional.ofNullable(partyId));
     return this;
   }
 
@@ -126,19 +130,19 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
 
   @Override
   public NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate) {
-    this.next.paymentPlanEndDate(paymentPlanEndDate);
+    this.next.paymentPlanEndDate(Optional.ofNullable(paymentPlanEndDate));
     return this;
   }
 
   @Override
   public NewPaymentPlan paymentPlanEndDateInterval(@Nullable Duration paymentPlanEndDateInterval) {
-    this.next.paymentPlanEndDateInterval(paymentPlanEndDateInterval);
+    this.next.paymentPlanEndDateInterval(Optional.ofNullable(paymentPlanEndDateInterval));
     return this;
   }
 
   @Override
   public NewPaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType) {
-    this.next.paymentPlanEndDateType(paymentPlanEndDateType);
+    this.next.paymentPlanEndDateType(Optional.ofNullable(paymentPlanEndDateType));
     return this;
   }
 

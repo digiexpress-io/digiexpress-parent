@@ -34,8 +34,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
         processId: template.processId,
         taskId: template.taskId,
         userId: template.userId,
-        subLabelKey: template.subLabelKey,
-        subLabelValue: template.subLabelValue,
         reply: template.replys?.join("\r\n\r\n") ?? '',
         customerTitle: template.customerTitle,
         question: template.content?.question ?? '' 
@@ -91,7 +89,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
           sx={{ mb: 3 }}
           multiline
           minRows={4}
-          placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder', defaultMessage: 'Customer question' })}
+          placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder' })}
           value={command?.question ?? ''}
         />
 
@@ -100,7 +98,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
           sx={{ mb: 3 }}
           multiline
           minRows={4}
-          placeholder='Write a reply here'
+          placeholder={intl.formatMessage({ id: 'feedback.myReply.placeholder' })}
           value={command?.reply ?? ''}
         />
 

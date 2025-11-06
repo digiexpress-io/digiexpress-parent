@@ -30,17 +30,12 @@ import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
 import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
-import io.digiexpress.thena.batch.client.test.config.PgProfile;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
 @Slf4j
 public class CreateOneBatchDbTest extends DbTestTemplate {
   final String batchName = "run-all-dialob-related-tasks";

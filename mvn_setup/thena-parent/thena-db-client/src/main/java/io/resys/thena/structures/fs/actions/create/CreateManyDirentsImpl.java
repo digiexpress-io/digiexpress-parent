@@ -40,7 +40,6 @@ import io.resys.thena.structures.fs.FsInserts.FsBatchDirents;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.fs.ImmutableFsBatchDirents;
 import io.resys.thena.structures.fs.actions.commitlog.FsCommitBuilder;
-import io.resys.thena.structures.fs.actions.create.CreateOneDirentImpl.CreateOneDirentException;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -90,8 +89,8 @@ public class CreateManyDirentsImpl implements CreateManyDirents {
         tx.query().direntSequences().nextVal(this.dirents.size())
         .onItem().transformToUni(nextVal -> createRequest(tx, nextVal))
         .onItem().transformToUni(request -> createResponse(tx, request))
-        .onFailure(CreateManyDirentException.class).recoverWithItem(ex -> {
-          final CreateOneDirentException error = (CreateOneDirentException) ex;          
+        .onFailure(CreateManyDirentException.class).recoverWithItem(error -> {
+                    
           return ImmutableManyDirentsEnvelope.builder()
             .tenantId(tenantId)
             .addMessages(ImmutableMessage.builder()
@@ -110,7 +109,7 @@ public class CreateManyDirentsImpl implements CreateManyDirents {
   private Uni<ManyDirentsEnvelope> createResponse(FsState tx, FsBatchDirents request) {
     return tx.insert().batchMany(request).onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-        throw new CreateOneDirentException("Failed to create dirents!", rsp);
+        throw new CreateManyDirentException("Failed to create dirents!", rsp);
       }
       
       final ManyDirentsEnvelope result = ImmutableManyDirentsEnvelope.builder()

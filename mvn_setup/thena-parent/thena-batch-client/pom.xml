@@ -25,11 +25,14 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client-pg</artifactId>
     </dependency>
-  
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-test-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    
   </dependencies>
 </project>

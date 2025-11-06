@@ -30,7 +30,6 @@ const StyledSelectFormControl = styled(FormControl)<FormControlProps>(({ theme }
 
 const StyledSelectHelperText = styled(FormHelperText)(({ theme }) => ({
   marginTop: theme.spacing(1),
-  paddingLeft: theme.spacing(2),
 }));
 
 const StyledSelectBase = styled(Select)(({ theme }) => ({

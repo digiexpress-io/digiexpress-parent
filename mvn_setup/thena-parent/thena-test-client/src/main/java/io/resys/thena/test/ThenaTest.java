@@ -1,12 +1,10 @@
-package io.resys.hdes.client.test.config;
-
-import java.util.Map;
+package io.resys.thena.test;
 
 /*-
  * #%L
- * thena-docdb-pgsql
+ * thena-test-client
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +20,16 @@ import java.util.Map;
  * #L%
  */
 
-import io.quarkus.test.junit.QuarkusTestProfile;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class PgProfile implements QuarkusTestProfile {
-  @Override
-  public Map<String, String> getConfigOverrides() {
-    return Map.of(
-      "quarkus.datasource.db-kind", "pg",
-      "quarkus.datasource.reactive.max-size", "20"
-    );
-  }
+import org.junit.jupiter.api.extension.ExtendWith;
 
-  @Override
-  public String getConfigProfile() {
-    return "pg-profile";
-  }
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(ThenaTestExtension.class)
+public @interface ThenaTest {
+  ThenaTestDbConfig database() default @ThenaTestDbConfig(enabled = false);
 }

@@ -221,19 +221,19 @@ public interface PaymentPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getContractId(),
-        doc.getPartyId().orElse(null),
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
+        doc.getPartyId().map(TableUtils::toUuid).orElse(null),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getPaymentPlanStatus(),
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
         doc.getPaymentPlanStartDate(),
-        doc.getPaymentPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
         doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        doc.getPaymentPlanEndDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getPaymentPlanEndDateInterval()),
         doc.getPaymentPlanEndDateType().orElse(null)
       });
     }
@@ -243,19 +243,19 @@ public interface PaymentPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getContractId(),
-        doc.getPartyId().orElse(null),
-        doc.getCommitId(),
+        TableUtils.toUuid(doc.getContractId()),
+        doc.getPartyId().map(TableUtils::toUuid).orElse(null),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getPaymentPlanStatus(),
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
         doc.getPaymentPlanStartDate(),
-        doc.getPaymentPlanStartDateInterval(),
+        TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
         doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        doc.getPaymentPlanEndDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getPaymentPlanEndDateInterval()),
         doc.getPaymentPlanEndDateType().orElse(null),
-        doc.getId()
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -264,7 +264,7 @@ public interface PaymentPlanTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(PaymentPlan paymentPlan) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        paymentPlan.getId()
+        TableUtils.toUuid(paymentPlan.getId())
       });
     }
   }

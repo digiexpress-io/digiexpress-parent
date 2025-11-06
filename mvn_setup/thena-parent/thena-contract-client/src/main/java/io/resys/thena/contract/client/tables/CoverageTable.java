@@ -238,12 +238,12 @@ public interface CoverageTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Coverage doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getContractId(),
-        doc.getInsuredId(),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getContractId()),
+        TableUtils.toUuid(doc.getInsuredId()),
         doc.getExternalId(),
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getCoverageType(),
         doc.getCoverageCode(),
         doc.getCoverageSumInsured().orElse(null),
@@ -253,10 +253,10 @@ public interface CoverageTable {
         doc.getCoverageEffectiveFrom(),
         doc.getCoverageEffectiveTo().orElse(null),
         doc.getCoverageTermStartDate(),
-        doc.getCoverageTermStartDateInterval(),
+        TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
         doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        doc.getCoverageTermEndDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getCoverageTermEndDateInterval()),
         doc.getCoverageTermEndDateType().orElse(null)
       });
     }
@@ -266,10 +266,10 @@ public interface CoverageTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Coverage doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getContractId(),
-        doc.getInsuredId(),
+        TableUtils.toUuid(doc.getContractId()),
+        TableUtils.toUuid(doc.getInsuredId()),
         doc.getExternalId(),
-        doc.getCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getCoverageType(),
         doc.getCoverageCode(),
         doc.getCoverageSumInsured().orElse(null),
@@ -279,12 +279,12 @@ public interface CoverageTable {
         doc.getCoverageEffectiveFrom(),
         doc.getCoverageEffectiveTo().orElse(null),
         doc.getCoverageTermStartDate(),
-        doc.getCoverageTermStartDateInterval(),
+        TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
         doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        doc.getCoverageTermEndDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getCoverageTermEndDateInterval()),
         doc.getCoverageTermEndDateType().orElse(null),
-        doc.getId()
+        TableUtils.toUuid(doc.getId())
       });
     }
   }
@@ -293,7 +293,7 @@ public interface CoverageTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Coverage coverage) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
-        coverage.getId()
+        TableUtils.toUuid(coverage.getId())
       });
     }
   }

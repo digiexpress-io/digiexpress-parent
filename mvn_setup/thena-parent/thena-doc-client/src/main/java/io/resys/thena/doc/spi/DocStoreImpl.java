@@ -169,7 +169,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     protected ObjectMapper objectMapper;
     protected ThenaDocConfig.AuthorProvider authorProvider;
     
-    protected io.vertx.mutiny.pgclient.PgPool pgPool;
+    protected io.vertx.mutiny.sqlclient.Pool pgPool;
     protected String pgHost;
     protected String pgDb;
     protected Integer pgPort;

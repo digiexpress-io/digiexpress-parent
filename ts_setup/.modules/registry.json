@@ -2290,17 +2290,16 @@
       "actualDependencies": [
         "react",
         "@mui/material",
-        "react-intl",
         "@dxs-ts/wrench-api",
+        "react-intl",
         "@dxs-ts/eveli-primitives",
-        "notistack",
         "@dxs-ts/tagomi-api",
+        "notistack",
         "@mui/icons-material",
         "@tanstack/react-router",
         "@dxs-ts/envir-fetch",
         "@mui/x-tree-view",
         "@mui/utils",
-        "@dxs-ts/eveli-api",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -2320,11 +2319,11 @@
         "@dxs-ts/wrench-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/tagomi-api",
-        "@dxs-ts/envir-fetch",
-        "@dxs-ts/eveli-api"
+        "@dxs-ts/envir-fetch"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/eveli-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
         "luxon",
@@ -2985,16 +2984,16 @@
       "actualDependencies": [
         "react",
         "@mui/material",
-        "@mui/icons-material",
         "react-intl",
+        "@mui/icons-material",
         "luxon",
         "@mui/utils"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
-        "@mui/icons-material",
         "react-intl",
+        "@mui/icons-material",
         "luxon",
         "@mui/utils"
       ],
@@ -3655,6 +3654,6 @@
       ]
     }
   },
-  "checksum": "c0b714dd251c3485fc83c26bb558052caabb93d31253337b433f4ad730e9aa85",
-  "generatedAt": "2025-10-21T06:18:06.873Z"
+  "checksum": "21c96bf5eaec83a23f18fbcaee0674091becc77bd591bdbd4b4b16e10cac4f6b",
+  "generatedAt": "2025-11-05T15:01:17.306Z"
 }

@@ -24,16 +24,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
-import io.digiexpress.thena.batch.client.test.config.PgProfile;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import lombok.extern.slf4j.Slf4j;
 
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+
 @Slf4j
 public class CreateDropDbTest extends DbTestTemplate {
 

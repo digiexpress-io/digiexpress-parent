@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -103,7 +103,7 @@ public class MergePartyBuilder implements MergeParty {
 
   @Override
   public MergeParty partyEffectiveTo(LocalDate partyEffectiveTo) {
-    this.nextParty.partyEffectiveTo(partyEffectiveTo);
+    this.nextParty.partyEffectiveTo(Optional.ofNullable(partyEffectiveTo));
     return this;
   }
 
@@ -127,25 +127,25 @@ public class MergePartyBuilder implements MergeParty {
 
   @Override
   public MergeParty partyTermEndDate(LocalDate partyTermEndDate) {
-    this.nextParty.partyTermEndDate(partyTermEndDate);
+    this.nextParty.partyTermEndDate(Optional.ofNullable(partyTermEndDate));
     return this;
   }
 
   @Override
   public MergeParty partyTermEndDateInterval(Duration partyTermEndDateInterval) {
-    this.nextParty.partyTermEndDateInterval(partyTermEndDateInterval);
+    this.nextParty.partyTermEndDateInterval(Optional.ofNullable(partyTermEndDateInterval));
     return this;
   }
 
   @Override
   public MergeParty partyTermEndDateType(String partyTermEndDateType) {
-    this.nextParty.partyTermEndDateType(partyTermEndDateType);
+    this.nextParty.partyTermEndDateType(Optional.ofNullable(partyTermEndDateType));
     return this;
   }
 
   @Override
   public MergeParty partyData(JsonObject partyData) {
-    this.nextParty.partyData(partyData);
+    this.nextParty.partyData(Optional.ofNullable(partyData));
     return this;
   }
   

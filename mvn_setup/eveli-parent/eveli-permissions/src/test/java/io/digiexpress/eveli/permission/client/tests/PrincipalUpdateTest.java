@@ -32,14 +32,10 @@ import io.digiexpress.eveli.permission.client.api.model.ChangeType;
 import io.digiexpress.eveli.permission.client.api.model.ImmutableChangePrincipalRoles;
 import io.digiexpress.eveli.permission.client.tests.config.DbTestTemplate;
 import io.digiexpress.eveli.permission.client.tests.config.GenerateTestData;
-import io.digiexpress.eveli.permission.client.tests.config.OrgPgProfile;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.entities.Tenant;
 import lombok.extern.slf4j.Slf4j;
 
-@QuarkusTest
-@TestProfile(OrgPgProfile.class)
+
 @Slf4j
 public class PrincipalUpdateTest extends DbTestTemplate {
 

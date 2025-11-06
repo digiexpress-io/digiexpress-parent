@@ -3,12 +3,9 @@ import { MenuList, MenuItem, ListItemText, Button } from '@mui/material';
 import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
-
-import { useTagomiNav } from '../tagomi-nav';
 import { ActivityProps, useActivities } from './Activities';
 
-import { EveliPermissions, EveliShellExplorer, EveliShellCompose, _eveli_shell_useUtilityClasses as useUtilityClasses } from '@dxs-ts/eveli-primitives';
-import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
+import { EveliShellExplorer, EveliShellCompose, _eveli_shell_useUtilityClasses as useUtilityClasses } from '@dxs-ts/eveli-primitives';
 
 
 
@@ -35,11 +32,8 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps, onClick: () => void }>
 export const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const { activeItem, onNav } = useTagomiNav();
   const activities = useActivities();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
-  const [migrationsDialogOpen, setMigrationsDialogOpen] = React.useState(false)
 
   const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

@@ -16,6 +16,13 @@
     
       <dependency>
         <groupId>io.digiexpress</groupId>
+        <artifactId>thena-test-client</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.digiexpress</groupId>
         <artifactId>thena-contract-client</artifactId>
         <version>${project.version}</version>
       </dependency>

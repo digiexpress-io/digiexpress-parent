@@ -1,19 +1,10 @@
 package io.resys.thena.docdb.test;
 
-import java.io.Serializable;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-
-import org.immutables.value.Value;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 /*-
  * #%L
- * thena-docdb-mongo
+ * thena-doc-client
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +20,15 @@ import org.junit.jupiter.api.Test;
  * #L%
  */
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+
+import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
@@ -38,13 +36,11 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.doc.api.DocQueryActions.IncludeInQuery;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
-import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
+
 @Slf4j
 public class BatchDocWithoutCommitTreeTest extends DbTestTemplate {
   private final static String tenantId = "BatchDocWithoutCommitTreeTest-1";

@@ -22,15 +22,10 @@ package io.resys.thena.contract.test;
 
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.contract.samples.providers.Contract_FEEMI_Provider;
 import io.resys.thena.contract.test.config.DbTestTemplate;
-import io.resys.thena.contract.test.config.PgProfile;
 import lombok.extern.slf4j.Slf4j;
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
 @Slf4j
 public class Contract_CRUD_Test extends DbTestTemplate {
 
@@ -41,6 +36,6 @@ public class Contract_CRUD_Test extends DbTestTemplate {
   @Test
   public void feemiTest() {
     final var client = super.createClient(TENANT_ID);
-    //Contract_FEEMI_Provider.newSavings(client).await().atMost(atMost);
+    Contract_FEEMI_Provider.newSavings(client).await().atMost(atMost);
   }
 }

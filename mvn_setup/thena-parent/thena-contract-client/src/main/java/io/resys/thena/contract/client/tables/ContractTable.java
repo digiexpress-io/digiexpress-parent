@@ -247,21 +247,21 @@ public interface ContractTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Contract doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getParentContractId().orElse(null),
+        TableUtils.toUuid(doc.getId()),
+        doc.getParentContractId().map(TableUtils::toUuid).orElse(null),
         doc.getContractNumber(),
         doc.getExternalId().orElse(null),
-        doc.getCommitId(),
-        doc.getCreatedCommitId(),
-        doc.getUpdatedTreeCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         doc.getContractIssueDate(),
-        doc.getContractIssueDateInterval(),
+        TableUtils.toInterval(doc.getContractIssueDateInterval()),
         doc.getContractIssueDateType(),
         doc.getContractStartDate(),
-        doc.getContractStartDateInterval(),
+        TableUtils.toInterval(doc.getContractStartDateInterval()),
         doc.getContractStartDateType(),
         doc.getContractMaturityDate().orElse(null),
-        doc.getContractMaturityDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getContractMaturityDateInterval()),
         doc.getContractMaturityDateType().orElse(null),
         doc.getContractStatus(),
         doc.getContractSubStatus().orElse(null),
@@ -276,26 +276,26 @@ public interface ContractTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Contract doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentContractId().orElse(null),
+        doc.getParentContractId().map(TableUtils::toUuid).orElse(null),
         doc.getContractNumber(),
         doc.getExternalId().orElse(null),
-        doc.getCommitId(),
-        doc.getUpdatedTreeCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         doc.getContractIssueDate(),
-        doc.getContractIssueDateInterval(),
+        TableUtils.toInterval(doc.getContractIssueDateInterval()),
         doc.getContractIssueDateType(),
         doc.getContractStartDate(),
-        doc.getContractStartDateInterval(),
+        TableUtils.toInterval(doc.getContractStartDateInterval()),
         doc.getContractStartDateType(),
         doc.getContractMaturityDate().orElse(null),
-        doc.getContractMaturityDateInterval().orElse(null),
+        TableUtils.toIntervalOptional(doc.getContractMaturityDateInterval()),
         doc.getContractMaturityDateType().orElse(null),
         doc.getContractStatus(),
         doc.getContractSubStatus().orElse(null),
         doc.getContractType(),
         doc.getContractSubType().orElse(null),
         doc.getContractData().orElse(null),
-        doc.getId()
+        TableUtils.toUuid(doc.getId())
       });
     }
   }

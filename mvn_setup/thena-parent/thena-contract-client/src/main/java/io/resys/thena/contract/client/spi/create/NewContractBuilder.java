@@ -23,6 +23,7 @@ package io.resys.thena.contract.client.spi.create;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -76,7 +77,15 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
         .commitId(commitId)
         .updatedTreeCommitId(commitId)
         .createdCommitId(commitId)
-        .contractNumber(contractNumber);
+        .contractNumber(contractNumber)
+        .parentContractId(Optional.empty())
+        .externalId(Optional.empty())
+        .contractMaturityDate(Optional.empty())
+        .contractMaturityDateInterval(Optional.empty())
+        .contractMaturityDateType(Optional.empty())
+        .contractSubStatus(Optional.empty())
+        .contractSubType(Optional.empty())
+        .contractData(Optional.empty());
         
     this.logger = logger;
   }
@@ -89,13 +98,13 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract parentContractId(@Nullable String parentContractId) {
-    this.contract.parentContractId(parentContractId);
+    this.contract.parentContractId(Optional.ofNullable(parentContractId));
     return this;
   }
 
   @Override
   public NewContract externalId(@Nullable String externalId) {
-    this.contract.externalId(externalId);
+    this.contract.externalId(Optional.ofNullable(externalId));
     return this;
   }
 
@@ -137,19 +146,19 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract contractMaturityDate(@Nullable LocalDate contractMaturityDate) {
-    this.contract.contractMaturityDate(contractMaturityDate);
+    this.contract.contractMaturityDate(Optional.ofNullable(contractMaturityDate));
     return this;
   }
 
   @Override
   public NewContract contractMaturityDateInterval(@Nullable Duration contractMaturityDateInterval) {
-    this.contract.contractMaturityDateInterval(contractMaturityDateInterval);
+    this.contract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
     return this;
   }
 
   @Override
   public NewContract contractMaturityDateType(@Nullable String contractMaturityDateType) {
-    this.contract.contractMaturityDateType(contractMaturityDateType);
+    this.contract.contractMaturityDateType(Optional.ofNullable(contractMaturityDateType));
     return this;
   }
 
@@ -161,7 +170,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract contractSubStatus(@Nullable String contractSubStatus) {
-    this.contract.contractSubStatus(contractSubStatus);
+    this.contract.contractSubStatus(Optional.ofNullable(contractSubStatus));
     return this;
   }
 
@@ -173,13 +182,13 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
   @Override
   public NewContract contractSubType(@Nullable String contractSubType) {
-    this.contract.contractSubType(contractSubType);
+    this.contract.contractSubType(Optional.ofNullable(contractSubType));
     return this;
   }
 
   @Override
   public NewContract contractData(@Nullable JsonObject contractData) {
-    this.contract.contractData(contractData);
+    this.contract.contractData(Optional.ofNullable(contractData));
     return this;
   }
 

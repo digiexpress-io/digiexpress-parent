@@ -155,8 +155,8 @@ public interface CommitTreeTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(CommitTree doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getId(),
-        doc.getCommitId(),
+        TableUtils.toUuid(doc.getId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null)
@@ -168,11 +168,11 @@ public interface CommitTreeTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(CommitTree doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getCommitId(),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null),
-        doc.getId()
+        TableUtils.toUuid(doc.getId())
       });
     }
   }

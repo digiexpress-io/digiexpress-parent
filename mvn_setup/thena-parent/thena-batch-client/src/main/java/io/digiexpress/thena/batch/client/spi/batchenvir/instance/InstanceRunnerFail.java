@@ -22,6 +22,8 @@ package io.digiexpress.thena.batch.client.spi.batchenvir.instance;
 
 import java.time.OffsetDateTime;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
@@ -31,7 +33,6 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeLog.ExecutionLogLev
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.spi.batchenvir.BatchEnvirLogger;
-import io.quarkus.runtime.util.ExceptionUtil;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,7 @@ public class InstanceRunnerFail {
         .createdAt(OffsetDateTime.now())
         .format("Failed to runtime execution")
         .formatType(BatchEnvirLogger.INSTANCE_ERROR.getName())
-        .stack(ExceptionUtil.generateStackTrace(throwable))
+        .stack(ExceptionUtils.getStackTrace(throwable))
         .build();
     final RuntimeInstance updatedInstance = ImmutableRuntimeInstance.builder().from(start)
         .status(RuntimeStatus.COMPLETED)

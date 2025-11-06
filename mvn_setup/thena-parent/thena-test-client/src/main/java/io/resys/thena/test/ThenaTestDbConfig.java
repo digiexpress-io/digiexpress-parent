@@ -1,12 +1,10 @@
-package io.resys.thena.grim.test.config;
-
-import java.util.Map;
+package io.resys.thena.test;
 
 /*-
  * #%L
- * thena-docdb-pgsql
+ * thena-test-client
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +20,17 @@ import java.util.Map;
  * #L%
  */
 
-import io.quarkus.test.junit.QuarkusTestProfile;
 
-public class PgProfile implements QuarkusTestProfile {
-  @Override
-  public Map<String, String> getConfigOverrides() {
-    return Map.of(
-      "quarkus.datasource.db-kind", "pg",
-      "quarkus.datasource.reactive.max-size", "20",
-      "quarkus.datasource.devservices.image-name", "postgres:17"
-    );
-  }
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-  @Override
-  public String getConfigProfile() {
-    return "pg-profile";
-  }
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ThenaTestDbConfig {
+  boolean enabled() default true; 
+  String database() default "eveli-app";
+  String host() default "localhost";
+  int port() default 5433;
+  String user() default "eveli-app";
+  String password() default "password123";
+  int poolMaxSize() default 5;
 }

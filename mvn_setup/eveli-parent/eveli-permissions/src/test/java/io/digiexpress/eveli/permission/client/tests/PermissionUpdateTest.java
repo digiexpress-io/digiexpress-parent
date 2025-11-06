@@ -30,12 +30,7 @@ import io.digiexpress.eveli.permission.client.api.model.ImmutableChangePermissio
 import io.digiexpress.eveli.permission.client.api.model.ImmutableCreatePermission;
 import io.digiexpress.eveli.permission.client.api.model.Principal.Permission;
 import io.digiexpress.eveli.permission.client.tests.config.DbTestTemplate;
-import io.digiexpress.eveli.permission.client.tests.config.OrgPgProfile;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 
-@QuarkusTest
-@TestProfile(OrgPgProfile.class)
 public class PermissionUpdateTest extends DbTestTemplate {
   
   public Permission createPermissionForUpdate(PermissionClient client) {

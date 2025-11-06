@@ -34,14 +34,10 @@ import io.digiexpress.thena.mq.client.api.ThenaMqConsumer.MessageResponse;
 import io.digiexpress.thena.mq.client.api.entities.Binding.BindingStatus;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.TestProfile;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@QuarkusTest
-@TestProfile(PgProfile.class)
 @Slf4j
 public class CreateOneChannelTest extends DbTestTemplate {
 
@@ -144,8 +140,8 @@ public class CreateOneChannelTest extends DbTestTemplate {
   
     
     // Check that consumers have been called
-    Assertions.assertNotNull(worker_1_rsp.getValue());
-    Assertions.assertNotNull(worker_2_rsp.getValue());
+    Assertions.assertNotNull(worker_1_rsp.get());
+    Assertions.assertNotNull(worker_2_rsp.get());
     
     
     // Check for bindings

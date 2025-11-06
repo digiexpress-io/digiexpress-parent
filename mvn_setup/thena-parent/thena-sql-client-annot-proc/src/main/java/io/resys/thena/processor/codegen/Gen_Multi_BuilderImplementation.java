@@ -185,12 +185,66 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     method.addCode("return $T.combine().all()\n", ClassName.get(Uni.class));
     method.addCode("  .unis(\n");
     
-    final var visitCalls = new ArrayList<String>();
-    for (final var operationName : operations.keySet()) {
-      visitCalls.add("visit" + NamingUtils.capitalize(operationName) + "(entries)");
+    // Group operations by type: DELETE -> INSERT -> UPDATE
+    final var deleteOps = new ArrayList<String>();
+    final var insertOps = new ArrayList<String>();  
+    final var updateOps = new ArrayList<String>();
+    
+    // Sort tables by order to maintain referential integrity
+    final var tablesByOrder = tables.stream()
+        .sorted((a, b) -> Integer.compare(a.getOrder(), b.getOrder()))
+        .toList();
+    
+    // Group operations by type and sort by table order
+    for (final var table : tablesByOrder) {
+      for (final var sqlMethod : table.getSqlMethods()) {
+        final var fieldName = buildOperationFieldName(table, sqlMethod.getType());
+        if (fieldName != null && operations.containsKey(fieldName)) {
+          final var visitCall = "visit" + NamingUtils.capitalize(fieldName) + "(entries)";
+          
+          switch (sqlMethod.getType()) {
+            case DELETE_ALL -> deleteOps.add(visitCall);
+            case INSERT_ALL -> insertOps.add(visitCall);
+            case UPDATE_ALL -> updateOps.add(visitCall);
+            default -> { /* skip */ }
+          }
+        }
+      }
     }
     
-    method.addCode("    " + String.join(",\n    ", visitCalls));
+    final var visitCalls = new ArrayList<String>();
+    int orderNumber = 1;
+    
+    // 1. DELETES
+    if (!deleteOps.isEmpty()) {
+      method.addCode("    // === DELETE OPERATIONS ===\n");
+      for (final var deleteOp : deleteOps) {
+        visitCalls.add(deleteOp + ", // " + (orderNumber++));
+      }
+      method.addCode("    " + String.join("\n    ", visitCalls) + "\n\n");
+      visitCalls.clear();
+    }
+    
+    // 2. INSERTS  
+    if (!insertOps.isEmpty()) {
+      method.addCode("    // === INSERT OPERATIONS ===\n");
+      for (final var insertOp : insertOps) {
+        visitCalls.add(insertOp + ", // " + (orderNumber++));
+      }
+      method.addCode("    " + String.join("\n    ", visitCalls) + "\n\n");
+      visitCalls.clear();
+    }
+    
+    // 3. UPDATES
+    if (!updateOps.isEmpty()) {
+      method.addCode("    // === UPDATE OPERATIONS ===\n");
+      for (int i = 0; i < updateOps.size(); i++) {
+        final var updateOp = updateOps.get(i);
+        final var isLast = (i == updateOps.size() - 1);
+        visitCalls.add(updateOp + (isLast ? " // " : ", // ") + (orderNumber++));
+      }
+      method.addCode("    " + String.join("\n    ", visitCalls));
+    }
     method.addCode("\n  )\n");
     
     method.addCode("  .with($T.class, (items) -> visitSuccess(entries, items))\n", 

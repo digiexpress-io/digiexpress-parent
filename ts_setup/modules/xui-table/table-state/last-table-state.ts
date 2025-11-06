@@ -2,6 +2,7 @@
 import React from "react";
 import { TableState, TableStateInitWith } from "../table-api";
 import { useTable } from "../table-provider";
+import { ColumnDef } from "@tanstack/react-table";
 const dataId = 'last-table-state';
 
 
@@ -29,7 +30,7 @@ export function useLastTableState(tableId: string) {
     })
   }, [tableId]);
 
-  const onRestore: () => Promise<TableStateInitWith | undefined> = React.useCallback(async () => {
+  const onRestore: (columns: ColumnDef<any, unknown>[]) => Promise<TableStateInitWith | undefined> = React.useCallback(async (columns) => {
     if (!isSmartTables) {
       return undefined;
     }
@@ -41,7 +42,8 @@ export function useLastTableState(tableId: string) {
 
       const config = data.config.find(config => config.dataId === dataId);
       if (config) {
-        return JSON.parse(config.value);
+        const savedSate: TableStateInitWith = JSON.parse(config.value);
+        return savedSate;
       }
     } catch (e) {
       console.error('Failed to parse table settings', e)
