@@ -79,7 +79,7 @@ const FeedbackTopicSelect: React.FC<{
 }> = ({ onChange, value, values, label }) => {
 
 
-  const found = values.find(topic => topic.labelKey.endsWith(`.${value}`))?.labelKey;
+  const found = values.find(topic => topic.labelKey.toLocaleLowerCase().endsWith(`.${value.toLocaleLowerCase()}`))?.labelKey;
 
   return (
     <Box sx={{ minWidth: 120 }}>
