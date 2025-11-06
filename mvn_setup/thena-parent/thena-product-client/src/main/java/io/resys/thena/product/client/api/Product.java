@@ -49,7 +49,7 @@ public interface Product {
   
   default Optional<AgeRange> getAgeRange() {
     // Look for age eligibility rules
-    Optional<ProductRule> ageRule = this.getRuleByCode("ELIGIBILITY_AGE_INCEPTION");
+    Optional<ProductRule> ageRule = this.getRuleByCode(ProductRuleCodes.CODE_ELIGIBILITY_001_AGE_INCEPTION);
     if (ageRule.isPresent() && ageRule.get().getMeta().getStartAge().isPresent() 
         && ageRule.get().getMeta().getEndAge().isPresent()) {
       return Optional.of(AgeRange.of(
@@ -64,7 +64,7 @@ public interface Product {
   
   default Optional<IncomeRange> getContributionRange() {
     // Look for regular payment amount rules
-    Optional<ProductRule> paymentRule = this.getRuleByCode("CONTRIBUTION_REGULAR_MONTHLY");
+    Optional<ProductRule> paymentRule = this.getRuleByCode(ProductRuleCodes.CODE_CONTRIBUTION_002_REGULAR_MONTHLY);
     if (paymentRule.isPresent() && paymentRule.get().getMeta().getMinAmount().isPresent() 
         && paymentRule.get().getMeta().getMaxAmount().isPresent()) {
       
@@ -107,7 +107,7 @@ public interface Product {
   }
   
   default AllocationRules extractAllocationRules() {
-    final Optional<ProductRule> allocationRule = this.getRuleByCode("INVESTMENT_ALLOCATION_MIN");
+    final Optional<ProductRule> allocationRule = this.getRuleByCode(ProductRuleCodes.CODE_INVESTMENT_013_ALLOCATION_MIN);
     
     BigDecimal minPercentage = BigDecimal.ZERO;
     if (allocationRule.isPresent() && allocationRule.get().getMeta().getMinAmount().isPresent()) {
@@ -118,6 +118,32 @@ public interface Product {
         .maxFundsAllowed(100)
         .requiresTotal100(true)
         .build();
+  }
+  
+  default List<CoverOption> getCoverOptions() {
+    List<ProductRule> coverRules = this.getRulesByTypeAndSubType(RuleType.CLAIM, RuleSubType.DEATH_BENEFIT);
+    
+    return coverRules.stream()
+        .map(rule -> {
+          final var code = rule.getRuleCode();
+          final var name = extractNameFromText(rule.getText());
+          final var description = rule.getText();
+          final var coverType = extractCoverTypeFromCode(code);
+          final var amount = rule.getMeta().getMinAmount().orElse(BigDecimal.ZERO);
+          final var taxTreatment = rule.getMeta().getAttributes().getOrDefault("tax_treatment", "STANDARD");
+          final var beneficiaryType = rule.getMeta().getAttributes().getOrDefault("beneficiary_type", "ANY");
+          
+          return ImmutableCoverOption.builder()
+              .code(code)
+              .name(name)
+              .description(description)
+              .coverType(coverType)
+              .amount(amount)
+              .taxTreatment(taxTreatment)
+              .beneficiaryType(beneficiaryType)
+              .build();
+        })
+        .collect(Collectors.toList());
   }
   
   
@@ -161,6 +187,14 @@ public interface Product {
       return text.substring(0, text.indexOf(":")).trim();
     }
     return text.trim();
+  }
+  
+  private static String extractCoverTypeFromCode(String code) {
+    // Extract cover type from rule code
+    if (code.contains("DEATH_BENEFIT")) return "DEATH_BENEFIT";
+    if (code.contains("INHERITANCE")) return "INHERITANCE_COVER";
+    if (code.contains("BENEFICIARY")) return "BENEFICIARY_CLAUSE";
+    return "BASIC_COVER";
   }
   
   
@@ -212,5 +246,18 @@ public interface Product {
           .maxIncome(maxIncome)
           .build();
     }
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableCoverOption.class)
+  @JsonDeserialize(as = ImmutableCoverOption.class)
+  interface CoverOption {
+    String getCode();
+    String getName();
+    String getDescription();
+    String getCoverType();
+    BigDecimal getAmount();
+    String getTaxTreatment();
+    String getBeneficiaryType();
   }
 }
