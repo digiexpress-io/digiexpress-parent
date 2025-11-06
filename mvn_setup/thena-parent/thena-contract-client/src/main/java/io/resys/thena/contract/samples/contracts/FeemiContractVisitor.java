@@ -32,7 +32,6 @@ import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationTy
 import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.Party;
 import io.resys.thena.contract.samples.GenerationOptions;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
 import io.resys.thena.contract.samples.providers.Fund_Provider;
 import io.resys.thena.product.client.api.Product;
@@ -44,8 +43,6 @@ import io.resys.thena.product.client.api.Product;
 public class FeemiContractVisitor {
   
   public static void visitSavingsContract(NewContract newContract, Product product, GenerationOptions options) {
-    // Extract constraints from product rules
-    ProductConstraintExtractor.ProductConstraints constraints = ProductConstraintExtractor.extractConstraints(product);
     
     // Generate contract data using FeemiSavingsContractGenerator
     FeemiSavingsContractGenerator.GeneratedContractData contractData = 
@@ -179,8 +176,6 @@ public class FeemiContractVisitor {
   }
   
   public static void visitPensionContract(NewContract newContract, Product product, GenerationOptions options) {
-    // Extract constraints from product rules
-    ProductConstraintExtractor.ProductConstraints constraints = ProductConstraintExtractor.extractConstraints(product);
     
     // Generate person data
     CRM_Provider.Person person = CRM_Provider.generatePerson(
@@ -247,8 +242,6 @@ public class FeemiContractVisitor {
   }
   
   public static void visitPSContract(NewContract newContract, Product product, GenerationOptions options) {
-    // Extract constraints from product rules
-    ProductConstraintExtractor.ProductConstraints constraints = ProductConstraintExtractor.extractConstraints(product);
     
     // Generate person data
     CRM_Provider.Person person = CRM_Provider.generatePerson(
@@ -325,8 +318,6 @@ public class FeemiContractVisitor {
   }
   
   public static void visitNovaVirtusContract(NewContract newContract, Product product, GenerationOptions options) {
-    // Extract constraints from product rules
-    ProductConstraintExtractor.ProductConstraints constraints = ProductConstraintExtractor.extractConstraints(product);
     
     // Generate person data
     CRM_Provider.Person person = CRM_Provider.generatePerson(

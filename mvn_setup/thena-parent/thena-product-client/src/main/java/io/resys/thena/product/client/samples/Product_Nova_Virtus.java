@@ -22,6 +22,7 @@ package io.resys.thena.product.client.samples;
 
 import java.math.BigDecimal;
 
+import io.resys.thena.product.client.api.ImmutableProduct;
 import io.resys.thena.product.client.api.Product;
 import io.resys.thena.product.client.api.ProductRule;
 import io.resys.thena.product.client.api.RuleMeta;
@@ -31,7 +32,7 @@ import io.resys.thena.product.client.api.RuleType;
 public class Product_Nova_Virtus {
   
   public static Product create() {
-    return Product.builder()
+    return ImmutableProduct.builder()
         .productCode("NOVA_VIR_001")
         .productName("Nova Virtus Säästöhenkivakuutus")
         .category("Unit-linked Endowment Insurance")

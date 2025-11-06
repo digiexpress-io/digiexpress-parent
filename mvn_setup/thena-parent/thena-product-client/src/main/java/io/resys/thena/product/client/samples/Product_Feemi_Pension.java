@@ -22,6 +22,7 @@ package io.resys.thena.product.client.samples;
 
 import java.math.BigDecimal;
 
+import io.resys.thena.product.client.api.ImmutableProduct;
 import io.resys.thena.product.client.api.Product;
 import io.resys.thena.product.client.api.ProductRule;
 import io.resys.thena.product.client.api.RuleMeta;
@@ -31,7 +32,7 @@ import io.resys.thena.product.client.api.RuleType;
 public class Product_Feemi_Pension {
   
   public static Product create() {
-    return Product.builder()
+    return ImmutableProduct.builder()
         .productCode("FEEMI_PEN_001")
         .productName("Vapaaehtoinen eläkevakuutus")
         .category("Individual Pension Insurance")

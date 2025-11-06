@@ -27,6 +27,9 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.product.client.api.Product.AgeRange;
+import io.resys.thena.product.client.api.Product.IncomeRange;
+
 @Value.Immutable
 @JsonSerialize(as = ImmutableGenerationOptions.class)
 @JsonDeserialize(as = ImmutableGenerationOptions.class)
@@ -50,33 +53,5 @@ public interface GenerationOptions {
     return builder().build();
   }
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableAgeRange.class)
-  @JsonDeserialize(as = ImmutableAgeRange.class)
-  interface AgeRange {
-    int getMinAge();
-    int getMaxAge();
-    
-    static AgeRange of(int minAge, int maxAge) {
-      return ImmutableAgeRange.builder()
-          .minAge(minAge)
-          .maxAge(maxAge)
-          .build();
-    }
-  }
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableIncomeRange.class)
-  @JsonDeserialize(as = ImmutableIncomeRange.class)
-  interface IncomeRange {
-    int getMinIncome();
-    int getMaxIncome();
-    
-    static IncomeRange of(int minIncome, int maxIncome) {
-      return ImmutableIncomeRange.builder()
-          .minIncome(minIncome)
-          .maxIncome(maxIncome)
-          .build();
-    }
-  }
+
 }

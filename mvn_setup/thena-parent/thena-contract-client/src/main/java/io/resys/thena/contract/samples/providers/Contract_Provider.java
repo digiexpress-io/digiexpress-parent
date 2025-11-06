@@ -23,9 +23,10 @@ package io.resys.thena.contract.samples.providers;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
 import io.resys.thena.contract.samples.GenerationOptions;
-import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
 import io.resys.thena.contract.samples.contracts.FeemiContractVisitor;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
+import io.resys.thena.product.client.api.Product.AgeRange;
+import io.resys.thena.product.client.api.Product.IncomeRange;
+import io.resys.thena.product.client.api.ProductConstraintExtractor;
 import io.resys.thena.product.client.samples.Product_Feemi_PS;
 import io.resys.thena.product.client.samples.Product_Feemi_Pension;
 import io.resys.thena.product.client.samples.Product_Feemi_Savings;
@@ -48,7 +49,7 @@ public class Contract_Provider {
     final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(constraints.ageRange)  // Extract age range from product rules
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules
         .incomeRange(IncomeRange.of(30000, 80000))
         .isIncludeBeneficiaries(true)
         .riskProfile("MODERATE")
@@ -78,7 +79,7 @@ public class Contract_Provider {
     final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(constraints.ageRange)  // Extract age range from product rules
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules
         .incomeRange(IncomeRange.of(35000, 90000))
         .isIncludeBeneficiaries(false)
         .riskProfile("CONSERVATIVE")
@@ -108,7 +109,7 @@ public class Contract_Provider {
     final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(constraints.ageRange)  // Extract age range from product rules
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules
         .incomeRange(IncomeRange.of(25000, 75000))
         .isIncludeBeneficiaries(false)
         .riskProfile("MODERATE")
@@ -139,7 +140,7 @@ public class Contract_Provider {
     final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(constraints.ageRange)  // Extract age range from product rules (fallback 18-70 for Nova Virtus)
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules (fallback 18-70 for Nova Virtus)
         .incomeRange(IncomeRange.of(40000, 120000))
         .isIncludeBeneficiaries(true)
         .riskProfile("AGGRESSIVE")

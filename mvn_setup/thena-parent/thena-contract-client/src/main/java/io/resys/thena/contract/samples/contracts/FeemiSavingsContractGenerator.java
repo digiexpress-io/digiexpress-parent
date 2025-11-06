@@ -31,13 +31,13 @@ import java.util.Random;
 import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
 import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.AllocationRules;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.InvestmentOption;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.ProductConstraints;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
 import io.resys.thena.contract.samples.providers.Fund_Provider;
 import io.resys.thena.product.client.api.Product;
+import io.resys.thena.product.client.api.ProductConstraintExtractor;
+import io.resys.thena.product.client.api.ProductConstraintExtractor.AllocationRules;
+import io.resys.thena.product.client.api.ProductConstraintExtractor.InvestmentOption;
+import io.resys.thena.product.client.api.ProductConstraintExtractor.ProductConstraints;
 import io.vertx.core.json.JsonObject;
 
 public class FeemiSavingsContractGenerator {
