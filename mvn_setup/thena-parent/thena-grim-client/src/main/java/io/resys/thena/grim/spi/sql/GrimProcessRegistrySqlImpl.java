@@ -74,8 +74,9 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
         .append(" ON(procs.task_id = mission.id)").ln()
         
         .append(" WHERE procs.user_id = $1 and mission.archived_at is null").ln()
+        .append(" AND procs.status <> $2").ln()
         .build())
-        .props(Tuple.of(userId))
+        .props(Tuple.of(userId, "EXPIRED"))
         .build();
   }
   
