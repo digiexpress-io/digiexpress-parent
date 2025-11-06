@@ -464,6 +464,7 @@ article.parent.helper,,"If a Parent article is selected, this article will live 
 article.composer.parent.unselected,,No parent article,Ei valittu,Ingen överordnad artikel,
 article.create,,Create article,Luo artikkeli,Skapa artikel,
 article.name,,Article name,Artikkelin nimi,Artikelnamn,
+article.unknown,,Unknown article,Tuntematon artikkeli,Okänd artikel,
 article.delete.title,,Delete article,Poista tämä artikkeli pysyvästi?,Ta bort artikel,
 article.delete.description,,Deleting this article will remove it and its associated pages globally from the application.,Artikkelin poistaminen poistaa sen ja siihen yhdistetyt sivut koko sovelluksesta.,Om du tar bort den här artikeln tas den och dess associerade sidor bort globalt från programmet.,
 article.edit.title,,Edit article,Muokkaa artikkelia,Redigera artikel,
