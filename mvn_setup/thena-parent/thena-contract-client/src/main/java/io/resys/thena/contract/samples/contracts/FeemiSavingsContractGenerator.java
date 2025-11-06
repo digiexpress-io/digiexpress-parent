@@ -29,14 +29,14 @@ import java.util.Map;
 import java.util.Random;
 
 import io.resys.thena.contract.samples.GenerationOptions;
-import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
-import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
 import io.resys.thena.contract.samples.providers.Fund_Provider;
 import io.resys.thena.product.client.api.Product;
+import io.resys.thena.product.client.api.Product.AgeRange;
+import io.resys.thena.product.client.api.Product.AllocationRules;
+import io.resys.thena.product.client.api.Product.IncomeRange;
+import io.resys.thena.product.client.api.Product.InvestmentOption;
 import io.resys.thena.product.client.api.ProductConstraintExtractor;
-import io.resys.thena.product.client.api.ProductConstraintExtractor.AllocationRules;
-import io.resys.thena.product.client.api.ProductConstraintExtractor.InvestmentOption;
 import io.resys.thena.product.client.api.ProductConstraintExtractor.ProductConstraints;
 import io.vertx.core.json.JsonObject;
 

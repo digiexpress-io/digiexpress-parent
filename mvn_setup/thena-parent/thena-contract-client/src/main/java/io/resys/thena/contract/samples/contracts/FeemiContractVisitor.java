@@ -179,9 +179,9 @@ public class FeemiContractVisitor {
     
     // Generate person data
     CRM_Provider.Person person = CRM_Provider.generatePerson(
-        options.getAgeRange().orElse(constraints.ageRange).getMinAge(),
-        options.getIncomeRange().orElse(constraints.contributionRange).getMinIncome(),
-        options.getIncomeRange().orElse(constraints.contributionRange).getMaxIncome()
+        options.getAgeRange().getMinAge(),
+        options.getIncomeRange().getMinIncome(),
+        options.getIncomeRange().getMaxIncome()
     );
     
     // Generate fund data
@@ -245,10 +245,11 @@ public class FeemiContractVisitor {
     
     // Generate person data
     CRM_Provider.Person person = CRM_Provider.generatePerson(
-        options.getAgeRange().orElse(constraints.ageRange).getMinAge(),
-        options.getIncomeRange().orElse(constraints.contributionRange).getMinIncome(),
-        options.getIncomeRange().orElse(constraints.contributionRange).getMaxIncome()
+        options.getAgeRange().getMinAge(),
+        options.getIncomeRange().getMinIncome(),
+        options.getIncomeRange().getMaxIncome()
     );
+    
     
     // Generate fund data
     Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
@@ -321,9 +322,9 @@ public class FeemiContractVisitor {
     
     // Generate person data
     CRM_Provider.Person person = CRM_Provider.generatePerson(
-        options.getAgeRange().orElse(constraints.ageRange).getMinAge(),
-        options.getIncomeRange().orElse(constraints.contributionRange).getMinIncome(),
-        options.getIncomeRange().orElse(constraints.contributionRange).getMaxIncome()
+        options.getAgeRange().getMinAge(),
+        options.getIncomeRange().getMinIncome(),
+        options.getIncomeRange().getMaxIncome()
     );
     
 
