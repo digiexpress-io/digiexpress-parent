@@ -55,7 +55,9 @@ export const GRouterOfferSummaryRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
+    display: 'flex',
     justifyContent: 'center',
+    width: '100%',
 
     '.GRouterOfferSummary-summaryLayout': {
       [theme.breakpoints.up('md')]: {
@@ -71,14 +73,21 @@ export const GRouterOfferSummaryRoot = styled("div", {
       display: 'flex',
       flexDirection: 'column',
 
-      justifyItems: 'center',
-      justifySelf: 'center',
+      marginLeft: 'auto',
+      marginRight: 'auto',
       border: `1px solid ${theme.palette.divider}`,
       backgroundColor: theme.palette.background.default
     },
     '.GRouterOfferSummary-button': {
-      marginTop: theme.spacing(1),
-      justifySelf: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop: theme.spacing(2),
+      width: '100%',
+    },
+    '.GRouterOfferSummary-button > .MuiButton-root': {
+      width: '100%',
+      alignSelf: 'center',
+      flex: '0 0 auto',
     },
     '.GRouterOfferSummary-spacer': {
       marginTop: theme.spacing(0.5),
@@ -158,7 +167,11 @@ export const SummaryBox: React.FC<{
 
       <div className={classes.spacer} />
 
-      <Button className={classes.button} variant='contained' onClick={onNav}>{intl.formatMessage({ id: buttonBackToMsg })}</Button>
+      <Box className={classes.button}>
+        <Button variant='contained' onClick={onNav}>
+          {intl.formatMessage({ id: buttonBackToMsg })}
+        </Button>
+      </Box>
     </Box>
   )
 }

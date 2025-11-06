@@ -166,8 +166,9 @@ export const GFormPageFooter = styled('div', {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    justifySelf: 'flex-end',
-    gap: theme.spacing(1)
-
+    width: '100%',                
+    justifyContent: 'flex-end',    
+    flexWrap: 'wrap',             
+    gap: theme.spacing(1),
   };
 });
