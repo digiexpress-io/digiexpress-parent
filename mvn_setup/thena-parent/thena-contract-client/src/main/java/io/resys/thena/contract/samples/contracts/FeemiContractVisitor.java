@@ -28,6 +28,8 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.entities.ContractDocType;
+import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
+import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.Party;
 import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
@@ -333,17 +335,14 @@ public class FeemiContractVisitor {
         options.getIncomeRange().orElse(constraints.contributionRange).getMaxIncome()
     );
     
-    // Generate beneficiary if enabled
-    CRM_Provider.Beneficiary beneficiary = null;
-    if (options.isIncludeBeneficiaries()) {
-      beneficiary = CRM_Provider.generateBeneficiary("SPOUSE", 100);
-    }
+
     
     // Generate fund data
     Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
     Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("NOVA_VIR_001");
     
     final var policyholder = new MutableObject<Party>();
+    
     
     // Build Nova Virtus endowment contract
     newContract
@@ -375,20 +374,6 @@ public class FeemiContractVisitor {
           policyholder.setValue(built);
         })
         
-        // Add beneficiary if present
-        .addParty(party -> {
-          if (beneficiary != null) {
-            party
-                .externalId(beneficiary.getPersonalId())
-                .partyType("BENEFICIARY")
-                .partyEffectiveFrom(LocalDate.now())
-                .partyTermStartDate(LocalDate.now())
-                .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Duration.ZERO)
-                .partyData(beneficiary.toJson())
-                .build();
-          }
-        })
         
         // Add inheritance cover
         .addCoverage(coverageBuilder -> {
@@ -473,14 +458,43 @@ public class FeemiContractVisitor {
               .noteType("INHERITANCE_PLANNING")
               .noteValue("Unit-linked endowment with flexible inheritance planning and tax-efficient wealth transfer")
               .build();
-        })
+        });
         
         // Add beneficiary clause note
-        .addNote(note -> {
-          note
-              .noteType("BENEFICIARY_CLAUSE")
-              .noteValue("Beneficiary clause allows distribution without separate will, marital rights can be excluded")
-              .build();
-        });
+  
+        if(options.isIncludeBeneficiaries()) {
+          final var beneficiary = new MutableObject<Party>();
+          newContract.addParty(party -> {
+            
+            // Generate beneficiary if enabled
+            final var template = CRM_Provider.generateBeneficiary("SPOUSE", 100);
+    
+            final var created = party
+                .externalId(template.getPersonalId())
+                .partyType("BENEFICIARY")
+                .partyEffectiveFrom(LocalDate.now())
+                .partyTermStartDate(LocalDate.now())
+                .partyTermStartDateType(ContractDocType.CONTRACT.name())
+                .partyTermStartDateInterval(Duration.ZERO)
+                .partyData(template.toJson())
+                .build();
+            
+            beneficiary.setValue(created);
+            
+            
+          })
+          .addNote(note -> {
+            note
+                .relations(ImmutableContractOneOfRelations.builder()
+                    .partyId(beneficiary.get().getId())
+                    .relationType(ContractRelationType.PARTY)
+                    .build())
+                .noteType("BENEFICIARY_CLAUSE")
+                .noteValue("Beneficiary clause allows distribution without separate will, marital rights can be excluded")
+                .build();
+          });
+      }
+      newContract.build();
+        
   }
 }

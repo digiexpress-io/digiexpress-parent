@@ -115,13 +115,13 @@ public class Contract_Provider {
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitPSContract(contract, product, options))
         .onNewContract(newState -> {
-          System.out.println("Generated Feemi PS Contract:");
-          System.out.println("Contract ID: " + newState.getContract().getId());
-          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
-          System.out.println("Parties: " + newState.getParties().size());
-          System.out.println("Coverages: " + newState.getCoverages().size());
-          System.out.println("Payment Plans: " + newState.getPaymentPlans().size());
-          System.out.println("Notes: " + newState.getNotes().size());
+          log.info("✅ Generated Feemi PS Contract:");
+          log.info("   📝 Contract ID: {}", newState.getContract().getId());
+          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
+          log.info("   👥 Parties: {}", newState.getParties().size());
+          log.info("   🛡️ Coverages: {}", newState.getCoverages().size());
+          log.info("   💳 Payment Plans: {}", newState.getPaymentPlans().size());
+          log.info("   🏛️ Government Bonus Notes: {}", newState.getNotes().size());
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi PS contract")
@@ -145,13 +145,13 @@ public class Contract_Provider {
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitNovaVirtusContract(contract, product, options))
         .onNewContract(newState -> {
-          System.out.println("Generated Nova Virtus Contract:");
-          System.out.println("Contract ID: " + newState.getContract().getId());
-          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
-          System.out.println("Parties: " + newState.getParties().size());
-          System.out.println("Coverages: " + newState.getCoverages().size());
-          System.out.println("Investment Plans: " + newState.getInvPlans().size());
-          System.out.println("References: " + newState.getReferences().size());
+          log.info("✅ Generated Nova Virtus Endowment Contract:");
+          log.info("   📝 Contract ID: {}", newState.getContract().getId());
+          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
+          log.info("   👥 Parties: {}", newState.getParties().size());
+          log.info("   🛡️ Inheritance Coverage: {}", newState.getCoverages().size());
+          log.info("   💰 Investment Plans (Granite/Globe/ETF): {}", newState.getInvPlans().size());
+          log.info("   🔗 Product References: {}", newState.getReferences().size());
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Nova Virtus endowment contract")
