@@ -22,11 +22,12 @@ package io.resys.thena.contract.samples.providers;
 
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.samples.GenerationOptions;
 import io.resys.thena.contract.samples.contracts.FeemiContractVisitor;
+import io.resys.thena.product.client.api.Product;
 import io.resys.thena.product.client.api.Product.AgeRange;
 import io.resys.thena.product.client.api.Product.IncomeRange;
-import io.resys.thena.product.client.api.ProductConstraintExtractor;
 import io.resys.thena.product.client.samples.Product_Feemi_PS;
 import io.resys.thena.product.client.samples.Product_Feemi_Pension;
 import io.resys.thena.product.client.samples.Product_Feemi_Savings;
@@ -42,29 +43,23 @@ import lombok.extern.slf4j.Slf4j;
 public class Contract_Provider {
 
   /**
-   * Generate and persist a Feemi Savings contract with default options
+   * Generate and persist a Feemi Savings contract using full product capabilities
    */
   public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient) {
     final var product = Product_Feemi_Savings.create();
-    final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules
-        .incomeRange(IncomeRange.of(30000, 80000))
-        .isIncludeBeneficiaries(true)
-        .riskProfile("MODERATE")
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
+        .incomeRange(product.getContributionRange().orElse(IncomeRange.of(30000, 80000)))
+        .isIncludeBeneficiaries(hasDeathBenefits(product))  // Auto-detect if product has death coverage
+        .riskProfile(determineRiskProfile(product))  // Derive risk profile from investment options
         .build();
     
     return contractClient.withTenant().commit()
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitSavingsContract(contract, product, options))
         .onNewContract(newState -> {
-          log.info("✅ Generated Feemi Savings Contract:");
-          log.info("   📝 Contract ID: {}", newState.getContract().getId());
-          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
-          log.info("   👥 Parties: {}", newState.getParties().size());
-          log.info("   🛡️ Coverages: {}", newState.getCoverages().size());
-          log.info("   💰 Investment Plans: {}", newState.getInvPlans().size());
+          logProductBasedContract("Feemi Savings", product, newState);
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi Savings contract")
@@ -72,29 +67,23 @@ public class Contract_Provider {
   }
 
   /**
-   * Generate and persist a Feemi Pension contract with default options
+   * Generate and persist a Feemi Pension contract using full product capabilities
    */
   public static Uni<OneContractEnvelope> newPension(ContractClient contractClient) {
     final var product = Product_Feemi_Pension.create();
-    final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules
-        .incomeRange(IncomeRange.of(35000, 90000))
-        .isIncludeBeneficiaries(false)
-        .riskProfile("CONSERVATIVE")
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
+        .incomeRange(product.getContributionRange().orElse(IncomeRange.of(35000, 90000)))
+        .isIncludeBeneficiaries(hasDeathBenefits(product))
+        .riskProfile(determineRiskProfile(product))
         .build();
     
     return contractClient.withTenant().commit()
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitPensionContract(contract, product, options))
         .onNewContract(newState -> {
-          log.info("✅ Generated Feemi Pension Contract:");
-          log.info("   📝 Contract ID: {}", newState.getContract().getId());
-          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
-          log.info("   👥 Parties: {}", newState.getParties().size());
-          log.info("   🛡️ Coverages: {}", newState.getCoverages().size());
-          log.info("   💳 Payment Plans: {}", newState.getPaymentPlans().size());
+          logProductBasedContract("Feemi Pension", product, newState);
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi Pension contract")
@@ -102,30 +91,23 @@ public class Contract_Provider {
   }
 
   /**
-   * Generate and persist a Feemi PS contract with default options
+   * Generate and persist a Feemi PS contract using full product capabilities
    */
   public static Uni<OneContractEnvelope> newPS(ContractClient contractClient) {
     final var product = Product_Feemi_PS.create();
-    final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules
-        .incomeRange(IncomeRange.of(25000, 75000))
-        .isIncludeBeneficiaries(false)
-        .riskProfile("MODERATE")
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
+        .incomeRange(product.getContributionRange().orElse(IncomeRange.of(25000, 75000)))
+        .isIncludeBeneficiaries(hasDeathBenefits(product))
+        .riskProfile(determineRiskProfile(product))
         .build();
     
     return contractClient.withTenant().commit()
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitPSContract(contract, product, options))
         .onNewContract(newState -> {
-          log.info("✅ Generated Feemi PS Contract:");
-          log.info("   📝 Contract ID: {}", newState.getContract().getId());
-          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
-          log.info("   👥 Parties: {}", newState.getParties().size());
-          log.info("   🛡️ Coverages: {}", newState.getCoverages().size());
-          log.info("   💳 Payment Plans: {}", newState.getPaymentPlans().size());
-          log.info("   🏛️ Government Bonus Notes: {}", newState.getNotes().size());
+          logProductBasedContract("Feemi PS", product, newState);
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi PS contract")
@@ -133,33 +115,91 @@ public class Contract_Provider {
   }
 
   /**
-   * Generate and persist a Nova Virtus contract with default options
+   * Generate and persist a Nova Virtus contract using full product capabilities
    */
   public static Uni<OneContractEnvelope> newNovaVirtus(ContractClient contractClient) {
     final var product = Product_Nova_Virtus.create();
-    final var constraints = ProductConstraintExtractor.extractConstraints(product);
     
     GenerationOptions options = GenerationOptions.builder()
-        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))  // Extract age range from product rules (fallback 18-70 for Nova Virtus)
-        .incomeRange(IncomeRange.of(40000, 120000))
-        .isIncludeBeneficiaries(true)
-        .riskProfile("AGGRESSIVE")
+        .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
+        .incomeRange(product.getContributionRange().orElse(IncomeRange.of(40000, 120000)))
+        .isIncludeBeneficiaries(hasDeathBenefits(product))
+        .riskProfile(determineRiskProfile(product))
         .build();
     
     return contractClient.withTenant().commit()
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitNovaVirtusContract(contract, product, options))
         .onNewContract(newState -> {
-          log.info("✅ Generated Nova Virtus Endowment Contract:");
-          log.info("   📝 Contract ID: {}", newState.getContract().getId());
-          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
-          log.info("   👥 Parties: {}", newState.getParties().size());
-          log.info("   🛡️ Inheritance Coverage: {}", newState.getCoverages().size());
-          log.info("   💰 Investment Plans (Granite/Globe/ETF): {}", newState.getInvPlans().size());
-          log.info("   🔗 Product References: {}", newState.getReferences().size());
+          logProductBasedContract("Nova Virtus Endowment", product, newState);
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Nova Virtus endowment contract")
         .build();
+  }
+
+  /**
+   * Determines if the product has death benefits by checking cover options
+   */
+  private static boolean hasDeathBenefits(Product product) {
+    return !product.getCoverOptions().isEmpty();
+  }
+
+  /**
+   * Determines risk profile based on product's investment options
+   */
+  private static String determineRiskProfile(Product product) {
+    final var investmentOptions = product.extractInvestmentOptions();
+    
+    // Count risk levels
+    final long conservativeCount = investmentOptions.stream()
+        .filter(option -> "none".equalsIgnoreCase(option.getRiskLevel()) || 
+                         "low".equalsIgnoreCase(option.getRiskLevel()))
+        .count();
+    
+    final long aggressiveCount = investmentOptions.stream()
+        .filter(option -> "high".equalsIgnoreCase(option.getRiskLevel()) || 
+                         option.getName().toLowerCase().contains("equity") ||
+                         option.getName().toLowerCase().contains("etf"))
+        .count();
+    
+    // Determine profile based on investment mix
+    if (conservativeCount > 0 && aggressiveCount == 0) return "CONSERVATIVE";
+    if (aggressiveCount > conservativeCount) return "AGGRESSIVE";
+    return "MODERATE";
+  }
+
+  /**
+   * Enhanced logging that shows product capabilities and contract results
+   */
+  private static void logProductBasedContract(String productName, Product product, ContractContainer container) {
+    final var coverOptions = product.getCoverOptions();
+    final var investmentOptions = product.extractInvestmentOptions();
+    final var ageRange = product.getAgeRange();
+    
+    log.info("✅ Generated {} Contract:", productName);
+    log.info("   📝 Contract ID: {}", container.getContract().getId());
+    log.info("   🔢 Contract Number: {}", container.getContract().getContractNumber());
+    log.info("   👥 Parties: {}", container.getParties().size());
+    
+    // Show coverage based on product capabilities
+    if (!coverOptions.isEmpty()) {
+      log.info("   💀 Death Benefits: {} ({})", container.getCoverages().size(), 
+          coverOptions.stream().map(c -> c.getCoverType()).distinct().count() + " types");
+    } else {
+      log.info("   🛡️ Coverages: {} (No death benefits)", container.getCoverages().size());
+    }
+    
+    // Show investment details
+    log.info("   💰 Investment Plans: {} ({} options available)", 
+        container.getInvPlans().size(), investmentOptions.size());
+    
+    // Show product constraints applied
+    if (ageRange.isPresent()) {
+      log.info("   👶 Age Range: {}-{} years", ageRange.get().getMinAge(), ageRange.get().getMaxAge());
+    }
+    
+    log.info("   🔗 References: {}", container.getReferences().size());
+    log.info("   📋 Notes: {}", container.getNotes().size());
   }
 }
