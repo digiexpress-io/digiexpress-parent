@@ -40,13 +40,13 @@ import io.resys.thena.product.client.api.Product;
  * Feemi contract visitor that implements the NewContract interface and generates
  * realistic Finnish insurance contract data using CRM_Provider and Fund_Provider.
  */
-public class FeemiContractVisitor {
+public class SampleContractVisitor {
   
   public static void visitSavingsContract(NewContract newContract, Product product, GenerationOptions options) {
     
     // Generate contract data using FeemiSavingsContractGenerator
-    FeemiSavingsContractGenerator.GeneratedContractData contractData = 
-        FeemiSavingsContractGenerator.generate(product, options);
+    SavingsContractGenerator.GeneratedContractData contractData = 
+        SavingsContractGenerator.generate(product, options);
     
     
     final var policyholder = new MutableObject<Party>();
@@ -145,7 +145,7 @@ public class FeemiContractVisitor {
               .build();
           
           // Add allocations
-          for (FeemiSavingsContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
+          for (SavingsContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
             invPlan.addAllocation(alloc -> {
               alloc
                   .invPlanAllocCode(allocation.fundCode)

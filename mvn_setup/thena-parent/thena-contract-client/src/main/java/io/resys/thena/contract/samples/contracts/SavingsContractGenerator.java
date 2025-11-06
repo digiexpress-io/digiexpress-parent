@@ -38,7 +38,7 @@ import io.resys.thena.product.client.api.Product.IncomeRange;
 import io.resys.thena.product.client.api.Product.InvestmentOption;
 import io.vertx.core.json.JsonObject;
 
-public class FeemiSavingsContractGenerator {
+public class SavingsContractGenerator {
   
   private static final Random RANDOM = new Random();
   
