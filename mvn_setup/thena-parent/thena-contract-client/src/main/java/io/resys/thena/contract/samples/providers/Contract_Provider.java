@@ -31,11 +31,13 @@ import io.resys.thena.product.client.samples.Product_Feemi_Pension;
 import io.resys.thena.product.client.samples.Product_Feemi_PS;
 import io.resys.thena.product.client.samples.Product_Nova_Virtus;
 import io.smallrye.mutiny.Uni;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Central provider for generating realistic Finnish insurance contracts 
  * for all available products and persisting them to the database.
  */
+@Slf4j
 public class Contract_Provider {
 
   /**
@@ -55,12 +57,12 @@ public class Contract_Provider {
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitSavingsContract(contract, product, options))
         .onNewContract(newState -> {
-          System.out.println("Generated Feemi Savings Contract:");
-          System.out.println("Contract ID: " + newState.getContract().getId());
-          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
-          System.out.println("Parties: " + newState.getParties().size());
-          System.out.println("Coverages: " + newState.getCoverages().size());
-          System.out.println("Investment Plans: " + newState.getInvPlans().size());
+          log.info("✅ Generated Feemi Savings Contract:");
+          log.info("   📝 Contract ID: {}", newState.getContract().getId());
+          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
+          log.info("   👥 Parties: {}", newState.getParties().size());
+          log.info("   🛡️ Coverages: {}", newState.getCoverages().size());
+          log.info("   💰 Investment Plans: {}", newState.getInvPlans().size());
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi Savings contract")
@@ -84,12 +86,12 @@ public class Contract_Provider {
         .createOneContract()
         .contract(contract -> FeemiContractVisitor.visitPensionContract(contract, product, options))
         .onNewContract(newState -> {
-          System.out.println("Generated Feemi Pension Contract:");
-          System.out.println("Contract ID: " + newState.getContract().getId());
-          System.out.println("Contract Number: " + newState.getContract().getContractNumber());
-          System.out.println("Parties: " + newState.getParties().size());
-          System.out.println("Coverages: " + newState.getCoverages().size());
-          System.out.println("Payment Plans: " + newState.getPaymentPlans().size());
+          log.info("✅ Generated Feemi Pension Contract:");
+          log.info("   📝 Contract ID: {}", newState.getContract().getId());
+          log.info("   🔢 Contract Number: {}", newState.getContract().getContractNumber());
+          log.info("   👥 Parties: {}", newState.getParties().size());
+          log.info("   🛡️ Coverages: {}", newState.getCoverages().size());
+          log.info("   💳 Payment Plans: {}", newState.getPaymentPlans().size());
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi Pension contract")
