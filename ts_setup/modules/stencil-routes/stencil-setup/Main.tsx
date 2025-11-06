@@ -10,13 +10,10 @@ import { LinksView } from '../stencil-link';
 import { ExplorerItem, useStencilNav } from '../stencil-nav';
 import { SearchView } from '../stencil-search';
 import { ReleasesView } from '../stencil-release';
-
 import { Activities } from './Activities';
-
 import { ArticleTimestampsView } from '../stencil-locale/ArticleTimestampsView';
-
-
 import { StencilComposerApi } from '@dxs-ts/stencil-api';
+import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 
 //TODO == remove this
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
@@ -27,7 +24,7 @@ const Main: React.FC<{}> = () => {
 
   return React.useMemo(() => {
     if (site.contentType === "NO_CONNECTION") {
-      return (<Box>{site.contentType}</Box>);
+      return (<EveliSpinner message={site.contentType} />);
     }
     if (!activeItem) {
       return (<Box sx={root}></Box>)
