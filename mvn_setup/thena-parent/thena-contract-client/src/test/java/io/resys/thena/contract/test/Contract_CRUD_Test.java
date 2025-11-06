@@ -22,7 +22,7 @@ package io.resys.thena.contract.test;
 
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.contract.samples.providers.Contract_FEEMI_Provider;
+import io.resys.thena.contract.samples.providers.Contract_Provider;
 import io.resys.thena.contract.test.config.DbTestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +36,6 @@ public class Contract_CRUD_Test extends DbTestTemplate {
   @Test
   public void feemiTest() {
     final var client = super.createClient(TENANT_ID);
-    Contract_FEEMI_Provider.newSavings(client).await().atMost(atMost);
+    Contract_Provider.newSavings(client).await().atMost(atMost);
   }
 }

@@ -4,6 +4,7 @@ import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { ExplorerItem, useTagomiNav } from '../tagomi-nav';
 import { ServicesView } from '../tagomi-service';
 import { TemplateEditor } from '../tagomi-template';
+import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
@@ -13,7 +14,7 @@ const Main: React.FC<{}> = () => {
 
   return React.useMemo(() => {
     if (!site.commitAt) {
-      return (<Box>No commits found</Box>);
+      return (<Box><EveliSpinner message={'No commits found'} /></Box>);
     }
     if (!activeItem) {
       return (<Box sx={root}></Box>)

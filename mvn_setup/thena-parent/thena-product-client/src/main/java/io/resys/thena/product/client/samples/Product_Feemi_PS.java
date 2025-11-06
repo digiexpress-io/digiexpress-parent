@@ -22,6 +22,7 @@ package io.resys.thena.product.client.samples;
 
 import java.math.BigDecimal;
 
+import io.resys.thena.product.client.api.ImmutableProduct;
 import io.resys.thena.product.client.api.Product;
 import io.resys.thena.product.client.api.ProductRule;
 import io.resys.thena.product.client.api.RuleMeta;
@@ -30,8 +31,8 @@ import io.resys.thena.product.client.api.RuleType;
 
 public class Product_Feemi_PS {
   
-  public Product build() {
-    return Product.builder()
+  public static Product create() {
+    return ImmutableProduct.builder()
         .productCode("FEEMI_PS_001")
         .productName("PS-vakuutus (Long-term Savings Insurance)")
         .category("Government Incentivized Long-term Savings")

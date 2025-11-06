@@ -12,7 +12,7 @@ import { useTagomiNav } from '../tagomi-nav';
 import { ServiceEdit } from './ServiceEdit';
 import { ServiceDelete } from './ServiceDelete';
 import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../tagomi-template';
-import { TemplateDependenciesAdd } from '../tagomi-dependencies';
+import { TemplateDependenciesAdd, TemplateDependenciesEdit } from '../tagomi-dependencies';
 import { DebugLocale } from '../tagomi-debug';
 
 
@@ -32,7 +32,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
     'TemplateDelete' | 
     'ServiceDelete' |
     'DebugLocale' |
-    'DependenciesAdd'
+    'DependenciesAdd' |
+    'DependenciesEdit'
   >(undefined);
 
   const handleDialogClose = () => setDialogOpen(undefined);
@@ -46,6 +47,7 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
       {dialogOpen === 'TemplateDelete' ? <TemplateDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'DebugLocale' ? <DebugLocale serviceId={service.id} onClose={handleDialogClose} /> : null}
       {dialogOpen === 'DependenciesAdd' ? <TemplateDependenciesAdd serviceId={service.id} onClose={handleDialogClose} /> : null}
+      {dialogOpen === 'DependenciesEdit' ? <TemplateDependenciesEdit serviceId={service.id} onClose={handleDialogClose} /> : null}
 
 
       {/** Article options */}
@@ -84,6 +86,13 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
         icon={EditIcon}
         onClick={() => setDialogOpen('DependenciesAdd')}
         labelText={intl.formatMessage({ id: 'tagomi.service.options.template.addDependencies' })}>
+      </Burger.TreeItemOption>
+
+      <Burger.TreeItemOption nodeId={service.id + 'dependencies.edit'}
+        color='page'
+        icon={EditIcon}
+        onClick={() => setDialogOpen('DependenciesEdit')}
+        labelText={intl.formatMessage({ id: 'tagomi.service.options.template.editDependencies' })}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={service.id + 'pages.delete'}

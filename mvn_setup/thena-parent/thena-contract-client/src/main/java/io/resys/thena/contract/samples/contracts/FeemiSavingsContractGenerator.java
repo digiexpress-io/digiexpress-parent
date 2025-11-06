@@ -29,15 +29,13 @@ import java.util.Map;
 import java.util.Random;
 
 import io.resys.thena.contract.samples.GenerationOptions;
-import io.resys.thena.contract.samples.GenerationOptions.AgeRange;
-import io.resys.thena.contract.samples.GenerationOptions.IncomeRange;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.AllocationRules;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.InvestmentOption;
-import io.resys.thena.contract.samples.products.ProductConstraintExtractor.ProductConstraints;
 import io.resys.thena.contract.samples.providers.CRM_Provider;
 import io.resys.thena.contract.samples.providers.Fund_Provider;
 import io.resys.thena.product.client.api.Product;
+import io.resys.thena.product.client.api.Product.AgeRange;
+import io.resys.thena.product.client.api.Product.AllocationRules;
+import io.resys.thena.product.client.api.Product.IncomeRange;
+import io.resys.thena.product.client.api.Product.InvestmentOption;
 import io.vertx.core.json.JsonObject;
 
 public class FeemiSavingsContractGenerator {
@@ -109,16 +107,13 @@ public class FeemiSavingsContractGenerator {
   }
   
   public static GeneratedContractData generate(Product product, GenerationOptions options) {
-    // Extract constraints from product rules
-    ProductConstraints constraints = ProductConstraintExtractor.extractConstraints(product);
-    
     GeneratedContractData data = new GeneratedContractData();
     
     // Generate contract data
-    data.contract = generateContractData(product, constraints);
+    data.contract = generateContractData(product, product);
     
     // Generate policyholder respecting age and income constraints
-    data.policyholder = generatePolicyholder(constraints, options);
+    data.policyholder = generatePolicyholder(product, options);
     
     // Generate beneficiary
     if (options.isIncludeBeneficiaries()) {
@@ -126,12 +121,12 @@ public class FeemiSavingsContractGenerator {
     }
     
     // Generate payment plan based on income and product constraints
-    data.paymentPlan = generatePaymentPlan(data.policyholder.annualIncome, constraints);
+    data.paymentPlan = generatePaymentPlan(data.policyholder.annualIncome, product);
     
     // Generate investment allocations based on risk profile and product options
     data.investmentAllocations = generateInvestmentAllocations(
-        constraints.investmentOptions, 
-        constraints.allocationRules, 
+        product.getInvestmentOptions(), 
+        product.getAllocationRules(), 
         options.getRiskProfile());
     
     // Generate coverage
@@ -140,7 +135,7 @@ public class FeemiSavingsContractGenerator {
     return data;
   }
   
-  private static ContractData generateContractData(Product product, ProductConstraints constraints) {
+  private static ContractData generateContractData(Product product, Product constraints) {
     ContractData contract = new ContractData();
     
     contract.productCode = product.getProductCode();
@@ -165,26 +160,14 @@ public class FeemiSavingsContractGenerator {
     return contract;
   }
   
-  private static PolicyholderData generatePolicyholder(ProductConstraints constraints, GenerationOptions options) {
+  private static PolicyholderData generatePolicyholder(Product constraints, GenerationOptions options) {
     PolicyholderData holder = new PolicyholderData();
     
     // Determine age range (respect both product constraints and generation options)
-    AgeRange ageRange = constraints.ageRange;
-    if (options.getAgeRange().isPresent()) {
-      AgeRange optionsAge = options.getAgeRange().get();
-      int minAge = Math.max(ageRange.getMinAge(), optionsAge.getMinAge());
-      int maxAge = Math.min(ageRange.getMaxAge(), optionsAge.getMaxAge());
-      ageRange = AgeRange.of(minAge, maxAge);
-    }
+    AgeRange ageRange = options.getAgeRange();
     
     // Determine income range (respect both product constraints and generation options)
-    IncomeRange incomeRange = constraints.contributionRange;
-    if (options.getIncomeRange().isPresent()) {
-      IncomeRange optionsIncome = options.getIncomeRange().get();
-      int minIncome = Math.max(incomeRange.getMinIncome(), optionsIncome.getMinIncome());
-      int maxIncome = Math.min(incomeRange.getMaxIncome(), optionsIncome.getMaxIncome());
-      incomeRange = IncomeRange.of(minIncome, maxIncome);
-    }
+    IncomeRange incomeRange = options.getIncomeRange();
     
     // Generate person using CRM_Provider
     int targetAge = ageRange.getMinAge() + RANDOM.nextInt(ageRange.getMaxAge() - ageRange.getMinAge() + 1);
@@ -224,7 +207,7 @@ public class FeemiSavingsContractGenerator {
     return beneficiary;
   }
   
-  private static PaymentPlanData generatePaymentPlan(int annualIncome, ProductConstraints constraints) {
+  private static PaymentPlanData generatePaymentPlan(int annualIncome, Product constraints) {
     PaymentPlanData payment = new PaymentPlanData();
     
     // Generate payment plan using Fund_Provider
