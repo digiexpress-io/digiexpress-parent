@@ -32,13 +32,15 @@
         "react"
       ],
       "internalDependencies": [],
-      "actualDependencies": [],
-      "actualExternalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
-      "unusedDependencies": [
-        "react"
-      ]
+      "unusedDependencies": []
     },
     "@dxs-ts/contract-composer": {
       "name": "@dxs-ts/contract-composer",
@@ -184,7 +186,9 @@
           "@dxs-ts/xui-table": "*",
           "@dxs-ts/task-composer-v1": "*",
           "@dxs-ts/task-composer-v2": "*",
-          "@dxs-ts/task-feedback": "*"
+          "@dxs-ts/task-feedback": "*",
+          "@dxs-ts/contract-api": "*",
+          "@dxs-ts/contract-composer": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -230,6 +234,8 @@
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "react",
         "react-dom",
         "react-intl",
@@ -289,7 +295,9 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
-        "@dxs-ts/task-feedback"
+        "@dxs-ts/task-feedback",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer"
       ],
       "actualDependencies": [
         "react",
@@ -341,6 +349,8 @@
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@tanstack/react-store",
         "@mui/utils"
       ]
@@ -557,6 +567,7 @@
           "@dxs-ts/stencil-api": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/task-api": "*",
+          "@dxs-ts/contract-api": "*",
           "@dxs-ts/tagomi-api": "*",
           "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/user-profile": "*",
@@ -585,6 +596,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
+        "@dxs-ts/contract-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
@@ -620,6 +632,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
+        "@dxs-ts/contract-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
@@ -641,6 +654,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/contract-api",
         "@dxs-ts/task-api",
         "@material-table/core"
       ],
@@ -662,6 +676,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/contract-api",
         "@dxs-ts/task-api"
       ],
       "missingDependencies": [],
@@ -881,6 +896,8 @@
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/task-composer-v1": "*",
           "@dxs-ts/task-composer-v2": "*",
+          "@dxs-ts/contract-api": "*",
+          "@dxs-ts/contract-composer": "*",
           "@dxs-ts/xui-table": "*",
           "@dxs-ts/xui-datetime": "*"
         },
@@ -929,6 +946,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
         "react",
@@ -1001,6 +1020,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -1015,10 +1036,11 @@
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
         "@tanstack/react-router",
-        "@dxs-ts/eveli-primitives",
-        "@dxs-ts/xui-datetime",
         "luxon",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
         "@dxs-ts/task-composer-v1",
@@ -1032,15 +1054,16 @@
         "@material-table/core",
         "recharts",
         "@dxs-ts/user-profile",
-        "@dxs-ts/tagomi-api",
-        "@dxs-ts/tagomi-routes",
-        "@dxs-ts/wrench-api",
         "@dxs-ts/gamut-shell",
         "@mui/system",
         "notistack",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
-        "@dxs-ts/wrench-routes"
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/contract-composer"
       ],
       "actualExternalDependencies": [
         "react",
@@ -1065,22 +1088,24 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
-        "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/xui-table",
         "@dxs-ts/user-profile",
-        "@dxs-ts/tagomi-api",
-        "@dxs-ts/tagomi-routes",
-        "@dxs-ts/wrench-api",
         "@dxs-ts/gamut-shell",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
-        "@dxs-ts/wrench-routes"
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
+        "@dxs-ts/wrench-api",
+        "@dxs-ts/wrench-routes",
+        "@dxs-ts/contract-composer"
       ],
       "missingDependencies": [],
       "unusedDependencies": []
@@ -1886,6 +1911,8 @@
           "@dxs-ts/stencil-routes": "*",
           "@dxs-ts/tagomi-api": "*",
           "@dxs-ts/tagomi-routes": "*",
+          "@dxs-ts/contract-api": "*",
+          "@dxs-ts/contract-composer": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/eveli-api": "*",
@@ -1922,6 +1949,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -1952,6 +1981,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -2007,6 +2038,8 @@
         "@dxs-ts/user-profile",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-datetime",
@@ -3285,7 +3318,9 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
-        "@dxs-ts/task-feedback"
+        "@dxs-ts/task-feedback",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer"
       ],
       "@dxs-ts/gamut-demo-app": [
         "@dxs-ts/envir-util",
@@ -3310,6 +3345,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
+        "@dxs-ts/contract-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
@@ -3345,6 +3381,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
         "@dxs-ts/task-composer-v2",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -3399,6 +3437,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3473,9 +3513,17 @@
     },
     "reverse": {
       "@dxs-ts/contract-api": [
-        "@dxs-ts/contract-composer"
+        "@dxs-ts/contract-composer",
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
       ],
-      "@dxs-ts/contract-composer": [],
+      "@dxs-ts/contract-composer": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
       "@dxs-ts/eveli-demo-app": [],
       "@dxs-ts/gamut-demo-app": [],
       "@dxs-ts/envir-fetch": [
@@ -3726,6 +3774,8 @@
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/contract-api",
+        "@dxs-ts/contract-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3814,6 +3864,6 @@
       ]
     }
   },
-  "checksum": "b723568139b819a6c866e4931c334769d0f948c40e6898e25b96e2c8df4ce8f1",
-  "generatedAt": "2025-11-07T12:09:35.561Z"
+  "checksum": "7e94ee36fde265325d83fa090bf98116de04d1c59147224449444b932bd1c3fb",
+  "generatedAt": "2025-11-07T14:23:13.887Z"
 }

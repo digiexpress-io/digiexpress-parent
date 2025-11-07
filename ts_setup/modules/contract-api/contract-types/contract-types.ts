@@ -60,6 +60,7 @@ export declare namespace ContractApi {
     parentContractId?: ContractId;
     contractName: string;
     contractNumber: string;
+    contractStatus: string;
     externalId?: string;
     commitId: CommitId;
     createdCommitId: CommitId;

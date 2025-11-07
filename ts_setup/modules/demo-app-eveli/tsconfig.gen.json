@@ -85,6 +85,12 @@
       ],
       "@dxs-ts/task-feedback": [
         "../task-feedback/index.ts"
+      ],
+      "@dxs-ts/contract-api": [
+        "../contract-api/index.ts"
+      ],
+      "@dxs-ts/contract-composer": [
+        "../contract-composer/index.ts"
       ]
     }
   },
@@ -170,16 +176,22 @@
     },
     {
       "path": "../task-feedback"
+    },
+    {
+      "path": "../contract-api"
+    },
+    {
+      "path": "../contract-composer"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-10-09T12:40:51.267Z",
+    "at": "2025-11-07T13:55:35.614Z",
     "forModule": "@dxs-ts/eveli-demo-app",
-    "fromRegistry": "ca22f58e07c1",
+    "fromRegistry": "620240fca325",
     "alias": {
       "@dxs-ts/eveli-demo-app": [
-        "../task-feedback"
+        "../contract-composer"
       ]
     }
   }

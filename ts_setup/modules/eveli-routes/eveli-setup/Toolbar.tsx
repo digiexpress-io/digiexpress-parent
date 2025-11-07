@@ -6,7 +6,7 @@ import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import { BuildOutlined as BuildOutlinedIcon } from '@mui/icons-material';
 import { EditNoteOutlined as EditNoteOutlinedIcon } from '@mui/icons-material';
 import { BeenhereOutlined as BeenhereOutlinedIcon } from '@mui/icons-material';
-import { Handshake as HandshakeIcon } from '@mui/icons-material';
+
 import { FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
 
@@ -116,23 +116,6 @@ export const Toolbar: React.FC<{}> = ({ }) => {
               <EditNoteOutlinedIcon />
             </IconButton>
             <Typography><FormattedMessage id='toolbar.tagomi' /></Typography>
-          </div>
-        </EveliPermissions>
-      </EveliTenantFeatureEnabled>
-
-      <EveliTenantFeatureEnabled id='CONTRACT_ENABLED'>
-        <EveliPermissions id='NAV_TO_CONTRACTS'>
-          <div>
-            <IconButton
-              {...(location.pathname.includes('contracts') ? { disabled: true, className: classes.itemActive } : {})}
-              onClick={() => navigate({
-                from: '/secured/$locale',
-                to: '/secured/$locale/contracts',
-                search: { explorer: [] }
-              })}>
-              <HandshakeIcon />
-            </IconButton>
-            <Typography><FormattedMessage id='toolbar.contracts' /></Typography>
           </div>
         </EveliPermissions>
       </EveliTenantFeatureEnabled>
