@@ -102,7 +102,6 @@ export const GInboxRoot = styled("div", {
       alignItems: 'center',
     },
 
-    // date positioning
     '.GInbox-inboxItemSentAt': {
       display: 'flex',
       flexShrink: 0,
@@ -112,56 +111,40 @@ export const GInboxRoot = styled("div", {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       paddingLeft: theme.spacing(1),
+    
       [theme.breakpoints.down('sm')]: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-      }, 
+      },
+    
       [theme.breakpoints.up('sm')]: {
         flexShrink: 0,
         width: '8ch',
         minWidth: '8ch',
         maxWidth: '8ch',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
       },
-      [theme.breakpoints.up('md')]: {
-        justifyContent: 'space-between',
-        textAlign: 'right',
-      },
-      [theme.breakpoints.up('lg')]: {
-        justifyContent: 'flex-end',
-        textAlign: 'right',
-      },      
     },
-
+    
     '.GInbox-inboxItemAttachments': {
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexGrow: 1,
-        flexShrink: 1,
-        minWidth: 0,
-        overflow: 'hidden',
-      },
-      [theme.breakpoints.only('lg')]: {
-        justifyContent: 'flex-start',
-        paddingRight: theme.spacing(5),
-      },
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      flexGrow: 1,
+      flexShrink: 1,
+      minWidth: 0,
+      overflow: 'hidden',
+      gap: theme.spacing(1),
+      '& > *': { flex: '0 0 auto' },
       [theme.breakpoints.down('sm')]: {
-        display: 'flex',
         flexWrap: 'wrap',
-        gap: theme.spacing(1),
-        justifyContent: 'flex-start',
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
-        minWidth: 0,
       },
-    },        
+    },
     
     '& .GSort-root': {
       display: 'flex',
