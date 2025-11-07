@@ -12,12 +12,13 @@ import { ContractApi, useContractBackend } from '@dxs-ts/contract-api';
 
 
 import { IndicatorStatus } from './IndicatorStatus';
-import { filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
+import { filterStringOrArrayFn, filterContractRefOrSubjectFn, taskSortingFn } from './tableHelpers';
+import { IndicatorSubject } from './IndicatorSubject';
 
 
 export const CONTRACT_TABLE_QUERY_KEY = 'find-all-contract';
 
-export const TaskTable: React.FC = () => {
+export const ContractTable: React.FC = () => {
   const intl = useIntl();
   const backend = useContractBackend();
 
@@ -27,11 +28,15 @@ export const TaskTable: React.FC = () => {
     initialData: [],
   });
 
+  console.log(data)
+
   
   const columns: ColumnDef<ContractApi.Contract, any>[] = [
-    {
-      header: intl.formatMessage({ id: 'taskTable.col.header.addInfo', defaultMessage: 'Info' }),
-      accessorKey: 'additionalInfo',
+     {
+      header: intl.formatMessage({ id: 'contractTable.col.header.contractNumber'}),
+      accessorKey: 'contractNumber',
+      cell: (contract) => flexRender(IndicatorSubject, { title: contract.getValue(), id: contract.row.original.id }),
+      filterFn: filterContractRefOrSubjectFn,
       size: 100,
       minSize: 100,
       enableSorting: false,
@@ -39,21 +44,22 @@ export const TaskTable: React.FC = () => {
       enableColumnFilter: true,
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.client', defaultMessage: 'Client' }),
-      accessorKey: 'clientIdentificator',
-      filterFn: 'includesString',
-      size: 150,
-      minSize: 150,
-      enableColumnFilter: true,
+      header: intl.formatMessage({ id: 'contractTable.col.header.contractType'}),
+      accessorKey: 'contractType',
+      size: 100,
+      minSize: 100,
+      enableSorting: false,
       enableResizing: true,
+      enableColumnFilter: true,
     },
+
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.status', defaultMessage: 'Status' }),
+      header: intl.formatMessage({ id: 'contractTable.col.header.status' }),
       accessorKey: 'statusIntl',
       filterFn: filterStringOrArrayFn,
       size: 150,
       minSize: 150,
-      cell: (cell) => flexRender(IndicatorStatus, { status: cell.row.original.status! }),
+      cell: (cell) => flexRender(IndicatorStatus, { status: cell.row.original.contractStatus }),
       sortingFn: taskSortingFn,
       enableSorting: true,
       enableColumnFilter: true,
@@ -62,21 +68,10 @@ export const TaskTable: React.FC = () => {
         enableSelection: true
       }
     },
+
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.due', defaultMessage: 'Due' }),
-      accessorKey: 'dueDate',
-      size: 150,
-      minSize: 150,
-      enableSorting: true,
-      enableColumnFilter: true,
-      enableResizing: true,
-      meta: { isDate: true },
-      filterFn: filterDueDate,
-      cell: (dueDate) => flexRender(AnyDateTimeShort, { value: dueDate.getValue() })
-    },
-    {
-      header: intl.formatMessage({ id: 'taskTable.col.header.created', defaultMessage: 'Created' }),
-      accessorKey: 'created',
+      header: intl.formatMessage({ id: 'contractTable.col.header.created'}),
+      accessorKey: 'transitives.createdAt',
       size: 150,
       minSize: 150,
       enableSorting: true,
@@ -85,7 +80,19 @@ export const TaskTable: React.FC = () => {
       meta: { isDate: true },
       filterFn: filterCreated,
       cell: (created) => flexRender(AnyDateTimeShort, { value: created.getValue() })
-    }
+    },
+    {
+      header: intl.formatMessage({ id: 'contractTable.col.header.maturityDate'}),
+      accessorKey: 'contractMaturityDate',
+      size: 150,
+      minSize: 150,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      meta: { isDate: true },
+      filterFn: filterMaturityDate,
+      cell: (dueDate) => flexRender(AnyDateTimeShort, { value: dueDate.getValue() })
+    },
   ]
 
 
@@ -111,12 +118,12 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   return <div>{formatted}</div>;
 }
 
-const filterDueDate: FilterFnOption<ContractApi.Contract> = (row, _columnId: string, filterValue: TableDateFilter) => {
-  const latestTagDate = row.original.;
+const filterMaturityDate: FilterFnOption<ContractApi.Contract> = (row, _columnId: string, filterValue: TableDateFilter) => {
+  const latestTagDate = row.original.contractMaturityDate;
   return anyDateFilter(latestTagDate, filterValue);
 }
 
 const filterCreated: FilterFnOption<ContractApi.Contract> = (row, _columnId: string, filterValue: TableDateFilter) => {
-  const lastSaved = row.original.created;
+  const lastSaved = row.original.transitives?.createdAt;
   return anyDateFilter(lastSaved, filterValue);
 }

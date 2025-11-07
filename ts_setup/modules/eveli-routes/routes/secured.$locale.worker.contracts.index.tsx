@@ -1,3 +1,4 @@
+import { ContractTable } from '@dxs-ts/contract-composer'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/secured/$locale/worker/contracts/')({
@@ -5,5 +6,5 @@ export const Route = createFileRoute('/secured/$locale/worker/contracts/')({
 })
 
 function Component() {
-  return (<>contract table</>)
+  return (<ContractTable />)
 }

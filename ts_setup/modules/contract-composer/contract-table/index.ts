@@ -1,1 +1,1 @@
-export * from './TaskTable'
+export * from './ContractTable'

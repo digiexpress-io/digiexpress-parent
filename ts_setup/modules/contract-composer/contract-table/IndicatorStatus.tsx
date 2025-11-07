@@ -5,24 +5,26 @@ import { FormattedMessage } from 'react-intl';
 import { ContractApi } from '@dxs-ts/contract-api';
 
 
-type Props = { status?: ContractApi.Contract['contractStatus'] };
+type Props = { status?: ContractApi.ContractStatusType };
+
+
 
 export const IndicatorStatus: React.FC<Props> = ({ status }) => {
   const classes = useUtilityClasses();
   if (!status) return null;
 
-  const color = TaskApi.task_status_hex[status] ?? '#ccc5b9';
+  const color = ContractApi.contract_status_hex[status] ?? '#ccc5b9';
 
   return (
     <Root className={classes.root} ownerState={{ color }}>
       <Typography>
-        <FormattedMessage {...TaskApi.task_status_messages[status]} />
+        <FormattedMessage {...ContractApi.contract_status_messages[status]} />
       </Typography>
     </Root>
   );
 };
 
-const MUI_NAME = 'EveliTaskTableStatusIndicator';
+const MUI_NAME = 'EveliContractTableStatusIndicator';
 
 const Root = styled('div', {
   name: MUI_NAME,

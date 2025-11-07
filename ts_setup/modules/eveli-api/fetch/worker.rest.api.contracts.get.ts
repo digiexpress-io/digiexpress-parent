@@ -14,6 +14,9 @@ function hook(_props: {}) {
     findAllContracts: async (): Promise<ContractApi.Contract[]> => {
       return params.fetch(`${url({}) }/all`)
         .then(response => response.json())
+        .then((data: ContractApi.ContractContainer[]) => {
+          return data.map(({contract}) => contract);
+        })
     },
     getOneContract: async (contractId: string): Promise<ContractApi.Contract> => {
       return params.fetch(`${url({}) }/${contractId}`)

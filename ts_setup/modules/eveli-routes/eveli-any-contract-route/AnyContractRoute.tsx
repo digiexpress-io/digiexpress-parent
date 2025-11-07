@@ -5,14 +5,13 @@ import { DateTime } from "luxon";
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { DatePicker as XuiDatePicker, DateTimeFormatter as XuiDateTimeFormatter } from "@dxs-ts/xui-datetime";
-import { useFeedbackBackend, useIam, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
+import { useIam, useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 
 import { ContractBackendProvider, ContractBackendProviderProps } from '@dxs-ts/contract-api';
 
 
 export const AnyContractRoute: React.FC<{children: React.ReactNode}> = ({ children }) => {
 
-  const feedbackBackend = useFeedbackBackend();
   const [open, setOpen] = React.useState(false);
   const navigate = useContractNavigate({ setTaskCreateOpen: setOpen });
   const permissions = useContractPermissions();
