@@ -57,7 +57,7 @@ public class SavingsContractGenerator {
   
   public static class ContractData {
     public String productCode;
-    public String contractNumber;
+    //public String contractNumber;
     public LocalDate issueDate;
     public LocalDate startDate;
     public JsonObject contractData;
@@ -139,7 +139,7 @@ public class SavingsContractGenerator {
     ContractData contract = new ContractData();
     
     contract.productCode = product.getProductCode();
-    contract.contractNumber = "SAV-" + String.format("%08d", RANDOM.nextInt(99999999));
+    // contract.contractNumber = "SAV-" + String.format("%08d", RANDOM.nextInt(99999999));
     contract.issueDate = LocalDate.now().minusDays(RANDOM.nextInt(730)); // Up to 2 years ago
     contract.startDate = contract.issueDate.plusDays(1);
     

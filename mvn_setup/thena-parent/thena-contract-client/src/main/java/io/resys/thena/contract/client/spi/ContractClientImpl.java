@@ -84,6 +84,10 @@ public class ContractClientImpl implements ContractClient {
     return new ContractDbImpl(dataSource);
   }
   
+  public String getTenantName() {
+    return startingState.getDataSource().getTenant().getName();
+  }
+  
   public static Builder create() {
     return new Builder();
   }

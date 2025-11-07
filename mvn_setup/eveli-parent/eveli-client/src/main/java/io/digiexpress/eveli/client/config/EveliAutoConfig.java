@@ -104,7 +104,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Import(value = { 
     EveliBatchesAutoConfig.class,
-    EveliBatchesDevAutoConfig.class
+    EveliBatchesDevAutoConfig.class,
+    EveliAutoConfigContract.class, 
 })
 @EnableConfigurationProperties( value = {
     EveliProps.class, 
@@ -118,7 +119,8 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsEnvir.class,
     EveliPropsBatch.class,
     EveliPropsTagomi.class,
-    EveliPropsDb.class
+    EveliPropsDb.class,
+    EveliPropsContract.class
 })
 @Slf4j
 public class EveliAutoConfig {

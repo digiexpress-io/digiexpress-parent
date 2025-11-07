@@ -35,6 +35,7 @@ public interface GenerationOptions {
   
   AgeRange getAgeRange();
   IncomeRange getIncomeRange();
+  String getRefNumber();
   
   @Value.Default
   default boolean isIncludeBeneficiaries() { return true; }

@@ -45,10 +45,11 @@ public class Contract_Provider {
   /**
    * Generate and persist a Feemi Savings contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient) {
+  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient, String refNumber) {
     final var product = Product_Feemi_Savings.create();
     
     GenerationOptions options = GenerationOptions.builder()
+        .refNumber(refNumber)
         .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
         .incomeRange(product.getContributionRange().orElse(IncomeRange.of(30000, 80000)))
         .isIncludeBeneficiaries(hasDeathBenefits(product))  // Auto-detect if product has death coverage

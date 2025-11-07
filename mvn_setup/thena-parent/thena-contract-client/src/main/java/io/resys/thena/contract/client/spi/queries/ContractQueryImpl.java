@@ -48,7 +48,7 @@ public class ContractQueryImpl implements ContractQuery {
   private final Uni<ContractDb> state;
   
   private List<String> contractIds;
-  private List<ContractDocType> excludedDocs;
+  private final List<ContractDocType> excludedDocs = new ArrayList<>();
   private boolean lockForUpdate;
 
   @Override
@@ -59,17 +59,14 @@ public class ContractQueryImpl implements ContractQuery {
 
   @Override
   public ContractQuery excludeDocs(ContractDocType... docs) {
-    if(excludedDocs == null) {
-      excludedDocs = new ArrayList<>();
-    }
     this.excludedDocs.addAll(Arrays.asList(docs));
     return this;
   }
 
   @Override
   public ContractQuery addContractId(String id) {
-    if(contractIds == null) {
-      contractIds = new ArrayList<>();
+    if(this.contractIds == null) {
+      this.contractIds = new ArrayList<>();
     }
     this.contractIds.add(id);
     return this;
@@ -77,8 +74,8 @@ public class ContractQueryImpl implements ContractQuery {
 
   @Override
   public ContractQuery addAllContractId(List<String> ids) {
-    if(contractIds == null) {
-      contractIds = new ArrayList<>();
+    if(this.contractIds == null) {
+      this.contractIds = new ArrayList<>();
     }
     this.contractIds.addAll(ids);
     return this;
@@ -136,7 +133,7 @@ public class ContractQueryImpl implements ContractQuery {
   
   
   private Uni<ContractDbQuery.World> findAllContracts(ContractDb state, ContractTableFilter filter) {
-    if(excludedDocs.contains(ContractDocType.CONTRACT)) {
+    if(this.excludedDocs.contains(ContractDocType.CONTRACT)) {
       return Uni.createFrom().item(ImmutableWorld.builder().build());
     }
     return state.query().queryContract().findAllByFilter(filter)
@@ -147,7 +144,7 @@ public class ContractQueryImpl implements ContractQuery {
   }
   
   private Uni<ContractDbQuery.World> findAllParties(ContractDb state, ContractTableFilter filter) {
-    if(excludedDocs.contains(ContractDocType.PARTY)) {
+    if(this.excludedDocs.contains(ContractDocType.PARTY)) {
       return Uni.createFrom().item(ImmutableWorld.builder().build());
     }
     return state.query().queryParty().findAllByFilter(filter)

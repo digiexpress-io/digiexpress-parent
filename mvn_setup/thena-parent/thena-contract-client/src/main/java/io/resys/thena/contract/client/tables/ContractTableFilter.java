@@ -42,7 +42,7 @@ public interface ContractTableFilter {
   final static class SQL implements SqlBuilder<ContractTableFilter> {
     @Override
     public SqlTuple apply(Tenant tenant, ContractTableFilter filter) {
-      throw new UnsupportedOperationException("Default SQL builder should not be called");
+      return 
     }
   }
 }

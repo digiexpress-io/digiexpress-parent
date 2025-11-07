@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+
 /*-
  * #%L
  * eveli-client
@@ -27,9 +29,11 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliBatchesDevAutoConfig.BatchTenantCondition;
+import io.digiexpress.eveli.client.spi.batch.contract_gen.Batch_Generate_Contract_Definition;
 import io.digiexpress.eveli.client.spi.batch.delete_all.Batch_DeleteAll_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
+import io.resys.thena.contract.client.api.ContractClient;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -50,4 +54,10 @@ public class EveliBatchesDevAutoConfig {
   public BatchDefinition tasksCleanUpJob(ProcessClient processClient, TaskClient taskClient, FeedbackClient feedback) {
     return Batch_DeleteAll_Definition.create(processClient, taskClient, feedback);
   }
+  
+  @Bean
+  @ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = EveliPropsContract.PREFIX, name = "enabled")
+  public BatchDefinition generateContractJob(ContractClient contractClient) {
+    return Batch_Generate_Contract_Definition.create(contractClient);
+  } 
 }

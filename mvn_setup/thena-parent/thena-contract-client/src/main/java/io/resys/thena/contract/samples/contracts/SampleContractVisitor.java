@@ -53,7 +53,8 @@ public class SampleContractVisitor {
     
     // Build the contract using the NewContract interface
     newContract
-        .contractNumber(contractData.contract.contractNumber)
+        
+        .contractNumber(options.getRefNumber())
         .contractIssueDate(contractData.contract.issueDate)
         .contractIssueDateInterval(Duration.ZERO)
         .contractIssueDateType(ContractDocType.CONTRACT.name())        
@@ -133,7 +134,7 @@ public class SampleContractVisitor {
         // Add investment plan with allocations
         .addInvPlan(invPlan -> {
           invPlan
-              .externalId("INV_PLAN_" + contractData.contract.contractNumber)
+              .externalId("INV_PLAN_" + options.getRefNumber())
               .invPlanCode("FEEMI_SAVINGS_PLAN")
               .invPlanName("Feemi Savings Investment Plan")
               .invPlanStatus("ACTIVE")
