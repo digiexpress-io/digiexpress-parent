@@ -92,8 +92,14 @@ public class ContractQueryImpl implements ContractQuery {
 
     return Uni.combine().all().unis(
         findAllContracts(state, query),
-        findAllParties(state, query)
-
+        findAllParties(state, query),
+        findAllCoverages(state, query),
+        findAllReferences(state, query),
+        findAllNotes(state, query),
+        findAllCapabilities(state, query),
+        findAllInvPlans(state, query),
+        findAllPaymentPlans(state, query),
+        findAllInvPlanAllocs(state, query)
       ).with(ContractDbQuery.World.class, (containers) -> {
         final var combined = ImmutableWorld.builder();
         containers.forEach(container -> combined.from(container));
@@ -150,6 +156,83 @@ public class ContractQueryImpl implements ContractQuery {
     return state.query().queryParty().findAllByFilter(filter)
       .onItem().transform(items -> ImmutableWorld
           .builder().party(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllCoverages(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.COVERAGE)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryCoverage().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().coverage(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllReferences(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.REFERENCE)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryReference().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().reference(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllNotes(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.NOTE)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryNote().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().note(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllCapabilities(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.CAPABILITY)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryCapability().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().capability(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllInvPlans(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.INV_PLAN)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryInvPlan().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().invPlan(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllPaymentPlans(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.PAYMENT_PLAN)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryPaymentPlan().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().paymentPlan(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+          .build()
+      );
+  }
+  
+  private Uni<ContractDbQuery.World> findAllInvPlanAllocs(ContractDb state, ContractTableFilter filter) {
+    if(this.excludedDocs.contains(ContractDocType.INV_PLAN_ALLOC)) {
+      return Uni.createFrom().item(ImmutableWorld.builder().build());
+    }
+    return state.query().queryInvPlanAlloc().findAllByFilter(filter)
+      .onItem().transform(items -> ImmutableWorld
+          .builder().invPlanAlloc(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
           .build()
       );
   }
