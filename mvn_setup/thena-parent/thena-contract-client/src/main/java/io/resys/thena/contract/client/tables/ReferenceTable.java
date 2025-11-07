@@ -100,8 +100,8 @@ public interface ReferenceTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {reference} r
-      LEFT JOIN {commit} updated_commit ON r.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON r.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON r.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON r.created_commit_id = created_commit.commit_id
     """,
     rowMapper = ReferenceMapper.class
   )
@@ -113,8 +113,8 @@ public interface ReferenceTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {reference} r
-      LEFT JOIN {commit} updated_commit ON r.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON r.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON r.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON r.created_commit_id = created_commit.commit_id
       WHERE r.contract_id = $1
     """,
     rowMapper = ReferenceMapper.class
@@ -127,8 +127,8 @@ public interface ReferenceTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {reference} reference
-      LEFT JOIN {commit} updated_commit ON reference.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON reference.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON reference.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON reference.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON reference.contract_id = contract.id
     """,
     rowMapper = ReferenceMapper.class,
@@ -143,8 +143,8 @@ public interface ReferenceTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {reference} r
-      LEFT JOIN {commit} updated_commit ON r.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON r.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON r.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON r.created_commit_id = created_commit.commit_id
       WHERE r.id = $1
     """,
     rowMapper = ReferenceMapper.class

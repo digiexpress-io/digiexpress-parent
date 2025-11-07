@@ -338,8 +338,8 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
       
       builder.addStatement("final var sqlBuilder = new $T()", 
         ClassName.bestGuess(method.getSqlBuilderClassName()));
-      builder.addStatement("final var baseSql = sqlBuilder.apply(dataSource.getTenant(), $L)", 
-        param.getName());
+      builder.addStatement("final var baseSql = sqlBuilder.apply(dataSource.getTenant(), $L, $L)", 
+        resolveSqlPlaceholders(method.getSqlTemplate(), method.getTableNames()), param.getName());
       builder.addCode("\n");
       builder.addStatement("var sqlValue = baseSql.getValue()");
       

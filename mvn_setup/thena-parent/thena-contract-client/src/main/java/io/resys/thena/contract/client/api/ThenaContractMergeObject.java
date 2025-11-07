@@ -21,8 +21,8 @@ package io.resys.thena.contract.client.api;
  */
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -55,15 +55,15 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeContract contractIssueDate(LocalDate contractIssueDate);
-    MergeContract contractIssueDateInterval(@Nullable Duration contractIssueDateInterval);
+    MergeContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval);
     MergeContract contractIssueDateType(@Nullable String contractIssueDateType);
     
     MergeContract contractStartDate(LocalDate contractStartDate);
-    MergeContract contractStartDateInterval(@Nullable Duration contractStartDateInterval);
+    MergeContract contractStartDateInterval(@Nullable Period contractStartDateInterval);
     MergeContract contractStartDateType(@Nullable String contractStartDateType);
     
     MergeContract contractMaturityDate(@Nullable LocalDate contractMaturityDate);
-    MergeContract contractMaturityDateInterval(@Nullable Duration contractMaturityDateInterval);
+    MergeContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval);
     MergeContract contractMaturityDateType(@Nullable String contractMaturityDateType);
     
     // Status and type
@@ -121,11 +121,11 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeParty partyTermStartDate(LocalDate partyTermStartDate);
-    MergeParty partyTermStartDateInterval(@Nullable Duration partyTermStartDateInterval);
+    MergeParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval);
     MergeParty partyTermStartDateType(@Nullable String partyTermStartDateType);
     
     MergeParty partyTermEndDate(@Nullable LocalDate partyTermEndDate);
-    MergeParty partyTermEndDateInterval(@Nullable Duration partyTermEndDateInterval);
+    MergeParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval);
     MergeParty partyTermEndDateType(@Nullable String partyTermEndDateType);
     
     MergeParty partyData(@Nullable JsonObject partyData);
@@ -154,11 +154,11 @@ public interface ThenaContractMergeObject {
     
     // Business term dates
     MergeCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
-    MergeCoverage coverageTermStartDateInterval(@Nullable Duration coverageTermStartDateInterval);
+    MergeCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval);
     MergeCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
     
     MergeCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
-    MergeCoverage coverageTermEndDateInterval(@Nullable Duration coverageTermEndDateInterval);
+    MergeCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval);
     MergeCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // Collection operations for coverage's child entities
@@ -204,11 +204,11 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeInvPlan invPlanStartDate(LocalDate invPlanStartDate);
-    MergeInvPlan invPlanStartDateInterval(@Nullable Duration invPlanStartDateInterval);
+    MergeInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval);
     MergeInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
     
     MergeInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
-    MergeInvPlan invPlanEndDateInterval(@Nullable Duration invPlanEndDateInterval);
+    MergeInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval);
     MergeInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // Collection operations for investment plan allocations
@@ -242,11 +242,11 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergePaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
-    MergePaymentPlan paymentPlanStartDateInterval(@Nullable Duration paymentPlanStartDateInterval);
+    MergePaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval);
     MergePaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
     
     MergePaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
-    MergePaymentPlan paymentPlanEndDateInterval(@Nullable Duration paymentPlanEndDateInterval);
+    MergePaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval);
     MergePaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
     void build();
   }

@@ -1,7 +1,5 @@
 package io.resys.thena.contract.samples.contracts;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * thena-contract-client
@@ -23,6 +21,7 @@ import java.time.Duration;
  */
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -56,11 +55,11 @@ public class SampleContractVisitor {
         
         .contractNumber(options.getRefNumber())
         .contractIssueDate(contractData.contract.issueDate)
-        .contractIssueDateInterval(Duration.ZERO)
+        .contractIssueDateInterval(Period.ZERO)
         .contractIssueDateType(ContractDocType.CONTRACT.name())        
         
         .contractStartDate(contractData.contract.startDate)
-        .contractStartDateInterval(Duration.ZERO)
+        .contractStartDateInterval(Period.ZERO)
         .contractStartDateType(ContractDocType.CONTRACT.name())
         
         .contractStatus("ACTIVE")
@@ -77,7 +76,7 @@ public class SampleContractVisitor {
               .partyEffectiveFrom(contractData.contract.startDate)
               .partyTermStartDate(contractData.contract.startDate)
               .partyTermStartDateType(ContractDocType.CONTRACT.name())
-              .partyTermStartDateInterval(Duration.ZERO)
+              .partyTermStartDateInterval(Period.ZERO)
               
               .partyData(contractData.policyholder.partyData)
               .build();
@@ -94,7 +93,7 @@ public class SampleContractVisitor {
                 .partyEffectiveFrom(contractData.contract.startDate)
                 .partyTermStartDate(contractData.contract.startDate)
                 .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Duration.ZERO)
+                .partyTermStartDateInterval(Period.ZERO)
                 .partyData(contractData.beneficiary.partyData)
                 .build();
           }
@@ -112,7 +111,7 @@ public class SampleContractVisitor {
               .coverageEffectiveFrom(contractData.contract.startDate)
               .coverageTermStartDate(contractData.contract.startDate)
               .coverageTermStartDateType(ContractDocType.CONTRACT.name())
-              .coverageTermStartDateInterval(Duration.ZERO)
+              .coverageTermStartDateInterval(Period.ZERO)
               
               .build();
         })
@@ -126,7 +125,7 @@ public class SampleContractVisitor {
               .paymentPlanStartDate(contractData.paymentPlan.startDate)
               
               .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
-              .paymentPlanStartDateInterval(Duration.ZERO)
+              .paymentPlanStartDateInterval(Period.ZERO)
               
               .build();
         })
@@ -141,7 +140,7 @@ public class SampleContractVisitor {
               .invPlanStartDate(contractData.contract.startDate)
               
               .invPlanStartDateType(ContractDocType.CONTRACT.name())
-              .invPlanStartDateInterval(Duration.ZERO)
+              .invPlanStartDateInterval(Period.ZERO)
               
               .build();
           
@@ -341,11 +340,11 @@ public class SampleContractVisitor {
     newContract
         .contractNumber("NVE-" + String.format("%08d", System.currentTimeMillis() % 100000000))
         .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
-        .contractIssueDateInterval(Duration.ZERO)
+        .contractIssueDateInterval(Period.ZERO)
         .contractIssueDateType(ContractDocType.CONTRACT.name())
         
         .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
-        .contractStartDateInterval(Duration.ZERO)
+        .contractStartDateInterval(Period.ZERO)
         .contractStartDateType(ContractDocType.CONTRACT.name())
         
         .contractStatus("ACTIVE")
@@ -360,7 +359,7 @@ public class SampleContractVisitor {
               .partyEffectiveFrom(LocalDate.now())
               .partyTermStartDate(LocalDate.now())
               .partyTermStartDateType(ContractDocType.CONTRACT.name())
-              .partyTermStartDateInterval(Duration.ZERO)
+              .partyTermStartDateInterval(Period.ZERO)
               .partyData(person.toJson())
               .build();
           
@@ -380,7 +379,7 @@ public class SampleContractVisitor {
               .coverageEffectiveFrom(LocalDate.now())
               .coverageTermStartDate(LocalDate.now())
               .coverageTermStartDateType(ContractDocType.CONTRACT.name())
-              .coverageTermStartDateInterval(Duration.ZERO)
+              .coverageTermStartDateInterval(Period.ZERO)
               .build();
         })
         
@@ -392,7 +391,7 @@ public class SampleContractVisitor {
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
               .paymentPlanStartDate(paymentPlan.getStartDate())
               .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
-              .paymentPlanStartDateInterval(Duration.ZERO)
+              .paymentPlanStartDateInterval(Period.ZERO)
               .build();
         })
         
@@ -405,7 +404,7 @@ public class SampleContractVisitor {
               .invPlanStatus("ACTIVE")
               .invPlanStartDate(LocalDate.now())
               .invPlanStartDateType(ContractDocType.CONTRACT.name())
-              .invPlanStartDateInterval(Duration.ZERO)
+              .invPlanStartDateInterval(Period.ZERO)
               .build();
           
           // Add Nova Virtus specific allocations (Granite/Globe portfolios, ETFs)
@@ -468,7 +467,7 @@ public class SampleContractVisitor {
                 .partyEffectiveFrom(LocalDate.now())
                 .partyTermStartDate(LocalDate.now())
                 .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Duration.ZERO)
+                .partyTermStartDateInterval(Period.ZERO)
                 .partyData(template.toJson())
                 .build();
             

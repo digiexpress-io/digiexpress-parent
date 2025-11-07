@@ -37,5 +37,7 @@ public class Contract_CRUD_Test extends DbTestTemplate {
   public void feemiTest() {
     final var client = super.createClient(TENANT_ID);
     Contract_Provider.newSavings(client, "001").await().atMost(atMost);
+    
+    client.withTenant().find().contractQuery().findAll().await().atMost(atMost);
   }
 }

@@ -21,8 +21,8 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -165,7 +165,7 @@ public class NewCoverageBuilder implements NewCoverage {
   }
 
   @Override
-  public NewCoverage coverageTermStartDateInterval(@Nullable Duration coverageTermStartDateInterval) {
+  public NewCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval) {
     this.next.coverageTermStartDateInterval(coverageTermStartDateInterval);
     return this;
   }
@@ -183,7 +183,7 @@ public class NewCoverageBuilder implements NewCoverage {
   }
 
   @Override
-  public NewCoverage coverageTermEndDateInterval(@Nullable Duration coverageTermEndDateInterval) {
+  public NewCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval) {
     this.next.coverageTermEndDateInterval(Optional.ofNullable(coverageTermEndDateInterval));
     return this;
   }

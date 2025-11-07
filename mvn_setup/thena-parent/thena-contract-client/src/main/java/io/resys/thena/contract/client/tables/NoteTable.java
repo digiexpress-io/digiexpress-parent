@@ -100,8 +100,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} n
-      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.commit_id
     """,
     rowMapper = NoteMapper.class
   )
@@ -113,8 +113,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} n
-      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.commit_id
       WHERE n.contract_id = $1
     """,
     rowMapper = NoteMapper.class
@@ -127,8 +127,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} note
-      LEFT JOIN {commit} updated_commit ON note.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON note.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON note.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON note.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON note.contract_id = contract.id
     """,
     rowMapper = NoteMapper.class,
@@ -143,8 +143,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} n
-      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.commit_id
       WHERE n.id = $1
     """,
     rowMapper = NoteMapper.class

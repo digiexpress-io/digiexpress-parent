@@ -20,7 +20,7 @@ package io.resys.thena.contract.client.entities;
  * #L%
  */
 
-import java.time.Duration;
+import java.time.Period;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -54,11 +54,11 @@ public interface Party extends ContractEntity {
 
   // Business dates (expanded)
   LocalDate getPartyTermStartDate();
-  Duration getPartyTermStartDateInterval();
+  Period getPartyTermStartDateInterval();
   String getPartyTermStartDateType();
 
   Optional<LocalDate> getPartyTermEndDate();
-  Optional<Duration> getPartyTermEndDateInterval();
+  Optional<Period> getPartyTermEndDateInterval();
   Optional<String> getPartyTermEndDateType();
 
   Optional<JsonObject> getPartyData();

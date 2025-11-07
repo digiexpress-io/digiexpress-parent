@@ -1,26 +1,5 @@
 package io.resys.thena.contract.client.tables;
 
-/*-
- * #%L
- * thena-contract-client
- * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -104,9 +83,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} contract
-      LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.id  
-      LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.commit_id  
+      LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.commit_id
     """,
     rowMapper = ContractMapper.class,
     sqlBuilder = ContractTableFilter.SQL.class
@@ -120,9 +99,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
-      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
+      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.commit_id
     """,
     rowMapper = ContractMapper.class
   )
@@ -135,9 +114,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id  
-      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id  
+      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.commit_id
       WHERE c.id = $1
     """,
     rowMapper = ContractMapper.class
@@ -153,9 +132,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id  
-      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id  
+      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.commit_id
       WHERE c.id = $1
     """,
     rowMapper = ContractMapper.class
@@ -197,14 +176,14 @@ public interface ContractTable {
       final String parent_contract_id = row.getString("parent_contract_id");
       final String external_id = row.getString("external_id");
       final LocalDate contract_maturity_date = row.getLocalDate("contract_maturity_date");
-      final Duration contract_maturity_date_interval = row.get(Duration.class, "contract_maturity_date_interval");
+      final var contract_maturity_date_interval = TableUtils.toDuration(row, "contract_maturity_date_interval");
       final String contract_maturity_date_type = row.getString("contract_maturity_date_type");
       final String contract_sub_status = row.getString("contract_sub_status");
       final String contract_sub_type = row.getString("contract_sub_type");
       final JsonObject contract_data = row.getJsonObject("contract_data");
 
       return ImmutableContract.builder()
-          .id(row.getString("id"))
+          .id(row.getUUID("id").toString())
           .parentContractId(Optional.ofNullable(parent_contract_id))
           .contractNumber(row.getString("contract_number"))
 
@@ -222,11 +201,11 @@ public interface ContractTable {
 
           // Business dates (expanded)
           .contractIssueDate(row.getLocalDate("contract_issue_date"))
-          .contractIssueDateInterval(row.get(Duration.class, "contract_issue_date_interval"))
+          .contractIssueDateInterval(TableUtils.toDuration(row, "contract_issue_date_interval"))
           .contractIssueDateType(row.getString("contract_issue_date_type"))
           
           .contractStartDate(row.getLocalDate("contract_start_date"))
-          .contractStartDateInterval(row.get(Duration.class, "contract_start_date_interval"))
+          .contractStartDateInterval(TableUtils.toDuration(row, "contract_start_date_interval"))
           .contractStartDateType(row.getString("contract_start_date_type"))
           
           .contractMaturityDate(Optional.ofNullable(contract_maturity_date))

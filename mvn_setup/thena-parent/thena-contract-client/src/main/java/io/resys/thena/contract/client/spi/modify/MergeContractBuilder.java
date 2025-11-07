@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.spi.modify;
 
+import java.time.LocalDate;
+
 /*-
  * #%L
  * thena-contract-client
@@ -20,8 +22,7 @@ package io.resys.thena.contract.client.spi.modify;
  * #L%
  */
 
-import java.time.Duration;
-import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -133,7 +134,7 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public MergeContract contractIssueDateInterval(Duration contractIssueDateInterval) {
+  public MergeContract contractIssueDateInterval(Period contractIssueDateInterval) {
     this.nextContract.contractIssueDateInterval(contractIssueDateInterval);
     updateVersion();
     return this;
@@ -154,7 +155,7 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public MergeContract contractStartDateInterval(Duration contractStartDateInterval) {
+  public MergeContract contractStartDateInterval(Period contractStartDateInterval) {
     this.nextContract.contractStartDateInterval(contractStartDateInterval);
     updateVersion();
     return this;
@@ -175,7 +176,7 @@ public class MergeContractBuilder implements MergeContract {
   }
   
   @Override
-  public MergeContract contractMaturityDateInterval(Duration contractMaturityDateInterval) {
+  public MergeContract contractMaturityDateInterval(Period contractMaturityDateInterval) {
     this.nextContract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
     updateVersion();
     return this;

@@ -1,26 +1,5 @@
 package io.resys.thena.contract.client.tables;
 
-/*-
- * #%L
- * thena-contract-client
- * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -90,8 +69,8 @@ public interface PartyTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {party} p
-      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.commit_id
     """,
     rowMapper = PartyMapper.class
   )
@@ -103,8 +82,8 @@ public interface PartyTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {party} p
-      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.commit_id
       WHERE p.contract_id = $1
     """,
     rowMapper = PartyMapper.class
@@ -117,8 +96,8 @@ public interface PartyTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {party} party
-      LEFT JOIN {commit} updated_commit ON party.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON party.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON party.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON party.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON party.contract_id = contract.id
     """,
     rowMapper = PartyMapper.class,
@@ -133,8 +112,8 @@ public interface PartyTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {party} p
-      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.commit_id
       WHERE p.id = $1
     """,
     rowMapper = PartyMapper.class
@@ -181,7 +160,7 @@ public interface PartyTable {
     public Party apply(Row row) {
       final LocalDate party_effective_to = row.getLocalDate("party_effective_to");
       final LocalDate party_term_end_date = row.getLocalDate("party_term_end_date");
-      final Duration party_term_end_date_interval = row.get(Duration.class, "party_term_end_date_interval");
+      final var party_term_end_date_interval = TableUtils.toDuration(row, "party_term_end_date_interval");
       final String party_term_end_date_type = row.getString("party_term_end_date_type");
       final JsonObject party_data = row.getJsonObject("party_data");
 
@@ -205,7 +184,7 @@ public interface PartyTable {
 
           // Business dates (expanded)
           .partyTermStartDate(row.getLocalDate("party_term_start_date"))
-          .partyTermStartDateInterval(row.get(Duration.class, "party_term_start_date_interval"))
+          .partyTermStartDateInterval(TableUtils.toDuration(row, "party_term_start_date_interval"))
           .partyTermStartDateType(row.getString("party_term_start_date_type"))
 
           .partyTermEndDate(Optional.ofNullable(party_term_end_date))

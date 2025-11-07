@@ -21,7 +21,6 @@ package io.resys.thena.contract.client.tables;
  */
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -100,8 +99,8 @@ public interface CoverageTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {coverage} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
     """,
     rowMapper = CoverageMapper.class
   )
@@ -113,8 +112,8 @@ public interface CoverageTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {coverage} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
       WHERE c.contract_id = $1
     """,
     rowMapper = CoverageMapper.class
@@ -127,8 +126,8 @@ public interface CoverageTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {coverage} coverage
-      LEFT JOIN {commit} updated_commit ON coverage.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON coverage.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON coverage.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON coverage.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON coverage.contract_id = contract.id
     """,
     rowMapper = CoverageMapper.class,
@@ -143,8 +142,8 @@ public interface CoverageTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {coverage} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
       WHERE c.id = $1
     """,
     rowMapper = CoverageMapper.class
@@ -194,7 +193,7 @@ public interface CoverageTable {
       final String coverage_rate_type = row.getString("coverage_rate_type");
       final LocalDate coverage_effective_to = row.getLocalDate("coverage_effective_to");
       final LocalDate coverage_term_end_date = row.getLocalDate("coverage_term_end_date");
-      final Duration coverage_term_end_date_interval = row.get(Duration.class, "coverage_term_end_date_interval");
+      final var coverage_term_end_date_interval = TableUtils.toDuration(row, "coverage_term_end_date_interval");
       final String coverage_term_end_date_type = row.getString("coverage_term_end_date_type");
 
       return ImmutableCoverage.builder()
@@ -223,7 +222,7 @@ public interface CoverageTable {
 
           // Business dates (expanded)
           .coverageTermStartDate(row.getLocalDate("coverage_term_start_date"))
-          .coverageTermStartDateInterval(row.get(Duration.class, "coverage_term_start_date_interval"))
+          .coverageTermStartDateInterval(TableUtils.toDuration(row, "coverage_term_start_date_interval"))
           .coverageTermStartDateType(row.getString("coverage_term_start_date_type"))
 
           .coverageTermEndDate(Optional.ofNullable(coverage_term_end_date))

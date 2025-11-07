@@ -21,8 +21,8 @@ package io.resys.thena.contract.client.spi.modify;
  */
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +150,7 @@ public class MergeCoverageBuilder implements MergeCoverage {
   }
 
   @Override
-  public MergeCoverage coverageTermStartDateInterval(Duration coverageTermStartDateInterval) {
+  public MergeCoverage coverageTermStartDateInterval(Period coverageTermStartDateInterval) {
     this.nextCoverage.coverageTermStartDateInterval(coverageTermStartDateInterval);
     return this;
   }
@@ -168,7 +168,7 @@ public class MergeCoverageBuilder implements MergeCoverage {
   }
 
   @Override
-  public MergeCoverage coverageTermEndDateInterval(Duration coverageTermEndDateInterval) {
+  public MergeCoverage coverageTermEndDateInterval(Period coverageTermEndDateInterval) {
     this.nextCoverage.coverageTermEndDateInterval(Optional.ofNullable(coverageTermEndDateInterval));
     return this;
   }

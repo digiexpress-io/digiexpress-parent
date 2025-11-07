@@ -80,8 +80,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              ip.contract_id as contract_id
       FROM {inv_plan_alloc} ia
-      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} ip ON ia.inv_plan_id = ip.id
     """,
     rowMapper = InvPlanAllocMapper.class
@@ -95,8 +95,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              ip.contract_id as contract_id
       FROM {inv_plan_alloc} ia
-      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} ip ON ia.inv_plan_id = ip.id
       WHERE ip.contract_id = $1
     """,
@@ -111,8 +111,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              invplan.contract_id as contract_id
       FROM {inv_plan_alloc} invplanalloc
-      LEFT JOIN {commit} updated_commit ON invplanalloc.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON invplanalloc.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON invplanalloc.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON invplanalloc.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} invplan ON invplanalloc.inv_plan_id = invplan.id
       LEFT JOIN {contract} contract ON invplan.contract_id = contract.id
     """,
@@ -129,8 +129,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              ip.contract_id as contract_id
       FROM {inv_plan_alloc} ia
-      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} ip ON ia.inv_plan_id = ip.id
       WHERE ia.id = $1
     """,

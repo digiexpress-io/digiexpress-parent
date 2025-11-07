@@ -20,9 +20,9 @@ package io.resys.thena.contract.client.entities;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -52,15 +52,15 @@ public interface Contract extends ContractEntity {
 
   // Business dates (expanded)
   LocalDate getContractIssueDate();
-  Duration getContractIssueDateInterval();
+  Period getContractIssueDateInterval();
   String getContractIssueDateType();
   
   LocalDate getContractStartDate();
-  Duration getContractStartDateInterval();
+  Period getContractStartDateInterval();
   String getContractStartDateType();
   
   Optional<LocalDate> getContractMaturityDate();
-  Optional<Duration> getContractMaturityDateInterval();
+  Optional<Period> getContractMaturityDateInterval();
   Optional<String> getContractMaturityDateType();
   
   String getContractStatus();
