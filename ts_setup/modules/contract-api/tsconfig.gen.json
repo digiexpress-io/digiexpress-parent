@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-11-07T10:39:52.412Z",
+    "forModule": "@dxs-ts/contract-api",
+    "fromRegistry": "da9c0fd57435",
+    "alias": {}
+  }
+}

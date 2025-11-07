@@ -1,5 +1,145 @@
 {
   "modules": {
+    "@dxs-ts/contract-api": {
+      "name": "@dxs-ts/contract-api",
+      "path": "modules/contract-api",
+      "packageJson": {
+        "name": "@dxs-ts/contract-api",
+        "version": "${project.version}",
+        "description": "Contract API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*"
+        },
+        "keywords": [
+          "contract",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react"
+      ],
+      "peerDependencies": [
+        "react"
+      ],
+      "externalDependencies": [
+        "react"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react"
+      ]
+    },
+    "@dxs-ts/contract-composer": {
+      "name": "@dxs-ts/contract-composer",
+      "path": "modules/contract-composer",
+      "packageJson": {
+        "name": "@dxs-ts/contract-composer",
+        "version": "${project.version}",
+        "description": "Contract composer",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/contract-api": "*",
+          "@dxs-ts/xui-table": "*",
+          "@dxs-ts/xui-datetime": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "luxon": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@tanstack/react-table": "*",
+          "@tanstack/react-query": "*",
+          "@monaco-editor/react": "*",
+          "yaml": "*"
+        },
+        "keywords": [
+          "contract-composer"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ]
+    },
     "@dxs-ts/eveli-demo-app": {
       "name": "@dxs-ts/eveli-demo-app",
       "path": "modules/demo-app-eveli",
@@ -3104,6 +3244,12 @@
   },
   "dependencyGraph": {
     "forward": {
+      "@dxs-ts/contract-api": [],
+      "@dxs-ts/contract-composer": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
       "@dxs-ts/eveli-demo-app": [
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
@@ -3318,6 +3464,10 @@
       ]
     },
     "reverse": {
+      "@dxs-ts/contract-api": [
+        "@dxs-ts/contract-composer"
+      ],
+      "@dxs-ts/contract-composer": [],
       "@dxs-ts/eveli-demo-app": [],
       "@dxs-ts/gamut-demo-app": [],
       "@dxs-ts/envir-fetch": [
@@ -3514,6 +3664,7 @@
         "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/xui-datetime": [
+        "@dxs-ts/contract-composer",
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
         "@dxs-ts/eveli-primitives",
@@ -3529,6 +3680,7 @@
         "@dxs-ts/xui-table"
       ],
       "@dxs-ts/xui-table": [
+        "@dxs-ts/contract-composer",
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
@@ -3654,6 +3806,6 @@
       ]
     }
   },
-  "checksum": "21c96bf5eaec83a23f18fbcaee0674091becc77bd591bdbd4b4b16e10cac4f6b",
-  "generatedAt": "2025-11-05T15:01:17.306Z"
+  "checksum": "da9c0fd5743558990965f5e79fc4cb44a832ebd547554dfc462c9486dd3dc665",
+  "generatedAt": "2025-11-07T10:39:52.411Z"
 }
