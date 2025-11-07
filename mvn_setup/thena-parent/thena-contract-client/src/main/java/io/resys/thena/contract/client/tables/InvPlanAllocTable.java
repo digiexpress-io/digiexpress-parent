@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -186,7 +185,7 @@ public interface InvPlanAllocTable {
 
           .invPlanAllocCode(row.getString("inv_plan_alloc_code"))
           .invPlanAllocName(row.getString("inv_plan_alloc_name"))
-          .invPlanAllocPercentage(row.get(BigDecimal.class, "inv_plan_alloc_percentage"))
+          .invPlanAllocPercentage(row.getBigDecimal("inv_plan_alloc_percentage"))
           .invPlanAllocStatus(row.getString("inv_plan_alloc_status"))
 
           .build();

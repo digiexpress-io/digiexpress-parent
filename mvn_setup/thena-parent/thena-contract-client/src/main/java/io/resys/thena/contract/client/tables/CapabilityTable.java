@@ -80,7 +80,7 @@ public interface CapabilityTable {
       FROM {capability} capability
       LEFT JOIN {commit} updated_commit ON capability.commit_id = updated_commit.commit_id
       LEFT JOIN {commit} created_commit ON capability.created_commit_id = created_commit.commit_id
-      LEFT JOIN {contract} created_commit ON capability.contract_id = contract.id
+      LEFT JOIN {contract} contract ON capability.contract_id = contract.id
     """,
     rowMapper = CapabilityMapper.class,
     sqlBuilder = ContractTableFilter.SQL.class

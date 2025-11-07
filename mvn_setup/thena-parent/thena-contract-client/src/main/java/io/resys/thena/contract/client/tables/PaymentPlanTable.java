@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -201,7 +200,7 @@ public interface PaymentPlanTable {
 
           .paymentPlanStatus(row.getString("payment_plan_status"))
           .paymentPlanFrequency(row.getString("payment_plan_frequency"))
-          .paymentPlanAmount(row.get(BigDecimal.class, "payment_plan_amount"))
+          .paymentPlanAmount(row.getBigDecimal("payment_plan_amount"))
 
           // Business dates (expanded)
           .paymentPlanStartDate(row.getLocalDate("payment_plan_start_date"))

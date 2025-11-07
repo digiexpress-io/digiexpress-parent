@@ -188,8 +188,8 @@ public interface CoverageTable {
   class CoverageMapper implements TenantSql.RowMapper<Coverage> {
     @Override
     public Coverage apply(Row row) {
-      final BigDecimal coverage_sum_insured = row.get(BigDecimal.class, "coverage_sum_insured");
-      final BigDecimal coverage_rate = row.get(BigDecimal.class, "coverage_rate");
+      final BigDecimal coverage_sum_insured = row.getBigDecimal("coverage_sum_insured");
+      final BigDecimal coverage_rate = row.getBigDecimal("coverage_rate");
       final String coverage_rate_type = row.getString("coverage_rate_type");
       final LocalDate coverage_effective_to = row.getLocalDate("coverage_effective_to");
       final LocalDate coverage_term_end_date = row.getLocalDate("coverage_term_end_date");
