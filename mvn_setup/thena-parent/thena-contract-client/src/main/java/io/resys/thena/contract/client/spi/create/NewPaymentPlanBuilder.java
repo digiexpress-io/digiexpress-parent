@@ -56,7 +56,7 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
     this.logger = logger;
     this.contractId = contractId;
     this.next = ImmutablePaymentPlan.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)

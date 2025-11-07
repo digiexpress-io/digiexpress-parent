@@ -55,7 +55,7 @@ public class NewInvPlanAllocBuilder implements NewInvPlanAlloc {
     this.invPlanId = invPlanId;
     
     this.next = ImmutableInvPlanAlloc.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .invPlanId(invPlanId);

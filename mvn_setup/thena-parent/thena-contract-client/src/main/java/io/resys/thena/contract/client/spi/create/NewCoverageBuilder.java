@@ -65,7 +65,7 @@ public class NewCoverageBuilder implements NewCoverage {
     this.currentTx = currentTx;
     this.savedState = savedState;
     this.next = ImmutableCoverage.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)

@@ -60,7 +60,7 @@ public class NewNoteBuilder implements NewNote {
     this.logger = logger;
     this.contractId = contractId;
     this.relation = relation;
-    this.noteId = OidUtils.gen();
+    this.noteId = OidUtils.genUUID();
     this.next = ImmutableNote.builder()
         .id(noteId)
         .commitId(logger.getCommitId())

@@ -176,7 +176,7 @@ public class ModifyOneContractImpl implements ModifyOneContract {
     ImmutablePersistenceUnit next = start;    
     final var logger = new ContractCommitBuilder(tenantId, 
         ImmutableCommit.builder()
-          .commitId(OidUtils.gen())
+          .commitId(OidUtils.genUUID())
           .commitAuthor(author)
           .commitMessage(message)
           .commitLog("")
