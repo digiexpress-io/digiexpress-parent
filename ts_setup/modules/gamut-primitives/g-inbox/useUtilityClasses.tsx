@@ -11,7 +11,11 @@ export interface GInboxClasses {
   inboxItemSentAt: string,
   inboxItemAttachments: string,
   taskRefLayout: string,
-  newMsgIndicator: string
+  newMsgIndicator: string,
+  headerRow: string,
+  headerFormName: string,
+  headerAttachments: string,
+  headerLastModified: string
 }
 export type GInboxClassKey = keyof GInboxClasses;
 
@@ -23,7 +27,11 @@ export const useUtilityClasses = () => {
     inboxItemSentAt: ['inboxItemSentAt'],
     inboxItemAttachments: ['inboxItemAttachments'],
     taskRefLayout: ['taskRefLayout'],
-    newMsgIndicator: ['newMsgIndicator']
+    newMsgIndicator: ['newMsgIndicator'],
+    headerRow: ['headerRow'],
+    headerFormName: ['headerFormName'],
+    headerAttachments: ['headerAttachments'],
+    headerLastModified: ['headerLastModified']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -42,7 +50,11 @@ export const GInboxRoot = styled("div", {
       styles.inboxItemSentAt,
       styles.inboxItemAttachments,
       styles.taskRefLayout,
-      styles.newMsgIndicator
+      styles.newMsgIndicator,
+      styles.headerRow,
+      styles.headerFormName,
+      styles.headerAttachments,
+      styles.headerLastModified
     ];
   },
 })(({ theme }) => {
@@ -84,7 +96,7 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'flex-end',
         textAlign: 'right',
       },
-    },    
+    },
 
     '.GInbox-newMsgIndicator': {
       marginRight: theme.spacing(1),
@@ -111,13 +123,13 @@ export const GInboxRoot = styled("div", {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       paddingLeft: theme.spacing(1),
-    
+
       [theme.breakpoints.down('sm')]: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
       },
-    
+
       [theme.breakpoints.up('sm')]: {
         flexShrink: 0,
         width: '8ch',
@@ -128,7 +140,7 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'flex-end',
       },
     },
-    
+
     '.GInbox-inboxItemAttachments': {
       display: 'flex',
       alignItems: 'center',
@@ -145,7 +157,7 @@ export const GInboxRoot = styled("div", {
         paddingRight: theme.spacing(2),
       },
     },
-    
+
     '& .GSort-root': {
       display: 'flex',
       width: '100%',
@@ -157,6 +169,26 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'center'
       },
     },
+
+    '.GInbox-headerRow': {
+      width: '100%',
+    },
+
+    '.GInbox-headerFormName': {
+      display: 'flex',
+      justifyContent: 'flex-start !important',
+    },
+
+    '.GInbox-headerAttachments': {
+      display: 'flex',
+      justifyContent: 'flex-start',
+    },
+
+    '.GInbox-headerLastModified': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+
   };
 });
 
