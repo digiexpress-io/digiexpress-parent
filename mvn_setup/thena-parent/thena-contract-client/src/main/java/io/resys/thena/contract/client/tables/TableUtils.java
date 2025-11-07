@@ -143,4 +143,9 @@ public class TableUtils {
         interval.getDays()
     );
   }
+  
+  public static String toStringUUID(Row row, String name) {
+    final var uuid = row.get(UUID.class, name);
+    return uuid == null ? null : uuid.toString();
+  }
 }

@@ -197,13 +197,13 @@ public interface CoverageTable {
       final String coverage_term_end_date_type = row.getString("coverage_term_end_date_type");
 
       return ImmutableCoverage.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
-          .insuredId(row.getString("insured_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
+          .insuredId(TableUtils.toStringUUID(row, "insured_id"))
 
           .externalId(row.getString("external_id"))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableCoverageTransitives.builder()

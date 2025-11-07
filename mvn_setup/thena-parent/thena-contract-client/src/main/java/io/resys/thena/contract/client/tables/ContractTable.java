@@ -173,7 +173,7 @@ public interface ContractTable {
   class ContractMapper implements TenantSql.RowMapper<Contract> {
     @Override
     public Contract apply(Row row) {
-      final String parent_contract_id = row.getString("parent_contract_id");
+      final String parent_contract_id = TableUtils.toStringUUID(row, "parent_contract_id");
       final String external_id = row.getString("external_id");
       final LocalDate contract_maturity_date = row.getLocalDate("contract_maturity_date");
       final var contract_maturity_date_interval = TableUtils.toDuration(row, "contract_maturity_date_interval");
@@ -183,14 +183,14 @@ public interface ContractTable {
       final JsonObject contract_data = row.getJsonObject("contract_data");
 
       return ImmutableContract.builder()
-          .id(row.getUUID("id").toString())
+          .id(TableUtils.toStringUUID(row, "id"))
           .parentContractId(Optional.ofNullable(parent_contract_id))
           .contractNumber(row.getString("contract_number"))
 
           .externalId(Optional.ofNullable(external_id))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
-          .updatedTreeCommitId(row.getString("updated_tree_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .updatedTreeCommitId(TableUtils.toStringUUID(row, "updated_tree_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableContractTransitives.builder()

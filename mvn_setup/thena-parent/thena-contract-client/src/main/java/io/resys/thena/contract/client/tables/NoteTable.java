@@ -183,10 +183,10 @@ public interface NoteTable {
   class NoteMapper implements TenantSql.RowMapper<Note> {
     @Override
     public Note apply(Row row) {
-      final var inv_plan_id = row.getString("inv_plan_id");
-      final var inv_plan_alloc_id = row.getString("inv_plan_alloc_id");
-      final var coverage_id = row.getString("coverage_id");
-      final var party_id = row.getString("party_id");
+      final var inv_plan_id = TableUtils.toStringUUID(row, "inv_plan_id");
+      final var inv_plan_alloc_id = TableUtils.toStringUUID(row, "inv_plan_alloc_id");
+      final var coverage_id = TableUtils.toStringUUID(row, "coverage_id");
+      final var party_id = TableUtils.toStringUUID(row, "party_id");
       final var note_body = row.getJsonObject("note_body");
 
       ContractOneOfRelations relations = null;
@@ -213,12 +213,12 @@ public interface NoteTable {
       }
 
       return ImmutableNote.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
           .relations(relations)
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableNoteTransitives.builder()

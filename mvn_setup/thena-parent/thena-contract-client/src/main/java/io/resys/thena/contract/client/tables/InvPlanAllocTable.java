@@ -171,17 +171,17 @@ public interface InvPlanAllocTable {
     @Override
     public InvPlanAlloc apply(Row row) {
       return ImmutableInvPlanAlloc.builder()
-          .id(row.getString("id"))
-          .invPlanId(row.getString("inv_plan_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .invPlanId(TableUtils.toStringUUID(row, "inv_plan_id"))
 
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins (including virtual contract_id)
           .transitives(ImmutableInvPlanAllocTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .updatedAt(row.getOffsetDateTime("updated_at"))
-              .contractId(row.getString("contract_id"))
+              .contractId(TableUtils.toStringUUID(row, "contract_id"))
               .build())
 
           .invPlanAllocCode(row.getString("inv_plan_alloc_code"))

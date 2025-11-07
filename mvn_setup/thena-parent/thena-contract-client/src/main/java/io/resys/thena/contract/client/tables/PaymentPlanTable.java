@@ -180,18 +180,18 @@ public interface PaymentPlanTable {
   class PaymentPlanMapper implements TenantSql.RowMapper<PaymentPlan> {
     @Override
     public PaymentPlan apply(Row row) {
-      final String party_id = row.getString("party_id");
+      final String party_id = TableUtils.toStringUUID(row, "party_id");
       final LocalDate payment_plan_end_date = row.getLocalDate("payment_plan_end_date");
       final var payment_plan_end_date_interval = TableUtils.toDuration(row, "payment_plan_end_date_interval");
       final String payment_plan_end_date_type = row.getString("payment_plan_end_date_type");
 
       return ImmutablePaymentPlan.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
           .partyId(Optional.ofNullable(party_id))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutablePaymentPlanTransitives.builder()
