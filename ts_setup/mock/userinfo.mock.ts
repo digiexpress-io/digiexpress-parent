@@ -24,7 +24,8 @@ export default defineMock({
       'TASK_REOPEN',
       'USER_PROFILE_EDIT',
       'HEALTH_VIEW',
-      'TAGOMI_EDIT'
+      'TAGOMI_EDIT',
+      'CONTRACT_EDIT'
     ]
   }
 })

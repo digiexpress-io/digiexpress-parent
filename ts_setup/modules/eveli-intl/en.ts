@@ -429,6 +429,7 @@ export const en = {
   'snack.migration.createdMessage': 'Site data updated',
   'toolbar.save': 'Save',
   'toolbar.stencil': 'theStencil',
+  'toolbar.contracts': 'Contracts',
   'toolbar.wrench': 'theWrench',
   'toolbar.menu': 'Menu',
   'toolbar.help': 'Help',

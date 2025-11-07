@@ -431,6 +431,7 @@ snack.release.deletedMessage,,Release deleted,Julkaisu poistettu,Release raderad
 snack.migration.createdMessage,,Site data updated,Sivuston tiedot päivitetty,Webbplatsdata uppdaterad,
 toolbar.save,,Save,Tallenna,Spara,
 toolbar.stencil,,theStencil,theStencil,theStencil,
+toolbar.contracts,,Contracts,,,
 toolbar.wrench,,theWrench,theWrench,theWrench,
 toolbar.menu,,Menu,Valikko,Meny,
 toolbar.help,,Help,Tuki,Hjälp,

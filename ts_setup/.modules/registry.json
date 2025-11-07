@@ -119,21 +119,29 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
-      "actualDependencies": [],
-      "actualExternalDependencies": [],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "react-intl",
+        "luxon"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils",
+        "react-intl",
+        "luxon"
+      ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/contract-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
-        "react",
-        "react-intl",
-        "luxon",
-        "@mui/material",
-        "@mui/utils",
         "@mui/system",
-        "@mui/icons-material",
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
@@ -1024,14 +1032,14 @@
         "@material-table/core",
         "recharts",
         "@dxs-ts/user-profile",
+        "@dxs-ts/tagomi-api",
+        "@dxs-ts/tagomi-routes",
+        "@dxs-ts/wrench-api",
         "@dxs-ts/gamut-shell",
         "@mui/system",
         "notistack",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/stencil-api",
-        "@dxs-ts/tagomi-api",
-        "@dxs-ts/tagomi-routes",
-        "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes"
       ],
       "actualExternalDependencies": [
@@ -1066,12 +1074,12 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/xui-table",
         "@dxs-ts/user-profile",
-        "@dxs-ts/gamut-shell",
-        "@dxs-ts/stencil-routes",
-        "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/gamut-shell",
+        "@dxs-ts/stencil-routes",
+        "@dxs-ts/stencil-api",
         "@dxs-ts/wrench-routes"
       ],
       "missingDependencies": [],
@@ -3806,6 +3814,6 @@
       ]
     }
   },
-  "checksum": "da9c0fd5743558990965f5e79fc4cb44a832ebd547554dfc462c9486dd3dc665",
-  "generatedAt": "2025-11-07T10:39:52.411Z"
+  "checksum": "b723568139b819a6c866e4931c334769d0f948c40e6898e25b96e2c8df4ce8f1",
+  "generatedAt": "2025-11-07T12:09:35.561Z"
 }
