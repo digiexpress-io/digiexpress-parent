@@ -24,6 +24,8 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
@@ -53,12 +55,27 @@ public interface ContractTableFilter {
       
       if(filter.getContractIds().isPresent()) {
         builder.append("(")
-          .append(" contract.id = ANY($").append(index).append(")")
+          .append(" contract.id = ANY($").append(index++).append(")")
           .append(" OR contract.contract_number = ANY($").append(index).append(")")
           .append(" OR contract.external_id = ANY($").append(index++).append(")")
           .append(")")
           .ln();
-        params.add(filter.getContractIds().get().toArray());
+        
+        final var uuid = filter.getContractIds().get()
+          .stream().map(id -> {
+            try {
+              return UUID.fromString(id);
+            } catch(Exception e) {
+              // ignore
+              return null;
+            }
+          })
+          .filter(e -> e != null)
+          .collect(Collectors.toList());
+        
+        params.add(uuid.toArray(new UUID[]{}));
+        
+        params.add(filter.getContractIds().get().toArray(new String[]{}));
       }
       
       final var result = builder.toString();

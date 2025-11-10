@@ -12,7 +12,8 @@
         "note": "No internal dependencies - this is the foundation layer",
         "dependencies": {},
         "peerDependencies": {
-          "react": "*"
+          "react": "*",
+          "@tanstack/react-query": "*"
         },
         "keywords": [
           "contract",
@@ -23,21 +24,26 @@
         "private": true
       },
       "dependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query"
       ],
       "peerDependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query"
       ],
       "externalDependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query"
       ],
       "internalDependencies": [],
       "actualDependencies": [
         "react",
+        "@tanstack/react-query",
         "react-intl"
       ],
       "actualExternalDependencies": [
         "react",
+        "@tanstack/react-query",
         "react-intl"
       ],
       "actualInternalDependencies": [],
@@ -3873,6 +3879,6 @@
       ]
     }
   },
-  "checksum": "f56f7e80da255537a3cd569be7b56534f952d3c565ff67454a6ee488fa55a011",
-  "generatedAt": "2025-11-07T15:06:45.971Z"
+  "checksum": "8d3c62745ec11d8f40c2e46e34c3ca1ee232b5f95d8fe60c6fbd45bcab300e7f",
+  "generatedAt": "2025-11-10T07:57:43.603Z"
 }

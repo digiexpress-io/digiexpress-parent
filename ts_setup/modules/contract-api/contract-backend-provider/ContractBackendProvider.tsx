@@ -14,7 +14,7 @@ export interface ContractBackendContextType {
   };
   persistence: {
     findAllContracts: () => Promise<ContractApi.Contract[]>;
-    getOneContract: (contractId: string) => Promise<ContractApi.Contract>;
+    getOneContract: (contractId: string) => Promise<ContractApi.ContractContainer>;
   };
   slots: {
     DateTimeFormatter: React.ElementType<{ value: string | Date | undefined, variant?: 'text' }>;

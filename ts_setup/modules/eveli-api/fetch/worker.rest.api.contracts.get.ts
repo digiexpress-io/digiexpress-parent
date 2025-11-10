@@ -18,8 +18,8 @@ function hook(_props: {}) {
           return data.map(({contract}) => contract);
         })
     },
-    getOneContract: async (contractId: string): Promise<ContractApi.Contract> => {
-      return params.fetch(`${url({}) }/${contractId}`)
+    getOneContract: async (contractId: string): Promise<ContractApi.ContractContainer> => {
+      return params.fetch(`${url({})}/${contractId}`)
         .then(response => response.json())
     }
   }
