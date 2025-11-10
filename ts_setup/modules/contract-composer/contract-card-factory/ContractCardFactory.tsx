@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { TaskAlt as TaskAltIcon } from '@mui/icons-material';
+import { Handshake as HandshakeIcon } from '@mui/icons-material';
+
 import { AdminPanelSettingsOutlined as AdminPanelSettingsOutlinedIcon } from '@mui/icons-material';
 import { EditOutlined as EditOutlinedIcon } from '@mui/icons-material';
 import { AttachFileOutlined as AttachFileOutlinedIcon } from '@mui/icons-material';
@@ -19,6 +21,7 @@ import { DateTime } from 'luxon';
 
 
 import { ContractCard, ContractCardDataRowElement, ContractCardId, useCardConfig, ContractCardDataRowText, useContractCardThemeConfig, StartAdornmentIcon } from '../contract-card';
+import { useContract } from '@dxs-ts/contract-api';
 
 
 export type FactoryCardId =
@@ -34,8 +37,12 @@ const defaultExpandedCards: FactoryCardId[] = ['contract_main'];
 export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
-  //const { task } = useTaskDashboard();
-  
+  const { contractContainer } = useContract();
+  const { contract } = contractContainer;
+
+  console.log(contract)
+
+
   const {
     cardTheme, editingCardId, toggleReview,
     isCardFlashy, toggleCardFlashy, setEditCard,
@@ -79,23 +86,26 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
    
     case 'contract_main':
       return (
-        <ContractCard title={intl.formatMessage({ id: 'contractcard.title.contractId'})}
+        <ContractCard title={intl.formatMessage({ id: 'contractcard.contractMain.title' }, { contractId: contract.contractNumber })}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<></>)}
-          startAdornmentIcon={<StartAdornmentIcon icon={TaskAltIcon} />}
+          startAdornmentIcon={<StartAdornmentIcon icon={HandshakeIcon} />}
 
           showFlashyToggle={true}
           showEditOnMenu={true}
           showEditButton={true}
           showReviewOnMenu={false}
         >
-   
-          <ContractCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.customerName', defaultMessage: 'Customer name' })} value={'name'} style={style} />
-          <ContractCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.subject', defaultMessage: 'Subject' })} value={'something'} style={style} />
-          <ContractCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.additionalInfo', defaultMessage: 'Extra info' })} value={'more'} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.category' })} value={contract.contractData?.category} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.issueDate' })} value={contract.contractData?.issueDate} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.productName' })} value={contract.contractData?.productName} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.productCode' })} value={contract.contractData?.productCode} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.limits.annualMaxContribution' })} value={contract.contractData?.limits.annualMaxContribution} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.limits.contractMinValue' })} value={contract.contractData?.limits.contractMinValue} style={style} />
+          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.limits.partialWithdrawalMin' })} value={contract.contractData?.limits.partialWithdrawalMin} style={style} />
         </ContractCard>
       );
 

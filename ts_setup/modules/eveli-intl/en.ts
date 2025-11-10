@@ -971,5 +971,14 @@ export const en = {
   'contractTable.col.header.created': 'Created',
   'contractTable.col.header.maturityDate': 'Maturity Date',
   'contract.composer.contract.edit': 'Edit contract',
+  'contractcard.edit': 'Edit',
+  'contractcard.contractMain.title': 'Contract number: {contractId}',
+  'contractcard.body.category': 'Category',
+  'contractcard.body.issueDate': 'Issue date',
+  'contractcard.body.productName': 'Product name',
+  'contractcard.body.productCode': 'Product code',
+  'contractcard.body.limits.annualMaxContribution': 'Annual max contribution',
+  'contractcard.body.limits.contractMinValue': 'Contract minimum value',
+  'contractcard.body.limits.partialWithdrawalMin': 'Partial withdrawl minimum',
   'contract.status.active': 'Active'
 }
