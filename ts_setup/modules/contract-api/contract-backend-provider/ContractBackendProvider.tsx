@@ -13,7 +13,7 @@ export interface ContractBackendContextType {
     openOneContract: (contractIdOrRef: string) => void;
   };
   persistence: {
-    findAllContracts: () => Promise<ContractApi.Contract[]>;
+    findAllContracts: () => Promise<ContractApi.ContractSummary[]>;
     getOneContract: (contractId: string) => Promise<ContractApi.ContractContainer>;
   };
   slots: {

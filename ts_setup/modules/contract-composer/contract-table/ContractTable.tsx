@@ -12,6 +12,7 @@ import { ContractApi, useContractBackend } from '@dxs-ts/contract-api';
 import { IndicatorStatus } from './IndicatorStatus';
 import { filterStringOrArrayFn, filterContractRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 import { IndicatorSubject } from './IndicatorSubject';
+import { Policyholder } from './Policyholder';
 
 
 export const CONTRACT_TABLE_QUERY_KEY = 'find-all-contract';
@@ -26,14 +27,12 @@ export const ContractTable: React.FC = () => {
     initialData: [],
   });
 
-  console.log(data)
-
   
-  const columns: ColumnDef<ContractApi.Contract, any>[] = [
+  const columns: ColumnDef<ContractApi.ContractSummary, any>[] = [
      {
       header: intl.formatMessage({ id: 'contractTable.col.header.contractNumber'}),
       accessorKey: 'contractNumber',
-      cell: (contract) => flexRender(IndicatorSubject, { title: contract.getValue(), id: contract.row.original.id }),
+      cell: (contract) => flexRender(IndicatorSubject, { contract: contract.row.original }),
       filterFn: filterContractRefOrSubjectFn,
       size: 100,
       minSize: 100,
@@ -50,7 +49,16 @@ export const ContractTable: React.FC = () => {
       enableResizing: true,
       enableColumnFilter: true,
     },
-
+    {
+      header: intl.formatMessage({ id: 'contractTable.col.header.policyholder'}),
+      accessorKey: 'policyholder.externalId',
+      cell: (cell) => flexRender(Policyholder, { contract: cell.row.original }),
+      size: 100,
+      minSize: 100,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+    },
     {
       header: intl.formatMessage({ id: 'contractTable.col.header.status' }),
       accessorKey: 'statusIntl',
@@ -69,7 +77,7 @@ export const ContractTable: React.FC = () => {
 
     {
       header: intl.formatMessage({ id: 'contractTable.col.header.created'}),
-      accessorKey: 'transitives.createdAt',
+      accessorKey: 'createdAt',
       size: 150,
       minSize: 150,
       enableSorting: true,
@@ -99,7 +107,14 @@ export const ContractTable: React.FC = () => {
       <Box display="flex" alignItems="center" mb={2}>
         <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'contractsTable.title' })}</Typography>
       </Box>
-      <WithTableStyles data={data} columns={columns} options={{ tableId: 'contracts' }} />
+      <WithTableStyles 
+        data={data} 
+        columns={columns} 
+        options={{ tableId: 'contracts' }} 
+        theme={{
+          rowProps: { height: '50px' }
+        }}
+      />
     </>
   );
 }
@@ -110,18 +125,24 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   if (!rawDate) {
     return <div>--</div>
   }
-  const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
+  if((typeof rawDate)) {
+
+  }
+
+  const isJSDate = (typeof rawDate) === 'object';
+
+  const dateTime = (isJSDate ? DateTime.fromJSDate(rawDate) : DateTime.fromISO(rawDate)).setLocale('fi');
   const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
 
   return <div>{formatted}</div>;
 }
 
-const filterMaturityDate: FilterFnOption<ContractApi.Contract> = (row, _columnId: string, filterValue: TableDateFilter) => {
+const filterMaturityDate: FilterFnOption<ContractApi.ContractSummary> = (row, _columnId: string, filterValue: TableDateFilter) => {
   const latestTagDate = row.original.contractMaturityDate;
   return anyDateFilter(latestTagDate, filterValue);
 }
 
-const filterCreated: FilterFnOption<ContractApi.Contract> = (row, _columnId: string, filterValue: TableDateFilter) => {
-  const lastSaved = row.original.transitives?.createdAt;
+const filterCreated: FilterFnOption<ContractApi.ContractSummary> = (row, _columnId: string, filterValue: TableDateFilter) => {
+  const lastSaved = row.original.createdAt;
   return anyDateFilter(lastSaved, filterValue);
 }

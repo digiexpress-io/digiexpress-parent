@@ -3,16 +3,15 @@ import { Box, Link } from '@mui/material';
 import { Lock as LockIcon } from '@mui/icons-material';
 import { EmojiPeopleOutlined as EmojiPeopleOutlinedIcon } from '@mui/icons-material';
 
-import { useContractBackend } from '@dxs-ts/contract-api';
+import { ContractApi, useContractBackend } from '@dxs-ts/contract-api';
 
 
 
 export type IndicatorSubjectProps = {
-  title: string
-  id?: string
+  contract: ContractApi.ContractSummary
 }
 
-export const IndicatorSubject: React.FC<IndicatorSubjectProps> = ({ title, id }) => {
+export const IndicatorSubject: React.FC<IndicatorSubjectProps> = ({ contract }) => {
   const backend = useContractBackend();
 
 
@@ -28,9 +27,9 @@ export const IndicatorSubject: React.FC<IndicatorSubjectProps> = ({ title, id })
       <Link href="#" onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
-        backend.navigate.openOneContract(id!);
+        backend.navigate.openOneContract(contract.contractId);
       }}>
-        {title}
+        {contract.contractNumber}
       </Link>
     </Box>
   );

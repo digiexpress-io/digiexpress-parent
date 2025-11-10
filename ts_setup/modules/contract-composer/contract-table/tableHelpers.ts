@@ -6,9 +6,9 @@ const statusOrder: Record<ContractApi.ContractStatusType, number> = {
   ACTIVE: 0,
 }
 
-export function taskSortingFn(rowA: Row<ContractApi.Contract>, rowB: Row<ContractApi.Contract>, columnId: string) {
-  const a = rowA.original[columnId as keyof ContractApi.Contract];
-  const b = rowB.original[columnId as keyof ContractApi.Contract];
+export function taskSortingFn(rowA: Row<ContractApi.ContractSummary>, rowB: Row<ContractApi.ContractSummary>, columnId: string) {
+  const a = rowA.original[columnId as keyof ContractApi.ContractSummary];
+  const b = rowA.original[columnId as keyof ContractApi.ContractSummary];
 
   switch (columnId) {
     case 'contractStatus': {
@@ -25,7 +25,7 @@ export function taskSortingFn(rowA: Row<ContractApi.Contract>, rowB: Row<Contrac
   }
 }
 
-export const filterContractRefOrSubjectFn: FilterFnOption<ContractApi.Contract> = (row, _columnId: string, filterValue: string[]) => {
+export const filterContractRefOrSubjectFn: FilterFnOption<ContractApi.ContractSummary> = (row, _columnId: string, filterValue: string[]) => {
   const cleanedFilterValues = Array.isArray(filterValue) ? filterValue.map((filter) => filter.toLowerCase()) : [(filterValue as string).toLowerCase()];
 
   if (!filterValue || filterValue.length === 0) {
@@ -56,7 +56,7 @@ function normalize(input: string | string[]): string[] {
     .map(value => value.toLowerCase())
 }
 
-export const filterStringOrArrayFn: FilterFnOption<ContractApi.Contract> = (row, columnId: string, initFilters: string | string[]) => {
+export const filterStringOrArrayFn: FilterFnOption<ContractApi.ContractSummary> = (row, columnId: string, initFilters: string | string[]) => {
   const filters = normalize(initFilters);
   if (filters.length === 0) {
     return true;
