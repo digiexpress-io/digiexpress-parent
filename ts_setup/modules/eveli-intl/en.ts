@@ -969,5 +969,7 @@ export const en = {
   'contractTable.col.header.contractNumber': 'Number',
   'contractTable.col.header.contractType': 'Type',
   'contractTable.col.header.created': 'Created',
-  'contractTable.col.header.maturityDate': 'Maturity Date'
+  'contractTable.col.header.maturityDate': 'Maturity Date',
+  'contract.composer.contract.edit': 'Edit contract',
+  'contract.status.active': 'Active'
 }
