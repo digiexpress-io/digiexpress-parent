@@ -95,10 +95,11 @@ public class Contract_Provider {
   /**
    * Generate and persist a Feemi PS contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newPS(ContractClient contractClient) {
+  public static Uni<OneContractEnvelope> newPS(ContractClient contractClient, String refNumber) {
     final var product = Product_Feemi_PS.create();
     
     GenerationOptions options = GenerationOptions.builder()
+        .refNumber(refNumber)
         .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
         .incomeRange(product.getContributionRange().orElse(IncomeRange.of(25000, 75000)))
         .isIncludeBeneficiaries(hasDeathBenefits(product))
