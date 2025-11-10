@@ -189,36 +189,52 @@ public class SampleContractVisitor {
     Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("FEEMI_PENSION");
     
     // Build pension contract
+    final var startDate = LocalDate.now().minusDays((long) (Math.random() * 30));
+    final var policyholder = new MutableObject<Party>();
+    
+    
     newContract
-        .contractNumber("PEN-" + String.format("%08d", System.currentTimeMillis() % 100000000))
         .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
-        .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
+        .contractIssueDateInterval(Period.ZERO)
+        .contractIssueDateType(ContractDocType.CONTRACT.name())     
+        .contractStartDate(startDate)
+        .contractStartDateInterval(Period.ZERO)
+        .contractStartDateType(ContractDocType.CONTRACT.name())
+        
         .contractStatus("ACTIVE")
         .contractType("PENSION_INSURANCE")
         .contractSubType("FEEMI_PENSION")
+        .contractNumber(options.getRefNumber())   
         
         // Add policyholder
         .addParty(party -> {
-          party
+          final var built = party
               .externalId(person.getPersonalId())
               .partyType("POLICYHOLDER")
-              .partyEffectiveFrom(LocalDate.now())
-              .partyTermStartDate(LocalDate.now())
+              .partyEffectiveFrom(startDate)
+              .partyTermStartDate(startDate)
               .partyData(person.toJson())
+              .partyTermStartDate(startDate)
+              .partyTermStartDateType(ContractDocType.CONTRACT.name())
+              .partyTermStartDateInterval(Period.ZERO)
               .build();
+          policyholder.setValue(built);
         })
         
         // Add disability coverage
         .addCoverage(coverageBuilder -> {
           coverageBuilder
-              .insuredId(person.getPersonalId())
+              .insuredId(policyholder.get().getId())
               .externalId(coverage.getCoverageCode())
               .coverageType(coverage.getCoverageType())
               .coverageCode(coverage.getCoverageCode())
               .coverageSumInsured(coverage.getSumInsured())
               .coverageStatus("ACTIVE")
-              .coverageEffectiveFrom(LocalDate.now())
-              .coverageTermStartDate(LocalDate.now())
+              .coverageTermStartDate(startDate)
+              .coverageEffectiveFrom(startDate)
+              .coverageTermStartDate(startDate)
+              .coverageTermStartDateInterval(Period.ZERO)
+              .coverageTermStartDateType(ContractDocType.CONTRACT.name())
               .build();
         })
         
@@ -228,7 +244,9 @@ public class SampleContractVisitor {
               .paymentPlanStatus("ACTIVE")
               .paymentPlanFrequency(paymentPlan.getFrequency())
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
-              .paymentPlanStartDate(paymentPlan.getStartDate())
+              .paymentPlanStartDate(startDate)
+              .paymentPlanStartDateInterval(Period.ZERO)
+              .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
               .build();
         })
         
@@ -238,7 +256,7 @@ public class SampleContractVisitor {
               .referenceType("PRODUCT_CODE")
               .referenceValue(product.getProductCode())
               .build();
-        });
+        }).build();
   }
   
   public static void visitPSContract(NewContract newContract, Product product, GenerationOptions options) {
