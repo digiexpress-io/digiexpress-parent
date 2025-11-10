@@ -9,7 +9,9 @@ import { useContract } from '@dxs-ts/contract-api';
 
 const _variant_prod: FactoryCardId[] = [
   'contract_main',
-  'contract_dates'
+  'contract_details',
+  'contract_parties',
+  'contract_party_details'
 ];
 
 
