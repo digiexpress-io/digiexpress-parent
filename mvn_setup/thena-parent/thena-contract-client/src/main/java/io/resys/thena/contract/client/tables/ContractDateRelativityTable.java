@@ -27,6 +27,7 @@ import java.util.UUID;
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.contract.client.entities.ContractDateRelativity;
 import io.resys.thena.contract.client.entities.ImmutableContractDateRelativity;
+import io.resys.thena.contract.client.entities.ImmutableContractDateRelativityTransitives;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -41,6 +42,8 @@ import io.vertx.mutiny.sqlclient.Row;
       id                    UUID PRIMARY KEY,
       contract_id          UUID NOT NULL,
       
+      commit_id            UUID NOT NULL,
+      created_commit_id    UUID NOT NULL,
       
       inv_plan_id          UUID,
       coverage_id          UUID,
@@ -49,14 +52,10 @@ import io.vertx.mutiny.sqlclient.Row;
       
       entity_type          VARCHAR(50) NOT NULL,
       field_name           VARCHAR(100) NOT NULL,
-      
-
       relative_to_type     VARCHAR(50) NOT NULL,
       offset_interval      INTERVAL,
       calculation_rule     VARCHAR(100),
-      
-      description          TEXT,
-      created_at           TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      description          TEXT
     );
 
 
@@ -108,8 +107,13 @@ public interface ContractDateRelativityTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {contract_date_relativity}
-      ORDER BY created_at DESC
+      SELECT cdr.*, 
+             created_commit.created_at,
+             updated_commit.created_at as updated_at
+      FROM {contract_date_relativity} cdr
+      LEFT JOIN {commit} updated_commit ON cdr.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON cdr.created_commit_id = created_commit.commit_id
+      ORDER BY created_commit.created_at DESC
     """,
     rowMapper = ContractDateRelativityMapper.class
   )
@@ -117,9 +121,14 @@ public interface ContractDateRelativityTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {contract_date_relativity}
-      WHERE contract_id = $1
-      ORDER BY created_at DESC
+      SELECT cdr.*, 
+             created_commit.created_at,
+             updated_commit.created_at as updated_at
+      FROM {contract_date_relativity} cdr
+      LEFT JOIN {commit} updated_commit ON cdr.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON cdr.created_commit_id = created_commit.commit_id
+      WHERE cdr.contract_id = $1
+      ORDER BY created_commit.created_at DESC
     """,
     rowMapper = ContractDateRelativityMapper.class
   )
@@ -127,12 +136,17 @@ public interface ContractDateRelativityTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {contract_date_relativity}
-      WHERE entity_type = $1 AND (
-        (entity_type = 'INV_PLAN' AND inv_plan_id = $2) OR
-        (entity_type = 'COVERAGE' AND coverage_id = $2) OR
-        (entity_type = 'PARTY' AND party_id = $2) OR
-        (entity_type = 'PAYMENT_PLAN' AND payment_plan_id = $2)
+      SELECT cdr.*, 
+             created_commit.created_at,
+             updated_commit.created_at as updated_at
+      FROM {contract_date_relativity} cdr
+      LEFT JOIN {commit} updated_commit ON cdr.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON cdr.created_commit_id = created_commit.commit_id
+      WHERE cdr.entity_type = $1 AND (
+        (cdr.entity_type = 'INV_PLAN' AND cdr.inv_plan_id = $2) OR
+        (cdr.entity_type = 'COVERAGE' AND cdr.coverage_id = $2) OR
+        (cdr.entity_type = 'PARTY' AND cdr.party_id = $2) OR
+        (cdr.entity_type = 'PAYMENT_PLAN' AND cdr.payment_plan_id = $2)
       )
     """,
     rowMapper = ContractDateRelativityMapper.class
@@ -142,8 +156,13 @@ public interface ContractDateRelativityTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {contract_date_relativity}
-      WHERE id = $1
+      SELECT cdr.*, 
+             created_commit.created_at,
+             updated_commit.created_at as updated_at
+      FROM {contract_date_relativity} cdr
+      LEFT JOIN {commit} updated_commit ON cdr.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON cdr.created_commit_id = created_commit.commit_id
+      WHERE cdr.id = $1
     """,
     rowMapper = ContractDateRelativityMapper.class
   )
@@ -152,9 +171,9 @@ public interface ContractDateRelativityTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {contract_date_relativity}
-      (id, contract_id, inv_plan_id, coverage_id, party_id, payment_plan_id,
+      (id, contract_id, commit_id, created_commit_id, inv_plan_id, coverage_id, party_id, payment_plan_id,
        entity_type, field_name, relative_to_type, offset_interval, calculation_rule, description)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
     """,
     propsMapper = ContractDateRelativityInsertMapper.class
   )
@@ -163,10 +182,10 @@ public interface ContractDateRelativityTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {contract_date_relativity}
-       SET contract_id = $1, inv_plan_id = $2, coverage_id = $3, party_id = $4, payment_plan_id = $5,
-           entity_type = $6, field_name = $7, relative_to_type = $8, offset_interval = $9, 
-           calculation_rule = $10, description = $11
-       WHERE id = $12
+       SET contract_id = $1, commit_id = $2, inv_plan_id = $3, coverage_id = $4, party_id = $5, payment_plan_id = $6,
+           entity_type = $7, field_name = $8, relative_to_type = $9, offset_interval = $10, 
+           calculation_rule = $11, description = $12
+       WHERE id = $13
     """,
     propsMapper = ContractDateRelativityUpdateMapper.class
   )
@@ -187,6 +206,14 @@ public interface ContractDateRelativityTable {
       return ImmutableContractDateRelativity.builder()
           .id(TableUtils.toStringUUID(row, "id"))
           .contractId(TableUtils.toStringUUID(row, "contract_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          
+          // Transitive data from joins
+          .transitives(ImmutableContractDateRelativityTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .updatedAt(row.getOffsetDateTime("updated_at"))
+              .build())
           
           .invPlanId(Optional.ofNullable(inv_plan_id))
           .coverageId(Optional.ofNullable(coverage_id))
@@ -195,12 +222,10 @@ public interface ContractDateRelativityTable {
           
           .entityType(row.getString("entity_type"))
           .fieldName(row.getString("field_name"))
-          
           .relativeToType(row.getString("relative_to_type"))
           .offsetInterval(Optional.ofNullable(offset_interval))
           .calculationRule(Optional.ofNullable(calculation_rule))
           .description(Optional.ofNullable(description))
-          .createdAt(row.getOffsetDateTime("created_at"))
           .build();
     }
   }
@@ -211,6 +236,8 @@ public interface ContractDateRelativityTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getContractId()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getInvPlanId().map(TableUtils::toUuid).orElse(null),
         doc.getCoverageId().map(TableUtils::toUuid).orElse(null),
         doc.getPartyId().map(TableUtils::toUuid).orElse(null),
@@ -230,6 +257,7 @@ public interface ContractDateRelativityTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(ContractDateRelativity doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getContractId()),
+        TableUtils.toUuid(doc.getCommitId()),
         doc.getInvPlanId().map(TableUtils::toUuid).orElse(null),
         doc.getCoverageId().map(TableUtils::toUuid).orElse(null),
         doc.getPartyId().map(TableUtils::toUuid).orElse(null),

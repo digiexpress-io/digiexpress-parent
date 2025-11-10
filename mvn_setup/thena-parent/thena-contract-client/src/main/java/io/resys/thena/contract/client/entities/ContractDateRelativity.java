@@ -29,12 +29,20 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import jakarta.annotation.Nullable;
+
 @Value.Immutable
 @JsonSerialize(as = ImmutableContractDateRelativity.class)
 @JsonDeserialize(as = ImmutableContractDateRelativity.class)
 public interface ContractDateRelativity extends ContractEntity {
   String getId();
   String getContractId();
+  String getCommitId();
+  String getCreatedCommitId();
+  
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable ContractDateRelativityTransitives getTransitives();
   
   // Polymorphic FKs - only one should be populated
   Optional<String> getInvPlanId();
@@ -51,5 +59,17 @@ public interface ContractDateRelativity extends ContractEntity {
   Optional<String> getCalculationRule();
   
   Optional<String> getDescription();
-  OffsetDateTime getCreatedAt();
+  
+  @Override 
+  default ContractDocType getDocType() { 
+    return ContractDocType.CONTRACT_DATE_RELATIVITY; 
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableContractDateRelativityTransitives.class)
+  @JsonDeserialize(as = ImmutableContractDateRelativityTransitives.class)
+  interface ContractDateRelativityTransitives {
+    OffsetDateTime getCreatedAt();
+    OffsetDateTime getUpdatedAt();
+  }
 }

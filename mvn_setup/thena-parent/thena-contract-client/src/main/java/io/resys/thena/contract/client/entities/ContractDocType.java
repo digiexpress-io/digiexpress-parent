@@ -30,6 +30,7 @@ public enum ContractDocType {
   PAYMENT_PLAN,
   INV_PLAN,
   INV_PLAN_ALLOC,
+  CONTRACT_DATE_RELATIVITY,
   COMMIT,
   COMMIT_TREE
 }
