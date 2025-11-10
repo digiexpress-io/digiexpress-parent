@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.spi.create;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -73,9 +72,7 @@ public class NewCoverageBuilder implements NewCoverage {
         .coverageRate(Optional.empty())
         .coverageRateType(Optional.empty())
         .coverageEffectiveTo(Optional.empty())
-        .coverageTermEndDate(Optional.empty())
-        .coverageTermEndDateInterval(Optional.empty())
-        .coverageTermEndDateType(Optional.empty());
+        .coverageTermEndDate(Optional.empty());
     
     final var updates = currentTx.getCoverageUpdates().stream().map(e -> e.getId()).toList();
     final var deletes = currentTx.getCoverageDeletes().stream().map(e -> e.getId()).toList();
@@ -165,32 +162,8 @@ public class NewCoverageBuilder implements NewCoverage {
   }
 
   @Override
-  public NewCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval) {
-    this.next.coverageTermStartDateInterval(coverageTermStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType) {
-    this.next.coverageTermStartDateType(coverageTermStartDateType);
-    return this;
-  }
-
-  @Override
   public NewCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate) {
     this.next.coverageTermEndDate(Optional.ofNullable(coverageTermEndDate));
-    return this;
-  }
-
-  @Override
-  public NewCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval) {
-    this.next.coverageTermEndDateInterval(Optional.ofNullable(coverageTermEndDateInterval));
-    return this;
-  }
-
-  @Override
-  public NewCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType) {
-    this.next.coverageTermEndDateType(Optional.ofNullable(coverageTermEndDateType));
     return this;
   }
 

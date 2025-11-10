@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.spi.create;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.Period;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -81,8 +80,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
         .parentContractId(Optional.empty())
         .externalId(Optional.empty())
         .contractMaturityDate(Optional.empty())
-        .contractMaturityDateInterval(Optional.empty())
-        .contractMaturityDateType(Optional.empty())
         .contractSubStatus(Optional.empty())
         .contractSubType(Optional.empty())
         .contractData(Optional.empty());
@@ -114,17 +111,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return this;
   }
 
-  @Override
-  public NewContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval) {
-    this.contract.contractIssueDateInterval(contractIssueDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewContract contractIssueDateType(@Nullable String contractIssueDateType) {
-    this.contract.contractIssueDateType(contractIssueDateType);
-    return this;
-  }
 
   @Override
   public NewContract contractStartDate(LocalDate contractStartDate) {
@@ -132,17 +118,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return this;
   }
 
-  @Override
-  public NewContract contractStartDateInterval(@Nullable Period contractStartDateInterval) {
-    this.contract.contractStartDateInterval(contractStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewContract contractStartDateType(@Nullable String contractStartDateType) {
-    this.contract.contractStartDateType(contractStartDateType);
-    return this;
-  }
 
   @Override
   public NewContract contractMaturityDate(@Nullable LocalDate contractMaturityDate) {
@@ -150,17 +125,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return this;
   }
 
-  @Override
-  public NewContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval) {
-    this.contract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
-    return this;
-  }
-
-  @Override
-  public NewContract contractMaturityDateType(@Nullable String contractMaturityDateType) {
-    this.contract.contractMaturityDateType(Optional.ofNullable(contractMaturityDateType));
-    return this;
-  }
 
   @Override
   public NewContract contractStatus(String contractStatus) {

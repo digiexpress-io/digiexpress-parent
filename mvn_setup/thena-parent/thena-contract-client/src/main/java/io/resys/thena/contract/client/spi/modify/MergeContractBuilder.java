@@ -1,28 +1,6 @@
 package io.resys.thena.contract.client.spi.modify;
 
 import java.time.LocalDate;
-
-/*-
- * #%L
- * thena-contract-client
- * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -133,19 +111,6 @@ public class MergeContractBuilder implements MergeContract {
     return this;
   }
   
-  @Override
-  public MergeContract contractIssueDateInterval(Period contractIssueDateInterval) {
-    this.nextContract.contractIssueDateInterval(contractIssueDateInterval);
-    updateVersion();
-    return this;
-  }
-  
-  @Override
-  public MergeContract contractIssueDateType(String contractIssueDateType) {
-    this.nextContract.contractIssueDateType(contractIssueDateType);
-    updateVersion();
-    return this;
-  }
   
   @Override
   public MergeContract contractStartDate(LocalDate contractStartDate) {
@@ -154,19 +119,6 @@ public class MergeContractBuilder implements MergeContract {
     return this;
   }
   
-  @Override
-  public MergeContract contractStartDateInterval(Period contractStartDateInterval) {
-    this.nextContract.contractStartDateInterval(contractStartDateInterval);
-    updateVersion();
-    return this;
-  }
-  
-  @Override
-  public MergeContract contractStartDateType(String contractStartDateType) {
-    this.nextContract.contractStartDateType(contractStartDateType);
-    updateVersion();
-    return this;
-  }
   
   @Override
   public MergeContract contractMaturityDate(LocalDate contractMaturityDate) {
@@ -175,19 +127,6 @@ public class MergeContractBuilder implements MergeContract {
     return this;
   }
   
-  @Override
-  public MergeContract contractMaturityDateInterval(Period contractMaturityDateInterval) {
-    this.nextContract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
-    updateVersion();
-    return this;
-  }
-  
-  @Override
-  public MergeContract contractMaturityDateType(String contractMaturityDateType) {
-    this.nextContract.contractMaturityDateType(Optional.ofNullable(contractMaturityDateType));
-    updateVersion();
-    return this;
-  }
   
   @Override
   public MergeContract contractStatus(String contractStatus) {

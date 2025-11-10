@@ -21,7 +21,6 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -67,9 +66,7 @@ public class NewInvPlanBuilder implements NewInvPlan {
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)
-        .invPlanEndDate(Optional.empty())
-        .invPlanEndDateInterval(Optional.empty())
-        .invPlanEndDateType(Optional.empty());
+        .invPlanEndDate(Optional.empty());
     
     this.batch = ImmutablePersistenceUnit.builder()
         .tenantId(logger.getTenantId())
@@ -128,32 +125,8 @@ public class NewInvPlanBuilder implements NewInvPlan {
   }
 
   @Override
-  public NewInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval) {
-    this.next.invPlanStartDateInterval(invPlanStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType) {
-    this.next.invPlanStartDateType(invPlanStartDateType);
-    return this;
-  }
-
-  @Override
   public NewInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate) {
     this.next.invPlanEndDate(Optional.ofNullable(invPlanEndDate));
-    return this;
-  }
-
-  @Override
-  public NewInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval) {
-    this.next.invPlanEndDateInterval(Optional.ofNullable(invPlanEndDateInterval));
-    return this;
-  }
-
-  @Override
-  public NewInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType) {
-    this.next.invPlanEndDateType(Optional.ofNullable(invPlanEndDateType));
     return this;
   }
 

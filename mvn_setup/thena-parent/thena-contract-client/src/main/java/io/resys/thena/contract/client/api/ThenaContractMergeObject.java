@@ -55,16 +55,8 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeContract contractIssueDate(LocalDate contractIssueDate);
-    MergeContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval);
-    MergeContract contractIssueDateType(@Nullable String contractIssueDateType);
-    
     MergeContract contractStartDate(LocalDate contractStartDate);
-    MergeContract contractStartDateInterval(@Nullable Period contractStartDateInterval);
-    MergeContract contractStartDateType(@Nullable String contractStartDateType);
-    
     MergeContract contractMaturityDate(@Nullable LocalDate contractMaturityDate);
-    MergeContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval);
-    MergeContract contractMaturityDateType(@Nullable String contractMaturityDateType);
     
     // Status and type
     MergeContract contractStatus(String contractStatus);
@@ -121,12 +113,7 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeParty partyTermStartDate(LocalDate partyTermStartDate);
-    MergeParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval);
-    MergeParty partyTermStartDateType(@Nullable String partyTermStartDateType);
-    
     MergeParty partyTermEndDate(@Nullable LocalDate partyTermEndDate);
-    MergeParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval);
-    MergeParty partyTermEndDateType(@Nullable String partyTermEndDateType);
     
     MergeParty partyData(@Nullable JsonObject partyData);
     
@@ -154,12 +141,7 @@ public interface ThenaContractMergeObject {
     
     // Business term dates
     MergeCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
-    MergeCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval);
-    MergeCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
-    
     MergeCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
-    MergeCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval);
-    MergeCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // Collection operations for coverage's child entities
     <T> MergeCoverage setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference);
@@ -204,12 +186,7 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeInvPlan invPlanStartDate(LocalDate invPlanStartDate);
-    MergeInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval);
-    MergeInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
-    
     MergeInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
-    MergeInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval);
-    MergeInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // Collection operations for investment plan allocations
     <T> MergeInvPlan setAllAllocations(List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> allocation);
@@ -242,12 +219,7 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergePaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
-    MergePaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval);
-    MergePaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
-    
     MergePaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
-    MergePaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval);
-    MergePaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
     void build();
   }
 }

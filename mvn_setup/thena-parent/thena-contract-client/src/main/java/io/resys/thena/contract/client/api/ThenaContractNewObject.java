@@ -40,16 +40,8 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewContract contractIssueDate(LocalDate contractIssueDate);
-    NewContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval);
-    NewContract contractIssueDateType(@Nullable String contractIssueDateType);
-    
     NewContract contractStartDate(LocalDate contractStartDate);
-    NewContract contractStartDateInterval(@Nullable Period contractStartDateInterval);
-    NewContract contractStartDateType(@Nullable String contractStartDateType);
-    
     NewContract contractMaturityDate(@Nullable LocalDate contractMaturityDate);
-    NewContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval);
-    NewContract contractMaturityDateType(@Nullable String contractMaturityDateType);
     
     // Status and type
     NewContract contractStatus(String contractStatus);
@@ -81,12 +73,7 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewParty partyTermStartDate(LocalDate partyTermStartDate);
-    NewParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval);
-    NewParty partyTermStartDateType(@Nullable String partyTermStartDateType);
-    
     NewParty partyTermEndDate(@Nullable LocalDate partyTermEndDate);
-    NewParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval);
-    NewParty partyTermEndDateType(@Nullable String partyTermEndDateType);
     
     NewParty partyData(@Nullable JsonObject partyData);
     
@@ -111,12 +98,7 @@ public interface ThenaContractNewObject {
     
     // Business term dates
     NewCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
-    NewCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval);
-    NewCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
-    
     NewCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
-    NewCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval);
-    NewCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // nested entities
     NewCoverage addNote(Consumer<NewNote> note);
@@ -161,12 +143,7 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewInvPlan invPlanStartDate(LocalDate invPlanStartDate);
-    NewInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval);
-    NewInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
-    
     NewInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
-    NewInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval);
-    NewInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // nested allocation
     NewInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation);
@@ -191,12 +168,7 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewPaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
-    NewPaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval);
-    NewPaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
-    
     NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
-    NewPaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval);
-    NewPaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
     void build();
   }
   

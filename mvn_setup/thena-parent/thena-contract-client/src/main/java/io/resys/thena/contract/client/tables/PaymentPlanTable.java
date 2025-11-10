@@ -53,12 +53,7 @@ import io.vertx.mutiny.sqlclient.Row;
       payment_plan_amount             DECIMAL(15,2) NOT NULL,
 
       payment_plan_start_date         DATE NOT NULL,
-      payment_plan_start_date_interval INTERVAL NOT NULL,
-      payment_plan_start_date_type    VARCHAR(100) NOT NULL,
-
-      payment_plan_end_date           DATE,
-      payment_plan_end_date_interval  INTERVAL,
-      payment_plan_end_date_type      VARCHAR(100)
+      payment_plan_end_date           DATE
     );
 
     CREATE INDEX IF NOT EXISTS {payment_plan}_STATUS_INDEX
@@ -148,9 +143,8 @@ public interface PaymentPlanTable {
       INSERT INTO {payment_plan}
       (id, contract_id, party_id, commit_id, created_commit_id,
        payment_plan_status, payment_plan_frequency, payment_plan_amount,
-       payment_plan_start_date, payment_plan_start_date_interval, payment_plan_start_date_type,
-       payment_plan_end_date, payment_plan_end_date_interval, payment_plan_end_date_type)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+       payment_plan_start_date, payment_plan_end_date)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     """,
     propsMapper = PaymentPlanInsertMapper.class
   )
@@ -161,9 +155,8 @@ public interface PaymentPlanTable {
       UPDATE {payment_plan}
        SET contract_id = $1, party_id = $2, commit_id = $3,
            payment_plan_status = $4, payment_plan_frequency = $5, payment_plan_amount = $6,
-           payment_plan_start_date = $7, payment_plan_start_date_interval = $8, payment_plan_start_date_type = $9,
-           payment_plan_end_date = $10, payment_plan_end_date_interval = $11, payment_plan_end_date_type = $12
-       WHERE id = $13
+           payment_plan_start_date = $7, payment_plan_end_date = $8
+       WHERE id = $9
     """,
     propsMapper = PaymentPlanUpdateMapper.class
   )
@@ -181,8 +174,6 @@ public interface PaymentPlanTable {
     public PaymentPlan apply(Row row) {
       final String party_id = TableUtils.toStringUUID(row, "party_id");
       final LocalDate payment_plan_end_date = row.getLocalDate("payment_plan_end_date");
-      final var payment_plan_end_date_interval = TableUtils.toDuration(row, "payment_plan_end_date_interval");
-      final String payment_plan_end_date_type = row.getString("payment_plan_end_date_type");
 
       return ImmutablePaymentPlan.builder()
           .id(TableUtils.toStringUUID(row, "id"))
@@ -202,14 +193,9 @@ public interface PaymentPlanTable {
           .paymentPlanFrequency(row.getString("payment_plan_frequency"))
           .paymentPlanAmount(row.getBigDecimal("payment_plan_amount"))
 
-          // Business dates (expanded)
+          // Business dates
           .paymentPlanStartDate(row.getLocalDate("payment_plan_start_date"))
-          .paymentPlanStartDateInterval(TableUtils.toDuration(row, "payment_plan_start_date_interval"))
-          .paymentPlanStartDateType(row.getString("payment_plan_start_date_type"))
-
           .paymentPlanEndDate(Optional.ofNullable(payment_plan_end_date))
-          .paymentPlanEndDateInterval(Optional.ofNullable(payment_plan_end_date_interval))
-          .paymentPlanEndDateType(Optional.ofNullable(payment_plan_end_date_type))
 
           .build();
     }
@@ -228,11 +214,7 @@ public interface PaymentPlanTable {
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
         doc.getPaymentPlanStartDate(),
-        TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
-        doc.getPaymentPlanStartDateType(),
-        doc.getPaymentPlanEndDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getPaymentPlanEndDateInterval()),
-        doc.getPaymentPlanEndDateType().orElse(null)
+        doc.getPaymentPlanEndDate().orElse(null)
       });
     }
   }
@@ -248,11 +230,7 @@ public interface PaymentPlanTable {
         doc.getPaymentPlanFrequency(),
         doc.getPaymentPlanAmount(),
         doc.getPaymentPlanStartDate(),
-        TableUtils.toInterval(doc.getPaymentPlanStartDateInterval()),
-        doc.getPaymentPlanStartDateType(),
         doc.getPaymentPlanEndDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getPaymentPlanEndDateInterval()),
-        doc.getPaymentPlanEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });
     }
