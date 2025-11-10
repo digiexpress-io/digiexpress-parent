@@ -8,7 +8,8 @@ import { ContractCardFactory, FactoryCardId } from '../contract-card-factory';
 import { useContract } from '@dxs-ts/contract-api';
 
 const _variant_prod: FactoryCardId[] = [
-  'contract_main'
+  'contract_main',
+  'contract_dates'
 ];
 
 
