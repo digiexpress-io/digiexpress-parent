@@ -58,6 +58,7 @@ const _variant_prod_audit: FactoryCardId[] = [
   'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
+  'audit_ai'
 ];
 
 

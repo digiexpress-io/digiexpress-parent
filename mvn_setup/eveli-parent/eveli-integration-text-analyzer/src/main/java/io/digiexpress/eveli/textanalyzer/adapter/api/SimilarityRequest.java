@@ -21,17 +21,22 @@ package io.digiexpress.eveli.textanalyzer.adapter.api;
  */
 
 import java.util.List;
-import java.util.Optional;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class SimilaritySearchRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class SimilarityRequest {
   
   @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
   public static class Entry {
     String id;
-    Optional<String> language;
+    String language;
     String text;
   }
   

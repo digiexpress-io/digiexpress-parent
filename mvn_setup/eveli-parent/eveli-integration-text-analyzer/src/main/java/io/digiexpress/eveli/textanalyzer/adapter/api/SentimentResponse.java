@@ -22,6 +22,7 @@ package io.digiexpress.eveli.textanalyzer.adapter.api;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 
 import io.digiexpress.eveli.textanalyzer.api.Sentiment;
 import lombok.Data;
@@ -33,7 +34,7 @@ public class SentimentResponse {
   public static class SentenceSentiment {
     String text;
     Sentiment sentiment;
-    Object scores;
+    Map<String, Float> scores;
   }
   String id;
   Sentiment sentiment;

@@ -1,8 +1,8 @@
-package io.digiexpress.eveli.textanalyzer.adapter.api;
+package io.digiexpress.eveli.client.api;
 
 /*-
  * #%L
- * eveli-integration-text-analyzer
+ * eveli-client
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,29 +20,10 @@ package io.digiexpress.eveli.textanalyzer.adapter.api;
  * #L%
  */
 
-import java.time.OffsetDateTime;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import lombok.Data;
-
-@Data
-public class SimilaritySearchResponse {
-  OffsetDateTime timestamp;
-  String modelVersion;
-  String modelId;
-  List<ProcessedEntry> entries;
-  @Data
-  public static class ProcessedEntry {
-    String id;
-    String language;
-    String text;
-    List<SimilarityResult> similarities;
-  }
-  @Data
-  public static class SimilarityResult {
-    String id;
-    float similarityScore;
-    String text;
-    String language;
-  }
+public interface FeedbackCategoriesReader {
+  Map<String, Map<String, Map<String, List<String>>>> readCategoriesJsonFile() throws IOException;
 }

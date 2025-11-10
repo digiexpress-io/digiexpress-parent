@@ -14,6 +14,7 @@ import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-mater
 import { DriveFileMoveOutlined as DriveFileMoveOutlinedIcon } from '@mui/icons-material';
 import { History as HistoryIcon } from '@mui/icons-material';
 import { NoteAltOutlined as NoteAltOutlinedIcon } from '@mui/icons-material';
+import { Analytics as AnalyticsIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
@@ -46,6 +47,7 @@ import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
 import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 import { TaskAuditQueuesTable } from '../task-audit-queue';
+import { TaskAuditAi } from '../task-audit-ai';
 import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
 
 
@@ -70,7 +72,8 @@ export type FactoryCardId =
   'audit_queue_deliveries' |
   'audit_processes' |
   'audit_flow' |
-  'audit_queue_messages'
+  'audit_queue_messages'|
+  'audit_ai'
 
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
@@ -92,7 +95,8 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
-  'audit_queue_messages'
+  'audit_queue_messages',
+  'audit_ai'
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -486,6 +490,20 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           startAdornmentIcon={<StartAdornmentIcon icon={AccountTreeOutlinedIcon} />}>
           <TaskAuditQueueDeliveriesTable />
         </TaskCard>
+      );
+    case 'audit_ai':
+      return (
+          <TaskFeature id='TASK_FEEDBACK'>
+            <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.ai', defaultMessage: 'Audit: AI analysis' })}
+                      {...commonProps}
+                      showFlashyToggle={false}
+                      showEditOnMenu={false}
+                      showEditButton={false}
+                      showReviewOnMenu={false}
+                      startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+              <TaskAuditAi />
+            </TaskCard>
+          </TaskFeature>
       );
     default:
       return null;

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import io.digiexpress.eveli.client.api.*;
+import io.digiexpress.eveli.textanalyzer.adapter.spi.FeedbackAnalyzerRestClient;
 import org.springframework.context.ApplicationEventPublisher;
 
 /*-
@@ -26,12 +28,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.TaskAuditClient;
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
@@ -102,8 +98,14 @@ public class EveliAutoConfigWorker {
     return new WorkerIamController(authClient);
   } 
   @Bean 
-  public FeedbackApiController feedbackApiController(WorkerAuthClient authClient, FeedbackClient feedbackClient, TaskClient taskClient) {
-    return new FeedbackApiController(authClient, feedbackClient, taskClient);
+  public FeedbackApiController feedbackApiController(
+      WorkerAuthClient authClient,
+      FeedbackClient feedbackClient,
+      TaskClient taskClient,
+      FeedbackAnalyzerRestClient feedbackAnalyzerRestClient,
+      FeedbackCategoriesReader feedbackCategoriesReader
+  ) {
+    return new FeedbackApiController(authClient, feedbackClient, taskClient, feedbackAnalyzerRestClient, feedbackCategoriesReader);
   }
   @Bean
   public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {

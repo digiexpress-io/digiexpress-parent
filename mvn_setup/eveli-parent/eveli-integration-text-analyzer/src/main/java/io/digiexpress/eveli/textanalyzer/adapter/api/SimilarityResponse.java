@@ -20,20 +20,30 @@ package io.digiexpress.eveli.textanalyzer.adapter.api;
  * #L%
  */
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
+
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class SentimentSubcategoryRequest {
-  private String id;
-  private String language;
-  private String mainCategory;
-  private String text;
-  private Map<String, Map<String, Map<String, List<String>>>> categories;
+public class SimilarityResponse {
+  String id;
+  OffsetDateTime timestamp;
+  String modelVersion;
+  String modelId;
+  List<ProcessedEntry> entries;
+  @Data
+  public static class ProcessedEntry {
+    String id;
+    String language;
+    String text;
+    List<SimilarityResult> similarities;
+  }
+  @Data
+  public static class SimilarityResult {
+    String id;
+    float similarityScore;
+    String text;
+    String language;
+  }
 }

@@ -36,6 +36,10 @@
       <artifactId>thena-db-client</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>eveli-integration-text-analyzer</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.digiexpress</groupId>    
       <artifactId>tagomi-client</artifactId>
     </dependency>

@@ -21,6 +21,6 @@ package io.digiexpress.eveli.textanalyzer.adapter.api;
  */
 
 public interface FeedbackAnalyzerClient {
-  SimilaritySearchResponse findSimilar(SimilaritySearchRequest request);
+  SimilarityResponse findSimilar(SimilarityRequest request);
   SentimentSubcategoryResponse findSentimentAndSubcategory(SentimentSubcategoryRequest request);
 }

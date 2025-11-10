@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import io.digiexpress.eveli.client.api.*;
+import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -47,14 +49,6 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CustomerAccountClient;
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.TaskAuditClient;
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TenantConfigClient;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -216,6 +210,10 @@ public class EveliAutoConfig {
   ) {
     final var history = new FeedbackWithHistory(tx, jdbc, om);
     return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbc, history, feedbackProps);
+  }
+  @Bean
+  public FeedbackCategoriesReader feedbackCategoriesReader() {
+    return new FeedbackCategoriesReaderImpl();
   }
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {

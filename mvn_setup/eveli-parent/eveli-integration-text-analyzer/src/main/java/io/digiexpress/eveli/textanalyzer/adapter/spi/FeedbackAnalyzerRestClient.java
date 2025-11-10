@@ -33,8 +33,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.digiexpress.eveli.textanalyzer.adapter.api.FeedbackAnalyzerClient;
 import io.digiexpress.eveli.textanalyzer.adapter.api.SentimentSubcategoryRequest;
 import io.digiexpress.eveli.textanalyzer.adapter.api.SentimentSubcategoryResponse;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilaritySearchRequest;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilaritySearchResponse;
+import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityRequest;
+import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityResponse;
 import io.digiexpress.eveli.textanalyzer.properties.AnalyzerServerProps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,8 +56,8 @@ public class FeedbackAnalyzerRestClient implements FeedbackAnalyzerClient{
   private final ObjectMapper mapper;
 
   @Override
-  public SimilaritySearchResponse findSimilar(SimilaritySearchRequest request) {
-    return executeCall(request, "find-similar", SimilaritySearchResponse.class);
+  public SimilarityResponse findSimilar(SimilarityRequest request) {
+    return executeCall(request, "find-similar", SimilarityResponse.class);
   }
 
   @Override

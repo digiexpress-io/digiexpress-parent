@@ -13,6 +13,7 @@ export declare namespace FeedbackApi {
   export type ReplyId = string;
   export type CategoryId = string;
   export type CustomerId = string;
+  export type Sentiment = 'positive' | 'negative' | 'neutral' | 'mixed' | 'unknown';
 
 
 
@@ -122,6 +123,61 @@ export declare namespace FeedbackApi {
   export interface UpsertFeedbackRankingCommand extends ModifyOneFeedbackCommand {
     replyIdOrCategoryId: string;
     rating: number | undefined; // undefined = remove vote
+  }
+
+
+  export interface SentimentAndSubcategoryResponse {
+    sentiment: SentimentResponse;
+    subcategory: SubcategoryResponse;
+  }
+
+  export interface SentimentResponse {
+    id: string;
+    sentiment: Sentiment;
+    confidence: number;
+    sentences: SentimentSentence[];
+    timestamp: string;
+    modelVersion: string;
+    modelId: string;
+  }
+
+  export interface SentimentSentence {
+    text: string;
+    sentiment: Sentiment;
+    scores: Record<string, number>;
+  }
+
+  export interface SubcategoryResponse {
+    id: string;
+    subcategory: string;
+    confidence: number;
+    matches: string[];
+    scores: Record<string, number>;
+    timestamp: string;
+    modelVersion: string;
+    modelId: string;
+  }
+
+  export interface SimilarityResponse {
+    id: string;
+    timestamp: string;
+    modelVersion: string;
+    modelId: string;
+    entries: ProcessedEntry[];
+  }
+
+  export interface ProcessedEntry {
+    id: string;
+    language: string;
+    text: string;
+    similarities: EntrySimilarityResult[];
+  }
+
+  export interface EntrySimilarityResult {
+    id: string;
+    similarityScore: number;
+    text: string;
+    language: string;
   }
 
 

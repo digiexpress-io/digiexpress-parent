@@ -20,15 +20,16 @@ package io.digiexpress.eveli.textanalyzer.spi;
  * #L%
  */
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import io.digiexpress.eveli.textanalyzer.adapter.api.FeedbackAnalyzerClient;
 import io.digiexpress.eveli.textanalyzer.adapter.api.SentimentSubcategoryRequest;
 import io.digiexpress.eveli.textanalyzer.adapter.api.SentimentSubcategoryResponse;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilaritySearchRequest;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilaritySearchRequest.Entry;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilaritySearchResponse;
+import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityRequest;
+import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityRequest.Entry;
+import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityResponse;
 import io.digiexpress.eveli.textanalyzer.api.ImmutableTextSentimentAndSubcategory;
 import io.digiexpress.eveli.textanalyzer.api.ImmutableTextSimilarityItem;
 import io.digiexpress.eveli.textanalyzer.api.ImmutableTextSimilarityItems;
@@ -49,9 +50,10 @@ public class TextAnalyzerServiceImpl implements TextAnalyzerService{
   public TextSentimentAndSubcategory findSentimentAndSubcategory(TextCategoryItem request) {
     SentimentSubcategoryRequest clientRequest = new SentimentSubcategoryRequest();
     clientRequest.setId(request.getId());
-    clientRequest.setLanguage(Objects.requireNonNullElse(request.getLanguage(), "fi"));
+    clientRequest.setLanguage(request.getLanguage());
     clientRequest.setMainCategory(request.getMainCategory());
     clientRequest.setText(request.getText());
+    clientRequest.setCategories(request.getCategories());
     SentimentSubcategoryResponse response = client.findSentimentAndSubcategory(clientRequest);
     TextSentimentAndSubcategory result = ImmutableTextSentimentAndSubcategory.builder()
         .id(response.getSentiment().getId())
@@ -66,16 +68,16 @@ public class TextAnalyzerServiceImpl implements TextAnalyzerService{
 
   @Override
   public TextSimilarityItems findSimilar(TextItems request) {
-    SimilaritySearchRequest clientRequest = new SimilaritySearchRequest();
+    SimilarityRequest clientRequest = new SimilarityRequest();
     clientRequest.setId(request.getId());
     clientRequest.setEntries(request.getItems().stream().map(item -> {
       Entry entry = new Entry();
       entry.setId(item.getId());
-      entry.setLanguage(Optional.ofNullable(item.getLanguage()).or(()->Optional.of("fi")));
+      entry.setLanguage(item.getLanguage());
       entry.setText(item.getText());
       return entry;
     }).toList());
-    SimilaritySearchResponse clientResponse = client.findSimilar(clientRequest);
+    SimilarityResponse clientResponse = client.findSimilar(clientRequest);
     TextSimilarityItems response = ImmutableTextSimilarityItems.builder()
         .items(clientResponse.getEntries().stream().map(entry-> {
           return ImmutableTextSimilarityItem.builder()
