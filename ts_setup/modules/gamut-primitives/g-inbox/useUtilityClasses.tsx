@@ -1,4 +1,4 @@
-import { generateUtilityClass, Grid, lighten, styled } from '@mui/material';
+import { generateUtilityClass, lighten, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -76,11 +76,20 @@ export const GInboxRoot = styled("div", {
         borderColor: 'rgba(194,190,194,1)',
         boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
       },
+    
+      [theme.breakpoints.only('sm')]: {
+        alignItems: 'flex-start',
+      },
+    
+      [theme.breakpoints.only('md')]: {
+        alignItems: 'flex-start',
+      },
+    
       [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap',
         rowGap: theme.spacing(1),
       },
-    },
+    },      
 
     '.GInbox-inboxItemTitle': {
       fontSize: theme.typography.body2.fontSize,
@@ -94,7 +103,7 @@ export const GInboxRoot = styled("div", {
       },
       [theme.breakpoints.only('md')]: {
         justifyContent: 'flex-end',
-        textAlign: 'right',
+        textAlign: 'left',
       },
     },
 
@@ -137,7 +146,6 @@ export const GInboxRoot = styled("div", {
         maxWidth: '8ch',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
       },
     },
 
@@ -151,24 +159,23 @@ export const GInboxRoot = styled("div", {
       overflow: 'hidden',
       gap: theme.spacing(1),
       '& > *': { flex: '0 0 auto' },
+    
+      [theme.breakpoints.only('sm')]: {
+        flexWrap: 'wrap',
+        rowGap: theme.spacing(1),
+      },
+    
+      [theme.breakpoints.only('md')]: {
+        flexWrap: 'wrap',
+        rowGap: theme.spacing(1),
+      },
+    
       [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap',
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
       },
-    },
-
-    '& .GSort-root': {
-      display: 'flex',
-      width: '100%',
-      marginBottom: theme.spacing(1),
-      [theme.breakpoints.up('sm')]: {
-        justifyContent: 'flex-end'
-      },
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'center'
-      },
-    },
+    },    
 
     '.GInbox-headerRow': {
       width: '100%',
@@ -182,6 +189,7 @@ export const GInboxRoot = styled("div", {
     '.GInbox-headerAttachments': {
       display: 'flex',
       justifyContent: 'flex-start',
+      paddingLeft: theme.spacing(1),
     },
 
     '.GInbox-headerLastModified': {
