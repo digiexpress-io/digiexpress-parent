@@ -963,5 +963,11 @@ export const en = {
   'tagomi.locale.label.editLocaleValue': 'Edit locale label value',
   'xui.calendarInput.mask.placeholder.day': 'dd',
   'xui.calendarInput.mask.placeholder.month': 'mm',
-  'xui.calendarInput.mask.placeholder.year': 'yyyy'
+  'xui.calendarInput.mask.placeholder.year': 'yyyy',
+  'contractsTable.title': 'Contracts',
+  'contractTable.col.header.status': 'Status',
+  'contractTable.col.header.contractNumber': 'Number',
+  'contractTable.col.header.contractType': 'Type',
+  'contractTable.col.header.created': 'Created',
+  'contractTable.col.header.maturityDate': 'Maturity Date'
 }

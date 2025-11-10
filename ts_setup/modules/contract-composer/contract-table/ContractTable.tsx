@@ -9,8 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import { anyDateFilter, TableDateFilter, WithTableStyles } from '@dxs-ts/xui-table';
 import { ContractApi, useContractBackend } from '@dxs-ts/contract-api';
 
-
-
 import { IndicatorStatus } from './IndicatorStatus';
 import { filterStringOrArrayFn, filterContractRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 import { IndicatorSubject } from './IndicatorSubject';
@@ -99,9 +97,9 @@ export const ContractTable: React.FC = () => {
   return (
     <>
       <Box display="flex" alignItems="center" mb={2}>
-        <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'taskTable.title', defaultMessage: 'Tasks' })}</Typography>
+        <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'contractsTable.title' })}</Typography>
       </Box>
-      <WithTableStyles data={data} columns={columns} options={{ tableId: 'tasks' }} />
+      <WithTableStyles data={data} columns={columns} options={{ tableId: 'contracts' }} />
     </>
   );
 }
