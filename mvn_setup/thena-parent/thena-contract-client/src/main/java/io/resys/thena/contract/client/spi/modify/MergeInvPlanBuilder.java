@@ -20,8 +20,8 @@ package io.resys.thena.contract.client.spi.modify;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +112,7 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     return this;
   }
   @Override
-  public MergeInvPlan invPlanStartDateInterval(Duration invPlanStartDateInterval) {
+  public MergeInvPlan invPlanStartDateInterval(Period invPlanStartDateInterval) {
     this.nextInvPlan.invPlanStartDateInterval(invPlanStartDateInterval);
     return this;
   }
@@ -127,7 +127,7 @@ public class MergeInvPlanBuilder implements MergeInvPlan {
     return this;
   }
   @Override
-  public MergeInvPlan invPlanEndDateInterval(Duration invPlanEndDateInterval) {
+  public MergeInvPlan invPlanEndDateInterval(Period invPlanEndDateInterval) {
     this.nextInvPlan.invPlanEndDateInterval(Optional.ofNullable(invPlanEndDateInterval));
     return this;
   }

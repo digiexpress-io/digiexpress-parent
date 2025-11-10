@@ -327,7 +327,7 @@ public @interface TenantSql {
    */
   @FunctionalInterface
   interface SqlBuilder<T> {
-    SqlTuple apply(Tenant tenant, T parameter);
+    SqlTuple apply(Tenant tenant, String baselineSql, T parameter);
   }
   
   /**
@@ -335,7 +335,7 @@ public @interface TenantSql {
    */
   final class DefaultSqlBuilder implements SqlBuilder<Object> {
     @Override
-    public SqlTuple apply(Tenant tenant, Object parameter) {
+    public SqlTuple apply(Tenant tenant, String baselineSql, Object parameter) {
       throw new UnsupportedOperationException("Default SQL builder should not be called");
     }
   }

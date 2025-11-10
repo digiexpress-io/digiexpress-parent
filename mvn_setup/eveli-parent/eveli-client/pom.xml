@@ -25,6 +25,10 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>thena-contract-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-grim-client</artifactId>
     </dependency>
     <dependency>

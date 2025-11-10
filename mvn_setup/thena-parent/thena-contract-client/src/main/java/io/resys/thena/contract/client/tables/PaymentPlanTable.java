@@ -20,8 +20,6 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -94,8 +92,8 @@ public interface PaymentPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {payment_plan} p
-      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.commit_id
     """,
     rowMapper = PaymentPlanMapper.class
   )
@@ -107,8 +105,8 @@ public interface PaymentPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {payment_plan} p
-      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.commit_id
       WHERE p.contract_id = $1
     """,
     rowMapper = PaymentPlanMapper.class
@@ -121,8 +119,8 @@ public interface PaymentPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {payment_plan} paymentplan
-      LEFT JOIN {commit} updated_commit ON paymentplan.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON paymentplan.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON paymentplan.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON paymentplan.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON paymentplan.contract_id = contract.id
     """,
     rowMapper = PaymentPlanMapper.class,
@@ -137,8 +135,8 @@ public interface PaymentPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {payment_plan} p
-      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON p.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON p.created_commit_id = created_commit.commit_id
       WHERE p.id = $1
     """,
     rowMapper = PaymentPlanMapper.class
@@ -181,18 +179,18 @@ public interface PaymentPlanTable {
   class PaymentPlanMapper implements TenantSql.RowMapper<PaymentPlan> {
     @Override
     public PaymentPlan apply(Row row) {
-      final String party_id = row.getString("party_id");
+      final String party_id = TableUtils.toStringUUID(row, "party_id");
       final LocalDate payment_plan_end_date = row.getLocalDate("payment_plan_end_date");
-      final Duration payment_plan_end_date_interval = row.get(Duration.class, "payment_plan_end_date_interval");
+      final var payment_plan_end_date_interval = TableUtils.toDuration(row, "payment_plan_end_date_interval");
       final String payment_plan_end_date_type = row.getString("payment_plan_end_date_type");
 
       return ImmutablePaymentPlan.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
           .partyId(Optional.ofNullable(party_id))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutablePaymentPlanTransitives.builder()
@@ -202,11 +200,11 @@ public interface PaymentPlanTable {
 
           .paymentPlanStatus(row.getString("payment_plan_status"))
           .paymentPlanFrequency(row.getString("payment_plan_frequency"))
-          .paymentPlanAmount(row.get(BigDecimal.class, "payment_plan_amount"))
+          .paymentPlanAmount(row.getBigDecimal("payment_plan_amount"))
 
           // Business dates (expanded)
           .paymentPlanStartDate(row.getLocalDate("payment_plan_start_date"))
-          .paymentPlanStartDateInterval(row.get(Duration.class, "payment_plan_start_date_interval"))
+          .paymentPlanStartDateInterval(TableUtils.toDuration(row, "payment_plan_start_date_interval"))
           .paymentPlanStartDateType(row.getString("payment_plan_start_date_type"))
 
           .paymentPlanEndDate(Optional.ofNullable(payment_plan_end_date))

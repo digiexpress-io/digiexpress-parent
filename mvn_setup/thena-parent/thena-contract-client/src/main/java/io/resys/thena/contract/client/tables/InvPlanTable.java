@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -89,8 +88,8 @@ public interface InvPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {inv_plan} i
-      LEFT JOIN {commit} updated_commit ON i.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON i.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON i.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON i.created_commit_id = created_commit.commit_id
     """,
     rowMapper = InvPlanMapper.class
   )
@@ -102,8 +101,8 @@ public interface InvPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {inv_plan} i
-      LEFT JOIN {commit} updated_commit ON i.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON i.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON i.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON i.created_commit_id = created_commit.commit_id
       WHERE i.contract_id = $1
     """,
     rowMapper = InvPlanMapper.class
@@ -116,8 +115,8 @@ public interface InvPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {inv_plan} invplan
-      LEFT JOIN {commit} updated_commit ON invplan.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON invplan.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON invplan.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON invplan.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON invplan.contract_id = contract.id
     """,
     rowMapper = InvPlanMapper.class,
@@ -132,8 +131,8 @@ public interface InvPlanTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {inv_plan} i
-      LEFT JOIN {commit} updated_commit ON i.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON i.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON i.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON i.created_commit_id = created_commit.commit_id
       WHERE i.id = $1
     """,
     rowMapper = InvPlanMapper.class
@@ -177,16 +176,16 @@ public interface InvPlanTable {
     @Override
     public InvPlan apply(Row row) {
       final LocalDate inv_plan_end_date = row.getLocalDate("inv_plan_end_date");
-      final Duration inv_plan_end_date_interval = row.get(Duration.class, "inv_plan_end_date_interval");
+      final var inv_plan_end_date_interval = TableUtils.toDuration(row, "inv_plan_end_date_interval");
       final String inv_plan_end_date_type = row.getString("inv_plan_end_date_type");
 
       return ImmutableInvPlan.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
           .externalId(row.getString("external_id"))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableInvPlanTransitives.builder()
@@ -200,7 +199,7 @@ public interface InvPlanTable {
 
           // Business dates (expanded)
           .invPlanStartDate(row.getLocalDate("inv_plan_start_date"))
-          .invPlanStartDateInterval(row.get(Duration.class, "inv_plan_start_date_interval"))
+          .invPlanStartDateInterval(TableUtils.toDuration(row, "inv_plan_start_date_interval"))
           .invPlanStartDateType(row.getString("inv_plan_start_date_type"))
 
           .invPlanEndDate(Optional.ofNullable(inv_plan_end_date))

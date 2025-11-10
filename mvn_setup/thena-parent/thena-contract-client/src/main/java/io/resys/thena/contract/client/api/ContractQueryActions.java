@@ -26,12 +26,14 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.entities.ContractDocType;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface ContractQueryActions {
 
   
   ContractQuery contractQuery();
+  ReferenceNumberQuery referenceNumberQuery();
   
   interface ContractQuery {
     
@@ -43,8 +45,12 @@ public interface ContractQueryActions {
     ContractQuery addContractId(String ids);
     ContractQuery addAllContractId(List<String> ids); // include only data for given contract
     
-    Uni<QueryEnvelope<ContractContainer>> get(String ids);
+    Uni<QueryEnvelope<ContractContainer>> get(String id);
     Uni<QueryEnvelopeList<ContractContainer>> findAll();
   }
   
+  
+  interface ReferenceNumberQuery {
+    Multi<String> findNext(int howMany);
+  }
 }

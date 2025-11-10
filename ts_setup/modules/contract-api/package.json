@@ -1,0 +1,16 @@
+{
+  "name": "@dxs-ts/contract-api",
+  "version": "${project.version}",
+  "description": "Contract API layer - data fetching, business logic, state management",
+  "main": "./index.ts",
+  "type": "module",
+
+  "note": "No internal dependencies - this is the foundation layer",
+  "dependencies": { },
+  "peerDependencies": {
+    "react": "*",
+    "@tanstack/react-query": "*"
+  },
+  "keywords": ["contract", "api", "data", "business-logic"],
+  "private": true
+}

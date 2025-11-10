@@ -17,7 +17,9 @@ export const EveliFeatureMapping = {
   'LOGIN_BUTTON': notOneOf(['wrench-only']),
   'STENCIL_ENABLED': notOneOf(['stencil-disabled']),
   'WRENCH_ENABLED': notOneOf(['wrench-disabled']),
-  'TAGOMI_ENABLED': oneOf(['tagomi']),                    
+  'TAGOMI_ENABLED': oneOf(['tagomi']),     
+  'CONTRACT_ENABLED': oneOf(['contract']),
+
   'PUBLICATION_UPDATE': notOneOf(['external-deployment']),                    
 
   'STENCIL_LOCALE_FILTER': oneOf(['stencil_locale_filter']),                  
@@ -34,7 +36,8 @@ export const EveliFeatureMapping = {
   'QUEUES_ENABLED': notOneOf(['queues-visually-disabled']),
   'FEEDBACK_ENABLED': notOneOf(['feedback-visually-disabled']),               
 
-  'PROFILE_ENABLED': oneOf(['user_profile']),                                
+  'PROFILE_ENABLED': oneOf(['user_profile']),
+
 
   'SMART_TABLES': oneOf(['smart_tables']),
   

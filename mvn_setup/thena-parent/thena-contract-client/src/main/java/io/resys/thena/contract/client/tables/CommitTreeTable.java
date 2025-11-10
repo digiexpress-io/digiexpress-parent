@@ -142,8 +142,8 @@ public interface CommitTreeTable {
       final JsonObject body_before = row.getJsonObject("body_before");
 
       return ImmutableCommitTree.builder()
-          .id(row.getString("id"))
-          .commitId(row.getString("commit_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
           .operationType(CommitTreeOperation.valueOf(operation_type))
           .bodyAfter(Optional.ofNullable(body_after))
           .bodyBefore(Optional.ofNullable(body_before))

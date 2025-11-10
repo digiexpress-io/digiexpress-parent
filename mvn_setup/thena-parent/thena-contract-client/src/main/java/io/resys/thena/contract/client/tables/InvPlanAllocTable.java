@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -80,8 +79,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              ip.contract_id as contract_id
       FROM {inv_plan_alloc} ia
-      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} ip ON ia.inv_plan_id = ip.id
     """,
     rowMapper = InvPlanAllocMapper.class
@@ -95,8 +94,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              ip.contract_id as contract_id
       FROM {inv_plan_alloc} ia
-      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} ip ON ia.inv_plan_id = ip.id
       WHERE ip.contract_id = $1
     """,
@@ -111,8 +110,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              invplan.contract_id as contract_id
       FROM {inv_plan_alloc} invplanalloc
-      LEFT JOIN {commit} updated_commit ON invplanalloc.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON invplanalloc.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON invplanalloc.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON invplanalloc.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} invplan ON invplanalloc.inv_plan_id = invplan.id
       LEFT JOIN {contract} contract ON invplan.contract_id = contract.id
     """,
@@ -129,8 +128,8 @@ public interface InvPlanAllocTable {
              created_commit.created_at as created_at,
              ip.contract_id as contract_id
       FROM {inv_plan_alloc} ia
-      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON ia.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ia.created_commit_id = created_commit.commit_id
       LEFT JOIN {inv_plan} ip ON ia.inv_plan_id = ip.id
       WHERE ia.id = $1
     """,
@@ -171,22 +170,22 @@ public interface InvPlanAllocTable {
     @Override
     public InvPlanAlloc apply(Row row) {
       return ImmutableInvPlanAlloc.builder()
-          .id(row.getString("id"))
-          .invPlanId(row.getString("inv_plan_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .invPlanId(TableUtils.toStringUUID(row, "inv_plan_id"))
 
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins (including virtual contract_id)
           .transitives(ImmutableInvPlanAllocTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .updatedAt(row.getOffsetDateTime("updated_at"))
-              .contractId(row.getString("contract_id"))
+              .contractId(TableUtils.toStringUUID(row, "contract_id"))
               .build())
 
           .invPlanAllocCode(row.getString("inv_plan_alloc_code"))
           .invPlanAllocName(row.getString("inv_plan_alloc_name"))
-          .invPlanAllocPercentage(row.get(BigDecimal.class, "inv_plan_alloc_percentage"))
+          .invPlanAllocPercentage(row.getBigDecimal("inv_plan_alloc_percentage"))
           .invPlanAllocStatus(row.getString("inv_plan_alloc_status"))
 
           .build();

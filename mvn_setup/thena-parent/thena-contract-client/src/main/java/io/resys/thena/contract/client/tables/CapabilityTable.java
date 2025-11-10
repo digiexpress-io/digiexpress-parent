@@ -29,7 +29,6 @@ import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.contract.client.entities.Capability;
 import io.resys.thena.contract.client.entities.ImmutableCapability;
 import io.resys.thena.contract.client.entities.ImmutableCapabilityTransitives;
-import io.resys.thena.contract.client.tables.ContractTable.ContractMapper;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -79,11 +78,11 @@ public interface CapabilityTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {capability} capability
-      LEFT JOIN {commit} updated_commit ON capability.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON capability.created_commit_id = created_commit.id
-      LEFT JOIN {contract} created_commit ON capability.contract_id = contract.id
+      LEFT JOIN {commit} updated_commit ON capability.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON capability.created_commit_id = created_commit.commit_id
+      LEFT JOIN {contract} contract ON capability.contract_id = contract.id
     """,
-    rowMapper = ContractMapper.class,
+    rowMapper = CapabilityMapper.class,
     sqlBuilder = ContractTableFilter.SQL.class
   )
   SqlTuple findAllByFilter(ContractTableFilter filter);
@@ -95,8 +94,8 @@ public interface CapabilityTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {capability} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
     """,
     rowMapper = CapabilityMapper.class
   )
@@ -108,8 +107,8 @@ public interface CapabilityTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {capability} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
       WHERE c.contract_id = $1
     """,
     rowMapper = CapabilityMapper.class
@@ -123,8 +122,8 @@ public interface CapabilityTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {capability} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
       WHERE c.id = $1
     """,
     rowMapper = CapabilityMapper.class
@@ -166,12 +165,12 @@ public interface CapabilityTable {
       final String external_id = row.getString("external_id");
 
       return ImmutableCapability.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
           .externalId(Optional.ofNullable(external_id))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableCapabilityTransitives.builder()

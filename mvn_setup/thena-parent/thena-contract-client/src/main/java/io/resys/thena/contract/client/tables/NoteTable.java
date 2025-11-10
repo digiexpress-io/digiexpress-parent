@@ -100,8 +100,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} n
-      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.commit_id
     """,
     rowMapper = NoteMapper.class
   )
@@ -113,8 +113,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} n
-      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.commit_id
       WHERE n.contract_id = $1
     """,
     rowMapper = NoteMapper.class
@@ -127,8 +127,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} note
-      LEFT JOIN {commit} updated_commit ON note.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON note.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON note.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON note.created_commit_id = created_commit.commit_id
       LEFT JOIN {contract} contract ON note.contract_id = contract.id
     """,
     rowMapper = NoteMapper.class,
@@ -143,8 +143,8 @@ public interface NoteTable {
              updated_commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {note} n
-      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.id
+      LEFT JOIN {commit} updated_commit ON n.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON n.created_commit_id = created_commit.commit_id
       WHERE n.id = $1
     """,
     rowMapper = NoteMapper.class
@@ -183,10 +183,10 @@ public interface NoteTable {
   class NoteMapper implements TenantSql.RowMapper<Note> {
     @Override
     public Note apply(Row row) {
-      final var inv_plan_id = row.getString("inv_plan_id");
-      final var inv_plan_alloc_id = row.getString("inv_plan_alloc_id");
-      final var coverage_id = row.getString("coverage_id");
-      final var party_id = row.getString("party_id");
+      final var inv_plan_id = TableUtils.toStringUUID(row, "inv_plan_id");
+      final var inv_plan_alloc_id = TableUtils.toStringUUID(row, "inv_plan_alloc_id");
+      final var coverage_id = TableUtils.toStringUUID(row, "coverage_id");
+      final var party_id = TableUtils.toStringUUID(row, "party_id");
       final var note_body = row.getJsonObject("note_body");
 
       ContractOneOfRelations relations = null;
@@ -213,12 +213,12 @@ public interface NoteTable {
       }
 
       return ImmutableNote.builder()
-          .id(row.getString("id"))
-          .contractId(row.getString("contract_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
           .relations(relations)
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableNoteTransitives.builder()

@@ -22,6 +22,7 @@ package io.resys.thena.contract.client.spi;
 
 import io.resys.thena.contract.client.api.ContractQueryActions;
 import io.resys.thena.contract.client.spi.queries.ContractQueryImpl;
+import io.resys.thena.contract.client.spi.queries.ReferenceNumberQueryImpl;
 import io.resys.thena.contract.client.tables.ContractDb;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,11 @@ public class ContractQueryActionsImpl implements ContractQueryActions {
   
   @Override
   public ContractQuery contractQuery() {
-    final var state = startingState.withTenant(repoId);
-    return new ContractQueryImpl(state);
+    return new ContractQueryImpl(startingState.withTenant(repoId));
+  }
+
+  @Override
+  public ReferenceNumberQuery referenceNumberQuery() {
+    return new ReferenceNumberQueryImpl(startingState.withTenant(repoId));
   }
 }

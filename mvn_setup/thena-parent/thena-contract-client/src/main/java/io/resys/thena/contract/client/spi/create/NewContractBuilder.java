@@ -20,9 +20,9 @@ package io.resys.thena.contract.client.spi.create;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -71,7 +71,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
 
     this.createdAt = logger.getCreatedAt();
     this.commitId = logger.getCommitId();
-    this.contractId = OidUtils.gen();
+    this.contractId = OidUtils.genUUID();
     this.contract = ImmutableContract.builder()
         .id(contractId)
         .commitId(commitId)
@@ -115,7 +115,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   }
 
   @Override
-  public NewContract contractIssueDateInterval(@Nullable Duration contractIssueDateInterval) {
+  public NewContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval) {
     this.contract.contractIssueDateInterval(contractIssueDateInterval);
     return this;
   }
@@ -133,7 +133,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   }
 
   @Override
-  public NewContract contractStartDateInterval(@Nullable Duration contractStartDateInterval) {
+  public NewContract contractStartDateInterval(@Nullable Period contractStartDateInterval) {
     this.contract.contractStartDateInterval(contractStartDateInterval);
     return this;
   }
@@ -151,7 +151,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   }
 
   @Override
-  public NewContract contractMaturityDateInterval(@Nullable Duration contractMaturityDateInterval) {
+  public NewContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval) {
     this.contract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
     return this;
   }

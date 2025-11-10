@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { SimpleTreeView } from "@mui/x-tree-view";
 import { useIntl } from 'react-intl'
 
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 
 import { WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
 import DecisionItem from './DecisionItem';

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, IconButton, Typography } from '@mui/material'
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import { RadioButtonChecked as RadioButtonCheckedIcon } from '@mui/icons-material'
+import { RadioButtonUnchecked as RadioButtonUncheckedIcon } from '@mui/icons-material'
 
 import { GInputSurveyQuestionBody, GInputSurveyQuestionLabel, useUtilityClasses } from './useUtilityClasses'
 import { InputHidden } from './InputHidden'

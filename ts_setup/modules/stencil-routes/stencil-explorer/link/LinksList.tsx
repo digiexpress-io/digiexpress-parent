@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { SimpleTreeView } from "@mui/x-tree-view";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 import { useIntl } from 'react-intl'
 
 

@@ -56,7 +56,7 @@ public class NewReferenceBuilder implements NewReference {
     super();
     this.logger = logger;
     this.next = ImmutableReference.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .relations(rel)

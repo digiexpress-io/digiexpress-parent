@@ -20,8 +20,8 @@ package io.resys.thena.contract.client.spi.create;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -67,7 +67,7 @@ public class NewPartyBuilder implements NewParty {
     this.currentTx = currentTx;
     this.savedState = savedState;
     this.next = ImmutableParty.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)
@@ -130,7 +130,7 @@ public class NewPartyBuilder implements NewParty {
   }
 
   @Override
-  public NewParty partyTermStartDateInterval(@Nullable Duration partyTermStartDateInterval) {
+  public NewParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval) {
     this.next.partyTermStartDateInterval(partyTermStartDateInterval);
     return this;
   }
@@ -148,7 +148,7 @@ public class NewPartyBuilder implements NewParty {
   }
 
   @Override
-  public NewParty partyTermEndDateInterval(@Nullable Duration partyTermEndDateInterval) {
+  public NewParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval) {
     this.next.partyTermEndDateInterval(partyTermEndDateInterval);
     return this;
   }

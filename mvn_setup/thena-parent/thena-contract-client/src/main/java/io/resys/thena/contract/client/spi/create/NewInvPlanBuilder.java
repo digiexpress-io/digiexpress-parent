@@ -20,8 +20,8 @@ package io.resys.thena.contract.client.spi.create;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class NewInvPlanBuilder implements NewInvPlan {
     super();
     this.logger = logger;
     this.contractId = contractId;
-    this.invPlanId = OidUtils.gen();
+    this.invPlanId = OidUtils.genUUID();
     this.savedState = savedState;
     this.next = ImmutableInvPlan.builder()
         .id(invPlanId)
@@ -128,7 +128,7 @@ public class NewInvPlanBuilder implements NewInvPlan {
   }
 
   @Override
-  public NewInvPlan invPlanStartDateInterval(@Nullable Duration invPlanStartDateInterval) {
+  public NewInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval) {
     this.next.invPlanStartDateInterval(invPlanStartDateInterval);
     return this;
   }
@@ -146,7 +146,7 @@ public class NewInvPlanBuilder implements NewInvPlan {
   }
 
   @Override
-  public NewInvPlan invPlanEndDateInterval(@Nullable Duration invPlanEndDateInterval) {
+  public NewInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval) {
     this.next.invPlanEndDateInterval(Optional.ofNullable(invPlanEndDateInterval));
     return this;
   }

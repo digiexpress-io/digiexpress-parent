@@ -46,3 +46,6 @@ eveli:
     - path-pattern: /worker/rest/api/userprofiles/**
       method: GET,POST,PUT
       roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/contracts/**
+      method: GET,POST,PUT
+      roles: ROLE_Authorized

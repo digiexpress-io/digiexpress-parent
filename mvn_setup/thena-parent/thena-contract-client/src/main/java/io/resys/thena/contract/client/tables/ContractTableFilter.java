@@ -1,5 +1,7 @@
 package io.resys.thena.contract.client.tables;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-contract-client
@@ -22,12 +24,17 @@ package io.resys.thena.contract.client.tables;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
 import io.resys.thena.api.annotations.TenantSql.SqlBuilder;
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
+import io.resys.thena.storesql.support.SqlStatement;
+import io.vertx.mutiny.sqlclient.Tuple;
 
 
 @Value.Immutable
@@ -41,8 +48,42 @@ public interface ContractTableFilter {
   
   final static class SQL implements SqlBuilder<ContractTableFilter> {
     @Override
-    public SqlTuple apply(Tenant tenant, ContractTableFilter filter) {
-      throw new UnsupportedOperationException("Default SQL builder should not be called");
+    public SqlTuple apply(Tenant tenant, String baseline, ContractTableFilter filter) {
+      final var builder = new SqlStatement();
+      final var params = new ArrayList<Object>();
+      int index = 1;
+      
+      if(filter.getContractIds().isPresent()) {
+        builder.append("(")
+          .append(" contract.id = ANY($").append(index++).append(")")
+          .append(" OR contract.contract_number = ANY($").append(index).append(")")
+          .append(" OR contract.external_id = ANY($").append(index++).append(")")
+          .append(")")
+          .ln();
+        
+        final var uuid = filter.getContractIds().get()
+          .stream().map(id -> {
+            try {
+              return UUID.fromString(id);
+            } catch(Exception e) {
+              // ignore
+              return null;
+            }
+          })
+          .filter(e -> e != null)
+          .collect(Collectors.toList());
+        
+        params.add(uuid.toArray(new UUID[]{}));
+        
+        params.add(filter.getContractIds().get().toArray(new String[]{}));
+      }
+      
+      final var result = builder.toString();
+      final var clause = (result.isBlank() ? "" : " WHERE ") + builder.toString();
+      return ImmutableSqlTuple.builder()
+          .value(baseline + clause)
+          .props(Tuple.from(params))
+          .build();
     }
   }
 }

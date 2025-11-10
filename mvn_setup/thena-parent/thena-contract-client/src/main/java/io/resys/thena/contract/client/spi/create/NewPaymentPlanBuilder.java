@@ -21,8 +21,8 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -56,7 +56,7 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
     this.logger = logger;
     this.contractId = contractId;
     this.next = ImmutablePaymentPlan.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)
@@ -117,7 +117,7 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
   }
 
   @Override
-  public NewPaymentPlan paymentPlanStartDateInterval(@Nullable Duration paymentPlanStartDateInterval) {
+  public NewPaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval) {
     this.next.paymentPlanStartDateInterval(paymentPlanStartDateInterval);
     return this;
   }
@@ -135,7 +135,7 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
   }
 
   @Override
-  public NewPaymentPlan paymentPlanEndDateInterval(@Nullable Duration paymentPlanEndDateInterval) {
+  public NewPaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval) {
     this.next.paymentPlanEndDateInterval(Optional.ofNullable(paymentPlanEndDateInterval));
     return this;
   }

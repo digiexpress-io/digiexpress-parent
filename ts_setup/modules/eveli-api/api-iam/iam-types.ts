@@ -17,7 +17,8 @@ export declare namespace IamApi {
     'DIALOB_VIEW' | 'DIALOB_EDIT' |
     'TABLES_V2' | 'BATCH_VIEW' | 'BATCH_EDIT' |
     'TASK_REOPEN' | 'USER_PROFILE_EDIT' | 'HEALTH_VIEW' | 
-    'TAGOMI_EDIT'
+    'TAGOMI_EDIT' |
+    'CONTRACT_EDIT'
 
   export interface User {
     userId: string;

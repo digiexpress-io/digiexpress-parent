@@ -28,7 +28,7 @@ public class FindAllUsingSqlBuilder implements TenantSql.SqlBuilder<FindAllFilte
 
   
   @Override
-  public SqlTuple apply(Tenant names, FindAllFilter parameter) {
+  public SqlTuple apply(Tenant names, String where, FindAllFilter parameter) {
   
     return null;
   }

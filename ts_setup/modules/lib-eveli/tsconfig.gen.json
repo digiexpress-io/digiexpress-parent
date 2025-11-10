@@ -53,6 +53,12 @@
       "@dxs-ts/tagomi-routes": [
         "../tagomi-routes/index.ts"
       ],
+      "@dxs-ts/contract-api": [
+        "../contract-api/index.ts"
+      ],
+      "@dxs-ts/contract-composer": [
+        "../contract-composer/index.ts"
+      ],
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
@@ -136,6 +142,12 @@
       "path": "../tagomi-routes"
     },
     {
+      "path": "../contract-api"
+    },
+    {
+      "path": "../contract-composer"
+    },
+    {
       "path": "../task-api"
     },
     {
@@ -168,9 +180,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-10-09T12:41:20.856Z",
+    "at": "2025-11-07T13:54:58.595Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "fc0ffdaca068",
+    "fromRegistry": "f4e03581a36c",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

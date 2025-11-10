@@ -1,7 +1,7 @@
 import React from 'react'
 import { useThemeProps, Button, SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
+import { PersonOutlined as PersonOutlinedIcon } from '@mui/icons-material'
 import { FormattedMessage } from 'react-intl'
 
 import { MUI_NAME, GLogoutRoot, useUtilityClasses } from './useUtilityClasses';

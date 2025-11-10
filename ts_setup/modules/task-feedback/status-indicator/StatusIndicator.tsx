@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Tooltip, useTheme } from '@mui/material';
 import { Done as DoneIcon } from '@mui/icons-material';
-import RateReviewIcon from '@mui/icons-material/RateReview';
+import { RateReview as RateReviewIcon } from '@mui/icons-material';
 
 import { FeedbackApi, useFeedback } from '../api-feedback';
 import { useIntl } from 'react-intl';

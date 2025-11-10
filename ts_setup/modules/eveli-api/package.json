@@ -11,6 +11,7 @@
     "@dxs-ts/stencil-api": "*",
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/task-api": "*",
+    "@dxs-ts/contract-api": "*",
     "@dxs-ts/tagomi-api": "*",
     "@dxs-ts/gamut-theme": "*",
     "@dxs-ts/user-profile": "*",

@@ -72,7 +72,7 @@ public class ContractCommitBuilder {
   public ContractCommitBuilder add(ContractEntity entity) {
     isTreePresent = true;
     this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(commitId)
         .operationType(CommitTreeOperation.ADD)
         .bodyAfter(JsonObject.mapFrom(entity))
@@ -96,7 +96,7 @@ public class ContractCommitBuilder {
     
     isTreePresent = true;
     this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(commitId)
         .operationType(CommitTreeOperation.MERGE)
         .bodyBefore(JsonObject.mapFrom(previous))
@@ -108,7 +108,7 @@ public class ContractCommitBuilder {
   public ContractCommitBuilder rm(ContractEntity current) {
     isTreePresent = true;
     this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(commitId)
         .operationType(CommitTreeOperation.REMOVE)
         .bodyBefore(JsonObject.mapFrom(current))

@@ -28,6 +28,8 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.f4b6a3.uuid.UuidCreator;
+
 import io.resys.thena.support.RepoAssert.RepoAssertException;
 import jakarta.annotation.Nullable;
 
@@ -98,5 +100,9 @@ public final class OidUtils {
       throw new IllegalArgumentException("rev must be numeric");
     }
     return Integer.parseInt(rev);
+  }
+  
+  public static String genUUID() {
+    return UuidCreator.getTimeOrderedEpoch().toString();
   }
 }

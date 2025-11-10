@@ -79,7 +79,11 @@ const FeedbackTopicSelect: React.FC<{
 }> = ({ onChange, value, values, label }) => {
 
 
-  const found = values.find(topic => topic.labelKey.endsWith(`.${value}`))?.labelKey;
+  const found = values.find(topic => topic.labelKey.toLocaleLowerCase().endsWith(`.${value.toLocaleLowerCase()}`))?.labelKey;
+  if(!found) {
+    console.error('Feedback topic not found', {value, values})
+  }
+
 
   return (
     <Box sx={{ minWidth: 120 }}>

@@ -32,7 +32,8 @@ export const tenant_features = [
   'dialob_dashboard_smart',
   'batches',
   
-  'tagomi'
+  'tagomi',
+  'contract'
 ] as const;
 
 export type TenantFeature = typeof tenant_features[number];

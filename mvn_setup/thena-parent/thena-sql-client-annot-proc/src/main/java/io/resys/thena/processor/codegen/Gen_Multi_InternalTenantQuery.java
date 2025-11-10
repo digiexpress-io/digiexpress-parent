@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -129,6 +131,9 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     }
     code.add("\n");
     for (final var table : sortedTables) {
+      if(StringUtils.isEmpty(table.getConstraintsSql().trim())) {
+        continue;
+      }
       final var getter = NamingUtils.pluralize(table.getTableName());
       code.add(".append(registry.$L().createConstraints().getValue())\n", getter);
     }

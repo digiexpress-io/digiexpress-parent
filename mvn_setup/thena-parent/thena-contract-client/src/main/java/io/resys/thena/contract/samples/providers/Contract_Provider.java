@@ -24,7 +24,7 @@ import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.samples.GenerationOptions;
-import io.resys.thena.contract.samples.contracts.FeemiContractVisitor;
+import io.resys.thena.contract.samples.contracts.SampleContractVisitor;
 import io.resys.thena.product.client.api.Product;
 import io.resys.thena.product.client.api.Product.AgeRange;
 import io.resys.thena.product.client.api.Product.IncomeRange;
@@ -45,10 +45,11 @@ public class Contract_Provider {
   /**
    * Generate and persist a Feemi Savings contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient) {
+  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient, String refNumber) {
     final var product = Product_Feemi_Savings.create();
     
     GenerationOptions options = GenerationOptions.builder()
+        .refNumber(refNumber)
         .ageRange(product.getAgeRange().orElse(AgeRange.of(18, 70)))
         .incomeRange(product.getContributionRange().orElse(IncomeRange.of(30000, 80000)))
         .isIncludeBeneficiaries(hasDeathBenefits(product))  // Auto-detect if product has death coverage
@@ -57,7 +58,7 @@ public class Contract_Provider {
     
     return contractClient.withTenant().commit()
         .createOneContract()
-        .contract(contract -> FeemiContractVisitor.visitSavingsContract(contract, product, options))
+        .contract(contract -> SampleContractVisitor.visitSavingsContract(contract, product, options))
         .onNewContract(newState -> {
           logProductBasedContract("Feemi Savings", product, newState);
         })
@@ -81,7 +82,7 @@ public class Contract_Provider {
     
     return contractClient.withTenant().commit()
         .createOneContract()
-        .contract(contract -> FeemiContractVisitor.visitPensionContract(contract, product, options))
+        .contract(contract -> SampleContractVisitor.visitPensionContract(contract, product, options))
         .onNewContract(newState -> {
           logProductBasedContract("Feemi Pension", product, newState);
         })
@@ -105,7 +106,7 @@ public class Contract_Provider {
     
     return contractClient.withTenant().commit()
         .createOneContract()
-        .contract(contract -> FeemiContractVisitor.visitPSContract(contract, product, options))
+        .contract(contract -> SampleContractVisitor.visitPSContract(contract, product, options))
         .onNewContract(newState -> {
           logProductBasedContract("Feemi PS", product, newState);
         })
@@ -129,7 +130,7 @@ public class Contract_Provider {
     
     return contractClient.withTenant().commit()
         .createOneContract()
-        .contract(contract -> FeemiContractVisitor.visitNovaVirtusContract(contract, product, options))
+        .contract(contract -> SampleContractVisitor.visitNovaVirtusContract(contract, product, options))
         .onNewContract(newState -> {
           logProductBasedContract("Nova Virtus Endowment", product, newState);
         })

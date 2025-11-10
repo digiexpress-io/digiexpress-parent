@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, TextField, TextFieldProps, InputAdornment, useTheme } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Link as LinkIcon } from '@mui/icons-material';
 import { ModeEdit as EditIcon } from '@mui/icons-material';

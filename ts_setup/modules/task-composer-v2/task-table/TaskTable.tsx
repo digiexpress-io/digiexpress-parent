@@ -4,7 +4,7 @@ import { Box, Typography, IconButton, Tooltip, Dialog, DialogTitle, DialogConten
 import { CellContext, ColumnDef, FilterFnOption, flexRender } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { Add as AddIcon } from '@mui/icons-material';
-import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
+import { Inventory2TwoTone as Inventory2TwoToneIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';

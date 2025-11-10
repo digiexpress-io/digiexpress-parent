@@ -20,10 +20,11 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.time.Duration;
+import java.time.Period;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.pgclient.data.Interval;
 import io.vertx.sqlclient.data.NullValue;
 
@@ -114,41 +115,15 @@ public class TableUtils {
    * @return Interval object
    * @throws IllegalArgumentException if the duration is null
    */
-  public static Interval toInterval(Duration duration) {
-    if (duration == null) {
-      throw new IllegalArgumentException("Duration cannot be null");
+  public static Interval toInterval(Period period) {
+    if (period == null) {
+      throw new IllegalArgumentException("Period cannot be null");
     }
-    
-    long totalSeconds = duration.getSeconds();
-    int nanos = duration.getNano();
-    
-    // Handle negative durations
-    boolean isNegative = totalSeconds < 0 || (totalSeconds == 0 && nanos < 0);
-    if (isNegative) {
-      totalSeconds = Math.abs(totalSeconds);
-      nanos = Math.abs(nanos);
-    }
-    
-    int days = (int) (totalSeconds / 86400);
-    totalSeconds %= 86400;
-    
-    int hours = (int) (totalSeconds / 3600);
-    totalSeconds %= 3600;
-    
-    int minutes = (int) (totalSeconds / 60);
-    int seconds = (int) (totalSeconds % 60);
-    
-    int microseconds = nanos / 1000;
-    
-    Interval interval = new io.vertx.pgclient.data.Interval()
-        .days(days)
-        .hours(hours)
-        .minutes(minutes)
-        .seconds(seconds)
-        .microseconds(microseconds);
 
-    
-    return interval;
+    return new Interval()
+      .years(period.getYears())
+      .months(period.getMonths())
+      .days(period.getDays());
   }
   
   /**
@@ -158,7 +133,7 @@ public class TableUtils {
    * @return Interval object or NullValue.of(Interval.class) if empty
    * @throws IllegalArgumentException if the duration is present but cannot be converted
    */
-  public static Object toIntervalOptional(Optional<Duration> optionalDuration) {
+  public static Object toIntervalOptional(Optional<Period> optionalDuration) {
     if(optionalDuration.isEmpty()) {
       return NullValue.of(Interval.class);
     }
@@ -172,7 +147,25 @@ public class TableUtils {
    * @return Interval object or NullValue.of(Interval.class) if input is null
    * @throws IllegalArgumentException if the duration is not null but cannot be converted
    */
-  public static Object toIntervalSafe(Duration duration) {
+  public static Object toIntervalSafe(Period duration) {
     return duration == null ? NullValue.of(Interval.class) : toInterval(duration);
+  }
+  
+  public static Period toDuration(Row row, String name) {
+    final var interval = row.get(Interval.class, name);
+    if (interval == null) {
+        return null;
+    }
+    
+    return Period.of(
+        interval.getYears(),
+        interval.getMonths(),
+        interval.getDays()
+    );
+  }
+  
+  public static String toStringUUID(Row row, String name) {
+    final var uuid = row.get(UUID.class, name);
+    return uuid == null ? null : uuid.toString();
   }
 }

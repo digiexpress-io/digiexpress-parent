@@ -59,6 +59,7 @@
     <text-tree.version>2.1.2</text-tree.version>
     <javapoet.version>1.13.0</javapoet.version>
     <autoservice.version>1.1.1</autoservice.version>
+    <uuidcreator.version>5.3.7</uuidcreator.version>
   </properties>
 
   <build>
@@ -217,13 +218,6 @@
   <dependencyManagement>
     <dependencies>
     
-      <dependency>
-        <groupId>com.google.auto.service</groupId>
-        <artifactId>auto-service</artifactId>
-        <version>${autoservice.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      
       <!-- Code Generation -->
       <dependency>
         <groupId>com.squareup</groupId>
@@ -283,6 +277,13 @@
         <artifactId>java-diff-utils</artifactId>
         <version>${java-diff-utils.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.github.f4b6a3</groupId>
+        <artifactId>uuid-creator</artifactId>
+        <version>${uuidcreator.version}</version>
+      </dependency>
+      
+      
 
       <!-- Google -->
       <dependency>
@@ -290,7 +291,14 @@
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.google.auto.service</groupId>
+        <artifactId>auto-service</artifactId>
+        <version>${autoservice.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      
+      
       <!-- jackson -->
       <dependency>
         <groupId>com.fasterxml.jackson</groupId>

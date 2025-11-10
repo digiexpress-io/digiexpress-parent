@@ -128,11 +128,11 @@ public interface CommitTable {
   class CommitMapper implements TenantSql.RowMapper<Commit> {
     @Override
     public Commit apply(Row row) {
-      final String parent_id = row.getString("parent_id");
-      final String contract_id = row.getString("contract_id");
+      final String parent_id = TableUtils.toStringUUID(row, "parent_id");
+      final String contract_id = TableUtils.toStringUUID(row, "contract_id");
 
       return ImmutableCommit.builder()
-          .commitId(row.getString("commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
           .parentCommitId(Optional.ofNullable(parent_id))
           .contractId(Optional.ofNullable(contract_id))
           .createdAt(row.getOffsetDateTime("created_at"))

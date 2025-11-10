@@ -55,7 +55,7 @@ public class NewCapabilityBuilder implements NewCapability {
     this.logger = logger;
     this.contractId = contractId;
     this.next = ImmutableCapability.builder()
-        .id(OidUtils.gen())
+        .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)

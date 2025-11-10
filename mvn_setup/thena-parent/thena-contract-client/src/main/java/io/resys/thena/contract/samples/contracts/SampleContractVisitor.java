@@ -1,7 +1,5 @@
 package io.resys.thena.contract.samples.contracts;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * thena-contract-client
@@ -23,6 +21,7 @@ import java.time.Duration;
  */
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -40,26 +39,27 @@ import io.resys.thena.product.client.api.Product;
  * Feemi contract visitor that implements the NewContract interface and generates
  * realistic Finnish insurance contract data using CRM_Provider and Fund_Provider.
  */
-public class FeemiContractVisitor {
+public class SampleContractVisitor {
   
   public static void visitSavingsContract(NewContract newContract, Product product, GenerationOptions options) {
     
     // Generate contract data using FeemiSavingsContractGenerator
-    FeemiSavingsContractGenerator.GeneratedContractData contractData = 
-        FeemiSavingsContractGenerator.generate(product, options);
+    SavingsContractGenerator.GeneratedContractData contractData = 
+        SavingsContractGenerator.generate(product, options);
     
     
     final var policyholder = new MutableObject<Party>();
     
     // Build the contract using the NewContract interface
     newContract
-        .contractNumber(contractData.contract.contractNumber)
+        
+        .contractNumber(options.getRefNumber())
         .contractIssueDate(contractData.contract.issueDate)
-        .contractIssueDateInterval(Duration.ZERO)
+        .contractIssueDateInterval(Period.ZERO)
         .contractIssueDateType(ContractDocType.CONTRACT.name())        
         
         .contractStartDate(contractData.contract.startDate)
-        .contractStartDateInterval(Duration.ZERO)
+        .contractStartDateInterval(Period.ZERO)
         .contractStartDateType(ContractDocType.CONTRACT.name())
         
         .contractStatus("ACTIVE")
@@ -76,7 +76,7 @@ public class FeemiContractVisitor {
               .partyEffectiveFrom(contractData.contract.startDate)
               .partyTermStartDate(contractData.contract.startDate)
               .partyTermStartDateType(ContractDocType.CONTRACT.name())
-              .partyTermStartDateInterval(Duration.ZERO)
+              .partyTermStartDateInterval(Period.ZERO)
               
               .partyData(contractData.policyholder.partyData)
               .build();
@@ -93,7 +93,7 @@ public class FeemiContractVisitor {
                 .partyEffectiveFrom(contractData.contract.startDate)
                 .partyTermStartDate(contractData.contract.startDate)
                 .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Duration.ZERO)
+                .partyTermStartDateInterval(Period.ZERO)
                 .partyData(contractData.beneficiary.partyData)
                 .build();
           }
@@ -111,7 +111,7 @@ public class FeemiContractVisitor {
               .coverageEffectiveFrom(contractData.contract.startDate)
               .coverageTermStartDate(contractData.contract.startDate)
               .coverageTermStartDateType(ContractDocType.CONTRACT.name())
-              .coverageTermStartDateInterval(Duration.ZERO)
+              .coverageTermStartDateInterval(Period.ZERO)
               
               .build();
         })
@@ -125,7 +125,7 @@ public class FeemiContractVisitor {
               .paymentPlanStartDate(contractData.paymentPlan.startDate)
               
               .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
-              .paymentPlanStartDateInterval(Duration.ZERO)
+              .paymentPlanStartDateInterval(Period.ZERO)
               
               .build();
         })
@@ -133,19 +133,19 @@ public class FeemiContractVisitor {
         // Add investment plan with allocations
         .addInvPlan(invPlan -> {
           invPlan
-              .externalId("INV_PLAN_" + contractData.contract.contractNumber)
+              .externalId("INV_PLAN_" + options.getRefNumber())
               .invPlanCode("FEEMI_SAVINGS_PLAN")
               .invPlanName("Feemi Savings Investment Plan")
               .invPlanStatus("ACTIVE")
               .invPlanStartDate(contractData.contract.startDate)
               
               .invPlanStartDateType(ContractDocType.CONTRACT.name())
-              .invPlanStartDateInterval(Duration.ZERO)
+              .invPlanStartDateInterval(Period.ZERO)
               
               .build();
           
           // Add allocations
-          for (FeemiSavingsContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
+          for (SavingsContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
             invPlan.addAllocation(alloc -> {
               alloc
                   .invPlanAllocCode(allocation.fundCode)
@@ -340,11 +340,11 @@ public class FeemiContractVisitor {
     newContract
         .contractNumber("NVE-" + String.format("%08d", System.currentTimeMillis() % 100000000))
         .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
-        .contractIssueDateInterval(Duration.ZERO)
+        .contractIssueDateInterval(Period.ZERO)
         .contractIssueDateType(ContractDocType.CONTRACT.name())
         
         .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
-        .contractStartDateInterval(Duration.ZERO)
+        .contractStartDateInterval(Period.ZERO)
         .contractStartDateType(ContractDocType.CONTRACT.name())
         
         .contractStatus("ACTIVE")
@@ -359,7 +359,7 @@ public class FeemiContractVisitor {
               .partyEffectiveFrom(LocalDate.now())
               .partyTermStartDate(LocalDate.now())
               .partyTermStartDateType(ContractDocType.CONTRACT.name())
-              .partyTermStartDateInterval(Duration.ZERO)
+              .partyTermStartDateInterval(Period.ZERO)
               .partyData(person.toJson())
               .build();
           
@@ -379,7 +379,7 @@ public class FeemiContractVisitor {
               .coverageEffectiveFrom(LocalDate.now())
               .coverageTermStartDate(LocalDate.now())
               .coverageTermStartDateType(ContractDocType.CONTRACT.name())
-              .coverageTermStartDateInterval(Duration.ZERO)
+              .coverageTermStartDateInterval(Period.ZERO)
               .build();
         })
         
@@ -391,7 +391,7 @@ public class FeemiContractVisitor {
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
               .paymentPlanStartDate(paymentPlan.getStartDate())
               .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
-              .paymentPlanStartDateInterval(Duration.ZERO)
+              .paymentPlanStartDateInterval(Period.ZERO)
               .build();
         })
         
@@ -404,7 +404,7 @@ public class FeemiContractVisitor {
               .invPlanStatus("ACTIVE")
               .invPlanStartDate(LocalDate.now())
               .invPlanStartDateType(ContractDocType.CONTRACT.name())
-              .invPlanStartDateInterval(Duration.ZERO)
+              .invPlanStartDateInterval(Period.ZERO)
               .build();
           
           // Add Nova Virtus specific allocations (Granite/Globe portfolios, ETFs)
@@ -467,7 +467,7 @@ public class FeemiContractVisitor {
                 .partyEffectiveFrom(LocalDate.now())
                 .partyTermStartDate(LocalDate.now())
                 .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Duration.ZERO)
+                .partyTermStartDateInterval(Period.ZERO)
                 .partyData(template.toJson())
                 .build();
             

@@ -21,8 +21,8 @@ package io.resys.thena.contract.client.api;
  */
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.function.Consumer;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
@@ -40,15 +40,15 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewContract contractIssueDate(LocalDate contractIssueDate);
-    NewContract contractIssueDateInterval(@Nullable Duration contractIssueDateInterval);
+    NewContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval);
     NewContract contractIssueDateType(@Nullable String contractIssueDateType);
     
     NewContract contractStartDate(LocalDate contractStartDate);
-    NewContract contractStartDateInterval(@Nullable Duration contractStartDateInterval);
+    NewContract contractStartDateInterval(@Nullable Period contractStartDateInterval);
     NewContract contractStartDateType(@Nullable String contractStartDateType);
     
     NewContract contractMaturityDate(@Nullable LocalDate contractMaturityDate);
-    NewContract contractMaturityDateInterval(@Nullable Duration contractMaturityDateInterval);
+    NewContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval);
     NewContract contractMaturityDateType(@Nullable String contractMaturityDateType);
     
     // Status and type
@@ -81,11 +81,11 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewParty partyTermStartDate(LocalDate partyTermStartDate);
-    NewParty partyTermStartDateInterval(@Nullable Duration partyTermStartDateInterval);
+    NewParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval);
     NewParty partyTermStartDateType(@Nullable String partyTermStartDateType);
     
     NewParty partyTermEndDate(@Nullable LocalDate partyTermEndDate);
-    NewParty partyTermEndDateInterval(@Nullable Duration partyTermEndDateInterval);
+    NewParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval);
     NewParty partyTermEndDateType(@Nullable String partyTermEndDateType);
     
     NewParty partyData(@Nullable JsonObject partyData);
@@ -111,11 +111,11 @@ public interface ThenaContractNewObject {
     
     // Business term dates
     NewCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
-    NewCoverage coverageTermStartDateInterval(@Nullable Duration coverageTermStartDateInterval);
+    NewCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval);
     NewCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
     
     NewCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
-    NewCoverage coverageTermEndDateInterval(@Nullable Duration coverageTermEndDateInterval);
+    NewCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval);
     NewCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // nested entities
@@ -161,11 +161,11 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewInvPlan invPlanStartDate(LocalDate invPlanStartDate);
-    NewInvPlan invPlanStartDateInterval(@Nullable Duration invPlanStartDateInterval);
+    NewInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval);
     NewInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
     
     NewInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
-    NewInvPlan invPlanEndDateInterval(@Nullable Duration invPlanEndDateInterval);
+    NewInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval);
     NewInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // nested allocation
@@ -191,11 +191,11 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewPaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
-    NewPaymentPlan paymentPlanStartDateInterval(@Nullable Duration paymentPlanStartDateInterval);
+    NewPaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval);
     NewPaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
     
     NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
-    NewPaymentPlan paymentPlanEndDateInterval(@Nullable Duration paymentPlanEndDateInterval);
+    NewPaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval);
     NewPaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
     void build();
   }

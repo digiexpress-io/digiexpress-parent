@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.tables;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -104,9 +103,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} contract
-      LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.id  
-      LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON contract.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON contract.created_commit_id = created_commit.commit_id  
+      LEFT JOIN {commit} updated_tree_commit ON contract.updated_tree_commit_id = updated_tree_commit.commit_id
     """,
     rowMapper = ContractMapper.class,
     sqlBuilder = ContractTableFilter.SQL.class
@@ -120,9 +119,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id
-      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id
+      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.commit_id
     """,
     rowMapper = ContractMapper.class
   )
@@ -135,9 +134,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id  
-      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id  
+      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.commit_id
       WHERE c.id = $1
     """,
     rowMapper = ContractMapper.class
@@ -153,9 +152,9 @@ public interface ContractTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {contract} c
-      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.id  
-      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {commit} updated_commit ON c.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON c.created_commit_id = created_commit.commit_id  
+      LEFT JOIN {commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.commit_id
       WHERE c.id = $1
     """,
     rowMapper = ContractMapper.class
@@ -194,24 +193,24 @@ public interface ContractTable {
   class ContractMapper implements TenantSql.RowMapper<Contract> {
     @Override
     public Contract apply(Row row) {
-      final String parent_contract_id = row.getString("parent_contract_id");
+      final String parent_contract_id = TableUtils.toStringUUID(row, "parent_contract_id");
       final String external_id = row.getString("external_id");
       final LocalDate contract_maturity_date = row.getLocalDate("contract_maturity_date");
-      final Duration contract_maturity_date_interval = row.get(Duration.class, "contract_maturity_date_interval");
+      final var contract_maturity_date_interval = TableUtils.toDuration(row, "contract_maturity_date_interval");
       final String contract_maturity_date_type = row.getString("contract_maturity_date_type");
       final String contract_sub_status = row.getString("contract_sub_status");
       final String contract_sub_type = row.getString("contract_sub_type");
       final JsonObject contract_data = row.getJsonObject("contract_data");
 
       return ImmutableContract.builder()
-          .id(row.getString("id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .parentContractId(Optional.ofNullable(parent_contract_id))
           .contractNumber(row.getString("contract_number"))
 
           .externalId(Optional.ofNullable(external_id))
-          .commitId(row.getString("commit_id"))
-          .createdCommitId(row.getString("created_commit_id"))
-          .updatedTreeCommitId(row.getString("updated_tree_commit_id"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .updatedTreeCommitId(TableUtils.toStringUUID(row, "updated_tree_commit_id"))
 
           // Transitive data from joins
           .transitives(ImmutableContractTransitives.builder()
@@ -222,11 +221,11 @@ public interface ContractTable {
 
           // Business dates (expanded)
           .contractIssueDate(row.getLocalDate("contract_issue_date"))
-          .contractIssueDateInterval(row.get(Duration.class, "contract_issue_date_interval"))
+          .contractIssueDateInterval(TableUtils.toDuration(row, "contract_issue_date_interval"))
           .contractIssueDateType(row.getString("contract_issue_date_type"))
           
           .contractStartDate(row.getLocalDate("contract_start_date"))
-          .contractStartDateInterval(row.get(Duration.class, "contract_start_date_interval"))
+          .contractStartDateInterval(TableUtils.toDuration(row, "contract_start_date_interval"))
           .contractStartDateType(row.getString("contract_start_date_type"))
           
           .contractMaturityDate(Optional.ofNullable(contract_maturity_date))
