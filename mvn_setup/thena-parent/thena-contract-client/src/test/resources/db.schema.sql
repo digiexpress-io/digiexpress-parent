@@ -174,6 +174,8 @@ CREATE INDEX IF NOT EXISTS inv_plan_alloc_CREATED_COMMIT_INDEX ON inv_plan_alloc
 CREATE TABLE IF NOT EXISTS contract_date_relativity (
   id UUID PRIMARY KEY,
   contract_id UUID NOT NULL,
+  commit_id UUID NOT NULL,
+  created_commit_id UUID NOT NULL,
   inv_plan_id UUID,
   coverage_id UUID,
   party_id UUID,
@@ -183,8 +185,7 @@ CREATE TABLE IF NOT EXISTS contract_date_relativity (
   relative_to_type VARCHAR(50) NOT NULL,
   offset_interval INTERVAL,
   calculation_rule VARCHAR(100),
-  description TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  description TEXT
 );
 CREATE INDEX IF NOT EXISTS contract_date_relativity_CONTRACT_INDEX ON contract_date_relativity (contract_id);
 CREATE INDEX IF NOT EXISTS contract_date_relativity_ENTITY_TYPE_INDEX ON contract_date_relativity (entity_type);

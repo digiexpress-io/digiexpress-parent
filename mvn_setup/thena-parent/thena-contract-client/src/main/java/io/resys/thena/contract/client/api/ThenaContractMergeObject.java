@@ -30,6 +30,7 @@ import java.util.function.Function;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRelativity;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
@@ -82,6 +83,7 @@ public interface ThenaContractMergeObject {
     MergeContract addCapability(Consumer<NewCapability> capability);
     MergeContract addInvPlan(Consumer<NewInvPlan> invPlan);
     MergeContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
+    MergeContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity);
     
     // Modify existing child entities by ID
     MergeContract modifyParty(String partyId, Consumer<MergeParty> party);
@@ -91,6 +93,7 @@ public interface ThenaContractMergeObject {
     MergeContract modifyCapability(String capabilityId, Consumer<MergeCapability> capability);
     MergeContract modifyInvPlan(String invPlanId, Consumer<MergeInvPlan> invPlan);
     MergeContract modifyPaymentPlan(String paymentPlanId, Consumer<MergePaymentPlan> paymentPlan);
+    MergeContract modifyDateRelativity(String dateRelativityId, Consumer<MergeDateRelativity> dateRelativity);
     
     // Remove child entities by ID
     MergeContract removeParty(String partyId);
@@ -100,6 +103,7 @@ public interface ThenaContractMergeObject {
     MergeContract removeCapability(String capabilityId);
     MergeContract removeInvPlan(String invPlanId);
     MergeContract removePaymentPlan(String paymentPlanId);
+    MergeContract removeDateRelativity(String dateRelativityId);
     
     void build();
   }
@@ -220,6 +224,21 @@ public interface ThenaContractMergeObject {
     // Business dates
     MergePaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
     MergePaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
+    void build();
+  }
+  
+  interface MergeDateRelativity {
+    MergeDateRelativity invPlanId(@Nullable String invPlanId);
+    MergeDateRelativity coverageId(@Nullable String coverageId);
+    MergeDateRelativity partyId(@Nullable String partyId);
+    MergeDateRelativity paymentPlanId(@Nullable String paymentPlanId);
+    
+    MergeDateRelativity entityType(String entityType);
+    MergeDateRelativity fieldName(String fieldName);
+    MergeDateRelativity relativeToType(String relativeToType);
+    MergeDateRelativity offsetInterval(@Nullable Period offsetInterval);
+    MergeDateRelativity calculationRule(@Nullable String calculationRule);
+    MergeDateRelativity description(@Nullable String description);
     void build();
   }
 }

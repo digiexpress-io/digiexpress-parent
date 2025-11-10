@@ -35,6 +35,7 @@ import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContai
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCapability;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeContract;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCoverage;
+import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeDateRelativity;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeNote;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeParty;
@@ -42,6 +43,7 @@ import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergePaymentP
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeReference;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRelativity;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewParty;
@@ -58,6 +60,7 @@ import io.resys.thena.contract.client.entities.Reference;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.create.NewCapabilityBuilder;
 import io.resys.thena.contract.client.spi.create.NewCoverageBuilder;
+import io.resys.thena.contract.client.spi.create.NewDateRelativityBuilder;
 import io.resys.thena.contract.client.spi.create.NewInvPlanBuilder;
 import io.resys.thena.contract.client.spi.create.NewNoteBuilder;
 import io.resys.thena.contract.client.spi.create.NewPartyBuilder;
@@ -528,6 +531,17 @@ public class MergeContractBuilder implements MergeContract {
     return this;
   }
   
+  @Override
+  public MergeContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity) {
+    final var allDateRelativity = this.batch.build();
+    final var builder = new NewDateRelativityBuilder(logger, contractId, allDateRelativity, container);
+    dateRelativity.accept(builder);
+    final var built = builder.close();
+    this.batch.addContractDateRelativityInserts(built);
+    updateVersion();
+    return this;
+  }
+  
   // Modify methods - create merge builders for existing entities
   @Override
   public MergeContract modifyParty(String partyId, Consumer<MergeParty> party) {
@@ -600,6 +614,17 @@ public class MergeContractBuilder implements MergeContract {
     final var allPaymentPlans = this.batch.build();
     final var builder = new MergePaymentPlanBuilder(container, logger, contractId, paymentPlanId, allPaymentPlans, container);
     paymentPlan.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    updateVersion();
+    return this;
+  }
+  
+  @Override
+  public MergeContract modifyDateRelativity(String dateRelativityId, Consumer<MergeDateRelativity> dateRelativity) {
+    final var allDateRelativity = this.batch.build();
+    final var builder = new MergeDateRelativityBuilder(container, logger, contractId, dateRelativityId, allDateRelativity, container);
+    dateRelativity.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
     updateVersion();
@@ -696,6 +721,11 @@ public class MergeContractBuilder implements MergeContract {
     }
     updateVersion();
     return this;
+  }
+  
+  @Override
+  public MergeContract removeDateRelativity(String dateRelativityId) {
+    throw new UnsupportedOperationException("Date relativity removal is not supported. Date relativity rules are permanent once created.");
   }
   
   @Override

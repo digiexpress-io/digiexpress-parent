@@ -58,6 +58,7 @@ public interface ThenaContractNewObject {
     NewContract addCapability(Consumer<NewCapability> capability);
     NewContract addInvPlan(Consumer<NewInvPlan> invPlan);
     NewContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
+    NewContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity);
     
     // state handling
     NewContract onNewState(Consumer<ContractContainer> handleNewState);
@@ -169,6 +170,22 @@ public interface ThenaContractNewObject {
     // Business dates
     NewPaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
     NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
+    void build();
+  }
+  
+  // support interface for date relativity creation
+  interface NewDateRelativity {
+    NewDateRelativity invPlanId(@Nullable String invPlanId);
+    NewDateRelativity coverageId(@Nullable String coverageId);
+    NewDateRelativity partyId(@Nullable String partyId);
+    NewDateRelativity paymentPlanId(@Nullable String paymentPlanId);
+    
+    NewDateRelativity entityType(String entityType);
+    NewDateRelativity fieldName(String fieldName);
+    NewDateRelativity relativeToType(String relativeToType);
+    NewDateRelativity offsetInterval(@Nullable Period offsetInterval);
+    NewDateRelativity calculationRule(@Nullable String calculationRule);
+    NewDateRelativity description(@Nullable String description);
     void build();
   }
   
