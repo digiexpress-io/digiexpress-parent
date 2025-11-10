@@ -11,7 +11,8 @@ const _variant_prod: FactoryCardId[] = [
   'contract_main',
   'contract_details',
   'contract_parties',
-  'contract_party_details'
+  'contract_party_details',
+  'coverages'
 ];
 
 

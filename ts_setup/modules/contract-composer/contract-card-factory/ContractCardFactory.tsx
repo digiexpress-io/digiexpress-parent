@@ -12,24 +12,25 @@ import { ContractCard, ContractCardDataRowElement, ContractCardId, useCardConfig
 import { useContract } from '@dxs-ts/contract-api';
 
 
-export type FactoryCardId = 'contract_main' | 'contract_details' | 'contract_parties' | 'contract_party_details';
+export type FactoryCardId = 'contract_main' | 'contract_details' | 'contract_parties' | 'contract_party_details' | 'coverages';
 
 export const CONTRACT_CARD_IDS: FactoryCardId[] = [
   'contract_main',
   'contract_details',
   'contract_parties',
-  'contract_party_details'
+  'contract_party_details',
+  'coverages'
 ];
 
-const defaultExpandedCards: FactoryCardId[] = ['contract_main', 'contract_parties', 'contract_party_details'];
+const defaultExpandedCards: FactoryCardId[] = ['contract_main', 'coverages'];
 
 export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { contractContainer } = useContract();
-  const { contract, parties } = contractContainer;
+  const { contract, parties, coverages } = contractContainer;
 
-  console.log(parties)
+  console.log(contractContainer)
 
 
   const {
@@ -190,7 +191,46 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
         }
       </ContractCard>
       );
+    case 'coverages':
+      return (<ContractCard title={intl.formatMessage({ id: 'contractcard.coverages.title' })}
+        {...commonProps}
+        isMenu
+        titleNotifier={coverages.length}
+        onDoubleClick={handleEdit}
+        onEdit={handleEdit}
+        editDialog={editingCardId === cardId && (<></>)}
+        startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
 
+        showFlashyToggle={true}
+        showEditOnMenu={true}
+        showEditButton={true}
+        showReviewOnMenu={false}
+      >{
+          coverages.map(cover => {
+            const insuredParty = parties.find(p => p.id === cover.insuredId);
+
+            return (
+              <div key={cover.id}>
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageCode' })} value={cover.coverageCode} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.insuredId' })} value={insuredParty?.partyData?.fullName ?? "--"} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageType' })} value={cover.coverageType} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageStatus' })} value={cover.coverageStatus} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageSumInsured' })} value={cover.coverageSumInsured?.toString()} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageTermStartDateType' })} value={cover.coverageTermStartDateType} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageTermStartDate' })} value={formatAnyDateShort(cover.coverageTermStartDate)} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageTermStartDateInterval' })} value={cover.coverageTermStartDateInterval} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageEffectiveFrom' })} value={formatAnyDateShort(cover.coverageEffectiveFrom)} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.createdAt' })} value={formatAnyDateShort(cover.transitives?.createdAt)} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.updatedAt' })} value={formatAnyDateShort(cover.transitives?.updatedAt)} style={style} />
+
+              </div>
+            )
+          })
+        }
+
+
+      </ContractCard>
+      );
     default:
       return null;
   }
