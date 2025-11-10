@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme, Divider, Grid2, Typography } from "@mui/material";
+import { useTheme, Divider, Grid2, Typography, Box, alpha } from "@mui/material";
 import { ContractCardStyleDefinition } from "./cardThemeConfig";
 
 
@@ -56,4 +56,32 @@ export const ContractCardDataRowElement: React.FC<{ label: string, value: React.
   </>
   )
 }
+
+
+export const ContractCardDataRowParty: React.FC<{ titleLabel: string, valueLabel: string, children: React.ReactNode, style: ContractCardStyleDefinition }> = ({ titleLabel, valueLabel, children, style }) => {
+  const theme = useTheme();
+
+  return (
+
+    <Box sx={{ marginBottom: theme.spacing(2) }}>
+      <Box display='flex' alignItems='baseline'>
+        <Typography sx={{
+          ...style.bodyTypography,
+          fontWeight: 500,
+          whiteSpace: 'normal',
+          wordWrap: 'break-word',
+          marginRight: theme.spacing(1)
+        }}>
+          {titleLabel}
+        </Typography>
+        <Typography sx={{ ...style.bodyTypography }}>{valueLabel}</Typography>
+      </Box>
+
+      <Box marginLeft={theme.spacing(3)} paddingLeft={theme.spacing(1)} borderLeft={`2px solid ${alpha(theme.palette.primary.main, 0.5)}`}>
+        {children}
+      </Box>
+    </Box>
+  )
+}
+
 

@@ -11,11 +11,35 @@ function hook(_props: {}) {
   const { url } = params;
   
   return {
-    findAllContracts: async (): Promise<ContractApi.Contract[]> => {
+    findAllContracts: async (): Promise<ContractApi.ContractSummary[]> => {
       return params.fetch(`${url({}) }/all`)
         .then(response => response.json())
         .then((data: ContractApi.ContractContainer[]) => {
-          return data.map(({contract}) => contract);
+          return data.map((container) => {
+
+            const [policyholder] = container.parties
+                .filter(({ partyType }) => partyType === 'POLICYHOLDER')
+                .sort(({ partyTermStartDate: a }, { partyTermStartDate: b}) => new Date(b).getTime() - new Date(a).getTime());
+
+            const contract = container.contract;
+
+            const result: ContractApi.ContractSummary = {
+              container,
+
+              policyholder,
+              contractId: contract.id,
+              contractNumber: contract.contractNumber,
+              contractIssueDate: new Date(contract.contractIssueDate),
+              contractStartDate: new Date(contract.contractStartDate),
+              contractStatus: contract.contractStatus,
+              contractType: contract.contractType,
+              createdAt: new Date(contract.transitives?.createdAt!),
+              updatedAt: new Date(contract.transitives?.updatedTreeAt!)
+            };
+
+            console.log(result);
+            return result;
+          });
         })
     },
     getOneContract: async (contractId: string): Promise<ContractApi.ContractContainer> => {

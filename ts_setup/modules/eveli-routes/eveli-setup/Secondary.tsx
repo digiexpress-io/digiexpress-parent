@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
 import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
-import { Handshake as HandshakeIcon } from '@mui/icons-material';
+import { HandshakeOutlined as HandshakeOutlinedIcon } from '@mui/icons-material';
 import { NetworkCheck as NetworkCheckIcon } from '@mui/icons-material';
 import { ThumbUpAltOutlined as ThumbUpAltOutlinedIcon } from '@mui/icons-material';
 import { CloudQueue as CloudQueueIcon } from '@mui/icons-material';
@@ -71,7 +71,7 @@ export const Secondary: React.FC = () => {
       <CreateTaskButton />
       <EveliTenantFeatureEnabled id='CONTRACT_ENABLED'>
         <EveliPermissions id='NAV_TO_CONTRACTS'>
-          <Button startIcon={<HandshakeIcon />}
+          <Button startIcon={<HandshakeOutlinedIcon />}
             variant={location.pathname.includes('contracts') ? 'explorerActive' : 'explorerInactive'}
             onClick={() => navigate({
               from: '/secured/$locale',

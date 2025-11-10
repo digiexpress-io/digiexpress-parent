@@ -200,7 +200,7 @@ export declare namespace ContractApi {
     // Transitive data from joins
     transitives?: PartyTransitives;
 
-    partyType: string;
+    partyType: 'POLICYHOLDER' | 'BENEFICIARY';
     partyEffectiveFrom: string; // LocalDate
     partyEffectiveTo?: string; // Optional<LocalDate>
 
@@ -401,4 +401,24 @@ export declare namespace ContractApi {
     // Map<InvPlanId, InvPlanAlloc[]>
     invPlanAllocations: Record<InvPlanId, InvPlanAlloc[]>;
   }
+
+
+
+  export interface ContractSummary {
+    container: ContractContainer;
+    contractId: string;
+    parentContractId?: ContractId;
+    contractNumber: string;
+    contractIssueDate: Date;
+    contractStartDate: Date; 
+    contractMaturityDate?: Date;     
+    contractStatus: ContractStatusType;
+    contractType: string;
+
+    createdAt: Date; 
+    updatedAt: Date;
+
+    policyholder: Party;
+  }
+
 }
