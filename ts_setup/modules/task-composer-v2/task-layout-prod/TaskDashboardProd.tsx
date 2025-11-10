@@ -45,7 +45,7 @@ const _variant_prod: FactoryCardId[] = [
   'notes',
   'assignees_roles',
   'status_priority',
-
+  'ai_assistant',
 ];
 
 

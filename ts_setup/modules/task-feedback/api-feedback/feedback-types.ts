@@ -1,6 +1,25 @@
 
 export namespace FeedbackApi {
 
+  export enum Colors {
+    RED = 1,
+    GREEN,
+    YELLOW,
+    GREY
+  }
+
+  export type ColorMap = {
+    [status: string]: Colors
+  }
+
+  export const sentiment_colors: ColorMap = {
+    MIXED: Colors.YELLOW,
+    POSITIVE: Colors.GREEN,
+    NEGATIVE: Colors.RED,
+    NEUTRAL: Colors.GREY,
+    UNKNOWN: Colors.GREY
+  };
+
 }
 
 export declare namespace FeedbackApi {
@@ -14,7 +33,6 @@ export declare namespace FeedbackApi {
   export type CategoryId = string;
   export type CustomerId = string;
   export type Sentiment = 'positive' | 'negative' | 'neutral' | 'mixed' | 'unknown';
-
 
 
   export interface FeedbackTopic {

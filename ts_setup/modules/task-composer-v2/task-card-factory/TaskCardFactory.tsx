@@ -33,6 +33,7 @@ import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../task-feedback';
 import { TaskTransferEditDialog } from '../task-transfer';
+import { TaskAiAssistant } from '../task-ai-assistant';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
 import {
@@ -73,7 +74,8 @@ export type FactoryCardId =
   'audit_processes' |
   'audit_flow' |
   'audit_queue_messages'|
-  'audit_ai'
+  'audit_ai' |
+  'ai_assistant'
 
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
@@ -88,6 +90,7 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'task_meta',
   'transfer',
   'assignable',
+  'ai_assistant',
   'audit_viewers',
   'audit_commits',
   'audit_queues',
@@ -493,17 +496,31 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_ai':
       return (
-          <TaskFeature id='TASK_FEEDBACK'>
-            <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.ai', defaultMessage: 'Audit: AI analysis' })}
-                      {...commonProps}
-                      showFlashyToggle={false}
-                      showEditOnMenu={false}
-                      showEditButton={false}
-                      showReviewOnMenu={false}
-                      startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
-              <TaskAuditAi />
-            </TaskCard>
-          </TaskFeature>
+        <TaskFeature id='TASK_FEEDBACK'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.ai', defaultMessage: 'Audit: AI analysis' })}
+              {...commonProps}
+              showFlashyToggle={false}
+              showEditOnMenu={false}
+              showEditButton={false}
+              showReviewOnMenu={false}
+              startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+            <TaskAuditAi />
+          </TaskCard>
+        </TaskFeature>
+      );
+    case 'ai_assistant':
+      return (
+        <TaskFeature id='TASK_FEEDBACK'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant' })}
+              {...commonProps}
+              showFlashyToggle={false}
+              showEditOnMenu={false}
+              showEditButton={false}
+              showReviewOnMenu={false}
+              startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+            <TaskAiAssistant />
+          </TaskCard>
+        </TaskFeature>
       );
     default:
       return null;
@@ -533,5 +550,5 @@ const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
   }, [task.taskRef]);
 
 
-  return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : undefined
+  return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : 0
 }
