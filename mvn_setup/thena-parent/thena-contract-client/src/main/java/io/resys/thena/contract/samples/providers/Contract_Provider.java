@@ -120,7 +120,7 @@ public class Contract_Provider {
   /**
    * Generate and persist a Nova Virtus contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newNovaVirtus(ContractClient contractClient) {
+  public static Uni<OneContractEnvelope> newNovaVirtus(ContractClient contractClient, String refNumber) {
     final var product = Product_Nova_Virtus.create();
     
     GenerationOptions options = GenerationOptions.builder()
@@ -128,6 +128,7 @@ public class Contract_Provider {
         .incomeRange(product.getContributionRange().orElse(IncomeRange.of(40000, 120000)))
         .isIncludeBeneficiaries(hasDeathBenefits(product))
         .riskProfile(determineRiskProfile(product))
+        .refNumber(refNumber)
         .build();
     
     return contractClient.withTenant().commit()
