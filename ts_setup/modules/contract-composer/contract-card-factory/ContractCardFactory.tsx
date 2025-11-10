@@ -12,23 +12,24 @@ import { ContractCard, ContractCardDataRowElement, ContractCardId, useCardConfig
 import { useContract } from '@dxs-ts/contract-api';
 
 
-export type FactoryCardId = 'contract_main' | 'contract_details' | 'contract_parties' | 'contract_party_details' | 'coverages';
+export type FactoryCardId = 'contract_main' | 'contract_details' | 'contract_parties' | 'contract_party_details' | 'coverages' | 'payment_plans';
 
 export const CONTRACT_CARD_IDS: FactoryCardId[] = [
   'contract_main',
   'contract_details',
   'contract_parties',
   'contract_party_details',
-  'coverages'
+  'coverages',
+  'payment_plans'
 ];
 
-const defaultExpandedCards: FactoryCardId[] = ['contract_main', 'coverages'];
+const defaultExpandedCards: FactoryCardId[] = ['contract_main', 'payment_plans'];
 
 export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { contractContainer } = useContract();
-  const { contract, parties, coverages } = contractContainer;
+  const { contract, parties, coverages, paymentPlans } = contractContainer;
 
   console.log(contractContainer)
 
@@ -73,7 +74,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
 
 
   switch (cardId) {
-   
+
     case 'contract_main':
       return (
         <ContractCard title={intl.formatMessage({ id: 'contractcard.contractMain.title' }, { contractId: contract.contractNumber })}
@@ -113,9 +114,9 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
         showEditButton={true}
         showReviewOnMenu={false}
       >
-        <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.transitives.createdAt' })} value={formatAnyDateShort(contract.transitives?.createdAt)} style={style} />
-        <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.transitives.updatedAt' })} value={formatAnyDateShort(contract.transitives?.updatedAt)} style={style} />
-        <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.transitives.updatedTreeAt' })} value={formatAnyDateShort(contract.transitives?.updatedTreeAt)} style={style} />
+        <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(contract.transitives?.createdAt)} style={style} />
+        <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(contract.transitives?.updatedAt)} style={style} />
+        <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedTreeAt' })} value={formatAnyDateShort(contract.transitives?.updatedTreeAt)} style={style} />
         <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.issueDate' })} value={formatAnyDateShort(contract.contractData?.issueDate)} style={style} />
         <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.issueDateInterval' })} value={contract.contractIssueDateInterval} style={style} />
         <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.issueDateType' })} value={contract.contractIssueDateType} style={style} />
@@ -184,8 +185,8 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
             <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyTermEndDate' })} value={formatAnyDateShort(party.partyTermEndDate)} style={style} />
             <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyTermEndDateInterval' })} value={party.partyTermEndDateInterval ?? "--"} style={style} />
             <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyTermEndDateType' })} value={party.partyTermEndDateType ?? "--"} style={style} />
-            <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.createdAt' })} value={formatAnyDateShort(party.transitives?.createdAt)} style={style} />
-            <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.updatedAt' })} value={formatAnyDateShort(party.transitives?.updatedAt)} style={style} />
+            <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(party.transitives?.createdAt)} style={style} />
+            <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(party.transitives?.updatedAt)} style={style} />
           </ContractCardDataRowParty>
         ))
         }
@@ -205,7 +206,8 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
         showEditOnMenu={true}
         showEditButton={true}
         showReviewOnMenu={false}
-      >{
+      >
+        {
           coverages.map(cover => {
             const insuredParty = parties.find(p => p.id === cover.insuredId);
 
@@ -220,15 +222,48 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageTermStartDate' })} value={formatAnyDateShort(cover.coverageTermStartDate)} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageTermStartDateInterval' })} value={cover.coverageTermStartDateInterval} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageEffectiveFrom' })} value={formatAnyDateShort(cover.coverageEffectiveFrom)} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.createdAt' })} value={formatAnyDateShort(cover.transitives?.createdAt)} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.updatedAt' })} value={formatAnyDateShort(cover.transitives?.updatedAt)} style={style} />
-
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(cover.transitives?.createdAt)} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(cover.transitives?.updatedAt)} style={style} />
               </div>
             )
           })
         }
+      </ContractCard>
+      );
+    case 'payment_plans':
+      return (<ContractCard title={intl.formatMessage({ id: 'contractcard.paymentPlans.title' })}
+        {...commonProps}
+        isMenu
+        titleNotifier={paymentPlans.length}
+        onDoubleClick={handleEdit}
+        onEdit={handleEdit}
+        editDialog={editingCardId === cardId && (<></>)}
+        startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
 
+        showFlashyToggle={true}
+        showEditOnMenu={true}
+        showEditButton={true}
+        showReviewOnMenu={false}
+      >
+        {
+          paymentPlans.map(plan => {
+            const insuredParty = parties.find(p => p.id === plan.partyId);
 
+            return (
+              <div key={plan.id}>
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.partyName' })} value={insuredParty?.partyData?.fullName ?? "--"} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanStatus' })} value={plan.paymentPlanStatus} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanFrequency' })} value={plan.paymentPlanFrequency} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanAmount' })} value={plan.paymentPlanAmount.toString()} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanStartDate' })} value={formatAnyDateShort(plan.paymentPlanStartDate)} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanStartDateInterval' })} value={plan.paymentPlanStartDateInterval} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanStartDateType' })} value={plan.paymentPlanStartDateType} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(plan.transitives?.createdAt)} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(plan.transitives?.updatedAt)} style={style} />
+              </div>
+            )
+          })
+        }
       </ContractCard>
       );
     default:
