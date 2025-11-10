@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme, Divider, Grid2, Typography, Box, alpha } from "@mui/material";
 import { ContractCardStyleDefinition } from "./cardThemeConfig";
+import { useIntl } from 'react-intl';
 
 
 interface ContractCardDataRowTextProps {
@@ -80,6 +81,18 @@ export const ContractCardDataRowParty: React.FC<{ titleLabel: string, valueLabel
       <Box marginLeft={theme.spacing(3)} paddingLeft={theme.spacing(1)} borderLeft={`2px solid ${alpha(theme.palette.primary.main, 0.5)}`}>
         {children}
       </Box>
+    </Box>
+  )
+}
+
+export const ContractCardTransitivesRow: React.FC<{ createdAt: string, updatedAt: string }> = ({ createdAt, updatedAt }) => {
+  const intl = useIntl();
+  const theme = useTheme();
+
+  return (
+    <Box display='flex' gap={theme.spacing(1)} marginTop={theme.spacing(1)} justifySelf='flex-end'>
+      <Typography variant='caption'>{intl.formatMessage({ id: 'contractcard.transitives.createdAt' })}{": "}{createdAt}</Typography>
+      <Typography variant='caption'>{intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })}{": "}{updatedAt}</Typography>
     </Box>
   )
 }

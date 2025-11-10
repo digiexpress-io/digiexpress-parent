@@ -1025,9 +1025,6 @@ export const en = {
   'contractcard.body.coverages.coverageTermStartDate': 'Term start date',
   'contractcard.body.coverages.coverageTermStartDateType': 'Term start date type',
   'contractcard.body.coverages.coverageTermStartDateInterval': 'Term start date interval',
-  'contractcard.transitives.createdAt': 'Created at',
-  'contractcard.transitives.updatedAt': 'Updated at',
-  'contractcard.transitives.updatedTreeAt': 'Updated tree at',
   'contractcard.body.paymentPlans.partyName': 'Party name',
   'contractcard.body.paymentPlans.paymentPlanFrequency': 'Payment plan frequency',
   'contractcard.body.paymentPlans.paymentPlanAmount': 'Payment amount',
@@ -1045,5 +1042,8 @@ export const en = {
   'contractcard.body.investmentPlans.invPlanEndDate': 'End date',
   'contractcard.body.investmentPlans.invPlanEndDateType': 'End date type',
   'contractcard.body.investmentPlans.invPlanEndDateInterval': 'End date interval',
+  'contractcard.transitives.createdAt': 'Created',
+  'contractcard.transitives.updatedAt': 'Updated',
+  'contractcard.transitives.updatedTreeAt': 'Updated tree',
   'contract.status.active': 'Active'
 }

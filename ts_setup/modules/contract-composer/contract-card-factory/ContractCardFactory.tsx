@@ -8,7 +8,7 @@ import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
 
-import { ContractCard, ContractCardDataRowElement, ContractCardId, useCardConfig, ContractCardDataRowText, useContractCardThemeConfig, StartAdornmentIcon, ContractCardDataRowParty } from '../contract-card';
+import { ContractCard, ContractCardDataRowElement, ContractCardId, useCardConfig, ContractCardDataRowText, useContractCardThemeConfig, StartAdornmentIcon, ContractCardDataRowParty, ContractCardTransitivesRow } from '../contract-card';
 import { useContract } from '@dxs-ts/contract-api';
 
 
@@ -131,6 +131,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.investmentExperience' })} value={party.partyData?.investmentExperience ?? "--"} style={style} />
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.riskTolerance' })} value={party.partyData?.riskTolerance ?? "--"} style={style} />
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyCoverages' })} value={partyCovers.join(", ") ?? "--"} style={style} />
+              <ContractCardTransitivesRow createdAt={formatAnyDateShort(party.transitives?.createdAt)} updatedAt={formatAnyDateShort(party.transitives?.updatedAt)} />
             </ContractCardDataRowParty>
           )
         })}
@@ -163,8 +164,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageType' })} value={cover.coverageType} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageStatus' })} value={cover.coverageStatus} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageSumInsured' })} value={cover.coverageSumInsured?.toString()} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(cover.transitives?.createdAt)} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(cover.transitives?.updatedAt)} style={style} />
+                <ContractCardTransitivesRow createdAt={formatAnyDateShort(cover.transitives?.createdAt)} updatedAt={formatAnyDateShort(cover.transitives?.updatedAt)} />
               </div>
             )
           })
@@ -198,6 +198,8 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanAmount' })} value={plan.paymentPlanAmount.toString()} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(plan.transitives?.createdAt)} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(plan.transitives?.updatedAt)} style={style} />
+                <ContractCardTransitivesRow createdAt={formatAnyDateShort(plan.transitives?.createdAt)} updatedAt={formatAnyDateShort(plan.transitives?.updatedAt)} />
+
               </div>
             )
           })
