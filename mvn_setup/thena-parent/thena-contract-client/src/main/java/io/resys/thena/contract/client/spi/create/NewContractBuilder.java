@@ -31,6 +31,7 @@ import io.resys.thena.contract.client.api.ImmutableContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRelativity;
@@ -237,6 +238,16 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   }
 
   @Override
+  public NewContract addCommand(Consumer<NewCommand> command) {
+    final var allCommands = this.next.build();
+    final var builder = new NewCommandBuilder(logger, contractId, allCommands, null);
+    command.accept(builder);
+    final var built = builder.close();
+    this.next.addCommandInserts(built);
+    return this;
+  }
+
+  @Override
   public NewContract onNewState(Consumer<ContractContainer> handleNewState) {
     this.handleNewState = handleNewState;
     return this;
@@ -283,6 +294,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
         .invPlans(batch.getInvPlanInserts())
         .paymentPlans(batch.getPaymentPlanInserts())
         .dateRelativity(batch.getContractDateRelativityInserts())
+        .commands(batch.getCommandInserts())
         .invPlanAllocations(batch.getInvPlanAllocInserts().stream()
             .collect(Collectors.groupingBy(alloc -> alloc.getInvPlanId())))
         .build();

@@ -59,6 +59,7 @@ public interface ThenaContractNewObject {
     NewContract addInvPlan(Consumer<NewInvPlan> invPlan);
     NewContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
     NewContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity);
+    NewContract addCommand(Consumer<NewCommand> command);
     
     // state handling
     NewContract onNewState(Consumer<ContractContainer> handleNewState);
@@ -186,6 +187,18 @@ public interface ThenaContractNewObject {
     NewDateRelativity offsetInterval(@Nullable Period offsetInterval);
     NewDateRelativity calculationRule(@Nullable String calculationRule);
     NewDateRelativity description(@Nullable String description);
+    void build();
+  }
+  
+  // support interface for command creation
+  interface NewCommand {
+    NewCommand externalId(@Nullable String externalId);
+    NewCommand commandBody(JsonObject commandBody);
+    NewCommand commandStatus(String commandStatus);
+    NewCommand commandType(String commandType);
+    NewCommand commandTargetDate(@Nullable LocalDate commandTargetDate);
+    NewCommand commandDescription(@Nullable String commandDescription);
+    NewCommand commandError(@Nullable JsonObject commandError);
     void build();
   }
   

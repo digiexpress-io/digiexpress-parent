@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCapability;
+import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCommand;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeContract;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCoverage;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeDateRelativity;
@@ -42,6 +43,7 @@ import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeParty;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergePaymentPlan;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeReference;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRelativity;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
@@ -59,6 +61,7 @@ import io.resys.thena.contract.client.entities.PaymentPlan;
 import io.resys.thena.contract.client.entities.Reference;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.spi.create.NewCapabilityBuilder;
+import io.resys.thena.contract.client.spi.create.NewCommandBuilder;
 import io.resys.thena.contract.client.spi.create.NewCoverageBuilder;
 import io.resys.thena.contract.client.spi.create.NewDateRelativityBuilder;
 import io.resys.thena.contract.client.spi.create.NewInvPlanBuilder;
@@ -542,6 +545,17 @@ public class MergeContractBuilder implements MergeContract {
     return this;
   }
   
+  @Override
+  public MergeContract addCommand(Consumer<NewCommand> command) {
+    final var allCommands = this.batch.build();
+    final var builder = new NewCommandBuilder(logger, contractId, allCommands, container);
+    command.accept(builder);
+    final var built = builder.close();
+    this.batch.addCommandInserts(built);
+    updateVersion();
+    return this;
+  }
+  
   // Modify methods - create merge builders for existing entities
   @Override
   public MergeContract modifyParty(String partyId, Consumer<MergeParty> party) {
@@ -625,6 +639,17 @@ public class MergeContractBuilder implements MergeContract {
     final var allDateRelativity = this.batch.build();
     final var builder = new MergeDateRelativityBuilder(container, logger, contractId, dateRelativityId, allDateRelativity, container);
     dateRelativity.accept(builder);
+    final var built = builder.close();
+    this.batch.from(built);
+    updateVersion();
+    return this;
+  }
+  
+  @Override
+  public MergeContract modifyCommand(String commandId, Consumer<MergeCommand> command) {
+    final var allCommands = this.batch.build();
+    final var builder = new MergeCommandBuilder(container, logger, contractId, commandId, allCommands, container);
+    command.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
     updateVersion();
@@ -718,6 +743,19 @@ public class MergeContractBuilder implements MergeContract {
     if(toRemove.isPresent()) {
       logger.rm(toRemove.get());
       this.batch.addPaymentPlanDeletes(toRemove.get());
+    }
+    updateVersion();
+    return this;
+  }
+  
+  @Override
+  public MergeContract removeCommand(String commandId) {
+    final var toRemove = container.getCommands().stream()
+        .filter(c -> c.getId().equals(commandId))
+        .findFirst();
+    if(toRemove.isPresent()) {
+      logger.rm(toRemove.get());
+      this.batch.addCommandDeletes(toRemove.get());
     }
     updateVersion();
     return this;

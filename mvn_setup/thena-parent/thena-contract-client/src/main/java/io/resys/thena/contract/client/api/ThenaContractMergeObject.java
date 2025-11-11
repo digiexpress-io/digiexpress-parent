@@ -29,6 +29,7 @@ import java.util.function.Function;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRelativity;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
@@ -84,6 +85,7 @@ public interface ThenaContractMergeObject {
     MergeContract addInvPlan(Consumer<NewInvPlan> invPlan);
     MergeContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
     MergeContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity);
+    MergeContract addCommand(Consumer<NewCommand> command);
     
     // Modify existing child entities by ID
     MergeContract modifyParty(String partyId, Consumer<MergeParty> party);
@@ -94,6 +96,7 @@ public interface ThenaContractMergeObject {
     MergeContract modifyInvPlan(String invPlanId, Consumer<MergeInvPlan> invPlan);
     MergeContract modifyPaymentPlan(String paymentPlanId, Consumer<MergePaymentPlan> paymentPlan);
     MergeContract modifyDateRelativity(String dateRelativityId, Consumer<MergeDateRelativity> dateRelativity);
+    MergeContract modifyCommand(String commandId, Consumer<MergeCommand> command);
     
     // Remove child entities by ID
     MergeContract removeParty(String partyId);
@@ -104,6 +107,7 @@ public interface ThenaContractMergeObject {
     MergeContract removeInvPlan(String invPlanId);
     MergeContract removePaymentPlan(String paymentPlanId);
     MergeContract removeDateRelativity(String dateRelativityId);
+    MergeContract removeCommand(String commandId);
     
     void build();
   }
@@ -239,6 +243,17 @@ public interface ThenaContractMergeObject {
     MergeDateRelativity offsetInterval(@Nullable Period offsetInterval);
     MergeDateRelativity calculationRule(@Nullable String calculationRule);
     MergeDateRelativity description(@Nullable String description);
+    void build();
+  }
+  
+  interface MergeCommand {
+    MergeCommand externalId(@Nullable String externalId);
+    MergeCommand commandBody(JsonObject commandBody);
+    MergeCommand commandStatus(String commandStatus);
+    MergeCommand commandType(String commandType);
+    MergeCommand commandTargetDate(@Nullable LocalDate commandTargetDate);
+    MergeCommand commandDescription(@Nullable String commandDescription);
+    MergeCommand commandError(@Nullable JsonObject commandError);
     void build();
   }
 }

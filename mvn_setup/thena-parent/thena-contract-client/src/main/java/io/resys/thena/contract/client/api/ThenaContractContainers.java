@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.contract.client.entities.Capability;
+import io.resys.thena.contract.client.entities.Command;
 import io.resys.thena.contract.client.entities.Contract;
 import io.resys.thena.contract.client.entities.ContractDateRelativity;
 import io.resys.thena.contract.client.entities.Coverage;
@@ -59,6 +60,7 @@ public interface ThenaContractContainers {
     List<InvPlan> getInvPlans();
     List<PaymentPlan> getPaymentPlans();
     List<ContractDateRelativity> getDateRelativity();
+    List<Command> getCommands();
     
     // Investment plan allocations grouped by investment plan id
     Map<String, List<InvPlanAlloc>> getInvPlanAllocations();

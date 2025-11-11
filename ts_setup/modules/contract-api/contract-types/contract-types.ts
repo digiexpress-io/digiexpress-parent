@@ -62,6 +62,7 @@ export declare namespace ContractApi {
   export type CommitId = string;
   export type CommitTreeId = string;
   export type ContractDateRelativityId = string;
+  export type CommandId = string;
   export type ContractEntityId = string;
   export type ContractStatusType = 'ACTIVE';
 
@@ -78,6 +79,7 @@ export declare namespace ContractApi {
     | "INV_PLAN"
     | "INV_PLAN_ALLOC"
     | "CONTRACT_DATE_RELATIVITY"
+    | "COMMAND"
     | "REFERENCE"
     | "COMMIT"
     | "COMMIT_TREE";
@@ -139,6 +141,11 @@ export declare namespace ContractApi {
   }
 
   export interface ReferenceTransitives {
+    createdAt: string; // OffsetDateTime
+    updatedAt: string; // OffsetDateTime
+  }
+
+  export interface CommandTransitives {
     createdAt: string; // OffsetDateTime
     updatedAt: string; // OffsetDateTime
   }
@@ -385,6 +392,25 @@ export declare namespace ContractApi {
     description?: string;
   }
 
+  export interface Command {
+    id: CommandId;
+    contractId: ContractId;
+
+    externalId?: string;
+    commitId: CommitId;
+    createdCommitId: CommitId;
+
+    // Transitive data from joins
+    transitives?: CommandTransitives;
+
+    commandBody: Record<string, any>; // JsonObject
+    commandStatus: string;
+    commandType: string;
+    commandTargetDate?: string; // Optional<LocalDate>
+    commandDescription?: string;
+    commandError?: Record<string, any>; // Optional<JsonObject>
+  }
+
   export interface ContractDateRelativityTransitives {
     createdAt: string; // OffsetDateTime
     updatedAt: string; // OffsetDateTime
@@ -403,6 +429,7 @@ export declare namespace ContractApi {
     invPlans: InvPlan[];
     paymentPlans: PaymentPlan[];
     dateRelativity: ContractDateRelativity[];
+    commands: Command[];
 
     // Map<InvPlanId, InvPlanAlloc[]>
     invPlanAllocations: Record<InvPlanId, InvPlanAlloc[]>;

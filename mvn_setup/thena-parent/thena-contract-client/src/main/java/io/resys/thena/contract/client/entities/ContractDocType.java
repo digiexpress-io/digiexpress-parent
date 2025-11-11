@@ -31,6 +31,7 @@ public enum ContractDocType {
   INV_PLAN,
   INV_PLAN_ALLOC,
   CONTRACT_DATE_RELATIVITY,
+  COMMAND,
   COMMIT,
   COMMIT_TREE
 }

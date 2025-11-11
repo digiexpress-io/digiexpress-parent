@@ -294,6 +294,18 @@ public class ContractQueryImpl implements ContractQuery {
       }
     });
     
+    world.getCommand().values().forEach(command -> {
+      if(builders.containsKey(command.getContractId())) {
+        builders.get(command.getContractId()).addCommands(command);
+      }
+    });
+    
+    world.getContractDateRelativity().values().forEach(dateRule -> {
+      if(builders.containsKey(dateRule.getContractId())) {
+        builders.get(dateRule.getContractId()).addDateRelativity(dateRule);
+      }
+    });
+    
     // Group InvPlanAlloc by InvPlan ID within each contract
     final var invPlanAllocsByContract = new java.util.HashMap<String, java.util.Map<String, java.util.List<io.resys.thena.contract.client.entities.InvPlanAlloc>>>();
     
