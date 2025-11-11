@@ -8,7 +8,11 @@ import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
 
-import { ContractCard, ContractCardDataRowElement, ContractCardId, useCardConfig, ContractCardDataRowText, useContractCardThemeConfig, StartAdornmentIcon, ContractCardDataRowParty, ContractCardTransitivesRow } from '../contract-card';
+import {
+  ContractCard, ContractCardId, useCardConfig, ContractCardDataRowText,
+  useContractCardThemeConfig, StartAdornmentIcon, ContractCardDataRowGrouped, ContractCardTransitivesRow,
+  ContractCardDataList
+} from '../contract-card';
 import { useContract } from '@dxs-ts/contract-api';
 
 
@@ -28,7 +32,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { contractContainer } = useContract();
-  const { contract, parties, coverages, paymentPlans, invPlans } = contractContainer;
+  const { contract, parties, coverages, paymentPlans, invPlans, invPlanAllocations } = contractContainer;
 
   console.log(contractContainer)
 
@@ -120,7 +124,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
           const partyCovers = coverages.filter(c => c.insuredId === party.id).map(c => c.coverageCode)
 
           return (
-            <ContractCardDataRowParty key={party.id} titleLabel={intl.formatMessage({ id: 'contractcard.body.parties.partyType' })} style={style} valueLabel={party.partyType}>
+            <ContractCardDataRowGrouped key={party.id} titleLabel={intl.formatMessage({ id: 'contractcard.body.parties.partyType' })} style={style} valueLabel={party.partyType}>
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyFullName' })} value={party.partyData?.fullName ?? "-"} style={style} />
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.dateOfBirth' })} value={formatAnyDateShort(party.partyData?.dateOfBirth)} style={style} />
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyPersonalId' })} value={party.partyData?.personalId ?? "-"} style={style} />
@@ -132,7 +136,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.riskTolerance' })} value={party.partyData?.riskTolerance ?? "--"} style={style} />
               <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.parties.partyCoverages' })} value={partyCovers.join(", ") ?? "--"} style={style} />
               <ContractCardTransitivesRow createdAt={formatAnyDateShort(party.transitives?.createdAt)} updatedAt={formatAnyDateShort(party.transitives?.updatedAt)} />
-            </ContractCardDataRowParty>
+            </ContractCardDataRowGrouped>
           )
         })}
       </ContractCard>
@@ -188,16 +192,11 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
       >
         {
           paymentPlans.map(plan => {
-            const insuredParty = parties.find(p => p.id === plan.partyId);
-
             return (
               <div key={plan.id}>
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.partyName' })} value={insuredParty?.partyData?.fullName ?? "--"} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanStatus' })} value={plan.paymentPlanStatus} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanFrequency' })} value={plan.paymentPlanFrequency} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanAmount' })} value={plan.paymentPlanAmount.toString()} style={style} />
                 <ContractCardTransitivesRow createdAt={formatAnyDateShort(plan.transitives?.createdAt)} updatedAt={formatAnyDateShort(plan.transitives?.updatedAt)} />
-
               </div>
             )
           })
@@ -221,11 +220,22 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
       >
         {
           invPlans.map(plan => {
+            const allocations = invPlanAllocations[plan.id] ?? [];
+
             return (
               <div key={plan.id}>
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanName' })} value={plan.invPlanName} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanCode' })} value={plan.invPlanCode} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanStatus' })} value={plan.invPlanStatus} style={style} />
+                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.investmentPlans.invPlanAllocations.title' })} value={undefined} style={style} />
+
+                {allocations.map((allocation, index) => (
+                  <ContractCardDataList index={index}
+                    labelColHeader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationName' })}
+                    valueColheader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage' })}
+                    label={allocation.invPlanAllocName}
+                    value={allocation.invPlanAllocPercentage.toString()}
+                  />
+                ))}
               </div>
             )
           })
@@ -243,6 +253,14 @@ function formatAnyDateShort(value: Date | string | undefined): string {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 }
 
+/*
+
+    <ContractCardDataRowGrouped titleLabel={intl.formatMessage({ id: 'contractcard.investmentPlans.invPlanAllocations.title' })} valueLabel={allocation.invPlanAllocName} style={style}>
+                    <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage' })} value={allocation.invPlanAllocPercentage.toString()} style={style} />
+                  </ContractCardDataRowGrouped>
+
+
+*/
 
 
 
