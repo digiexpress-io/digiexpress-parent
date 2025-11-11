@@ -14,6 +14,7 @@ import {
   ContractCardDataList
 } from '../contract-card';
 import { useContract } from '@dxs-ts/contract-api';
+import { ContractEditWizard } from '../contract-edit-wizard/ContractEditWizard';
 
 
 export type FactoryCardId = 'contract_main' | 'contract_parties' | 'coverages' | 'payment_plans' | 'investment_plans';
@@ -85,7 +86,11 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && (<></>)}
+          editDialog={editingCardId === cardId && <ContractEditWizard
+            title={`Edit contract: ${contract.contractNumber}`}
+            onClose={handleEditClose}
+            open={isEditOpen}
+          />}
           startAdornmentIcon={<StartAdornmentIcon icon={HandshakeOutlinedIcon} />}
 
           showFlashyToggle={true}
