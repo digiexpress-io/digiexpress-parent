@@ -196,8 +196,6 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanStatus' })} value={plan.paymentPlanStatus} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanFrequency' })} value={plan.paymentPlanFrequency} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.paymentPlans.paymentPlanAmount' })} value={plan.paymentPlanAmount.toString()} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(plan.transitives?.createdAt)} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(plan.transitives?.updatedAt)} style={style} />
                 <ContractCardTransitivesRow createdAt={formatAnyDateShort(plan.transitives?.createdAt)} updatedAt={formatAnyDateShort(plan.transitives?.updatedAt)} />
 
               </div>
@@ -228,8 +226,6 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanName' })} value={plan.invPlanName} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanCode' })} value={plan.invPlanCode} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanStatus' })} value={plan.invPlanStatus} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.createdAt' })} value={formatAnyDateShort(plan.transitives?.createdAt)} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.transitives.updatedAt' })} value={formatAnyDateShort(plan.transitives?.updatedAt)} style={style} />
               </div>
             )
           })
