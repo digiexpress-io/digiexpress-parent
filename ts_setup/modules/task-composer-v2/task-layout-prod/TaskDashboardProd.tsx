@@ -84,12 +84,19 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
         <Typography variant='h1'>{intl.formatMessage({ id: 'task.edit' })}</Typography>
 
         {cardOrder.map((cardId) => (
-          <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
+          <Grid2
+            key={cardId}
+            size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}
+            sx={{
+              '&:has(> *:empty)': { display: 'none' }
+            }}
+          >
             <DraggableCardWrapper {...getDragPropsForId(cardId)} draggingId={draggingId}>
               <TaskCardFactory cardId={cardId} />
             </DraggableCardWrapper>
           </Grid2>
         ))}
+
       </Grid2>
 
       <TaskFormReviewDrawer onClose={toggleReview} open={isReviewOpen} />
