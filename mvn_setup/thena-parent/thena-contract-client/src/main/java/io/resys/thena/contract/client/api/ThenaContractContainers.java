@@ -32,7 +32,7 @@ import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.contract.client.entities.Capability;
 import io.resys.thena.contract.client.entities.Command;
 import io.resys.thena.contract.client.entities.Contract;
-import io.resys.thena.contract.client.entities.ContractDateRelativity;
+import io.resys.thena.contract.client.entities.DateRule;
 import io.resys.thena.contract.client.entities.Coverage;
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
@@ -59,7 +59,7 @@ public interface ThenaContractContainers {
     List<Capability> getCapabilities();
     List<InvPlan> getInvPlans();
     List<PaymentPlan> getPaymentPlans();
-    List<ContractDateRelativity> getDateRelativity();
+    List<DateRule> getDateRules();
     List<Command> getCommands();
     
     // Investment plan allocations grouped by investment plan id

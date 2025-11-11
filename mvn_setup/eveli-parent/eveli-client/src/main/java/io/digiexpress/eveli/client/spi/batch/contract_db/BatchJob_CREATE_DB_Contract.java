@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.spi.batch.contract_db;
  * #L%
  */
 
-import io.digiexpress.eveli.client.spi.batch.contract_gen.BatchJob_Generate_Savings_1.GeneratorConfig;
+import io.digiexpress.eveli.client.spi.batch.contract_db.BatchJob_CREATE_DB_Contract.CreateDbConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
@@ -30,45 +30,46 @@ import io.digiexpress.thena.batch.client.api.executor.ExecutorResult;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
 import io.resys.thena.contract.client.api.ContractClient;
-import io.resys.thena.contract.samples.providers.Contract_Provider;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 
-
 @RequiredArgsConstructor
-public class BatchJob_CREATE_DB_Contract implements Executor<String, GeneratorConfig> {
+public class BatchJob_CREATE_DB_Contract implements Executor<String, CreateDbConfig> {
 
   private final ContractClient contractClient;
 
   @Override
-  public ExecutorQuery<String, GeneratorConfig> before(ExecutorContext context) {
-    return new ExecutorQuery<String, GeneratorConfig>() {
+  public ExecutorQuery<String, CreateDbConfig> before(ExecutorContext context) {
+    return new ExecutorQuery<String, CreateDbConfig>() {
       @Override
-      public GeneratorConfig getConfig() {
-        return new GeneratorConfig();
+      public CreateDbConfig getConfig() {
+        return new CreateDbConfig();
       }
       @Override
       public Multi<String> findAll() {
-        return contractClient.withTenant().find().referenceNumberQuery().findNext(5);
+        return Multi.createFrom().item(contractClient.withTenant().getTenantId());
       }
     };
   }
 
   @Override
-  public Uni<ExecutorEntity> accept(String refNumber, GeneratorConfig config, ExecutorContext context) {
-    return Contract_Provider.newSavings(contractClient, refNumber)
+  public Uni<ExecutorEntity> accept(String tenantName, CreateDbConfig config, ExecutorContext context) {
+    return contractClient
+        .tenants().commit()
+        .name(tenantName)
+        .build()
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()
             .status(ExecutorEntity.ExecutorEntityStatus.OK)
-            .entityId(refNumber)
+            .entityId(tenantName)
             .build());
         
   }
 
   @Override
-  public Uni<ExecutorResult> after(GeneratorConfig config, ExecutorContext context) {
+  public Uni<ExecutorResult> after(CreateDbConfig config, ExecutorContext context) {
     return Uni.createFrom().item(ImmutableExecutorResult.builder()
         .status(ExecutorResult.ExecutorStatus.OK)
         .build());
@@ -76,7 +77,7 @@ public class BatchJob_CREATE_DB_Contract implements Executor<String, GeneratorCo
 
   @RequiredArgsConstructor
   @Data
-  public static class GeneratorConfig implements ExecutorConfig {
+  public static class CreateDbConfig implements ExecutorConfig {
     private static final long serialVersionUID = 7079554536966522627L;
   }
 }

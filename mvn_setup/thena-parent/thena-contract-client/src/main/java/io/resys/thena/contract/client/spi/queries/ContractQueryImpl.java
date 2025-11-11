@@ -300,9 +300,9 @@ public class ContractQueryImpl implements ContractQuery {
       }
     });
     
-    world.getContractDateRelativity().values().forEach(dateRule -> {
+    world.getDateRule().values().forEach(dateRule -> {
       if(builders.containsKey(dateRule.getContractId())) {
-        builders.get(dateRule.getContractId()).addDateRelativity(dateRule);
+        builders.get(dateRule.getContractId()).addDateRules(dateRule);
       }
     });
     

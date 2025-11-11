@@ -58,7 +58,7 @@ public interface ThenaContractNewObject {
     NewContract addCapability(Consumer<NewCapability> capability);
     NewContract addInvPlan(Consumer<NewInvPlan> invPlan);
     NewContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
-    NewContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity);
+    NewContract addDateRule(Consumer<NewDateRule> dateRule);
     NewContract addCommand(Consumer<NewCommand> command);
     
     // state handling
@@ -174,19 +174,19 @@ public interface ThenaContractNewObject {
     void build();
   }
   
-  // support interface for date relativity creation
-  interface NewDateRelativity {
-    NewDateRelativity invPlanId(@Nullable String invPlanId);
-    NewDateRelativity coverageId(@Nullable String coverageId);
-    NewDateRelativity partyId(@Nullable String partyId);
-    NewDateRelativity paymentPlanId(@Nullable String paymentPlanId);
+  // support interface for date rule creation
+  interface NewDateRule {
+    NewDateRule invPlanId(@Nullable String invPlanId);
+    NewDateRule coverageId(@Nullable String coverageId);
+    NewDateRule partyId(@Nullable String partyId);
+    NewDateRule paymentPlanId(@Nullable String paymentPlanId);
     
-    NewDateRelativity entityType(String entityType);
-    NewDateRelativity fieldName(String fieldName);
-    NewDateRelativity relativeToType(String relativeToType);
-    NewDateRelativity offsetInterval(@Nullable Period offsetInterval);
-    NewDateRelativity calculationRule(@Nullable String calculationRule);
-    NewDateRelativity description(@Nullable String description);
+    NewDateRule dateRuleEntity(String dateRuleEntity);
+    NewDateRule dateRuleEntityField(String dateRuleEntityField);
+    NewDateRule dateRuleType(String dateRuleType);
+    NewDateRule dateRulePeriod(@Nullable Period dateRulePeriod);
+    NewDateRule dateRuleName(@Nullable String dateRuleName);
+    NewDateRule dateRuleDescription(@Nullable String dateRuleDescription);
     void build();
   }
   

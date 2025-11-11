@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.spi.batch.contract_db;
  * #L%
  */
 
-import io.digiexpress.eveli.client.spi.batch.contract_gen.BatchJob_Generate_Savings_1.GeneratorConfig;
+import io.digiexpress.eveli.client.spi.batch.contract_db.BatchJob_DROP_DB_Contract.DropDbConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
@@ -29,46 +29,52 @@ import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorResult;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.contract.client.api.ContractClient;
-import io.resys.thena.contract.samples.providers.Contract_Provider;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 
-
 @RequiredArgsConstructor
-public class BatchJob_DROP_DB_Contract implements Executor<String, GeneratorConfig> {
+public class BatchJob_DROP_DB_Contract implements Executor<Tenant, DropDbConfig> {
 
   private final ContractClient contractClient;
 
   @Override
-  public ExecutorQuery<String, GeneratorConfig> before(ExecutorContext context) {
-    return new ExecutorQuery<String, GeneratorConfig>() {
+  public ExecutorQuery<Tenant, DropDbConfig> before(ExecutorContext context) {
+    return new ExecutorQuery<Tenant, DropDbConfig>() {
       @Override
-      public GeneratorConfig getConfig() {
-        return new GeneratorConfig();
+      public DropDbConfig getConfig() {
+        return new DropDbConfig();
       }
       @Override
-      public Multi<String> findAll() {
-        return contractClient.withTenant().find().referenceNumberQuery().findNext(5);
+      public Multi<Tenant> findAll() {
+        final var tenantId = contractClient.withTenant().getTenantId();
+        return contractClient.tenants().find().id(tenantId).findAll();
       }
     };
   }
 
   @Override
-  public Uni<ExecutorEntity> accept(String refNumber, GeneratorConfig config, ExecutorContext context) {
-    return Contract_Provider.newSavings(contractClient, refNumber)
+  public Uni<ExecutorEntity> accept(Tenant tenant, DropDbConfig config, ExecutorContext context) {
+    if(tenant.getType() != StructureType.contract) {
+      return Uni.createFrom().item(ImmutableExecutorEntity.builder()
+              .status(ExecutorEntity.ExecutorEntityStatus.SKIP)
+              .entityId(tenant.getName())
+              .build());
+    }
+    return contractClient.tenants().delete()
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()
             .status(ExecutorEntity.ExecutorEntityStatus.OK)
-            .entityId(refNumber)
+            .entityId(tenant.getName())
             .build());
-        
   }
 
   @Override
-  public Uni<ExecutorResult> after(GeneratorConfig config, ExecutorContext context) {
+  public Uni<ExecutorResult> after(DropDbConfig config, ExecutorContext context) {
     return Uni.createFrom().item(ImmutableExecutorResult.builder()
         .status(ExecutorResult.ExecutorStatus.OK)
         .build());
@@ -76,7 +82,7 @@ public class BatchJob_DROP_DB_Contract implements Executor<String, GeneratorConf
 
   @RequiredArgsConstructor
   @Data
-  public static class GeneratorConfig implements ExecutorConfig {
+  public static class DropDbConfig implements ExecutorConfig {
     private static final long serialVersionUID = 7079554536966522627L;
   }
 }

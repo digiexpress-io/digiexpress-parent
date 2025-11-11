@@ -23,6 +23,26 @@ CREATE INDEX IF NOT EXISTS contract_PARENT_INDEX ON contract (parent_contract_id
 CREATE INDEX IF NOT EXISTS contract_COMMIT_INDEX ON contract (commit_id);
 CREATE INDEX IF NOT EXISTS contract_CREATED_COMMIT_INDEX ON contract (created_commit_id);
 CREATE INDEX IF NOT EXISTS contract_UPDATED_TREE_COMMIT_INDEX ON contract (updated_tree_commit_id);
+CREATE TABLE IF NOT EXISTS command (
+  id UUID PRIMARY KEY,
+  contract_id UUID NOT NULL,
+  external_id VARCHAR(255),
+  commit_id UUID NOT NULL,
+  created_commit_id UUID NOT NULL,
+  command_body JSONB NOT NULL,
+  command_status VARCHAR(100) NOT NULL,
+  command_type VARCHAR(100) NOT NULL,
+  command_target_date DATE,
+  command_description TEXT,
+  command_error JSONB
+);
+CREATE INDEX IF NOT EXISTS command_STATUS_INDEX ON command (command_status);
+CREATE INDEX IF NOT EXISTS command_TYPE_INDEX ON command (command_type);
+CREATE INDEX IF NOT EXISTS command_TARGET_DATE_INDEX ON command (command_target_date);
+CREATE INDEX IF NOT EXISTS command_CONTRACT_INDEX ON command (contract_id);
+CREATE INDEX IF NOT EXISTS command_EXTERNAL_INDEX ON command (external_id);
+CREATE INDEX IF NOT EXISTS command_COMMIT_INDEX ON command (commit_id);
+CREATE INDEX IF NOT EXISTS command_CREATED_COMMIT_INDEX ON command (created_commit_id);
 CREATE TABLE IF NOT EXISTS party (
   id UUID PRIMARY KEY,
   contract_id UUID NOT NULL,
@@ -171,7 +191,7 @@ CREATE INDEX IF NOT EXISTS inv_plan_alloc_CODE_INDEX ON inv_plan_alloc (inv_plan
 CREATE INDEX IF NOT EXISTS inv_plan_alloc_INV_PLAN_INDEX ON inv_plan_alloc (inv_plan_id);
 CREATE INDEX IF NOT EXISTS inv_plan_alloc_COMMIT_INDEX ON inv_plan_alloc (commit_id);
 CREATE INDEX IF NOT EXISTS inv_plan_alloc_CREATED_COMMIT_INDEX ON inv_plan_alloc (created_commit_id);
-CREATE TABLE IF NOT EXISTS contract_date_relativity (
+CREATE TABLE IF NOT EXISTS date_rule (
   id UUID PRIMARY KEY,
   contract_id UUID NOT NULL,
   commit_id UUID NOT NULL,
@@ -180,19 +200,19 @@ CREATE TABLE IF NOT EXISTS contract_date_relativity (
   coverage_id UUID,
   party_id UUID,
   payment_plan_id UUID,
-  entity_type VARCHAR(50) NOT NULL,
-  field_name VARCHAR(100) NOT NULL,
-  relative_to_type VARCHAR(50) NOT NULL,
-  offset_interval INTERVAL,
-  calculation_rule VARCHAR(100),
-  description TEXT
+  date_rule_entity VARCHAR(50) NOT NULL,
+  date_rule_entity_field VARCHAR(100) NOT NULL,
+  date_rule_type VARCHAR(50) NOT NULL,
+  date_rule_period INTERVAL,
+  date_rule_name VARCHAR(100),
+  date_rule_description TEXT
 );
-CREATE INDEX IF NOT EXISTS contract_date_relativity_CONTRACT_INDEX ON contract_date_relativity (contract_id);
-CREATE INDEX IF NOT EXISTS contract_date_relativity_ENTITY_TYPE_INDEX ON contract_date_relativity (entity_type);
-CREATE INDEX IF NOT EXISTS contract_date_relativity_INV_PLAN_INDEX ON contract_date_relativity (inv_plan_id);
-CREATE INDEX IF NOT EXISTS contract_date_relativity_COVERAGE_INDEX ON contract_date_relativity (coverage_id);
-CREATE INDEX IF NOT EXISTS contract_date_relativity_PARTY_INDEX ON contract_date_relativity (party_id);
-CREATE INDEX IF NOT EXISTS contract_date_relativity_PAYMENT_PLAN_INDEX ON contract_date_relativity (payment_plan_id);
+CREATE INDEX IF NOT EXISTS date_rule_CONTRACT_INDEX ON date_rule (contract_id);
+CREATE INDEX IF NOT EXISTS date_rule_ENTITY_INDEX ON date_rule (date_rule_entity);
+CREATE INDEX IF NOT EXISTS date_rule_INV_PLAN_INDEX ON date_rule (inv_plan_id);
+CREATE INDEX IF NOT EXISTS date_rule_COVERAGE_INDEX ON date_rule (coverage_id);
+CREATE INDEX IF NOT EXISTS date_rule_PARTY_INDEX ON date_rule (party_id);
+CREATE INDEX IF NOT EXISTS date_rule_PAYMENT_PLAN_INDEX ON date_rule (payment_plan_id);
 CREATE TABLE IF NOT EXISTS commit (
   commit_id UUID PRIMARY KEY,
   parent_id UUID,
@@ -218,6 +238,10 @@ ALTER TABLE
   contract
 ADD
   CONSTRAINT fk_contract_parent FOREIGN KEY (parent_contract_id) REFERENCES contract(id);
+ALTER TABLE
+  command
+ADD
+  CONSTRAINT fk_command_contract FOREIGN KEY (contract_id) REFERENCES contract(id);
 ALTER TABLE
   party
 ADD
@@ -291,49 +315,49 @@ ALTER TABLE
 ADD
   CONSTRAINT fk_inv_plan_alloc_inv_plan FOREIGN KEY (inv_plan_id) REFERENCES inv_plan(id);
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
-  CONSTRAINT fk_date_relativity_contract FOREIGN KEY (contract_id) REFERENCES contract(id);
+  CONSTRAINT fk_date_rule_contract FOREIGN KEY (contract_id) REFERENCES contract(id);
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
-  CONSTRAINT fk_date_relativity_inv_plan FOREIGN KEY (inv_plan_id) REFERENCES inv_plan(id);
+  CONSTRAINT fk_date_rule_inv_plan FOREIGN KEY (inv_plan_id) REFERENCES inv_plan(id);
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
-  CONSTRAINT fk_date_relativity_coverage FOREIGN KEY (coverage_id) REFERENCES coverage(id);
+  CONSTRAINT fk_date_rule_coverage FOREIGN KEY (coverage_id) REFERENCES coverage(id);
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
-  CONSTRAINT fk_date_relativity_party FOREIGN KEY (party_id) REFERENCES party(id);
+  CONSTRAINT fk_date_rule_party FOREIGN KEY (party_id) REFERENCES party(id);
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
-  CONSTRAINT fk_date_relativity_payment_plan FOREIGN KEY (payment_plan_id) REFERENCES payment_plan(id);
+  CONSTRAINT fk_date_rule_payment_plan FOREIGN KEY (payment_plan_id) REFERENCES payment_plan(id);
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
   CONSTRAINT check_single_entity CHECK (
     (inv_plan_id IS NOT NULL) :: int + (coverage_id IS NOT NULL) :: int + (party_id IS NOT NULL) :: int + (payment_plan_id IS NOT NULL) :: int = 1
   );
 ALTER TABLE
-  contract_date_relativity
+  date_rule
 ADD
   CONSTRAINT check_entity_type_consistency CHECK (
     (
-      entity_type = 'INV_PLAN'
+      date_rule_entity = 'INV_PLAN'
       AND inv_plan_id IS NOT NULL
     )
     OR (
-      entity_type = 'COVERAGE'
+      date_rule_entity = 'COVERAGE'
       AND coverage_id IS NOT NULL
     )
     OR (
-      entity_type = 'PARTY'
+      date_rule_entity = 'PARTY'
       AND party_id IS NOT NULL
     )
     OR (
-      entity_type = 'PAYMENT_PLAN'
+      date_rule_entity = 'PAYMENT_PLAN'
       AND payment_plan_id IS NOT NULL
     )
   );

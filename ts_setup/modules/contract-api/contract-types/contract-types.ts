@@ -61,7 +61,7 @@ export declare namespace ContractApi {
   export type NoteId = string;
   export type CommitId = string;
   export type CommitTreeId = string;
-  export type ContractDateRelativityId = string;
+  export type DateRuleId = string;
   export type CommandId = string;
   export type ContractEntityId = string;
   export type ContractStatusType = 'ACTIVE';
@@ -78,7 +78,7 @@ export declare namespace ContractApi {
     | "PAYMENT_PLAN"
     | "INV_PLAN"
     | "INV_PLAN_ALLOC"
-    | "CONTRACT_DATE_RELATIVITY"
+    | "DATE_RULE"
     | "COMMAND"
     | "REFERENCE"
     | "COMMIT"
@@ -366,14 +366,14 @@ export declare namespace ContractApi {
     bodyBefore?: Record<string, any>;
   }
 
-  export interface ContractDateRelativity {
-    id: ContractDateRelativityId;
+  export interface DateRule {
+    id: DateRuleId;
     contractId: ContractId;
     commitId: CommitId;
     createdCommitId: CommitId;
 
     // Transitive data from joins
-    transitives?: ContractDateRelativityTransitives;
+    transitives?: DateRuleTransitives;
 
     // Polymorphic FKs - only one should be populated
     invPlanId?: InvPlanId;
@@ -381,15 +381,15 @@ export declare namespace ContractApi {
     partyId?: PartyId;
     paymentPlanId?: PaymentPlanId;
 
-    entityType: string;
-    fieldName: string;
+    dateRuleEntity: string;
+    dateRuleEntityField: string;
 
-    // Relativity rule
-    relativeToType: string;
-    offsetInterval?: string; // Period -> ISO-8601 duration string
-    calculationRule?: string;
+    // Date rule
+    dateRuleType: string;
+    dateRulePeriod?: string; // Period -> ISO-8601 duration string
+    dateRuleName?: string;
 
-    description?: string;
+    dateRuleDescription?: string;
   }
 
   export interface Command {
@@ -411,7 +411,7 @@ export declare namespace ContractApi {
     commandError?: Record<string, any>; // Optional<JsonObject>
   }
 
-  export interface ContractDateRelativityTransitives {
+  export interface DateRuleTransitives {
     createdAt: string; // OffsetDateTime
     updatedAt: string; // OffsetDateTime
   }
@@ -428,7 +428,7 @@ export declare namespace ContractApi {
     capabilities: Capability[];
     invPlans: InvPlan[];
     paymentPlans: PaymentPlan[];
-    dateRelativity: ContractDateRelativity[];
+    dateRules: DateRule[];
     commands: Command[];
 
     // Map<InvPlanId, InvPlanAlloc[]>

@@ -34,7 +34,7 @@ import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
-import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRelativity;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRule;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewParty;
@@ -228,12 +228,12 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   }
 
   @Override
-  public NewContract addDateRelativity(Consumer<NewDateRelativity> dateRelativity) {
-    final var allDateRelativity = this.next.build();
-    final var builder = new NewDateRelativityBuilder(logger, contractId, allDateRelativity, null);
-    dateRelativity.accept(builder);
+  public NewContract addDateRule(Consumer<NewDateRule> dateRule) {
+    final var allDateRules = this.next.build();
+    final var builder = new NewDateRuleBuilder(logger, contractId, allDateRules, null);
+    dateRule.accept(builder);
     final var built = builder.close();
-    this.next.addContractDateRelativityInserts(built);
+    this.next.addDateRuleInserts(built);
     return this;
   }
 
@@ -293,7 +293,7 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
         .capabilities(batch.getCapabilityInserts())
         .invPlans(batch.getInvPlanInserts())
         .paymentPlans(batch.getPaymentPlanInserts())
-        .dateRelativity(batch.getContractDateRelativityInserts())
+        .dateRules(batch.getDateRuleInserts())
         .commands(batch.getCommandInserts())
         .invPlanAllocations(batch.getInvPlanAllocInserts().stream()
             .collect(Collectors.groupingBy(alloc -> alloc.getInvPlanId())))
