@@ -50,6 +50,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.PdfClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -68,6 +69,7 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
+import io.digiexpress.eveli.client.spi.process.PdfClientRest;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -124,6 +126,8 @@ import lombok.extern.slf4j.Slf4j;
 })
 @Slf4j
 public class EveliAutoConfig {
+
+  private RestTemplate restTemplate;
 
   @Data
   @Builder
@@ -348,5 +352,10 @@ public class EveliAutoConfig {
         .build();
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     return new UserProfileClientImpl(store);
+  }
+  
+  @Bean
+  public PdfClient pdfClient(TaskClient client, DialobClient dialob, EveliPropsPrintout printoutConfig) {
+    return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl());
   }
 }
