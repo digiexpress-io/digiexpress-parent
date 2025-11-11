@@ -62,12 +62,9 @@ public class EveliAutoConfigWorker {
   @Bean 
   public PrintoutController printoutController(
       WorkerAuthClient authClient,  
-      RestTemplate restTemplate,
-      DialobClient dialobClient,
-      TaskClient taskClient,
-      EveliPropsPrintout printoutConfig
+      TaskClient taskClient
   ) {
-    return new PrintoutController(taskClient, authClient, dialobClient, restTemplate, printoutConfig.getServiceUrl());
+    return new PrintoutController(taskClient, authClient);
   }
   
   @Bean
