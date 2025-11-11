@@ -52,6 +52,7 @@ import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.PdfClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.QuestionnaireAttachmentCommands;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
@@ -71,6 +72,7 @@ import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringT
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.PdfClientRest;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
+import io.digiexpress.eveli.client.spi.process.ProcessQuestionnaireAttachmentCommand;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
@@ -357,5 +359,14 @@ public class EveliAutoConfig {
   @Bean
   public PdfClient pdfClient(TaskClient client, DialobClient dialob, EveliPropsPrintout printoutConfig) {
     return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl());
+  }
+  
+  @Bean
+  public QuestionnaireAttachmentCommands questionnaireAttachmentCommands(
+      AttachmentCommands attachments, 
+      PdfClient pdf, 
+      TaskClient tasks, 
+      ProcessClient processClient) {
+    return new ProcessQuestionnaireAttachmentCommand(attachments, pdf, tasks, processClient);
   }
 }
