@@ -66,9 +66,24 @@ public interface AttachmentCommands {
    * 
    */
   interface AttachmentContentUploadBuilder {
+    /**
+     * Filename for content. Required.
+     * @param filename
+     * @return
+     */
     AttachmentContentUploadBuilder filename(String filename);
-    AttachmentContentUploadBuilder taskId(String taskId);
+    /**
+     * If process ID is provided then content is attached to process.
+     * @param processId
+     * @return
+     */
     AttachmentContentUploadBuilder processId(String processId);
+    /**
+     * Task ID should be given if process for task is missing, in this case content is attached to task.
+     * @param taskId
+     * @return
+     */
+    AttachmentContentUploadBuilder taskId(String taskId);
     Attachment build(byte[] content);
   }
   

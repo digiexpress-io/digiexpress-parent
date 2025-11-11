@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +16,9 @@ import org.springframework.web.client.RestTemplate;
 import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.PdfClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import jakarta.annotation.Nullable;
@@ -48,33 +47,15 @@ public class PdfClientRest implements PdfClient {
     
     private String processId;
     private String taskId;
+    private TaskClient.Task task;
+    private ProcessInstance process;
     private List<PdfRequestFields> requestedFields = new ArrayList<>();
     
     @Override
     public byte[] build() {
       try {
-        TaskClient.Task task = null;
-        ProcessClient.ProcessInstance taskProcess = null;
-        if (processId != null) {
-          var process = client.queryTaskProcesess().findOneById(processId).await().atMost(timeout);
-          if (process.isEmpty()) {
-            throw new IllegalStateException("Process not found");
-          }
-          taskProcess = process.get();
-          task = client.queryTasks().getOneById(taskProcess.getTaskId()).await().atMost(timeout);
-        }
-        else if (taskId != null) {
-          task = client.queryTasks().getOneById(taskId).await().atMost(timeout);
-          Optional<ProcessInstance> process = client.queryTaskProcesess().findOneByTaskId(taskId).await().atMost(timeout);
-          if (process.isEmpty()) {
-            throw new IllegalStateException("Process not found");
-          }
-          taskProcess = process.get();
-        }
-        else {
-          throw new IllegalStateException("Task Id or process Id missing");
-        }
-        final var questionnaire = dialob.getQuestionnaireById(taskProcess.getQuestionnaireId());
+        initObjects();
+        final var questionnaire = dialob.getQuestionnaireById(process.getQuestionnaireId());
         final var form = dialob.getFormById(questionnaire.getMetadata().getFormId());
         
         
@@ -85,7 +66,7 @@ public class PdfClientRest implements PdfClient {
             .referenceId(task.getTaskRef())
             
             .customerName(requestedFields.contains(PdfRequestFields.CUSTOMER_NAME) ? task.getClientIdentificator() : null)
-            .customerSsn(requestedFields.contains(PdfRequestFields.CUSTOMER_SSN) ? taskProcess.getUserId() : null)
+            .customerSsn(requestedFields.contains(PdfRequestFields.CUSTOMER_SSN) ? process.getUserId() : null)
             .comments(requestedFields.contains(PdfRequestFields.EXTERNAL_COMMENTS) ? task.getComments().stream()
                 .filter(e -> Boolean.TRUE.equals(e.getExternal()))
                 .map(e -> PrintoutInputComment.builder()
@@ -106,6 +87,15 @@ public class PdfClientRest implements PdfClient {
       }
     }
   
+    private void initObjects() {
+      if (process == null) {
+        process = client.queryTaskProcesess().getOneById(processId).await().atMost(timeout);
+      }
+      if (task == null) {
+        task = client.queryTasks().getOneById(taskId).await().atMost(timeout);
+      }
+    }
+
     private byte[] callPrintoutService(RestTemplate restTemplate, PrintoutInput input) {
       ResponseEntity<byte[]> pdfEntity = null;
       try {
@@ -166,6 +156,18 @@ public class PdfClientRest implements PdfClient {
     @Override
     public ProcessQuestionnairePdfBuilder requestFields(Collection<PdfRequestFields> fields) {
       this.requestedFields.addAll(fields);
+      return this;
+    }
+
+    @Override
+    public ProcessQuestionnairePdfBuilder process(ProcessInstance process) {
+      this.process = process;
+      return this;
+    }
+
+    @Override
+    public ProcessQuestionnairePdfBuilder task(Task task) {
+      this.task = task;
       return this;
     }
 
