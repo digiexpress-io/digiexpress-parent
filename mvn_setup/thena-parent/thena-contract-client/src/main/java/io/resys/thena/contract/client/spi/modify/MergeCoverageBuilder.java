@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.spi.modify;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -149,17 +148,6 @@ public class MergeCoverageBuilder implements MergeCoverage {
     return this;
   }
 
-  @Override
-  public MergeCoverage coverageTermStartDateInterval(Period coverageTermStartDateInterval) {
-    this.nextCoverage.coverageTermStartDateInterval(coverageTermStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public MergeCoverage coverageTermStartDateType(String coverageTermStartDateType) {
-    this.nextCoverage.coverageTermStartDateType(coverageTermStartDateType);
-    return this;
-  }
 
   @Override
   public MergeCoverage coverageTermEndDate(LocalDate coverageTermEndDate) {
@@ -167,17 +155,6 @@ public class MergeCoverageBuilder implements MergeCoverage {
     return this;
   }
 
-  @Override
-  public MergeCoverage coverageTermEndDateInterval(Period coverageTermEndDateInterval) {
-    this.nextCoverage.coverageTermEndDateInterval(Optional.ofNullable(coverageTermEndDateInterval));
-    return this;
-  }
-
-  @Override
-  public MergeCoverage coverageTermEndDateType(String coverageTermEndDateType) {
-    this.nextCoverage.coverageTermEndDateType(Optional.ofNullable(coverageTermEndDateType));
-    return this;
-  }
 
   @Override
   public <T> MergeCoverage setAllNotes(String noteType, List<T> replacements, Function<T, Consumer<NewNote>> note) {

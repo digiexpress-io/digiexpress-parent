@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.spi.create;
  * #L%
  */
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
@@ -29,23 +28,24 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
-import io.resys.thena.contract.client.api.ThenaContractNewObject.NewPaymentPlan;
-import io.resys.thena.contract.client.entities.ImmutablePaymentPlan;
-import io.resys.thena.contract.client.entities.PaymentPlan;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
+import io.resys.thena.contract.client.entities.Command;
+import io.resys.thena.contract.client.entities.ImmutableCommand;
 import io.resys.thena.contract.client.spi.commitlog.ContractCommitBuilder;
 import io.resys.thena.contract.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
-public class NewPaymentPlanBuilder implements NewPaymentPlan {
+public class NewCommandBuilder implements NewCommand {
   private final ContractCommitBuilder logger;
   private final String contractId;
-  private final Map<String, PaymentPlan> allPaymentPlans;
-  private final ImmutablePaymentPlan.Builder next;
+  private final Map<String, Command> allCommands;
+  private final ImmutableCommand.Builder next;
   private boolean built;
   
-  public NewPaymentPlanBuilder(
+  public NewCommandBuilder(
       ContractCommitBuilder logger, 
       String contractId, 
       ImmutablePersistenceUnit currentTx,
@@ -54,26 +54,28 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
     super();
     this.logger = logger;
     this.contractId = contractId;
-    this.next = ImmutablePaymentPlan.builder()
+    this.next = ImmutableCommand.builder()
         .id(OidUtils.genUUID())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)
-        .partyId(Optional.empty())
-        .paymentPlanEndDate(Optional.empty());
+        .externalId(Optional.empty())
+        .commandTargetDate(Optional.empty())
+        .commandDescription(Optional.empty())
+        .commandError(Optional.empty());
     
   
-    final var updates = currentTx.getPaymentPlanUpdates().stream().map(e -> e.getId()).toList();
-    final var deletes = currentTx.getPaymentPlanDeletes().stream().map(e -> e.getId()).toList();
+    final var updates = currentTx.getCommandUpdates().stream().map(e -> e.getId()).toList();
+    final var deletes = currentTx.getCommandDeletes().stream().map(e -> e.getId()).toList();
     
-    this.allPaymentPlans = Stream.of(
+    this.allCommands = Stream.of(
         // from current TX
-        currentTx.getPaymentPlanInserts().stream(),
-        currentTx.getPaymentPlanUpdates().stream(),
+        currentTx.getCommandInserts().stream(),
+        currentTx.getCommandUpdates().stream(),
         
         // previously saved
         Optional.ofNullable(savedState)
-          .map(saved -> saved.getPaymentPlans())
+          .map(saved -> saved.getCommands())
           .orElse(Collections.emptyList())
           .stream()
       )
@@ -84,38 +86,44 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
   }
 
   @Override
-  public NewPaymentPlan partyId(@Nullable String partyId) {
-    this.next.partyId(Optional.ofNullable(partyId));
+  public NewCommand externalId(@Nullable String externalId) {
+    this.next.externalId(Optional.ofNullable(externalId));
     return this;
   }
 
   @Override
-  public NewPaymentPlan paymentPlanStatus(String paymentPlanStatus) {
-    this.next.paymentPlanStatus(paymentPlanStatus);
+  public NewCommand commandBody(JsonObject commandBody) {
+    this.next.commandBody(commandBody);
     return this;
   }
 
   @Override
-  public NewPaymentPlan paymentPlanFrequency(String paymentPlanFrequency) {
-    this.next.paymentPlanFrequency(paymentPlanFrequency);
+  public NewCommand commandStatus(String commandStatus) {
+    this.next.commandStatus(commandStatus);
     return this;
   }
 
   @Override
-  public NewPaymentPlan paymentPlanAmount(BigDecimal paymentPlanAmount) {
-    this.next.paymentPlanAmount(paymentPlanAmount);
+  public NewCommand commandType(String commandType) {
+    this.next.commandType(commandType);
     return this;
   }
 
   @Override
-  public NewPaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate) {
-    this.next.paymentPlanStartDate(paymentPlanStartDate);
+  public NewCommand commandTargetDate(@Nullable LocalDate commandTargetDate) {
+    this.next.commandTargetDate(Optional.ofNullable(commandTargetDate));
     return this;
   }
 
   @Override
-  public NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate) {
-    this.next.paymentPlanEndDate(Optional.ofNullable(paymentPlanEndDate));
+  public NewCommand commandDescription(@Nullable String commandDescription) {
+    this.next.commandDescription(Optional.ofNullable(commandDescription));
+    return this;
+  }
+
+  @Override
+  public NewCommand commandError(@Nullable JsonObject commandError) {
+    this.next.commandError(Optional.ofNullable(commandError));
     return this;
   }
 
@@ -124,8 +132,8 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
     this.built = true;
   }
 
-  public ImmutablePaymentPlan close() {
-    RepoAssert.isTrue(built, () -> "you must call NewPaymentPlan.build() to finalize payment plan CREATE!");
+  public ImmutableCommand close() {
+    RepoAssert.isTrue(built, () -> "you must call NewCommand.build() to finalize command CREATE!");
     
     final var built = next.build();
     

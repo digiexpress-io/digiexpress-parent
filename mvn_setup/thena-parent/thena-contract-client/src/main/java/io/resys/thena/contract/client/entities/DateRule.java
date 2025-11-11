@@ -20,8 +20,8 @@ package io.resys.thena.contract.client.entities;
  * #L%
  */
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -29,43 +29,46 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableParty.class)
-@JsonDeserialize(as = ImmutableParty.class)
-public interface Party extends ContractEntity {
+@JsonSerialize(as = ImmutableDateRule.class)
+@JsonDeserialize(as = ImmutableDateRule.class)
+public interface DateRule extends ContractEntity {
   String getId();
   String getContractId();
-
-  String getExternalId();
   String getCommitId();
   String getCreatedCommitId();
-
+  
   // Transitive data from joins
   @Value.Auxiliary
-  @Nullable PartyTransitives getTransitives();
-
-  String getPartyType();
-  LocalDate getPartyEffectiveFrom();
-  Optional<LocalDate> getPartyEffectiveTo();
-
-  // Business dates
-  LocalDate getPartyTermStartDate();
-  Optional<LocalDate> getPartyTermEndDate();
-
-  Optional<JsonObject> getPartyData();
-
+  @Nullable DateRuleTransitives getTransitives();
+  
+  // Polymorphic FKs - only one should be populated
+  Optional<String> getInvPlanId();
+  Optional<String> getCoverageId();
+  Optional<String> getPartyId();
+  Optional<String> getPaymentPlanId();
+  
+  String getDateRuleEntity();
+  String getDateRuleEntityField();
+  
+  // Relativity rule
+  String getDateRuleType();
+  Optional<Period> getDateRulePeriod();
+  Optional<String> getDateRuleName();
+  
+  Optional<String> getDateRuleDescription();
+  
   @Override 
   default ContractDocType getDocType() { 
-    return ContractDocType.PARTY; 
+    return ContractDocType.DATE_RULE; 
   }
 
   @Value.Immutable
-  @JsonSerialize(as = ImmutablePartyTransitives.class)
-  @JsonDeserialize(as = ImmutablePartyTransitives.class)
-  interface PartyTransitives {
+  @JsonSerialize(as = ImmutableDateRuleTransitives.class)
+  @JsonDeserialize(as = ImmutableDateRuleTransitives.class)
+  interface DateRuleTransitives {
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
   }

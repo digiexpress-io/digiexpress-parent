@@ -20,7 +20,6 @@ package io.resys.thena.contract.client.entities;
  * #L%
  */
 
-import java.time.Period;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -51,14 +50,9 @@ public interface InvPlan extends ContractEntity {
   String getInvPlanCode();
   String getInvPlanName();
 
-  // Business dates (expanded)
+  // Business dates
   LocalDate getInvPlanStartDate();
-  Period getInvPlanStartDateInterval();
-  String getInvPlanStartDateType();
-
   Optional<LocalDate> getInvPlanEndDate();
-  Optional<Period> getInvPlanEndDateInterval();
-  Optional<String> getInvPlanEndDateType();
 
   @Override 
   default ContractDocType getDocType() { 

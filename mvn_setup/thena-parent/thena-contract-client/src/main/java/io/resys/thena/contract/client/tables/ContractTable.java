@@ -51,16 +51,8 @@ import io.vertx.mutiny.sqlclient.Row;
       updated_tree_commit_id          UUID NOT NULL,
 
       contract_issue_date             DATE NOT NULL,
-      contract_issue_date_interval    INTERVAL NOT NULL,
-      contract_issue_date_type        VARCHAR(100) NOT NULL,
-
       contract_start_date             DATE NOT NULL,
-      contract_start_date_interval    INTERVAL NOT NULL,
-      contract_start_date_type        VARCHAR(100) NOT NULL,
-
       contract_maturity_date          DATE,
-      contract_maturity_date_interval INTERVAL,
-      contract_maturity_date_type     VARCHAR(100),
 
       contract_status                 VARCHAR(100) NOT NULL,
       contract_sub_status             VARCHAR(100),
@@ -165,11 +157,9 @@ public interface ContractTable {
     sql = """
       INSERT INTO {contract}
       (id, parent_contract_id, contract_number, external_id, commit_id, created_commit_id, updated_tree_commit_id,
-       contract_issue_date, contract_issue_date_interval, contract_issue_date_type,
-       contract_start_date, contract_start_date_interval, contract_start_date_type,
-       contract_maturity_date, contract_maturity_date_interval, contract_maturity_date_type,
+       contract_issue_date, contract_start_date, contract_maturity_date,
        contract_status, contract_sub_status, contract_type, contract_sub_type, contract_data)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
     """,
     propsMapper = ContractInsertMapper.class
   )
@@ -179,11 +169,9 @@ public interface ContractTable {
     sql = """
       UPDATE {contract}
        SET parent_contract_id = $1, contract_number = $2, external_id = $3, commit_id = $4, updated_tree_commit_id = $5,
-           contract_issue_date = $6, contract_issue_date_interval = $7, contract_issue_date_type = $8,
-           contract_start_date = $9, contract_start_date_interval = $10, contract_start_date_type = $11,
-           contract_maturity_date = $12, contract_maturity_date_interval = $13, contract_maturity_date_type = $14,
-           contract_status = $15, contract_sub_status = $16, contract_type = $17, contract_sub_type = $18, contract_data = $19
-       WHERE id = $20
+           contract_issue_date = $6, contract_start_date = $7, contract_maturity_date = $8,
+           contract_status = $9, contract_sub_status = $10, contract_type = $11, contract_sub_type = $12, contract_data = $13
+       WHERE id = $14
     """,
     propsMapper = ContractUpdateMapper.class
   )
@@ -196,8 +184,7 @@ public interface ContractTable {
       final String parent_contract_id = TableUtils.toStringUUID(row, "parent_contract_id");
       final String external_id = row.getString("external_id");
       final LocalDate contract_maturity_date = row.getLocalDate("contract_maturity_date");
-      final var contract_maturity_date_interval = TableUtils.toDuration(row, "contract_maturity_date_interval");
-      final String contract_maturity_date_type = row.getString("contract_maturity_date_type");
+      
       final String contract_sub_status = row.getString("contract_sub_status");
       final String contract_sub_type = row.getString("contract_sub_type");
       final JsonObject contract_data = row.getJsonObject("contract_data");
@@ -219,18 +206,10 @@ public interface ContractTable {
               .updatedTreeAt(row.getOffsetDateTime("updated_tree_at"))
               .build())
 
-          // Business dates (expanded)
+          // Business dates
           .contractIssueDate(row.getLocalDate("contract_issue_date"))
-          .contractIssueDateInterval(TableUtils.toDuration(row, "contract_issue_date_interval"))
-          .contractIssueDateType(row.getString("contract_issue_date_type"))
-          
           .contractStartDate(row.getLocalDate("contract_start_date"))
-          .contractStartDateInterval(TableUtils.toDuration(row, "contract_start_date_interval"))
-          .contractStartDateType(row.getString("contract_start_date_type"))
-          
           .contractMaturityDate(Optional.ofNullable(contract_maturity_date))
-          .contractMaturityDateInterval(Optional.ofNullable(contract_maturity_date_interval))
-          .contractMaturityDateType(Optional.ofNullable(contract_maturity_date_type))
           
           .contractStatus(row.getString("contract_status"))
           .contractSubStatus(Optional.ofNullable(contract_sub_status))
@@ -254,14 +233,8 @@ public interface ContractTable {
         TableUtils.toUuid(doc.getCreatedCommitId()),
         TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         doc.getContractIssueDate(),
-        TableUtils.toInterval(doc.getContractIssueDateInterval()),
-        doc.getContractIssueDateType(),
         doc.getContractStartDate(),
-        TableUtils.toInterval(doc.getContractStartDateInterval()),
-        doc.getContractStartDateType(),
         doc.getContractMaturityDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getContractMaturityDateInterval()),
-        doc.getContractMaturityDateType().orElse(null),
         doc.getContractStatus(),
         doc.getContractSubStatus().orElse(null),
         doc.getContractType(),
@@ -281,14 +254,8 @@ public interface ContractTable {
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         doc.getContractIssueDate(),
-        TableUtils.toInterval(doc.getContractIssueDateInterval()),
-        doc.getContractIssueDateType(),
         doc.getContractStartDate(),
-        TableUtils.toInterval(doc.getContractStartDateInterval()),
-        doc.getContractStartDateType(),
         doc.getContractMaturityDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getContractMaturityDateInterval()),
-        doc.getContractMaturityDateType().orElse(null),
         doc.getContractStatus(),
         doc.getContractSubStatus().orElse(null),
         doc.getContractType(),

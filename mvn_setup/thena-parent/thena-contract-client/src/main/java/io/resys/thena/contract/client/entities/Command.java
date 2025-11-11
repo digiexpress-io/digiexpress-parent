@@ -33,39 +33,36 @@ import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableParty.class)
-@JsonDeserialize(as = ImmutableParty.class)
-public interface Party extends ContractEntity {
+@JsonSerialize(as = ImmutableCommand.class)
+@JsonDeserialize(as = ImmutableCommand.class)
+public interface Command extends ContractEntity {
   String getId();
   String getContractId();
 
-  String getExternalId();
+  Optional<String> getExternalId();
   String getCommitId();
   String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary
-  @Nullable PartyTransitives getTransitives();
+  @Nullable CommandTransitives getTransitives();
 
-  String getPartyType();
-  LocalDate getPartyEffectiveFrom();
-  Optional<LocalDate> getPartyEffectiveTo();
-
-  // Business dates
-  LocalDate getPartyTermStartDate();
-  Optional<LocalDate> getPartyTermEndDate();
-
-  Optional<JsonObject> getPartyData();
+  JsonObject getCommandBody();
+  String getCommandStatus();
+  String getCommandType();
+  Optional<LocalDate> getCommandTargetDate();
+  Optional<String> getCommandDescription();
+  Optional<JsonObject> getCommandError();
 
   @Override 
   default ContractDocType getDocType() { 
-    return ContractDocType.PARTY; 
+    return ContractDocType.COMMAND; 
   }
 
   @Value.Immutable
-  @JsonSerialize(as = ImmutablePartyTransitives.class)
-  @JsonDeserialize(as = ImmutablePartyTransitives.class)
-  interface PartyTransitives {
+  @JsonSerialize(as = ImmutableCommandTransitives.class)
+  @JsonDeserialize(as = ImmutableCommandTransitives.class)
+  interface CommandTransitives {
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
   }

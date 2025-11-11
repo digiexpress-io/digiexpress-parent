@@ -1,5 +1,5 @@
 export * from './CardDragWrapper';
-export * from './ContractCardDataRows';
+export * from './ContractCardDataDisplays';
 export * from './ContractCard';
 export * from './cardThemeConfig';
 export * from './CardConfigContext';

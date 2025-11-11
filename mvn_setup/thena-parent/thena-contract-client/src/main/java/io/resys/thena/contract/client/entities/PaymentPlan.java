@@ -21,7 +21,6 @@ package io.resys.thena.contract.client.entities;
  */
 
 import java.math.BigDecimal;
-import java.time.Period;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -52,14 +51,9 @@ public interface PaymentPlan extends ContractEntity {
   String getPaymentPlanFrequency();
   BigDecimal getPaymentPlanAmount();
 
-  // Business dates (expanded)
+  // Business dates
   LocalDate getPaymentPlanStartDate();
-  Period getPaymentPlanStartDateInterval();
-  String getPaymentPlanStartDateType();
-
   Optional<LocalDate> getPaymentPlanEndDate();
-  Optional<Period> getPaymentPlanEndDateInterval();
-  Optional<String> getPaymentPlanEndDateType();
 
   @Override 
   default ContractDocType getDocType() { 

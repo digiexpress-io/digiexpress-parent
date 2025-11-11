@@ -61,6 +61,8 @@ export declare namespace ContractApi {
   export type NoteId = string;
   export type CommitId = string;
   export type CommitTreeId = string;
+  export type DateRuleId = string;
+  export type CommandId = string;
   export type ContractEntityId = string;
   export type ContractStatusType = 'ACTIVE';
 
@@ -76,6 +78,8 @@ export declare namespace ContractApi {
     | "PAYMENT_PLAN"
     | "INV_PLAN"
     | "INV_PLAN_ALLOC"
+    | "DATE_RULE"
+    | "COMMAND"
     | "REFERENCE"
     | "COMMIT"
     | "COMMIT_TREE";
@@ -141,6 +145,11 @@ export declare namespace ContractApi {
     updatedAt: string; // OffsetDateTime
   }
 
+  export interface CommandTransitives {
+    createdAt: string; // OffsetDateTime
+    updatedAt: string; // OffsetDateTime
+  }
+
   // ============================================================
   // Contract one-of relations (for Note/Reference multi-FK)
   // ============================================================
@@ -169,18 +178,10 @@ export declare namespace ContractApi {
     // Transitive data from joins
     transitives?: ContractTransitives;
 
-    // Business dates (expanded)
+    // Business dates
     contractIssueDate: string; // LocalDate
-    contractIssueDateInterval: string; // Period -> ISO-8601 duration string
-    contractIssueDateType: string;
-    
     contractStartDate: string; // LocalDate
-    contractStartDateInterval: string; // Period -> ISO-8601 duration string
-    contractStartDateType: string;
-    
     contractMaturityDate?: string; // Optional<LocalDate>
-    contractMaturityDateInterval?: string; // Optional<Period>
-    contractMaturityDateType?: string;
     
     contractStatus: ContractStatusType;
     contractSubStatus?: string;
@@ -204,14 +205,9 @@ export declare namespace ContractApi {
     partyEffectiveFrom: string; // LocalDate
     partyEffectiveTo?: string; // Optional<LocalDate>
 
-    // Business dates (expanded)
+    // Business dates
     partyTermStartDate: string; // LocalDate
-    partyTermStartDateInterval: string; // Period
-    partyTermStartDateType: string;
-
     partyTermEndDate?: string; // Optional<LocalDate>
-    partyTermEndDateInterval?: string; // Optional<Period>
-    partyTermEndDateType?: string;
 
     partyData?: Record<string, any>; // Optional<JsonObject>
   }
@@ -237,14 +233,9 @@ export declare namespace ContractApi {
     coverageEffectiveFrom: string; // LocalDate
     coverageEffectiveTo?: string; // Optional<LocalDate>
 
-    // Business dates (expanded)
+    // Business dates
     coverageTermStartDate: string; // LocalDate
-    coverageTermStartDateInterval: string; // Period
-    coverageTermStartDateType: string;
-
     coverageTermEndDate?: string; // Optional<LocalDate>
-    coverageTermEndDateInterval?: string; // Optional<Period>
-    coverageTermEndDateType?: string;
   }
 
   export interface Capability {
@@ -278,14 +269,9 @@ export declare namespace ContractApi {
     paymentPlanFrequency: string;
     paymentPlanAmount: number; // BigDecimal
 
-    // Business dates (expanded)
+    // Business dates
     paymentPlanStartDate: string; // LocalDate
-    paymentPlanStartDateInterval: string; // Period
-    paymentPlanStartDateType: string;
-
     paymentPlanEndDate?: string; // Optional<LocalDate>
-    paymentPlanEndDateInterval?: string; // Optional<Period>
-    paymentPlanEndDateType?: string;
   }
 
   export interface InvPlan {
@@ -303,14 +289,9 @@ export declare namespace ContractApi {
     invPlanCode: string;
     invPlanName: string;
 
-    // Business dates (expanded)
+    // Business dates
     invPlanStartDate: string; // LocalDate
-    invPlanStartDateInterval: string; // Period
-    invPlanStartDateType: string;
-
     invPlanEndDate?: string; // Optional<LocalDate>
-    invPlanEndDateInterval?: string; // Optional<Period>
-    invPlanEndDateType?: string;
   }
 
   export interface InvPlanAlloc {
@@ -385,6 +366,56 @@ export declare namespace ContractApi {
     bodyBefore?: Record<string, any>;
   }
 
+  export interface DateRule {
+    id: DateRuleId;
+    contractId: ContractId;
+    commitId: CommitId;
+    createdCommitId: CommitId;
+
+    // Transitive data from joins
+    transitives?: DateRuleTransitives;
+
+    // Polymorphic FKs - only one should be populated
+    invPlanId?: InvPlanId;
+    coverageId?: CoverageId;
+    partyId?: PartyId;
+    paymentPlanId?: PaymentPlanId;
+
+    dateRuleEntity: string;
+    dateRuleEntityField: string;
+
+    // Date rule
+    dateRuleType: string;
+    dateRulePeriod?: string; // Period -> ISO-8601 duration string
+    dateRuleName?: string;
+
+    dateRuleDescription?: string;
+  }
+
+  export interface Command {
+    id: CommandId;
+    contractId: ContractId;
+
+    externalId?: string;
+    commitId: CommitId;
+    createdCommitId: CommitId;
+
+    // Transitive data from joins
+    transitives?: CommandTransitives;
+
+    commandBody: Record<string, any>; // JsonObject
+    commandStatus: string;
+    commandType: string;
+    commandTargetDate?: string; // Optional<LocalDate>
+    commandDescription?: string;
+    commandError?: Record<string, any>; // Optional<JsonObject>
+  }
+
+  export interface DateRuleTransitives {
+    createdAt: string; // OffsetDateTime
+    updatedAt: string; // OffsetDateTime
+  }
+
   // ============================================================
   // Container interface (for grouped contract data)
   // ============================================================
@@ -397,6 +428,8 @@ export declare namespace ContractApi {
     capabilities: Capability[];
     invPlans: InvPlan[];
     paymentPlans: PaymentPlan[];
+    dateRules: DateRule[];
+    commands: Command[];
 
     // Map<InvPlanId, InvPlanAlloc[]>
     invPlanAllocations: Record<InvPlanId, InvPlanAlloc[]>;

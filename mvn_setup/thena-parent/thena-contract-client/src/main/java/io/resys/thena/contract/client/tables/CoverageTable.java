@@ -60,12 +60,7 @@ import io.vertx.mutiny.sqlclient.Row;
       coverage_effective_to           DATE,
 
       coverage_term_start_date        DATE NOT NULL,
-      coverage_term_start_date_interval INTERVAL NOT NULL,
-      coverage_term_start_date_type   VARCHAR(100) NOT NULL,
-
-      coverage_term_end_date          DATE,
-      coverage_term_end_date_interval INTERVAL,
-      coverage_term_end_date_type     VARCHAR(100)
+      coverage_term_end_date          DATE
     );
 
     CREATE INDEX IF NOT EXISTS {coverage}_TYPE_INDEX
@@ -156,9 +151,8 @@ public interface CoverageTable {
       (id, contract_id, insured_id, external_id, commit_id, created_commit_id,
        coverage_type, coverage_code, coverage_sum_insured, coverage_rate, coverage_rate_type,
        coverage_status, coverage_effective_from, coverage_effective_to,
-       coverage_term_start_date, coverage_term_start_date_interval, coverage_term_start_date_type,
-       coverage_term_end_date, coverage_term_end_date_interval, coverage_term_end_date_type)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+       coverage_term_start_date, coverage_term_end_date)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
     """,
     propsMapper = CoverageInsertMapper.class
   )
@@ -170,9 +164,8 @@ public interface CoverageTable {
        SET contract_id = $1, insured_id = $2, external_id = $3, commit_id = $4,
            coverage_type = $5, coverage_code = $6, coverage_sum_insured = $7, coverage_rate = $8, coverage_rate_type = $9,
            coverage_status = $10, coverage_effective_from = $11, coverage_effective_to = $12,
-           coverage_term_start_date = $13, coverage_term_start_date_interval = $14, coverage_term_start_date_type = $15,
-           coverage_term_end_date = $16, coverage_term_end_date_interval = $17, coverage_term_end_date_type = $18
-       WHERE id = $19
+           coverage_term_start_date = $13, coverage_term_end_date = $14
+       WHERE id = $15
     """,
     propsMapper = CoverageUpdateMapper.class
   )
@@ -193,8 +186,6 @@ public interface CoverageTable {
       final String coverage_rate_type = row.getString("coverage_rate_type");
       final LocalDate coverage_effective_to = row.getLocalDate("coverage_effective_to");
       final LocalDate coverage_term_end_date = row.getLocalDate("coverage_term_end_date");
-      final var coverage_term_end_date_interval = TableUtils.toDuration(row, "coverage_term_end_date_interval");
-      final String coverage_term_end_date_type = row.getString("coverage_term_end_date_type");
 
       return ImmutableCoverage.builder()
           .id(TableUtils.toStringUUID(row, "id"))
@@ -220,14 +211,9 @@ public interface CoverageTable {
           .coverageEffectiveFrom(row.getLocalDate("coverage_effective_from"))
           .coverageEffectiveTo(Optional.ofNullable(coverage_effective_to))
 
-          // Business dates (expanded)
+          // Business dates
           .coverageTermStartDate(row.getLocalDate("coverage_term_start_date"))
-          .coverageTermStartDateInterval(TableUtils.toDuration(row, "coverage_term_start_date_interval"))
-          .coverageTermStartDateType(row.getString("coverage_term_start_date_type"))
-
           .coverageTermEndDate(Optional.ofNullable(coverage_term_end_date))
-          .coverageTermEndDateInterval(Optional.ofNullable(coverage_term_end_date_interval))
-          .coverageTermEndDateType(Optional.ofNullable(coverage_term_end_date_type))
 
           .build();
     }
@@ -252,11 +238,7 @@ public interface CoverageTable {
         doc.getCoverageEffectiveFrom(),
         doc.getCoverageEffectiveTo().orElse(null),
         doc.getCoverageTermStartDate(),
-        TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
-        doc.getCoverageTermStartDateType(),
-        doc.getCoverageTermEndDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getCoverageTermEndDateInterval()),
-        doc.getCoverageTermEndDateType().orElse(null)
+        doc.getCoverageTermEndDate().orElse(null)
       });
     }
   }
@@ -278,11 +260,7 @@ public interface CoverageTable {
         doc.getCoverageEffectiveFrom(),
         doc.getCoverageEffectiveTo().orElse(null),
         doc.getCoverageTermStartDate(),
-        TableUtils.toInterval(doc.getCoverageTermStartDateInterval()),
-        doc.getCoverageTermStartDateType(),
         doc.getCoverageTermEndDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getCoverageTermEndDateInterval()),
-        doc.getCoverageTermEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });
     }

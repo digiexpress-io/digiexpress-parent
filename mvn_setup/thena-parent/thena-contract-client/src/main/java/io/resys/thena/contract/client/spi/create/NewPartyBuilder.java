@@ -21,7 +21,6 @@ package io.resys.thena.contract.client.spi.create;
  */
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -73,8 +72,6 @@ public class NewPartyBuilder implements NewParty {
         .contractId(contractId)
         .partyEffectiveTo(Optional.empty())
         .partyTermEndDate(Optional.empty())
-        .partyTermEndDateInterval(Optional.empty())
-        .partyTermEndDateType(Optional.empty())
         .partyData(Optional.empty());
     
     final var updates = currentTx.getPartyUpdates().stream().map(e -> e.getId()).toList();
@@ -130,32 +127,8 @@ public class NewPartyBuilder implements NewParty {
   }
 
   @Override
-  public NewParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval) {
-    this.next.partyTermStartDateInterval(partyTermStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewParty partyTermStartDateType(@Nullable String partyTermStartDateType) {
-    this.next.partyTermStartDateType(partyTermStartDateType);
-    return this;
-  }
-
-  @Override
   public NewParty partyTermEndDate(@Nullable LocalDate partyTermEndDate) {
     this.next.partyTermEndDate(partyTermEndDate);
-    return this;
-  }
-
-  @Override
-  public NewParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval) {
-    this.next.partyTermEndDateInterval(partyTermEndDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewParty partyTermEndDateType(@Nullable String partyTermEndDateType) {
-    this.next.partyTermEndDateType(partyTermEndDateType);
     return this;
   }
 
