@@ -33,6 +33,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.PdfClient;
@@ -56,6 +58,7 @@ public class PdfClientRest implements PdfClient {
   private final DialobClient dialob;
   private final RestTemplate restTemplate;
   private final String serviceUrl;
+  private final ObjectMapper om;
   
   @Override
   public ProcessQuestionnairePdfBuilder pdfBuilder() {
@@ -109,9 +112,20 @@ public class PdfClientRest implements PdfClient {
   
     private void initObjects() {
       if (process == null) {
-        process = client.queryTaskProcesess().getOneById(processId).await().atMost(timeout);
+        if (processId != null) {
+          process = client.queryTaskProcesess().getOneById(processId).await().atMost(timeout);
+        }
+        else if (taskId != null) {
+          process = client.queryTaskProcesess().findOneByTaskId(taskId).await().atMost(timeout).get();
+        }
+        else if (task != null) {
+          process = client.queryTaskProcesess().findOneByTaskId(task.getId()).await().atMost(timeout).get();
+        }
       }
       if (task == null) {
+        if (taskId == null) {
+          taskId = process.getTaskId();
+        }
         task = client.queryTasks().getOneById(taskId).await().atMost(timeout);
       }
     }
@@ -125,7 +139,9 @@ public class PdfClientRest implements PdfClient {
         printHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<?> printRequest = new HttpEntity<>(input, printHeaders);
         log.debug("Calling printout service url  {}", serviceUrl);
-        log.debug("body:{}", input);
+        if (log.isDebugEnabled()) {
+          log.debug("body:{}",om.writeValueAsString(input));
+        }
         pdfEntity = restTemplate.postForEntity(serviceUrl, printRequest, byte[].class);
       } 
       catch(Exception e) {

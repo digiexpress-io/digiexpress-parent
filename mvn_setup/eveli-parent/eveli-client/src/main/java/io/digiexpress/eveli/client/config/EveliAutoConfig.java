@@ -355,8 +355,13 @@ public class EveliAutoConfig {
   }
   
   @Bean
-  public PdfClient pdfClient(TaskClient client, DialobClient dialob, EveliPropsPrintout printoutConfig, RestTemplate restTemplate) {
-    return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl());
+  public PdfClient pdfClient(
+      TaskClient client, 
+      DialobClient dialob, 
+      EveliPropsPrintout printoutConfig, 
+      RestTemplate restTemplate, 
+      ObjectMapper om) {
+    return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl(), om);
   }
   
   @Bean
