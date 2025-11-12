@@ -28,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.PdfClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -62,9 +63,10 @@ public class EveliAutoConfigWorker {
   @Bean 
   public PrintoutController printoutController(
       WorkerAuthClient authClient,  
-      TaskClient taskClient
+      TaskClient taskClient, 
+      PdfClient pdfClient
   ) {
-    return new PrintoutController(taskClient, authClient);
+    return new PrintoutController(taskClient, authClient, pdfClient);
   }
   
   @Bean

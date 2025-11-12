@@ -48,11 +48,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PrintoutController {
 
-  PdfClient pdfClient;
   
   private final TaskClient client;
-  
   private final WorkerAuthClient auth;
+  private final PdfClient pdfClient;
 
   private static final Duration timeout = Duration.ofMillis(10000);
   

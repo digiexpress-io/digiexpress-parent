@@ -129,8 +129,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EveliAutoConfig {
 
-  private RestTemplate restTemplate;
-
   @Data
   @Builder
   public static class EveliPropsDbResolved {
@@ -357,7 +355,7 @@ public class EveliAutoConfig {
   }
   
   @Bean
-  public PdfClient pdfClient(TaskClient client, DialobClient dialob, EveliPropsPrintout printoutConfig) {
+  public PdfClient pdfClient(TaskClient client, DialobClient dialob, EveliPropsPrintout printoutConfig, RestTemplate restTemplate) {
     return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl());
   }
   
