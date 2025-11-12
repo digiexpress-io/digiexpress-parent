@@ -291,12 +291,19 @@ public class AttachmentCommandsGoogle implements AttachmentCommands {
         try (WriteChannel writer = storage.writer(blobInfo)) {
           int writtenBytes = writer.write(ByteBuffer.wrap(content));
           log.debug("wrote {} bytes in content upload", writtenBytes);
-          return ImmutableAttachment.builder().name(filename)
-              .processId(processId)
-              .taskId(taskId)
-              .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-              .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
-              .size((long)writtenBytes).status(AttachmentStatus.OK).build();
+          io.digiexpress.eveli.client.api.ImmutableAttachment.Builder builder = ImmutableAttachment.builder()
+            .name(filename)
+            .created(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
+            .updated(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
+            .size((long)writtenBytes)
+            .status(AttachmentStatus.OK);
+          if (processId != null) {            
+            builder.processId(processId);
+          }
+          else if (taskId != null) {
+            builder.taskId(taskId);
+          }
+          return builder.build();
         } catch (IOException e) {
           log.warn("Error writing attachment: ", e);
         }
