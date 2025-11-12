@@ -2863,8 +2863,7 @@
         "@tanstack/react-table",
         "luxon",
         "@dxs-ts/xui-datetime",
-        "notistack",
-        "@mui/utils"
+        "notistack"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2873,16 +2872,13 @@
         "@mui/icons-material",
         "@tanstack/react-table",
         "luxon",
-        "notistack",
-        "@mui/utils"
+        "notistack"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
-      "missingDependencies": [
-        "@mui/utils"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/user-profile": {
@@ -3883,6 +3879,6 @@
       ]
     }
   },
-  "checksum": "0b9644333e94b4c2706837e10fe4ff6d69c0bf51ecc9b5cd73b49513eb2f8350",
-  "generatedAt": "2025-11-12T10:33:36.303Z"
+  "checksum": "8d3c62745ec11d8f40c2e46e34c3ca1ee232b5f95d8fe60c6fbd45bcab300e7f",
+  "generatedAt": "2025-11-12T11:16:57.752Z"
 }
