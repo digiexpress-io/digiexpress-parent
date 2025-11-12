@@ -36,6 +36,7 @@ public interface AttachmentCommands {
   AttachmentUploadBuilder upload();
   AttachmentUrlBuilder url();
   AttachmentRemoveBuilder remove();
+  AttachmentContentUploadBuilder contentUpload(); 
   
   interface AttachmentQuery {
     List<Attachment> processId(String processId);
@@ -49,11 +50,41 @@ public interface AttachmentCommands {
     Optional<URL> processId(String processId) throws URISyntaxException;
   }
   
+  /**
+   * Builder for interactive attachment upload.
+   * Produces URL which can be used to upload attachment safely.
+   */
   interface AttachmentUploadBuilder {
     AttachmentUploadBuilder filename(String filename);
     AttachmentUploadBuilder encodePath(String filename);
     Optional<AttachmentUpload> taskId(String taskId);
     Optional<AttachmentUpload> processId(String processId);
+  }
+
+  /**
+   * Builder for attachment upload from generated/batch content.
+   * 
+   */
+  interface AttachmentContentUploadBuilder {
+    /**
+     * Filename for content. Required.
+     * @param filename
+     * @return
+     */
+    AttachmentContentUploadBuilder filename(String filename);
+    /**
+     * If process ID is provided then content is attached to process.
+     * @param processId
+     * @return
+     */
+    AttachmentContentUploadBuilder processId(String processId);
+    /**
+     * Task ID should be given if process for task is missing, in this case content is attached to task.
+     * @param taskId
+     * @return
+     */
+    AttachmentContentUploadBuilder taskId(String taskId);
+    Attachment build(byte[] content);
   }
   
   interface AttachmentRemoveBuilder {
