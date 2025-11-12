@@ -45,7 +45,7 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
       <Box className={classes.messagesContainer}>
         {allExternalMessages.length === 0 ?
           (
-            <Typography textAlign='center'>{intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No messages yet' })}</Typography>
+            <Typography textAlign='center'>{intl.formatMessage({ id: 'task.customerMessages.none' })}</Typography>
           ) : (
             allExternalMessages.map((comment, index) => {
               const isLast = index === externalCommentCount - 1;
@@ -73,12 +73,12 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
         <Box className={classes.inputBoxTitle}>
           <EditIcon color='primary' />
           <Typography className={classes.messageBoxLabel}>
-            {intl.formatMessage({ id: 'task.customerMessages.newMessageTitle', defaultMessage: 'Write a new message' })}
+            {intl.formatMessage({ id: 'task.customerMessages.newMessageTitle' })}
           </Typography>
         </Box>
         <StyledTextField value={message} fullWidth multiline rows={3}
           onChange={onChange}
-          placeholder={intl.formatMessage({ id: 'task.customerMessages.newMessagePlaceholder', defaultMessage: 'My message to customer...' })} />
+          placeholder={intl.formatMessage({ id: 'task.customerMessages.newMessagePlaceholder' })} />
       </Box>
     </StyledCustomerMessagesEditor>
 

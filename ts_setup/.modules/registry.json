@@ -138,10 +138,10 @@
         "@mui/utils",
         "react-intl",
         "luxon",
+        "@dxs-ts/contract-api",
         "@tanstack/react-table",
         "@tanstack/react-query",
-        "@dxs-ts/xui-table",
-        "@dxs-ts/contract-api"
+        "@dxs-ts/xui-table"
       ],
       "actualExternalDependencies": [
         "react",
@@ -154,8 +154,8 @@
         "@tanstack/react-query"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/xui-table",
-        "@dxs-ts/contract-api"
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -2863,7 +2863,8 @@
         "@tanstack/react-table",
         "luxon",
         "@dxs-ts/xui-datetime",
-        "notistack"
+        "notistack",
+        "@mui/utils"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2872,13 +2873,16 @@
         "@mui/icons-material",
         "@tanstack/react-table",
         "luxon",
-        "notistack"
+        "notistack",
+        "@mui/utils"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "@mui/utils"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/user-profile": {
@@ -3879,6 +3883,6 @@
       ]
     }
   },
-  "checksum": "8d3c62745ec11d8f40c2e46e34c3ca1ee232b5f95d8fe60c6fbd45bcab300e7f",
-  "generatedAt": "2025-11-10T07:57:43.603Z"
+  "checksum": "0b9644333e94b4c2706837e10fe4ff6d69c0bf51ecc9b5cd73b49513eb2f8350",
+  "generatedAt": "2025-11-12T10:33:36.303Z"
 }
