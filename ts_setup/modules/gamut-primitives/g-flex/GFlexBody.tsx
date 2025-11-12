@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, styled, useThemeProps, Paper, lighten } from '@mui/material';
+import { generateUtilityClass, styled, useThemeProps } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -49,7 +49,7 @@ const GFlexBodyRoot = styled("div", {
 
     ':hover': {
       cursor: 'pointer',
-      backgroundColor: theme.palette.action.disabled,
+      backgroundColor: theme.palette.action.active,
     },
 
     '& .MuiGrid-root.MuiGrid-container': {

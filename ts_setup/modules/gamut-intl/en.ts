@@ -82,6 +82,7 @@ export const en = {
   'gamut.forms.page.stepper': '{start} of {end}',
   'gamut.forms.page.selection.key': 'Step {stepNumber} out of {totalSteps}',
   'gamut.forms.page.next': 'Next',
+  'gamut.forms.page.previous': 'Previous',
   'gamut.forms.page.complete': 'Complete',
   'gamut.forms.page.cancel': 'Cancel',
   'gamut.forms.filling.welcome': 'Welcome!',

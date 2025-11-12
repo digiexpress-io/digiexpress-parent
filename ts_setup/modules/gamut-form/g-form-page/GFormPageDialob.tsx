@@ -50,6 +50,11 @@ const Internal: React.FC<GFormBaseElementProps> = ({ actionItem: element, formSt
     }
   }
 
+  function onPreviousPage() {
+    store.previous();
+  }
+
+
   function onComplete() {
     if (store.form.completeAllowed) {
       store.complete(setErrorsVisible);      
@@ -74,6 +79,7 @@ const Internal: React.FC<GFormBaseElementProps> = ({ actionItem: element, formSt
       pages={pages}
       onChangePage={onChangePage}
       onNextPage={onNextPage}
+      onPreviousPage={onPreviousPage}
       onComplete={onComplete}
       onCancel={onCancel}
     />);
