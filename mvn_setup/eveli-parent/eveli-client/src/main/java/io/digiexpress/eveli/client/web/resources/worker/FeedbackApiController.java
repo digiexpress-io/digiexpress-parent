@@ -181,7 +181,7 @@ public class FeedbackApiController {
       return ResponseEntity.notFound().build();
     }
     List<SimilarityRequest.Entry> items = new ArrayList<>(feedbacks.stream().map(fb -> new SimilarityRequest.Entry(
-      fb.getId(),
+      fb.getSourceId(),
       fb.getLocale(),
       fb.getContent().getQuestion()
     )).toList());

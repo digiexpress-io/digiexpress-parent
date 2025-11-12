@@ -511,7 +511,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'ai_assistant':
       return (
         <TaskFeature id='TASK_FEEDBACK'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
               {...commonProps}
               showFlashyToggle={false}
               showEditOnMenu={false}

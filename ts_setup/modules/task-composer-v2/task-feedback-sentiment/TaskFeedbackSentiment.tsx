@@ -54,9 +54,11 @@ export const TaskFeedbackSentiment: React.FC<TaskFeedbackSentimentProps> = ({ se
       </TaskFeedbackSentimentRoot>)
   }
 
+  const label = sentiment.charAt(0).toUpperCase() + sentiment.slice(1).toLowerCase();
+
   return (
     <TaskFeedbackSentimentRoot sentiment={sentiment} className={classes.root}>
-      <Chip label={sentiment.charAt(0).toUpperCase() + sentiment.slice(1)} variant='filled' />
+      <Chip label={label} variant='filled' />
     </TaskFeedbackSentimentRoot>
   )
 }
