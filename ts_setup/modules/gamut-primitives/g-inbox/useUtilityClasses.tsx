@@ -67,14 +67,13 @@ export const GInboxRoot = styled("div", {
       alignItems: 'center',
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      backgroundColor: `${lighten(theme.palette.action.disabled, 0.85)}`,
+      backgroundColor: theme.palette.background.default,
       borderWidth: '1px',
       borderBottomStyle: 'solid',
-      borderBottomColor: lighten(theme.palette.action.disabled, 0.5),
+      borderBottomColor: theme.palette.divider,
       ':hover': {
-        backgroundColor: `${lighten(theme.palette.action.disabled, 0.7)}`,
-        borderColor: 'rgba(194,190,194,1)',
-        boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
+        backgroundColor: theme.palette.action.active,
+        borderColor: theme.palette.divider,
       },
     
       [theme.breakpoints.only('sm')]: {
