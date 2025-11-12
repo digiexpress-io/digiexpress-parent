@@ -1,8 +1,8 @@
-package io.resys.thena.contract.client.tables;
+package io.resys.thena.ledger.client.tables;
 
 /*-
  * #%L
- * thena-contract-client
+ * thena-ledger-client
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -24,12 +24,12 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.contract.client.entities.CommitTree;
-import io.resys.thena.contract.client.entities.CommitTree.CommitTreeOperation;
-import io.resys.thena.contract.client.entities.ImmutableCommitTree;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.ledger.client.entities.CommitTree;
+import io.resys.thena.ledger.client.entities.CommitTree.CommitTreeOperation;
+import io.resys.thena.ledger.client.entities.ImmutableCommitTree;
 import io.resys.thena.support.TableUtils;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
@@ -76,24 +76,12 @@ public interface CommitTreeTable {
       SELECT ct.*
       FROM {commit_tree} ct
       LEFT JOIN {commit} c ON ct.commit_id = c.commit_id
-      WHERE c.contract_id = $1
+      WHERE c.ledger_id = $1
       ORDER BY c.created_at DESC
     """,
     rowMapper = CommitTreeMapper.class
   )
-  SqlTuple findAllByContractId(String contractId);
-
-  @TenantSql.FindAll(
-    sql = """
-      SELECT committree.*
-      FROM {commit_tree} committree
-      LEFT JOIN {commit} commit ON committree.commit_id = commit.commit_id
-      LEFT JOIN {contract} contract ON commit.contract_id = contract.id
-    """,
-    rowMapper = CommitTreeMapper.class,
-    sqlBuilder = ContractTableFilter.SQL.class
-  )
-  SqlTuple findAllByFilter(ContractTableFilter filter);
+  SqlTuple findAllByLedgerId(String ledgerId);
 
   @TenantSql.FindAll(
     sql = """
@@ -124,16 +112,6 @@ public interface CommitTreeTable {
   )
   SqlTupleList insertMany(List<CommitTree> commitTrees);
 
-  @TenantSql.UpdateAll(
-    sql = """
-      UPDATE {commit_tree}
-       SET commit_id = $1, operation_type = $2, body_after = $3, body_before = $4
-       WHERE id = $5
-    """,
-    propsMapper = CommitTreeUpdateMapper.class
-  )
-  SqlTupleList updateMany(List<CommitTree> commitTrees);
-
   // Mapper classes
   class CommitTreeMapper implements TenantSql.RowMapper<CommitTree> {
     @Override
@@ -161,19 +139,6 @@ public interface CommitTreeTable {
         doc.getOperationType().name(),
         doc.getBodyAfter().orElse(null),
         doc.getBodyBefore().orElse(null)
-      });
-    }
-  }
-
-  class CommitTreeUpdateMapper implements TenantSql.PropsMapper<CommitTree> {
-    @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(CommitTree doc) {
-      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        TableUtils.toUuid(doc.getCommitId()),
-        doc.getOperationType().name(),
-        doc.getBodyAfter().orElse(null),
-        doc.getBodyBefore().orElse(null),
-        TableUtils.toUuid(doc.getId())
       });
     }
   }

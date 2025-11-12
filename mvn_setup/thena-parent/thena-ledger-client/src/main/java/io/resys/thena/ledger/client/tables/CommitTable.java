@@ -1,8 +1,8 @@
-package io.resys.thena.contract.client.tables;
+package io.resys.thena.ledger.client.tables;
 
 /*-
  * #%L
- * thena-contract-client
+ * thena-ledger-client
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.contract.client.entities.Commit;
-import io.resys.thena.contract.client.entities.ImmutableCommit;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.ledger.client.entities.Commit;
+import io.resys.thena.ledger.client.entities.ImmutableCommit;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
@@ -40,7 +40,7 @@ import io.vertx.mutiny.sqlclient.Row;
     (
       commit_id UUID PRIMARY KEY,
       parent_id UUID,
-      contract_id UUID,
+      ledger_id UUID,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL,
       commit_log TEXT NOT NULL,
       commit_author VARCHAR(255) NOT NULL,
@@ -49,8 +49,8 @@ import io.vertx.mutiny.sqlclient.Row;
 
     CREATE INDEX IF NOT EXISTS {commit}_PARENT_INDEX
       ON {commit} (parent_id);
-    CREATE INDEX IF NOT EXISTS {commit}_CONTRACT_INDEX
-      ON {commit} (contract_id);
+    CREATE INDEX IF NOT EXISTS {commit}_LEDGER_INDEX
+      ON {commit} (ledger_id);
     CREATE INDEX IF NOT EXISTS {commit}_AUTH_INDEX
       ON {commit} (commit_author);
   """,
@@ -76,24 +76,12 @@ public interface CommitTable {
   @TenantSql.FindAll(
     sql = """
       SELECT * FROM {commit}
-      WHERE contract_id = $1
+      WHERE ledger_id = $1
       ORDER BY created_at DESC
     """,
     rowMapper = CommitMapper.class
   )
-  SqlTuple findAllByContractId(String contractId);
-
-  @TenantSql.FindAll(
-    sql = """
-      SELECT commit.*
-      FROM {commit} commit
-      LEFT JOIN {contract} contract ON commit.contract_id = contract.id
-      ORDER BY commit.created_at DESC
-    """,
-    rowMapper = CommitMapper.class,
-    sqlBuilder = ContractTableFilter.SQL.class
-  )
-  SqlTuple findAllByFilter(ContractTableFilter filter);
+  SqlTuple findAllByLedgerId(String ledgerId);
 
   @TenantSql.Find(
     optional = false,
@@ -103,39 +91,26 @@ public interface CommitTable {
     """,
     rowMapper = CommitMapper.class
   )
-  SqlTuple getById(String commitId);
+  SqlTuple getByCommitId(String commitId);
 
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {commit}
-      (commit_id, parent_id, contract_id, created_at, commit_log, commit_author, commit_message)
+      (commit_id, parent_id, ledger_id, created_at, commit_log, commit_author, commit_message)
        VALUES($1, $2, $3, $4, $5, $6, $7)
     """,
     propsMapper = CommitInsertMapper.class
   )
   SqlTupleList insertMany(List<Commit> commits);
 
-  @TenantSql.UpdateAll(
-    sql = """
-      UPDATE {commit}
-       SET parent_id = $1, contract_id = $2, created_at = $3, commit_log = $4, commit_author = $5, commit_message = $6
-       WHERE commit_id = $7
-    """,
-    propsMapper = CommitUpdateMapper.class
-  )
-  SqlTupleList updateMany(List<Commit> commits);
-
   // Mapper classes
   class CommitMapper implements TenantSql.RowMapper<Commit> {
     @Override
     public Commit apply(Row row) {
-      final String parent_id = TableUtils.toStringUUID(row, "parent_id");
-      final String contract_id = TableUtils.toStringUUID(row, "contract_id");
-
       return ImmutableCommit.builder()
-          .commitId(TableUtils.toStringUUID(row, "commit_id"))
-          .parentCommitId(Optional.ofNullable(parent_id))
-          .contractId(Optional.ofNullable(contract_id))
+          .id(TableUtils.toStringUUID(row, "commit_id"))
+          .parentId(Optional.ofNullable(TableUtils.toStringUUID(row, "parent_id")))
+          .ledgerId(Optional.ofNullable(TableUtils.toStringUUID(row, "ledger_id")))
           .createdAt(row.getOffsetDateTime("created_at"))
           .commitLog(row.getString("commit_log"))
           .commitAuthor(row.getString("commit_author"))
@@ -148,28 +123,13 @@ public interface CommitTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        TableUtils.toUuid(doc.getCommitId()),
-        doc.getParentCommitId().map(TableUtils::toUuid).orElse(null),
-        doc.getContractId().map(TableUtils::toUuid).orElse(null),
+        TableUtils.toUuid(doc.getId()),
+        doc.getParentId().map(TableUtils::toUuid).orElse(null),
+        doc.getLedgerId().map(TableUtils::toUuid).orElse(null),
         doc.getCreatedAt(),
         doc.getCommitLog(),
         doc.getCommitAuthor(),
         doc.getCommitMessage()
-      });
-    }
-  }
-
-  class CommitUpdateMapper implements TenantSql.PropsMapper<Commit> {
-    @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(Commit doc) {
-      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentCommitId().map(TableUtils::toUuid).orElse(null),
-        doc.getContractId().map(TableUtils::toUuid).orElse(null),
-        doc.getCreatedAt(),
-        doc.getCommitLog(),
-        doc.getCommitAuthor(),
-        doc.getCommitMessage(),
-        TableUtils.toUuid(doc.getCommitId())
       });
     }
   }

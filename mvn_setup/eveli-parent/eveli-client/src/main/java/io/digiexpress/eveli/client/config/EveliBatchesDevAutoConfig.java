@@ -29,6 +29,7 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliBatchesDevAutoConfig.BatchTenantCondition;
+import io.digiexpress.eveli.client.spi.batch.contract_db.Batch_DB_Contract_Definition;
 import io.digiexpress.eveli.client.spi.batch.contract_gen.Batch_Generate_Contract_Definition;
 import io.digiexpress.eveli.client.spi.batch.delete_all.Batch_DeleteAll_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
@@ -60,4 +61,12 @@ public class EveliBatchesDevAutoConfig {
   public BatchDefinition generateContractJob(ContractClient contractClient) {
     return Batch_Generate_Contract_Definition.create(contractClient);
   } 
+  
+  @Bean
+  @ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = EveliPropsContract.PREFIX, name = "enabled")
+  public BatchDefinition recreateContractDbJob(ContractClient contractClient) {
+    return Batch_DB_Contract_Definition.create(contractClient);
+  } 
+  
+  
 }

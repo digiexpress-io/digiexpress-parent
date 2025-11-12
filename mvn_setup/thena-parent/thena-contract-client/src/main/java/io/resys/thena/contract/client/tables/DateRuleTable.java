@@ -31,6 +31,7 @@ import io.resys.thena.contract.client.entities.ImmutableDateRuleTransitives;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -199,7 +200,7 @@ public interface DateRuleTable {
       final String coverage_id = TableUtils.toStringUUID(row, "coverage_id");
       final String party_id = TableUtils.toStringUUID(row, "party_id");
       final String payment_plan_id = TableUtils.toStringUUID(row, "payment_plan_id");
-      final var date_rule_period = TableUtils.toDuration(row, "date_rule_period");
+      final var date_rule_period = IntervallUtils.toDuration(row, "date_rule_period");
       final String date_rule_name = row.getString("date_rule_name");
       final String date_rule_description = row.getString("date_rule_description");
 
@@ -245,7 +246,7 @@ public interface DateRuleTable {
         doc.getDateRuleEntity(),
         doc.getDateRuleEntityField(),
         doc.getDateRuleType(),
-        TableUtils.toIntervalOptional(doc.getDateRulePeriod()),
+        IntervallUtils.toIntervalOptional(doc.getDateRulePeriod()),
         doc.getDateRuleName().orElse(null),
         doc.getDateRuleDescription().orElse(null)
       });
@@ -265,7 +266,7 @@ public interface DateRuleTable {
         doc.getDateRuleEntity(),
         doc.getDateRuleEntityField(),
         doc.getDateRuleType(),
-        TableUtils.toIntervalOptional(doc.getDateRulePeriod()),
+        IntervallUtils.toIntervalOptional(doc.getDateRulePeriod()),
         doc.getDateRuleName().orElse(null),
         doc.getDateRuleDescription().orElse(null),
         TableUtils.toUuid(doc.getId())
