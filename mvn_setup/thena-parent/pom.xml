@@ -28,6 +28,7 @@
     <module>thena-git-client</module>
     <module>thena-product-client</module>
     <module>thena-contract-client</module>
+    <module>thena-ledger-client</module>
   </modules>
 
 </project>

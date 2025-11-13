@@ -95,6 +95,7 @@ gamut.forms.page.subtitle.complete,,Next: Complete,Seuraava: Valmis,Nästa: Komp
 gamut.forms.page.stepper,,{start} of {end},{start} sivu {end},{start} av {slut},{start} of {end},{start] od {end}
 gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Vaihe {stepNumber} vaiheista {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps},Korak {stepNumber} od {totalSteps}
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya,Sledeći
+gamut.forms.page.previous,,Previous,,,
 gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap,Završi
 gamut.forms.page.cancel,,Cancel,Peruuta,Avboka,Batal,Otkaži
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!,Dobrodošli!

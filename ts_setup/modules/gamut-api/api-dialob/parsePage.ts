@@ -14,13 +14,10 @@ export function parsePage(currentPageId: string, session: DialobApi.Form): Dialo
   const currentlyFilling = allPageIds.indexOf(activePageId);
   const whereIsCurrentItem = allPageIds.indexOf(currentPageId);
 
-
-
   const pages: DialobApi.ActionItem[] = allPageIds
     .map(delegateId => session.getItem(delegateId))
     .filter(junk_data => junk_data ? true : false)
     .map(p => p as DialobApi.ActionItem)
-
 
   const singular: boolean = pages.length === 1
   let status: 'completed' | 'filling' | 'todo' | 'submit';
@@ -103,12 +100,19 @@ function getErrorSummary(currentPageId: string, session: DialobApi.Form): {
   return { firstErrorControlId, errorChecksum: md5.end() + '' }
 }
 
-function getLastPageId(session: DialobApi.Form, availableItems: string[]): string | undefined {
+function getLastPageId(session: DialobApi.Form, allPageIds: string[]): string | undefined {
+
+
   let lastPageId: string | undefined = undefined;
-  for (const pageId of availableItems) {
+  for (const pageId of allPageIds) {
+
+  // double checking... can be skipped when form is not configure to return always all pages
     const page = session.getItem(pageId);
+
     if (page) {
       lastPageId = page.id;
+    } else {
+      lastPageId = pageId;
     }
   }
 
@@ -116,11 +120,12 @@ function getLastPageId(session: DialobApi.Form, availableItems: string[]): strin
 }
 
 function getPageNumber(allPageIds: string[], pageId: string, session: DialobApi.Form): number {
+  /* double checking... can be skipped when form is not configure to return always all pages
   const index = allPageIds
     .map(delegateId => session.getItem(delegateId))
     .filter(junk_data => junk_data)
     .map(item => item?.id)
     .indexOf(pageId);
-
-  return index + 1;
+  */
+  return allPageIds.indexOf(pageId) + 1;
 }

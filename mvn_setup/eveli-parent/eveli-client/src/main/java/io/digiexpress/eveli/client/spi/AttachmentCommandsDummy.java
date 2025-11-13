@@ -128,4 +128,30 @@ public class AttachmentCommandsDummy implements AttachmentCommands {
       }
     };
   }
+
+
+  @Override
+  public AttachmentContentUploadBuilder contentUpload() {
+    return new AttachmentContentUploadBuilder() {
+      @Override
+      public AttachmentContentUploadBuilder taskId(String taskId) {
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentUploadBuilder processId(String processId) {
+        return this;
+      }
+      
+      @Override
+      public AttachmentContentUploadBuilder filename(String filename) {
+        return this;
+      }
+      
+      @Override
+      public Attachment build(byte[] content) {
+        return dummyAttachment;
+      }
+    };
+  }
 }

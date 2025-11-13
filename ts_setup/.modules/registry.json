@@ -12,7 +12,9 @@
         "note": "No internal dependencies - this is the foundation layer",
         "dependencies": {},
         "peerDependencies": {
-          "react": "*"
+          "react": "*",
+          "@tanstack/react-query": "*",
+          "react-intl": "*"
         },
         "keywords": [
           "contract",
@@ -23,27 +25,33 @@
         "private": true
       },
       "dependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
       ],
       "peerDependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
       ],
       "externalDependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
       ],
       "internalDependencies": [],
       "actualDependencies": [
         "react",
+        "@tanstack/react-query",
         "react-intl"
       ],
       "actualExternalDependencies": [
         "react",
+        "@tanstack/react-query",
         "react-intl"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [
-        "react-intl"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/contract-composer": {
@@ -132,10 +140,10 @@
         "@mui/utils",
         "react-intl",
         "luxon",
+        "@dxs-ts/contract-api",
         "@tanstack/react-table",
         "@tanstack/react-query",
-        "@dxs-ts/xui-table",
-        "@dxs-ts/contract-api"
+        "@dxs-ts/xui-table"
       ],
       "actualExternalDependencies": [
         "react",
@@ -148,8 +156,8 @@
         "@tanstack/react-query"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/xui-table",
-        "@dxs-ts/contract-api"
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
       "unusedDependencies": [

@@ -1,4 +1,4 @@
-import { generateUtilityClass, Grid, lighten, styled } from '@mui/material';
+import { generateUtilityClass, lighten, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -11,7 +11,11 @@ export interface GInboxClasses {
   inboxItemSentAt: string,
   inboxItemAttachments: string,
   taskRefLayout: string,
-  newMsgIndicator: string
+  newMsgIndicator: string,
+  headerRow: string,
+  headerFormName: string,
+  headerAttachments: string,
+  headerLastModified: string
 }
 export type GInboxClassKey = keyof GInboxClasses;
 
@@ -23,7 +27,11 @@ export const useUtilityClasses = () => {
     inboxItemSentAt: ['inboxItemSentAt'],
     inboxItemAttachments: ['inboxItemAttachments'],
     taskRefLayout: ['taskRefLayout'],
-    newMsgIndicator: ['newMsgIndicator']
+    newMsgIndicator: ['newMsgIndicator'],
+    headerRow: ['headerRow'],
+    headerFormName: ['headerFormName'],
+    headerAttachments: ['headerAttachments'],
+    headerLastModified: ['headerLastModified']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -42,7 +50,11 @@ export const GInboxRoot = styled("div", {
       styles.inboxItemSentAt,
       styles.inboxItemAttachments,
       styles.taskRefLayout,
-      styles.newMsgIndicator
+      styles.newMsgIndicator,
+      styles.headerRow,
+      styles.headerFormName,
+      styles.headerAttachments,
+      styles.headerLastModified
     ];
   },
 })(({ theme }) => {
@@ -55,20 +67,28 @@ export const GInboxRoot = styled("div", {
       alignItems: 'center',
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      backgroundColor: `${lighten(theme.palette.action.disabled, 0.85)}`,
+      backgroundColor: theme.palette.background.default,
       borderWidth: '1px',
       borderBottomStyle: 'solid',
-      borderBottomColor: lighten(theme.palette.action.disabled, 0.5),
+      borderBottomColor: theme.palette.divider,
       ':hover': {
-        backgroundColor: `${lighten(theme.palette.action.disabled, 0.7)}`,
-        borderColor: 'rgba(194,190,194,1)',
-        boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
+        backgroundColor: theme.palette.action.active,
+        borderColor: theme.palette.divider,
       },
+    
+      [theme.breakpoints.only('sm')]: {
+        alignItems: 'flex-start',
+      },
+    
+      [theme.breakpoints.only('md')]: {
+        alignItems: 'flex-start',
+      },
+    
       [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap',
         rowGap: theme.spacing(1),
       },
-    },
+    },      
 
     '.GInbox-inboxItemTitle': {
       fontSize: theme.typography.body2.fontSize,
@@ -82,9 +102,9 @@ export const GInboxRoot = styled("div", {
       },
       [theme.breakpoints.only('md')]: {
         justifyContent: 'flex-end',
-        textAlign: 'right',
+        textAlign: 'left',
       },
-    },    
+    },
 
     '.GInbox-newMsgIndicator': {
       marginRight: theme.spacing(1),
@@ -102,7 +122,6 @@ export const GInboxRoot = styled("div", {
       alignItems: 'center',
     },
 
-    // date positioning
     '.GInbox-inboxItemSentAt': {
       display: 'flex',
       flexShrink: 0,
@@ -112,68 +131,71 @@ export const GInboxRoot = styled("div", {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       paddingLeft: theme.spacing(1),
+
       [theme.breakpoints.down('sm')]: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-      }, 
+      },
+
       [theme.breakpoints.up('sm')]: {
         flexShrink: 0,
         width: '8ch',
         minWidth: '8ch',
         maxWidth: '8ch',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
       },
-      [theme.breakpoints.up('md')]: {
-        justifyContent: 'space-between',
-        textAlign: 'right',
-      },
-      [theme.breakpoints.up('lg')]: {
-        justifyContent: 'flex-end',
-        textAlign: 'right',
-      },      
     },
 
     '.GInbox-inboxItemAttachments': {
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexGrow: 1,
-        flexShrink: 1,
-        minWidth: 0,
-        overflow: 'hidden',
-      },
-      [theme.breakpoints.only('lg')]: {
-        justifyContent: 'flex-start',
-        paddingRight: theme.spacing(5),
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'flex',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      flexGrow: 1,
+      flexShrink: 1,
+      minWidth: 0,
+      overflow: 'hidden',
+      gap: theme.spacing(1),
+      '& > *': { flex: '0 0 auto' },
+    
+      [theme.breakpoints.only('sm')]: {
         flexWrap: 'wrap',
-        gap: theme.spacing(1),
-        justifyContent: 'flex-start',
+        rowGap: theme.spacing(1),
+      },
+    
+      [theme.breakpoints.only('md')]: {
+        flexWrap: 'wrap',
+        rowGap: theme.spacing(1),
+      },
+    
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap',
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
-        minWidth: 0,
       },
-    },        
-    
-    '& .GSort-root': {
-      display: 'flex',
+    },    
+
+    '.GInbox-headerRow': {
       width: '100%',
-      marginBottom: theme.spacing(1),
-      [theme.breakpoints.up('sm')]: {
-        justifyContent: 'flex-end'
-      },
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'center'
-      },
     },
+
+    '.GInbox-headerFormName': {
+      display: 'flex',
+      justifyContent: 'flex-start !important',
+    },
+
+    '.GInbox-headerAttachments': {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      paddingLeft: theme.spacing(1),
+    },
+
+    '.GInbox-headerLastModified': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+
   };
 });
 

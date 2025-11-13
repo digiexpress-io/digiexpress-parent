@@ -21,7 +21,6 @@ export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProp
   const [newMessage, setNewMessage] = React.useState<string>('');
   const { task, saveCustomerComment } = useTaskDashboard();
 
-
   function handleSetMessage(event: React.ChangeEvent<HTMLInputElement>) {
     setNewMessage(event.target.value);
   }
@@ -41,21 +40,21 @@ export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProp
 
       <DialogTitle>
         {intl.formatMessage({ id: 'task.customerMessages' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
+        {intl.formatMessage({ id: 'eveli.textSeparator', defaultMessage: ": " })}
         {task.taskRef ?? 'no task reference id'}
       </DialogTitle>
 
       <DialogContent>
         <Box className={classes.historyLabel}>
           <HistoryIcon />
-          <Typography>{intl.formatMessage({ id: 'task.customerMessages.messageHistory', defaultMessage: 'Message history' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'task.customerMessages.messageHistory' })}</Typography>
         </Box>
         <CustomerMessagesEditor onChange={handleSetMessage} task={task} message={newMessage} />
       </DialogContent>
 
       <DialogActions>
         <Button variant='outlined' onClick={handleCloseDialog}>{intl.formatMessage({ id: 'button.close' })}</Button>
-        <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>{intl.formatMessage({ id: 'button.sendMessage', defaultMessage: 'Send message now' })}</Button>
+        <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>{intl.formatMessage({ id: 'button.sendMessage' })}</Button>
       </DialogActions>
     </StyledDialog>
   )

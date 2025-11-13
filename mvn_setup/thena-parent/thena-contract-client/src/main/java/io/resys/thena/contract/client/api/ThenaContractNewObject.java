@@ -40,16 +40,8 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewContract contractIssueDate(LocalDate contractIssueDate);
-    NewContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval);
-    NewContract contractIssueDateType(@Nullable String contractIssueDateType);
-    
     NewContract contractStartDate(LocalDate contractStartDate);
-    NewContract contractStartDateInterval(@Nullable Period contractStartDateInterval);
-    NewContract contractStartDateType(@Nullable String contractStartDateType);
-    
     NewContract contractMaturityDate(@Nullable LocalDate contractMaturityDate);
-    NewContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval);
-    NewContract contractMaturityDateType(@Nullable String contractMaturityDateType);
     
     // Status and type
     NewContract contractStatus(String contractStatus);
@@ -66,6 +58,8 @@ public interface ThenaContractNewObject {
     NewContract addCapability(Consumer<NewCapability> capability);
     NewContract addInvPlan(Consumer<NewInvPlan> invPlan);
     NewContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
+    NewContract addDateRule(Consumer<NewDateRule> dateRule);
+    NewContract addCommand(Consumer<NewCommand> command);
     
     // state handling
     NewContract onNewState(Consumer<ContractContainer> handleNewState);
@@ -81,12 +75,7 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewParty partyTermStartDate(LocalDate partyTermStartDate);
-    NewParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval);
-    NewParty partyTermStartDateType(@Nullable String partyTermStartDateType);
-    
     NewParty partyTermEndDate(@Nullable LocalDate partyTermEndDate);
-    NewParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval);
-    NewParty partyTermEndDateType(@Nullable String partyTermEndDateType);
     
     NewParty partyData(@Nullable JsonObject partyData);
     
@@ -111,12 +100,7 @@ public interface ThenaContractNewObject {
     
     // Business term dates
     NewCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
-    NewCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval);
-    NewCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
-    
     NewCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
-    NewCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval);
-    NewCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // nested entities
     NewCoverage addNote(Consumer<NewNote> note);
@@ -161,12 +145,7 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewInvPlan invPlanStartDate(LocalDate invPlanStartDate);
-    NewInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval);
-    NewInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
-    
     NewInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
-    NewInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval);
-    NewInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // nested allocation
     NewInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation);
@@ -191,12 +170,35 @@ public interface ThenaContractNewObject {
     
     // Business dates
     NewPaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
-    NewPaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval);
-    NewPaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
-    
     NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
-    NewPaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval);
-    NewPaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
+    void build();
+  }
+  
+  // support interface for date rule creation
+  interface NewDateRule {
+    NewDateRule invPlanId(@Nullable String invPlanId);
+    NewDateRule coverageId(@Nullable String coverageId);
+    NewDateRule partyId(@Nullable String partyId);
+    NewDateRule paymentPlanId(@Nullable String paymentPlanId);
+    
+    NewDateRule dateRuleEntity(String dateRuleEntity);
+    NewDateRule dateRuleEntityField(String dateRuleEntityField);
+    NewDateRule dateRuleType(String dateRuleType);
+    NewDateRule dateRulePeriod(@Nullable Period dateRulePeriod);
+    NewDateRule dateRuleName(@Nullable String dateRuleName);
+    NewDateRule dateRuleDescription(@Nullable String dateRuleDescription);
+    void build();
+  }
+  
+  // support interface for command creation
+  interface NewCommand {
+    NewCommand externalId(@Nullable String externalId);
+    NewCommand commandBody(JsonObject commandBody);
+    NewCommand commandStatus(String commandStatus);
+    NewCommand commandType(String commandType);
+    NewCommand commandTargetDate(@Nullable LocalDate commandTargetDate);
+    NewCommand commandDescription(@Nullable String commandDescription);
+    NewCommand commandError(@Nullable JsonObject commandError);
     void build();
   }
   

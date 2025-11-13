@@ -49,6 +49,16 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.CustomerAccountClient;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.PdfClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.QuestionnaireAttachmentCommands;
+import io.digiexpress.eveli.client.api.TaskAuditClient;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TenantConfigClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -62,7 +72,9 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
+import io.digiexpress.eveli.client.spi.process.PdfClientRest;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
+import io.digiexpress.eveli.client.spi.process.ProcessQuestionnaireAttachmentCommand;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
@@ -346,5 +358,24 @@ public class EveliAutoConfig {
         .build();
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     return new UserProfileClientImpl(store);
+  }
+  
+  @Bean
+  public PdfClient pdfClient(
+      TaskClient client, 
+      DialobClient dialob, 
+      EveliPropsPrintout printoutConfig, 
+      RestTemplate restTemplate, 
+      ObjectMapper om) {
+    return new PdfClientRest(client, dialob, restTemplate, printoutConfig.getServiceUrl(), om);
+  }
+  
+  @Bean
+  public QuestionnaireAttachmentCommands questionnaireAttachmentCommands(
+      AttachmentCommands attachments, 
+      PdfClient pdf, 
+      TaskClient tasks, 
+      ProcessClient processClient) {
+    return new ProcessQuestionnaireAttachmentCommand(attachments, pdf, tasks, processClient);
   }
 }

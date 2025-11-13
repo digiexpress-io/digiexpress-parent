@@ -142,7 +142,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
           labelKey: props.labelKey,
           labelValue: props.labelValue,
         })
-          setCustomerTitle(props.customerTitle)
+        setCustomerTitle(props.customerTitle)
       }} />
 
       <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>

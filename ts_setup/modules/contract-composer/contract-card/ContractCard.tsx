@@ -94,7 +94,7 @@ export const ContractCard: React.FC<ContractCardProps> = (props) => {
           {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
         </Box>
 
-        {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
+        {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'contractcard.edit' })}</Button>}
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
         <Box {...getDragHandlePropsForId(props.id)}

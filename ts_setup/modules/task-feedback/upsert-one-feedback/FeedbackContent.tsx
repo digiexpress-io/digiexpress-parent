@@ -66,8 +66,8 @@ export const FeedbackContent: React.FC<{
       <TextField sx={{ width: '100%' }} value={feedback.customerTitle ?? ''} onChange={handleCustomerTitleChange} />
     </div>
 
-    </>)
-  }
+  </>)
+}
 
 
 
@@ -81,7 +81,7 @@ const FeedbackTopicSelect: React.FC<{
 
   const found = values.find(topic => topic.labelKey.toLocaleLowerCase().endsWith(`.${value.toLocaleLowerCase()}`))?.labelKey;
   if(!found) {
-    console.error('Feedback topic not found', {value, values})
+    console.error('Feedback topic not found', { value, values })
   }
 
 
@@ -95,7 +95,7 @@ const FeedbackTopicSelect: React.FC<{
           {values
             .filter(({ labelKey }) => {
               const isFailsafe = labelKey === value;
-              if(found && isFailsafe) {
+              if (found && isFailsafe) {
                 return false
               }
               return true;

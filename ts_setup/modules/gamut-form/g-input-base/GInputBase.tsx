@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { GInputLabelProps } from '../g-input-label'
 import { GInputErrorProps } from '../g-input-error'
 import { GInputAdornmentProps } from '../g-input-adornment'
@@ -63,22 +63,25 @@ export function GInputBase<InputProps = {}>(initProps: GInputBaseProps<InputProp
 
   return (
     <GInputBaseRoot as={ownerState.component} className={classes.root} spacing={1} container ownerState={ownerState}>
-      
+
       <Grid item xl={small} lg={small} md={small} sm={12} xs={12} className={classes.label}>
         <Label {...props.slotProps.label} />
         <Adornment {...props.slotProps.adornment} />
       </Grid>
-      <Grid item xl={small} lg={small} md={small} sm={12} xs={12} className={classes.input}>
-        <Input {...inputProps} />
-      </Grid>
 
-      {(props.slotProps.error.errors?.length ?? 0) > 0 && <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.error}>
-        <Error {...props.slotProps.error} />
-      </Grid>}
+      <Grid item xl={small} lg={small} md={small} sm={12} xs={12}>
+        <Grid item className={classes.input}>
+          <Input {...inputProps} />
+        </Grid>
+
+        {(props.slotProps.error.errors?.length ?? 0) > 0 && <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.error}>
+          <Error {...props.slotProps.error} />
+        </Grid>}
+      </Grid>
 
       {Sec &&
         (<Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <Sec {...props.slotProps.secondary}/>
+        <Sec {...props.slotProps.secondary} />
         </Grid>)}
 
     </GInputBaseRoot>

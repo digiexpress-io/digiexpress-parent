@@ -71,33 +71,33 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   return (
     <GInboxRoot className={classes.root}>
       <GFlex variant='header'>
-        <Grid2 container sx={{ width: '100%' }}>
-          <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 2 }}>
+        <Grid2 container className={classes.headerRow}>
+
+          <Grid2 size={{ xs: 12, sm: 12, md: 2, lg: 2 }}>
             <Typography fontWeight='bold'>
               {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
             </Typography>
           </Grid2>
 
-          <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 4, xl: 4 }} sx={{ justifyContent: 'flex-start !important' }}>
+          <Grid2 size={{ xs: 12, sm: 12, md: 4, lg: 4 }} className={classes.headerFormName}>
             <Typography fontWeight='bold'>
               {intl.formatMessage({ id: 'gamut.forms.formName' })}
             </Typography>
           </Grid2>
 
-          <Grid2 size={{ xs: 12, sm: 12, md: 4, lg: 4 }} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Grid2 size={{ xs: 12, sm: 12, md: 4, lg: 4 }} className={classes.headerAttachments}>
             <Typography fontWeight='bold'>
               {intl.formatMessage({ id: 'gamut.forms.attachments' })}
             </Typography>
           </Grid2>
 
-          <Grid2 size={{ xs: 12, sm: 12, md: 2, lg: 2 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Grid2 size={{ xs: 12, sm: 12, md: 2, lg: 2 }} className={classes.headerLastModified}>
             <Typography fontWeight='bold'>
               {intl.formatMessage({ id: 'gamut.forms.lastModified' })}
             </Typography>
           </Grid2>
         </Grid2>
       </GFlex>
-
 
 
       {subjects

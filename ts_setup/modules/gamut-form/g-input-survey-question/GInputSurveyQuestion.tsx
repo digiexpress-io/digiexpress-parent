@@ -44,7 +44,6 @@ export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props)
       <GInputSurveyQuestionLabel className={classes.label} {...delegate}>
 
         <Box display='flex' flexDirection='column'>
-          <GInputError errors={errors} id={id} />
 
           <Box display='flex' flexDirection='row' justifyContent='flex-end'>
             <Typography ref={navref} id={navrefid} color={props.errors?.length ? 'error' : 'inherit'}>{props.label}</Typography>
@@ -54,6 +53,8 @@ export const GInputSurveyQuestion: React.FC<GInputSurveyQuestionProps> = (props)
               </Box>
             )}
           </Box>
+          <GInputError errors={errors} id={id} />
+
         </Box>
         <GInputAdornment id={`${id}-label`} title={props.label} children={description} disabled={props.disabled} />
         <InputHidden id={id} choice={internalValue} onChange={onChange} />

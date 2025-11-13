@@ -28,6 +28,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.PdfClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskAuditClient;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.spi.dialob.DialobCreateEventPublisher;
@@ -58,12 +65,10 @@ public class EveliAutoConfigWorker {
   @Bean 
   public PrintoutController printoutController(
       WorkerAuthClient authClient,  
-      RestTemplate restTemplate,
-      DialobClient dialobClient,
-      TaskClient taskClient,
-      EveliPropsPrintout printoutConfig
+      TaskClient taskClient, 
+      PdfClient pdfClient
   ) {
-    return new PrintoutController(taskClient, authClient, dialobClient, restTemplate, printoutConfig.getServiceUrl());
+    return new PrintoutController(taskClient, authClient, pdfClient);
   }
   
   @Bean

@@ -21,12 +21,14 @@ package io.digiexpress.eveli.client.web.resources.worker;
  */
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +46,12 @@ public class ContractApiController {
   public Multi<ContractContainer> all() {
     return contractClient.withTenant().find().contractQuery().findAll()
         .onItem().transformToMulti(env -> Multi.createFrom().items(env.getObjects().stream()));
+  }
+
+  @GetMapping("/{contractId}")
+  public Uni<ContractContainer> getOnContract(@PathVariable("contractId") String id) {
+    return contractClient.withTenant().find().contractQuery().get(id)
+        .onItem().transform(env -> env.getObjects());
   }
 
 }

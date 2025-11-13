@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.spi.create;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -61,9 +60,7 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
         .createdCommitId(logger.getCommitId())
         .contractId(contractId)
         .partyId(Optional.empty())
-        .paymentPlanEndDate(Optional.empty())
-        .paymentPlanEndDateInterval(Optional.empty())
-        .paymentPlanEndDateType(Optional.empty());
+        .paymentPlanEndDate(Optional.empty());
     
   
     final var updates = currentTx.getPaymentPlanUpdates().stream().map(e -> e.getId()).toList();
@@ -117,32 +114,8 @@ public class NewPaymentPlanBuilder implements NewPaymentPlan {
   }
 
   @Override
-  public NewPaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval) {
-    this.next.paymentPlanStartDateInterval(paymentPlanStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewPaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType) {
-    this.next.paymentPlanStartDateType(paymentPlanStartDateType);
-    return this;
-  }
-
-  @Override
   public NewPaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate) {
     this.next.paymentPlanEndDate(Optional.ofNullable(paymentPlanEndDate));
-    return this;
-  }
-
-  @Override
-  public NewPaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval) {
-    this.next.paymentPlanEndDateInterval(Optional.ofNullable(paymentPlanEndDateInterval));
-    return this;
-  }
-
-  @Override
-  public NewPaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType) {
-    this.next.paymentPlanEndDateType(Optional.ofNullable(paymentPlanEndDateType));
     return this;
   }
 

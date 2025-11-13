@@ -1,10 +1,13 @@
 import { styled, generateUtilityClass } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
+import { TableThemeContextType, useTableTheme } from '../table-theme-provider';
 
 export const EveliTableRootClassName = 'EveliTable';
 
 const cellPadding = '10px';
-const rowHeight = '40px';
+function rowHeight(theme: TableThemeContextType) {
+  return theme.rowProps?.height ?? '40px'
+};
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -111,9 +114,10 @@ export const BodyRowSlot = styled('div', {
   slot: 'BodyRow',
 })<{}>(({ theme }) => {
 
+  const tableTheme = useTableTheme();
   return {
     padding: cellPadding,
-    height: rowHeight,
+    height: rowHeight(tableTheme),
     backgroundColor: theme.palette.background.default,
     border: `1px solid ${theme.palette.divider}`,
     borderTop: 'none',
@@ -140,9 +144,9 @@ export const BodyFillerRowSlot = styled('div', {
   name: EveliTableRootClassName,
   slot: 'BodyFillerRow',
 })<{}>(({ theme }) => {
-
+  const tableTheme = useTableTheme();
   return {
-    height: rowHeight,
+    height: rowHeight(tableTheme),
     padding: cellPadding,
     border: `1px solid ${theme.palette.divider}`,
     borderTop: 'none',

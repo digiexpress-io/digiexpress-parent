@@ -113,7 +113,6 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
         <Button variant="outlined" onClick={onClose}>
           {intl.formatMessage({ id: 'button.cancel' })}
         </Button>
-        <Button>{intl.formatMessage({ id: 'button.save' })}</Button>
       </DialogActions>
     </FilesEditDialogRoot>
   );

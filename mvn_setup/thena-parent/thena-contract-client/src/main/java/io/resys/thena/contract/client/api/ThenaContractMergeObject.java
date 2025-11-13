@@ -29,7 +29,9 @@ import java.util.function.Function;
 
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRule;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlanAlloc;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
@@ -55,16 +57,8 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeContract contractIssueDate(LocalDate contractIssueDate);
-    MergeContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval);
-    MergeContract contractIssueDateType(@Nullable String contractIssueDateType);
-    
     MergeContract contractStartDate(LocalDate contractStartDate);
-    MergeContract contractStartDateInterval(@Nullable Period contractStartDateInterval);
-    MergeContract contractStartDateType(@Nullable String contractStartDateType);
-    
     MergeContract contractMaturityDate(@Nullable LocalDate contractMaturityDate);
-    MergeContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval);
-    MergeContract contractMaturityDateType(@Nullable String contractMaturityDateType);
     
     // Status and type
     MergeContract contractStatus(String contractStatus);
@@ -90,6 +84,8 @@ public interface ThenaContractMergeObject {
     MergeContract addCapability(Consumer<NewCapability> capability);
     MergeContract addInvPlan(Consumer<NewInvPlan> invPlan);
     MergeContract addPaymentPlan(Consumer<NewPaymentPlan> paymentPlan);
+    MergeContract addDateRule(Consumer<NewDateRule> dateRule);
+    MergeContract addCommand(Consumer<NewCommand> command);
     
     // Modify existing child entities by ID
     MergeContract modifyParty(String partyId, Consumer<MergeParty> party);
@@ -99,6 +95,8 @@ public interface ThenaContractMergeObject {
     MergeContract modifyCapability(String capabilityId, Consumer<MergeCapability> capability);
     MergeContract modifyInvPlan(String invPlanId, Consumer<MergeInvPlan> invPlan);
     MergeContract modifyPaymentPlan(String paymentPlanId, Consumer<MergePaymentPlan> paymentPlan);
+    MergeContract modifyDateRule(String dateRuleId, Consumer<MergeDateRule> dateRule);
+    MergeContract modifyCommand(String commandId, Consumer<MergeCommand> command);
     
     // Remove child entities by ID
     MergeContract removeParty(String partyId);
@@ -108,6 +106,8 @@ public interface ThenaContractMergeObject {
     MergeContract removeCapability(String capabilityId);
     MergeContract removeInvPlan(String invPlanId);
     MergeContract removePaymentPlan(String paymentPlanId);
+    MergeContract removeDateRule(String dateRuleId);
+    MergeContract removeCommand(String commandId);
     
     void build();
   }
@@ -121,12 +121,7 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeParty partyTermStartDate(LocalDate partyTermStartDate);
-    MergeParty partyTermStartDateInterval(@Nullable Period partyTermStartDateInterval);
-    MergeParty partyTermStartDateType(@Nullable String partyTermStartDateType);
-    
     MergeParty partyTermEndDate(@Nullable LocalDate partyTermEndDate);
-    MergeParty partyTermEndDateInterval(@Nullable Period partyTermEndDateInterval);
-    MergeParty partyTermEndDateType(@Nullable String partyTermEndDateType);
     
     MergeParty partyData(@Nullable JsonObject partyData);
     
@@ -154,12 +149,7 @@ public interface ThenaContractMergeObject {
     
     // Business term dates
     MergeCoverage coverageTermStartDate(LocalDate coverageTermStartDate);
-    MergeCoverage coverageTermStartDateInterval(@Nullable Period coverageTermStartDateInterval);
-    MergeCoverage coverageTermStartDateType(@Nullable String coverageTermStartDateType);
-    
     MergeCoverage coverageTermEndDate(@Nullable LocalDate coverageTermEndDate);
-    MergeCoverage coverageTermEndDateInterval(@Nullable Period coverageTermEndDateInterval);
-    MergeCoverage coverageTermEndDateType(@Nullable String coverageTermEndDateType);
     
     // Collection operations for coverage's child entities
     <T> MergeCoverage setAllReferences(String referenceType, List<T> replacements, Function<T, Consumer<NewReference>> reference);
@@ -204,12 +194,7 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergeInvPlan invPlanStartDate(LocalDate invPlanStartDate);
-    MergeInvPlan invPlanStartDateInterval(@Nullable Period invPlanStartDateInterval);
-    MergeInvPlan invPlanStartDateType(@Nullable String invPlanStartDateType);
-    
     MergeInvPlan invPlanEndDate(@Nullable LocalDate invPlanEndDate);
-    MergeInvPlan invPlanEndDateInterval(@Nullable Period invPlanEndDateInterval);
-    MergeInvPlan invPlanEndDateType(@Nullable String invPlanEndDateType);
     
     // Collection operations for investment plan allocations
     <T> MergeInvPlan setAllAllocations(List<T> replacements, Function<T, Consumer<NewInvPlanAlloc>> allocation);
@@ -242,12 +227,33 @@ public interface ThenaContractMergeObject {
     
     // Business dates
     MergePaymentPlan paymentPlanStartDate(LocalDate paymentPlanStartDate);
-    MergePaymentPlan paymentPlanStartDateInterval(@Nullable Period paymentPlanStartDateInterval);
-    MergePaymentPlan paymentPlanStartDateType(@Nullable String paymentPlanStartDateType);
-    
     MergePaymentPlan paymentPlanEndDate(@Nullable LocalDate paymentPlanEndDate);
-    MergePaymentPlan paymentPlanEndDateInterval(@Nullable Period paymentPlanEndDateInterval);
-    MergePaymentPlan paymentPlanEndDateType(@Nullable String paymentPlanEndDateType);
+    void build();
+  }
+  
+  interface MergeDateRule {
+    MergeDateRule invPlanId(@Nullable String invPlanId);
+    MergeDateRule coverageId(@Nullable String coverageId);
+    MergeDateRule partyId(@Nullable String partyId);
+    MergeDateRule paymentPlanId(@Nullable String paymentPlanId);
+    
+    MergeDateRule dateRuleEntity(String dateRuleEntity);
+    MergeDateRule dateRuleEntityField(String dateRuleEntityField);
+    MergeDateRule dateRuleType(String dateRuleType);
+    MergeDateRule dateRulePeriod(@Nullable Period dateRulePeriod);
+    MergeDateRule dateRuleName(@Nullable String dateRuleName);
+    MergeDateRule dateRuleDescription(@Nullable String dateRuleDescription);
+    void build();
+  }
+  
+  interface MergeCommand {
+    MergeCommand externalId(@Nullable String externalId);
+    MergeCommand commandBody(JsonObject commandBody);
+    MergeCommand commandStatus(String commandStatus);
+    MergeCommand commandType(String commandType);
+    MergeCommand commandTargetDate(@Nullable LocalDate commandTargetDate);
+    MergeCommand commandDescription(@Nullable String commandDescription);
+    MergeCommand commandError(@Nullable JsonObject commandError);
     void build();
   }
 }

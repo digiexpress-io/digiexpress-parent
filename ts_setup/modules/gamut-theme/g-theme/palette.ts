@@ -21,7 +21,8 @@ export const palette: PaletteOptions = {
     disabled: 'rgba(55, 65, 81, 0.90)'
   },
   action: {
-    disabled: '#e9ecef'
+    disabled: '#65748B',
+    active: '#e9ecef'
   },
   divider: "#dee2e6",
   success: {

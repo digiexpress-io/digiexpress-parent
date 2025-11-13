@@ -8,7 +8,9 @@
   "note": "No internal dependencies - this is the foundation layer",
   "dependencies": { },
   "peerDependencies": {
-    "react": "*"
+    "react": "*",
+    "@tanstack/react-query": "*",
+    "react-intl": "*"
   },
   "keywords": ["contract", "api", "data", "business-logic"],
   "private": true

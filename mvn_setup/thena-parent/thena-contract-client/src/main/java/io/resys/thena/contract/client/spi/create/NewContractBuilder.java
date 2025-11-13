@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.spi.create;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.Period;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -32,8 +31,10 @@ import io.resys.thena.contract.client.api.ImmutableContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractNewObject;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCapability;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCommand;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewCoverage;
+import io.resys.thena.contract.client.api.ThenaContractNewObject.NewDateRule;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewInvPlan;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewNote;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewParty;
@@ -81,8 +82,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
         .parentContractId(Optional.empty())
         .externalId(Optional.empty())
         .contractMaturityDate(Optional.empty())
-        .contractMaturityDateInterval(Optional.empty())
-        .contractMaturityDateType(Optional.empty())
         .contractSubStatus(Optional.empty())
         .contractSubType(Optional.empty())
         .contractData(Optional.empty());
@@ -114,17 +113,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return this;
   }
 
-  @Override
-  public NewContract contractIssueDateInterval(@Nullable Period contractIssueDateInterval) {
-    this.contract.contractIssueDateInterval(contractIssueDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewContract contractIssueDateType(@Nullable String contractIssueDateType) {
-    this.contract.contractIssueDateType(contractIssueDateType);
-    return this;
-  }
 
   @Override
   public NewContract contractStartDate(LocalDate contractStartDate) {
@@ -132,17 +120,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return this;
   }
 
-  @Override
-  public NewContract contractStartDateInterval(@Nullable Period contractStartDateInterval) {
-    this.contract.contractStartDateInterval(contractStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public NewContract contractStartDateType(@Nullable String contractStartDateType) {
-    this.contract.contractStartDateType(contractStartDateType);
-    return this;
-  }
 
   @Override
   public NewContract contractMaturityDate(@Nullable LocalDate contractMaturityDate) {
@@ -150,17 +127,6 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
     return this;
   }
 
-  @Override
-  public NewContract contractMaturityDateInterval(@Nullable Period contractMaturityDateInterval) {
-    this.contract.contractMaturityDateInterval(Optional.ofNullable(contractMaturityDateInterval));
-    return this;
-  }
-
-  @Override
-  public NewContract contractMaturityDateType(@Nullable String contractMaturityDateType) {
-    this.contract.contractMaturityDateType(Optional.ofNullable(contractMaturityDateType));
-    return this;
-  }
 
   @Override
   public NewContract contractStatus(String contractStatus) {
@@ -262,6 +228,26 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
   }
 
   @Override
+  public NewContract addDateRule(Consumer<NewDateRule> dateRule) {
+    final var allDateRules = this.next.build();
+    final var builder = new NewDateRuleBuilder(logger, contractId, allDateRules, null);
+    dateRule.accept(builder);
+    final var built = builder.close();
+    this.next.addDateRuleInserts(built);
+    return this;
+  }
+
+  @Override
+  public NewContract addCommand(Consumer<NewCommand> command) {
+    final var allCommands = this.next.build();
+    final var builder = new NewCommandBuilder(logger, contractId, allCommands, null);
+    command.accept(builder);
+    final var built = builder.close();
+    this.next.addCommandInserts(built);
+    return this;
+  }
+
+  @Override
   public NewContract onNewState(Consumer<ContractContainer> handleNewState) {
     this.handleNewState = handleNewState;
     return this;
@@ -307,6 +293,8 @@ public class NewContractBuilder implements ThenaContractNewObject.NewContract {
         .capabilities(batch.getCapabilityInserts())
         .invPlans(batch.getInvPlanInserts())
         .paymentPlans(batch.getPaymentPlanInserts())
+        .dateRules(batch.getDateRuleInserts())
+        .commands(batch.getCommandInserts())
         .invPlanAllocations(batch.getInvPlanAllocInserts().stream()
             .collect(Collectors.groupingBy(alloc -> alloc.getInvPlanId())))
         .build();

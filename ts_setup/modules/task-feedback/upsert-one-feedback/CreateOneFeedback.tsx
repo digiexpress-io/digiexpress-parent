@@ -76,7 +76,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskRef, o
   }
 
   const AcceptButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.AcceptButton ?? SaveFeedback;
-  const CancelButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> =  slots?.CancelButton ?? CancelFeedback;
+  const CancelButton: React.ElementType<{ disabled: boolean, onClick: () => Promise<void> }> = slots?.CancelButton ?? CancelFeedback;
 
   return (
     <>

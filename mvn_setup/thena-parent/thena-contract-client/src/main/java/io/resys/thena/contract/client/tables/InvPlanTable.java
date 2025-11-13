@@ -33,6 +33,7 @@ import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -53,12 +54,7 @@ import io.vertx.mutiny.sqlclient.Row;
       inv_plan_name                   VARCHAR(255) NOT NULL,
 
       inv_plan_start_date             DATE NOT NULL,
-      inv_plan_start_date_interval    INTERVAL NOT NULL,
-      inv_plan_start_date_type        VARCHAR(100) NOT NULL,
-
-      inv_plan_end_date               DATE,
-      inv_plan_end_date_interval      INTERVAL,
-      inv_plan_end_date_type          VARCHAR(100)
+      inv_plan_end_date               DATE
     );
 
     CREATE INDEX IF NOT EXISTS {inv_plan}_STATUS_INDEX
@@ -144,9 +140,8 @@ public interface InvPlanTable {
       INSERT INTO {inv_plan}
       (id, contract_id, external_id, commit_id, created_commit_id,
        inv_plan_status, inv_plan_code, inv_plan_name,
-       inv_plan_start_date, inv_plan_start_date_interval, inv_plan_start_date_type,
-       inv_plan_end_date, inv_plan_end_date_interval, inv_plan_end_date_type)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+       inv_plan_start_date, inv_plan_end_date)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     """,
     propsMapper = InvPlanInsertMapper.class
   )
@@ -157,9 +152,8 @@ public interface InvPlanTable {
       UPDATE {inv_plan}
        SET contract_id = $1, external_id = $2, commit_id = $3,
            inv_plan_status = $4, inv_plan_code = $5, inv_plan_name = $6,
-           inv_plan_start_date = $7, inv_plan_start_date_interval = $8, inv_plan_start_date_type = $9,
-           inv_plan_end_date = $10, inv_plan_end_date_interval = $11, inv_plan_end_date_type = $12
-       WHERE id = $13
+           inv_plan_start_date = $7, inv_plan_end_date = $8
+       WHERE id = $9
     """,
     propsMapper = InvPlanUpdateMapper.class
   )
@@ -176,8 +170,6 @@ public interface InvPlanTable {
     @Override
     public InvPlan apply(Row row) {
       final LocalDate inv_plan_end_date = row.getLocalDate("inv_plan_end_date");
-      final var inv_plan_end_date_interval = TableUtils.toDuration(row, "inv_plan_end_date_interval");
-      final String inv_plan_end_date_type = row.getString("inv_plan_end_date_type");
 
       return ImmutableInvPlan.builder()
           .id(TableUtils.toStringUUID(row, "id"))
@@ -197,14 +189,9 @@ public interface InvPlanTable {
           .invPlanCode(row.getString("inv_plan_code"))
           .invPlanName(row.getString("inv_plan_name"))
 
-          // Business dates (expanded)
+          // Business dates
           .invPlanStartDate(row.getLocalDate("inv_plan_start_date"))
-          .invPlanStartDateInterval(TableUtils.toDuration(row, "inv_plan_start_date_interval"))
-          .invPlanStartDateType(row.getString("inv_plan_start_date_type"))
-
           .invPlanEndDate(Optional.ofNullable(inv_plan_end_date))
-          .invPlanEndDateInterval(Optional.ofNullable(inv_plan_end_date_interval))
-          .invPlanEndDateType(Optional.ofNullable(inv_plan_end_date_type))
 
           .build();
     }
@@ -223,11 +210,7 @@ public interface InvPlanTable {
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
-        doc.getInvPlanStartDateType(),
-        doc.getInvPlanEndDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getInvPlanEndDateInterval()),
-        doc.getInvPlanEndDateType().orElse(null)
+        doc.getInvPlanEndDate().orElse(null)
       });
     }
   }
@@ -243,11 +226,7 @@ public interface InvPlanTable {
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        TableUtils.toInterval(doc.getInvPlanStartDateInterval()),
-        doc.getInvPlanStartDateType(),
         doc.getInvPlanEndDate().orElse(null),
-        TableUtils.toIntervalOptional(doc.getInvPlanEndDateInterval()),
-        doc.getInvPlanEndDateType().orElse(null),
         TableUtils.toUuid(doc.getId())
       });
     }

@@ -13,6 +13,7 @@ import { CircularProgress } from '@mui/material';
 import { useTableState } from './table-state';
 import { ToolColumnSavedFilter } from './tool-column-saved-filter';
 import { TableState } from './table-api';
+import { TableThemeProvider, TableThemeProviderProps } from './table-theme-provider';
 
 
 
@@ -32,10 +33,11 @@ export interface TableSlots<DataType extends object> {
 }
 
 export function WithTableStyles<DataType extends object>(props: {
-  columns: ColumnDef<DataType, unknown>[],
-  data: DataType[],
-  options: { initialPageSize?: number, tableId: string }
-  slots?: TableSlots<DataType>
+  columns: ColumnDef<DataType, unknown>[];
+  data: DataType[];
+  options: { initialPageSize?: number, tableId: string };
+  slots?: TableSlots<DataType>;
+  theme?: Omit<TableThemeProviderProps, 'children'>
 }): React.ReactNode {
 
   const { tableId } = props.options;
@@ -45,7 +47,13 @@ export function WithTableStyles<DataType extends object>(props: {
   if(loading) {
     return <CircularProgress />
   }
-  return (<RenderTable columns={props.columns} data={props.data} options={{ initialPageSize, tableId }} state={state} slots={props.slots}/>)
+  return (<RenderTable 
+    theme={props.theme}
+    columns={props.columns} 
+    data={props.data} 
+    options={{ initialPageSize, tableId }} 
+    state={state} 
+    slots={props.slots}/>)
 }
 
 
@@ -55,6 +63,7 @@ function RenderTable<DataType extends object>(props: {
   options: { initialPageSize: number, tableId: string  },
   state: [TableState, React.Dispatch<React.SetStateAction<TableState>>];
   slots: TableSlots<DataType> | undefined;
+  theme?: Omit<TableThemeProviderProps, 'children'>
 }): React.ReactNode {
 
   const { table, pagination, columnSizeVars, filterDialogOpen, onColumnFilter, onClearAll } = useTable<DataType>(props);
@@ -62,7 +71,7 @@ function RenderTable<DataType extends object>(props: {
   
 
   return (
-    <>
+    <TableThemeProvider {...(props.theme ? props.theme : {})}>
       <EveliTable slotProps={{
         root: { columnSizeVars },
         header: {
@@ -102,6 +111,6 @@ function RenderTable<DataType extends object>(props: {
         {/** Choose columns that are visible in full screen dialob */}
         <ToolColumnConfigDialog open={filterDialogOpen} onClose={onColumnFilter} table={table} />
       </>
-    </>
+    </TableThemeProvider>
   )
 }

@@ -22,7 +22,6 @@ package io.resys.thena.contract.client.spi.modify;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -111,17 +110,6 @@ public class MergePaymentPlanBuilder implements MergePaymentPlan {
     return this;
   }
 
-  @Override
-  public MergePaymentPlan paymentPlanStartDateInterval(Period paymentPlanStartDateInterval) {
-    this.nextPaymentPlan.paymentPlanStartDateInterval(paymentPlanStartDateInterval);
-    return this;
-  }
-
-  @Override
-  public MergePaymentPlan paymentPlanStartDateType(String paymentPlanStartDateType) {
-    this.nextPaymentPlan.paymentPlanStartDateType(paymentPlanStartDateType);
-    return this;
-  }
 
   @Override
   public MergePaymentPlan paymentPlanEndDate(LocalDate paymentPlanEndDate) {
@@ -129,17 +117,6 @@ public class MergePaymentPlanBuilder implements MergePaymentPlan {
     return this;
   }
 
-  @Override
-  public MergePaymentPlan paymentPlanEndDateInterval(Period paymentPlanEndDateInterval) {
-    this.nextPaymentPlan.paymentPlanEndDateInterval(Optional.ofNullable(paymentPlanEndDateInterval));
-    return this;
-  }
-
-  @Override
-  public MergePaymentPlan paymentPlanEndDateType(String paymentPlanEndDateType) {
-    this.nextPaymentPlan.paymentPlanEndDateType(Optional.ofNullable(paymentPlanEndDateType));
-    return this;
-  }
 
   @Override
   public void build() {

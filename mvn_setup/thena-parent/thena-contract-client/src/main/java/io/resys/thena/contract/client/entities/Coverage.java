@@ -21,7 +21,6 @@ package io.resys.thena.contract.client.entities;
  */
 
 import java.math.BigDecimal;
-import java.time.Period;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -58,14 +57,9 @@ public interface Coverage extends ContractEntity {
   LocalDate getCoverageEffectiveFrom();
   Optional<LocalDate> getCoverageEffectiveTo();
 
-  // Business dates (expanded)
+  // Business dates
   LocalDate getCoverageTermStartDate();
-  Period getCoverageTermStartDateInterval();
-  String getCoverageTermStartDateType();
-
   Optional<LocalDate> getCoverageTermEndDate();
-  Optional<Period> getCoverageTermEndDateInterval();
-  Optional<String> getCoverageTermEndDateType();
 
   @Override 
   default ContractDocType getDocType() { 

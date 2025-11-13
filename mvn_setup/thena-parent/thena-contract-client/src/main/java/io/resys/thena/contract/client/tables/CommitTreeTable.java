@@ -30,6 +30,7 @@ import io.resys.thena.contract.client.entities.ImmutableCommitTree;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.support.TableUtils;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 

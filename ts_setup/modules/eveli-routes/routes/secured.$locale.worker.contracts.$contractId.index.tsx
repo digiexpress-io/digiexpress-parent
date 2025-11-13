@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-
+import { ContractProvider } from '@dxs-ts/contract-api';
 import { ContractDashboard } from '@dxs-ts/contract-composer';
 import { Container } from '@mui/material';
 
@@ -8,10 +8,13 @@ export const Route = createFileRoute('/secured/$locale/worker/contracts/$contrac
 })
 
 function Component() {
+  const { contractId } = Route.useParams();
   return (
-    <Container>
-      <ContractDashboard />
-    </Container>
+    <ContractProvider contractId={contractId}>
+      <Container>
+        <ContractDashboard />
+      </Container>
+    </ContractProvider>
   )
 
 

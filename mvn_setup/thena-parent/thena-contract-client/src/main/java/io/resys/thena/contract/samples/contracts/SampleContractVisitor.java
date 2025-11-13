@@ -21,12 +21,10 @@ package io.resys.thena.contract.samples.contracts;
  */
 
 import java.time.LocalDate;
-import java.time.Period;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
-import io.resys.thena.contract.client.entities.ContractDocType;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
 import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.Party;
@@ -54,13 +52,9 @@ public class SampleContractVisitor {
     newContract
         
         .contractNumber(options.getRefNumber())
-        .contractIssueDate(contractData.contract.issueDate)
-        .contractIssueDateInterval(Period.ZERO)
-        .contractIssueDateType(ContractDocType.CONTRACT.name())        
+        .contractIssueDate(contractData.contract.issueDate)        
         
         .contractStartDate(contractData.contract.startDate)
-        .contractStartDateInterval(Period.ZERO)
-        .contractStartDateType(ContractDocType.CONTRACT.name())
         
         .contractStatus("ACTIVE")
         .contractType("SAVINGS_INSURANCE")
@@ -72,12 +66,8 @@ public class SampleContractVisitor {
           final var built = party
               .externalId(contractData.policyholder.personalId)
               .partyType("POLICYHOLDER")
-              
               .partyEffectiveFrom(contractData.contract.startDate)
-              .partyTermStartDate(contractData.contract.startDate)
-              .partyTermStartDateType(ContractDocType.CONTRACT.name())
-              .partyTermStartDateInterval(Period.ZERO)
-              
+              .partyTermStartDate(contractData.contract.startDate)              
               .partyData(contractData.policyholder.partyData)
               .build();
           
@@ -92,8 +82,6 @@ public class SampleContractVisitor {
                 .partyType("BENEFICIARY")
                 .partyEffectiveFrom(contractData.contract.startDate)
                 .partyTermStartDate(contractData.contract.startDate)
-                .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Period.ZERO)
                 .partyData(contractData.beneficiary.partyData)
                 .build();
           }
@@ -110,9 +98,6 @@ public class SampleContractVisitor {
               .coverageStatus("ACTIVE")
               .coverageEffectiveFrom(contractData.contract.startDate)
               .coverageTermStartDate(contractData.contract.startDate)
-              .coverageTermStartDateType(ContractDocType.CONTRACT.name())
-              .coverageTermStartDateInterval(Period.ZERO)
-              
               .build();
         })
         
@@ -123,10 +108,6 @@ public class SampleContractVisitor {
               .paymentPlanFrequency(contractData.paymentPlan.frequency)
               .paymentPlanAmount(contractData.paymentPlan.monthlyAmount)
               .paymentPlanStartDate(contractData.paymentPlan.startDate)
-              
-              .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
-              .paymentPlanStartDateInterval(Period.ZERO)
-              
               .build();
         })
         
@@ -138,10 +119,6 @@ public class SampleContractVisitor {
               .invPlanName("Feemi Savings Investment Plan")
               .invPlanStatus("ACTIVE")
               .invPlanStartDate(contractData.contract.startDate)
-              
-              .invPlanStartDateType(ContractDocType.CONTRACT.name())
-              .invPlanStartDateInterval(Period.ZERO)
-              
               .build();
           
           // Add allocations
@@ -189,36 +166,42 @@ public class SampleContractVisitor {
     Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("FEEMI_PENSION");
     
     // Build pension contract
+    final var startDate = LocalDate.now().minusDays((long) (Math.random() * 30));
+    final var policyholder = new MutableObject<Party>();
+    
+    
     newContract
-        .contractNumber("PEN-" + String.format("%08d", System.currentTimeMillis() % 100000000))
-        .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
-        .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
+        .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))     
+        .contractStartDate(startDate)
+        
         .contractStatus("ACTIVE")
         .contractType("PENSION_INSURANCE")
         .contractSubType("FEEMI_PENSION")
+        .contractNumber(options.getRefNumber())   
         
         // Add policyholder
         .addParty(party -> {
-          party
+          final var built = party
               .externalId(person.getPersonalId())
               .partyType("POLICYHOLDER")
-              .partyEffectiveFrom(LocalDate.now())
-              .partyTermStartDate(LocalDate.now())
+              .partyEffectiveFrom(startDate)
+              .partyTermStartDate(startDate)
               .partyData(person.toJson())
               .build();
+          policyholder.setValue(built);
         })
         
         // Add disability coverage
         .addCoverage(coverageBuilder -> {
           coverageBuilder
-              .insuredId(person.getPersonalId())
+              .insuredId(policyholder.get().getId())
               .externalId(coverage.getCoverageCode())
               .coverageType(coverage.getCoverageType())
               .coverageCode(coverage.getCoverageCode())
               .coverageSumInsured(coverage.getSumInsured())
               .coverageStatus("ACTIVE")
-              .coverageEffectiveFrom(LocalDate.now())
-              .coverageTermStartDate(LocalDate.now())
+              .coverageTermStartDate(startDate)
+              .coverageEffectiveFrom(startDate)
               .build();
         })
         
@@ -228,7 +211,7 @@ public class SampleContractVisitor {
               .paymentPlanStatus("ACTIVE")
               .paymentPlanFrequency(paymentPlan.getFrequency())
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
-              .paymentPlanStartDate(paymentPlan.getStartDate())
+              .paymentPlanStartDate(startDate)
               .build();
         })
         
@@ -238,7 +221,7 @@ public class SampleContractVisitor {
               .referenceType("PRODUCT_CODE")
               .referenceValue(product.getProductCode())
               .build();
-        });
+        }).build();
   }
   
   public static void visitPSContract(NewContract newContract, Product product, GenerationOptions options) {
@@ -255,11 +238,17 @@ public class SampleContractVisitor {
     Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
     Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("FEEMI_PS");
     
+    
+    final var startDate = LocalDate.now().minusDays((long) (Math.random() * 30));
+    final var policyholder = new MutableObject<Party>();
+    
+    
     // Build PS contract (with government bonus)
     newContract
-        .contractNumber("PS-" + String.format("%08d", System.currentTimeMillis() % 100000000))
+        .contractNumber(options.getRefNumber())
         .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
-        .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
+        
+        .contractStartDate(startDate)
         .contractMaturityDate(LocalDate.now().plusYears(10)) // 10-year commitment
         .contractStatus("ACTIVE")
         .contractType("PS_INSURANCE")
@@ -267,26 +256,28 @@ public class SampleContractVisitor {
         
         // Add policyholder
         .addParty(party -> {
-          party
+          final var built = party
               .externalId(person.getPersonalId())
               .partyType("POLICYHOLDER")
-              .partyEffectiveFrom(LocalDate.now())
-              .partyTermStartDate(LocalDate.now())
+              .partyEffectiveFrom(startDate)
+              .partyTermStartDate(startDate)
               .partyData(person.toJson())
               .build();
+          
+          policyholder.setValue(built);
         })
         
         // Add government bonus coverage
         .addCoverage(coverageBuilder -> {
           coverageBuilder
-              .insuredId(person.getPersonalId())
+              .insuredId(policyholder.get().getId())
               .externalId(coverage.getCoverageCode())
               .coverageType(coverage.getCoverageType())
               .coverageCode(coverage.getCoverageCode())
               .coverageSumInsured(coverage.getSumInsured()) // 4.5% bonus
               .coverageStatus("ACTIVE")
-              .coverageEffectiveFrom(LocalDate.now())
-              .coverageTermStartDate(LocalDate.now())
+              .coverageEffectiveFrom(startDate)
+              .coverageTermStartDate(startDate)
               .coverageTermEndDate(LocalDate.now().plusYears(10))
               .build();
         })
@@ -315,7 +306,7 @@ public class SampleContractVisitor {
               .noteType("GOVERNMENT_BONUS")
               .noteValue("Eligible for 4.5% annual government bonus with 10-year commitment")
               .build();
-        });
+        }).build();
   }
   
   public static void visitNovaVirtusContract(NewContract newContract, Product product, GenerationOptions options) {
@@ -338,14 +329,9 @@ public class SampleContractVisitor {
     
     // Build Nova Virtus endowment contract
     newContract
-        .contractNumber("NVE-" + String.format("%08d", System.currentTimeMillis() % 100000000))
+        .contractNumber(options.getRefNumber())
         .contractIssueDate(LocalDate.now().minusDays((long) (Math.random() * 365)))
-        .contractIssueDateInterval(Period.ZERO)
-        .contractIssueDateType(ContractDocType.CONTRACT.name())
-        
         .contractStartDate(LocalDate.now().minusDays((long) (Math.random() * 30)))
-        .contractStartDateInterval(Period.ZERO)
-        .contractStartDateType(ContractDocType.CONTRACT.name())
         
         .contractStatus("ACTIVE")
         .contractType("ENDOWMENT_INSURANCE")
@@ -358,8 +344,6 @@ public class SampleContractVisitor {
               .partyType("POLICYHOLDER")
               .partyEffectiveFrom(LocalDate.now())
               .partyTermStartDate(LocalDate.now())
-              .partyTermStartDateType(ContractDocType.CONTRACT.name())
-              .partyTermStartDateInterval(Period.ZERO)
               .partyData(person.toJson())
               .build();
           
@@ -378,8 +362,6 @@ public class SampleContractVisitor {
               .coverageStatus("ACTIVE")
               .coverageEffectiveFrom(LocalDate.now())
               .coverageTermStartDate(LocalDate.now())
-              .coverageTermStartDateType(ContractDocType.CONTRACT.name())
-              .coverageTermStartDateInterval(Period.ZERO)
               .build();
         })
         
@@ -390,8 +372,6 @@ public class SampleContractVisitor {
               .paymentPlanFrequency(paymentPlan.getFrequency())
               .paymentPlanAmount(paymentPlan.getMonthlyAmount())
               .paymentPlanStartDate(paymentPlan.getStartDate())
-              .paymentPlanStartDateType(ContractDocType.CONTRACT.name())
-              .paymentPlanStartDateInterval(Period.ZERO)
               .build();
         })
         
@@ -403,8 +383,6 @@ public class SampleContractVisitor {
               .invPlanName("Nova Virtus Investment Plan")
               .invPlanStatus("ACTIVE")
               .invPlanStartDate(LocalDate.now())
-              .invPlanStartDateType(ContractDocType.CONTRACT.name())
-              .invPlanStartDateInterval(Period.ZERO)
               .build();
           
           // Add Nova Virtus specific allocations (Granite/Globe portfolios, ETFs)
@@ -466,8 +444,6 @@ public class SampleContractVisitor {
                 .partyType("BENEFICIARY")
                 .partyEffectiveFrom(LocalDate.now())
                 .partyTermStartDate(LocalDate.now())
-                .partyTermStartDateType(ContractDocType.CONTRACT.name())
-                .partyTermStartDateInterval(Period.ZERO)
                 .partyData(template.toJson())
                 .build();
             
