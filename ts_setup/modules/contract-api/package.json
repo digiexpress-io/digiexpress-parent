@@ -9,7 +9,8 @@
   "dependencies": { },
   "peerDependencies": {
     "react": "*",
-    "@tanstack/react-query": "*"
+    "@tanstack/react-query": "*",
+    "react-intl": "*"
   },
   "keywords": ["contract", "api", "data", "business-logic"],
   "private": true

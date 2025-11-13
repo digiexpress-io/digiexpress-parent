@@ -13,7 +13,8 @@
         "dependencies": {},
         "peerDependencies": {
           "react": "*",
-          "@tanstack/react-query": "*"
+          "@tanstack/react-query": "*",
+          "react-intl": "*"
         },
         "keywords": [
           "contract",
@@ -25,15 +26,18 @@
       },
       "dependencies": [
         "react",
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "react-intl"
       ],
       "peerDependencies": [
         "react",
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "react-intl"
       ],
       "externalDependencies": [
         "react",
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "react-intl"
       ],
       "internalDependencies": [],
       "actualDependencies": [
@@ -47,9 +51,7 @@
         "react-intl"
       ],
       "actualInternalDependencies": [],
-      "missingDependencies": [
-        "react-intl"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/contract-composer": {
@@ -2863,8 +2865,7 @@
         "@tanstack/react-table",
         "luxon",
         "@dxs-ts/xui-datetime",
-        "notistack",
-        "@mui/utils"
+        "notistack"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2873,16 +2874,13 @@
         "@mui/icons-material",
         "@tanstack/react-table",
         "luxon",
-        "notistack",
-        "@mui/utils"
+        "notistack"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
-      "missingDependencies": [
-        "@mui/utils"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/user-profile": {
@@ -3883,6 +3881,6 @@
       ]
     }
   },
-  "checksum": "0b9644333e94b4c2706837e10fe4ff6d69c0bf51ecc9b5cd73b49513eb2f8350",
-  "generatedAt": "2025-11-12T10:25:52.203Z"
+  "checksum": "25316885a5c24fcfa7e8051b4e519cae4744ce7418952a6fc3a957f00b11bec6",
+  "generatedAt": "2025-11-13T06:55:25.515Z"
 }
