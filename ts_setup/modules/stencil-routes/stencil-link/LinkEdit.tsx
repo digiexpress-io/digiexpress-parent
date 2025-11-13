@@ -19,6 +19,23 @@ interface LinkEditProps {
   onClose: () => void,
 }
 
+const areSetsEqual = <T,>(a: T[], b: T[]) => {
+  if (a.length !== b.length) return false;
+  const setA = new Set(a);
+  for (const v of b) if (!setA.has(v)) return false;
+  return true;
+};
+
+type Label = { locale: string; labelValue: string };
+const areLabelsEqual = (a: Label[], b: Label[]) => {
+  if (a.length !== b.length) return false;
+  const mapA = new Map(a.map(l => [l.locale, l.labelValue]));
+  for (const { locale, labelValue } of b) {
+    if (!mapA.has(locale) || mapA.get(locale) !== labelValue) return false;
+  }
+  return true;
+};
+
 const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
   const intl = useIntl();
   const theme = useTheme();
@@ -69,24 +86,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
       sx: article.body.parentId ? selectSub : undefined
     }));
 
-    const areSetsEqual = <T,>(a: T[], b: T[]) => {
-      if (a.length !== b.length) return false;
-      const setA = new Set(a);
-      for (const v of b) if (!setA.has(v)) return false;
-      return true;
-    };
-    
-    type Label = { locale: string; labelValue: string };
-    const areLabelsEqual = (a: Label[], b: Label[]) => {
-      if (a.length !== b.length) return false;
-      const mapA = new Map(a.map(l => [l.locale, l.labelValue]));
-      for (const { locale, labelValue } of b) {
-        if (!mapA.has(locale) || mapA.get(locale) !== labelValue) return false;
-      }
-      return true;
-    };
-
-    const hasChanges = React.useMemo(() => {
+    const isChanged = React.useMemo(() => {
       return (
         value !== link.body.value ||
         contentType !== link.body.contentType ||
@@ -148,7 +148,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
         <CancelButton onClick={onClose} />
         <Button
           onClick={handleUpdate}
-          disabled={!value || changeInProgress || labels.length < 1 || !hasChanges}
+          disabled={!value || changeInProgress || labels.length < 1 || !isChanged}
         >
           <FormattedMessage id='button.update' />
         </Button>
