@@ -18,6 +18,7 @@ import { Analytics as AnalyticsIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
+import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
@@ -510,17 +511,19 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'ai_assistant':
       return (
-        <TaskFeature id='TASK_FEEDBACK'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
-              {...commonProps}
-              showFlashyToggle={false}
-              showEditOnMenu={false}
-              showEditButton={false}
-              showReviewOnMenu={false}
-              startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
-            <TaskAiAssistant />
-          </TaskCard>
-        </TaskFeature>
+        <EveliTenantFeatureEnabled id='AI_ASSISTANT'>
+          <TaskFeature id='TASK_FEEDBACK'>
+            <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
+                {...commonProps}
+                showFlashyToggle={false}
+                showEditOnMenu={false}
+                showEditButton={false}
+                showReviewOnMenu={false}
+                startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+              <TaskAiAssistant />
+            </TaskCard>
+          </TaskFeature>
+        </EveliTenantFeatureEnabled>
       );
     default:
       return null;

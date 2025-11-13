@@ -37,6 +37,10 @@ export const TaskAiAssistant: React.FC = () => {
     });
   }, [task.id, getSimilarFeedback]);
 
+  if (!sentimentAndSubcategory && !similarFeedback) {
+    return <Typography sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.ai.assistant.loading', defaultMessage: 'Loading AI Assistant data...' })}</Typography>;
+  }
+
   return (
     <Stack direction="column" height="100%">
       <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.sentiment', defaultMessage: 'Sentiment' })} style={style} 
@@ -44,7 +48,6 @@ export const TaskAiAssistant: React.FC = () => {
       <Divider sx={{ mb: 1 }} />
       <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.subcategory', defaultMessage: 'Subcategory' })} style={style} 
         value={<TaskFeedbackSubcategory subcategory={sentimentAndSubcategory?.subcategory.subcategory} style={style} />} />
-        {task.subject}
       <Divider sx={{ mb: 1 }} />
       <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.similar.feedback', defaultMessage: 'Similar feedback' })} style={style} 
         value={<TaskFeedbackSimilar similarities={similarities} style={style} toggleShowSimilarities={() => setShowSimilarFeedback(!showSimilarFeedback)} />} />

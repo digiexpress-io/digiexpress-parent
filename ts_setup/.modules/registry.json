@@ -2679,7 +2679,8 @@
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/xui-table": "*",
-          "@dxs-ts/xui-datetime": "*"
+          "@dxs-ts/xui-datetime": "*",
+          "@dxs-ts/eveli-api": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -2704,6 +2705,7 @@
         "@dxs-ts/task-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/eveli-api",
         "react",
         "react-intl",
         "luxon",
@@ -2746,7 +2748,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
         "@dxs-ts/xui-table",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/eveli-api"
       ],
       "actualDependencies": [
         "react",
@@ -2757,12 +2760,14 @@
         "@mui/icons-material",
         "luxon",
         "@dxs-ts/task-api",
+        "@dxs-ts/task-feedback",
+        "@mui/system",
         "@tanstack/react-query",
-        "@tanstack/react-table",
         "@monaco-editor/react",
         "yaml",
+        "@tanstack/react-table",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-feedback"
+        "@dxs-ts/eveli-api"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2771,21 +2776,21 @@
         "@mui/utils",
         "@mui/icons-material",
         "luxon",
+        "@mui/system",
         "@tanstack/react-query",
-        "@tanstack/react-table",
         "@monaco-editor/react",
-        "yaml"
+        "yaml",
+        "@tanstack/react-table"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-datetime",
         "@dxs-ts/task-api",
+        "@dxs-ts/task-feedback",
         "@dxs-ts/xui-table",
-        "@dxs-ts/task-feedback"
+        "@dxs-ts/eveli-api"
       ],
       "missingDependencies": [],
-      "unusedDependencies": [
-        "@mui/system"
-      ]
+      "unusedDependencies": []
     },
     "@dxs-ts/task-feedback": {
       "name": "@dxs-ts/task-feedback",
@@ -3500,7 +3505,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
         "@dxs-ts/xui-table",
-        "@dxs-ts/xui-datetime"
+        "@dxs-ts/xui-datetime",
+        "@dxs-ts/eveli-api"
       ],
       "@dxs-ts/task-feedback": [
         "@dxs-ts/xui-table",
@@ -3559,6 +3565,7 @@
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-routes",
+        "@dxs-ts/task-composer-v2",
         "@dxs-ts/wrench-routes"
       ],
       "@dxs-ts/eveli-intl": [
@@ -3873,6 +3880,6 @@
       ]
     }
   },
-  "checksum": "f56f7e80da255537a3cd569be7b56534f952d3c565ff67454a6ee488fa55a011",
-  "generatedAt": "2025-11-07T15:06:45.971Z"
+  "checksum": "c64a92d93ed3ff98a316497e8d53e37197f6a21707ba189657841a41fb3a5bf4",
+  "generatedAt": "2025-11-13T11:37:29.669Z"
 }

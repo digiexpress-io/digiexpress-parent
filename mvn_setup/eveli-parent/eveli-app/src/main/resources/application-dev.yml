@@ -114,7 +114,7 @@ eveli.user-registry.service-url:
 eveli.envir.cache-expirations.short-deployment: PT1M
 eveli.envir.cache-expirations.long-runtime: PT30M
 eveli.envir.dev-enabled: false
-eveli.tenant-features: batches-dev
+eveli.tenant-features: batches-dev, ai-assistant
 
 eveli.tagomi.service-url: http://localhost:8085
 
