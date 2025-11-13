@@ -25,7 +25,6 @@ import java.time.LocalDate;
 import java.util.function.Consumer;
 
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
-import io.resys.thena.ledger.client.entities.LedgerEntity.LedgerOneOfRelations;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
 import io.vertx.core.json.JsonObject;
