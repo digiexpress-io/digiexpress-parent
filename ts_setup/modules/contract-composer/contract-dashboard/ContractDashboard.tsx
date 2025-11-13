@@ -3,7 +3,7 @@ import { Grid2, Typography } from '@mui/material';
 
 
 import { useIntl } from 'react-intl';
-import { CardConfigContextProvider, contractCardGridSize, useCardConfig, useContractCardThemeConfig } from '../contract-card';
+import { CardConfigContextProvider, contractCardGridSize, DraggableCardWrapper, useCardConfig, useContractCardThemeConfig, useDragCardController } from '../contract-card';
 import { ContractCardFactory, FactoryCardId } from '../contract-card-factory';
 import { useContract } from '@dxs-ts/contract-api';
 
@@ -18,9 +18,11 @@ const _variant_prod: FactoryCardId[] = [
 
 const ContractDashboardInternal: React.FC = () => {
   const intl = useIntl();
-  const { cardOrder, isReviewOpen, cardTheme, setCardTheme } = useCardConfig();
+  const { cardOrder, isReviewOpen, cardTheme } = useCardConfig();
   const { contractContainer } = useContract();
   const styleConfig = useContractCardThemeConfig();
+  const { getDragPropsForId, draggingId } = useDragCardController();
+
   const style = styleConfig[cardTheme];
 
   console.log(contractContainer);
@@ -41,7 +43,9 @@ const ContractDashboardInternal: React.FC = () => {
         sx={{ overflowY: 'auto', maxHeight: '100%', overflow: 'visible' }}>
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? contractCardGridSize.singleCol : contractCardGridSize[cardTheme]}>
+            <DraggableCardWrapper {...getDragPropsForId(cardId)} draggingId={draggingId}>
             <ContractCardFactory cardId={cardId} />
+            </DraggableCardWrapper>
           </Grid2>
         ))}
       </Grid2>
