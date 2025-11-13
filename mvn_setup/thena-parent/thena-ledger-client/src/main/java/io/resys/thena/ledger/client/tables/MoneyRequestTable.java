@@ -50,7 +50,6 @@ import io.vertx.mutiny.sqlclient.Row;
       money_request_description TEXT,
       money_request_due_date DATE NOT NULL,
       money_request_amount DECIMAL(15,2) NOT NULL,
-      money_request_currency VARCHAR(3) NOT NULL,
       created_commit UUID NOT NULL,
       updated_commit UUID NOT NULL
     );
@@ -132,8 +131,8 @@ public interface MoneyRequestTable {
       INSERT INTO {money_request}
       (money_request_id, ledger_id, money_request_external_id, money_request_type, money_request_sub_type, 
        money_request_status, money_request_frequency, money_request_description, money_request_due_date, 
-       money_request_amount, money_request_currency, created_commit, updated_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+       money_request_amount, created_commit, updated_commit)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     """,
     propsMapper = MoneyRequestInsertMapper.class
   )
@@ -144,8 +143,8 @@ public interface MoneyRequestTable {
       UPDATE {money_request}
        SET ledger_id = $1, money_request_external_id = $2, money_request_type = $3, money_request_sub_type = $4,
            money_request_status = $5, money_request_frequency = $6, money_request_description = $7, 
-           money_request_due_date = $8, money_request_amount = $9, money_request_currency = $10, updated_commit = $11
-       WHERE money_request_id = $12
+           money_request_due_date = $8, money_request_amount = $9, updated_commit = $10
+       WHERE money_request_id = $11
     """,
     propsMapper = MoneyRequestUpdateMapper.class
   )
@@ -166,7 +165,6 @@ public interface MoneyRequestTable {
           .description(Optional.ofNullable(row.getString("money_request_description")))
           .dueDate(row.getLocalDate("money_request_due_date"))
           .amount(row.getBigDecimal("money_request_amount"))
-          .currency(row.getString("money_request_currency"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .updatedCommit(TableUtils.toStringUUID(row, "updated_commit"))
           .build();
@@ -187,7 +185,6 @@ public interface MoneyRequestTable {
         doc.getDescription().orElse(null),
         doc.getDueDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getCreatedCommit()),
         TableUtils.toUuid(doc.getUpdatedCommit())
       });
@@ -207,7 +204,6 @@ public interface MoneyRequestTable {
         doc.getDescription().orElse(null),
         doc.getDueDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getUpdatedCommit()),
         TableUtils.toUuid(doc.getId())
       });

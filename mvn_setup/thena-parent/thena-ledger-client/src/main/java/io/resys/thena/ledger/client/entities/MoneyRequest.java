@@ -44,7 +44,6 @@ public interface MoneyRequest extends LedgerEntity {
   Optional<String> getDescription();
   LocalDate getDueDate();
   BigDecimal getAmount();
-  String getCurrency();
   String getCreatedCommit();
   String getUpdatedCommit();
 
