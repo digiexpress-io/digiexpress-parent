@@ -1,7 +1,4 @@
 import React from 'react';
-import { Box, Divider, Stack, Typography } from '@mui/material';
-
-
 import { HandshakeOutlined as HandshakeOutlinedIcon } from '@mui/icons-material';
 import { CalendarMonthOutlined as CalendarMonthOutlinedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
@@ -99,7 +96,6 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
           showReviewOnMenu={false}
         >
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.category' })} value={contract.contractData?.category} style={style} />
-          <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.status' })} value={contract.contractStatus} style={style} />
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.productName' })} value={contract.contractData?.productName} style={style} />
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.productCode' })} value={contract.contractData?.productCode} style={style} />
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.issueDate' })} value={formatAnyDateShort(contract.contractData?.issueDate)} style={style} />
@@ -107,6 +103,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.limits.annualMaxContribution' })} value={contract.contractData?.limits.annualMaxContribution} style={style} />
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.limits.contractMinValue' })} value={contract.contractData?.limits.contractMinValue} style={style} />
           <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.limits.partialWithdrawalMin' })} value={contract.contractData?.limits.partialWithdrawalMin} style={style} />
+          <ContractCardTransitivesRow createdAt={formatAnyDateShort(contract.transitives?.createdAt)} updatedAt={formatAnyDateShort(contract.transitives?.updatedAt)} />
         </ContractCard>
       );
 
@@ -171,7 +168,6 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageEffectiveFrom' })} value={formatAnyDateShort(cover.coverageEffectiveFrom)} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.insuredId' })} value={insuredParty?.partyData?.fullName ?? "--"} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageType' })} value={cover.coverageType} style={style} />
-                <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageStatus' })} value={cover.coverageStatus} style={style} />
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.coverages.coverageSumInsured' })} value={cover.coverageSumInsured?.toString()} style={style} />
                 <ContractCardTransitivesRow createdAt={formatAnyDateShort(cover.transitives?.createdAt)} updatedAt={formatAnyDateShort(cover.transitives?.updatedAt)} />
               </div>
@@ -239,8 +235,10 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                     valueColheader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage' })}
                     label={allocation.invPlanAllocName}
                     value={allocation.invPlanAllocPercentage.toString()}
+
                   />
                 ))}
+                <ContractCardTransitivesRow createdAt={formatAnyDateShort(plan.transitives?.createdAt)} updatedAt={formatAnyDateShort(plan.transitives?.updatedAt)} />
               </div>
             )
           })
@@ -258,14 +256,6 @@ function formatAnyDateShort(value: Date | string | undefined): string {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 }
 
-/*
-
-    <ContractCardDataRowGrouped titleLabel={intl.formatMessage({ id: 'contractcard.investmentPlans.invPlanAllocations.title' })} valueLabel={allocation.invPlanAllocName} style={style}>
-                    <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage' })} value={allocation.invPlanAllocPercentage.toString()} style={style} />
-                  </ContractCardDataRowGrouped>
-
-
-*/
 
 
 
