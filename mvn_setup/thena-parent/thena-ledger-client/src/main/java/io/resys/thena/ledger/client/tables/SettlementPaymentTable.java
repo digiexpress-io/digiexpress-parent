@@ -65,7 +65,10 @@ public interface SettlementPaymentTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {settlement_payment}
+      SELECT settlement_payment.*,
+             created_commit.created_at as created_at
+      FROM {settlement_payment} settlement_payment
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
       ORDER BY settlement_payment_id ASC
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -74,7 +77,10 @@ public interface SettlementPaymentTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {settlement_payment}
+      SELECT settlement_payment.*,
+             created_commit.created_at as created_at
+      FROM {settlement_payment} settlement_payment
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
       WHERE settlement_id = $1
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -83,7 +89,10 @@ public interface SettlementPaymentTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {settlement_payment}
+      SELECT settlement_payment.*,
+             created_commit.created_at as created_at
+      FROM {settlement_payment} settlement_payment
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
       WHERE payment_id = $1
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -93,7 +102,10 @@ public interface SettlementPaymentTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {settlement_payment}
+      SELECT settlement_payment.*,
+             created_commit.created_at as created_at
+      FROM {settlement_payment} settlement_payment
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
       WHERE settlement_payment_id = $1
     """,
     rowMapper = SettlementPaymentMapper.class

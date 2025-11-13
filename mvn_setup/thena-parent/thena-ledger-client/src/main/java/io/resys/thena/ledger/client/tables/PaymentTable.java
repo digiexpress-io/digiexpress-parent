@@ -71,7 +71,10 @@ public interface PaymentTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {payment}
+      SELECT payment.*,
+             created_commit.created_at as created_at
+      FROM {payment} payment
+      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
       ORDER BY payment_date DESC
     """,
     rowMapper = PaymentMapper.class
@@ -80,7 +83,10 @@ public interface PaymentTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {payment}
+      SELECT payment.*,
+             created_commit.created_at as created_at
+      FROM {payment} payment
+      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY payment_date DESC
     """,
@@ -91,7 +97,10 @@ public interface PaymentTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {payment}
+      SELECT payment.*,
+             created_commit.created_at as created_at
+      FROM {payment} payment
+      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
       WHERE payment_id = $1
     """,
     rowMapper = PaymentMapper.class
@@ -101,7 +110,10 @@ public interface PaymentTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {payment}
+      SELECT payment.*,
+             created_commit.created_at as created_at
+      FROM {payment} payment
+      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
       WHERE payment_external_id = $1
     """,
     rowMapper = PaymentMapper.class

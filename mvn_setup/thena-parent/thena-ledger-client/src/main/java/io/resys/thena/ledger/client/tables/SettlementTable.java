@@ -71,7 +71,10 @@ public interface SettlementTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {settlement}
+      SELECT settlement.*,
+             created_commit.created_at as created_at
+      FROM {settlement} settlement
+      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
       ORDER BY settlement_date DESC
     """,
     rowMapper = SettlementMapper.class
@@ -80,7 +83,10 @@ public interface SettlementTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {settlement}
+      SELECT settlement.*,
+             created_commit.created_at as created_at
+      FROM {settlement} settlement
+      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY settlement_date DESC
     """,
@@ -91,7 +97,10 @@ public interface SettlementTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {settlement}
+      SELECT settlement.*,
+             created_commit.created_at as created_at
+      FROM {settlement} settlement
+      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
       WHERE settlement_id = $1
     """,
     rowMapper = SettlementMapper.class
@@ -101,7 +110,10 @@ public interface SettlementTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {settlement}
+      SELECT settlement.*,
+             created_commit.created_at as created_at
+      FROM {settlement} settlement
+      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
       WHERE settlement_external_id = $1
     """,
     rowMapper = SettlementMapper.class

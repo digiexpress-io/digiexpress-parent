@@ -68,7 +68,10 @@ public interface UnitPriceTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {unit_price}
+      SELECT unit_price.*,
+             created_commit.created_at as created_at
+      FROM {unit_price} unit_price
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
       ORDER BY unit_price_date DESC
     """,
     rowMapper = UnitPriceMapper.class
@@ -77,7 +80,10 @@ public interface UnitPriceTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {unit_price}
+      SELECT unit_price.*,
+             created_commit.created_at as created_at
+      FROM {unit_price} unit_price
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
       WHERE unit_price_type = $1
       ORDER BY unit_price_date DESC
     """,
@@ -88,7 +94,10 @@ public interface UnitPriceTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {unit_price}
+      SELECT unit_price.*,
+             created_commit.created_at as created_at
+      FROM {unit_price} unit_price
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
       WHERE unit_price_id = $1
     """,
     rowMapper = UnitPriceMapper.class
@@ -98,7 +107,10 @@ public interface UnitPriceTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {unit_price}
+      SELECT unit_price.*,
+             created_commit.created_at as created_at
+      FROM {unit_price} unit_price
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
       WHERE unit_price_external_id = $1
     """,
     rowMapper = UnitPriceMapper.class

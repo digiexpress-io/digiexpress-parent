@@ -63,7 +63,12 @@ public interface LedgerTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger}
+      SELECT ledger.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {ledger} ledger
+      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
       ORDER BY ledger_name ASC
     """,
     rowMapper = LedgerMapper.class
@@ -73,7 +78,12 @@ public interface LedgerTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {ledger}
+      SELECT ledger.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {ledger} ledger
+      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
     """,
     rowMapper = LedgerMapper.class
@@ -83,7 +93,12 @@ public interface LedgerTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {ledger}
+      SELECT ledger.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {ledger} ledger
+      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
       WHERE ledger_external_id = $1
     """,
     rowMapper = LedgerMapper.class

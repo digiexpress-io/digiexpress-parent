@@ -73,7 +73,10 @@ public interface LedgerEventTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
       ORDER BY ledger_event_date DESC
     """,
     rowMapper = LedgerEventMapper.class
@@ -82,7 +85,10 @@ public interface LedgerEventTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY ledger_event_date DESC
     """,
@@ -92,7 +98,10 @@ public interface LedgerEventTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
       WHERE ledger_event_type = $1
       ORDER BY ledger_event_date DESC
     """,
@@ -103,7 +112,10 @@ public interface LedgerEventTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
       WHERE ledger_event_id = $1
     """,
     rowMapper = LedgerEventMapper.class
@@ -113,7 +125,10 @@ public interface LedgerEventTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
       WHERE ledger_event_external_id = $1
     """,
     rowMapper = LedgerEventMapper.class

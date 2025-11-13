@@ -79,7 +79,12 @@ public interface MoneyRequestTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {money_request}
+      SELECT money_request.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {money_request} money_request
+      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
       ORDER BY money_request_due_date ASC
     """,
     rowMapper = MoneyRequestMapper.class
@@ -88,7 +93,12 @@ public interface MoneyRequestTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {money_request}
+      SELECT money_request.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {money_request} money_request
+      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY money_request_due_date ASC
     """,
@@ -98,7 +108,12 @@ public interface MoneyRequestTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {money_request}
+      SELECT money_request.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {money_request} money_request
+      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
       WHERE money_request_status = $1
       ORDER BY money_request_due_date ASC
     """,
@@ -109,7 +124,12 @@ public interface MoneyRequestTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {money_request}
+      SELECT money_request.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {money_request} money_request
+      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
       WHERE money_request_id = $1
     """,
     rowMapper = MoneyRequestMapper.class
@@ -119,7 +139,12 @@ public interface MoneyRequestTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {money_request}
+      SELECT money_request.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {money_request} money_request
+      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
       WHERE money_request_external_id = $1
     """,
     rowMapper = MoneyRequestMapper.class

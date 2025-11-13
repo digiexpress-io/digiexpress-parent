@@ -75,7 +75,10 @@ public interface ProjectionTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {projection}
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
       ORDER BY projection_target_date ASC
     """,
     rowMapper = ProjectionMapper.class
@@ -84,7 +87,10 @@ public interface ProjectionTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {projection}
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY projection_target_date ASC
     """,
@@ -95,7 +101,10 @@ public interface ProjectionTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {projection}
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
       WHERE projection_id = $1
     """,
     rowMapper = ProjectionMapper.class
@@ -105,7 +114,10 @@ public interface ProjectionTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {projection}
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
       WHERE projection_external_id = $1
     """,
     rowMapper = ProjectionMapper.class

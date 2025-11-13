@@ -71,7 +71,10 @@ public interface BlackBookTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {black_book}
+      SELECT black_book.*,
+             created_commit.created_at as created_at
+      FROM {black_book} black_book
+      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
       ORDER BY black_book_date DESC
     """,
     rowMapper = BlackBookMapper.class
@@ -80,7 +83,10 @@ public interface BlackBookTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {black_book}
+      SELECT black_book.*,
+             created_commit.created_at as created_at
+      FROM {black_book} black_book
+      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY black_book_date DESC
     """,
@@ -91,7 +97,10 @@ public interface BlackBookTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {black_book}
+      SELECT black_book.*,
+             created_commit.created_at as created_at
+      FROM {black_book} black_book
+      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
       WHERE black_book_id = $1
     """,
     rowMapper = BlackBookMapper.class
@@ -101,7 +110,10 @@ public interface BlackBookTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {black_book}
+      SELECT black_book.*,
+             created_commit.created_at as created_at
+      FROM {black_book} black_book
+      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
       WHERE black_book_external_id = $1
     """,
     rowMapper = BlackBookMapper.class

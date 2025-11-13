@@ -78,7 +78,10 @@ public interface ProjectionDetailTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {projection_detail}
+      SELECT projection_detail.*,
+             created_commit.created_at as created_at
+      FROM {projection_detail} projection_detail
+      LEFT JOIN {commit} created_commit ON projection_detail.created_commit = created_commit.commit_id
       ORDER BY detail_start_date DESC
     """,
     rowMapper = ProjectionDetailMapper.class
@@ -87,7 +90,10 @@ public interface ProjectionDetailTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {projection_detail}
+      SELECT projection_detail.*,
+             created_commit.created_at as created_at
+      FROM {projection_detail} projection_detail
+      LEFT JOIN {commit} created_commit ON projection_detail.created_commit = created_commit.commit_id
       WHERE projection_id = $1
       ORDER BY detail_start_date ASC
     """,
@@ -98,7 +104,10 @@ public interface ProjectionDetailTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {projection_detail}
+      SELECT projection_detail.*,
+             created_commit.created_at as created_at
+      FROM {projection_detail} projection_detail
+      LEFT JOIN {commit} created_commit ON projection_detail.created_commit = created_commit.commit_id
       WHERE detail_id = $1
     """,
     rowMapper = ProjectionDetailMapper.class
@@ -108,7 +117,10 @@ public interface ProjectionDetailTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {projection_detail}
+      SELECT projection_detail.*,
+             created_commit.created_at as created_at
+      FROM {projection_detail} projection_detail
+      LEFT JOIN {commit} created_commit ON projection_detail.created_commit = created_commit.commit_id
       WHERE detail_external_id = $1
     """,
     rowMapper = ProjectionDetailMapper.class
