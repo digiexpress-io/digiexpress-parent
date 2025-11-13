@@ -79,6 +79,19 @@ public interface ProjectionTable {
              created_commit.created_at as created_at
       FROM {projection} projection
       LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = ProjectionMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
       ORDER BY projection_target_date ASC
     """,
     rowMapper = ProjectionMapper.class

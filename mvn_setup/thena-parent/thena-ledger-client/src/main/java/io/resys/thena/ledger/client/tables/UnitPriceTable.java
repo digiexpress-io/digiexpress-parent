@@ -72,6 +72,18 @@ public interface UnitPriceTable {
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
       LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
+    """,
+    rowMapper = UnitPriceMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT unit_price.*,
+             created_commit.created_at as created_at
+      FROM {unit_price} unit_price
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
       ORDER BY unit_price_date DESC
     """,
     rowMapper = UnitPriceMapper.class

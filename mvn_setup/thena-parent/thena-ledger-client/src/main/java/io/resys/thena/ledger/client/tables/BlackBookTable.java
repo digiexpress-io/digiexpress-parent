@@ -75,6 +75,19 @@ public interface BlackBookTable {
              created_commit.created_at as created_at
       FROM {black_book} black_book
       LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON black_book.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = BlackBookMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT black_book.*,
+             created_commit.created_at as created_at
+      FROM {black_book} black_book
+      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
       ORDER BY black_book_date DESC
     """,
     rowMapper = BlackBookMapper.class

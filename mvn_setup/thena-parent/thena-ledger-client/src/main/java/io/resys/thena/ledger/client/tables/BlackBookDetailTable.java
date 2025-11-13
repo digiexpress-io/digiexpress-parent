@@ -82,6 +82,20 @@ public interface BlackBookDetailTable {
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
       LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {black_book} black_book ON black_book_detail.black_book_id = black_book.black_book_id
+      LEFT JOIN {ledger} ledger ON black_book.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = BlackBookDetailMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT black_book_detail.*,
+             created_commit.created_at as created_at
+      FROM {black_book_detail} black_book_detail
+      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
       ORDER BY detail_start_date DESC
     """,
     rowMapper = BlackBookDetailMapper.class

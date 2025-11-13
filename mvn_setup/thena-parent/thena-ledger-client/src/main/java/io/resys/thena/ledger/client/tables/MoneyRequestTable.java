@@ -85,6 +85,21 @@ public interface MoneyRequestTable {
       FROM {money_request} money_request
       LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
       LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON money_request.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = MoneyRequestMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT money_request.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {money_request} money_request
+      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
       ORDER BY money_request_due_date ASC
     """,
     rowMapper = MoneyRequestMapper.class

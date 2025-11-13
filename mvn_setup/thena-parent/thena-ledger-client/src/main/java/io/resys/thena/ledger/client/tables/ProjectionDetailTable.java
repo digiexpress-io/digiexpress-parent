@@ -82,6 +82,20 @@ public interface ProjectionDetailTable {
              created_commit.created_at as created_at
       FROM {projection_detail} projection_detail
       LEFT JOIN {commit} created_commit ON projection_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {projection} projection ON projection_detail.projection_id = projection.projection_id
+      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = ProjectionDetailMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT projection_detail.*,
+             created_commit.created_at as created_at
+      FROM {projection_detail} projection_detail
+      LEFT JOIN {commit} created_commit ON projection_detail.created_commit = created_commit.commit_id
       ORDER BY detail_start_date DESC
     """,
     rowMapper = ProjectionDetailMapper.class

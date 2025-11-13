@@ -69,6 +69,20 @@ public interface SettlementPaymentTable {
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
       LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
+      LEFT JOIN {settlement} settlement ON settlement_payment.settlement_id = settlement.settlement_id
+      LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = SettlementPaymentMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT settlement_payment.*,
+             created_commit.created_at as created_at
+      FROM {settlement_payment} settlement_payment
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
       ORDER BY settlement_payment_id ASC
     """,
     rowMapper = SettlementPaymentMapper.class

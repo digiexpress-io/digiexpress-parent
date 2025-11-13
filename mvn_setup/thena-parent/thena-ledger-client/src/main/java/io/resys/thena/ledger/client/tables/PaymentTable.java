@@ -75,6 +75,19 @@ public interface PaymentTable {
              created_commit.created_at as created_at
       FROM {payment} payment
       LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON payment.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = PaymentMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT payment.*,
+             created_commit.created_at as created_at
+      FROM {payment} payment
+      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
       ORDER BY payment_date DESC
     """,
     rowMapper = PaymentMapper.class

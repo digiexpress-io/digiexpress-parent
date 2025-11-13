@@ -69,6 +69,20 @@ public interface LedgerTable {
       FROM {ledger} ledger
       LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
       LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
+    """,
+    rowMapper = LedgerMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT ledger.*,
+             updated_commit.created_at as updated_at,
+             created_commit.created_at as created_at
+      FROM {ledger} ledger
+      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
       ORDER BY ledger_name ASC
     """,
     rowMapper = LedgerMapper.class

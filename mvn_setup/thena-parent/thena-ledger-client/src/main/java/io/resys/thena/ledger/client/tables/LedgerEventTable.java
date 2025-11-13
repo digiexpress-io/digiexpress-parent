@@ -77,6 +77,19 @@ public interface LedgerEventTable {
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
       LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON ledger_event.ledger_id = ledger.ledger_id
+    """,
+    rowMapper = LedgerEventMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
       ORDER BY ledger_event_date DESC
     """,
     rowMapper = LedgerEventMapper.class
