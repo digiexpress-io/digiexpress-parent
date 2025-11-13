@@ -88,9 +88,9 @@ class ConverterTest {
       {
         "text": "I would like to point out some flaws regarding forest protection.",
         "sentiment": "neutral",
-        "scores": [
-          0.0
-        ]
+        "scores": {
+          "score": 0.0
+        }
       }
     ],
     "timestamp": "2025-09-04T21:24:06.678744Z",

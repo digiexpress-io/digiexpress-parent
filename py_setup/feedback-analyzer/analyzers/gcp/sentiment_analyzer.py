@@ -130,7 +130,7 @@ class GCPSentimentAnalyzer(BaseSentimentAnalyzer):
             sentences=[{
                 "text": text,
                 "sentiment": sentiment,
-                "scores": { score }
+                "scores": { "score": score }
             }],
             timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             modelVersion = sentiment_version,
