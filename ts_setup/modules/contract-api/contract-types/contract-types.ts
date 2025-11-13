@@ -184,6 +184,7 @@ export declare namespace ContractApi {
     contractMaturityDate?: string; // Optional<LocalDate>
     
     contractStatus: ContractStatusType;
+
     contractSubStatus?: string;
     contractType: string;
     contractSubType?: string;
@@ -446,6 +447,8 @@ export declare namespace ContractApi {
     contractStartDate: Date; 
     contractMaturityDate?: Date;     
     contractStatus: ContractStatusType;
+    contractStatusIntl?: string;
+
     contractType: string;
 
     createdAt: Date; 

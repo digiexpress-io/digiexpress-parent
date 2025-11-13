@@ -1,5 +1,6 @@
 import { createFileFetch } from '@dxs-ts/envir-fetch';
 import { ContractApi } from '@dxs-ts/contract-api';
+import { useIntl } from 'react-intl';
 
 
 export const Hook = createFileFetch('worker/rest/api/contracts.GET')({
@@ -9,6 +10,7 @@ export const Hook = createFileFetch('worker/rest/api/contracts.GET')({
 function hook(_props: {}) {
   const params = Hook.useParams();
   const { url } = params;
+  const intl = useIntl();
   
   return {
     findAllContracts: async (): Promise<ContractApi.ContractSummary[]> => {
@@ -38,7 +40,10 @@ function hook(_props: {}) {
             };
 
             console.log(result);
-            return result;
+            return {
+              ...result,
+              contractStatusIntl: intl.formatMessage({ id: `contract.status.${result.contractStatus?.toLowerCase()}`, defaultMessage: result.contractStatus })
+            };
           });
         })
     },
