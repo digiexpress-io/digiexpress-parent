@@ -197,10 +197,11 @@ gamut.feedback.vote.title,,Was this answer helpful?,Oliko vastauksesta hyötyä?
 gamut.feedback.vote.notHelpful,,No this was not helpful,Ei vastauksesta ei ollut apua,"Nej, detta var inte till hjälp.","Tidak, ini tidak membantu","Ne, nije bio od pomoći"
 gamut.feedback.vote.yesHelpful,,Yes this was helpful,Kyllä vastauksesta oli apua,"Ja, detta var hjälpsamt.",Ya ini membantu,"Da, bio je od pomoći"
 gamut.feedback.vote.loginReq,,You must be logged in to rate feedback,Sinun on kirjauduttava sisään arvioidaksesi palautetta,Du måste vara inloggad för att betygsätta feedback,Anda mesti log masuk untuk menilai maklum balas,Za ocjenjivanje povratne informacije potrebno je biti prijavljen
-gamut.feedback.updatedOnDate,,Updated date,Päivitä päivämäärä,Uppdaterat datum,Tarikh dikemas kini,Ažuriran datum
+gamut.feedback.updatedOnDate,,Updated,Päivitetty,Uppdaterad,Tarikh dikemas kini,Ažuriran datum
 gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespons,Maklum balas pelanggan,Povratna informacija klijenta
 gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi,Odgovor organizacije
 // ----------------------- DIALOB REVIEW -------------------------,,,,,,
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
 dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
+
 
