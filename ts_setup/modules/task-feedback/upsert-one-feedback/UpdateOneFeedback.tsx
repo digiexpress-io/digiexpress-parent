@@ -137,6 +137,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
 
       <Divider sx={{ my: 2 }} />
 
+      <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.mainCategory' })}</Typography>
       <FeedbackContent feedback={{ ...feedback, ...main, customerTitle }} onChange={(props) => {
         setMain({
           labelKey: props.labelKey,
