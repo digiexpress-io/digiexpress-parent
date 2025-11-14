@@ -6,8 +6,31 @@ import { FeedbackApi, useFeedback } from '../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 
 import { WithTableStyles } from '@dxs-ts/xui-table';
-import { ColumnDef, sortingFns } from '@tanstack/react-table';
+import { ColumnDef, sortingFns, type FilterFn } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
+
+const normalizeYMD = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+const dateFilterFn: FilterFn<any> = (row, columnId, filterValue: { date: Date | null; type: 'EQUAL' | 'LT' | 'GTE' }) => {
+  const { date, type } = filterValue ?? {};
+  if (!date) return true;
+
+  const raw = row.getValue(columnId);
+  if (!raw) return false;
+
+  const cellDate = typeof raw === 'string' ? new Date(raw) : (raw as Date);
+  if (isNaN(cellDate.getTime())) return false;
+
+  const a = normalizeYMD(cellDate).getTime();
+  const b = normalizeYMD(date).getTime();
+
+  switch (type) {
+    case 'EQUAL': return a === b;
+    case 'LT':    return a < b;
+    case 'GTE':   return a >= b;
+    default:      return true;
+  }
+};
 
 export interface FeedbackAllTasksProps {
   onOpenFeedback(feedbackId: string): void;
@@ -62,7 +85,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ onOpenFeedba
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { enableSelection: true },
+      meta: { enableSelection: false },
       cell: (info) => info.getValue(),
     },
     {
@@ -75,7 +98,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ onOpenFeedba
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { enableSelection: true },
+      meta: { enableSelection: false },
       cell: (info) => info.getValue(),
     },
     {
@@ -88,7 +111,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ onOpenFeedba
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { enableSelection: true },
+      meta: { enableSelection: false },
       cell: (info) => info.getValue(),
     },
     {
@@ -96,20 +119,20 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ onOpenFeedba
       accessorKey: 'updatedOnDate',
       size: 200,
       minSize: 200,
-      filterFn: 'includesString',
+      filterFn: dateFilterFn,
       sortingFn: sortingFns.datetime,
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { enableSelection: true },
+      meta: { isDate: true, enableSelection: false },
       cell: (info) => {
         const dateTime = DateTime.fromJSDate(new Date(info.getValue()))
-          .setLocale("fi")
-          .toLocaleString(DateTime.DATE_SHORT)
+          .setLocale('fi')
+          .toLocaleString(DateTime.DATE_SHORT);
         return dateTime;
       },
     },
-  ];
+  ];  
 
   return (
     <Box>
