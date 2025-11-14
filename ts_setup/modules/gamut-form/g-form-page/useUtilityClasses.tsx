@@ -25,6 +25,7 @@ const useUtilityClasses = (ownerState: GFormPageProps) => {
     titles: ['titles'],
     title: ['title'],
     subTitle: ['subTitle'],
+    footerButton: ['footerButton'],
 
     body: ['body'],
     footer: ['footer'],
@@ -95,7 +96,7 @@ export const GFormPageSubTitle = styled('div', {
   slot: 'Title',
   overridesResolver: (props, styles) => {
     return [
-      styles.root, ...useVariantOverride(props, styles)
+      styles.root, ...useVariantOverride(props, styles),
     ];
   },
 })<{ ownerState: GFormPageProps }>(({ theme, ownerState }) => {
@@ -170,5 +171,11 @@ export const GFormPageFooter = styled('div', {
     justifyContent: 'flex-end',    
     flexWrap: 'wrap',             
     gap: theme.spacing(1),
+
+    '& .GFormPage-footerButton': {
+      [theme.breakpoints.down('sm')]: {
+        width: '100%',
+      }
+    }
   };
 });
