@@ -64,12 +64,12 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
     <StyledDialog fullWidth maxWidth='md' className={classes.taskAssignmentEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle>
-        {intl.formatMessage({ id: 'task.assignable.dialog.title', defaultMessage: 'Manage assigned forms' })}
+        {intl.formatMessage({ id: 'task.assignable.dialog.title' })}
       </DialogTitle>
 
       <DialogContent>
         <Stack direction='column' width='100%'>
-          <Typography variant='h3' color='primary.main'>{intl.formatMessage({ id: 'task.assignable.new', defaultMessage: 'Assign new forms' })}</Typography>
+          <Typography variant='h3' color='primary.main'>{intl.formatMessage({ id: 'task.assignable.new' })}</Typography>
 
           <Box className={classes.contentText}>
             <InfoOutlinedIcon fontSize='small' color='info' />
@@ -81,7 +81,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
 
           <Box className={classes.contentBody}>
             <div>
-              <Typography variant='subtitle2'>{intl.formatMessage({ id: 'task.assignable.locale', defaultMessage: 'Language' })}</Typography>
+              <Typography variant='subtitle2'>{intl.formatMessage({ id: 'task.assignable.locale' })}</Typography>
               <FormControl size="medium" sx={{ minWidth: 100 }}>
                 <Select value={selectedLocale}
                   onChange={(e) => setSelectedLocale(e.target.value)}
@@ -97,7 +97,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
               </FormControl>
             </div>
             <Box flex={1}>
-              <Typography variant='subtitle2'>{intl.formatMessage({ id: 'task.assignable.forms', defaultMessage: 'Forms' })}</Typography>
+              <Typography variant='subtitle2'>{intl.formatMessage({ id: 'task.assignable.forms' })}</Typography>
               <Autocomplete fullWidth
                 multiple
                 disableCloseOnSelect
@@ -117,13 +117,10 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
 
           <Box className={classes.cancelledFormsContainer}>
             <Typography variant="h3" color='error.main'>
-              {intl.formatMessage({ id: 'task.assignable.cancel', defaultMessage: 'Cancel assigned forms' })}
+              {intl.formatMessage({ id: 'task.assignable.cancel' })}
             </Typography>
             <Typography>
-              {intl.formatMessage({
-                id: 'task.assignable.cancel.desc',
-                defaultMessage: 'Assigned forms cannot be cancelled after the customer has completed them!'
-              })}
+              {intl.formatMessage({ id: 'task.assignable.cancel.desc' })}
             </Typography>
 
             <Autocomplete
@@ -148,7 +145,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
             />
 
             <Box sx={{ mt: 2 }}>
-              {cancelledForms.length > 0 && <Typography color='error.main' fontWeight={500}>{intl.formatMessage({ id: 'task.assignable.cancel.formsList.desc', defaultMessage: 'The following form(s) will be cancelled!' })}</Typography>}
+              {cancelledForms.length > 0 && <Typography color='error.main' fontWeight={500}>{intl.formatMessage({ id: 'task.assignable.cancel.formsList.desc' })}</Typography>}
               {cancelledForms.map((form, index) => (
                 <Box key={form.id} sx={{ backgroundColor: index % 2 === 0 ? 'action.hover' : 'background.default', p: 0.5, display: 'flex' }}>
                   <Typography>{form.description}{" - "}{form.locale}{" - "}{form.status}</Typography>

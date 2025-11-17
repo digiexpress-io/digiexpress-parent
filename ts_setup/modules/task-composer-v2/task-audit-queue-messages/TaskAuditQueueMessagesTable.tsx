@@ -29,7 +29,7 @@ export const TaskAuditQueueMessagesTable: React.FC = () => {
 
   const columns: ColumnDef<TaskApi.TaskAuditQueueMessage, any>[] = [
     {
-      header: intl.formatMessage({ id: 'task.audit.queueMessages.routingKey', defaultMessage: 'Author' }),
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.routingKey' }),
       accessorKey: 'routingKey',
       size: 150,
       minSize: 100,
@@ -38,7 +38,7 @@ export const TaskAuditQueueMessagesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queueMessages.bodyType', defaultMessage: 'Body type' }),
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.bodyType' }),
       accessorKey: 'bodyType',
       size: 150,
       minSize: 150,
@@ -47,7 +47,7 @@ export const TaskAuditQueueMessagesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queueMessages.bodyValue', defaultMessage: 'Body value' }),
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.bodyValue' }),
       accessorKey: 'bodyValue',
       size: 150,
       minSize: 150,
@@ -57,7 +57,7 @@ export const TaskAuditQueueMessagesTable: React.FC = () => {
       cell: (bodyValue) => flexRender(BodyValue, { value: bodyValue.row.original })
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queueMessages.createdAt', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.queueMessages.createdAt' }),
       accessorKey: 'createdAt',
       size: 150,
       minSize: 150,

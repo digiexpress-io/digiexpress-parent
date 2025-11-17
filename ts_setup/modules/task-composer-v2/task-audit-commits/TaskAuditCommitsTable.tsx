@@ -34,7 +34,7 @@ export const TaskAuditCommitsTable: React.FC = () => {
 
   const columns: ColumnDef<TaskApi.TaskCommit, any>[] = [
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.author', defaultMessage: 'Author' }),
+      header: intl.formatMessage({ id: 'task.audit.commits.author' }),
       accessorKey: 'commitAuthor',
       size: 200,
       minSize: 200,
@@ -43,7 +43,7 @@ export const TaskAuditCommitsTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.message', defaultMessage: 'Message' }),
+      header: intl.formatMessage({ id: 'task.audit.commits.message' }),
       accessorKey: 'commitMessage',
       size: 400,
       minSize: 400,
@@ -52,7 +52,7 @@ export const TaskAuditCommitsTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.commitBody', defaultMessage: 'Body' }),
+      header: intl.formatMessage({ id: 'task.audit.commits.commitBody' }),
       accessorKey: 'commitBody',
       size: 150,
       minSize: 150,
@@ -62,7 +62,7 @@ export const TaskAuditCommitsTable: React.FC = () => {
       cell: (updated) => flexRender(CommitBody, { value: updated.row.original })
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.commits.createdAt', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.commits.createdAt' }),
       accessorKey: 'createdAt',
       size: 150,
       minSize: 150,
@@ -103,7 +103,7 @@ const CommitBody: React.FC<{ value: TaskApi.TaskCommit }> = ({ value }) => {
         {intl.formatMessage({ id: 'button.view', defaultMessage: 'View' })}
       </Button>
       <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>{intl.formatMessage({ id: 'task.audit.commits.commitBody.title', defaultMessage: 'Commit body' })}</DialogTitle>
+        <DialogTitle>{intl.formatMessage({ id: 'task.audit.commits.commitBody.title' })}</DialogTitle>
         <DialogContent>
           <Editor
             value={toYaml(tree)}
