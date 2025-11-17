@@ -32,7 +32,7 @@ export const TaskPropertiesAlt: React.FC<{ style: TaskCardStyleDefinition, onRev
         <Box className={classes.cell}>
           <Typography>{intl.formatMessage({ id: 'taskDialog.category' })}</Typography>
           <Chip color={isProtected ? 'error' : 'primary'}
-            label={isProtected ? intl.formatMessage({ id: 'task.keywords.protected', defaultMessage: 'Protected' }) : intl.formatMessage({ id: 'task.keywords.normal', defaultMessage: 'Normal' })}
+            label={isProtected ? intl.formatMessage({ id: 'task.keywords.protected' }) : intl.formatMessage({ id: 'task.keywords.normal' })}
           />
         </Box>
 
@@ -41,9 +41,9 @@ export const TaskPropertiesAlt: React.FC<{ style: TaskCardStyleDefinition, onRev
         </Box>
 
         <Box className={classes.cell}>
-          <Typography>{intl.formatMessage({ id: 'taskDialog.source', defaultMessage: 'Source' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskDialog.source' })}</Typography>
           <Chip color='primary'
-            label={isManual ? intl.formatMessage({ id: 'task.keywords.internal', defaultMessage: 'Internal' }) : intl.formatMessage({ id: 'task.keywords.customerCreated', defaultMessage: 'Customer-created' })}
+            label={isManual ? intl.formatMessage({ id: 'task.keywords.internal' }) : intl.formatMessage({ id: 'task.keywords.customerCreated' })}
           />
         </Box>
 
@@ -53,13 +53,13 @@ export const TaskPropertiesAlt: React.FC<{ style: TaskCardStyleDefinition, onRev
       </Grid2>
 
       <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }} className={classes.row}>
-        <StyledTextField fullWidth value={task.clientIdentificator} label={intl.formatMessage({ id: 'taskcard.body.customerName', defaultMessage: 'Customer name' })} />
-        <StyledTextField fullWidth value={task.subject} label={intl.formatMessage({ id: 'taskcard.body.subject', defaultMessage: 'Subject' })} />
-        <Button variant='contained' onClick={onReview}>{intl.formatMessage({ id: 'taskcard.button.viewForm', defaultMessage: 'View form' })}</Button>
+        <StyledTextField fullWidth value={task.clientIdentificator} label={intl.formatMessage({ id: 'taskcard.body.customerName' })} />
+        <StyledTextField fullWidth value={task.subject} label={intl.formatMessage({ id: 'taskcard.body.subject' })} />
+        <Button variant='contained' onClick={onReview}>{intl.formatMessage({ id: 'taskcard.button.viewForm' })}</Button>
       </Grid2>
 
       <Grid2 size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }} className={classes.row}>
-        <StyledTextField fullWidth value={task.additionalInfo} label={intl.formatMessage({ id: 'taskcard.body.additionalInfo', defaultMessage: 'Additional info' })} />
+        <StyledTextField fullWidth value={task.additionalInfo} label={intl.formatMessage({ id: 'taskcard.body.additionalInfo' })} />
       </Grid2>
     </StyledTaskPropertiesAlt>
   )
