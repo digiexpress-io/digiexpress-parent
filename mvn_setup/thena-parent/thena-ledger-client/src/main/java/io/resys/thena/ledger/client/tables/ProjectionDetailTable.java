@@ -40,33 +40,36 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {projection_detail}
     (
-      detail_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
+      
       projection_id UUID NOT NULL,
-      detail_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      target_id VARCHAR(255),
+            
       detail_type VARCHAR(100) NOT NULL,
       detail_sub_type VARCHAR(100),
       detail_description TEXT,
-      detail_target_id VARCHAR(255),
       detail_start_date DATE NOT NULL,
       detail_end_date DATE NOT NULL,
       detail_amount DECIMAL(15,2) NOT NULL,
       detail_formula VARCHAR(255),
       detail_body JSONB,
+
       created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {projection_detail}_PROJECTION_INDEX
       ON {projection_detail} (projection_id);
     CREATE INDEX IF NOT EXISTS {projection_detail}_EXTERNAL_INDEX
-      ON {projection_detail} (detail_external_id);
+      ON {projection_detail} (external_id);
     CREATE INDEX IF NOT EXISTS {projection_detail}_TARGET_INDEX
-      ON {projection_detail} (detail_target_id);
+      ON {projection_detail} (target_id);
     CREATE INDEX IF NOT EXISTS {projection_detail}_DATE_RANGE_INDEX
       ON {projection_detail} (detail_start_date, detail_end_date);
   """,
   constraints = """
     ALTER TABLE {projection_detail} ADD CONSTRAINT fk_projection_detail_projection 
-      FOREIGN KEY (projection_id) REFERENCES {projection}(projection_id);
+      FOREIGN KEY (projection_id) REFERENCES {projection}(id);
     ALTER TABLE {projection_detail} ADD CONSTRAINT fk_projection_detail_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -82,8 +85,8 @@ public interface ProjectionDetailTable {
              created_commit.created_at as created_at
       FROM {projection_detail} projection_detail
       LEFT JOIN {commit} created_commit ON projection_detail.created_commit_id = created_commit.commit_id
-      LEFT JOIN {projection} projection ON projection_detail.projection_id = projection.projection_id
-      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.ledger_id
+      LEFT JOIN {projection} projection ON projection_detail.projection_id = projection.id
+      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.id
     """,
     rowMapper = ProjectionDetailMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -122,7 +125,7 @@ public interface ProjectionDetailTable {
              created_commit.created_at as created_at
       FROM {projection_detail} projection_detail
       LEFT JOIN {commit} created_commit ON projection_detail.created_commit_id = created_commit.commit_id
-      WHERE detail_id = $1
+      WHERE id = $1
     """,
     rowMapper = ProjectionDetailMapper.class
   )
@@ -135,7 +138,7 @@ public interface ProjectionDetailTable {
              created_commit.created_at as created_at
       FROM {projection_detail} projection_detail
       LEFT JOIN {commit} created_commit ON projection_detail.created_commit_id = created_commit.commit_id
-      WHERE detail_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = ProjectionDetailMapper.class
   )
@@ -144,8 +147,8 @@ public interface ProjectionDetailTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {projection_detail}
-      (detail_id, projection_id, detail_external_id, detail_type, detail_sub_type, 
-       detail_description, detail_target_id, detail_start_date, detail_end_date, 
+      (id, projection_id, external_id, detail_type, detail_sub_type, 
+       detail_description, target_id, detail_start_date, detail_end_date, 
        detail_amount, detail_formula, detail_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
@@ -160,13 +163,13 @@ public interface ProjectionDetailTable {
       final JsonObject detail_body = row.getJsonObject("detail_body");
 
       return ImmutableProjectionDetail.builder()
-          .id(TableUtils.toStringUUID(row, "detail_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .projectionId(TableUtils.toStringUUID(row, "projection_id"))
-          .externalId(row.getString("detail_external_id"))
+          .externalId(row.getString("external_id"))
           .type(row.getString("detail_type"))
           .subType(Optional.ofNullable(row.getString("detail_sub_type")))
           .description(Optional.ofNullable(row.getString("detail_description")))
-          .targetId(Optional.ofNullable(row.getString("detail_target_id")))
+          .targetId(Optional.ofNullable(row.getString("target_id")))
           .startDate(row.getLocalDate("detail_start_date"))
           .endDate(row.getLocalDate("detail_end_date"))
           .amount(row.getBigDecimal("detail_amount"))

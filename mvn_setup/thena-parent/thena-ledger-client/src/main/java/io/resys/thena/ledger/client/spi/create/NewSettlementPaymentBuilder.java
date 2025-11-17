@@ -55,7 +55,7 @@ public class NewSettlementPaymentBuilder implements NewSettlementPayment {
     this.next = ImmutableSettlementPayment.builder()
         .id(OidUtils.genUUID())
         .settlementId(settlementId)
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     // SettlementPayments are immutable, so no updates/deletes to consider
     this.allSettlementPayments = Stream.of(

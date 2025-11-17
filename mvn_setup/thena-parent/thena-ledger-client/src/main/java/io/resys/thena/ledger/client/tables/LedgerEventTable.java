@@ -40,9 +40,9 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {ledger_event}
     (
-      ledger_event_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      ledger_event_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
       ledger_event_type VARCHAR(100) NOT NULL,
       ledger_event_sub_type VARCHAR(100),
       ledger_event_description TEXT,
@@ -54,7 +54,7 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE INDEX IF NOT EXISTS {ledger_event}_LEDGER_INDEX
       ON {ledger_event} (ledger_id);
     CREATE INDEX IF NOT EXISTS {ledger_event}_EXTERNAL_INDEX
-      ON {ledger_event} (ledger_event_external_id);
+      ON {ledger_event} (external_id);
     CREATE INDEX IF NOT EXISTS {ledger_event}_TYPE_INDEX
       ON {ledger_event} (ledger_event_type);
     CREATE INDEX IF NOT EXISTS {ledger_event}_DATE_INDEX
@@ -62,7 +62,7 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -78,7 +78,7 @@ public interface LedgerEventTable {
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
       LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
-      LEFT JOIN {ledger} ledger ON ledger_event.ledger_id = ledger.ledger_id
+      LEFT JOIN {ledger} ledger ON ledger_event.ledger_id = ledger.id
     """,
     rowMapper = LedgerEventMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -130,7 +130,7 @@ public interface LedgerEventTable {
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
       LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
-      WHERE ledger_event_id = $1
+      WHERE id = $1
     """,
     rowMapper = LedgerEventMapper.class
   )
@@ -143,7 +143,7 @@ public interface LedgerEventTable {
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
       LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
-      WHERE ledger_event_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = LedgerEventMapper.class
   )
@@ -152,7 +152,7 @@ public interface LedgerEventTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ledger_event}
-      (ledger_event_id, ledger_id, ledger_event_external_id, ledger_event_type, ledger_event_sub_type, 
+      (id, ledger_id, external_id, ledger_event_type, ledger_event_sub_type, 
        ledger_event_description, ledger_event_date, ledger_event_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
@@ -167,9 +167,9 @@ public interface LedgerEventTable {
       final JsonObject ledger_event_body = row.getJsonObject("ledger_event_body");
 
       return ImmutableLedgerEvent.builder()
-          .id(TableUtils.toStringUUID(row, "ledger_event_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("ledger_event_external_id"))
+          .externalId(row.getString("external_id"))
           .type(row.getString("ledger_event_type"))
           .subType(Optional.ofNullable(row.getString("ledger_event_sub_type")))
           .description(Optional.ofNullable(row.getString("ledger_event_description")))

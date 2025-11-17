@@ -26,14 +26,11 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.entities.LedgerDocType;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface LedgerQueryActions {
 
-  
   LedgerQuery ledgerQuery();
-  ReferenceNumberQuery referenceNumberQuery();
   
   interface LedgerQuery {
     
@@ -49,8 +46,4 @@ public interface LedgerQueryActions {
     Uni<QueryEnvelopeList<LedgerContainer>> findAll();
   }
   
-  
-  interface ReferenceNumberQuery {
-    Multi<String> findNext(int howMany);
-  }
 }

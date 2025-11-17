@@ -58,8 +58,8 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
     this.next = ImmutableMoneyRequest.builder()
         .id(OidUtils.genUUID())
         .ledgerId(ledgerId)
-        .createdCommit(logger.getCommitId())
-        .updatedCommit(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
+        .commitId(logger.getCommitId())
         .subType(Optional.empty())
         .description(Optional.empty());
     

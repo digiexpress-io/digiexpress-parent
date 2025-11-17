@@ -40,33 +40,36 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {black_book_detail}
     (
-      detail_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       black_book_id UUID NOT NULL,
-      detail_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      target_id VARCHAR(255),
+      
       detail_type VARCHAR(100) NOT NULL,
       detail_sub_type VARCHAR(100),
       detail_description TEXT,
-      detail_target_id VARCHAR(255),
+      
       detail_start_date DATE NOT NULL,
       detail_end_date DATE NOT NULL,
       detail_amount DECIMAL(15,2) NOT NULL,
       detail_formula VARCHAR(255),
       detail_body JSONB,
+      
       created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {black_book_detail}_BLACK_BOOK_INDEX
       ON {black_book_detail} (black_book_id);
     CREATE INDEX IF NOT EXISTS {black_book_detail}_EXTERNAL_INDEX
-      ON {black_book_detail} (detail_external_id);
+      ON {black_book_detail} (external_id);
     CREATE INDEX IF NOT EXISTS {black_book_detail}_TARGET_INDEX
-      ON {black_book_detail} (detail_target_id);
+      ON {black_book_detail} (target_id);
     CREATE INDEX IF NOT EXISTS {black_book_detail}_DATE_RANGE_INDEX
       ON {black_book_detail} (detail_start_date, detail_end_date);
   """,
   constraints = """
     ALTER TABLE {black_book_detail} ADD CONSTRAINT fk_black_book_detail_black_book 
-      FOREIGN KEY (black_book_id) REFERENCES {black_book}(black_book_id);
+      FOREIGN KEY (black_book_id) REFERENCES {black_book}(id);
     ALTER TABLE {black_book_detail} ADD CONSTRAINT fk_black_book_detail_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -82,8 +85,8 @@ public interface BlackBookDetailTable {
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
       LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
-      LEFT JOIN {black_book} black_book ON black_book_detail.black_book_id = black_book.black_book_id
-      LEFT JOIN {ledger} ledger ON black_book.ledger_id = ledger.ledger_id
+      LEFT JOIN {black_book} black_book ON black_book_detail.black_book_id = black_book.id
+      LEFT JOIN {ledger} ledger ON black_book.ledger_id = ledger.id
     """,
     rowMapper = BlackBookDetailMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -122,7 +125,7 @@ public interface BlackBookDetailTable {
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
       LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
-      WHERE detail_id = $1
+      WHERE id = $1
     """,
     rowMapper = BlackBookDetailMapper.class
   )
@@ -135,7 +138,7 @@ public interface BlackBookDetailTable {
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
       LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
-      WHERE detail_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = BlackBookDetailMapper.class
   )
@@ -144,8 +147,8 @@ public interface BlackBookDetailTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {black_book_detail}
-      (detail_id, black_book_id, detail_external_id, detail_type, detail_sub_type, 
-       detail_description, detail_target_id, detail_start_date, detail_end_date, 
+      (id, black_book_id, external_id, detail_type, detail_sub_type, 
+       detail_description, target_id, detail_start_date, detail_end_date, 
        detail_amount, detail_formula, detail_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
@@ -160,13 +163,13 @@ public interface BlackBookDetailTable {
       final JsonObject detail_body = row.getJsonObject("detail_body");
 
       return ImmutableBlackBookDetail.builder()
-          .id(TableUtils.toStringUUID(row, "detail_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .blackBookId(TableUtils.toStringUUID(row, "black_book_id"))
-          .externalId(row.getString("detail_external_id"))
+          .externalId(row.getString("external_id"))
           .type(row.getString("detail_type"))
           .subType(Optional.ofNullable(row.getString("detail_sub_type")))
           .description(Optional.ofNullable(row.getString("detail_description")))
-          .targetId(Optional.ofNullable(row.getString("detail_target_id")))
+          .targetId(Optional.ofNullable(row.getString("target_id")))
           .startDate(row.getLocalDate("detail_start_date"))
           .endDate(row.getLocalDate("detail_end_date"))
           .amount(row.getBigDecimal("detail_amount"))

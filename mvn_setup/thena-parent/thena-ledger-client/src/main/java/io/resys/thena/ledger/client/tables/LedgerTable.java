@@ -39,8 +39,8 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {ledger}
     (
-      ledger_id UUID PRIMARY KEY,
-      ledger_external_id VARCHAR(255) NOT NULL,
+      id UUID PRIMARY KEY,
+      external_id VARCHAR(255) NOT NULL,
       ledger_name VARCHAR(255) NOT NULL,
       ledger_description TEXT,
       
@@ -141,8 +141,8 @@ public interface LedgerTable {
     @Override
     public Ledger apply(Row row) {
       return ImmutableLedger.builder()
-          .id(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("ledger_external_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .externalId(row.getString("external_id"))
           .name(row.getString("ledger_name"))
           .description(Optional.ofNullable(row.getString("ledger_description")))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
@@ -151,7 +151,7 @@ public interface LedgerTable {
           .transitives(ImmutableLedgerTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .updatedAt(row.getOffsetDateTime("updated_at"))
-              .updatedTreeAt(row.getOffsetDateTime("updated_at"))
+              .updatedTreeAt(row.getOffsetDateTime("updated_tree_at"))
               .build())
           .build();
     }

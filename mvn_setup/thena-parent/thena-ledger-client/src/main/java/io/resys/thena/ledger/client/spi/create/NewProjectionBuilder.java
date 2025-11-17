@@ -62,7 +62,7 @@ public class NewProjectionBuilder implements NewProjection {
     this.next = ImmutableProjection.builder()
         .id(projectionId)
         .ledgerId(ledgerId)
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     // Projections are immutable, so no updates/deletes to consider
     this.allProjections = Stream.of(

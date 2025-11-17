@@ -1,25 +1,5 @@
 package io.resys.thena.ledger.client.spi.create;
 
-/*-
- * #%L
- * thena-ledger-client
- * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -50,7 +30,6 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
   private final ImmutableLedger.Builder ledger;
   private final String ledgerId;
   private final String commitId;
-  private final OffsetDateTime createdAt;
   
   private ImmutablePersistenceUnit.Builder next;
   private Consumer<LedgerContainer> handleNewState;
@@ -59,14 +38,12 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
   public NewLedgerBuilder(LedgerCommitBuilder logger) {
     super();
     this.next = ImmutablePersistenceUnit.builder();
-
-    this.createdAt = logger.getCreatedAt();
     this.commitId = logger.getCommitId();
     this.ledgerId = OidUtils.genUUID();
     this.ledger = ImmutableLedger.builder()
         .id(ledgerId)
         .createdCommitId(commitId)
-        .updatedCommitId(commitId)
+        .commitId(commitId)
         .description(Optional.empty());
         
     this.logger = logger;

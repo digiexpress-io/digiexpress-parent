@@ -32,8 +32,8 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
-import io.resys.thena.ledger.client.api.LedgerQueryActions.LedgerQuery;
 import io.resys.thena.ledger.client.api.ImmutableLedgerContainer;
+import io.resys.thena.ledger.client.api.LedgerQueryActions.LedgerQuery;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.entities.LedgerDocType;
 import io.resys.thena.ledger.client.tables.BbDb;
@@ -259,7 +259,7 @@ public class LedgerQueryImpl implements LedgerQuery {
   }
 
   private List<LedgerContainer> groupByLedger(BbDbQuery.World world) {
-    final Map<String, LedgerContainer.Builder> ledgerContainers = world.getLedger().values().stream()
+    final Map<String, ImmutableLedgerContainer.Builder> ledgerContainers = world.getLedger().values().stream()
         .collect(Collectors.toMap(
             ledger -> ledger.getId(),
             ledger -> ImmutableLedgerContainer.builder().ledger(ledger)
@@ -289,19 +289,24 @@ public class LedgerQueryImpl implements LedgerQuery {
       }
     });
 
-    // Group settlement payments by settlement ID (need to find ledger through settlement)
-    final Map<String, String> settlementToLedger = world.getSettlement().values().stream()
-        .collect(Collectors.toMap(s -> s.getId(), s -> s.getLedgerId()));
-
+    // Group settlement payments by settlement ID within each ledger
+    final var settlementPaymentsByLedger = new java.util.HashMap<String, java.util.Map<String, java.util.List<io.resys.thena.ledger.client.entities.SettlementPayment>>>();
+    
     world.getSettlementPayment().values().forEach(settlementPayment -> {
-      final var ledgerId = settlementToLedger.get(settlementPayment.getSettlementId());
-      if (ledgerId != null) {
-        final var container = ledgerContainers.get(ledgerId);
-        if (container != null) {
-          container.addSettlementPayments(settlementPayment.getSettlementId(), settlementPayment);
-        }
+      final var settlement = world.getSettlement().get(settlementPayment.getSettlementId());
+      if (settlement != null && ledgerContainers.containsKey(settlement.getLedgerId())) {
+        settlementPaymentsByLedger.computeIfAbsent(settlement.getLedgerId(), k -> new java.util.HashMap<>())
+            .computeIfAbsent(settlementPayment.getSettlementId(), k -> new java.util.ArrayList<>())
+            .add(settlementPayment);
       }
     });
+    
+    settlementPaymentsByLedger.forEach((ledgerId, settlementPayments) -> {
+      final var container = ledgerContainers.get(ledgerId);
+      if (container != null) {
+        container.settlementPayments(settlementPayments);
+      }
+    });    
 
     // Group black books by ledger ID
     world.getBlackBook().values().forEach(blackBook -> {
@@ -311,17 +316,22 @@ public class LedgerQueryImpl implements LedgerQuery {
       }
     });
 
-    // Group black book details by black book ID (need to find ledger through black book)
-    final Map<String, String> blackBookToLedger = world.getBlackBook().values().stream()
-        .collect(Collectors.toMap(bb -> bb.getId(), bb -> bb.getLedgerId()));
-
+    // Group black book details by black book ID within each ledger
+    final var blackBookDetailsByLedger = new java.util.HashMap<String, java.util.Map<String, java.util.List<io.resys.thena.ledger.client.entities.BlackBookDetail>>>();
+    
     world.getBlackBookDetail().values().forEach(blackBookDetail -> {
-      final var ledgerId = blackBookToLedger.get(blackBookDetail.getBlackBookId());
-      if (ledgerId != null) {
-        final var container = ledgerContainers.get(ledgerId);
-        if (container != null) {
-          container.addBlackBookDetails(blackBookDetail.getBlackBookId(), blackBookDetail);
-        }
+      final var blackBook = world.getBlackBook().get(blackBookDetail.getBlackBookId());
+      if (blackBook != null && ledgerContainers.containsKey(blackBook.getLedgerId())) {
+        blackBookDetailsByLedger.computeIfAbsent(blackBook.getLedgerId(), k -> new java.util.HashMap<>())
+            .computeIfAbsent(blackBookDetail.getBlackBookId(), k -> new java.util.ArrayList<>())
+            .add(blackBookDetail);
+      }
+    });
+    
+    blackBookDetailsByLedger.forEach((ledgerId, blackBookDetails) -> {
+      final var container = ledgerContainers.get(ledgerId);
+      if (container != null) {
+        container.blackBookDetails(blackBookDetails);
       }
     });
 
@@ -333,17 +343,22 @@ public class LedgerQueryImpl implements LedgerQuery {
       }
     });
 
-    // Group projection details by projection ID (need to find ledger through projection)
-    final Map<String, String> projectionToLedger = world.getProjection().values().stream()
-        .collect(Collectors.toMap(p -> p.getId(), p -> p.getLedgerId()));
-
+    // Group projection details by projection ID within each ledger
+    final var projectionDetailsByLedger = new java.util.HashMap<String, java.util.Map<String, java.util.List<io.resys.thena.ledger.client.entities.ProjectionDetail>>>();
+    
     world.getProjectionDetail().values().forEach(projectionDetail -> {
-      final var ledgerId = projectionToLedger.get(projectionDetail.getProjectionId());
-      if (ledgerId != null) {
-        final var container = ledgerContainers.get(ledgerId);
-        if (container != null) {
-          container.addProjectionDetails(projectionDetail.getProjectionId(), projectionDetail);
-        }
+      final var projection = world.getProjection().get(projectionDetail.getProjectionId());
+      if (projection != null && ledgerContainers.containsKey(projection.getLedgerId())) {
+        projectionDetailsByLedger.computeIfAbsent(projection.getLedgerId(), k -> new java.util.HashMap<>())
+            .computeIfAbsent(projectionDetail.getProjectionId(), k -> new java.util.ArrayList<>())
+            .add(projectionDetail);
+      }
+    });
+    
+    projectionDetailsByLedger.forEach((ledgerId, projectionDetails) -> {
+      final var container = ledgerContainers.get(ledgerId);
+      if (container != null) {
+        container.projectionDetails(projectionDetails);
       }
     });
 
@@ -363,7 +378,7 @@ public class LedgerQueryImpl implements LedgerQuery {
     });
 
     return ledgerContainers.values().stream()
-        .map(LedgerContainer.Builder::build)
+        .map(ImmutableLedgerContainer.Builder::build)
         .collect(Collectors.toList());
   }
 }

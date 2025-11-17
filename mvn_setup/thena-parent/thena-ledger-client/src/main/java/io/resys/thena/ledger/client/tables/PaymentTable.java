@@ -39,27 +39,29 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {payment}
     (
-      payment_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      payment_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      
       payment_type VARCHAR(100) NOT NULL,
       payment_sub_type VARCHAR(100),
       payment_description TEXT,
       payment_date DATE NOT NULL,
       payment_amount DECIMAL(15,2) NOT NULL,
+      
       created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {payment}_LEDGER_INDEX
       ON {payment} (ledger_id);
     CREATE INDEX IF NOT EXISTS {payment}_EXTERNAL_INDEX
-      ON {payment} (payment_external_id);
+      ON {payment} (external_id);
     CREATE INDEX IF NOT EXISTS {payment}_DATE_INDEX
       ON {payment} (payment_date);
   """,
   constraints = """
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -75,7 +77,7 @@ public interface PaymentTable {
              created_commit.created_at as created_at
       FROM {payment} payment
       LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
-      LEFT JOIN {ledger} ledger ON payment.ledger_id = ledger.ledger_id
+      LEFT JOIN {ledger} ledger ON payment.ledger_id = ledger.id
     """,
     rowMapper = PaymentMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -114,7 +116,7 @@ public interface PaymentTable {
              created_commit.created_at as created_at
       FROM {payment} payment
       LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
-      WHERE payment_id = $1
+      WHERE id = $1
     """,
     rowMapper = PaymentMapper.class
   )
@@ -127,7 +129,7 @@ public interface PaymentTable {
              created_commit.created_at as created_at
       FROM {payment} payment
       LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
-      WHERE payment_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = PaymentMapper.class
   )
@@ -136,7 +138,7 @@ public interface PaymentTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {payment}
-      (payment_id, ledger_id, payment_external_id, payment_type, payment_sub_type, 
+      (id, ledger_id, external_id, payment_type, payment_sub_type, 
        payment_description, payment_date, payment_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
@@ -149,9 +151,9 @@ public interface PaymentTable {
     @Override
     public Payment apply(Row row) {
       return ImmutablePayment.builder()
-          .id(TableUtils.toStringUUID(row, "payment_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("payment_external_id"))
+          .externalId(row.getString("external_id"))
           .type(row.getString("payment_type"))
           .subType(Optional.ofNullable(row.getString("payment_sub_type")))
           .description(Optional.ofNullable(row.getString("payment_description")))

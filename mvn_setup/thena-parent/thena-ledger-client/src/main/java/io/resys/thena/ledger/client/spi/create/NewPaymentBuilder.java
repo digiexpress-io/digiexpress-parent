@@ -54,7 +54,7 @@ public class NewPaymentBuilder implements NewPayment {
     this.next = ImmutablePayment.builder()
         .id(OidUtils.genUUID())
         .ledgerId(ledgerId)
-        .createdCommit(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
         .subType(Optional.empty())
         .description(Optional.empty());
     

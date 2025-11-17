@@ -39,13 +39,15 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {unit_price}
     (
-      unit_price_id UUID PRIMARY KEY,
-      unit_price_external_id VARCHAR(255) NOT NULL,
+      id UUID PRIMARY KEY,
+      external_id VARCHAR(255) NOT NULL,
+      
       unit_price_type VARCHAR(100) NOT NULL,
       unit_price_sub_type VARCHAR(100),
       unit_price_description TEXT,
       unit_price_date DATE NOT NULL,
       unit_price_value DECIMAL(15,8) NOT NULL,
+      
       created_commit_id UUID NOT NULL
     );
 

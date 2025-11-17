@@ -66,7 +66,7 @@ public class NewBlackBookBuilder implements NewBlackBook {
     this.next = ImmutableBlackBook.builder()
         .id(this.blackBookId)
         .ledgerId(ledgerId)
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     this.allBlackBooks = Stream.of(
         // from current TX

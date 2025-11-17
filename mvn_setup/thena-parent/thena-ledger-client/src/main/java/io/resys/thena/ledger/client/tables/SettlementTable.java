@@ -39,14 +39,16 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {settlement}
     (
-      settlement_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      settlement_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      
       settlement_type VARCHAR(100) NOT NULL,
       settlement_sub_type VARCHAR(100),
       settlement_description TEXT,
       settlement_date DATE NOT NULL,
       settlement_amount DECIMAL(15,2) NOT NULL,
+      
       created_commit_id UUID NOT NULL
     );
 

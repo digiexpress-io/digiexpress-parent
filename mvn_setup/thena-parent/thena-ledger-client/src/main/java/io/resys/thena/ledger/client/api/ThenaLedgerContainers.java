@@ -61,13 +61,15 @@ public interface ThenaLedgerContainers {
     List<UnitPrice> getUnitPrices();
     
     List<BlackBook> getBlackBooks();
+    // bb id -> details
     Map<String, List<BlackBookDetail>> getBlackBookDetails();
     
-    
-    List<Projection> getProjections();
+    List<Projection> getProjections(); 
+    // projection id -> details
     Map<String, List<ProjectionDetail>> getProjectionDetails();
     
     List<Settlement> getSettlements();
+    // settlement id -> details
     Map<String, List<SettlementPayment>> getSettlementPayments();
 
   }

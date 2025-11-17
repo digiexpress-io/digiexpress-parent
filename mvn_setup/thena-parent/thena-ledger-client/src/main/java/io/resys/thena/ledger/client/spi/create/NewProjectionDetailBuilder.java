@@ -57,7 +57,7 @@ public class NewProjectionDetailBuilder implements NewProjectionDetail {
     this.next = ImmutableProjectionDetail.builder()
         .id(OidUtils.genUUID())
         .projectionId(projectionId)
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     // ProjectionDetails are immutable, so no updates/deletes to consider
     this.allProjectionDetails = Stream.of(

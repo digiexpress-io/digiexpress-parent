@@ -65,7 +65,7 @@ public class NewSettlementBuilder implements NewSettlement {
     this.next = ImmutableSettlement.builder()
         .id(settlementId)
         .ledgerId(ledgerId)
-        .createdCommit(logger.getCommitId())
+        .createdCommitId(logger.getCommitId())
         .subType(Optional.empty())
         .description(Optional.empty());
     

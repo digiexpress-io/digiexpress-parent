@@ -39,9 +39,10 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE IF NOT EXISTS {projection}
     (
-      projection_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      projection_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      
       projection_type VARCHAR(100) NOT NULL,
       projection_sub_type VARCHAR(100),
       projection_description TEXT,
@@ -49,13 +50,14 @@ import io.vertx.mutiny.sqlclient.Row;
       projection_start_date DATE NOT NULL,
       projection_end_date DATE NOT NULL,
       projection_amount DECIMAL(15,2) NOT NULL,
+      
       created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {projection}_LEDGER_INDEX
       ON {projection} (ledger_id);
     CREATE INDEX IF NOT EXISTS {projection}_EXTERNAL_INDEX
-      ON {projection} (projection_external_id);
+      ON {projection} (external_id);
     CREATE INDEX IF NOT EXISTS {projection}_TARGET_DATE_INDEX
       ON {projection} (projection_target_date);
     CREATE INDEX IF NOT EXISTS {projection}_DATE_RANGE_INDEX
@@ -63,7 +65,7 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -79,7 +81,7 @@ public interface ProjectionTable {
              created_commit.created_at as created_at
       FROM {projection} projection
       LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
-      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.ledger_id
+      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.id
     """,
     rowMapper = ProjectionMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -118,7 +120,7 @@ public interface ProjectionTable {
              created_commit.created_at as created_at
       FROM {projection} projection
       LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
-      WHERE projection_id = $1
+      WHERE id = $1
     """,
     rowMapper = ProjectionMapper.class
   )
@@ -131,7 +133,7 @@ public interface ProjectionTable {
              created_commit.created_at as created_at
       FROM {projection} projection
       LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
-      WHERE projection_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = ProjectionMapper.class
   )
@@ -140,7 +142,7 @@ public interface ProjectionTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {projection}
-      (projection_id, ledger_id, projection_external_id, projection_type, projection_sub_type, 
+      (id, ledger_id, external_id, projection_type, projection_sub_type, 
        projection_description, projection_target_date, projection_start_date, projection_end_date, 
        projection_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
@@ -154,9 +156,9 @@ public interface ProjectionTable {
     @Override
     public Projection apply(Row row) {
       return ImmutableProjection.builder()
-          .id(TableUtils.toStringUUID(row, "projection_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("projection_external_id"))
+          .externalId(row.getString("external_id"))
           .type(row.getString("projection_type"))
           .subType(Optional.ofNullable(row.getString("projection_sub_type")))
           .description(Optional.ofNullable(row.getString("projection_description")))

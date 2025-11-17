@@ -58,7 +58,7 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
     this.next = ImmutableBlackBookDetail.builder()
         .id(OidUtils.genUUID())
         .blackBookId(blackBookId)
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     // BlackBookDetails are immutable, so no updates/deletes to consider
     this.allBlackBookDetails = Stream.of(

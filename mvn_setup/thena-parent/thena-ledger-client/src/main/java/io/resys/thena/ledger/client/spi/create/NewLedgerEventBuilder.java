@@ -56,7 +56,7 @@ public class NewLedgerEventBuilder implements NewLedgerEvent {
     this.next = ImmutableLedgerEvent.builder()
         .id(OidUtils.genUUID())
         .ledgerId(ledgerId)
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     // LedgerEvents are immutable, so no updates/deletes to consider
     this.allLedgerEvents = Stream.of(

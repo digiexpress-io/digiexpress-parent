@@ -52,7 +52,7 @@ public class NewUnitPriceBuilder implements NewUnitPrice {
     this.logger = logger;
     this.next = ImmutableUnitPrice.builder()
         .id(OidUtils.genUUID())
-        .createdCommit(logger.getCommitId());
+        .createdCommitId(logger.getCommitId());
     
     // UnitPrices are immutable, so no updates/deletes to consider
     this.allUnitPrices = Stream.of(
