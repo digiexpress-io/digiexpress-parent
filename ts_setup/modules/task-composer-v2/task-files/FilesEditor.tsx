@@ -40,10 +40,10 @@ export const FilesEditor: React.FC<FilesEditorProps> = ({
         <>
           <Box className={classes.headerRow}>
             <Box className={classes.colName}>
-              {intl.formatMessage({ id: 'task.file.fileName', defaultMessage: 'File name' })}
+              {intl.formatMessage({ id: 'task.file.fileName' })}
             </Box>
             <Box className={classes.colDate}>
-              {intl.formatMessage({ id: 'task.file.uploadDate', defaultMessage: 'Upload date' })}
+              {intl.formatMessage({ id: 'task.file.uploadDate' })}
             </Box>
             <Box className={classes.colAction} />
             <Box className={classes.colAction} />
@@ -79,12 +79,7 @@ export const FilesEditor: React.FC<FilesEditorProps> = ({
           ))}
         </>
       ) : (
-        <Typography className={classes.noFiles}>
-          {intl.formatMessage({
-            id: 'task.file.attachments.none',
-            defaultMessage: 'No files for this task',
-          })}
-        </Typography>
+          <Typography className={classes.noFiles}>{intl.formatMessage({ id: 'task.files.none' })}</Typography>
       )}
     </FilesEditorRoot>
   );
