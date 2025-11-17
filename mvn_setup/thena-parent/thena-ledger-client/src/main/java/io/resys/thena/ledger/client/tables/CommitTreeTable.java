@@ -36,7 +36,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "commit_tree",
-  order = 101,
+  order = 2001,
   ddl = """
     CREATE TABLE IF NOT EXISTS {commit_tree}
     (

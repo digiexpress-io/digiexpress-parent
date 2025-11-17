@@ -35,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "unit_price",
-  order = 800,
+  order = 700,
   ddl = """
     CREATE TABLE IF NOT EXISTS {unit_price}
     (
@@ -52,7 +52,7 @@ import io.vertx.mutiny.sqlclient.Row;
     );
 
     CREATE INDEX IF NOT EXISTS {unit_price}_EXTERNAL_INDEX
-      ON {unit_price} (unit_price_external_id);
+      ON {unit_price} (external_id);
     CREATE INDEX IF NOT EXISTS {unit_price}_TYPE_INDEX
       ON {unit_price} (unit_price_type);
     CREATE INDEX IF NOT EXISTS {unit_price}_DATE_INDEX

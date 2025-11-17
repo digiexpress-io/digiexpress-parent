@@ -34,7 +34,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "settlement_payment",
-  order = 501,
+  order = 800,
   ddl = """
     CREATE TABLE IF NOT EXISTS {settlement_payment}
     (
@@ -53,9 +53,9 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_settlement 
-      FOREIGN KEY (settlement_id) REFERENCES {settlement}(settlement_id);
+      FOREIGN KEY (settlement_id) REFERENCES {settlement}(id);
     ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_payment 
-      FOREIGN KEY (payment_id) REFERENCES {payment}(payment_id);
+      FOREIGN KEY (payment_id) REFERENCES {payment}(id);
     ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -71,8 +71,8 @@ public interface SettlementPaymentTable {
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
       LEFT JOIN {commit} created_commit ON settlement_payment.created_commit_id = created_commit.commit_id
-      LEFT JOIN {settlement} settlement ON settlement_payment.settlement_id = settlement.settlement_id
-      LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.ledger_id
+      LEFT JOIN {settlement} settlement ON settlement_payment.settlement_id = settlement.id
+      LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.id
     """,
     rowMapper = SettlementPaymentMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class

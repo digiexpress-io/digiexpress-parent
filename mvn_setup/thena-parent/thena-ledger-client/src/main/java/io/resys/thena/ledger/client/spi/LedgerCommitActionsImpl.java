@@ -1,8 +1,9 @@
 package io.resys.thena.ledger.client.spi;
 
 import io.resys.thena.ledger.client.api.LedgerCommitActions;
+import io.resys.thena.ledger.client.spi.actions.CreateOneLedgerImpl;
+import io.resys.thena.ledger.client.spi.actions.ModifyOneLedgerImpl;
 import io.resys.thena.ledger.client.tables.BbDb;
-import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -15,13 +16,11 @@ public class LedgerCommitActionsImpl implements LedgerCommitActions {
   
   @Override
   public CreateOneLedger createOneLedger() {
-    // TODO Auto-generated method stub
-    return null;
+    return new CreateOneLedgerImpl(startingState, repoId);
   }
   @Override
   public ModifyOneLedger modifyOneLedger() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyOneLedgerImpl(startingState, repoId);
   }
   
 }

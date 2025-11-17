@@ -1,4 +1,4 @@
-package io.resys.thena.ledger.client.test;
+package io.resys.thena.ledger.client.test.config;
 
 /*-
  * #%L

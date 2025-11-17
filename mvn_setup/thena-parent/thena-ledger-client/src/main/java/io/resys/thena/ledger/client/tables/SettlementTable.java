@@ -35,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "settlement",
-  order = 500,
+  order = 400,
   ddl = """
     CREATE TABLE IF NOT EXISTS {settlement}
     (
@@ -55,13 +55,13 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE INDEX IF NOT EXISTS {settlement}_LEDGER_INDEX
       ON {settlement} (ledger_id);
     CREATE INDEX IF NOT EXISTS {settlement}_EXTERNAL_INDEX
-      ON {settlement} (settlement_external_id);
+      ON {settlement} (external_id);
     CREATE INDEX IF NOT EXISTS {settlement}_DATE_INDEX
       ON {settlement} (settlement_date);
   """,
   constraints = """
     ALTER TABLE {settlement} ADD CONSTRAINT fk_settlement_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {settlement} ADD CONSTRAINT fk_settlement_created_commit 
       FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
@@ -77,7 +77,7 @@ public interface SettlementTable {
              created_commit.created_at as created_at
       FROM {settlement} settlement
       LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
-      LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.ledger_id
+      LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.id
     """,
     rowMapper = SettlementMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class

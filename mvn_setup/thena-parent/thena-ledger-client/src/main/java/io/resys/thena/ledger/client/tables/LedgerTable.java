@@ -35,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "ledger",
-  order = 200,
+  order = 0,
   ddl = """
     CREATE TABLE IF NOT EXISTS {ledger}
     (
@@ -50,7 +50,7 @@ import io.vertx.mutiny.sqlclient.Row;
     );
 
     CREATE INDEX IF NOT EXISTS {ledger}_EXTERNAL_INDEX
-      ON {ledger} (ledger_external_id);
+      ON {ledger} (external_id);
   """,
   constraints = """
     ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_commit 
@@ -73,8 +73,8 @@ public interface LedgerTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} updated_commit ON ledger.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit_id = created_commit.commit_id
       LEFT JOIN {commit} updated_tree_commit ON ledger.updated_tree_commit_id = updated_tree_commit.commit_id
     """,
     rowMapper = LedgerMapper.class,
@@ -89,8 +89,8 @@ public interface LedgerTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} updated_commit ON ledger.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit_id = created_commit.commit_id
       LEFT JOIN {commit} updated_tree_commit ON ledger.updated_tree_commit_id = updated_tree_commit.commit_id
       ORDER BY ledger_name ASC
     """,
@@ -106,10 +106,10 @@ public interface LedgerTable {
              created_commit.created_at as created_at,
              updated_tree_commit.created_at as updated_tree_at
       FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} updated_commit ON ledger.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit_id = created_commit.commit_id
       LEFT JOIN {commit} updated_tree_commit ON ledger.updated_tree_commit_id = updated_tree_commit.commit_id
-      WHERE ledger_id = $1 or ledger_external_id = $1
+      WHERE id = $1 or external_id = $1
     """,
     rowMapper = LedgerMapper.class
   )
@@ -119,7 +119,7 @@ public interface LedgerTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ledger}
-      (ledger_id, ledger_external_id, ledger_name, ledger_description, commit_id, created_commit_id, updated_tree_commit_id)
+      (id, external_id, ledger_name, ledger_description, commit_id, created_commit_id, updated_tree_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7)
     """,
     propsMapper = LedgerInsertMapper.class
@@ -129,8 +129,8 @@ public interface LedgerTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {ledger}
-       SET ledger_external_id = $1, ledger_name = $2, ledger_description = $3, commit_id = $4, updated_tree_commit_id = $5
-       WHERE ledger_id = $6
+       SET external_id = $1, ledger_name = $2, ledger_description = $3, commit_id = $4, updated_tree_commit_id = $5
+       WHERE id = $6
     """,
     propsMapper = LedgerUpdateMapper.class
   )

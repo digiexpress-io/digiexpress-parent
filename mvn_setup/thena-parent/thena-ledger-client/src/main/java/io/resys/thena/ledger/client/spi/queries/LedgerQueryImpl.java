@@ -381,4 +381,8 @@ public class LedgerQueryImpl implements LedgerQuery {
         .map(ImmutableLedgerContainer.Builder::build)
         .collect(Collectors.toList());
   }
+  
+  public static LedgerQueryImpl of(BbDb db) {
+    return new LedgerQueryImpl(Uni.createFrom().item(db));
+  }
 }

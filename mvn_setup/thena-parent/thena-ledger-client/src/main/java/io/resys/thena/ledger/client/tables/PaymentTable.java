@@ -35,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "payment",
-  order = 400,
+  order = 300,
   ddl = """
     CREATE TABLE IF NOT EXISTS {payment}
     (

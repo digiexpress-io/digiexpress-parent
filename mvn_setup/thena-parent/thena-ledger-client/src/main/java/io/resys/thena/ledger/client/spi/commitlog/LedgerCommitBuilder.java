@@ -24,14 +24,13 @@ import java.time.OffsetDateTime;
 
 import com.google.common.base.Objects;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.ledger.client.entities.Commit;
 import io.resys.thena.ledger.client.entities.CommitTree.CommitTreeOperation;
-import io.resys.thena.ledger.client.entities.LedgerEntity;
 import io.resys.thena.ledger.client.entities.ImmutableCommit;
 import io.resys.thena.ledger.client.entities.ImmutableCommitTree;
-import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
+import io.resys.thena.ledger.client.entities.LedgerEntity;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
+import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.vertx.core.json.JsonObject;
 
@@ -67,6 +66,10 @@ public class LedgerCommitBuilder {
   
   public OffsetDateTime getCreatedAt() {
     return createdAt;
+  }
+  public LedgerCommitBuilder withLedgerId(String contractId) {
+    this.commit.ledgerId(contractId);
+    return this;
   }
   
   public LedgerCommitBuilder add(LedgerEntity entity) {
