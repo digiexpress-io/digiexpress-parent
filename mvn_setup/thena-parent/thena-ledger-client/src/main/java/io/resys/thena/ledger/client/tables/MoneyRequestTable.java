@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequest;
+import io.resys.thena.ledger.client.entities.ImmutableMoneyRequestTransitives;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
@@ -207,6 +208,10 @@ public interface MoneyRequestTable {
           .amount(row.getBigDecimal("money_request_amount"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .updatedCommit(TableUtils.toStringUUID(row, "updated_commit"))
+          .transitives(ImmutableMoneyRequestTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .updatedAt(row.getOffsetDateTime("updated_at"))
+              .build())
           .build();
     }
   }

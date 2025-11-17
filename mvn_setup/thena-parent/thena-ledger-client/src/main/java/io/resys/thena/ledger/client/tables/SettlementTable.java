@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableSettlement;
+import io.resys.thena.ledger.client.entities.ImmutableSettlementTransitives;
 import io.resys.thena.ledger.client.entities.Settlement;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
@@ -157,6 +158,9 @@ public interface SettlementTable {
           .date(row.getLocalDate("settlement_date"))
           .amount(row.getBigDecimal("settlement_amount"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutableSettlementTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

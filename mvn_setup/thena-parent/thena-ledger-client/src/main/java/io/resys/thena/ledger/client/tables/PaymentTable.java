@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutablePayment;
+import io.resys.thena.ledger.client.entities.ImmutablePaymentTransitives;
 import io.resys.thena.ledger.client.entities.Payment;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
@@ -157,6 +158,9 @@ public interface PaymentTable {
           .date(row.getLocalDate("payment_date"))
           .amount(row.getBigDecimal("payment_amount"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutablePaymentTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

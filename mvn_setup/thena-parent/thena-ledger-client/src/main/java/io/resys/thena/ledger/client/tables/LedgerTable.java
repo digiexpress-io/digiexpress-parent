@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableLedger;
+import io.resys.thena.ledger.client.entities.ImmutableLedgerTransitives;
 import io.resys.thena.ledger.client.entities.Ledger;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
@@ -150,6 +151,10 @@ public interface LedgerTable {
           .description(Optional.ofNullable(row.getString("ledger_description")))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .updatedCommit(TableUtils.toStringUUID(row, "updated_commit"))
+          .transitives(ImmutableLedgerTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .updatedAt(row.getOffsetDateTime("updated_at"))
+              .build())
           .build();
     }
   }

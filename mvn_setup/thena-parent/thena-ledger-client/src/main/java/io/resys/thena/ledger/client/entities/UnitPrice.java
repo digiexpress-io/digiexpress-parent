@@ -22,7 +22,9 @@ package io.resys.thena.ledger.client.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -43,9 +45,20 @@ public interface UnitPrice extends LedgerEntity {
   BigDecimal getValue();
   String getCreatedCommit();
 
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable UnitPriceTransitives getTransitives();
+
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.UNIT_PRICE;
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableUnitPriceTransitives.class)
+  @JsonDeserialize(as = ImmutableUnitPriceTransitives.class)
+  interface UnitPriceTransitives {
+    OffsetDateTime getCreatedAt();
   }
 
 }

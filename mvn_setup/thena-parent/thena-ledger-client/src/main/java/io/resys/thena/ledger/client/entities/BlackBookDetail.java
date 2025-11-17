@@ -22,7 +22,9 @@ package io.resys.thena.ledger.client.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -50,9 +52,20 @@ public interface BlackBookDetail extends LedgerEntity {
   Optional<JsonObject> getBody();
   String getCreatedCommit();
 
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable BlackBookDetailTransitives getTransitives();
+
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.BLACK_BOOK_DETAIL;
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableBlackBookDetailTransitives.class)
+  @JsonDeserialize(as = ImmutableBlackBookDetailTransitives.class)
+  interface BlackBookDetailTransitives {
+    OffsetDateTime getCreatedAt();
   }
 
 }

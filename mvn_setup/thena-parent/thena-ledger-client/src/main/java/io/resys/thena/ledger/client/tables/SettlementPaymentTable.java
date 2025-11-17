@@ -27,6 +27,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableSettlementPayment;
+import io.resys.thena.ledger.client.entities.ImmutableSettlementPaymentTransitives;
 import io.resys.thena.ledger.client.entities.SettlementPayment;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
@@ -146,6 +147,9 @@ public interface SettlementPaymentTable {
           .paymentId(TableUtils.toStringUUID(row, "payment_id"))
           .allocationAmount(row.getBigDecimal("allocation_amount"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutableSettlementPaymentTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

@@ -29,6 +29,7 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.BlackBook;
 import io.resys.thena.ledger.client.entities.ImmutableBlackBook;
+import io.resys.thena.ledger.client.entities.ImmutableBlackBookTransitives;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
@@ -157,6 +158,9 @@ public interface BlackBookTable {
           .date(row.getLocalDate("black_book_date"))
           .amount(row.getBigDecimal("black_book_amount"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutableBlackBookTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

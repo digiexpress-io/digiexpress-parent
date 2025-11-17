@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableProjection;
+import io.resys.thena.ledger.client.entities.ImmutableProjectionTransitives;
 import io.resys.thena.ledger.client.entities.Projection;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
@@ -164,6 +165,9 @@ public interface ProjectionTable {
           .endDate(row.getLocalDate("projection_end_date"))
           .amount(row.getBigDecimal("projection_amount"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutableProjectionTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

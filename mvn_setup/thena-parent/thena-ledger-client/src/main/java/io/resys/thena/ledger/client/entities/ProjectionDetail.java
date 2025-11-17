@@ -22,7 +22,9 @@ package io.resys.thena.ledger.client.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -50,9 +52,20 @@ public interface ProjectionDetail extends LedgerEntity {
   Optional<JsonObject> getBody();
   String getCreatedCommit();
 
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable ProjectionDetailTransitives getTransitives();
+
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.PROJECTION_DETAIL;
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableProjectionDetailTransitives.class)
+  @JsonDeserialize(as = ImmutableProjectionDetailTransitives.class)
+  interface ProjectionDetailTransitives {
+    OffsetDateTime getCreatedAt();
   }
 
 }

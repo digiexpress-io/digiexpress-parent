@@ -20,12 +20,15 @@ package io.resys.thena.ledger.client.entities;
  * #L%
  */
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableLedger.class)
@@ -39,10 +42,21 @@ public interface Ledger extends LedgerEntity {
   String getCreatedCommit();
   String getUpdatedCommit();
 
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable LedgerTransitives getTransitives();
+
 
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.LEDGER;
   }
 
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableLedgerTransitives.class)
+  @JsonDeserialize(as = ImmutableLedgerTransitives.class)
+  interface LedgerTransitives {
+    OffsetDateTime getCreatedAt();
+    OffsetDateTime getUpdatedAt();
+  }
 }

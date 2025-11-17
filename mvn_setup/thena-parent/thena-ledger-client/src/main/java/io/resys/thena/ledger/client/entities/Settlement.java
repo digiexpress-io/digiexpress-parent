@@ -22,12 +22,15 @@ package io.resys.thena.ledger.client.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableSettlement.class)
@@ -44,9 +47,19 @@ public interface Settlement extends LedgerEntity {
   BigDecimal getAmount();
   String getCreatedCommit();
 
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable SettlementTransitives getTransitives();
+
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.SETTLEMENT;
   }
 
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableSettlementTransitives.class)
+  @JsonDeserialize(as = ImmutableSettlementTransitives.class)
+  interface SettlementTransitives {
+    OffsetDateTime getCreatedAt();
+  }
 }

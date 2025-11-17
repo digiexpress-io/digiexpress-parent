@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableProjectionDetail;
+import io.resys.thena.ledger.client.entities.ImmutableProjectionDetailTransitives;
 import io.resys.thena.ledger.client.entities.ProjectionDetail;
 import io.resys.thena.support.TableUtils;
 import io.vertx.core.json.JsonObject;
@@ -172,6 +173,9 @@ public interface ProjectionDetailTable {
           .formula(Optional.ofNullable(row.getString("detail_formula")))
           .body(Optional.ofNullable(detail_body))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutableProjectionDetailTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

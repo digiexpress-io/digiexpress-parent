@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableLedgerEvent;
+import io.resys.thena.ledger.client.entities.ImmutableLedgerEventTransitives;
 import io.resys.thena.ledger.client.entities.LedgerEvent;
 import io.resys.thena.support.TableUtils;
 import io.vertx.core.json.JsonObject;
@@ -175,6 +176,9 @@ public interface LedgerEventTable {
           .date(row.getLocalDate("ledger_event_date"))
           .body(Optional.ofNullable(ledger_event_body))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .transitives(ImmutableLedgerEventTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }

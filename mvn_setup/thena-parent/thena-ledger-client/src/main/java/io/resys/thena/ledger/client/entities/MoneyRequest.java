@@ -22,12 +22,15 @@ package io.resys.thena.ledger.client.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableMoneyRequest.class)
@@ -47,6 +50,10 @@ public interface MoneyRequest extends LedgerEntity {
   String getCreatedCommit();
   String getUpdatedCommit();
 
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable MoneyRequestTransitives getTransitives();
+
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.MONEY_REQUEST;
@@ -58,6 +65,14 @@ public interface MoneyRequest extends LedgerEntity {
 
   enum MoneyRequestFrequency {
     ONE_TIME, MONTHLY, QUARTERLY, ANNUALLY
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableMoneyRequestTransitives.class)
+  @JsonDeserialize(as = ImmutableMoneyRequestTransitives.class)
+  interface MoneyRequestTransitives {
+    OffsetDateTime getCreatedAt();
+    OffsetDateTime getUpdatedAt();
   }
 
 }
