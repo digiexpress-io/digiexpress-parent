@@ -44,7 +44,6 @@ public interface Projection extends LedgerEntity {
   LocalDate getStartDate();
   LocalDate getEndDate();
   BigDecimal getAmount();
-  String getCurrency();
   String getCreatedCommit();
 
   @Override

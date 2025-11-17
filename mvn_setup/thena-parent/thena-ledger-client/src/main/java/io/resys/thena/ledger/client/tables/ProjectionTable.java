@@ -48,7 +48,6 @@ import io.vertx.mutiny.sqlclient.Row;
       projection_start_date DATE NOT NULL,
       projection_end_date DATE NOT NULL,
       projection_amount DECIMAL(15,2) NOT NULL,
-      projection_currency VARCHAR(3) NOT NULL,
       created_commit UUID NOT NULL
     );
 
@@ -142,8 +141,8 @@ public interface ProjectionTable {
       INSERT INTO {projection}
       (projection_id, ledger_id, projection_external_id, projection_type, projection_sub_type, 
        projection_description, projection_target_date, projection_start_date, projection_end_date, 
-       projection_amount, projection_currency, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       projection_amount, created_commit)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     """,
     propsMapper = ProjectionInsertMapper.class
   )
@@ -164,7 +163,6 @@ public interface ProjectionTable {
           .startDate(row.getLocalDate("projection_start_date"))
           .endDate(row.getLocalDate("projection_end_date"))
           .amount(row.getBigDecimal("projection_amount"))
-          .currency(row.getString("projection_currency"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .build();
     }
@@ -184,7 +182,6 @@ public interface ProjectionTable {
         doc.getStartDate(),
         doc.getEndDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getCreatedCommit())
       });
     }

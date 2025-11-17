@@ -46,7 +46,6 @@ import io.vertx.mutiny.sqlclient.Row;
       black_book_description TEXT,
       black_book_date DATE NOT NULL,
       black_book_amount DECIMAL(15,2) NOT NULL,
-      black_book_currency VARCHAR(3) NOT NULL,
       created_commit UUID NOT NULL
     );
 
@@ -137,7 +136,7 @@ public interface BlackBookTable {
     sql = """
       INSERT INTO {black_book}
       (black_book_id, ledger_id, black_book_external_id, black_book_type, black_book_sub_type, 
-       black_book_description, black_book_date, black_book_amount, black_book_currency, created_commit)
+       black_book_description, black_book_date, black_book_amount, created_commit)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     """,
     propsMapper = BlackBookInsertMapper.class
@@ -157,7 +156,6 @@ public interface BlackBookTable {
           .description(Optional.ofNullable(row.getString("black_book_description")))
           .date(row.getLocalDate("black_book_date"))
           .amount(row.getBigDecimal("black_book_amount"))
-          .currency(row.getString("black_book_currency"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .build();
     }
@@ -175,7 +173,6 @@ public interface BlackBookTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getCreatedCommit())
       });
     }

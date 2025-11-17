@@ -49,7 +49,6 @@ import io.vertx.mutiny.sqlclient.Row;
       detail_start_date DATE NOT NULL,
       detail_end_date DATE NOT NULL,
       detail_amount DECIMAL(15,2) NOT NULL,
-      detail_currency VARCHAR(3) NOT NULL,
       detail_formula VARCHAR(255),
       detail_body JSONB,
       created_commit UUID NOT NULL
@@ -146,8 +145,8 @@ public interface ProjectionDetailTable {
       INSERT INTO {projection_detail}
       (detail_id, projection_id, detail_external_id, detail_type, detail_sub_type, 
        detail_description, detail_target_id, detail_start_date, detail_end_date, 
-       detail_amount, detail_currency, detail_formula, detail_body, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+       detail_amount, detail_formula, detail_body, created_commit)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
     propsMapper = ProjectionDetailInsertMapper.class
   )
@@ -170,7 +169,6 @@ public interface ProjectionDetailTable {
           .startDate(row.getLocalDate("detail_start_date"))
           .endDate(row.getLocalDate("detail_end_date"))
           .amount(row.getBigDecimal("detail_amount"))
-          .currency(row.getString("detail_currency"))
           .formula(Optional.ofNullable(row.getString("detail_formula")))
           .body(Optional.ofNullable(detail_body))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
@@ -192,7 +190,6 @@ public interface ProjectionDetailTable {
         doc.getStartDate(),
         doc.getEndDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         doc.getFormula().orElse(null),
         doc.getBody().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommit())

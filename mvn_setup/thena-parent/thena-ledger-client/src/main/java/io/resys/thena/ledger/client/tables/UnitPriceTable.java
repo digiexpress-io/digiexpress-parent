@@ -45,7 +45,6 @@ import io.vertx.mutiny.sqlclient.Row;
       unit_price_description TEXT,
       unit_price_date DATE NOT NULL,
       unit_price_value DECIMAL(15,8) NOT NULL,
-      unit_price_currency VARCHAR(3) NOT NULL,
       created_commit UUID NOT NULL
     );
 
@@ -133,8 +132,8 @@ public interface UnitPriceTable {
     sql = """
       INSERT INTO {unit_price}
       (unit_price_id, unit_price_external_id, unit_price_type, unit_price_sub_type, 
-       unit_price_description, unit_price_date, unit_price_value, unit_price_currency, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       unit_price_description, unit_price_date, unit_price_value, created_commit)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8)
     """,
     propsMapper = UnitPriceInsertMapper.class
   )
@@ -152,7 +151,6 @@ public interface UnitPriceTable {
           .description(Optional.ofNullable(row.getString("unit_price_description")))
           .date(row.getLocalDate("unit_price_date"))
           .value(row.getBigDecimal("unit_price_value"))
-          .currency(row.getString("unit_price_currency"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .build();
     }
@@ -169,7 +167,6 @@ public interface UnitPriceTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getValue(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getCreatedCommit())
       });
     }

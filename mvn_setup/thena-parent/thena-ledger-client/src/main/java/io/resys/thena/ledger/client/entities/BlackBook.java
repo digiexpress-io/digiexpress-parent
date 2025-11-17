@@ -42,7 +42,6 @@ public interface BlackBook extends LedgerEntity {
   Optional<String> getDescription();
   LocalDate getDate();
   BigDecimal getAmount();
-  String getCurrency();
   String getCreatedCommit();
 
   @Override

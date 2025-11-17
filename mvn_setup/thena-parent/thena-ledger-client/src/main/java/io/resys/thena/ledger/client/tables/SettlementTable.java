@@ -46,7 +46,6 @@ import io.vertx.mutiny.sqlclient.Row;
       settlement_description TEXT,
       settlement_date DATE NOT NULL,
       settlement_amount DECIMAL(15,2) NOT NULL,
-      settlement_currency VARCHAR(3) NOT NULL,
       created_commit UUID NOT NULL
     );
 
@@ -137,8 +136,8 @@ public interface SettlementTable {
     sql = """
       INSERT INTO {settlement}
       (settlement_id, ledger_id, settlement_external_id, settlement_type, settlement_sub_type, 
-       settlement_description, settlement_date, settlement_amount, settlement_currency, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       settlement_description, settlement_date, settlement_amount, created_commit)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = SettlementInsertMapper.class
   )
@@ -157,7 +156,6 @@ public interface SettlementTable {
           .description(Optional.ofNullable(row.getString("settlement_description")))
           .date(row.getLocalDate("settlement_date"))
           .amount(row.getBigDecimal("settlement_amount"))
-          .currency(row.getString("settlement_currency"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .build();
     }
@@ -175,7 +173,6 @@ public interface SettlementTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getCreatedCommit())
       });
     }

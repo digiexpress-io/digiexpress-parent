@@ -41,7 +41,6 @@ public interface UnitPrice extends LedgerEntity {
   Optional<String> getDescription();
   LocalDate getDate();
   BigDecimal getValue();
-  String getCurrency();
   String getCreatedCommit();
 
   @Override

@@ -46,7 +46,6 @@ public interface BlackBookDetail extends LedgerEntity {
   LocalDate getStartDate();
   LocalDate getEndDate();
   BigDecimal getAmount();
-  String getCurrency();
   Optional<String> getFormula();
   Optional<JsonObject> getBody();
   String getCreatedCommit();

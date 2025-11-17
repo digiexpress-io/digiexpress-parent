@@ -46,7 +46,6 @@ import io.vertx.mutiny.sqlclient.Row;
       payment_description TEXT,
       payment_date DATE NOT NULL,
       payment_amount DECIMAL(15,2) NOT NULL,
-      payment_currency VARCHAR(3) NOT NULL,
       created_commit UUID NOT NULL
     );
 
@@ -137,8 +136,8 @@ public interface PaymentTable {
     sql = """
       INSERT INTO {payment}
       (payment_id, ledger_id, payment_external_id, payment_type, payment_sub_type, 
-       payment_description, payment_date, payment_amount, payment_currency, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       payment_description, payment_date, payment_amount, created_commit)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = PaymentInsertMapper.class
   )
@@ -157,7 +156,6 @@ public interface PaymentTable {
           .description(Optional.ofNullable(row.getString("payment_description")))
           .date(row.getLocalDate("payment_date"))
           .amount(row.getBigDecimal("payment_amount"))
-          .currency(row.getString("payment_currency"))
           .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
           .build();
     }
@@ -175,7 +173,6 @@ public interface PaymentTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getAmount(),
-        doc.getCurrency(),
         TableUtils.toUuid(doc.getCreatedCommit())
       });
     }
