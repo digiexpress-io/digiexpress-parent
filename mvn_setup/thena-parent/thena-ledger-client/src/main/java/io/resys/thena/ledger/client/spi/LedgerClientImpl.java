@@ -95,8 +95,6 @@ public class LedgerClientImpl implements LedgerClient {
       
       final var tenantCache = this.tenantCache == null ? new TenantCacheImpl() : this.tenantCache;
       final var ctx = TenantContext.defaults(tenantName);
-      
-      
       final var pool = new ThenaSqlPoolVertx(client);
       
       final var dataSource = new ThenaSqlDataSourceImpl(
