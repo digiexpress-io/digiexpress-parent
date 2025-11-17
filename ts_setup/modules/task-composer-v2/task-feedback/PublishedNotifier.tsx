@@ -52,6 +52,30 @@ export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, styl
 }
 
 
+export const PublishedNotifierTextOnly: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
+
+  const intl = useIntl();
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
+
+
+  React.useEffect(() => {
+    getOneFeedback(task.taskRef!)
+      .then((resp) => {
+        setFeedback(resp);
+      });
+  }, [task.taskRef]);
+
+
+  return feedback ? (
+    intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' })
+  ) : (
+    intl.formatMessage({ id: 'task.feedback.isNotPublished', defaultMessage: 'Not published' })
+  )
+
+}
+
+
 const MUI_NAME = 'FeedbackPublishedNotifier';
 const NotifierUnpublished = styled('div', {
   name: MUI_NAME,
@@ -105,7 +129,7 @@ const NotifierPublished = styled('div', {
 
 }));
 
-export const useUtilityClasses = () => {
+const useUtilityClasses = () => {
   const slots = {
     msgContainer: ['msgContainer'],
   };

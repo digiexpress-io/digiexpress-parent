@@ -17,7 +17,7 @@ import { NoteAltOutlined as NoteAltOutlinedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
-import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
+import { TaskFeature } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
@@ -30,7 +30,7 @@ import { AssigneeRolesEditDialog } from '../task-assignee-roles-edit';
 import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
-import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../task-feedback';
+import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly, PublishedNotifierTextOnly } from '../task-feedback';
 import { TaskTransferEditDialog } from '../task-transfer';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
@@ -46,7 +46,6 @@ import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
 import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 import { TaskAuditQueuesTable } from '../task-audit-queue';
-import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
 
 
 
@@ -325,7 +324,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
-            titleNotifier={<FeedbackTitle task={task}/>}
+            titleNotifier={<PublishedNotifierTextOnly task={task} />}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
           >
@@ -498,22 +497,3 @@ function _formatAnyDateShort(value: Date | string | undefined): string {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 }
 
-
-
-const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
-
-  const intl = useIntl();
-  const { getOneFeedback } = useFeedback();
-  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
-
-  
-  React.useEffect(() => {
-    getOneFeedback(task.taskRef!)
-      .then((resp) => {
-        setFeedback(resp);
-      });
-  }, [task.taskRef]);
-
-
-  return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : undefined
-}
