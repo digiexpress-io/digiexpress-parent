@@ -38,7 +38,7 @@ export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, styl
     return (
       <NotifierPublished className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
         <CheckIcon />
-        {intl.formatMessage({ id: 'task.feedback.isPublished', defaultMessage: 'Published' })}
+        {intl.formatMessage({ id: 'task.feedback.published' })}
       </NotifierPublished>)
 
   }
@@ -46,7 +46,7 @@ export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, styl
   return (
     <NotifierUnpublished className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
       <CloseIcon />
-      {intl.formatMessage({ id: 'task.feedback.isNotPublished', defaultMessage: 'Not published' })}
+      {intl.formatMessage({ id: 'task.feedback.notPublished' })}
     </NotifierUnpublished>
   )
 }
@@ -68,9 +68,9 @@ export const PublishedNotifierTextOnly: React.FC<{ task: TaskApi.Task }> = ({ ta
 
 
   return feedback ? (
-    intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' })
+    intl.formatMessage({ id: 'task.feedback.published' })
   ) : (
-    intl.formatMessage({ id: 'task.feedback.isNotPublished', defaultMessage: 'Not published' })
+      intl.formatMessage({ id: 'task.feedback.notPublished' })
   )
 
 }

@@ -42,7 +42,7 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
 
   const [userList, setUserList] = React.useState<TaskApi.User[]>([]);
   const [errors, setErrors] = React.useState<RequiredError>({
-    subject: intl.formatMessage({ id: 'task.composer.error.subject.required', defaultMessage: '* Task subject is required' })
+    subject: intl.formatMessage({ id: 'task.composer.error.subject.required' })
   });
 
   function resetAllCreateFields() {
@@ -55,12 +55,7 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
     setPriority(TaskApi.TaskPriority.NORMAL);
     setDueDate(initialDueDate);
     setUserList([]);
-    setErrors({
-      subject: intl.formatMessage({
-        id: 'task.composer.error.subject.required',
-        defaultMessage: '* Task subject is required'
-      })
-    });
+    setErrors({ subject: intl.formatMessage({ id: 'task.composer.error.subject.required' }) });
   }
 
   React.useEffect(() => {
@@ -85,7 +80,7 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
   function handleSetSubject(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
     setSubject(value);
-    setErrors((prev) => ({ ...prev, subject: value.trim() ? undefined : intl.formatMessage({ id: 'task.composer.error.subject.required', defaultMessage: '* Task subject is required' }) }));
+    setErrors((prev) => ({ ...prev, subject: value.trim() ? undefined : intl.formatMessage({ id: 'task.composer.error.subject.required' }) }));
   };
   function handleSetAddInfo(event: React.ChangeEvent<HTMLInputElement>) {
     setAddInfo(event.target.value);
@@ -128,45 +123,45 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
   return (
     <StyledTaskCreate className={classes.root} open={open} onClose={onClose} maxWidth='md'>
 
-      <DialogTitle variant='h1'>{intl.formatMessage({ id: 'task.composer.create', defaultMessage: 'Create new task' })}</DialogTitle>
+      <DialogTitle variant='h1'>{intl.formatMessage({ id: 'task.composer.create' })}</DialogTitle>
       <DialogContent>
 
         <Stack direction="row" spacing={3} className={classes.fieldsRow}>
           {/* LEFT COLUMN */}
           <Stack direction="column" spacing={1} flex={1}>
             <Typography fontWeight={500}>
-              {intl.formatMessage({ id: 'task.composer.dueDate', defaultMessage: 'Due' })}
+              {intl.formatMessage({ id: 'task.composer.dueDate' })}
             </Typography>
             <backend.slots.DateTimePicker onChange={newDate => setDueDate(newDate)} value={dueDate} />
 
             <Stack direction="column">
               <Typography fontWeight={500}>
-                {intl.formatMessage({ id: 'task.composer.clientName', defaultMessage: 'Client name' })}
+                {intl.formatMessage({ id: 'task.composer.clientName' })}
               </Typography>
               <StyledTextField onChange={handleSetClientName} value={clientName} />
             </Stack>
 
             <Stack direction="column">
               <Typography fontWeight={500}>
-                {intl.formatMessage({ id: 'task.composer.subject', defaultMessage: '* Task subject' })}
+                {intl.formatMessage({ id: 'task.composer.subject' })}
               </Typography>
               <StyledTextField
                 required
                 onChange={handleSetSubject}
                 value={subject}
-                placeholder={intl.formatMessage({ id: 'task.composer.field.required', defaultMessage: '* required' })}
+                placeholder={intl.formatMessage({ id: 'task.composer.field.required' })}
                 error={!!errors.subject}
                 helperText={errors.subject}
               />
             </Stack>
 
             <Typography fontWeight={500}>
-              {intl.formatMessage({ id: 'task.composer.description', defaultMessage: 'Description' })}
+              {intl.formatMessage({ id: 'task.composer.description' })}
             </Typography>
             <StyledTextField multiline maxRows={4} onChange={handleSetDescription} value={description} />
 
             <Typography fontWeight={500}>
-              {intl.formatMessage({ id: 'task.composer.additionalInfo', defaultMessage: 'Additional information' })}
+              {intl.formatMessage({ id: 'task.composer.additionalInfo' })}
             </Typography>
             <StyledTextField multiline maxRows={4} onChange={handleSetAddInfo} value={addInfo} />
           </Stack>
@@ -177,28 +172,28 @@ export const TaskCreate: React.FC<{ open: boolean, onClose: () => void}> = ({ op
 
             <Stack direction="column">
               <Typography fontWeight={500}>
-                {intl.formatMessage({ id: 'task.composer.roles', defaultMessage: 'Roles' })}
+                {intl.formatMessage({ id: 'task.composer.roles' })}
               </Typography>
               <EditRoles assignedRoles={roles} groups={groups} acceptNewRoles={handleSetRoles} />
             </Stack>
 
             <Stack direction="column">
               <Typography fontWeight={500}>
-                {intl.formatMessage({ id: 'task.composer.assignee', defaultMessage: 'Assignee' })}
+                {intl.formatMessage({ id: 'task.composer.assignee' })}
               </Typography>
               <TaskCreateAssignee onChange={(user) => setAssignee(user)} userList={userList} value={assignee} />
             </Stack>
 
             <Stack direction="column">
               <Typography fontWeight={500}>
-                {intl.formatMessage({ id: 'task.composer.priority', defaultMessage: 'Priority' })}
+                {intl.formatMessage({ id: 'task.composer.priority' })}
               </Typography>
               <EditPriority onChange={handleSetPriority} priority={priority} />
             </Stack>
 
             <Stack direction="column" spacing={1}>
               <Typography fontWeight={500}>
-                {intl.formatMessage({ id: 'task.composer.status', defaultMessage: 'Status' })}
+                {intl.formatMessage({ id: 'task.composer.status' })}
               </Typography>
               <StyledTextField value={intl.formatMessage({ id: 'task.status.new' })}
                 slotProps={{
