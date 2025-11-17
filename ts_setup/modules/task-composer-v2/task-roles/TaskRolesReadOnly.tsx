@@ -17,7 +17,7 @@ export const TaskRolesReadOnly: React.FC<TaskRolesReadOnlyProps> = ({ task, styl
   if (!task.assignedRoles || task.assignedRoles.length === 0) {
     return (
       <TaskRolesRoot>
-        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.roles.none', defaultMessage: 'No roles assigned' })}</Typography>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.roles.none' })}</Typography>
       </TaskRolesRoot>)
   }
 

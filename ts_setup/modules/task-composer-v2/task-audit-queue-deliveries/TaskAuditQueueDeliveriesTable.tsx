@@ -29,7 +29,7 @@ export const TaskAuditQueueDeliveriesTable: React.FC = () => {
 
   const columns: ColumnDef<TaskApi.TaskAuditQueueDelivery, any>[] = [
     {
-      header: intl.formatMessage({ id: 'task.audit.queueDeliveries.queueName', defaultMessage: 'Queue name' }),
+      header: intl.formatMessage({ id: 'task.audit.queueDeliveries.queueName' }),
       accessorKey: 'queueId',
       size: 300,
       minSize: 200,
@@ -39,7 +39,7 @@ export const TaskAuditQueueDeliveriesTable: React.FC = () => {
       cell: (attempts) => flexRender(QueueName, { value: attempts.row.original.queueId })
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queueBindings.status', defaultMessage: 'Status' }),
+      header: intl.formatMessage({ id: 'task.audit.queueBindings.status' }),
       accessorKey: 'status',
       size: 150,
       minSize: 150,
@@ -48,7 +48,7 @@ export const TaskAuditQueueDeliveriesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queueBindings.attempts', defaultMessage: 'Attempts' }),
+      header: intl.formatMessage({ id: 'task.audit.queueBindings.attempts' }),
       accessorKey: 'attempts',
       size: 150,
       minSize: 100,
@@ -58,7 +58,7 @@ export const TaskAuditQueueDeliveriesTable: React.FC = () => {
       cell: (attempts) => flexRender(Attempts, { value: attempts.row.original })
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queueBindings.createdAt', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.queueBindings.createdAt' }),
       accessorKey: 'createdAt',
       size: 150,
       minSize: 150,
