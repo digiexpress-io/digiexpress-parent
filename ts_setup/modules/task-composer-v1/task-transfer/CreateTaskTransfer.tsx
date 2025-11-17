@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, TextField, Typography, Stack } from '@mui/material';
+import { Box, Button, TextField, Typography, Stack, List, ListItem } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
@@ -12,14 +12,13 @@ export interface CreateTaskTransferProps {
 
 export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => {
   const intl = useIntl();
-  const [title, setTitle] = React.useState<string>(props.task.transferredId ?? '');
   const [isSaving, setSaving] = React.useState(false);
   const backend = useTaskBackend();
 
   function handleOnTransfer() {
     setSaving(true)
     backend.persistence
-      .createOnTaskTransfer(props.task, { transferTitle: title })
+      .createOnTaskTransfer(props.task, {})
       .then(() => props.onTransferComplete())
   }
 
@@ -29,25 +28,43 @@ export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => 
         <Stack spacing={3}>
           <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.create.title' })}</Typography>
           <div>
-            <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.docTitle' })}</Typography>
-            <TextField onChange={(e) => setTitle(e.target.value)}
+            <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.journalNumber' })}</Typography>
+            <TextField 
+              variant="filled"
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
+              }}
               sx={{ mb: 3 }}
-              placeholder={intl.formatMessage({ id: 'task.transfer.create.docTitle.placeholder' })}
-              value={title ?? ''}
+              value={props.task.transferredId ?? ''}
             />
           </div>
 
         { props.task.transferredId && (<>
-            <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.props.title' })}</Typography>
+            <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.create.files' })}</Typography>
             <div>
-              {JSON.stringify(props.task.transferredProps ?? {}, null, 2)}
+              {props.task.transferredProps && Object.entries(props.task.transferredProps).filter(([key, value])=>{key==='files'}).map(([key, value])=>{
+                if (Array.isArray(value)) {
+                  return (
+                    <List>
+                      {value.map(file => {
+                        return (<ListItem>
+                          {file}
+                        </ListItem>)
+                      })}
+                    </List>
+                  )
+                }
+                return null;
+              })}
             </div>
         </>)}
         </Stack>
 
       </div>
       <Box display='flex' gap={1}>
-        <Button variant='contained' onClick={handleOnTransfer} disabled={!title || isSaving}>
+        <Button variant='contained' onClick={handleOnTransfer} disabled={isSaving}>
           { 
             props.task.transferredId ? 
             <FormattedMessage id='button.republish' /> :
