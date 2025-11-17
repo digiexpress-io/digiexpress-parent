@@ -44,21 +44,19 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
   return (
     <StyledAssigneeRolesEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
       <DialogTitle>
-        {intl.formatMessage({ id: 'task.assigneesAndRolesEdit', defaultMessage: 'Edit assigness and roles' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-        {task.taskRef ?? 'no task reference id'}
+        {intl.formatMessage({ id: 'task.assigneesAndRolesEdit' })}{": "}{task.taskRef ?? 'no task reference id'}
       </DialogTitle>
 
       <DialogContent>
         <Grid2 container display='flex' alignItems='center'>
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignee', defaultMessage: 'Assignee' })}</Typography>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignee' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
             <StyledTextField value={assignee} onChange={handleSetAssignee} />
           </Grid2>
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignedRoles', defaultMessage: 'Roles' })}</Typography>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignedRoles' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
             <EditRoles assignedRoles={roles} groups={groups} acceptNewRoles={handleSetRoles}/>

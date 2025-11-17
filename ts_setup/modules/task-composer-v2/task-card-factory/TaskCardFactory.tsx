@@ -229,7 +229,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'assignees_roles':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees', defaultMessage: 'Roles and Assignees' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees' })}
           {...commonProps}
           isMenu
           showFlashyToggle={true}
@@ -240,17 +240,17 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<AssigneeRolesEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles', defaultMessage: 'Roles' })} style={style} value={<TaskRolesReadOnly task={task} style={style} />}
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles' })} style={style} value={<TaskRolesReadOnly task={task} style={style} />}
           />
           <Divider sx={{ my: 1 }} />
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee', defaultMessage: 'Assignee' })} style={style} value={<TaskAssigneeReadOnly task={task} style={style} />} />
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee' })} style={style} value={<TaskAssigneeReadOnly task={task} style={style} />} />
         </TaskCard>
       );
 
     case 'customer_messages':
       return (
         <TaskFeature id='CRM_MESSAGES'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages' })}
             {...commonProps}
             isMenu
             showFlashyToggle={true}
@@ -271,7 +271,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'assignable':
       return (
         <TaskFeature id='ASSIGNABLE'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.assignable', defaultMessage: 'Assigned to customer' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.assignable' })}
             {...commonProps}
             isMenu
             showFlashyToggle={true}
@@ -291,7 +291,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'files':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.files', defaultMessage: 'Files' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.files' })}
           {...commonProps}
           isMenu
           showFlashyToggle={true}
@@ -315,7 +315,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'feedback':
       return (
         <TaskFeature id='TASK_FEEDBACK'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback', defaultMessage: 'Customer feedback' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback' })}
             {...commonProps}
             isMenu
             showFlashyToggle={true}
@@ -335,7 +335,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'notes':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes', defaultMessage: 'Notes' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes' })}
           {...commonProps}
           isMenu
           titleNotifier={task.comments.filter(a => !a.external).length}
@@ -354,15 +354,15 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'task_meta':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history', defaultMessage: 'History and metadata' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history' })}
           {...commonProps}
           showFlashyToggle={true}
           showEditOnMenu={false}
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy' })} value={task.updaterId} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate' })} value={_formatAnyDateShort(task.updated)} style={style} />
         </TaskCard>
       );
 
