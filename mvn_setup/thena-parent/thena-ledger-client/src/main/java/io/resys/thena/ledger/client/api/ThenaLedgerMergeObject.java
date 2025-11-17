@@ -22,9 +22,7 @@ package io.resys.thena.ledger.client.api;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewBlackBook;
@@ -51,9 +49,6 @@ public interface ThenaLedgerMergeObject {
     MergeLedger name(String name);
     MergeLedger description(@Nullable String description);
     
-    // Collection bulk replacement operations for entities that can be logically replaced
-    <T> MergeLedger setAllMoneyRequests(String requestType, List<T> replacements, Function<T, Consumer<NewMoneyRequest>> moneyRequest);
-    
     // Add new entities to existing ledger (all types can be added)
     MergeLedger addMoneyRequest(Consumer<NewMoneyRequest> moneyRequest);
     MergeLedger addPayment(Consumer<NewPayment> payment);
@@ -66,8 +61,6 @@ public interface ThenaLedgerMergeObject {
     // Modify existing mutable entities only
     MergeLedger modifyMoneyRequest(String moneyRequestId, Consumer<MergeMoneyRequest> moneyRequest);
     
-    // Remove operations only for entities that can be logically deleted
-    MergeLedger removeMoneyRequest(String moneyRequestId);
     
     void build();
   }

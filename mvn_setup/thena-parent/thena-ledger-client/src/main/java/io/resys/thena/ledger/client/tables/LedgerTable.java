@@ -43,6 +43,7 @@ import io.vertx.mutiny.sqlclient.Row;
       ledger_external_id VARCHAR(255) NOT NULL,
       ledger_name VARCHAR(255) NOT NULL,
       ledger_description TEXT,
+      
       created_commit UUID NOT NULL,
       updated_commit UUID NOT NULL
     );

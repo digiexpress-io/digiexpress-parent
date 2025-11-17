@@ -135,7 +135,7 @@ public class NewSettlementBuilder implements NewSettlement {
     this.built = true;
   }
 
-  public PersistenceUnit close() {
+  public ImmutablePersistenceUnit close() {
     RepoAssert.isTrue(built, () -> "you must call NewSettlement.build() to finalize settlement CREATE!");
 
     final var settlement = next.build();
