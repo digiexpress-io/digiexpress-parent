@@ -42,7 +42,7 @@ export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => 
           </div>
 
         { props.task.transferredId && (<>
-            <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.create.files' })}</Typography>
+            <Typography variant='h5' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.create.files' })}</Typography>
             <div>
               {props.task.transferredProps && Object.entries(props.task.transferredProps).filter(([key, v])=>key==='files').map(([k, value])=>{
                 if (Array.isArray(value)) {
@@ -63,15 +63,17 @@ export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => 
         </Stack>
 
       </div>
-      <Box display='flex' gap={1}>
-        <Button variant='contained' onClick={handleOnTransfer} disabled={isSaving}>
-          { 
-            props.task.transferredId ? 
-            <FormattedMessage id='task.transfer.button.retransfer' /> :
-            <FormattedMessage id='task.transfer.button.transfer' />
-          }
-        </Button>
-      </Box>
+      {(!props.task.transferredId || backend.permissions.isRetransferAllowed) && (
+        <Box display='flex' gap={1}>
+          <Button variant='contained' onClick={handleOnTransfer} disabled={isSaving}>
+            { 
+              props.task.transferredId ? 
+              <FormattedMessage id='task.transfer.button.retransfer' /> :
+              <FormattedMessage id='task.transfer.button.transfer' />
+            }
+          </Button>
+        </Box>
+      )}
     </>
   );
 }

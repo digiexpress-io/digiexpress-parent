@@ -13,6 +13,7 @@ export interface TaskBackendContextType {
     isCreateTaskAllowed: boolean;
     isReopenTaskAllowed: boolean;
     isDeleteTaskAllowed: boolean;
+    isRetransferAllowed: boolean;
   };
   features: {
     isAuditTaskEnabled: boolean;
