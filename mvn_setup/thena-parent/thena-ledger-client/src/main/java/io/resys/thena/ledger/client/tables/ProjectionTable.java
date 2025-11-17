@@ -164,7 +164,7 @@ public interface ProjectionTable {
           .startDate(row.getLocalDate("projection_start_date"))
           .endDate(row.getLocalDate("projection_end_date"))
           .amount(row.getBigDecimal("projection_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableProjectionTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -186,7 +186,7 @@ public interface ProjectionTable {
         doc.getStartDate(),
         doc.getEndDate(),
         doc.getAmount(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

@@ -45,7 +45,7 @@ public interface Settlement extends LedgerEntity {
   Optional<String> getDescription();
   LocalDate getDate();
   BigDecimal getAmount();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

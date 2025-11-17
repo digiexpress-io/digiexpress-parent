@@ -50,7 +50,7 @@ public interface ProjectionDetail extends LedgerEntity {
   BigDecimal getAmount();
   Optional<String> getFormula();
   Optional<JsonObject> getBody();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

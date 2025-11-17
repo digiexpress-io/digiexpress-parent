@@ -46,7 +46,7 @@ public interface Projection extends LedgerEntity {
   LocalDate getStartDate();
   LocalDate getEndDate();
   BigDecimal getAmount();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

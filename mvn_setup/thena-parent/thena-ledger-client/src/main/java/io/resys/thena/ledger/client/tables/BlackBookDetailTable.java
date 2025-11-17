@@ -172,7 +172,7 @@ public interface BlackBookDetailTable {
           .amount(row.getBigDecimal("detail_amount"))
           .formula(Optional.ofNullable(row.getString("detail_formula")))
           .body(Optional.ofNullable(detail_body))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookDetailTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -196,7 +196,7 @@ public interface BlackBookDetailTable {
         doc.getAmount(),
         doc.getFormula().orElse(null),
         doc.getBody().orElse(null),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

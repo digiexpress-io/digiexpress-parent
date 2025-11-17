@@ -146,8 +146,8 @@ public interface LedgerTable {
           .name(row.getString("ledger_name"))
           .description(Optional.ofNullable(row.getString("ledger_description")))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
-          .updatedTreeCommit(TableUtils.toStringUUID(row, "updated_tree_commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .updatedTreeCommitId(TableUtils.toStringUUID(row, "updated_tree_commit_id"))
           .transitives(ImmutableLedgerTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .updatedAt(row.getOffsetDateTime("updated_at"))
@@ -166,8 +166,8 @@ public interface LedgerTable {
         doc.getName(),
         doc.getDescription().orElse(null),
         TableUtils.toUuid(doc.getCommitId()),
-        TableUtils.toUuid(doc.getCreatedCommit()),
-        TableUtils.toUuid(doc.getUpdatedTreeCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId())
       });
     }
   }
@@ -180,7 +180,7 @@ public interface LedgerTable {
         doc.getName(),
         doc.getDescription().orElse(null),
         TableUtils.toUuid(doc.getCommitId()),
-        TableUtils.toUuid(doc.getUpdatedTreeCommit()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         TableUtils.toUuid(doc.getId())
       });
     }

@@ -38,7 +38,7 @@ public interface SettlementPayment extends LedgerEntity {
   String getSettlementId();
   String getPaymentId();
   BigDecimal getAllocationAmount();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

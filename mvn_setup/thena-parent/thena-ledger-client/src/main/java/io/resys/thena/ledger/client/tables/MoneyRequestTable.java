@@ -207,7 +207,7 @@ public interface MoneyRequestTable {
           .dueDate(row.getLocalDate("money_request_due_date"))
           .amount(row.getBigDecimal("money_request_amount"))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableMoneyRequestTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .updatedAt(row.getOffsetDateTime("updated_at"))
@@ -231,7 +231,7 @@ public interface MoneyRequestTable {
         doc.getDueDate(),
         doc.getAmount(),
         TableUtils.toUuid(doc.getCommitId()),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

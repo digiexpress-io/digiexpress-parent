@@ -47,7 +47,7 @@ import io.vertx.mutiny.sqlclient.Row;
       payment_description TEXT,
       payment_date DATE NOT NULL,
       payment_amount DECIMAL(15,2) NOT NULL,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {payment}_LEDGER_INDEX
@@ -61,7 +61,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {payment};
@@ -74,7 +74,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       LEFT JOIN {ledger} ledger ON payment.ledger_id = ledger.ledger_id
     """,
     rowMapper = PaymentMapper.class,
@@ -87,7 +87,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       ORDER BY payment_date DESC
     """,
     rowMapper = PaymentMapper.class
@@ -99,7 +99,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY payment_date DESC
     """,
@@ -113,7 +113,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       WHERE payment_id = $1
     """,
     rowMapper = PaymentMapper.class
@@ -126,7 +126,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       WHERE payment_external_id = $1
     """,
     rowMapper = PaymentMapper.class
@@ -137,7 +137,7 @@ public interface PaymentTable {
     sql = """
       INSERT INTO {payment}
       (payment_id, ledger_id, payment_external_id, payment_type, payment_sub_type, 
-       payment_description, payment_date, payment_amount, created_commit)
+       payment_description, payment_date, payment_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = PaymentInsertMapper.class
@@ -157,7 +157,7 @@ public interface PaymentTable {
           .description(Optional.ofNullable(row.getString("payment_description")))
           .date(row.getLocalDate("payment_date"))
           .amount(row.getBigDecimal("payment_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutablePaymentTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -177,7 +177,7 @@ public interface PaymentTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getAmount(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

@@ -45,7 +45,7 @@ public interface LedgerEvent extends LedgerEntity {
   Optional<String> getDescription();
   LocalDate getDate();
   Optional<JsonObject> getBody();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

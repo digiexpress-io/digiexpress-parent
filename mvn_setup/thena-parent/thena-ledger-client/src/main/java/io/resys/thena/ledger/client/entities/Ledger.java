@@ -41,8 +41,8 @@ public interface Ledger extends LedgerEntity {
   Optional<String> getDescription();
   
   String getCommitId();
-  String getCreatedCommit();
-  String getUpdatedTreeCommit();
+  String getCreatedCommitId();
+  String getUpdatedTreeCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

@@ -48,7 +48,7 @@ import io.vertx.mutiny.sqlclient.Row;
       ledger_event_description TEXT,
       ledger_event_date DATE NOT NULL,
       ledger_event_body JSONB,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {ledger_event}_LEDGER_INDEX
@@ -64,7 +64,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {ledger_event};
@@ -77,7 +77,7 @@ public interface LedgerEventTable {
       SELECT ledger_event.*,
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
-      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       LEFT JOIN {ledger} ledger ON ledger_event.ledger_id = ledger.ledger_id
     """,
     rowMapper = LedgerEventMapper.class,
@@ -90,7 +90,7 @@ public interface LedgerEventTable {
       SELECT ledger_event.*,
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
-      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       ORDER BY ledger_event_date DESC
     """,
     rowMapper = LedgerEventMapper.class
@@ -102,7 +102,7 @@ public interface LedgerEventTable {
       SELECT ledger_event.*,
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
-      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY ledger_event_date DESC
     """,
@@ -115,7 +115,7 @@ public interface LedgerEventTable {
       SELECT ledger_event.*,
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
-      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       WHERE ledger_event_type = $1
       ORDER BY ledger_event_date DESC
     """,
@@ -129,7 +129,7 @@ public interface LedgerEventTable {
       SELECT ledger_event.*,
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
-      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       WHERE ledger_event_id = $1
     """,
     rowMapper = LedgerEventMapper.class
@@ -142,7 +142,7 @@ public interface LedgerEventTable {
       SELECT ledger_event.*,
              created_commit.created_at as created_at
       FROM {ledger_event} ledger_event
-      LEFT JOIN {commit} created_commit ON ledger_event.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       WHERE ledger_event_external_id = $1
     """,
     rowMapper = LedgerEventMapper.class
@@ -153,7 +153,7 @@ public interface LedgerEventTable {
     sql = """
       INSERT INTO {ledger_event}
       (ledger_event_id, ledger_id, ledger_event_external_id, ledger_event_type, ledger_event_sub_type, 
-       ledger_event_description, ledger_event_date, ledger_event_body, created_commit)
+       ledger_event_description, ledger_event_date, ledger_event_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = LedgerEventInsertMapper.class
@@ -175,7 +175,7 @@ public interface LedgerEventTable {
           .description(Optional.ofNullable(row.getString("ledger_event_description")))
           .date(row.getLocalDate("ledger_event_date"))
           .body(Optional.ofNullable(ledger_event_body))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableLedgerEventTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -195,7 +195,7 @@ public interface LedgerEventTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getBody().orElse(null),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

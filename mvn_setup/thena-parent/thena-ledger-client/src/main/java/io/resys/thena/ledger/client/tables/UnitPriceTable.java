@@ -46,7 +46,7 @@ import io.vertx.mutiny.sqlclient.Row;
       unit_price_description TEXT,
       unit_price_date DATE NOT NULL,
       unit_price_value DECIMAL(15,8) NOT NULL,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {unit_price}_EXTERNAL_INDEX
@@ -58,7 +58,7 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {unit_price} ADD CONSTRAINT fk_unit_price_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {unit_price};
@@ -71,7 +71,7 @@ public interface UnitPriceTable {
       SELECT unit_price.*,
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
-      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
     """,
     rowMapper = UnitPriceMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -83,7 +83,7 @@ public interface UnitPriceTable {
       SELECT unit_price.*,
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
-      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
       ORDER BY unit_price_date DESC
     """,
     rowMapper = UnitPriceMapper.class
@@ -95,7 +95,7 @@ public interface UnitPriceTable {
       SELECT unit_price.*,
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
-      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
       WHERE unit_price_type = $1
       ORDER BY unit_price_date DESC
     """,
@@ -109,7 +109,7 @@ public interface UnitPriceTable {
       SELECT unit_price.*,
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
-      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
       WHERE unit_price_id = $1
     """,
     rowMapper = UnitPriceMapper.class
@@ -122,7 +122,7 @@ public interface UnitPriceTable {
       SELECT unit_price.*,
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
-      LEFT JOIN {commit} created_commit ON unit_price.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
       WHERE unit_price_external_id = $1
     """,
     rowMapper = UnitPriceMapper.class
@@ -133,7 +133,7 @@ public interface UnitPriceTable {
     sql = """
       INSERT INTO {unit_price}
       (unit_price_id, unit_price_external_id, unit_price_type, unit_price_sub_type, 
-       unit_price_description, unit_price_date, unit_price_value, created_commit)
+       unit_price_description, unit_price_date, unit_price_value, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8)
     """,
     propsMapper = UnitPriceInsertMapper.class
@@ -152,7 +152,7 @@ public interface UnitPriceTable {
           .description(Optional.ofNullable(row.getString("unit_price_description")))
           .date(row.getLocalDate("unit_price_date"))
           .value(row.getBigDecimal("unit_price_value"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableUnitPriceTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -171,7 +171,7 @@ public interface UnitPriceTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getValue(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

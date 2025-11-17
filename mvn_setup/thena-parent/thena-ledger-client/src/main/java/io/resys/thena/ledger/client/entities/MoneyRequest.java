@@ -48,7 +48,7 @@ public interface MoneyRequest extends LedgerEntity {
   LocalDate getDueDate();
   BigDecimal getAmount();
   String getCommitId();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

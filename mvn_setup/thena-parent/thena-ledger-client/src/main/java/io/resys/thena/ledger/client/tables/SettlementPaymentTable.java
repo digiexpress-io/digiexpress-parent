@@ -42,7 +42,7 @@ import io.vertx.mutiny.sqlclient.Row;
       settlement_id UUID NOT NULL,
       payment_id UUID NOT NULL,
       allocation_amount DECIMAL(15,2) NOT NULL,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {settlement_payment}_SETTLEMENT_INDEX
@@ -56,7 +56,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_payment 
       FOREIGN KEY (payment_id) REFERENCES {payment}(payment_id);
     ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {settlement_payment};
@@ -69,7 +69,7 @@ public interface SettlementPaymentTable {
       SELECT settlement_payment.*,
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
-      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit_id = created_commit.commit_id
       LEFT JOIN {settlement} settlement ON settlement_payment.settlement_id = settlement.settlement_id
       LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.ledger_id
     """,
@@ -83,7 +83,7 @@ public interface SettlementPaymentTable {
       SELECT settlement_payment.*,
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
-      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit_id = created_commit.commit_id
       ORDER BY settlement_payment_id ASC
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -95,7 +95,7 @@ public interface SettlementPaymentTable {
       SELECT settlement_payment.*,
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
-      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit_id = created_commit.commit_id
       WHERE settlement_id = $1
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -107,7 +107,7 @@ public interface SettlementPaymentTable {
       SELECT settlement_payment.*,
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
-      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit_id = created_commit.commit_id
       WHERE payment_id = $1
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -120,7 +120,7 @@ public interface SettlementPaymentTable {
       SELECT settlement_payment.*,
              created_commit.created_at as created_at
       FROM {settlement_payment} settlement_payment
-      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement_payment.created_commit_id = created_commit.commit_id
       WHERE settlement_payment_id = $1
     """,
     rowMapper = SettlementPaymentMapper.class
@@ -130,7 +130,7 @@ public interface SettlementPaymentTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {settlement_payment}
-      (settlement_payment_id, settlement_id, payment_id, allocation_amount, created_commit)
+      (settlement_payment_id, settlement_id, payment_id, allocation_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5)
     """,
     propsMapper = SettlementPaymentInsertMapper.class
@@ -146,7 +146,7 @@ public interface SettlementPaymentTable {
           .settlementId(TableUtils.toStringUUID(row, "settlement_id"))
           .paymentId(TableUtils.toStringUUID(row, "payment_id"))
           .allocationAmount(row.getBigDecimal("allocation_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableSettlementPaymentTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -162,7 +162,7 @@ public interface SettlementPaymentTable {
         TableUtils.toUuid(doc.getSettlementId()),
         TableUtils.toUuid(doc.getPaymentId()),
         doc.getAllocationAmount(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

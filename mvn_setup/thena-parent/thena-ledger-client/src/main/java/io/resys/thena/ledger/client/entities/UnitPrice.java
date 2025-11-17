@@ -43,7 +43,7 @@ public interface UnitPrice extends LedgerEntity {
   Optional<String> getDescription();
   LocalDate getDate();
   BigDecimal getValue();
-  String getCreatedCommit();
+  String getCreatedCommitId();
 
   // Transitive data from joins
   @Value.Auxiliary

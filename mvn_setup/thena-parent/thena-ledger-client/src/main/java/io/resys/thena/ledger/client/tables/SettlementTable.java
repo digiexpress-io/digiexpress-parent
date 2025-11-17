@@ -47,7 +47,7 @@ import io.vertx.mutiny.sqlclient.Row;
       settlement_description TEXT,
       settlement_date DATE NOT NULL,
       settlement_amount DECIMAL(15,2) NOT NULL,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {settlement}_LEDGER_INDEX
@@ -61,7 +61,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {settlement} ADD CONSTRAINT fk_settlement_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
     ALTER TABLE {settlement} ADD CONSTRAINT fk_settlement_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {settlement};
@@ -74,7 +74,7 @@ public interface SettlementTable {
       SELECT settlement.*,
              created_commit.created_at as created_at
       FROM {settlement} settlement
-      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
       LEFT JOIN {ledger} ledger ON settlement.ledger_id = ledger.ledger_id
     """,
     rowMapper = SettlementMapper.class,
@@ -87,7 +87,7 @@ public interface SettlementTable {
       SELECT settlement.*,
              created_commit.created_at as created_at
       FROM {settlement} settlement
-      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
       ORDER BY settlement_date DESC
     """,
     rowMapper = SettlementMapper.class
@@ -99,7 +99,7 @@ public interface SettlementTable {
       SELECT settlement.*,
              created_commit.created_at as created_at
       FROM {settlement} settlement
-      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY settlement_date DESC
     """,
@@ -113,7 +113,7 @@ public interface SettlementTable {
       SELECT settlement.*,
              created_commit.created_at as created_at
       FROM {settlement} settlement
-      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
       WHERE settlement_id = $1
     """,
     rowMapper = SettlementMapper.class
@@ -126,7 +126,7 @@ public interface SettlementTable {
       SELECT settlement.*,
              created_commit.created_at as created_at
       FROM {settlement} settlement
-      LEFT JOIN {commit} created_commit ON settlement.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
       WHERE settlement_external_id = $1
     """,
     rowMapper = SettlementMapper.class
@@ -137,7 +137,7 @@ public interface SettlementTable {
     sql = """
       INSERT INTO {settlement}
       (settlement_id, ledger_id, settlement_external_id, settlement_type, settlement_sub_type, 
-       settlement_description, settlement_date, settlement_amount, created_commit)
+       settlement_description, settlement_date, settlement_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = SettlementInsertMapper.class
@@ -157,7 +157,7 @@ public interface SettlementTable {
           .description(Optional.ofNullable(row.getString("settlement_description")))
           .date(row.getLocalDate("settlement_date"))
           .amount(row.getBigDecimal("settlement_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableSettlementTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
@@ -177,7 +177,7 @@ public interface SettlementTable {
         doc.getDescription().orElse(null),
         doc.getDate(),
         doc.getAmount(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }
