@@ -166,15 +166,15 @@ public interface BlackBookDetailTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .blackBookId(TableUtils.toStringUUID(row, "black_book_id"))
           .externalId(row.getString("external_id"))
-          .type(row.getString("detail_type"))
-          .subType(Optional.ofNullable(row.getString("detail_sub_type")))
-          .description(Optional.ofNullable(row.getString("detail_description")))
+          .detailType(row.getString("detail_type"))
+          .detailSubType(Optional.ofNullable(row.getString("detail_sub_type")))
+          .detailDescription(Optional.ofNullable(row.getString("detail_description")))
           .targetId(Optional.ofNullable(row.getString("target_id")))
-          .startDate(row.getLocalDate("detail_start_date"))
-          .endDate(row.getLocalDate("detail_end_date"))
-          .amount(row.getBigDecimal("detail_amount"))
-          .formula(Optional.ofNullable(row.getString("detail_formula")))
-          .body(Optional.ofNullable(detail_body))
+          .detailStartDate(row.getLocalDate("detail_start_date"))
+          .detailEndDate(row.getLocalDate("detail_end_date"))
+          .detailAmount(row.getBigDecimal("detail_amount"))
+          .detailFormula(Optional.ofNullable(row.getString("detail_formula")))
+          .detailBody(Optional.ofNullable(detail_body))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookDetailTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -190,15 +190,15 @@ public interface BlackBookDetailTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getBlackBookId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
+        doc.getDetailType(),
+        doc.getDetailSubType().orElse(null),
+        doc.getDetailDescription().orElse(null),
         doc.getTargetId().orElse(null),
-        doc.getStartDate(),
-        doc.getEndDate(),
-        doc.getAmount(),
-        doc.getFormula().orElse(null),
-        doc.getBody().orElse(null),
+        doc.getDetailStartDate(),
+        doc.getDetailEndDate(),
+        doc.getDetailAmount(),
+        doc.getDetailFormula().orElse(null),
+        doc.getDetailBody().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

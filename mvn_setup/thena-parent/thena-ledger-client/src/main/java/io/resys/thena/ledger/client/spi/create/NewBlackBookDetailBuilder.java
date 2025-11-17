@@ -84,19 +84,19 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
 
   @Override
   public NewBlackBookDetail type(String type) {
-    this.next.type(type);
+    this.next.detailType(type);
     return this;
   }
 
   @Override
   public NewBlackBookDetail subType(String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.detailSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewBlackBookDetail description(String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.detailDescription(Optional.ofNullable(description));
     return this;
   }
 
@@ -108,31 +108,31 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
 
   @Override
   public NewBlackBookDetail startDate(LocalDate startDate) {
-    this.next.startDate(startDate);
+    this.next.detailStartDate(startDate);
     return this;
   }
 
   @Override
   public NewBlackBookDetail endDate(LocalDate endDate) {
-    this.next.endDate(endDate);
+    this.next.detailEndDate(endDate);
     return this;
   }
 
   @Override
   public NewBlackBookDetail amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.detailAmount(amount);
     return this;
   }
 
   @Override
   public NewBlackBookDetail formula(String formula) {
-    this.next.formula(Optional.ofNullable(formula));
+    this.next.detailFormula(Optional.ofNullable(formula));
     return this;
   }
 
   @Override
   public NewBlackBookDetail body(JsonObject body) {
-    this.next.body(Optional.ofNullable(body));
+    this.next.detailBody(Optional.ofNullable(body));
     return this;
   }
 
@@ -151,8 +151,8 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
     RepoAssert.isTrue(
         this.allBlackBookDetails.values().stream()
         .filter(a -> (
-            a.getStartDate().equals(built.getStartDate())
-            && a.getType().equals(built.getType())
+            a.getDetailStartDate().equals(built.getDetailStartDate())
+            && a.getDetailType().equals(built.getDetailType())
             && Objects.equal(a.getTargetId().orElse(null), built.getTargetId().orElse(null))
         ))
         .count() == 0

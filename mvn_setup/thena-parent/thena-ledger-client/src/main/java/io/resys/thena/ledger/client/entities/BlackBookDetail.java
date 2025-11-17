@@ -41,15 +41,16 @@ public interface BlackBookDetail extends LedgerEntity {
   String getId();
   String getBlackBookId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
+  String getDetailType();
   Optional<String> getTargetId();
-  LocalDate getStartDate();
-  LocalDate getEndDate();
-  BigDecimal getAmount();
-  Optional<String> getFormula();
-  Optional<JsonObject> getBody();
+  Optional<String> getDetailSubType();
+  Optional<String> getDetailDescription();
+
+  LocalDate getDetailStartDate();
+  LocalDate getDetailEndDate();
+  BigDecimal getDetailAmount();
+  Optional<String> getDetailFormula();
+  Optional<JsonObject> getDetailBody();
   String getCreatedCommitId();
 
   // Transitive data from joins
