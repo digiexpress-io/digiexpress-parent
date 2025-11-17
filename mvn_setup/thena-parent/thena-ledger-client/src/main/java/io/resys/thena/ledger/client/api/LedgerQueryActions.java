@@ -32,7 +32,7 @@ import io.smallrye.mutiny.Uni;
 public interface LedgerQueryActions {
 
   
-  LedgerQuery contractQuery();
+  LedgerQuery ledgerQuery();
   ReferenceNumberQuery referenceNumberQuery();
   
   interface LedgerQuery {
