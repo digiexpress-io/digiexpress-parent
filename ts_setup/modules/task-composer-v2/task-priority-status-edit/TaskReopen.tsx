@@ -39,20 +39,20 @@ export const TaskReopen: React.FC<{
   return (
     <>
       <Dialog open={props.open} onClose={handleClose}>
-        <DialogTitle>{intl.formatMessage({ id: 'taskReopenDialog.title', defaultMessage: 'Reopen Task' })}</DialogTitle>
+        <DialogTitle>{intl.formatMessage({ id: 'taskReopenDialog.title' })}</DialogTitle>
         <DialogContent>
-          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle1', defaultMessage: 'You are about to reopen this task' })}</Typography>
-          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle2', defaultMessage: 'Upon accepting changes, task status will be set to OPEN and message will be sent to customer' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle1' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle2' })}</Typography>
 
           <Divider sx={{ my: 3 }} />
-          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.customer-message', defaultMessage: 'Please write a message to send to the customer explaining this change' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.customer-message' })}</Typography>
 
           <TextField
             required fullWidth multiline maxRows={5}
             value={reason}
             onChange={handleReasonChange}
-            label={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder1', defaultMessage: 'Message to customer' })}
-            placeholder={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder2', defaultMessage: 'Enter message' })} />
+            label={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder1' })}
+            placeholder={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder2' })} />
         </DialogContent>
         <DialogActions>
           <Button variant='outlined' onClick={handleClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
@@ -61,7 +61,7 @@ export const TaskReopen: React.FC<{
       </Dialog>
 
       {backend.permissions.isReopenTaskAllowed && (<Button onClick={() => setOpen(true)}>
-          {intl.formatMessage({ id: 'button.taskReopenDialog', defaultMessage: 'Reopen task' })}
+        {intl.formatMessage({ id: 'button.taskReopenDialog' })}
         </Button>)}
 
     </>

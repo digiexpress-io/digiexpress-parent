@@ -47,7 +47,7 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task, noteText, onChan
       <Box className={classes.messagesContainer}>
 
         {!internalComments || internalComments.length === 0 && <Typography variant='body2' textAlign='center'>
-          {intl.formatMessage({ id: 'task.note.none', defaultMessage: 'No notes yet' })}
+          {intl.formatMessage({ id: 'task.notes.none' })}
         </Typography>
         }
 
@@ -74,7 +74,7 @@ export const NotesEditor: React.FC<NotesEditorProps> = ({ task, noteText, onChan
       <Box className={classes.inputBox}>
         <Box className={classes.inputBoxTitle}>
           <EditIcon color='primary' />
-          <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.note.newNote', defaultMessage: 'Write a new note' })}</Typography>
+          <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.notes.newNote' })}</Typography>
         </Box>
         <StyledTextField multiline rows={4} value={noteText} onChange={onChange} />
       </Box>

@@ -39,16 +39,12 @@ export const NotesEditDialog: React.FC<NotesEditDialogProps> = ({ open, onClose 
   return (
     <StyledEditNotesDialog fullWidth maxWidth='xl' className={classes.editDialog} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
-      <DialogTitle>
-        {intl.formatMessage({ id: 'task.note.edit', defaultMessage: 'Edit notes for task' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-        {task.taskRef ?? 'no task reference id'}
-      </DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'task.notes.edit' })}{": "}{task.taskRef ?? 'no task reference id'}</DialogTitle>
 
       <DialogContent>
         <Box className={classes.historyLabel}>
           <HistoryIcon />
-          <Typography>{intl.formatMessage({ id: 'task.note.history', defaultMessage: 'Note history' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'task.note.history' })}</Typography>
         </Box>
         <NotesEditor task={task} onChange={handleSetNote} noteText={newNote} />
       </DialogContent>

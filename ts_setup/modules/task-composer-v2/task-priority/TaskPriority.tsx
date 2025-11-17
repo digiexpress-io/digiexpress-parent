@@ -31,11 +31,7 @@ export const EditPriority: React.FC<{
   return (
     <StyledEditPriority className={classes.root}>
       <Stack direction='column' width='100%'>
-        <Typography fontWeight={500} mb={1} sx={{ fontWeight: 500 }}>
-          {intl.formatMessage({ id: 'task.priority', defaultMessage: 'Priority' })}
-          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-          {priority}
-        </Typography>
+        <Typography fontWeight={500} mb={1} sx={{ fontWeight: 500 }}>{intl.formatMessage({ id: 'task.priority' })}{": "}{priority}</Typography>
         <ButtonGroup fullWidth className={classes.prioritySelect} disableElevation>
           {Object.entries(TaskApi.task_priority_messages).map(([key, message]) => {
             const level = key as TaskApi.TaskPriority;
