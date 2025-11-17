@@ -52,7 +52,7 @@ import io.vertx.mutiny.sqlclient.Row;
       detail_amount DECIMAL(15,2) NOT NULL,
       detail_formula VARCHAR(255),
       detail_body JSONB,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {black_book_detail}_BLACK_BOOK_INDEX
@@ -68,7 +68,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {black_book_detail} ADD CONSTRAINT fk_black_book_detail_black_book 
       FOREIGN KEY (black_book_id) REFERENCES {black_book}(black_book_id);
     ALTER TABLE {black_book_detail} ADD CONSTRAINT fk_black_book_detail_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {black_book_detail};
@@ -81,7 +81,7 @@ public interface BlackBookDetailTable {
       SELECT black_book_detail.*,
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
-      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
       LEFT JOIN {black_book} black_book ON black_book_detail.black_book_id = black_book.black_book_id
       LEFT JOIN {ledger} ledger ON black_book.ledger_id = ledger.ledger_id
     """,
@@ -95,7 +95,7 @@ public interface BlackBookDetailTable {
       SELECT black_book_detail.*,
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
-      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
       ORDER BY detail_start_date DESC
     """,
     rowMapper = BlackBookDetailMapper.class
@@ -107,7 +107,7 @@ public interface BlackBookDetailTable {
       SELECT black_book_detail.*,
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
-      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
       WHERE black_book_id = $1
       ORDER BY detail_start_date ASC
     """,
@@ -121,7 +121,7 @@ public interface BlackBookDetailTable {
       SELECT black_book_detail.*,
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
-      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
       WHERE detail_id = $1
     """,
     rowMapper = BlackBookDetailMapper.class
@@ -134,7 +134,7 @@ public interface BlackBookDetailTable {
       SELECT black_book_detail.*,
              created_commit.created_at as created_at
       FROM {black_book_detail} black_book_detail
-      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book_detail.created_commit_id = created_commit.commit_id
       WHERE detail_external_id = $1
     """,
     rowMapper = BlackBookDetailMapper.class
@@ -146,7 +146,7 @@ public interface BlackBookDetailTable {
       INSERT INTO {black_book_detail}
       (detail_id, black_book_id, detail_external_id, detail_type, detail_sub_type, 
        detail_description, detail_target_id, detail_start_date, detail_end_date, 
-       detail_amount, detail_formula, detail_body, created_commit)
+       detail_amount, detail_formula, detail_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
     propsMapper = BlackBookDetailInsertMapper.class
@@ -172,7 +172,7 @@ public interface BlackBookDetailTable {
           .amount(row.getBigDecimal("detail_amount"))
           .formula(Optional.ofNullable(row.getString("detail_formula")))
           .body(Optional.ofNullable(detail_body))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookDetailTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())

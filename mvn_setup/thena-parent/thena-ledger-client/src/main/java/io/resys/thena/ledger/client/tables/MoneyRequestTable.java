@@ -51,8 +51,8 @@ import io.vertx.mutiny.sqlclient.Row;
       money_request_description TEXT,
       money_request_due_date DATE NOT NULL,
       money_request_amount DECIMAL(15,2) NOT NULL,
-      created_commit UUID NOT NULL,
-      updated_commit UUID NOT NULL
+      commit_id UUID NOT NULL,
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {money_request}_LEDGER_INDEX
@@ -67,10 +67,10 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+    ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_commit 
+      FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
     ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
-    ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_updated_commit 
-      FOREIGN KEY (updated_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {money_request};
@@ -81,11 +81,11 @@ public interface MoneyRequestTable {
   @TenantSql.FindAll(
     sql = """
       SELECT money_request.*,
-             updated_commit.created_at as updated_at,
+             commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {money_request} money_request
-      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       LEFT JOIN {ledger} ledger ON money_request.ledger_id = ledger.ledger_id
     """,
     rowMapper = MoneyRequestMapper.class,
@@ -96,11 +96,11 @@ public interface MoneyRequestTable {
   @TenantSql.FindAll(
     sql = """
       SELECT money_request.*,
-             updated_commit.created_at as updated_at,
+             commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {money_request} money_request
-      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       ORDER BY money_request_due_date ASC
     """,
     rowMapper = MoneyRequestMapper.class
@@ -110,11 +110,11 @@ public interface MoneyRequestTable {
   @TenantSql.FindAll(
     sql = """
       SELECT money_request.*,
-             updated_commit.created_at as updated_at,
+             commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {money_request} money_request
-      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY money_request_due_date ASC
     """,
@@ -125,11 +125,11 @@ public interface MoneyRequestTable {
   @TenantSql.FindAll(
     sql = """
       SELECT money_request.*,
-             updated_commit.created_at as updated_at,
+             commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {money_request} money_request
-      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       WHERE money_request_status = $1
       ORDER BY money_request_due_date ASC
     """,
@@ -141,11 +141,11 @@ public interface MoneyRequestTable {
     optional = false,
     sql = """
       SELECT money_request.*,
-             updated_commit.created_at as updated_at,
+             commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {money_request} money_request
-      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       WHERE money_request_id = $1
     """,
     rowMapper = MoneyRequestMapper.class
@@ -156,11 +156,11 @@ public interface MoneyRequestTable {
     optional = true,
     sql = """
       SELECT money_request.*,
-             updated_commit.created_at as updated_at,
+             commit.created_at as updated_at,
              created_commit.created_at as created_at
       FROM {money_request} money_request
-      LEFT JOIN {commit} updated_commit ON money_request.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON money_request.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
+      LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       WHERE money_request_external_id = $1
     """,
     rowMapper = MoneyRequestMapper.class
@@ -172,7 +172,7 @@ public interface MoneyRequestTable {
       INSERT INTO {money_request}
       (money_request_id, ledger_id, money_request_external_id, money_request_type, money_request_sub_type, 
        money_request_status, money_request_frequency, money_request_description, money_request_due_date, 
-       money_request_amount, created_commit, updated_commit)
+       money_request_amount, commit_id, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     """,
     propsMapper = MoneyRequestInsertMapper.class
@@ -184,7 +184,7 @@ public interface MoneyRequestTable {
       UPDATE {money_request}
        SET ledger_id = $1, money_request_external_id = $2, money_request_type = $3, money_request_sub_type = $4,
            money_request_status = $5, money_request_frequency = $6, money_request_description = $7, 
-           money_request_due_date = $8, money_request_amount = $9, updated_commit = $10
+           money_request_due_date = $8, money_request_amount = $9, commit_id = $10
        WHERE money_request_id = $11
     """,
     propsMapper = MoneyRequestUpdateMapper.class
@@ -206,8 +206,8 @@ public interface MoneyRequestTable {
           .description(Optional.ofNullable(row.getString("money_request_description")))
           .dueDate(row.getLocalDate("money_request_due_date"))
           .amount(row.getBigDecimal("money_request_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
-          .updatedCommit(TableUtils.toStringUUID(row, "updated_commit"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableMoneyRequestTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .updatedAt(row.getOffsetDateTime("updated_at"))
@@ -230,8 +230,8 @@ public interface MoneyRequestTable {
         doc.getDescription().orElse(null),
         doc.getDueDate(),
         doc.getAmount(),
-        TableUtils.toUuid(doc.getCreatedCommit()),
-        TableUtils.toUuid(doc.getUpdatedCommit())
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommit())
       });
     }
   }
@@ -249,7 +249,7 @@ public interface MoneyRequestTable {
         doc.getDescription().orElse(null),
         doc.getDueDate(),
         doc.getAmount(),
-        TableUtils.toUuid(doc.getUpdatedCommit()),
+        TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getId())
       });
     }

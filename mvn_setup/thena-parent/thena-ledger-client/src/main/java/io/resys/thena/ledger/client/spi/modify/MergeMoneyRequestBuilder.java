@@ -43,9 +43,6 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
   private final ImmutablePersistenceUnit.Builder batch;
   private final MoneyRequest currentMoneyRequest; 
   private final ImmutableMoneyRequest.Builder nextMoneyRequest;
-  private final ImmutableMoneyRequestTransitives.Builder nextTransitives;
-  private final LedgerContainer container;
-  private final String ledgerId;
   private boolean built;
 
   public MergeMoneyRequestBuilder(
@@ -56,9 +53,7 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
       ImmutablePersistenceUnit currentTx,
       @Nullable LedgerContainer savedState) {
     super();
-    this.ledgerId = ledgerId;
     this.logger = logger;
-    this.container = container;
     this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
     
     // Find the money request to modify - first check current transaction
@@ -80,63 +75,53 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
     RepoAssert.notNull(currentMoneyRequest, () -> "Can't find money request with id: '" + moneyRequestId + "' for ledger: '" + ledgerId + "'!");
     
     this.nextMoneyRequest = ImmutableMoneyRequest.builder().from(currentMoneyRequest);
-    this.nextTransitives = ImmutableMoneyRequestTransitives.builder()
-        .from(currentMoneyRequest.getTransitives());
   }
 
   @Override
   public MergeMoneyRequest externalId(String externalId) {
     this.nextMoneyRequest.externalId(externalId);
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest type(String type) {
     this.nextMoneyRequest.type(type);
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest subType(String subType) {
     this.nextMoneyRequest.subType(Optional.ofNullable(subType));
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest status(MoneyRequestStatus status) {
     this.nextMoneyRequest.status(status);
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest frequency(MoneyRequestFrequency frequency) {
     this.nextMoneyRequest.frequency(frequency);
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest description(String description) {
     this.nextMoneyRequest.description(Optional.ofNullable(description));
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest dueDate(LocalDate dueDate) {
     this.nextMoneyRequest.dueDate(dueDate);
-    updateVersion();
     return this;
   }
 
   @Override
   public MergeMoneyRequest amount(BigDecimal amount) {
     this.nextMoneyRequest.amount(amount);
-    updateVersion();
     return this;
   }
 
@@ -149,15 +134,14 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
     RepoAssert.isTrue(built, () -> "you must call MergeMoneyRequest.build() to finalize money request MERGE!");
 
     final var moneyRequest = nextMoneyRequest
-        .updatedCommit(logger.getCommitId())
-        .transitives(nextTransitives.updatedAt(logger.getCommitAt()).build())
+        .commitId(logger.getCommitId())
+        .transitives(ImmutableMoneyRequestTransitives.builder()
+            .from(currentMoneyRequest.getTransitives())
+            .updatedAt(logger.getCreatedAt())
+            .build())
         .build();
     
     this.logger.add(moneyRequest);
     return batch.addMoneyRequestUpdates(moneyRequest).build();
-  }
-
-  private void updateVersion() {
-    this.nextTransitives.updatedAt(logger.getCommitAt());
   }
 }

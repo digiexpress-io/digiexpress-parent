@@ -49,7 +49,7 @@ import io.vertx.mutiny.sqlclient.Row;
       projection_start_date DATE NOT NULL,
       projection_end_date DATE NOT NULL,
       projection_amount DECIMAL(15,2) NOT NULL,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {projection}_LEDGER_INDEX
@@ -65,7 +65,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {projection};
@@ -78,7 +78,7 @@ public interface ProjectionTable {
       SELECT projection.*,
              created_commit.created_at as created_at
       FROM {projection} projection
-      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.ledger_id
     """,
     rowMapper = ProjectionMapper.class,
@@ -91,7 +91,7 @@ public interface ProjectionTable {
       SELECT projection.*,
              created_commit.created_at as created_at
       FROM {projection} projection
-      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       ORDER BY projection_target_date ASC
     """,
     rowMapper = ProjectionMapper.class
@@ -103,7 +103,7 @@ public interface ProjectionTable {
       SELECT projection.*,
              created_commit.created_at as created_at
       FROM {projection} projection
-      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY projection_target_date ASC
     """,
@@ -117,7 +117,7 @@ public interface ProjectionTable {
       SELECT projection.*,
              created_commit.created_at as created_at
       FROM {projection} projection
-      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       WHERE projection_id = $1
     """,
     rowMapper = ProjectionMapper.class
@@ -130,7 +130,7 @@ public interface ProjectionTable {
       SELECT projection.*,
              created_commit.created_at as created_at
       FROM {projection} projection
-      LEFT JOIN {commit} created_commit ON projection.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       WHERE projection_external_id = $1
     """,
     rowMapper = ProjectionMapper.class
@@ -142,7 +142,7 @@ public interface ProjectionTable {
       INSERT INTO {projection}
       (projection_id, ledger_id, projection_external_id, projection_type, projection_sub_type, 
        projection_description, projection_target_date, projection_start_date, projection_end_date, 
-       projection_amount, created_commit)
+       projection_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     """,
     propsMapper = ProjectionInsertMapper.class
@@ -164,7 +164,7 @@ public interface ProjectionTable {
           .startDate(row.getLocalDate("projection_start_date"))
           .endDate(row.getLocalDate("projection_end_date"))
           .amount(row.getBigDecimal("projection_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableProjectionTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())

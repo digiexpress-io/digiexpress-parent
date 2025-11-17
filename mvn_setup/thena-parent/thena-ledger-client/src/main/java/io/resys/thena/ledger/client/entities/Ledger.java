@@ -39,8 +39,10 @@ public interface Ledger extends LedgerEntity {
   String getExternalId();
   String getName();
   Optional<String> getDescription();
+  
+  String getCommitId();
   String getCreatedCommit();
-  String getUpdatedCommit();
+  String getUpdatedTreeCommit();
 
   // Transitive data from joins
   @Value.Auxiliary
@@ -58,5 +60,6 @@ public interface Ledger extends LedgerEntity {
   interface LedgerTransitives {
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
+    OffsetDateTime getUpdatedTreeAt();
   }
 }

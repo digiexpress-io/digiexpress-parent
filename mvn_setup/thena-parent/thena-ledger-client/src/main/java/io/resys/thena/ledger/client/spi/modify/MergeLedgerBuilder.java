@@ -180,8 +180,11 @@ public class MergeLedgerBuilder implements MergeLedger {
     }
 
     final var ledger = nextLedger
-        .updatedCommit(logger.getCommitId())
-        .transitives(nextTransitives.updatedAt(logger.getCreatedAt()).build())
+        .commitId(logger.getCommitId())
+        .transitives(nextTransitives
+            .updatedAt(logger.getCreatedAt())
+            .updatedTreeAt(logger.getCreatedAt())
+            .build())
         .build();
     
     this.logger.add(ledger);

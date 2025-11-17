@@ -65,8 +65,8 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
     this.ledgerId = OidUtils.genUUID();
     this.ledger = ImmutableLedger.builder()
         .id(ledgerId)
-        .createdCommit(commitId)
-        .updatedCommit(commitId)
+        .createdCommitId(commitId)
+        .updatedCommitId(commitId)
         .description(Optional.empty());
         
     this.logger = logger;

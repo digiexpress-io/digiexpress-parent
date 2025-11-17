@@ -47,7 +47,7 @@ import io.vertx.mutiny.sqlclient.Row;
       black_book_description TEXT,
       black_book_date DATE NOT NULL,
       black_book_amount DECIMAL(15,2) NOT NULL,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {black_book}_LEDGER_INDEX
@@ -61,7 +61,7 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {black_book} ADD CONSTRAINT fk_black_book_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
     ALTER TABLE {black_book} ADD CONSTRAINT fk_black_book_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {black_book};
@@ -74,7 +74,7 @@ public interface BlackBookTable {
       SELECT black_book.*,
              created_commit.created_at as created_at
       FROM {black_book} black_book
-      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book.created_commit_id = created_commit.commit_id
       LEFT JOIN {ledger} ledger ON black_book.ledger_id = ledger.ledger_id
     """,
     rowMapper = BlackBookMapper.class,
@@ -87,7 +87,7 @@ public interface BlackBookTable {
       SELECT black_book.*,
              created_commit.created_at as created_at
       FROM {black_book} black_book
-      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book.created_commit_id = created_commit.commit_id
       ORDER BY black_book_date DESC
     """,
     rowMapper = BlackBookMapper.class
@@ -99,7 +99,7 @@ public interface BlackBookTable {
       SELECT black_book.*,
              created_commit.created_at as created_at
       FROM {black_book} black_book
-      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY black_book_date DESC
     """,
@@ -113,7 +113,7 @@ public interface BlackBookTable {
       SELECT black_book.*,
              created_commit.created_at as created_at
       FROM {black_book} black_book
-      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book.created_commit_id = created_commit.commit_id
       WHERE black_book_id = $1
     """,
     rowMapper = BlackBookMapper.class
@@ -126,7 +126,7 @@ public interface BlackBookTable {
       SELECT black_book.*,
              created_commit.created_at as created_at
       FROM {black_book} black_book
-      LEFT JOIN {commit} created_commit ON black_book.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON black_book.created_commit_id = created_commit.commit_id
       WHERE black_book_external_id = $1
     """,
     rowMapper = BlackBookMapper.class
@@ -137,8 +137,8 @@ public interface BlackBookTable {
     sql = """
       INSERT INTO {black_book}
       (black_book_id, ledger_id, black_book_external_id, black_book_type, black_book_sub_type, 
-       black_book_description, black_book_date, black_book_amount, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       black_book_description, black_book_date, black_book_amount, created_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = BlackBookInsertMapper.class
   )
@@ -157,7 +157,7 @@ public interface BlackBookTable {
           .description(Optional.ofNullable(row.getString("black_book_description")))
           .date(row.getLocalDate("black_book_date"))
           .amount(row.getBigDecimal("black_book_amount"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommit(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
               .build())
