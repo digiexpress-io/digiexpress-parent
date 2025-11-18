@@ -119,12 +119,6 @@
       </dependency>
 
       <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>eveli-integration-text-analyzer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>io.digiexpress</groupId>    
         <artifactId>tagomi-client</artifactId>
         <version>${project.version}</version>

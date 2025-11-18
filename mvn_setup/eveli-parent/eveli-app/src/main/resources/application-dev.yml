@@ -75,7 +75,7 @@ eveli.feedback.category-sub: cityServiceGroup, preschoolEducationGroup, cityServ
 eveli.feedback.question-title: feedBackTitle
 eveli.feedback.question: feedBackTxt,feedBackText
 eveli.feedback.username-allowed: publicAnswerAllowed,publishFeedBack
-eveli.feedback.analyzer.enabled: true
+eveli.feedback.analyzer.enabled: false
 eveli.feedback.analyzer.endpoint-url: http://localhost:8083
 
 # jwt linked crm from security proxy

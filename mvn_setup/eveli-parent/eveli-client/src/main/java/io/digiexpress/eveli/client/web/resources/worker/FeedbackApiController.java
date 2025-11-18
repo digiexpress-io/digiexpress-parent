@@ -12,8 +12,6 @@ import io.digiexpress.eveli.client.api.FeedbackClient.SimilarFeedback;
 import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
-import io.digiexpress.eveli.textanalyzer.adapter.spi.FeedbackAnalyzerRestClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,8 +61,6 @@ public class FeedbackApiController {
   private final WorkerAuthClient securityClient;
   private final FeedbackClient feedbackClient;
   private final TaskClient taskClient;
-  private final FeedbackAnalyzerRestClient feedbackAnalyzerRestClient;
-  private final FeedbackCategoriesReader feedbackCategoriesReader;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping
