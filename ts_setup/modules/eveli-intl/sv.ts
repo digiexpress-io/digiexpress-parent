@@ -899,7 +899,7 @@ export const sv = {
   'taskcard.style.DEFAULT': 'Standard',
   'taskcard.style.LARGE': 'Stor',
   'task.feedback.none': 'Ingen feedback tillgänglig',
-  'task.feedback.published': 'Spela om till feedback',
+  'task.feedback.published': 'Publicerad',
   'toolbar.tagomi': 'Tagomi',
   'tagomi.services.searchAll': 'Sök alla Tagomi-tjänster',
   'tagomi.main.services.all': 'Alla tjänster',

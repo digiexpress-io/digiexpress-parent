@@ -899,7 +899,7 @@ export const fi = {
   'taskcard.style.DEFAULT': 'Oletus',
   'taskcard.style.LARGE': 'Suuri',
   'task.feedback.none': 'Palautetta ei ole saatavilla',
-  'task.feedback.published': 'Julkaise vastine palautteelle',
+  'task.feedback.published': 'Julkaistu',
   'toolbar.tagomi': 'Tagomi',
   'tagomi.services.searchAll': 'Hae kaikista Tagomi-palveluista',
   'tagomi.main.services.all': 'Kaikki palvelut',

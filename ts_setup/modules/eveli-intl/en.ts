@@ -990,7 +990,7 @@ export const en = {
   'task.feedback.none': 'No feedback available',
   'task.feedback.title': 'Customer title',
   'task.feedback.detailedResponse': 'Details from customer',
-  'task.feedback.published': 'Reply to feedback',
+  'task.feedback.published': 'Published',
   'task.feedback.notPublished': 'Not published',
   'task.attachments': 'Task attached files',
   'task.button.uploadFile': 'Upload file',
