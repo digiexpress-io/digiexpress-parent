@@ -178,7 +178,7 @@ export const fi = {
   'gamut.feedback.vote.notHelpful': 'Ei vastauksesta ei ollut apua',
   'gamut.feedback.vote.yesHelpful': 'Kyllä vastauksesta oli apua',
   'gamut.feedback.vote.loginReq': 'Sinun on kirjauduttava sisään arvioidaksesi palautetta',
-  'gamut.feedback.updatedOnDate': 'Päivitä päivämäärä',
+  'gamut.feedback.updatedOnDate': 'Päivitetty',
   'gamut.feedback.feedbackViewerTitle': 'Asiakas palaute',
   'gamut.feedback.feedbackViewerSubTitle': 'Organisaation palaute',
   'dialob.review.title': 'Lomakkeen esikatselu',

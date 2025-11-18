@@ -123,12 +123,25 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
       </DialogTitle>
       <DialogContent>
         <Typography className={classes.subTitle}>{feedback.feedback.customerTitle}</Typography>
-        <Typography>{feedback.feedback.content.question}</Typography>
-
+        <Typography
+          sx={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          }}
+        >
+          {feedback.feedback.content.question}
+        </Typography>
         <Divider className={classes.contentDivider} />
         <div className={classes.replyContainer}>
           <Typography>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerSubTitle' })}</Typography>
-          <Typography>{feedback.feedback.replyText}</Typography>
+          <Typography
+            sx={{
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}
+          >
+            {feedback.feedback.replyText}
+          </Typography>
         </div>
       </DialogContent>
       <DialogActions>

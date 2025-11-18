@@ -177,7 +177,7 @@ export const sv = {
   'gamut.feedback.vote.notHelpful': 'Nej, detta var inte till hjälp.',
   'gamut.feedback.vote.yesHelpful': 'Ja, detta var hjälpsamt.',
   'gamut.feedback.vote.loginReq': 'Du måste vara inloggad för att betygsätta feedback',
-  'gamut.feedback.updatedOnDate': 'Uppdaterat datum',
+  'gamut.feedback.updatedOnDate': 'Uppdaterad',
   'gamut.feedback.feedbackViewerTitle': 'Kundrespons',
   'gamut.feedback.feedbackViewerSubTitle': 'Organisationens svar',
   'dialob.review.title': 'Formulärgranskning',
