@@ -23,6 +23,8 @@ import java.util.List;
  */
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
@@ -40,6 +42,8 @@ public class FeedbackClientImpl implements FeedbackClient {
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory feedbackWithHistory;
   private final EveliPropsFeedback configProps;
+  private final ObjectMapper objectMapper;
+  private final FeedbackCategoriesReader feedbackCategoriesReader;
   
   @Override
   public Feedback createOneFeedback(CreateFeedbackCommand command, String userId) {
@@ -89,6 +93,13 @@ public class FeedbackClientImpl implements FeedbackClient {
   @Override
   public FeedbackRatingQuery queryFeedbackRatings() {
     return new FeedbackRatingQueryImpl(jdbc);
+  }
+
+  @Override
+  public FeedbackAnalyzerQuery queryFeedbackAnalyzer() {
+    final var analyzerQueryImpl = new FeedbackAnalyzerQueryImpl(this, configProps, objectMapper, feedbackCategoriesReader);
+    final var analyzerQueryDummyImpl = new FeedbackAnalyzerQueryDummyImpl();
+    return configProps.getAnalyzer().getEnabled() ? analyzerQueryImpl : analyzerQueryDummyImpl;
   }
 
 }

@@ -1,6 +1,25 @@
 
 export namespace FeedbackApi {
 
+  export enum Colors {
+    RED = 1,
+    GREEN,
+    YELLOW,
+    GREY
+  }
+
+  export type ColorMap = {
+    [status: string]: Colors
+  }
+
+  export const sentiment_colors: ColorMap = {
+    MIXED: Colors.YELLOW,
+    POSITIVE: Colors.GREEN,
+    NEGATIVE: Colors.RED,
+    NEUTRAL: Colors.GREY,
+    UNKNOWN: Colors.GREY
+  };
+
 }
 
 export declare namespace FeedbackApi {
@@ -13,7 +32,7 @@ export declare namespace FeedbackApi {
   export type ReplyId = string;
   export type CategoryId = string;
   export type CustomerId = string;
-
+  export type SentimentPolarity = 'positive' | 'negative' | 'neutral' | 'mixed' | 'unknown';
 
 
   export interface FeedbackTopic {
@@ -122,6 +141,61 @@ export declare namespace FeedbackApi {
   export interface UpsertFeedbackRankingCommand extends ModifyOneFeedbackCommand {
     replyIdOrCategoryId: string;
     rating: number | undefined; // undefined = remove vote
+  }
+
+
+  export interface SentimentAndSubcategory {
+    sentiment: Sentiment;
+    subcategory: Subcategory;
+  }
+
+  export interface Sentiment {
+    id: string;
+    sentiment: SentimentPolarity;
+    confidence: number;
+    sentences: SentimentSentence[];
+    timestamp: string;
+    modelVersion: string;
+    modelId: string;
+  }
+
+  export interface SentimentSentence {
+    text: string;
+    sentiment: SentimentPolarity;
+    scores: Record<string, number>;
+  }
+
+  export interface Subcategory {
+    id: string;
+    subcategory: string;
+    confidence: number;
+    matches: string[];
+    scores: Record<string, number>;
+    timestamp: string;
+    modelVersion: string;
+    modelId: string;
+  }
+
+  export interface SimilarFeedback {
+    id: string;
+    timestamp: string;
+    modelVersion: string;
+    modelId: string;
+    entries: ProcessedFeedbackItem[];
+  }
+
+  export interface ProcessedFeedbackItem {
+    id: string;
+    language: string;
+    text: string;
+    similarities: Similarity[];
+  }
+
+  export interface Similarity {
+    id: string;
+    similarityScore: number;
+    text: string;
+    language: string;
   }
 
 

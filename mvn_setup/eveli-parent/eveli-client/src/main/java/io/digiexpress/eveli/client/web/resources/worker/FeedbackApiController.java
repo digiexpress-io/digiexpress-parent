@@ -1,10 +1,17 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import io.digiexpress.eveli.client.api.FeedbackClient.SentimentAndSubcategory;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.SimilarFeedback;
+import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,14 +44,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
-import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -128,5 +131,22 @@ public class FeedbackApiController {
     final var authentication = securityClient.getUser();
     final var template = feedbackClient.queryTemplate().findOneByTaskId(id, authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
+  }
+
+  @GetMapping("/{taskIdOrFeedbackId}/sentiment-and-subcategory")
+  public ResponseEntity<SentimentAndSubcategory> getFeedbackSentimentAndSubcategory(@PathVariable("taskIdOrFeedbackId") String id) throws IOException
+  {
+    final var sentimentAndSubcategory = feedbackClient.queryFeedbackAnalyzer().getSentimentAndSubcategoryById(id);
+    return ResponseEntity.ok(sentimentAndSubcategory);
+  }
+
+  @GetMapping("/{taskIdOrFeedbackId}/similar")
+  public ResponseEntity<SimilarFeedback> getSimilarFeedback(@PathVariable("taskIdOrFeedbackId") String id) {
+    final var similarFeedback = feedbackClient.queryFeedbackAnalyzer().findSimilarFeedbackById(id);
+    // empty result expected if there are no existing feedbacks
+    if (similarFeedback.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(similarFeedback.get());
   }
 }

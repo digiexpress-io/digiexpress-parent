@@ -22,7 +22,6 @@
     <module>eveli-integration-google</module>
     <module>eveli-integration-queue</module>
     <module>eveli-integration-git</module>
-    <module>eveli-integration-text-analyzer</module>
     <module>eveli-app</module>
     <module>eveli-app-gcloud</module>
     <module>eveli-app-wrench-only</module>

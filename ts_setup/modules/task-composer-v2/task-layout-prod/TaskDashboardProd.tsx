@@ -45,7 +45,7 @@ const _variant_prod: FactoryCardId[] = [
   'notes',
   'assignees_roles',
   'status_priority',
-
+  'ai_assistant',
 ];
 
 
@@ -58,6 +58,7 @@ const _variant_prod_audit: FactoryCardId[] = [
   'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
+  'audit_ai'
 ];
 
 

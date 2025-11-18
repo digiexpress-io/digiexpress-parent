@@ -14,10 +14,12 @@ import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-mater
 import { DriveFileMoveOutlined as DriveFileMoveOutlinedIcon } from '@mui/icons-material';
 import { History as HistoryIcon } from '@mui/icons-material';
 import { NoteAltOutlined as NoteAltOutlinedIcon } from '@mui/icons-material';
+import { Analytics as AnalyticsIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
-import { TaskFeature } from '@dxs-ts/task-api';
+import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
+import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
 import { TaskStatusReadOnly } from '../task-status';
@@ -32,6 +34,7 @@ import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
 import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly, PublishedNotifierTextOnly } from '../task-feedback';
 import { TaskTransferEditDialog } from '../task-transfer';
+import { TaskAiAssistant } from '../task-ai-assistant';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
 
 import {
@@ -46,6 +49,8 @@ import { TaskAuditQueueMessagesTable } from '../task-audit-queue-messages';
 import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 import { TaskAuditQueuesTable } from '../task-audit-queue';
+import { TaskAuditAi } from '../task-audit-ai';
+import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
 
 
 
@@ -69,7 +74,9 @@ export type FactoryCardId =
   'audit_queue_deliveries' |
   'audit_processes' |
   'audit_flow' |
-  'audit_queue_messages'
+  'audit_queue_messages'|
+  'audit_ai' |
+  'ai_assistant'
 
 
 export const TASK_CARD_IDS: FactoryCardId[] = [
@@ -84,6 +91,7 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'task_meta',
   'transfer',
   'assignable',
+  'ai_assistant',
   'audit_viewers',
   'audit_commits',
   'audit_queues',
@@ -91,7 +99,8 @@ export const TASK_CARD_IDS: FactoryCardId[] = [
   'audit_queue_deliveries',
   'audit_processes',
   'audit_flow',
-  'audit_queue_messages'
+  'audit_queue_messages',
+  'audit_ai'
 ];
 
 const defaultExpandedCards: FactoryCardId[] = ['task_main_alt', 'assignees_roles', 'status_priority'];
@@ -485,6 +494,36 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           <TaskAuditQueueDeliveriesTable />
         </TaskCard>
       );
+    case 'audit_ai':
+      return (
+        <TaskFeature id='TASK_FEEDBACK'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.ai', defaultMessage: 'Audit: AI analysis' })}
+              {...commonProps}
+              showFlashyToggle={false}
+              showEditOnMenu={false}
+              showEditButton={false}
+              showReviewOnMenu={false}
+              startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+            <TaskAuditAi />
+          </TaskCard>
+        </TaskFeature>
+      );
+    case 'ai_assistant':
+      return (
+        <EveliTenantFeatureEnabled id='AI_ASSISTANT'>
+          <TaskFeature id='TASK_FEEDBACK'>
+            <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
+                {...commonProps}
+                showFlashyToggle={false}
+                showEditOnMenu={false}
+                showEditButton={false}
+                showReviewOnMenu={false}
+                startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+              <TaskAiAssistant />
+            </TaskCard>
+          </TaskFeature>
+        </EveliTenantFeatureEnabled>
+      );
     default:
       return null;
   }
@@ -494,5 +533,23 @@ function _formatAnyDateShort(value: Date | string | undefined): string {
   if (!value) return '--';
   const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
+}
+
+const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
+
+  const intl = useIntl();
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
+
+  
+  React.useEffect(() => {
+    getOneFeedback(task.taskRef!)
+      .then((resp) => {
+        setFeedback(resp);
+      });
+  }, [task.taskRef]);
+
+
+  return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : 0
 }
 

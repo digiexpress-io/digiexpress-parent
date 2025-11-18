@@ -8,7 +8,8 @@
     "@dxs-ts/task-feedback": "*",
     "@dxs-ts/task-api": "*",
     "@dxs-ts/xui-table": "*",
-    "@dxs-ts/xui-datetime": "*"
+    "@dxs-ts/xui-datetime": "*",
+    "@dxs-ts/eveli-api": "*"
   },
   "peerDependencies": {
     "react": "*",
