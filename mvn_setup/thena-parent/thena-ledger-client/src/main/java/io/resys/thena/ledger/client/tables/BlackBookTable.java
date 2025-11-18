@@ -154,11 +154,11 @@ public interface BlackBookTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
           .externalId(row.getString("external_id"))
-          .type(row.getString("black_book_type"))
-          .subType(Optional.ofNullable(row.getString("black_book_sub_type")))
-          .description(Optional.ofNullable(row.getString("black_book_description")))
-          .date(row.getLocalDate("black_book_date"))
-          .amount(row.getBigDecimal("black_book_amount"))
+          .bookType(row.getString("black_book_type"))
+          .bookSubType(Optional.ofNullable(row.getString("black_book_sub_type")))
+          .bookDescription(Optional.ofNullable(row.getString("black_book_description")))
+          .bookDate(row.getLocalDate("black_book_date"))
+          .bookAmount(row.getBigDecimal("black_book_amount"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -174,11 +174,11 @@ public interface BlackBookTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
-        doc.getAmount(),
+        doc.getBookType(),
+        doc.getBookSubType().orElse(null),
+        doc.getBookDescription().orElse(null),
+        doc.getBookDate(),
+        doc.getBookAmount(),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

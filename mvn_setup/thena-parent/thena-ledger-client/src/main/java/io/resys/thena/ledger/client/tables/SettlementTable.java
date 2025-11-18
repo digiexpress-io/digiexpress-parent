@@ -116,7 +116,7 @@ public interface SettlementTable {
              created_commit.created_at as created_at
       FROM {settlement} settlement
       LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
-      WHERE settlement_id = $1
+      WHERE id = $1
     """,
     rowMapper = SettlementMapper.class
   )
@@ -129,7 +129,7 @@ public interface SettlementTable {
              created_commit.created_at as created_at
       FROM {settlement} settlement
       LEFT JOIN {commit} created_commit ON settlement.created_commit_id = created_commit.commit_id
-      WHERE settlement_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = SettlementMapper.class
   )
@@ -138,7 +138,7 @@ public interface SettlementTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {settlement}
-      (settlement_id, ledger_id, settlement_external_id, settlement_type, settlement_sub_type, 
+      (id, ledger_id, external_id, settlement_type, settlement_sub_type, 
        settlement_description, settlement_date, settlement_amount, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
@@ -151,14 +151,14 @@ public interface SettlementTable {
     @Override
     public Settlement apply(Row row) {
       return ImmutableSettlement.builder()
-          .id(TableUtils.toStringUUID(row, "settlement_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("settlement_external_id"))
-          .type(row.getString("settlement_type"))
-          .subType(Optional.ofNullable(row.getString("settlement_sub_type")))
-          .description(Optional.ofNullable(row.getString("settlement_description")))
-          .date(row.getLocalDate("settlement_date"))
-          .amount(row.getBigDecimal("settlement_amount"))
+          .externalId(row.getString("external_id"))
+          .settlementType(row.getString("settlement_type"))
+          .settlementSubType(Optional.ofNullable(row.getString("settlement_sub_type")))
+          .settlementDescription(Optional.ofNullable(row.getString("settlement_description")))
+          .settlementDate(row.getLocalDate("settlement_date"))
+          .settlementAmount(row.getBigDecimal("settlement_amount"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableSettlementTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -174,11 +174,11 @@ public interface SettlementTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
-        doc.getAmount(),
+        doc.getSettlementType(),
+        doc.getSettlementSubType().orElse(null),
+        doc.getSettlementDescription().orElse(null),
+        doc.getSettlementDate(),
+        doc.getSettlementAmount(),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

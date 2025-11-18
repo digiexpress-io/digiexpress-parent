@@ -38,11 +38,11 @@ public interface UnitPrice extends LedgerEntity {
 
   String getId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
-  LocalDate getDate();
-  BigDecimal getValue();
+  String getUnitType();
+  Optional<String> getUnitSubType();
+  Optional<String> getUnitDescription();
+  LocalDate getUnitDate();
+  BigDecimal getUnitValue();
   String getCreatedCommitId();
 
   // Transitive data from joins

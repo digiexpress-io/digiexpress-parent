@@ -112,7 +112,7 @@ public interface UnitPriceTable {
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
       LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
-      WHERE unit_price_id = $1
+      WHERE id = $1
     """,
     rowMapper = UnitPriceMapper.class
   )
@@ -125,7 +125,7 @@ public interface UnitPriceTable {
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
       LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
-      WHERE unit_price_external_id = $1
+      WHERE external_id = $1
     """,
     rowMapper = UnitPriceMapper.class
   )
@@ -134,7 +134,7 @@ public interface UnitPriceTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {unit_price}
-      (unit_price_id, unit_price_external_id, unit_price_type, unit_price_sub_type, 
+      (id, external_id, unit_price_type, unit_price_sub_type, 
        unit_price_description, unit_price_date, unit_price_value, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8)
     """,
@@ -147,13 +147,13 @@ public interface UnitPriceTable {
     @Override
     public UnitPrice apply(Row row) {
       return ImmutableUnitPrice.builder()
-          .id(TableUtils.toStringUUID(row, "unit_price_id"))
-          .externalId(row.getString("unit_price_external_id"))
-          .type(row.getString("unit_price_type"))
-          .subType(Optional.ofNullable(row.getString("unit_price_sub_type")))
-          .description(Optional.ofNullable(row.getString("unit_price_description")))
-          .date(row.getLocalDate("unit_price_date"))
-          .value(row.getBigDecimal("unit_price_value"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .externalId(row.getString("external_id"))
+          .unitType(row.getString("unit_price_type"))
+          .unitSubType(Optional.ofNullable(row.getString("unit_price_sub_type")))
+          .unitDescription(Optional.ofNullable(row.getString("unit_price_description")))
+          .unitDate(row.getLocalDate("unit_price_date"))
+          .unitValue(row.getBigDecimal("unit_price_value"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableUnitPriceTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -168,11 +168,11 @@ public interface UnitPriceTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
-        doc.getValue(),
+        doc.getUnitType(),
+        doc.getUnitSubType().orElse(null),
+        doc.getUnitDescription().orElse(null),
+        doc.getUnitDate(),
+        doc.getUnitValue(),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

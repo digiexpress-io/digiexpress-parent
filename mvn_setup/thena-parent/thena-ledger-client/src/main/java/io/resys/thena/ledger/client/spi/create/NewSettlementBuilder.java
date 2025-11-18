@@ -66,8 +66,8 @@ public class NewSettlementBuilder implements NewSettlement {
         .id(settlementId)
         .ledgerId(ledgerId)
         .createdCommitId(logger.getCommitId())
-        .subType(Optional.empty())
-        .description(Optional.empty());
+        .settlementSubType(Optional.empty())
+        .settlementDescription(Optional.empty());
     
     // Settlements are immutable, so no updates/deletes to consider
     this.allSettlements = Stream.of(
@@ -92,31 +92,31 @@ public class NewSettlementBuilder implements NewSettlement {
 
   @Override
   public NewSettlement type(String type) {
-    this.next.type(type);
+    this.next.settlementType(type);
     return this;
   }
 
   @Override
   public NewSettlement subType(@Nullable String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.settlementSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewSettlement description(@Nullable String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.settlementDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewSettlement date(LocalDate date) {
-    this.next.date(date);
+    this.next.settlementDate(date);
     return this;
   }
 
   @Override
   public NewSettlement amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.settlementAmount(amount);
     return this;
   }
 
@@ -145,8 +145,8 @@ public class NewSettlementBuilder implements NewSettlement {
     RepoAssert.isTrue(
         this.allSettlements.values().stream()
         .filter(a -> (
-            a.getDate().equals(settlement.getDate())
-            && a.getType().equals(settlement.getType())
+            a.getSettlementDate().equals(settlement.getSettlementDate())
+            && a.getSettlementType().equals(settlement.getSettlementType())
             && Objects.equal(a.getExternalId(), settlement.getExternalId())
         ))
         .count() == 0

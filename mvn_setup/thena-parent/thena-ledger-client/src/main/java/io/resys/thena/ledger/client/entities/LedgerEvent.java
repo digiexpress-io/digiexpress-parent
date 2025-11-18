@@ -40,10 +40,10 @@ public interface LedgerEvent extends LedgerEntity {
   String getId();
   String getLedgerId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
-  LocalDate getDate();
+  String getEventType();
+  Optional<String> getEventSubType();
+  Optional<String> getEventDescription();
+  LocalDate getEventDate();
   Optional<JsonObject> getBody();
   String getCreatedCommitId();
 

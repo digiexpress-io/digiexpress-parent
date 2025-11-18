@@ -40,13 +40,13 @@ public interface MoneyRequest extends LedgerEntity {
   String getId();
   String getLedgerId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
+  String getRequestType();
+  Optional<String> getRequestSubType();
   MoneyRequestStatus getStatus();
   MoneyRequestFrequency getFrequency();
-  Optional<String> getDescription();
-  LocalDate getDueDate();
-  BigDecimal getAmount();
+  Optional<String> getRequestDescription();
+  LocalDate getRequestDueDate();
+  BigDecimal getRequestAmount();
   String getCommitId();
   String getCreatedCommitId();
 

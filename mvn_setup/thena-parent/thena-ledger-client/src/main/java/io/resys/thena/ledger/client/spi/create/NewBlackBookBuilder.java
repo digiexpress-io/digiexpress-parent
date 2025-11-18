@@ -90,31 +90,31 @@ public class NewBlackBookBuilder implements NewBlackBook {
 
   @Override
   public NewBlackBook type(String type) {
-    this.next.type(type);
+    this.next.bookType(type);
     return this;
   }
 
   @Override
   public NewBlackBook subType(String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.bookSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewBlackBook description(String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.bookDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewBlackBook date(LocalDate date) {
-    this.next.date(date);
+    this.next.bookDate(date);
     return this;
   }
 
   @Override
   public NewBlackBook amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.bookAmount(amount);
     return this;
   }
 
@@ -142,8 +142,8 @@ public class NewBlackBookBuilder implements NewBlackBook {
     RepoAssert.isTrue(
         this.allBlackBooks.values().stream()
         .filter(a -> (
-            a.getDate().equals(blackbook.getDate())
-            && a.getType().equals(blackbook.getType())
+            a.getBookDate().equals(blackbook.getBookDate())
+            && a.getBookType().equals(blackbook.getBookType())
             && Objects.equal(a.getExternalId(), blackbook.getExternalId())
         ))
         .count() == 0

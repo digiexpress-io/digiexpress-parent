@@ -40,11 +40,11 @@ public interface Payment extends LedgerEntity {
   String getId();
   String getLedgerId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
-  LocalDate getDate();
-  BigDecimal getAmount();
+  String getPaymentType();
+  Optional<String> getPaymentSubType();
+  Optional<String> getPaymentDescription();
+  LocalDate getPaymentDate();
+  BigDecimal getPaymentAmount();
   String getCreatedCommitId();
 
   // Transitive data from joins

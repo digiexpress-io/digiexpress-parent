@@ -154,11 +154,11 @@ public interface PaymentTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
           .externalId(row.getString("external_id"))
-          .type(row.getString("payment_type"))
-          .subType(Optional.ofNullable(row.getString("payment_sub_type")))
-          .description(Optional.ofNullable(row.getString("payment_description")))
-          .date(row.getLocalDate("payment_date"))
-          .amount(row.getBigDecimal("payment_amount"))
+          .paymentType(row.getString("payment_type"))
+          .paymentSubType(Optional.ofNullable(row.getString("payment_sub_type")))
+          .paymentDescription(Optional.ofNullable(row.getString("payment_description")))
+          .paymentDate(row.getLocalDate("payment_date"))
+          .paymentAmount(row.getBigDecimal("payment_amount"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutablePaymentTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -174,11 +174,11 @@ public interface PaymentTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
-        doc.getAmount(),
+        doc.getPaymentType(),
+        doc.getPaymentSubType().orElse(null),
+        doc.getPaymentDescription().orElse(null),
+        doc.getPaymentDate(),
+        doc.getPaymentAmount(),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

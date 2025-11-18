@@ -39,13 +39,13 @@ public interface Projection extends LedgerEntity {
   String getId();
   String getLedgerId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
-  LocalDate getTargetDate();
-  LocalDate getStartDate();
-  LocalDate getEndDate();
-  BigDecimal getAmount();
+  String getProjectionType();
+  Optional<String> getProjectionSubType();
+  Optional<String> getProjectionDescription();
+  LocalDate getProjectionTargetDate();
+  LocalDate getProjectionStartDate();
+  LocalDate getProjectionEndDate();
+  BigDecimal getProjectionAmount();
   String getCreatedCommitId();
 
   // Transitive data from joins

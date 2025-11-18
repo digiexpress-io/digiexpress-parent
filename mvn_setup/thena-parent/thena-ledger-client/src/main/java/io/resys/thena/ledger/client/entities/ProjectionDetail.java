@@ -41,15 +41,15 @@ public interface ProjectionDetail extends LedgerEntity {
   String getId();
   String getProjectionId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
+  String getDetailType();
+  Optional<String> getDetailSubType();
+  Optional<String> getDetailDescription();
   Optional<String> getTargetId();
-  LocalDate getStartDate();
-  LocalDate getEndDate();
-  BigDecimal getAmount();
-  Optional<String> getFormula();
-  Optional<JsonObject> getBody();
+  LocalDate getDetailStartDate();
+  LocalDate getDetailEndDate();
+  BigDecimal getDetailAmount();
+  Optional<String> getDetailFormula();
+  Optional<JsonObject> getDetailBody();
   String getCreatedCommitId();
 
   // Transitive data from joins

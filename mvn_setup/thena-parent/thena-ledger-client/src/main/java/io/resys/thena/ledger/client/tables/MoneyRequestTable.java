@@ -201,13 +201,13 @@ public interface MoneyRequestTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
           .externalId(row.getString("external_id"))
-          .type(row.getString("money_request_type"))
-          .subType(Optional.ofNullable(row.getString("money_request_sub_type")))
+          .requestType(row.getString("money_request_type"))
+          .requestSubType(Optional.ofNullable(row.getString("money_request_sub_type")))
           .status(MoneyRequestStatus.valueOf(row.getString("money_request_status")))
           .frequency(MoneyRequestFrequency.valueOf(row.getString("money_request_frequency")))
-          .description(Optional.ofNullable(row.getString("money_request_description")))
-          .dueDate(row.getLocalDate("money_request_due_date"))
-          .amount(row.getBigDecimal("money_request_amount"))
+          .requestDescription(Optional.ofNullable(row.getString("money_request_description")))
+          .requestDueDate(row.getLocalDate("money_request_due_date"))
+          .requestAmount(row.getBigDecimal("money_request_amount"))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableMoneyRequestTransitives.builder()
@@ -225,13 +225,13 @@ public interface MoneyRequestTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
+        doc.getRequestType(),
+        doc.getRequestSubType().orElse(null),
         doc.getStatus().name(),
         doc.getFrequency().name(),
-        doc.getDescription().orElse(null),
-        doc.getDueDate(),
-        doc.getAmount(),
+        doc.getRequestDescription().orElse(null),
+        doc.getRequestDueDate(),
+        doc.getRequestAmount(),
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
@@ -244,13 +244,13 @@ public interface MoneyRequestTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
+        doc.getRequestType(),
+        doc.getRequestSubType().orElse(null),
         doc.getStatus().name(),
         doc.getFrequency().name(),
-        doc.getDescription().orElse(null),
-        doc.getDueDate(),
-        doc.getAmount(),
+        doc.getRequestDescription().orElse(null),
+        doc.getRequestDueDate(),
+        doc.getRequestAmount(),
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getId())
       });

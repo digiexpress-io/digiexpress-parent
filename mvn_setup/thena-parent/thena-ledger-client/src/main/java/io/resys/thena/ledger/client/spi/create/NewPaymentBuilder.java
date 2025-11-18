@@ -55,8 +55,8 @@ public class NewPaymentBuilder implements NewPayment {
         .id(OidUtils.genUUID())
         .ledgerId(ledgerId)
         .createdCommitId(logger.getCommitId())
-        .subType(Optional.empty())
-        .description(Optional.empty());
+        .paymentSubType(Optional.empty())
+        .paymentDescription(Optional.empty());
     
     // Payments are immutable, so no updates/deletes to consider
     this.allPayments = Stream.of(
@@ -81,31 +81,31 @@ public class NewPaymentBuilder implements NewPayment {
 
   @Override
   public NewPayment type(String type) {
-    this.next.type(type);
+    this.next.paymentType(type);
     return this;
   }
 
   @Override
   public NewPayment subType(@Nullable String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.paymentSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewPayment description(@Nullable String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.paymentDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewPayment date(LocalDate date) {
-    this.next.date(date);
+    this.next.paymentDate(date);
     return this;
   }
 
   @Override
   public NewPayment amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.paymentAmount(amount);
     return this;
   }
 

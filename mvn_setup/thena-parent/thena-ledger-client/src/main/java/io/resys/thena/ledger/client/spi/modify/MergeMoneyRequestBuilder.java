@@ -85,13 +85,13 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
 
   @Override
   public MergeMoneyRequest type(String type) {
-    this.nextMoneyRequest.type(type);
+    this.nextMoneyRequest.requestType(type);
     return this;
   }
 
   @Override
   public MergeMoneyRequest subType(String subType) {
-    this.nextMoneyRequest.subType(Optional.ofNullable(subType));
+    this.nextMoneyRequest.requestSubType(Optional.ofNullable(subType));
     return this;
   }
 
@@ -109,19 +109,19 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
 
   @Override
   public MergeMoneyRequest description(String description) {
-    this.nextMoneyRequest.description(Optional.ofNullable(description));
+    this.nextMoneyRequest.requestDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public MergeMoneyRequest dueDate(LocalDate dueDate) {
-    this.nextMoneyRequest.dueDate(dueDate);
+    this.nextMoneyRequest.requestDueDate(dueDate);
     return this;
   }
 
   @Override
   public MergeMoneyRequest amount(BigDecimal amount) {
-    this.nextMoneyRequest.amount(amount);
+    this.nextMoneyRequest.requestAmount(amount);
     return this;
   }
 

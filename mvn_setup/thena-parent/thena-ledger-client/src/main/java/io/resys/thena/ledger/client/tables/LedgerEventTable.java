@@ -170,10 +170,10 @@ public interface LedgerEventTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
           .externalId(row.getString("external_id"))
-          .type(row.getString("ledger_event_type"))
-          .subType(Optional.ofNullable(row.getString("ledger_event_sub_type")))
-          .description(Optional.ofNullable(row.getString("ledger_event_description")))
-          .date(row.getLocalDate("ledger_event_date"))
+          .eventType(row.getString("ledger_event_type"))
+          .eventSubType(Optional.ofNullable(row.getString("ledger_event_sub_type")))
+          .eventDescription(Optional.ofNullable(row.getString("ledger_event_description")))
+          .eventDate(row.getLocalDate("ledger_event_date"))
           .body(Optional.ofNullable(ledger_event_body))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableLedgerEventTransitives.builder()
@@ -190,10 +190,10 @@ public interface LedgerEventTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
+        doc.getEventType(),
+        doc.getEventSubType().orElse(null),
+        doc.getEventDescription().orElse(null),
+        doc.getEventDate(),
         doc.getBody().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });

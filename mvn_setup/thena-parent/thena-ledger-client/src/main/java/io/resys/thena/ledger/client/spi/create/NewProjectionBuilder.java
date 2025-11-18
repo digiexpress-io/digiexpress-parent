@@ -81,43 +81,43 @@ public class NewProjectionBuilder implements NewProjection {
 
   @Override
   public NewProjection type(String type) {
-    this.next.type(type);
+    this.next.projectionType(type);
     return this;
   }
 
   @Override
   public NewProjection subType(String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.projectionSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewProjection description(String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.projectionDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewProjection targetDate(LocalDate targetDate) {
-    this.next.targetDate(targetDate);
+    this.next.projectionTargetDate(targetDate);
     return this;
   }
 
   @Override
   public NewProjection startDate(LocalDate startDate) {
-    this.next.startDate(startDate);
+    this.next.projectionStartDate(startDate);
     return this;
   }
 
   @Override
   public NewProjection endDate(LocalDate endDate) {
-    this.next.endDate(endDate);
+    this.next.projectionEndDate(endDate);
     return this;
   }
 
   @Override
   public NewProjection amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.projectionAmount(amount);
     return this;
   }
 

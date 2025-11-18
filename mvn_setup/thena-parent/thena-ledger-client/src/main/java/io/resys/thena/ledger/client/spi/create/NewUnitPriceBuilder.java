@@ -76,31 +76,31 @@ public class NewUnitPriceBuilder implements NewUnitPrice {
 
   @Override
   public NewUnitPrice type(String type) {
-    this.next.type(type);
+    this.next.unitType(type);
     return this;
   }
 
   @Override
   public NewUnitPrice subType(String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.unitSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewUnitPrice description(String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.unitDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewUnitPrice date(LocalDate date) {
-    this.next.date(date);
+    this.next.unitDate(date);
     return this;
   }
 
   @Override
   public NewUnitPrice value(BigDecimal value) {
-    this.next.value(value);
+    this.next.unitValue(value);
     return this;
   }
 

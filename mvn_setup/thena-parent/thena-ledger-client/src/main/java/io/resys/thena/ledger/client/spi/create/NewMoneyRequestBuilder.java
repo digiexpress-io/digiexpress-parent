@@ -60,8 +60,8 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
         .ledgerId(ledgerId)
         .createdCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
-        .subType(Optional.empty())
-        .description(Optional.empty());
+        .requestSubType(Optional.empty())
+        .requestDescription(Optional.empty());
     
     final var updates = currentTx.getMoneyRequestUpdates().stream().map(e -> e.getId()).toList();
     
@@ -89,13 +89,13 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
 
   @Override
   public NewMoneyRequest type(String type) {
-    this.next.type(type);
+    this.next.requestType(type);
     return this;
   }
 
   @Override
   public NewMoneyRequest subType(@Nullable String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.requestSubType(Optional.ofNullable(subType));
     return this;
   }
 
@@ -113,19 +113,19 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
 
   @Override
   public NewMoneyRequest description(@Nullable String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.requestDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewMoneyRequest dueDate(LocalDate dueDate) {
-    this.next.dueDate(dueDate);
+    this.next.requestDueDate(dueDate);
     return this;
   }
 
   @Override
   public NewMoneyRequest amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.requestAmount(amount);
     return this;
   }
 

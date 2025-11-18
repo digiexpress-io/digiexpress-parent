@@ -159,13 +159,13 @@ public interface ProjectionTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
           .externalId(row.getString("external_id"))
-          .type(row.getString("projection_type"))
-          .subType(Optional.ofNullable(row.getString("projection_sub_type")))
-          .description(Optional.ofNullable(row.getString("projection_description")))
-          .targetDate(row.getLocalDate("projection_target_date"))
-          .startDate(row.getLocalDate("projection_start_date"))
-          .endDate(row.getLocalDate("projection_end_date"))
-          .amount(row.getBigDecimal("projection_amount"))
+          .projectionType(row.getString("projection_type"))
+          .projectionSubType(Optional.ofNullable(row.getString("projection_sub_type")))
+          .projectionDescription(Optional.ofNullable(row.getString("projection_description")))
+          .projectionTargetDate(row.getLocalDate("projection_target_date"))
+          .projectionStartDate(row.getLocalDate("projection_start_date"))
+          .projectionEndDate(row.getLocalDate("projection_end_date"))
+          .projectionAmount(row.getBigDecimal("projection_amount"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableProjectionTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -181,13 +181,13 @@ public interface ProjectionTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getTargetDate(),
-        doc.getStartDate(),
-        doc.getEndDate(),
-        doc.getAmount(),
+        doc.getProjectionType(),
+        doc.getProjectionSubType().orElse(null),
+        doc.getProjectionDescription().orElse(null),
+        doc.getProjectionTargetDate(),
+        doc.getProjectionStartDate(),
+        doc.getProjectionEndDate(),
+        doc.getProjectionAmount(),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

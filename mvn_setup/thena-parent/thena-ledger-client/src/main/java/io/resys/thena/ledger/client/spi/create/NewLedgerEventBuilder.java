@@ -80,25 +80,25 @@ public class NewLedgerEventBuilder implements NewLedgerEvent {
 
   @Override
   public NewLedgerEvent type(String type) {
-    this.next.type(type);
+    this.next.eventType(type);
     return this;
   }
 
   @Override
   public NewLedgerEvent subType(String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.eventSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewLedgerEvent description(String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.eventDescription(Optional.ofNullable(description));
     return this;
   }
 
   @Override
   public NewLedgerEvent date(LocalDate date) {
-    this.next.date(date);
+    this.next.eventDate(date);
     return this;
   }
 

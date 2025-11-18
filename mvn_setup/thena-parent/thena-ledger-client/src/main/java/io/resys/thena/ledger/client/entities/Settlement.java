@@ -40,11 +40,11 @@ public interface Settlement extends LedgerEntity {
   String getId();
   String getLedgerId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
-  LocalDate getDate();
-  BigDecimal getAmount();
+  String getSettlementType();
+  Optional<String> getSettlementSubType();
+  Optional<String> getSettlementDescription();
+  LocalDate getSettlementDate();
+  BigDecimal getSettlementAmount();
   String getCreatedCommitId();
 
   // Transitive data from joins

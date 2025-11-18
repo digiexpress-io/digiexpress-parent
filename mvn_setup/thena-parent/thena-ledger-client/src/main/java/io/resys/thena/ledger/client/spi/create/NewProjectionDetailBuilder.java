@@ -82,19 +82,19 @@ public class NewProjectionDetailBuilder implements NewProjectionDetail {
 
   @Override
   public NewProjectionDetail type(String type) {
-    this.next.type(type);
+    this.next.detailType(type);
     return this;
   }
 
   @Override
   public NewProjectionDetail subType(String subType) {
-    this.next.subType(Optional.ofNullable(subType));
+    this.next.detailSubType(Optional.ofNullable(subType));
     return this;
   }
 
   @Override
   public NewProjectionDetail description(String description) {
-    this.next.description(Optional.ofNullable(description));
+    this.next.detailDescription(Optional.ofNullable(description));
     return this;
   }
 
@@ -106,31 +106,31 @@ public class NewProjectionDetailBuilder implements NewProjectionDetail {
 
   @Override
   public NewProjectionDetail startDate(LocalDate startDate) {
-    this.next.startDate(startDate);
+    this.next.detailStartDate(startDate);
     return this;
   }
 
   @Override
   public NewProjectionDetail endDate(LocalDate endDate) {
-    this.next.endDate(endDate);
+    this.next.detailEndDate(endDate);
     return this;
   }
 
   @Override
   public NewProjectionDetail amount(BigDecimal amount) {
-    this.next.amount(amount);
+    this.next.detailAmount(amount);
     return this;
   }
 
   @Override
   public NewProjectionDetail formula(String formula) {
-    this.next.formula(Optional.ofNullable(formula));
+    this.next.detailFormula(Optional.ofNullable(formula));
     return this;
   }
 
   @Override
   public NewProjectionDetail body(JsonObject body) {
-    this.next.body(Optional.ofNullable(body));
+    this.next.detailBody(Optional.ofNullable(body));
     return this;
   }
 
@@ -148,9 +148,9 @@ public class NewProjectionDetailBuilder implements NewProjectionDetail {
     RepoAssert.isTrue(
         this.allProjectionDetails.values().stream()
         .filter(a -> (
-            a.getStartDate().equals(built.getStartDate())
+            a.getDetailStartDate().equals(built.getDetailStartDate())
             && Objects.equal(a.getTargetId().orElse(null), built.getTargetId().orElse(null))
-            && a.getType().equals(built.getType())
+            && a.getDetailType().equals(built.getDetailType())
         ))
         .count() == 0
         , () -> "can't have duplicate projection details with same type/start-date for same projection!");
