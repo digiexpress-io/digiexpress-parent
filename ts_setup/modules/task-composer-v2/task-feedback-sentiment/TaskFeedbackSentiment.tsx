@@ -7,11 +7,11 @@ import { FeedbackApi, FeedbackBackend } from '@dxs-ts/task-feedback';
 import { TaskApi } from '@dxs-ts/task-api';
 
 export interface TaskFeedbackSentimentProps {
-  sentiment: FeedbackApi.Sentiment | undefined;
+  sentiment: FeedbackApi.SentimentPolarity | undefined;
   style: TaskCardStyleDefinition
 }
 
-const getSentimentColor = (sentiment: FeedbackApi.Sentiment | undefined): string => {
+const getSentimentColor = (sentiment: FeedbackApi.SentimentPolarity | undefined): string => {
   if (!sentiment) {
     return '#ccc';
   }
@@ -74,7 +74,7 @@ const TaskFeedbackSentimentRoot = styled('div', {
     ];
   },
 
-})<{ sentiment: FeedbackApi.Sentiment | undefined }>(({ sentiment, theme }) => {
+})<{ sentiment: FeedbackApi.SentimentPolarity | undefined }>(({ sentiment, theme }) => {
 
   const bgColor = getSentimentColor(sentiment);
   const textColor = getContrastText(bgColor);

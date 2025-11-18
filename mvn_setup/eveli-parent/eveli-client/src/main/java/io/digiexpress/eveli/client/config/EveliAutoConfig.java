@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import io.digiexpress.eveli.client.api.*;
+import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -218,14 +218,15 @@ public class EveliAutoConfig {
       ObjectMapper om,
       TransactionTemplate tx,
       EveliPropsFeedback feedbackProps,
-      DialobClient dialobClient
+      DialobClient dialobClient,
+      FeedbackCategoriesReader feedbackCategoriesReader
   ) {
     final var history = new FeedbackWithHistory(tx, jdbc, om);
-    return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbc, history, feedbackProps);
+    return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbc, history, feedbackProps, om, feedbackCategoriesReader);
   }
   @Bean
-  public FeedbackCategoriesReader feedbackCategoriesReader() {
-    return new FeedbackCategoriesReaderImpl();
+  public FeedbackCategoriesReader feedbackCategoriesReader(ObjectMapper objectMapper) {
+    return new FeedbackCategoriesReaderImpl(objectMapper);
   }
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {

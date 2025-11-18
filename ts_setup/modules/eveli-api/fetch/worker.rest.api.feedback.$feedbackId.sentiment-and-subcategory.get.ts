@@ -13,7 +13,7 @@ function hook(props: {}) {
 
     return {
 
-        getFeedbackSentimentAndSubcategory:  async (feedbackId: string): Promise<FeedbackApi.SentimentAndSubcategoryResponse | undefined>  => {
+        getFeedbackSentimentAndSubcategory:  async (feedbackId: string): Promise<FeedbackApi.SentimentAndSubcategory | undefined>  => {
             const service = url({ feedbackId });
             const response = await params.fetch(service, {
                 method: method,

@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.api;
 
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 /*-
@@ -23,8 +24,10 @@ import java.time.ZonedDateTime;
  */
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -53,7 +56,9 @@ public interface FeedbackClient {
   
   FeedbackHistoryQuery queryHistory();
 
-  
+  FeedbackAnalyzerQuery queryFeedbackAnalyzer();
+
+
   /**
    * Extract task/questionnaire data and map it to possible feedback 
    */
@@ -309,6 +314,122 @@ public interface FeedbackClient {
     @Nullable String getMain(); 
     @Nullable String getSub(); 
     @Nullable String getQuestion();
+  }
+
+  interface FeedbackAnalyzerQuery {
+    SentimentAndSubcategory getSentimentAndSubcategoryById(String id);
+    Optional<SimilarFeedback> findSimilarFeedbackById(String id);
+  }
+
+  @JsonSerialize(as = ImmutableFeedbackSentimentAndSubcategoryCommand.class)
+  @JsonDeserialize(as = ImmutableFeedbackSentimentAndSubcategoryCommand.class)
+  @Value.Immutable
+  interface FeedbackSentimentAndSubcategoryCommand {
+    String getId();
+    String getLanguage();
+    String getText();
+    JsonNode getCategories();
+    String getMainCategory();
+  }
+
+  @JsonSerialize(as = ImmutableSentimentAndSubcategory.class)
+  @JsonDeserialize(as = ImmutableSentimentAndSubcategory.class)
+  @Value.Immutable
+  interface SentimentAndSubcategory {
+    Sentiment getSentiment();
+    Subcategory getSubcategory();
+  }
+
+  @JsonSerialize(as = ImmutableSentiment.class)
+  @JsonDeserialize(as = ImmutableSentiment.class)
+  @Value.Immutable
+  interface Sentiment {
+    String getId();
+    SentimentPolarity getSentiment();
+    Float getConfidence();
+    List<SentenceSentiment> getSentences();
+    OffsetDateTime getTimestamp();
+    String getModelVersion();
+    String getModelId();
+  }
+
+  @JsonSerialize(as = ImmutableSentenceSentiment.class)
+  @JsonDeserialize(as = ImmutableSentenceSentiment.class)
+  @Value.Immutable
+  interface SentenceSentiment {
+    String getText();
+    SentimentPolarity getSentiment();
+    Map<String, Float> getScores();
+  }
+
+  enum SentimentPolarity {
+    positive,
+    negative,
+    neutral,
+    mixed,
+    unknown
+  }
+
+  @JsonSerialize(as = ImmutableSubcategory.class)
+  @JsonDeserialize(as = ImmutableSubcategory.class)
+  @Value.Immutable
+  interface Subcategory {
+    String getId();
+    String getSubcategory();
+    Float getConfidence();
+    List<String> getMatches();
+    Map<String, Float> getScores();
+    OffsetDateTime getTimestamp();
+    String getModelVersion();
+    String getModelId();
+  }
+
+  @JsonSerialize(as = ImmutableSimilarFeedbackCommand.class)
+  @JsonDeserialize(as = ImmutableSimilarFeedbackCommand.class)
+  @Value.Immutable
+  interface SimilarFeedbackCommand {
+    String getId();
+    List<FeedbackItem> getEntries();
+  }
+
+  @JsonSerialize(as = ImmutableFeedbackItem.class)
+  @JsonDeserialize(as = ImmutableFeedbackItem.class)
+  @Value.Immutable
+  interface FeedbackItem {
+    String getId();
+    String getLanguage();
+    String getText();
+  }
+
+  @JsonSerialize(as = ImmutableSimilarFeedback.class)
+  @JsonDeserialize(as = ImmutableSimilarFeedback.class)
+  @Value.Immutable
+  interface SimilarFeedback {
+    String getId();
+    String getModelId();
+    String getModelVersion();
+    OffsetDateTime getTimestamp();
+    List<ProcessedFeedbackItem> getEntries();
+  }
+
+  @JsonSerialize(as = ImmutableProcessedFeedbackItem.class)
+  @JsonDeserialize(as = ImmutableProcessedFeedbackItem.class)
+  @Value.Immutable
+  interface ProcessedFeedbackItem {
+    String getId();
+    String getLanguage();
+    String getText();
+    List<Similarity> getSimilarities();
+  }
+
+  @JsonSerialize(as = ImmutableSimilarity.class)
+  @JsonDeserialize(as = ImmutableSimilarity.class)
+  @Value.Immutable
+  interface Similarity {
+    String getId();
+    String getLanguage();
+    String getText();
+    Float getSimilarityScore();
   }
 
 }

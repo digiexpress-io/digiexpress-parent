@@ -2,18 +2,18 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import io.digiexpress.eveli.client.api.*;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SentimentSubcategoryRequest;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SentimentSubcategoryResponse;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityRequest;
-import io.digiexpress.eveli.textanalyzer.adapter.api.SimilarityResponse;
+import io.digiexpress.eveli.client.api.FeedbackClient.SentimentAndSubcategory;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.SimilarFeedback;
+import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.textanalyzer.adapter.spi.FeedbackAnalyzerRestClient;
-import io.smallrye.mutiny.Uni;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -138,71 +138,19 @@ public class FeedbackApiController {
   }
 
   @GetMapping("/{taskIdOrFeedbackId}/sentiment-and-subcategory")
-  public Uni<ResponseEntity<SentimentSubcategoryResponse>> getFeedbackSentimentAndSubcategory(@PathVariable("taskIdOrFeedbackId") String id) throws IOException
+  public ResponseEntity<SentimentAndSubcategory> getFeedbackSentimentAndSubcategory(@PathVariable("taskIdOrFeedbackId") String id) throws IOException
   {
-    final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
-    final var categories = feedbackCategoriesReader.readCategoriesJsonFile();
-
-    if (feedback.isPresent()) {
-      final var sentimentAndSubcategory = feedbackAnalyzerRestClient.findSentimentAndSubcategory(
-        new SentimentSubcategoryRequest(
-          id,
-          feedback.get().getLocale(),
-          feedback.get().getContent().getQuestion(),
-          feedback.get().getContent().getMain(),
-          categories
-        )
-      );
-
-      return Uni.createFrom().item(ResponseEntity.ok(sentimentAndSubcategory));
-    }
-
-    // if feedback not found, try finding feedback questionnaire from task
-    final var questionnaire = feedbackClient.queryQuestionnaire().findOneFromTaskById(id);
-    if (questionnaire.isEmpty()) {
-      return Uni.createFrom().item(ResponseEntity.notFound().build());
-    }
-    final var sentimentAndSubcategory = feedbackAnalyzerRestClient.findSentimentAndSubcategory(
-      new SentimentSubcategoryRequest(
-        id,
-        questionnaire.get().getQuestionnaire().getMetadata().getLanguage(),
-        questionnaire.get().getContent().getMain(),
-        questionnaire.get().getContent().getQuestion(),
-        categories
-      )
-    );
-    return Uni.createFrom().item(ResponseEntity.ok(sentimentAndSubcategory));
+    final var sentimentAndSubcategory = feedbackClient.queryFeedbackAnalyzer().getSentimentAndSubcategoryById(id);
+    return ResponseEntity.ok(sentimentAndSubcategory);
   }
 
   @GetMapping("/{taskIdOrFeedbackId}/similar")
-  public ResponseEntity<SimilarityResponse> getSimilarFeedbacks(@PathVariable("taskIdOrFeedbackId") String id) {
-    final var feedbacks = feedbackClient.queryFeedbacks().findAll();
-    if (feedbacks.isEmpty()) {
+  public ResponseEntity<SimilarFeedback> getSimilarFeedback(@PathVariable("taskIdOrFeedbackId") String id) {
+    final var similarFeedback = feedbackClient.queryFeedbackAnalyzer().findSimilarFeedbackById(id);
+    // empty result expected if there are no existing feedbacks
+    if (similarFeedback.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
-    List<SimilarityRequest.Entry> items = new ArrayList<>(feedbacks.stream().map(fb -> new SimilarityRequest.Entry(
-      fb.getSourceId(),
-      fb.getLocale(),
-      fb.getContent().getQuestion()
-    )).toList());
-
-    // if given id is not feedback id, use task id to find feedback questionnaire and add it to items
-    if (items.stream().noneMatch(i -> i.getId().equals(id))) {
-      final var questionnaire = feedbackClient.queryQuestionnaire().findOneFromTaskById(id);
-      if (questionnaire.isEmpty()) {
-        return ResponseEntity.notFound().build();
-      }
-      items.add(new SimilarityRequest.Entry(
-        id,
-        questionnaire.get().getQuestionnaire().getMetadata().getLanguage(),
-        questionnaire.get().getContent().getQuestion()
-      ));
-    }
-
-    final var similarFeedbacks = feedbackAnalyzerRestClient.findSimilar(new SimilarityRequest(
-      id,
-      items
-    ));
-    return new ResponseEntity<>(similarFeedbacks, HttpStatus.OK);
+    return ResponseEntity.ok(similarFeedback.get());
   }
 }

@@ -126,7 +126,7 @@ class GCPSubcategoryAnalyzer(BaseSubcategoryAnalyzer):
             if best_similarity < 0.1:
                 self.logger.error(f"Best similarity {best_similarity} below threshold for reqeust with id: {id}")
                 return SubcategoryResponse(
-                    taskidId=id,
+                    id=id,
                     subcategory="unclassified",
                     confidence=0.0,
                     matches=[],
@@ -150,7 +150,7 @@ class GCPSubcategoryAnalyzer(BaseSubcategoryAnalyzer):
         except Exception as e:
             self.logger.error(f"Subcategory analysis error: {e} for request with id: {request.id}")
             return SubcategoryResponse(
-                    taskId=id,
+                    id=id,
                     subcategory="unclassified",
                     confidence=0.0,
                     matches=[],

@@ -32,7 +32,7 @@ export declare namespace FeedbackApi {
   export type ReplyId = string;
   export type CategoryId = string;
   export type CustomerId = string;
-  export type Sentiment = 'positive' | 'negative' | 'neutral' | 'mixed' | 'unknown';
+  export type SentimentPolarity = 'positive' | 'negative' | 'neutral' | 'mixed' | 'unknown';
 
 
   export interface FeedbackTopic {
@@ -144,14 +144,14 @@ export declare namespace FeedbackApi {
   }
 
 
-  export interface SentimentAndSubcategoryResponse {
-    sentiment: SentimentResponse;
-    subcategory: SubcategoryResponse;
+  export interface SentimentAndSubcategory {
+    sentiment: Sentiment;
+    subcategory: Subcategory;
   }
 
-  export interface SentimentResponse {
+  export interface Sentiment {
     id: string;
-    sentiment: Sentiment;
+    sentiment: SentimentPolarity;
     confidence: number;
     sentences: SentimentSentence[];
     timestamp: string;
@@ -161,11 +161,11 @@ export declare namespace FeedbackApi {
 
   export interface SentimentSentence {
     text: string;
-    sentiment: Sentiment;
+    sentiment: SentimentPolarity;
     scores: Record<string, number>;
   }
 
-  export interface SubcategoryResponse {
+  export interface Subcategory {
     id: string;
     subcategory: string;
     confidence: number;
@@ -176,22 +176,22 @@ export declare namespace FeedbackApi {
     modelId: string;
   }
 
-  export interface SimilarityResponse {
+  export interface SimilarFeedback {
     id: string;
     timestamp: string;
     modelVersion: string;
     modelId: string;
-    entries: ProcessedEntry[];
+    entries: ProcessedFeedbackItem[];
   }
 
-  export interface ProcessedEntry {
+  export interface ProcessedFeedbackItem {
     id: string;
     language: string;
     text: string;
-    similarities: EntrySimilarityResult[];
+    similarities: Similarity[];
   }
 
-  export interface EntrySimilarityResult {
+  export interface Similarity {
     id: string;
     similarityScore: number;
     text: string;

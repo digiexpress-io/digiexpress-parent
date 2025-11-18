@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.api;
+package io.digiexpress.eveli.client.spi.feedback;
 
 /*-
  * #%L
@@ -20,8 +20,10 @@ package io.digiexpress.eveli.client.api;
  * #L%
  */
 
-import com.fasterxml.jackson.databind.JsonNode;
+public class FeedbackAnalyzerException extends RuntimeException {
+  private static final long serialVersionUID = -2660498571025767943L;
 
-public interface FeedbackCategoriesReader {
-  JsonNode getCategories();
+  public FeedbackAnalyzerException(String message) {
+    super(message);
+  }
 }

@@ -20,8 +20,8 @@ export const TaskAiAssistant: React.FC = () => {
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
 
-  const [sentimentAndSubcategory, setSentimentAndSubcategory] = React.useState<FeedbackApi.SentimentAndSubcategoryResponse | undefined>(undefined);
-  const [similarFeedback, setSimilarFeedback] = React.useState<FeedbackApi.SimilarityResponse | undefined>(undefined);
+  const [sentimentAndSubcategory, setSentimentAndSubcategory] = React.useState<FeedbackApi.SentimentAndSubcategory | undefined>(undefined);
+  const [similarFeedback, setSimilarFeedback] = React.useState<FeedbackApi.SimilarFeedback | undefined>(undefined);
   const [showSimilarFeedback, setShowSimilarFeedback] = React.useState<boolean>(false);
   const similarities = similarFeedback?.entries.find((entry) => entry.id === task.id)?.similarities;
 

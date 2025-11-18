@@ -6,7 +6,7 @@ import { TaskCardStyleDefinition } from '../task-card';
 import { FeedbackApi } from '@dxs-ts/task-feedback';
 
 export interface TaskFeedbackSimilarProps {
-  similarities: FeedbackApi.EntrySimilarityResult[] | undefined;
+  similarities: FeedbackApi.Similarity[] | undefined;
   style: TaskCardStyleDefinition;
   toggleShowSimilarities: () => void;
 }

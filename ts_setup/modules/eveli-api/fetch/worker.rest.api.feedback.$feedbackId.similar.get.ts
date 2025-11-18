@@ -13,7 +13,7 @@ function hook(props: {}) {
 
     return {
 
-        getSimilarFeedback:  async (feedbackId: string): Promise<FeedbackApi.SimilarityResponse | undefined>  => {
+        getSimilarFeedback:  async (feedbackId: string): Promise<FeedbackApi.SimilarFeedback | undefined>  => {
             const service = url({ feedbackId });
             const response = await params.fetch(service, {
                 method: method,

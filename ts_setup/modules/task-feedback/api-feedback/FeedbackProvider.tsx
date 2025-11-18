@@ -11,8 +11,8 @@ export interface FeedbackBackend {
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback | undefined>;
   isTaskFeedbackEnabled: (taskId: FeedbackApi.TaskId) => Promise<true | false>;
   deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
-  getFeedbackSentimentAndSubcategory: (feedbackId: string) => Promise<FeedbackApi.SentimentAndSubcategoryResponse | undefined>;
-  getSimilarFeedback: (feedbackId: string) => Promise<FeedbackApi.SimilarityResponse | undefined>;
+  getFeedbackSentimentAndSubcategory: (feedbackId: string) => Promise<FeedbackApi.SentimentAndSubcategory | undefined>;
+  getSimilarFeedback: (feedbackId: string) => Promise<FeedbackApi.SimilarFeedback | undefined>;
 }
 
 

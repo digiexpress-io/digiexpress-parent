@@ -34,6 +34,7 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "eveli.feedback")
 public class EveliPropsFeedback {  
   private Boolean enabled;
+  private FeedbackAnalyzerProps analyzer;
   
   // all of the value can have multiple values separated by ","
   
@@ -44,6 +45,12 @@ public class EveliPropsFeedback {
   private String question;// answer from what to extract question 
   private String username;// answer/context var from what to extract customer name 
   private String usernameAllowed;// answer from what to extract if username is allowed
+
+  @Data
+  public static class FeedbackAnalyzerProps {
+    private Boolean enabled;
+    private String endpointUrl;
+  }
   
   
   public static List<String> toList(String input) {

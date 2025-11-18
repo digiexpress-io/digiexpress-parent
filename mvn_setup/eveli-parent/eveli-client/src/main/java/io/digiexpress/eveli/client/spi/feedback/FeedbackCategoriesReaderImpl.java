@@ -20,31 +20,26 @@ package io.digiexpress.eveli.client.spi.feedback;
  * #L%
  */
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
-
+@RequiredArgsConstructor
 public class FeedbackCategoriesReaderImpl implements FeedbackCategoriesReader {
+  final ObjectMapper mapper;
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  public JsonNode getCategories() {
+    // categories structure: language -> mainCategory -> subCategory -> list of keywords
+    final var resource = new ClassPathResource("assets/categories/categories.json");
 
-  public Map<String, Map<String, Map<String, List<String>>>> readCategoriesJsonFile() throws IOException {
-    ClassPathResource resource = new ClassPathResource("assets/categories/categories.json");
-
-    try (InputStream inputStream = resource.getInputStream()) {
-      return objectMapper.readValue(
-        inputStream,
-        new TypeReference<Map<String, Map<String, Map<String, List<String>>>>>() {}
-      );
+    try (final var inputStream = resource.getInputStream()) {
+      return mapper.readTree(inputStream);
     } catch (IOException e) {
-      throw new IOException("Failed to read categories.json file", e);
+      throw new RuntimeException("Categories json not found: " + e.getMessage(), e);
     }
   }
 }

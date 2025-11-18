@@ -17,8 +17,8 @@ export const TaskAuditAi: React.FC = () => {
   const intl = useIntl();
   const { task } = useTaskDashboard();
   const { getFeedbackSentimentAndSubcategory, getSimilarFeedback } = useFeedback();
-  const [sentimentAndSubcategory, setSentimentAndSubcategory] = React.useState<FeedbackApi.SentimentAndSubcategoryResponse | undefined>(undefined);
-  const [similarFeedback, setSimilarFeedback] = React.useState<FeedbackApi.SimilarityResponse | undefined>(undefined);
+  const [sentimentAndSubcategory, setSentimentAndSubcategory] = React.useState<FeedbackApi.SentimentAndSubcategory | undefined>(undefined);
+  const [similarFeedback, setSimilarFeedback] = React.useState<FeedbackApi.SimilarFeedback | undefined>(undefined);
 
   React.useEffect(() => {
     getFeedbackSentimentAndSubcategory(task.id).then(result => {
