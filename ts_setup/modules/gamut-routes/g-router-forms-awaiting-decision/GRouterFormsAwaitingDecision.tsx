@@ -77,7 +77,7 @@ export const GRouterFormsAwaitingDecision: React.FC<GRouterFormsAwaitingDecision
                 left: () => (<>
                   <Divider />
                   <GContracts
-                    filter={(contract => contract.status === 'OPEN' || contract.status === 'NEW' || contract.status === 'WAITING')}
+                    filter={(contract => contract.status === 'OPEN' || contract.status === 'NEW' || contract.status === 'WAITING' || contract.status === 'TRANSFERRED')}
                     slotProps={{ item: { onClick: handleContractItemClick } }}
                   />
                 </>
