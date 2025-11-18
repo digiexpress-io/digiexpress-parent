@@ -28,19 +28,21 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableProjection;
+import io.resys.thena.ledger.client.entities.ImmutableProjectionTransitives;
 import io.resys.thena.ledger.client.entities.Projection;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "projection",
-  order = 700,
+  order = 600,
   ddl = """
     CREATE TABLE IF NOT EXISTS {projection}
     (
-      projection_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      projection_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      
       projection_type VARCHAR(100) NOT NULL,
       projection_sub_type VARCHAR(100),
       projection_description TEXT,
@@ -48,14 +50,14 @@ import io.vertx.mutiny.sqlclient.Row;
       projection_start_date DATE NOT NULL,
       projection_end_date DATE NOT NULL,
       projection_amount DECIMAL(15,2) NOT NULL,
-      projection_currency VARCHAR(3) NOT NULL,
-      created_commit UUID NOT NULL
+      
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {projection}_LEDGER_INDEX
       ON {projection} (ledger_id);
     CREATE INDEX IF NOT EXISTS {projection}_EXTERNAL_INDEX
-      ON {projection} (projection_external_id);
+      ON {projection} (external_id);
     CREATE INDEX IF NOT EXISTS {projection}_TARGET_DATE_INDEX
       ON {projection} (projection_target_date);
     CREATE INDEX IF NOT EXISTS {projection}_DATE_RANGE_INDEX
@@ -63,9 +65,9 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {projection};
@@ -75,7 +77,23 @@ public interface ProjectionTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {projection}
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON projection.ledger_id = ledger.id
+    """,
+    rowMapper = ProjectionMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       ORDER BY projection_target_date ASC
     """,
     rowMapper = ProjectionMapper.class
@@ -84,7 +102,10 @@ public interface ProjectionTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {projection}
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY projection_target_date ASC
     """,
@@ -95,8 +116,11 @@ public interface ProjectionTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {projection}
-      WHERE projection_id = $1
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
+      WHERE id = $1
     """,
     rowMapper = ProjectionMapper.class
   )
@@ -105,8 +129,11 @@ public interface ProjectionTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {projection}
-      WHERE projection_external_id = $1
+      SELECT projection.*,
+             created_commit.created_at as created_at
+      FROM {projection} projection
+      LEFT JOIN {commit} created_commit ON projection.created_commit_id = created_commit.commit_id
+      WHERE external_id = $1
     """,
     rowMapper = ProjectionMapper.class
   )
@@ -115,10 +142,10 @@ public interface ProjectionTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {projection}
-      (projection_id, ledger_id, projection_external_id, projection_type, projection_sub_type, 
+      (id, ledger_id, external_id, projection_type, projection_sub_type, 
        projection_description, projection_target_date, projection_start_date, projection_end_date, 
-       projection_amount, projection_currency, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       projection_amount, created_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     """,
     propsMapper = ProjectionInsertMapper.class
   )
@@ -129,18 +156,20 @@ public interface ProjectionTable {
     @Override
     public Projection apply(Row row) {
       return ImmutableProjection.builder()
-          .id(TableUtils.toStringUUID(row, "projection_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("projection_external_id"))
-          .type(row.getString("projection_type"))
-          .subType(Optional.ofNullable(row.getString("projection_sub_type")))
-          .description(Optional.ofNullable(row.getString("projection_description")))
-          .targetDate(row.getLocalDate("projection_target_date"))
-          .startDate(row.getLocalDate("projection_start_date"))
-          .endDate(row.getLocalDate("projection_end_date"))
-          .amount(row.getBigDecimal("projection_amount"))
-          .currency(row.getString("projection_currency"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .externalId(row.getString("external_id"))
+          .projectionType(row.getString("projection_type"))
+          .projectionSubType(Optional.ofNullable(row.getString("projection_sub_type")))
+          .projectionDescription(Optional.ofNullable(row.getString("projection_description")))
+          .projectionTargetDate(row.getLocalDate("projection_target_date"))
+          .projectionStartDate(row.getLocalDate("projection_start_date"))
+          .projectionEndDate(row.getLocalDate("projection_end_date"))
+          .projectionAmount(row.getBigDecimal("projection_amount"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .transitives(ImmutableProjectionTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }
@@ -152,15 +181,14 @@ public interface ProjectionTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getTargetDate(),
-        doc.getStartDate(),
-        doc.getEndDate(),
-        doc.getAmount(),
-        doc.getCurrency(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        doc.getProjectionType(),
+        doc.getProjectionSubType().orElse(null),
+        doc.getProjectionDescription().orElse(null),
+        doc.getProjectionTargetDate(),
+        doc.getProjectionStartDate(),
+        doc.getProjectionEndDate(),
+        doc.getProjectionAmount(),
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

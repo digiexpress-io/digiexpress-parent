@@ -22,7 +22,9 @@ package io.resys.thena.ledger.client.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -39,21 +41,31 @@ public interface ProjectionDetail extends LedgerEntity {
   String getId();
   String getProjectionId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
+  String getDetailType();
+  Optional<String> getDetailSubType();
+  Optional<String> getDetailDescription();
   Optional<String> getTargetId();
-  LocalDate getStartDate();
-  LocalDate getEndDate();
-  BigDecimal getAmount();
-  String getCurrency();
-  Optional<String> getFormula();
-  Optional<JsonObject> getBody();
-  String getCreatedCommit();
+  LocalDate getDetailStartDate();
+  LocalDate getDetailEndDate();
+  BigDecimal getDetailAmount();
+  Optional<String> getDetailFormula();
+  Optional<JsonObject> getDetailBody();
+  String getCreatedCommitId();
+
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable ProjectionDetailTransitives getTransitives();
 
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.PROJECTION_DETAIL;
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableProjectionDetailTransitives.class)
+  @JsonDeserialize(as = ImmutableProjectionDetailTransitives.class)
+  interface ProjectionDetailTransitives {
+    OffsetDateTime getCreatedAt();
   }
 
 }

@@ -4,6 +4,9 @@ import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { Check as CheckIcon } from '@mui/icons-material';
 import { ChevronRight as ChevronRightIcon } from '@mui/icons-material';
 import { ChevronLeft as ChevronLeftIcon } from '@mui/icons-material';
+import { CloseOutlined as CloseOutlinedIcon } from '@mui/icons-material';
+import { DoneOutlined as DoneOutlinedIcon } from '@mui/icons-material';
+
 
 import { FormattedMessage } from 'react-intl';
 
@@ -123,27 +126,27 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
       <GFormPageFooter ownerState={ownerState} className={classes.footer} as={ownerState.slots?.footer}>
 
         {!props.disabled && (
-          <Button onClick={handleCancel} variant='outlined' color='primary'>
+          <Button className={classes.footerButton} onClick={handleCancel} variant='outlined'>
             <FormattedMessage id='gamut.forms.page.cancel' />
           </Button>)
         }
 
         {props.pages.length > 1 &&
-          <Button disabled={props.pageNumber === 1} variant='outlined' onClick={handlePreviousPage} startIcon={<ChevronLeftIcon />}>
+          <Button className={classes.footerButton} disabled={props.pageNumber === 1} variant='outlined' onClick={handlePreviousPage} startIcon={<ChevronLeftIcon />}>
             <FormattedMessage id='gamut.forms.page.previous' />
           </Button>
         }
 
         {props.pages.length > 1 &&
-          <Button disabled={props.pageNumber === props.pages.length || !props.proceedAllowed} variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>
+          <Button className={classes.footerButton} disabled={props.pageNumber === props.pages.length} variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>
             <FormattedMessage id='gamut.forms.page.next' />
           </Button>
         }
-
-        <Button disabled={props.pageNumber !== props.pages.length} onClick={handleComplete} variant='contained' color='primary'>
-          <FormattedMessage id='gamut.forms.page.complete' />
-        </Button>
-
+        {props.pageNumber === props.pages.length &&
+          <Button className={classes.footerButton} disabled={props.pageNumber !== props.pages.length} startIcon={<DoneOutlinedIcon />} onClick={handleComplete} variant='contained' color='primary'>
+            <FormattedMessage id='gamut.forms.page.complete' />
+          </Button>
+        }
 
       </GFormPageFooter>
     </GFormPageRoot >

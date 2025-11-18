@@ -38,7 +38,7 @@ export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, styl
     return (
       <NotifierPublished className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
         <CheckIcon />
-        {intl.formatMessage({ id: 'task.feedback.isPublished', defaultMessage: 'Published' })}
+        {intl.formatMessage({ id: 'task.feedback.published' })}
       </NotifierPublished>)
 
   }
@@ -46,9 +46,33 @@ export const PublishedNotifier: React.FC<PublishedNotifierProps> = ({ task, styl
   return (
     <NotifierUnpublished className={classes.msgContainer} sx={{ ...style?.bodyTypographySmall }}>
       <CloseIcon />
-      {intl.formatMessage({ id: 'task.feedback.isNotPublished', defaultMessage: 'Not published' })}
+      {intl.formatMessage({ id: 'task.feedback.notPublished' })}
     </NotifierUnpublished>
   )
+}
+
+
+export const PublishedNotifierTextOnly: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
+
+  const intl = useIntl();
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
+
+
+  React.useEffect(() => {
+    getOneFeedback(task.taskRef!)
+      .then((resp) => {
+        setFeedback(resp);
+      });
+  }, [task.taskRef]);
+
+
+  return feedback ? (
+    intl.formatMessage({ id: 'task.feedback.published' })
+  ) : (
+      intl.formatMessage({ id: 'task.feedback.notPublished' })
+  )
+
 }
 
 
@@ -105,7 +129,7 @@ const NotifierPublished = styled('div', {
 
 }));
 
-export const useUtilityClasses = () => {
+const useUtilityClasses = () => {
   const slots = {
     msgContainer: ['msgContainer'],
   };

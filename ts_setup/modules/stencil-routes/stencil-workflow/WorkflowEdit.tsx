@@ -121,7 +121,6 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           onChangeStart={() => setChangeInProgress(true)}
           selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
 
-
         <Burger.TextField label='services.technicalname'
           required
           value={technicalname}
@@ -133,14 +132,12 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
             <Burger.Select label="services.formName" onChange={setFormName}
               selected={formName}
               items={allForms}
-              helperText='services.formName.description'
             />
           </Box>
           <Box sx={{ ml: 1 }}>
             <Burger.Select label="services.formTag" onChange={setFormTag}
               selected={formTag}
               items={formTags}
-              helperText='services.formTag.description'
             />
           </Box>
           <Box sx={{ ml: 1 }} flexGrow={1}>

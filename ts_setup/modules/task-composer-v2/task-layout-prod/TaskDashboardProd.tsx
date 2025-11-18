@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid2, Typography } from '@mui/material';
 import { TaskFormReviewDrawer } from '../task-form-review';
-import { TaskDashboardContextProvider } from '../task-dashboard';
+import { TaskDashboardContextProvider, useTaskDashboard } from '../task-dashboard';
 import { FactoryCardId, TaskCardFactory } from '../task-card-factory';
 import {
   CardConfigContextProvider,
@@ -72,6 +72,7 @@ export interface TaskDashboardProdProps {
 export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (props) => {
   const intl = useIntl();
   const { isReviewOpen, cardTheme, toggleReview, cardOrder } = useCardConfig();
+  const { task } = useTaskDashboard();
 
   const { getDragPropsForId, draggingId } = useDragCardController();
 
@@ -82,12 +83,10 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
   return (
     <Grid2 container spacing={style.cardSpacing} m={2}>
       <Grid2 container size={{ xs: 12, md: isReviewOpen ? 6 : 12 }} spacing={style.cardSpacing}>
-        <Typography variant='h1'>{intl.formatMessage({ id: 'task.edit' })}</Typography>
+        <Typography variant='h1'>{intl.formatMessage({ id: 'task.edit' })}{": "}{task.taskRef}</Typography>
 
         {cardOrder.map((cardId) => (
-          <Grid2
-            key={cardId}
-            size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}
+          <Grid2 key={cardId} size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}
             sx={{
               '&:has(> *:empty)': { display: 'none' }
             }}

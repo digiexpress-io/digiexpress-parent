@@ -27,7 +27,7 @@ const TaskDashboardInternal: React.FC = () => {
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2 size={isReviewOpen ? taskCardGridSize.singleCol : taskCardGridSize[cardTheme]}>
-        <Typography variant='h1'>{intl.formatMessage({ id: 'task.composer.task.edit', defaultMessage: 'Edit task: ' })} {task.taskRef}</Typography>
+        <Typography variant='h1'>{intl.formatMessage({ id: 'task.composer.task.edit' })} {task.taskRef}</Typography>
         <TaskCardStyleSelect value={cardTheme} onChange={setCardTheme} />
       </Grid2>
 

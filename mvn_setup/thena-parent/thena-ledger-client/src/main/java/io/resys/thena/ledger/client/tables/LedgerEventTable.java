@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableLedgerEvent;
+import io.resys.thena.ledger.client.entities.ImmutableLedgerEventTransitives;
 import io.resys.thena.ledger.client.entities.LedgerEvent;
 import io.resys.thena.support.TableUtils;
 import io.vertx.core.json.JsonObject;
@@ -35,25 +36,25 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "ledger_event",
-  order = 900,
+  order = 1100,
   ddl = """
     CREATE TABLE IF NOT EXISTS {ledger_event}
     (
-      ledger_event_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      ledger_event_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
       ledger_event_type VARCHAR(100) NOT NULL,
       ledger_event_sub_type VARCHAR(100),
       ledger_event_description TEXT,
       ledger_event_date DATE NOT NULL,
       ledger_event_body JSONB,
-      created_commit UUID NOT NULL
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {ledger_event}_LEDGER_INDEX
       ON {ledger_event} (ledger_id);
     CREATE INDEX IF NOT EXISTS {ledger_event}_EXTERNAL_INDEX
-      ON {ledger_event} (ledger_event_external_id);
+      ON {ledger_event} (external_id);
     CREATE INDEX IF NOT EXISTS {ledger_event}_TYPE_INDEX
       ON {ledger_event} (ledger_event_type);
     CREATE INDEX IF NOT EXISTS {ledger_event}_DATE_INDEX
@@ -61,9 +62,9 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {ledger_event};
@@ -73,7 +74,23 @@ public interface LedgerEventTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON ledger_event.ledger_id = ledger.id
+    """,
+    rowMapper = LedgerEventMapper.class,
+    sqlBuilder = LedgerTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(LedgerTableFilter filter);
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       ORDER BY ledger_event_date DESC
     """,
     rowMapper = LedgerEventMapper.class
@@ -82,7 +99,10 @@ public interface LedgerEventTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY ledger_event_date DESC
     """,
@@ -92,7 +112,10 @@ public interface LedgerEventTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {ledger_event}
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
       WHERE ledger_event_type = $1
       ORDER BY ledger_event_date DESC
     """,
@@ -103,8 +126,11 @@ public interface LedgerEventTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {ledger_event}
-      WHERE ledger_event_id = $1
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
+      WHERE id = $1
     """,
     rowMapper = LedgerEventMapper.class
   )
@@ -113,8 +139,11 @@ public interface LedgerEventTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT * FROM {ledger_event}
-      WHERE ledger_event_external_id = $1
+      SELECT ledger_event.*,
+             created_commit.created_at as created_at
+      FROM {ledger_event} ledger_event
+      LEFT JOIN {commit} created_commit ON ledger_event.created_commit_id = created_commit.commit_id
+      WHERE external_id = $1
     """,
     rowMapper = LedgerEventMapper.class
   )
@@ -123,8 +152,8 @@ public interface LedgerEventTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ledger_event}
-      (ledger_event_id, ledger_id, ledger_event_external_id, ledger_event_type, ledger_event_sub_type, 
-       ledger_event_description, ledger_event_date, ledger_event_body, created_commit)
+      (id, ledger_id, external_id, ledger_event_type, ledger_event_sub_type, 
+       ledger_event_description, ledger_event_date, ledger_event_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = LedgerEventInsertMapper.class
@@ -138,15 +167,18 @@ public interface LedgerEventTable {
       final JsonObject ledger_event_body = row.getJsonObject("ledger_event_body");
 
       return ImmutableLedgerEvent.builder()
-          .id(TableUtils.toStringUUID(row, "ledger_event_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("ledger_event_external_id"))
-          .type(row.getString("ledger_event_type"))
-          .subType(Optional.ofNullable(row.getString("ledger_event_sub_type")))
-          .description(Optional.ofNullable(row.getString("ledger_event_description")))
-          .date(row.getLocalDate("ledger_event_date"))
+          .externalId(row.getString("external_id"))
+          .eventType(row.getString("ledger_event_type"))
+          .eventSubType(Optional.ofNullable(row.getString("ledger_event_sub_type")))
+          .eventDescription(Optional.ofNullable(row.getString("ledger_event_description")))
+          .eventDate(row.getLocalDate("ledger_event_date"))
           .body(Optional.ofNullable(ledger_event_body))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .transitives(ImmutableLedgerEventTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }
@@ -158,12 +190,12 @@ public interface LedgerEventTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
+        doc.getEventType(),
+        doc.getEventSubType().orElse(null),
+        doc.getEventDescription().orElse(null),
+        doc.getEventDate(),
         doc.getBody().orElse(null),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

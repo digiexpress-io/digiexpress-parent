@@ -43,7 +43,7 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
     <StyledCustomerMessagesReadOnly className={classes.container}>
       {externalMessages.length === 0 ? (
         <Typography color='error' sx={{ ...style.bodyTypography }}>
-          {intl.formatMessage({ id: 'task.customerMessages.none', defaultMessage: 'No customer messages' })}
+          {intl.formatMessage({ id: 'task.customerMessages.none' })}
         </Typography>
       ) : (
         sortedExternalMessages.map((comment) => (
@@ -51,7 +51,7 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
             <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
             <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
               <Typography className={classes.senderInfo} sx={{ ...style.bodyTypography }} >
-                {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
+                {comment.userName}{" "}{intl.formatMessage({ id: 'task.customerMessages.user.message.wroteOn' })}{formatDate(comment.created)}
               </Typography>
               <Typography
                 style={{

@@ -100,10 +100,12 @@ class RefState {
       return;
     }
     const target = refs.values[refs.firstItemId];
-    target.current.scrollIntoView({
+    const rect = target.current.getBoundingClientRect();
+    const absoluteY = window.scrollY + rect.top - 50;
+
+    window.scrollTo({
+      top: absoluteY,
       behavior: "smooth",
-      block: "center",
-      inline: "start"
     });
     this.consumed({ consumed: true })
   }

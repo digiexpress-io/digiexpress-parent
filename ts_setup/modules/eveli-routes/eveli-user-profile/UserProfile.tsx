@@ -120,7 +120,7 @@ export const UserProfile: React.FC<{}> = () => {
         <EveliUserOverviewDetail>
           <div className={classes.sectionTitle}>
             <SettingsIcon />
-            <Typography><FormattedMessage id='eveli.userProfile.tenantConfig' defaultMessage='Configuration options' /></Typography>
+            <Typography><FormattedMessage id='eveli.userProfile.tenantConfig' /></Typography>
           </div>
 
           <Divider className={classes.divider} />

@@ -40,7 +40,7 @@ export const NotesTruncated: React.FC<NotesTruncatedTruncatedProps> = ({ task, s
 
   if (!internalComments || internalComments.length === 0) {
     return (<Typography sx={{ ...style?.bodyTypography }} color='error'>
-      {intl.formatMessage({ id: 'task.note.none', defaultMessage: 'No notes for this task' })}
+      {intl.formatMessage({ id: 'task.notes.none' })}
     </Typography>)
   }
 

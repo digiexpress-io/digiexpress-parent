@@ -25,7 +25,7 @@ export const TaskAuditQueuesTable: React.FC = () => {
 
   const columns: ColumnDef<TaskApi.TaskAuditQueue, any>[] = [
     {
-      header: intl.formatMessage({ id: 'task.audit.queue.name', defaultMessage: 'Queue name' }),
+      header: intl.formatMessage({ id: 'task.audit.queue.name' }),
       accessorKey: 'queueName',
       size: 200,
       minSize: 200,
@@ -34,7 +34,7 @@ export const TaskAuditQueuesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queue.createdBy', defaultMessage: 'Created by' }),
+      header: intl.formatMessage({ id: 'task.audit.queue.createdBy' }),
       accessorKey: 'createdBy',
       size: 250,
       minSize: 200,
@@ -43,7 +43,7 @@ export const TaskAuditQueuesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queue.comment', defaultMessage: 'Comment' }),
+      header: intl.formatMessage({ id: 'task.audit.queue.comment' }),
       accessorKey: 'comment',
       size: 250,
       minSize: 200,
@@ -52,7 +52,7 @@ export const TaskAuditQueuesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.queue.createdAt', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.queue.createdAt' }),
       accessorKey: 'createdAt',
       size: 150,
       minSize: 150,

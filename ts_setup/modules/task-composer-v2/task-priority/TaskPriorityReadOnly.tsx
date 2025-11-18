@@ -6,7 +6,6 @@ import { useIntl } from 'react-intl';
 import { TaskApi } from '@dxs-ts/task-api';
 import { useTaskDashboard } from '../task-dashboard';
 
-type Priority = TaskApi.TaskPriority;
 
 export const TaskPriorityReadOnly: React.FC = () => {
   const intl = useIntl();
@@ -30,7 +29,7 @@ const TaskPriorityRoot = styled('div', {
     ];
   },
 
-})<{ task: TaskApi.Task }>(({ theme, task }) => {
+})<{ task: TaskApi.Task }>(({ task }) => {
   const bgColor = TaskApi.task_priority_hex[task.priority!];
   const textColor = TaskApi.get_contrast_text(bgColor);
 

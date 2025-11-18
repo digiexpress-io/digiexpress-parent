@@ -32,7 +32,7 @@ import { AssigneeRolesEditDialog } from '../task-assignee-roles-edit';
 import { PriorityStatusEditDialog } from '../task-priority-status-edit';
 import { useTaskDashboard } from '../task-dashboard';
 import { CustomerMessagesReadOnly, CustomerMessagesEditDialog } from '../task-messages';
-import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly } from '../task-feedback';
+import { CustomerFeedbackEditDialog, CustomerFeedbackReadOnly, PublishedNotifierTextOnly } from '../task-feedback';
 import { TaskTransferEditDialog } from '../task-transfer';
 import { TaskAiAssistant } from '../task-ai-assistant';
 import { TaskEditDialog, TaskOverdueWarning, TaskProperties, TaskPropertiesAlt } from '../task';
@@ -154,7 +154,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
   switch (cardId) {
     case 'task_main_alt':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })} ${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId' })}: ${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
@@ -171,7 +171,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'task_main':
       return (
-        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId', defaultMessage: 'Task reference id' })}${intl.formatMessage({ id: 'eveli.textSeparatorColon' })}${task.taskRef}`}
+        <TaskCard title={`${intl.formatMessage({ id: 'taskcard.title.taskRefId' })}: ${task.taskRef}`}
           {...commonProps}
           isMenu
           onDoubleClick={handleEdit}
@@ -184,7 +184,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate', defaultMessage: 'Due date' })} style={style}
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.dueDate' })} style={style}
             value={
               <Box display='flex' justifyContent='space-between'>
                 <Typography sx={{ ...style.bodyTypography }}>{_formatAnyDateShort(task.dueDate)}</Typography>
@@ -192,9 +192,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
               </Box>
             }
           />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.customerName', defaultMessage: 'Customer name' })} value={task.clientIdentificator || 'NONE'} style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.subject', defaultMessage: 'Subject' })} value={task.subject} style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.additionalInfo', defaultMessage: 'Extra info' })} value={task.additionalInfo} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.customerName' })} value={task.clientIdentificator || 'NONE'} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.subject' })} value={task.subject} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.additionalInfo' })} value={task.additionalInfo} style={style} />
           <TaskProperties task={task} />
         </TaskCard>
       );
@@ -207,17 +207,16 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           showEditButton={true}
           showReviewOnMenu={true}
         >
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName', defaultMessage: 'Form name' })} style={style} value={task.subject + " " + "v1.0"} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate', defaultMessage: 'Submitted' })} value={_formatAnyDateShort(task.created)} style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback', defaultMessage: 'Publish feedback?' })} value='YES' style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.representative', defaultMessage: 'Representative name' })} value='Representative name' style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.otherInfo', defaultMessage: 'Other info' })} value='info here' style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName' })} style={style} value={task.subject + " " + "v1.0"} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate' })} value={_formatAnyDateShort(task.created)} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback' })} value='YES' style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.representative' })} value='Representative name' style={style} />
         </TaskCard>
       );
 
     case 'status_priority':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.statusAndPriority', defaultMessage: 'Status and Priority' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.statusAndPriority' })}
           {...commonProps}
           isMenu
           showFlashyToggle={true}
@@ -229,16 +228,16 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           editDialog={editingCardId === cardId && (<PriorityStatusEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={PriorityHighIcon} />}>
           <Stack direction="column" height="100%">
-            <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.task.status', defaultMessage: 'Status' })} value={<TaskStatusReadOnly />} style={style} />
+            <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.task.status' })} value={<TaskStatusReadOnly />} style={style} />
             <Divider sx={{ my: 1 }} />
-            <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.task.priority', defaultMessage: 'Priority' })} value={<TaskPriorityReadOnly />} style={style} />
+            <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.task.priority' })} value={<TaskPriorityReadOnly />} style={style} />
           </Stack>
         </TaskCard>
       );
 
     case 'assignees_roles':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees', defaultMessage: 'Roles and Assignees' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.rolesAndAssignees' })}
           {...commonProps}
           isMenu
           showFlashyToggle={true}
@@ -249,17 +248,17 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           onEdit={handleEdit}
           editDialog={editingCardId === cardId && (<AssigneeRolesEditDialog open onClose={handleEditClose} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={AdminPanelSettingsOutlinedIcon} />}>
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles', defaultMessage: 'Roles' })} style={style} value={<TaskRolesReadOnly task={task} style={style} />}
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.roles' })} style={style} value={<TaskRolesReadOnly task={task} style={style} />}
           />
           <Divider sx={{ my: 1 }} />
-          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee', defaultMessage: 'Assignee' })} style={style} value={<TaskAssigneeReadOnly task={task} style={style} />} />
+          <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.assignee' })} style={style} value={<TaskAssigneeReadOnly task={task} style={style} />} />
         </TaskCard>
       );
 
     case 'customer_messages':
       return (
         <TaskFeature id='CRM_MESSAGES'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages', defaultMessage: 'Customer messages' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages' })}
             {...commonProps}
             isMenu
             showFlashyToggle={true}
@@ -280,7 +279,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'assignable':
       return (
         <TaskFeature id='ASSIGNABLE'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.assignable', defaultMessage: 'Assigned to customer' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.assignable' })}
             {...commonProps}
             isMenu
             showFlashyToggle={true}
@@ -300,7 +299,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'files':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.files', defaultMessage: 'Files' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.files' })}
           {...commonProps}
           isMenu
           showFlashyToggle={true}
@@ -324,7 +323,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'feedback':
       return (
         <TaskFeature id='TASK_FEEDBACK'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback', defaultMessage: 'Customer feedback' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerFeedback' })}
             {...commonProps}
             isMenu
             showFlashyToggle={true}
@@ -333,7 +332,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showReviewOnMenu={false}
             onEdit={handleEdit}
             onDoubleClick={handleEdit}
-            titleNotifier={<FeedbackTitle task={task}/>}
+            titleNotifier={<PublishedNotifierTextOnly task={task} />}
             startAdornmentIcon={<StartAdornmentIcon icon={ThumbUpAltOutlinedIcon} />}
             editDialog={isEditOpen && (<CustomerFeedbackEditDialog task={task} open onClose={handleEditClose} />)}
           >
@@ -344,7 +343,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'notes':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes', defaultMessage: 'Notes' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.notes' })}
           {...commonProps}
           isMenu
           titleNotifier={task.comments.filter(a => !a.external).length}
@@ -363,15 +362,15 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'task_meta':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history', defaultMessage: 'History and metadata' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.history' })}
           {...commonProps}
           showFlashyToggle={true}
           showEditOnMenu={false}
           showEditButton={false}
           showReviewOnMenu={false}
           startAdornmentIcon={<StartAdornmentIcon icon={HistoryIcon} />}>
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy', defaultMessage: 'Last edited by' })} value={task.updaterId} style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate', defaultMessage: 'Last edited date' })} value={_formatAnyDateShort(task.updated)} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedBy' })} value={task.updaterId} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.lastEditedDate' })} value={_formatAnyDateShort(task.updated)} style={style} />
         </TaskCard>
       );
 
@@ -401,7 +400,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'audit_viewers':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.viewers', defaultMessage: 'Audit: Viewers' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.viewers' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -413,7 +412,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_commits':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.commits', defaultMessage: 'Audit: Commits' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.commits' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -425,7 +424,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_queues':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queues', defaultMessage: 'Audit: Queues' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queues' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -437,7 +436,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_processes':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.processes', defaultMessage: 'Audit: Processes' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.processes' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -449,7 +448,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_flow':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.flow', defaultMessage: 'Audit: Flow' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.flow' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -461,7 +460,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_queue_messages':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueMessages', defaultMessage: 'Audit: Queue messages' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueMessages' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -473,7 +472,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_queue_bindings':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueBindings', defaultMessage: 'Audit: Queue bindings' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueBindings' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -485,7 +484,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'audit_queue_deliveries':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueDeliveries', defaultMessage: 'Audit: Queue deliveries' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.queueDeliveries' })}
           {...commonProps}
           showFlashyToggle={false}
           showEditOnMenu={false}
@@ -536,8 +535,6 @@ function _formatAnyDateShort(value: Date | string | undefined): string {
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 }
 
-
-
 const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
 
   const intl = useIntl();
@@ -555,3 +552,4 @@ const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
 
   return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : 0
 }
+

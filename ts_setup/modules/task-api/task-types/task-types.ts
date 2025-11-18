@@ -211,7 +211,7 @@ export declare namespace TaskApi {
   export type TaskFeatureType = 'feedback' | 'transfer' | 'anon' | 'assignable';
 
   export interface TransferTaskCommand {
-    transferTitle: string;
+    transferTitle?: string;
   }
 
   export interface CreateTaskCustomerAssignmentCommand {

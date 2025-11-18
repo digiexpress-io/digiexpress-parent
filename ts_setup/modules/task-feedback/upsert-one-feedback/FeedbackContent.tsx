@@ -51,11 +51,9 @@ export const FeedbackContent: React.FC<{
     return;
   }
   return (<>
-    <div style={{ marginTop: 25 }} />
 
     <div style={{ marginBottom: 10 }}>
       <FeedbackTopicSelect onChange={handleMainChange}
-        label={intl.formatMessage({ id: 'feedback.mainCategory' })}
         value={feedback.labelKey}
         values={feedbackTopics?.main ?? []}
       />
@@ -73,10 +71,9 @@ export const FeedbackContent: React.FC<{
 
 const FeedbackTopicSelect: React.FC<{
   onChange: (value: FeedbackApi.FeedbackTopicItem) => void,
-  label: string;
   value: string;
   values: FeedbackApi.FeedbackTopicItem[],
-}> = ({ onChange, value, values, label }) => {
+}> = ({ onChange, value, values }) => {
 
 
   const found = values.find(topic => topic.labelKey.toLocaleLowerCase().endsWith(`.${value.toLocaleLowerCase()}`))?.labelKey;
@@ -88,10 +85,7 @@ const FeedbackTopicSelect: React.FC<{
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
-        <InputLabel>
-          <Typography fontWeight='bold'>{label}</Typography>
-        </InputLabel>
-        <Select value={found ?? value} label={label}>
+        <Select value={found ?? value}>
           {values
             .filter(({ labelKey }) => {
               const isFailsafe = labelKey === value;

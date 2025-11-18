@@ -21,7 +21,9 @@ package io.resys.thena.ledger.client.entities;
  */
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -38,16 +40,27 @@ public interface LedgerEvent extends LedgerEntity {
   String getId();
   String getLedgerId();
   String getExternalId();
-  String getType();
-  Optional<String> getSubType();
-  Optional<String> getDescription();
-  LocalDate getDate();
+  String getEventType();
+  Optional<String> getEventSubType();
+  Optional<String> getEventDescription();
+  LocalDate getEventDate();
   Optional<JsonObject> getBody();
-  String getCreatedCommit();
+  String getCreatedCommitId();
+
+  // Transitive data from joins
+  @Value.Auxiliary
+  @Nullable LedgerEventTransitives getTransitives();
 
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.LEDGER_EVENT;
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableLedgerEventTransitives.class)
+  @JsonDeserialize(as = ImmutableLedgerEventTransitives.class)
+  interface LedgerEventTransitives {
+    OffsetDateTime getCreatedAt();
   }
 
 }
