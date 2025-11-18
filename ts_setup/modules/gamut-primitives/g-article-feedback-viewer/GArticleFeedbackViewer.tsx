@@ -70,15 +70,20 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
   return (
     <GArticleFeedbackViewerRoot className={classes.root} open={true} maxWidth='lg' fullWidth onClose={props.onClose}>
       <DialogTitle className={classes.titleContainer}>
-        <div>
-          <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerTitle' })}</Typography>
-          <Typography>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Typography className={classes.title}>
+            {intl.formatMessage({ id: 'gamut.feedback.feedbackViewerTitle' })}
+          </Typography>
+
+          <Typography sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>
             {intl.formatMessage({ id: 'gamut.feedback.updatedOnDate' })}
             {intl.formatMessage({ id: 'gamut.textSeparator', defaultMessage: ' ' })}
             {DateTime.fromJSDate(new Date(feedback.feedback.updatedOnDate))
               .setLocale(locale)
-              .toLocaleString(DateTime.DATE_SHORT)}</Typography>
+              .toLocaleString(DateTime.DATE_SHORT)}
+          </Typography>
         </div>
+
         <Box flexGrow={1} />
 
         <Stack spacing={1} onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
@@ -133,7 +138,9 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
         </Typography>
         <Divider className={classes.contentDivider} />
         <div className={classes.replyContainer}>
-          <Typography>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerSubTitle' })}</Typography>
+          <Typography className={classes.answerSubTitle}>
+            {intl.formatMessage({ id: 'gamut.feedback.feedbackViewerSubTitle' })}
+          </Typography>
           <Typography
             sx={{
               whiteSpace: 'pre-wrap',

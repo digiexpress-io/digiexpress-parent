@@ -14,6 +14,7 @@ export interface GArticleFeedbackViewerClasses {
   contentDivider: string;
   subTitle: string;
   replyContainer: string;
+  answerSubTitle: string;
 }
 
 export type GArticleFeedbackViewerClassKey = keyof GArticleFeedbackViewerClasses;
@@ -30,6 +31,7 @@ export const useUtilityClasses = () => {
     contentDivider: ['contentDivider'],
     subTitle: ['subTitle'],
     replyContainer: ['replyContainer'],
+    answerSubTitle: ['answerSubTitle'],
   };
 
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -51,6 +53,7 @@ export const GArticleFeedbackViewerRoot = styled(Dialog, {
       styles.contentDivider,
       styles.subTitle,
       styles.replyContainer,
+      styles.answerSubTitle,
     ];
   },
 })(({ theme }) => {
@@ -73,7 +76,7 @@ export const GArticleFeedbackViewerRoot = styled(Dialog, {
       fontSize: '30pt'
     },
     '& .GArticleFeedbackViewer-contentDivider': {
-      marginTop: theme.spacing(1),
+      marginTop: theme.spacing(4),
       border: `2px solid ${theme.palette.primary.main}`,
     },
     '& .GArticleFeedbackViewer-title': {
@@ -81,13 +84,19 @@ export const GArticleFeedbackViewerRoot = styled(Dialog, {
       marginBottom: theme.spacing(2),
     },
     '& .GArticleFeedbackViewer-subTitle': {
-      ...theme.typography.h3,
+      ...theme.typography.body1,
+      fontWeight: 'bold',
       marginBottom: theme.spacing(2),
-    },
+    },    
     '& .GArticleFeedbackViewer-replyContainer': {
       backgroundColor: alpha(theme.palette.primary.main, 0.1),
       padding: theme.spacing(2),
     },
+    '& .GArticleFeedbackViewer-answerSubTitle': {
+      ...theme.typography.body1,
+      fontWeight: 'bold',
+      marginBottom: theme.spacing(2),
+    },    
 
   }
 });
