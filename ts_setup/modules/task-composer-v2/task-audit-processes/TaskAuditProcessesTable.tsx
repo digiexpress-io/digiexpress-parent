@@ -43,7 +43,7 @@ export const TaskAuditProcessesTable: React.FC = () => {
 
   const columns: ColumnDef<ProcessEntry, any>[] = [
     {
-      header: intl.formatMessage({ id: 'task.audit.process.type', defaultMessage: 'Type' }),
+      header: intl.formatMessage({ id: 'task.audit.process.type' }),
       accessorKey: 'type',
       size: 300,
       minSize: 300,
@@ -52,7 +52,7 @@ export const TaskAuditProcessesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.process.value', defaultMessage: 'Value' }),
+      header: intl.formatMessage({ id: 'task.audit.process.value' }),
       accessorKey: 'value',
       size: 400,
       minSize: 400,
@@ -61,7 +61,7 @@ export const TaskAuditProcessesTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'task.audit.process.createdAt', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'task.audit.process.createdAt' }),
       accessorKey: 'targetDate',
       size: 150,
       minSize: 150,
@@ -74,7 +74,7 @@ export const TaskAuditProcessesTable: React.FC = () => {
 
   return (
     <Box sx={{ display: 'inline-block' }}>
-      {processes.length === 0 ? (intl.formatMessage({ id: 'task.audit.processes.None', defaultMessage: 'No processes for this task' })
+      {processes.length === 0 ? (intl.formatMessage({ id: 'task.audit.processes.None' })
       ) : (
         <WithTableStyles data={processes} columns={columns} options={{ tableId: 'taskAuditProcess', initialPageSize: 20 }} />)
       }

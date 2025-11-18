@@ -19,7 +19,7 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
   const { hardcodedFeatures } = useTenantConfig();
 
   const [selectedFeatures, setSelectedFeatures] = React.useState<string[]>(userProfile.tenantFeatures ?? []);
-  const inputLabel = intl.formatMessage({ id: 'eveli.userProfile.tenantConfig.select', defaultMessage: 'Config option' });
+  const inputLabel = intl.formatMessage({ id: 'eveli.userProfile.tenantConfig.select' });
 
   React.useEffect(() => {
     const userFeatures = userProfile.tenantFeatures ?? [];
@@ -77,12 +77,7 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
 
   return (
     <Box sx={{ minWidth: 120 }}>
-      <Typography variant='subtitle2' mb={3}>
-        {intl.formatMessage({
-          id: `eveli.userProfile.tenantConfig.select.title`,
-          defaultMessage: 'Personalise your user experience by adding and removing features'
-        })}
-      </Typography>
+      <Typography variant='subtitle2' mb={3}>{intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.title` })}</Typography>
       <FormControl fullWidth>
         <InputLabel>{inputLabel}</InputLabel>
         <Select multiple value={selectedFeatures} label={inputLabel} onChange={handleChange}

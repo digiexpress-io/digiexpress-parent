@@ -63,6 +63,7 @@ const EveliPermissionMapping = {
   'DELETE_STENCIL_ASSET': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
 
   'TASK_REOPEN': oneOf(['TASK_REOPEN']),
+  'TASK_RETRANSFER': oneOf(['TASK_RETRANSFER']),
 
   'NAV_TO_TABLES_V2': oneOf(['TABLES_V2'])
 }

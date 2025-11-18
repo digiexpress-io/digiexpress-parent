@@ -66,19 +66,19 @@ export const PriorityStatusEditDialog: React.FC<PriorityStatusEditDialogProps> =
   if (isTaskReopenable) {
     return backend.permissions.isReopenTaskAllowed && (
       <StyledPriorityStatusEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
-        <DialogTitle>{intl.formatMessage({ id: 'taskReopenDialog.title', defaultMessage: 'Reopen Task' })}</DialogTitle>
+        <DialogTitle>{intl.formatMessage({ id: 'taskReopenDialog.title' })}</DialogTitle>
         <DialogContent>
-          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle1', defaultMessage: 'You are about to reopen this task' })}</Typography>
-          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle2', defaultMessage: 'Upon accepting changes, task status will be set to OPEN and message will be sent to customer' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle1' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.subtitle2' })}</Typography>
 
           <Divider sx={{ my: 3 }} />
-          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.customer-message', defaultMessage: 'Please write a message to send to the customer explaining this change' })}</Typography>
+          <Typography>{intl.formatMessage({ id: 'taskReopenDialog.customer-message' })}</Typography>
 
           <StyledTextField required fullWidth multiline rows={5}
             value={reopenReason}
             onChange={handleReopenReasonChange}
-            label={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder1', defaultMessage: 'Message to customer' })}
-            placeholder={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder2', defaultMessage: 'Enter message' })} />
+            label={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder1' })}
+            placeholder={intl.formatMessage({ id: 'taskReopenDialog.customer-message-label-placeholder2' })} />
         </DialogContent>
         <DialogActions>
           <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
@@ -91,11 +91,7 @@ export const PriorityStatusEditDialog: React.FC<PriorityStatusEditDialogProps> =
 
   return (
     <StyledPriorityStatusEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
-      <DialogTitle>
-        {intl.formatMessage({ id: 'task.priorityAndStatusEdit', defaultMessage: 'Edit priority and status' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-        {task.taskRef ?? 'no task reference id'}
-      </DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'task.priorityAndStatusEdit' })}{": "}{task.taskRef ?? 'no task reference id'}</DialogTitle>
 
       <DialogContent>
         <Grid2 container display='flex' alignItems='center'>

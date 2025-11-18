@@ -28,32 +28,37 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableLedger;
+import io.resys.thena.ledger.client.entities.ImmutableLedgerTransitives;
 import io.resys.thena.ledger.client.entities.Ledger;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "ledger",
-  order = 200,
+  order = 0,
   ddl = """
     CREATE TABLE IF NOT EXISTS {ledger}
     (
-      ledger_id UUID PRIMARY KEY,
-      ledger_external_id VARCHAR(255) NOT NULL,
+      id UUID PRIMARY KEY,
+      external_id VARCHAR(255) NOT NULL,
       ledger_name VARCHAR(255) NOT NULL,
       ledger_description TEXT,
-      created_commit UUID NOT NULL,
-      updated_commit UUID NOT NULL
+      
+      commit_id UUID NOT NULL,
+      created_commit_id UUID NOT NULL,
+      updated_tree_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {ledger}_EXTERNAL_INDEX
-      ON {ledger} (ledger_external_id);
+      ON {ledger} (external_id);
   """,
   constraints = """
+    ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_commit 
+      FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
     ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
-    ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_updated_commit 
-      FOREIGN KEY (updated_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
+    ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_updated_tree_commit 
+      FOREIGN KEY (updated_tree_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {ledger};
@@ -65,10 +70,12 @@ public interface LedgerTable {
     sql = """
       SELECT ledger.*,
              updated_commit.created_at as updated_at,
-             created_commit.created_at as created_at
+             created_commit.created_at as created_at,
+             updated_tree_commit.created_at as updated_tree_at
       FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} updated_commit ON ledger.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit_id = created_commit.commit_id
+      LEFT JOIN {commit} updated_tree_commit ON ledger.updated_tree_commit_id = updated_tree_commit.commit_id
     """,
     rowMapper = LedgerMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -79,10 +86,12 @@ public interface LedgerTable {
     sql = """
       SELECT ledger.*,
              updated_commit.created_at as updated_at,
-             created_commit.created_at as created_at
+             created_commit.created_at as created_at,
+             updated_tree_commit.created_at as updated_tree_at
       FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} updated_commit ON ledger.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit_id = created_commit.commit_id
+      LEFT JOIN {commit} updated_tree_commit ON ledger.updated_tree_commit_id = updated_tree_commit.commit_id
       ORDER BY ledger_name ASC
     """,
     rowMapper = LedgerMapper.class
@@ -94,36 +103,24 @@ public interface LedgerTable {
     sql = """
       SELECT ledger.*,
              updated_commit.created_at as updated_at,
-             created_commit.created_at as created_at
+             created_commit.created_at as created_at,
+             updated_tree_commit.created_at as updated_tree_at
       FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
-      WHERE ledger_id = $1
+      LEFT JOIN {commit} updated_commit ON ledger.commit_id = updated_commit.commit_id
+      LEFT JOIN {commit} created_commit ON ledger.created_commit_id = created_commit.commit_id
+      LEFT JOIN {commit} updated_tree_commit ON ledger.updated_tree_commit_id = updated_tree_commit.commit_id
+      WHERE id = $1 or external_id = $1
     """,
     rowMapper = LedgerMapper.class
   )
   SqlTuple getById(String ledgerId);
 
-  @TenantSql.Find(
-    optional = true,
-    sql = """
-      SELECT ledger.*,
-             updated_commit.created_at as updated_at,
-             created_commit.created_at as created_at
-      FROM {ledger} ledger
-      LEFT JOIN {commit} updated_commit ON ledger.updated_commit = updated_commit.commit_id
-      LEFT JOIN {commit} created_commit ON ledger.created_commit = created_commit.commit_id
-      WHERE ledger_external_id = $1
-    """,
-    rowMapper = LedgerMapper.class
-  )
-  SqlTuple findByExternalId(String externalId);
 
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ledger}
-      (ledger_id, ledger_external_id, ledger_name, ledger_description, created_commit, updated_commit)
-       VALUES($1, $2, $3, $4, $5, $6)
+      (id, external_id, ledger_name, ledger_description, commit_id, created_commit_id, updated_tree_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7)
     """,
     propsMapper = LedgerInsertMapper.class
   )
@@ -132,8 +129,8 @@ public interface LedgerTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {ledger}
-       SET ledger_external_id = $1, ledger_name = $2, ledger_description = $3, updated_commit = $4
-       WHERE ledger_id = $5
+       SET external_id = $1, ledger_name = $2, ledger_description = $3, commit_id = $4, updated_tree_commit_id = $5
+       WHERE id = $6
     """,
     propsMapper = LedgerUpdateMapper.class
   )
@@ -144,12 +141,18 @@ public interface LedgerTable {
     @Override
     public Ledger apply(Row row) {
       return ImmutableLedger.builder()
-          .id(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("ledger_external_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
+          .externalId(row.getString("external_id"))
           .name(row.getString("ledger_name"))
           .description(Optional.ofNullable(row.getString("ledger_description")))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
-          .updatedCommit(TableUtils.toStringUUID(row, "updated_commit"))
+          .commitId(TableUtils.toStringUUID(row, "commit_id"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .updatedTreeCommitId(TableUtils.toStringUUID(row, "updated_tree_commit_id"))
+          .transitives(ImmutableLedgerTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .updatedAt(row.getOffsetDateTime("updated_at"))
+              .updatedTreeAt(row.getOffsetDateTime("updated_tree_at"))
+              .build())
           .build();
     }
   }
@@ -162,8 +165,9 @@ public interface LedgerTable {
         doc.getExternalId(),
         doc.getName(),
         doc.getDescription().orElse(null),
-        TableUtils.toUuid(doc.getCreatedCommit()),
-        TableUtils.toUuid(doc.getUpdatedCommit())
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getCreatedCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId())
       });
     }
   }
@@ -175,7 +179,8 @@ public interface LedgerTable {
         doc.getExternalId(),
         doc.getName(),
         doc.getDescription().orElse(null),
-        TableUtils.toUuid(doc.getUpdatedCommit()),
+        TableUtils.toUuid(doc.getCommitId()),
+        TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         TableUtils.toUuid(doc.getId())
       });
     }

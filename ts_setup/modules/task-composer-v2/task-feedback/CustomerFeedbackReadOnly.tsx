@@ -29,7 +29,7 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
   if (!feedback || !feedback.content) {
     return (
       <Typography color='error' sx={{ ...style.bodyTypography }}>
-        {intl.formatMessage({ id: 'task.feedback.none', defaultMessage: 'No feedback found' })}
+        {intl.formatMessage({ id: 'task.feedback.none' })}
       </Typography>)
   }
 
@@ -48,7 +48,7 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
 
         <Box className={classes.customerText}>
           <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold' }}>
-          {intl.formatMessage({ id: 'task.feedback.title', defaultMessage: 'Customer title' })}
+            {intl.formatMessage({ id: 'task.feedback.title' })}
         </Typography>
         <Typography sx={{ ...style.bodyTypography }}>{feedback.content.title}</Typography>
       </Box>
@@ -56,7 +56,7 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
 
       <Box className={classes.customerText}>
           <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold' }}>
-          {intl.formatMessage({ id: 'task.feedback.detailedResponse', defaultMessage: 'Details from customer' })}
+            {intl.formatMessage({ id: 'task.feedback.detailedResponse' })}
         </Typography>
           <Typography sx={{ ...style.bodyTypography }}>{truncate(feedback.content.question, 350)}</Typography>
         </Box>

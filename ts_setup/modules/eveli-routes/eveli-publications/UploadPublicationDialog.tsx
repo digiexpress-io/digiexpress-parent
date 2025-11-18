@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, Stack, DialogContentText, Button, Typography, Alert } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Button, Alert } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 import { PublicationApi } from '@dxs-ts/eveli-api';

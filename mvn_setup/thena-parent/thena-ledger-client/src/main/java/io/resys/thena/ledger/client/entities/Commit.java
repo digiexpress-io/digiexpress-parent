@@ -42,6 +42,10 @@ public interface Commit extends LedgerEntity {
   String getCommitMessage();
 
 
+  default String getCommitId() {
+    return this.getId();
+  }
+  
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.COMMIT;

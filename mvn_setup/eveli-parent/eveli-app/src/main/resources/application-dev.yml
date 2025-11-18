@@ -69,12 +69,14 @@ eveli.dialob.api-key:
 
 # feedback  
 eveli.feedback.enabled: true
-eveli.feedback.forms: palautteet
-eveli.feedback.category-main: mainList
+eveli.feedback.forms: palautteet,feedback_ai
+eveli.feedback.category-main: mainList,feedBackType
 eveli.feedback.category-sub: cityServiceGroup, preschoolEducationGroup, cityServiceMainList, constructionMainList, youthServiceMainList, exerciseMainList, schoolMainList, employmentImmigrationMainList, freeTimeCultureMainList, preschoolMainList, communicationMainList, cooperationMainList
 eveli.feedback.question-title: feedBackTitle
-eveli.feedback.question: feedBackTxt
-eveli.feedback.username-allowed: publicAnswerAllowed
+eveli.feedback.question: feedBackTxt,feedBackText
+eveli.feedback.username-allowed: publicAnswerAllowed,publishFeedBack
+eveli.feedback.analyzer.enabled: false
+eveli.feedback.analyzer.endpoint-url: http://localhost:8083
 
 # jwt linked crm from security proxy
 eveli.crm.enabled: false
@@ -114,7 +116,7 @@ eveli.user-registry.service-url:
 eveli.envir.cache-expirations.short-deployment: PT1M
 eveli.envir.cache-expirations.long-runtime: PT30M
 eveli.envir.dev-enabled: false
-eveli.tenant-features: batches-dev
+eveli.tenant-features: batches-dev, ai-assistant
 
 eveli.tagomi.service-url: http://localhost:8085
 

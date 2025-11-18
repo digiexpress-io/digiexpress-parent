@@ -139,6 +139,7 @@ function useTaskPermissions(): TaskBackendProviderProps['permissions'] {
     isCreateTaskAllowed: permissions.isAccessGranted('CREATE_TASK'),
     isDeleteTaskAllowed: permissions.isAccessGranted('DELETE_TASK'),
     isReopenTaskAllowed: permissions.isAccessGranted('TASK_REOPEN'),
+    isRetransferAllowed: permissions.isAccessGranted('TASK_RETRANSFER'),
   }
 }
 

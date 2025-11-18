@@ -74,11 +74,7 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
       slots={{ transition: Zoom }}
     >
       <DialogTitle className={classes.titleRow}>
-        <span>
-          {intl.formatMessage({ id: 'task.attachments', defaultMessage: 'Task attached files' })}
-          {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-          {task.taskRef ?? intl.formatMessage({ id: 'task.noTaskReferenceId', defaultMessage: 'No task reference id' })}
-        </span>
+        {intl.formatMessage({ id: 'task.attachments' })}{": "}{task.taskRef ?? intl.formatMessage({ id: 'task.noTaskReferenceId' })}
 
         <Box className={classes.grow} />
 
@@ -95,7 +91,7 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
             onClick={handleFileDialog}
             startIcon={<AddIcon />}
           >
-            {intl.formatMessage({ id: 'eveli.uploadFile', defaultMessage: 'Upload new file' })}
+            {intl.formatMessage({ id: 'task.button.uploadFile' })}
           </Button>
         </div>
       </DialogTitle>

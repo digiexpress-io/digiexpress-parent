@@ -66,9 +66,7 @@ export const CustomerFeedbackEditDialog: React.FC<CustomerFeedbackEditProps> = (
     <StyledDialog fullScreen className={classes.customerFeedbackEdit} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
       <DialogTitle sx={{ display: 'flex' }}>
-        {intl.formatMessage({ id: 'task.customerFeedback', defaultMessage: 'Customer feedback' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-        {task.taskRef ?? 'no task reference id'}
+        {intl.formatMessage({ id: 'task.customerFeedback' })}{": "}{task.taskRef ?? 'no task reference id'}
         <Box flexGrow={1} />
         <div>
           <PublishedNotifier task={task} />

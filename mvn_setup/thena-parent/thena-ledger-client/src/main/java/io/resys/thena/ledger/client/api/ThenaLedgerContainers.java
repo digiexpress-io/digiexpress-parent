@@ -55,16 +55,22 @@ public interface ThenaLedgerContainers {
   interface LedgerContainer extends ThenaContainer {
     Ledger getLedger();
     
-    List<BlackBook> getBlackBooks();
-    Map<String, List<BlackBookDetail>> getBlackBookDetails();
     List<LedgerEvent> getLedgerEvents();
-    List<MoneyRequest> getMoneyRequest();
+    List<MoneyRequest> getMoneyRequests();
     List<Payment> getPayments();
-    List<Projection> getProjections();
+    List<UnitPrice> getUnitPrices();
+    
+    List<BlackBook> getBlackBooks();
+    // bb id -> details
+    Map<String, List<BlackBookDetail>> getBlackBookDetails();
+    
+    List<Projection> getProjections(); 
+    // projection id -> details
     Map<String, List<ProjectionDetail>> getProjectionDetails();
     
     List<Settlement> getSettlements();
-    List<SettlementPayment> getSettlementPayments();
-    List<UnitPrice> getUnitPrices();
+    // settlement id -> details
+    Map<String, List<SettlementPayment>> getSettlementPayments();
+
   }
 }

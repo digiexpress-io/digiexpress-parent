@@ -28,7 +28,7 @@ export const TaskAuditViewersTable: React.FC = () => {
 
   const columns: ColumnDef<TaskApi.TaskViewer, any>[] = [
     {
-      header: intl.formatMessage({id: 'task.audit.viewers.usedBy', defaultMessage: 'Viewed by'}),
+      header: intl.formatMessage({ id: 'task.audit.viewers.usedBy' }),
       accessorKey: 'usedBy',
       size: 300,
       minSize: 300,
@@ -37,7 +37,7 @@ export const TaskAuditViewersTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({id: 'task.audit.viewers.updatedAt', defaultMessage: 'Updated at'}),
+      header: intl.formatMessage({ id: 'task.audit.viewers.updatedAt' }),
       accessorKey: 'updatedAt',
       size: 300,
       minSize: 300,

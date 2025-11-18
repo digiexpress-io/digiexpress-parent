@@ -61,7 +61,6 @@ public interface ThenaLedgerNewObject {
     NewMoneyRequest description(@Nullable String description);
     NewMoneyRequest dueDate(LocalDate dueDate);
     NewMoneyRequest amount(BigDecimal amount);
-    NewMoneyRequest currency(String currency);
     void build();
   }
   
@@ -73,7 +72,6 @@ public interface ThenaLedgerNewObject {
     NewPayment description(@Nullable String description);
     NewPayment date(LocalDate date);
     NewPayment amount(BigDecimal amount);
-    NewPayment currency(String currency);
     void build();
   }
   
@@ -85,7 +83,6 @@ public interface ThenaLedgerNewObject {
     NewSettlement description(@Nullable String description);
     NewSettlement date(LocalDate date);
     NewSettlement amount(BigDecimal amount);
-    NewSettlement currency(String currency);
     
     // nested settlement payments
     NewSettlement addSettlementPayment(Consumer<NewSettlementPayment> settlementPayment);
@@ -107,8 +104,7 @@ public interface ThenaLedgerNewObject {
     NewBlackBook description(@Nullable String description);
     NewBlackBook date(LocalDate date);
     NewBlackBook amount(BigDecimal amount);
-    NewBlackBook currency(String currency);
-    
+
     // nested black book details
     NewBlackBook addBlackBookDetail(Consumer<NewBlackBookDetail> blackBookDetail);
     void build();
@@ -124,7 +120,6 @@ public interface ThenaLedgerNewObject {
     NewBlackBookDetail startDate(LocalDate startDate);
     NewBlackBookDetail endDate(LocalDate endDate);
     NewBlackBookDetail amount(BigDecimal amount);
-    NewBlackBookDetail currency(String currency);
     NewBlackBookDetail formula(@Nullable String formula);
     NewBlackBookDetail body(@Nullable JsonObject body);
     void build();
@@ -140,7 +135,6 @@ public interface ThenaLedgerNewObject {
     NewProjection startDate(LocalDate startDate);
     NewProjection endDate(LocalDate endDate);
     NewProjection amount(BigDecimal amount);
-    NewProjection currency(String currency);
     
     // nested projection details
     NewProjection addProjectionDetail(Consumer<NewProjectionDetail> projectionDetail);
@@ -157,7 +151,6 @@ public interface ThenaLedgerNewObject {
     NewProjectionDetail startDate(LocalDate startDate);
     NewProjectionDetail endDate(LocalDate endDate);
     NewProjectionDetail amount(BigDecimal amount);
-    NewProjectionDetail currency(String currency);
     NewProjectionDetail formula(@Nullable String formula);
     NewProjectionDetail body(@Nullable JsonObject body);
     void build();
@@ -171,7 +164,6 @@ public interface ThenaLedgerNewObject {
     NewUnitPrice description(@Nullable String description);
     NewUnitPrice date(LocalDate date);
     NewUnitPrice value(BigDecimal value);
-    NewUnitPrice currency(String currency);
     void build();
   }
   

@@ -18,7 +18,7 @@ export const TaskAssigneeReadOnly: React.FC<TaskAssigneeReadOnlyProps> = ({ task
   if (!task.assignedUser || typeof name !== 'string') {
     return (
       <StyledTaskAssigneeReadOnly>
-        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.assignees.none', defaultMessage: 'No users assigned' })}</Typography>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.assignees.none' })}</Typography>
       </StyledTaskAssigneeReadOnly>
     )
   }

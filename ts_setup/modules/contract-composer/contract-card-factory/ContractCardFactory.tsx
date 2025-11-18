@@ -14,17 +14,18 @@ import { useContract } from '@dxs-ts/contract-api';
 import { ContractEditWizard } from '../contract-edit-wizard/ContractEditWizard';
 
 
-export type FactoryCardId = 'contract_main' | 'contract_parties' | 'coverages' | 'payment_plans' | 'investment_plans';
+export type FactoryCardId = 'contract_main' | 'contract_parties' | 'coverages' | 'payment_plans' | 'investment_plans' | 'product';
 
 export const CONTRACT_CARD_IDS: FactoryCardId[] = [
   'contract_main',
   'contract_parties',
   'coverages',
   'payment_plans',
-  'investment_plans'
+  'investment_plans',
+  'product'
 ];
 
-const defaultExpandedCards: FactoryCardId[] = ['contract_main', 'investment_plans'];
+const defaultExpandedCards: FactoryCardId[] = ['contract_main', 'investment_plans', 'product'];
 
 export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initProps) => {
   const intl = useIntl();
@@ -176,6 +177,22 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
         }
       </ContractCard>
       );
+    case 'product': {
+      return (<ContractCard title='product'
+        {...commonProps}
+        isMenu
+        onDoubleClick={handleEdit}
+        onEdit={handleEdit}
+        editDialog={editingCardId === cardId && (<></>)}
+        startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
+        showFlashyToggle={true}
+        showEditOnMenu={true}
+        showEditButton={true}
+        showReviewOnMenu={false}>
+        Product
+      </ContractCard>
+      )
+    }
     case 'payment_plans':
       return (<ContractCard title={intl.formatMessage({ id: 'contractcard.paymentPlans.title' })}
         {...commonProps}

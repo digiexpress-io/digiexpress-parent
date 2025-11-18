@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -45,6 +46,7 @@ import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.GrimProcess;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -113,7 +115,15 @@ public class TransferTaskVisitor {
     
     final var config = ctx.getConfig();
     final var grim = config.getClient().grim(config.getTenantName());
-    return grim.find().missionProcsQuery().findOneByMissionId(taskId).onItem().transformToUni(process -> {
+    
+    final Uni<Optional<GrimProcess>> procQuery;
+    if(command.getProcessId() == null) {
+      procQuery = grim.find().missionProcsQuery().findOneByMissionId(taskId);
+    } else {
+      procQuery = grim.find().missionProcsQuery().findOneById(command.getProcessId());
+    }
+    
+    return procQuery.onItem().transformToUni(process -> {
       
       return taskFileClient.queryTaskFiles().findAll(taskId, process.map(e -> e.getId())).onItem().transform(files -> {
         if(files.isEmpty()) {

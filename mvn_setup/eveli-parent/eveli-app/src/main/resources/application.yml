@@ -64,6 +64,7 @@ eveli.feedback.category-sub: cityServiceGroup, preschoolEducationGroup, cityServ
 eveli.feedback.question-title: feedBackTitle
 eveli.feedback.question: feedBackTxt
 eveli.feedback.username-allowed: publicAnswerAllowed
+eveli.feedback.analyzer.enabled: false
   
 eveli.jwt.eveli-public-key-value:
 eveli.jwt.eveli-issuer: "https://frontdesk.digiexpress.io/gateway/issuer"

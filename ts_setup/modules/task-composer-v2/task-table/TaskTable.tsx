@@ -53,7 +53,7 @@ export const TaskTable: React.FC = () => {
   };
   const columns: ColumnDef<TaskApi.Task, any>[] = [
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.priority', defaultMessage: 'Priority' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.priority' }),
       accessorKey: 'priorityIntl',
       filterFn: filterStringOrArrayFn,
       sortingFn: taskSortingFn,
@@ -68,7 +68,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.subject', defaultMessage: 'Subject' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.subject' }),
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
       cell: (task) => flexRender(IndicatorSubject, { title: task.getValue(), id: task.row.original.id, keywords: task.row.original.keyWords }),
@@ -84,7 +84,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.addInfo', defaultMessage: 'Info' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.addInfo' }),
       accessorKey: 'additionalInfo',
       size: 100,
       minSize: 100,
@@ -93,7 +93,7 @@ export const TaskTable: React.FC = () => {
       enableColumnFilter: true,
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.client', defaultMessage: 'Client' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.client' }),
       accessorKey: 'clientIdentificator',
       filterFn: 'includesString',
       size: 150,
@@ -102,7 +102,7 @@ export const TaskTable: React.FC = () => {
       enableResizing: true,
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.status', defaultMessage: 'Status' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.status' }),
       accessorKey: 'statusIntl',
       filterFn: filterStringOrArrayFn,
       size: 150,
@@ -117,7 +117,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.roles', defaultMessage: 'Roles' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.roles' }),
       accessorKey: 'assignedRoles',
       filterFn: filterStringOrArrayFn,
       size: 150,
@@ -131,7 +131,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.assignee', defaultMessage: 'Assignee' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.assignee' }),
       accessorKey: 'assignedUser',
       filterFn: filterStringOrArrayFn,
       cell: (assignee) => flexRender(IndicatorAssignee, { name: assignee.getValue() }),
@@ -146,7 +146,7 @@ export const TaskTable: React.FC = () => {
       }
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.due', defaultMessage: 'Due' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.due' }),
       accessorKey: 'dueDate',
       size: 150,
       minSize: 150,
@@ -158,7 +158,7 @@ export const TaskTable: React.FC = () => {
       cell: (dueDate) => flexRender(AnyTaskDateTimeShort, { value: dueDate.getValue() })
     },
     {
-      header: intl.formatMessage({ id: 'taskTable.col.header.created', defaultMessage: 'Created' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.created' }),
       accessorKey: 'created',
       size: 150,
       minSize: 150,
@@ -170,7 +170,7 @@ export const TaskTable: React.FC = () => {
       cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },
     ...(backend.permissions.isDeleteTaskAllowed ? [{
-      header: intl.formatMessage({ id: 'taskTable.col.header.archive', defaultMessage: 'Archive' }),
+      header: intl.formatMessage({ id: 'taskTable.col.header.archive' }),
       size: 100,
       minSize: 100,
       enableSorting: true,
@@ -191,7 +191,7 @@ export const TaskTable: React.FC = () => {
   return (
     <>
       <Box display="flex" alignItems="center" mb={2}>
-        <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'taskTable.title', defaultMessage: 'Tasks' })}</Typography>
+        <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'taskTable.title' })}</Typography>
         {backend.permissions.isCreateTaskAllowed && (
           <Tooltip title={intl.formatMessage({ id: 'taskButton.addTask' })}>
             <IconButton onClick={() => backend.navigate.createOneTask()}>
@@ -221,18 +221,15 @@ const ArchiveConfirmationDialog: React.FC<ArchiveConfirmationDialogProps> = ({ t
 
   return (
     <Dialog open={!!deleteId} onClose={handleCancelArchive}>
-      <DialogTitle>{intl.formatMessage({ id: 'taskTable.confirmArchive.title', defaultMessage: `Confirm archive task: ${task?.taskRef ?? ''}` })}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'taskTable.confirmArchive.title' }, { taskRef: task?.taskRef ?? '' })}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {intl.formatMessage({
-            id: 'taskTable.button.archive.confirm',
-            defaultMessage: 'You are about to archive this task, which will remove it from the active tasks. Are you sure you want to continue?',
-          })}
+          {intl.formatMessage({ id: 'taskTable.button.archive.confirm' })}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancelArchive} variant='outlined'>{intl.formatMessage({ id: 'button.cancel', defaultMessage: 'Cancel' })}</Button>
-        <Button onClick={handleConfirmArchive} color="error" autoFocus>{intl.formatMessage({ id: 'button.archive', defaultMessage: 'Archive' })}</Button>
+        <Button onClick={handleCancelArchive} variant='outlined'>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button onClick={handleConfirmArchive} color="error" autoFocus>{intl.formatMessage({ id: 'button.archive' })}</Button>
       </DialogActions>
     </Dialog>
   )

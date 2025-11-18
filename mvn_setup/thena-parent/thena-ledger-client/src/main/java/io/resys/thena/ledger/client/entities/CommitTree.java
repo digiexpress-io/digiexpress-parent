@@ -46,7 +46,7 @@ public interface CommitTree extends LedgerEntity {
   }
 
   enum CommitTreeOperation {
-    CREATE, UPDATE, DELETE
+    ADD, MERGE, REMOVE
   }
 
 }

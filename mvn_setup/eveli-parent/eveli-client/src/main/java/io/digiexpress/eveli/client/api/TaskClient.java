@@ -79,6 +79,7 @@ public interface TaskClient {
     ModifyTaskProcess commitMessage(String commitMessage);
     ModifyTaskProcess commitAuthor(String commitAuthor);
     ModifyTaskProcess status(ProcessStatus status);
+    ModifyTaskProcess taskId(String taskId);
     Uni<ProcessClient.ProcessInstance> build();
   }
   
@@ -251,6 +252,7 @@ public interface TaskClient {
   @Value.Immutable
   interface TransferTaskCommand {
     String getTransferTitle();
+    @Nullable String getProcessId();
     Map<String, String> getTransferProps();
   }
   

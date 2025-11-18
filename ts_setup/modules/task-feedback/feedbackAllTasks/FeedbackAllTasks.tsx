@@ -9,20 +9,48 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { ColumnDef, sortingFns, type FilterFn } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 
+function parseDate(raw: unknown): Date | undefined {
+
+  if (!raw) {
+    return undefined;
+  }
+
+  try {
+    const date = typeof raw === 'string' ? new Date(raw) : (raw as Date);
+    if (!isNaN(date.getTime())) {
+      return date;
+    }
+  } catch (error) {
+    // ignore
+  }
+
+  try {
+    return DateTime.fromISO(raw as string).toJSDate();
+  } catch (error) {
+    // ignore
+  }
+  return undefined;
+}
+
+
 const normalizeYMD = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
 const dateFilterFn: FilterFn<any> = (row, columnId, filterValue: { date: Date | null; type: 'EQUAL' | 'LT' | 'GTE' }) => {
-  const { date, type } = filterValue ?? {};
-  if (!date) return true;
+  const { type } = filterValue ?? {};
 
-  const raw = row.getValue(columnId);
-  if (!raw) return false;
+  const b_raw = parseDate(filterValue?.date);
+  if (!b_raw) {
+    return true;
+  }
 
-  const cellDate = typeof raw === 'string' ? new Date(raw) : (raw as Date);
-  if (isNaN(cellDate.getTime())) return false;
+  const a_raw = parseDate(row.getValue(columnId));
+  if (!a_raw) {
+    return false;
+  }
 
-  const a = normalizeYMD(cellDate).getTime();
-  const b = normalizeYMD(date).getTime();
+
+  const a = normalizeYMD(a_raw).getTime();
+  const b = normalizeYMD(b_raw).getTime();
 
   switch (type) {
     case 'EQUAL': return a === b;

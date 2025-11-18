@@ -28,40 +28,42 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutablePayment;
+import io.resys.thena.ledger.client.entities.ImmutablePaymentTransitives;
 import io.resys.thena.ledger.client.entities.Payment;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "payment",
-  order = 400,
+  order = 300,
   ddl = """
     CREATE TABLE IF NOT EXISTS {payment}
     (
-      payment_id UUID PRIMARY KEY,
+      id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      payment_external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255) NOT NULL,
+      
       payment_type VARCHAR(100) NOT NULL,
       payment_sub_type VARCHAR(100),
       payment_description TEXT,
       payment_date DATE NOT NULL,
       payment_amount DECIMAL(15,2) NOT NULL,
-      payment_currency VARCHAR(3) NOT NULL,
-      created_commit UUID NOT NULL
+      
+      created_commit_id UUID NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS {payment}_LEDGER_INDEX
       ON {payment} (ledger_id);
     CREATE INDEX IF NOT EXISTS {payment}_EXTERNAL_INDEX
-      ON {payment} (payment_external_id);
+      ON {payment} (external_id);
     CREATE INDEX IF NOT EXISTS {payment}_DATE_INDEX
       ON {payment} (payment_date);
   """,
   constraints = """
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(ledger_id);
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_created_commit 
-      FOREIGN KEY (created_commit) REFERENCES {commit}(commit_id);
+      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
     DROP TABLE {payment};
@@ -74,8 +76,8 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
-      LEFT JOIN {ledger} ledger ON payment.ledger_id = ledger.ledger_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON payment.ledger_id = ledger.id
     """,
     rowMapper = PaymentMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class
@@ -87,7 +89,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       ORDER BY payment_date DESC
     """,
     rowMapper = PaymentMapper.class
@@ -99,7 +101,7 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
       ORDER BY payment_date DESC
     """,
@@ -113,8 +115,8 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
-      WHERE payment_id = $1
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
+      WHERE id = $1
     """,
     rowMapper = PaymentMapper.class
   )
@@ -126,8 +128,8 @@ public interface PaymentTable {
       SELECT payment.*,
              created_commit.created_at as created_at
       FROM {payment} payment
-      LEFT JOIN {commit} created_commit ON payment.created_commit = created_commit.commit_id
-      WHERE payment_external_id = $1
+      LEFT JOIN {commit} created_commit ON payment.created_commit_id = created_commit.commit_id
+      WHERE external_id = $1
     """,
     rowMapper = PaymentMapper.class
   )
@@ -136,9 +138,9 @@ public interface PaymentTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {payment}
-      (payment_id, ledger_id, payment_external_id, payment_type, payment_sub_type, 
-       payment_description, payment_date, payment_amount, payment_currency, created_commit)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      (id, ledger_id, external_id, payment_type, payment_sub_type, 
+       payment_description, payment_date, payment_amount, created_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = PaymentInsertMapper.class
   )
@@ -149,16 +151,18 @@ public interface PaymentTable {
     @Override
     public Payment apply(Row row) {
       return ImmutablePayment.builder()
-          .id(TableUtils.toStringUUID(row, "payment_id"))
+          .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("payment_external_id"))
-          .type(row.getString("payment_type"))
-          .subType(Optional.ofNullable(row.getString("payment_sub_type")))
-          .description(Optional.ofNullable(row.getString("payment_description")))
-          .date(row.getLocalDate("payment_date"))
-          .amount(row.getBigDecimal("payment_amount"))
-          .currency(row.getString("payment_currency"))
-          .createdCommit(TableUtils.toStringUUID(row, "created_commit"))
+          .externalId(row.getString("external_id"))
+          .paymentType(row.getString("payment_type"))
+          .paymentSubType(Optional.ofNullable(row.getString("payment_sub_type")))
+          .paymentDescription(Optional.ofNullable(row.getString("payment_description")))
+          .paymentDate(row.getLocalDate("payment_date"))
+          .paymentAmount(row.getBigDecimal("payment_amount"))
+          .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
+          .transitives(ImmutablePaymentTransitives.builder()
+              .createdAt(row.getOffsetDateTime("created_at"))
+              .build())
           .build();
     }
   }
@@ -170,13 +174,12 @@ public interface PaymentTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getType(),
-        doc.getSubType().orElse(null),
-        doc.getDescription().orElse(null),
-        doc.getDate(),
-        doc.getAmount(),
-        doc.getCurrency(),
-        TableUtils.toUuid(doc.getCreatedCommit())
+        doc.getPaymentType(),
+        doc.getPaymentSubType().orElse(null),
+        doc.getPaymentDescription().orElse(null),
+        doc.getPaymentDate(),
+        doc.getPaymentAmount(),
+        TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
   }

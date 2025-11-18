@@ -33,7 +33,8 @@ export const tenant_features = [
   'batches',
   
   'tagomi',
-  'contract'
+  'contract',
+  'ai-assistant',
 ] as const;
 
 export type TenantFeature = typeof tenant_features[number];

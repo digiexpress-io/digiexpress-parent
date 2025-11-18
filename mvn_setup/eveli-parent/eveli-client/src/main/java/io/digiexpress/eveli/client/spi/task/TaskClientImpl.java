@@ -442,6 +442,7 @@ public class TaskClientImpl implements TaskClient {
       private String commitAuthor;
       private String status;
       private String id;
+      private Optional<String> taskId;
       @Override
       public ModifyTaskProcess id(String id) {
         this.id = id;
@@ -463,7 +464,11 @@ public class TaskClientImpl implements TaskClient {
         this.status = status.name();
         return this;
       }
-      
+      @Override
+      public ModifyTaskProcess taskId(String taskId) {
+        this.taskId = Optional.ofNullable(taskId);
+        return this;
+      }
       @Override
       public Uni<ProcessInstance> build() {
         TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
@@ -477,7 +482,12 @@ public class TaskClientImpl implements TaskClient {
             .commitAuthor(commitAuthor)
             .commitMessage(commitMessage)
             .procId(id)
-            .modifyProc(proc -> proc.status(status).build())
+            .modifyProc(proc -> {
+              if(taskId != null) {
+                proc.missionId(taskId.orElse(null));
+              }
+              proc.status(status).build();
+            })
             .build()
             .onItem().transform(e -> {
               if(e.getStatus() != CommitResultStatus.OK || e.getProc() == null) {
@@ -487,6 +497,7 @@ public class TaskClientImpl implements TaskClient {
             });
         
       }
+
     };
   }
 }

@@ -32,7 +32,7 @@ export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose,
       variant="persistent"
     >
       <Box display='flex' alignItems='center' justifyContent='space-between'>
-        <Typography variant="h1">{intl.formatMessage({ id: 'taskcard.form.review.title', defaultMessage: 'Form review' })}</Typography>
+        <Typography variant="h1">{intl.formatMessage({ id: 'taskcard.title.formReview' })}</Typography>
 
         <ButtonGroup>
           <IconButton onClick={onClose}><CloseIcon color='primary' /></IconButton>

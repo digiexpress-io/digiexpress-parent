@@ -3,7 +3,8 @@ import React from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle,
   MenuItem, Stack, Button, TextField, FormLabel,
-  useTheme
+  useTheme,
+  Typography
 } from '@mui/material';
 
 import { DateTime } from 'luxon';
@@ -90,13 +91,13 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-      <DialogTitle fontWeight='bold' id='new-form-dialog-title'>
+      <DialogTitle fontWeight='bold'>
         {intl.formatMessage({ id: 'publications.dialogTitle' })}
       </DialogTitle>
 
       <DialogContent>
         <Stack spacing={1}>
-          <FormLabel>{intl.formatMessage({ id: 'publications.liveDate' })}</FormLabel>
+          <Typography fontWeight='bold'>{intl.formatMessage({ id: 'publications.liveDate' })}</Typography>
           <DatePicker 
             /* sx={{
                border: '2px solid transparent',

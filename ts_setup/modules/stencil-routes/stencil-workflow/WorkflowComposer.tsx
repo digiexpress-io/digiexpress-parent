@@ -72,7 +72,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   const message = <FormattedMessage id="snack.workflow.createdMessage" />
-  //const articles: StencilApi.Article[] = session.getArticlesForLocales(locales);
 
   const articles: { id: string, value: string }[] = Object.values(site.articles)
     .sort((a1, a2) => {
@@ -134,7 +133,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Burger.Select label="services.formName" onChange={setFormName}
               selected={formName}
               items={allForms}
-              helperText='services.formName.description'
             />
             {!formName && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
           </Box>
@@ -142,7 +140,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Burger.Select label="services.formTag" onChange={setFormTag}
               selected={formTag}
               items={formTags}
-              helperText='services.formTag.description'
             />
             {!formTag && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
           </Box>

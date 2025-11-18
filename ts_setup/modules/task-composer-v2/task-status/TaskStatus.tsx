@@ -36,11 +36,7 @@ const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) =
 
   return (
     <Box className={classes.progressBar}>
-      <Typography sx={{ fontWeight: 500, mb: 1 }}>
-        {intl.formatMessage({ id: 'task.status', defaultMessage: 'Status' })}
-        {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-        {status}
-      </Typography>
+      <Typography sx={{ fontWeight: 500, mb: 1 }}>{intl.formatMessage({ id: 'task.status' })}{": "}{status}</Typography>
       <Box className={classes.backgroundTrack}>
         <Box sx={{
           height: '100%',
@@ -52,7 +48,7 @@ const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) =
       </Box>
       <Typography className={classes.progressDesc}>
         {progress}
-        {intl.formatMessage({ id: 'task.status.percComplete', defaultMessage: '% complete' })}
+        {intl.formatMessage({ id: 'task.status.percComplete' })}
       </Typography>
     </Box>
   );
