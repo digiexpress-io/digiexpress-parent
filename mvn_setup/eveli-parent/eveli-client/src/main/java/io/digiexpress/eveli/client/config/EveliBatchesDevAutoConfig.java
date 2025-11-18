@@ -29,11 +29,11 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliBatchesDevAutoConfig.BatchTenantCondition;
-import io.digiexpress.eveli.client.spi.batch.contract_db.Batch_DB_Contract_Definition;
-import io.digiexpress.eveli.client.spi.batch.contract_gen.Batch_Generate_Contract_Definition;
 import io.digiexpress.eveli.client.spi.batch.delete_all.Batch_DeleteAll_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
+import io.resys.lp.batches.create_db.Batch_DB_Contract_Definition;
+import io.resys.lp.batches.gen_contracts.Batch_Generate_Contract_Definition;
 import io.resys.thena.contract.client.api.ContractClient;
 import lombok.extern.slf4j.Slf4j;
 

@@ -20,6 +20,21 @@
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>lp-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>lp-batches</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>lp-products</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>io.digiexpress</groupId>
