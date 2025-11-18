@@ -1,5 +1,7 @@
 package io.resys.thena.spi;
 
+import org.apache.commons.lang3.StringUtils;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -50,7 +52,17 @@ public class TenantQueryImpl implements TenantActions.TenantQuery {
   
   @Override
   public Multi<Tenant> findAll() {
-   return state.tenant().findAll(); 
+    if(StringUtils.isEmpty(id)) {
+      return state.tenant().findAll();       
+    }
+    return state.tenant().findByNameOrId(id)
+        .onItem().transformToMulti(item -> {
+          if(item.isPresent()) {
+            return Multi.createFrom().item(item.get());  
+          }
+          return Multi.createFrom().empty();
+          
+        }); 
   }
 
   @Override
@@ -63,5 +75,4 @@ public class TenantQueryImpl implements TenantActions.TenantQuery {
   public Uni<Tenant> delete() {
     return get().onItem().transformToUni(repo -> state.tenant().delete(repo));
   }
-
 }

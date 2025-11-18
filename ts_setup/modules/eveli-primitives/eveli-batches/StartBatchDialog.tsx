@@ -14,6 +14,7 @@ export const StartBatchDialog: React.FC<StartBatchDialogProps> = ({ batch, open,
   const intl = useIntl();
   const [instanceName, setInstanceName] = React.useState('');
   const [commitMessage, setCommitMessage] = React.useState('');
+  const [blocked, setBlocked] = React.useState(false);
   const { createInstance } = useFetch('worker/rest/api/batches/$batchName/instances.POST', {})
 
   function handleComment(event: React.ChangeEvent<HTMLInputElement>) {
@@ -24,11 +25,18 @@ export const StartBatchDialog: React.FC<StartBatchDialogProps> = ({ batch, open,
     setInstanceName(event.target.value)
   }
 
-  function handleStartBatch() {
-    createInstance(
+  async function handleStartBatch() {
+    if(blocked) {
+      return;
+    }
+    setBlocked(true);
+    
+    await createInstance(
       batch.batchName, 
-      { commitMessage, instanceName, params: {} })
-    .then(onClose);
+      { commitMessage, instanceName, params: {} });
+
+    setBlocked(false);
+    onClose();
   }
 
 
@@ -55,7 +63,7 @@ export const StartBatchDialog: React.FC<StartBatchDialogProps> = ({ batch, open,
 
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button variant='contained' disabled={!commitMessage} onClick={handleStartBatch}>{intl.formatMessage({ id: 'button.startBatch' })}</Button>
+        <Button variant='contained' disabled={!commitMessage || blocked} onClick={handleStartBatch}>{intl.formatMessage({ id: 'button.startBatch' })}</Button>
       </DialogActions>
 
     </Dialog>

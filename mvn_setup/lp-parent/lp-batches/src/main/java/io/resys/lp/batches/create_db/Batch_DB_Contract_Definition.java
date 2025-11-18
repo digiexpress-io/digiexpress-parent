@@ -37,7 +37,7 @@ public class Batch_DB_Contract_Definition {
             .executor(new BatchJob_DROP_DB_Contract(contractClient))
             .build())
         .addSteps(ImmutableBatchStepDefinition.builder()
-            .name("cretae-contract-db")
+            .name("create-contract-db")
             .comment("create all tables")
             .executor(new BatchJob_CREATE_DB_Contract(contractClient))
             .build())

@@ -66,7 +66,7 @@ public class BatchJob_DROP_DB_Contract implements Executor<Tenant, DropDbConfig>
               .entityId(tenant.getName())
               .build());
     }
-    return contractClient.tenants().delete()
+    return contractClient.tenants().find().id(tenant.getId()).delete()
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()
             .status(ExecutorEntity.ExecutorEntityStatus.OK)
             .entityId(tenant.getName())

@@ -68,7 +68,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (inv_plan_id) REFERENCES {inv_plan}(id);
   """,
   drop = """
-    DROP TABLE {inv_plan_alloc};
+    DROP TABLE IF EXISTS {inv_plan_alloc} CASCADE;
   """
 )
 public interface InvPlanAllocTable {

@@ -51,9 +51,8 @@ public class TenantActionsImpl implements TenantActions {
   public TenantBuilder commit() {
     return new TenantBuilderImpl(state, type);
   }
-
   @Override
-  public Uni<Void> delete() {
+  public Uni<Void> deleteAll() {
 
     final var existingRepos = find().findAll();
     return existingRepos.onItem().transformToUni((repo) -> {

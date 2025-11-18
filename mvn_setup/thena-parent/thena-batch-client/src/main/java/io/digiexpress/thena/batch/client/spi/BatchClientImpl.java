@@ -41,17 +41,14 @@ public class BatchClientImpl implements BatchClient {
   public TenantActions manageTenants() {
     return new TenantActionsImpl(batchDb, StructureType.batch);
   }
-  
   @Override
   public BatchQuery queryBatches() {
     return new BatchQueryImpl(batchDb);
   }
-  
   @Override
   public CreateBatchConfig createBatchConfig() {
     return new CreateBatchConfigImpl(batchDb);
   }
-
   @Override
   public BatchClient withTenant(String tenantId) {
     // create tenant that will be loaded later
@@ -64,7 +61,6 @@ public class BatchClientImpl implements BatchClient {
         .externalId(null)
         .build()));
   }
-
   @Override
   public CreateOneRuntimeInstance createOneRuntimeInstance() {
     return new CreateOneRuntimeInstanceImpl(batchDb);
@@ -77,7 +73,6 @@ public class BatchClientImpl implements BatchClient {
   public RuntimeInstanceQuery queryRuntimeInstances() {
     return new RuntimeInstanceQueryImpl(batchDb);
   }
-
   @Override
   public RuntimeStepQuery queryRuntimeSteps() {
     return new RuntimeStepQueryImpl(batchDb);

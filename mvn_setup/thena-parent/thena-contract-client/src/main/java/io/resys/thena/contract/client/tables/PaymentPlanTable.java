@@ -77,7 +77,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (party_id) REFERENCES {party}(id);
   """,
   drop = """
-    DROP TABLE {payment_plan};
+    DROP TABLE IF EXISTS {payment_plan} CASCADE;
   """
 )
 public interface PaymentPlanTable {

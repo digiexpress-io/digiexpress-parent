@@ -110,7 +110,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   
   protected Uni<Void> deleteRepos() {
     final var client = config.getClient();    
-    return client.tenants().delete().onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
+    return client.tenants().deleteAll().onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
   protected Uni<T> deleteRepo(String repoName, String headName) {

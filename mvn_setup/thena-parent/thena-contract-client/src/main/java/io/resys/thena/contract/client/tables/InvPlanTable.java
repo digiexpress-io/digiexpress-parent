@@ -73,7 +73,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (contract_id) REFERENCES {contract}(id);
   """,
   drop = """
-    DROP TABLE {inv_plan};
+    DROP TABLE IF EXISTS {inv_plan} CASCADE;
   """
 )
 public interface InvPlanTable {

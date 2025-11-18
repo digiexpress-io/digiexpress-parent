@@ -101,7 +101,7 @@ import io.vertx.mutiny.sqlclient.Row;
     );
   """,
   drop = """
-    DROP TABLE {date_rule};
+    DROP TABLE IF EXISTS {date_rule} CASCADE;
   """
 )
 public interface DateRuleTable {

@@ -33,7 +33,7 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE SEQUENCE {contract_seq} MINVALUE 1 MAXVALUE 999999 CYCLE;
   """,
   drop = """
-    DROP SEQUENCE {contract_seq};
+    DROP SEQUENCE IF EXISTS {contract_seq};
   """,
   constraints = ""
 )

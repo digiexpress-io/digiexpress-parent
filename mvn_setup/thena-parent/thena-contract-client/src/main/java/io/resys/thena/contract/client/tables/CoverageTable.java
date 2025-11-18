@@ -84,7 +84,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (insured_id) REFERENCES {party}(id);
   """,
   drop = """
-    DROP TABLE {coverage};
+    DROP TABLE IF EXISTS {coverage} CASCADE;
   """
 )
 public interface CoverageTable {

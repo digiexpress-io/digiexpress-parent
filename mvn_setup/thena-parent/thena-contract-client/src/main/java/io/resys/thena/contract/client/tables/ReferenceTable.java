@@ -90,7 +90,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (party_id) REFERENCES {party}(id);
   """,
   drop = """
-    DROP TABLE {reference};
+    DROP TABLE IF EXISTS {reference} CASCADE;
   """
 )
 public interface ReferenceTable {
