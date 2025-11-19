@@ -59,6 +59,7 @@ public class NewProjectionBuilder implements NewProjection {
     this.logger = logger;
     this.savedState = savedState;
     this.projectionId = OidUtils.genUUID();
+    this.batch = logger.createPersistenceUnit();
     this.next = ImmutableProjection.builder()
         .id(projectionId)
         .ledgerId(ledgerId)

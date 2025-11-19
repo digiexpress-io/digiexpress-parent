@@ -60,6 +60,7 @@ public class NewBlackBookBuilder implements NewBlackBook {
       @Nullable LedgerContainer savedState) {
     
     super();
+    this.batch = logger.createPersistenceUnit();
     this.logger = logger;
     this.savedState = savedState;
     this.blackBookId = OidUtils.genUUID();

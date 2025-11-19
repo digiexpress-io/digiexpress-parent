@@ -34,10 +34,10 @@ public class Contract_CRUD_Test extends DbTestTemplate {
   @Test
   public void genPoliciesTest() {
     final var client = super.createClient(TENANT_ID);
-    Contract_Provider.newSavings(client, "001").await().atMost(atMost);
-    Contract_Provider.newPension(client, "002").await().atMost(atMost);
-    Contract_Provider.newPS(client, "003").await().atMost(atMost);
-    Contract_Provider.newNovaVirtus(client, "004").await().atMost(atMost);
+    Contract_Provider.newSavings(client, null, "001").await().atMost(atMost);
+    Contract_Provider.newPension(client, null, "002").await().atMost(atMost);
+    Contract_Provider.newPS(client, null, "003").await().atMost(atMost);
+    Contract_Provider.newNovaVirtus(client, null, "004").await().atMost(atMost);
     
     client.withTenant().find().contractQuery().findAll().await().atMost(atMost);
   }

@@ -53,15 +53,9 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {ledger} (external_id);
   """,
   constraints = """
-    ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_commit 
-      FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
-    ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
-    ALTER TABLE {ledger} ADD CONSTRAINT fk_ledger_updated_tree_commit 
-      FOREIGN KEY (updated_tree_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {ledger};
+    DROP TABLE IF EXISTS {ledger} CASCADE;
   """
 )
 public interface LedgerTable {

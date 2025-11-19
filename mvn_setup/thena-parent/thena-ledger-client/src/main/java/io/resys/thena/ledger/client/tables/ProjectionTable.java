@@ -66,11 +66,9 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {projection} ADD CONSTRAINT fk_projection_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
-    ALTER TABLE {projection} ADD CONSTRAINT fk_projection_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {projection};
+    DROP TABLE IF EXISTS {projection} CASCADE;
   """
 )
 public interface ProjectionTable {

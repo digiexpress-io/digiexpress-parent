@@ -68,7 +68,7 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
   }
   
   @Override
-  public CreateOneLedger Ledger(Consumer<NewLedger> addLedger) {
+  public CreateOneLedger ledger(Consumer<NewLedger> addLedger) {
     RepoAssert.notNull(addLedger, () -> "addLedger can't be empty!");
     ledger = addLedger;
     return this;

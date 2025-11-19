@@ -29,6 +29,7 @@ import io.resys.lp.product.spi.providers.support.SampleContractVisitor;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.api.ContractCommitActions.OneContractEnvelope;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
+import io.resys.thena.ledger.client.api.LedgerClient;
 import io.resys.thena.product.client.api.Product;
 import io.resys.thena.product.client.api.Product.AgeRange;
 import io.resys.thena.product.client.api.Product.IncomeRange;
@@ -45,7 +46,11 @@ public class Contract_Provider {
   /**
    * Generate and persist a Feemi Savings contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newSavings(ContractClient contractClient, String refNumber) {
+  public static Uni<OneContractEnvelope> newSavings(
+      ContractClient contractClient,
+      LedgerClient ledgerClient,
+      String refNumber) {
+    
     final var product = Product_Feemi_Savings.create();
     
     GenerationOptions options = GenerationOptions.builder()
@@ -64,13 +69,17 @@ public class Contract_Provider {
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi Savings contract")
-        .build();
+        .build()
+        .onItem().transformToUni(env -> createLedgerAccount(ledgerClient, env));
   }
 
   /**
    * Generate and persist a Feemi Pension contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newPension(ContractClient contractClient, String refNumber) {
+  public static Uni<OneContractEnvelope> newPension(
+      ContractClient contractClient,
+      LedgerClient ledgerClient,
+      String refNumber) {
     final var product = Product_Feemi_Pension.create();
     
     GenerationOptions options = GenerationOptions.builder()
@@ -89,13 +98,17 @@ public class Contract_Provider {
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi Pension contract")
-        .build();
+        .build()
+        .onItem().transformToUni(env -> createLedgerAccount(ledgerClient, env));
   }
 
   /**
    * Generate and persist a Feemi PS contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newPS(ContractClient contractClient, String refNumber) {
+  public static Uni<OneContractEnvelope> newPS(
+      ContractClient contractClient,
+      LedgerClient ledgerClient,
+      String refNumber) {
     final var product = Product_Feemi_PS.create();
     
     GenerationOptions options = GenerationOptions.builder()
@@ -114,13 +127,17 @@ public class Contract_Provider {
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Feemi PS contract")
-        .build();
+        .build()
+        .onItem().transformToUni(env -> createLedgerAccount(ledgerClient, env));
   }
 
   /**
    * Generate and persist a Nova Virtus contract using full product capabilities
    */
-  public static Uni<OneContractEnvelope> newNovaVirtus(ContractClient contractClient, String refNumber) {
+  public static Uni<OneContractEnvelope> newNovaVirtus(
+      ContractClient contractClient,
+      LedgerClient ledgerClient,
+      String refNumber) {
     final var product = Product_Nova_Virtus.create();
     
     GenerationOptions options = GenerationOptions.builder()
@@ -139,7 +156,27 @@ public class Contract_Provider {
         })
         .commitAuthor(Contract_Provider.class.getName())
         .commitMessage("Generated Nova Virtus endowment contract")
-        .build();
+        .build()
+        .onItem().transformToUni(env -> createLedgerAccount(ledgerClient, env));
+  }
+  
+  public static Uni<OneContractEnvelope> createLedgerAccount(LedgerClient ledgerClient, OneContractEnvelope env) {
+    
+    if(ledgerClient == null) {
+      return Uni.createFrom().item(env);
+    }
+    
+    return ledgerClient.withTenant().commit()
+        .createOneLedger()
+        .ledger(newLedger -> newLedger
+          .externalId(env.getContract().getContract().getId())
+          .name(env.getContract().getContract().getContractNumber())
+          .description("default ledger")
+          .build()
+        )
+        .commitAuthor(Contract_Provider.class.getName())
+        .commitMessage("default account for contract")
+        .build().onItem().transform(_ignore -> env);
   }
 
   /**

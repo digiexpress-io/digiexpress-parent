@@ -56,11 +56,9 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (settlement_id) REFERENCES {settlement}(id);
     ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_payment 
       FOREIGN KEY (payment_id) REFERENCES {payment}(id);
-    ALTER TABLE {settlement_payment} ADD CONSTRAINT fk_settlement_payment_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {settlement_payment};
+    DROP TABLE IF EXISTS {settlement_payment} CASCADE;
   """
 )
 public interface SettlementPaymentTable {

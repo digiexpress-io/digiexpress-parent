@@ -55,7 +55,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {commit_tree};
+    DROP TABLE IF EXISTS {commit_tree} CASCADE;
   """
 )
 public interface CommitTreeTable {

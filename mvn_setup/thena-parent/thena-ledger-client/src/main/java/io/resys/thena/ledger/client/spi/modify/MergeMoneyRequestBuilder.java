@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeMoneyRequest;
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequest;
@@ -54,7 +53,7 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
       @Nullable LedgerContainer savedState) {
     super();
     this.logger = logger;
-    this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
+    this.batch = logger.createPersistenceUnit();
     
     // Find the money request to modify - first check current transaction
     MoneyRequest fromTx = currentTx.getMoneyRequestInserts().stream()

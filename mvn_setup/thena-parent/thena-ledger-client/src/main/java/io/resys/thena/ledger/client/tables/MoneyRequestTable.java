@@ -69,13 +69,9 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
-    ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_commit 
-      FOREIGN KEY (commit_id) REFERENCES {commit}(commit_id);
-    ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {money_request};
+    DROP TABLE IF EXISTS {money_request} CASCADE;
   """
 )
 public interface MoneyRequestTable {

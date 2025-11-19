@@ -24,5 +24,10 @@
       <artifactId>lp-products</artifactId>
     </dependency>
     
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-test-client</artifactId>
+    </dependency>
+  
   </dependencies>
 </project>

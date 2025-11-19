@@ -36,6 +36,7 @@ import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewProjection;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewSettlement;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewUnitPrice;
 import io.resys.thena.ledger.client.entities.ImmutableLedger;
+import io.resys.thena.ledger.client.entities.ImmutableLedgerTransitives;
 import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
 import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
@@ -57,13 +58,14 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
   
   public NewLedgerBuilder(LedgerCommitBuilder logger) {
     super();
-    this.next = ImmutablePersistenceUnit.builder();
+    this.next = logger.createPersistenceUnit();
     this.commitId = logger.getCommitId();
     this.ledgerId = OidUtils.genUUID();
     this.ledger = ImmutableLedger.builder()
         .id(ledgerId)
         .createdCommitId(commitId)
         .commitId(commitId)
+        .updatedTreeCommitId(commitId)
         .description(Optional.empty());
         
     this.logger = logger;
@@ -172,10 +174,11 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
     RepoAssert.isTrue(built, () -> "you must call NewLedger.build() to finalize ledger CREATE!");
 
     final var ledger = this.ledger
-       // .transitives(ImmutableLedgerTransitives.builder()
-       //     .createdAt(createdAt)
-       //     .updatedAt(createdAt)
-       //     .build())
+        .transitives(ImmutableLedgerTransitives.builder()
+            .createdAt(logger.getCreatedAt())
+            .updatedAt(logger.getCreatedAt())
+            .updatedTreeAt(logger.getCreatedAt())
+           .build())
         .build();
     
     logger.add(ledger);

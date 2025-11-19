@@ -59,7 +59,7 @@ public class BatchJob_Generate_Savings_1 implements Executor<String, GeneratorCo
 
   @Override
   public Uni<ExecutorEntity> accept(String refNumber, GeneratorConfig config, ExecutorContext context) {
-    return Contract_Provider.newSavings(contractClient, refNumber)
+    return Contract_Provider.newSavings(contractClient, null, refNumber)
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()
             .status(ExecutorEntity.ExecutorEntityStatus.OK)
             .entityId(refNumber)
