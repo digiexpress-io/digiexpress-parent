@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.dialob.api.proto.Actions;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.FormAssignment;
@@ -289,6 +290,23 @@ public class TaskApiController {
         final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
         final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
         final var actions = dialobReviewClient.createReview().form(form).formData(questionnaire).build();
+        return new ResponseEntity<>(actions, HttpStatus.OK);
+      }
+      return ResponseEntity.notFound().build();
+      
+    });
+  }
+  
+  @PostMapping(value="/{id}/review-actions")
+  public Uni<ResponseEntity<?>> getTaskFormReviewActions(@PathVariable("id") String id, @RequestBody Actions action) {
+    
+    return taskClient.queryTasks().getOneById(id)
+    .onItem().transform(task -> {
+      
+      if(task.getQuestionnaireId() != null) {
+        final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
+        final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
+        final var actions = dialobReviewClient.createNav().form(form).formData(questionnaire).navigateTo(action).build();
         return new ResponseEntity<>(actions, HttpStatus.OK);
       }
       return ResponseEntity.notFound().build();
