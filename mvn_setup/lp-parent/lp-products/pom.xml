@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>lp-parent</artifactId>
+    <version>0.y-SNAPSHOT</version>
+  </parent>
+  <packaging>jar</packaging>
+  
+  <artifactId>lp-products</artifactId>
+  <name>lp-products</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-product-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-contract-client</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-test-client</artifactId>
+    </dependency>
+  
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

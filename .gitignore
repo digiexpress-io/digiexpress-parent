@@ -1,7 +1,7 @@
 .DS_Store
 target/
 node_modules/
-.settings
+.settings/
 build/
 temp-build/
 .yarn

@@ -23,10 +23,13 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-batch-client</artifactId>
     </dependency>
+    
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-contract-client</artifactId>
+      <artifactId>lp-batches</artifactId>
     </dependency>
+    
+    
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-grim-client</artifactId>

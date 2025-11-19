@@ -37,7 +37,7 @@ public interface TenantActions {
 
   TenantQuery find();
   TenantBuilder commit();  
-  Uni<Void> delete();
+  Uni<Void> deleteAll();
 
   interface TenantQuery {
     TenantQuery id(String id);
@@ -65,4 +65,5 @@ public interface TenantActions {
     CommitStatus getStatus();
     List<Message> getMessages();
   }
+
 }

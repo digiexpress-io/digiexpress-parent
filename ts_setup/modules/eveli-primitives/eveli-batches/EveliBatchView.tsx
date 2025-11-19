@@ -22,6 +22,7 @@ export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
   const { data: batch, error, refetch, isPending } = useQuery({
     queryKey: ['batches/' + batchId],
     queryFn: () => getOne(batchId),
+    refetchInterval: 15000
   });
 
   if (isPending || !batch) {
@@ -31,7 +32,10 @@ export const EveliBatchView: React.FC<{ batchId: string }> = ({ batchId }) => {
   const instances = batch.transitives?.instances ?? [];
 
   return (<>
-    <StartBatchDialog open={startDialogOpen} onClose={() => setStartDialogOpen(false)} batch={batch} />
+    <StartBatchDialog batch={batch} open={startDialogOpen} onClose={() => {
+      setStartDialogOpen(false);
+      setTimeout(refetch, 2000)
+    }} />
     <EveliBatchViewRoot className={classes.root}>
       <Box className={classes.batchNameRow}>
         <Typography variant='h1'>{batch.batchName}</Typography>

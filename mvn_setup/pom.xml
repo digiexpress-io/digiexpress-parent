@@ -124,6 +124,7 @@
     <module>eveli-parent</module>
     <module>dialob-parent</module>
     <module>tagomi-parent</module>
+    <module>lp-parent</module>
   </modules>
 
   <build>

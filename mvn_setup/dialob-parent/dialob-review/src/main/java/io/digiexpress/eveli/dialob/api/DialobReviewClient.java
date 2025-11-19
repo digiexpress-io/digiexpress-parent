@@ -27,10 +27,17 @@ import io.dialob.api.questionnaire.Questionnaire;
 public interface DialobReviewClient {
 
   ReviewBuilder createReview();
+  ReviewNavigationBuilder createNav();
   
   interface ReviewBuilder {
     ReviewBuilder form(Form form);
     ReviewBuilder formData(Questionnaire formData);
+    Actions build();
+  }
+  interface ReviewNavigationBuilder {
+    ReviewNavigationBuilder form(Form form);
+    ReviewNavigationBuilder formData(Questionnaire formData);
+    ReviewNavigationBuilder navigateTo(Actions action);
     Actions build();
   }
 }

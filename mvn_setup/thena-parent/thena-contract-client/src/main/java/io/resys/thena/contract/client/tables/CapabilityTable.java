@@ -68,7 +68,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (contract_id) REFERENCES {contract}(id);
   """,
   drop = """
-    DROP TABLE {capability};
+    DROP TABLE IF EXISTS {capability} CASCADE;
   """
 )
 public interface CapabilityTable {

@@ -84,7 +84,7 @@ import io.vertx.mutiny.sqlclient.Row;
       FOREIGN KEY (parent_contract_id) REFERENCES {contract}(id);
   """,
   drop = """
-    DROP TABLE {contract};
+    DROP TABLE IF EXISTS {contract} CASCADE;
   """
 )
 public interface ContractTable {

@@ -101,13 +101,16 @@ public class TransferTaskVisitor {
           .externalId(file.getExternalId())
           .build()); 
     }
+    Map<String,String> allProps = new HashMap<>(task.getDocumentProperties());
+    allProps.putAll(props);
+    allProps.putAll(command.getTransferProps());
     return container
         .title(command.getTransferTitle())
         .draftedBy(userId)
         .decidedBy(userId)
         .createdBy(userId)
         .externalId(taskId)
-        .props(task.getDocumentProperties())
+        .props(allProps)
         .build();
   }
   
@@ -195,15 +198,14 @@ public class TransferTaskVisitor {
   
   private Uni<Map<String, String>> getQuestionnairePropsFromFlow(Task task) {
 
-
-    
     return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
+      if (!runtime.getWrench().getFlowNames().contains(flowName)) {
+        return Map.<String, String>of();
+      }
       final String questionnaireId = task.getQuestionnaireId(); 
       final String assigneeId = task.getAssignedUser();
       
       TaskAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
-      TaskAssert.notNull(assigneeId, () -> "assigneeId must be defined!");
-      
       final var flowInput = new HashMap<String, Serializable>();
       flowInput.put("questionnaireId", questionnaireId);
       flowInput.put("assigneeId", assigneeId);
