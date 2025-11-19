@@ -24,10 +24,14 @@ import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.ledger.client.api.LedgerClient;
 
 public class Batch_DB_Contract_Definition {
 
-  public static BatchDefinition create(ContractClient contractClient) {
+  public static BatchDefinition create(
+      ContractClient contractClient,
+      LedgerClient ledgerClient
+      ) {
     return ImmutableBatchDefinition.builder()
         .batchName("recreate-contract-db")
         .comment("drops and creates contract db")
@@ -40,6 +44,17 @@ public class Batch_DB_Contract_Definition {
             .name("create-contract-db")
             .comment("create all tables")
             .executor(new BatchJob_CREATE_DB_Contract(contractClient))
+            .build())
+        
+        .addSteps(ImmutableBatchStepDefinition.builder()
+            .name("delete-ledger-db")
+            .comment("create all tables")
+            .executor(new BatchJob_DROP_DB_Ledger(ledgerClient))
+            .build())
+        .addSteps(ImmutableBatchStepDefinition.builder()
+            .name("create-ledger-db")
+            .comment("create all tables")
+            .executor(new BatchJob_CREATE_DB_Ledger(ledgerClient))
             .build())
         .build();
   }
