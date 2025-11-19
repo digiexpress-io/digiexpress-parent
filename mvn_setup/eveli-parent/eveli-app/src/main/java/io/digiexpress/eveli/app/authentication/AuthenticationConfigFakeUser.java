@@ -44,6 +44,7 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
+import io.digiexpress.eveli.client.api.ImmutableCustomerAddress;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
 import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
@@ -182,11 +183,11 @@ public class AuthenticationConfigFakeUser  {
       public Customer getCustomer() {
         return ImmutableCustomer.builder()
             .principal(ImmutableCustomerPrincipal.builder()
-                .id("my-ssn")
-                .ssn("my-ssn")
-                .username("same vimes")
-                .firstName("same")
-                .lastName("vimes")
+                .id("12345678")
+                .ssn("230469-449B")
+                .username("sam-vimes")
+                .firstName("Sam")
+                .lastName("Vimes")
                 .protectionOrder(false)
                 
                 /*
@@ -197,8 +198,13 @@ public class AuthenticationConfigFakeUser  {
                 */
                 
                 .contact(ImmutableCustomerContact.builder()
-                    .email("same.vimes@resys.io")
-                    .addressValue("test-street")
+                    .email("sam.vimes@resys.io")
+                    .address(ImmutableCustomerAddress.builder()
+                        .country("FI")
+                        .locality("POLVIJÄRVI")
+                        .street("Kylpylaitoksentie 87")
+                        .postalCode("83700")
+                        .build())
                     .build())
                 
                 .build())

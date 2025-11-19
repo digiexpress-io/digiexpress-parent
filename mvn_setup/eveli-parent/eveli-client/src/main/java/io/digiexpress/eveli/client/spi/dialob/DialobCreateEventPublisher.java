@@ -132,13 +132,15 @@ public class DialobCreateEventPublisher {
       return Uni.createFrom().item(new TaskUpdate(task.getItem1(), task.getItem2(), Collections.emptyList()));
     }
     
+    final String ssn = task.getItem2().map(proc -> proc.getUserId()).orElse(task.getItem1().getClientIdentificator());
+    
     final var requests = new ArrayList<>(assignments.stream().map(assignment -> 
         new UserActionsBuilderImpl(processClient, dialobClient, envir)
           .inputContextId("_")
           .inputParentContextId("_")
           .customerAssignment(true)
           .externalUserActionInit(ImmutableInitUserAction.builder()
-              .identity(task.getItem1().getClientIdentificator())
+              .identity(ssn)
               .workflowName(assignment.getServiceName())
               .protectionOrder(false)
               .build())
@@ -152,7 +154,7 @@ public class DialobCreateEventPublisher {
       final var mainRequest = Uni.createFrom().item(() -> processClient.createInstance()
           .anon(false)
           .taskId(task.getItem1().getId())
-          .userId(task.getItem1().getClientIdentificator())
+          .userId(ssn)
 
           .anon(false)
           .customerAssignment(false)
