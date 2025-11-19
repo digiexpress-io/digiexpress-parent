@@ -4,15 +4,24 @@ import { useVariantOverride } from '@dxs-ts/gamut-api';
 import { GArticleFeedbackProps } from './GArticleFeedback';
 import { GFeedbackTableArticleReducerProps } from './GArticleFeedbackTableReducer';
 
-
 export const MUI_NAME = 'GArticleFeedback';
 
 export interface GArticleFeedbackClasses {
   root: string;
-}
+  emptyRow: string;
+  filledRow: string;
+  pagination: string;
+  noData: string;
+  toolbar: string;
+  vote: string;
+  colWidth: string;
+  mobileList: string;
+  mobileListItem: string;
+  mobileListHeader: string;
+  mobileListMeta: string;
+};
 
 export type GArticleFeedbackClassKey = keyof GArticleFeedbackClasses;
-
 
 export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
   const slots = {
@@ -23,13 +32,16 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     noData: ['noData'],
     toolbar: ['toolbar'],
     vote: ['vote'],
-    colWidth: ['colWidth']
+    colWidth: ['colWidth'],
+    mobileList: ['mobileList'],
+    mobileListItem: ['mobileListItem'],
+    mobileListHeader: ['mobileListHeader'],
+    mobileListMeta: ['mobileListMeta'],
   };
 
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
-
 
 export const GArticleFeedbackRoot = styled("div", {
   name: MUI_NAME,
@@ -44,7 +56,6 @@ export const GArticleFeedbackRoot = styled("div", {
 })<{ ownerState: GArticleFeedbackProps & { reducer: GFeedbackTableArticleReducerProps } }>(({ theme, ownerState }) => {
   const enabled = (ownerState.enabled && ownerState.children && ownerState.enabled(ownerState.children)) ?? false;
   const { reducer } = ownerState;
-
 
   return {
     display: enabled ? undefined : 'none',
@@ -61,7 +72,6 @@ export const GArticleFeedbackRoot = styled("div", {
       [theme.breakpoints.up('sm')]: {
         width: '35%'
       },
-
     },
     '& .GArticleFeedback-pagination .MuiToolbar-root': {
       paddingLeft: 0
@@ -73,7 +83,7 @@ export const GArticleFeedbackRoot = styled("div", {
       cursor: 'pointer'
     },
     '& .GArticleFeedback-noData': {
-      'textAlign': 'center'
+      textAlign: 'center'
     },
     '& .GArticleFeedback-toolbar': {
       paddingLeft: 0
@@ -105,7 +115,31 @@ export const GArticleFeedbackRoot = styled("div", {
         minWidth: 20,
         textAlign: 'center',
         lineHeight: 1,
-      }
+      },
+    },
+
+    '& .GArticleFeedback-mobileList': {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1)
+    },
+    '& .GArticleFeedback-mobileListItem': {
+      paddingTop: theme.spacing(1.5),
+      paddingBottom: theme.spacing(1.5)
+    },
+    '& .GArticleFeedback-mobileListHeader': {
+      ...theme.typography.subtitle1,
+      fontWeight: theme.typography.fontWeightBold,
+      marginBottom: theme.spacing(0.5),
+      wordBreak: 'break-word'
+    },
+    '& .GArticleFeedback-mobileListMeta': {
+      marginTop: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: theme.spacing(1)
     },
   };
 });

@@ -1,5 +1,6 @@
 import React from 'react';
-import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography } from '@mui/material';
+import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
@@ -14,6 +15,7 @@ import { GArticleFeedbackViewer } from '../g-article-feedback-viewer';
 
 import { DateTime } from 'luxon';
 import { useLocale } from '@dxs-ts/gamut-api';
+import { GArticleFeedbackList } from './GArticleFeedbackList';
 
 
 
@@ -35,6 +37,8 @@ function isEnabled(view: SiteApi.TopicView) {
 export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => {
   const [selectedFeedback, setSelectedFeedback] = React.useState<SiteApi.CustomerFeedback | undefined>();
   const { locale } = useLocale();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const props = useThemeProps({
     props: initProps,
@@ -69,8 +73,8 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   }
 
   const Root = props.component ?? GArticleFeedbackRoot;
-  function handleOnRowClick(feedback: SiteApi.CustomerFeedback) {
-    setSelectedFeedback(feedback);
+  function handleOnRowClick(row: SiteApi.CustomerFeedback) {
+    setSelectedFeedback(row);
   }
 
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -81,78 +85,107 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
     reducer[1](prev => prev.withRowsPerPage(event.target.value));
   }
 
+  const [state] = reducer;
+  const visibleRows = state.visibleRows;
 
+  return (
+    <>
+      {ownerState.isViewFeedback && ownerState.feedbackId && (
+        <GArticleFeedbackViewer
+          feedbackId={ownerState.feedbackId}
+          onClose={() => setSelectedFeedback(undefined)}
+        />
+      )}
+      <Root ownerState={ownerState} className={classes.root}>
+        <GArticleFeedbackTableToolbar className={classes.toolbar} />
 
-  return (<>
-    {
-      ownerState.isViewFeedback && ownerState.feedbackId &&
-      <GArticleFeedbackViewer feedbackId={ownerState.feedbackId} onClose={() => setSelectedFeedback(undefined)} />
-    }
-    <Root ownerState={ownerState} className={classes.root}>
-      <GArticleFeedbackTableToolbar className={classes.toolbar} />
-      <TableContainer>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <GArticleFeedbackTableHead cellName='subLabelValue' ownerState={reducer}>
-                <FormattedMessage id='gamut.feedback.table.topicTitle' />
-              </GArticleFeedbackTableHead>
+        {isSmallScreen ? (
+          <GArticleFeedbackList
+            items={visibleRows}
+            locale={locale}
+            onRowClick={handleOnRowClick}
+            classes={{
+              mobileList: classes.mobileList,
+              mobileListItem: classes.mobileListItem,
+              mobileListHeader: classes.mobileListHeader,
+              mobileListMeta: classes.mobileListMeta,
+              vote: classes.vote,
+            }}
+          />
+        ) : (
+            <TableContainer>
+              <Table size='small'>
+                <TableHead>
+                  <TableRow>
+                    <GArticleFeedbackTableHead cellName='subLabelValue' ownerState={reducer}>
+                      <FormattedMessage id='gamut.feedback.table.topicTitle' />
+                    </GArticleFeedbackTableHead>
 
-              <GArticleFeedbackTableHead cellName='labelValue' ownerState={reducer}>
-                <FormattedMessage id='gamut.feedback.table.topic' />
-              </GArticleFeedbackTableHead>
+                    <GArticleFeedbackTableHead cellName='labelValue' ownerState={reducer}>
+                      <FormattedMessage id='gamut.feedback.table.topic' />
+                    </GArticleFeedbackTableHead>
 
-              <GArticleFeedbackTableHead cellName='updatedOnDate' ownerState={reducer}>
-                <FormattedMessage id='gamut.feedback.table.updatedOnDate' />
-              </GArticleFeedbackTableHead>
+                    <GArticleFeedbackTableHead cellName='updatedOnDate' ownerState={reducer}>
+                      <FormattedMessage id='gamut.feedback.table.updatedOnDate' />
+                    </GArticleFeedbackTableHead>
 
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
 
-          <TableBody>
-            {reducer[0].visibleRows.map((row) => (
-              <TableRow hover tabIndex={-1} key={row.feedback.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
-                <TableCell className={classes.colWidth} component="th" scope="row" padding="none">{row.feedback.customerTitle ? row.feedback.customerTitle : "-"}</TableCell>
-                <TableCell className={classes.colWidth} component="th" scope="row" padding="none">{row.feedback.labelValue}</TableCell>
-                <TableCell component="th" scope="row" align="left" padding="none">
-                  {DateTime.fromJSDate(new Date(row.feedback.updatedOnDate))
-                    .setLocale(locale)
-                    .toLocaleString(DateTime.DATE_SHORT)}
-                </TableCell>
-                <TableCell align="right">
-                  <div className={classes.vote}>
-                    <div className="vote-item">
-                      <ThumbDownIcon fontSize='small' />
-                      <Typography className="vote-count">{row.feedback.thumbsDownCount}</Typography>
-                    </div>
-                    <div className="vote-item">
-                      <ThumbUpIcon fontSize='small' />
-                      <Typography className="vote-count">{row.feedback.thumbsUpCount}</Typography>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>))
-            }
-            {reducer[0].emptyRows > 0 && (
-              <TableRow className={classes.emptyRow}>
-                <TableCell colSpan={5} className={ownerState.noData ? classes.noData : undefined}>
-                  {ownerState.noData && <Typography><FormattedMessage id='gamut.feedback.table.nodata' /></Typography>}
-                </TableCell>
-              </TableRow>)}
-          </TableBody>
+                <TableBody>
+                  {visibleRows.map((row) => (
+                    <TableRow hover tabIndex={-1} key={row.feedback.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
+                      <TableCell className={classes.colWidth} component="th" scope="row" padding="none">{row.feedback.customerTitle ? row.feedback.customerTitle : "-"}</TableCell>
+                      <TableCell className={classes.colWidth} component="th" scope="row" padding="none">{row.feedback.labelValue}</TableCell>
+                      <TableCell component="th" scope="row" align="left" padding="none">
+                        {DateTime.fromJSDate(new Date(row.feedback.updatedOnDate))
+                          .setLocale(locale)
+                          .toLocaleString(DateTime.DATE_SHORT)}
+                      </TableCell>
+                      <TableCell align="right">
+                        <div className={classes.vote}>
+                          <div className="vote-item">
+                            <ThumbDownIcon fontSize='small' />
+                            <Typography className="vote-count">{row.feedback.thumbsDownCount}</Typography>
+                          </div>
+                          <div className="vote-item">
+                            <ThumbUpIcon fontSize='small' />
+                            <Typography className="vote-count">{row.feedback.thumbsUpCount}</Typography>
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>))
+                }
+                {state.emptyRows > 0 && (
+                  <TableRow className={classes.emptyRow}>
+                    <TableCell
+                      colSpan={5}
+                      className={ownerState.noData ? classes.noData : undefined}
+                    >
+                      {ownerState.noData && (
+                        <Typography>
+                          <FormattedMessage id="gamut.feedback.table.nodata" />
+                        </Typography>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
-        </Table>
-      </TableContainer>
-      <TablePagination component='div'
-        className={classes.pagination}
-        rowsPerPageOptions={[5, 20, 40]}
-        count={reducer[0].data.length}
-        rowsPerPage={reducer[0].rowsPerPage}
-        page={reducer[0].page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage} />
-    </Root>
-  </>
+        <TablePagination
+          component="div"
+          className={classes.pagination}
+          rowsPerPageOptions={[5, 20, 40]}
+          count={state.data.length}
+          rowsPerPage={state.rowsPerPage}
+          page={state.page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage} />
+      </Root>
+    </>
   )
 }
