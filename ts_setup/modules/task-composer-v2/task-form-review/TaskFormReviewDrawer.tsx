@@ -4,7 +4,7 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { PictureAsPdfRounded as PictureAsPdfRoundedIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
-import { useTaskBackend } from '@dxs-ts/task-api';
+import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 
 import { useTaskDashboard } from '../task-dashboard';
 
@@ -12,11 +12,12 @@ import { useTaskDashboard } from '../task-dashboard';
 
 export interface FormReviewDrawerProps {
   open: boolean;
+  assignment: TaskApi.TaskCustomerAssignment | undefined; 
   onClose: () => void;
 }
 
 
-export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose, open }) => {
+export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ assignment, onClose, open }) => {
   const theme = useTheme();
   const intl = useIntl();
   const isSmall = useMediaQuery(theme.breakpoints.down('md'));
@@ -44,7 +45,7 @@ export const TaskFormReviewDrawer: React.FC<FormReviewDrawerProps> = ({ onClose,
           </IconButton>
         </ButtonGroup>
       </Box>
-      {open && <backend.slots.DialobReview task={task} onClose={onClose} /> }
+      {open && <backend.slots.DialobReview task={{ id: task.id, questionnaireId: assignment?.questionnaireId ?? task.questionnaireId }} onClose={onClose} />}
     </StyledFormReview>
   );
 };

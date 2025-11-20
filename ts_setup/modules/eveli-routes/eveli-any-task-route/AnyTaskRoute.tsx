@@ -216,11 +216,10 @@ const DialobReview: React.FC<{task: { id: string, questionnaireId?: string | und
   if(!task.questionnaireId) {
     return (<></>);
   }
-
   return (
     <>
       {/* <RealDialobReview taskId={task.id} questionnaireId={task.questionnaireId!} onClose={onClose} /> */}
-      <DialobReviewBasedOnForm taskId={task.id} questionnaireId={task.questionnaireId!} onClose={onClose} />
+      <DialobReviewBasedOnForm taskId={task.questionnaireId ?? task.id} questionnaireId={task.questionnaireId!} onClose={onClose} />
     </>
   )
 }

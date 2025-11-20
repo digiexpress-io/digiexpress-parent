@@ -17,7 +17,7 @@ import { useIntl } from 'react-intl';
 
 const TaskDashboardInternal: React.FC = () => {
   const intl = useIntl();
-  const { cardOrder, isReviewOpen, cardTheme, setCardTheme, toggleReview } = useCardConfig();
+  const { cardOrder, isReviewOpen, cardTheme, reviewAssignment, setCardTheme, toggleReview } = useCardConfig();
   const { getDragPropsForId, draggingId } = useDragCardController();
 
   const styleConfig = useTaskCardThemeConfig();
@@ -44,7 +44,7 @@ const TaskDashboardInternal: React.FC = () => {
         ))}
       </Grid2>
 
-      <TaskFormReviewDrawer onClose={toggleReview} open={isReviewOpen} />
+      <TaskFormReviewDrawer onClose={toggleReview} open={isReviewOpen} assignment={reviewAssignment} />
     </Grid2>
   );
 };

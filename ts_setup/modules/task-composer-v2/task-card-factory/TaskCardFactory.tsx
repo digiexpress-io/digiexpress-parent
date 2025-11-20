@@ -50,8 +50,6 @@ import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 import { TaskAuditQueuesTable } from '../task-audit-queue';
 import { TaskAuditAi } from '../task-audit-ai';
-import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
-
 
 
 export type FactoryCardId =
@@ -292,7 +290,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             onDoubleClick={handleEdit}
             editDialog={isEditOpen && (<TaskAssignmentEditDialog open onClose={handleEditClose} taskId={task.id} />)}
           >
-            <TaskAssignmentReadOnly task={task} />
+            <TaskAssignmentReadOnly task={task} onClickReview={toggleReview} />
           </TaskCard>
         </TaskFeature>
       );

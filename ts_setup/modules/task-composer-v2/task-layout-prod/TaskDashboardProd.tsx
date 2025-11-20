@@ -71,7 +71,7 @@ export interface TaskDashboardProdProps {
 
 export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (props) => {
   const intl = useIntl();
-  const { isReviewOpen, cardTheme, toggleReview, cardOrder } = useCardConfig();
+  const { isReviewOpen, cardTheme, toggleReview, cardOrder, reviewAssignment } = useCardConfig();
   const { task } = useTaskDashboard();
 
   const { getDragPropsForId, draggingId } = useDragCardController();
@@ -99,7 +99,7 @@ export const TaskDashboardProdInternal: React.FC<TaskDashboardProdProps> = (prop
 
       </Grid2>
 
-      <TaskFormReviewDrawer onClose={toggleReview} open={isReviewOpen} />
+      <TaskFormReviewDrawer onClose={toggleReview} open={isReviewOpen} assignment={reviewAssignment} />
     </Grid2>)
 }
 
