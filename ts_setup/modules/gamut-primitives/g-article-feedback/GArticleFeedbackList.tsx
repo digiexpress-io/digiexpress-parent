@@ -5,27 +5,25 @@ import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 
 import { SiteApi } from '@dxs-ts/gamut-api';
+import { useUtilityClasses } from './useUtilityClasses';
 
 export interface GArticleFeedbackListProps {
   items: SiteApi.CustomerFeedback[];
   locale: string;
   onRowClick: (row: SiteApi.CustomerFeedback) => void;
-  classes: {
-    mobileList: string;
-    mobileListItem: string;
-    mobileListHeader: string;
-    mobileListMeta: string;
-    vote: string;
-  };
 }
 
 export const GArticleFeedbackList: React.FC<GArticleFeedbackListProps> = ({
   items,
   locale,
   onRowClick,
-  classes,
+
 }) => {
-  if (!items.length) return null;
+  const classes = useUtilityClasses();
+
+  if (!items.length) {
+    return null;
+  }
 
   return (
     <List className={classes.mobileList}>
