@@ -36,7 +36,7 @@ export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task, onClickRevie
               <Typography>{option.status}</Typography>
             </Grid2>
             <Grid2 size={{ xs: 6, sm: 2, md: 2, lg: 2, xl: 2 }} display='flex' justifyContent='flex-end'>
-              <Button onClick={() => onClickReview(option)}>{intl.formatMessage({ id: 'task.form.review' })}</Button>
+              <Button disabled={option.status !== "COMPLETED"} onClick={() => onClickReview(option)}>{intl.formatMessage({ id: 'task.form.review' })}</Button>
             </Grid2>
           </Grid2>
           <Divider />
