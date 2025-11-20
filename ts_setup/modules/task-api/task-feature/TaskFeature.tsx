@@ -17,6 +17,7 @@ function notOneOf(type: TaskApi.TaskFeatureType[]): (input: TaskApi.TaskFeatureT
 
 const TaskFeatureMapping = {
   'TASK_FEEDBACK': oneOf(['feedback']),
+  'TASK_AI_FEEDBACK': oneOf(['feedback-ai']),
   'TASK_TRANSFER': oneOf(['transfer']),
   'CRM_MESSAGES': notOneOf(['anon']),
   'ASSIGNABLE': oneOf(['assignable']),
