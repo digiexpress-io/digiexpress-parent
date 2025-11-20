@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -80,34 +81,6 @@ public class ContractQueryImpl implements ContractQuery {
     this.contractIds.addAll(ids);
     return this;
   }
-  
-  
-  
-
-  private Uni<List<ContractContainer>> startQuery(ContractDb state) {
-    final var query = ImmutableContractTableFilter.builder()
-        .lockForUpdate(Boolean.TRUE.equals(this.lockForUpdate))
-        .contractIds(Optional.ofNullable(this.contractIds == null || this.contractIds.isEmpty() ? null: this.contractIds))
-        .build();
-
-    return Uni.combine().all().unis(
-        findAllContracts(state, query),
-        findAllParties(state, query),
-        findAllCoverages(state, query),
-        findAllReferences(state, query),
-        findAllNotes(state, query),
-        findAllCapabilities(state, query),
-        findAllInvPlans(state, query),
-        findAllPaymentPlans(state, query),
-        findAllInvPlanAllocs(state, query)
-      ).with(ContractDbQuery.World.class, (containers) -> {
-        final var combined = ImmutableWorld.builder();
-        containers.forEach(container -> combined.from(container));
-        final ContractDbQuery.World built = combined.build();
-        final var result = groupByContract(built);
-        return result;
-      });
-  }
 
   @Override
   public Uni<QueryEnvelope<ContractContainer>> get(String contractIdOrExtId) {
@@ -136,7 +109,53 @@ public class ContractQueryImpl implements ContractQuery {
         });
   }
   
+  @Override
+  public Uni<QueryEnvelope<ContractContainer>> findOne() {
+    return findAll().onItem().transform(env -> {
+      if(env.getObjects().size() > 1) {
+        return ImmutableQueryEnvelope.<ContractContainer>builder()
+            .messages(env.getMessages())
+            .addMessages(ImmutableMessage.builder().text("Expecting exactly 1 or 0 result but found: " + env.getObjects().size()).build())
+            .status(QueryEnvelopeStatus.ERROR)
+            .repo(env.getRepo())
+            .objects(null)
+            .build();
+      }
+      
+      return ImmutableQueryEnvelope.<ContractContainer>builder()
+          .messages(env.getMessages())
+          .status(env.getStatus())
+          .repo(env.getRepo())
+          .objects(env.getObjects().isEmpty() ? null : env.getObjects().iterator().next())
+          .build();
+    });
+  }
   
+  
+  private Uni<List<ContractContainer>> startQuery(ContractDb state) {
+    final var query = ImmutableContractTableFilter.builder()
+        .lockForUpdate(Boolean.TRUE.equals(this.lockForUpdate))
+        .contractIds(Optional.ofNullable(this.contractIds == null || this.contractIds.isEmpty() ? null: this.contractIds))
+        .build();
+
+    return Uni.combine().all().unis(
+        findAllContracts(state, query),
+        findAllParties(state, query),
+        findAllCoverages(state, query),
+        findAllReferences(state, query),
+        findAllNotes(state, query),
+        findAllCapabilities(state, query),
+        findAllInvPlans(state, query),
+        findAllPaymentPlans(state, query),
+        findAllInvPlanAllocs(state, query)
+      ).with(ContractDbQuery.World.class, (containers) -> {
+        final var combined = ImmutableWorld.builder();
+        containers.forEach(container -> combined.from(container));
+        final ContractDbQuery.World built = combined.build();
+        final var result = groupByContract(built);
+        return result;
+      });
+  }
   
   private Uni<ContractDbQuery.World> findAllContracts(ContractDb state, ContractTableFilter filter) {
     if(this.excludedDocs.contains(ContractDocType.CONTRACT)) {

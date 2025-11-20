@@ -50,8 +50,8 @@ public interface LedgerTableFilter {
       
       if(filter.getLedgerIds().isPresent()) {
         builder.append("(")
-          .append(" ledger.ledger_id = ANY($").append(index++).append(")")
-          .append(" OR ledger.ledger_external_id = ANY($").append(index++).append(")")
+          .append(" ledger.id = ANY($").append(index++).append(")")
+          .append(" OR ledger.external_id = ANY($").append(index++).append(")")
           .append(")")
           .ln();
         

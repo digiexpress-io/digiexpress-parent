@@ -129,6 +129,12 @@ public class NewInvPlanBuilder implements NewInvPlan {
     this.next.invPlanEndDate(Optional.ofNullable(invPlanEndDate));
     return this;
   }
+  
+  @Override
+  public NewInvPlan invPlanRefNumber(String invPlanRefNumber) {
+    this.next.invPlanRefNumber(invPlanRefNumber);
+    return this;
+  }
 
   @Override
   public NewInvPlan addAllocation(Consumer<NewInvPlanAlloc> allocation) {

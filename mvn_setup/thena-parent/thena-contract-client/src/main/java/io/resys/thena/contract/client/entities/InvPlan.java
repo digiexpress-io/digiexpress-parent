@@ -38,7 +38,7 @@ public interface InvPlan extends ContractEntity {
   String getId();
   String getContractId();
 
-  String getExternalId();
+  Optional<String> getExternalId();
   String getCommitId();
   String getCreatedCommitId();
 
@@ -46,6 +46,7 @@ public interface InvPlan extends ContractEntity {
   @Value.Auxiliary
   @Nullable InvPlanTransitives getTransitives();
 
+  String getInvPlanRefNumber();
   String getInvPlanStatus();
   String getInvPlanCode();
   String getInvPlanName();

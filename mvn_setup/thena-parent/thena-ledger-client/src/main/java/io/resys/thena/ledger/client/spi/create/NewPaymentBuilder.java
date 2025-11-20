@@ -22,9 +22,12 @@ package io.resys.thena.ledger.client.spi.create;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,14 +39,18 @@ import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 public class NewPaymentBuilder implements NewPayment {
   private final LedgerCommitBuilder logger;
   private final Map<String, Payment> allPayments;
   private final ImmutablePayment.Builder next;
-  private boolean built;
+  private final List<Consumer<Payment>> callbacks = new ArrayList<>();
   
+  
+  private boolean isBuilt;
+  private Payment built;
   public NewPaymentBuilder(
       LedgerCommitBuilder logger, 
       String ledgerId,
@@ -109,15 +116,21 @@ public class NewPaymentBuilder implements NewPayment {
     this.next.paymentAmount(amount);
     return this;
   }
+  @Override
+  public NewPayment body(JsonObject body) {
+    this.next.paymentBody(Optional.ofNullable(body));
+    return this;
+  }
 
   @Override
-  public void build() {
-    this.built = true;
+  public Payment build() {
+    this.isBuilt = true;
+    this.built = next.build();
+    return this.built;
   }
 
   public Payment close() {
-    RepoAssert.isTrue(built, () -> "you must call NewPayment.build() to finalize payment CREATE!");
-    final var built = next.build();
+    RepoAssert.isTrue(isBuilt, () -> "you must call NewPayment.build() to finalize payment CREATE!");
     
     // Validate uniqueness - no duplicate capabilities with same code
     RepoAssert.isTrue(
@@ -126,7 +139,14 @@ public class NewPaymentBuilder implements NewPayment {
         .count() == 0
         , () -> "can't have duplicate external id-s!");
 
+    this.callbacks.forEach(callback -> callback.accept(built));
     this.logger.add(built);
     return built;
+  }
+
+  @Override
+  public NewPayment onNewState(Consumer<Payment> payment) {
+    callbacks.add(payment);
+    return this;
   }
 }

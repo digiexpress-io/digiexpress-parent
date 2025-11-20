@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.Payment;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -72,7 +73,9 @@ public interface ThenaLedgerNewObject {
     NewPayment description(@Nullable String description);
     NewPayment date(LocalDate date);
     NewPayment amount(BigDecimal amount);
-    void build();
+    NewPayment body(@Nullable JsonObject body);
+    NewPayment onNewState(Consumer<Payment> payment);
+    Payment build();
   }
   
   // support interface for settlement creation

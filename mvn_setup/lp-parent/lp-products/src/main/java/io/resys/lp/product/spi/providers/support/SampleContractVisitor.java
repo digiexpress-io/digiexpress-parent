@@ -114,7 +114,7 @@ public class SampleContractVisitor {
         // Add investment plan with allocations
         .addInvPlan(invPlan -> {
           invPlan
-              .externalId("INV_PLAN_" + options.getRefNumber())
+              .invPlanRefNumber("INV_PLAN_" + options.getRefNumber())
               .invPlanCode("FEEMI_SAVINGS_PLAN")
               .invPlanName("Feemi Savings Investment Plan")
               .invPlanStatus("ACTIVE")
@@ -378,7 +378,7 @@ public class SampleContractVisitor {
         // Add investment plan with Nova Virtus specific options
         .addInvPlan(invPlan -> {
           invPlan
-              .externalId("NOVA_PLAN_" + System.currentTimeMillis())
+              .invPlanRefNumber("NOVA_VIRTUS_PLAN_" + options.getRefNumber())
               .invPlanCode("NOVA_VIRTUS_PLAN")
               .invPlanName("Nova Virtus Investment Plan")
               .invPlanStatus("ACTIVE")

@@ -28,7 +28,7 @@ import io.resys.thena.ledger.client.entities.Payment;
 
 
 @Value.Immutable
-public interface PaymentMatching {
+public interface AllocatedPayments {
 
   List<Payment> getMatches(); // Operation result
   List<Payment> getUnknowns(); // Operation result
