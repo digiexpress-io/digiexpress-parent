@@ -49,7 +49,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   const iam = useIam();
 
   const { site } = useSite();
-
+  const onlyFirstSubjects = subjects.filter(subject => subjects.find(i => i.contractId === subject.contractId) === subject);
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
   const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
@@ -67,6 +67,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
         return subject.lastExchange.userName;
     }
   };
+
 
   return (
     <GInboxRoot className={classes.root}>
@@ -100,7 +101,8 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
       </GFlex>
 
 
-      {subjects
+
+      {onlyFirstSubjects
         .map((subject) => {
           const contract = getContract(subject.contractId);
           return {
@@ -121,6 +123,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
           return bDate.toMillis() - aDate.toMillis();
         })
+
         .map((subject) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
@@ -186,7 +189,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
               }
 
               if (entry.formId) {
-                return (<FormReview formName={offerName} formId={entry.formId} />)
+                return (<FormReview key={entry.formId} formName={offerName} formId={entry.formId} />)
               }
               return (<></>);
 

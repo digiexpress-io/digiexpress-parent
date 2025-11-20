@@ -113,13 +113,14 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
 
                 if (subOffer?.formId) {
                   const name = getLocalisedOfferName(site, entry.id);
+
                   return (
                     <GInboxFormAssignedNotComplete key={entry.id} onClick={() => onOpenOffer(subOffer)} formName={name} />
                   )
                 }
 
                 if (entry.formId) {
-                  return (<FormReview formName={offerName} formId={entry.formId} />)
+                  return (<FormReview key={entry.id} formName={offerName} formId={entry.formId} />)
                 }
                 return (<></>);
               })
