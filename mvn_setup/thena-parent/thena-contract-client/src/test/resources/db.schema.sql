@@ -162,9 +162,10 @@ CREATE INDEX IF NOT EXISTS payment_plan_CREATED_COMMIT_INDEX ON payment_plan (cr
 CREATE TABLE IF NOT EXISTS inv_plan (
   id UUID PRIMARY KEY,
   contract_id UUID NOT NULL,
-  external_id VARCHAR(255) NOT NULL,
+  external_id VARCHAR(255),
   commit_id UUID NOT NULL,
   created_commit_id UUID NOT NULL,
+  inv_plan_ref_number VARCHAR(255) NOT NULL,
   inv_plan_status VARCHAR(100) NOT NULL,
   inv_plan_code VARCHAR(100) NOT NULL,
   inv_plan_name VARCHAR(255) NOT NULL,

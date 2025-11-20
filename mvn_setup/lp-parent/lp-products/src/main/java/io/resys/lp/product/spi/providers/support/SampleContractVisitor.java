@@ -32,6 +32,7 @@ import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationTy
 import io.resys.thena.contract.client.entities.ImmutableContractOneOfRelations;
 import io.resys.thena.contract.client.entities.Party;
 import io.resys.thena.product.client.api.Product;
+import io.vertx.core.json.JsonObject;
 
 /**
  * Feemi contract visitor that implements the NewContract interface and generates
@@ -60,6 +61,15 @@ public class SampleContractVisitor {
         .contractType("SAVINGS_INSURANCE")
         .contractSubType("FEEMI_SAVINGS")
         .contractData(contractData.contract.contractData)
+        
+        .addNote(newNote -> {
+          newNote
+            .noteType("product-description")
+            .noteValue("json-format")
+            .noteBody(JsonObject.mapFrom(product))
+            .build();
+        })
+        
         
         // Add policyholder as primary party
         .addParty(party -> {
@@ -336,6 +346,13 @@ public class SampleContractVisitor {
         .contractStatus("ACTIVE")
         .contractType("ENDOWMENT_INSURANCE")
         .contractSubType("NOVA_VIRTUS")
+        .addNote(newNote -> {
+          newNote
+            .noteType("product-description")
+            .noteValue("json-format")
+            .noteBody(JsonObject.mapFrom(product))
+            .build();
+        })
         
         // Add policyholder
         .addParty(party -> {

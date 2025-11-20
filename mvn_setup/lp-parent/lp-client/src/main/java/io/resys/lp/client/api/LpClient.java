@@ -45,7 +45,7 @@ public interface LpClient {
     PaymentMatching paymentMatching();
   }
   interface RealCalculation {
-    RealCalculation accountId(String nameOrIdOrRef);
+    RealCalculation accountId(String contractIdOrRefOrEtc);
     RealCalculation startDate(@Nullable LocalDate localDate);
     // make sure to check for failures...
     Uni<Envelope<AnyCalculation>> build();
