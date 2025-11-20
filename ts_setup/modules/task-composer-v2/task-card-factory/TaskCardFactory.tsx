@@ -283,7 +283,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showFlashyToggle={true}
             showEditOnMenu={true}
             showEditButton={true}
-            showReviewOnMenu={true}
+            showReviewOnMenu={false}
             titleNotifier={task.customerAssignments.length}
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={AssignmentIndOutlinedIcon} />}
