@@ -125,6 +125,7 @@ export const my = {
   'gamut.inbox.subtitle': 'Mesej dan fail yang berkaitan dengan borang anda',
   'gamut.inbox.messages.title': 'Mesej',
   'gamut.inbox.subjectAttachment.title': 'Lampiran',
+  'gamut.inbox.subjectAttachmentAssignedNotCompleted.title': 'Blanketter som tilldelats mig men ännu inte är ifyllda',
   'gamut.inbox.newMessage.placeholder': 'Sila tulis mesej anda',
   'gamut.inbox.newMessage.replyingTo': 'Membalas kepada',
   'gamut.inbox.newMessage.sendNew': 'Hantar mesej baharu',

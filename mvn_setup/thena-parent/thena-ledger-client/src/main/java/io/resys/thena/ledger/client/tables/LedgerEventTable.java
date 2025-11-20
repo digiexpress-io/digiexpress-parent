@@ -63,11 +63,9 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
-    ALTER TABLE {ledger_event} ADD CONSTRAINT fk_ledger_event_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {ledger_event};
+    DROP TABLE IF EXISTS {ledger_event} CASCADE;
   """
 )
 public interface LedgerEventTable {

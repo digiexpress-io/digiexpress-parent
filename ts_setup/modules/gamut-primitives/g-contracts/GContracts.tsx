@@ -99,7 +99,7 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
         })        
         .map(({ contract }) => mapToItem(contract))
         .map((contract) => (
-          <Item key={contract.id} {...contract} />
+          <Item key={contract.exchangeId} {...contract} />
         ))}
     </Root>
   );

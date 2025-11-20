@@ -62,11 +62,9 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {payment} ADD CONSTRAINT fk_payment_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
-    ALTER TABLE {payment} ADD CONSTRAINT fk_payment_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {payment};
+    DROP TABLE IF EXISTS {payment} CASCADE;
   """
 )
 public interface PaymentTable {

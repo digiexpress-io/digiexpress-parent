@@ -63,6 +63,7 @@ public class NewSettlementBuilder implements NewSettlement {
     this.logger = logger;
     this.settlementId = OidUtils.genUUID();
     this.savedState = savedState;
+    this.batch = logger.createPersistenceUnit();
     this.next = ImmutableSettlement.builder()
         .id(settlementId)
         .ledgerId(ledgerId)

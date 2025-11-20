@@ -30,6 +30,8 @@ import org.springframework.context.annotation.Configuration;
 import io.digiexpress.eveli.client.web.resources.worker.ContractApiController;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.spi.ContractClientImpl;
+import io.resys.thena.ledger.client.api.LedgerClient;
+import io.resys.thena.ledger.client.spi.LedgerClientImpl;
 import io.resys.thena.storesql.PgErrors;
 import io.vertx.mutiny.sqlclient.Pool;
 
@@ -55,6 +57,24 @@ public class EveliAutoConfigContract {
         .build().await().atMost(Duration.ofMinutes(1));
     }
     return contract;
+  }
+  
+  @Bean
+  public LedgerClient ledgerClient(Pool pgPool) {
+    final var ledger = LedgerClientImpl.create()
+      .errorHandler(new PgErrors())
+      .client(pgPool)
+      .tenantName("SAVINGS")
+      .build();
+    
+    final var isAutoCreate = true;
+    if(isAutoCreate) {
+      ledger
+        .tenants().commit()
+        .name(ledger.getTenantName())
+        .build().await().atMost(Duration.ofMinutes(1));
+    }
+    return ledger;
   }
 
   @Bean

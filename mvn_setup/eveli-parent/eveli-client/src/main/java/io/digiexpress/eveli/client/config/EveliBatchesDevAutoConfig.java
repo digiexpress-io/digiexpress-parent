@@ -35,6 +35,7 @@ import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.resys.lp.batches.create_db.Batch_DB_Contract_Definition;
 import io.resys.lp.batches.gen_contracts.Batch_Generate_Contract_Definition;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.ledger.client.api.LedgerClient;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -58,14 +59,14 @@ public class EveliBatchesDevAutoConfig {
   
   @Bean
   @ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = EveliPropsContract.PREFIX, name = "enabled")
-  public BatchDefinition generateContractJob(ContractClient contractClient) {
-    return Batch_Generate_Contract_Definition.create(contractClient);
+  public BatchDefinition generateContractJob(ContractClient contractClient, LedgerClient ledgerClient) {
+    return Batch_Generate_Contract_Definition.create(contractClient, ledgerClient);
   } 
   
   @Bean
   @ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = EveliPropsContract.PREFIX, name = "enabled")
-  public BatchDefinition recreateContractDbJob(ContractClient contractClient) {
-    return Batch_DB_Contract_Definition.create(contractClient);
+  public BatchDefinition recreateContractDbJob(ContractClient contractClient, LedgerClient ledgerClient) {
+    return Batch_DB_Contract_Definition.create(contractClient, ledgerClient);
   } 
   
   

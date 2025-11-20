@@ -57,9 +57,12 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {commit} ADD CONSTRAINT fk_commit_parent 
       FOREIGN KEY (parent_id) REFERENCES {commit}(commit_id);
+      
+    ALTER TABLE {commit} ADD CONSTRAINT fk_commit_ledger 
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
   """,
   drop = """
-    DROP TABLE {commit};
+    DROP TABLE IF EXISTS {commit} CASCADE;
   """
 )
 public interface CommitTable {

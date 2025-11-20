@@ -57,7 +57,6 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   const offerName = site && contract ? getLocalisedOfferName(site, contract.offer.name) : '';
 
 
-
   React.useLayoutEffect(() => {
     if (isViewed) {
       return;
@@ -70,6 +69,10 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
     console.error("no site / contract", { subject, site, contract });
     return <>...no site / contract</>
   }
+
+  const completedSubforms = contract.subforms.filter(
+    entry => entry.formId && !entry.formInProgress
+  );
 
   function handleReplyTo(subjectId: CommsApi.SubjectId, text: string) {
     replyTo({ subjectId, text });
@@ -96,30 +99,30 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
               subjectId={subject.id}
               attachmentId={doc.id}
               onClick={() => { }}
-              key={subject.id}
+              key={doc.id}
             />
           ))}
-
+          {completedSubforms.map(entry => {
+            const name = getLocalisedOfferName(site, entry.id);
+            return (
+              <FormReview key={entry.id} formName={name} formId={entry.formId} />
+            );
+          })}
         </div>
 
-        {contract.subforms.length > 0 && (
+        {(contract.subforms.length > 0 && contract.subforms.some(f => f.formInProgress)) && (
           <Box className={classes.title}>
             <Typography>
-              {intl.formatMessage({ id: 'gamut.inbox.subjectAttachmentAssignedNotCompleted.title', defaultMessage: 'Forms assigned to me but not yet completed' })}
+              {intl.formatMessage({ id: 'gamut.inbox.subjectAttachmentAssignedNotCompleted.title' })}
             </Typography>
             {
               contract.subforms.map(entry => {
                 const subOffer = entry.formInProgress ? getOffer(entry.id) : undefined;
-
                 if (subOffer?.formId) {
                   const name = getLocalisedOfferName(site, entry.id);
                   return (
                     <GInboxFormAssignedNotComplete key={entry.id} onClick={() => onOpenOffer(subOffer)} formName={name} />
                   )
-                }
-
-                if (entry.formId) {
-                  return (<FormReview formName={offerName} formId={entry.formId} />)
                 }
                 return (<></>);
               })

@@ -31,6 +31,7 @@ import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
 import io.resys.lp.batches.gen_contracts.BatchJob_Generate_Savings_1.GeneratorConfig;
 import io.resys.lp.product.spi.providers.Contract_Provider;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.ledger.client.api.LedgerClient;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
@@ -42,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class BatchJob_Generate_Savings_1 implements Executor<String, GeneratorConfig> {
 
   private final ContractClient contractClient;
+  private final LedgerClient ledgerClient;
 
   @Override
   public ExecutorQuery<String, GeneratorConfig> before(ExecutorContext context) {
@@ -59,7 +61,7 @@ public class BatchJob_Generate_Savings_1 implements Executor<String, GeneratorCo
 
   @Override
   public Uni<ExecutorEntity> accept(String refNumber, GeneratorConfig config, ExecutorContext context) {
-    return Contract_Provider.newSavings(contractClient, refNumber)
+    return Contract_Provider.newSavings(contractClient, ledgerClient, refNumber)
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()
             .status(ExecutorEntity.ExecutorEntityStatus.OK)
             .entityId(refNumber)

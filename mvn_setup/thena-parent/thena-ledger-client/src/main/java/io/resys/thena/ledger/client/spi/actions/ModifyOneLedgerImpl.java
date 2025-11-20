@@ -71,7 +71,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
   }
   
   @Override
-  public ModifyOneLedger LedgerId(String ledgerId) {
+  public ModifyOneLedger ledgerId(String ledgerId) {
     this.ledgerId = RepoAssert.notEmpty(ledgerId, () -> "ledgerId can't be empty!");
     return this;
   }

@@ -59,11 +59,9 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {unit_price} (unit_price_date);
   """,
   constraints = """
-    ALTER TABLE {unit_price} ADD CONSTRAINT fk_unit_price_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {unit_price};
+    DROP TABLE IF EXISTS {unit_price} CASCADE;
   """
 )
 public interface UnitPriceTable {

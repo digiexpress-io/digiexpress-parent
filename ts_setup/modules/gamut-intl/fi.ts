@@ -127,6 +127,7 @@ export const fi = {
   'gamut.inbox.subtitle': 'Viestit ja liitteet liittyen asiontitapahtumiin',
   'gamut.inbox.messages.title': 'Viestit',
   'gamut.inbox.subjectAttachment.title': 'Liitteet',
+  'gamut.inbox.subjectAttachmentAssignedNotCompleted.title': 'Minulle osoitetut lomakkeet',
   'gamut.inbox.newMessage.placeholder': 'Kirjoita viestisi',
   'gamut.inbox.newMessage.replyingTo': 'Vastaa viestiin',
   'gamut.inbox.newMessage.sendNew': 'Lähetä uusi viesti',

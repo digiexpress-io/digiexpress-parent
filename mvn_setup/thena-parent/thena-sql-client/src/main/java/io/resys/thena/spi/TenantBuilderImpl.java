@@ -49,6 +49,7 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
     super();
     this.state = state;
     this.type = type;
+    this.name = state.getDataSource().getTenant().getName();
   }
 
   public TenantBuilderImpl externalId(String externalId) {

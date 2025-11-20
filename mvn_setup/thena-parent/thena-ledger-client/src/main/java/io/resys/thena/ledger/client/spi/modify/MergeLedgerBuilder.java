@@ -66,7 +66,7 @@ public class MergeLedgerBuilder implements MergeLedger {
     
     this.container = container;
     this.logger = logger;
-    this.batch = ImmutablePersistenceUnit.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
+    this.batch = logger.createPersistenceUnit();
     this.nextLedger = ImmutableLedger.builder().from(start);
     this.ledgerId = container.getLedger().getId();
   }

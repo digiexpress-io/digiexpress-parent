@@ -43,7 +43,7 @@ public interface LedgerCommitActions {
   interface CreateOneLedger {
     CreateOneLedger commitAuthor(String author);
     CreateOneLedger commitMessage(String message);
-    CreateOneLedger Ledger(Consumer<NewLedger> addLedger);
+    CreateOneLedger ledger(Consumer<NewLedger> addLedger);
     CreateOneLedger onNewLedger(Consumer<LedgerContainer> handleNewState);
     Uni<OneLedgerEnvelope> build();
   }
@@ -51,7 +51,7 @@ public interface LedgerCommitActions {
   interface ModifyOneLedger {
     ModifyOneLedger commitAuthor(String author);
     ModifyOneLedger commitMessage(String message);
-    ModifyOneLedger LedgerId(String LedgerId);
+    ModifyOneLedger ledgerId(String LedgerId);
     ModifyOneLedger modifyLedger(Consumer<MergeLedger> modifyLedger);
     Uni<OneLedgerEnvelope> build();
   }

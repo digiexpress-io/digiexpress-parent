@@ -24,17 +24,18 @@ import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.ledger.client.api.LedgerClient;
 
 public class Batch_Generate_Contract_Definition {
 
-  public static BatchDefinition create(ContractClient contractClient) {
+  public static BatchDefinition create(ContractClient contractClient, LedgerClient ledgerClient) {
     return ImmutableBatchDefinition.builder()
         .batchName("generate-test-contracts")
         .comment("generates test data for contracts")
         .addSteps(ImmutableBatchStepDefinition.builder()
             .name("delete-proc")
             .comment("deletes all processes")
-            .executor(new BatchJob_Generate_Savings_1(contractClient))
+            .executor(new BatchJob_Generate_Savings_1(contractClient, ledgerClient))
             .build())
         .build();
   }

@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 
 import com.google.common.base.Objects;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.ledger.client.entities.Commit;
 import io.resys.thena.ledger.client.entities.CommitTree.CommitTreeOperation;
 import io.resys.thena.ledger.client.entities.ImmutableCommit;
@@ -50,10 +51,10 @@ public class LedgerCommitBuilder {
     this.commitId = commit.getCommitId();
     this.tenantId = tenantId;
     this.commit = ImmutableCommit.builder().from(commit);
-    this.next = ImmutablePersistenceUnit.builder();
     this.logger = new LedgerCommitLogger(tenantId, commit);
     this.createdAt = commit.getCreatedAt();
     this.author = commit.getCommitAuthor();
+    this.next = createPersistenceUnit();
   }
   
   public String getTenantId() {
@@ -126,5 +127,12 @@ public class LedgerCommitBuilder {
       this.next.addCommitInserts(commit.commitLog(logger.close()).build());
     }
     return next.build();
+  }
+  
+  public ImmutablePersistenceUnit.Builder createPersistenceUnit() {
+    return ImmutablePersistenceUnit.builder()
+        .tenantId(getTenantId())
+        .status(BatchStatus.OK)
+        .log("");
   }
 }

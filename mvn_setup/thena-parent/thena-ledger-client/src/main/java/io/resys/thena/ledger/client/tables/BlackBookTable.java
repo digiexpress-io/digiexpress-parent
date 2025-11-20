@@ -62,11 +62,9 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {black_book} ADD CONSTRAINT fk_black_book_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
-    ALTER TABLE {black_book} ADD CONSTRAINT fk_black_book_created_commit 
-      FOREIGN KEY (created_commit_id) REFERENCES {commit}(commit_id);
   """,
   drop = """
-    DROP TABLE {black_book};
+    DROP TABLE IF EXISTS {black_book} CASCADE;
   """
 )
 public interface BlackBookTable {
