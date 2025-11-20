@@ -1,9 +1,10 @@
 import React from 'react';
-import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography, useMediaQuery } from '@mui/material';
+import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography, useMediaQuery, Button, Popover, List, ListItem, ListItemButton, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SiteApi, useSite } from '@dxs-ts/gamut-api';
 import { GOverridableComponent } from '@dxs-ts/gamut-api';
@@ -16,10 +17,7 @@ import { GArticleFeedbackViewer } from '../g-article-feedback-viewer';
 import { DateTime } from 'luxon';
 import { useLocale } from '@dxs-ts/gamut-api';
 import { GArticleFeedbackList } from './GArticleFeedbackList';
-
-
-
-
+import { useAnchor } from '../g-locales/useAnchor';
 
 export interface GArticleFeedbackProps {
   children: SiteApi.TopicView;
@@ -38,6 +36,9 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   const [selectedFeedback, setSelectedFeedback] = React.useState<SiteApi.CustomerFeedback | undefined>();
   const { locale } = useLocale();
   const theme = useTheme();
+  const intl = useIntl();
+  const { anchorProps: sortAnchorProps, onClick: sortAnchorOnClick } = useAnchor();
+
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const props = useThemeProps({
@@ -88,6 +89,36 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   const [state] = reducer;
   const visibleRows = state.visibleRows;
 
+  const currentSortLabelId =
+    state.orderBy === 'subLabelValue'
+      ? 'gamut.feedback.table.topicTitle'
+      : state.orderBy === 'labelValue'
+      ? 'gamut.feedback.table.topic'
+      : 'gamut.feedback.table.updatedOnDate';
+
+  const currentSortLabel = intl.formatMessage({ id: currentSortLabelId });
+
+  const handleMobileSortChange = (
+    property: 'subLabelValue' | 'labelValue' | 'updatedOnDate',
+  ) => {
+    reducer[1]((prev) => {
+      const userOrder =
+        property === prev.orderBy
+          ? (prev.order === 'asc' ? 'desc' : 'asc')
+          : prev.order;
+  
+      return prev.withOrderBy(property, userOrder as any);
+    });
+  
+    sortAnchorProps.onClose();
+  };
+  
+  const handleMobileToggleOrder = () => {
+    reducer[1]((prev) =>
+      prev.withOrderBy(prev.orderBy as any),
+    );
+  };
+
   return (
     <>
       {ownerState.isViewFeedback && ownerState.feedbackId && (
@@ -98,6 +129,53 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
       )}
       <Root ownerState={ownerState} className={classes.root}>
         <GArticleFeedbackTableToolbar className={classes.toolbar} />
+
+        {isSmallScreen && (
+          <>
+            <Box className={classes.mobileSortBar}>
+              <Button
+                onClick={sortAnchorOnClick}
+                variant="text"
+              >
+                {currentSortLabel}
+              </Button>
+
+              <Box className={classes.mobileSortArrow}>
+                <TableSortLabel
+                  active
+                  direction={state.order}
+                  onClick={handleMobileToggleOrder}
+                />
+              </Box>
+            </Box>
+
+            <Popover {...sortAnchorProps}>
+              <List disablePadding>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={() => handleMobileSortChange('subLabelValue')}
+                  >
+                    <FormattedMessage id="gamut.feedback.table.topicTitle" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={() => handleMobileSortChange('labelValue')}
+                  >
+                    <FormattedMessage id="gamut.feedback.table.topic" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={() => handleMobileSortChange('updatedOnDate')}
+                  >
+                    <FormattedMessage id="gamut.feedback.table.updatedOnDate" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Popover>
+          </>
+        )}
 
         {isSmallScreen ? (
           <GArticleFeedbackList

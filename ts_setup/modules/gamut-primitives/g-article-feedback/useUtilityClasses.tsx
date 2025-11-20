@@ -19,6 +19,8 @@ export interface GArticleFeedbackClasses {
   mobileListItem: string;
   mobileListHeader: string;
   mobileListMeta: string;
+  mobileSortBar: string;
+  mobileSortArrow: string;
 };
 
 export type GArticleFeedbackClassKey = keyof GArticleFeedbackClasses;
@@ -37,6 +39,8 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     mobileListItem: ['mobileListItem'],
     mobileListHeader: ['mobileListHeader'],
     mobileListMeta: ['mobileListMeta'],
+    mobileSortBar: ['mobileSortBar'],
+    mobileSortArrow: ['mobileSortArrow'],
   };
 
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -140,6 +144,21 @@ export const GArticleFeedbackRoot = styled("div", {
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: theme.spacing(1)
+    },
+    '& .GArticleFeedback-mobileSortBar': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingBottom: theme.spacing(1),
+      gap: theme.spacing(1),
+    },
+    '& .GArticleFeedback-mobileSortArrow': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingRight: theme.spacing(1),
     },
   };
 });
