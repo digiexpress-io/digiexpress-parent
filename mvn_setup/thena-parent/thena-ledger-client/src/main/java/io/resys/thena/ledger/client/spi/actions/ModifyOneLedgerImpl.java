@@ -35,7 +35,6 @@ import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;
 import io.resys.thena.ledger.client.entities.ImmutableCommit;
 import io.resys.thena.ledger.client.entities.LedgerDocType;
-import io.resys.thena.ledger.client.spi.actions.ModifyOneLedgerImpl.ModifyOneLedgerException;
 import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
 import io.resys.thena.ledger.client.spi.modify.MergeLedgerBuilder;
 import io.resys.thena.ledger.client.spi.queries.LedgerQueryImpl;
@@ -166,6 +165,8 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
     final var createdAt = OffsetDateTime.now();
     ImmutablePersistenceUnit next = start;
 
+    final var currentState = env.getObjects().get(0);
+    
     final var logger = new LedgerCommitBuilder(tenantId, 
         ImmutableCommit.builder()
           .id(OidUtils.genUUID())
@@ -173,10 +174,10 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
           .commitMessage(message)
           .commitLog("")
           .createdAt(createdAt)
+          .ledgerId(currentState.getLedger().getId())
           .build()
     );
     
-    final var currentState = env.getObjects().get(0);
     final var mergeLedger = new MergeLedgerBuilder(currentState, logger);
     this.modifyLedger.accept(mergeLedger);
     final var modified = mergeLedger.close();
@@ -184,7 +185,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
     next = ImmutablePersistenceUnit.builder()
         .from(start)
         .from(modified)
-        .from(logger.withLedgerId(ledgerId).close())
+        .from(logger.close())
         .build();
   
     return Tuple2.of(next, currentState);
