@@ -128,6 +128,7 @@ export const en = {
   'gamut.inbox.subtitle': 'Messages and files related to your cases',
   'gamut.inbox.messages.title': 'Messages',
   'gamut.inbox.subjectAttachment.title': 'Attachments',
+  'gamut.inbox.subjectAttachmentAssignedNotCompleted.title': 'Forms assigned to me but not yet completed',
   'gamut.inbox.newMessage.placeholder': 'Please write your message',
   'gamut.inbox.newMessage.replyingTo': 'Replying to',
   'gamut.inbox.newMessage.sendNew': 'Send a new message',

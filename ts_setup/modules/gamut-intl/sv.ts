@@ -126,6 +126,7 @@ export const sv = {
   'gamut.inbox.subtitle': 'Meddelanden och filer relaterade till dina formulär',
   'gamut.inbox.messages.title': 'Meddelanden',
   'gamut.inbox.subjectAttachment.title': 'Bilagor',
+  'gamut.inbox.subjectAttachmentAssignedNotCompleted.title': 'joita ei ole vielä täytetty',
   'gamut.inbox.newMessage.placeholder': 'Skriv ditt meddelande',
   'gamut.inbox.newMessage.replyingTo': 'Svarar på',
   'gamut.inbox.newMessage.sendNew': 'Skicka ett nytt meddelande',

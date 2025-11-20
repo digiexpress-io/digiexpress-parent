@@ -142,6 +142,7 @@ gamut.inbox.title,,Inbox,Saapuneet,Inkorg,Peti masuk,Dolazne poruke
 gamut.inbox.subtitle,inbox,Messages and files related to your cases,Viestit ja liitteet liittyen asiontitapahtumiin,Meddelanden och filer relaterade till dina formulär,Mesej dan fail yang berkaitan dengan borang anda,Poruke i datoteke povezane sa obrascima
 gamut.inbox.messages.title,,Messages,Viestit,Meddelanden,Mesej,Poruke
 gamut.inbox.subjectAttachment.title,,Attachments,Liitteet,Bilagor,Lampiran,Prilozi
+gamut.inbox.subjectAttachmentAssignedNotCompleted.title,,Forms assigned to me but not yet completed,Minulle osoitetut lomakkeet, joita ei ole vielä täytetty,Blanketter som tilldelats mig men ännu inte är ifyllda
 gamut.inbox.newMessage.placeholder,,Please write your message,Kirjoita viestisi,Skriv ditt meddelande,Sila tulis mesej anda,Unesi poruku
 gamut.inbox.newMessage.replyingTo,,Replying to,Vastaa viestiin,Svarar på,Membalas kepada,Odgovor na
 gamut.inbox.newMessage.sendNew,,Send a new message,Lähetä uusi viesti,Skicka ett nytt meddelande,Hantar mesej baharu,Pošalji novu poruku
