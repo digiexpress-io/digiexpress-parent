@@ -124,7 +124,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
                     <GInboxFormAssignedNotComplete key={entry.id} onClick={() => onOpenOffer(subOffer)} formName={name} />
                   )
                 }
-                return (<></>);
+                return (<React.Fragment key={entry.id} />);
               })
             }
           </Box>
