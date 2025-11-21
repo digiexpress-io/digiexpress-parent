@@ -70,7 +70,7 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
   return (
     <GArticleFeedbackViewerRoot className={classes.root} open={true} maxWidth='lg' fullWidth onClose={props.onClose}>
       <DialogTitle className={classes.titleContainer}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className={classes.titleDateContainer}>
           <Typography className={classes.title}>
             {intl.formatMessage({ id: 'gamut.feedback.feedbackViewerTitle' })}
           </Typography>
@@ -105,7 +105,9 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
             </Box>
           </Popover>
 
-          <Typography>{intl.formatMessage({ id: 'gamut.feedback.vote.title' })}</Typography>
+          <Typography className={classes.voteTitle}>
+            {intl.formatMessage({ id: 'gamut.feedback.vote.title' })}
+          </Typography>
           <div className={classes.thumbsContainer}>
             <IconButton color='primary' onClick={handleDownvote} disabled={feedbackDisabled}>
               <Tooltip title={intl.formatMessage({ id: 'gamut.feedback.vote.notHelpful' })}>

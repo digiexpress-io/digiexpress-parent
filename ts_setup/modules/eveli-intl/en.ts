@@ -129,7 +129,7 @@ export const en = {
   'menu.locales': 'Languages',
   'menu.templates': 'Templates',
   'menu.flows': 'Service Flows',
-  'menu.decisions': 'Service Flows',
+  'menu.decisions': 'Decision tables',
   'menu.debug': 'Debug',
   'menu.releases': 'Debug',
   'menu.compare': 'Debug',
