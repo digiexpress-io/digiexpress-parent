@@ -29,8 +29,8 @@ import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeMoneyRequest
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequest;
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequestTransitives;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
-import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
 import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
@@ -83,7 +83,13 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
   }
 
   @Override
-  public MergeMoneyRequest type(String type) {
+  public MergeMoneyRequest paymentId(@Nullable String paymentId) {
+    this.nextMoneyRequest.paymentId(Optional.ofNullable(paymentId));
+    return this;
+  }
+
+  @Override
+  public MergeMoneyRequest type(MoneyRequestType type) {
     this.nextMoneyRequest.requestType(type);
     return this;
   }
@@ -96,15 +102,10 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
 
   @Override
   public MergeMoneyRequest status(MoneyRequestStatus status) {
-    this.nextMoneyRequest.status(status);
+    this.nextMoneyRequest.requestStatus(status);
     return this;
   }
 
-  @Override
-  public MergeMoneyRequest frequency(MoneyRequestFrequency frequency) {
-    this.nextMoneyRequest.frequency(frequency);
-    return this;
-  }
 
   @Override
   public MergeMoneyRequest description(String description) {
@@ -113,8 +114,8 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
   }
 
   @Override
-  public MergeMoneyRequest dueDate(LocalDate dueDate) {
-    this.nextMoneyRequest.requestDueDate(dueDate);
+  public MergeMoneyRequest targetDate(LocalDate targetDate) {
+    this.nextMoneyRequest.requestTargetDate(targetDate);
     return this;
   }
 
@@ -132,11 +133,11 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
   public ImmutablePersistenceUnit close() {
     RepoAssert.isTrue(built, () -> "you must call MergeMoneyRequest.build() to finalize money request MERGE!");
 
-    final var moneyRequest = nextMoneyRequest
-        .commitId(logger.getCommitId())
+    final var moneyRequest = this.nextMoneyRequest
+        .commitId(this.logger.getCommitId())
         .transitives(ImmutableMoneyRequestTransitives.builder()
-            .from(currentMoneyRequest.getTransitives())
-            .updatedAt(logger.getCreatedAt())
+            .from(this.currentMoneyRequest.getTransitives())
+            .updatedAt(this.logger.getCreatedAt())
             .build())
         .build();
     

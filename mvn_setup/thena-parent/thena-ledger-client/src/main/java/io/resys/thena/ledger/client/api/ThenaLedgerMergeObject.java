@@ -32,8 +32,8 @@ import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewPayment;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewProjection;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewSettlement;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewUnitPrice;
-import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import jakarta.annotation.Nullable;
 
 // Generic interfaces for update operations and adding new entities
@@ -68,12 +68,12 @@ public interface ThenaLedgerMergeObject {
   // Merge interface only for truly mutable entities
   interface MergeMoneyRequest {
     MergeMoneyRequest externalId(String externalId);
-    MergeMoneyRequest type(String type);
+    MergeMoneyRequest paymentId(@Nullable String paymentId);
+    MergeMoneyRequest type(MoneyRequestType type);
     MergeMoneyRequest subType(@Nullable String subType);
     MergeMoneyRequest status(MoneyRequestStatus status);  // Key mutable field: OPEN -> CLOSED -> CANCELLED
-    MergeMoneyRequest frequency(MoneyRequestFrequency frequency);
     MergeMoneyRequest description(@Nullable String description);
-    MergeMoneyRequest dueDate(LocalDate dueDate);
+    MergeMoneyRequest targetDate(LocalDate targetDate);
     MergeMoneyRequest amount(BigDecimal amount);
     void build();
   }

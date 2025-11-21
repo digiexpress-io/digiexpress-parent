@@ -111,7 +111,7 @@ public class LedgerQueryImpl implements LedgerQuery {
   }
 
   @Override
-  public Uni<QueryEnvelope<LedgerContainer>> get(String ledgerIdOrExtId) {
+  public Uni<QueryEnvelope<LedgerContainer>> getOne(String ledgerIdOrExtId) {
     this.addLedgerId(ledgerIdOrExtId);
     return this.state
         .onItem().transformToUni(state -> {
@@ -136,6 +136,20 @@ public class LedgerQueryImpl implements LedgerQuery {
                   .build());
         });
   }
+  
+  @Override
+  public Uni<QueryEnvelope<LedgerContainer>> findOne() {
+    return this.state
+        .onItem().transformToUni(state -> {
+          return startQuery(state)
+              .onItem().transform(items -> ImmutableQueryEnvelope.<LedgerContainer>builder()
+                  .repo(state.getDataSource().getTenant())
+                  .status(QueryEnvelopeStatus.OK)
+                  .objects(items.isEmpty() ? null : items.getFirst())
+                  .build());
+        });
+  }
+
 
   private Uni<BbDbQuery.World> findAllLedgers(BbDb state, LedgerTableFilter filter) {
     if(this.excludedDocs.contains(LedgerDocType.LEDGER)) {

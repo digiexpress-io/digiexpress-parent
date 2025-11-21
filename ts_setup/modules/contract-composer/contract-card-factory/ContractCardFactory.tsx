@@ -1,6 +1,10 @@
 import React from 'react';
+import { ListItem, ListItemText, List, ListItemIcon, Box, Button, Divider } from '@mui/material';
+
 import { HandshakeOutlined as HandshakeOutlinedIcon } from '@mui/icons-material';
+import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import { CalendarMonthOutlined as CalendarMonthOutlinedIcon } from '@mui/icons-material';
+import { Circle as CircleIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
@@ -12,7 +16,7 @@ import {
 } from '../contract-card';
 import { useContract } from '@dxs-ts/contract-api';
 import { ContractEditWizard } from '../contract-edit-wizard/ContractEditWizard';
-
+import { ContractProductDescriptionDialog } from '../contract-product';
 
 export type FactoryCardId = 'contract_main' | 'contract_parties' | 'coverages' | 'payment_plans' | 'investment_plans' | 'product';
 
@@ -31,9 +35,11 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { contractContainer } = useContract();
-  const { contract, parties, coverages, paymentPlans, invPlans, invPlanAllocations } = contractContainer;
+  const { contract, parties, coverages, paymentPlans, invPlans, invPlanAllocations, notes } = contractContainer;
+  const [contractBodyOpen, setProductDescriptionOpen] = React.useState(false);
+  const [description, setDescription] = React.useState<any>();
 
-  console.log(contractContainer)
+  //console.log(contractContainer)
 
 
   const {
@@ -177,21 +183,58 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
         }
       </ContractCard>
       );
-    case 'product': {
-      return (<ContractCard title='product'
-        {...commonProps}
-        isMenu
-        onDoubleClick={handleEdit}
-        onEdit={handleEdit}
-        editDialog={editingCardId === cardId && (<></>)}
-        startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
-        showFlashyToggle={true}
-        showEditOnMenu={true}
-        showEditButton={true}
-        showReviewOnMenu={false}>
-        Product
-      </ContractCard>
-      )
+    case "product": {
+      const productRules = notes
+        .filter(n => n.noteType === "product-description")
+        .flatMap(n => n.noteBody?.rules ?? []);
+
+      const productDescriptionNote = notes.find(n => n.noteType === "product-description");
+      const description = productDescriptionNote?.noteBody?.description;
+
+      console.log(notes.filter(n => n.noteType === "product-description"))
+      return (
+        <ContractCard
+          title={intl.formatMessage({ id: "contractcard.product.title" })}
+          {...commonProps}
+          isMenu
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={editingCardId === cardId && <></>}
+          startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
+          showFlashyToggle={true}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
+        >
+          <Box display='flex' justifyContent='flex-end'>
+            <Button onClick={() => setProductDescriptionOpen(true)}
+              endIcon={<OpenInNewIcon fontSize='small' />} variant='contained'>
+              {intl.formatMessage({ id: "contractcard.product.description.view" })}
+            </Button>
+          </Box>
+          {productRules.map((rule, index) => (
+            <div key={index}>
+              <List >
+                <ListItem dense>
+                  <ListItemIcon sx={{ minWidth: '40px' }}><CircleIcon sx={{ height: '10px', width: '10px', color: 'primary.main' }} /></ListItemIcon>
+                  <ListItemText primary={rule.text} secondary={rule.ruleCode}
+                    slotProps={{
+                      primary: {
+                        sx: { fontWeight: 'bold' }
+                      },
+                      secondary: {
+                        sx: { fontSize: '11pt' }
+                      }
+                    }}
+                  />
+                </ListItem>
+              </List>
+              <Divider />
+            </div>
+          ))}
+          <ContractProductDescriptionDialog onClose={() => setProductDescriptionOpen(false)} open={contractBodyOpen} content={description} />
+        </ContractCard>
+      );
     }
     case 'payment_plans':
       return (<ContractCard title={intl.formatMessage({ id: 'contractcard.paymentPlans.title' })}
@@ -247,7 +290,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.investmentPlans.invPlanAllocations.title' })} value={undefined} style={style} />
 
                 {allocations.map((allocation, index) => (
-                  <ContractCardDataList index={index}
+                  <ContractCardDataList index={index} key={index}
                     labelColHeader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationName' })}
                     valueColheader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage' })}
                     label={allocation.invPlanAllocName}
@@ -272,7 +315,4 @@ function formatAnyDateShort(value: Date | string | undefined): string {
   const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 }
-
-
-
 

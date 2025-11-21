@@ -55,6 +55,10 @@ public class PaymentMatchingTest extends DbTestTemplate {
       })
       .build().await().atMost(atMost);
     
+    getLpClient().actions().paymentCalculation()
+      .ledgerId(firstPaymentPlan.getContractId())
+      .build()
+      .await().atMost(atMost);
     
   }
 }

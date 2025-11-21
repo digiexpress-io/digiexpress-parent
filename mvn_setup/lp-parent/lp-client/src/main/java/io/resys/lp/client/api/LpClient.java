@@ -40,13 +40,13 @@ public interface LpClient {
 
   
   interface Actions {
-    RealCalculation realCalculation();
+    PaymentCalculation paymentCalculation();
     ImaginaryCalculation imaginaryCalculation();
     PaymentMatching paymentMatching();
   }
-  interface RealCalculation {
-    RealCalculation accountId(String contractIdOrRefOrEtc);
-    RealCalculation startDate(@Nullable LocalDate localDate);
+  interface PaymentCalculation {
+    PaymentCalculation ledgerId(String contractIdOrRefOrEtc);
+    PaymentCalculation startDate(@Nullable LocalDate localDate);
     // make sure to check for failures...
     Uni<Envelope<AnyCalculation>> build();
   }

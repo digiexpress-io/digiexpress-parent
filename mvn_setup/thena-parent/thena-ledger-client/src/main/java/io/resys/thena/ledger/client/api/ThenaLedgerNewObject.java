@@ -25,8 +25,8 @@ import java.time.LocalDate;
 import java.util.function.Consumer;
 
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
-import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import io.resys.thena.ledger.client.entities.Payment;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -36,6 +36,7 @@ public interface ThenaLedgerNewObject {
   interface NewLedger {
     NewLedger externalId(String externalId);
     NewLedger name(String name);
+    NewLedger startDate(@Nullable LocalDate startDate);
     NewLedger description(@Nullable String description);
     
     // nested builders for related entities
@@ -55,12 +56,12 @@ public interface ThenaLedgerNewObject {
   // support interface for money request creation
   interface NewMoneyRequest {
     NewMoneyRequest externalId(String externalId);
-    NewMoneyRequest type(String type);
+    NewMoneyRequest paymentId(@Nullable String paymentId);
+    NewMoneyRequest type(MoneyRequestType type);
     NewMoneyRequest subType(@Nullable String subType);
     NewMoneyRequest status(MoneyRequestStatus status);
-    NewMoneyRequest frequency(MoneyRequestFrequency frequency);
     NewMoneyRequest description(@Nullable String description);
-    NewMoneyRequest dueDate(LocalDate dueDate);
+    NewMoneyRequest targetDate(LocalDate targetDate);
     NewMoneyRequest amount(BigDecimal amount);
     void build();
   }
@@ -120,8 +121,9 @@ public interface ThenaLedgerNewObject {
     NewBlackBookDetail subType(@Nullable String subType);
     NewBlackBookDetail description(@Nullable String description);
     NewBlackBookDetail targetId(@Nullable String targetId);
-    NewBlackBookDetail startDate(LocalDate startDate);
-    NewBlackBookDetail endDate(LocalDate endDate);
+    NewBlackBookDetail paymentId(@Nullable String paymentId);
+    NewBlackBookDetail startDate(@Nullable LocalDate startDate);
+    NewBlackBookDetail endDate(@Nullable LocalDate endDate);
     NewBlackBookDetail amount(BigDecimal amount);
     NewBlackBookDetail formula(@Nullable String formula);
     NewBlackBookDetail body(@Nullable JsonObject body);

@@ -36,6 +36,8 @@ import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContai
 import io.resys.thena.ledger.client.api.LedgerClient;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewPayment;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -104,8 +106,23 @@ public class PaymentMatchingImpl implements PaymentMatching {
   
   private void appendPayment(MergeLedger ledger, Consumer<NewPayment> newPayment) {
     ledger.addPayment(builder -> {
-      builder.onNewState(allocated -> allocation.addMatches(allocated));
+      builder.onNewState(allocated -> {
+        
+        // record the payment as allocated
+        allocation.addMatches(allocated);
+        
+        // push the payment to processing as + money to account
+        ledger.addMoneyRequest(request -> request
+            .amount(allocated.getPaymentAmount())
+            .paymentId(allocated.getId())
+            .status(MoneyRequestStatus.OPEN)
+            .targetDate(allocated.getPaymentDate())
+            .type(MoneyRequestType.ADD_PAYMENT)
+            .build()
+        );
+      });
       newPayment.accept(builder);
+    
     });
   }
 }

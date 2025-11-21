@@ -41,7 +41,7 @@ import io.vertx.mutiny.sqlclient.Row;
     (
       id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255),
       
       black_book_type VARCHAR(100) NOT NULL,
       black_book_sub_type VARCHAR(100),
@@ -151,7 +151,7 @@ public interface BlackBookTable {
       return ImmutableBlackBook.builder()
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("external_id"))
+          .externalId(Optional.ofNullable(row.getString("external_id")))
           .bookType(row.getString("black_book_type"))
           .bookSubType(Optional.ofNullable(row.getString("black_book_sub_type")))
           .bookDescription(Optional.ofNullable(row.getString("black_book_description")))
@@ -171,7 +171,7 @@ public interface BlackBookTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
-        doc.getExternalId(),
+        doc.getExternalId().orElse(null),
         doc.getBookType(),
         doc.getBookSubType().orElse(null),
         doc.getBookDescription().orElse(null),

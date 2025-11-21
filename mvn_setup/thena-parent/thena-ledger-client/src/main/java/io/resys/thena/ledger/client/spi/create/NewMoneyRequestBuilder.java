@@ -32,8 +32,8 @@ import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewMoneyRequest;
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequest;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
-import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
 import io.resys.thena.support.OidUtils;
@@ -61,6 +61,7 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
         .ledgerId(ledgerId)
         .createdCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
+        .paymentId(Optional.empty())
         .requestSubType(Optional.empty())
         .requestDescription(Optional.empty());
     
@@ -89,7 +90,13 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
   }
 
   @Override
-  public NewMoneyRequest type(String type) {
+  public NewMoneyRequest paymentId(@Nullable String paymentId) {
+    this.next.paymentId(Optional.ofNullable(paymentId));
+    return this;
+  }
+
+  @Override
+  public NewMoneyRequest type(MoneyRequestType type) {
     this.next.requestType(type);
     return this;
   }
@@ -102,15 +109,10 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
 
   @Override
   public NewMoneyRequest status(MoneyRequestStatus status) {
-    this.next.status(status);
+    this.next.requestStatus(status);
     return this;
   }
 
-  @Override
-  public NewMoneyRequest frequency(MoneyRequestFrequency frequency) {
-    this.next.frequency(frequency);
-    return this;
-  }
 
   @Override
   public NewMoneyRequest description(@Nullable String description) {
@@ -119,8 +121,8 @@ public class NewMoneyRequestBuilder implements NewMoneyRequest {
   }
 
   @Override
-  public NewMoneyRequest dueDate(LocalDate dueDate) {
-    this.next.requestDueDate(dueDate);
+  public NewMoneyRequest targetDate(LocalDate targetDate) {
+    this.next.requestTargetDate(targetDate);
     return this;
   }
 

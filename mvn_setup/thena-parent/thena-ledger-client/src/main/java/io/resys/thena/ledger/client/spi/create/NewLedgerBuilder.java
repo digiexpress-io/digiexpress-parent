@@ -1,5 +1,8 @@
 package io.resys.thena.ledger.client.spi.create;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 /*-
  * #%L
  * thena-ledger-client
@@ -55,6 +58,8 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
   private ImmutablePersistenceUnit.Builder next;
   private Consumer<LedgerContainer> handleNewState;
   private boolean built;
+  private boolean isBbAdded = false;
+  private LocalDate startDate;
   
   public NewLedgerBuilder(LedgerCommitBuilder logger) {
     super();
@@ -69,6 +74,12 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
         .description(Optional.empty());
         
     this.logger = logger;
+  }
+
+  @Override
+  public NewLedger startDate(LocalDate startDate) {
+    this.startDate = startDate;
+    return this;
   }
   
   @Override
@@ -126,6 +137,7 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
     blackBook.accept(builder);
     final var built = builder.close();
     this.next.from(built);
+    this.isBbAdded = true;
     return this;
   }
 
@@ -171,8 +183,18 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
   }
 
   public PersistenceUnit close() {
+
     RepoAssert.isTrue(built, () -> "you must call NewLedger.build() to finalize ledger CREATE!");
 
+    if(!this.isBbAdded) {
+      this.addBlackBook(newBb -> newBb
+          .description("opening new ledger")
+          .type("LEDGER_START")
+          .amount(BigDecimal.ZERO)
+          .date(Optional.ofNullable(startDate).orElse(logger.getCreatedAt().toLocalDate()))
+          .build());
+    }
+    
     final var ledger = this.ledger
         .transitives(ImmutableLedgerTransitives.builder()
             .createdAt(logger.getCreatedAt())
@@ -215,4 +237,5 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
     
     handleNewState.accept(container);
   }
+
 }

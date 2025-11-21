@@ -42,7 +42,8 @@ public interface LedgerQueryActions {
     LedgerQuery addLedgerId(String ids);
     LedgerQuery addAllLedgerId(List<String> ids); // include only data for given contract
     
-    Uni<QueryEnvelope<LedgerContainer>> get(String id);
+    Uni<QueryEnvelope<LedgerContainer>> getOne(String id);
+    Uni<QueryEnvelope<LedgerContainer>> findOne();
     Uni<QueryEnvelopeList<LedgerContainer>> findAll();
   }
   

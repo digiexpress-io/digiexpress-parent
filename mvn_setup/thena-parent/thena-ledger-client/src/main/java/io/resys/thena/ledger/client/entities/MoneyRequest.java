@@ -39,14 +39,19 @@ public interface MoneyRequest extends LedgerEntity {
 
   String getId();
   String getLedgerId();
-  String getExternalId();
-  String getRequestType();
+  Optional<String> getExternalId();
+  
+  Optional<String> getPaymentId();
+  
+  MoneyRequestType getRequestType();
+  MoneyRequestStatus getRequestStatus();
+  
   Optional<String> getRequestSubType();
-  MoneyRequestStatus getStatus();
-  MoneyRequestFrequency getFrequency();
   Optional<String> getRequestDescription();
-  LocalDate getRequestDueDate();
+  
+  LocalDate getRequestTargetDate();
   BigDecimal getRequestAmount();
+  
   String getCommitId();
   String getCreatedCommitId();
 
@@ -63,8 +68,8 @@ public interface MoneyRequest extends LedgerEntity {
     OPEN, CLOSED, CANCELLED
   }
 
-  enum MoneyRequestFrequency {
-    ONE_TIME, MONTHLY, QUARTERLY, ANNUALLY
+  enum MoneyRequestType {
+    ADD_PAYMENT
   }
 
   @Value.Immutable
