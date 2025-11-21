@@ -23,43 +23,55 @@ package io.resys.thena.ledger.client.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.Optional;
-import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import jakarta.annotation.Nullable;
+
 @Value.Immutable
 @JsonSerialize(as = ImmutableBlackBook.class)
 @JsonDeserialize(as = ImmutableBlackBook.class)
-public interface BlackBook extends LedgerEntity {
-
+public interface BlackBook extends LedgerEntity, Comparable<BlackBook> {
+  
   String getId();
   String getLedgerId();
-  String getExternalId();
+  Optional<String> getExternalId();
   String getBookType();
   Optional<String> getBookSubType();
   Optional<String> getBookDescription();
   LocalDate getBookDate();
   BigDecimal getBookAmount();
   String getCreatedCommitId();
-
+  
   // Transitive data from joins
   @Value.Auxiliary
   @Nullable BlackBookTransitives getTransitives();
-
+  
   @Override
   default LedgerDocType getDocType() {
     return LedgerDocType.BLACK_BOOK;
   }
-
+  
+  // Natural ordering: by ledger ID, then by book date (descending)
+  @Override
+  default int compareTo(BlackBook other) {
+    return COMPARATOR.compare(this, other);
+  }
+  
+  // Comparator: sort by ledger ID ascending, then by book date descending
+  final static Comparator<BlackBook> COMPARATOR = Comparator
+      .comparing(BlackBook::getLedgerId)
+      .thenComparing(BlackBook::getBookDate, Comparator.reverseOrder());
+  
   @Value.Immutable
   @JsonSerialize(as = ImmutableBlackBookTransitives.class)
   @JsonDeserialize(as = ImmutableBlackBookTransitives.class)
   interface BlackBookTransitives {
     OffsetDateTime getCreatedAt();
   }
-
 }

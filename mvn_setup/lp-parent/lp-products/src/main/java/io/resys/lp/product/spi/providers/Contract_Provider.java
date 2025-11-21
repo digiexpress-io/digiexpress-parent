@@ -169,6 +169,7 @@ public class Contract_Provider {
     return ledgerClient.withTenant().commit()
         .createOneLedger()
         .ledger(newLedger -> newLedger
+          .startDate(env.getContract().getContract().getContractStartDate())
           .externalId(env.getContract().getContract().getId())
           .name(env.getContract().getContract().getContractNumber())
           .description("default ledger")

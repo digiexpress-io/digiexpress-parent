@@ -30,29 +30,30 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequest;
 import io.resys.thena.ledger.client.entities.ImmutableMoneyRequestTransitives;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
-import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestFrequency;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
+import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "money_request",
-  order = 200,
+  order = 300,
   ddl = """
     CREATE TABLE IF NOT EXISTS {money_request}
     (
       id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
-      external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255),
+      payment_id UUID,
       
       money_request_type VARCHAR(100) NOT NULL,
-      money_request_sub_type VARCHAR(100),
+      money_request_target_date DATE NOT NULL,
       money_request_status VARCHAR(20) NOT NULL,
-      money_request_frequency VARCHAR(20) NOT NULL,
-      money_request_description TEXT,
-      money_request_due_date DATE NOT NULL,
       money_request_amount DECIMAL(15,2) NOT NULL,
-      
+                  
+      money_request_sub_type VARCHAR(100),
+      money_request_description TEXT,
+
       commit_id UUID NOT NULL,
       created_commit_id UUID NOT NULL
     );
@@ -61,14 +62,19 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {money_request} (ledger_id);
     CREATE INDEX IF NOT EXISTS {money_request}_EXTERNAL_INDEX
       ON {money_request} (external_id);
+    CREATE INDEX IF NOT EXISTS {money_request}_PAYMENT_INDEX
+      ON {money_request} (payment_id);
     CREATE INDEX IF NOT EXISTS {money_request}_STATUS_INDEX
       ON {money_request} (money_request_status);
-    CREATE INDEX IF NOT EXISTS {money_request}_DUE_DATE_INDEX
-      ON {money_request} (money_request_due_date);
+    CREATE INDEX IF NOT EXISTS {money_request}_TARGET_DATE_INDEX
+      ON {money_request} (money_request_target_date);
   """,
   constraints = """
     ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
+      
+    ALTER TABLE {money_request} ADD CONSTRAINT fk_money_request_payment 
+      FOREIGN KEY (payment_id) REFERENCES {payment}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {money_request} CASCADE;
@@ -99,7 +105,7 @@ public interface MoneyRequestTable {
       FROM {money_request} money_request
       LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
       LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
-      ORDER BY money_request_due_date ASC
+      ORDER BY money_request_target_date ASC
     """,
     rowMapper = MoneyRequestMapper.class
   )
@@ -114,7 +120,7 @@ public interface MoneyRequestTable {
       LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
       LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       WHERE ledger_id = $1
-      ORDER BY money_request_due_date ASC
+      ORDER BY money_request_target_date ASC
     """,
     rowMapper = MoneyRequestMapper.class
   )
@@ -129,7 +135,7 @@ public interface MoneyRequestTable {
       LEFT JOIN {commit} commit ON money_request.commit_id = commit.commit_id
       LEFT JOIN {commit} created_commit ON money_request.created_commit_id = created_commit.commit_id
       WHERE money_request_status = $1
-      ORDER BY money_request_due_date ASC
+      ORDER BY money_request_target_date ASC
     """,
     rowMapper = MoneyRequestMapper.class
   )
@@ -168,8 +174,8 @@ public interface MoneyRequestTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {money_request}
-      (id, ledger_id, external_id, money_request_type, money_request_sub_type, 
-       money_request_status, money_request_frequency, money_request_description, money_request_due_date, 
+      (id, ledger_id, external_id, payment_id, money_request_type, money_request_sub_type, 
+       money_request_status, money_request_description, money_request_target_date, 
        money_request_amount, commit_id, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     """,
@@ -180,9 +186,9 @@ public interface MoneyRequestTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {money_request}
-       SET ledger_id = $1, money_request_external_id = $2, money_request_type = $3, money_request_sub_type = $4,
-           money_request_status = $5, money_request_frequency = $6, money_request_description = $7, 
-           money_request_due_date = $8, money_request_amount = $9, commit_id = $10
+       SET ledger_id = $1, external_id = $2, payment_id = $3, money_request_type = $4, money_request_sub_type = $5,
+           money_request_status = $6, money_request_description = $7, 
+           money_request_target_date = $8, money_request_amount = $9, commit_id = $10
        WHERE id = $11
     """,
     propsMapper = MoneyRequestUpdateMapper.class
@@ -196,13 +202,13 @@ public interface MoneyRequestTable {
       return ImmutableMoneyRequest.builder()
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
-          .externalId(row.getString("external_id"))
-          .requestType(row.getString("money_request_type"))
+          .externalId(Optional.ofNullable(row.getString("external_id")))
+          .paymentId(Optional.ofNullable(TableUtils.toStringUUID(row, "payment_id")))
+          .requestType(MoneyRequestType.valueOf(row.getString("money_request_type")))
           .requestSubType(Optional.ofNullable(row.getString("money_request_sub_type")))
-          .status(MoneyRequestStatus.valueOf(row.getString("money_request_status")))
-          .frequency(MoneyRequestFrequency.valueOf(row.getString("money_request_frequency")))
+          .requestStatus(MoneyRequestStatus.valueOf(row.getString("money_request_status")))
           .requestDescription(Optional.ofNullable(row.getString("money_request_description")))
-          .requestDueDate(row.getLocalDate("money_request_due_date"))
+          .requestTargetDate(row.getLocalDate("money_request_target_date"))
           .requestAmount(row.getBigDecimal("money_request_amount"))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
@@ -220,13 +226,13 @@ public interface MoneyRequestTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
-        doc.getExternalId(),
-        doc.getRequestType(),
+        doc.getExternalId().orElse(null),
+        TableUtils.toUuid(doc.getPaymentId().orElse(null)),
+        doc.getRequestType().name(),
         doc.getRequestSubType().orElse(null),
-        doc.getStatus().name(),
-        doc.getFrequency().name(),
+        doc.getRequestStatus().name(),
         doc.getRequestDescription().orElse(null),
-        doc.getRequestDueDate(),
+        doc.getRequestTargetDate(),
         doc.getRequestAmount(),
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getCreatedCommitId())
@@ -240,12 +246,12 @@ public interface MoneyRequestTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId(),
-        doc.getRequestType(),
+        TableUtils.toUuid(doc.getPaymentId().orElse(null)),
+        doc.getRequestType().name(),
         doc.getRequestSubType().orElse(null),
-        doc.getStatus().name(),
-        doc.getFrequency().name(),
+        doc.getRequestStatus().name(),
         doc.getRequestDescription().orElse(null),
-        doc.getRequestDueDate(),
+        doc.getRequestTargetDate(),
         doc.getRequestAmount(),
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getId())
