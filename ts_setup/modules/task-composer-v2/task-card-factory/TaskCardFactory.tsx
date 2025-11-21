@@ -18,7 +18,7 @@ import { Analytics as AnalyticsIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
-import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
+
 import { TaskApi, TaskFeature } from '@dxs-ts/task-api';
 
 import { TaskRolesReadOnly } from '../task-roles';
@@ -50,8 +50,6 @@ import { TaskAuditQueueBindingsTable } from '../task-audit-queue-bindings';
 import { TaskAuditQueueDeliveriesTable } from '../task-audit-queue-deliveries';
 import { TaskAuditQueuesTable } from '../task-audit-queue';
 import { TaskAuditAi } from '../task-audit-ai';
-import { FeedbackApi, useFeedback } from '@dxs-ts/task-feedback';
-
 
 
 export type FactoryCardId =
@@ -285,14 +283,14 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
             showFlashyToggle={true}
             showEditOnMenu={true}
             showEditButton={true}
-            showReviewOnMenu={true}
+            showReviewOnMenu={false}
             titleNotifier={task.customerAssignments.length}
             onEdit={handleEdit}
             startAdornmentIcon={<StartAdornmentIcon icon={AssignmentIndOutlinedIcon} />}
             onDoubleClick={handleEdit}
             editDialog={isEditOpen && (<TaskAssignmentEditDialog open onClose={handleEditClose} taskId={task.id} />)}
           >
-            <TaskAssignmentReadOnly task={task} />
+            <TaskAssignmentReadOnly task={task} onClickReview={toggleReview} />
           </TaskCard>
         </TaskFeature>
       );
@@ -510,19 +508,17 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
       );
     case 'ai_assistant':
       return (
-        <EveliTenantFeatureEnabled id='AI_ASSISTANT'>
-          <TaskFeature id='TASK_FEEDBACK'>
-            <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
-                {...commonProps}
-                showFlashyToggle={false}
-                showEditOnMenu={false}
-                showEditButton={false}
-                showReviewOnMenu={false}
-                startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
-              <TaskAiAssistant />
-            </TaskCard>
-          </TaskFeature>
-        </EveliTenantFeatureEnabled>
+        <TaskFeature id='TASK_AI_FEEDBACK'>
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
+            {...commonProps}
+            showFlashyToggle={false}
+            showEditOnMenu={false}
+            showEditButton={false}
+            showReviewOnMenu={false}
+            startAdornmentIcon={<StartAdornmentIcon icon={AnalyticsIcon} />}>
+            <TaskAiAssistant />
+          </TaskCard>
+        </TaskFeature>
       );
     default:
       return null;
@@ -534,22 +530,3 @@ function _formatAnyDateShort(value: Date | string | undefined): string {
   const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
   return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
 }
-
-const FeedbackTitle: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
-
-  const intl = useIntl();
-  const { getOneFeedback } = useFeedback();
-  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
-
-  
-  React.useEffect(() => {
-    getOneFeedback(task.taskRef!)
-      .then((resp) => {
-        setFeedback(resp);
-      });
-  }, [task.taskRef]);
-
-
-  return feedback ? intl.formatMessage({ id: 'taskcard.title.customerFeedback.published', defaultMessage: 'Published' }) : 0
-}
-

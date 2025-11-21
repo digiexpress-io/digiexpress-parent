@@ -1,4 +1,4 @@
-import { generateUtilityClass, lighten, styled } from '@mui/material';
+import { alpha, generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -72,7 +72,7 @@ export const GInboxRoot = styled("div", {
       borderBottomStyle: 'solid',
       borderBottomColor: theme.palette.divider,
       ':hover': {
-        backgroundColor: theme.palette.action.active,
+        backgroundColor: alpha(theme.palette.action.active, 0.05),
         borderColor: theme.palette.divider,
       },
     

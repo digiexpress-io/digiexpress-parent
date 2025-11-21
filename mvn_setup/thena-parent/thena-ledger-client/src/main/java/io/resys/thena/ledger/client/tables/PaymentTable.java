@@ -48,7 +48,8 @@ import io.vertx.mutiny.sqlclient.Row;
       payment_description TEXT,
       payment_date DATE NOT NULL,
       payment_amount DECIMAL(15,2) NOT NULL,
-      
+      payment_body JSONB,
+            
       created_commit_id UUID NOT NULL
     );
 
@@ -137,8 +138,8 @@ public interface PaymentTable {
     sql = """
       INSERT INTO {payment}
       (id, ledger_id, external_id, payment_type, payment_sub_type, 
-       payment_description, payment_date, payment_amount, created_commit_id)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       payment_description, payment_date, payment_amount, payment_body, created_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     """,
     propsMapper = PaymentInsertMapper.class
   )
@@ -157,6 +158,8 @@ public interface PaymentTable {
           .paymentDescription(Optional.ofNullable(row.getString("payment_description")))
           .paymentDate(row.getLocalDate("payment_date"))
           .paymentAmount(row.getBigDecimal("payment_amount"))
+          .paymentBody(Optional.ofNullable(row.getJsonObject("payment_body")))
+          
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutablePaymentTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -177,6 +180,7 @@ public interface PaymentTable {
         doc.getPaymentDescription().orElse(null),
         doc.getPaymentDate(),
         doc.getPaymentAmount(),
+        doc.getPaymentBody().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

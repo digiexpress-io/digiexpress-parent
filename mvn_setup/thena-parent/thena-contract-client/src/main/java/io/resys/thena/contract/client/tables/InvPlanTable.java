@@ -44,11 +44,12 @@ import io.vertx.mutiny.sqlclient.Row;
     (
       id                              UUID PRIMARY KEY,
       contract_id                     UUID NOT NULL,
-
-      external_id                     VARCHAR(255) NOT NULL,
+      external_id                     VARCHAR(255),
+      
       commit_id                       UUID NOT NULL,
       created_commit_id               UUID NOT NULL,
 
+      inv_plan_ref_number             VARCHAR(255) NOT NULL,
       inv_plan_status                 VARCHAR(100) NOT NULL,
       inv_plan_code                   VARCHAR(100) NOT NULL,
       inv_plan_name                   VARCHAR(255) NOT NULL,
@@ -140,8 +141,8 @@ public interface InvPlanTable {
       INSERT INTO {inv_plan}
       (id, contract_id, external_id, commit_id, created_commit_id,
        inv_plan_status, inv_plan_code, inv_plan_name,
-       inv_plan_start_date, inv_plan_end_date)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       inv_plan_start_date, inv_plan_end_date, inv_plan_ref_number)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     """,
     propsMapper = InvPlanInsertMapper.class
   )
@@ -152,8 +153,9 @@ public interface InvPlanTable {
       UPDATE {inv_plan}
        SET contract_id = $1, external_id = $2, commit_id = $3,
            inv_plan_status = $4, inv_plan_code = $5, inv_plan_name = $6,
-           inv_plan_start_date = $7, inv_plan_end_date = $8
-       WHERE id = $9
+           inv_plan_start_date = $7, inv_plan_end_date = $8,
+           inv_plan_ref_number = $9
+       WHERE id = $10
     """,
     propsMapper = InvPlanUpdateMapper.class
   )
@@ -175,7 +177,7 @@ public interface InvPlanTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .contractId(TableUtils.toStringUUID(row, "contract_id"))
 
-          .externalId(row.getString("external_id"))
+          .externalId(Optional.ofNullable(row.getString("external_id")))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
 
@@ -185,6 +187,7 @@ public interface InvPlanTable {
               .updatedAt(row.getOffsetDateTime("updated_at"))
               .build())
 
+          .invPlanRefNumber(row.getString("inv_plan_ref_number"))
           .invPlanStatus(row.getString("inv_plan_status"))
           .invPlanCode(row.getString("inv_plan_code"))
           .invPlanName(row.getString("inv_plan_name"))
@@ -203,14 +206,15 @@ public interface InvPlanTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getContractId()),
-        doc.getExternalId(),
+        doc.getExternalId().orElse(null),
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getInvPlanStatus(),
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
-        doc.getInvPlanEndDate().orElse(null)
+        doc.getInvPlanEndDate().orElse(null),
+        doc.getInvPlanRefNumber()
       });
     }
   }
@@ -220,13 +224,14 @@ public interface InvPlanTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(InvPlan doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getContractId()),
-        doc.getExternalId(),
+        doc.getExternalId().orElse(null),
         TableUtils.toUuid(doc.getCommitId()),
         doc.getInvPlanStatus(),
         doc.getInvPlanCode(),
         doc.getInvPlanName(),
         doc.getInvPlanStartDate(),
         doc.getInvPlanEndDate().orElse(null),
+        doc.getInvPlanRefNumber(),
         TableUtils.toUuid(doc.getId())
       });
     }

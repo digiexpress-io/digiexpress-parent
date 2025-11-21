@@ -39,8 +39,22 @@ public class PaymentMatchingTest extends DbTestTemplate {
     
     final var firstPaymentPlan = savings.getContract()
         .getPaymentPlans().iterator().next();
-    
     final var firstPaymentDate = firstPaymentPlan.getPaymentPlanStartDate();
+    
+    
+    getLpClient().actions().paymentMatching()
+      .addHint(savings.getContract().getContract().getId())
+      .addPayment(newPayment -> {
+        newPayment
+          .amount(firstPaymentPlan.getPaymentPlanAmount())
+          .date(firstPaymentDate)
+          .externalId("001")
+          .description("test payment")
+          .type("NORMAL")
+          .build();
+      })
+      .build().await().atMost(atMost);
+    
     
   }
 }

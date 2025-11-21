@@ -25,7 +25,7 @@ export interface GArticleFeedbackClasses {
 
 export type GArticleFeedbackClassKey = keyof GArticleFeedbackClasses;
 
-export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
+export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     emptyRow: ['emptyRow'],
@@ -35,6 +35,7 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     toolbar: ['toolbar'],
     vote: ['vote'],
     colWidth: ['colWidth'],
+
     mobileList: ['mobileList'],
     mobileListItem: ['mobileListItem'],
     mobileListHeader: ['mobileListHeader'],

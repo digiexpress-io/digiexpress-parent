@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.util.Arrays;
+
 /*-
  * #%L
  * eveli-client
@@ -22,6 +24,7 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -283,15 +286,21 @@ public class TaskApiController {
   @GetMapping(value="/{id}/review-actions")
   public Uni<ResponseEntity<?>> getTaskFormReviewActions(@PathVariable("id") String id)
   {
-    return taskClient.queryTasks().getOneById(id)
-    .onItem().transform(task -> {
+    return taskClient.queryTasks().findAll(Arrays.asList(id))
+    .onItem().transform(tasks -> {
       
-      if(task.getQuestionnaireId() != null) {
-        final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
+      final var questionnaireId = Optional.ofNullable(tasks.isEmpty() ? null : tasks.iterator().next())
+          .map(task -> task.getQuestionnaireId())
+          .orElse(id);
+      try {
+        final var questionnaire = dialobClient.getQuestionnaireById(questionnaireId);
         final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
         final var actions = dialobReviewClient.createReview().form(form).formData(questionnaire).build();
         return new ResponseEntity<>(actions, HttpStatus.OK);
+      } catch(Exception e) {
+        log.error("Can't resolve questionnaire for review: {}, because of: {}", id, e.getMessage(), e);
       }
+        
       return ResponseEntity.notFound().build();
       
     });
@@ -300,15 +309,22 @@ public class TaskApiController {
   @PostMapping(value="/{id}/review-actions")
   public Uni<ResponseEntity<?>> getTaskFormReviewActions(@PathVariable("id") String id, @RequestBody Actions action) {
     
-    return taskClient.queryTasks().getOneById(id)
-    .onItem().transform(task -> {
+    return taskClient.queryTasks().findAll(Arrays.asList(id))
+    .onItem().transform(tasks -> {
       
-      if(task.getQuestionnaireId() != null) {
-        final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
+      final var questionnaireId = Optional.ofNullable(tasks.isEmpty() ? null : tasks.iterator().next())
+          .map(task -> task.getQuestionnaireId())
+          .orElse(id);
+      
+      try {
+        final var questionnaire = dialobClient.getQuestionnaireById(questionnaireId);
         final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
         final var actions = dialobReviewClient.createNav().form(form).formData(questionnaire).navigateTo(action).build();
         return new ResponseEntity<>(actions, HttpStatus.OK);
+      } catch(Exception e) {
+        log.error("Can't resolve questionnaire for review: {}, because of: {}", id, e.getMessage(), e);
       }
+      
       return ResponseEntity.notFound().build();
       
     });

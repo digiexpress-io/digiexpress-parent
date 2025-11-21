@@ -1,23 +1,25 @@
 import React from 'react'
-import { Box, Divider, generateUtilityClass, Grid2, styled, Typography } from '@mui/material';
+import { Box, Button, Divider, generateUtilityClass, Grid2, styled, Typography } from '@mui/material';
 import { CheckCircleOutlineOutlined as CheckCircleOutlineOutlinedIcon } from '@mui/icons-material';
 import { RadioButtonUncheckedOutlined as RadioButtonUncheckedOutlinedIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
 
 import { TaskApi } from '@dxs-ts/task-api';
+import { useIntl } from 'react-intl';
 
 
 
 
-export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
+export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task, onClickReview: (option: TaskApi.TaskCustomerAssignment) => void }> = ({ task, onClickReview }) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
 
   return (<>
     <StyledTaskAssignmentReadOnly className={classes.root}>
       {task.customerAssignments.map((option) => (
-        <>
-          <Grid2 key={option.id} container alignItems="center" mb={1}>
-            <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 8 }}>
+        <div key={option.id}>
+          <Grid2 container alignItems="center" mb={1}>
+            <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>
               <Box display="flex" alignItems="center" gap={1}>
                 {option.status === "COMPLETED" ? (
                   <CheckCircleOutlineOutlinedIcon color="success" />
@@ -33,9 +35,12 @@ export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task }> = ({ task 
             <Grid2 size={{ xs: 6, sm: 2, md: 2, lg: 2, xl: 2 }}>
               <Typography>{option.status}</Typography>
             </Grid2>
+            <Grid2 size={{ xs: 6, sm: 2, md: 2, lg: 2, xl: 2 }} display='flex' justifyContent='flex-end'>
+              <Button disabled={option.status !== "COMPLETED"} onClick={() => onClickReview(option)}>{intl.formatMessage({ id: 'task.form.review' })}</Button>
+            </Grid2>
           </Grid2>
           <Divider />
-        </>
+        </div>
       ))}
     </StyledTaskAssignmentReadOnly>
   </>

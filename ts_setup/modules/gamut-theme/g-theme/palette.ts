@@ -22,7 +22,7 @@ export const palette: PaletteOptions = {
   },
   action: {
     disabled: '#65748B',
-    active: '#e9ecef'
+    active: '#212529' // Mui input adornments inherit this colour -- needed for dialob fill
   },
   divider: "#dee2e6",
   success: {

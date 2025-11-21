@@ -40,6 +40,7 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE TABLE IF NOT EXISTS {unit_price}
     (
       id UUID PRIMARY KEY,
+      ledger_id UUID NOT NULL,
       external_id VARCHAR(255) NOT NULL,
       
       unit_price_type VARCHAR(100) NOT NULL,
@@ -51,6 +52,8 @@ import io.vertx.mutiny.sqlclient.Row;
       created_commit_id UUID NOT NULL
     );
 
+    CREATE INDEX IF NOT EXISTS {unit_price}_LEDGER_INDEX
+      ON {unit_price} (ledger_id);
     CREATE INDEX IF NOT EXISTS {unit_price}_EXTERNAL_INDEX
       ON {unit_price} (external_id);
     CREATE INDEX IF NOT EXISTS {unit_price}_TYPE_INDEX
@@ -59,6 +62,8 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {unit_price} (unit_price_date);
   """,
   constraints = """
+    ALTER TABLE {unit_price} ADD CONSTRAINT fk_uni_price_ledger 
+      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {unit_price} CASCADE;
@@ -72,6 +77,7 @@ public interface UnitPriceTable {
              created_commit.created_at as created_at
       FROM {unit_price} unit_price
       LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
+      LEFT JOIN {ledger} ledger ON unit_price.ledger_id = ledger.id
     """,
     rowMapper = UnitPriceMapper.class,
     sqlBuilder = LedgerTableFilter.SQL.class

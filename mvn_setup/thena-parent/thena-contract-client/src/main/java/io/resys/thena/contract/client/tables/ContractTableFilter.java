@@ -40,24 +40,41 @@ import io.vertx.mutiny.sqlclient.Tuple;
 @Value.Immutable
 public interface ContractTableFilter {
   Optional<List<String>> getContractIds();
-  
   Boolean getLockForUpdate();
   
-  
-  
-  
   final static class SQL implements SqlBuilder<ContractTableFilter> {
+    
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, ContractTableFilter filter) {
       final var builder = new SqlStatement();
       final var params = new ArrayList<Object>();
       int index = 1;
+
+      // append reference numbers and other ids
+      final boolean addRefNumbers = filter.getContractIds().isPresent();
+      if(addRefNumbers) {
+        baseline +=
+"""
+  LEFT JOIN ( 
+  SELECT 
+    inv_plan.contract_id,
+    ARRAY_AGG(inv_plan.external_id::text) || ARRAY_AGG(inv_plan.inv_plan_ref_number::text) as refs
+  FROM {inv_plan} as inv_plan
+  GROUP BY 
+    inv_plan.contract_id
+  ) as ref_number_1 
+  ON ref_number_1.contract_id = contract.id
+"""; 
+      }
       
+      
+      // main contract id filter
       if(filter.getContractIds().isPresent()) {
         builder.append("(")
           .append(" contract.id = ANY($").append(index++).append(")")
           .append(" OR contract.contract_number = ANY($").append(index).append(")")
-          .append(" OR contract.external_id = ANY($").append(index++).append(")")
+          .append(" OR contract.external_id = ANY($").append(index).append(")")
+          .append(" OR ref_number_1.refs && $").append(index++).append("")
           .append(")")
           .ln();
         
@@ -73,10 +90,12 @@ public interface ContractTableFilter {
           .filter(e -> e != null)
           .collect(Collectors.toList());
         
-        params.add(uuid.toArray(new UUID[]{}));
-        
+        params.add(uuid.toArray(new UUID[]{}));    
         params.add(filter.getContractIds().get().toArray(new String[]{}));
       }
+      
+
+      
       
       final var result = builder.toString();
       final var clause = (result.isBlank() ? "" : " WHERE ") + builder.toString();

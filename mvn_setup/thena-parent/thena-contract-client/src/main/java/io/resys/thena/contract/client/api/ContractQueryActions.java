@@ -47,6 +47,7 @@ public interface ContractQueryActions {
     
     Uni<QueryEnvelope<ContractContainer>> get(String id);
     Uni<QueryEnvelopeList<ContractContainer>> findAll();
+    Uni<QueryEnvelope<ContractContainer>> findOne();
   }
   
   

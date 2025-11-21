@@ -30,6 +30,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
@@ -41,8 +42,11 @@ public interface Payment extends LedgerEntity {
   String getLedgerId();
   String getExternalId();
   String getPaymentType();
+  
+  Optional<JsonObject> getPaymentBody();
   Optional<String> getPaymentSubType();
   Optional<String> getPaymentDescription();
+  
   LocalDate getPaymentDate();
   BigDecimal getPaymentAmount();
   String getCreatedCommitId();

@@ -23,7 +23,6 @@ package io.resys.thena.ledger.client.spi.modify;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeMoneyRequest;
@@ -108,9 +107,8 @@ public class MergeLedgerBuilder implements MergeLedger {
     final var builder = new NewMoneyRequestBuilder(logger, ledgerId, this.batch.build(), container);
     moneyRequest.accept(builder);
     final var built = builder.close();
-    this.logger.add(built);
     this.batch.addMoneyRequestInserts(built);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -119,9 +117,8 @@ public class MergeLedgerBuilder implements MergeLedger {
     final var builder = new NewPaymentBuilder(logger, ledgerId, this.batch.build(), container);
     payment.accept(builder);
     final var built = builder.close();
-    this.logger.add(built);
     this.batch.addPaymentInserts(built);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -131,7 +128,7 @@ public class MergeLedgerBuilder implements MergeLedger {
     settlement.accept(builder);
     final var builtData = builder.close();
     this.batch.from(builtData);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -141,7 +138,7 @@ public class MergeLedgerBuilder implements MergeLedger {
     blackBook.accept(builder);
     final var builtData = builder.close();
     this.batch.from(builtData);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -151,7 +148,7 @@ public class MergeLedgerBuilder implements MergeLedger {
     projection.accept(builder);
     final var builtData = builder.close();
     this.batch.from(builtData);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -160,9 +157,8 @@ public class MergeLedgerBuilder implements MergeLedger {
     final var builder = new NewUnitPriceBuilder(logger, this.batch.build(), container);
     unitPrice.accept(builder);
     final var built = builder.close();
-    this.logger.add(built);
     this.batch.addUnitPriceInserts(built);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -171,9 +167,8 @@ public class MergeLedgerBuilder implements MergeLedger {
     final var builder = new NewLedgerEventBuilder(logger, ledgerId, this.batch.build(), container);
     ledgerEvent.accept(builder);
     final var built = builder.close();
-    this.logger.add(built);
     this.batch.addLedgerEventInserts(built);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -183,7 +178,7 @@ public class MergeLedgerBuilder implements MergeLedger {
     moneyRequest.accept(builder);
     final var builtData = builder.close();
     this.batch.from(builtData);
-    updateVersion();
+    updateTreeVersion();
     return this;
   }
 
@@ -200,18 +195,20 @@ public class MergeLedgerBuilder implements MergeLedger {
     }
 
     final var ledger = nextLedger
-        .commitId(logger.getCommitId())
-        .transitives(nextTransitives
-            .updatedAt(logger.getCreatedAt())
-            .updatedTreeAt(logger.getCreatedAt())
-            .build())
+        .transitives(nextTransitives.build())
         .build();
     
-    this.logger.add(ledger);
+    this.logger.merge(container.getLedger(), ledger);
     return batch.addLedgerUpdates(ledger).build();
   }
 
+  private void updateTreeVersion() {
+    this.nextLedger.updatedTreeCommitId(logger.getCommitId());
+    this.nextTransitives.updatedTreeAt(logger.getCreatedAt());
+  }
+  
   private void updateVersion() {
+    this.nextLedger.commitId(logger.getCommitId());
     this.nextTransitives.updatedAt(logger.getCreatedAt());
   }
 }

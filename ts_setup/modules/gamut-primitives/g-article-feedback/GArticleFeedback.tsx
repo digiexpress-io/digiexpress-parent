@@ -61,7 +61,7 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   }, [feedback]);
 
 
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses();
   const slots = props.slots;
   const ownerState = {
     ...props,
@@ -182,13 +182,6 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
             items={visibleRows}
             locale={locale}
             onRowClick={handleOnRowClick}
-            classes={{
-              mobileList: classes.mobileList,
-              mobileListItem: classes.mobileListItem,
-              mobileListHeader: classes.mobileListHeader,
-              mobileListMeta: classes.mobileListMeta,
-              vote: classes.vote,
-            }}
           />
         ) : (
             <TableContainer>

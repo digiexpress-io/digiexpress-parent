@@ -45,6 +45,7 @@ import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -97,7 +98,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
 
   private Uni<OneLedgerEnvelope> doInTx(BbDb tx) {
     return createRequest(tx)
-        .onItem().transformToUni(request -> createResponse(tx, request))
+        .onItem().transformToUni(request -> createResponse(tx, request.getItem1(), request.getItem2()))
         .onFailure(ModifyOneLedgerException.class).recoverWithItem(ex -> {
           final ModifyOneLedgerException error = (ModifyOneLedgerException) ex;          
           return ImmutableOneLedgerEnvelope.builder()
@@ -115,7 +116,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
         });
   }
   
-  private Uni<OneLedgerEnvelope> createResponse(BbDb tx, PersistenceUnit request) {
+  private Uni<OneLedgerEnvelope> createResponse(BbDb tx, PersistenceUnit request, LedgerContainer previous) {
     return tx.builder().from(request).persist().onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
         throw new ModifyOneLedgerException("Failed to modify ledger!", rsp);
@@ -124,7 +125,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
       final OneLedgerEnvelope result = ImmutableOneLedgerEnvelope.builder()
           .repoId(tenantId)
           .ledger(ImmutableLedgerContainer.builder()
-            .ledger(rsp.getLedgerUpdates().isEmpty() ? null : rsp.getLedgerUpdates().iterator().next())
+            .ledger(rsp.getLedgerUpdates().isEmpty() ? previous.getLedger() : rsp.getLedgerUpdates().iterator().next())
             .moneyRequests(rsp.getMoneyRequestInserts())
             .payments(rsp.getPaymentInserts())
             .settlements(rsp.getSettlementInserts())
@@ -146,7 +147,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
     });
   }
   
-  private Uni<PersistenceUnit> createRequest(BbDb tx) {
+  private Uni<Tuple2<PersistenceUnit, LedgerContainer>> createRequest(BbDb tx) {
     return LedgerQueryImpl.of(tx)
       .addLedgerId(this.ledgerId)
       .lockForUpdate()
@@ -155,7 +156,7 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
       .transform(container -> createRequest(tx, container));
   }
   
-  private PersistenceUnit createRequest(BbDb tx, QueryEnvelopeList<LedgerContainer> env) {
+  private Tuple2<PersistenceUnit, LedgerContainer> createRequest(BbDb tx, QueryEnvelopeList<LedgerContainer> env) {
     final var start = ImmutablePersistenceUnit.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
@@ -164,6 +165,8 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
     final var createdAt = OffsetDateTime.now();
     ImmutablePersistenceUnit next = start;
 
+    final var currentState = env.getObjects().get(0);
+    
     final var logger = new LedgerCommitBuilder(tenantId, 
         ImmutableCommit.builder()
           .id(OidUtils.genUUID())
@@ -171,20 +174,21 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
           .commitMessage(message)
           .commitLog("")
           .createdAt(createdAt)
+          .ledgerId(currentState.getLedger().getId())
           .build()
     );
     
-    final var mergeLedger = new MergeLedgerBuilder(env.getObjects().get(0), logger);
+    final var mergeLedger = new MergeLedgerBuilder(currentState, logger);
     this.modifyLedger.accept(mergeLedger);
     final var modified = mergeLedger.close();
     
     next = ImmutablePersistenceUnit.builder()
         .from(start)
         .from(modified)
-        .from(logger.withLedgerId(ledgerId).close())
+        .from(logger.close())
         .build();
   
-    return next;
+    return Tuple2.of(next, currentState);
   }
   
 

@@ -139,6 +139,7 @@ public interface ThenaContractNewObject {
   // support interface for investment plan creation
   interface NewInvPlan {
     NewInvPlan externalId(String externalId);
+    NewInvPlan invPlanRefNumber(String invPlanRefNumber);
     NewInvPlan invPlanCode(String invPlanCode);
     NewInvPlan invPlanName(String invPlanName);
     NewInvPlan invPlanStatus(String invPlanStatus);

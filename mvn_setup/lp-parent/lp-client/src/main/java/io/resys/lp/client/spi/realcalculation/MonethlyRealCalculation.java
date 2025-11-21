@@ -1,4 +1,4 @@
-package io.resys.lp.client.api.entities;
+package io.resys.lp.client.spi.realcalculation;
 
 /*-
  * #%L
@@ -20,17 +20,28 @@ package io.resys.lp.client.api.entities;
  * #L%
  */
 
-import java.util.List;
+import java.time.LocalDate;
 
-import org.immutables.value.Value;
+import io.resys.lp.client.api.LpClient.RealCalculation;
+import io.resys.lp.client.api.entities.AnyCalculation;
+import io.resys.lp.client.api.entities.Envelope;
+import io.smallrye.mutiny.Uni;
 
-import io.resys.thena.ledger.client.entities.Payment;
+public class MonethlyRealCalculation implements RealCalculation {
 
+  @Override
+  public RealCalculation accountId(String contractIdOrRefOrEtc) {
+    return this;
+  }
 
-@Value.Immutable
-public interface PaymentMatching {
+  @Override
+  public RealCalculation startDate(LocalDate localDate) {
+    return this;
+  }
 
-  List<Payment> getMatches(); // Operation result
-  List<Payment> getUnknowns(); // Operation result
-  
+  @Override
+  public Uni<Envelope<AnyCalculation>> build() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

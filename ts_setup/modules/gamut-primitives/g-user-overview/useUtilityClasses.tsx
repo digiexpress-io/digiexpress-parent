@@ -36,8 +36,8 @@ export const GUserOverviewDetail = styled(Box, {
     border: `1px solid ${theme.palette.divider}`,
 
     ':hover': ownerState.onClick ? {
-      backgroundColor: theme.palette.action.active,
-      borderColor: 'rgba(194,190,194,1)',
+      backgroundColor: alpha(theme.palette.action.active, 0.05),
+      borderColor: alpha(theme.palette.action.active, 0.2),
     } : undefined,
 
     '& .GUserOverview-overviewItemTitle': {

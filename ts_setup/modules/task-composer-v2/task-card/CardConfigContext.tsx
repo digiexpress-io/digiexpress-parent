@@ -1,11 +1,12 @@
-
-import React, { createContext, PropsWithChildren, useContext } from 'react';
+import React, { PropsWithChildren } from 'react';
+import { TaskApi } from '@dxs-ts/task-api';
 
 export type TaskCardId = string;
 export type TaskCardStyleKey = 'compact' | 'default' | 'large';
 
 export interface CardConfig {
   isReviewOpen: boolean;
+  reviewAssignment: TaskApi.TaskCustomerAssignment | undefined;
   editingCardId: string | undefined;
   cardTheme: TaskCardStyleKey;
   cardOrder: string[];
@@ -14,7 +15,7 @@ export interface CardConfig {
   isCardExpanded(id: string): boolean;
   toggleCardExpanded(id: string, forceToExpandedValue?: boolean): void;
 
-  toggleReview(): void;
+  toggleReview(option?: TaskApi.TaskCustomerAssignment): void;
   isCardFlashy(id: string): boolean;
   toggleCardFlashy(id: string): void;
 
@@ -24,18 +25,15 @@ export interface CardConfig {
   setCardTheme(theme: TaskCardStyleKey): void;
 }
 
-const INITIAL_CONFIG: CardConfig = {
-} as any;
-
 export interface CardConfigContextProviderProps {
   cardTheme?: TaskCardStyleKey;
   initialCardOrder: string[];
 }
 
-export const CardConfigContext = createContext<CardConfig>(INITIAL_CONFIG);
+export const CardConfigContext = React.createContext<CardConfig | undefined>(undefined);
 
 export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigContextProviderProps>> = (props) => {
-  const [isReviewOpen, setReviewOpen] = React.useState(false);
+  const [reviewOpen, setReviewOpen] = React.useState<{ open: boolean, option: TaskApi.TaskCustomerAssignment | undefined }>({ open: false, option: undefined });
 
   const [flashyCards, setFlashyCards] = React.useState<string[]>([]);
   const [expandedCards, setExpandedCards] = React.useState<CardConfig['expandedCards']>([]);
@@ -43,14 +41,16 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
   const [editingCardId, setEditingCardId] = React.useState<string | undefined>();
   const [cardTheme, setCardTheme] = React.useState<TaskCardStyleKey>(props.cardTheme ?? 'default');
 
-
-
   const contextValue: CardConfig = React.useMemo(() => {
     return {
-      cardTheme, isReviewOpen, editingCardId, cardOrder, expandedCards,
+      cardTheme, editingCardId, cardOrder, expandedCards,
+
+      isReviewOpen: reviewOpen.open,
+      reviewAssignment: reviewOpen.option,
+
       setCardOrder, setCardTheme,
-      toggleReview() {
-        setReviewOpen(prev => !prev)
+      toggleReview(option?: TaskApi.TaskCustomerAssignment) {
+        setReviewOpen(prev => ({ open: !prev.open, option }))
       },
       isCardFlashy(cardId) {
         return flashyCards.includes(cardId)
@@ -74,7 +74,7 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
         });
       }
     }
-  }, [isReviewOpen, editingCardId, cardTheme, flashyCards, expandedCards, cardOrder]);
+  }, [reviewOpen.open, reviewOpen.option?.id, editingCardId, cardTheme, flashyCards, expandedCards, cardOrder]);
 
 
   return (
@@ -84,4 +84,10 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
   );
 };
 
-export const useCardConfig = () => useContext(CardConfigContext);
+export const useCardConfig = () => {
+  const ctx = React.useContext(CardConfigContext);
+  if (!ctx) {
+    throw new Error('Missing task card context!');
+  }
+  return ctx;
+}

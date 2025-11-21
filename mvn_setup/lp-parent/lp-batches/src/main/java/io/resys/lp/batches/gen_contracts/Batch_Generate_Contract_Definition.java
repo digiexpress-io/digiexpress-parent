@@ -33,9 +33,14 @@ public class Batch_Generate_Contract_Definition {
         .batchName("generate-test-contracts")
         .comment("generates test data for contracts")
         .addSteps(ImmutableBatchStepDefinition.builder()
-            .name("delete-proc")
-            .comment("deletes all processes")
+            .name("generate test set 1")
+            .comment("feemi savings")
             .executor(new BatchJob_Generate_Savings_1(contractClient, ledgerClient))
+            .build())
+        .addSteps(ImmutableBatchStepDefinition.builder()
+            .name("generate test set 2")
+            .comment("nova virtus")
+            .executor(new BatchJob_Generate_Savings_2(contractClient, ledgerClient))
             .build())
         .build();
   }
