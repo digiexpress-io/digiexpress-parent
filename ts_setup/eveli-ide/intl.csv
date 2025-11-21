@@ -1169,6 +1169,7 @@ contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage,Contrac
 contractcard.body.investmentPlans.invPlanAllocation.allocationStatus,Contract,Status,Status,Status,
 contractcard.body.product.description.ruleCode,,Code,,,
 contractcard.body.product.description.ruleText,,Text,,,
+contractcard.product.description.view,,Product description,,,
 contractcard.transitives.createdAt,Contract,Created,Luotu,Skapad,
 contractcard.transitives.updatedAt,Contract,Updated,Päivitetty,Uppdaterad,
 contractcard.transitives.updatedTreeAt,Contract,Updated tree,Päivitetty puu,Uppdaterat träd,

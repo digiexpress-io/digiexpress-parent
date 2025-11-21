@@ -1161,6 +1161,7 @@ export const en = {
   'contractcard.body.investmentPlans.invPlanAllocation.allocationStatus': 'Status',
   'contractcard.body.product.description.ruleCode': 'Code',
   'contractcard.body.product.description.ruleText': 'Text',
+  'contractcard.product.description.view': 'Product description',
   'contractcard.transitives.createdAt': 'Created',
   'contractcard.transitives.updatedAt': 'Updated',
   'contractcard.transitives.updatedTreeAt': 'Updated tree',

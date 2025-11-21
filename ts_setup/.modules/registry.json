@@ -141,6 +141,8 @@
         "react-intl",
         "luxon",
         "@dxs-ts/contract-api",
+        "@monaco-editor/react",
+        "yaml",
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@dxs-ts/xui-table"
@@ -152,6 +154,8 @@
         "@mui/utils",
         "react-intl",
         "luxon",
+        "@monaco-editor/react",
+        "yaml",
         "@tanstack/react-table",
         "@tanstack/react-query"
       ],
@@ -162,9 +166,7 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/xui-datetime",
-        "@mui/system",
-        "@monaco-editor/react",
-        "yaml"
+        "@mui/system"
       ]
     },
     "@dxs-ts/eveli-demo-app": {
@@ -3881,6 +3883,6 @@
       ]
     }
   },
-  "checksum": "7a12d49ca57114d7052abe331ddb57a78db25f981e81a195d37dc00a968f4f0a",
-  "generatedAt": "2025-11-20T09:49:30.939Z"
+  "checksum": "da783e57ce7f4d9801b06dff05469fe23165059742b58bfdf4d13886087ffe96",
+  "generatedAt": "2025-11-21T13:09:36.869Z"
 }
