@@ -21,7 +21,9 @@ package io.resys.lp.client.spi;
  */
 
 import io.resys.lp.client.api.LpClient;
+import io.resys.lp.client.spi.calc.CalculationFactory;
 import io.resys.lp.client.spi.paymentmatching.PaymentMatchingImpl;
+import io.resys.lp.client.spi.realcalculation.AddPaymentCalculation;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.ledger.client.api.LedgerClient;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +40,8 @@ public class LpClientImpl implements LpClient {
   public Actions actions() {
     return new Actions() {
       @Override
-      public RealCalculation realCalculation() {
-        // TODO Auto-generated method stub
-        return null;
+      public PaymentCalculation paymentCalculation() {
+        return new AddPaymentCalculation(contracts, ledgers, new CalculationFactory(contracts, ledgers));
       }
       @Override
       public ImaginaryCalculation imaginaryCalculation() {

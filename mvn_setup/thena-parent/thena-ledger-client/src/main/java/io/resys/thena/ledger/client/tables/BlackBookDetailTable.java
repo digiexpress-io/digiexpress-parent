@@ -42,15 +42,16 @@ import io.vertx.mutiny.sqlclient.Row;
     (
       id UUID PRIMARY KEY,
       black_book_id UUID NOT NULL,
-      external_id VARCHAR(255) NOT NULL,
+      external_id VARCHAR(255),
       target_id VARCHAR(255),
+      payment_id UUID,
       
       detail_type VARCHAR(100) NOT NULL,
       detail_sub_type VARCHAR(100),
       detail_description TEXT,
       
-      detail_start_date DATE NOT NULL,
-      detail_end_date DATE NOT NULL,
+      detail_start_date DATE,
+      detail_end_date DATE,
       detail_amount DECIMAL(15,2) NOT NULL,
       detail_formula VARCHAR(255),
       detail_body JSONB,
@@ -62,6 +63,8 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {black_book_detail} (black_book_id);
     CREATE INDEX IF NOT EXISTS {black_book_detail}_EXTERNAL_INDEX
       ON {black_book_detail} (external_id);
+    CREATE INDEX IF NOT EXISTS {black_book_detail}_PAYMENT_INDEX
+      ON {black_book_detail} (payment_id);
     CREATE INDEX IF NOT EXISTS {black_book_detail}_TARGET_INDEX
       ON {black_book_detail} (target_id);
     CREATE INDEX IF NOT EXISTS {black_book_detail}_DATE_RANGE_INDEX
@@ -70,6 +73,9 @@ import io.vertx.mutiny.sqlclient.Row;
   constraints = """
     ALTER TABLE {black_book_detail} ADD CONSTRAINT fk_black_book_detail_black_book 
       FOREIGN KEY (black_book_id) REFERENCES {black_book}(id);
+      
+    ALTER TABLE {black_book_detail} ADD CONSTRAINT fk_black_book_detail_payment 
+      FOREIGN KEY (payment_id) REFERENCES {payment}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {black_book_detail} CASCADE;
@@ -145,10 +151,10 @@ public interface BlackBookDetailTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {black_book_detail}
-      (id, black_book_id, external_id, detail_type, detail_sub_type, 
-       detail_description, target_id, detail_start_date, detail_end_date, 
+      (id, black_book_id, external_id, target_id, payment_id, detail_type, detail_sub_type, 
+       detail_description, detail_start_date, detail_end_date, 
        detail_amount, detail_formula, detail_body, created_commit_id)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
     """,
     propsMapper = BlackBookDetailInsertMapper.class
   )
@@ -163,13 +169,14 @@ public interface BlackBookDetailTable {
       return ImmutableBlackBookDetail.builder()
           .id(TableUtils.toStringUUID(row, "id"))
           .blackBookId(TableUtils.toStringUUID(row, "black_book_id"))
-          .externalId(row.getString("external_id"))
+          .externalId(Optional.ofNullable(row.getString("external_id")))
           .detailType(row.getString("detail_type"))
           .detailSubType(Optional.ofNullable(row.getString("detail_sub_type")))
           .detailDescription(Optional.ofNullable(row.getString("detail_description")))
           .targetId(Optional.ofNullable(row.getString("target_id")))
-          .detailStartDate(row.getLocalDate("detail_start_date"))
-          .detailEndDate(row.getLocalDate("detail_end_date"))
+          .paymentId(Optional.ofNullable(TableUtils.toStringUUID(row, "payment_id")))
+          .detailStartDate(Optional.ofNullable(row.getLocalDate("detail_start_date")))
+          .detailEndDate(Optional.ofNullable(row.getLocalDate("detail_end_date")))
           .detailAmount(row.getBigDecimal("detail_amount"))
           .detailFormula(Optional.ofNullable(row.getString("detail_formula")))
           .detailBody(Optional.ofNullable(detail_body))
@@ -187,13 +194,14 @@ public interface BlackBookDetailTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getBlackBookId()),
-        doc.getExternalId(),
+        doc.getExternalId().orElse(null),
+        doc.getTargetId().orElse(null),
+        doc.getPaymentId().isPresent() ? TableUtils.toUuid(doc.getPaymentId().get()) : null,
         doc.getDetailType(),
         doc.getDetailSubType().orElse(null),
         doc.getDetailDescription().orElse(null),
-        doc.getTargetId().orElse(null),
-        doc.getDetailStartDate(),
-        doc.getDetailEndDate(),
+        doc.getDetailStartDate().orElse(null),
+        doc.getDetailEndDate().orElse(null),
         doc.getDetailAmount(),
         doc.getDetailFormula().orElse(null),
         doc.getDetailBody().orElse(null),

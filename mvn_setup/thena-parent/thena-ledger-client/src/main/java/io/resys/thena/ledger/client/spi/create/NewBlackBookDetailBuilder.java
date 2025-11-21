@@ -58,6 +58,11 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
     this.next = ImmutableBlackBookDetail.builder()
         .id(OidUtils.genUUID())
         .blackBookId(blackBookId)
+        .targetId(Optional.empty())
+        .paymentId(Optional.empty())
+        .externalId(Optional.empty())
+        .detailStartDate(Optional.empty())
+        .detailEndDate(Optional.empty())
         .createdCommitId(logger.getCommitId());
     
     // BlackBookDetails are immutable, so no updates/deletes to consider
@@ -129,7 +134,11 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
     this.next.detailFormula(Optional.ofNullable(formula));
     return this;
   }
-
+  @Override
+  public NewBlackBookDetail paymentId(String paymentId) {
+    this.next.paymentId(Optional.ofNullable(paymentId));
+    return this;
+  }  
   @Override
   public NewBlackBookDetail body(JsonObject body) {
     this.next.detailBody(Optional.ofNullable(body));

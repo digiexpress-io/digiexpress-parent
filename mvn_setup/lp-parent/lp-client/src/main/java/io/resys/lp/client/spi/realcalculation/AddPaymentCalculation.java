@@ -22,7 +22,7 @@ package io.resys.lp.client.spi.realcalculation;
 
 import java.time.LocalDate;
 
-import io.resys.lp.client.api.LpClient.RealCalculation;
+import io.resys.lp.client.api.LpClient.PaymentCalculation;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class AddPaymentCalculation implements RealCalculation {
+public class AddPaymentCalculation implements PaymentCalculation {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
   private final CalculationFactory factory;
@@ -49,13 +49,13 @@ public class AddPaymentCalculation implements RealCalculation {
   private LocalDate startDate;
   
   @Override
-  public RealCalculation accountId(String contractIdOrRefOrEtc) {
+  public PaymentCalculation ledgerId(String contractIdOrRefOrEtc) {
     this.contractIdOrRefOrEtc = contractIdOrRefOrEtc;
     return this;
   }
 
   @Override
-  public RealCalculation startDate(LocalDate startDate) {
+  public PaymentCalculation startDate(LocalDate startDate) {
     this.startDate = startDate;
     return this;
   }

@@ -245,7 +245,7 @@ public interface MoneyRequestTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(MoneyRequest doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getLedgerId()),
-        doc.getExternalId(),
+        doc.getExternalId().orElse(null),
         TableUtils.toUuid(doc.getPaymentId().orElse(null)),
         doc.getRequestType().name(),
         doc.getRequestSubType().orElse(null),

@@ -121,8 +121,9 @@ public interface ThenaLedgerNewObject {
     NewBlackBookDetail subType(@Nullable String subType);
     NewBlackBookDetail description(@Nullable String description);
     NewBlackBookDetail targetId(@Nullable String targetId);
-    NewBlackBookDetail startDate(LocalDate startDate);
-    NewBlackBookDetail endDate(LocalDate endDate);
+    NewBlackBookDetail paymentId(@Nullable String paymentId);
+    NewBlackBookDetail startDate(@Nullable LocalDate startDate);
+    NewBlackBookDetail endDate(@Nullable LocalDate endDate);
     NewBlackBookDetail amount(BigDecimal amount);
     NewBlackBookDetail formula(@Nullable String formula);
     NewBlackBookDetail body(@Nullable JsonObject body);

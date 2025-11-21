@@ -2,6 +2,7 @@ package io.resys.lp.client.spi.calc.real.formulas;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +12,14 @@ import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
 import io.resys.thena.ledger.client.api.LedgerCommitActions.OneLedgerEnvelope;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;
-import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeMoneyRequest;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewBlackBook;
+import io.resys.thena.ledger.client.entities.BlackBook;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestStatus;
 import io.resys.thena.ledger.client.entities.MoneyRequest.MoneyRequestType;
 import io.resys.thena.ledger.client.entities.Payment;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -29,6 +31,7 @@ public class AddPayment_FeemiSavings implements LedgerCalculator {
   
   private MergeLedger ledger;
   private NewBlackBook newBlackBook;
+  private BlackBook lastBlackBook;
 
   
   // FEEMI_SAV_001 product parameters
@@ -46,7 +49,10 @@ public class AddPayment_FeemiSavings implements LedgerCalculator {
         .filter(request -> request.getRequestType() == MoneyRequestType.ADD_PAYMENT)
         .toList();
     
-    
+     final var sortedBb = new ArrayList<>(ctx.getLedger().getBlackBooks());
+     sortedBb.sort(BlackBook.COMPARATOR);
+     this.lastBlackBook = sortedBb.getFirst();
+     
     return ctx.getLedgerClient().withTenant().commit().modifyOneLedger()
       .commitMessage("+ payment calculation")
       .commitAuthor(AddPayment_FeemiSavings.class.getSimpleName())
@@ -68,42 +74,52 @@ public class AddPayment_FeemiSavings implements LedgerCalculator {
     ledger.addBlackBook(bb -> {
       // start 
       this.newBlackBook = bb;
-      
+
       // execute
+      var total = BigDecimal.ZERO;
       for (final var request : openRequests) {
-        visitPayment(request);
+        total = total.add(visitPayment(request));
       }
+
       // end
-      this.newBlackBook.build();
-    });    
-  }
-  
-      
-  private void visitPayment(MoneyRequest moneyRequest) {
-    
-    // Find related payment
-    final var payment = ctx.getLedger().getPayments().stream()
-        .filter(p -> p.getExternalId().equals(moneyRequest.getExternalId().orElse("")))
-        .findFirst()
-        .orElse(null);
-    
-    if (payment == null) {
-      return;
-    }
-    
-    // Cross join with investment plans
-    for (final var invPlan : ctx.getContract().getInvPlans()) {
-      visitInvPlan(payment, moneyRequest, invPlan);
-    }
-    
-    ledger.modifyMoneyRequest(moneyRequest.getId(), change -> {
-      change
-        .status(MoneyRequestStatus.CLOSED)
+      this.newBlackBook
+        .amount(total)
+        .date(LocalDate.now())
+        .type("INCOMING_PAYMENT")
         .build();
     });
   }
   
-  private void visitInvPlan(Payment payment, MoneyRequest moneyRequest, InvPlan invPlan) {
+      
+  private BigDecimal visitPayment(MoneyRequest moneyRequest) {
+    
+    // Find related payment
+    final var payment = ctx.getLedger().getPayments().stream()
+        .filter(p -> (
+            p.getExternalId().equals(moneyRequest.getExternalId().orElse("")) ||
+            p.getId().equals(moneyRequest.getPaymentId().orElse(""))
+            ))
+        .findFirst()
+        .orElse(null);
+    
+    if (payment == null) {
+      return BigDecimal.ZERO;
+    }
+    
+    // Cross join with investment plans
+    final var balance = BigDecimal.ZERO;
+    for (final var invPlan : ctx.getContract().getInvPlans()) {
+      balance.add(visitInvPlan(payment, moneyRequest, invPlan));
+    }
+    
+    ledger.modifyMoneyRequest(moneyRequest.getId(), change -> {
+      change.status(MoneyRequestStatus.CLOSED).build();
+    });
+    
+    return balance;
+  }
+  
+  private BigDecimal visitInvPlan(Payment payment, MoneyRequest moneyRequest, InvPlan invPlan) {
     final var grossAmount = moneyRequest.getRequestAmount();
     final var paymentFee = grossAmount.multiply(KAPPA).setScale(2, RoundingMode.HALF_UP);
     final var netAmount = grossAmount.subtract(paymentFee);
@@ -111,18 +127,37 @@ public class AddPayment_FeemiSavings implements LedgerCalculator {
     // Get allocations for this investment plan
     final var allocations = ctx.getContract().getInvPlanAllocations().get(invPlan.getId());
     if (allocations == null || allocations.isEmpty()) {
-      return;
+      return BigDecimal.ZERO;
     }
     
+    final var feeLog = String.format("Fee calculation: %s * %s = %s", grossAmount, KAPPA, paymentFee);
+    log.add(feeLog);
+
+    
     for (final var allocation : allocations) {
-      visitInvPlanAlloc(payment, moneyRequest, invPlan, allocation, netAmount);
+      final var allocated = visitInvPlanAlloc(payment, moneyRequest, invPlan, allocation, netAmount);
+      
+      newBlackBook.addBlackBookDetail(bbd -> bbd
+          .type("PAYMENT_DETAIL")
+          .subType("PAYMENT_AMOUNT_ALLOC")
+          .amount(allocated)
+          .paymentId(payment.getId())
+          .targetId(allocation.getId())
+          .body(JsonObject.of(
+              "kappa_log", feeLog,
+              "kappa", paymentFee,
+              "net_amount", netAmount,
+              "gross_amount", grossAmount
+          ))
+          .build());
     }
     
     // Add payment fee calculation
-    log.add(String.format("Fee calculation: %s * %s = %s", grossAmount, KAPPA, paymentFee));
+    
+    return netAmount;
   }
   
-  private void visitInvPlanAlloc(Payment payment, MoneyRequest moneyRequest, InvPlan invPlan, 
+  private BigDecimal visitInvPlanAlloc(Payment payment, MoneyRequest moneyRequest, InvPlan invPlan, 
                                  InvPlanAlloc allocation, BigDecimal netAmount) {
     
     final var allocationAmount = netAmount.multiply(allocation.getInvPlanAllocPercentage())
@@ -138,6 +173,8 @@ public class AddPayment_FeemiSavings implements LedgerCalculator {
     final var units = allocationAmount.divide(unitPrice, 6, RoundingMode.HALF_UP);
     
     visitFormula(payment, moneyRequest, invPlan, allocation, allocationAmount, units, unitPrice);
+    
+    return allocationAmount;
   }
   
   private void visitFormula(Payment payment, MoneyRequest moneyRequest, InvPlan invPlan,

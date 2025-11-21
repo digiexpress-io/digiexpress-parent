@@ -133,11 +133,11 @@ public class MergeMoneyRequestBuilder implements MergeMoneyRequest {
   public ImmutablePersistenceUnit close() {
     RepoAssert.isTrue(built, () -> "you must call MergeMoneyRequest.build() to finalize money request MERGE!");
 
-    final var moneyRequest = nextMoneyRequest
-        .commitId(logger.getCommitId())
+    final var moneyRequest = this.nextMoneyRequest
+        .commitId(this.logger.getCommitId())
         .transitives(ImmutableMoneyRequestTransitives.builder()
-            .from(currentMoneyRequest.getTransitives())
-            .updatedAt(logger.getCreatedAt())
+            .from(this.currentMoneyRequest.getTransitives())
+            .updatedAt(this.logger.getCreatedAt())
             .build())
         .build();
     
