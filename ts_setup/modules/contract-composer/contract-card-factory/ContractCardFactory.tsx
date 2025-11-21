@@ -1,6 +1,9 @@
 import React from 'react';
+import { ListItem, ListItemText, List, ListItemIcon } from '@mui/material';
+
 import { HandshakeOutlined as HandshakeOutlinedIcon } from '@mui/icons-material';
 import { CalendarMonthOutlined as CalendarMonthOutlinedIcon } from '@mui/icons-material';
+import { Circle as CircleIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { DateTime } from 'luxon';
 
@@ -31,9 +34,9 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { contractContainer } = useContract();
-  const { contract, parties, coverages, paymentPlans, invPlans, invPlanAllocations } = contractContainer;
+  const { contract, parties, coverages, paymentPlans, invPlans, invPlanAllocations, notes } = contractContainer;
 
-  console.log(contractContainer)
+  //console.log(contractContainer)
 
 
   const {
@@ -177,21 +180,46 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
         }
       </ContractCard>
       );
-    case 'product': {
-      return (<ContractCard title='product'
-        {...commonProps}
-        isMenu
-        onDoubleClick={handleEdit}
-        onEdit={handleEdit}
-        editDialog={editingCardId === cardId && (<></>)}
-        startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
-        showFlashyToggle={true}
-        showEditOnMenu={true}
-        showEditButton={true}
-        showReviewOnMenu={false}>
-        Product
-      </ContractCard>
-      )
+    case "product": {
+      const productRules = notes
+        .filter(n => n.noteType === "product-description")
+        .flatMap(n => n.noteBody?.rules ?? []);
+
+      return (
+        <ContractCard
+          title={intl.formatMessage({ id: "contractcard.product.title" })}
+          {...commonProps}
+          isMenu
+          onDoubleClick={handleEdit}
+          onEdit={handleEdit}
+          editDialog={editingCardId === cardId && <></>}
+          startAdornmentIcon={<StartAdornmentIcon icon={CalendarMonthOutlinedIcon} />}
+          showFlashyToggle={true}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={false}
+        >
+
+          {productRules.map((rule, index) => (
+            <List key={index} disablePadding>
+              <ListItem dense>
+                <ListItemIcon sx={{ minWidth: '40px' }}><CircleIcon sx={{ height: '10px', width: '10px', color: 'primary.main' }} /></ListItemIcon>
+                <ListItemText primary={rule.text} secondary={rule.ruleCode}
+                  slotProps={{
+                    primary: {
+                      sx: { fontWeight: 'bold' }
+                    },
+                    secondary: {
+                      sx: { fontSize: '11pt' }
+                    }
+                  }}
+                />
+              </ListItem>
+            </List>
+          ))}
+
+        </ContractCard>
+      );
     }
     case 'payment_plans':
       return (<ContractCard title={intl.formatMessage({ id: 'contractcard.paymentPlans.title' })}
@@ -247,7 +275,7 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
                 <ContractCardDataRowText label={intl.formatMessage({ id: 'contractcard.investmentPlans.invPlanAllocations.title' })} value={undefined} style={style} />
 
                 {allocations.map((allocation, index) => (
-                  <ContractCardDataList index={index}
+                  <ContractCardDataList index={index} key={index}
                     labelColHeader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationName' })}
                     valueColheader={intl.formatMessage({ id: 'contractcard.body.investmentPlans.invPlanAllocation.allocationPercentage' })}
                     label={allocation.invPlanAllocName}
@@ -275,4 +303,14 @@ function formatAnyDateShort(value: Date | string | undefined): string {
 
 
 
-
+/*
+   {/*  <ContractCardDataList
+              key={index}
+              index={index}
+              labelColHeader={intl.formatMessage({ id: "contractcard.body.product.description.ruleCode" })}
+              valueColheader={intl.formatMessage({ id: "contractcard.body.product.description.ruleText" })}
+              label={rule.ruleCode}
+              value={rule.text}
+            />
+            
+            */
