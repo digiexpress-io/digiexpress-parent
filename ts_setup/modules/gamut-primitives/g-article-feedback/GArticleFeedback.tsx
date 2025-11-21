@@ -136,6 +136,7 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               <Button
                 onClick={sortAnchorOnClick}
                 variant="text"
+                endIcon={<span className={classes.mobileSortChevron}>▼</span>}
               >
                 {currentSortLabel}
               </Button>

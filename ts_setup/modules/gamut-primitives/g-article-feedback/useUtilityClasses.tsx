@@ -21,6 +21,7 @@ export interface GArticleFeedbackClasses {
   mobileListMeta: string;
   mobileSortBar: string;
   mobileSortArrow: string;
+  mobileSortChevron: string;
 };
 
 export type GArticleFeedbackClassKey = keyof GArticleFeedbackClasses;
@@ -42,6 +43,7 @@ export const useUtilityClasses = () => {
     mobileListMeta: ['mobileListMeta'],
     mobileSortBar: ['mobileSortBar'],
     mobileSortArrow: ['mobileSortArrow'],
+    mobileSortChevron: ['mobileSortChevron'],
   };
 
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -160,6 +162,13 @@ export const GArticleFeedbackRoot = styled("div", {
       alignItems: 'center',
       justifyContent: 'center',
       paddingRight: theme.spacing(1),
+    },
+    '& .GArticleFeedback-mobileSortChevron': {
+      fontSize: '0.5rem',
+      opacity: 0.7,
+      marginLeft: theme.spacing(0.5),
+      display: 'inline-block',
+      transform: 'translateY(1px)',
     },
   };
 });
