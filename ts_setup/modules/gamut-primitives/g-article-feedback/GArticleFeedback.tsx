@@ -1,5 +1,6 @@
 import React from 'react';
 import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography, useMediaQuery, Button, Popover, List, ListItem, ListItemButton, Box } from '@mui/material';
+import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { ThumbDown as ThumbDownIcon } from '@mui/icons-material';
 import { ThumbUp as ThumbUpIcon } from '@mui/icons-material';
@@ -136,7 +137,13 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               <Button
                 onClick={sortAnchorOnClick}
                 variant="text"
-                endIcon={<span className={classes.mobileSortChevron}>▼</span>}
+                endIcon={
+                  sortAnchorProps.open ? (
+                    <ArrowDropUpIcon className={classes.mobileSortIcon} />
+                  ) : (
+                    <ArrowDropDownIcon className={classes.mobileSortIcon} />
+                  )
+                }
               >
                 {currentSortLabel}
               </Button>
