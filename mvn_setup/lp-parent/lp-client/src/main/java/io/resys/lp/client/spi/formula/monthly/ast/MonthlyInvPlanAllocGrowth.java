@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.formulas.monthly.ast;
+package io.resys.lp.client.spi.formula.monthly.ast;
 
 /*-
  * #%L
