@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.formulas.addpayment.ast;
+package io.resys.lp.client.spi.formula.addpayment.ast;
 
 /*-
  * #%L
