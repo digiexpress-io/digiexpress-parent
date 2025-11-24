@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import io.resys.lp.client.api.LpClient.PaymentMatching;
+import io.resys.lp.client.api.LpClient.MatchPayment;
 import io.resys.lp.client.api.entities.AllocatedPayments;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class PaymentMatchingImpl implements PaymentMatching {
+public class PaymentMatchingImpl implements MatchPayment {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
   
@@ -53,12 +53,12 @@ public class PaymentMatchingImpl implements PaymentMatching {
   private final ImmutableAllocatedPayments.Builder allocation = ImmutableAllocatedPayments.builder();
   
   @Override
-  public PaymentMatching addHint(String contractIdOrSomeContractIdentifier) {
+  public MatchPayment addHint(String contractIdOrSomeContractIdentifier) {
     this.hints.add(contractIdOrSomeContractIdentifier);
     return this;
   }
   @Override
-  public PaymentMatching addPayment(Consumer<NewPayment> payment) {
+  public MatchPayment addPayment(Consumer<NewPayment> payment) {
     this.payments.add(payment);
     return this;
   }
