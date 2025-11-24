@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.resys.lp.client.api.LpClient.CalculatePaymentFormula;
@@ -157,74 +158,87 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
       return new PaymentToInvPlan.Node(BigDecimal.ZERO);
     }
 
+    var allocated = BigDecimal.ZERO;
+    
     for (final var allocation : allocations) {
       // detail 1 - + payment share against fund 
       final var node = visitPaymentToInvPlanAlloc(new PaymentToInvPlanAlloc.Expression(payment, moneyRequest, invPlan, allocation));
       
+      allocated = allocated.add(node.getAllocatedAmount());
       
       newBlackBook.addBlackBookDetail(bbd -> bbd
           .type("PAYMENT_DETAIL")
           .subType("PAYMENT_ALLOCATED_AMOUNT")
-          .amount(allocationAmount)
+          .amount(node.getAllocatedAmount())
           .paymentId(payment.getId())
           .targetId(allocation.getId())
-          .body(JsonObject.of(
-              "kappa_log", feeLog,
-              "kappa", paymentFee,
-              "net_amount", netAmount,
-              "gross_amount", grossAmount,
-              "alloc_percentage", allocation.getInvPlanAllocPercentage()
-          ))
+          .body(JsonObject.mapFrom(node))
           .build());
 
     }
-    return new PaymentToInvPlan.Node(netAmount);
+    return new PaymentToInvPlan.Node(allocated);
   }
 
   
   
-  private BigDecimal visitPaymentToInvPlanAlloc(PaymentToInvPlanAlloc.Expression exp) {
-    final Payment payment = exp.getPayment(); 
-    final MoneyRequest moneyRequest = exp.getMoneyRequest(); 
+  private PaymentToInvPlanAlloc.Node visitPaymentToInvPlanAlloc(PaymentToInvPlanAlloc.Expression exp) {
+    final Payment payment = exp.getPayment();
     final InvPlan invPlan = exp.getInvPlan();
+    
+    final MoneyRequest moneyRequest = exp.getMoneyRequest(); 
+
     final InvPlanAlloc allocation = exp.getAllocation(); 
     
     
     // net amount that is going to be allocated
-    final var grossAmount = moneyRequest.getRequestAmount();
-    final var paymentFee = grossAmount.multiply(KAPPA).setScale(2, RoundingMode.HALF_UP);
-    final var netAmount = grossAmount.subtract(paymentFee);
+    final var paymentGrossAmount = moneyRequest.getRequestAmount();
+    final var paymentKappaPaymentFeeAmount = paymentGrossAmount.multiply(KAPPA).setScale(2, RoundingMode.HALF_UP);
+    final var paymentNetAmount = paymentGrossAmount.subtract(paymentKappaPaymentFeeAmount);
     
     // share from the net amount that is going to be used
-    final var allocationAmount = netAmount.multiply(allocation.getInvPlanAllocPercentage()).setScale(2, RoundingMode.HALF_UP);
+    final var allocatedShare = allocation.getInvPlanAllocPercentage();
+    final var allocatedAmount = paymentNetAmount.multiply(allocatedShare).setScale(2, RoundingMode.HALF_UP);
 
     
     // Find unit price for this allocation
-    final var unitPrice = ctx.getLedger().getUnitPrices().stream()
+    final var fundUnitPrice = ctx.getLedger().getUnitPrices().stream()
         .filter(up -> up.getExternalId().equals(allocation.getInvPlanAllocCode()))
         .findFirst()
         .map(up -> up.getUnitValue())
         .orElse(BigDecimal.ONE);
     
-    final var units = allocationAmount.divide(unitPrice, 6, RoundingMode.HALF_UP);
+    final var fundUnitAmount = allocatedAmount.divide(fundUnitPrice, 6, RoundingMode.HALF_UP);
     
     
     // FEEMI_SAV_001 formula calculation
-    final var mortalityCharge = allocationAmount.multiply(GAMMA).setScale(2, RoundingMode.HALF_UP);
-    final var netInvestment = allocationAmount.subtract(mortalityCharge);
-    final var projectedValue = netInvestment.multiply(BigDecimal.ONE.add(MU)).setScale(2, RoundingMode.HALF_UP);
+    final var allocationGammaMortalityFee = allocatedAmount.multiply(GAMMA).setScale(2, RoundingMode.HALF_UP);
+    final var allocationNetAmount = allocatedAmount.subtract(allocationGammaMortalityFee);
+    final var allocationProjectedValue = allocationNetAmount.multiply(BigDecimal.ONE.add(MU)).setScale(2, RoundingMode.HALF_UP);
     
     
+    final var feeLog = String.format("Fee calculation: %s * %s = %s", paymentGrossAmount, KAPPA, paymentKappaPaymentFeeAmount);
     
-    final var feeLog = String.format("Fee calculation: %s * %s = %s", grossAmount, KAPPA, paymentFee);
-    log.add(String.format("FEEMI_SAV_001 - Payment: %s, Plan: %s, Alloc: %s%% to %s", 
-        payment.getExternalId(), invPlan.getInvPlanCode(), 
-        allocation.getInvPlanAllocPercentage().multiply(new BigDecimal("100")), allocation.getInvPlanAllocPercentage()));
-    
-    log.add(String.format("Amount: %s, Units: %s @ %s, Mortality: %s, Net Investment: %s, Projected: %s",
-        allocationAmount, units, unitPrice, mortalityCharge, netInvestment, projectedValue));
-    
-    return allocationAmount;
+    return PaymentToInvPlanAlloc.Node.builder()
+        .logs(Arrays.asList(feeLog))
+        
+        .invPlanId(invPlan.getId())
+        .paymentId(payment.getId())
+        
+        .paymentGrossAmount(paymentGrossAmount)
+        .paymentKappaPaymentFeeAmount(paymentKappaPaymentFeeAmount)
+        .paymentNetAmount(paymentNetAmount)
+        
+        .allocatedShare(allocatedShare)
+        .allocatedAmount(allocatedAmount)
+        
+        .fundUnitPrice(fundUnitPrice)
+        .fundUnitAmount(fundUnitAmount)
+        
+        .allocationGammaMortalityFee(allocationGammaMortalityFee)
+        .allocationNetAmount(allocationNetAmount)
+        .allocationProjectedValue(allocationProjectedValue)
+        
+        .build();
   }
 
 }
