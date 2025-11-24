@@ -17,6 +17,8 @@ public class PaymentToInvPlan {
   
   @Value
   public static class Node {
-    BigDecimal allocated; 
+    BigDecimal allocated;
+    BigDecimal inflow;
+    BigDecimal outflow;
   }
 }

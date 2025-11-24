@@ -47,6 +47,7 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
 
   
   public Uni<Envelope<AnyCalculation>> accept(FormulaContainer container) {
+    this.ctx = container;
     
     // Iterate through open money requests
     final var openRequests = ctx.getLedger().getMoneyRequests().stream()
@@ -93,16 +94,26 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
       // start 
       this.newBlackBook = bb;
 
-      // execute
-      var allocated = BigDecimal.ZERO;
+      // execute calculations
+      var totalInflow = BigDecimal.ZERO;
+      var totalOutflow = BigDecimal.ZERO;
+      
       for (final var request : openRequests) {
         final var node = visitMoneyToLedger(new MoneyToLedger.Expression(request));
-        allocated = allocated.add(node.getAllocated());
+        totalInflow = totalInflow.add(node.getInflow());
+        totalOutflow = totalOutflow.add(node.getOutflow());
       }
+      
+      final var netChange = totalInflow.subtract(totalOutflow);
+      final var newBalance = lastBlackBook.getBookAmount().add(netChange);
 
-      // end
+      // end - create BlackBook entry with proper money tracking
       this.newBlackBook
-        .amount(allocated)
+        .parentId(lastBlackBook.getId())
+        .amount(newBalance)              // Running balance
+        .deltaAmount(netChange)          // Net change  
+        .inflowAmount(totalInflow)       // Total money in
+        .outflowAmount(totalOutflow)     // Total money out
         .date(LocalDate.now())
         .type("INCOMING_PAYMENT")
         .build();
@@ -124,21 +135,26 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
         .orElse(null);
     
     if (payment == null) {
-      return new MoneyToLedger.Node(BigDecimal.ZERO);
+      return new MoneyToLedger.Node(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
     
-    // Cross join with investment plans
-    final var balance = BigDecimal.ZERO;
+    // Cross join with investment plans and sum flows
+    var totalAllocated = BigDecimal.ZERO;
+    var totalInflow = BigDecimal.ZERO;
+    var totalOutflow = BigDecimal.ZERO;
+    
     for (final var invPlan : ctx.getContract().getInvPlans()) {
       final var node = visitPaymentToInvPlan(new PaymentToInvPlan.Expression(payment, moneyRequest, invPlan));
-      balance.add(node.getAllocated());
+      totalAllocated = totalAllocated.add(node.getAllocated());
+      totalInflow = totalInflow.add(node.getInflow());
+      totalOutflow = totalOutflow.add(node.getOutflow());
     }
     
     ledger.modifyMoneyRequest(moneyRequest.getId(), change -> {
       change.status(MoneyRequestStatus.CLOSED).build();
     });
     
-    return new MoneyToLedger.Node(balance);
+    return new MoneyToLedger.Node(totalAllocated, totalInflow, totalOutflow);
   }
   
   
@@ -152,28 +168,40 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
     // Get allocations for this investment plan
     final var allocations = ctx.getContract().getInvPlanAllocations().get(invPlan.getId());
     if (allocations == null || allocations.isEmpty()) {
-      return new PaymentToInvPlan.Node(BigDecimal.ZERO);
+      return new PaymentToInvPlan.Node(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
-    var allocated = BigDecimal.ZERO;
+    var totalAllocated = BigDecimal.ZERO;
+    var totalInflow = BigDecimal.ZERO;
+    var totalOutflow = BigDecimal.ZERO;
     
     for (final var allocation : allocations) {
       // detail 1 - + payment share against fund 
       final var node = visitPaymentToInvPlanAlloc(new PaymentToInvPlanAlloc.Expression(payment, moneyRequest, invPlan, allocation));
       
-      allocated = allocated.add(node.getAllocatedAmount());
+      totalAllocated = totalAllocated.add(node.getAllocatedAmount());
       
+      // Calculate inflow and outflow for this allocation
+      final var allocationInflow = node.getPaymentGrossAmount(); // Money coming in
+      final var allocationOutflow = node.getPaymentKappaPaymentFeeAmount().add(node.getAllocationGammaMortalityFee()); // Fees going out
+      
+      totalInflow = totalInflow.add(allocationInflow);
+      totalOutflow = totalOutflow.add(allocationOutflow);
+      
+      // Create detailed BlackBook entry with money tracking
       newBlackBook.addBlackBookDetail(bbd -> bbd
           .type("PAYMENT_DETAIL")
           .subType("PAYMENT_ALLOCATED_AMOUNT")
-          .amount(node.getAllocatedAmount())
+          .amount(node.getAllocatedAmount())           // Final allocated amount
+          .deltaAmount(node.getAllocationNetAmount())  // Net after fees
+          .inflowAmount(allocationInflow)              // Gross payment
+          .outflowAmount(allocationOutflow)            // Total fees
           .paymentId(payment.getId())
           .targetId(allocation.getId())
           .body(JsonObject.mapFrom(node))
           .build());
-
     }
-    return new PaymentToInvPlan.Node(allocated);
+    return new PaymentToInvPlan.Node(totalAllocated, totalInflow, totalOutflow);
   }
 
   
