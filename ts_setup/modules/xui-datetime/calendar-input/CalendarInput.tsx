@@ -9,10 +9,10 @@ import { useCalendarInput } from "./CalendarInputProvider";
 // Field components using context
 const DayField: React.FC = () => {
   const intl = useIntl();
-
-  const { machine, dayRef, handleKeyDown, focusField, blurField, typeDayDigit } = useCalendarInput();
+  const { disabled, machine, dayRef, handleKeyDown, focusField, blurField, typeDayDigit } = useCalendarInput();
   return (
     <Input
+      disabled={disabled}
       ref={dayRef}
       type="text"
       value={machine.day}
@@ -30,9 +30,10 @@ const DayField: React.FC = () => {
 
 const MonthField: React.FC = () => {
   const intl = useIntl();
-  const { machine, monthRef, handleKeyDown, focusField, blurField, typeMonthDigit } = useCalendarInput();
+  const { disabled, machine, monthRef, handleKeyDown, focusField, blurField, typeMonthDigit } = useCalendarInput();
   return (
     <Input
+      disabled={disabled}
       ref={monthRef}
       type="text"
       value={machine.month}
@@ -50,9 +51,10 @@ const MonthField: React.FC = () => {
 
 const YearField: React.FC = () => {
   const intl = useIntl();
-  const { machine, yearRef, handleKeyDown, focusField, blurField, typeYearDigit } = useCalendarInput();
+  const { machine, yearRef, disabled, handleKeyDown, focusField, blurField, typeYearDigit } = useCalendarInput();
   return (
     <Input
+      disabled={disabled}
       ref={yearRef}
       type="text"
       value={machine.year}
@@ -74,7 +76,7 @@ const DateSeparator: React.FC = () => (
 
 const ErrorMessage: React.FC = () => {
   const { machine } = useCalendarInput();
-  
+
   if (machine.isValid) return null;
   
   // todo

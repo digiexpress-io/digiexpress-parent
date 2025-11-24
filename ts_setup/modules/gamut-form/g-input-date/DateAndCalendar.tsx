@@ -21,6 +21,7 @@ interface DelegateInputProps {
   setExtendedErrors: GInputDateProps['setExtendedErrors'];
   setValue: (newValue: DateTime | null) => void;
   value: DateTime | null;
+  disabled?: boolean;
 }
 
 const input = React.forwardRef<any, DelegateInputProps>((props, _ref) => {
@@ -37,6 +38,7 @@ const input = React.forwardRef<any, DelegateInputProps>((props, _ref) => {
   }
   return (<XuiDatePicker
     fullWidth
+    disabled={props.disabled}
     onValidity={handleValidity}
     value={props.value ? props.value.toJSDate() : null}
     onChange={(d) => {
@@ -50,14 +52,16 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const [value, setValue] = React.useState<DateTime | null>(parseInit(props.value));
   const ownerState = { variant: props.variant ?? 'date' };
-  const { setExtendedErrors } = props;
+  const { setExtendedErrors, disabled } = props;
 
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>
       <InputHidden dateTime={value} onChange={props.onChange} id={props.id} />
       <OutlinedInput fullWidth 
-        slots={{ input }} slotProps={{ input: 
-          { value, setValue, setExtendedErrors } as any
+        slots={{ input }}
+        slotProps={{
+          input:
+            { value, disabled, setValue, setExtendedErrors } as any
         }}/>
     </GInputDateInput>
   );
