@@ -34,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
-  private final List<String> log = new ArrayList<>();
 
   private FormulaContainer ctx;
   private MergeLedger ledger;
