@@ -49,9 +49,9 @@ import io.vertx.mutiny.sqlclient.Row;
       black_book_description TEXT,
       black_book_date DATE NOT NULL,
       black_book_amount DECIMAL(15,2) NOT NULL,
-      delta_amount DECIMAL(15,2),
-      inflow_amount DECIMAL(15,2),
-      outflow_amount DECIMAL(15,2),
+      black_book_delta_amount DECIMAL(15,2),
+      black_book_inflow_amount DECIMAL(15,2),
+      black_book_outflow_amount DECIMAL(15,2),
       
       created_commit_id UUID NOT NULL
     );
@@ -146,8 +146,9 @@ public interface BlackBookTable {
     sql = """
       INSERT INTO {black_book}
       (id, ledger_id, external_id, parent_black_book_id, black_book_type, black_book_sub_type, 
-       black_book_description, black_book_date, black_book_amount, delta_amount, 
-       inflow_amount, outflow_amount, created_commit_id)
+       black_book_description, black_book_date, black_book_amount, 
+       black_book_delta_amount, black_book_inflow_amount, black_book_outflow_amount, 
+       created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
     propsMapper = BlackBookInsertMapper.class
@@ -168,9 +169,9 @@ public interface BlackBookTable {
           .bookDescription(Optional.ofNullable(row.getString("black_book_description")))
           .bookDate(row.getLocalDate("black_book_date"))
           .bookAmount(row.getBigDecimal("black_book_amount"))
-          .deltaAmount(Optional.ofNullable(row.getBigDecimal("delta_amount")))
-          .inflowAmount(Optional.ofNullable(row.getBigDecimal("inflow_amount")))
-          .outflowAmount(Optional.ofNullable(row.getBigDecimal("outflow_amount")))
+          .deltaAmount(Optional.ofNullable(row.getBigDecimal("black_book_delta_amount")))
+          .inflowAmount(Optional.ofNullable(row.getBigDecimal("black_book_inflow_amount")))
+          .outflowAmount(Optional.ofNullable(row.getBigDecimal("black_book_outflow_amount")))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
