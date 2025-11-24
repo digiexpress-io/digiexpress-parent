@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.realcalculation;
+package io.resys.lp.client.spi;
 
 /*-
  * #%L

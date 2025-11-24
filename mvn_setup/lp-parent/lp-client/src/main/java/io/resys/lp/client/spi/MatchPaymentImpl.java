@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.paymentmatching;
+package io.resys.lp.client.spi;
 
 /*-
  * #%L
@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class PaymentMatchingImpl implements MatchPayment {
+public class MatchPaymentImpl implements MatchPayment {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
   
@@ -88,7 +88,7 @@ public class PaymentMatchingImpl implements MatchPayment {
   
   private Uni<Envelope<AllocatedPayments>> allocateToLedger(ContractContainer contract) {
     return ledgers.withTenant().commit().modifyOneLedger()
-        .commitAuthor(PaymentMatchingImpl.class.getSimpleName())
+        .commitAuthor(MatchPaymentImpl.class.getSimpleName())
         .commitMessage("Payment matching")
         .ledgerId(contract.getContract().getId())
         .modifyLedger(ledger -> {

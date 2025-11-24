@@ -21,8 +21,6 @@ package io.resys.lp.client.spi;
  */
 
 import io.resys.lp.client.api.LpClient;
-import io.resys.lp.client.spi.paymentmatching.PaymentMatchingImpl;
-import io.resys.lp.client.spi.realcalculation.AddPaymentCalculation;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.ledger.client.api.LedgerClient;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +42,7 @@ public class LpClientImpl implements LpClient {
       }
       @Override
       public MatchPayment matchPayment() {
-        return new PaymentMatchingImpl(contracts, ledgers);
+        return new MatchPaymentImpl(contracts, ledgers);
       }
     };
   }
