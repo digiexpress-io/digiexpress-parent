@@ -109,7 +109,6 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
 
       // end - create BlackBook entry with proper money tracking
       this.newBlackBook
-        .parentId(lastBlackBook.getId())
         .amount(newBalance)              // Running balance
         .deltaAmount(netChange)          // Net change  
         .inflowAmount(totalInflow)       // Total money in

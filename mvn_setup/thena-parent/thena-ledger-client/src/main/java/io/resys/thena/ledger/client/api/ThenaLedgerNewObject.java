@@ -102,8 +102,10 @@ public interface ThenaLedgerNewObject {
   
   // support interface for black book creation
   interface NewBlackBook {
-    NewBlackBook externalId(String externalId);
+    // Fail-safe automatically assigned internally by default
     NewBlackBook parentId(@Nullable String parentBlackBookId);
+    
+    NewBlackBook externalId(String externalId);
     NewBlackBook type(String type);
     NewBlackBook subType(@Nullable String subType);
     NewBlackBook description(@Nullable String description);
