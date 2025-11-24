@@ -82,7 +82,7 @@ public class LedgerCommitBuilder {
         .id(blackBookId)
         .ledgerId(ledgerId)
         .createdCommitId(getCommitId())
-        .parentBlackBookId(this.currentBlackBookId.orElse(null));
+        .parentBlackBookId(this.currentBlackBookId);
     this.currentBlackBookId = Optional.of(blackBookId);
     return result;
   }

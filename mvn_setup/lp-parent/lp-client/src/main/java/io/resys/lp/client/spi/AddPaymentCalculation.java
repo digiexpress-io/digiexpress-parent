@@ -23,7 +23,7 @@ package io.resys.lp.client.spi;
 import java.time.LocalDate;
 
 import io.resys.lp.client.api.LpClient.CalculatePayment;
-import io.resys.lp.client.api.LpClient.CalculatePaymentFormula;
+import io.resys.lp.client.api.LpClient.CalculationFormula;
 import io.resys.lp.client.api.LpClient.FormulaContainer;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
@@ -49,7 +49,7 @@ public class AddPaymentCalculation implements CalculatePayment {
   
   private String contractIdOrRefOrEtc;
   private LocalDate targetDate;
-  private CalculatePaymentFormula formula;
+  private CalculationFormula formula;
   
   @Override
   public CalculatePayment ledgerId(String ledgerId) {
@@ -62,7 +62,7 @@ public class AddPaymentCalculation implements CalculatePayment {
     return this;
   }
   @Override
-  public CalculatePayment formula(CalculatePaymentFormula formula) {
+  public CalculatePayment formula(CalculationFormula formula) {
     this.formula = formula;
     return this;
   } 

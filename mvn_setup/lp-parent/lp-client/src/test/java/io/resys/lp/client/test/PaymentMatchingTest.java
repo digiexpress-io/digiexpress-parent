@@ -22,6 +22,7 @@ package io.resys.lp.client.test;
 
 import org.junit.jupiter.api.Test;
 
+import io.resys.lp.client.spi.formula.AddPaymentFactory;
 import io.resys.lp.client.test.config.DbTestTemplate;
 import io.resys.lp.product.spi.providers.Contract_Provider;
 
@@ -57,6 +58,7 @@ public class PaymentMatchingTest extends DbTestTemplate {
     
     getLpClient().actions().calculatePayment()
       .ledgerId(firstPaymentPlan.getContractId())
+      .formula(new AddPaymentFactory())
       .build()
       .await().atMost(atMost);
     
