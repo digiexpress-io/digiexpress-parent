@@ -39,6 +39,7 @@ public interface Ledger extends LedgerEntity {
   String getExternalId();
   String getName();
   Optional<String> getDescription();
+  Optional<String> getCurrentBlackBookId();
   
   String getCommitId();
   String getCreatedCommitId();

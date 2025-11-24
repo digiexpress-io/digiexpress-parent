@@ -42,12 +42,16 @@ import io.vertx.mutiny.sqlclient.Row;
       id UUID PRIMARY KEY,
       ledger_id UUID NOT NULL,
       external_id VARCHAR(255),
+      parent_black_book_id UUID,
       
       black_book_type VARCHAR(100) NOT NULL,
       black_book_sub_type VARCHAR(100),
       black_book_description TEXT,
       black_book_date DATE NOT NULL,
       black_book_amount DECIMAL(15,2) NOT NULL,
+      delta_amount DECIMAL(15,2),
+      inflow_amount DECIMAL(15,2),
+      outflow_amount DECIMAL(15,2),
       
       created_commit_id UUID NOT NULL
     );
@@ -56,12 +60,17 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {black_book} (ledger_id);
     CREATE INDEX IF NOT EXISTS {black_book}_EXTERNAL_INDEX
       ON {black_book} (external_id);
+    CREATE INDEX IF NOT EXISTS {black_book}_PARENT_INDEX
+      ON {black_book} (parent_black_book_id);
     CREATE INDEX IF NOT EXISTS {black_book}_DATE_INDEX
       ON {black_book} (black_book_date);
   """,
   constraints = """
     ALTER TABLE {black_book} ADD CONSTRAINT fk_black_book_ledger 
       FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
+      
+    ALTER TABLE {black_book} ADD CONSTRAINT fk_black_book_parent 
+      FOREIGN KEY (parent_black_book_id) REFERENCES {black_book}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {black_book} CASCADE;
@@ -136,9 +145,10 @@ public interface BlackBookTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {black_book}
-      (id, ledger_id, external_id, black_book_type, black_book_sub_type, 
-       black_book_description, black_book_date, black_book_amount, created_commit_id)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      (id, ledger_id, external_id, parent_black_book_id, black_book_type, black_book_sub_type, 
+       black_book_description, black_book_date, black_book_amount, delta_amount, 
+       inflow_amount, outflow_amount, created_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
     propsMapper = BlackBookInsertMapper.class
   )
@@ -152,11 +162,15 @@ public interface BlackBookTable {
           .id(TableUtils.toStringUUID(row, "id"))
           .ledgerId(TableUtils.toStringUUID(row, "ledger_id"))
           .externalId(Optional.ofNullable(row.getString("external_id")))
+          .parentBlackBookId(Optional.ofNullable(TableUtils.toStringUUID(row, "parent_black_book_id")))
           .bookType(row.getString("black_book_type"))
           .bookSubType(Optional.ofNullable(row.getString("black_book_sub_type")))
           .bookDescription(Optional.ofNullable(row.getString("black_book_description")))
           .bookDate(row.getLocalDate("black_book_date"))
           .bookAmount(row.getBigDecimal("black_book_amount"))
+          .deltaAmount(Optional.ofNullable(row.getBigDecimal("delta_amount")))
+          .inflowAmount(Optional.ofNullable(row.getBigDecimal("inflow_amount")))
+          .outflowAmount(Optional.ofNullable(row.getBigDecimal("outflow_amount")))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -172,11 +186,15 @@ public interface BlackBookTable {
         TableUtils.toUuid(doc.getId()),
         TableUtils.toUuid(doc.getLedgerId()),
         doc.getExternalId().orElse(null),
+        doc.getParentBlackBookId().isPresent() ? TableUtils.toUuid(doc.getParentBlackBookId().get()) : null,
         doc.getBookType(),
         doc.getBookSubType().orElse(null),
         doc.getBookDescription().orElse(null),
         doc.getBookDate(),
         doc.getBookAmount(),
+        doc.getDeltaAmount().orElse(null),
+        doc.getInflowAmount().orElse(null),
+        doc.getOutflowAmount().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }
