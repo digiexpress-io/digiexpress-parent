@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.resys.lp.client.api.LpClient.CalculatePaymentFormula;
@@ -213,10 +212,17 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
     final var allocationNetAmount = allocatedAmount.subtract(allocationGammaMortalityFee);
     
     
-    final var feeLog = String.format("Fee calculation: %s * %s = %s", paymentGrossAmount, KAPPA, paymentKappaPaymentFeeAmount);
+    // Create detailed formula logs
+    final var logs = new ArrayList<String>();
+    logs.add(String.format("Payment Fee: κ × gross_amount = %s × %s = %s", KAPPA, paymentGrossAmount, paymentKappaPaymentFeeAmount));
+    logs.add(String.format("Net Payment: gross_amount - payment_fee = %s - %s = %s", paymentGrossAmount, paymentKappaPaymentFeeAmount, paymentNetAmount));
+    logs.add(String.format("Allocation: net_payment × allocation_share = %s × %s = %s", paymentNetAmount, allocatedShare, allocatedAmount));
+    logs.add(String.format("Fund Units: allocated_amount ÷ unit_price = %s ÷ %s = %s", allocatedAmount, fundUnitPrice, fundUnitAmount));
+    logs.add(String.format("Mortality Fee: γ × allocated_amount = %s × %s = %s", GAMMA, allocatedAmount, allocationGammaMortalityFee));
+    logs.add(String.format("Net Allocation: allocated_amount - mortality_fee = %s - %s = %s", allocatedAmount, allocationGammaMortalityFee, allocationNetAmount));
     
     return PaymentToInvPlanAlloc.Node.builder()
-        .logs(Arrays.asList(feeLog))
+        .logs(logs)
         
         .invPlanId(invPlan.getId())
         .paymentId(payment.getId())
