@@ -22,21 +22,18 @@ package io.resys.lp.client.spi.formula.feemi_savings.monthly;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.resys.lp.client.api.LpClient.CalculationFormula;
 import io.resys.lp.client.api.LpClient.FormulaContainer;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
-import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanAllocGrowth;
-import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanGrowth;
-import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyPortfolioGrowth;
 import io.resys.lp.client.api.entities.ImmutableEnvelope;
 import io.resys.lp.client.api.entities.ImmutableLog;
+import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanAllocGrowth;
+import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanGrowth;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
@@ -228,11 +225,37 @@ public class Monthly_FeemiSavings implements CalculationFormula {
   }
   
   private BigDecimal getCurrentAllocationValue(String allocationId) {
-    // Get the current value from the latest BlackBook detail entries
-    return ctx.getLedger().getBlackBookDetails().stream()
-        .filter(detail -> allocationId.equals(detail.getTargetId()))
-        .filter(detail -> "PAYMENT_ALLOCATED_AMOUNT".equals(detail.getSubType()))
-        .map(detail -> detail.getAmount())
+    // Use tree navigation to find allocation value since last monthly calculation
+    final var tree = ctx.getLedger().toTree();
+    
+    // Get all nodes from current back to the last monthly calculation (or beginning)
+    final var nodesSinceLastMonthly = tree.getTill("MONTHLY_CALCULATION");
+    
+    // Find the baseline value from the last monthly calculation (if any)
+    BigDecimal baselineValue = BigDecimal.ZERO;
+    final var lastMonthlyNode = nodesSinceLastMonthly.stream()
+        .filter(node -> "MONTHLY_CALCULATION".equals(node.getBlackBook().getBookType()))
+        .findFirst();
+        
+    if (lastMonthlyNode.isPresent()) {
+      // Get the allocation value from the last monthly calculation
+      baselineValue = lastMonthlyNode.get().getBlackBookDetails().stream()
+          .filter(detail -> allocationId.equals(detail.getTargetId().orElse(null)))
+          .filter(detail -> "ALLOCATION_GROWTH".equals(detail.getDetailSubType().orElse(null)))
+          .map(detail -> detail.getDetailAmount())
+          .findFirst()
+          .orElse(BigDecimal.ZERO);
+    }
+    
+    // Sum all new payment allocations since the last monthly calculation
+    final BigDecimal newAllocations = nodesSinceLastMonthly.stream()
+        .filter(node -> !"MONTHLY_CALCULATION".equals(node.getBlackBook().getBookType()))
+        .flatMap(node -> node.getBlackBookDetails().stream())
+        .filter(detail -> allocationId.equals(detail.getTargetId().orElse(null)))
+        .filter(detail -> "PAYMENT_ALLOCATED_AMOUNT".equals(detail.getDetailSubType().orElse(null)))
+        .map(detail -> detail.getDetailAmount())
         .reduce(BigDecimal.ZERO, BigDecimal::add);
+    
+    return baselineValue.add(newAllocations);
   }
 }
