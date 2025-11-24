@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.formula.addpayment;
+package io.resys.lp.client.spi.formula.feemi_savings.addpayment;
 
 /*-
  * #%L
@@ -31,9 +31,9 @@ import io.resys.lp.client.api.LpClient.FormulaContainer;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
-import io.resys.lp.client.spi.formula.addpayment.ast.MoneyToLedger;
-import io.resys.lp.client.spi.formula.addpayment.ast.PaymentToInvPlan;
-import io.resys.lp.client.spi.formula.addpayment.ast.PaymentToInvPlanAlloc;
+import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.MoneyToLedger;
+import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.PaymentToInvPlan;
+import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.PaymentToInvPlanAlloc;
 import io.resys.lp.client.api.entities.ImmutableEnvelope;
 import io.resys.lp.client.api.entities.ImmutableLog;
 import io.resys.thena.api.entities.CommitResultStatus;

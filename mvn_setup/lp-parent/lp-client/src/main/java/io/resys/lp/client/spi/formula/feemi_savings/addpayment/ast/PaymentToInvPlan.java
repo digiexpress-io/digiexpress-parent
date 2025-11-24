@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.formula.monthly.ast;
+package io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast;
 
 /*-
  * #%L
@@ -23,20 +23,22 @@ package io.resys.lp.client.spi.formula.monthly.ast;
 import java.math.BigDecimal;
 
 import io.resys.thena.contract.client.entities.InvPlan;
+import io.resys.thena.ledger.client.entities.MoneyRequest;
+import io.resys.thena.ledger.client.entities.Payment;
 import lombok.Value;
 
-public class MonthlyInvPlanGrowth {
-  
+public class PaymentToInvPlan {
   @Value
   public static class Expression {
+    Payment payment; 
+    MoneyRequest moneyRequest; 
     InvPlan invPlan;
   }
   
   @Value
   public static class Node {
-    BigDecimal grossGrowth;
-    BigDecimal mortalityFees;
-    BigDecimal netGrowth;
+    BigDecimal allocated;
+    BigDecimal inflow;
+    BigDecimal outflow;
   }
-  
 }

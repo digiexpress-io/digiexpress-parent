@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.formula.monthly.ast;
+package io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast;
 
 /*-
  * #%L
@@ -25,15 +25,20 @@ import java.util.List;
 
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
+import io.resys.thena.ledger.client.entities.MoneyRequest;
+import io.resys.thena.ledger.client.entities.Payment;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-public class MonthlyInvPlanAllocGrowth {
+public class PaymentToInvPlanAlloc {
+ 
   
   @Value
   public static class Expression {
+    Payment payment;
+    MoneyRequest moneyRequest; 
     InvPlan invPlan;
     InvPlanAlloc allocation;
   }
@@ -42,16 +47,19 @@ public class MonthlyInvPlanAllocGrowth {
   public static class Node {
     private final List<String> logs;
     
+    private final String paymentId;
     private final String invPlanId;
-    private final String allocationId;
-    
-    private final BigDecimal currentAllocationValue;
-    private final BigDecimal grossGrowthAmount;
-    private final BigDecimal mortalityFeeAmount;
-    private final BigDecimal netGrowthAmount;
-    private final BigDecimal newAllocationValue;
+    private final BigDecimal paymentGrossAmount;
+    private final BigDecimal paymentKappaPaymentFeeAmount;
+    private final BigDecimal paymentNetAmount;
+
+    private final BigDecimal allocatedShare;
+    private final BigDecimal allocatedAmount;
     
     private final BigDecimal fundUnitPrice;
+    private final BigDecimal fundUnitAmount;
+    
+    private final BigDecimal allocationGammaMortalityFee;
+    private final BigDecimal allocationNetAmount;
   }
-  
 }

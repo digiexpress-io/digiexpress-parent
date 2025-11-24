@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.formula;
+package io.resys.lp.client.spi.formula.feemi_savings;
 
 /*-
  * #%L
@@ -24,7 +24,7 @@ import io.resys.lp.client.api.LpClient.CalculationFormula;
 import io.resys.lp.client.api.LpClient.FormulaContainer;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
-import io.resys.lp.client.spi.formula.addpayment.AddPayment_FeemiSavings;
+import io.resys.lp.client.spi.formula.feemi_savings.addpayment.AddPayment_FeemiSavings;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
