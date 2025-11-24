@@ -211,7 +211,6 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
     // FEEMI_SAV_001 formula calculation
     final var allocationGammaMortalityFee = allocatedAmount.multiply(GAMMA).setScale(2, RoundingMode.HALF_UP);
     final var allocationNetAmount = allocatedAmount.subtract(allocationGammaMortalityFee);
-    final var allocationProjectedValue = allocationNetAmount.multiply(BigDecimal.ONE.add(MU)).setScale(2, RoundingMode.HALF_UP);
     
     
     final var feeLog = String.format("Fee calculation: %s * %s = %s", paymentGrossAmount, KAPPA, paymentKappaPaymentFeeAmount);
@@ -234,7 +233,6 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
         
         .allocationGammaMortalityFee(allocationGammaMortalityFee)
         .allocationNetAmount(allocationNetAmount)
-        .allocationProjectedValue(allocationProjectedValue)
         
         .build();
   }

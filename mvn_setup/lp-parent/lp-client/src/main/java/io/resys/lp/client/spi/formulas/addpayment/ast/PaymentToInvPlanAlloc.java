@@ -41,6 +41,5 @@ public class PaymentToInvPlanAlloc {
     
     private final BigDecimal allocationGammaMortalityFee;
     private final BigDecimal allocationNetAmount;
-    private final BigDecimal allocationProjectedValue;
   }
 }
