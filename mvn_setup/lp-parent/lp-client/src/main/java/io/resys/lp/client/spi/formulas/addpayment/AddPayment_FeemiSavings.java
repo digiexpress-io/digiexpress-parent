@@ -42,8 +42,7 @@ public class AddPayment_FeemiSavings implements CalculatePaymentFormula {
 
   
   // FEEMI_SAV_001 product parameters
-  private static final BigDecimal KAPPA = new BigDecimal("0.02"); // 2% payment fee
-  private static final BigDecimal KAPPA_REDUCED = BigDecimal.ZERO; // 0% monthly fee
+  private static final BigDecimal KAPPA = BigDecimal.ZERO; // 0% payment fee per spec
   private static final BigDecimal GAMMA = new BigDecimal("0.001"); // mortality rate from death cover
   private static final BigDecimal MU = new BigDecimal("0.05"); // estimated return rate
 
