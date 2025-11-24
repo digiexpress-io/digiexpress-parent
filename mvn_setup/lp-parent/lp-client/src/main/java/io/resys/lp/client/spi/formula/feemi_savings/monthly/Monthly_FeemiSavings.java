@@ -32,6 +32,7 @@ import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
 import io.resys.lp.client.api.entities.ImmutableEnvelope;
 import io.resys.lp.client.api.entities.ImmutableLog;
+import io.resys.lp.client.spi.formula.feemi_savings.BlackBookConstants;
 import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanAllocGrowth;
 import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanGrowth;
 import io.resys.thena.api.entities.CommitResultStatus;
@@ -137,7 +138,7 @@ public class Monthly_FeemiSavings implements CalculationFormula {
         .inflowAmount(totalGrowth)             // Growth from investments
         .outflowAmount(totalMortalityFees)     // Monthly mortality fees
         .date(ctx.getToday())
-        .type("MONTHLY_CALCULATION")
+        .type(BlackBookConstants.TYPE_MONTHLY_CALCULATION)
         .build();
     });
   }
@@ -164,8 +165,8 @@ public class Monthly_FeemiSavings implements CalculationFormula {
       
       // Create detailed BlackBook entry for allocation growth
       newBlackBook.addBlackBookDetail(bbd -> bbd
-          .type("MONTHLY_DETAIL")
-          .subType("ALLOCATION_GROWTH")
+          .type(BlackBookConstants.DETAIL_TYPE_MONTHLY_DETAIL)
+          .subType(BlackBookConstants.SUBTYPE_ALLOCATION_GROWTH)
           .amount(node.getNewAllocationValue())         // New allocation value
           .deltaAmount(node.getNetGrowthAmount())       // Net growth
           .inflowAmount(node.getGrossGrowthAmount())    // Gross growth
@@ -229,19 +230,19 @@ public class Monthly_FeemiSavings implements CalculationFormula {
     final var tree = ctx.getLedger().toTree();
     
     // Get all nodes from current back to the last monthly calculation (or beginning)
-    final var nodesSinceLastMonthly = tree.getTill("MONTHLY_CALCULATION");
+    final var nodesSinceLastMonthly = tree.getTill(BlackBookConstants.TYPE_MONTHLY_CALCULATION);
     
     // Find the baseline value from the last monthly calculation (if any)
     BigDecimal baselineValue = BigDecimal.ZERO;
     final var lastMonthlyNode = nodesSinceLastMonthly.stream()
-        .filter(node -> "MONTHLY_CALCULATION".equals(node.getBlackBook().getBookType()))
+        .filter(node -> BlackBookConstants.TYPE_MONTHLY_CALCULATION.equals(node.getBlackBook().getBookType()))
         .findFirst();
         
     if (lastMonthlyNode.isPresent()) {
       // Get the allocation value from the last monthly calculation
       baselineValue = lastMonthlyNode.get().getBlackBookDetails().stream()
           .filter(detail -> allocationId.equals(detail.getTargetId().orElse(null)))
-          .filter(detail -> "ALLOCATION_GROWTH".equals(detail.getDetailSubType().orElse(null)))
+          .filter(detail -> BlackBookConstants.SUBTYPE_ALLOCATION_GROWTH.equals(detail.getDetailSubType().orElse(null)))
           .map(detail -> detail.getDetailAmount())
           .findFirst()
           .orElse(BigDecimal.ZERO);
@@ -249,10 +250,10 @@ public class Monthly_FeemiSavings implements CalculationFormula {
     
     // Sum all new payment allocations since the last monthly calculation
     final BigDecimal newAllocations = nodesSinceLastMonthly.stream()
-        .filter(node -> !"MONTHLY_CALCULATION".equals(node.getBlackBook().getBookType()))
+        .filter(node -> !BlackBookConstants.TYPE_MONTHLY_CALCULATION.equals(node.getBlackBook().getBookType()))
         .flatMap(node -> node.getBlackBookDetails().stream())
         .filter(detail -> allocationId.equals(detail.getTargetId().orElse(null)))
-        .filter(detail -> "PAYMENT_ALLOCATED_AMOUNT".equals(detail.getDetailSubType().orElse(null)))
+        .filter(detail -> BlackBookConstants.SUBTYPE_PAYMENT_ALLOCATED_AMOUNT.equals(detail.getDetailSubType().orElse(null)))
         .map(detail -> detail.getDetailAmount())
         .reduce(BigDecimal.ZERO, BigDecimal::add);
     

@@ -31,6 +31,7 @@ import io.resys.lp.client.api.LpClient.FormulaContainer;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
+import io.resys.lp.client.spi.formula.feemi_savings.BlackBookConstants;
 import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.MoneyToLedger;
 import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.PaymentToInvPlan;
 import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.PaymentToInvPlanAlloc;
@@ -134,7 +135,7 @@ public class AddPayment_FeemiSavings implements CalculationFormula {
         .inflowAmount(totalInflow)       // Total money in
         .outflowAmount(totalOutflow)     // Total money out
         .date(LocalDate.now())
-        .type("INCOMING_PAYMENT")
+        .type(BlackBookConstants.TYPE_INCOMING_PAYMENT)
         .build();
     });
   }
@@ -209,8 +210,8 @@ public class AddPayment_FeemiSavings implements CalculationFormula {
       
       // Create detailed BlackBook entry with money tracking
       newBlackBook.addBlackBookDetail(bbd -> bbd
-          .type("PAYMENT_DETAIL")
-          .subType("PAYMENT_ALLOCATED_AMOUNT")
+          .type(BlackBookConstants.DETAIL_TYPE_PAYMENT_DETAIL)
+          .subType(BlackBookConstants.SUBTYPE_PAYMENT_ALLOCATED_AMOUNT)
           .amount(node.getAllocatedAmount())           // Final allocated amount
           .deltaAmount(node.getAllocationNetAmount())  // Net after fees
           .inflowAmount(allocationInflow)              // Gross payment
