@@ -108,11 +108,6 @@ export const GOffersRoot = styled("div", {
     '& .GOffers-noOffers.MuiPaper-root.MuiAlert-root': {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
-      backgroundColor: 'red',
-      color: darken(theme.palette.info.main, 0.6),
-      '.MuiAlert-icon': {
-        color: theme.palette.info.dark,
-      }
     },
     '& .GSort-root': {
       display: 'flex',
