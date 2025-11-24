@@ -2,9 +2,7 @@ import React from 'react';
 
 import {
   Dialog, DialogActions, DialogContent, DialogTitle,
-  MenuItem, Stack, Button, TextField, FormLabel,
-  useTheme,
-  Typography
+  MenuItem, Stack, Button, TextField, Typography
 } from '@mui/material';
 
 import { DateTime } from 'luxon';
@@ -29,7 +27,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
   const { contentTags } = useFetch('worker/rest/api/assets/any-tags/stencil-tags.GET', {});
   const { savePublication } = useFetch('worker/rest/api/assets/publications.POST', {});
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
-  const theme = useTheme();
 
   const [form, setForm] = React.useState<PublicationApi.PublicationInit>({
     name: '',
@@ -64,29 +61,32 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     tags?: PublicationApi.AssetTag[],
     newTag: string
   }> = ({ name, labelId, tags, newTag }) => (
-
-    <TextField
-      select
-      name={name}
-      value={form[name] ?? NEW_TAG_VALUE}
-      label={intl.formatMessage({ id: labelId })}
-      fullWidth
-      slotProps={{ input: { margin: 'dense' } }}
-      sx={{ minHeight: '72px' }}
-      onChange={(event) => {
-        const newValue = event.target.value;
-        setForm(prev => ({ ...prev, [name]: newValue }));
-      }}
-    >
-      <MenuItem key='-1' value={NEW_TAG_VALUE}>
-        {intl.formatMessage({ id: 'publications.createNewTag' }, { tag: newTag })}
-      </MenuItem>
-      {tags?.map(tag => (
-        <MenuItem key={tag.name} value={tag.name}>
-          {tag.name} / {tag.description}
+    <>
+      <Typography fontWeight='bold'>
+        {intl.formatMessage({ id: labelId })}
+      </Typography>
+      <TextField
+        select
+        name={name}
+        value={form[name] ?? NEW_TAG_VALUE}
+        fullWidth
+        slotProps={{ input: { margin: 'dense' } }}
+        sx={{ minHeight: '72px' }}
+        onChange={(event) => {
+          const newValue = event.target.value;
+          setForm(prev => ({ ...prev, [name]: newValue }));
+        }}
+      >
+        <MenuItem key='-1' value={NEW_TAG_VALUE}>
+          {intl.formatMessage({ id: 'publications.createNewTag' }, { tag: newTag })}
         </MenuItem>
-      ))}
-    </TextField>
+        {tags?.map(tag => (
+          <MenuItem key={tag.name} value={tag.name}>
+            {tag.name} / {tag.description}
+          </MenuItem>
+        ))}
+      </TextField>
+    </>
   );
 
   return (
@@ -111,6 +111,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
              }}
                */
             fullWidth value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
+            sx={{ minHeight: '72px' }} 
             onChange={(date) =>
               setForm(prev => ({
                 ...prev,
@@ -122,11 +123,13 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
             }
           />
 
+          <Typography fontWeight='bold'>
+            {intl.formatMessage({ id: 'publications.name' })}
+          </Typography>
           <TextField
             fullWidth
             required
             name='name'
-            label={intl.formatMessage({ id: 'publications.name' })}
             error={!form.name}
             helperText={!form.name ? intl.formatMessage({ id: 'error.valueRequired' }) : ' '}
             slotProps={{ input: { margin: 'dense' } }}
@@ -135,9 +138,11 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
             onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
           />
 
+          <Typography fontWeight='bold'>
+            {intl.formatMessage({ id: 'publications.description' })}
+          </Typography>
           <TextField
             name='description'
-            label={intl.formatMessage({ id: 'publications.description' })}
             fullWidth
             slotProps={{ input: { margin: 'dense' } }}
             sx={{ minHeight: '72px' }}
