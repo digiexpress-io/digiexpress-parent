@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import io.resys.lp.client.api.LpClient.CalculatePayment;
 import io.resys.lp.client.api.LpClient.CalculationFormula;
 import io.resys.lp.client.api.LpClient.FormulaContainer;
+import io.resys.lp.client.api.LpClient.FundQuery;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
@@ -46,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 public class AddPaymentCalculation implements CalculatePayment {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
+  private final FundQuery fundQuery;
   
   private String contractIdOrRefOrEtc;
   private LocalDate targetDate;
@@ -100,6 +102,7 @@ public class AddPaymentCalculation implements CalculatePayment {
                 .contractClient(contracts)
                 .ledger(ledger.getObjects())
                 .ledgerClient(ledgers)
+                .fundQuery(fundQuery)
                 .build();
               
               return formula.accept(container);
@@ -127,10 +130,12 @@ public class AddPaymentCalculation implements CalculatePayment {
   private static class FormulaContainerImpl implements FormulaContainer {
     private final ContractClient contractClient;
     private final LedgerClient ledgerClient;
+    private final FundQuery fundQuery;
     
     private final ContractContainer contract;
     private final LedgerContainer ledger;
     private final LocalDate startDate;
     private final LocalDate today;
+
   }
 }

@@ -44,19 +44,30 @@ public class Fund_Provider {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Faker FAKER = new Faker(Locale.of("fi", "FI"));
   
-  private static final String[] FUND_NAMES = {
-    "Taattu tuotto", "Tasapainoinen rahasto", "Osakerahasto", "Indeksirahasto",
-    "Eurooppa-rahasto", "Kehittyvät markkinat", "Obligaatiorahasto", "Kiinteistörahasto",
-    "Teknologia-rahasto", "Terveydenhuolto-rahasto", "Vastuullinen sijoittaminen"
+  @lombok.Value
+  public static class FundInfo {
+    String code;
+    String name;
+    String riskLevel;
+    BigDecimal baseValue;
+    BigDecimal volatility;
+  }
+  
+  public static final FundInfo[] FUND_INFO = {
+    new FundInfo("TAATTU_TUOTTO", "Taattu tuotto", "NONE", new BigDecimal("100.50"), new BigDecimal("0.005")),
+    new FundInfo("TASAPAINOINEN_RAHASTO", "Tasapainoinen rahasto", "MEDIUM", new BigDecimal("125.75"), new BigDecimal("0.015")),
+    new FundInfo("OSAKERAHASTO", "Osakerahasto", "HIGH", new BigDecimal("180.25"), new BigDecimal("0.025")),
+    new FundInfo("INDEKSIRAHASTO", "Indeksirahasto", "HIGH", new BigDecimal("165.80"), new BigDecimal("0.020")),
+    new FundInfo("EUROOPPA_RAHASTO", "Eurooppa-rahasto", "MEDIUM", new BigDecimal("140.60"), new BigDecimal("0.022")),
+    new FundInfo("KEHITTYVAT_MARKKINAT", "Kehittyvät markkinat", "VERY_HIGH", new BigDecimal("195.30"), new BigDecimal("0.040")),
+    new FundInfo("OBLIGAATIORAHASTO", "Obligaatiorahasto", "LOW", new BigDecimal("105.20"), new BigDecimal("0.008")),
+    new FundInfo("KIINTEISTO_RAHASTO", "Kiinteistörahasto", "HIGH", new BigDecimal("155.90"), new BigDecimal("0.018")),
+    new FundInfo("TEKNOLOGIA_RAHASTO", "Teknologia-rahasto", "VERY_HIGH", new BigDecimal("220.45"), new BigDecimal("0.045")),
+    new FundInfo("TERVEYDENHUOLTO_RAHASTO", "Terveydenhuolto-rahasto", "HIGH", new BigDecimal("175.80"), new BigDecimal("0.028")),
+    new FundInfo("VASTUULLINEN_SIJOITTAMINEN", "Vastuullinen sijoittaminen", "MEDIUM", new BigDecimal("160.30"), new BigDecimal("0.020"))
   };
   
-  private static final String[] FUND_CODES = {
-    "TAATTU_TUOTTO", "TASAPAINOINEN_RAHASTO", "OSAKERAHASTO", "INDEKSIRAHASTO",
-    "EUROOPPA_RAHASTO", "KEHITTYVAT_MARKKINAT", "OBLIGAATIORAHASTO", "KIINTEISTO_RAHASTO",
-    "TEKNOLOGIA_RAHASTO", "TERVEYDENHUOLTO_RAHASTO", "VASTUULLINEN_SIJOITTAMINEN"
-  };
-  
-  
+
   @Data
   @Builder
   @Jacksonized
@@ -204,9 +215,9 @@ public class Fund_Provider {
   }
   
   public static Fund generateFund(String riskProfile) {
-    int fundIndex = RANDOM.nextInt(FUND_CODES.length);
-    String fundCode = FUND_CODES[fundIndex];
-    String fundName = FUND_NAMES[fundIndex];
+    int fundIndex = RANDOM.nextInt(FUND_INFO.length);
+    String fundCode = FUND_INFO[fundIndex].getCode();
+    String fundName = FUND_INFO[fundIndex].getName();
     
     String riskLevel = determineRiskLevel(fundCode, riskProfile);
     BigDecimal managementFee = generateManagementFee(riskLevel);

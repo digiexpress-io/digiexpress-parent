@@ -245,11 +245,8 @@ public class AddPayment_FeemiSavings implements CalculationFormula {
 
     
     // Find unit price for this allocation
-    final var fundUnitPrice = ctx.getLedger().getUnitPrices().stream()
-        .filter(up -> up.getExternalId().equals(allocation.getInvPlanAllocCode()))
-        .findFirst()
-        .map(up -> up.getUnitValue())
-        .orElse(BigDecimal.ONE);
+    final var fund = ctx.getFundQuery().getOne(allocation.getInvPlanAllocCode(), payment.getPaymentDate());
+    final var fundUnitPrice = fund.getCalculationValue().getPriceValue();
     
     final var fundUnitAmount = allocatedAmount.divide(fundUnitPrice, 6, RoundingMode.HALF_UP);
     

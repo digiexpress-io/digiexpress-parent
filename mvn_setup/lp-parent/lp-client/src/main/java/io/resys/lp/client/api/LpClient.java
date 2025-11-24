@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import io.resys.lp.client.api.entities.AllocatedPayments;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
+import io.resys.lp.client.api.entities.Fund;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.ledger.client.api.LedgerClient;
@@ -63,6 +64,8 @@ public interface LpClient {
     ContractClient getContractClient();
     LedgerClient getLedgerClient();
     
+    FundQuery getFundQuery();
+    
     ContractContainer getContract();
     LedgerContainer getLedger();
     LocalDate getStartDate();
@@ -79,4 +82,9 @@ public interface LpClient {
     // make sure to check for failures...
     Uni<Envelope<AllocatedPayments>> build();
   }
+  
+  interface FundQuery {
+    Fund getOne(String fundIdNameOrCode, LocalDate targetDate);
+  }
+
 }
