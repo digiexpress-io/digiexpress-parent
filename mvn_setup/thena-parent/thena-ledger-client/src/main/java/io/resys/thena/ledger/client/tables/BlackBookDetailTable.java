@@ -53,9 +53,9 @@ import io.vertx.mutiny.sqlclient.Row;
       detail_start_date DATE,
       detail_end_date DATE,
       detail_amount DECIMAL(15,2) NOT NULL,
-      delta_amount DECIMAL(15,2),
-      inflow_amount DECIMAL(15,2),
-      outflow_amount DECIMAL(15,2),
+      detail_delta_amount DECIMAL(15,2),
+      detail_inflow_amount DECIMAL(15,2),
+      detail_outflow_amount DECIMAL(15,2),
       detail_formula VARCHAR(255),
       detail_body JSONB,
       
@@ -156,7 +156,7 @@ public interface BlackBookDetailTable {
       INSERT INTO {black_book_detail}
       (id, black_book_id, external_id, target_id, payment_id, detail_type, detail_sub_type, 
        detail_description, detail_start_date, detail_end_date, 
-       detail_amount, delta_amount, inflow_amount, outflow_amount, detail_formula, detail_body, created_commit_id)
+       detail_amount, detail_delta_amount, detail_inflow_amount, detail_outflow_amount, detail_formula, detail_body, created_commit_id)
        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
     """,
     propsMapper = BlackBookDetailInsertMapper.class
@@ -181,9 +181,9 @@ public interface BlackBookDetailTable {
           .detailStartDate(Optional.ofNullable(row.getLocalDate("detail_start_date")))
           .detailEndDate(Optional.ofNullable(row.getLocalDate("detail_end_date")))
           .detailAmount(row.getBigDecimal("detail_amount"))
-          .deltaAmount(Optional.ofNullable(row.getBigDecimal("delta_amount")))
-          .inflowAmount(Optional.ofNullable(row.getBigDecimal("inflow_amount")))
-          .outflowAmount(Optional.ofNullable(row.getBigDecimal("outflow_amount")))
+          .detailDeltaAmount(Optional.ofNullable(row.getBigDecimal("detail_delta_amount")))
+          .detailInflowAmount(Optional.ofNullable(row.getBigDecimal("detail_inflow_amount")))
+          .detailOutflowAmount(Optional.ofNullable(row.getBigDecimal("detail_outflow_amount")))
           .detailFormula(Optional.ofNullable(row.getString("detail_formula")))
           .detailBody(Optional.ofNullable(detail_body))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
@@ -209,9 +209,9 @@ public interface BlackBookDetailTable {
         doc.getDetailStartDate().orElse(null),
         doc.getDetailEndDate().orElse(null),
         doc.getDetailAmount(),
-        doc.getDeltaAmount().orElse(null),
-        doc.getInflowAmount().orElse(null),
-        doc.getOutflowAmount().orElse(null),
+        doc.getDetailDeltaAmount().orElse(null),
+        doc.getDetailInflowAmount().orElse(null),
+        doc.getDetailOutflowAmount().orElse(null),
         doc.getDetailFormula().orElse(null),
         doc.getDetailBody().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommitId())

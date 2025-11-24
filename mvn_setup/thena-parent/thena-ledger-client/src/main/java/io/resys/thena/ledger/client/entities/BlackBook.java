@@ -47,9 +47,9 @@ public interface BlackBook extends LedgerEntity, Comparable<BlackBook> {
   Optional<String> getBookDescription();
   LocalDate getBookDate();
   BigDecimal getBookAmount();
-  Optional<BigDecimal> getDeltaAmount();
-  Optional<BigDecimal> getInflowAmount();
-  Optional<BigDecimal> getOutflowAmount();
+  Optional<BigDecimal> getBookDeltaAmount();
+  Optional<BigDecimal> getBookInflowAmount();
+  Optional<BigDecimal> getBookOutflowAmount();
   String getCreatedCommitId();
   
   // Transitive data from joins

@@ -130,6 +130,24 @@ public class NewBlackBookDetailBuilder implements NewBlackBookDetail {
   }
 
   @Override
+  public NewBlackBookDetail deltaAmount(BigDecimal deltaAmount) {
+    this.next.detailDeltaAmount(Optional.ofNullable(deltaAmount));
+    return this;
+  }
+
+  @Override
+  public NewBlackBookDetail inflowAmount(BigDecimal inflowAmount) {
+    this.next.detailInflowAmount(Optional.ofNullable(inflowAmount));
+    return this;
+  }
+
+  @Override
+  public NewBlackBookDetail outflowAmount(BigDecimal outflowAmount) {
+    this.next.detailOutflowAmount(Optional.ofNullable(outflowAmount));
+    return this;
+  }
+
+  @Override
   public NewBlackBookDetail formula(String formula) {
     this.next.detailFormula(Optional.ofNullable(formula));
     return this;

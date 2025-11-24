@@ -169,9 +169,9 @@ public interface BlackBookTable {
           .bookDescription(Optional.ofNullable(row.getString("black_book_description")))
           .bookDate(row.getLocalDate("black_book_date"))
           .bookAmount(row.getBigDecimal("black_book_amount"))
-          .deltaAmount(Optional.ofNullable(row.getBigDecimal("black_book_delta_amount")))
-          .inflowAmount(Optional.ofNullable(row.getBigDecimal("black_book_inflow_amount")))
-          .outflowAmount(Optional.ofNullable(row.getBigDecimal("black_book_outflow_amount")))
+          .bookDeltaAmount(Optional.ofNullable(row.getBigDecimal("black_book_delta_amount")))
+          .bookInflowAmount(Optional.ofNullable(row.getBigDecimal("black_book_inflow_amount")))
+          .bookOutflowAmount(Optional.ofNullable(row.getBigDecimal("black_book_outflow_amount")))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .transitives(ImmutableBlackBookTransitives.builder()
               .createdAt(row.getOffsetDateTime("created_at"))
@@ -193,9 +193,9 @@ public interface BlackBookTable {
         doc.getBookDescription().orElse(null),
         doc.getBookDate(),
         doc.getBookAmount(),
-        doc.getDeltaAmount().orElse(null),
-        doc.getInflowAmount().orElse(null),
-        doc.getOutflowAmount().orElse(null),
+        doc.getBookDeltaAmount().orElse(null),
+        doc.getBookInflowAmount().orElse(null),
+        doc.getBookOutflowAmount().orElse(null),
         TableUtils.toUuid(doc.getCreatedCommitId())
       });
     }

@@ -21,6 +21,7 @@ package io.resys.thena.ledger.client.spi.actions;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.entities.BatchStatus;
@@ -156,6 +157,7 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
     final var createdAt = OffsetDateTime.now();
     ImmutablePersistenceUnit next = start;
 
+    final var ledgerId = OidUtils.genUUID();
     final var logger = new LedgerCommitBuilder(tenantId, 
         ImmutableCommit.builder()
           .id(OidUtils.genUUID())
@@ -163,19 +165,20 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
           .commitMessage(message)
           .commitLog("")
           .createdAt(createdAt)
-          .build()
+          .ledgerId(ledgerId)
+          .build(),
+        Optional.empty()
     );
     
     final var newLedger = new NewLedgerBuilder(logger);
     this.ledger.accept(newLedger);
     final var created = newLedger.close();
     
-    final var ledgerId = created.getLedgerInserts().iterator().next().getId();
     
     next = ImmutablePersistenceUnit.builder()
         .from(start)
         .from(created)
-        .from(logger.withLedgerId(ledgerId).close())
+        .from(logger.close())
         .build();
   
     return Uni.createFrom().item(next);

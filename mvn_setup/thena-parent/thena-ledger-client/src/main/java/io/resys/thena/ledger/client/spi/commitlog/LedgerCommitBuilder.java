@@ -21,11 +21,13 @@ package io.resys.thena.ledger.client.spi.commitlog;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import com.google.common.base.Objects;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.ledger.client.entities.Commit;
+import io.resys.thena.ledger.client.entities.ImmutableBlackBook;
 import io.resys.thena.ledger.client.entities.CommitTree.CommitTreeOperation;
 import io.resys.thena.ledger.client.entities.ImmutableCommit;
 import io.resys.thena.ledger.client.entities.ImmutableCommitTree;
@@ -38,23 +40,25 @@ import io.vertx.core.json.JsonObject;
 public class LedgerCommitBuilder {
   private final String tenantId;
   private final String commitId;
-  private final String author;
+  private final String ledgerId;
   private final ImmutableCommit.Builder commit;
   private final ImmutablePersistenceUnit.Builder next;
-  
   private final LedgerCommitLogger logger;
   private final OffsetDateTime createdAt;
-  private boolean isTreePresent = false;
   
-  public LedgerCommitBuilder(String tenantId, Commit commit) {
+  private boolean isTreePresent = false;
+  private Optional<String> currentBlackBookId;
+  
+  public LedgerCommitBuilder(String tenantId, Commit commit, Optional<String> currentBlackBookId) {
     super();
     this.commitId = commit.getCommitId();
     this.tenantId = tenantId;
+    this.ledgerId = commit.getLedgerId().orElseThrow();
     this.commit = ImmutableCommit.builder().from(commit);
     this.logger = new LedgerCommitLogger(tenantId, commit);
     this.createdAt = commit.getCreatedAt();
-    this.author = commit.getCommitAuthor();
     this.next = createPersistenceUnit();
+    this.currentBlackBookId = currentBlackBookId;
   }
   
   public String getTenantId() {
@@ -71,6 +75,16 @@ public class LedgerCommitBuilder {
   public LedgerCommitBuilder withLedgerId(String contractId) {
     this.commit.ledgerId(contractId);
     return this;
+  }
+  
+  public ImmutableBlackBook.Builder withNextBlackBook(String blackBookId) {
+    final var result = ImmutableBlackBook.builder()
+        .id(blackBookId)
+        .ledgerId(ledgerId)
+        .createdCommitId(getCommitId())
+        .parentBlackBookId(this.currentBlackBookId.orElse(null));
+    this.currentBlackBookId = Optional.of(blackBookId);
+    return result;
   }
   
   public LedgerCommitBuilder add(LedgerEntity entity) {
@@ -134,5 +148,12 @@ public class LedgerCommitBuilder {
         .tenantId(getTenantId())
         .status(BatchStatus.OK)
         .log("");
+  }
+  public String getLedgerId() {
+    return ledgerId;
+  }
+  
+  public Optional<String> getCurrentBlackBookId() {
+    return this.currentBlackBookId;
   }
 }
