@@ -931,6 +931,7 @@ export const en = {
   'taskcard.body.lastEditedBy': 'Last edited by',
   'taskcard.body.lastEditedDate': 'Last edited date',
   'taskcard.body.dueDate': 'Due date',
+  'taskcard.body.dueDate.value.invalid': 'Invalid date format or range--check format: dd.MM.yyyy',
   'taskcard.body.customerName': 'Customer name',
   'taskcard.body.subject': 'Subject',
   'taskcard.body.additionalInfo': 'Additional info',

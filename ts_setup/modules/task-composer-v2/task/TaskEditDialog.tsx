@@ -35,7 +35,10 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
   const [dueDate, setDueDate] = React.useState<Date | null>(initialDueDate);
   const [addInfo, setAddInfo] = React.useState(task.additionalInfo);
   const [subject, setSubject] = React.useState(task.subject);
+  const [dueDateError, setDueDateError] = React.useState<string | undefined>();
+
   const subjectErrors = useSubjectErrors(subject);
+  const isErrors = !!subjectErrors || !!dueDateError;
 
   function handleSetAddInfo(event: React.ChangeEvent<HTMLInputElement>) {
     setAddInfo(event.target.value);
@@ -77,7 +80,15 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
               size="small"
               value={dueDate}
               onChange={(date) => setDueDate(date)}
+              onValidity={(isError) =>
+                setDueDateError(isError ? intl.formatMessage({ id: 'taskcard.body.dueDate.value.invalid' }) : undefined)
+              }
             />
+            {dueDateError && (
+              <Typography variant="caption" color="error" ml={2}>
+                {dueDateError}
+              </Typography>
+            )}
           </Grid2>
 
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
@@ -118,7 +129,7 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
               additionalInfo: addInfo,
               dueDate: dueDate ?? undefined,
               subject,
-            }) || !!subjectErrors
+            }) || isErrors
           }>
           {intl.formatMessage({ id: 'button.save' })}
         </Button>
