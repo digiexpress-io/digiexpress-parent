@@ -1,6 +1,27 @@
 package io.resys.lp.client.spi;
 
+/*-
+ * #%L
+ * lp-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 
 import io.resys.lp.client.api.LpClient.FundQuery;
 import io.resys.lp.client.api.entities.Fund;
@@ -21,6 +42,9 @@ public class FundQueryImpl implements FundQuery {
   public Fund getOne(String fundIdNameOrCode, LocalDate targetDate) {
     RepoAssert.notEmpty(fundIdNameOrCode, () -> "Fund name/id/code must be provided!");
     RepoAssert.notNull(targetDate, () -> "targetDate must be defined!");
+    final var adjustmentDelta = 5 - targetDate.get(ChronoField.DAY_OF_WEEK);
+    
+    final var adjustedDate = adjustmentDelta < 0 ? targetDate.minusDays(Math.abs(adjustmentDelta)): targetDate;
     
     // 1. Find fund info from Fund_Provider for metadata
     final var fundInfo = findFundByNameOrCode(fundIdNameOrCode);
@@ -29,12 +53,12 @@ public class FundQueryImpl implements FundQuery {
     // 2. Get unit price from ledger for target date (or closest past date)
     final var unitPrice = ledger.getUnitPrices().stream()
         .filter(up -> fundId.equals(up.getFundId()))
-        .filter(up -> !up.getUnitDate().isAfter(targetDate)) // Not in future
+        .filter(up -> !up.getUnitDate().isAfter(adjustedDate)) // Not in future
         .max((a, b) -> a.getUnitDate().compareTo(b.getUnitDate())) // Latest available
         .orElse(null);
     
     if (unitPrice == null) {
-      throw new IllegalArgumentException("No unit price found for fund: " + fundId + " on or before: " + targetDate);
+      throw new IllegalArgumentException("No unit price found for fund: " + fundId + " on or before: " + adjustedDate);
     }
     
     // 3. Create calculation value from ledger data

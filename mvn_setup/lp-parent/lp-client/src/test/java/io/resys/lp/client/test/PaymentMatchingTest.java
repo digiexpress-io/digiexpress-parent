@@ -37,6 +37,8 @@ public class PaymentMatchingTest extends DbTestTemplate {
         getLedgerClient(), 
         "001"
       ).await().atMost(atMost);
+    genFunds();
+    
     
     final var firstPaymentPlan = savings.getContract()
         .getPaymentPlans().iterator().next();
@@ -61,6 +63,7 @@ public class PaymentMatchingTest extends DbTestTemplate {
       .formula(new AddPaymentFactory())
       .build()
       .await().atMost(atMost);
-    
+   
+
   }
 }

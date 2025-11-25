@@ -31,6 +31,7 @@ import io.resys.thena.ledger.client.entities.ImmutableBlackBook;
 import io.resys.thena.ledger.client.entities.CommitTree.CommitTreeOperation;
 import io.resys.thena.ledger.client.entities.ImmutableCommit;
 import io.resys.thena.ledger.client.entities.ImmutableCommitTree;
+import io.resys.thena.ledger.client.entities.LedgerDocType;
 import io.resys.thena.ledger.client.entities.LedgerEntity;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
 import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
@@ -53,7 +54,7 @@ public class LedgerCommitBuilder {
     super();
     this.commitId = commit.getCommitId();
     this.tenantId = tenantId;
-    this.ledgerId = commit.getLedgerId().orElseThrow();
+    this.ledgerId = commit.getLedgerId().orElse(null);
     this.commit = ImmutableCommit.builder().from(commit);
     this.logger = new LedgerCommitLogger(tenantId, commit);
     this.createdAt = commit.getCreatedAt();
@@ -89,6 +90,9 @@ public class LedgerCommitBuilder {
   
   public LedgerCommitBuilder add(LedgerEntity entity) {
     isTreePresent = true;
+    if(entity.getDocType() == LedgerDocType.UNIT_PRICE) {
+      return this;
+    }
     this.next.addCommitTreeInserts(ImmutableCommitTree.builder()
         .id(OidUtils.genUUID())
         .commitId(commitId)

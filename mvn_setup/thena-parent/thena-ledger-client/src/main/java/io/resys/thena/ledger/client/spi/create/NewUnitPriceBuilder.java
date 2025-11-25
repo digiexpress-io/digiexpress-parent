@@ -116,7 +116,7 @@ public class NewUnitPriceBuilder implements NewUnitPrice {
   public UnitPrice close() {
     RepoAssert.isTrue(built, () -> "you must call NewUnitPrice.build() to finalize unit price CREATE!");
     final var built = next.build();
-    // don't log unit prices... this.logger.add(built);
+    this.logger.add(built);
     return built;
   }
 }

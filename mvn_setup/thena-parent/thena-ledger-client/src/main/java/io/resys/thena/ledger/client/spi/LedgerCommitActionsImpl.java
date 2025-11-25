@@ -21,6 +21,7 @@ package io.resys.thena.ledger.client.spi;
  */
 
 import io.resys.thena.ledger.client.api.LedgerCommitActions;
+import io.resys.thena.ledger.client.spi.actions.CreateManyUnitPricesImpl;
 import io.resys.thena.ledger.client.spi.actions.CreateOneLedgerImpl;
 import io.resys.thena.ledger.client.spi.actions.ModifyOneLedgerImpl;
 import io.resys.thena.ledger.client.tables.BbDb;
@@ -44,8 +45,8 @@ public class LedgerCommitActionsImpl implements LedgerCommitActions {
   }
   @Override
   public CreateManyUnitPrices createManyUnitPrices() {
-    // TODO Auto-generated method stub
-    return null;
+
+    return new CreateManyUnitPricesImpl(startingState, repoId);
   }
   
 }

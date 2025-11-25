@@ -26,8 +26,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import io.resys.lp.client.api.LpClient;
-import io.resys.lp.client.api.LpClient.FundQuery;
-import io.resys.lp.client.spi.FundQueryImpl;
 import io.resys.lp.client.spi.LpClientImpl;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.ledger.client.api.LedgerClient;
@@ -53,6 +51,8 @@ public class DbTestTemplate {
   @AfterEach
   public void tearDown() {
   }
+  
+  
   public LpClient getLpClient() {
     return new LpClientImpl(getContractClient(), getLedgerClient());
   }
@@ -62,4 +62,12 @@ public class DbTestTemplate {
   public LedgerClient getLedgerClient() {
     return client.getLedgerContract();    
   }
+  
+  
+  public void genFunds() {
+    new TestFundsGen(getContractClient(), getLedgerClient())
+      .genFunds().await().atMost(atMost);
+  }
+  
+  
 }

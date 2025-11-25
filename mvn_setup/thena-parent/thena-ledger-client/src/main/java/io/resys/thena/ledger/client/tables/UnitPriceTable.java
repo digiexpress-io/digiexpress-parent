@@ -74,7 +74,7 @@ public interface UnitPriceTable {
                created_commit.created_at as created_at
         FROM {unit_price} unit_price
         LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
-        WHERE unit_price.external_id = ANY($1) OR unit_price.fund_id = ANY($1) OR unit_price.id = ANY($1)
+        WHERE unit_price.external_id = ANY($1) OR unit_price.fund_id = ANY($1) OR CAST(unit_price.id AS varchar(255)) = ANY($1)
         ORDER BY unit_price_date DESC
       """,
       rowMapper = UnitPriceMapper.class
