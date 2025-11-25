@@ -40,8 +40,8 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE TABLE IF NOT EXISTS {unit_price}
     (
       id UUID PRIMARY KEY,
-      ledger_id UUID NOT NULL,
       external_id VARCHAR(255) NOT NULL,
+      fund_id VARCHAR(255) NOT NULL,
       
       unit_price_type VARCHAR(100) NOT NULL,
       unit_price_sub_type VARCHAR(100),
@@ -52,8 +52,6 @@ import io.vertx.mutiny.sqlclient.Row;
       created_commit_id UUID NOT NULL
     );
 
-    CREATE INDEX IF NOT EXISTS {unit_price}_LEDGER_INDEX
-      ON {unit_price} (ledger_id);
     CREATE INDEX IF NOT EXISTS {unit_price}_EXTERNAL_INDEX
       ON {unit_price} (external_id);
     CREATE INDEX IF NOT EXISTS {unit_price}_TYPE_INDEX
@@ -62,8 +60,6 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {unit_price} (unit_price_date);
   """,
   constraints = """
-    ALTER TABLE {unit_price} ADD CONSTRAINT fk_uni_price_ledger 
-      FOREIGN KEY (ledger_id) REFERENCES {ledger}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {unit_price} CASCADE;
@@ -71,19 +67,20 @@ import io.vertx.mutiny.sqlclient.Row;
 )
 public interface UnitPriceTable {
 
-  @TenantSql.FindAll(
-    sql = """
-      SELECT unit_price.*,
-             created_commit.created_at as created_at
-      FROM {unit_price} unit_price
-      LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
-      LEFT JOIN {ledger} ledger ON unit_price.ledger_id = ledger.id
-    """,
-    rowMapper = UnitPriceMapper.class,
-    sqlBuilder = LedgerTableFilter.SQL.class
-  )
-  SqlTuple findAllByFilter(LedgerTableFilter filter);
 
+  @TenantSql.FindAll(
+      sql = """
+        SELECT unit_price.*,
+               created_commit.created_at as created_at
+        FROM {unit_price} unit_price
+        LEFT JOIN {commit} created_commit ON unit_price.created_commit_id = created_commit.commit_id
+        WHERE unit_price.external_id = ANY($1) OR unit_price.fund_id = ANY($1) OR unit_price.id = ANY($1)
+        ORDER BY unit_price_date DESC
+      """,
+      rowMapper = UnitPriceMapper.class
+    )
+  SqlTuple findAllByAnyId(String[] ids);
+  
   @TenantSql.FindAll(
     sql = """
       SELECT unit_price.*,
@@ -138,9 +135,9 @@ public interface UnitPriceTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {unit_price}
-      (id, external_id, unit_price_type, unit_price_sub_type, 
+      (id, external_id, fund_id, unit_price_type, unit_price_sub_type, 
        unit_price_description, unit_price_date, unit_price_value, created_commit_id)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = UnitPriceInsertMapper.class
   )
@@ -153,6 +150,7 @@ public interface UnitPriceTable {
       return ImmutableUnitPrice.builder()
           .id(TableUtils.toStringUUID(row, "id"))
           .externalId(row.getString("external_id"))
+          .fundId(row.getString("fund_id"))
           .unitType(row.getString("unit_price_type"))
           .unitSubType(Optional.ofNullable(row.getString("unit_price_sub_type")))
           .unitDescription(Optional.ofNullable(row.getString("unit_price_description")))
@@ -172,6 +170,7 @@ public interface UnitPriceTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         doc.getExternalId(),
+        doc.getFundId(),
         doc.getUnitType(),
         doc.getUnitSubType().orElse(null),
         doc.getUnitDescription().orElse(null),

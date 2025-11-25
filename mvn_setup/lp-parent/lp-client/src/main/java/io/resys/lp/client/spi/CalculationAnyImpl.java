@@ -87,6 +87,7 @@ public class CalculationAnyImpl implements CalculateAny {
         return ledgers.withTenant().find()
             .ledgerQuery()
             .addLedgerId(contractId)
+            .addAllFundId(contract.getObjects().getAllUsedFunds())
             .findOne()
             .onItem().transformToUni(ledger -> {
               if(ledger.getObjects() == null) {
@@ -109,6 +110,8 @@ public class CalculationAnyImpl implements CalculateAny {
             });
       });
   }
+  
+
   
   private Uni<Envelope<AnyCalculation>> notFoundError(QueryEnvelope<?> env, String message) {
     return Uni.createFrom().item(ImmutableEnvelope.<AnyCalculation>builder()
