@@ -42,5 +42,10 @@ public class LedgerCommitActionsImpl implements LedgerCommitActions {
   public ModifyOneLedger modifyOneLedger() {
     return new ModifyOneLedgerImpl(startingState, repoId);
   }
+  @Override
+  public CreateManyUnitPrices createManyUnitPrices() {
+    // TODO Auto-generated method stub
+    return null;
+  }
   
 }

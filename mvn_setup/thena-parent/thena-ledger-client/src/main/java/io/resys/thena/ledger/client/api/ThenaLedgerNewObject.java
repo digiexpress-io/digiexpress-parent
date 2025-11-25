@@ -172,6 +172,7 @@ public interface ThenaLedgerNewObject {
   
   // support interface for unit price creation
   interface NewUnitPrice {
+    NewUnitPrice fundId(String fundId);
     NewUnitPrice externalId(String externalId);
     NewUnitPrice type(String type);
     NewUnitPrice subType(@Nullable String subType);

@@ -31,6 +31,8 @@ import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewLedger;
+import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewUnitPrice;
+import io.resys.thena.ledger.client.entities.UnitPrice;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
@@ -38,8 +40,16 @@ public interface LedgerCommitActions {
   
   CreateOneLedger createOneLedger();
   ModifyOneLedger modifyOneLedger();
+  CreateManyUnitPrices createManyUnitPrices();
   
-
+  interface CreateManyUnitPrices {
+    CreateManyUnitPrices commitAuthor(String author);
+    CreateManyUnitPrices commitMessage(String message);
+    CreateManyUnitPrices addUnitPrice(Consumer<NewUnitPrice> addUnitPrice);
+    CreateManyUnitPrices onNewUnitPrices(Consumer<List<UnitPrice>> handleNewState);
+    Uni<ManyUnitPricesEnvelope> build();
+  }
+  
   interface CreateOneLedger {
     CreateOneLedger commitAuthor(String author);
     CreateOneLedger commitMessage(String message);
@@ -91,4 +101,16 @@ public interface LedgerCommitActions {
     @Nullable LedgerContainer getLedger();
 
   }
+  
+  
+  
+  @Value.Immutable
+  interface ManyUnitPricesEnvelope extends ThenaEnvelope {
+    String getRepoId();
+    CommitResultStatus getStatus();
+    List<Message> getMessages();
+    @Nullable String getLog();
+    @Nullable List<UnitPrice> getUnitPrices();
+  }
+  
 }

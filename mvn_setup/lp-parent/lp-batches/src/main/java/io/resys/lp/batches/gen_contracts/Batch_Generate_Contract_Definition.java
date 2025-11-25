@@ -42,6 +42,11 @@ public class Batch_Generate_Contract_Definition {
             .comment("nova virtus")
             .executor(new BatchJob_Generate_Savings_2(contractClient, ledgerClient))
             .build())
+        .addSteps(ImmutableBatchStepDefinition.builder()
+            .name("generate funds from contract start date")
+            .comment("fund generator")
+            .executor(new BatchJob_Generate_Funds(contractClient, ledgerClient))
+            .build())
         .build();
   }
 }

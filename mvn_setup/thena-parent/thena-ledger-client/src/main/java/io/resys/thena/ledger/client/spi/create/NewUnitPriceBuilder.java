@@ -73,7 +73,11 @@ public class NewUnitPriceBuilder implements NewUnitPrice {
     this.next.externalId(externalId);
     return this;
   }
-
+  @Override
+  public NewUnitPrice fundId(String fundId) {
+    this.next.fundId(fundId);
+    return this;
+  }
   @Override
   public NewUnitPrice type(String type) {
     this.next.unitType(type);
@@ -112,7 +116,7 @@ public class NewUnitPriceBuilder implements NewUnitPrice {
   public UnitPrice close() {
     RepoAssert.isTrue(built, () -> "you must call NewUnitPrice.build() to finalize unit price CREATE!");
     final var built = next.build();
-    this.logger.add(built);
+    // don't log unit prices... this.logger.add(built);
     return built;
   }
 }
