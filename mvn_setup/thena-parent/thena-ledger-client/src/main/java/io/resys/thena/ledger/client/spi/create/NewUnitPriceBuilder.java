@@ -73,7 +73,11 @@ public class NewUnitPriceBuilder implements NewUnitPrice {
     this.next.externalId(externalId);
     return this;
   }
-
+  @Override
+  public NewUnitPrice fundId(String fundId) {
+    this.next.fundId(fundId);
+    return this;
+  }
   @Override
   public NewUnitPrice type(String type) {
     this.next.unitType(type);

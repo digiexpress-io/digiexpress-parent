@@ -102,12 +102,18 @@ public interface ThenaLedgerNewObject {
   
   // support interface for black book creation
   interface NewBlackBook {
+    // Fail-safe automatically assigned internally by default
+    NewBlackBook parentId(@Nullable String parentBlackBookId);
+    
     NewBlackBook externalId(String externalId);
     NewBlackBook type(String type);
     NewBlackBook subType(@Nullable String subType);
     NewBlackBook description(@Nullable String description);
     NewBlackBook date(LocalDate date);
     NewBlackBook amount(BigDecimal amount);
+    NewBlackBook deltaAmount(@Nullable BigDecimal deltaAmount);
+    NewBlackBook inflowAmount(@Nullable BigDecimal inflowAmount);
+    NewBlackBook outflowAmount(@Nullable BigDecimal outflowAmount);
 
     // nested black book details
     NewBlackBook addBlackBookDetail(Consumer<NewBlackBookDetail> blackBookDetail);
@@ -125,6 +131,9 @@ public interface ThenaLedgerNewObject {
     NewBlackBookDetail startDate(@Nullable LocalDate startDate);
     NewBlackBookDetail endDate(@Nullable LocalDate endDate);
     NewBlackBookDetail amount(BigDecimal amount);
+    NewBlackBookDetail deltaAmount(@Nullable BigDecimal deltaAmount);
+    NewBlackBookDetail inflowAmount(@Nullable BigDecimal inflowAmount);
+    NewBlackBookDetail outflowAmount(@Nullable BigDecimal outflowAmount);
     NewBlackBookDetail formula(@Nullable String formula);
     NewBlackBookDetail body(@Nullable JsonObject body);
     void build();
@@ -163,6 +172,7 @@ public interface ThenaLedgerNewObject {
   
   // support interface for unit price creation
   interface NewUnitPrice {
+    NewUnitPrice fundId(String fundId);
     NewUnitPrice externalId(String externalId);
     NewUnitPrice type(String type);
     NewUnitPrice subType(@Nullable String subType);

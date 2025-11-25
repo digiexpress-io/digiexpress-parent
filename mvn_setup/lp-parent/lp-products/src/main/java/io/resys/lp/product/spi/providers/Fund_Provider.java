@@ -44,19 +44,30 @@ public class Fund_Provider {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Faker FAKER = new Faker(Locale.of("fi", "FI"));
   
-  private static final String[] FUND_NAMES = {
-    "Taattu tuotto", "Tasapainoinen rahasto", "Osakerahasto", "Indeksirahasto",
-    "Eurooppa-rahasto", "Kehittyvät markkinat", "Obligaatiorahasto", "Kiinteistörahasto",
-    "Teknologia-rahasto", "Terveydenhuolto-rahasto", "Vastuullinen sijoittaminen"
+  @lombok.Value
+  public static class FundInfo {
+    String code;
+    String name;
+    String riskLevel;
+    BigDecimal baseValue;
+    BigDecimal volatility;
+  }
+  
+  public static final FundInfo[] FUND_INFO = {
+    new FundInfo("TAATTU_TUOTTO", "Taattu tuotto", "NONE", new BigDecimal("100.50"), new BigDecimal("0.005")),
+    new FundInfo("TASAPAINOINEN_RAHASTO", "Tasapainoinen rahasto", "MEDIUM", new BigDecimal("125.75"), new BigDecimal("0.015")),
+    new FundInfo("OSAKERAHASTO", "Osakerahasto", "HIGH", new BigDecimal("180.25"), new BigDecimal("0.025")),
+    new FundInfo("INDEKSIRAHASTO", "Indeksirahasto", "HIGH", new BigDecimal("165.80"), new BigDecimal("0.020")),
+    new FundInfo("EUROOPPA_RAHASTO", "Eurooppa-rahasto", "MEDIUM", new BigDecimal("140.60"), new BigDecimal("0.022")),
+    new FundInfo("KEHITTYVAT_MARKKINAT", "Kehittyvät markkinat", "VERY_HIGH", new BigDecimal("195.30"), new BigDecimal("0.040")),
+    new FundInfo("OBLIGAATIORAHASTO", "Obligaatiorahasto", "LOW", new BigDecimal("105.20"), new BigDecimal("0.008")),
+    new FundInfo("KIINTEISTO_RAHASTO", "Kiinteistörahasto", "HIGH", new BigDecimal("155.90"), new BigDecimal("0.018")),
+    new FundInfo("TEKNOLOGIA_RAHASTO", "Teknologia-rahasto", "VERY_HIGH", new BigDecimal("220.45"), new BigDecimal("0.045")),
+    new FundInfo("TERVEYDENHUOLTO_RAHASTO", "Terveydenhuolto-rahasto", "HIGH", new BigDecimal("175.80"), new BigDecimal("0.028")),
+    new FundInfo("VASTUULLINEN_SIJOITTAMINEN", "Vastuullinen sijoittaminen", "MEDIUM", new BigDecimal("160.30"), new BigDecimal("0.020"))
   };
   
-  private static final String[] FUND_CODES = {
-    "TAATTU_TUOTTO", "TASAPAINOINEN_RAHASTO", "OSAKERAHASTO", "INDEKSIRAHASTO",
-    "EUROOPPA_RAHASTO", "KEHITTYVAT_MARKKINAT", "OBLIGAATIORAHASTO", "KIINTEISTO_RAHASTO",
-    "TEKNOLOGIA_RAHASTO", "TERVEYDENHUOLTO_RAHASTO", "VASTUULLINEN_SIJOITTAMINEN"
-  };
-  
-  
+
   @Data
   @Builder
   @Jacksonized
@@ -133,80 +144,10 @@ public class Fund_Provider {
     }
   }
   
-  @Data
-  @Builder
-  @Jacksonized
-  public static class PaymentPlan {
-    private BigDecimal monthlyAmount;
-    private BigDecimal annualAmount;
-    private String frequency;
-    private LocalDate startDate;
-    private LocalDate nextPaymentDate;
-    private String paymentMethod;
-    private String bankAccount;
-    private boolean active;
-    
-    public JsonObject toJson() {
-      try {
-        String json = MAPPER.writeValueAsString(this);
-        return new JsonObject(json);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Failed to convert PaymentPlan to JSON", e);
-      }
-    }
-    
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("monthlyAmount", monthlyAmount);
-      map.put("annualAmount", annualAmount);
-      map.put("frequency", frequency);
-      map.put("startDate", startDate.toString());
-      map.put("nextPaymentDate", nextPaymentDate.toString());
-      map.put("paymentMethod", paymentMethod);
-      map.put("bankAccount", bankAccount);
-      map.put("active", active);
-      return map;
-    }
-  }
-  
-  @Data
-  @Builder
-  @Jacksonized
-  public static class Coverage {
-    private String coverageType;
-    private String coverageCode;
-    private BigDecimal sumInsured;
-    private BigDecimal premium;
-    private LocalDate effectiveDate;
-    private LocalDate expiryDate;
-    private boolean active;
-    
-    public JsonObject toJson() {
-      try {
-        String json = MAPPER.writeValueAsString(this);
-        return new JsonObject(json);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Failed to convert Coverage to JSON", e);
-      }
-    }
-    
-    public Map<String, Object> toMap() {
-      Map<String, Object> map = new HashMap<>();
-      map.put("coverageType", coverageType);
-      map.put("coverageCode", coverageCode);
-      map.put("sumInsured", sumInsured);
-      map.put("premium", premium);
-      map.put("effectiveDate", effectiveDate.toString());
-      map.put("expiryDate", expiryDate.toString());
-      map.put("active", active);
-      return map;
-    }
-  }
-  
   public static Fund generateFund(String riskProfile) {
-    int fundIndex = RANDOM.nextInt(FUND_CODES.length);
-    String fundCode = FUND_CODES[fundIndex];
-    String fundName = FUND_NAMES[fundIndex];
+    int fundIndex = RANDOM.nextInt(FUND_INFO.length);
+    String fundCode = FUND_INFO[fundIndex].getCode();
+    String fundName = FUND_INFO[fundIndex].getName();
     
     String riskLevel = determineRiskLevel(fundCode, riskProfile);
     BigDecimal managementFee = generateManagementFee(riskLevel);
@@ -250,42 +191,7 @@ public class Fund_Provider {
     return allocations;
   }
   
-  public static PaymentPlan generatePaymentPlan(int annualIncome) {
-    double contributionRate = 0.03 + (RANDOM.nextDouble() * 0.05);
-    int monthlyAmount = (int) (annualIncome * contributionRate / 12);
-    monthlyAmount = Math.round(monthlyAmount / 25.0f) * 25;
-    monthlyAmount = Math.max(50, Math.min(5000, monthlyAmount));
-    
-    LocalDate startDate = LocalDate.now().minusDays(RANDOM.nextInt(365));
-    
-    return PaymentPlan.builder()
-        .monthlyAmount(new BigDecimal(monthlyAmount))
-        .annualAmount(new BigDecimal(monthlyAmount * 12))
-        .frequency("MONTHLY")
-        .startDate(startDate)
-        .nextPaymentDate(calculateNextPaymentDate(startDate))
-        .paymentMethod("DIRECT_DEBIT")
-        .bankAccount(generateBankAccount())
-        .active(true)
-        .build();
-  }
-  
-  public static Coverage generateCoverage(String productCode) {
-    String coverageType = determineCoverageType(productCode);
-    BigDecimal sumInsured = generateSumInsured(coverageType);
-    LocalDate effectiveDate = LocalDate.now().minusDays(RANDOM.nextInt(730));
-    
-    return Coverage.builder()
-        .coverageType(coverageType)
-        .coverageCode(generateCoverageCode(coverageType))
-        .sumInsured(sumInsured)
-        .premium(calculatePremium(sumInsured, coverageType))
-        .effectiveDate(effectiveDate)
-        .expiryDate(effectiveDate.plusYears(1))
-        .active(true)
-        .build();
-  }
-  
+
   private static InvestmentAllocation createAllocation(String code, String name, BigDecimal percentage, BigDecimal totalAmount, String riskLevel) {
     BigDecimal amount = totalAmount.multiply(percentage);
     
@@ -367,56 +273,7 @@ public class Fund_Provider {
     return LocalDate.now().minusYears(1 + RANDOM.nextInt(10)).minusDays(RANDOM.nextInt(365));
   }
   
-  private static LocalDate calculateNextPaymentDate(LocalDate startDate) {
-    LocalDate current = LocalDate.now();
-    LocalDate nextPayment = startDate;
-    
-    while (nextPayment.isBefore(current)) {
-      nextPayment = nextPayment.plusMonths(1);
-    }
-    
-    return nextPayment;
-  }
   
-  private static String generateBankAccount() {
-    // Generate Finnish IBAN using faker pattern or custom logic
-    return "FI" + String.format("%02d", 10 + RANDOM.nextInt(90)) + 
-           String.format("%014d", Math.abs(RANDOM.nextLong()) % 100000000000000L);
-  }
   
-  private static String determineCoverageType(String productCode) {
-    return switch (productCode) {
-      case "FEEMI_SAVINGS" -> "DEATH_BENEFIT";
-      case "FEEMI_PENSION" -> "DISABILITY_BENEFIT";
-      case "FEEMI_PS" -> "GOVERNMENT_BONUS";
-      default -> "BASIC_COVERAGE";
-    };
-  }
   
-  private static String generateCoverageCode(String coverageType) {
-    return switch (coverageType) {
-      case "DEATH_BENEFIT" -> "DEATH_" + (1000 + RANDOM.nextInt(4000));
-      case "DISABILITY_BENEFIT" -> "DISABILITY_" + (500 + RANDOM.nextInt(2000));
-      case "GOVERNMENT_BONUS" -> "GOV_BONUS_4_5_PCT";
-      default -> "BASIC_" + (500 + RANDOM.nextInt(1500));
-    };
-  }
-  
-  private static BigDecimal generateSumInsured(String coverageType) {
-    return switch (coverageType) {
-      case "DEATH_BENEFIT" -> new BigDecimal(1000 + RANDOM.nextInt(4000));
-      case "DISABILITY_BENEFIT" -> new BigDecimal(500 + RANDOM.nextInt(2000));
-      case "GOVERNMENT_BONUS" -> new BigDecimal("0.045");
-      default -> new BigDecimal(500 + RANDOM.nextInt(1500));
-    };
-  }
-  
-  private static BigDecimal calculatePremium(BigDecimal sumInsured, String coverageType) {
-    return switch (coverageType) {
-      case "DEATH_BENEFIT" -> sumInsured.multiply(new BigDecimal("0.001"));
-      case "DISABILITY_BENEFIT" -> sumInsured.multiply(new BigDecimal("0.002"));
-      case "GOVERNMENT_BONUS" -> BigDecimal.ZERO;
-      default -> sumInsured.multiply(new BigDecimal("0.0015"));
-    };
-  }
 }

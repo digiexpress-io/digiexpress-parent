@@ -11,6 +11,7 @@ export interface CalendarInputProps {
 }
 
 export interface CalendarInputContextType {
+  disabled: boolean;
   // Machine state
   machine: DateInputStateMachine;
   
@@ -42,11 +43,12 @@ export const useCalendarInput = () => {
 };
 
 export const CalendarInputProvider: React.FC<{
+  disabled?: boolean;
   children: React.ReactNode;
   value?: Date | null;
   onChange: (date: Date | null) => void;
   onCalendarOpen?: () => void;
-}> = ({ children, value, onChange, onCalendarOpen }) => {
+}> = ({ disabled, children, value, onChange, onCalendarOpen }) => {
   // THE MAGIC: Single state machine instance
   const [machine, setMachine] = React.useState(() => new DateInputStateMachine().setFromDate(value || null));
   
@@ -200,6 +202,7 @@ export const CalendarInputProvider: React.FC<{
   };
 
   const contextValue: CalendarInputContextType = {
+    disabled: disabled === true ? true : false,
     machine,
     dayRef,
     monthRef,

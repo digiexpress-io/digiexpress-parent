@@ -43,6 +43,9 @@ public interface BlackBookDetail extends LedgerEntity {
 
   String getDetailType();
   BigDecimal getDetailAmount();
+  Optional<BigDecimal> getDetailDeltaAmount();
+  Optional<BigDecimal> getDetailInflowAmount();
+  Optional<BigDecimal> getDetailOutflowAmount();
 
   Optional<String> getExternalId();
   Optional<String> getPaymentId();

@@ -24,9 +24,11 @@ package io.resys.thena.ledger.client.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -48,6 +50,18 @@ import io.resys.thena.ledger.client.entities.UnitPrice;
  * similar to GrimMissionContainer in the Grim domain.
  */
 public interface ThenaLedgerContainers {
+  
+  
+  interface LedgerTreeNode {
+    BlackBook getBlackBook();
+    List<ProjectionDetail> getBlackBookDetails();
+    
+    List<LedgerTreeNode> getTill(String blackBookType);
+    
+    Optional<LedgerTreeNode> getPrevious();
+    Optional<LedgerTreeNode> getNext();
+  }
+  
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableLedgerContainer.class)
@@ -71,6 +85,11 @@ public interface ThenaLedgerContainers {
     List<Settlement> getSettlements();
     // settlement id -> details
     Map<String, List<SettlementPayment>> getSettlementPayments();
-
+    
+    
+    @JsonIgnore
+    default LedgerTreeNode toTree() {
+      return new LedgerTreeNode_Default(this);
+    }
   }
 }

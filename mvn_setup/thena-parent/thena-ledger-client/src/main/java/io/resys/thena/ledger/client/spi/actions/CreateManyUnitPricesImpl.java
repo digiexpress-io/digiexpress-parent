@@ -21,21 +21,23 @@ package io.resys.thena.ledger.client.spi.actions;
  */
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.ledger.client.api.LedgerCommitActions.CreateOneLedger;
-import io.resys.thena.ledger.client.api.LedgerCommitActions.OneLedgerEnvelope;
-import io.resys.thena.ledger.client.api.ImmutableLedgerContainer;
-import io.resys.thena.ledger.client.api.ImmutableOneLedgerEnvelope;
-import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
-import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewLedger;
+import io.resys.thena.ledger.client.api.ImmutableManyUnitPricesEnvelope;
+import io.resys.thena.ledger.client.api.LedgerCommitActions.CreateManyUnitPrices;
+import io.resys.thena.ledger.client.api.LedgerCommitActions.ManyUnitPricesEnvelope;
+import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewUnitPrice;
 import io.resys.thena.ledger.client.entities.ImmutableCommit;
+import io.resys.thena.ledger.client.entities.UnitPrice;
+import io.resys.thena.ledger.client.spi.actions.CreateOneLedgerImpl.CreateOneLedgerException;
 import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
-import io.resys.thena.ledger.client.spi.create.NewLedgerBuilder;
+import io.resys.thena.ledger.client.spi.create.NewUnitPriceBuilder;
 import io.resys.thena.ledger.client.tables.BbDb;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
 import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
@@ -46,58 +48,58 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateOneLedgerImpl implements CreateOneLedger {
+public class CreateManyUnitPricesImpl implements CreateManyUnitPrices {
 
   private final BbDb state;
   private final String tenantId;
   
   private String author;
   private String message;
-  private Consumer<NewLedger> ledger;
-  private Consumer<LedgerContainer> handleNewState;
+  private List<Consumer<NewUnitPrice>> ledger = new ArrayList<>();
+  private Consumer<List<UnitPrice>> handleNewState;
   
   @Override
-  public CreateOneLedger commitAuthor(String author) {
+  public CreateManyUnitPrices commitAuthor(String author) {
     this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); 
     return this;
   }
   
   @Override
-  public CreateOneLedger commitMessage(String message) {
+  public CreateManyUnitPrices commitMessage(String message) {
     this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!");
     return this;
   }
   
   @Override
-  public CreateOneLedger ledger(Consumer<NewLedger> addLedger) {
-    RepoAssert.notNull(addLedger, () -> "addLedger can't be empty!");
-    ledger = addLedger;
+  public CreateManyUnitPrices addUnitPrice(Consumer<NewUnitPrice> addUnitPrice) {
+    RepoAssert.notNull(addUnitPrice, () -> "addUnitPrice can't be empty!");
+    ledger.add(addUnitPrice);
     return this;
   }
 
   @Override
-  public Uni<OneLedgerEnvelope> build() {
+  public Uni<ManyUnitPricesEnvelope> build() {
     RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    RepoAssert.notNull(ledger, () -> "ledger can't be empty!");
+    RepoAssert.notNull(ledger.isEmpty(), () -> "unitPrices can't be empty!");
 
     final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(tenantId).build();
     return this.state.withTransaction(scope, this::doInTx);
   }
   
   @Override
-  public CreateOneLedger onNewLedger(Consumer<LedgerContainer> handleNewState) {
+  public CreateManyUnitPrices onNewUnitPrices(Consumer<List<UnitPrice>> handleNewState) {
     this.handleNewState = handleNewState;
     return this;
   }
 
-  private Uni<OneLedgerEnvelope> doInTx(BbDb tx) {
+  private Uni<ManyUnitPricesEnvelope> doInTx(BbDb tx) {
     return createRequest(tx)
         .onItem().transformToUni(request -> createResponse(tx, request))
-        .onFailure(CreateOneLedgerException.class).recoverWithItem(ex -> {
-          final CreateOneLedgerException error = (CreateOneLedgerException) ex;          
-          return ImmutableOneLedgerEnvelope.builder()
+        .onFailure(ManyUnitPricesEnvelopeException.class).recoverWithItem(ex -> {
+          final ManyUnitPricesEnvelopeException error = (ManyUnitPricesEnvelopeException) ex;          
+          return ImmutableManyUnitPricesEnvelope.builder()
             .repoId(tenantId)
             .addMessages(ImmutableMessage.builder()
                 .text(new StringBuilder()
@@ -112,27 +114,15 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
         });
   }
   
-  private Uni<OneLedgerEnvelope> createResponse(BbDb tx, PersistenceUnit request) {
+  private Uni<ManyUnitPricesEnvelope> createResponse(BbDb tx, PersistenceUnit request) {
     return tx.builder().from(request).persist().onItem().transform(rsp -> {
       if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-        throw new CreateOneLedgerException("Failed to create ledger!", rsp);
+        throw new CreateOneLedgerException("Failed to create unit prices!", rsp);
       }
       
-      final OneLedgerEnvelope result = ImmutableOneLedgerEnvelope.builder()
+      final ManyUnitPricesEnvelope result = ImmutableManyUnitPricesEnvelope.builder()
           .repoId(tenantId)
-          .ledger(ImmutableLedgerContainer.builder()
-            .ledger(rsp.getLedgerInserts().iterator().next())
-            .moneyRequests(rsp.getMoneyRequestInserts())
-            .payments(rsp.getPaymentInserts())
-            .settlements(rsp.getSettlementInserts())
-            .settlementPayments(java.util.Collections.emptyMap())
-            .blackBooks(rsp.getBlackBookInserts())
-            .blackBookDetails(java.util.Collections.emptyMap())
-            .projections(rsp.getProjectionInserts())
-            .projectionDetails(java.util.Collections.emptyMap())
-            .unitPrices(rsp.getUnitPriceInserts())
-            .ledgerEvents(rsp.getLedgerEventInserts())
-            .build())
+          .addAllUnitPrices(request.getUnitPriceInserts())
           .addAllMessages(rsp.getCommitLogs().stream().map(log -> ImmutableMessage.builder()
               .exception(log.getException())
               .text(log.getText())
@@ -143,7 +133,7 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
     })
     .onItem().invoke(newState -> {
       if(handleNewState != null) {
-        handleNewState.accept(newState.getLedger());
+        handleNewState.accept(newState.getUnitPrices());
       }
     });
   }
@@ -155,9 +145,9 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
         .log("")
         .build();
     final var createdAt = OffsetDateTime.now();
-    ImmutablePersistenceUnit next = start;
+    
 
-    final var ledgerId = OidUtils.genUUID();
+
     final var logger = new LedgerCommitBuilder(tenantId, 
         ImmutableCommit.builder()
           .id(OidUtils.genUUID())
@@ -165,30 +155,29 @@ public class CreateOneLedgerImpl implements CreateOneLedger {
           .commitMessage(message)
           .commitLog("")
           .createdAt(createdAt)
-          .ledgerId(ledgerId)
+          .ledgerId(Optional.empty())
           .build(),
         Optional.empty()
     );
     
-    final var newLedger = new NewLedgerBuilder(logger);
-    this.ledger.accept(newLedger);
-    final var created = newLedger.close();
     
-    
-    next = ImmutablePersistenceUnit.builder()
-        .from(start)
-        .from(created)
-        .from(logger.close())
-        .build();
+    final var next = ImmutablePersistenceUnit.builder().from(start);
+    for(final var newUnitPrice : this.ledger) {
+      
+      final var builder = new NewUnitPriceBuilder(logger, start, null);
+      newUnitPrice.accept(builder);
+      final var created = builder.close();  
+      next.addUnitPriceInserts(created);
+    }
   
-    return Uni.createFrom().item(next);
+    return Uni.createFrom().item(next.from(logger.close()).build());
   }
   
-  public static class CreateOneLedgerException extends RuntimeException {
+  public static class ManyUnitPricesEnvelopeException extends RuntimeException {
     private static final long serialVersionUID = -6202574733069488724L;
     private final PersistenceUnit batch;
     
-    public CreateOneLedgerException(String message, PersistenceUnit batch) {
+    public ManyUnitPricesEnvelopeException(String message, PersistenceUnit batch) {
       super(message + System.lineSeparator() + " " +
           String.join(System.lineSeparator() + " ", batch.getCommitLogs().stream().map(e -> e.getText()).toList()));
       

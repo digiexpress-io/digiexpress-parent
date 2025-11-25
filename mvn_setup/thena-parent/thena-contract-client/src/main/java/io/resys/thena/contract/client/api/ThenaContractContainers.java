@@ -22,9 +22,11 @@ package io.resys.thena.contract.client.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -32,8 +34,8 @@ import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.contract.client.entities.Capability;
 import io.resys.thena.contract.client.entities.Command;
 import io.resys.thena.contract.client.entities.Contract;
-import io.resys.thena.contract.client.entities.DateRule;
 import io.resys.thena.contract.client.entities.Coverage;
+import io.resys.thena.contract.client.entities.DateRule;
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
 import io.resys.thena.contract.client.entities.Note;
@@ -64,5 +66,14 @@ public interface ThenaContractContainers {
     
     // Investment plan allocations grouped by investment plan id
     Map<String, List<InvPlanAlloc>> getInvPlanAllocations();
+    
+    @JsonIgnore
+    default List<String> getAllUsedFunds() {
+      return getInvPlanAllocations().values().stream()
+          .flatMap(e -> e.stream())
+          .flatMap(e -> Stream.of(e.getInvPlanAllocCode(), e.getInvPlanAllocName()))
+          .distinct()
+          .toList();
+    }
   }
 }

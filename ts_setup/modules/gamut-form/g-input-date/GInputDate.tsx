@@ -64,10 +64,9 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
 
   const errors: DialobApi.ActionError[] = [...extendedErrors, ...(props.errors ?? [])]
 
-  const { id, label, variant = 'date', labelPosition } = props;
+  const { id, label, variant = 'date', labelPosition, disabled } = props;
   const ownerState = { ...props, variant };
   const classes = useUtilityClasses(id, variant);
-
 
   const slots: GInputBaseProps<GInputDateProps> = {
     id,
@@ -79,9 +78,9 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     },
     slotProps: {
       error: { id, errors },
-      input: { ...ownerState, name: id, setExtendedErrors: handleExtendedErrors },
-      label: { id, children: label ?? '', labelPosition, required: props.required, errors: props.errors },
-      adornment: { id, children: props.description, title: label, disabled: props.disabled }
+      input: { ...ownerState, name: id, setExtendedErrors: handleExtendedErrors, disabled },
+      label: { id, children: label ?? '', labelPosition, required: props.required, errors },
+      adornment: { id, children: props.description, title: label, disabled }
     }
   }
 

@@ -43,6 +43,7 @@ import io.vertx.mutiny.sqlclient.Row;
       external_id VARCHAR(255) NOT NULL,
       ledger_name VARCHAR(255) NOT NULL,
       ledger_description TEXT,
+      current_black_book_id UUID,
       
       commit_id UUID NOT NULL,
       created_commit_id UUID NOT NULL,
@@ -51,6 +52,8 @@ import io.vertx.mutiny.sqlclient.Row;
 
     CREATE INDEX IF NOT EXISTS {ledger}_EXTERNAL_INDEX
       ON {ledger} (external_id);
+    CREATE INDEX IF NOT EXISTS {ledger}_CURRENT_BLACKBOOK_INDEX
+      ON {ledger} (current_black_book_id);
   """,
   constraints = """
   """,
@@ -113,8 +116,8 @@ public interface LedgerTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ledger}
-      (id, external_id, ledger_name, ledger_description, commit_id, created_commit_id, updated_tree_commit_id)
-       VALUES($1, $2, $3, $4, $5, $6, $7)
+      (id, external_id, ledger_name, ledger_description, current_black_book_id, commit_id, created_commit_id, updated_tree_commit_id)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8)
     """,
     propsMapper = LedgerInsertMapper.class
   )
@@ -123,8 +126,8 @@ public interface LedgerTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {ledger}
-       SET external_id = $1, ledger_name = $2, ledger_description = $3, commit_id = $4, updated_tree_commit_id = $5
-       WHERE id = $6
+       SET external_id = $1, ledger_name = $2, ledger_description = $3, current_black_book_id = $4, commit_id = $5, updated_tree_commit_id = $6
+       WHERE id = $7
     """,
     propsMapper = LedgerUpdateMapper.class
   )
@@ -139,6 +142,7 @@ public interface LedgerTable {
           .externalId(row.getString("external_id"))
           .name(row.getString("ledger_name"))
           .description(Optional.ofNullable(row.getString("ledger_description")))
+          .currentBlackBookId(Optional.ofNullable(TableUtils.toStringUUID(row, "current_black_book_id")))
           .commitId(TableUtils.toStringUUID(row, "commit_id"))
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .updatedTreeCommitId(TableUtils.toStringUUID(row, "updated_tree_commit_id"))
@@ -159,6 +163,7 @@ public interface LedgerTable {
         doc.getExternalId(),
         doc.getName(),
         doc.getDescription().orElse(null),
+        doc.getCurrentBlackBookId().isPresent() ? TableUtils.toUuid(doc.getCurrentBlackBookId().get()) : null,
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getCreatedCommitId()),
         TableUtils.toUuid(doc.getUpdatedTreeCommitId())
@@ -173,6 +178,7 @@ public interface LedgerTable {
         doc.getExternalId(),
         doc.getName(),
         doc.getDescription().orElse(null),
+        doc.getCurrentBlackBookId().isPresent() ? TableUtils.toUuid(doc.getCurrentBlackBookId().get()) : null,
         TableUtils.toUuid(doc.getCommitId()),
         TableUtils.toUuid(doc.getUpdatedTreeCommitId()),
         TableUtils.toUuid(doc.getId())

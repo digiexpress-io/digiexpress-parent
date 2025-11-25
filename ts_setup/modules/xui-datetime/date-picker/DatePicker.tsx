@@ -14,21 +14,21 @@ import { DateFieldContainer } from './DateFieldContainer';
  */
 export interface DatePickerProps {
   value: Date | null;
+  disabled?: boolean;
   onChange: (newDate: Date | null) => void;
   /** Stretch to container width (used in "mui-like" UIs) */
   fullWidth?: boolean;
-
   /** Control input height similar to MUI TextField */
   size?: 'small' | 'medium';
   /** Extra Box sx for outer wrapper */
   sx?: SxProps<Theme>;
-
   onValidity?: (isError: boolean) => void;
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
   sx,
+  disabled,
   onChange,
   onValidity,
   fullWidth = false,
@@ -46,14 +46,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const handleCalendarOpen = () => setOpen(true);
   const classes = useUtilityClasses();
 
-
   const anchorRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
     <>
-      <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen}>
+      <CalendarInputProvider value={value} onChange={onChange} onCalendarOpen={handleCalendarOpen} disabled={disabled}>
         <XuiDateFieldRoot sx={{ ...sx }} ownerState={{ fullWidth }} className={classes.root} ref={anchorRef}>
-          <DateFieldContainer
+          <DateFieldContainer 
             onClear={() => handleDateChange(null)}
             onOpen={handleCalendarOpen}
             size={size}
@@ -62,7 +61,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         </XuiDateFieldRoot>
       </CalendarInputProvider>
 
-      <Popover
+      {disabled === true ? <></> : <Popover
         open={isPickerOpen}
         onClose={handleClose}
         anchorEl={anchorRef.current}
@@ -81,7 +80,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           onClose={handleClose}
           value={value}
           onChange={handleDateChange} />
-      </Popover>
+      </Popover>}
     </>
   );
 }

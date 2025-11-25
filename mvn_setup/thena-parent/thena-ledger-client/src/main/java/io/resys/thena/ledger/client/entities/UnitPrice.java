@@ -38,6 +38,9 @@ public interface UnitPrice extends LedgerEntity {
 
   String getId();
   String getExternalId();
+  String getFundId();
+  
+  
   String getUnitType();
   Optional<String> getUnitSubType();
   Optional<String> getUnitDescription();

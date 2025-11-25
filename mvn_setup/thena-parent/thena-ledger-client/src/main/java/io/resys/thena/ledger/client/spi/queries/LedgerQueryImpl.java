@@ -50,6 +50,7 @@ public class LedgerQueryImpl implements LedgerQuery {
   private final Uni<BbDb> state;
   
   private List<String> ledgerIds;
+  private final List<String> fundNameOrId = new ArrayList<>();
   private final List<LedgerDocType> excludedDocs = new ArrayList<>();
   private boolean lockForUpdate;
 
@@ -58,7 +59,11 @@ public class LedgerQueryImpl implements LedgerQuery {
     this.lockForUpdate = true;
     return this;
   }
-
+  @Override
+  public LedgerQuery addAllFundId(List<String> fundNameOrId) {
+    this.fundNameOrId.addAll(fundNameOrId);
+    return this;
+  }
   @Override
   public LedgerQuery excludeDocs(LedgerDocType... docs) {
     this.excludedDocs.addAll(Arrays.asList(docs));
@@ -87,6 +92,7 @@ public class LedgerQueryImpl implements LedgerQuery {
     final var query = ImmutableLedgerTableFilter.builder()
         .lockForUpdate(Boolean.TRUE.equals(this.lockForUpdate))
         .ledgerIds(Optional.ofNullable(this.ledgerIds == null || this.ledgerIds.isEmpty() ? null: this.ledgerIds))
+        .fundIds(Optional.ofNullable(this.fundNameOrId == null || this.fundNameOrId.isEmpty() ? null: this.fundNameOrId))
         .build();
 
     return Uni.combine().all().unis(
@@ -251,10 +257,11 @@ public class LedgerQueryImpl implements LedgerQuery {
   }
   
   private Uni<BbDbQuery.World> findAllUnitPrices(BbDb state, LedgerTableFilter filter) {
-    if(this.excludedDocs.contains(LedgerDocType.UNIT_PRICE)) {
+    if(this.excludedDocs.contains(LedgerDocType.UNIT_PRICE) || filter.getFundIds().isEmpty()) {
       return Uni.createFrom().item(ImmutableWorld.builder().build());
     }
-    return state.query().queryUnitPrice().findAllByFilter(filter)
+    return state.query().queryUnitPrice()
+      .findAllByAnyId(filter.getFundIds().get().toArray(new String[] {}))
       .onItem().transform(items -> ImmutableWorld
           .builder().unitPrice(items.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
           .build()
@@ -399,4 +406,6 @@ public class LedgerQueryImpl implements LedgerQuery {
   public static LedgerQueryImpl of(BbDb db) {
     return new LedgerQueryImpl(Uni.createFrom().item(db));
   }
+
+
 }

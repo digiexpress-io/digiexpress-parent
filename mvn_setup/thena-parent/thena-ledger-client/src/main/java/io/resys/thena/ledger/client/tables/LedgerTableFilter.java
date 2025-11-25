@@ -39,6 +39,8 @@ import io.vertx.mutiny.sqlclient.Tuple;
 public interface LedgerTableFilter {
   Optional<List<String>> getLedgerIds();
   
+  Optional<List<String>> getFundIds();
+  
   Boolean getLockForUpdate();
   
   final static class SQL implements SqlBuilder<LedgerTableFilter> {

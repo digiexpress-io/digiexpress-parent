@@ -51,6 +51,8 @@ public class DbTestTemplate {
   @AfterEach
   public void tearDown() {
   }
+  
+  
   public LpClient getLpClient() {
     return new LpClientImpl(getContractClient(), getLedgerClient());
   }
@@ -60,4 +62,12 @@ public class DbTestTemplate {
   public LedgerClient getLedgerClient() {
     return client.getLedgerContract();    
   }
+  
+  
+  public void genFunds() {
+    new TestFundsGen(getContractClient(), getLedgerClient())
+      .genFunds().await().atMost(atMost);
+  }
+  
+  
 }

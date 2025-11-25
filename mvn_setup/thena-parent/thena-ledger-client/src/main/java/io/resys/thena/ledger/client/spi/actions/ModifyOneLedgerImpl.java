@@ -175,7 +175,8 @@ public class ModifyOneLedgerImpl implements ModifyOneLedger {
           .commitLog("")
           .createdAt(createdAt)
           .ledgerId(currentState.getLedger().getId())
-          .build()
+          .build(),
+        currentState.getLedger().getCurrentBlackBookId()
     );
     
     final var mergeLedger = new MergeLedgerBuilder(currentState, logger);

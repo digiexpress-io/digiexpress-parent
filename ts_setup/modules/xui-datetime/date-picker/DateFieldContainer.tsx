@@ -21,16 +21,15 @@ export const DateFieldContainer: React.FC<DateFieldContainerProps> = ({ onClear,
   const { machine } = useCalendarInput();
   const classes = useUtilityClasses();
   const intl = useIntl();
+
   const isBlurred: boolean = machine.focusedField === undefined || machine.focusedField === null;
   const isValidationRequired: boolean = machine.data.day !== '' || machine.data.month !== '' || machine.data.year !== '';
   const isError: boolean = (!machine.isValid && isValidationRequired);
   const isEffect = isError && isValidationRequired && isBlurred;
 
   React.useEffect(() => {
-    if (isBlurred && isValidationRequired) {
-      onValidity(isError);
-    }
-  }, [isEffect])
+    onValidity(isError);
+  }, [isEffect, isError])
 
   return (
     <XuiDateFieldInput className={classes.input} ownerState={{ isError, size  }}>

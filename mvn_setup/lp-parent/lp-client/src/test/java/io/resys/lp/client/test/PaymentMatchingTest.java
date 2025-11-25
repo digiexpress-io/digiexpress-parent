@@ -22,6 +22,7 @@ package io.resys.lp.client.test;
 
 import org.junit.jupiter.api.Test;
 
+import io.resys.lp.client.spi.formula.feemi_savings.AddPaymentFactory;
 import io.resys.lp.client.test.config.DbTestTemplate;
 import io.resys.lp.product.spi.providers.Contract_Provider;
 
@@ -36,13 +37,15 @@ public class PaymentMatchingTest extends DbTestTemplate {
         getLedgerClient(), 
         "001"
       ).await().atMost(atMost);
+    genFunds();
+    
     
     final var firstPaymentPlan = savings.getContract()
         .getPaymentPlans().iterator().next();
     final var firstPaymentDate = firstPaymentPlan.getPaymentPlanStartDate();
     
     
-    getLpClient().actions().paymentMatching()
+    getLpClient().actions().matchPayment()
       .addHint(savings.getContract().getContract().getId())
       .addPayment(newPayment -> {
         newPayment
@@ -55,10 +58,12 @@ public class PaymentMatchingTest extends DbTestTemplate {
       })
       .build().await().atMost(atMost);
     
-    getLpClient().actions().paymentCalculation()
+    getLpClient().actions().calculateAny()
       .ledgerId(firstPaymentPlan.getContractId())
+      .formula(new AddPaymentFactory())
       .build()
       .await().atMost(atMost);
-    
+   
+
   }
 }

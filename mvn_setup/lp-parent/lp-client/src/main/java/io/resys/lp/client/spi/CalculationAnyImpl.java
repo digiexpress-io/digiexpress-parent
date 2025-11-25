@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.realcalculation;
+package io.resys.lp.client.spi;
 
 /*-
  * #%L
@@ -22,47 +22,56 @@ package io.resys.lp.client.spi.realcalculation;
 
 import java.time.LocalDate;
 
-import io.resys.lp.client.api.LpClient.PaymentCalculation;
+import io.resys.lp.client.api.LpClient.CalculateAny;
+import io.resys.lp.client.api.LpClient.CalculationFormula;
+import io.resys.lp.client.api.LpClient.FormulaContainer;
+import io.resys.lp.client.api.LpClient.FundQuery;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
 import io.resys.lp.client.api.entities.ImmutableEnvelope;
 import io.resys.lp.client.api.entities.ImmutableLog;
-import io.resys.lp.client.spi.calc.CalculationFactory;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.ledger.client.api.LedgerClient;
-import io.resys.thena.ledger.client.api.LedgerCommitActions.OneLedgerEnvelope;
+import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class AddPaymentCalculation implements PaymentCalculation {
+public class CalculationAnyImpl implements CalculateAny {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
-  private final CalculationFactory factory;
+
   
   private String contractIdOrRefOrEtc;
-  private LocalDate startDate;
+  private LocalDate targetDate;
+  private CalculationFormula formula;
   
   @Override
-  public PaymentCalculation ledgerId(String contractIdOrRefOrEtc) {
-    this.contractIdOrRefOrEtc = contractIdOrRefOrEtc;
+  public CalculateAny ledgerId(String ledgerId) {
+    this.contractIdOrRefOrEtc = ledgerId;
     return this;
   }
-
   @Override
-  public PaymentCalculation startDate(LocalDate startDate) {
-    this.startDate = startDate;
+  public CalculateAny targetDate(LocalDate targetDate) {
+    this.targetDate = targetDate;
     return this;
   }
-
+  @Override
+  public CalculateAny formula(CalculationFormula formula) {
+    this.formula = formula;
+    return this;
+  } 
   @Override
   public Uni<Envelope<AnyCalculation>> build() {
-    RepoAssert.notEmpty(contractIdOrRefOrEtc, () -> "contractIdOrRefOrEtc can't be empty!");
+    RepoAssert.notEmpty(contractIdOrRefOrEtc, () -> "ledgerId can't be empty!");
+    RepoAssert.notNull(formula, () -> "formula can't be null!");
     
     
     return contracts.withTenant().find().contractQuery()
@@ -78,36 +87,31 @@ public class AddPaymentCalculation implements PaymentCalculation {
         return ledgers.withTenant().find()
             .ledgerQuery()
             .addLedgerId(contractId)
+            .addAllFundId(contract.getObjects().getAllUsedFunds())
             .findOne()
             .onItem().transformToUni(ledger -> {
               if(ledger.getObjects() == null) {
                 return notFoundError(contract, "Ledger not found!");
               }
-              return factory.builder()
-                  .contract(contract.getObjects())
-                  .ledger(ledger.getObjects())
-                  .startDate(startDate)
-                  .incomingPayments()
-                  .accept()
-                  .onItem().transform(this::ledgerCalculated);
+              
+              final var targetDate = this.targetDate == null ? LocalDate.now() : this.targetDate;
+              
+              final var container = FormulaContainerImpl.builder()
+                .startDate(targetDate)
+                .today(targetDate)
+                .contract(contract.getObjects())
+                .contractClient(contracts)
+                .ledger(ledger.getObjects())
+                .ledgerClient(ledgers)
+                .fundQuery(new FundQueryImpl(ledger.getObjects()))
+                .build();
+              
+              return formula.accept(container);
             });
       });
   }
   
-  private Envelope<AnyCalculation> ledgerCalculated(OneLedgerEnvelope env) {
-    return ImmutableEnvelope.<AnyCalculation>builder()
-        .status(env.getStatus() == CommitResultStatus.OK ? EnvelopeStatus.OK : EnvelopeStatus.ERROR)
-        .addAllLogs(env.getMessages().stream().map(e -> ImmutableLog.builder()
-            .exception(e.getException())
-            .text(e.getText())
-            .build()).toList())
-        .addLogs(ImmutableLog.builder()
-            .targetId(String.join(",", contractIdOrRefOrEtc))
-            .text("Ledger calculated")
-            .build())
-        .object(null)
-        .build();
-  } 
+
   
   private Uni<Envelope<AnyCalculation>> notFoundError(QueryEnvelope<?> env, String message) {
     return Uni.createFrom().item(ImmutableEnvelope.<AnyCalculation>builder()
@@ -122,5 +126,19 @@ public class AddPaymentCalculation implements PaymentCalculation {
             .build())
         .object(null)
         .build());
-  } 
+  }
+
+
+  @Data @Builder
+  private static class FormulaContainerImpl implements FormulaContainer {
+    private final ContractClient contractClient;
+    private final LedgerClient ledgerClient;
+    private final FundQuery fundQuery;
+    
+    private final ContractContainer contract;
+    private final LedgerContainer ledger;
+    private final LocalDate startDate;
+    private final LocalDate today;
+
+  }
 }

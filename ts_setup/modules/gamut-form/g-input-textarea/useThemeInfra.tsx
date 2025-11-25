@@ -7,17 +7,21 @@ import { useVariantOverride } from '@dxs-ts/gamut-api'
 import { GInputError } from '../g-input-error'
 import { GInputLabel } from '../g-input-label'
 import { GInputAdornment } from '../g-input-adornment'
+import { useGFormErrorVisibility } from '../g-form-error-visibility';
 
 
 
 const MUI_NAME = 'GInputTextArea';
 
-
 export function useThemeInfra(initProps: GInputTextAreaProps) {
+
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
   })
+
+  const { isErrorsVisible } = useGFormErrorVisibility({ controlId: props.id });
+  const visibleErrors = isErrorsVisible ? props.errors : undefined;
 
   const {
     variant = 'textBox',
@@ -26,8 +30,10 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
 
   const ownerState = {
     ...props,
-    variant
+    variant,
+    visibleErrors
   }
+
   const { id, onChange, value, label, labelPosition, errors } = props;
   const slots: GInputBaseProps<TextFieldProps> = {
     id,
@@ -39,12 +45,11 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     },
     slotProps: {
       error: { id, errors },
-      input: { name: id, onChange, value: value ?? '', rows, multiline: true, error: (props.errors?.length ?? 0) > 0, disabled: props.disabled },
-      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: props.errors },
+      input: { name: id, onChange, value: value ?? '', rows, multiline: true, errors: props.errors, disabled: props.disabled },
+      label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: visibleErrors },
       adornment: { id, children: props.description, title: label ?? '', disabled: props.disabled }
     }
   }
-
   const classes = useUtilityClasses(props.id, variant);
   return { classes, ownerState, props, slots };
 }
@@ -61,8 +66,15 @@ const GInput = styled(TextField, {
       props.name,
     ];
   },
-})<GInputBaseAnyProps & TextFieldProps>(({ theme }) => {
-  return {
+})<GInputBaseAnyProps & TextFieldProps & { errors?: any }>(({ theme, errors }) => {
+
+  const hasErrors = !!errors && (Array.isArray(errors) ? errors.length > 0 : true);
+
+  return hasErrors ? {
+    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.error.main,
+    }
+  } : {
 
   };
 });
@@ -77,7 +89,9 @@ export const GInputTextAreaRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: { variant: string, disabled: boolean, visibleErrors?: any } }>(({ theme, ownerState }) => {
+  const isErrorsVisible = ownerState.visibleErrors && ownerState.visibleErrors.length > 0;
+
 
   if (ownerState.disabled) {
     return {
@@ -89,6 +103,14 @@ export const GInputTextAreaRoot = styled("div", {
       }
     }
   }
+
+  return {
+    ...(isErrorsVisible && {
+      "& .GInputLabel-root .MuiTypography-root": {
+        color: theme.palette.error.main,
+      },
+    }),
+  };
 
 });
 

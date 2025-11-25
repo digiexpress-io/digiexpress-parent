@@ -64,10 +64,7 @@ public class NewBlackBookBuilder implements NewBlackBook {
     this.logger = logger;
     this.savedState = savedState;
     this.blackBookId = OidUtils.genUUID();
-    this.next = ImmutableBlackBook.builder()
-        .id(this.blackBookId)
-        .ledgerId(ledgerId)
-        .createdCommitId(logger.getCommitId());
+    this.next = logger.withNextBlackBook(blackBookId);
     
     this.allBlackBooks = Stream.of(
         // from current TX
@@ -116,6 +113,30 @@ public class NewBlackBookBuilder implements NewBlackBook {
   @Override
   public NewBlackBook amount(BigDecimal amount) {
     this.next.bookAmount(amount);
+    return this;
+  }
+
+  @Override
+  public NewBlackBook parentId(String parentBlackBookId) {
+    this.next.parentBlackBookId(Optional.ofNullable(parentBlackBookId));
+    return this;
+  }
+
+  @Override
+  public NewBlackBook deltaAmount(BigDecimal deltaAmount) {
+    this.next.bookDeltaAmount(Optional.ofNullable(deltaAmount));
+    return this;
+  }
+
+  @Override
+  public NewBlackBook inflowAmount(BigDecimal inflowAmount) {
+    this.next.bookInflowAmount(Optional.ofNullable(inflowAmount));
+    return this;
+  }
+
+  @Override
+  public NewBlackBook outflowAmount(BigDecimal outflowAmount) {
+    this.next.bookOutflowAmount(Optional.ofNullable(outflowAmount));
     return this;
   }
 

@@ -1,4 +1,4 @@
-package io.resys.lp.client.spi.paymentmatching;
+package io.resys.lp.client.spi;
 
 /*-
  * #%L
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import io.resys.lp.client.api.LpClient.PaymentMatching;
+import io.resys.lp.client.api.LpClient.MatchPayment;
 import io.resys.lp.client.api.entities.AllocatedPayments;
 import io.resys.lp.client.api.entities.Envelope;
 import io.resys.lp.client.api.entities.Envelope.EnvelopeStatus;
@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class PaymentMatchingImpl implements PaymentMatching {
+public class MatchPaymentImpl implements MatchPayment {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
   
@@ -53,12 +53,12 @@ public class PaymentMatchingImpl implements PaymentMatching {
   private final ImmutableAllocatedPayments.Builder allocation = ImmutableAllocatedPayments.builder();
   
   @Override
-  public PaymentMatching addHint(String contractIdOrSomeContractIdentifier) {
+  public MatchPayment addHint(String contractIdOrSomeContractIdentifier) {
     this.hints.add(contractIdOrSomeContractIdentifier);
     return this;
   }
   @Override
-  public PaymentMatching addPayment(Consumer<NewPayment> payment) {
+  public MatchPayment addPayment(Consumer<NewPayment> payment) {
     this.payments.add(payment);
     return this;
   }
@@ -88,7 +88,7 @@ public class PaymentMatchingImpl implements PaymentMatching {
   
   private Uni<Envelope<AllocatedPayments>> allocateToLedger(ContractContainer contract) {
     return ledgers.withTenant().commit().modifyOneLedger()
-        .commitAuthor(PaymentMatchingImpl.class.getSimpleName())
+        .commitAuthor(MatchPaymentImpl.class.getSimpleName())
         .commitMessage("Payment matching")
         .ledgerId(contract.getContract().getId())
         .modifyLedger(ledger -> {

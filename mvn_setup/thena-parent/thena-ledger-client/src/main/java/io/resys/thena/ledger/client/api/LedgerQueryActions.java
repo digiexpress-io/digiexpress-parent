@@ -39,7 +39,10 @@ public interface LedgerQueryActions {
     // optimization, exclude explicitly doc-s that we don't need 
     LedgerQuery excludeDocs(LedgerDocType... docs);
     
-    LedgerQuery addLedgerId(String ids);
+    
+    LedgerQuery addAllFundId(List<String> fundNameOrId); // query exciting fund related data, by default wont be included
+    
+    LedgerQuery addLedgerId(String id);
     LedgerQuery addAllLedgerId(List<String> ids); // include only data for given contract
     
     Uni<QueryEnvelope<LedgerContainer>> getOne(String id);

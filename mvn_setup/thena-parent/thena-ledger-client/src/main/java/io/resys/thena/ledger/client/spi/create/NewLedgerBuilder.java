@@ -43,7 +43,6 @@ import io.resys.thena.ledger.client.entities.ImmutableLedgerTransitives;
 import io.resys.thena.ledger.client.spi.commitlog.LedgerCommitBuilder;
 import io.resys.thena.ledger.client.tables.BbDbBuilder.PersistenceUnit;
 import io.resys.thena.ledger.client.tables.ImmutablePersistenceUnit;
-import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 
@@ -65,7 +64,7 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
     super();
     this.next = logger.createPersistenceUnit();
     this.commitId = logger.getCommitId();
-    this.ledgerId = OidUtils.genUUID();
+    this.ledgerId = logger.getLedgerId();
     this.ledger = ImmutableLedger.builder()
         .id(ledgerId)
         .createdCommitId(commitId)
@@ -136,6 +135,9 @@ public class NewLedgerBuilder implements ThenaLedgerNewObject.NewLedger {
     final var builder = new NewBlackBookBuilder(logger, ledgerId, allBlackBooks, null);
     blackBook.accept(builder);
     final var built = builder.close();
+    
+    
+    this.ledger.currentBlackBookId(logger.getCurrentBlackBookId());
     this.next.from(built);
     this.isBbAdded = true;
     return this;

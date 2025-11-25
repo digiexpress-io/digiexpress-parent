@@ -26,11 +26,13 @@ import java.util.function.Consumer;
 import io.resys.lp.client.api.entities.AllocatedPayments;
 import io.resys.lp.client.api.entities.AnyCalculation;
 import io.resys.lp.client.api.entities.Envelope;
+import io.resys.lp.client.api.entities.Fund;
 import io.resys.thena.contract.client.api.ContractClient;
+import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.ledger.client.api.LedgerClient;
+import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerNewObject.NewPayment;
 import io.smallrye.mutiny.Uni;
-import jakarta.annotation.Nullable;
 
 public interface LpClient {
   Actions actions();
@@ -40,28 +42,49 @@ public interface LpClient {
 
   
   interface Actions {
-    PaymentCalculation paymentCalculation();
-    ImaginaryCalculation imaginaryCalculation();
-    PaymentMatching paymentMatching();
+    CalculateAny calculateAny();
+    MatchPayment matchPayment();
   }
-  interface PaymentCalculation {
-    PaymentCalculation ledgerId(String contractIdOrRefOrEtc);
-    PaymentCalculation startDate(@Nullable LocalDate localDate);
+  
+  // Calculate any open matched payments
+  interface CalculateAny {
+    CalculateAny ledgerId(String ledgerId);
+    CalculateAny targetDate(LocalDate targetDate);
+    CalculateAny formula(CalculationFormula formula);
+    
     // make sure to check for failures...
     Uni<Envelope<AnyCalculation>> build();
   }
   
-  interface ImaginaryCalculation {
+  interface CalculationFormula {
+    Uni<Envelope<AnyCalculation>> accept(FormulaContainer container);
+  }
     
+  interface FormulaContainer {
+    ContractClient getContractClient();
+    LedgerClient getLedgerClient();
+    
+    FundQuery getFundQuery();
+    
+    ContractContainer getContract();
+    LedgerContainer getLedger();
+    LocalDate getStartDate();
+    LocalDate getToday();
   }
   
-  interface PaymentMatching {
-    PaymentMatching addHint(String contractIdOrRefOrEtc);
+  
+  interface MatchPayment {
+    MatchPayment addHint(String contractIdOrRefOrEtc);
     
     // auto-match figure out if this can be matched by whatever rules....
-    PaymentMatching addPayment(Consumer<NewPayment> payment);
+    MatchPayment addPayment(Consumer<NewPayment> payment);
     
     // make sure to check for failures...
     Uni<Envelope<AllocatedPayments>> build();
   }
+  
+  interface FundQuery {
+    Fund getOne(String fundIdNameOrCode, LocalDate targetDate);
+  }
+
 }
