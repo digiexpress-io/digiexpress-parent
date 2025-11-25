@@ -39,12 +39,11 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
     },
     slotProps: {
       error: { id, errors },
-      input: { name: id, onChange, value: value ?? '', rows, multiline: true, error: (props.errors?.length ?? 0) > 0, disabled: props.disabled },
+      input: { name: id, onChange, value: value ?? '', rows, multiline: true, errors: props.errors, disabled: props.disabled },
       label: { id, children: label ?? '', labelPosition, required: initProps.required, errors: props.errors },
       adornment: { id, children: props.description, title: label ?? '', disabled: props.disabled }
     }
   }
-
   const classes = useUtilityClasses(props.id, variant);
   return { classes, ownerState, props, slots };
 }
@@ -61,8 +60,15 @@ const GInput = styled(TextField, {
       props.name,
     ];
   },
-})<GInputBaseAnyProps & TextFieldProps>(({ theme }) => {
-  return {
+})<GInputBaseAnyProps & TextFieldProps & { errors?: any }>(({ theme, errors }) => {
+
+  const hasErrors = !!errors && (Array.isArray(errors) ? errors.length > 0 : true);
+
+  return hasErrors ? {
+    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.error.main,
+    }
+  } : {
 
   };
 });
@@ -78,6 +84,7 @@ export const GInputTextAreaRoot = styled("div", {
     ];
   },
 })<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+
 
   if (ownerState.disabled) {
     return {
