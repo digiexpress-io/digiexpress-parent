@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 public class CalculationAnyImpl implements CalculateAny {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
-  private final FundQuery fundQuery;
+
   
   private String contractIdOrRefOrEtc;
   private LocalDate targetDate;
@@ -103,7 +103,7 @@ public class CalculationAnyImpl implements CalculateAny {
                 .contractClient(contracts)
                 .ledger(ledger.getObjects())
                 .ledgerClient(ledgers)
-                .fundQuery(fundQuery)
+                .fundQuery(new FundQueryImpl(ledger.getObjects()))
                 .build();
               
               return formula.accept(container);

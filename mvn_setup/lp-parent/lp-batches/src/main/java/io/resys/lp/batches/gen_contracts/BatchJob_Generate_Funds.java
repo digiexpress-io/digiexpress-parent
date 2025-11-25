@@ -1,8 +1,12 @@
 package io.resys.lp.batches.gen_contracts;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+
+import io.resys.lp.product.spi.providers.Fund_Provider;
 
 /*-
  * #%L
@@ -96,8 +100,8 @@ public class BatchJob_Generate_Funds implements Executor<QueryEnvelopeList<Contr
                .fundId(fund.getFundId())
                .externalId(fund.getFundName())
                .date(valueDate)
-               .type(null)
-               .value(null)
+               .type("UNIT_PRICE")
+               .value(calculateFundValue(fund.getFundId(), valueDate))
                .build();
            })
          );
@@ -128,5 +132,33 @@ public class BatchJob_Generate_Funds implements Executor<QueryEnvelopeList<Contr
   private static class GenFundValue {
     String fundId;
     String fundName;
+  }
+  
+  private BigDecimal calculateFundValue(String fundId, LocalDate date) {
+    // Find fund info from Fund_Provider
+    Fund_Provider.FundInfo fundInfo = null;
+    for (Fund_Provider.FundInfo info : Fund_Provider.FUND_INFO) {
+      if (info.getCode().equals(fundId)) {
+        fundInfo = info;
+        break;
+      }
+    }
+    
+    if (fundInfo == null) {
+      return new BigDecimal("100.00"); // Default fallback
+    }
+    
+    // Use same calculation logic as FundQueryImpl
+    final var baseValue = fundInfo.getBaseValue();
+    final var volatility = fundInfo.getVolatility();
+    final var seed = date.toEpochDay() + fundId.hashCode();
+    
+    // Realistic price movement using sine waves
+    final var random = (Math.sin(seed * 0.1) + Math.sin(seed * 0.023) + Math.sin(seed * 0.007)) / 3.0;
+    final var dailyChange = volatility.multiply(BigDecimal.valueOf(random));
+    final var newValue = baseValue.add(baseValue.multiply(dailyChange));
+    final var minValue = baseValue.multiply(new BigDecimal("0.2"));
+    
+    return newValue.max(minValue).setScale(2, RoundingMode.HALF_UP);
   }
 }

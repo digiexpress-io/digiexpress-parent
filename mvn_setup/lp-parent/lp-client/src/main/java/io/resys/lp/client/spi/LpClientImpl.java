@@ -32,14 +32,13 @@ public class LpClientImpl implements LpClient {
 
   private final ContractClient contracts;
   private final LedgerClient ledgers;
-  private final FundQuery fundQuery;
   
   @Override
   public Actions actions() {
     return new Actions() {
       @Override
       public CalculateAny calculateAny() {
-        return new CalculationAnyImpl(contracts, ledgers, fundQuery);
+        return new CalculationAnyImpl(contracts, ledgers);
       }
       @Override
       public MatchPayment matchPayment() {
@@ -50,6 +49,6 @@ public class LpClientImpl implements LpClient {
 
   @Override
   public LpClient with(ContractClient contracts, LedgerClient ledgers) {
-    return new LpClientImpl(contracts, ledgers, fundQuery);
+    return new LpClientImpl(contracts, ledgers);
   }
 }

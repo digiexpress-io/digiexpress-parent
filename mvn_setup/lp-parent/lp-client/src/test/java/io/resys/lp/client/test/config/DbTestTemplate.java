@@ -54,15 +54,12 @@ public class DbTestTemplate {
   public void tearDown() {
   }
   public LpClient getLpClient() {
-    return new LpClientImpl(getContractClient(), getLedgerClient(), getFundQuery());
+    return new LpClientImpl(getContractClient(), getLedgerClient());
   }
   public ContractClient getContractClient() {
     return client.getClientContract();
   }
   public LedgerClient getLedgerClient() {
     return client.getLedgerContract();    
-  }
-  public FundQuery getFundQuery() {
-    return new FundQueryImpl();
   }
 }
