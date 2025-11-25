@@ -79,7 +79,7 @@ export const GInputDate: React.FC<GInputDateProps> = (initProps) => {
     slotProps: {
       error: { id, errors },
       input: { ...ownerState, name: id, setExtendedErrors: handleExtendedErrors, disabled },
-      label: { id, children: label ?? '', labelPosition, required: props.required, errors: props.errors },
+      label: { id, children: label ?? '', labelPosition, required: props.required, errors },
       adornment: { id, children: props.description, title: label, disabled }
     }
   }

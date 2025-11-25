@@ -77,9 +77,10 @@ const DateSeparator: React.FC = () => (
 const ErrorMessage: React.FC = () => {
   const { machine } = useCalendarInput();
 
-  if (machine.isValid) return null;
-  
-  // todo
+  if (machine.isValid) {
+    return null;
+  };
+
   return (<div></div>);
 };
 
