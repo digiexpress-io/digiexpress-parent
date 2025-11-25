@@ -25,7 +25,6 @@ import java.time.LocalDate;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import io.resys.lp.product.spi.providers.CRM_Provider;
-import io.resys.lp.product.spi.providers.Fund_Provider;
 import io.resys.lp.product.spi.providers.GenerationOptions;
 import io.resys.thena.contract.client.api.ThenaContractNewObject.NewContract;
 import io.resys.thena.contract.client.entities.ContractEntity.ContractRelationType;
@@ -43,8 +42,7 @@ public class SampleContractVisitor {
   public static void visitSavingsContract(NewContract newContract, Product product, GenerationOptions options) {
     
     // Generate contract data using FeemiSavingsContractGenerator
-    SavingsContractGenerator.GeneratedContractData contractData = 
-        SavingsContractGenerator.generate(product, options);
+    ContractGenerator.GeneratedContractData contractData = ContractGenerator.generate(product, options);
     
     
     final var policyholder = new MutableObject<Party>();
@@ -101,10 +99,10 @@ public class SampleContractVisitor {
         .addCoverage(coverage -> {
           coverage
               .insuredId(policyholder.get().getId())
-              .externalId(contractData.coverage.coverageCode)
-              .coverageType(contractData.coverage.coverageType)
-              .coverageCode(contractData.coverage.coverageCode)
-              .coverageSumInsured(contractData.coverage.sumInsured)
+              .externalId(contractData.coverage.getCoverageCode())
+              .coverageType(contractData.coverage.getCoverageType())
+              .coverageCode(contractData.coverage.getCoverageCode())
+              .coverageSumInsured(contractData.coverage.getSumInsured())
               .coverageStatus("ACTIVE")
               .coverageEffectiveFrom(contractData.contract.startDate)
               .coverageTermStartDate(contractData.contract.startDate)
@@ -115,9 +113,9 @@ public class SampleContractVisitor {
         .addPaymentPlan(paymentPlan -> {
           paymentPlan
               .paymentPlanStatus("ACTIVE")
-              .paymentPlanFrequency(contractData.paymentPlan.frequency)
-              .paymentPlanAmount(contractData.paymentPlan.monthlyAmount)
-              .paymentPlanStartDate(contractData.paymentPlan.startDate)
+              .paymentPlanFrequency(contractData.paymentPlan.getFrequency())
+              .paymentPlanAmount(contractData.paymentPlan.getMonthlyAmount())
+              .paymentPlanStartDate(contractData.paymentPlan.getStartDate())
               .build();
         })
         
@@ -132,7 +130,7 @@ public class SampleContractVisitor {
               .build();
           
           // Add allocations
-          for (SavingsContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
+          for (ContractGenerator.InvestmentAllocationData allocation : contractData.investmentAllocations) {
             invPlan.addAllocation(alloc -> {
               alloc
                   .invPlanAllocCode(allocation.fundCode)
@@ -165,15 +163,15 @@ public class SampleContractVisitor {
   public static void visitPensionContract(NewContract newContract, Product product, GenerationOptions options) {
     
     // Generate person data
-    CRM_Provider.Person person = CRM_Provider.generatePerson(
+    final CRM_Provider.Person person = CRM_Provider.generatePerson(
         options.getAgeRange().getMinAge(),
         options.getIncomeRange().getMinIncome(),
         options.getIncomeRange().getMaxIncome()
     );
     
     // Generate fund data
-    Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
-    Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("FEEMI_PENSION");
+    final var paymentPlan = ContractGenerator.generatePaymentPlan(person.getEmployment().getAnnualIncome(), product);
+    final var coverage = ContractGenerator.generateCoverage("FEEMI_PENSION");
     
     // Build pension contract
     final var startDate = LocalDate.now().minusDays((long) (Math.random() * 30));
@@ -237,7 +235,7 @@ public class SampleContractVisitor {
   public static void visitPSContract(NewContract newContract, Product product, GenerationOptions options) {
     
     // Generate person data
-    CRM_Provider.Person person = CRM_Provider.generatePerson(
+    final CRM_Provider.Person person = CRM_Provider.generatePerson(
         options.getAgeRange().getMinAge(),
         options.getIncomeRange().getMinIncome(),
         options.getIncomeRange().getMaxIncome()
@@ -245,8 +243,8 @@ public class SampleContractVisitor {
     
     
     // Generate fund data
-    Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
-    Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("FEEMI_PS");
+    final var paymentPlan = ContractGenerator.generatePaymentPlan(person.getEmployment().getAnnualIncome(), product);
+    final var coverage = ContractGenerator.generateCoverage("FEEMI_PS");
     
     
     final var startDate = LocalDate.now().minusDays((long) (Math.random() * 30));
@@ -322,17 +320,15 @@ public class SampleContractVisitor {
   public static void visitNovaVirtusContract(NewContract newContract, Product product, GenerationOptions options) {
     
     // Generate person data
-    CRM_Provider.Person person = CRM_Provider.generatePerson(
+    final CRM_Provider.Person person = CRM_Provider.generatePerson(
         options.getAgeRange().getMinAge(),
         options.getIncomeRange().getMinIncome(),
         options.getIncomeRange().getMaxIncome()
     );
-    
 
-    
     // Generate fund data
-    Fund_Provider.PaymentPlan paymentPlan = Fund_Provider.generatePaymentPlan(person.getEmployment().getAnnualIncome());
-    Fund_Provider.Coverage coverage = Fund_Provider.generateCoverage("NOVA_VIR_001");
+    final var paymentPlan = ContractGenerator.generatePaymentPlan(person.getEmployment().getAnnualIncome(), product);
+    final var coverage = ContractGenerator.generateCoverage("NOVA_VIR_001");
     
     final var policyholder = new MutableObject<Party>();
     

@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.resys.lp.product.spi.providers.CRM_Provider;
 import io.resys.lp.product.spi.providers.Fund_Provider;
 import io.resys.lp.product.spi.providers.GenerationOptions;
@@ -37,8 +39,11 @@ import io.resys.thena.product.client.api.Product.AllocationRules;
 import io.resys.thena.product.client.api.Product.IncomeRange;
 import io.resys.thena.product.client.api.Product.InvestmentOption;
 import io.vertx.core.json.JsonObject;
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
-public class SavingsContractGenerator {
+public class ContractGenerator {
   
   private static final Random RANDOM = new Random();
   
@@ -87,12 +92,6 @@ public class SavingsContractGenerator {
     public JsonObject partyData;
   }
   
-  public static class PaymentPlanData {
-    public BigDecimal monthlyAmount;
-    public String frequency;
-    public LocalDate startDate;
-  }
-  
   public static class InvestmentAllocationData {
     public String fundCode;
     public String fundName;
@@ -100,11 +99,75 @@ public class SavingsContractGenerator {
     public String riskLevel;
   }
   
-  public static class CoverageData {
-    public String coverageType;
-    public String coverageCode;
-    public BigDecimal sumInsured;
+
+  @Data
+  @Builder
+  @Jacksonized
+  public static class PaymentPlanData {
+    private BigDecimal monthlyAmount;
+    private BigDecimal annualAmount;
+    private String frequency;
+    private LocalDate startDate;
+    private LocalDate nextPaymentDate;
+    private String paymentMethod;
+    private String bankAccount;
+    private boolean active;
+    
+    @JsonIgnore
+    public JsonObject toJson() {
+      String json = new JsonObject(toMap()).encode();
+      return new JsonObject(json);
+    }
+    
+    @JsonIgnore
+    public Map<String, Object> toMap() {
+      Map<String, Object> map = new HashMap<>();
+      map.put("monthlyAmount", monthlyAmount);
+      map.put("annualAmount", annualAmount);
+      map.put("frequency", frequency);
+      map.put("startDate", startDate.toString());
+      map.put("nextPaymentDate", nextPaymentDate.toString());
+      map.put("paymentMethod", paymentMethod);
+      map.put("bankAccount", bankAccount);
+      map.put("active", active);
+      return map;
+    }
   }
+  
+  @Data
+  @Builder
+  @Jacksonized
+  public static class CoverageData {
+    private String coverageType;
+    private String coverageCode;
+    private BigDecimal sumInsured;
+    private BigDecimal premium;
+    private LocalDate effectiveDate;
+    private LocalDate expiryDate;
+    private boolean active;
+    
+    
+    @JsonIgnore
+    public JsonObject toJson() {
+      String json = new JsonObject(toMap()).encode();
+      return new JsonObject(json);
+    }
+    
+    @JsonIgnore
+    public Map<String, Object> toMap() {
+      Map<String, Object> map = new HashMap<>();
+      map.put("coverageType", coverageType);
+      map.put("coverageCode", coverageCode);
+      map.put("sumInsured", sumInsured);
+      map.put("premium", premium);
+      map.put("effectiveDate", effectiveDate.toString());
+      map.put("expiryDate", expiryDate.toString());
+      map.put("active", active);
+      return map;
+    }
+  }
+  
+  
   
   public static GeneratedContractData generate(Product product, GenerationOptions options) {
     GeneratedContractData data = new GeneratedContractData();
@@ -207,20 +270,6 @@ public class SavingsContractGenerator {
     return beneficiary;
   }
   
-  private static PaymentPlanData generatePaymentPlan(int annualIncome, Product constraints) {
-    PaymentPlanData payment = new PaymentPlanData();
-    
-    // Generate payment plan using Fund_Provider
-    Fund_Provider.PaymentPlan fundPayment = Fund_Provider.generatePaymentPlan(annualIncome);
-    
-    // Map to PaymentPlanData
-    payment.monthlyAmount = fundPayment.getMonthlyAmount();
-    payment.frequency = fundPayment.getFrequency();
-    payment.startDate = fundPayment.getStartDate();
-    
-    return payment;
-  }
-  
   private static List<InvestmentAllocationData> generateInvestmentAllocations(
       List<InvestmentOption> options, AllocationRules rules, String riskProfile) {
     
@@ -241,18 +290,95 @@ public class SavingsContractGenerator {
     
     return allocations;
   }
+
+
+  public static PaymentPlanData generatePaymentPlan(int annualIncome, Product constraints) {
+    double contributionRate = 0.03 + (RANDOM.nextDouble() * 0.05);
+    int monthlyAmount = (int) (annualIncome * contributionRate / 12);
+    monthlyAmount = Math.round(monthlyAmount / 25.0f) * 25;
+    monthlyAmount = Math.max(50, Math.min(5000, monthlyAmount));
+    
+    LocalDate startDate = LocalDate.now().minusDays(RANDOM.nextInt(365));
+    
+    return PaymentPlanData.builder()
+        .monthlyAmount(new BigDecimal(monthlyAmount))
+        .annualAmount(new BigDecimal(monthlyAmount * 12))
+        .frequency("MONTHLY")
+        .startDate(startDate)
+        .nextPaymentDate(calculateNextPaymentDate(startDate))
+        .paymentMethod("DIRECT_DEBIT")
+        .bankAccount(generateBankAccount())
+        .active(true)
+        .build();
+  }
   
-  private static CoverageData generateCoverage(String productCode) {
-    CoverageData coverage = new CoverageData();
+  public static CoverageData generateCoverage(String productCode) {
+    String coverageType = determineCoverageType(productCode);
+    BigDecimal sumInsured = generateSumInsured(coverageType);
+    LocalDate effectiveDate = LocalDate.now().minusDays(RANDOM.nextInt(730));
     
-    // Generate coverage using Fund_Provider
-    Fund_Provider.Coverage fundCoverage = Fund_Provider.generateCoverage(productCode);
+    return CoverageData.builder()
+        .coverageType(coverageType)
+        .coverageCode(generateCoverageCode(coverageType))
+        .sumInsured(sumInsured)
+        .premium(calculatePremium(sumInsured, coverageType))
+        .effectiveDate(effectiveDate)
+        .expiryDate(effectiveDate.plusYears(1))
+        .active(true)
+        .build();
+  }
+  
+  
+  private static LocalDate calculateNextPaymentDate(LocalDate startDate) {
+    LocalDate current = LocalDate.now();
+    LocalDate nextPayment = startDate;
     
-    // Map to CoverageData
-    coverage.coverageType = fundCoverage.getCoverageType();
-    coverage.coverageCode = fundCoverage.getCoverageCode();
-    coverage.sumInsured = fundCoverage.getSumInsured();
+    while (nextPayment.isBefore(current)) {
+      nextPayment = nextPayment.plusMonths(1);
+    }
     
-    return coverage;
+    return nextPayment;
+  }
+  
+  private static String generateBankAccount() {
+    // Generate Finnish IBAN using faker pattern or custom logic
+    return "FI" + String.format("%02d", 10 + RANDOM.nextInt(90)) + 
+           String.format("%014d", Math.abs(RANDOM.nextLong()) % 100000000000000L);
+  }
+  
+  private static String determineCoverageType(String productCode) {
+    return switch (productCode) {
+      case "FEEMI_SAVINGS" -> "DEATH_BENEFIT";
+      case "FEEMI_PENSION" -> "DISABILITY_BENEFIT";
+      case "FEEMI_PS" -> "GOVERNMENT_BONUS";
+      default -> "BASIC_COVERAGE";
+    };
+  }
+  
+  private static String generateCoverageCode(String coverageType) {
+    return switch (coverageType) {
+      case "DEATH_BENEFIT" -> "DEATH_" + (1000 + RANDOM.nextInt(4000));
+      case "DISABILITY_BENEFIT" -> "DISABILITY_" + (500 + RANDOM.nextInt(2000));
+      case "GOVERNMENT_BONUS" -> "GOV_BONUS_4_5_PCT";
+      default -> "BASIC_" + (500 + RANDOM.nextInt(1500));
+    };
+  }
+  
+  private static BigDecimal generateSumInsured(String coverageType) {
+    return switch (coverageType) {
+      case "DEATH_BENEFIT" -> new BigDecimal(1000 + RANDOM.nextInt(4000));
+      case "DISABILITY_BENEFIT" -> new BigDecimal(500 + RANDOM.nextInt(2000));
+      case "GOVERNMENT_BONUS" -> new BigDecimal("0.045");
+      default -> new BigDecimal(500 + RANDOM.nextInt(1500));
+    };
+  }
+  
+  private static BigDecimal calculatePremium(BigDecimal sumInsured, String coverageType) {
+    return switch (coverageType) {
+      case "DEATH_BENEFIT" -> sumInsured.multiply(new BigDecimal("0.001"));
+      case "DISABILITY_BENEFIT" -> sumInsured.multiply(new BigDecimal("0.002"));
+      case "GOVERNMENT_BONUS" -> BigDecimal.ZERO;
+      default -> sumInsured.multiply(new BigDecimal("0.0015"));
+    };
   }
 }
