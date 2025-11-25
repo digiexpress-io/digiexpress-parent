@@ -56,7 +56,7 @@ public class PaymentMatchingTest extends DbTestTemplate {
       })
       .build().await().atMost(atMost);
     
-    getLpClient().actions().calculatePayment()
+    getLpClient().actions().calculateAny()
       .ledgerId(firstPaymentPlan.getContractId())
       .formula(new AddPaymentFactory())
       .build()

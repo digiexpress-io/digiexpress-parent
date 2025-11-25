@@ -38,8 +38,8 @@ public class LpClientImpl implements LpClient {
   public Actions actions() {
     return new Actions() {
       @Override
-      public CalculatePayment calculatePayment() {
-        return new AddPaymentCalculation(contracts, ledgers, fundQuery);
+      public CalculateAny calculateAny() {
+        return new CalculationAnyImpl(contracts, ledgers, fundQuery);
       }
       @Override
       public MatchPayment matchPayment() {

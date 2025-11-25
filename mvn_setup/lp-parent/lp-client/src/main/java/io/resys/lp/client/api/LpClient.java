@@ -42,15 +42,15 @@ public interface LpClient {
 
   
   interface Actions {
-    CalculatePayment calculatePayment();
+    CalculateAny calculateAny();
     MatchPayment matchPayment();
   }
   
   // Calculate any open matched payments
-  interface CalculatePayment {
-    CalculatePayment ledgerId(String ledgerId);
-    CalculatePayment targetDate(LocalDate targetDate);
-    CalculatePayment formula(CalculationFormula formula);
+  interface CalculateAny {
+    CalculateAny ledgerId(String ledgerId);
+    CalculateAny targetDate(LocalDate targetDate);
+    CalculateAny formula(CalculationFormula formula);
     
     // make sure to check for failures...
     Uni<Envelope<AnyCalculation>> build();

@@ -22,7 +22,7 @@ package io.resys.lp.client.spi;
 
 import java.time.LocalDate;
 
-import io.resys.lp.client.api.LpClient.CalculatePayment;
+import io.resys.lp.client.api.LpClient.CalculateAny;
 import io.resys.lp.client.api.LpClient.CalculationFormula;
 import io.resys.lp.client.api.LpClient.FormulaContainer;
 import io.resys.lp.client.api.LpClient.FundQuery;
@@ -44,7 +44,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class AddPaymentCalculation implements CalculatePayment {
+public class CalculationAnyImpl implements CalculateAny {
   private final ContractClient contracts;
   private final LedgerClient ledgers;
   private final FundQuery fundQuery;
@@ -54,17 +54,17 @@ public class AddPaymentCalculation implements CalculatePayment {
   private CalculationFormula formula;
   
   @Override
-  public CalculatePayment ledgerId(String ledgerId) {
+  public CalculateAny ledgerId(String ledgerId) {
     this.contractIdOrRefOrEtc = ledgerId;
     return this;
   }
   @Override
-  public CalculatePayment targetDate(LocalDate targetDate) {
+  public CalculateAny targetDate(LocalDate targetDate) {
     this.targetDate = targetDate;
     return this;
   }
   @Override
-  public CalculatePayment formula(CalculationFormula formula) {
+  public CalculateAny formula(CalculationFormula formula) {
     this.formula = formula;
     return this;
   } 
