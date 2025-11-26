@@ -983,6 +983,7 @@ export const sv = {
   'task.composer.additionalInfo': 'Ytterligare information',
   'task.composer.roles': 'Roller',
   'task.composer.assignee': 'Övertagare',
+  'task.composer.assignments.none': 'Inga kundtilldelningar',
   'task.composer.priority': 'Prioritet',
   'task.composer.status': 'Status',
   'task.composer.task.edit': 'Redigera uppgift',

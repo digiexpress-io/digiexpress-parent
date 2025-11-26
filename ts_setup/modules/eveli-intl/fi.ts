@@ -983,6 +983,7 @@ export const fi = {
   'task.composer.additionalInfo': 'Lisätietoja',
   'task.composer.roles': 'Roolit',
   'task.composer.assignee': 'Määräysvaltalainen',
+  'task.composer.assignments.none': 'Ei asiakasvastuita',
   'task.composer.priority': 'Prioriteetti',
   'task.composer.status': 'Status',
   'task.composer.task.edit': 'Muokkaa tehtävää',

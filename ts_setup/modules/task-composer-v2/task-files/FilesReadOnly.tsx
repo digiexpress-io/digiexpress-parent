@@ -32,11 +32,13 @@ export const FilesReadOnly: React.FC<FilesReadOnlyProps> = ({ task, style }) => 
 
   if (!attachments.length) {
     return (
-      <Typography className={classes.empty}>
-        {intl.formatMessage({ id: 'task.files.none' })}
-      </Typography>
+      <FilesReadOnlyRoot className={classes.root} style={style}>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>
+          {intl.formatMessage({ id: 'task.files.none' })}
+        </Typography>
+      </FilesReadOnlyRoot>
     );
-  }
+  }  
 
   return (
     <FilesReadOnlyRoot className={classes.root} style={style}>

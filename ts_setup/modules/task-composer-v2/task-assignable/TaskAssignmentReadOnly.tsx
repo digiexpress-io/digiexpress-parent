@@ -14,9 +14,21 @@ export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task, onClickRevie
   const classes = useUtilityClasses();
   const intl = useIntl();
 
+  const customerAssignments = task.customerAssignments ?? [];
+
+  if (customerAssignments.length === 0) {
+    return (
+      <StyledTaskAssignmentReadOnly className={classes.root}>
+        <Typography variant="body2" color="error">
+          {intl.formatMessage({ id: 'task.composer.assignments.none' })}
+        </Typography>
+      </StyledTaskAssignmentReadOnly>
+    );
+  }
+
   return (<>
     <StyledTaskAssignmentReadOnly className={classes.root}>
-      {task.customerAssignments.map((option) => (
+      {customerAssignments.map((option) => (
         <div key={option.id}>
           <Grid2 container alignItems="center" mb={1}>
             <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}>

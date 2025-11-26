@@ -984,6 +984,7 @@ export const en = {
   'task.composer.additionalInfo': 'Additional info',
   'task.composer.roles': 'Roles',
   'task.composer.assignee': 'Assignee',
+  'task.composer.assignments.none': 'No assignments',
   'task.composer.priority': 'Priority',
   'task.composer.status': 'Status',
   'task.composer.task.edit': 'Edit task',
