@@ -55,6 +55,7 @@ export const TaskBody: React.FC<TaskBodyProps> = (props) => {
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const backend = useTaskBackend();
 
+  const isManual = task.keyWords?.includes('Manual');
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(id).then(setAttachments);
@@ -67,7 +68,7 @@ export const TaskBody: React.FC<TaskBodyProps> = (props) => {
 
   return (
     <Grid2 container spacing={2} paddingLeft={2} paddingRight={2}>
-      <TaskFeature id="CRM_MESSAGES">
+      {isManual ? <></> : <TaskFeature id="CRM_MESSAGES">
         <Grid2 size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -81,7 +82,7 @@ export const TaskBody: React.FC<TaskBodyProps> = (props) => {
             </AccordionDetails>
           </Accordion>
         </Grid2>
-      </TaskFeature>
+      </TaskFeature>}
 
       <TaskFeature id="TASK_FEEDBACK">
         <Grid2 size={{ xs: 12 }}>
