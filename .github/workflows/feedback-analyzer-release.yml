@@ -18,7 +18,7 @@ on:
 
 env:
   APP_PATH: py_setup/feedback-analyzer
-  IMAGE_NAME: digiexpress-io/digiexpress-parent/feedback-analyzer
+  IMAGE_NAME: digiexpress-io/feedback-analyzer
   GIT_USERNAME: github-actions[bot]
   GIT_EMAIL: github-actions[bot]@users.noreply.github.com
   TAG_PREFIX: feedback-analyzer/v
