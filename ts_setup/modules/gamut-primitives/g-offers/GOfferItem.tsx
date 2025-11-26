@@ -79,7 +79,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
                 <Box display='flex' justifyContent='flex-start' flexDirection='column'>
                   <Typography>{name}</Typography>
                   <Box className={classes.assignedIndicator}>
-                    <TransferWithinAStationIcon />
+                    <TransferWithinAStationIcon className={classes.assignedIcon} />
                     <Typography variant='subtitle1'>{intl.formatMessage({ id: 'gamut.offers.assignedToMe', defaultMessage: 'Assigned to me' })}</Typography>
                   </Box>
                 </Box>

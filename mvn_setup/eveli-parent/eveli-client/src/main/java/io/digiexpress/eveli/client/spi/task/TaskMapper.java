@@ -270,6 +270,8 @@ public class TaskMapper {
         
         .expiresInSeconds(entity.getExpiresInSeconds())
         .expiresAt(entity.getExpiresAt())
+        .type(entity.getType())
+        
         .build();
   }
 }
