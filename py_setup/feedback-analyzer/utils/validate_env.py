@@ -19,8 +19,6 @@ def validate_environment():
     elif config.PROVIDER == 'gcp':
         if not config.GOOGLE_PROJECT_ID:
             errors.append("GOOGLE_PROJECT_ID is required when using GCP provider")
-        if not config.GOOGLE_CREDENTIALS_PATH:
-            errors.append("GOOGLE_CREDENTIALS_PATH is required when using GCP provider")
     
     if errors:
         for error in errors:
