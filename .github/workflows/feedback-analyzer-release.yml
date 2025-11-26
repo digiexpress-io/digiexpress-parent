@@ -117,7 +117,7 @@ jobs:
           git config --global user.email "${{ env.GIT_EMAIL }}"
           
           git add "${{ env.APP_PATH }}/version.json"
-          git commit -m "release ${{ env.TAG_PREFIX }}$NEW_VERSION"
+          git commit -m "release ${{ env.TAG_PREFIX }}${{ steps.version.outputs.version }}"
           git push origin ${{ github.ref_name }}
 
           git tag -a "${{ steps.version.outputs.tag }}" -m "Release version ${{ steps.version.outputs.version }}"
