@@ -26,7 +26,8 @@ export const useUtilityClasses = () => {
     header: ['header'],
     noOffers: ['noOffers'],
     assigned: ['assigned'],
-    assignedIndicator: ['assignedIndicator']
+    assignedIndicator: ['assignedIndicator'],
+    assignedIcon: ['assignedIcon']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -42,6 +43,7 @@ export const GOfferItemRoot = styled("div", {
       styles.lastModified,
       styles.cancel,
       styles.header,
+      styles.assignedIcon
     ];
   },
 })<{ ownerState: GOfferItemProps }>(({ theme, ownerState }) => {
@@ -56,10 +58,9 @@ export const GOfferItemRoot = styled("div", {
       marginRight: theme.spacing(0.5)
     },
 
-    '& .GOffers-assigned .MuiSvgIcon-root': {
+    '& .GOffers-assignedIcon': {
       marginRight: theme.spacing(1),
       color: theme.palette.error.main,
-      fontSize: '1.5rem'
     },
 
     '& .GOffers-assigned .MuiTypography-subtitle1': {
