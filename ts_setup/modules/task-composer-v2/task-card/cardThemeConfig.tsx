@@ -127,8 +127,19 @@ export const flashyCardColorsById: Record<TaskCardId, { flashyBackground: string
     flashyBackground: '#D6F2EB', // soft mint-teal background
     flashyBorder: '#3A9D8F',     // deeper teal accent
     contrastText: '#1C1C1C',
-}
+  },
+  'assignable': {
+    flashyBackground: '#F3E8FF', // soft lavender background
+    flashyBorder: '#7B3F9D',     // deeper purple accent
+    contrastText: '#1C1C1C',
+  },
+  'default': {
+    flashyBackground: '#FFF7E0', // gentle warm highlight
+    flashyBorder: '#FFB300',     // amber border
+    contrastText: '#1C1C1C',
+  },
 };
+
 
 
 

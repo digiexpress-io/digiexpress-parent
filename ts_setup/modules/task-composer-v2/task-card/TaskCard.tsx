@@ -143,7 +143,7 @@ const TaskSectionCard = styled(Box, {
   },
 })<{ ownerState: TaskCardProps }>(({ theme, ownerState }) => {
   const { id, isFlashy } = ownerState;
-  const colors = flashyCardColorsById[id] ?? '#333fff';
+  const colors = flashyCardColorsById[id] ?? flashyCardColorsById['default'];
 
 
   const baseStyles: SxProps = {
