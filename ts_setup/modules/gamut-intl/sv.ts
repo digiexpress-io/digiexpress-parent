@@ -66,6 +66,7 @@ export const sv = {
   'gamut.forms.started': 'Startade',
   'gamut.forms.attachments': 'Bilagor',
   'gamut.forms.status': 'Status',
+  'gamut.forms.selectionUndefined': 'Välja',
   'gamut.forms.status.OPEN': 'Pågår',
   'gamut.forms.status.NEW': 'Bearbetningen startar snart',
   'gamut.forms.status.COMPLETED': 'Avslutad',
