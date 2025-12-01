@@ -55,7 +55,7 @@ jobs:
             CI: false # 
             BOT_EMAIL: jocelyn.mutso@resys.io 
             BOT_NAME: jocelyn.mutso
-            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+#            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
 
         - name: Generate Magnificent Build Summary ✨
           run: |
