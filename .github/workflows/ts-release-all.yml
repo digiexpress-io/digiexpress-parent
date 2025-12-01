@@ -36,9 +36,9 @@ jobs:
         - name: Debug environment
           run: |
             echo "NODE_ENV: $NODE_ENV"
-            node --version
-            npm --version
-
+            echo "node version: $(node --version)"
+            echo "npm version: $(npm --version)"
+        
         - uses: actions/setup-node@v5
           with:
             node-version: 22
