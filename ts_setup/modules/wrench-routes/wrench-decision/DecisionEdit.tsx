@@ -160,7 +160,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
       renderHeader={headerProps => (
         <Decision.Header {...headerProps} onClick={(header) => setEdit({ header })}>
           <Button variant='text' onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
-            <FormattedMessage id='decisions.toolbar.options' defaultMessage='Options' />
+            <FormattedMessage id='decisions.toolbar.options' />
           </Button>
           <Button variant='text' onClick={() => onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }])}>
             <FormattedMessage id='decisions.toolbar.addInputColumn'/>

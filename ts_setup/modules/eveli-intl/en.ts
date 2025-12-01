@@ -648,6 +648,7 @@ export const en = {
   'decisions.composer.copiedMessage': 'Copied DECISION {name} as: {newName}',
   'decisions.composer.errorsTitle': 'Failed to create DECISION',
   'decisions.composer.assetName': 'Unique name for the DECISION',
+  'decisions.toolbar.options': 'Options',
   'decisions.toolbar.addInputColumn': 'Add input column',
   'decisions.toolbar.addOutputColumn': 'Add output column',
   'decisions.toolbar.addRow': 'Add row',

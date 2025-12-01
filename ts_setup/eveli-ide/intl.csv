@@ -650,6 +650,7 @@ decisions.composer.createdMessage,theWrench (only EN translations),Created DECIS
 decisions.composer.copiedMessage,theWrench (only EN translations),Copied DECISION {name} as: {newName},Copied DECISION {name} as: {newName},Copied DECISION {name} as: {newName},
 decisions.composer.errorsTitle,theWrench (only EN translations),Failed to create DECISION,Failed to create DECISION,Failed to create DECISION,
 decisions.composer.assetName,theWrench (only EN translations),Unique name for the DECISION,Unique name for the DECISION,Unique name for the DECISION,
+decisions.toolbar.options,theWrench (only EN translations),Options,Options,Options,
 decisions.toolbar.addInputColumn,theWrench (only EN translations),Add input column,Add input column,Add input column,
 decisions.toolbar.addOutputColumn,theWrench (only EN translations),Add output column,Add output column,Add output column,
 decisions.toolbar.addRow,theWrench (only EN translations),Add row,Add row,Add row,
