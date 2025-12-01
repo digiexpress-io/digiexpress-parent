@@ -368,7 +368,7 @@ public class CommandMapper {
           )
           .collect(Collectors.toList());
       
-      final HitPolicy hitPolicy = this.hitPolicy == null ? HitPolicy.ALL : this.hitPolicy;
+      final HitPolicy hitPolicy = this.hitPolicy == null ? HitPolicy.FIRST : this.hitPolicy;
       return ImmutableAstDecision.builder()
           .name(name)
           .bodyType(AstBodyType.DT)
