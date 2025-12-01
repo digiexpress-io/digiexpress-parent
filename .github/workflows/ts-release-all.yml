@@ -43,6 +43,8 @@ jobs:
         - name: Setup environment
           run: |
             npm config set provenance true
+            npm config delete always-auth 2>/dev/null || true
+            npm config delete verify-deps-before-run 2>/dev/null || true
             echo "NODE_ENV: $NODE_ENV"
             echo "node version: $(node --version)"
             echo "npm version: $(npm --version)"
@@ -50,8 +52,6 @@ jobs:
 
         - name: Install dependencies 📦
           run: pnpm install --frozen-lockfile
-#        - name: Test
-#          run: pnpm test -r
 
         - name: Run 'release-all.sh'  
           run: ./.release-scripts/release-all.sh
