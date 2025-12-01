@@ -33,7 +33,7 @@ export const saveCsv = (decision: HdesApi.AstDecision, delimiter: string) => {
 
 const DownloadCSV: React.FC<DownloadCSVProps> = ({ decision, onClose }) => {
   const intl = useIntl();
-  const [delimiter, setDelimiter] = React.useState(';');
+  const [delimiter, setDelimiter] = React.useState(',');
   const [customDelimiter, setCustomDelimiter] = React.useState('');
 
   const handleDownload = () => {

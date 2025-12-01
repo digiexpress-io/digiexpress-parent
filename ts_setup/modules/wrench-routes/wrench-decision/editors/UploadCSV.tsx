@@ -13,7 +13,7 @@ interface UploadCSVProps {
 const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
   const intl = useIntl();
   const [csv, setCsv] = React.useState('');
-  const [delimiter, setDelimiter] = React.useState(';');
+  const [delimiter, setDelimiter] = React.useState(',');
   const [customDelimiter, setCustomDelimiter] = React.useState('');
   
   return (
