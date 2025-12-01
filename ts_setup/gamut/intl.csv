@@ -79,7 +79,7 @@ gamut.forms.taskRefId,,Reference Id,Viitetunnus,Referens ID,Id Rujukan,Referentn
 gamut.forms.started,,Started,Aloitettu,Startade,Bermula,Započeto
 gamut.forms.attachments,,Attachments,Liitteet,Bilagor,Lampiran,Prilozi
 gamut.forms.status,,Status,Tila,Status,Status,Status
-gamut.forms.selectionUndefined,,Select,Select,,,
+gamut.forms.selectionUndefined,,Select,Valitse,Välja,,
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
 gamut.forms.status.NEW,,Processing starts soon,Valmis käsittelyyn,Bearbetningen startar snart,Pemprosesan bermula tidak lama lagi,Obrada počinje uskoro
 gamut.forms.status.COMPLETED,,Completed,Käsitelty,Avslutad,Selesai,Završeno

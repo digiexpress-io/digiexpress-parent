@@ -118,7 +118,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
   const styleConfig = useTaskCardThemeConfig();
   const style = styleConfig[cardTheme];
-
+  const isManualTask = task.keyWords?.includes('Manual');
 
   const commonProps = {
     id: cardId,
@@ -258,6 +258,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
         <TaskFeature id='CRM_MESSAGES'>
           <TaskCard title={intl.formatMessage({ id: 'taskcard.title.customerMessages' })}
             {...commonProps}
+            isCardHidden={isManualTask}
             isMenu
             showFlashyToggle={true}
             showEditOnMenu={true}
@@ -271,6 +272,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           >
             <CustomerMessagesReadOnly task={task} style={style} />
           </TaskCard>
+
         </TaskFeature>
       );
 

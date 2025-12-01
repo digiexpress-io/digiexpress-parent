@@ -66,7 +66,7 @@ export const fi = {
   'gamut.forms.started': 'Aloitettu',
   'gamut.forms.attachments': 'Liitteet',
   'gamut.forms.status': 'Tila',
-  'gamut.forms.selectionUndefined': 'Select',
+  'gamut.forms.selectionUndefined': 'Valitse',
   'gamut.forms.status.OPEN': 'Käsittelyssä',
   'gamut.forms.status.NEW': 'Valmis käsittelyyn',
   'gamut.forms.status.COMPLETED': 'Käsitelty',

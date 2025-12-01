@@ -26,37 +26,41 @@ jobs:
         - uses: actions/checkout@v5
           with:
             fetch-depth: 501
+          
         - uses: pnpm/action-setup@v4
           name: install pnpm
           with:
             version: 10
-
-        - name: Debug environment
-          run: |
-            echo "NODE_ENV: $NODE_ENV"
-            node --version
-            npm --version
-
+            run_install: false
+        
         - uses: actions/setup-node@v5
           with:
-            node-version: 22
+            node-version: 24
             cache: 'pnpm'
             cache-dependency-path: ts_setup/pnpm-lock.yaml
             registry-url: 'https://registry.npmjs.org/'
 
+        - name: Setup environment
+          run: |
+            npm config set provenance true
+            npm config delete always-auth 2>/dev/null || true
+            npm config delete verify-deps-before-run 2>/dev/null || true
+            echo "NODE_ENV: $NODE_ENV"
+            echo "node version: $(node --version)"
+            echo "npm version: $(npm --version)"
+            echo "pnpm version: $(pnpm --version)"
+
         - name: Install dependencies 📦
           run: pnpm install --frozen-lockfile
-#        - name: Test
-#          run: pnpm test -r
 
         - name: Run 'release-all.sh'  
           run: ./.release-scripts/release-all.sh
           env:
-            CI: false # 
+            
             BOT_EMAIL: jocelyn.mutso@resys.io 
             BOT_NAME: jocelyn.mutso
-            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
-
+#            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+#            CI: false
         - name: Generate Magnificent Build Summary ✨
           run: |
             # Make the script executable
