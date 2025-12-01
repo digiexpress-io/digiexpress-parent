@@ -56,11 +56,11 @@ jobs:
         - name: Run 'release-all.sh'  
           run: ./.release-scripts/release-all.sh
           env:
-            CI: false # 
+            
             BOT_EMAIL: jocelyn.mutso@resys.io 
             BOT_NAME: jocelyn.mutso
 #            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
-
+#            CI: false
         - name: Generate Magnificent Build Summary ✨
           run: |
             # Make the script executable
