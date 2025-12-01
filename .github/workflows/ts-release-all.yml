@@ -30,7 +30,7 @@ jobs:
           name: install pnpm
           with:
             version: 10
-            node-version: 22
+            node-version: 22.20.0
 
         - name: Debug environment
           run: |
