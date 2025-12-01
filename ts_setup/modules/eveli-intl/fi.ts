@@ -579,6 +579,8 @@ export const fi = {
   'activities.compare.title': 'Compare',
   'activities.compare.desc': 'Compare two releases to see what has changed between them.',
   'activities.compare.view': 'Compare',
+  'activities.compare.sort.oldestFirst': 'Sort oldest first',
+  'activities.compare.sort.newestFirst': 'Sort newest first',
   'activities.debug.title': 'Debug',
   'activities.debug.desc': 'Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.',
   'activities.debug.view': 'Simulate',

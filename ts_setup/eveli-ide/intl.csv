@@ -581,6 +581,8 @@ activities.releases.view,theWrench (only EN translations),View all releases,View
 activities.compare.title,theWrench (only EN translations),Compare,Compare,Compare,
 activities.compare.desc,theWrench (only EN translations),Compare two releases to see what has changed between them.,Compare two releases to see what has changed between them.,Compare two releases to see what has changed between them.,
 activities.compare.view,theWrench (only EN translations),Compare,Compare,Compare,
+activities.compare.sort.oldestFirst,theWrench (only EN translations),Sort oldest first,Sort oldest first,Sort oldest first,
+activities.compare.sort.newestFirst,theWrench (only EN translations),Sort newest first,Sort newest first,Sort newest first,
 activities.debug.title,theWrench (only EN translations),Debug,Debug,Debug,
 activities.debug.desc,theWrench (only EN translations),"Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.","Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.","Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.",
 activities.debug.view,theWrench (only EN translations),Simulate,Simulate,Simulate,
