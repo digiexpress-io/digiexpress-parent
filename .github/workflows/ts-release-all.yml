@@ -32,24 +32,19 @@ jobs:
           with:
             version: 10
             run_install: false
-
-        - name: Install Node.js
-          uses: actions/setup-node@v4
+        
+        - uses: actions/setup-node@v5
           with:
             node-version: 24
+            cache: 'pnpm'
+            cache-dependency-path: ts_setup/pnpm-lock.yaml
+            registry-url: 'https://registry.npmjs.org/'
 
         - name: Debug environment
           run: |
             echo "NODE_ENV: $NODE_ENV"
             echo "node version: $(node --version)"
             echo "npm version: $(npm --version)"
-        
-        - uses: actions/setup-node@v5
-          with:
-            node-version: 22
-            cache: 'pnpm'
-            cache-dependency-path: ts_setup/pnpm-lock.yaml
-            registry-url: 'https://registry.npmjs.org/'
 
         - name: Install dependencies 📦
           run: pnpm install --frozen-lockfile
