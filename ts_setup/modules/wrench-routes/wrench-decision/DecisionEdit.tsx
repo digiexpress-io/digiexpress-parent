@@ -12,8 +12,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
-import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';
-import fileDownload from 'js-file-download'
+import { CellEdit, NameDescHitPolicyEdit, UploadCSV, DownloadCSV, OrderEdit, HeaderEdit } from './editors';
 
 
 import Decision from './table';
@@ -27,6 +26,7 @@ interface EditMode {
   header?: HdesApi.TypeDef,
   meta?: boolean,
   upload?: boolean,
+  download?: boolean,
   rowsColumns?: boolean,
 }
 
@@ -36,25 +36,6 @@ function quotation(input: any) {
   }
 
   return "\"" + input.replaceAll('"', '\\"') + "\""  
-}
-
-const saveCsv = (decision: HdesApi.AstDecision) => {
-  const accepts: HdesApi.TypeDef[] = [...decision.headers.acceptDefs].sort((a, b) => a.order - b.order);
-  const returns: HdesApi.TypeDef[] = [...decision.headers.returnDefs].sort((a, b) => a.order - b.order);
-  const rows = decision.rows.sort((a, b) => a.order - b.order);
-  const headers: HdesApi.TypeDef[] = [...accepts, ...returns];
-
-  const line0 = headers.map(h => h.name).join(";");
-  const lines = rows.map(row => {
-    const cells: Record<string, HdesApi.AstDecisionCell> = {};
-    row.cells.forEach(e => cells[e.header] = e);
-    return headers
-      .map(header => cells[header.id])
-      .map(c => `${c.value ? c.value : ''}`)
-      .join(";")
-
-  }).join("\r\n");
-  fileDownload(line0 + "\r\n" + lines, decision.name + '.csv')
 }
 
 const MenuOption: React.FC<{
@@ -150,6 +131,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     {edit?.meta ? <NameDescHitPolicyEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
     {edit?.rowsColumns ? <OrderEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
     {edit?.upload ? <UploadCSV onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
+    {edit?.download ? <DownloadCSV decision={ast} onClose={() => setEdit(undefined)} /> : null}
     {edit?.cell ? <CellEdit dt={ast} cell={edit?.cell} onClose={() => setEdit(undefined)} onChange={(command) => onChange([command])} /> : null}
     {edit?.header ? <HeaderEdit dt={ast} header={edit.header} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
 
@@ -163,7 +145,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
       <MenuOption label='decisions.toolbar.addRow' icon={<DoubleArrowRoundedIcon sx={{ transform: "rotate(90deg)" }} />} onClick={() => { onChange([{ type: 'ADD_ROW', id: "" }]); setMenuAnchorEl(null); }} />
       <MenuOption label="decisions.toolbar.organize.rows.columns" icon={<CompareArrowsRoundedIcon />} onClick={() => { setEdit({ rowsColumns: true }); setMenuAnchorEl(null); }} />
       <Divider />
-      <MenuOption label='decisions.toolbar.csvDownload' icon={<FileDownloadDoneIcon />} onClick={() => { saveCsv(ast); setMenuAnchorEl(null); }} />
+      <MenuOption label='decisions.toolbar.csvDownload' icon={<FileDownloadDoneIcon />} onClick={() => { setEdit({ download: true }); setMenuAnchorEl(null); }} />
       <MenuOption label='decisions.toolbar.csvUpload' icon={<UploadIcon />} onClick={() => { setEdit({ upload: true }); setMenuAnchorEl(null); }} />
       <Divider />
       <MenuOption label="decisions.toolbar.nameAndHitpolicy" icon={<EditIcon />} onClick={() => { setEdit({ meta: true }); setMenuAnchorEl(null); }} />
