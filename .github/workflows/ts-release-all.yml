@@ -40,11 +40,13 @@ jobs:
             cache-dependency-path: ts_setup/pnpm-lock.yaml
             registry-url: 'https://registry.npmjs.org/'
 
-        - name: Debug environment
+        - name: Setup environment
           run: |
+            npm config set provenance true
             echo "NODE_ENV: $NODE_ENV"
             echo "node version: $(node --version)"
             echo "npm version: $(npm --version)"
+            echo "pnpm version: $(pnpm --version)"
 
         - name: Install dependencies 📦
           run: pnpm install --frozen-lockfile
