@@ -23,6 +23,7 @@ export interface TaskCardProps {
   isMenu?: boolean;
   isExpanded?: boolean;
   isFlashy?: boolean;
+  isCardHidden?: boolean;
 
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
@@ -85,47 +86,48 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
 
   return (<>
     {props.editDialog}
-    <TaskSectionCard className={classes.dataCard} ownerState={props} id={props.id}>
+    {props.isCardHidden ? (<></>) : (
+      <TaskSectionCard className={classes.dataCard} ownerState={props} id={props.id}>
+        <Box className={classes.title}>
+          <Box display='flex' flexGrow={1} alignItems='center' onClick={props.onToggleExpanded}>
+            {props.startAdornmentIcon}
+            <TitleText style={style}>{props.title}</TitleText>
+            {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
+          </Box>
 
-      <Box className={classes.title}>
-        <Box display='flex' flexGrow={1} alignItems='center' onClick={props.onToggleExpanded}>
-          {props.startAdornmentIcon}
-          <TitleText style={style}>{props.title}</TitleText>
-          {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
+          {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
+          <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
+          {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
+          <Box {...getDragHandlePropsForId(props.id)}
+            sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
+            <DragHandleIcon color='primary' />
+          </Box>
+          <TaskCardMenu cardId={props.id}
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleMenuClose}
+            flashy={props.isFlashy}
+            onToggleFlashy={props.onToggleFlashy}
+            onToggleAltView={props.onToggleAltView}
+            onReview={props.onReview}
+            onEdit={handleEdit}
+            showEdit={props.showEditOnMenu}
+            showFlashyToggle={props.showFlashyToggle}
+            showReview={props.showReviewOnMenu}
+          />
         </Box>
 
-        {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
-        <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
-        {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
-        <Box {...getDragHandlePropsForId(props.id)}
-          sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>
-          <DragHandleIcon color='primary' />
-        </Box>
-        <TaskCardMenu cardId={props.id}
-          anchorEl={anchorEl}
-          open={menuOpen}
-          onClose={handleMenuClose}
-          flashy={props.isFlashy}
-          onToggleFlashy={props.onToggleFlashy}
-          onToggleAltView={props.onToggleAltView}
-          onReview={props.onReview}
-          onEdit={handleEdit}
-          showEdit={props.showEditOnMenu}
-          showFlashyToggle={props.showFlashyToggle}
-          showReview={props.showReviewOnMenu}
-        />
-      </Box>
 
+        <Collapse in={props.isExpanded} timeout="auto" unmountOnExit>
+          <Box className={classes.cardBody}>
+            <ExpandableBox isExpanded={props.isExpanded} onDoubleClick={props.onDoubleClick}>
+              {cardContent}
+            </ExpandableBox>
+          </Box>
 
-      <Collapse in={props.isExpanded} timeout="auto" unmountOnExit>
-        <Box className={classes.cardBody}>
-          <ExpandableBox isExpanded={props.isExpanded} onDoubleClick={props.onDoubleClick}>
-            {cardContent}
-          </ExpandableBox>
-        </Box>
-
-      </Collapse>
-    </TaskSectionCard>
+        </Collapse>
+      </TaskSectionCard>
+    )}
   </>
   );
 }
