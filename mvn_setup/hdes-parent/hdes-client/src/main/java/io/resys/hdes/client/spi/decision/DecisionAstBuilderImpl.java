@@ -159,7 +159,7 @@ public class DecisionAstBuilderImpl implements DecisionAstBuilder {
       case IMPORT_ORDERED_CSV: {
         
         CommandMapper.Builder result = builder.deleteColumns().deleteRows();
-        CSVFormat format = (command.getId() != null && !command.getId().isEmpty()) ?
+        CSVFormat format = StringUtils.isNotEmpty(command.getId()) ?
           CSVFormat.DEFAULT.builder().setDelimiter(command.getId()).get() : CSVFormat.DEFAULT;
         CSVParser parser = CSVParser.parse(command.getValue(), format);
         List<CSVRecord> records = parser.getRecords();
