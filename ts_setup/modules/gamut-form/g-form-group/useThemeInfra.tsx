@@ -138,10 +138,20 @@ const GFormGroupBody = styled('div', {
 
   return {
     display: 'grid',
-
     gridAutoFlow: 'row',
     gridTemplateRows: `repeat(${rowCount}, auto)`,
     gridTemplateColumns: `repeat(${colCount}, 1fr)`,
+
+    // ------------------------- compensation for MUI bug - force grid items in dialob's multi-col group layout to re-render with full width 
+    '& .MuiGrid-item': {
+      width: '100% !important',
+      maxWidth: 'none !important',
+      flex: 'auto',
+    },
+    '& .GInputLabel-root': {
+      justifyContent: 'flex-start'
+    },
+    // --------------------------
 
     '& .GFormBase-root': {
       paddingRight: theme.spacing(1),
