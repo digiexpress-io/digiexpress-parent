@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton, Button } from '@mui/material';
-import { SxProps } from '@mui/system';
+import { Box, Menu, MenuItem, ListItemIcon, ListItemText, Divider, Button, Typography } from '@mui/material';
 
 import { Edit as EditIcon } from '@mui/icons-material';
 import { DoubleArrowRounded as DoubleArrowRoundedIcon } from '@mui/icons-material';
@@ -13,8 +12,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
-import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';
-import fileDownload from 'js-file-download'
+import { CellEdit, NameDescHitPolicyEdit, UploadCSV, DownloadCSV, OrderEdit, HeaderEdit } from './editors';
 
 
 import Decision from './table';
@@ -28,8 +26,8 @@ interface EditMode {
   header?: HdesApi.TypeDef,
   meta?: boolean,
   upload?: boolean,
+  download?: boolean,
   rowsColumns?: boolean,
-  options?: boolean
 }
 
 function quotation(input: any) {
@@ -40,52 +38,43 @@ function quotation(input: any) {
   return "\"" + input.replaceAll('"', '\\"') + "\""  
 }
 
-const saveCsv = (decision: HdesApi.AstDecision) => {
-  const accepts: HdesApi.TypeDef[] = [...decision.headers.acceptDefs].sort((a, b) => a.order - b.order);
-  const returns: HdesApi.TypeDef[] = [...decision.headers.returnDefs].sort((a, b) => a.order - b.order);
-  const rows = decision.rows.sort((a, b) => a.order - b.order);
-  const headers: HdesApi.TypeDef[] = [...accepts, ...returns];
-
-  const line0 = headers.map(h => h.name).join(";");
-  const lines = rows.map(row => {
-    const cells: Record<string, HdesApi.AstDecisionCell> = {};
-    row.cells.forEach(e => cells[e.header] = e);
-    return headers
-      .map(header => cells[header.id])
-      .map(c => `${c.value ? c.value : ''}`)
-      .join(";")
-
-  }).join("\r\n");
-  fileDownload(line0 + "\r\n" + lines, decision.name + '.csv')
-}
-
-const DrawerOption: React.FC<{
+const MenuOption: React.FC<{
   onClick: () => void;
   label: string;
   icon: React.ReactElement;
 }> = ({ icon, onClick, label }) => {
-  const itemSx: SxProps = { color: "text.primary" }
-  return (<ListItemButton onClick={onClick}>
-    <ListItemIcon sx={itemSx}>{icon}</ListItemIcon>
-    <ListItemText sx={itemSx}>
-      <Box component="span" sx={itemSx}>
+  return (
+    <MenuItem onClick={onClick}>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText>
         <FormattedMessage id={label} />
-      </Box>
-    </ListItemText>
-  </ListItemButton>);
+      </ListItemText>
+    </MenuItem>
+  );
 }
 
+const copyCommandsToClipboard = async (
+  decisionId: string,
+  branchName: string | undefined,
+  getCommands: (id: string, branch: string | undefined) => Promise<HdesApi.AstCommand[]>
+) => {
+  const commands = await getCommands(decisionId, branchName);
 
-const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <>
-    <Box sx={{ width: "350px" }}><List>{children}</List></Box>
-    <Divider orientation="vertical" flexItem color="secondary.dark" />
-  </>
+  const javaCommands = commands.map(command =>
+    (`ImmutableAstCommand.builder().type(AstCommandValue.${command.type}).value(${quotation(command.value)}).id(${quotation(command.id)}).build()`)
+  ).join(",\r\n");
+
+  const text = JSON.stringify(commands, null, 2) + "\r\n"+ "\r\n" + javaCommands;
+  setTimeout(() => {
+    navigator.clipboard.writeText(text);
+    console.log(text);
+  })
 }
 
 const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
   const [confirmDelete, setConfirmDelete] = React.useState<{ type: 'ROW' | 'COLUMN', id: string } | null>(null);
   const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
   const { service, actions, session } = Composer.useComposer();
   const update = session.pages[decision.id];
 
@@ -142,47 +131,36 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     {edit?.meta ? <NameDescHitPolicyEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
     {edit?.rowsColumns ? <OrderEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
     {edit?.upload ? <UploadCSV onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
+    {edit?.download ? <DownloadCSV decision={ast} onClose={() => setEdit(undefined)} /> : null}
     {edit?.cell ? <CellEdit dt={ast} cell={edit?.cell} onClose={() => setEdit(undefined)} onChange={(command) => onChange([command])} /> : null}
     {edit?.header ? <HeaderEdit dt={ast} header={edit.header} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
 
-    <Drawer anchor="top" open={edit?.options} onClose={() => setEdit(undefined)} sx={{ zIndex: "10000" }}>
-      <Box sx={{ display: "flex", backgroundColor: "secondary.main", color: "primary.contrastText" }}>
-        <DrawerSection>
-          <DrawerOption label='decisions.toolbar.addInputColumn' icon={<DoubleArrowRoundedIcon sx={{ transform: "rotate(-180deg)" }} />} onClick={() => onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }])} />
-          <DrawerOption label='decisions.toolbar.addOutputColumn' icon={<DoubleArrowRoundedIcon />} onClick={() => onChange([{ type: 'ADD_HEADER_OUT', id: "out-" + ast.headers.returnDefs.length + 1 }])} />
-          <DrawerOption label='decisions.toolbar.addRow' icon={<DoubleArrowRoundedIcon sx={{ transform: "rotate(90deg)" }} />} onClick={() => onChange([{ type: 'ADD_ROW', id: "" }])} />
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerOption label='decisions.toolbar.csvDownload' icon={<FileDownloadDoneIcon />} onClick={() => saveCsv(ast)} />
-          <DrawerOption label='decisions.toolbar.csvUpload' icon={<UploadIcon />} onClick={() => setEdit({ upload: true })} />
-          <DrawerOption label='decisions.toolbar.copyCommands' icon={<FileDownloadDoneIcon/>} onClick={async function() {
-              const commands = await getCommands(decision.id, service.branchName);
-
-
-              const javaCommands = commands.map(command => 
-                (`ImmutableAstCommand.builder().type(AstCommandValue.${command.type}).value(${quotation(command.value)}).id(${quotation(command.id)}).build()`)
-              ).join(",\r\n");
-
-              const text = JSON.stringify(commands, null, 2) + "\r\n"+ "\r\n" + javaCommands;
-              setTimeout(() => {
-                navigator.clipboard.writeText(text);
-                console.log(text);
-              })
-          }} />
-        </DrawerSection>
-        <DrawerSection>
-          <DrawerOption label="decisions.toolbar.nameAndHitpolicy" icon={<EditIcon />} onClick={() => setEdit({ meta: true })} />
-          <DrawerOption label="decisions.toolbar.organize.rows.columns" icon={<CompareArrowsRoundedIcon />} onClick={() => setEdit({ rowsColumns: true })} />
-        </DrawerSection>
-      </Box>
-    </Drawer>
+    <Menu
+      anchorEl={menuAnchorEl}
+      open={Boolean(menuAnchorEl)}
+      onClose={() => setMenuAnchorEl(null)}
+    >
+      <MenuOption label='decisions.toolbar.addInputColumn' icon={<DoubleArrowRoundedIcon sx={{ transform: "rotate(-180deg)" }} />} onClick={() => { onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }]); setMenuAnchorEl(null); }} />
+      <MenuOption label='decisions.toolbar.addOutputColumn' icon={<DoubleArrowRoundedIcon />} onClick={() => { onChange([{ type: 'ADD_HEADER_OUT', id: "out-" + ast.headers.returnDefs.length + 1 }]); setMenuAnchorEl(null); }} />
+      <MenuOption label='decisions.toolbar.addRow' icon={<DoubleArrowRoundedIcon sx={{ transform: "rotate(90deg)" }} />} onClick={() => { onChange([{ type: 'ADD_ROW', id: "" }]); setMenuAnchorEl(null); }} />
+      <MenuOption label="decisions.toolbar.organize.rows.columns" icon={<CompareArrowsRoundedIcon />} onClick={() => { setEdit({ rowsColumns: true }); setMenuAnchorEl(null); }} />
+      <Divider />
+      <MenuOption label='decisions.toolbar.csvDownload' icon={<FileDownloadDoneIcon />} onClick={() => { setEdit({ download: true }); setMenuAnchorEl(null); }} />
+      <MenuOption label='decisions.toolbar.csvUpload' icon={<UploadIcon />} onClick={() => { setEdit({ upload: true }); setMenuAnchorEl(null); }} />
+      <Divider />
+      <MenuOption label="decisions.toolbar.nameAndHitpolicy" icon={<EditIcon />} onClick={() => { setEdit({ meta: true }); setMenuAnchorEl(null); }} />
+      <MenuOption label='decisions.toolbar.copyCommands' icon={<FileDownloadDoneIcon/>} onClick={async () => {
+        await copyCommandsToClipboard(decision.id, service.branchName, getCommands);
+        setMenuAnchorEl(null);
+      }} />
+    </Menu>
 
 
     <Decision.Table ast={ast}
       renderHeader={headerProps => (
         <Decision.Header {...headerProps} onClick={(header) => setEdit({ header })}>
-          <Button variant='text' onClick={() => setEdit({ options: true })}>
-            {`${ast.name} - ${intl.formatMessage({id: "decisions.table.hitpolicy"})}: ${ast.hitPolicy}`}
+          <Button variant='text' onClick={(e) => setMenuAnchorEl(e.currentTarget)}>
+            <FormattedMessage id='decisions.toolbar.options' />
           </Button>
           <Button variant='text' onClick={() => onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }])}>
             <FormattedMessage id='decisions.toolbar.addInputColumn'/>
@@ -198,6 +176,8 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
           <Button variant='text' onClick={() => setEdit({ rowsColumns: true })}>
             <FormattedMessage id='decisions.toolbar.organize.rows.columns'/>
           </Button>
+
+          <Typography variant='subtitle2' sx={{ ml: 'auto' }}>{ast.name} - {ast.hitPolicy}</Typography>
         </Decision.Header>
       )}
 

@@ -393,5 +393,10 @@
     "id": null,
     "value": null,
     "type": "SET_DESCRIPTION"
+  },
+  {
+    "id": null,
+    "value": "ALL",
+    "type": "SET_HIT_POLICY"
   }
 ]
