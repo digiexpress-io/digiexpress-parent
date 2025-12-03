@@ -2,6 +2,7 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
 
 export class Hint_FlowId {
   static accept(container: Container): languages.CompletionItem[] {
@@ -17,10 +18,10 @@ export class Hint_FlowId {
     }
 
     const before = BEFORE
-      .filter(name => this.hasNonNull(name, flow))
-      .map(name => this.get(name, flow));
+      .filter(name => HintUtils.isNonNull(name, flow))
+      .map(name => HintUtils.get(name, flow));
 
-    if (!this.isBefore(container, before)) {
+    if (!HintUtils.isBefore(container, before)) {
       return result;
     }
     
@@ -28,26 +29,5 @@ export class Hint_FlowId {
     result.push(builder.id("id").addField(KEY_ID).build());
     
     return result;
-  }
-
-  private static hasNonNull(name: string, node: any): boolean {
-    return this.get(name, node) ? true : false;
-  }
-  
-  private static get(keyword: string, node: any): any {
-    const result = node.children ? node.children[keyword] : node[keyword];
-    return result;
-  }
-
-  private static isBefore(container: Container, nodes: (any | undefined | null)[]): boolean {
-    for (const current of nodes) {
-      if (!current) {
-        continue;
-      }
-      if (container.nav.currentLine >= current.start) {
-        return false;
-      }
-    }
-    return true;
   }
 }
