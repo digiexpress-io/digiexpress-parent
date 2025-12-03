@@ -3,6 +3,9 @@ import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
 
+import { HintUtils } from './HintUtils'
+
+
 export class Hint_FlowInputs {
   static accept(container: Container): languages.CompletionItem[] {
     const result: languages.CompletionItem[] = [];
@@ -11,15 +14,15 @@ export class Hint_FlowInputs {
     const KEY_INPUTS: HdesApi.NodeKeywordTypes = "inputs";
     const AFTER: HdesApi.NodeKeywordTypes[] = ['id', 'description'];
     
-    const node = this.get(KEY_INPUTS, flow);
+    const node = HintUtils.get(KEY_INPUTS, flow);
     if (node) {
       return result;
     }
     const after = AFTER
-      .filter(name => this.hasNonNull(name, flow))
-      .map(name => this.get(name, flow));
+      .filter(name => HintUtils.isNonNull(name, flow))
+      .map(name => HintUtils.get(name, flow));
       
-    if (!after.length || !this.isAfter(container, after)) {
+    if (!after.length || !HintUtils.isAfter(container, after)) {
       return result;
     }
     
@@ -33,23 +36,5 @@ export class Hint_FlowInputs {
       .build());
       
     return result;
-  }
-
-  private static hasNonNull(name: string, node: any): boolean {
-    return this.get(name, node) ? true : false;
-  }
-  
-  private static get(keyword: string, node: any): any {
-    const result = node.children ? node.children[keyword] : node[keyword];
-    return result;
-  }
-
-  private static isAfter(container: Container, nodes: any[]): boolean {
-    for (const current of nodes) {
-      if (!(container.nav.currentLine > current.end)) {
-        return false;
-      }
-    }
-    return true;
   }
 }

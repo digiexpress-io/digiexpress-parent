@@ -2,6 +2,7 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
 
 interface TaskBodyPos {
   isEndOfLine: boolean;
@@ -42,7 +43,7 @@ export class Hint_TaskBodyMapping {
     }
     
     const afterInputBlock = (container.nav.currentLine - 1) === inputs.end;
-    if (!this.isInNode(container, inputs) && !afterInputBlock) {
+    if (!HintUtils.isInNode(container, inputs) && !afterInputBlock) {
       return result;
     }
 
@@ -137,9 +138,5 @@ export class Hint_TaskBodyMapping {
     }
     
     return result;
-  }
-
-  private static isInNode(container: Container, node: { start: number, end: number }): boolean {
-    return container.nav.currentLine <= node.end && container.nav.currentLine >= node.start;
   }
 }

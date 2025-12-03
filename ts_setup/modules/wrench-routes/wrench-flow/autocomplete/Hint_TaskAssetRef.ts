@@ -1,6 +1,7 @@
 import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
+import { HintUtils } from './HintUtils';
 
 export class Hint_TaskAssetRef {
   static accept(container: Container): languages.CompletionItem[] {
@@ -21,7 +22,7 @@ export class Hint_TaskAssetRef {
       }
       
       const ref = target.children["ref"];
-      if (!ref || !this.isInNode(container, ref)) {
+      if (!ref || !HintUtils.isInNode(container, ref)) {
         return result;
       }
 
@@ -39,7 +40,4 @@ export class Hint_TaskAssetRef {
     return result;
   }
 
-  private static isInNode(container: Container, node: { start: number, end: number }): boolean {
-    return container.nav.currentLine <= node.end && container.nav.currentLine >= node.start;
-  }
 }

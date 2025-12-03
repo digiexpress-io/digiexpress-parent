@@ -1,7 +1,8 @@
 import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
-import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
+
 
 export class Hint_InputDebugValue {
   static accept(container: Container): languages.CompletionItem[] {
@@ -21,7 +22,7 @@ export class Hint_InputDebugValue {
       const builder = new CompletionItemBuilder(container.model, container.modelPosition);
       builder.id("debugValue");
       
-      if (this.isInNode(container, input)) {
+      if (HintUtils.isInNode(container, input)) {
         builder.addValue("").append(true);
       }
       
@@ -31,7 +32,5 @@ export class Hint_InputDebugValue {
     return result;
   }
 
-  private static isInNode(container: Container, node: { start: number, end: number }): boolean {
-    return container.nav.currentLine <= node.end && container.nav.currentLine >= node.start;
-  }
+
 }

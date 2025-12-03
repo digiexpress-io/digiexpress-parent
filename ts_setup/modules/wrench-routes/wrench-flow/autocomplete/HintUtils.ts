@@ -19,6 +19,8 @@ export class HintUtils {
     return container.nav.currentLine <= ending && container.nav.currentLine >= node.start;
   }
 
+
+
   static isBefore(container: Container, nodes: (any | undefined | null)[]): boolean {
     for (const current of nodes) {
       if (!current) {
@@ -52,4 +54,6 @@ export class HintUtils {
     }
     return container.nav.currentColumn >= last.source.value.length;
   }
+
+
 }

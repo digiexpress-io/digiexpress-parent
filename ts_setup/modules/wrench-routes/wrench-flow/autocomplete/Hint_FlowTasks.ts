@@ -2,6 +2,8 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
+
 
 export class Hint_FlowTasks {
   static accept(container: Container): languages.CompletionItem[] {
@@ -11,16 +13,16 @@ export class Hint_FlowTasks {
     const KEY_INPUTS: HdesApi.NodeKeywordTypes = "inputs";
     const KEY_TASKS: HdesApi.NodeKeywordTypes = "tasks";
     
-    if (this.get(KEY_TASKS, flow)) {
+    if (HintUtils.get(KEY_TASKS, flow)) {
       return result;
     }
     
-    const inputs = this.get(KEY_INPUTS, flow);
+    const inputs = HintUtils.get(KEY_INPUTS, flow);
     if (!inputs) {
       return result;
     }
     
-    if (!this.isAfter(container, [inputs])) {
+    if (!HintUtils.isAfter(container, [inputs])) {
       return result;
     }
     
@@ -30,17 +32,5 @@ export class Hint_FlowTasks {
     return result;
   }
 
-  private static get(keyword: string, node: any): any {
-    const result = node.children ? node.children[keyword] : node[keyword];
-    return result;
-  }
 
-  private static isAfter(container: Container, nodes: any[]): boolean {
-    for (const current of nodes) {
-      if (!(container.nav.currentLine > current.end)) {
-        return false;
-      }
-    }
-    return true;
-  }
 }

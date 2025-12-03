@@ -2,6 +2,7 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
+import { HintUtils } from './HintUtils';
 
 export class Hint_NewTask {
   static accept(container: Container): languages.CompletionItem[] {
@@ -9,7 +10,7 @@ export class Hint_NewTask {
     const flow = container.flow.src;
     
     const KEY_TASKS: HdesApi.NodeKeywordTypes = "tasks";
-    const tasks = this.get(KEY_TASKS, flow);
+    const tasks = HintUtils.get(KEY_TASKS, flow);
     
     if (tasks == null) {
       return result;
@@ -20,11 +21,11 @@ export class Hint_NewTask {
     const allTasks: HdesApi.AstFlowNode[] = Object.values(tasks.children);
     
     for (const task of allTasks) {
-      if (this.isEndOfLine(container, task)) {
+      if (HintUtils.isEndOfLine(container, task)) {
         isEndOfLine = true;
         break;
       }
-      if (this.isInNode(container, task)) {
+      if (HintUtils.isInNode(container, task)) {
         isAround = false;
       }
     }
@@ -78,27 +79,5 @@ export class Hint_NewTask {
     }
     
     return result;
-  }
-
-  private static get(keyword: string, node: any): any {
-    const result = node.children ? node.children[keyword] : node[keyword];
-    return result;
-  }
-
-  private static isInNode(container: Container, node: { start: number, end: number }): boolean {
-    return container.nav.currentLine <= node.end && container.nav.currentLine >= node.start;
-  }
-
-  private static isEndOfLine(container: Container, node: HdesApi.AstFlowNode): boolean {
-    const sameLine = node.end === container.nav.currentLine;
-    if (!sameLine) {
-      return false;
-    }
-
-    const last = Object.values(node.children).filter(v => v.end === node.end).reduce(v => v);
-    if (!last) {
-      return container.nav.currentColumn >= node.value.length;
-    }
-    return container.nav.currentColumn >= last.source.value.length;
   }
 }

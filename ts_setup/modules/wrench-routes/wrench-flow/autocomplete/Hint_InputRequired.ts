@@ -1,7 +1,7 @@
 import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
-import { HdesApi } from '@dxs-ts/wrench-api';
+
 
 export class Hint_InputRequired {
   static accept(container: Container): languages.CompletionItem[] {
