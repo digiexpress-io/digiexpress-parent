@@ -2,7 +2,7 @@ import { HdesApi } from '@dxs-ts/wrench-api';
 import { Position, languages, editor } from 'monaco-editor';
 
 import { AcBuilder } from './AcBuilder';
-import {  TYPES } from './types';
+import { TYPES } from './types';
 import { AssetsQuery } from './AssetsQuery';
 import { AstNav, AstNavNode, AstNavNodeDesc } from './AstNav';
 
@@ -15,7 +15,7 @@ interface TaskBodyPos {
   isEndOfLine: boolean, inTask: boolean,
 }
 
-export class AutocompleteVisitor {
+export class AcVisitor {
 
   private _flow: HdesApi.AstFlow;
   private _result: languages.CompletionItem[] = [];
