@@ -1,91 +1,53 @@
 import { HdesApi } from '@dxs-ts/wrench-api';
-import { Position, languages, editor, IRange } from 'monaco-editor';
-import * as monaco_editor from 'monaco-editor';
+import { Position, languages, editor } from 'monaco-editor';
 
-export const EXTERNAL_DIALOG = 'EXTERNAL_DIALOG';
+import { AcBuilder } from './AcBuilder';
+import {  TYPES } from './types';
+import { AssetsQuery } from './AssetsQuery';
+import { AstNav, AstNavNode, AstNavNodeDesc } from './AstNav';
 
 const KEY_ID = "id";
 const FIELD = ":";
 const KEY_DESC = "description";
 const KEY_INPUTS = "inputs";
 const KEY_TASKS = "tasks";
-
-/*
-const KEY_THEN = "then";
-const KEY_WHEN = "when";
-const KEY_SWITCH = "switch";
-const KEY_REQ = "required";
-const KEY_TYPE = "type";
-const KEY_DT = "decisionTable";
-const KEY_USER_TASK = "userTask";
-const KEY_REF = "ref";
-const KEY_COLLECTION = "collection";
-const KEY_SERVICE = "service";
-const VALUE_NEXT = "next";
-const VALUE_END = "end";
-const KEY_DEBUG_VALUE = "debugValue";
-*/
-
-const TYPES: HdesApi.ValueType[] = [
-  'ARRAY',
-  'TIME', 'DATE', 'DATE_TIME',
-  'STRING',
-  'INTEGER', 'LONG', 'DECIMAL',
-  'BOOLEAN'
-];
-
 interface TaskBodyPos {
   isEndOfLine: boolean, inTask: boolean,
 }
 
-export interface FlowAstAutocomplete {
-  id: string
-  value: string;
-  append: boolean;
-  position: Position;
-  range: IRange;
-  guided?: GuidedType;
-}
-
-export type GuidedType = 'service-task' | 'decision-task';
 export class AutocompleteVisitor {
 
   private _flow: HdesApi.AstFlow;
   private _result: languages.CompletionItem[] = [];
-  private _pos: { line: number, ch: number };
-  private _site: HdesApi.Site;
-  private _model: editor.ITextModel;
-  private _modelPosition: Position;
-  private _decisionsByName: Record<string, HdesApi.Entity<HdesApi.AstDecision>> = {};
-  private _servicesByName: Record<string, HdesApi.Entity<HdesApi.AstService>> = {};
 
+  private _site: HdesApi.Site;
+  private _assetsQuery: AssetsQuery
+  
+  private _nav: AstNav;
+  private _navDesc: AstNavNodeDesc;
 
   constructor(
     flow: HdesApi.AstFlow, 
     site: HdesApi.Site, 
     model: editor.ITextModel, 
     modelPosition: Position) {
-    
+
     this._flow = flow;
     this._site = site;
-    this._model = model;
-    this._pos = { line: modelPosition.lineNumber - 1, ch: modelPosition.column - 1 };
-    this._modelPosition = modelPosition;
-    Object.values(site.decisions).forEach(d => {
-      if (d.ast) {
-        this._decisionsByName[d.ast?.name] = d;
-      }
-    });
-    Object.values(site.services).forEach(d => {
-      if (d.ast) {
-        this._servicesByName[d.ast?.name] = d;
-      }
-    });
+    this._assetsQuery = new AssetsQuery(site);
+    this._nav = new AstNav(flow, this._assetsQuery, model, modelPosition);
+    this._navDesc = this._nav.getPositionDescription();
+  }
+
+  visit(): languages.CompletionItem[] {
+    this.visitRoot(this._flow.src);
+    console.log('desc', this._nav.getPositionDescription(), this._result);
+    return [...this._result];
   }
 
   private ac() {
-    return new AcBuilder(this._model, this._modelPosition);
-  };
+    return new AcBuilder(this._nav.model, this._nav.modelPosition);
+  }
 
   private hasNonNull(name: string, node: HdesApi.AstFlowNode): boolean {
     return this.get(name, node) ? true : false;
@@ -95,48 +57,118 @@ export class AutocompleteVisitor {
     return result;
   }
 
-  visit(): languages.CompletionItem[] {
-    this.visitRoot(this._flow.src);
-    console.log("generating hints", this._result);
-    return [...this._result];
+  private findAllTaskThen(taskId: string | undefined): { id: string, text: string }[] {
+    return taskId ? [
+      { id: "end", text: "then: end" },
+      ...Object.entries(this._flow.src.tasks)
+        .filter(([, body]) => body.id?.value)
+        .filter(([, body]) => ( body.id?.value !== taskId))
+        .map(([name, body]) => ({
+          id: body.id?.value,
+          text: `then: ${name}`
+        }))
+    ] : [{ id: "end", text: "then: end" }];
   }
-  visitRoot(flow: HdesApi.AstFlowRoot) {
+
+  private visitRoot(flow: HdesApi.AstFlowRoot) {
     this.visitId(flow);
     this.visitDesc(flow);
     this.visitInputs(flow);
     this.visitTasks(flow);
-    this.visitTaskBody(flow);
-    this.visitNewInput(flow);
-    this.visitInput(flow);
-    this.visitNewTask(flow);
-  }
-
-  visitTaskBody(flow: HdesApi.AstFlowRoot) {
-    const tasks = this.get(KEY_TASKS, flow);
-    if (tasks == null) {
+    
+    if(!this._navDesc.node) {
       return;
     }
 
-    if (tasks.start >= this._pos.line) {
-      return;
-    }
-
-    const allTasks: HdesApi.AstFlowNode[] = Object.values(tasks.children);
-    for (const task of allTasks) {
-      const isEndOfLine = this.isEndOfLine(task);
-      const inTask = this.in(task);
-      const afterInputBlock = (this._pos.line - 1) === task.end;
-
-      if (isEndOfLine || inTask || afterInputBlock) {
-        const pos: TaskBodyPos = { isEndOfLine, inTask };
-        this.visitTaskBodyThen(flow, task, pos);
-        this.visitTaskBodyRef(flow, task, pos);
-        this.visitTaskBodyMapping(flow, task, pos);
+    if(this._navDesc.node.type === 'FLOW_TASK' && !this._navDesc.node.value.then) {
+      const task = this._navDesc.node.value;
+      const taskId = task.id?.value;
+      const selection = this.findAllTaskThen(taskId);
+      
+      
+      for(const then of selection) {
+        this._result.push(this.ac()
+          .id(then.text)
+          .append(false)
+          .addField("then", { indent: 6, value: then.id })
+          .build());
       }
     }
+
+    if(this._navDesc.node.type === 'FLOW_TASK' && !this._navDesc.node.value.id) {
+      const task = this._navDesc.node.value;
+      this._result.push(this.ac()
+        .id("id: ")
+        .append(false)
+        .addField("id", { indent: 6, value: task.keyword })
+        .build());
+    }
+
+    if(this._navDesc.node.type === 'FLOW_TASK' && 
+      !this._navDesc.node.value['decisionTable'] && 
+      !this._navDesc.node.value['returns'] && 
+      !this._navDesc.node.value['service'] && 
+      !this._navDesc.node.value['switch']
+    ) {
+      const task = this._navDesc.node.value;
+      this._result.push(this.ac()
+        .id("id: ")
+        .append(false)
+        .addField("id", { indent: 6, value: task.keyword })
+        .build());
+    }
+    
+    if(this._navDesc.node.type === 'FLOW_TASK_THEN' && this._navDesc.description === 'ON_ELEMENT') {
+      const task = this._navDesc.node.parent?.value!;
+      const taskId = task.id?.value;
+      const selection = this.findAllTaskThen(taskId);
+
+      for(const then of selection) {
+        const sufix = this._navDesc.node.value.value === then.id ? " - currently selected" : "";
+        this._result.push(this.ac()
+          .id(then.text + sufix)
+          .append(false)
+          .addField("then", { indent: 6, value: then.id })
+          .build());
+      }
+    }
+
+    if(this._navDesc.node.type === 'FLOW_TASK_ASSET_REF' && this._navDesc.description === 'ON_ELEMENT') {
+      const task = this._navDesc.node.parent?.value!;
+      const service: HdesApi.AstFlowNode | undefined = task["service"];
+      const decisionTable: HdesApi.AstFlowNode | undefined = task["decisionTable"];
+      const target = decisionTable ? decisionTable : service;
+      if (!target) {
+        return;
+      }
+      const ref = target.children["ref"];
+      if (!ref || !this.in(ref)) {
+        return;
+      }
+
+      const refs = decisionTable ? Object.values(this._site.decisions) : Object.values(this._site.services);
+      for (const asset of refs) {
+        const sufix = ref.value === asset.ast?.name ? " - currently selected" : "";
+        this._result.push(this.ac()
+          .id("ref: " + asset.ast?.name + sufix)
+          .addField("ref", { indent: 8, value: asset.ast?.name })
+          .build());
+      }
+    }
+
+
+
+      
+      //this.visitNewInput(flow);
+      //this.visitInput(flow);
+      //this.visitNewTask(flow);
+
+    
   }
 
-  visitTaskBodyMapping(flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowNode, _props: TaskBodyPos) {
+
+
+  private visitTaskBodyMapping(flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowNode, _props: TaskBodyPos) {
     const service: HdesApi.AstFlowNode | undefined = task["service"];
     const decisionTable: HdesApi.AstFlowNode | undefined = task["decisionTable"];
     const target = decisionTable ? decisionTable : service;
@@ -147,7 +179,7 @@ export class AutocompleteVisitor {
     if (!inputs) {
       return;
     }
-    const afterInputBlock = (this._pos.line - 1) === inputs.end;
+    const afterInputBlock = (this._nav.currentLine - 1) === inputs.end;
     if (!this.in(inputs) && !afterInputBlock) {
       return;
     }
@@ -157,11 +189,7 @@ export class AutocompleteVisitor {
     if (!ref) {
       return;
     }
-    let linked: HdesApi.Entity<HdesApi.AstBody> = this._decisionsByName[ref.value];
-    if (!linked) {
-      linked = this._servicesByName[ref.value]
-    }
-
+    let linked: HdesApi.Entity<HdesApi.AstBody> | undefined = this._assetsQuery.findOne(ref.value);
     if (!linked) {
       return;
     }
@@ -185,7 +213,7 @@ export class AutocompleteVisitor {
 
     // change mapping
     for (const [key, value] of Object.entries(inputs.children)) {
-      if (value.end === this._pos.line) {
+      if (value.end === this._nav.currentLine) {
 
         for (const typeDef of this._flow.headers.acceptDefs) {
           this._result.push(this.ac()
@@ -200,7 +228,7 @@ export class AutocompleteVisitor {
     }
   }
 
-  visitTaskBodyMappingEntry(flow: HdesApi.AstFlowRoot, currentTask: HdesApi.AstFlowNode, props: { key: string, value: HdesApi.AstFlowNode }) {
+  private visitTaskBodyMappingEntry(flow: HdesApi.AstFlowRoot, currentTask: HdesApi.AstFlowNode, props: { key: string, value: HdesApi.AstFlowNode }) {
     for (const task of Object.values(flow.tasks)) {
 
       if (task.start > currentTask.start) {
@@ -217,11 +245,7 @@ export class AutocompleteVisitor {
       if (!ref) {
         continue;
       }
-      let linked: HdesApi.Entity<HdesApi.AstBody> = this._decisionsByName[ref.value];
-      if (!linked) {
-        linked = this._servicesByName[ref.value]
-      }
-
+      let linked: HdesApi.Entity<HdesApi.AstBody> | undefined = this._assetsQuery.findOne(ref.value);
       if (!linked) {
         continue;
       }
@@ -237,73 +261,16 @@ export class AutocompleteVisitor {
           .addField(props.key, { indent: 10, value: task.id.value + '.' + typeDef.name })
           .build());
       }
-
     }
   }
 
-  visitTaskBodyRef(_flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowNode, _props: TaskBodyPos) {
-    const service: HdesApi.AstFlowNode | undefined = task["service"];
-    const decisionTable: HdesApi.AstFlowNode | undefined = task["decisionTable"];
-    const target = decisionTable ? decisionTable : service;
-    if (!target) {
-      return;
-    }
-    const ref = target.children["ref"];
-    if (!ref || !this.in(ref)) {
-      return;
-    }
 
-    const refs = decisionTable ? Object.values(this._site.decisions) : Object.values(this._site.services);
-    for (const asset of refs) {
-      const sufix = ref.value === asset.ast?.name ? " - currently selected" : "";
-      this._result.push(this.ac()
-        .id("ref: " + asset.ast?.name + sufix)
-        .addField("ref", { indent: 8, value: asset.ast?.name })
-        .build());
-    }
-  }
-
-  visitTaskBodyThen(flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowNode, props: TaskBodyPos) {
-    const then: HdesApi.AstFlowNode | undefined = task["then"];
-    const id: HdesApi.AstFlowNode | undefined = task["id"];
-    const switchNode: HdesApi.AstFlowNode | undefined = task["switch"];
-    const service: HdesApi.AstFlowNode | undefined = task["service"];
-    const decisionTable: HdesApi.AstFlowNode | undefined = task["decisionTable"];
-    const getTasks = (): { id: string, text: string }[] => {
-      const selection: { id: string, text: string }[] = Object.entries(flow.tasks).map(([name, body]) => ({
-        id: body.id?.value,
-        text: name
-      }));
-      return [...selection, { id: "end", text: "end" }]
-    }
-
-
-    if (then && this._pos.line === then.end) {
-      for (const taskName of getTasks()) {
-        const sufix = then.value === taskName.id ? " - currently selected" : "";
-        this._result.push(this.ac()
-          .id("then: " + taskName.text + sufix)
-          .addField("then", { indent: 6, value: taskName.id })
-          .build());
-      }
-    } else if (!then && Object.keys(switchNode ? switchNode : {}).length === 0 && id && this.isBefore([service, decisionTable])) {
-      for (const taskName of getTasks()) {
-        this._result.push(this.ac()
-          .id(taskName.text)
-          //.append(this._pos.sticky === "before")
-          .append(true)
-          .addField("then", { indent: 6, value: taskName.id })
-          .build());
-      }
-    }
-  }
-
-  visitNewTask(flow: HdesApi.AstFlowRoot) {
+  private visitNewTask(flow: HdesApi.AstFlowRoot) {
     const tasks = this.get(KEY_TASKS, flow);
     if (tasks == null) {
       return;
     }
-    let isAround = tasks.start < this._pos.line;
+    let isAround = tasks.start < this._nav.currentLine;
     let isEndOfLine = false;
     const allTasks: HdesApi.AstFlowNode[] = Object.values(tasks.children);
     for (const task of allTasks) {
@@ -391,26 +358,23 @@ export class AutocompleteVisitor {
     }
   }
 
-  visitInput(flow: HdesApi.AstFlowRoot) {
+  private visitInput(flow: HdesApi.AstFlowRoot) {
     const inputs = flow.inputs;
     if (!inputs) {
       return;
     }
-    const inputsNode = this.get(KEY_INPUTS, flow)
     const inputsSorted = Object.values(inputs).sort((v1, v2) => v1.start - v2.start);
-    let index = 1;
     for (const input of inputsSorted) {
-      if (this.in(input, inputsSorted[index++]) || input.end === inputsNode.end) {
+
+
         this.visitInputRequired(input);
         this.visitInputType(input);
         this.visitDebugValue(input);
-      }
-
     }
   }
 
-  visitInputType(input: HdesApi.AstFlowInputNode) {
-    if (input.type && this._pos.line !== input.type.start) {
+  private visitInputType(input: HdesApi.AstFlowInputNode) {
+    if (input.type && this._nav.currentLine !== input.type.start) {
       return;
     }
     for (const type of TYPES) {
@@ -418,18 +382,19 @@ export class AutocompleteVisitor {
     }
   }
 
-  visitInputRequired(input: HdesApi.AstFlowInputNode) {
-    if (input.required && this._pos.line !== input.required.start) {
+  private visitInputRequired(input: HdesApi.AstFlowInputNode) {
+    if (input.required && this._nav.currentLine !== input.required.start) {
       return;
     }
     this._result.push(this.ac().id("required: true").addField("required", { indent: 4, value: "true" }).build());
     this._result.push(this.ac().id("required: false").addField("required", { indent: 4, value: "false" }).build());
   }
 
-  visitDebugValue(input: HdesApi.AstFlowInputNode) {
+  private visitDebugValue(input: HdesApi.AstFlowInputNode) {
     if (input.debugValue) {
       return;
     }
+    
     const builder = this.ac().id("debugValue");
     if (this.in(input)) {
       builder.addValue("").append(true);
@@ -437,7 +402,7 @@ export class AutocompleteVisitor {
     this._result.push(builder.addField("debugValue", { indent: 4, value: "\"\"" }).build())
   }
 
-  visitInputs(flow: HdesApi.AstFlowRoot) {
+  private visitInputs(flow: HdesApi.AstFlowRoot) {
     const node = this.get(KEY_INPUTS, flow);
     if (node) {
       return;
@@ -460,7 +425,7 @@ export class AutocompleteVisitor {
       .build());
   }
 
-  visitTasks(flow: HdesApi.AstFlowRoot) {
+  private visitTasks(flow: HdesApi.AstFlowRoot) {
     if (this.get(KEY_TASKS, flow)) {
       return;
     }
@@ -474,7 +439,7 @@ export class AutocompleteVisitor {
     this._result.push(this.ac().id("tasks block").addField(KEY_TASKS).build());
   }
 
-  visitId(flow: HdesApi.AstFlowRoot) {
+  private visitId(flow: HdesApi.AstFlowRoot) {
     const BEFORE = [KEY_DESC, KEY_INPUTS, KEY_TASKS];
     const node = flow.id;
     if (node != null) {
@@ -491,7 +456,7 @@ export class AutocompleteVisitor {
     this._result.push(this.ac().id("id").addField(KEY_ID).build());
   }
 
-  visitDesc(flow: HdesApi.AstFlowRoot) {
+  private visitDesc(flow: HdesApi.AstFlowRoot) {
     const BEFORE = [KEY_INPUTS, KEY_TASKS];
     if (flow.description || !flow.id) {
       return;
@@ -509,8 +474,9 @@ export class AutocompleteVisitor {
 
     this._result.push(this.ac().id('description').addField(KEY_DESC).build());
   }
-  isEndOfLine(node: HdesApi.AstFlowNode) {
-    const sameLine = node.end === this._pos.line;
+
+  private isEndOfLine(node: HdesApi.AstFlowNode) {
+    const sameLine = node.end === this._nav.currentLine;
 
     if (!sameLine) {
       return false;
@@ -518,179 +484,39 @@ export class AutocompleteVisitor {
 
     const last = Object.values(node.children).filter(v => v.end === node.end).reduce(v => v);
     if (!last) {
-      return this._pos.ch >= node.value.length;
+      return this._nav.currentColumn >= node.value.length;
     }
-    return this._pos.ch >= last.source.value.length
+    return this._nav.currentColumn >= last.source.value.length
   }
-  in(node: HdesApi.AstFlowNode, endNode?: HdesApi.AstFlowNode) {
-    const ending = endNode ? endNode.start - 1 : node.end;
-    return this._pos.line <= ending && this._pos.line >= node.start;
+  
+  private in(node: { start: number, end: number}, endNode?: { start: number, end: number}) {
+
+    let ending = node.end;
+    if(endNode) {
+      endNode.start - 1;
+    }
+
+    return this._nav.currentLine <= ending && this._nav.currentLine >= node.start;
   }
 
-  isBefore(nodes: (HdesApi.AstFlowNode | undefined | null)[]): boolean {
+  private isBefore(nodes: (HdesApi.AstFlowNode | undefined | null)[]): boolean {
     for (const current of nodes) {
       if (!current) {
         continue;
       }
-      if (this._pos.line >= current.start) {
+      if (this._nav.currentLine >= current.start) {
         return false;
       }
     }
     return true;
   }
 
-  isAfter(nodes: HdesApi.AstFlowNode[]): boolean {
+  private isAfter(nodes: HdesApi.AstFlowNode[]): boolean {
     for (const current of nodes) {
-      if (!(this._pos.line > current.end)) {
+      if (!(this._nav.currentLine > current.end)) {
         return false;
       }
     }
     return true;
   }
 }
-
-class AcBuilder {
-  private _id?: string;
-  private _value: string = '';
-  private _append = false;
-  private _guided: GuidedType | undefined;
-  private _model: editor.ITextModel;
-  private _position: Position;
-
-  constructor(model: editor.ITextModel, position: Position) {
-    this._model = model;
-    this._position = position;
-  }
-
-  id(id: string): AcBuilder {
-    this._id = id;
-    return this;
-  }
-  private getIndent(indent: number): string {
-    var result = "";
-    for (var index = 0; index < indent; index++) {
-      result += " ";
-    }
-    return result;
-  }
-  append(append: boolean) {
-    this._append = append;
-    return this;
-  }
-  guided(guided: GuidedType) {
-    this._guided = guided;
-    return this;
-  }
-  addField(fieldName: string, props?: {
-    indent?: number
-    value?: any
-  }) {
-    const prefix = props?.indent ? this.getIndent(props.indent) : '';
-    const sufix = props?.value ? ' ' + props.value : '';
-
-    if(this._value) {
-      this._value += '\r\n'
-    }
-
-    this._value += prefix + fieldName + FIELD + sufix;
-    return this;
-  }
-  addValue(value: string) {
-    this._value += value;
-    return this;
-  }
-  build(): languages.CompletionItem {
-    if (!this._id) {
-      throw new Error("id must be defined!");
-    }
-
-    const line = 
-      this._model.getLineContent(this._position.lineNumber);
-
-		const range: IRange = {
-			startLineNumber: this._position.lineNumber,
-			endLineNumber: this._position.lineNumber,
-			startColumn: 1,//1,
-			endColumn: 1//line.length == 0 ? 1 : line.length,
-		};
-
-    const insertText = this._append ? line + '\r\n' + this._value : this._value;
-
-    const autocomplete: FlowAstAutocomplete | undefined = this._guided ? {
-      id: this._id,
-      value: insertText,
-      guided: this._guided,
-      append: this._append,
-      position: this._position,
-      range
-    } : undefined;
-
-    return {
-      label: this._id,
-      kind: languages.CompletionItemKind.Function,
-      insertText: this._guided ? '' : insertText,
-      range: range,
-      filterText: line,
-      command: this._guided ? { 
-        id: EXTERNAL_DIALOG, 
-        title: this._guided,
-        arguments: [{ autocomplete }],
-      } : undefined
-    }
-  }
-}
-
-const parseTemplate = (toBeReplaced: any, template: string[]): string[] => {
-  const result: string[] = [];
-  for (let v of template) {
-    let line: string = v;
-
-    for (let key of Object.keys(toBeReplaced)) {
-      const replacable = '{' + key + '}';
-      if (line.indexOf(replacable) < 0) {
-        continue;
-      }
-      if (toBeReplaced[key] === undefined) {
-        return result;
-      }
-      line = line.replace(replacable, toBeReplaced[key])
-    }
-    result.push(line)
-  }
-
-  return result
-}
-
-const toLowerCamelCase = (value: string) => {
-  if (value) {
-    return value.replace(/^([A-Z])|\s(\w)/g, function(_match, p1, p2, _offset) {
-      if (p2) return p2.toUpperCase();
-      return p1.toLowerCase();
-    });
-  }
-}
-
-
-const executeTemplate = (cm: typeof monaco_editor, value: any, guided: FlowAstAutocomplete, asset?: HdesApi.AstBody) => {
-  const [model] = cm.editor.getModels();
-  const content = model.getLineContent(guided.position.lineNumber);
-
-  const lines: string[] = [];
-  if (guided.append) {
-    lines.push(content);
-  } else {
-    lines.push('');
-  }
-  lines.push(...parseTemplate(value, [guided.value]));
-
-  if (asset) {
-    const params = asset.headers.acceptDefs.map(p => '          ' + p.name + ':');
-    lines.push(...params)
-  }
-  model.applyEdits([{
-    range: guided.range,
-    text: lines.join('\r\n') + '\r\n'
-  }]);
-}
-
-export { parseTemplate, toLowerCamelCase, executeTemplate };

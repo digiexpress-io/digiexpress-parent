@@ -1,2 +1,4 @@
 export * from './api'
-export * from './AutocompleteTask';
+
+export type { FlowAstAutocomplete } from './types'
+export { EXTERNAL_DIALOG } from './types'

@@ -1,4 +1,5 @@
 export namespace HdesApi {
+  export const BLOCK_TYPES: NodeKeywordTypes[] = ['tasks', 'inputs', 'decisionTable', 'service', 'switch', 'returns' ];
 
   const getErrorMsg = (error: any) => {
     if (error.msg) {
@@ -104,6 +105,25 @@ export namespace HdesApi {
 
 
 export declare namespace HdesApi {
+  export type NodeKeywordTypes = 
+    | "id"
+    | "description"
+    | "inputs"
+    | "returns"
+    | "tasks"
+    | "then"
+    | "when"
+    | "switch"
+    | "required"
+    | "type"
+    | "decisionTable"
+    | "userTask"
+    | "ref"
+    | "collection"
+    | "service"
+    | "debugValue";
+
+
   export type TagId = string;
   export type EntityId = string;
   export type FlowId = string;
@@ -291,18 +311,22 @@ export declare namespace HdesApi {
     debugValue: AstFlowNode;
   }
   export interface AstFlowNode {
-    parent: AstFlowNode;
+    parent: AstFlowNode | undefined;
     keyword: string;
     children: Record<string, AstFlowNode>;
     value: string;
     source: AstChangeset;
     start: number;
     end: number;
+    indent: number;
 
+    collection?: AstFlowNode | undefined;
     service?: AstFlowNode | undefined;
     decisionTable?: AstFlowNode | undefined;
     then?: AstFlowNode | undefined;
     id?: AstFlowNode | undefined;
+    ref?: AstFlowNode | undefined;
+    returns?: AstFlowNode | undefined;
     switch?: AstFlowNode | undefined;
   }
 

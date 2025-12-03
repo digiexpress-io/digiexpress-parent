@@ -5,8 +5,10 @@ import MonacoReact, { useMonaco, OnChange, BeforeMount } from '@monaco-editor/re
 import * as monaco_editor from 'monaco-editor';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
-import { AutocompleteTask, AutocompleteVisitor, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
 import { WrenchComposerApi } from '@dxs-ts/wrench-api';
+
+import { AutocompleteVisitor, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
+import { SelectOrCreateAsset } from './SelectOrCreateAsset';
 
 
 export const FlowCodeEditor: React.FC<{
@@ -85,7 +87,7 @@ export const FlowCodeEditor: React.FC<{
 
   return (
   <>
-    {guided && monaco ? <AutocompleteTask onClose={() => setGuided(undefined)} flow={props.flow} guided={guided} cm={monaco}/> : undefined}
+    {guided && monaco ? <SelectOrCreateAsset onClose={() => setGuided(undefined)} flow={props.flow} guided={guided} cm={monaco}/> : undefined}
     <MonacoReact 
       beforeMount={beforeMount}
       onChange={handleChange}
