@@ -25,7 +25,7 @@ export class Hint_TaskBodyMapping {
     return result;
   }
 
-  private static processTask(container: Container, flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowNode): languages.CompletionItem[] {
+  private static processTask(container: Container, flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowTaskNode): languages.CompletionItem[] {
     const result: languages.CompletionItem[] = [];
     
     const service: HdesApi.AstFlowNode | undefined = task["service"];
@@ -96,7 +96,7 @@ export class Hint_TaskBodyMapping {
     return result;
   }
 
-  private static getTaskBodyMappingEntry(container: Container, flow: HdesApi.AstFlowRoot, currentTask: HdesApi.AstFlowNode, props: { key: string, value: HdesApi.AstFlowNode }): languages.CompletionItem[] {
+  private static getTaskBodyMappingEntry(container: Container, flow: HdesApi.AstFlowRoot, currentTask: HdesApi.AstFlowTaskNode, props: { key: string, value: HdesApi.AstFlowNode }): languages.CompletionItem[] {
     const result: languages.CompletionItem[] = [];
     
     for (const task of Object.values(flow.tasks)) {

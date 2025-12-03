@@ -1,7 +1,7 @@
 import * as monaco_editor from 'monaco-editor';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
-import { FlowAstAutocomplete } from '../autocomplete';
+import { CompletionDialogProps } from '../autocomplete';
 
 
 
@@ -15,7 +15,7 @@ export const toLowerCamelCase = (value: string) => {
   }
 }
 
-export const executeTemplate = (cm: typeof monaco_editor, value: any, guided: FlowAstAutocomplete, asset?: HdesApi.AstBody) => {
+export const executeTemplate = (cm: typeof monaco_editor, value: any, guided: CompletionDialogProps, asset?: HdesApi.AstBody) => {
   const [model] = cm.editor.getModels();
   const content = model.getLineContent(guided.position.lineNumber);
 
