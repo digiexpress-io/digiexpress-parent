@@ -7,7 +7,7 @@ import * as monaco_editor from 'monaco-editor';
 import { HdesApi } from '@dxs-ts/wrench-api';
 import { WrenchComposerApi } from '@dxs-ts/wrench-api';
 
-import { CompletionBuilder, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
+import { CompletionBuilder, EXTERNAL_DIALOG, CompletionDialogProps } from './autocomplete';
 import { SelectOrCreateAsset } from './SelectOrCreateAsset';
 
 
@@ -24,7 +24,7 @@ export const FlowCodeEditor: React.FC<{
   const { messages, onChange, ast } = props;
   const monaco: typeof monaco_editor | null = useMonaco();
   const astRef = React.useRef<HdesApi.AstFlow | undefined>(ast);
-  const [guided, setGuided] = React.useState<FlowAstAutocomplete>();
+  const [guided, setGuided] = React.useState<CompletionDialogProps>();
 
   React.useEffect(() => {
     if(!monaco) {

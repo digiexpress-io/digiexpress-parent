@@ -1,6 +1,6 @@
 
 import { Position, languages, editor, IRange } from 'monaco-editor';
-import { EXTERNAL_DIALOG, FIELD, FlowAstAutocomplete, GuidedType } from './types';
+import { EXTERNAL_DIALOG, FIELD, CompletionDialogProps, GuidedType } from './Hint';
 
 
 
@@ -78,7 +78,7 @@ export class CompletionItemBuilder {
 
     const insertText = this._append ? line + '\r\n' + this._value : this._value;
 
-    const autocomplete: FlowAstAutocomplete | undefined = this._guided ? {
+    const autocomplete: CompletionDialogProps | undefined = this._guided ? {
       id: this._id,
       value: insertText,
       guided: this._guided,

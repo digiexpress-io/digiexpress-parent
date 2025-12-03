@@ -11,7 +11,7 @@ import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
 
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 import { SelectTask } from './SelectTask';
-import { FlowAstAutocomplete } from '../autocomplete';
+import { CompletionDialogProps } from '../autocomplete';
 import { executeTemplate, toLowerCamelCase } from './utils';
 
 
@@ -21,7 +21,7 @@ import { executeTemplate, toLowerCamelCase } from './utils';
 export interface SelectOrCreateAssetProps {
   onClose: () => void;
   flow: HdesApi.Entity<HdesApi.AstFlow>;
-  guided: FlowAstAutocomplete;
+  guided: CompletionDialogProps;
   cm: typeof monaco_editor;
 }
 

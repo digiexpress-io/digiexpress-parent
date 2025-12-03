@@ -1,4 +1,4 @@
 export * from './CompletionBuilder'
 
-export type { FlowAstAutocomplete } from './types'
-export { EXTERNAL_DIALOG } from './types'
+export type { CompletionDialogProps } from './Hint'
+export { EXTERNAL_DIALOG } from './Hint'

@@ -1,15 +1,7 @@
 import { languages } from 'monaco-editor';
-import { Container } from './Hint';
+import { Container, TYPES } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
-
-const TYPES: HdesApi.ValueType[] = [
-  'ARRAY',
-  'TIME', 'DATE', 'DATE_TIME',
-  'STRING',
-  'INTEGER', 'LONG', 'DECIMAL',
-  'BOOLEAN'
-];
 
 export class Hint_InputType {
   static accept(container: Container): languages.CompletionItem[] {
