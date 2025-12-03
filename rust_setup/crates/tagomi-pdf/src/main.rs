@@ -13,11 +13,11 @@ use anyhow::Result;
 mod rest_api;
 mod pdf_compiler;
 
-use crate::rest_api::{StencilPdfClient, StencilPdfClientImpl, AnyResponse, PdfRequest};
+use crate::rest_api::{TagomiPdfClient, TagomiPdfClientImpl, AnyResponse, PdfRequest};
 
 
 lazy_static! {
-    static ref STENCIL_CLIENT: StencilPdfClientImpl = StencilPdfClientImpl::new();
+    static ref TAGOMI_CLIENT: TagomiPdfClientImpl = TagomiPdfClientImpl::new();
 }
 
 #[tokio::main]
@@ -40,12 +40,12 @@ async fn main() {
 }
 
 async fn health_check() -> Json<AnyResponse<String>> {
-    let resp = STENCIL_CLIENT.health_check().await;
+    let resp = TAGOMI_CLIENT.health_check().await;
     Json(resp)
 }
  
 async fn compile_pdf(Json(payload): Json<PdfRequest>) -> Result<Response, Response> {
-    let pdf_result = STENCIL_CLIENT.compile_pdf(payload).await; 
+    let pdf_result = TAGOMI_CLIENT.compile_pdf(payload).await; 
 
     match pdf_result.success {
         true => {

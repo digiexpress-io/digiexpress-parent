@@ -2338,33 +2338,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "stencil-pdf"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-trait",
- "axum",
- "base64",
- "chrono",
- "ecow",
- "itertools",
- "lazy_static",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 2.0.17",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "typst",
- "typst-kit",
- "typst-library",
- "typst-pdf",
-]
-
-[[package]]
 name = "strict-num"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2495,6 +2468,33 @@ dependencies = [
  "thiserror 1.0.69",
  "walkdir",
  "yaml-rust",
+]
+
+[[package]]
+name = "tagomi-pdf"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "axum",
+ "base64",
+ "chrono",
+ "ecow",
+ "itertools",
+ "lazy_static",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.17",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "typst",
+ "typst-kit",
+ "typst-library",
+ "typst-pdf",
 ]
 
 [[package]]
