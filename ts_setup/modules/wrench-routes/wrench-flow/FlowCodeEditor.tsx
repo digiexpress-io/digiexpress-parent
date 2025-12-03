@@ -7,7 +7,7 @@ import * as monaco_editor from 'monaco-editor';
 import { HdesApi } from '@dxs-ts/wrench-api';
 import { WrenchComposerApi } from '@dxs-ts/wrench-api';
 
-import { AutocompleteVisitor, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
+import { CompletionBuilder, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
 import { SelectOrCreateAsset } from './SelectOrCreateAsset';
 
 
@@ -78,7 +78,14 @@ export const FlowCodeEditor: React.FC<{
 
     editor.languages.registerCompletionItemProvider('yaml', {
       provideCompletionItems: function (model, position, context) {
-        let suggestions = astRef.current ? new AutocompleteVisitor(astRef.current, site, model, position).visit() : [];
+
+        let suggestions = astRef.current ? new CompletionBuilder()
+          .withFlow(astRef.current)
+          .withSite(site)
+          .withModel(model)
+          .withPosition(position)
+          .build() : [];
+
         return { suggestions };
       }
     });
