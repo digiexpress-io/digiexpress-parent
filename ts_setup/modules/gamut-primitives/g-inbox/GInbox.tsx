@@ -52,7 +52,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   const onlyFirstSubjects = subjects.filter(subject => subjects.find(i => i.contractId === subject.contractId) === subject);
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
-  const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
 
   const getSenderName = (subject: CommsApi.Subject, iam: IamApi.IamBackendContextType, intl: IntlShape): string => {
@@ -103,13 +102,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
 
       {onlyFirstSubjects
-        .map((subject) => {
-          const contract = getContract(subject.contractId);
-          return {
-            ...subject,
-            contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
-          };
-        })
         .sort((a, b) => {
           const aViewed = a.isViewed ? 1 : 0;
           const bViewed = b.isViewed ? 1 : 0;

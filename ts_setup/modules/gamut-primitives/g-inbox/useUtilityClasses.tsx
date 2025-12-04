@@ -59,7 +59,10 @@ export const GInboxRoot = styled("div", {
       styles.headerRow,
       styles.headerFormName,
       styles.headerAttachments,
-      styles.headerLastModified
+      styles.headerLastModified,
+      styles.files,
+      styles.filesCount,
+      styles.noValue,
     ];
   },
 })(({ theme }) => {
