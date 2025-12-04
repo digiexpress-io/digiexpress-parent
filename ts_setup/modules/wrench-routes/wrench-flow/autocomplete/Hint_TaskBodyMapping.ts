@@ -2,57 +2,31 @@ import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
 import { HdesApi } from '@dxs-ts/wrench-api';
-import { HintUtils } from './HintUtils';
 
-interface TaskBodyPos {
-  isEndOfLine: boolean;
-  inTask: boolean;
-}
 
 export class Hint_TaskBodyMapping {
   static accept(container: Container): languages.CompletionItem[] {
     const result: languages.CompletionItem[] = [];
-    const flow = container.flow.src;
     
-    // This hint needs to be called for each task, but we don't have the task context
-    // in the container pattern. For now, let's iterate through all tasks.
-    const tasks = flow.tasks ? Object.values(flow.tasks) : [];
-    
-    for (const task of tasks) {
-      const taskResults = this.processTask(container, flow, task);
-      result.push(...taskResults);
-    }
-    
-    return result;
-  }
-
-  private static processTask(container: Container, flow: HdesApi.AstFlowRoot, task: HdesApi.AstFlowTaskNode): languages.CompletionItem[] {
-    const result: languages.CompletionItem[] = [];
-    
-    const service: HdesApi.AstFlowNode | undefined = task["service"];
-    const decisionTable: HdesApi.AstFlowNode | undefined = task["decisionTable"];
-    const target = decisionTable ? decisionTable : service;
-    
-    if (!target) {
-      return result;
-    }
-    
-    const inputs = target.children["inputs"];
-    if (!inputs) {
-      return result;
-    }
-    
-    const afterInputBlock = (container.nav.currentLine - 1) === inputs.end;
-    if (!HintUtils.isInNode(container, inputs) && !afterInputBlock) {
+    if (!container.navDesc.node) {
       return result;
     }
 
-    const ref = target.children["ref"];
-    if (!ref) {
+    const node = container.navDesc.node;
+    const isInputs = node.type === 'FLOW_TASK_ASSET_INPUTS';
+    if (!isInputs) {
       return result;
     }
-    
-    let linked: HdesApi.Entity<HdesApi.AstBody> | undefined = container.assetsQuery.findOne(ref.value);
+
+    const inputs = node.value;
+    const target  = container.navDesc.node.parent?.value;
+    const ref = target?.children["ref"];
+
+    if (!target || !ref) {
+      return result;
+    }
+
+    const linked: HdesApi.Entity<HdesApi.AstBody> | undefined = container.assetsQuery.findOne(ref.value);
     if (!linked) {
       return result;
     }
@@ -75,68 +49,7 @@ export class Hint_TaskBodyMapping {
         .build());
     }
 
-    // Change mapping suggestions
-    for (const [key, value] of Object.entries(inputs.children)) {
-      if (value.end === container.nav.currentLine) {
-        // Flow input suggestions
-        for (const typeDef of container.flow.headers.acceptDefs) {
-          const builder = new CompletionItemBuilder(container.model, container.modelPosition);
-          result.push(builder
-            .id("flow input: " + typeDef.name + " " + typeDef.valueType)
-            .addField(key, { indent: 10, value: typeDef.name })
-            .build());
-        }
-
-        // Task output suggestions
-        const mappingEntries = this.getTaskBodyMappingEntry(container, flow, task, { key, value });
-        result.push(...mappingEntries);
-        break;
-      }
-    }
-
     return result;
   }
 
-  private static getTaskBodyMappingEntry(container: Container, flow: HdesApi.AstFlowRoot, currentTask: HdesApi.AstFlowTaskNode, props: { key: string, value: HdesApi.AstFlowNode }): languages.CompletionItem[] {
-    const result: languages.CompletionItem[] = [];
-    
-    for (const task of Object.values(flow.tasks)) {
-      if (task.start > currentTask.start) {
-        continue;
-      }
-
-      const service: HdesApi.AstFlowNode | undefined = task["service"];
-      const decisionTable: HdesApi.AstFlowNode | undefined = task["decisionTable"];
-      const target = decisionTable ? decisionTable : service;
-      
-      if (!target) {
-        continue;
-      }
-      
-      const ref = target.children["ref"];
-      if (!ref) {
-        continue;
-      }
-      
-      let linked: HdesApi.Entity<HdesApi.AstBody> | undefined = container.assetsQuery.findOne(ref.value);
-      if (!linked) {
-        continue;
-      }
-
-      const headers = linked.ast?.headers.returnDefs;
-      if (!headers) {
-        continue;
-      }
-
-      for (const typeDef of headers) {
-        const builder = new CompletionItemBuilder(container.model, container.modelPosition);
-        result.push(builder
-          .id("task output: " + task.id.value + "." + typeDef.name + " " + typeDef.valueType)
-          .addField(props.key, { indent: 10, value: task.id.value + '.' + typeDef.name })
-          .build());
-      }
-    }
-    
-    return result;
-  }
 }

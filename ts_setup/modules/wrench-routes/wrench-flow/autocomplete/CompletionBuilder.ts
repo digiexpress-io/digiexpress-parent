@@ -20,6 +20,7 @@ import { Hint_TaskThen } from './Hint_TaskThen';
 import { Hint_TaskId } from './Hint_TaskId';
 import { Hint_TaskAssetRef } from './Hint_TaskAssetRef';
 import { Hint_TaskBodyMapping } from './Hint_TaskBodyMapping';
+import { Hint_TaskInputMapping } from './Hint_TaskInputMapping';
 
 export class CompletionBuilder {
   private _flow?: HdesApi.AstFlow;
@@ -90,6 +91,7 @@ export class CompletionBuilder {
     result.push(...Hint_TaskId.accept(container));
     result.push(...Hint_TaskAssetRef.accept(container));
     result.push(...Hint_TaskBodyMapping.accept(container));
+    result.push(...Hint_TaskInputMapping.accept(container));
 
     console.log('desc', navDesc, result);
     return result;
