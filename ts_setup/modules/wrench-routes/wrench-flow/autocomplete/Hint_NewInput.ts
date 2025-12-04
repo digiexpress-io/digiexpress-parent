@@ -1,8 +1,7 @@
 import { languages } from 'monaco-editor';
 import { Container } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
-import { HdesApi } from '@dxs-ts/wrench-api';
-import { HintUtils } from './HintUtils';
+
 
 export class Hint_NewInput {
   static accept(container: Container): languages.CompletionItem[] {
@@ -29,6 +28,4 @@ export class Hint_NewInput {
     
     return result;
   }
-
-
 }
