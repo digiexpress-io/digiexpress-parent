@@ -11,7 +11,7 @@ export class Hint_NewSwitchTask {
       return result;
     }
 
-    const isTasks = node.type === 'FLOW_TASKS';
+    const isTasks = node.type === 'FLOW_TASKS' || (node.type === 'FLOW_TASK_ASSET_INPUTS' && node.isComplete);
     const isTask = node.type === 'FLOW_TASK' && 
       HintUtils.get('id', node.value) && 
       !HintUtils.get('then', node.value);
