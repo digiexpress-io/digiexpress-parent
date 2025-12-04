@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUtilityClasses, GInboxRoot, MUI_NAME } from './useUtilityClasses';
 import { IntlShape, useIntl } from 'react-intl';
-import { Typography, useThemeProps, Grid2 } from '@mui/material';
+import { Typography, useThemeProps, Grid2, Avatar } from '@mui/material';
 
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
@@ -168,15 +168,29 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
               formId={subject.formId}
             />
 
-            {subject.documents.map((doc) => (
-              <Attachments
-                key={doc.id}
-                subjectId={subject.id}
-                attachmentId={doc.id}
-                name={doc.name}
-                onClick={props.slotProps.attachment.onClick!}
-              />
-            ))}
+            {(() => {
+              const documents = subject.documents.length;
+
+              return (
+                <>
+                  <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
+                    <Typography component='span' className={classes.files}>
+                      {intl.formatMessage({ id: 'gamut.forms.files' })}
+                    </Typography>
+                  </GFlex>
+
+                  {documents ? (
+                    <Avatar className={classes.filesCount}>
+                      <Typography>{documents}</Typography>
+                    </Avatar>
+                  ) : (
+                    <Avatar className={classes.noValue}>
+                      {intl.formatMessage({ id: 'gamut.noValueIndicator' })}
+                    </Avatar>
+                  )}
+                </>
+              );
+            })()}
 
             {contract.subforms.length > 0 ? contract.subforms.map((entry) => {
               const subOffer = entry.formInProgress ? getOffer(entry.id) : undefined;

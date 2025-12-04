@@ -15,7 +15,10 @@ export interface GInboxClasses {
   headerRow: string,
   headerFormName: string,
   headerAttachments: string,
-  headerLastModified: string
+  headerLastModified: string,
+  files: string;
+  filesCount: string;
+  noValue: string;
 }
 export type GInboxClassKey = keyof GInboxClasses;
 
@@ -31,8 +34,10 @@ export const useUtilityClasses = () => {
     headerRow: ['headerRow'],
     headerFormName: ['headerFormName'],
     headerAttachments: ['headerAttachments'],
-    headerLastModified: ['headerLastModified']
-
+    headerLastModified: ['headerLastModified'],
+    files: ['files'],
+    filesCount: ['filesCount'],
+    noValue: ['noValue'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -58,6 +63,7 @@ export const GInboxRoot = styled("div", {
     ];
   },
 })(({ theme }) => {
+  const color = theme.palette.info.main;
   return {
 
     '.GInbox-inboxItem': {
@@ -195,6 +201,31 @@ export const GInboxRoot = styled("div", {
       display: 'flex',
       justifyContent: 'flex-end',
     },
+
+    '& .GInbox-files': {
+      fontWeight: 'bold',
+      marginRight: theme.spacing(0.5),
+    },
+    '& .GInbox-filesCount': {
+      [theme.breakpoints.down('md')]: {
+        height: '24px',
+        width: '24px',
+      },
+      height: '28px',
+      width: '28px',
+      backgroundColor: alpha(color, 0.3),
+      color: theme.palette.text.primary,
+    },    
+    '& .GInbox-noValue': {
+      [theme.breakpoints.down('md')]: {
+        height: '24px',
+        width: '24px',
+      },
+      height: '28px',
+      width: '28px',
+      backgroundColor: 'unset',
+      color: theme.palette.text.primary,
+    },    
 
   };
 });
