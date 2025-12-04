@@ -60,6 +60,8 @@ export class AstNav {
     this._flow = flow;
     this._model = model;
 
+    
+
     this._currentColumn = modelPosition.column - 1;
     this._currentLine = modelPosition.lineNumber - 1;
     this._modelPosition = modelPosition;
@@ -87,6 +89,7 @@ export class AstNav {
     if(!node) {
       return { description: 'EMPTY_FILE', node };
     }
+    
     if(node.isElementType) {
       // directly on the element
       const isOnElement = node.value.start === node.value.end && node.value.end === this._currentLine;
@@ -100,9 +103,6 @@ export class AstNav {
       }
       return { description: 'ON_ELEMENT', node };
     }
-
-    console.log('resolving end region');
-
     const endRegion = node.endRegion;
     if(endRegion.start <= this._currentLine && (endRegion.end === undefined || endRegion.end >= this._currentLine)) {
       return { description: 'END_OF_BLOCK', node };
@@ -114,6 +114,7 @@ export class AstNav {
 
 
 export class AstNavNode {
+  private _parent: AstNavNode | undefined;
   private _previous: AstNavNode | undefined;
   private _next: AstNavNode | undefined;
   private _value: HdesApi.AstFlowNode;
@@ -135,35 +136,61 @@ export class AstNavNode {
   withNext(next: AstNavNode) {
     this._next = next;
   }
+  withParent(parent: AstNavNode) {
+    this._parent = parent;
+  }
+  getAt(line: number): AstNavNode {
+    let base: AstNavNode | undefined = this.base;
+    while(base) {
+      const start = base.start;
+      const end = base.isElementType ? base.end : base.endBlock;
+      if(start <= line && end >= line) {
+        return base;
+      }
 
-  getAt(line: number): AstNavNode | undefined {
-    const start = this.start;
-    const end = this.end ?? line;
-    
-    if(start === line || end === line) {
-      return this;
-    } else if(start < line && end > line) {
-      return this;
-
-
-    } else if(start > line && this._previous) {
-      return this._previous.getAt(line);
-    } else if(end < line && this._next) {
-      return this._next.getAt(line);
+      base = base._previous;
     }
-    return undefined;
+    return this.tip;
   }
 
-  get end(): number | undefined {
-    if(this._next?.start === 0) {
-      return 0;
+  get base(): AstNavNode {
+    let base: AstNavNode = this;
+    while(base._next) {
+      base = base._next;
+    }
+    return base;
+  }
+
+  get tip(): AstNavNode {
+    let tip: AstNavNode = this;
+    while(tip._previous) {
+      tip = tip._previous;
+    }
+    return tip;
+  }
+
+  get id(): string {
+    return _toId(this._value);
+  }
+
+  get end(): number {
+    return this._value.end;
+  }
+
+  get endBlock(): number {
+    if(this.isElementType) {
+      return this.end;
     }
 
-    if(this._next) {
-      return this._next.start - 1;
+    let target: AstNavNode | undefined = this;
+    while(target._next) {
+      if(target._next.indent < this.indent) {
+        return target._next.start - 1;
+      }
+      target = target._next;
     }
 
-    return undefined;
+    return this.tip.end;
   }
 
   get isElementType() {
@@ -246,8 +273,7 @@ export class AstNavNode {
   }
 
   get parent(): AstNavNode | undefined {
-    const result = this.value.parent ? this.getAt(this.value.parent.start) : undefined;
-    return result;
+    return this._parent;
   }
 
   get endRegion() {
@@ -266,10 +292,14 @@ export class AstNavNode {
 
 function _toNodesNav(nodes: HdesApi.AstFlowNode[], query: AssetsQuery): AstNavNode[] {
   const collector: AstNavNode[] = [];
+  const byId: Record<string, AstNavNode> = {};
   let previous: AstNavNode | undefined = undefined;
+  
   for(const node of nodes) {
     const type = _classifyNode(node);
     const current: AstNavNode = new AstNavNode(node, type, query, { previous, next: undefined });
+    byId[current.id] = current;
+
     if(previous) {
       previous.withNext(current);
     }
@@ -278,19 +308,37 @@ function _toNodesNav(nodes: HdesApi.AstFlowNode[], query: AssetsQuery): AstNavNo
     previous = current; 
   }
 
+  for(const node of nodes) {
+    if(!node.parent) {
+      continue;
+    }
+    const parent: AstNavNode = byId[_toId(node.parent)];
+    const current: AstNavNode = byId[_toId(node)];
+    current.withParent(parent);
+  }
+
   return collector;
 }
 
-function _toNodesRaw(node: HdesApi.AstFlowNode, collector?: HdesApi.AstFlowNode[], parent?: HdesApi.AstFlowNode): HdesApi.AstFlowNode[] {
+function _toId(node: HdesApi.AstFlowNode): string {
+  return node.indent + "/" + node.start + "/" + node.keyword;
+}
+
+function _toNodesRaw(
+  node: HdesApi.AstFlowNode, 
+  collector?: HdesApi.AstFlowNode[], 
+  parent?: HdesApi.AstFlowNode
+): HdesApi.AstFlowNode[] {
+
   if(!collector) {
     collector = [];
   }
+  
   const clone = { ...node, parent };
   collector.push(clone);
   for(const child of Object.values(node.children)) {
     _toNodesRaw(child, collector, clone);
   }
-
   return collector;
 }
 

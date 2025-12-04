@@ -1,28 +1,26 @@
 import { languages } from 'monaco-editor';
 import { Container, TYPES } from './Hint';
 import { CompletionItemBuilder } from './CompletionItemBuilder';
+import { HintUtils } from './HintUtils';
 
 export class Hint_InputType {
   static accept(container: Container): languages.CompletionItem[] {
     const result: languages.CompletionItem[] = [];
-    const inputs = container.flow.src.inputs;
-    
-    if (!inputs) {
+
+    const node = container.navDesc.node;
+    if (!node) {
       return result;
     }
-    
-    const inputsSorted = Object.values(inputs).sort((v1, v2) => v1.start - v2.start);
-    for (const input of inputsSorted) {
-      if (input.type && container.nav.currentLine !== input.type.start) {
-        continue;
-      }
-      
+
+    const isUndefined = node.type === 'FLOW_INPUT' && !HintUtils.get("type", node.value);
+    const isChange = node.type === 'FLOW_INPUT_ELEMENT' && node.value.keyword === 'type';
+
+    if(isUndefined || isChange) {
       for (const type of TYPES) {
         const builder = new CompletionItemBuilder(container.model, container.modelPosition);
         result.push(builder.id("type: " + type).addField("type", { indent: 4, value: type }).build());
       }
     }
-    
     return result;
   }
 }

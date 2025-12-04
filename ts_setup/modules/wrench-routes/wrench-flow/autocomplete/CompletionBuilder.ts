@@ -75,10 +75,10 @@ export class CompletionBuilder {
     result.push(...Hint_FlowTasks.accept(container));
 
     // Input hints
-    result.push(...Hint_NewInput.accept(container));
     result.push(...Hint_InputType.accept(container));
     result.push(...Hint_InputRequired.accept(container));
     result.push(...Hint_InputDebugValue.accept(container));
+    result.push(...Hint_NewInput.accept(container));
 
     // Task hints
     result.push(...Hint_NewTask.accept(container));

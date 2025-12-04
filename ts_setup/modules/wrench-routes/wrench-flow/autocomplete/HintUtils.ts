@@ -2,12 +2,13 @@ import { HdesApi } from '@dxs-ts/wrench-api';
 import { Container } from './Hint';
 
 export class HintUtils {
-  static get(keyword: string, node: any): any {
+  static get(keyword: HdesApi.NodeKeywordTypes, node: HdesApi.AstFlowNode): any {
+    // @ts-ignore
     const result = node.children ? node.children[keyword] : node[keyword];
     return result;
   }
 
-  static isNonNull(name: string, node: any): boolean {
+  static isNonNull(name: HdesApi.NodeKeywordTypes, node: any): boolean {
     return HintUtils.get(name, node) ? true : false;
   }
 
