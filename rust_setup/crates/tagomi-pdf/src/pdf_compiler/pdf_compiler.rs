@@ -20,7 +20,8 @@ pub struct PdfCompilerImpl {
     main_template_id: Option<String>,
     templates: HashMap<FileId, Source>,
     modules: Vec<super::PdfDataModule>,
-    leakes: Vec<Box<str>>,
+    // leaks - explicit memory leak handling
+    leaks: Vec<Box<str>>,
     now: Datetime,
     start_time: Instant
 }
@@ -32,7 +33,7 @@ impl PdfCompilerImpl {
             main_template_id: None,
             templates: HashMap::new(),
             modules: Vec::new(),
-            leakes: Vec::new(),
+            leaks: Vec::new(),
             now: Datetime::from_ymd(now.year(), now.month() as u8, now.day() as u8).unwrap(),
             start_time: Instant::now()
         }
@@ -51,7 +52,7 @@ impl Drop for PdfCompilerImpl {
 
 
 impl PdfCompiler for PdfCompilerImpl {
-    fn main(mut self, template_id: String) -> Self {
+    fn main_template_id(mut self, template_id: String) -> Self {
         self.main_template_id = Some(template_id);
         self
     }
@@ -93,7 +94,7 @@ impl PdfCompiler for PdfCompilerImpl {
 
 
 
-        let library = map_to_lib(&self.modules, &mut self.leakes);
+        let library = map_to_lib(&self.modules, &mut self.leaks);
         //let fonts = Fonts::searcher()
         //    .include_system_fonts(false)
         //    .search_with(["./assets/fonts/"]);

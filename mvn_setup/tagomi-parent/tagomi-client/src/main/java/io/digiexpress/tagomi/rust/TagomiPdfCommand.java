@@ -31,12 +31,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.tagomi.rust.entities.AnyResponse;
 import io.digiexpress.tagomi.rust.entities.PdfRequest;
-import io.digiexpress.tagomi.rust.entities.PdfResponse;
+import io.digiexpress.tagomi.rust.entities.PdfDocument;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class RustCompileCommand {
+public class TagomiPdfCommand {
 
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
@@ -54,7 +54,7 @@ public class RustCompileCommand {
       final var response = restTemplate.postForEntity(url, entity, String.class);
       final var pdfResponse = objectMapper.readValue(
           response.getBody(),
-          new TypeReference<AnyResponse<PdfResponse>>() {}
+          new TypeReference<AnyResponse<PdfDocument>>() {}
           );
 
       if (Boolean.TRUE.equals(pdfResponse.getSuccess()) && pdfResponse.getData() != null) {
@@ -69,9 +69,9 @@ public class RustCompileCommand {
       }
     } catch (HttpClientErrorException.BadRequest e) {
       try {
-        AnyResponse<PdfResponse> errorResponse = objectMapper.readValue(
+        AnyResponse<PdfDocument> errorResponse = objectMapper.readValue(
             e.getResponseBodyAsString(),
-            new TypeReference<AnyResponse<PdfResponse>>() {}
+            new TypeReference<AnyResponse<PdfDocument>>() {}
             );
         throw new PdfCompilationException(
             "PDF compilation failed: " + errorResponse.getError()

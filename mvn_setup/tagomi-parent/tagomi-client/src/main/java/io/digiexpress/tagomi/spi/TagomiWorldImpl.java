@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.digiexpress.tagomi.rust.entities.PdfRequest.PdfDataModule;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,10 +37,9 @@ import io.digiexpress.tagomi.api.entities.ImmutablePdfEnvelope;
 import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiProgram;
 import io.digiexpress.tagomi.api.entities.TagomiWorld;
-import io.digiexpress.tagomi.rust.RustCompileCommand;
-import io.digiexpress.tagomi.rust.RustCompileCommand.PdfCompilationException;
+import io.digiexpress.tagomi.rust.TagomiPdfCommand;
+import io.digiexpress.tagomi.rust.TagomiPdfCommand.PdfCompilationException;
 import io.digiexpress.tagomi.rust.entities.PdfRequest;
-import io.digiexpress.tagomi.rust.entities.PdfRequest.PdfProps;
 import io.digiexpress.tagomi.rust.entities.PdfRequest.PdfTemplate;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -100,29 +100,29 @@ public class TagomiWorldImpl implements TagomiWorld {
         
         return datasource.get(service, this.props)
         .onItem().transform(resolved -> {
-          final var props = new ArrayList<PdfProps>();
-          props.add(PdfProps.builder()
+          final var dataModules = new ArrayList<PdfDataModule>();
+          dataModules.add(PdfDataModule.builder()
               .moduleName("wrench")
               .bodyName("flow")
               .bodyValue(resolved.mapTo(Map.class))
               .build());
-          
-          props.add(PdfProps.builder()
+
+          dataModules.add(PdfDataModule.builder()
               .moduleName("service")
               .bodyName("props")
               .bodyValue(this.props.mapTo(Map.class))
               .build());
           
           return PdfRequest.builder()
-              .now(OffsetDateTime.now())
-              .main(service.getServiceName())
-              .props(props)
+              .timestamp(OffsetDateTime.now())
+              .mainTemplateId(service.getServiceName())
+              .dataModules(dataModules)
               .templates(templates)
               .build();
         })
         .onItem().transform(request -> {
           try {
-            final var base64 = new RustCompileCommand(restTemplate, objectMapper, baseUrl).compilePdf(request);
+            final var base64 = new TagomiPdfCommand(restTemplate, objectMapper, baseUrl).compilePdf(request);
             final var localisedName = service.getLabels().stream()
                 .filter(l -> l.getLocale().equals(targetLocale.getLocaleCode()))
                 .map(e -> e.getLabelValue())

@@ -41,7 +41,7 @@ pub struct PdfTemplate {
 
 pub trait PdfCompiler {
     fn today(self, today: Datetime) -> Self;
-    fn main(self, template_id: String) -> Self;
+    fn main_template_id(self, template_id: String) -> Self;
     fn add_template<T: Into<PdfTemplate>>(self, template: T) -> Self;
     fn add_templates<T: Into<PdfTemplate>>(self, template: Vec<T>) -> Self;
     fn add_modules<T: Into<PdfDataModule>>(self, data: Vec<T>) -> Self;

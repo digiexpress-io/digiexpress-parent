@@ -29,8 +29,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PdfResponse {
-    private String main;
+public class PdfDocument {
+    @JsonProperty("main_template_id")
+    private String mainTemplateId;
     private String base64;
     
     @JsonProperty("cost_in_millis")

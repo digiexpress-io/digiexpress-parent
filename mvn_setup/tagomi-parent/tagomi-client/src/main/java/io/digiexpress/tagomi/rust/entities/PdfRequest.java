@@ -35,10 +35,12 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PdfRequest {
-  private String main;
-  private OffsetDateTime now;
+  @JsonProperty("main_template_id")
+  private String mainTemplateId;
+  private OffsetDateTime timestamp;
   private List<PdfTemplate> templates;
-  private List<PdfProps> props;
+  @JsonProperty("data_modules")
+  private List<PdfDataModule> dataModules;
   
   
   @Data
@@ -54,7 +56,7 @@ public class PdfRequest {
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class PdfProps {
+  public static class PdfDataModule {
     @JsonProperty("module_name")
     private String moduleName;
     

@@ -55,7 +55,7 @@ fn group_modules(modules: Vec<PdfDataModule>) -> Vec<(String, Vec<PdfDataModule>
         grouped_modules
     }
 
-pub fn map_to_lib(modules: &Vec<PdfDataModule>, leakes: &mut Vec<Box<str>>) -> Library {
+pub fn map_to_lib(modules: &Vec<PdfDataModule>, leaks: &mut Vec<Box<str>>) -> Library {
     // Build the input data into a Dict first
     let grouped_modules: Vec<(String, Vec<PdfDataModule>)> = group_modules(modules.clone());
 
@@ -68,7 +68,7 @@ pub fn map_to_lib(modules: &Vec<PdfDataModule>, leakes: &mut Vec<Box<str>>) -> L
             // Memory leak handling
             let key_box = data_module.value_key.into_boxed_str();
             let key: &str = Box::leak(key_box.clone());
-            leakes.push(key_box);
+            leaks.push(key_box);
 
             // Add to module dict
             module_dict.insert(key.into(), map_from_json_to_typst_value(data_module.value_data).unwrap_or(Value::None));
@@ -77,7 +77,7 @@ pub fn map_to_lib(modules: &Vec<PdfDataModule>, leakes: &mut Vec<Box<str>>) -> L
         // Memory leak handling
         let key_box = module_name.into_boxed_str();
         let key: &str = Box::leak(key_box.clone());
-        leakes.push(key_box);
+        leaks.push(key_box);
 
         // Add module to inputs
         inputs.insert(key.into(), Value::Dict(module_dict));
