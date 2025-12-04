@@ -10,14 +10,14 @@ pub struct AnyResponse<T> {
 
 #[derive(Deserialize)]
 pub struct PdfRequest {
-    pub main: String, // main template id
-    pub now: DateTime<FixedOffset>,
-    pub templates: Vec<PdfTemplate>, // all templates
-    pub props: Vec<PdfProps>, // json data for the templates
+    pub main_template_id: String,
+    pub timestamp: DateTime<FixedOffset>,
+    pub templates: Vec<PdfTemplate>,
+    pub data_modules: Vec<PdfDataModule>, // json data for the templates
 }
 
 #[derive(Deserialize)]
-pub struct PdfProps {
+pub struct PdfDataModule {
     pub module_name: String,
     pub body_name: String,
     pub body_value: serde_json::Value
@@ -31,14 +31,14 @@ pub struct PdfTemplate {
 
 
 #[derive(serde::Serialize)]
-pub struct PdfResponse {
-    pub main: String, // main template id
+pub struct PdfDocument {
+    pub main_template_id: String,
     pub base64: String,
     pub cost_in_millis: u64,
 }
 
 #[async_trait::async_trait]
-pub trait StencilPdfClient {
+pub trait TagomiPdfClient {
     async fn health_check(&self) -> AnyResponse<String>;
-    async fn compile_pdf(&self, payload: PdfRequest) -> AnyResponse<PdfResponse>; // data is base64 content
+    async fn compile_pdf(&self, payload: PdfRequest) -> AnyResponse<PdfDocument>; // data is base64 content
 }
