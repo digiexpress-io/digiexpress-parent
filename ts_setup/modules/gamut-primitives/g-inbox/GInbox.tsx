@@ -163,19 +163,15 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
               }
             })()}
           >
-            <FormReview
-              formName={offerName}
-              formId={subject.formId}
-            />
 
             {(() => {
-              const documents = subject.documents.length;
+             const documents = subject.documents.length;
 
               return (
                 <>
                   <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
                     <Typography component='span' className={classes.files}>
-                      {intl.formatMessage({ id: 'gamut.forms.files' })}
+                      {intl.formatMessage({ id: 'gamut.forms.attachments' })}
                     </Typography>
                   </GFlex>
 

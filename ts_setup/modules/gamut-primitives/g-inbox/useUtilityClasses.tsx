@@ -137,13 +137,13 @@ export const GInboxRoot = styled("div", {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       paddingLeft: theme.spacing(1),
-
       [theme.breakpoints.down('sm')]: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexBasis: '50%',
+        maxWidth: '50%',
+        display: 'flex',
+        justifyContent: 'flex-end',
         alignItems: 'center',
       },
-
       [theme.breakpoints.up('sm')]: {
         flexShrink: 0,
         width: '8ch',
@@ -163,21 +163,18 @@ export const GInboxRoot = styled("div", {
       minWidth: 0,
       overflow: 'hidden',
       gap: theme.spacing(1),
-      '& > *': { flex: '0 0 auto' },
-    
+      '& > *': { flex: '0 0 auto' },  
       [theme.breakpoints.only('sm')]: {
         flexWrap: 'wrap',
         rowGap: theme.spacing(1),
-      },
-    
+      },   
       [theme.breakpoints.only('md')]: {
         flexWrap: 'wrap',
         rowGap: theme.spacing(1),
-      },
-    
+      },   
       [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap',
-        paddingLeft: theme.spacing(2),
+        flexBasis: '50%',
+        maxWidth: '50%',
         paddingRight: theme.spacing(2),
       },
     },    
@@ -194,7 +191,6 @@ export const GInboxRoot = styled("div", {
     '.GInbox-headerAttachments': {
       display: 'flex',
       justifyContent: 'flex-start',
-      paddingLeft: theme.spacing(1),
     },
 
     '.GInbox-headerLastModified': {
@@ -203,28 +199,29 @@ export const GInboxRoot = styled("div", {
     },
 
     '& .GInbox-files': {
-      fontWeight: 'bold',
       marginRight: theme.spacing(0.5),
     },
     '& .GInbox-filesCount': {
-      [theme.breakpoints.down('md')]: {
-        height: '24px',
-        width: '24px',
-      },
+      marginTop: '4px',
+      marginBottom: '4px',
       height: '28px',
       width: '28px',
       backgroundColor: alpha(color, 0.3),
       color: theme.palette.text.primary,
-    },    
-    '& .GInbox-noValue': {
       [theme.breakpoints.down('md')]: {
         height: '24px',
         width: '24px',
       },
+    },    
+    '& .GInbox-noValue': {
       height: '28px',
       width: '28px',
       backgroundColor: 'unset',
       color: theme.palette.text.primary,
+      [theme.breakpoints.down('md')]: {
+        height: '24px',
+        width: '24px',
+      },
     },    
 
   };
