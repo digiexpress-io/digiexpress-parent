@@ -135,7 +135,6 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
       </Typography>
       {editor}
     </DialogContent>
-    <DialogContent>{editor}</DialogContent>
     <DialogActions>
       <Button variant='text' children={intl.formatMessage({ id: 'dt.header.delete' })} onClick={() => {
         onChange([{ type: 'DELETE_HEADER', id: header.id }]);
