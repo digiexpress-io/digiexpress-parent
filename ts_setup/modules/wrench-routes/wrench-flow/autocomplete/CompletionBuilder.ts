@@ -13,7 +13,9 @@ import { Hint_NewInput } from './Hint_NewInput';
 import { Hint_InputType } from './Hint_InputType';
 import { Hint_InputRequired } from './Hint_InputRequired';
 import { Hint_InputDebugValue } from './Hint_InputDebugValue';
-import { Hint_NewTask } from './Hint_NewTask';
+import { Hint_NewSwitchTask } from './Hint_NewSwitchTask';
+import { Hint_NewServiceTask } from './Hint_NewServiceTask';
+import { Hint_NewDecisionTask } from './Hint_NewDecisionTask';
 import { Hint_TaskThen } from './Hint_TaskThen';
 import { Hint_TaskId } from './Hint_TaskId';
 import { Hint_TaskAssetRef } from './Hint_TaskAssetRef';
@@ -81,7 +83,9 @@ export class CompletionBuilder {
     result.push(...Hint_NewInput.accept(container));
 
     // Task hints
-    result.push(...Hint_NewTask.accept(container));
+    result.push(...Hint_NewSwitchTask.accept(container));
+    result.push(...Hint_NewServiceTask.accept(container));
+    result.push(...Hint_NewDecisionTask.accept(container));
     result.push(...Hint_TaskThen.accept(container));
     result.push(...Hint_TaskId.accept(container));
     result.push(...Hint_TaskAssetRef.accept(container));
