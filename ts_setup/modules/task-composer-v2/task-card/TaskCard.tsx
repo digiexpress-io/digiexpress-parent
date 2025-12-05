@@ -203,8 +203,16 @@ const TaskSectionCard = styled(Box, {
         color: darken(colors.flashyBorder, 0.2),
       },
       '& .MuiButton-root': {
-        color: colors.contrastText,
-      },
+        '&.MuiButton-contained': {
+          color: theme.palette.primary.contrastText,
+        },
+        '&.MuiButton-text': {
+          color: 'inherit',
+        },
+        '&.Mui-disabled': {
+          color: theme.palette.action.disabled,
+        },
+      },      
       '& .MuiDivider-root': {
         borderColor: `${alpha(colors.flashyBorder, 0.1)}`
       },
