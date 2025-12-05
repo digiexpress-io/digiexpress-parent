@@ -17,7 +17,7 @@ export interface FeedbackBackend {
 
 
 export interface FeedbackContextType extends FeedbackBackend {
-  getFeedbackTopics: (templateOrFeedback: FeedbackApi.FeedbackContent) => Promise<FeedbackApi.FeedbackTopic>;
+  getFeedbackTopics: (labelKey: string) => FeedbackApi.FeedbackTopic[];
 }
 
 export const FeedbackContext = React.createContext<FeedbackContextType>({} as any);

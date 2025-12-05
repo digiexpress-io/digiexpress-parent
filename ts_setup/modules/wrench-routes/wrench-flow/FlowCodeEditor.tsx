@@ -5,8 +5,10 @@ import MonacoReact, { useMonaco, OnChange, BeforeMount } from '@monaco-editor/re
 import * as monaco_editor from 'monaco-editor';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
-import { AutocompleteTask, AutocompleteVisitor, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
 import { WrenchComposerApi } from '@dxs-ts/wrench-api';
+
+import { CompletionBuilder, EXTERNAL_DIALOG, CompletionDialogProps } from './autocomplete';
+import { SelectOrCreateAsset } from './SelectOrCreateAsset';
 
 
 export const FlowCodeEditor: React.FC<{
@@ -22,7 +24,7 @@ export const FlowCodeEditor: React.FC<{
   const { messages, onChange, ast } = props;
   const monaco: typeof monaco_editor | null = useMonaco();
   const astRef = React.useRef<HdesApi.AstFlow | undefined>(ast);
-  const [guided, setGuided] = React.useState<FlowAstAutocomplete>();
+  const [guided, setGuided] = React.useState<CompletionDialogProps>();
 
   React.useEffect(() => {
     if(!monaco) {
@@ -76,7 +78,14 @@ export const FlowCodeEditor: React.FC<{
 
     editor.languages.registerCompletionItemProvider('yaml', {
       provideCompletionItems: function (model, position, context) {
-        let suggestions = astRef.current ? new AutocompleteVisitor(astRef.current, site, model, position).visit() : [];
+
+        let suggestions = astRef.current ? new CompletionBuilder()
+          .withFlow(astRef.current)
+          .withSite(site)
+          .withModel(model)
+          .withPosition(position)
+          .build() : [];
+
         return { suggestions };
       }
     });
@@ -85,7 +94,7 @@ export const FlowCodeEditor: React.FC<{
 
   return (
   <>
-    {guided && monaco ? <AutocompleteTask onClose={() => setGuided(undefined)} flow={props.flow} guided={guided} cm={monaco}/> : undefined}
+    {guided && monaco ? <SelectOrCreateAsset onClose={() => setGuided(undefined)} flow={props.flow} guided={guided} cm={monaco}/> : undefined}
     <MonacoReact 
       beforeMount={beforeMount}
       onChange={handleChange}

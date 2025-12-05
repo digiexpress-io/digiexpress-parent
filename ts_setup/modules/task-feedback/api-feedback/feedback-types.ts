@@ -35,14 +35,11 @@ export declare namespace FeedbackApi {
   export type SentimentPolarity = 'positive' | 'negative' | 'neutral' | 'mixed' | 'unknown';
 
 
-  export interface FeedbackTopic {
-    main: FeedbackTopicItem[];
-    sub: FeedbackTopicItem[];
-  }
 
-  export interface FeedbackTopicItem {
+  export interface FeedbackTopic {
     labelKey: string;
     labelValue: string;
+    selected: boolean;
   }
 
   export interface FeedbackContent {
@@ -50,8 +47,6 @@ export declare namespace FeedbackApi {
     customerTitle: string | undefined;
     labelKey: string;
     labelValue: string;
-    subLabelKey: string | undefined;
-    subLabelValue: string | undefined;
 
     locale: string;
 

@@ -55,7 +55,7 @@ class ModelVisitor {
   }
 
   visitEdge(step: HdesApi.AstFlowTaskNode, props: { parent: Node, index?: number }) {
-    const id = this._fl.name + "/" + step.id.value;
+    const id = this._fl.name + "/" + (step.id?.value ?? props.index);
     const parent = props.parent;
 
     if (parent) {
@@ -76,7 +76,7 @@ class ModelVisitor {
   }
 
   visitStep(step: HdesApi.AstFlowTaskNode, props: { parent: Node, index?: number }) {
-    const id = this._fl.name + "/" + step.id.value;
+    const id = this._fl.name + "/" + (step.id?.value ?? props.index);
     const parent = props.parent;
 
     this.visitEdge(step, props);

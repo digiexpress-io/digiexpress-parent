@@ -55,7 +55,6 @@ SELECT
   feedback_reply.customer_question,
   
   feedback_reply.localized_label,
-  feedback_reply.localized_sub_label,
   feedback_reply.created_on_date,
   feedback_reply.updated_on_date,
   feedback_reply.updated_by,
@@ -64,7 +63,6 @@ SELECT
   feedback_reply.reply_text,
     
   feedback_category.label as label_key,
-  feedback_category.sub_label as sub_label_key,
   feedback_category.origin,
   
   (SELECT count(*) FROM feedback_approval WHERE reply_id = feedback_reply.id AND star_rating = 5) as thumbs_up_count,
@@ -111,13 +109,11 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .id(rs.getString("id"))
         .categoryId(rs.getString("category_id"))
         .labelKey(rs.getString("label_key"))
-        .subLabelKey(rs.getString("sub_label_key"))
         .origin(rs.getString("origin"))
         .thumbsUpCount(rs.getInt("thumbs_up_count"))
         .thumbsDownCount(rs.getInt("thumbs_down_count"))
         .reporterNames(rs.getString("reporter_names"))
         .labelValue(rs.getString("localized_label"))
-        .subLabelValue(rs.getString("localized_sub_label"))
         .sourceId(rs.getString("source_id"))
         .createdBy(rs.getString("created_by"))
         .updatedBy(rs.getString("updated_by"))

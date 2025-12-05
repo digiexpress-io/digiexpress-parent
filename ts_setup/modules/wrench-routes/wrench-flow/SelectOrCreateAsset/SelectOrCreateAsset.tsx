@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, List, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
 import * as monaco_editor from 'monaco-editor';
@@ -8,41 +8,24 @@ import * as Burger from '@dxs-ts/eveli-primitives';
 import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
 
 
-import { FlowAstAutocomplete, toLowerCamelCase, executeTemplate } from './api';
+
 import { CancelButton } from '@dxs-ts/eveli-primitives';
+import { SelectTask } from './SelectTask';
+import { CompletionDialogProps } from '../autocomplete';
+import { executeTemplate, toLowerCamelCase } from './utils';
 
 
-const SelectTask: React.FC<{ value:HdesApi.Entity<HdesApi.AstBody>, onClick: () => void, linked: boolean }> = ({ value, onClick, linked }) => {
-  const { ast } = value;
-  if (!ast) {
-    return null;
-  }
 
-  return (<>
-    <ListItem alignItems="flex-start" sx={{ cursor: "pointer" }} onClick={onClick}>
-      <ListItemText
-        primary={`${linked ? '* ' : ''}${ast.name}`}
-        secondary={<Typography
-          sx={{ display: 'inline' }}
-          component="span"
-          variant="body2"
-          color="text.primary">
-          {ast.description}
-        </Typography>} />
-    </ListItem>
-    <Divider />
-  </>);
 
-}
 
-interface AutocompleteTaskProps {
+export interface SelectOrCreateAssetProps {
   onClose: () => void;
   flow: HdesApi.Entity<HdesApi.AstFlow>;
-  guided: FlowAstAutocomplete;
+  guided: CompletionDialogProps;
   cm: typeof monaco_editor;
 }
 
-const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, flow, cm }) => {
+export const SelectOrCreateAsset: React.FC<SelectOrCreateAssetProps> = ({ onClose, guided, flow, cm }) => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const { decisions, services } = Composer.useSite();
@@ -54,7 +37,7 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, fl
   const usedLinks = flow.associations.filter(l => l.id && l.owner).map(l => l.id);
   const usedNames = [...Object.values(decisions).map(d => d.ast?.name), ...Object.values(services).map(d => d.ast?.name)]
 
-  const assets:HdesApi.Entity<HdesApi.AstBody>[] = React.useMemo(() => {
+  const assets: HdesApi.Entity<HdesApi.AstBody>[] = React.useMemo(() => {
     const target:HdesApi.Entity<HdesApi.AstBody>[] = type === "DT" ? Object.values(decisions) : Object.values(services);
     const keyword = name.toLowerCase();
     const result:HdesApi.Entity<HdesApi.AstBody>[] = target.filter(t => t.ast && (
@@ -171,4 +154,3 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, fl
   </Dialog>);
 }
 
-export { AutocompleteTask };

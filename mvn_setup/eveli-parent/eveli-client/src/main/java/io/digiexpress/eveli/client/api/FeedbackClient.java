@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -196,8 +196,6 @@ public interface FeedbackClient {
     String getLabelValue();
     
     @Nullable String getCustomerTitle();
-    @Nullable String getSubLabelKey();
-    @Nullable String getSubLabelValue();
     @Nullable String getReporterNames(); // nullable if there is no user consent, separated by ','
     
     String getSourceId();
