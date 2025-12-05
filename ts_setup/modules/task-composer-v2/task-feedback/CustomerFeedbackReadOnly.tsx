@@ -19,11 +19,7 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
   const classes = useUtilityClasses();
 
   React.useEffect(() => {
-    getOneFeedback(task.taskRef!)
-      .then((resp) => {
-        setFeedback(resp);
-        console.log("Setting feedback:", resp);
-      });
+    getOneFeedback(task.taskRef!).then(setFeedback);
   }, [task.taskRef]);
 
   if (!feedback || !feedback.content) {
@@ -37,7 +33,7 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
     <StyledCustomerFeedbackReadOnly className={classes.root}>
       <Box display='flex' flexDirection='row' justifyContent='space-between'>
         <Box flexDirection='column' alignItems='center'>
-          <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.content.main}</Typography>
+          <Typography className={classes.feedbackCategories} sx={{ ...style.bodyTypography }}>{feedback.labelValue}</Typography>
         </Box>
         <Box alignItems='top'>
           <PublishedNotifier task={task} style={style} />
@@ -49,15 +45,15 @@ export const CustomerFeedbackReadOnly: React.FC<{ task: TaskApi.Task, style: Tas
         <Box className={classes.customerText}>
           <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold' }}>
             {intl.formatMessage({ id: 'task.feedback.title' })}
-        </Typography>
-        <Typography sx={{ ...style.bodyTypography }}>{feedback.content.title}</Typography>
-      </Box>
+          </Typography>
+          <Typography sx={{ ...style.bodyTypography }}>{feedback.customerTitle}</Typography>
+        </Box>
 
 
-      <Box className={classes.customerText}>
+        <Box className={classes.customerText}>
           <Typography sx={{ ...style.bodyTypography, fontWeight: 'bold' }}>
             {intl.formatMessage({ id: 'task.feedback.detailedResponse' })}
-        </Typography>
+          </Typography>
           <Typography sx={{ ...style.bodyTypography }}>{truncate(feedback.content.question, 350)}</Typography>
         </Box>
       </Box>

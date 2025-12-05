@@ -4,7 +4,6 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 const mainGroupId = 'feedback.main_topic';
-const subGroupId = 'feedback.sub_topic';
 
 
 function useFeedBackIntlTopic() {
@@ -12,18 +11,12 @@ function useFeedBackIntlTopic() {
 
   const codes = React.useMemo(() => {
     const mainKeys: string[] = [];
-    const subKeys: string[] = [];
-      Object.keys(messages)
-      .forEach(key => {
 
-        if (key.startsWith(mainGroupId) && !mainKeys.includes(key)) {
-          mainKeys.push(key);
-        }
-        if (key.startsWith(subGroupId) && !subKeys.includes(key)) {
-          subKeys.push(key);
-        }
-      });
-    return { mainKeys, subKeys };
+    Object.keys(messages)
+      .filter(key => key.startsWith(mainGroupId) && !mainKeys.includes(key))
+      .forEach(key => mainKeys.push(key));
+
+    return mainKeys;
   }, [messages]);
   return codes;
 }
@@ -33,37 +26,36 @@ export function useFeedbackTopics() {
   const intl = useIntl();
   const codes = useFeedBackIntlTopic();
 
-  const getFeedbackTopics: (templateOrFeedback: FeedbackApi.FeedbackContent) => Promise<FeedbackApi.FeedbackTopic> = React.useCallback(
-    async function getFeedbackTopics(templateOrFeedback: FeedbackApi.FeedbackContent): Promise<FeedbackApi.FeedbackTopic> {
-      const main: FeedbackApi.FeedbackTopicItem[] = [];
-      const sub: FeedbackApi.FeedbackTopicItem[] = [];
+  const getFeedbackTopics: (dirtyValue: string) => FeedbackApi.FeedbackTopic[] = React.useCallback((dirtyValue) => {
 
-      const labelKeyJunk = templateOrFeedback.labelKey.toLocaleLowerCase()
-      const labelKey = codes.mainKeys.find(e => e === labelKeyJunk)
-
-      const subLabelKeyJunk = templateOrFeedback.subLabelKey?.toLocaleLowerCase();
-      const subLabelKey = codes.subKeys.find(e => e === subLabelKeyJunk)
+    const cleanedValue = (dirtyValue ?? '').trim().toLocaleLowerCase();
+    const found = codes.find(topic => {
+      const candidate = topic.toLocaleLowerCase();
+      return candidate.endsWith(`.${cleanedValue}`) || candidate === cleanedValue;
+    });
 
 
-      if (!labelKey && labelKeyJunk) {
-        main.push({ labelKey: labelKeyJunk, labelValue: '*' + (labelKeyJunk ?? '') })
-      }
+    const failSafe: FeedbackApi.FeedbackTopic[] = [];
+    if (!found) {
+      console.error('Feedback topic not found', { dirtyValue, codes })
+      const missingValue = dirtyValue.includes(".") ? dirtyValue : `${mainGroupId}.${dirtyValue}`;
+      failSafe.push({
+        labelKey: missingValue,
+        labelValue: '*' + missingValue,
+        selected: true
+      })
+    }
 
-      if (!subLabelKey && subLabelKeyJunk) {
-        sub.push({ labelKey: subLabelKeyJunk, labelValue: '*' + (subLabelKeyJunk ?? '') })
-      }
-
-      codes.mainKeys.map(labelKey => ({
+    return [
+      ...codes.map(labelKey => ({
         labelKey: labelKey.toLocaleLowerCase(),
-        labelValue: intl.formatMessage({ id: labelKey, defaultMessage: labelKey })
-      })).forEach(e => main.push(e));
+        labelValue: intl.formatMessage({ id: labelKey, defaultMessage: labelKey }),
+        selected: found === labelKey
+      })),
+      ...failSafe
+    ];
 
-      codes.subKeys.map(labelKey => ({
-        labelKey: labelKey.toLocaleLowerCase(),
-        labelValue: intl.formatMessage({ id: labelKey, defaultMessage: labelKey })
-      })).forEach(e => sub.push(e));
-      return { main, sub };
-    }, [])
+  }, [intl.locale])
 
   return { getFeedbackTopics }
 }
