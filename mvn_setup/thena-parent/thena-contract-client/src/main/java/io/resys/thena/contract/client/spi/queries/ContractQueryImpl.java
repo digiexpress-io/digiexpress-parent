@@ -83,7 +83,7 @@ public class ContractQueryImpl implements ContractQuery {
   }
 
   @Override
-  public Uni<QueryEnvelope<ContractContainer>> get(String contractIdOrExtId) {
+  public Uni<QueryEnvelope<ContractContainer>> getOne(String contractIdOrExtId) {
     this.addContractId(contractIdOrExtId);
     return this.state
         .onItem().transformToUni(state -> {

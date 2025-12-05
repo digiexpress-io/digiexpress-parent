@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.web.resources.worker.ContractApiController;
+import io.digiexpress.eveli.client.web.resources.worker.LedgerApiController;
 import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.contract.client.spi.ContractClientImpl;
 import io.resys.thena.ledger.client.api.LedgerClient;
@@ -80,5 +81,10 @@ public class EveliAutoConfigContract {
   @Bean
   public ContractApiController contractApiController(ContractClient contractClient) {
     return new ContractApiController(contractClient);
+  }
+  
+  @Bean
+  public LedgerApiController ledgerApiController(LedgerClient ledgerClient) {
+    return new LedgerApiController(ledgerClient);
   }
 }

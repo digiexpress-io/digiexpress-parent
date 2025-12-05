@@ -47,6 +47,12 @@ public class Batch_Generate_Contract_Definition {
             .comment("fund generator")
             .executor(new BatchJob_Generate_Funds(contractClient, ledgerClient))
             .build())
+        .addSteps(ImmutableBatchStepDefinition.builder()
+            .name("generate payment(s) from contract start date")
+            .comment("payment generator")
+            .executor(new BatchJob_Generate_Add_Payments(contractClient, ledgerClient))
+            .build())
+        
         .build();
   }
 }

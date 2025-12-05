@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.resys.thena.contract.client.api.ContractClient;
-import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
+import io.resys.thena.ledger.client.api.LedgerClient;
+import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -36,21 +36,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/worker/rest/api/contracts")
+@RequestMapping("/worker/rest/api/ledgers")
 @Slf4j
-public class ContractApiController {
+public class LedgerApiController {
 
-  private final ContractClient contractClient;
+  private final LedgerClient ledgerClient;
   
   @GetMapping("/all")
-  public Multi<ContractContainer> all() {
-    return contractClient.withTenant().find().contractQuery().findAll()
+  public Multi<LedgerContainer> all() {
+    return ledgerClient.withTenant().find().ledgerQuery().findAll()
         .onItem().transformToMulti(env -> Multi.createFrom().items(env.getObjects().stream()));
   }
 
-  @GetMapping("/{contractId}")
-  public Uni<ContractContainer> getOnContract(@PathVariable("contractId") String id) {
-    return contractClient.withTenant().find().contractQuery().getOne(id)
+  @GetMapping("/{ledgerId}")
+  public Uni<LedgerContainer> getOnLedger(@PathVariable("ledgerId") String id) {
+    return ledgerClient.withTenant().find().ledgerQuery().getOne(id)
         .onItem().transform(env -> env.getObjects());
   }
 
