@@ -18,6 +18,7 @@ import { Route as PublicLocaleAuthRouteImport } from './routes/public.$locale.au
 import { Route as SecuredLocalePublicationsIndexRouteImport } from './routes/secured.$locale.publications.index'
 import { Route as SecuredLocaleWorkerTasksRouteImport } from './routes/secured.$locale.worker.tasks'
 import { Route as SecuredLocaleWorkerProfileRouteImport } from './routes/secured.$locale.worker.profile'
+import { Route as SecuredLocaleWorkerLedgersRouteImport } from './routes/secured.$locale.worker.ledgers'
 import { Route as SecuredLocaleWorkerContractsRouteImport } from './routes/secured.$locale.worker.contracts'
 import { Route as SecuredLocaleWorkerBatchesRouteImport } from './routes/secured.$locale.worker.batches'
 import { Route as SecuredLocaleWorkerUserActivityIndexRouteImport } from './routes/secured.$locale.worker.user-activity.index'
@@ -25,6 +26,7 @@ import { Route as SecuredLocaleWorkerTasksIndexRouteImport } from './routes/secu
 import { Route as SecuredLocaleWorkerTaskActivityIndexRouteImport } from './routes/secured.$locale.worker.task-activity.index'
 import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/secured.$locale.worker.queues.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
+import { Route as SecuredLocaleWorkerLedgersIndexRouteImport } from './routes/secured.$locale.worker.ledgers.index'
 import { Route as SecuredLocaleWorkerHelpIndexRouteImport } from './routes/secured.$locale.worker.help.index'
 import { Route as SecuredLocaleWorkerFeedbackIndexRouteImport } from './routes/secured.$locale.worker.feedback.index'
 import { Route as SecuredLocaleWorkerDashboardIndexRouteImport } from './routes/secured.$locale.worker.dashboard.index'
@@ -40,6 +42,7 @@ import { Route as SecuredLocaleWorkerTasksCreateIndexRouteImport } from './route
 import { Route as SecuredLocaleWorkerTasksTaskIdIndexRouteImport } from './routes/secured.$locale.worker.tasks.$taskId.index'
 import { Route as SecuredLocaleWorkerQueuesMessagesIndexRouteImport } from './routes/secured.$locale.worker.queues.messages.index'
 import { Route as SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport } from './routes/secured.$locale.worker.queues.deliveries.index'
+import { Route as SecuredLocaleWorkerLedgersLedgerIdIndexRouteImport } from './routes/secured.$locale.worker.ledgers.$ledgerId.index'
 import { Route as SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport } from './routes/secured.$locale.worker.feedback.$feedbackId.index'
 import { Route as SecuredLocaleWorkerContractsContractIdIndexRouteImport } from './routes/secured.$locale.worker.contracts.$contractId.index'
 import { Route as SecuredLocaleWorkerBatchesCreateIndexRouteImport } from './routes/secured.$locale.worker.batches.create.index'
@@ -95,6 +98,12 @@ const SecuredLocaleWorkerProfileRoute =
     path: '/profile',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
+const SecuredLocaleWorkerLedgersRoute =
+  SecuredLocaleWorkerLedgersRouteImport.update({
+    id: '/ledgers',
+    path: '/ledgers',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
 const SecuredLocaleWorkerContractsRoute =
   SecuredLocaleWorkerContractsRouteImport.update({
     id: '/contracts',
@@ -136,6 +145,12 @@ const SecuredLocaleWorkerMonitoringIndexRoute =
     id: '/monitoring/',
     path: '/monitoring/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
+const SecuredLocaleWorkerLedgersIndexRoute =
+  SecuredLocaleWorkerLedgersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SecuredLocaleWorkerLedgersRoute,
   } as any)
 const SecuredLocaleWorkerHelpIndexRoute =
   SecuredLocaleWorkerHelpIndexRouteImport.update({
@@ -227,6 +242,12 @@ const SecuredLocaleWorkerQueuesDeliveriesIndexRoute =
     path: '/queues/deliveries/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
+const SecuredLocaleWorkerLedgersLedgerIdIndexRoute =
+  SecuredLocaleWorkerLedgersLedgerIdIndexRouteImport.update({
+    id: '/$ledgerId/',
+    path: '/$ledgerId/',
+    getParentRoute: () => SecuredLocaleWorkerLedgersRoute,
+  } as any)
 const SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute =
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport.update({
     id: '/feedback/$feedbackId/',
@@ -273,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
+  '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
@@ -287,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/task-activity': typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -296,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
   '/secured/$locale/worker/contracts/$contractId': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/ledgers/$ledgerId': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
   '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
   '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
@@ -322,6 +346,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/task-activity': typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -331,6 +356,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
   '/secured/$locale/worker/contracts/$contractId': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/ledgers/$ledgerId': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
   '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
   '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
@@ -348,6 +374,7 @@ export interface FileRoutesById {
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
+  '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
@@ -362,6 +389,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/dashboard/': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/task-activity/': typeof SecuredLocaleWorkerTaskActivityIndexRoute
@@ -371,6 +399,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/batches/create/': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
   '/secured/$locale/worker/contracts/$contractId/': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/ledgers/$ledgerId/': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
   '/secured/$locale/worker/queues/deliveries/': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   '/secured/$locale/worker/queues/messages/': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
   '/secured/$locale/worker/tasks/$taskId/': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
@@ -389,6 +418,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/'
     | '/secured/$locale/worker/batches'
     | '/secured/$locale/worker/contracts'
+    | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/profile'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications'
@@ -403,6 +433,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/dashboard'
     | '/secured/$locale/worker/feedback'
     | '/secured/$locale/worker/help'
+    | '/secured/$locale/worker/ledgers/'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/task-activity'
@@ -412,6 +443,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/batches/create'
     | '/secured/$locale/worker/contracts/$contractId'
     | '/secured/$locale/worker/feedback/$feedbackId'
+    | '/secured/$locale/worker/ledgers/$ledgerId'
     | '/secured/$locale/worker/queues/deliveries'
     | '/secured/$locale/worker/queues/messages'
     | '/secured/$locale/worker/tasks/$taskId'
@@ -438,6 +470,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/dashboard'
     | '/secured/$locale/worker/feedback'
     | '/secured/$locale/worker/help'
+    | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/task-activity'
@@ -447,6 +480,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/batches/create'
     | '/secured/$locale/worker/contracts/$contractId'
     | '/secured/$locale/worker/feedback/$feedbackId'
+    | '/secured/$locale/worker/ledgers/$ledgerId'
     | '/secured/$locale/worker/queues/deliveries'
     | '/secured/$locale/worker/queues/messages'
     | '/secured/$locale/worker/tasks/$taskId'
@@ -463,6 +497,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/'
     | '/secured/$locale/worker/batches'
     | '/secured/$locale/worker/contracts'
+    | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/profile'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications/'
@@ -477,6 +512,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/dashboard/'
     | '/secured/$locale/worker/feedback/'
     | '/secured/$locale/worker/help/'
+    | '/secured/$locale/worker/ledgers/'
     | '/secured/$locale/worker/monitoring/'
     | '/secured/$locale/worker/queues/'
     | '/secured/$locale/worker/task-activity/'
@@ -486,6 +522,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/batches/create/'
     | '/secured/$locale/worker/contracts/$contractId/'
     | '/secured/$locale/worker/feedback/$feedbackId/'
+    | '/secured/$locale/worker/ledgers/$ledgerId/'
     | '/secured/$locale/worker/queues/deliveries/'
     | '/secured/$locale/worker/queues/messages/'
     | '/secured/$locale/worker/tasks/$taskId/'
@@ -565,6 +602,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerProfileRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
     }
+    '/secured/$locale/worker/ledgers': {
+      id: '/secured/$locale/worker/ledgers'
+      path: '/ledgers'
+      fullPath: '/secured/$locale/worker/ledgers'
+      preLoaderRoute: typeof SecuredLocaleWorkerLedgersRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
+    }
     '/secured/$locale/worker/contracts': {
       id: '/secured/$locale/worker/contracts'
       path: '/contracts'
@@ -613,6 +657,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/worker/monitoring'
       preLoaderRoute: typeof SecuredLocaleWorkerMonitoringIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
+    }
+    '/secured/$locale/worker/ledgers/': {
+      id: '/secured/$locale/worker/ledgers/'
+      path: '/'
+      fullPath: '/secured/$locale/worker/ledgers/'
+      preLoaderRoute: typeof SecuredLocaleWorkerLedgersIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerLedgersRoute
     }
     '/secured/$locale/worker/help/': {
       id: '/secured/$locale/worker/help/'
@@ -718,6 +769,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/worker/queues/deliveries'
       preLoaderRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
+    }
+    '/secured/$locale/worker/ledgers/$ledgerId/': {
+      id: '/secured/$locale/worker/ledgers/$ledgerId/'
+      path: '/$ledgerId'
+      fullPath: '/secured/$locale/worker/ledgers/$ledgerId'
+      preLoaderRoute: typeof SecuredLocaleWorkerLedgersLedgerIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerLedgersRoute
     }
     '/secured/$locale/worker/feedback/$feedbackId/': {
       id: '/secured/$locale/worker/feedback/$feedbackId/'
@@ -826,6 +884,23 @@ const SecuredLocaleWorkerContractsRouteWithChildren =
     SecuredLocaleWorkerContractsRouteChildren,
   )
 
+interface SecuredLocaleWorkerLedgersRouteChildren {
+  SecuredLocaleWorkerLedgersIndexRoute: typeof SecuredLocaleWorkerLedgersIndexRoute
+  SecuredLocaleWorkerLedgersLedgerIdIndexRoute: typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
+}
+
+const SecuredLocaleWorkerLedgersRouteChildren: SecuredLocaleWorkerLedgersRouteChildren =
+  {
+    SecuredLocaleWorkerLedgersIndexRoute: SecuredLocaleWorkerLedgersIndexRoute,
+    SecuredLocaleWorkerLedgersLedgerIdIndexRoute:
+      SecuredLocaleWorkerLedgersLedgerIdIndexRoute,
+  }
+
+const SecuredLocaleWorkerLedgersRouteWithChildren =
+  SecuredLocaleWorkerLedgersRoute._addFileChildren(
+    SecuredLocaleWorkerLedgersRouteChildren,
+  )
+
 interface SecuredLocaleWorkerTasksRouteChildren {
   SecuredLocaleWorkerTasksIndexRoute: typeof SecuredLocaleWorkerTasksIndexRoute
   SecuredLocaleWorkerTasksTaskIdIndexRoute: typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
@@ -852,6 +927,7 @@ const SecuredLocaleWorkerTasksRouteWithChildren =
 interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerBatchesRoute: typeof SecuredLocaleWorkerBatchesRouteWithChildren
   SecuredLocaleWorkerContractsRoute: typeof SecuredLocaleWorkerContractsRouteWithChildren
+  SecuredLocaleWorkerLedgersRoute: typeof SecuredLocaleWorkerLedgersRouteWithChildren
   SecuredLocaleWorkerProfileRoute: typeof SecuredLocaleWorkerProfileRoute
   SecuredLocaleWorkerTasksRoute: typeof SecuredLocaleWorkerTasksRouteWithChildren
   SecuredLocaleWorkerDashboardIndexRoute: typeof SecuredLocaleWorkerDashboardIndexRoute
@@ -870,6 +946,7 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerBatchesRoute: SecuredLocaleWorkerBatchesRouteWithChildren,
   SecuredLocaleWorkerContractsRoute:
     SecuredLocaleWorkerContractsRouteWithChildren,
+  SecuredLocaleWorkerLedgersRoute: SecuredLocaleWorkerLedgersRouteWithChildren,
   SecuredLocaleWorkerProfileRoute: SecuredLocaleWorkerProfileRoute,
   SecuredLocaleWorkerTasksRoute: SecuredLocaleWorkerTasksRouteWithChildren,
   SecuredLocaleWorkerDashboardIndexRoute:

@@ -207,7 +207,9 @@
           "@dxs-ts/task-composer-v2": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/contract-api": "*",
-          "@dxs-ts/contract-composer": "*"
+          "@dxs-ts/contract-composer": "*",
+          "@dxs-ts/ledger-api": "*",
+          "@dxs-ts/ledger-composer": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -255,6 +257,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "react",
         "react-dom",
         "react-intl",
@@ -316,7 +320,9 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
-        "@dxs-ts/contract-composer"
+        "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer"
       ],
       "actualDependencies": [
         "react",
@@ -370,6 +376,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@tanstack/react-store",
         "@mui/utils"
       ]
@@ -587,6 +595,7 @@
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/contract-api": "*",
+          "@dxs-ts/ledger-api": "*",
           "@dxs-ts/tagomi-api": "*",
           "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/user-profile": "*",
@@ -616,6 +625,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
@@ -652,6 +662,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
@@ -674,6 +685,7 @@
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/task-api",
         "@material-table/core"
       ],
@@ -696,6 +708,7 @@
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/task-api"
       ],
       "missingDependencies": [],
@@ -917,6 +930,8 @@
           "@dxs-ts/task-composer-v2": "*",
           "@dxs-ts/contract-api": "*",
           "@dxs-ts/contract-composer": "*",
+          "@dxs-ts/ledger-api": "*",
+          "@dxs-ts/ledger-composer": "*",
           "@dxs-ts/xui-table": "*",
           "@dxs-ts/xui-datetime": "*"
         },
@@ -967,6 +982,8 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
         "react",
@@ -1041,6 +1058,8 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -1082,7 +1101,9 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
-        "@dxs-ts/contract-composer"
+        "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer"
       ],
       "actualExternalDependencies": [
         "react",
@@ -1124,7 +1145,9 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
-        "@dxs-ts/contract-composer"
+        "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
       "unusedDependencies": []
@@ -1902,6 +1925,171 @@
       "missingDependencies": [],
       "unusedDependencies": []
     },
+    "@dxs-ts/ledger-api": {
+      "name": "@dxs-ts/ledger-api",
+      "path": "modules/ledger-api",
+      "packageJson": {
+        "name": "@dxs-ts/ledger-api",
+        "version": "${project.version}",
+        "description": "Ledger API layer - data fetching, business logic, state management",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*",
+          "@tanstack/react-query": "*",
+          "react-intl": "*"
+        },
+        "keywords": [
+          "ledger",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ],
+      "peerDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ],
+      "externalDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react",
+        "@tanstack/react-query"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@tanstack/react-query"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react-intl"
+      ]
+    },
+    "@dxs-ts/ledger-composer": {
+      "name": "@dxs-ts/ledger-composer",
+      "path": "modules/ledger-composer",
+      "packageJson": {
+        "name": "@dxs-ts/ledger-composer",
+        "version": "${project.version}",
+        "description": "Ledger composer",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/ledger-api": "*",
+          "@dxs-ts/xui-table": "*",
+          "@dxs-ts/xui-datetime": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "luxon": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@tanstack/react-table": "*",
+          "@tanstack/react-query": "*",
+          "@monaco-editor/react": "*",
+          "yaml": "*"
+        },
+        "keywords": [
+          "contract-composer"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@dxs-ts/ledger-api",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@dxs-ts/xui-table"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "react-intl",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/xui-table"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/xui-datetime",
+        "luxon",
+        "@mui/utils",
+        "@mui/system",
+        "@monaco-editor/react",
+        "yaml"
+      ]
+    },
     "@dxs-ts/eveli-ide": {
       "name": "@dxs-ts/eveli-ide",
       "path": "modules/lib-eveli",
@@ -1932,6 +2120,8 @@
           "@dxs-ts/tagomi-routes": "*",
           "@dxs-ts/contract-api": "*",
           "@dxs-ts/contract-composer": "*",
+          "@dxs-ts/ledger-api": "*",
+          "@dxs-ts/ledger-composer": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/eveli-api": "*",
@@ -1970,6 +2160,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -2002,6 +2194,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -2059,6 +2253,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-datetime",
@@ -3090,8 +3286,8 @@
         "yaml",
         "notistack",
         "@dxs-ts/envir-fetch",
-        "js-file-download",
         "@uiw/react-md-editor",
+        "js-file-download",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3111,8 +3307,8 @@
         "@mui/system",
         "yaml",
         "notistack",
-        "js-file-download",
         "@uiw/react-md-editor",
+        "js-file-download",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3339,7 +3535,9 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/task-feedback",
         "@dxs-ts/contract-api",
-        "@dxs-ts/contract-composer"
+        "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer"
       ],
       "@dxs-ts/gamut-demo-app": [
         "@dxs-ts/envir-util",
@@ -3365,6 +3563,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/user-profile",
@@ -3402,6 +3601,8 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -3439,6 +3640,12 @@
         "@dxs-ts/gamut-api"
       ],
       "@dxs-ts/gamut-theme": [],
+      "@dxs-ts/ledger-api": [],
+      "@dxs-ts/ledger-composer": [
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
       "@dxs-ts/eveli-ide": [
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
@@ -3458,6 +3665,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3661,6 +3870,18 @@
         "@dxs-ts/eveli-ide",
         "@dxs-ts/gamut"
       ],
+      "@dxs-ts/ledger-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/ledger-composer",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/ledger-composer": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
       "@dxs-ts/eveli-ide": [
         "@dxs-ts/eveli-demo-app"
       ],
@@ -3745,6 +3966,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/gamut-form",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/gamut",
         "@dxs-ts/stencil-routes",
@@ -3760,6 +3982,7 @@
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/eveli-routes",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-routes",
@@ -3795,6 +4018,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/ledger-api",
+        "@dxs-ts/ledger-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3883,6 +4108,6 @@
       ]
     }
   },
-  "checksum": "da783e57ce7f4d9801b06dff05469fe23165059742b58bfdf4d13886087ffe96",
-  "generatedAt": "2025-11-21T13:09:36.869Z"
+  "checksum": "9e4c5a07fa631841d3cf13ba5e4c3ac291ce35466e004a80a2ff8a665e04c987",
+  "generatedAt": "2025-12-08T10:03:39.494Z"
 }

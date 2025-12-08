@@ -91,6 +91,12 @@
       ],
       "@dxs-ts/contract-composer": [
         "../contract-composer/index.ts"
+      ],
+      "@dxs-ts/ledger-api": [
+        "../ledger-api/index.ts"
+      ],
+      "@dxs-ts/ledger-composer": [
+        "../ledger-composer/index.ts"
       ]
     }
   },
@@ -182,16 +188,22 @@
     },
     {
       "path": "../contract-composer"
+    },
+    {
+      "path": "../ledger-api"
+    },
+    {
+      "path": "../ledger-composer"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-11-07T13:55:35.614Z",
+    "at": "2025-12-08T09:28:20.568Z",
     "forModule": "@dxs-ts/eveli-demo-app",
-    "fromRegistry": "620240fca325",
+    "fromRegistry": "3f14f8aea948",
     "alias": {
       "@dxs-ts/eveli-demo-app": [
-        "../contract-composer"
+        "../ledger-composer"
       ]
     }
   }

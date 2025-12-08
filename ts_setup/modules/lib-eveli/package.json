@@ -27,6 +27,8 @@
     "@dxs-ts/tagomi-routes": "*",
     "@dxs-ts/contract-api": "*",
     "@dxs-ts/contract-composer": "*",
+    "@dxs-ts/ledger-api": "*",
+    "@dxs-ts/ledger-composer": "*",
 
     "@dxs-ts/task-api": "*",
     "@dxs-ts/task-feedback": "*",

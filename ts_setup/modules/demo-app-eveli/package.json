@@ -38,7 +38,10 @@
     "@dxs-ts/task-feedback": "*",
 
     "@dxs-ts/contract-api": "*",
-    "@dxs-ts/contract-composer": "*"
+    "@dxs-ts/contract-composer": "*",
+
+    "@dxs-ts/ledger-api": "*",
+    "@dxs-ts/ledger-composer": "*"
   },
   "peerDependencies": {
     "react": "*",

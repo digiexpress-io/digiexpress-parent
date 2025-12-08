@@ -26,6 +26,9 @@
       "@dxs-ts/contract-api": [
         "../contract-api/index.ts"
       ],
+      "@dxs-ts/ledger-api": [
+        "../ledger-api/index.ts"
+      ],
       "@dxs-ts/tagomi-api": [
         "../tagomi-api/index.ts"
       ],
@@ -67,6 +70,9 @@
       "path": "../contract-api"
     },
     {
+      "path": "../ledger-api"
+    },
+    {
       "path": "../tagomi-api"
     },
     {
@@ -84,9 +90,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-11-07T13:52:37.397Z",
+    "at": "2025-12-08T10:03:39.497Z",
     "forModule": "@dxs-ts/eveli-api",
-    "fromRegistry": "35497fa4a04b",
+    "fromRegistry": "9e4c5a07fa63",
     "alias": {
       "@dxs-ts/eveli-api": [
         "../xui-table"

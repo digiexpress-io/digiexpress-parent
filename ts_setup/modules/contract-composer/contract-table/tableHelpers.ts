@@ -8,7 +8,7 @@ const statusOrder: Record<ContractApi.ContractStatusType, number> = {
 
 export function taskSortingFn(rowA: Row<ContractApi.ContractSummary>, rowB: Row<ContractApi.ContractSummary>, columnId: string) {
   const a = rowA.original[columnId as keyof ContractApi.ContractSummary];
-  const b = rowA.original[columnId as keyof ContractApi.ContractSummary];
+  const b = rowB.original[columnId as keyof ContractApi.ContractSummary];
 
   switch (columnId) {
     case 'contractStatus': {
