@@ -22,11 +22,4 @@ services:
       
       # Mount custom fonts directory
       - ./assets/fonts:/app/assets/fonts:ro
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-k", "-f", "https://localhost:8085/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
+    restart: always
