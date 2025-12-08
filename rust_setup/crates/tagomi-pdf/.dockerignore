@@ -1,0 +1,8 @@
+target/
+*.pem
+.gitignore
+*.md
+docker-compose.yml
+docker-compose.README.md
+certs/
+

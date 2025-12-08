@@ -1,13 +1,17 @@
 use chrono::{Datelike, Timelike};
 use crate::rest_api::{ AnyResponse, PdfDocument, PdfRequest, TagomiPdfClient };
 use crate::pdf_compiler::{ PdfCompiler, PdfCompilerImpl };
+use crate::config::Config;
 
-pub struct TagomiPdfClientImpl;
+pub struct TagomiPdfClientImpl {
+    config: Config,
+}
 
 
 impl TagomiPdfClientImpl {
-    pub fn new() -> Self {
+    pub fn new(config: Config) -> Self {
         Self {
+            config,
         }
     }
 }
@@ -59,6 +63,7 @@ impl TagomiPdfClient for TagomiPdfClientImpl {
             .main_template_id(payload.main_template_id)
             .add_templates(payload.templates)
             .add_modules(payload.data_modules)
+            .fonts_config(self.config.fonts_path.clone(), self.config.use_system_fonts)
             .compile();
 
         match result {

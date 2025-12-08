@@ -1,5 +1,6 @@
 use thiserror::Error;
 use std::result::Result;
+use std::path::PathBuf;
 
 use typst::{diag::{FileError, HintedString, SourceDiagnostic }, foundations::Datetime};
 use typst::{foundations::{ Dict }};
@@ -45,6 +46,7 @@ pub trait PdfCompiler {
     fn add_template<T: Into<PdfTemplate>>(self, template: T) -> Self;
     fn add_templates<T: Into<PdfTemplate>>(self, template: Vec<T>) -> Self;
     fn add_modules<T: Into<PdfDataModule>>(self, data: Vec<T>) -> Self;
+    fn fonts_config(self, fonts_path: PathBuf, use_system_fonts: bool) -> Self;
     fn compile(self) -> Result<Pdf, PdfCompilerError>;
 }
 

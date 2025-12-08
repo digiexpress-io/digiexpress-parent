@@ -9,10 +9,67 @@ To run the PDF application, navigate to the project directory and execute:
 cargo run
 ```
 
+### Configuration
+
+The application is configured using environment variables:
+
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| `HTTPS_ENABLED` | Enable HTTPS mode (`true` or `false`) | `false` |
+| `PORT` | Port to listen on | `8085` |
+| `TLS_CERT_PATH` | Path to TLS certificate file | `/etc/tls/cert.pem` |
+| `TLS_KEY_PATH` | Path to TLS private key file | `/etc/tls/key.pem` |
+| `FONTS_PATH` | Path to custom fonts directory | `/assets/fonts` |
+| `USE_SYSTEM_FONTS` | Include system fonts (`true` or `false`) | `true` |
+
+#### Running in HTTP mode (default):
+```bash
+cargo run
+```
+
+#### Running in HTTPS mode:
+```bash
+# Generate test certificates (for development only)
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
+
+# Run with HTTPS
+HTTPS_ENABLED=true TLS_CERT_PATH=cert.pem TLS_KEY_PATH=key.pem cargo run
+```
+
+#### Running on a custom port:
+```bash
+PORT=9090 cargo run
+```
+
+#### Using custom fonts:
+```bash
+# Use custom fonts in addition to system fonts (default behavior)
+FONTS_PATH=/path/to/fonts cargo run
+
+# Use custom fonts only (disable system fonts)
+FONTS_PATH=/path/to/fonts USE_SYSTEM_FONTS=false cargo run
+
+# Use system fonts only (default if FONTS_PATH not set)
+cargo run
+```
+
+### Running with Docker
+
+```bash
+docker-compose up -d
+```
+
+See [docker-compose.README.md](crates/tagomi-pdf/docker-compose.README.md) for more details.
+
+
 ### Calling endpoints
 
 ```bash
- curl -X GET http://localhost:8085/health
+# HTTP mode
+curl -X GET http://localhost:8085/health
+
+# HTTPS mode (with self-signed certificate)
+curl -k -X GET https://localhost:8085/health
 ```
 
 ```bash
