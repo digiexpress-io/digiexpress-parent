@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/ledger-api": [
+        "../ledger-api/index.ts"
+      ],
+      "@dxs-ts/xui-table": [
+        "../xui-table/index.ts"
+      ],
+      "@dxs-ts/xui-datetime": [
+        "../xui-datetime/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../ledger-api"
+    },
+    {
+      "path": "../xui-table"
+    },
+    {
+      "path": "../xui-datetime"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-12-08T09:26:27.984Z",
+    "forModule": "@dxs-ts/contract-composer",
+    "fromRegistry": "8840d0c4cc41",
+    "alias": {
+      "@dxs-ts/contract-composer": [
+        "../xui-datetime"
+      ]
+    }
+  }
+}

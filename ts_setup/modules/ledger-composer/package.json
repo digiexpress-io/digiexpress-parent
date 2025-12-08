@@ -1,0 +1,27 @@
+{
+  "name": "@dxs-ts/ledger-composer",
+  "version": "${project.version}",
+  "description": "Ledger composer",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/ledger-api": "*",
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/xui-datetime": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*",
+    "luxon": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*",
+    "@mui/system": "*",
+    "@mui/icons-material": "*",
+    "@tanstack/react-table": "*",
+    "@tanstack/react-query": "*",
+    "@monaco-editor/react": "*",
+    "yaml": "*"
+  },
+  "keywords": ["contract-composer"],
+  "private": true
+}

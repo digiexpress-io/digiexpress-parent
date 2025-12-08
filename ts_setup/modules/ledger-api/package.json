@@ -1,0 +1,17 @@
+{
+  "name": "@dxs-ts/ledger-api",
+  "version": "${project.version}",
+  "description": "Ledger API layer - data fetching, business logic, state management",
+  "main": "./index.ts",
+  "type": "module",
+
+  "note": "No internal dependencies - this is the foundation layer",
+  "dependencies": { },
+  "peerDependencies": {
+    "react": "*",
+    "@tanstack/react-query": "*",
+    "react-intl": "*"
+  },
+  "keywords": ["ledger", "api", "data", "business-logic"],
+  "private": true
+}
