@@ -3,6 +3,7 @@
 [![Gamut](https://img.shields.io/npm/v/@dxs-ts/gamut?label=Gamut@latest)](https://www.npmjs.com/package/@dxs-ts/gamut)
 [![Eveli IDE](https://img.shields.io/npm/v/@dxs-ts/eveli-ide?label=Eveli%20IDE@latest)](https://www.npmjs.com/package/@dxs-ts/eveli-ide)
 ![Feedback Analyzer](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/digiexpress-io/digiexpress-parent/dev/py_setup/feedback-analyzer/version.json&query=$.version&label=Feedback%20Analyzer@latest&color=blue&prefix=v)
+![Tagomi PDF](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/digiexpress-io/digiexpress-parent/dev/rust_setup/crates/tagomi-pdf/version.json&query=$.version&label=Tagomi%20PDF@latest&color=blue&prefix=v)
 
 
 # DigiExpress-parent
