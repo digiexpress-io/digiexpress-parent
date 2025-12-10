@@ -26,8 +26,6 @@ export const LedgerTable: React.FC = () => {
     initialData: [],
   });
 
-  console.log(data)
-
   const columns: ColumnDef<LedgerApi.LedgerSummary, any>[] = [
      {
       header: intl.formatMessage({ id: 'ledgerTable.col.header.ledgerNumber'}),

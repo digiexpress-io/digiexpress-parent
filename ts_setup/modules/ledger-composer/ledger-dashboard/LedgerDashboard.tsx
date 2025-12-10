@@ -3,17 +3,17 @@ import { Grid2, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useLedger } from '@dxs-ts/ledger-api';
 
-import { ContractCardFactory, FactoryCardId } from '../ledger-card-factory';
+import { LedgerCardFactory, FactoryCardId } from '../ledger-card-factory';
 import { 
   CardConfigContextProvider, 
   cardGridSize, 
   DraggableCardWrapper, 
-  useCardConfig, useCardThemeConfig, useDragCardController 
+  useCardConfig, useCardThemeConfig, useDragCardController
 } from '../ledger-card';
 
 
 const _variant_prod: FactoryCardId[] = [
-
+  'ledger_main'
 ];
 
 
@@ -43,7 +43,7 @@ const DashboardInternal: React.FC = () => {
         {cardOrder.map((cardId) => (
           <Grid2 key={cardId} size={isReviewOpen ? cardGridSize.singleCol : cardGridSize[cardTheme]}>
             <DraggableCardWrapper {...getDragPropsForId(cardId)} draggingId={draggingId}>
-            <ContractCardFactory cardId={cardId} />
+              <LedgerCardFactory cardId={cardId} />
             </DraggableCardWrapper>
           </Grid2>
         ))}

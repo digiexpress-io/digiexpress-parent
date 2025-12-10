@@ -1178,5 +1178,7 @@ export const en = {
   'contract.status.active': 'Active',
   'ledgersTable.title': 'Ledgers',
   'ledgerTable.col.header.ledgerNumber': 'Ledger number',
-  'ledgerTable.col.header.updatedAt': 'Updated'
+  'ledgerTable.col.header.updatedAt': 'Updated',
+  'ledgercard.title.ledgerMain': 'Ledger {ledgerName}',
+  'ledgercard.ledgerMain.description': 'Description'
 }
