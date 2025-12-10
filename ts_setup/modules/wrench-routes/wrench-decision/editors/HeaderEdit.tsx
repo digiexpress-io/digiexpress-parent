@@ -118,8 +118,10 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
                 value: (<ListItemText primary={type} />)
               }))} />)}
         </Grid2>
+        {valueType === 'STRING' && <Grid2 size={{ xs: 12 }}>
+          <EditValueSet valueSet={valueSet} setValueSet={setValueSet} commands={commands} setCommands={setCommands} headerId={header.id} />
+        </Grid2>}
       </Grid2>
-      {header.direction === 'IN' && header.valueType === 'STRING' && <EditValueSet valueSet={valueSet} setValueSet={setValueSet} commands={commands} setCommands={setCommands} headerId={header.id} />}
     </Box >);
 
   return (<Dialog open={true} onClose={onClose}>

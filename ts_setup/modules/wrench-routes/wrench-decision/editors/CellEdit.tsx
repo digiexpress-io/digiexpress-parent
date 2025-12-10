@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, TextField, Typography } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, Typography } from '@mui/material';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
 
@@ -11,6 +11,7 @@ import Builder, {
   EditDateTime, EditDateTimeSimple,
   EditDate, EditDateSimple } from './builders';
 import { ValueSetChooser } from './builders/ValueSetChooser';
+import { ValueSetChooserSimple } from './builders/ValueSetChooserSimple';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 
@@ -40,12 +41,15 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
 
   let editor: React.ReactElement;
   if (type === 'STRING') {
-    editor = header.valueSet && header.valueSet.length !== 0 ? 
-      <ValueSetChooser builder={value.builder} valueSet={header.valueSet} onChange={handleChangeValue} /> :
-      (input ?
-      <EditString builder={value.builder} onChange={handleChangeValue} /> :
-        <EditStringSimple builder={value.builder} onChange={handleChangeValue} />)
-
+    if (header.valueSet && header.valueSet.length !== 0) {
+      editor = input ?
+        <ValueSetChooser builder={value.builder} valueSet={header.valueSet} onChange={handleChangeValue} /> :
+        <ValueSetChooserSimple value={value.value} valueSet={header.valueSet} onChange={handleChangeValue} />;
+    } else {
+      editor = input ?
+        <EditString builder={value.builder} onChange={handleChangeValue} /> :
+        <EditStringSimple builder={value.builder} onChange={handleChangeValue} />;
+    }
   } else if (type === 'INTEGER' || type === 'LONG' || type === 'DECIMAL') {
     editor = input ?
       <EditNumber builder={value.builder} onChange={handleChangeValue} /> :
