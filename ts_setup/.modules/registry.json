@@ -1078,6 +1078,7 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
@@ -1102,7 +1103,6 @@
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/contract-composer",
-        "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer"
       ],
       "actualExternalDependencies": [
@@ -1131,6 +1131,7 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/ledger-api",
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-api",
@@ -1146,7 +1147,6 @@
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
         "@dxs-ts/contract-composer",
-        "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
@@ -2066,7 +2066,8 @@
         "@mui/icons-material",
         "@tanstack/react-table",
         "@tanstack/react-query",
-        "@dxs-ts/xui-table"
+        "@dxs-ts/xui-table",
+        "luxon"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2074,7 +2075,8 @@
         "react-intl",
         "@mui/icons-material",
         "@tanstack/react-table",
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "luxon"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/ledger-api",
@@ -2083,7 +2085,6 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/xui-datetime",
-        "luxon",
         "@mui/utils",
         "@mui/system",
         "@monaco-editor/react",
@@ -4108,6 +4109,6 @@
       ]
     }
   },
-  "checksum": "9e4c5a07fa631841d3cf13ba5e4c3ac291ce35466e004a80a2ff8a665e04c987",
-  "generatedAt": "2025-12-08T10:03:39.494Z"
+  "checksum": "752aed8076e929ed894a98f7acb80bf051d0792e69835a424ba2b7f86b3ba642",
+  "generatedAt": "2025-12-10T10:19:21.270Z"
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@mui/material';
 import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
 import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
+import { AccountBalance as AccountBalanceIcon } from '@mui/icons-material';
 import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
 import { HandshakeOutlined as HandshakeOutlinedIcon } from '@mui/icons-material';
 import { NetworkCheck as NetworkCheckIcon } from '@mui/icons-material';
@@ -78,6 +79,19 @@ export const Secondary: React.FC = () => {
               to: '/secured/$locale/worker/contracts',
             })}>
               {intl.formatMessage({ id: 'toolbar.contracts' })}
+          </Button>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
+
+      <EveliTenantFeatureEnabled id='CONTRACT_ENABLED'>
+        <EveliPermissions id='NAV_TO_CONTRACTS'>
+          <Button startIcon={<AccountBalanceIcon />}
+            variant={location.pathname.includes('ledgers') ? 'explorerActive' : 'explorerInactive'}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/ledgers',
+            })}>
+            {intl.formatMessage({ id: 'toolbar.ledgers' })}
           </Button>
         </EveliPermissions>
       </EveliTenantFeatureEnabled>

@@ -440,6 +440,7 @@ export const en = {
   'toolbar.save': 'Save',
   'toolbar.stencil': 'theStencil',
   'toolbar.contracts': 'Contracts',
+  'toolbar.ledgers': 'Ledgers',
   'toolbar.wrench': 'theWrench',
   'toolbar.menu': 'Menu',
   'toolbar.help': 'Help',
@@ -1174,5 +1175,8 @@ export const en = {
   'contractcard.transitives.createdAt': 'Created',
   'contractcard.transitives.updatedAt': 'Updated',
   'contractcard.transitives.updatedTreeAt': 'Updated tree',
-  'contract.status.active': 'Active'
+  'contract.status.active': 'Active',
+  'ledgersTable.title': 'Ledgers',
+  'ledgerTable.col.header.ledgerNumber': 'Ledger number',
+  'ledgerTable.col.header.updatedAt': 'Updated'
 }
