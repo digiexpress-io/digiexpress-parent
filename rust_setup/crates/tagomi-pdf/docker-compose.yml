@@ -1,0 +1,25 @@
+services:
+  tagomi-pdf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tagomi-pdf
+    ports:
+      - "8085:8085"
+    environment:
+      # HTTPS Configuration
+      - HTTPS_ENABLED=true
+      - PORT=8085
+      - TLS_CERT_PATH=/etc/tls/cert.pem
+      - TLS_KEY_PATH=/etc/tls/key.pem
+      
+      # Font Configuration
+      - FONTS_PATH=/app/assets/fonts
+      - USE_SYSTEM_FONTS=true
+    volumes:
+      # Mount TLS certificates
+      - ./certs:/etc/tls:ro
+      
+      # Mount custom fonts directory
+      - ./assets/fonts:/app/assets/fonts:ro
+    restart: always

@@ -5,19 +5,25 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use tower_http::cors::{CorsLayer};
-use tracing::{info};
+use axum_server::tls_openssl::OpenSSLConfig;
+use tower_http::cors::CorsLayer;
+use tracing::info;
 use anyhow::Result;
+use std::net::SocketAddr;
 
-
+mod config;
 mod rest_api;
 mod pdf_compiler;
 
+use config::Config;
+
 use crate::rest_api::{TagomiPdfClient, TagomiPdfClientImpl, AnyResponse, PdfRequest};
 
-
 lazy_static! {
-    static ref TAGOMI_CLIENT: TagomiPdfClientImpl = TagomiPdfClientImpl::new();
+    static ref CONFIG: Config = Config::from_env();
+    static ref TAGOMI_CLIENT: TagomiPdfClientImpl = TagomiPdfClientImpl::new(
+        CONFIG.clone()
+    );
 }
 
 #[tokio::main]
@@ -27,16 +33,30 @@ async fn main() {
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .init();
 
+    let config = &*CONFIG;
+    info!("Configuration: {:?}", config);
+
     let app = Router::new()
         .route("/", get(health_check))
         .route("/health", get(health_check))
         .route("/compile", post(compile_pdf))
         .layer(CorsLayer::permissive());
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8085").await.unwrap();
-    info!("Server running on http://0.0.0.0:8085");
-    
-    axum::serve(listener, app).await.unwrap();
+    let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
+
+    if config.https {
+        let tls_config = OpenSSLConfig::from_pem_file(&config.cert, &config.key).unwrap();
+        
+        info!("Server running on https://{}", addr);
+        axum_server::bind_openssl(addr, tls_config)
+            .serve(app.into_make_service())
+            .await
+            .unwrap();
+    } else {
+        let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+        info!("Server running on http://{}", addr);
+        axum::serve(listener, app).await.unwrap();
+    }
 }
 
 async fn health_check() -> Json<AnyResponse<String>> {

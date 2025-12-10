@@ -1,0 +1,142 @@
+name: Build and Deploy Tagomi PDF
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: 'patch'
+
+env:
+  APP_PATH: rust_setup/crates/tagomi-pdf
+  IMAGE_NAME: digiexpress-io/tagomi-pdf
+  GIT_USERNAME: github-actions[bot]
+  GIT_EMAIL: github-actions[bot]@users.noreply.github.com
+  TAG_PREFIX: tagomi-pdf/v
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Read and increment version
+        id: version
+        run: |
+          # Read version from Cargo.toml
+          CURRENT_VERSION=$(grep '^version = ' ${{ env.APP_PATH }}/Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          
+          if [[ $CURRENT_VERSION =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            MAJOR="${BASH_REMATCH[1]}"
+            MINOR="${BASH_REMATCH[2]}"
+            PATCH="${BASH_REMATCH[3]}"
+          else
+            echo "Invalid semantic version: $CURRENT_VERSION"
+            exit 1
+          fi
+          
+          case "${{ github.event.inputs.version_bump }}" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Bumping version from $CURRENT_VERSION to $NEW_VERSION (${{ github.event.inputs.version_bump }} bump)"
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=${{ env.TAG_PREFIX }}$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          if git rev-parse "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.version.outputs.tag }} already exists. Aborting workflow."
+            exit 1
+          else
+            echo "Tag ${{ steps.version.outputs.tag }} does not exist, creating tag."
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to ReSys Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}},value=v${{ steps.version.outputs.version }}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.APP_PATH }}
+          file: ${{ env.APP_PATH }}/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Push new version and tag to git
+        run: |
+          # Update Cargo.toml version
+          sed -i "s/^version = \".*\"/version = \"${{ steps.version.outputs.version }}\"/" ${{ env.APP_PATH }}/Cargo.toml
+          
+          # Update version.json for badge display
+          echo "{\"version\": \"${{ steps.version.outputs.version }}\"}" > ${{ env.APP_PATH }}/version.json
+
+          git config --global user.name "${{ env.GIT_USERNAME }}"
+          git config --global user.email "${{ env.GIT_EMAIL }}"
+          
+          git add "${{ env.APP_PATH }}/Cargo.toml" "${{ env.APP_PATH }}/version.json"
+          git commit -m "release ${{ env.TAG_PREFIX }}${{ steps.version.outputs.version }}"
+          git push origin ${{ github.ref_name }}
+
+          git tag -a "${{ steps.version.outputs.tag }}" -m "Release version ${{ steps.version.outputs.version }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+
+      - name: Tagomi PDF Release Summary
+        run: |
+          echo "## Tagomi PDF Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "**Bump type:** \`${{ github.event.inputs.version_bump }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**New version:** \`${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag created:** \`${{ steps.version.outputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Docker Images Created" >> $GITHUB_STEP_SUMMARY
+          IFS=',' read -ra IMAGES <<< "${{ steps.meta.outputs.tags }}"
+          for img in "${IMAGES[@]}"; do
+            echo "- \`${img}\`" >> $GITHUB_STEP_SUMMARY
+          done

@@ -3,6 +3,7 @@ use chrono::{Datelike, Utc};
 use tracing::debug;
 use typst::foundations::Datetime;
 use std::collections::HashMap;
+use std::path::PathBuf;
 use std::time::Instant;
 
 use base64::{ Engine, engine::general_purpose };
@@ -23,7 +24,9 @@ pub struct PdfCompilerImpl {
     // leaks - explicit memory leak handling
     leaks: Vec<Box<str>>,
     now: Datetime,
-    start_time: Instant
+    start_time: Instant,
+    fonts_path: PathBuf,
+    use_system_fonts: bool,
 }
 
 impl PdfCompilerImpl {
@@ -35,7 +38,9 @@ impl PdfCompilerImpl {
             modules: Vec::new(),
             leaks: Vec::new(),
             now: Datetime::from_ymd(now.year(), now.month() as u8, now.day() as u8).unwrap(),
-            start_time: Instant::now()
+            start_time: Instant::now(),
+            fonts_path: PathBuf::from("./assets/fonts"),
+            use_system_fonts: true,
         }
     }
 }
@@ -76,6 +81,11 @@ impl PdfCompiler for PdfCompilerImpl {
         self.now = today;
         self
     }
+    fn fonts_config(mut self, fonts_path: PathBuf, use_system_fonts: bool) -> Self {
+        self.fonts_path = fonts_path;
+        self.use_system_fonts = use_system_fonts;
+        self
+    }
     fn compile(mut self) -> Result<super::Pdf, super::PdfCompilerError> {
         // to the basic data validation
         let main_template = self.main_template_id.as_ref().ok_or_else(|| {
@@ -95,12 +105,24 @@ impl PdfCompiler for PdfCompilerImpl {
 
 
         let library = map_to_lib(&self.modules, &mut self.leaks);
-        //let fonts = Fonts::searcher()
-        //    .include_system_fonts(false)
-        //    .search_with(["./assets/fonts/"]);
-        let fonts = Fonts::searcher().include_system_fonts(true).search();
+        
+        // Load fonts based on configuration
+        let fonts = if self.use_system_fonts {
+            // Custom fonts + system fonts
+            debug!("Loading fonts from {} and system fonts", self.fonts_path.display());
+            Fonts::searcher()
+                .include_system_fonts(true)
+                .search_with([self.fonts_path.as_path()])
+        } else {
+            // Custom fonts only
+            debug!("Loading fonts from {} only", self.fonts_path.display());
+            Fonts::searcher()
+                .include_system_fonts(false)
+                .search_with([self.fonts_path.as_path()])
+        };
 
         // Debug loaded fonts
+        debug!("Total fonts loaded: {}", fonts.fonts.len());
         for (i, font) in fonts.fonts.iter().enumerate() {
             match font.path() {
                 Some(p) => debug!("Font {}: {}", i, p.display()),

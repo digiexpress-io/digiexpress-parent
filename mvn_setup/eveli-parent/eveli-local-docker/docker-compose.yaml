@@ -121,6 +121,21 @@ services:
     ports:
       - "8083:8000"
 
+  # tagomi pdf compiler
+  tagomi-pdf:
+    build:
+      context: ../../../rust_setup/crates/tagomi-pdf
+      dockerfile: Dockerfile
+    container_name: tagomi-pdf
+    ports:
+      - "8085:8085"
+    environment:
+      - FONTS_PATH=/app/assets/fonts
+      - USE_SYSTEM_FONTS=true
+    volumes:
+      - ../../../rust_setup/crates/tagomi-pdf/assets/fonts:/app/assets/fonts:ro
+    restart: always
+
 networks:
   dialob-backend:
     external: false

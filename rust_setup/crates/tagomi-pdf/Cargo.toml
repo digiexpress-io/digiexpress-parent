@@ -38,3 +38,6 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 # File handling
 tempfile = "3.23.0"
 base64 = "0.22"
+
+# HTTPS/TLS support
+axum-server = { version = "0.7", features = ["tls-openssl"] }
