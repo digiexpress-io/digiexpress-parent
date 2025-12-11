@@ -1195,5 +1195,6 @@ export const en = {
   'ledgercard.blackBook.description': 'Description',
   'ledgercard.blackBook.amount': 'Amount',
   'ledgercard.blackBook.type': 'Type',
-  'ledgercard.blackBook.bookDate': 'Created'
+  'ledgercard.blackBook.bookDate': 'Created',
+  'ledgercard.blackBook.details.none': 'No details found'
 }

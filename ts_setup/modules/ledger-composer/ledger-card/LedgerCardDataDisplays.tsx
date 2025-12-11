@@ -112,18 +112,17 @@ export const LedgerCardDataList: React.FC<{
     );
   };
 
-
 export const LedgerCardDataListExpander: React.FC<{
   columns: { key: string; label: string; width?: string }[];
-  rows: React.ReactNode[][];
-  expanderContent: React.ReactNode[][];
+  rows: Record<string, React.ReactNode>[];
+  expanderContent: React.ReactNode[];
 }> = ({ columns, rows, expanderContent }) => {
   const theme = useTheme();
   const [expandedRows, setExpandedRows] = React.useState<{ [key: number]: boolean }>({});
 
   const toggleRow = (index: number) => {
     setExpandedRows(prev => ({ ...prev, [index]: !prev[index] }));
-  }
+  };
 
   return (
     <>
@@ -144,35 +143,49 @@ export const LedgerCardDataListExpander: React.FC<{
       </List>
 
       {/* ROWS */}
-      {rows.map((cells, i) => (
+      {rows.map((row, i) => (
         <List dense sx={{ padding: theme.spacing(0.5) }} key={i}>
-          <ListItem dense sx={{ display: "flex", paddingLeft: 0, paddingRight: 0 }}>
+          <ListItem dense
+            sx={{
+              display: "flex",
+              paddingLeft: 0,
+              paddingRight: 0,
+              backgroundColor:
+                i % 2 === 0
+                  ? theme.palette.background.paper
+                  : theme.palette.action.hover
+            }}
+          >
             <IconButton size="small" onClick={() => toggleRow(i)} sx={{ mr: 1 }}>
               {expandedRows[i] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
 
-            {cells.map((cell, idx) => (
-              <ListItemText key={idx} sx={{ width: columns[idx]?.width ?? `${100 / columns.length}%` }}>
-                {cell}
+            {/* Render row cells */}
+            {columns.map((col, i) => (
+              <ListItemText key={i} sx={{ width: col.width ?? `${100 / columns.length}%` }}>
+                {row[col.key] ?? "-"}
               </ListItemText>
             ))}
           </ListItem>
 
           {/* Collapsible content */}
-          <Collapse in={expandedRows[i]} timeout="auto" unmountOnExit>
-            <Box sx={{
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingBottom: 1,
-              marginLeft: theme.spacing(5),
-              borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.8)}`,
-              backgroundColor: alpha(theme.palette.primary.main, 0.05)
-            }}>
-              <Typography variant="subtitle2">
-                {expanderContent[i].map(e => <div>{e}</div>)}
-              </Typography>
-            </Box>
-          </Collapse>
+          {expanderContent[i] && (
+            <Collapse in={expandedRows[i]} timeout="auto" unmountOnExit>
+              <Box sx={{
+                paddingLeft: theme.spacing(1),
+                paddingTop: theme.spacing(1),
+                paddingBottom: theme.spacing(1),
+                marginLeft: theme.spacing(5),
+                borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.8)}`,
+                backgroundColor: alpha(theme.palette.primary.main, 0.05)
+              }}
+              >
+                <Typography variant='subtitle2'>
+                  {expanderContent[i]}
+                </Typography>
+              </Box>
+            </Collapse>
+          )}
         </List>
       ))}
     </>

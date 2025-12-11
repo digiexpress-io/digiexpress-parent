@@ -173,17 +173,31 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
             ]}
 
             rows={blackBooks
-              .map(book => [
-                book.bookDescription ?? "-",
-                book.bookAmount.toString() ?? "-",
-                formatAnyDateShort(book.bookDate),
-                book.bookType ?? "-",
-              ])}
-            expanderContent={blackBooks
-              .map(book => (blackBookDetails[book.id] ?? []).flatMap(e => {
-                const logs: string[] = e.detailBody?.logs ?? [];
-                return logs.map(l => l.split(","));
-              }))} />
+              .map(book => ({
+                description: book.bookDescription ?? "-",
+                amount: book.bookAmount.toString() ?? "-",
+                bookDate: formatAnyDateShort(book.bookDate),
+                type: book.bookType ?? "-"
+              }))}
+            expanderContent={blackBooks.map(book => {
+              const details = blackBookDetails[book.id] ?? [];
+
+              if (details.length === 0) {
+                return <>{intl.formatMessage({ id: 'ledgercard.blackBook.details.none' })}</>
+              }
+
+              return (
+                <Box key={book.id}>
+                  {details.map(detail => {
+                    const logs: string[] = detail.detailBody?.logs ?? [];
+                    return logs.map((log, i) => (
+                      <div key={i}>{log}</div>
+                    ));
+                  })}
+                </Box>
+              );
+            })}
+          />
         </LedgerCard>
       );
     }
