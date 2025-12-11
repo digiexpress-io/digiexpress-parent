@@ -166,9 +166,9 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
           <LedgerCardDataList
             columns={[
               { key: "description", label: intl.formatMessage({ id: 'ledgercard.blackBook.description' }), width: "40%" },
-              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.blackBook.amount' }), width: "20%" },
-              { key: "bookDate", label: intl.formatMessage({ id: 'ledgercard.blackBook.bookDate' }), width: "20%" },
-              { key: "type", label: intl.formatMessage({ id: 'ledgercard.blackBook.type' }), width: "20%" }
+              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.blackBook.amount' }), width: "15%" },
+              { key: "bookDate", label: intl.formatMessage({ id: 'ledgercard.blackBook.bookDate' }), width: "15%" },
+              { key: "type", label: intl.formatMessage({ id: 'ledgercard.blackBook.type' }), width: "15%" },
             ]}
             rows={blackBooks
               .filter(b => b.ledgerId === ledger.id)
