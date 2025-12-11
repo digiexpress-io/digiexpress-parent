@@ -1,8 +1,6 @@
 import React from 'react'
-import { List, ListItem, ListItemButton, ListItemText, ListItemIcon, Box, Typography } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
-
-import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
 
 export const ValueSetChooserSimple: React.FC<{ 
   value?: string, 
