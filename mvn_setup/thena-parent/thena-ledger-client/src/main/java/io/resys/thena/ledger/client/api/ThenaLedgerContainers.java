@@ -37,6 +37,7 @@ import io.resys.thena.ledger.client.entities.BlackBook;
 import io.resys.thena.ledger.client.entities.BlackBookDetail;
 import io.resys.thena.ledger.client.entities.Ledger;
 import io.resys.thena.ledger.client.entities.LedgerEvent;
+import io.resys.thena.ledger.client.entities.LedgerTreeNode_Default;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
 import io.resys.thena.ledger.client.entities.Payment;
 import io.resys.thena.ledger.client.entities.Projection;
@@ -54,7 +55,7 @@ public interface ThenaLedgerContainers {
   
   interface LedgerTreeNode {
     BlackBook getBlackBook();
-    List<ProjectionDetail> getBlackBookDetails();
+    List<BlackBookDetail> getBlackBookDetails();
     
     List<LedgerTreeNode> getTill(String blackBookType);
     
@@ -89,7 +90,7 @@ public interface ThenaLedgerContainers {
     
     @JsonIgnore
     default LedgerTreeNode toTree() {
-      return new LedgerTreeNode_Default(this);
+      return LedgerTreeNode_Default.of(this);
     }
   }
 }
