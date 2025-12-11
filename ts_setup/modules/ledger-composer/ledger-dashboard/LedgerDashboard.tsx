@@ -29,8 +29,6 @@ const DashboardInternal: React.FC = () => {
 
   const style = styleConfig[cardTheme];
 
-  console.log(ledgerContainer)
-
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2>

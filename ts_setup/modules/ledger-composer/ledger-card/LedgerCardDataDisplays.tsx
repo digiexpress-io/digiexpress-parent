@@ -1,7 +1,8 @@
 import React from 'react';
-import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Box } from "@mui/material";
+import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Box, Collapse, IconButton, alpha } from "@mui/material";
 import { CardStyleDefinition } from "./cardThemeConfig";
 import { useIntl } from 'react-intl';
+import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 
 interface LedgerCardDataRowTextProps {
@@ -57,9 +58,10 @@ export const LedgerCardDataRowElement: React.FC<{ label: string, value: React.Re
   </>
   )
 }
+
 export const LedgerCardDataList: React.FC<{
   columns: { key: string; label: string; width?: string }[];
-  rows: React.ReactNode[][];
+  rows: Record<string, React.ReactNode>[];
 }> = ({ columns, rows }) => {
   const theme = useTheme();
 
@@ -82,7 +84,7 @@ export const LedgerCardDataList: React.FC<{
       </List>
 
       {/* ROWS */}
-      {rows.map((cells, i) => (
+      {rows.map((row, i) => (
         <List dense sx={{ padding: theme.spacing(0.5) }} key={i}>
           <ListItem dense
             sx={{
@@ -95,12 +97,82 @@ export const LedgerCardDataList: React.FC<{
                   : theme.palette.action.hover
             }}
           >
+            {columns.map((col, index) => (
+              <ListItemText
+                key={index}
+                sx={{ width: col.width ?? `${100 / columns.length}%` }}
+              >
+                {row[col.key]}
+              </ListItemText>
+            ))}
+          </ListItem>
+        </List>
+      ))}
+      </>
+    );
+  };
+
+
+export const LedgerCardDataListExpander: React.FC<{
+  columns: { key: string; label: string; width?: string }[];
+  rows: React.ReactNode[][];
+  expanderContent: React.ReactNode[][];
+}> = ({ columns, rows, expanderContent }) => {
+  const theme = useTheme();
+  const [expandedRows, setExpandedRows] = React.useState<{ [key: number]: boolean }>({});
+
+  const toggleRow = (index: number) => {
+    setExpandedRows(prev => ({ ...prev, [index]: !prev[index] }));
+  }
+
+  return (
+    <>
+      {/* HEADER */}
+      <List dense sx={{ padding: theme.spacing(0.5) }}>
+        <ListItem sx={{ display: "flex", paddingLeft: 0, paddingRight: 0 }}>
+          {columns.map(col => (
+            <Typography key={col.key}
+              sx={{
+                width: col.width ?? `${100 / columns.length}%`,
+                fontWeight: 500
+              }}
+            >
+              {col.label}
+            </Typography>
+          ))}
+        </ListItem>
+      </List>
+
+      {/* ROWS */}
+      {rows.map((cells, i) => (
+        <List dense sx={{ padding: theme.spacing(0.5) }} key={i}>
+          <ListItem dense sx={{ display: "flex", paddingLeft: 0, paddingRight: 0 }}>
+            <IconButton size="small" onClick={() => toggleRow(i)} sx={{ mr: 1 }}>
+              {expandedRows[i] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+
             {cells.map((cell, idx) => (
-              <ListItemText key={idx} sx={{ width: columns[idx]?.width ?? `${100 / columns.length}%`}}>
+              <ListItemText key={idx} sx={{ width: columns[idx]?.width ?? `${100 / columns.length}%` }}>
                 {cell}
               </ListItemText>
             ))}
           </ListItem>
+
+          {/* Collapsible content */}
+          <Collapse in={expandedRows[i]} timeout="auto" unmountOnExit>
+            <Box sx={{
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingBottom: 1,
+              marginLeft: theme.spacing(5),
+              borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.8)}`,
+              backgroundColor: alpha(theme.palette.primary.main, 0.05)
+            }}>
+              <Typography variant="subtitle2">
+                {expanderContent[i].map(e => <div>{e}</div>)}
+              </Typography>
+            </Box>
+          </Collapse>
         </List>
       ))}
     </>

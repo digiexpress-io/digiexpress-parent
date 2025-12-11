@@ -4,10 +4,11 @@ import { EditOutlined as EditOutlinedIcon } from '@mui/icons-material';
 import { CreditCard as CreditCardIcon } from '@mui/icons-material';
 import { AccountBalanceWallet as AccountBalanceWalletIcon } from '@mui/icons-material';
 import { RequestPageOutlined as RequestPageOutlinedIcon } from '@mui/icons-material';
-import { CardId, LedgerCardDataList, LedgerCardDataRowText, LedgerCardTransitivesRow, StartAdornmentIcon, useCardConfig, useCardThemeConfig } from '../ledger-card';
+import { CardId, LedgerCardDataList, LedgerCardDataRowText, LedgerCardDataListExpander, StartAdornmentIcon, useCardConfig, useCardThemeConfig } from '../ledger-card';
 import { useLedger } from '@dxs-ts/ledger-api';
 import { LedgerCard } from '../ledger-card';
 import { DateTime } from 'luxon';
+import { Box, Typography } from '@mui/material';
 
 
 export type FactoryCardId = 'ledger_main' | 'ledger_payments' | 'ledger_money_requests' | 'ledger_black_books';
@@ -25,7 +26,7 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { ledgerContainer } = useLedger();
-  const { ledger, payments, moneyRequests, blackBooks } = ledgerContainer;
+  const { ledger, payments, moneyRequests, blackBooks, blackBookDetails } = ledgerContainer;
 
   const {
     cardTheme, editingCardId, toggleReview,
@@ -105,12 +106,12 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
               { key: "date", label: intl.formatMessage({ id: 'ledgercard.payment.date' }), width: "20%" },
               { key: "type", label: intl.formatMessage({ id: 'ledgercard.payment.type' }), width: "20%" }
             ]}
-            rows={payments.map(p => [
-              p.paymentDescription ?? "-",
-              p.paymentAmount,
-              formatAnyDateShort(p.paymentDate),
-              p.paymentType
-            ])}
+            rows={payments.map(p => ({
+              description: p.paymentDescription ?? "-",
+              amount: p.paymentAmount,
+              date: formatAnyDateShort(p.paymentDate),
+              type: p.paymentType
+            }))}
           />
         </LedgerCard>
       );
@@ -138,12 +139,12 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
             ]}
             rows={moneyRequests.map(mr => {
               const payment = payments.find(p => p.id === mr.paymentId);
-              return [
-                payment?.paymentDescription ?? "-",
-                mr.requestAmount,
-                formatAnyDateShort(mr.requestTargetDate),
-                mr.requestType
-              ]
+              return {
+                description: payment?.paymentDescription ?? "-",
+                amount: mr.requestAmount,
+                date: formatAnyDateShort(mr.requestTargetDate),
+                type: mr.requestType
+              };
             })}
           />
         </LedgerCard>
@@ -163,22 +164,26 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
           onDoubleClick={handleEdit}
         //editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
         >
-          <LedgerCardDataList
+          <LedgerCardDataListExpander
             columns={[
               { key: "description", label: intl.formatMessage({ id: 'ledgercard.blackBook.description' }), width: "40%" },
-              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.blackBook.amount' }), width: "15%" },
-              { key: "bookDate", label: intl.formatMessage({ id: 'ledgercard.blackBook.bookDate' }), width: "15%" },
-              { key: "type", label: intl.formatMessage({ id: 'ledgercard.blackBook.type' }), width: "15%" },
+              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.blackBook.amount' }), width: "20%" },
+              { key: "bookDate", label: intl.formatMessage({ id: 'ledgercard.blackBook.bookDate' }), width: "20%" },
+              { key: "type", label: intl.formatMessage({ id: 'ledgercard.blackBook.type' }), width: "20%" },
             ]}
+
             rows={blackBooks
-              .filter(b => b.ledgerId === ledger.id)
               .map(book => [
-                book?.bookDescription ?? "-",
-                book?.bookAmount.toString() ?? "-",
+                book.bookDescription ?? "-",
+                book.bookAmount.toString() ?? "-",
                 formatAnyDateShort(book.bookDate),
-                book?.bookType ?? "-",
+                book.bookType ?? "-",
               ])}
-          />
+            expanderContent={blackBooks
+              .map(book => (blackBookDetails[book.id] ?? []).flatMap(e => {
+                const logs: string[] = e.detailBody?.logs ?? [];
+                return logs.map(l => l.split(","));
+              }))} />
         </LedgerCard>
       );
     }
