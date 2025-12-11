@@ -1180,5 +1180,20 @@ export const en = {
   'ledgerTable.col.header.ledgerNumber': 'Ledger number',
   'ledgerTable.col.header.updatedAt': 'Updated',
   'ledgercard.title.ledgerMain': 'Ledger {ledgerName}',
-  'ledgercard.ledgerMain.description': 'Description'
+  'ledgercard.title.ledgerPayments': 'Payments',
+  'ledgercard.title.ledgerMoneyRequests': 'Money requests',
+  'ledgercard.title.ledgerBlackBooks': 'Account details',
+  'ledgercard.ledgerMain.description': 'Description',
+  'ledgercard.payment.amount': 'Amount',
+  'ledgercard.payment.description': 'Description',
+  'ledgercard.payment.date': 'Date',
+  'ledgercard.payment.type': 'Type',
+  'ledgercard.moneyRequest.description': 'Payment description',
+  'ledgercard.moneyRequest.type': 'Type',
+  'ledgercard.moneyRequest.targetDate': 'Target date',
+  'ledgercard.moneyRequest.amount': 'Amount',
+  'ledgercard.blackBook.description': 'Description',
+  'ledgercard.blackBook.amount': 'Amount',
+  'ledgercard.blackBook.type': 'Type',
+  'ledgercard.blackBook.bookDate': 'Created'
 }

@@ -1,29 +1,31 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
 import { EditOutlined as EditOutlinedIcon } from '@mui/icons-material';
-
-
-import { CardId, LedgerCardDataRowText, StartAdornmentIcon, useCardConfig, useCardThemeConfig } from '../ledger-card';
+import { CreditCard as CreditCardIcon } from '@mui/icons-material';
+import { AccountBalanceWallet as AccountBalanceWalletIcon } from '@mui/icons-material';
+import { RequestPageOutlined as RequestPageOutlinedIcon } from '@mui/icons-material';
+import { CardId, LedgerCardDataList, LedgerCardDataRowText, LedgerCardTransitivesRow, StartAdornmentIcon, useCardConfig, useCardThemeConfig } from '../ledger-card';
 import { useLedger } from '@dxs-ts/ledger-api';
 import { LedgerCard } from '../ledger-card';
+import { DateTime } from 'luxon';
 
 
-export type FactoryCardId = 'ledger_main';
+export type FactoryCardId = 'ledger_main' | 'ledger_payments' | 'ledger_money_requests' | 'ledger_black_books';
 
 export const LEDGER_CARD_IDS: FactoryCardId[] = [
   'ledger_main',
+  'ledger_payments',
+  'ledger_money_requests',
+  'ledger_black_books'
 ];
 
-const defaultExpandedCards: FactoryCardId[] = ['ledger_main'];
+const defaultExpandedCards: FactoryCardId[] = ['ledger_main', 'ledger_payments', 'ledger_money_requests', 'ledger_black_books'];
 
 export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: FactoryCardId = initProps.cardId as FactoryCardId;
   const { ledgerContainer } = useLedger();
-  const { ledger, payments } = ledgerContainer;
-
-  //console.log(ledger, payments)
-
+  const { ledger, payments, moneyRequests, blackBooks } = ledgerContainer;
 
   const {
     cardTheme, editingCardId, toggleReview,
@@ -79,6 +81,104 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
         //editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
         >
           <LedgerCardDataRowText label={intl.formatMessage({ id: 'ledgercard.ledgerMain.description' })} value={ledger.description} style={style} />
+        </LedgerCard >
+      );
+    }
+    case 'ledger_payments': {
+      return (
+        <LedgerCard title={intl.formatMessage({ id: 'ledgercard.title.ledgerPayments' })}
+          {...commonProps}
+          isMenu
+          showFlashyToggle={true}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={true}
+          onEdit={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={CreditCardIcon} />}
+          onDoubleClick={handleEdit}
+        //editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
+        >
+          <LedgerCardDataList
+            columns={[
+              { key: "description", label: intl.formatMessage({ id: 'ledgercard.payment.description' }), width: "40%" },
+              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.payment.amount' }), width: "20%" },
+              { key: "date", label: intl.formatMessage({ id: 'ledgercard.payment.date' }), width: "20%" },
+              { key: "type", label: intl.formatMessage({ id: 'ledgercard.payment.type' }), width: "20%" }
+            ]}
+            rows={payments.map(p => [
+              p.paymentDescription ?? "-",
+              p.paymentAmount,
+              formatAnyDateShort(p.paymentDate),
+              p.paymentType
+            ])}
+          />
+        </LedgerCard>
+      );
+    }
+    case 'ledger_money_requests': {
+      return (
+        <LedgerCard title={intl.formatMessage({ id: 'ledgercard.title.ledgerMoneyRequests' })}
+          {...commonProps}
+          isMenu
+          showFlashyToggle={true}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={true}
+          onEdit={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={RequestPageOutlinedIcon} />}
+          onDoubleClick={handleEdit}
+        //editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
+        >
+          <LedgerCardDataList
+            columns={[
+              { key: "description", label: intl.formatMessage({ id: 'ledgercard.moneyRequest.description' }), width: "40%" },
+              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.moneyRequest.amount' }), width: "20%" },
+              { key: "date", label: intl.formatMessage({ id: 'ledgercard.moneyRequest.targetDate' }), width: "20%" },
+              { key: "type", label: intl.formatMessage({ id: 'ledgercard.moneyRequest.type' }), width: "20%" }
+            ]}
+            rows={moneyRequests.map(mr => {
+              const payment = payments.find(p => p.id === mr.paymentId);
+              return [
+                payment?.paymentDescription ?? "-",
+                mr.requestAmount,
+                formatAnyDateShort(mr.requestTargetDate),
+                mr.requestType
+              ]
+            })}
+          />
+        </LedgerCard>
+      );
+    }
+    case 'ledger_black_books': {
+      return (
+        <LedgerCard title={intl.formatMessage({ id: 'ledgercard.title.ledgerBlackBooks' })}
+          {...commonProps}
+          isMenu
+          showFlashyToggle={true}
+          showEditOnMenu={true}
+          showEditButton={true}
+          showReviewOnMenu={true}
+          onEdit={handleEdit}
+          startAdornmentIcon={<StartAdornmentIcon icon={AccountBalanceWalletIcon} />}
+          onDoubleClick={handleEdit}
+        //editDialog={isEditOpen && (<CustomerMessagesEditDialog open onClose={handleEditClose} />)}
+        >
+          <LedgerCardDataList
+            columns={[
+              { key: "description", label: intl.formatMessage({ id: 'ledgercard.blackBook.description' }), width: "40%" },
+              { key: "amount", label: intl.formatMessage({ id: 'ledgercard.blackBook.amount' }), width: "20%" },
+              { key: "bookDate", label: intl.formatMessage({ id: 'ledgercard.blackBook.bookDate' }), width: "20%" },
+              { key: "type", label: intl.formatMessage({ id: 'ledgercard.blackBook.type' }), width: "20%" }
+            ]}
+            rows={blackBooks
+              .filter(b => b.ledgerId === ledger.id)
+              .map(book => [
+                book?.bookDescription ?? "-",
+                book?.bookAmount.toString() ?? "-",
+                formatAnyDateShort(book.bookDate),
+                book?.bookType ?? "-",
+              ])}
+          />
         </LedgerCard>
       );
     }
@@ -86,3 +186,10 @@ export const LedgerCardFactory: React.FC<{ cardId: CardId }> = (initProps) => {
     default: return null;
   }
 }
+
+function formatAnyDateShort(value: Date | string | undefined): string {
+  if (!value) return '--';
+  const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
+  return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
+}
+
