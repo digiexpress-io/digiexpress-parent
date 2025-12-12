@@ -1,5 +1,7 @@
 package io.resys.thena.ledger.client.api;
 
+import java.time.LocalDate;
+
 /*-
  * #%L
  * thena-ledger-client
@@ -25,6 +27,7 @@ package io.resys.thena.ledger.client.api;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.immutables.value.Value;
 
@@ -57,10 +60,13 @@ public interface ThenaLedgerContainers {
     BlackBook getBlackBook();
     List<BlackBookDetail> getBlackBookDetails();
     
+    // includes the node type
     List<LedgerTreeNode> getTill(String blackBookType);
     
     Optional<LedgerTreeNode> getPrevious();
     Optional<LedgerTreeNode> getNext();
+    
+    Stream<LedgerTreeNode> getFrom(LocalDate targetDateInclusive);
   }
   
 

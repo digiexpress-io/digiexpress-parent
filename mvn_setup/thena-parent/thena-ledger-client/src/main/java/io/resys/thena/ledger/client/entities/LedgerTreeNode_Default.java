@@ -1,5 +1,6 @@
 package io.resys.thena.ledger.client.entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -24,8 +25,10 @@ import java.util.Collections;
  */
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerTreeNode;
@@ -36,8 +39,8 @@ import lombok.RequiredArgsConstructor;
 public class LedgerTreeNode_Default implements LedgerTreeNode {
   private final BlackBook blackBook;
   private final List<BlackBookDetail> blackBookDetails;
-  private final LedgerTreeNode next;
-  private LedgerTreeNode previous;
+  private final LedgerTreeNode_Default next;
+  private LedgerTreeNode_Default previous;
 
   @Override
   public BlackBook getBlackBook() {
@@ -51,11 +54,13 @@ public class LedgerTreeNode_Default implements LedgerTreeNode {
   public List<LedgerTreeNode> getTill(String blackBookType) {
     final var result = new ArrayList<LedgerTreeNode>();
     LedgerTreeNode from  = this;
-    while(from != null && !from.getBlackBook().getBookType().equals(blackBookType)) {
+    while(from != null) {
       result.add(from);
+      if(from.getBlackBook().getBookType().equals(blackBookType)) {
+        break;
+      }
       from = this.previous;
     }
-    
     return Collections.unmodifiableList(result);
   }
   @Override
@@ -66,8 +71,25 @@ public class LedgerTreeNode_Default implements LedgerTreeNode {
   public Optional<LedgerTreeNode> getNext() {
     return Optional.ofNullable(next);
   }
+  @Override
+  public Stream<LedgerTreeNode> getFrom(LocalDate targetDateInclusive) {
+    Objects.requireNonNull(targetDateInclusive, () -> "targetDateInclusive cannot be null");
+    
+    return Stream.iterate(
+      last(),
+      node -> node != null && !node.getBlackBook().getBookDate().isBefore(targetDateInclusive),
+      node -> node.getPrevious().orElse(null)
+    );
+  }
   
-  public void setParent(LedgerTreeNode previous) {
+  public LedgerTreeNode_Default last() {
+    if(this.next == null) {
+      return this;
+    }
+    return this.next.last();
+  }
+  
+  public void setParent(LedgerTreeNode_Default previous) {
     if(this.previous != null) {
       throw new IllegalArgumentException("previous is already set, can't change it!");
     }
@@ -89,7 +111,6 @@ public class LedgerTreeNode_Default implements LedgerTreeNode {
       }
       visited.add(tipId);
       
-      
       final BlackBook bb = bbs.get(tipId);
       final List<BlackBookDetail> bbDetails = Optional
           .ofNullable(ledger.getBlackBookDetails().get(bb.getId()))
@@ -105,7 +126,6 @@ public class LedgerTreeNode_Default implements LedgerTreeNode {
       }
       next = target;
     }
-
     return lastNode;
   }
 }

@@ -192,6 +192,9 @@ public class Yearly_FeemiSavings implements CalculationFormula {
     
     // Annual Policy Fee Distribution (Formula 1): (Fund Subscription Value / Total Portfolio Value) × EUR 36
     final var totalPortfolioValue = getTotalPortfolioValue();
+    if (totalPortfolioValue.compareTo(BigDecimal.ZERO) == 0) {
+      throw new IllegalStateException("Total portfolio value cannot be zero for yearly calculation");
+    }
     final var subscriptionWeight = currentValue.divide(totalPortfolioValue, 6, RoundingMode.HALF_UP);
     final var policyFeePerSubscription = ANNUAL_POLICY_FEE.multiply(subscriptionWeight).setScale(2, RoundingMode.HALF_UP);
     
@@ -200,8 +203,20 @@ public class Yearly_FeemiSavings implements CalculationFormula {
     
     // Fund Performance Tracking (Formula 3): (End Price - Start Price) / Start Price × 100
     final var lastYearDate = findLastYearlyCalculationDate();
-    final var fundStartPrice = ctx.getFundQuery().getOne(allocation.getInvPlanAllocCode(), lastYearDate).getCalculationValue().getPriceValue();
-    final var fundEndPrice = ctx.getFundQuery().getOne(allocation.getInvPlanAllocCode(), ctx.getToday()).getCalculationValue().getPriceValue();
+    final var fundStart = ctx.getFundQuery().getOne(allocation.getInvPlanAllocCode(), lastYearDate);
+    final var fundEnd = ctx.getFundQuery().getOne(allocation.getInvPlanAllocCode(), ctx.getToday());
+    
+    if (fundStart == null || fundEnd == null) {
+      throw new IllegalStateException("Fund price data not available for allocation: " + allocation.getInvPlanAllocCode());
+    }
+    
+    final var fundStartPrice = fundStart.getCalculationValue().getPriceValue();
+    final var fundEndPrice = fundEnd.getCalculationValue().getPriceValue();
+    
+    if (fundStartPrice.compareTo(BigDecimal.ZERO) == 0) {
+      throw new IllegalStateException("Fund start price cannot be zero for performance calculation");
+    }
+    
     final var fundPerformance = fundEndPrice.subtract(fundStartPrice).divide(fundStartPrice, 6, RoundingMode.HALF_UP);
     
     // Create detailed logs with formula references
@@ -266,11 +281,21 @@ public class Yearly_FeemiSavings implements CalculationFormula {
           .orElse(BigDecimal.ZERO);
     }
     
-    return BigDecimal.ZERO; // First year
+    // First year scenario: Calculate the baseline from contract start
+    // Sum all allocation values from contract start to last yearly calculation date
+    final var allNodes = ctx.getLedger().toTree().getFrom(lastYearlyDate);
+    return allNodes
+        .flatMap(node -> node.getBlackBookDetails().stream())
+        .filter(detail -> allocationId.equals(detail.getTargetId().orElse(null)))
+        .filter(detail -> 
+            BlackBookConstants.SUBTYPE_PAYMENT_ALLOCATED_AMOUNT.equals(detail.getDetailSubType().orElse(null)) ||
+            BlackBookConstants.SUBTYPE_ALLOCATION_GROWTH.equals(detail.getDetailSubType().orElse(null)))
+        .map(detail -> detail.getDetailDeltaAmount().orElse(BigDecimal.ZERO))
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
   
   private BigDecimal getCurrentFundSubscriptionValue(String allocationId) {
-    // Use the monthly calculation pattern to find current subscription value
+    // Use tree navigation to find the most recent allocation value
     final var tree = ctx.getLedger().toTree();
     
     // Get all nodes from current back to the last yearly calculation (or beginning)
@@ -279,7 +304,8 @@ public class Yearly_FeemiSavings implements CalculationFormula {
     // Find the baseline value from the last yearly calculation (if any)
     BigDecimal baselineValue = getFundSubscriptionValueAtYearStart(allocationId);
     
-    // Sum all changes since the last yearly calculation
+    // Sum all net changes (deltaAmount) since the last yearly calculation
+    // This properly tracks the running balance changes for the allocation
     final BigDecimal yearlyChanges = nodesSinceLastYearly.stream()
         .filter(node -> !BlackBookConstants.TYPE_YEARLY_CALCULATION.equals(node.getBlackBook().getBookType()))
         .flatMap(node -> node.getBlackBookDetails().stream())
@@ -287,7 +313,7 @@ public class Yearly_FeemiSavings implements CalculationFormula {
         .filter(detail -> 
             BlackBookConstants.SUBTYPE_PAYMENT_ALLOCATED_AMOUNT.equals(detail.getDetailSubType().orElse(null)) ||
             BlackBookConstants.SUBTYPE_ALLOCATION_GROWTH.equals(detail.getDetailSubType().orElse(null)))
-        .map(detail -> detail.getDetailAmount())
+        .map(detail -> detail.getDetailDeltaAmount().orElse(BigDecimal.ZERO))
         .reduce(BigDecimal.ZERO, BigDecimal::add);
     
     return baselineValue.add(yearlyChanges);
