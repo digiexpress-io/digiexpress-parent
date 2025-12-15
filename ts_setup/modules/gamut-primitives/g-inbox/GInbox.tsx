@@ -4,14 +4,13 @@ import { useIntl } from 'react-intl';
 import { Typography, useThemeProps, Grid2, Avatar } from '@mui/material';
 
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
-import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
+import { GInboxFormReviewProps } from '../g-inbox-form-review';
 import { GInboxAttachmentsProps } from '../g-inbox-attachments';
 
-import { CommsApi, OfferApi } from '@dxs-ts/gamut-api';
+import { OfferApi } from '@dxs-ts/gamut-api';
 
 import { GFlex } from '../g-flex';
-import { GInboxFormAssignedNotComplete } from '../g-inbox-form-assigned-not-complete';
-import { useInboxItems, useSenderName } from './utils';
+import { useInboxItems } from './utils';
 
 
 
@@ -42,9 +41,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   const classes = useUtilityClasses();
   const inboxItems = useInboxItems();
 
-
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
-  const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
 
 
   return (
@@ -79,54 +76,47 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
       </GFlex>
 
 
-      {inboxItems.map(({ subject, contract, offerName, contractStatus, subForms }) => {
+      {inboxItems.map(({ subject, contract, offerName, contractStatus, senderName, attachmentCount }) => <InboxItem
+        id={subject.id}
+        taskRefId={contract.referenceId}
+        key={subject.id}
+        onClick={props.slotProps.item.onClick!}
+        senderName={senderName}
+        sentAt={subject.lastExchange?.created ?? subject.created}
+        title={offerName}
+        subTitle={subject.lastExchange?.commentText ?? ''}
+        contractStatus={contractStatus}
+      >
+        <GInboxAttachmentCount attachmentCount={attachmentCount} />
+      </InboxItem>)
+      }
 
-          return (<InboxItem
-            id={subject.id}
-            taskRefId={contract.referenceId}
-            key={subject.id}
-            onClick={props.slotProps.item.onClick!}
-            senderName={useSenderName(subject)}
-            sentAt={subject.lastExchange?.created ?? subject.created}
-            title={offerName}
-            subTitle={subject.lastExchange?.commentText ?? ''}
-            contractStatus={contractStatus}
-          >
-
-            {(() => {
-             const documents = subject.documents.length;
-
-              return (
-                <>
-                  <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
-                    <Typography component='span' className={classes.files}>
-                      {intl.formatMessage({ id: 'gamut.forms.attachments' })}
-                    </Typography>
-                  </GFlex>
-
-                  {documents ? (
-                    <Avatar className={classes.filesCount}>
-                      <Typography>{documents}</Typography>
-                    </Avatar>
-                  ) : (
-                    <Avatar className={classes.noValue}>
-                      {intl.formatMessage({ id: 'gamut.noValueIndicator' })}
-                    </Avatar>
-                  )}
-                </>
-              );
-            })()}
-
-            {subForms.map(({ formId, formName, isOpen, offer }) => {
-              if (isOpen && offer) {
-                return (<GInboxFormAssignedNotComplete key={formId} onClick={() => props.onOpenOffer(offer)} formName={formName} />)
-              }
-              return (<FormReview key={formId} formName={offerName} formId={formId} />)
-            })
-            }
-          </InboxItem>
-          )
-        })}
     </GInboxRoot>
   )
 }
+
+const GInboxAttachmentCount: React.FC<{ attachmentCount: number }> = ({ attachmentCount }) => {
+  const classes = useUtilityClasses();
+  const intl = useIntl();
+
+  return (
+    <>
+      <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
+        <Typography component='span' className={classes.files}>
+          {intl.formatMessage({ id: 'gamut.forms.attachments' })}
+        </Typography>
+      </GFlex>
+
+      {attachmentCount ? (
+        <Avatar className={classes.filesCount}>
+          <Typography>{attachmentCount}</Typography>
+        </Avatar>
+      ) : (
+        <Avatar className={classes.noValue}>
+          {intl.formatMessage({ id: 'gamut.noValueIndicator' })}
+        </Avatar>
+      )}
+    </>
+  )
+}
+
