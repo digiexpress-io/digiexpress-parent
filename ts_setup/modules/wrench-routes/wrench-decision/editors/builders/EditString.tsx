@@ -8,7 +8,7 @@ import { StringBuilder } from './'
 
 
 export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: string) => void }> = (props) => {
-
+  const values = props.builder.getValues();
   const [value, setValue] = React.useState<string>('');
 
   const handleOperatorChange = (value: string) => {
@@ -25,22 +25,18 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
     props.onChange(props.builder.remove(id));
   }
 
-  const list = props.builder.getValues()
-    .map((value, index) => (
-      <ListItem disablePadding key={index}>
-        <Box display="flex" width="100%" alignItems="center">
-          <Box flexShrink={0}>
-            <ListItemButton onClick={() => handleRemoveValue(index)}>
-              <ListItemIcon>
-                <DeleteOutlineIcon />
-              </ListItemIcon>
-            </ListItemButton>
-          </Box>
-          <Box flexGrow={1}>
-            <ListItemText primary={value} />
-          </Box>
-        </Box>
-      </ListItem>));
+  const list = values.map((value, index) => (
+    <ListItem disablePadding key={index}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <ListItemButton onClick={() => handleRemoveValue(index)} sx={{ justifyContent: 'center' }}>
+          <ListItemIcon sx={{ minWidth: 'auto' }}>
+            <DeleteOutlineIcon />
+          </ListItemIcon>
+        </ListItemButton>
+        <ListItemText primary={value} />
+      </Box>
+    </ListItem>
+  ));
 
 
   return (
@@ -69,8 +65,8 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
     </Grid2>
 
     <Box>
-      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected' /></InputLabel>
-      <List>{list}</List>
+      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected.values' />:</InputLabel>
+      {values.length > 0 ? <List>{list}</List> : <Box sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected.empty' /></Box>}
     </Box>
   </Box>
   );

@@ -1,6 +1,6 @@
 import React from 'react'
-import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Divider, Box } from '@mui/material';
-import { FormattedMessage } from 'react-intl'
+import { List, ListItem, ListItemButton, ListItemText, ListItemIcon, Box, Typography } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl'
 
 import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
 import * as Burger from '@dxs-ts/eveli-primitives';
@@ -29,7 +29,7 @@ const addCommand = (command: HdesApi.AstCommand, commands: HdesApi.AstCommand[])
 
 
 export const EditValueSet: React.FC<EditValueSetProps> = ({ valueSet, setValueSet, commands, setCommands, headerId }) => {
-
+  const intl = useIntl();
   const [value, setValue] = React.useState<string>('');
 
   const handleAddValue = (value?: string) => {
@@ -46,19 +46,15 @@ export const EditValueSet: React.FC<EditValueSetProps> = ({ valueSet, setValueSe
     setCommands(addCommand({ type: 'SET_VALUE_SET', id: headerId, value: newValueSet.join(", ") }, commands));
   }
 
-  const list = valueSet && valueSet.length > 0 && valueSet.map((value, index) => (
+  const list = valueSet.map((value, index) => (
     <ListItem disablePadding key={index}>
-      <Box display="flex">
-        <Box flexGrow={0}>
-          <ListItemButton onClick={() => handleRemoveValue(index)}>
-            <ListItemIcon>
-              <DeleteOutlineIcon />
-            </ListItemIcon>
-          </ListItemButton>
-        </Box>
-        <Box flexGrow={1}>
-          <ListItemText primary={value} />
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <ListItemButton onClick={() => handleRemoveValue(index)} sx={{ justifyContent: 'center' }}>
+          <ListItemIcon sx={{ minWidth: 'auto' }}>
+            <DeleteOutlineIcon />
+          </ListItemIcon>
+        </ListItemButton>
+        <ListItemText primary={value} />
       </Box>
     </ListItem>
   ));
@@ -66,16 +62,17 @@ export const EditValueSet: React.FC<EditValueSetProps> = ({ valueSet, setValueSe
 
   return (
     <>
-      <Divider sx={{ mt: 2 }}/>
-      <InputLabel sx={{ mt: 1, fontWeight: 'bold', color: '#000' }}><FormattedMessage id='decisions.valueSet' /></InputLabel>
-      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.valueSet.description' /></InputLabel>
       <Burger.TextField
         label='decisions.valueSet.add'
         value={value}
         onChange={setValue}
-        onEnter={() => handleAddValue(value)} />
-      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.valueSet.current' /></InputLabel>
-      <List>{list}</List>
+        placeholder={intl.formatMessage({ id: 'decisions.valueSet.add.placeholder' })}
+        onEnter={() => {
+          handleAddValue(value)
+          setValue('')
+        }} />
+      <Typography sx={{ mt: 2 }}><FormattedMessage id='decisions.valueSet.current' />:</Typography>
+      {valueSet.length > 0 ? <List>{list}</List> : <Typography><FormattedMessage id='decisions.valueSet.current.empty' /></Typography>}
     </>
   );
 
