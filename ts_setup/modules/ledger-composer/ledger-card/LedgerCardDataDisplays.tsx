@@ -1,18 +1,21 @@
 import React from 'react';
 import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Box, Collapse, IconButton, alpha } from "@mui/material";
-import { CardStyleDefinition } from "./cardThemeConfig";
+import { CardStyleDefinition, useCardThemeConfig } from "./cardThemeConfig";
 import { useIntl } from 'react-intl';
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { useCardConfig } from './CardConfigContext';
 
 
 interface LedgerCardDataRowTextProps {
   label: string;
   value: string | string[] | undefined;
-  style: CardStyleDefinition;
 }
 
-export const LedgerCardDataRowText: React.FC<LedgerCardDataRowTextProps> = ({ label, value, style }) => {
+export const LedgerCardDataRowText: React.FC<LedgerCardDataRowTextProps> = ({ label, value }) => {
   const theme = useTheme();
+  const styleConfig = useCardThemeConfig();
+  const { cardTheme } = useCardConfig();
+  const style = styleConfig[cardTheme];
 
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>

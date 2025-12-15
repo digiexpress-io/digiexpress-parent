@@ -44,7 +44,6 @@ export const CardConfigContextProvider: React.FC<PropsWithChildren<CardConfigCon
   const [cardTheme, setCardTheme] = React.useState<CardStyleKey>(props.cardTheme ?? 'default');
 
 
-
   const contextValue: CardConfig = React.useMemo(() => {
     return {
       cardTheme, isReviewOpen, editingCardId, cardOrder, expandedCards,

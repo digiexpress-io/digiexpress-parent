@@ -23,7 +23,9 @@ function hook(_props: {}) {
               ledgerId: ledger.id,
               contractNumber: ledger.name,
               createdAt: new Date(ledger.transitives?.createdAt!),
-              updatedAt: new Date(ledger.transitives?.updatedTreeAt!)
+              updatedAt: new Date(ledger.transitives?.updatedTreeAt!),
+              currentBlackBook: ledger.currentBlackBookId ? container.blackBooks.find(bb => bb.id === ledger.currentBlackBookId): undefined
+              
             };
             return { ...result };
           });

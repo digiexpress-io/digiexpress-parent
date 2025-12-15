@@ -8,10 +8,12 @@ import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { anyDateFilter, TableDateFilter, WithTableStyles } from '@dxs-ts/xui-table';
 import { LedgerApi, useLedgerBackend } from '@dxs-ts/ledger-api';
+import { FormatAnyDateTimeShort } from '@dxs-ts/xui-datetime';
+
 
 import { filterContractRefOrSubjectFn } from './tableHelpers';
 import { IndicatorSubject } from './IndicatorSubject';
-import { DateTime } from 'luxon';
+
 
 
 export const LEDGER_TABLE_QUERY_KEY = 'find-all-ledger';
@@ -41,7 +43,7 @@ export const LedgerTable: React.FC = () => {
     {
       header: intl.formatMessage({ id: 'ledgerTable.col.header.updatedAt' }),
       accessorKey: 'updatedAt',
-      cell: (updatedAt) => flexRender(AnyTaskDateTimeShort, { value: updatedAt.getValue() }),
+      cell: (updatedAt) => flexRender(FormatAnyDateTimeShort, { value: updatedAt.getValue() }),
       filterFn: filterUpdated,
       size: 150,
       minSize: 100,
@@ -50,7 +52,39 @@ export const LedgerTable: React.FC = () => {
       enableColumnFilter: true,
       meta: { isDate: true },
     },
-  
+    {
+      header: intl.formatMessage({ id: 'ledgerTable.col.header.lastChangeType' }),
+      accessorKey: 'currentBlackBook',
+      cell: (ledger) => flexRender((props) => <>{props.value}</>, { value: ledger.getValue().bookType }),
+      size: 150,
+      minSize: 100,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+      meta: { isDate: true },
+    },
+    {
+      header: intl.formatMessage({ id: 'ledgerTable.col.header.netAddedToAccount' }),
+      accessorKey: 'currentBlackBook',
+      cell: (ledger) => flexRender((props) => <>{props.value}</>, { value: ledger.getValue().bookDeltaAmount }),
+      size: 150,
+      minSize: 100,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+      meta: { isDate: true },
+    },
+    {
+      header: intl.formatMessage({ id: 'ledgerTable.col.header.removedFromAccount' }),
+      accessorKey: 'currentBlackBook',
+      cell: (ledger) => flexRender((props) => <>{props.value}</>, { value: ledger.getValue().bookOutflowAmount }),
+      size: 150,
+      minSize: 100,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+      meta: { isDate: true },
+    }
   ]
 
 
@@ -69,21 +103,6 @@ export const LedgerTable: React.FC = () => {
       />
     </>
   );
-}
-
-
-
-const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  const rawDate = value;
-
-  if (!rawDate) {
-    return <div>--</div>
-  }
-  const jsDate = new Date(value);
-  const dateTime = DateTime.fromJSDate(jsDate).setLocale("fi");
-  const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
-
-  return <div>{formatted}</div>;
 }
 
 const filterUpdated: FilterFnOption<LedgerApi.LedgerSummary> = (row, _columnId: string, filterValue: TableDateFilter) => {
