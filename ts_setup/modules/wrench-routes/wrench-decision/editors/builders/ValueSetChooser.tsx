@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Box } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemText, ListItemIcon, Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
@@ -8,6 +8,7 @@ import { StringBuilder } from './'
 
 
 export const ValueSetChooser: React.FC<{ builder: StringBuilder, valueSet: string[], onChange: (value: string) => void }> = (props) => {
+  const values = props.builder.getValues();
 
   const handleOperatorChange = (value: string) => {
     props.onChange(props.builder.withOperator(value))
@@ -23,45 +24,44 @@ export const ValueSetChooser: React.FC<{ builder: StringBuilder, valueSet: strin
     props.onChange(props.builder.remove(id));
   }
 
-  const list = props.builder.getValues()
-    .map((value, index) => (
-      <ListItem disablePadding key={index}>
-        <Box display="flex">
-          <Box flexGrow={0}>
-            <ListItemButton onClick={() => handleRemoveValue(index)}>
-              <ListItemIcon>
-                <DeleteOutlineIcon />
-              </ListItemIcon>
-            </ListItemButton>
-          </Box>
-          <Box flexGrow={1}>
-            <ListItemText primary={value} />
-          </Box>
-        </Box>
-      </ListItem>));
-
-
-  return (<>
-
-    <Burger.Select
-        label="decisions.cells.newvalue.string.comparisonType"
-        onChange={handleOperatorChange}
-        selected={props.builder.getOperator()}
-        empty={{ id: '', label: 'decisions.cells.newvalue.string.empty' }}
-        items={props.builder.operators.map((v) => ({
-        id: v.value,
-        value: (<ListItemText primary={v.text} />)
-        }))}
-    />
-    <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.available' /></InputLabel>
-    {props.valueSet.map((v) => (
-        <ListItemButton key={v} onClick={() => handleAddValue(v)}>
-            <ListItemText primary={v} />
+  const list = values.map((value, index) => (
+    <ListItem disablePadding key={index}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <ListItemButton onClick={() => handleRemoveValue(index)} sx={{ justifyContent: 'center' }}>
+          <ListItemIcon sx={{ minWidth: 'auto' }}>
+            <DeleteOutlineIcon />
+          </ListItemIcon>
         </ListItemButton>
-    ))}
-    <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected' /></InputLabel>
-    <List>{list}</List>
+        <ListItemText primary={value} />
+      </Box>
+    </ListItem>
+  ));
 
-  </>);
 
+  return (
+    <>
+      <Burger.Select
+          label="decisions.cells.newvalue.string.comparisonType"
+          onChange={handleOperatorChange}
+          selected={props.builder.getOperator()}
+          empty={{ id: '', label: 'decisions.cells.newvalue.string.empty' }}
+          items={props.builder.operators.map((v) => ({
+          id: v.value,
+          value: (<ListItemText primary={v.text} />)
+          }))}
+      />
+      <Typography><FormattedMessage id='decisions.cells.newvalue.string.available' />:</Typography>
+      <List>
+        {props.valueSet.map((v) => (
+          <ListItem disablePadding key={v}>
+            <ListItemButton onClick={() => handleAddValue(v)}>
+                <ListItemText primary={v} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Typography><FormattedMessage id='decisions.cells.newvalue.string.selected.values' />:</Typography>
+      {values.length > 0 ? <List>{list}</List> : <Typography><FormattedMessage id='decisions.cells.newvalue.string.selected.empty' /></Typography>}
+    </>
+  );
 }

@@ -27,9 +27,6 @@ export const ContractTable: React.FC = () => {
     initialData: [],
   });
 
-
-  console.log(data)
-
   const columns: ColumnDef<ContractApi.ContractSummary, any>[] = [
      {
       header: intl.formatMessage({ id: 'contractTable.col.header.contractNumber'}),

@@ -13,7 +13,10 @@ import {
 
 
 const _variant_prod: FactoryCardId[] = [
-  'ledger_main'
+  'ledger_main',
+  'ledger_payments',
+  'ledger_money_requests',
+  'ledger_black_books'
 ];
 
 
@@ -32,7 +35,7 @@ const DashboardInternal: React.FC = () => {
         <Typography variant='h1'>
           {intl.formatMessage({ id: 'ledger.composer.contract.edit', defaultMessage: 'Edit ledger' })}
           {intl.formatMessage({ id: 'eveli.textSeparator', defaultMessage: ': ' })}
-          {ledgerContainer.ledger.id}
+          {ledgerContainer.ledger.name}
         </Typography>
       </Grid2>
 

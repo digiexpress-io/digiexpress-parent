@@ -25,13 +25,18 @@ public class BlackBookConstants {
   // BlackBook Types
   public static final String TYPE_INCOMING_PAYMENT = "INCOMING_PAYMENT";
   public static final String TYPE_MONTHLY_CALCULATION = "MONTHLY_CALCULATION";
+  public static final String TYPE_YEARLY_CALCULATION = "YEARLY_CALCULATION";
   
   // BlackBook Detail Types  
   public static final String DETAIL_TYPE_PAYMENT_DETAIL = "PAYMENT_DETAIL";
   public static final String DETAIL_TYPE_MONTHLY_DETAIL = "MONTHLY_DETAIL";
+  public static final String DETAIL_TYPE_YEARLY_DETAIL = "YEARLY_DETAIL";
   
   // BlackBook Detail SubTypes
   public static final String SUBTYPE_PAYMENT_ALLOCATED_AMOUNT = "PAYMENT_ALLOCATED_AMOUNT";
   public static final String SUBTYPE_ALLOCATION_GROWTH = "ALLOCATION_GROWTH";
+  public static final String SUBTYPE_ANNUAL_POLICY_FEE = "ANNUAL_POLICY_FEE";
+  public static final String SUBTYPE_ALLOCATION_PERFORMANCE = "ALLOCATION_PERFORMANCE";
+  public static final String SUBTYPE_TAX_CALCULATION = "TAX_CALCULATION";
 
 }

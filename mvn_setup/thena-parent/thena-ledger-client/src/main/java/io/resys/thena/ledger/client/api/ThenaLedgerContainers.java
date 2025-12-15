@@ -1,5 +1,7 @@
 package io.resys.thena.ledger.client.api;
 
+import java.time.LocalDate;
+
 /*-
  * #%L
  * thena-ledger-client
@@ -25,6 +27,7 @@ package io.resys.thena.ledger.client.api;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.immutables.value.Value;
 
@@ -37,6 +40,7 @@ import io.resys.thena.ledger.client.entities.BlackBook;
 import io.resys.thena.ledger.client.entities.BlackBookDetail;
 import io.resys.thena.ledger.client.entities.Ledger;
 import io.resys.thena.ledger.client.entities.LedgerEvent;
+import io.resys.thena.ledger.client.entities.LedgerTreeNode_Default;
 import io.resys.thena.ledger.client.entities.MoneyRequest;
 import io.resys.thena.ledger.client.entities.Payment;
 import io.resys.thena.ledger.client.entities.Projection;
@@ -54,12 +58,15 @@ public interface ThenaLedgerContainers {
   
   interface LedgerTreeNode {
     BlackBook getBlackBook();
-    List<ProjectionDetail> getBlackBookDetails();
+    List<BlackBookDetail> getBlackBookDetails();
     
+    // includes the node type
     List<LedgerTreeNode> getTill(String blackBookType);
     
     Optional<LedgerTreeNode> getPrevious();
     Optional<LedgerTreeNode> getNext();
+    
+    Stream<LedgerTreeNode> getFrom(LocalDate targetDateInclusive);
   }
   
 
@@ -89,7 +96,7 @@ public interface ThenaLedgerContainers {
     
     @JsonIgnore
     default LedgerTreeNode toTree() {
-      return new LedgerTreeNode_Default(this);
+      return LedgerTreeNode_Default.of(this);
     }
   }
 }

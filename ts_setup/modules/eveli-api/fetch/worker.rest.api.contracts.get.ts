@@ -39,7 +39,6 @@ function hook(_props: {}) {
               updatedAt: new Date(contract.transitives?.updatedTreeAt!)
             };
 
-            console.log(result);
             return {
               ...result,
               contractStatusIntl: intl.formatMessage({ id: `contract.status.${result.contractStatus?.toLowerCase()}`, defaultMessage: result.contractStatus })
