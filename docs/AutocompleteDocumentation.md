@@ -434,3 +434,219 @@ _____________________________________
 
 
 
+## 4. Cancelling the task-creation dialog breaks autocomplete positioning
+
+### 4.1 Test scenario
+
+Starting with a fresh `tasks` block:
+
+```yaml
+tasks:
+ 'autocomplete here'
+```
+
+**Action:**
+1. On a new line under `tasks:`, use autocomplete → suggestions appear:
+   - `new decision task`
+   - `new service task`
+   - `new switch task`
+
+2. Select **`new decision task`** *or* **`new service task`**.
+
+3. A dialog window appears (task creator).  
+   User presses **Cancel**.
+
+---
+
+### 4.2 Actual behavior
+
+After cancelling the dialog:
+
+- The cursor jumps to the **start** of the line.
+- Autocomplete **stops working** at this position.
+- Pressing **Ctrl+Space gives *no suggestions at all*.**
+- The user must enter a **space character** manually before autocomplete begins suggesting:
+  - `new decision task`
+  - `new service task`
+  - `new switch task`
+
+---
+
+### 4.3 Why this is a problem
+
+- Users may think autocomplete “broke” or the line became invalid.
+- The editor treats the cursor-at-start-of-line as incorrect indentation/context.
+- It disrupts expected workflow:  
+  cancelling a dialog should **not** erase context or break autocomplete.
+- Requiring a manual space is unintuitive and inconsistent with other blocks.
+
+---
+
+### 4.4 Expected behavior
+
+- After pressing **Cancel**, the cursor should:
+  - remain in the correct indentation for a task list (`<two spaces> - `)
+  - or at least remain at the **same position** where autocomplete was previously triggered
+
+- Autocomplete should continue suggesting the three task options without requiring the user to insert a space.
+
+---
+
+### 4.5 Status
+
+**Status:** ❌ **Bug – cancelling the task dialog resets cursor context and breaks autocomplete until a space is manually added**
+
+
+
+_____________________________________
+
+
+
+## 5. Autocomplete on `inputs:` inside decision task suggests task types and destroys the line
+
+### 5.1 Test scenario
+
+Creating a **new decision task** in a `tasks` block:
+
+```yaml
+tasks:
+
+  - task_queues_dt:
+      id: task_queues_dt
+      then: next
+      decisionTable:
+        ref: task_queues_dt
+        collection: false
+        inputs: 
+          event:
+```
+
+Cursor position:  
+At the **end of the line** `inputs:` (after the colon, before the newline).
+
+---
+
+### 5.2 Actual autocomplete behavior
+
+When using autocomplete at the end of the `inputs:` line, the editor suggests **task types** instead of anything related to decision-table inputs:
+
+- `new decision task`
+- `new service task`
+- `new switch task`
+
+**This is wrong for this context.**
+
+---
+
+### 5.3 Destructive behavior when selecting a suggestion
+
+When the user selects **any** of these suggestions:
+
+- The entire `inputs:` line is **deleted**.
+- It is replaced with the chosen task-creation snippet.
+- The `event:` line **remains** as-is below it.
+
+So the structure becomes invalid: the `inputs:` block is effectively destroyed.
+
+---
+
+### 5.4 Behavior when cancelling the task-type dialog
+
+After choosing a task type (e.g. `new decision task` or `new service task`), a dialog appears.
+
+- If the user presses **Cancel**:
+  - The `inputs:` line has already been removed.
+  - The cursor ends up at the **start** of the replaced line (similar to issue 4).
+  - The original `inputs:` context is lost.
+  - Autocomplete at that position behaves like on a fresh/empty line, with no decision-input-specific context.
+
+This is directly related to issue **4** (cancel breaks autocomplete & cursor context) but here it additionally **deletes a structurally important key (`inputs:`)**.
+
+---
+
+### 5.5 Expected behavior
+
+- At the end of `decisionTable.inputs:`:
+  - Autocomplete should **not** offer task types.
+  - It should either:
+    - offer nothing, or
+    - offer context-relevant snippets (e.g. a template for an input row), such as:
+      ```yaml
+      inputs:
+        <inputName>:
+      ```
+
+- Selecting a suggestion should **never delete** the `inputs:` key.
+- Cancelling the dialog should:
+  - leave `inputs:` intact
+  - leave the cursor in a sensible place under `inputs:`
+  - not break autocomplete or context
+
+---
+
+### 5.6 Status
+
+**Status:** ❌ **Bug – wrong autocomplete options on `inputs:` and destructive replacement of the line**
+
+- Autocomplete suggests **task types** where decision-table input configuration is expected.
+- Selecting a suggestion deletes the `inputs:` line and damages the structure.
+- Cancelling the dialog does not restore the original `inputs:` line, similar to issue 4 but more destructive here.
+
+
+
+_____________________________________
+
+
+
+## 6. UNDO does not revert task blocks inserted via autocomplete
+
+### 6.1 Test scenario
+
+Inside a `tasks:` section, using autocomplete allows insertion of these task blocks:
+
+- `new decision task`
+- `new service task`
+- `new switch task`
+
+Each of these inserts a **multi-line YAML structure** in one step.
+
+### 6.2 Actual behavior
+
+Using the editor's **UNDO shortcut (Ctrl+Z / Cmd+Z)**:
+
+- ✔️ **Value edits** inside tasks (e.g., editing `id`, `ref`, `type`, etc.) are correctly undone.
+- ❌ **The entire task blocks inserted via autocomplete are *not* undone.**
+
+When an autocomplete block is inserted, pressing UNDO:
+
+- does **not** remove the inserted block  
+- does **not** restore the previous YAML structure  
+- appears to do nothing unless the user performed additional edits afterward
+
+This makes the inserted task blocks effectively “sticky,” requiring manual deletion.
+
+### 6.3 Why this is a problem
+
+- Users expect UNDO to reverse **their last action**, especially when the last action inserted 10+ lines.
+- Inserting a task block is a **single operation**, but the undo history does not treat it as one.
+- This inconsistency makes UNDO feel unreliable:
+  - Editing a *value* is undoable  
+  - Inserting a *block* via autocomplete is not undoable  
+- Users may accidentally insert a task and have no quick way to revert.
+
+### 6.4 Expected behavior
+
+- Pressing UNDO immediately after inserting:
+  - `new decision task`
+  - `new service task`
+  - `new switch task`
+
+…should completely remove the generated block and return the editor to the state before insertion.
+
+In other words, the entire insertion should be treated as **one atomic undo step**.
+
+### 6.5 Status
+
+**Status:** ❌ **Bug – autocomplete-inserted task blocks cannot be undone**
+
+UNDO should work consistently for both inline edits and block insertions.
