@@ -1,19 +1,17 @@
 import React from 'react';
 import { useUtilityClasses, GInboxRoot, MUI_NAME } from './useUtilityClasses';
-import { IntlShape, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { Typography, useThemeProps, Grid2, Avatar } from '@mui/material';
 
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
-import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachments';
+import { GInboxAttachmentsProps } from '../g-inbox-attachments';
 
-import { CommsApi, OfferApi, useComms } from '@dxs-ts/gamut-api';
-import { IamApi, useIam } from '@dxs-ts/gamut-api';
-import { useContracts } from '@dxs-ts/gamut-api';
-import { useSite } from '@dxs-ts/gamut-api';
-import { useOffers } from '@dxs-ts/gamut-api';
+import { CommsApi, OfferApi } from '@dxs-ts/gamut-api';
+
 import { GFlex } from '../g-flex';
 import { GInboxFormAssignedNotComplete } from '../g-inbox-form-assigned-not-complete';
+import { useInboxItems, useSenderName } from './utils';
 
 
 
@@ -42,30 +40,11 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
+  const inboxItems = useInboxItems();
 
-  const { subjects } = useComms();
-  const { getContract } = useContracts();
-  const { getLocalisedOfferName, getOffer } = useOffers();
-  const iam = useIam();
-
-  const { site } = useSite();
-  const onlyFirstSubjects = subjects.filter(subject => subjects.find(i => i.contractId === subject.contractId) === subject);
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
-
-  const getSenderName = (subject: CommsApi.Subject, iam: IamApi.IamBackendContextType, intl: IntlShape): string => {
-    switch (true) {
-      case iam.user !== undefined && Boolean(iam.user.userId):
-        return (iam.user.userId);
-      case subject.lastExchange === undefined:
-        return (intl.formatMessage({ id: 'gamut.inbox.noMessages' }));
-      case subject.lastExchange?.userName === '' || subject.lastExchange?.userName === undefined:
-        return (intl.formatMessage({ id: 'cust.inbox.message.sender-name.org-user' }));
-      default:
-        return subject.lastExchange.userName;
-    }
-  };
 
 
   return (
@@ -100,60 +79,18 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
       </GFlex>
 
 
-
-      {onlyFirstSubjects
-        .sort((a, b) => {
-          const aViewed = a.isViewed ? 1 : 0;
-          const bViewed = b.isViewed ? 1 : 0;
-
-          if (aViewed !== bViewed) {
-            return aViewed - bViewed;
-          }
-
-          const aDate = a.lastExchange?.created ?? a.created;
-          const bDate = b.lastExchange?.created ?? b.created;
-
-          return bDate.toMillis() - aDate.toMillis();
-        })
-
-        .map((subject) => {
-          const contractId = subject.contractId;
-          const contract = getContract(contractId);
-          if (!site || !contract) {
-            return <React.Fragment key={contractId}></React.Fragment>
-          }
-          const offerName = getLocalisedOfferName(site, contract?.offer.name!)
+      {inboxItems.map(({ subject, contract, offerName, contractStatus, subForms }) => {
 
           return (<InboxItem
             id={subject.id}
             taskRefId={contract.referenceId}
             key={subject.id}
             onClick={props.slotProps.item.onClick!}
-            senderName={getSenderName(subject, iam, intl)}
+            senderName={useSenderName(subject)}
             sentAt={subject.lastExchange?.created ?? subject.created}
             title={offerName}
             subTitle={subject.lastExchange?.commentText ?? ''}
-            contractStatus={(() => {
-              if (!contract || !contract.status) return 'status unknown';
-              switch (contract.status) {
-                case 'OPEN':
-                  return intl.formatMessage({ id: 'gamut.forms.status.OPEN' });
-                case 'NEW':
-                  return intl.formatMessage({ id: 'gamut.forms.status.NEW' });
-                case 'COMPLETED':
-                  return intl.formatMessage({ id: 'gamut.forms.status.COMPLETED' });
-                case 'REJECTED':
-                  return intl.formatMessage({ id: 'gamut.forms.status.REJECTED' });
-                case 'DELEGATED':
-                  return intl.formatMessage({ id: 'gamut.forms.status.DELEGATED' });
-                case 'TRANSFERRED':
-                  return intl.formatMessage({ id: 'gamut.forms.status.TRANSFERRED' });
-                case 'WAITING':
-                  return intl.formatMessage({ id: 'gamut.forms.status.WAITING' });
-                default:
-                  return contract.status;
-              }
-            })()}
+            contractStatus={contractStatus}
           >
 
             {(() => {
@@ -180,23 +117,12 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
               );
             })()}
 
-            {contract.subforms.length > 0 ? contract.subforms.map((entry) => {
-              const subOffer = entry.formInProgress ? getOffer(entry.id) : undefined;
-
-              if (subOffer?.formId) {
-                const name = getLocalisedOfferName(site, entry.id);
-                return (
-                  <GInboxFormAssignedNotComplete key={entry.id} onClick={() => props.onOpenOffer(subOffer)} formName={name} />
-                )
+            {subForms.map(({ formId, formName, isOpen, offer }) => {
+              if (isOpen && offer) {
+                return (<GInboxFormAssignedNotComplete key={formId} onClick={() => props.onOpenOffer(offer)} formName={formName} />)
               }
-
-              if (entry.formId) {
-                return (<FormReview key={entry.formId} formName={offerName} formId={entry.formId} />)
-              }
-              return (<></>);
-
-
-            }) : (<></>)
+              return (<FormReview key={formId} formName={offerName} formId={formId} />)
+            })
             }
           </InboxItem>
           )
