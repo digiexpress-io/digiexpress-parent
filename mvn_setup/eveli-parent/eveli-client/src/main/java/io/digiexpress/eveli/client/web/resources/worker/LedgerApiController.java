@@ -1,5 +1,10 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.immutables.value.Value;
+
 /*-
  * #%L
  * eveli-client
@@ -22,9 +27,17 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.resys.lp.client.spi.LpClientImpl;
+import io.resys.lp.client.spi.formula.feemi_savings.AddPaymentFactory;
+import io.resys.thena.contract.client.api.ContractClient;
 import io.resys.thena.ledger.client.api.LedgerClient;
 import io.resys.thena.ledger.client.api.ThenaLedgerContainers.LedgerContainer;
 import io.smallrye.mutiny.Multi;
@@ -41,6 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LedgerApiController {
 
   private final LedgerClient ledgerClient;
+  private final ContractClient contractClient;
   
   @GetMapping("/all")
   public Multi<LedgerContainer> all() {
@@ -54,4 +68,38 @@ public class LedgerApiController {
         .onItem().transform(env -> env.getObjects());
   }
 
+  @PostMapping("/{ledgerId}/payments")
+  public Uni<LedgerContainer> addPayment(@RequestBody CreatePaymentCommand command) {
+    final var lpClient = new LpClientImpl(contractClient, ledgerClient);
+    return lpClient.actions().matchPayment()
+      .addHint(command.getContractId())
+      .addPayment(newPayment -> {
+        newPayment
+          .amount(command.getAmount())
+          .date(command.getTargetDate())
+          .externalId(command.getPaymentId())
+          .description(command.getDescription())
+          .type("MANUAL")
+          .build();
+      }).build()
+      
+      .onItem().transformToUni(ignore -> lpClient.actions().calculateAny()
+          .ledgerId(command.getContractId())
+          .formula(new AddPaymentFactory())
+          .build())
+      .onItem().transformToUni(ignore -> ledgerClient.withTenant().find().ledgerQuery().getOne(command.getContractId()))
+      .onItem().transform(env -> env.getObjects());
+    
+  }
+  
+  @JsonSerialize(as = ImmutableCreatePaymentCommand.class)
+  @JsonDeserialize(as = ImmutableCreatePaymentCommand.class)
+  @Value.Immutable
+  interface CreatePaymentCommand {
+    String getContractId();
+    BigDecimal getAmount();
+    LocalDate getTargetDate();
+    String getPaymentId();
+    String getDescription();
+  }
 }
