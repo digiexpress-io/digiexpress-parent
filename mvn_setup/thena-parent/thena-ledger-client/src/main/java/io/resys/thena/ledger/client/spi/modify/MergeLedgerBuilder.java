@@ -139,6 +139,9 @@ public class MergeLedgerBuilder implements MergeLedger {
     final var builtData = builder.close();
     this.batch.from(builtData);
     updateTreeVersion();
+    
+    this.nextLedger.currentBlackBookId(logger.getCurrentBlackBookId());
+    
     return this;
   }
 
