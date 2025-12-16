@@ -87,6 +87,9 @@ export namespace HdesApi {
     getSite(): Promise<HdesApi.Site> {
       return this._api.getSite(this._branchName);
     }
+    getSiteCommitLog(): Promise<HdesApi.CommitLog[]> {
+      return this._api.getSiteCommitLog();
+    }
     debug(debug: HdesApi.DebugRequest): Promise<HdesApi.DebugResponse> {
       return this._api.debug(debug, this._branchName);
     }
@@ -216,6 +219,12 @@ export declare namespace HdesApi {
 
 
 
+  export interface CommitLog {
+    objectId: string;
+    commitId: string;
+    createdAt: string;
+    createdBy: string;
+  }
 
   export interface Site {
     name: string,
@@ -497,6 +506,7 @@ export declare namespace HdesApi {
     ast(id: string, body: AstCommand[]): Promise<Entity<any>>;
     debug(input: DebugRequest): Promise<DebugResponse>;
     getSite(): Promise<Site>
+    getSiteCommitLog(): Promise<CommitLog[]>
     copy(id: string, name: string): Promise<Site>
     diff(input: DiffRequest): Promise<DiffResponse>
     summary(tagId: string): Promise<AstTagSummary>
@@ -521,6 +531,7 @@ export declare namespace HdesApi {
     createAsset(name: string, desc: string | undefined, type: HdesApi.AstBodyType | "SITE", body: HdesApi.AstCommand[] | undefined, branchName: string | undefined): Promise<HdesApi.Site>;
     ast(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Entity<any>>;
     getSite(branchName: string | undefined): Promise<HdesApi.Site>;
+    getSiteCommitLog(): Promise<HdesApi.CommitLog[]>;
     debug(debug: HdesApi.DebugRequest, branchName: string | undefined): Promise<HdesApi.DebugResponse>;
     copy(id: string, name: string, branchName: string | undefined): Promise<HdesApi.Site>;
     diff(input: HdesApi.DiffRequest): Promise<HdesApi.DiffResponse>;

@@ -3290,6 +3290,7 @@
         "@dxs-ts/envir-fetch",
         "@uiw/react-md-editor",
         "js-file-download",
+        "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3311,6 +3312,7 @@
         "notistack",
         "@uiw/react-md-editor",
         "js-file-download",
+        "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3325,7 +3327,9 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "luxon"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/xui-datetime": {
@@ -4110,6 +4114,6 @@
       ]
     }
   },
-  "checksum": "cb669eb1b3f9807e52e3cf49f54356b8b6991732a5872b9a3d6a09473de6b552",
-  "generatedAt": "2025-12-10T10:41:41.706Z"
+  "checksum": "ea2564d94c41d8a746c772d36fadcd59c29784d00ecf362ef3f986627dfee815",
+  "generatedAt": "2025-12-11T15:03:40.052Z"
 }

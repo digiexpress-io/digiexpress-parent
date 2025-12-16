@@ -238,6 +238,11 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
     return null;
   }
   
+  @Override
+  public CommitLogBuilder commitLog() {
+    return new CommitLogBuilderThenaImpl(config);
+  }
+  
   private void cantHaveEntityWithId(String id, StoreState currentState) {
     HdesAssert.isTrue(!currentState.getDecisions().containsKey(id), () -> "Entity of type 'decision' already exists with id: '" + id + "'!");
     HdesAssert.isTrue(!currentState.getFlows().containsKey(id), () -> "Entity of type 'flow' already exists with id: '" + id + "'!");

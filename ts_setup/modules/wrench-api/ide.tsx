@@ -39,12 +39,14 @@ export declare namespace WrenchComposerApi {
     getFlow(flowName: string): undefined | HdesApi.Entity<HdesApi.AstFlow>;
     getService(serviceName: string): undefined | HdesApi.Entity<HdesApi.AstService>;
     getEntity(id: HdesApi.EntityId): undefined | HdesApi.Entity<any>;
+    getLastUpdated(entityId: HdesApi.EntityId): string | null;
 
     withDebug(page: DebugSession): Session;
     withPage(page: HdesApi.EntityId): Session;
     withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): Session;
     withoutPages(pages: HdesApi.EntityId[]): Session;
     withSite(site: HdesApi.Site): Session;
+    withCommitlogs(commitlogs: HdesApi.CommitLog[]): Session;
   }
 
   interface Actions {
@@ -126,20 +128,22 @@ export namespace WrenchComposerApi {
 
     const actions = React.useMemo(() => {
       async function handleLoad(): Promise<void> {
-        return service.getSite()
-          .then(site => {
+        return Promise.all([service.getSite(), service.getSiteCommitLog()])
+          .then(([site, commitlogs]) => {
             if(site.contentType === "NOT_CREATED") {
-              service.create().site().then(created =>  dispatch((prev) => prev.withSite(created)));
+              service.create().site().then(created =>  dispatch((prev) => prev.withSite(created).withCommitlogs([])));
             } else {
-              dispatch((prev) => prev.withSite(site)) 
+              dispatch((prev) => prev.withSite(site).withCommitlogs(commitlogs)) 
             }
           });
       }
       async function handleLoadSite(site?: HdesApi.Site): Promise<void> {
         if(site) {
-          dispatch((prev) => prev.withSite(site)) 
+          return Promise.all([Promise.resolve(site), service.getSiteCommitLog()])
+            .then(([site, commitlogs]) => dispatch((prev) => prev.withSite(site).withCommitlogs(commitlogs)));
         } else {
-          return service.getSite().then(site => dispatch((prev) => prev.withSite(site)));  
+          return Promise.all([service.getSite(), service.getSiteCommitLog()])
+            .then(([site, commitlogs]) => dispatch((prev) => prev.withSite(site).withCommitlogs(commitlogs)));
         }
       }
       function handleBranchUpdate(branchName?: string): void {

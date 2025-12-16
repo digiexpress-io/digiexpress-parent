@@ -355,6 +355,11 @@ public class HdesInMemoryStore implements HdesStore {
   public StoreRepoBuilder repo() {
     throw new IllegalArgumentException("not implemented");
   }
+  @Override
+  public CommitLogBuilder commitLog() {
+    // in-memory store is read-only, so no commit log
+    return () -> Uni.createFrom().item(new ArrayList<>());
+  }
 
   @Override
   public Optional<String> getBranchName() {

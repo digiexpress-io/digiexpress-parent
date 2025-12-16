@@ -503,6 +503,11 @@ public class GitStore implements HdesStore {
     throw new RuntimeException("not implemented");
   }
   @Override
+  public CommitLogBuilder commitLog() {
+    // TODO implement git commit log
+    return () -> Uni.createFrom().item(new ArrayList<>());
+  }
+  @Override
   public BranchQuery queryBranches() {
     return new BranchQuery() {
       
