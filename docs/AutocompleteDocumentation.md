@@ -792,3 +792,130 @@ _____________________________________
 
 
 
+
+## 9. Switch task: autocomplete only works on the first line and suggestions are incorrect
+
+### 9.1 Test scenario
+
+A flow contains an existing task and a new switch task template:
+
+```yaml
+tasks: 
+
+  - setRoleForFeedBack:
+      id: setRoleForFeedBack
+      then: end
+      decisionTable:
+        ref: setRoleForFeedBack
+        collection: false
+        inputs:
+          inputColumn: workflowname
+
+  - name: 'autocomplete here'
+      id: task-id
+      switch:
+        - caseName1:
+            when: when-boolean-expression
+            then: next-task-id
+        - caseName2:
+            when: when-boolean-expression
+            then: next-task-id
+```
+
+Cursor is placed in the position marked `'autocomplete here'`.
+
+---
+
+### 9.2 Actual autocomplete behavior
+
+#### **Only the first line of the switch task (`- name:` line) provides autocomplete.**  
+All other lines inside the switch task (such as `id:`, `when:`, `then:`, case blocks) **provide no autocomplete suggestions at all**.
+
+This is already incorrect because switch tasks should support context-aware suggestions for:
+
+- valid task IDs for `then:`  
+- variables and expressions for `when:`  
+- case name completions (optional)  
+- field names (`id`, `switch`, etc.)
+
+But instead:
+
+### 9.3 Suggestions for the first line are incorrect
+
+Autocomplete suggestions on the **`- name:`** line (where `'autocomplete here'` is) are:
+
+- `new switch task`
+- `then: end`
+- `then: setRoleForFeedBack`
+
+These suggestions have two issues:
+
+#### **Issue A — Wrong category of suggestions**
+- `new switch task` is a *task creation* snippet, not relevant once a switch task already exists.
+- `then:` options (`end`, `setRoleForFeedBack`) are meant for *next-step linking*, not for the name field.
+
+Autocomplete should suggest **task types, or nothing**, but not unrelated fields.
+
+#### **Issue B — Autocomplete does not activate for any subsequent lines**
+
+Under this block:
+
+```yaml
+id: task-id
+switch:
+  - caseName1:
+      when: ...
+      then: ...
+```
+
+— **no autocomplete triggers at all**.
+
+This prevents:
+- filling `when:` with variables or expressions  
+- selecting valid next-task IDs for `then:`  
+- discovering valid case names  
+- renaming or validating `id:`  
+- configuring nested structures  
+
+This makes switch tasks effectively *manual-only*, with no autocomplete assistance.
+
+---
+
+### 9.4 Expected behavior
+
+A switch task should support the following:
+
+#### On the first line:
+- Suggesting **task kinds** (optional)
+- Or simply allowing renaming of the task without irrelevant suggestions
+
+#### On the `id:` line:
+- No suggestions OR suggestions of valid identifiers
+
+#### On `when:`:
+Should show:
+- flow inputs  
+- variables  
+- boolean operators  
+- task outputs (if relevant)
+
+#### On `then:`:
+Should show:
+- list of valid task IDs in this flow  
+- `end`, if allowed
+
+#### On case definitions:
+Autocomplete should activate normally inside nested structures.
+
+None of these currently work.
+
+---
+
+### 9.5 Status
+
+**Status:** ❌ **Bug – Switch task autocomplete is broken**
+
+- Only the first line offers autocomplete.
+- The suggestions offered are irrelevant or wrong.
+- All meaningful autocomplete contexts inside a switch task provide **no suggestions at all**.
+- Prevents proper authoring of switch tasks using autocomplete assistance.
