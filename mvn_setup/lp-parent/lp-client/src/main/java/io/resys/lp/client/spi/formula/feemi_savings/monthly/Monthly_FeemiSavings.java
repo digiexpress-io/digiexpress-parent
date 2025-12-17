@@ -22,8 +22,10 @@ package io.resys.lp.client.spi.formula.feemi_savings.monthly;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.resys.lp.client.api.LpClient.CalculationFormula;
 import io.resys.lp.client.api.LpClient.FormulaContainer;
@@ -64,22 +66,21 @@ public class Monthly_FeemiSavings implements CalculationFormula {
   public Uni<Envelope<AnyCalculation>> accept(FormulaContainer container) {
     this.ctx = container;
     
-    // Get sorted BlackBooks to find the last entry
-    final var sortedBb = new ArrayList<>(ctx.getLedger().getBlackBooks());
-    sortedBb.sort(BlackBook.COMPARATOR);
-    this.lastBlackBook = sortedBb.getFirst();
+    final var currentBlackBookId = container.getLedger().getLedger().getCurrentBlackBookId().get();
+    this.lastBlackBook =  container.getLedger().getBlackBooks().stream()
+      .filter(e -> e.getId().equals(currentBlackBookId))
+      .findFirst().get();
     
-    // Check if monthly calculation is needed (has it been a month since last calculation?)
-    final var lastCalculationDate = lastBlackBook.getBookDate();
-    final var daysSinceLastCalculation = ChronoUnit.DAYS.between(lastCalculationDate, ctx.getToday());
+
+    final var missingDates = getMissingDates(container);
     
-    if (daysSinceLastCalculation < 30) {
+    if (missingDates.isEmpty()) {
       // Not time for monthly calculation yet
       return Uni.createFrom().item(ImmutableEnvelope.<AnyCalculation>builder()
           .status(EnvelopeStatus.OK)
           .addLogs(ImmutableLog.builder()
               .targetId(ctx.getLedger().getLedger().getId())
-              .text("Monthly calculation not needed yet (last calculation: " + lastCalculationDate + ")")
+              .text("Monthly calculation not needed yet")
               .build())
           .object(null)
           .build());
@@ -93,7 +94,9 @@ public class Monthly_FeemiSavings implements CalculationFormula {
         this.ledger = ledger;
         
         // Execute monthly calculations
-        visitMonthlyPortfolioGrowth();
+        for(final var targetDate : missingDates) {
+          visitMonthlyPortfolioGrowth(targetDate);
+        }
         
         this.ledger.build();
       }).build()
@@ -113,7 +116,7 @@ public class Monthly_FeemiSavings implements CalculationFormula {
           .build());
   }
   
-  private void visitMonthlyPortfolioGrowth() {
+  private void visitMonthlyPortfolioGrowth(LocalDate endOfMonth) {
     ledger.addBlackBook(bb -> {
       this.newBlackBook = bb;
 
@@ -137,7 +140,7 @@ public class Monthly_FeemiSavings implements CalculationFormula {
         .deltaAmount(totalNetGrowth)           // Net growth for the month
         .inflowAmount(totalGrowth)             // Growth from investments
         .outflowAmount(totalMortalityFees)     // Monthly mortality fees
-        .date(ctx.getToday())
+        .date(endOfMonth)
         .type(BlackBookConstants.TYPE_MONTHLY_CALCULATION)
         .build();
     });
@@ -259,4 +262,49 @@ public class Monthly_FeemiSavings implements CalculationFormula {
     
     return baselineValue.add(newAllocations);
   }
+  
+  
+  private List<LocalDate> getMissingDates(FormulaContainer container) {
+    final var fromLastMonthly = container.getLedger().toTree()
+      .getTill(BlackBookConstants.TYPE_MONTHLY_CALCULATION);
+    
+    // nothing to calculate from nothing
+    if(fromLastMonthly.isEmpty()) {
+      return Collections.emptyList();
+    }
+    
+    final var lastMonthly = fromLastMonthly.stream()
+      .filter(e -> BlackBookConstants.TYPE_MONTHLY_CALCULATION.equals(e.getBlackBook().getBookType()))
+      .findFirst();
+    
+    final var isAfter = lastMonthly.get().getBlackBook().getBookDate().compareTo(container.getToday()) >= 0;
+    if(lastMonthly.isPresent() && isAfter) {
+      return Collections.emptyList();
+    }
+    
+    final LocalDate startingDate;
+    if(lastMonthly.isPresent()) {
+      startingDate = lastMonthly.get().getBlackBook().getBookDate().withDayOfMonth(1).plusMonths(1);
+    } else {
+      startingDate = fromLastMonthly.stream()
+        .filter(e -> e.getBlackBook().getBookAmount().compareTo(BigDecimal.ZERO) != 0)
+        .sorted((a, b) -> a.getBlackBook().getBookDate().compareTo(b.getBlackBook().getBookDate()))
+        .findFirst().map(e -> e.getBlackBook().getBookDate().withDayOfMonth(1))
+        .orElse(null);
+    }
+    
+    if(startingDate == null) {
+      return Collections.emptyList();
+    }
+    
+    final var missingDates = new ArrayList<LocalDate>();
+    var nextDate = startingDate;
+    do {
+      final var endOfMonth = nextDate.withDayOfMonth(1).plusMonths(1).minusDays(1);
+      missingDates.add(endOfMonth);
+      nextDate = endOfMonth.plusDays(1);
+    } while(container.getToday().compareTo(nextDate) >= 0);
+        
+    return missingDates;
+  } 
 }
