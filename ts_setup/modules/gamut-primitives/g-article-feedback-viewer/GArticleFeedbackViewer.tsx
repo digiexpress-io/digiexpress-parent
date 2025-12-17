@@ -109,21 +109,25 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
             {intl.formatMessage({ id: 'gamut.feedback.vote.title' })}
           </Typography>
           <div className={classes.thumbsContainer}>
-            <IconButton color='primary' onClick={handleDownvote} disabled={feedbackDisabled}>
-              <Tooltip title={intl.formatMessage({ id: 'gamut.feedback.vote.notHelpful' })}>
-                {userFeedbackRating === 1 ? <ThumbDownIcon className={classes.iconSize} /> : <ThumbDownOffAltIcon className={classes.iconSize} />}
-              </Tooltip>
-            </IconButton>
-            <Typography>{feedback.feedback.thumbsDownCount}</Typography>
-
-            <Box marginRight={1} />
-
             <IconButton color='primary' onClick={handleUpvote} disabled={feedbackDisabled}>
               <Tooltip title={intl.formatMessage({ id: 'gamut.feedback.vote.yesHelpful' })}>
-                {userFeedbackRating === 5 ? <ThumbUpIcon className={classes.iconSize} /> : <ThumbUpOffAltIcon className={classes.iconSize} />}
+                {userFeedbackRating === 5
+                  ? <ThumbUpIcon className={classes.iconSize} />
+                  : <ThumbUpOffAltIcon className={classes.iconSize} />}
               </Tooltip>
             </IconButton>
             <Typography>{feedback.feedback.thumbsUpCount}</Typography>
+
+            <Box marginRight={1} />
+
+            <IconButton color='primary' onClick={handleDownvote} disabled={feedbackDisabled}>
+              <Tooltip title={intl.formatMessage({ id: 'gamut.feedback.vote.notHelpful' })}>
+                {userFeedbackRating === 1
+                  ? <ThumbDownIcon className={classes.iconSize} />
+                  : <ThumbDownOffAltIcon className={classes.iconSize} />}
+              </Tooltip>
+            </IconButton>
+            <Typography>{feedback.feedback.thumbsDownCount}</Typography>
           </div>
         </Stack >
 

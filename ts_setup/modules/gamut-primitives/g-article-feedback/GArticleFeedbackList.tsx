@@ -55,15 +55,15 @@ export const GArticleFeedbackList: React.FC<GArticleFeedbackListProps> = ({
 
                 <Box className={classes.vote}>
                   <div className="vote-item">
-                    <ThumbDownIcon fontSize="small" />
-                    <Typography className="vote-count">
-                      {row.feedback.thumbsDownCount}
-                    </Typography>
-                  </div>
-                  <div className="vote-item">
                     <ThumbUpIcon fontSize="small" />
                     <Typography className="vote-count">
                       {row.feedback.thumbsUpCount}
+                    </Typography>
+                  </div>
+                  <div className="vote-item">
+                    <ThumbDownIcon fontSize="small" />
+                    <Typography className="vote-count">
+                      {row.feedback.thumbsDownCount}
                     </Typography>
                   </div>
                 </Box>
