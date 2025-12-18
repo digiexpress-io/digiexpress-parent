@@ -11,6 +11,7 @@ import { LedgerApi, useLedger } from '@dxs-ts/ledger-api';
 import { LedgerCard } from '../ledger-card';
 import { useLedgerCard } from '../ledger-card-factory';
 import { formatAnyDateShort } from '@dxs-ts/xui-datetime';
+import { LedgerFormatter } from '../ledger-formatter';
 
 
 
@@ -18,6 +19,8 @@ import { formatAnyDateShort } from '@dxs-ts/xui-datetime';
 export const LedgerCardBB: React.FC<{}> = () => {
   const intl = useIntl();
   const { ledgerContainer } = useLedger();
+  const formatter = LedgerFormatter;
+
   const { blackBooks, blackBookDetails } = ledgerContainer;
 
   const commonProps = useLedgerCard();
@@ -47,7 +50,7 @@ export const LedgerCardBB: React.FC<{}> = () => {
           .map(book => ({
             columns: {
               description: book.bookDescription ?? "-",
-              amount: book.bookAmount.toString() ?? "-",
+              amount: formatter.monetary_value(book.bookAmount),
               bookDate: formatAnyDateShort(book.bookDate),
               type: book.bookType ?? "-"
             },
@@ -75,6 +78,7 @@ const BBCardDetail: React.FC<{ book: LedgerApi.BlackBook }> = ({ book }) => {
 const BBDetailBlock: React.FC<{ detail: LedgerApi.BlackBookDetail }> = ({ detail }) => {
   const intl = useIntl();
   const theme = useTheme();
+  const formatter = LedgerFormatter;
   const [expanded, setExpanded] = React.useState(false);
 
   return (
@@ -86,23 +90,23 @@ const BBDetailBlock: React.FC<{ detail: LedgerApi.BlackBookDetail }> = ({ detail
         />
         <LedgerCardDataRowText
           label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.detailDescription' })}
-          value={detail.detailDescription}
+          value={detail.detailDescription ?? "--"}
         />
         <LedgerCardDataRowText
           label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.detailAmount' })}
-          value={detail.detailAmount.toString()}
+          value={formatter.monetary_value(detail.detailAmount)}
         />
         <LedgerCardDataRowText
           label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.inflowAmount' })}
-          value={detail.detailInflowAmount?.toString()}
+          value={formatter.monetary_value(detail.detailInflowAmount)}
         />
         <LedgerCardDataRowText
           label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.outflowAmount' })}
-          value={detail.detailOutflowAmount?.toString()}
+          value={formatter.monetary_value(detail.detailOutflowAmount)}
         />
         <LedgerCardDataRowText
           label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.deltaAmount' })}
-          value={detail.detailDeltaAmount?.toString()}
+          value={formatter.monetary_value(detail.detailDeltaAmount)}
         />
         <LedgerCardTransitivesRow {...detail.transitives} />
       </StyledExpanderBoxPrimary>
@@ -129,9 +133,10 @@ const BBDetailBlock: React.FC<{ detail: LedgerApi.BlackBookDetail }> = ({ detail
           <Divider sx={{ my: theme.spacing(0.5) }} />
           {((detail.detailBody?.logs ?? []) as string[]).map((log, i) => (
             <Typography key={i} variant="subtitle2">
-              {log}
+              {formatter.formula_value(log)}
             </Typography>
           ))}
+
         </StyledExpanderBoxSecondary>
       </Collapse>
     </Box>
@@ -149,7 +154,6 @@ const StyledExpanderBoxPrimary = styled(Box)(({ theme }) => ({
 
 const StyledExpanderBoxSecondary = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1),
-  //marginLeft: theme.spacing(5),
   marginTop: theme.spacing(1),
   borderLeft: `2px solid ${alpha(theme.palette.info.dark, 0.8)}`,
   backgroundColor: alpha(theme.palette.info.dark, 0.05),

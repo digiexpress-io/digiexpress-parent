@@ -1,27 +1,67 @@
 import React from 'react';
+import { Grid2, Typography } from '@mui/material';
+import numbro from "numbro";
+
+
+const DEFAULT_FORMAT: numbro.Format = {
+  thousandSeparated: true,
+  mantissa: 2,
+  currencySymbol: " €",
+  currencyPosition: "postfix",
+}
+
+numbro.registerLanguage({
+  languageTag: "fi-FI",
+  delimiters: { thousands: ".", decimal: "," },
+  abbreviations: { thousand: "k", million: "m", billion: "b", trillion: "t" },
+  ordinal: () => ".",
+  currency: { symbol: " €", position: "postfix", code: "EUR" },
+  formats: {
+    fourDigits: {},
+    fullWithTwoDecimals: {},
+    fullWithTwoDecimalsNoCurrency: {},
+    fullWithNoDecimals: {},
+  },
+});
+numbro.setLanguage("fi-FI");
 
 
 function monetary_value(input: string | number | undefined | null): string {
-  if(input === undefined) {
-    return "--";
+
+  if (input === undefined || input === null || input === "") {
+    return "0.00€";
   }
 
-  return "";
+  const value = typeof input === "number" ? input : parseFloat(input);
+
+  return numbro(value).formatCurrency(DEFAULT_FORMAT);
 }
 
 
 function formula_value(input: string): React.ReactNode {
 
-  const formula = _parseFormula(input);
+  const isRawFormat = input.toLowerCase().includes('fund units');
 
-  // Payment Fee    : κ × gross_amount  =   0 × 1525.00 = 0.00
-  // Net Payment    : gross_amount - payment_fee = 1525.00 - 0.00 = 1525.00
-  // Allocation     : net_payment × allocation_share = 1525.00 × 0.700000 = 1067.50
-  // Fund Units     : allocated_amount ÷ unit_price = 1067.50 ÷ 100.54000000 = 10.617665
-
-  return (<></>)
-
-
+  try {
+    const formula = _parseFormula(input);
+    return (
+      <>
+        <Grid2 container>
+          <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
+            <Typography fontWeight={500} variant='subtitle2'>{formula.name}</Typography>
+          </Grid2>
+          <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
+            <Typography variant='subtitle2'>{isRawFormat ? `= ${formula.equationResult}` : `= ${monetary_value(formula.equationResult)}`}</Typography>
+          </Grid2>
+          <Grid2 size={{ md: 6, lg: 6, xl: 6 }}>
+            <Typography variant='subtitle2' fontStyle='italic'>{formula.equationValues}</Typography>
+          </Grid2>
+        </Grid2>
+      </>
+    )
+  } catch (error) {
+    console.warn(`Unable to parse formula: ${input}`, error)
+  }
 }
 
 
@@ -37,8 +77,8 @@ function _parseFormula(input: string): Formula {
   const [equation, equationValues, equationResult] = formula.split("=");
   return {
     name,
-    equation, 
-    equationValues, 
+    equation,
+    equationValues,
     equationResult
   }
 }

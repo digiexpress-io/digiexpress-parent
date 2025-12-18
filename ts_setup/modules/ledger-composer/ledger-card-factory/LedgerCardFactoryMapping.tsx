@@ -12,6 +12,7 @@ import { LedgerCard, LedgerCardDataList, LedgerCardDataRowText, StartAdornmentIc
 import { useLedgerCard } from './LedgerCardProvider';
 import { LedgerCardBB } from '../ledger-card-bb';
 import { formatAnyDateShort } from '@dxs-ts/xui-datetime';
+import { LedgerFormatter } from '../ledger-formatter';
 
 
 
@@ -20,6 +21,7 @@ export const LedgerCardFactoryMapping: React.FC<{ }> = (initProps) => {
   const { ledgerContainer } = useLedger();
   const commonProps = useLedgerCard();
   const handleEdit = commonProps.onEditOpen;
+  const formatter = LedgerFormatter;
 
   const { ledger, payments, moneyRequests } = ledgerContainer;
 
@@ -65,7 +67,7 @@ export const LedgerCardFactoryMapping: React.FC<{ }> = (initProps) => {
             ]}
             rows={payments.map(p => ({
               description: p.paymentDescription ?? "-",
-              amount: p.paymentAmount,
+              amount: formatter.monetary_value(p.paymentAmount),
               date: formatAnyDateShort(p.paymentDate),
               type: p.paymentType
             }))}
@@ -98,7 +100,7 @@ export const LedgerCardFactoryMapping: React.FC<{ }> = (initProps) => {
               const payment = payments.find(p => p.id === mr.paymentId);
               return {
                 description: payment?.paymentDescription ?? "-",
-                amount: mr.requestAmount,
+                amount: formatter.monetary_value(mr.requestAmount),
                 date: formatAnyDateShort(mr.requestTargetDate),
                 type: mr.requestType
               };
