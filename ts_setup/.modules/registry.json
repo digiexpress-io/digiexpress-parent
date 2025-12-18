@@ -2064,6 +2064,7 @@
         "@mui/icons-material",
         "@mui/utils",
         "react-intl",
+        "luxon",
         "@dxs-ts/ledger-api",
         "@dxs-ts/xui-datetime",
         "@tanstack/react-table",
@@ -2076,6 +2077,7 @@
         "@mui/icons-material",
         "@mui/utils",
         "react-intl",
+        "luxon",
         "@tanstack/react-table",
         "@tanstack/react-query"
       ],
@@ -2086,7 +2088,6 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "luxon",
         "@mui/system",
         "@monaco-editor/react",
         "yaml"
@@ -4114,6 +4115,6 @@
       ]
     }
   },
-  "checksum": "2ac197953e9aa5d263ba8f785b4146b2187c7a450f9250b35502cc1121577dd4",
-  "generatedAt": "2025-12-17T09:29:19.202Z"
+  "checksum": "5647ceac384edd9a224aafd8cda8c872c3d513b1cc618ecfbdfd2e4a5619e448",
+  "generatedAt": "2025-12-18T10:07:10.936Z"
 }

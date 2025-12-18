@@ -1,8 +1,10 @@
 import React from 'react';
-import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Collapse, IconButton } from "@mui/material";
+import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Collapse, IconButton, Box } from "@mui/material";
 import { CardStyleDefinition, useCardThemeConfig } from "./cardThemeConfig";
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useCardConfig } from './CardConfigContext';
+import { useIntl } from 'react-intl';
+import { DateTime } from 'luxon';
 
 
 interface LedgerCardDataRowTextProps {
@@ -19,13 +21,13 @@ export const LedgerCardDataRowText: React.FC<LedgerCardDataRowTextProps> = ({ la
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>
       <Grid2 size={style.dataRowGridSizes.label}>
-        <Typography sx={{ ...style.bodyTypography, fontWeight: 500, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        <Typography sx={{ fontWeight: 500, whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {label}
         </Typography>
       </Grid2>
 
       <Grid2 size={style.dataRowGridSizes.value}>
-        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        <Typography sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {value}
         </Typography>
       </Grid2>
@@ -180,3 +182,22 @@ export const LedgerCardDataListExpander: React.FC<{
     </>
   );
 }
+
+export const LedgerCardTransitivesRow: React.FC<{ createdAt?: string, updatedAt?: string }> = ({ createdAt, updatedAt }) => {
+  const intl = useIntl();
+  const theme = useTheme();
+
+  return (
+    <Box display='flex' gap={theme.spacing(1)} marginTop={theme.spacing(1)} justifyContent='end'>
+      <Typography variant='caption'>{intl.formatMessage({ id: 'ledgercard.transitives.createdAt' })}{": "}{formatAnyDateShort(createdAt)}</Typography>
+      <Typography variant='caption'>{intl.formatMessage({ id: 'ledgercard.transitives.updatedAt' })}{": "}{formatAnyDateShort(updatedAt)}</Typography>
+    </Box>
+  )
+}
+
+function formatAnyDateShort(value: Date | string | undefined): string {
+  if (!value) return '--';
+  const dateTime = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(value);
+  return dateTime.setLocale('fi').toLocaleString(DateTime.DATE_SHORT);
+}
+

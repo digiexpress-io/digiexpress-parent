@@ -1209,5 +1209,16 @@ export const en = {
   'ledgercard.blackBook.amount': 'Amount',
   'ledgercard.blackBook.type': 'Type',
   'ledgercard.blackBook.bookDate': 'Created',
-  'ledgercard.blackBook.details.none': 'No details found'
+  'ledgercard.blackBook.detail.detailType': 'Type',
+  'ledgercard.blackBook.detail.detailDescription': 'Description',
+  'ledgercard.blackBook.detail.detailAmount': 'Amount',
+  'ledgercard.blackBook.detail.inflowAmount': 'Inflow',
+  'ledgercard.blackBook.detail.outflowAmount': 'Outflow',
+  'ledgercard.blackBook.detail.deltaAmount': 'Delta',
+  'ledgercard.blackBook.details.none': 'No details found',
+  'ledgercard.blackBook.detail.breakdown': 'Breakdown',
+  'ledgercard.blackBook.detail.expander.collapseBreakdown': 'Hide breakdown',
+  'ledgercard.blackBook.detail.expander.expandBreakdown': 'View breakdown',
+  'ledgercard.transitives.createdAt': 'Created',
+  'ledgercard.transitives.updatedAt': 'Updated'
 }

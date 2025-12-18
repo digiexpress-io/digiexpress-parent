@@ -1,12 +1,12 @@
 import React from 'react';
-import { alpha, Box, Collapse, IconButton, styled, Typography, useTheme } from '@mui/material';
+import { alpha, Box, Collapse, Divider, IconButton, styled, Typography, useTheme } from '@mui/material';
 
 import { AccountBalanceWallet as AccountBalanceWalletIcon } from '@mui/icons-material';
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 
-import { LedgerCardDataListExpander, StartAdornmentIcon } from '../ledger-card';
+import { LedgerCardDataListExpander, LedgerCardDataRowText, LedgerCardTransitivesRow, StartAdornmentIcon } from '../ledger-card';
 import { LedgerApi, useLedger } from '@dxs-ts/ledger-api';
 import { LedgerCard } from '../ledger-card';
 import { useLedgerCard } from '../ledger-card-factory';
@@ -60,84 +60,97 @@ export const LedgerCardBB: React.FC<{}> = () => {
 }
 
 
-
 const BBCardDetail: React.FC<{ book: LedgerApi.BlackBook }> = ({ book }) => {
-  const theme = useTheme();
   const { ledgerContainer } = useLedger();
-  const [expandedExtraRows, setExpandedExtraRows] = React.useState<Record<number, boolean>>({});
+  return (
+    <>
+      {ledgerContainer.blackBookDetails[book.id].map((detail) => (
+        <BBDetailBlock key={detail.id} detail={detail} />
+      ))}
+    </>
+  );
+};
 
 
-  const toggleExtraRow = (index: number) => {
-    setExpandedExtraRows(prev => ({ ...prev, [index]: !prev[index] }));
-  }
+const BBDetailBlock: React.FC<{ detail: LedgerApi.BlackBookDetail }> = ({ detail }) => {
+  const intl = useIntl();
+  const theme = useTheme();
+  const [expanded, setExpanded] = React.useState(false);
 
-  return ledgerContainer.blackBookDetails[book.id].map((detail, i) => (
-    <div key={i}>
-      <StyledExpanderBox>
-        <Typography variant='subtitle2'>
-          {detail.detailType}
-        </Typography>
-        <Typography variant='subtitle2'>
-          {detail.detailAmount}
-        </Typography>
-
-        <Typography variant='subtitle2'>
-          {detail.detailInflowAmount}
-        </Typography>
-
-        <Typography variant='subtitle2'>
-          {detail.detailOutflowAmount}
-        </Typography>
-
-        <Typography variant='subtitle2'>
-          {detail.detailDeltaAmount}
-        </Typography>
-
-        <Typography variant='subtitle2'>
-          {detail.detailDescription}
-        </Typography>
-
+  return (
+    <Box mb={2}>
+      <StyledExpanderBoxPrimary>
+        <LedgerCardDataRowText
+          label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.detailType' })}
+          value={detail.detailType}
+        />
+        <LedgerCardDataRowText
+          label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.detailDescription' })}
+          value={detail.detailDescription}
+        />
+        <LedgerCardDataRowText
+          label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.detailAmount' })}
+          value={detail.detailAmount.toString()}
+        />
+        <LedgerCardDataRowText
+          label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.inflowAmount' })}
+          value={detail.detailInflowAmount?.toString()}
+        />
+        <LedgerCardDataRowText
+          label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.outflowAmount' })}
+          value={detail.detailOutflowAmount?.toString()}
+        />
+        <LedgerCardDataRowText
+          label={intl.formatMessage({ id: 'ledgercard.blackBook.detail.deltaAmount' })}
+          value={detail.detailDeltaAmount?.toString()}
+        />
         <LedgerCardTransitivesRow {...detail.transitives} />
-      </StyledExpanderBox>
+      </StyledExpanderBoxPrimary>
+
       <Box display="flex" alignItems="center" mt={1}>
-        <IconButton size="small" onClick={() => toggleExtraRow(i)} sx={{ mr: 0.5 }}>
-          {expandedExtraRows[i] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        <IconButton size="small" onClick={() => setExpanded(v => !v)} sx={{ mr: 0.5 }}>
+          {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
-        <Typography variant="subtitle2" fontWeight='bold' sx={{ cursor: "pointer", color: theme.palette.primary.main }} onClick={() => toggleExtraRow(i)}>
-          {expandedExtraRows[i] ? 'view less' : 'view more'}
+        <Typography
+          variant="subtitle2"
+          fontWeight="bold"
+          sx={{ cursor: 'pointer', color: theme.palette.primary.main }}
+          onClick={() => setExpanded(v => !v)}
+        >
+          {expanded ? intl.formatMessage({ id: 'ledgercard.blackBook.detail.expander.collapseBreakdown' }) : intl.formatMessage({ id: 'ledgercard.blackBook.detail.expander.expandBreakdown' })}
         </Typography>
       </Box>
 
-      <Collapse in={expandedExtraRows[i]} timeout="auto" unmountOnExit>
-        <StyledExpanderBox>
-
-          {((detail.detailBody?.logs ?? []) as string[])
-            .map((log, key) => <div key={key}><Typography variant="subtitle2">{log}</Typography></div>)}
-        </StyledExpanderBox>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <StyledExpanderBoxSecondary>
+          <Typography fontWeight={500}>
+            {intl.formatMessage({ id: 'ledgercard.blackBook.detail.breakdown' })}
+          </Typography>
+          <Divider sx={{ my: theme.spacing(0.5) }} />
+          {((detail.detailBody?.logs ?? []) as string[]).map((log, i) => (
+            <Typography key={i} variant="subtitle2">
+              {log}
+            </Typography>
+          ))}
+        </StyledExpanderBoxSecondary>
       </Collapse>
-    </div>));
-}
+    </Box>
+  );
+};
 
 
 
-const StyledExpanderBox = styled(Box)(({ theme }) => ({
-  paddingLeft: theme.spacing(1),
-  paddingTop: theme.spacing(1),
-  paddingBottom: theme.spacing(1),
-  marginLeft: theme.spacing(5),
+const StyledExpanderBoxPrimary = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(1),
   borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.8)}`,
   backgroundColor: alpha(theme.palette.primary.main, 0.05),
 }));
 
 
-const LedgerCardTransitivesRow: React.FC<{ createdAt?: string, updatedAt?: string }> = ({ createdAt, updatedAt }) => {
-  const intl = useIntl();
-  const theme = useTheme();
-
-  return (
-    <Box display='flex' gap={theme.spacing(1)} marginTop={theme.spacing(1)} justifyContent='end'>
-      <Typography variant='caption'>{intl.formatMessage({ id: 'ledgercard.transitives.createdAt' })}{": "}{createdAt}</Typography>
-      <Typography variant='caption'>{intl.formatMessage({ id: 'ledgercard.transitives.updatedAt' })}{": "}{updatedAt}</Typography>
-    </Box>
-  )
-}
+const StyledExpanderBoxSecondary = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(1),
+  //marginLeft: theme.spacing(5),
+  marginTop: theme.spacing(1),
+  borderLeft: `2px solid ${alpha(theme.palette.info.dark, 0.8)}`,
+  backgroundColor: alpha(theme.palette.info.dark, 0.05),
+}));
