@@ -10,7 +10,7 @@ interface InfoTreeItemProps {
 }
 
 const InfoTreeItem: React.FC<InfoTreeItemProps> = ({ nodeId, lastUpdated }) => {
-  const formattedDate = DateTime.fromISO(lastUpdated, { zone: 'UTC' }).setLocale('fi').toFormat('d.M.yyyy HH:mm');
+  const formattedDate = DateTime.fromISO(lastUpdated, { zone: 'UTC' }).setZone('local').setLocale('fi').toFormat('d.M.yyyy HH:mm');
 
   return (
     <TreeItem 

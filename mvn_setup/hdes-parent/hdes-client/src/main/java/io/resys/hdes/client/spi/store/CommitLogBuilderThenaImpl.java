@@ -20,6 +20,7 @@ package io.resys.hdes.client.spi.store;
  * #L%
  */
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +62,10 @@ public class CommitLogBuilderThenaImpl implements CommitLogBuilder {
               return state.getObjects().getValues().stream().map(log -> {
                 final CommitLog result = ImmutableCommitLog.builder()
                     .commitId(log.getCommit().getId())
-                    .createdAt(log.getCommit().getDateTime().atOffset(ZoneOffset.UTC))
+                    .createdAt(log.getCommit().getDateTime()
+                        .atZone(ZoneId.systemDefault())
+                        .withZoneSameInstant(ZoneOffset.UTC)
+                        .toOffsetDateTime())
                     .createdBy(log.getCommit().getAuthor())
                     .objectId(log.getResourceName())
                     .build();
