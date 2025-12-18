@@ -71,7 +71,7 @@ export const Secondary: React.FC<{}> = () => {
         <Button startIcon={<CreateOutlinedIcon />}
           className={classes.composeButton}
           onClick={handleComposeSelectClick}>
-          {intl.formatMessage({ id: 'menu.compose' })}
+          {intl.formatMessage({ id: 'menu.compose.wrench' })}
         </Button>
         </EveliPermissions>
 
@@ -79,7 +79,7 @@ export const Secondary: React.FC<{}> = () => {
         <Button variant={activeItem?.type === 'FLOWS' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<AccountTreeOutlinedIcon />}
           onClick={() => onNav({ type: 'FLOWS' })}>
-          {intl.formatMessage({ id: 'menu.flows' })}
+          {intl.formatMessage({ id: 'menu.flows.wrench' })}
         </Button>
         </EveliPermissions>
 
@@ -87,7 +87,7 @@ export const Secondary: React.FC<{}> = () => {
         <Button variant={activeItem?.type === 'DECISIONS' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<TableChartOutlinedIcon />}
           onClick={() => onNav({ type: 'DECISIONS' })}>
-          {intl.formatMessage({ id: 'menu.decisions' })}
+          {intl.formatMessage({ id: 'menu.decisions.wrench' })}
         </Button>
         </EveliPermissions>
 
@@ -95,7 +95,7 @@ export const Secondary: React.FC<{}> = () => {
         <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<CodeOutlinedIcon />}
           onClick={() => onNav({ type: 'SERVICES' })}>
-          {intl.formatMessage({ id: 'menu.services' })}
+          {intl.formatMessage({ id: 'menu.services.wrench' })}
         </Button>
         </EveliPermissions>
 
@@ -103,7 +103,7 @@ export const Secondary: React.FC<{}> = () => {
           <Button variant={activeItem?.type === 'DEBUG' ? 'explorerActive' : 'explorerInactive'}
             startIcon={<BugReportOutlinedIcon />}
             onClick={() => onNav({ type: 'DEBUG' })}>
-            {intl.formatMessage({ id: 'menu.debug' })}
+            {intl.formatMessage({ id: 'menu.debug.wrench' })}
           </Button>
         </EveliPermissions>
 
@@ -111,7 +111,7 @@ export const Secondary: React.FC<{}> = () => {
           <Button variant={activeItem?.type === 'COMPARE' ? 'explorerActive' : 'explorerInactive'}
             startIcon={<CompareArrowsOutlinedIcon />}
             onClick={() => onNav({ type: 'COMPARE' })}>
-            {intl.formatMessage({ id: 'menu.compare' })}
+            {intl.formatMessage({ id: 'menu.compare.wrench' })}
           </Button>
         </EveliPermissions>
 
@@ -120,7 +120,7 @@ export const Secondary: React.FC<{}> = () => {
             <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
               startIcon={<NewReleasesOutlinedIcon />}
               onClick={() => onNav({ type: 'RELEASES' })}>
-              {intl.formatMessage({ id: 'menu.releases' })}
+              {intl.formatMessage({ id: 'menu.releases.wrench' })}
             </Button>
           </EveliPermissions>
         </EveliTenantFeatureEnabled>
