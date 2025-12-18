@@ -2,6 +2,7 @@ package io.resys.hdes.client.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,6 +49,7 @@ public interface HdesStore {
   QueryBuilder query();
   HistoryQuery history();
   BranchQuery queryBranches();
+  CommitLogBuilder commitLog();
   
   String getRepoName();
   String getHeadName();
@@ -58,6 +60,10 @@ public interface HdesStore {
 
   interface BranchQuery {
     Uni<List<Branch>> findAll();
+  }
+
+  interface CommitLogBuilder {
+    Uni<List<CommitLog>> build();
   }
   
   interface StoreRepoBuilder {
@@ -185,5 +191,13 @@ public interface HdesStore {
   interface Branch {
     String getCommitId();
     String getName();
+  }
+
+  @Value.Immutable
+  interface CommitLog {
+    String getObjectId();
+    String getCommitId();
+    OffsetDateTime getCreatedAt();
+    String getCreatedBy();
   }
 }

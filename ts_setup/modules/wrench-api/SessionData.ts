@@ -71,6 +71,7 @@ export class SessionData implements WrenchComposerApi.Session {
   private _pages: Record<HdesApi.EntityId, WrenchComposerApi.PageUpdate>;
   private _cache: SiteCache;
   private _debug: WrenchComposerApi.DebugSessions;
+  private _commitlogs: Record<string, HdesApi.CommitLog[]>;
 
   
   constructor(props: {
@@ -78,11 +79,19 @@ export class SessionData implements WrenchComposerApi.Session {
     pages?: Record<HdesApi.EntityId, WrenchComposerApi.PageUpdate>;
     cache?: SiteCache;
     debug?: WrenchComposerApi.DebugSessions;
+    commitlogs?: HdesApi.CommitLog[];
   }) {
     this._site = props.site ? props.site : { name: "", contentType: "OK", tags: {}, flows: {}, decisions: {}, services: {}, branches: {} };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
     this._debug = props.debug ? props.debug : { values: {}};
+    this._commitlogs = (props.commitlogs ?? []).reduce<Record<string, HdesApi.CommitLog[]>>((collector, item) => {
+      if (!collector[item.objectId]) {
+        collector[item.objectId] = [];
+      }
+      collector[item.objectId].push(item);
+      return collector;
+    }, {});
   }
   get site() {
     return this._site;
@@ -105,8 +114,20 @@ export class SessionData implements WrenchComposerApi.Session {
   getEntity(entityId: HdesApi.EntityId): HdesApi.Entity<any> | undefined {
     return this._cache.getEntity(entityId);
   }
+  getLastUpdated(entityId: HdesApi.EntityId): string | null {
+    try {
+      const lastUpdated = this._commitlogs[entityId];
+      return lastUpdated?.[0]?.createdAt ?? null;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
   withSite(site: HdesApi.Site) {
-    return new SessionData({ site: site, pages: this._pages, debug: this._debug });
+    return new SessionData({ site: site, pages: this._pages, debug: this._debug, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
+  }
+  withCommitlogs(commitlogs: HdesApi.CommitLog[]) {
+    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug, commitlogs });
   }
   withDebug(debugSession: WrenchComposerApi.DebugSession): SessionData {
     const newDebug: Record<HdesApi.EntityId, WrenchComposerApi.DebugSession> = {};
@@ -115,10 +136,10 @@ export class SessionData implements WrenchComposerApi.Session {
       selected: debugSession.selected,
       values: Object.assign({}, this._debug.values, newDebug)
     }
-    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug });
+    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withBranch(branchName: string): SessionData {
-    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug });
+    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withoutPages(pageIds: HdesApi.EntityId[]): SessionData {
     const pages: Record<string, WrenchComposerApi.PageUpdate> = {};
@@ -128,7 +149,7 @@ export class SessionData implements WrenchComposerApi.Session {
       }
       pages[page.origin.id] = page;
     }
-    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug });
+    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withPage(page: HdesApi.EntityId): SessionData {
     if (this._pages[page]) {
@@ -143,7 +164,7 @@ export class SessionData implements WrenchComposerApi.Session {
     }
 
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: [] });
-    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug});
+    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): SessionData {
     const session = this.withPage(page);
@@ -152,7 +173,7 @@ export class SessionData implements WrenchComposerApi.Session {
     const pages = Object.assign({}, session.pages);
     pages[page] = pageUpdate.withValue(value);
 
-    return new SessionData({ site: session.site, pages, cache: this._cache, debug: this._debug });
+    return new SessionData({ site: session.site, pages, cache: this._cache, debug: this._debug, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
 }
 

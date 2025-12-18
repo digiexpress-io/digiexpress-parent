@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { DateTime } from 'luxon';
 import { TableChartOutlined as TableChartOutlinedIcon } from '@mui/icons-material';
 import { AccountTreeOutlined as AccountTreeOutlinedIcon } from '@mui/icons-material';
 
@@ -10,6 +11,7 @@ import { EveliPermissions, TreeItemRoot, TreeItem } from "@dxs-ts/eveli-primitiv
 import { HdesApi, WrenchComposerApi } from '@dxs-ts/wrench-api';
 import DecisionOptions from './DecisionOptions';
 import { useWrenchNav } from "../../wrench-nav";
+import InfoTreeItem from '../InfoTreeItem';
 
 
 
@@ -47,6 +49,8 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
 
   const saved = isArticleSaved(decision);
   const decisionName = decision.ast ? decision.ast.name : decision.id;
+  const lastUpdated = session.getLastUpdated(decisionId);
+  const formattedDate = lastUpdated ? DateTime.fromISO(lastUpdated, { zone: 'UTC' }).setLocale('fi').toFormat('d.M.yyyy HH:mm') : '';
 
   const assocs = decision.associations.filter(a => a.refType === 'FLOW');
   const flows: HdesApi.Entity<HdesApi.AstFlow>[] = assocs.map(a =>  a.id ? session.site.flows[a.id] : session.getFlow(a.ref)).filter(a => !!a);
@@ -63,7 +67,10 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
         </TreeItem>
       </EveliPermissions>
 
-      {/** Decision options */}
+      {/** Decision info */}
+      {lastUpdated && <InfoTreeItem nodeId={decision.id} lastUpdated={lastUpdated} />}
+
+      {/** Decision flows */}
       <TreeItem itemId={decision.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
         labelInfo={`${flows.length}`}

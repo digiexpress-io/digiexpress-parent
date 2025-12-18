@@ -35,9 +35,14 @@ function Component() {
   const { update } = useFetch('worker/rest/api/assets/wrench/resources.PUT', {})
   const { remove } = useFetch('worker/rest/api/assets/wrench/resources/$id.DELETE', {})
   const { summary } = useFetch('worker/rest/api/assets/wrench/summary/$tagId.GET', {})
+
+  // Mocked implementation, not used in Tagomi
+  function getSiteCommitLog(): Promise<HdesApi.CommitLog[]> {
+    return Promise.resolve([]);
+  }
   
   const service = React.useMemo(() => new HdesApi.ServiceImpl({
-    update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag,
+    update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag, getSiteCommitLog
   }), [update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag]);
 
   

@@ -592,6 +592,8 @@ export const fi = {
   'activities.debug.desc': 'Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.',
   'activities.debug.view': 'Simulate',
   'activities.assets.saveSuccess': 'Saved asset: {name}',
+  'wrench.explorer.info': 'Info',
+  'wrench.explorer.info.lastModified': 'Last modified: {value}',
   'flows': 'Flows',
   'upload.json': 'JSON',
   'upload.csv': 'CSV',

@@ -20,6 +20,7 @@ function Component() {
   const { ast } = useFetch('worker/rest/api/assets/wrench/commands.POST', {})
   const { copy } = useFetch('worker/rest/api/assets/wrench/copyas.POST', {})
   const { getSite } = useFetch('worker/rest/api/assets/wrench/dataModels.GET', {})
+  const { getSiteCommitLog } = useFetch('worker/rest/api/assets/wrench/commitlogs.GET', {})
   const { debug } = useFetch('worker/rest/api/assets/wrench/debugs.POST', {})
   const { diff } = useFetch('worker/rest/api/assets/wrench/diff.GET', {})
   const { importTag } = useFetch('worker/rest/api/assets/wrench/importTag.POST', {})
@@ -29,8 +30,8 @@ function Component() {
   const { summary } = useFetch('worker/rest/api/assets/wrench/summary/$tagId.GET', {})
   
   const service = React.useMemo(() => new HdesApi.ServiceImpl({
-    update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag,
-  }), [update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag]);
+    update, createAsset, ast, getSite, getSiteCommitLog, debug, copy, diff, summary, remove, importTag,
+  }), [update, createAsset, ast, getSite, getSiteCommitLog, debug, copy, diff, summary, remove, importTag]);
   const { Main, Secondary, Tabs } = WrenchSetup;
   
   return (

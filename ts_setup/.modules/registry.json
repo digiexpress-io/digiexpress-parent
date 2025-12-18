@@ -3290,6 +3290,7 @@
         "@dxs-ts/envir-fetch",
         "@uiw/react-md-editor",
         "js-file-download",
+        "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3311,6 +3312,7 @@
         "notistack",
         "@uiw/react-md-editor",
         "js-file-download",
+        "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3325,7 +3327,9 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "luxon"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/xui-datetime": {
