@@ -1,18 +1,20 @@
 import React from 'react';
-import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Box, Collapse, IconButton, alpha } from "@mui/material";
-import { CardStyleDefinition } from "./cardThemeConfig";
-import { useIntl } from 'react-intl';
+import { useTheme, Divider, Grid2, Typography, List, ListItem, ListItemText, Collapse, IconButton } from "@mui/material";
+import { CardStyleDefinition, useCardThemeConfig } from "./cardThemeConfig";
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { useCardConfig } from './CardConfigContext';
 
 
 interface LedgerCardDataRowTextProps {
   label: string;
   value: string | string[] | undefined;
-  style: CardStyleDefinition;
 }
 
-export const LedgerCardDataRowText: React.FC<LedgerCardDataRowTextProps> = ({ label, value, style }) => {
+export const LedgerCardDataRowText: React.FC<LedgerCardDataRowTextProps> = ({ label, value }) => {
   const theme = useTheme();
+  const styleConfig = useCardThemeConfig();
+  const { cardTheme } = useCardConfig();
+  const style = styleConfig[cardTheme];
 
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>
@@ -114,15 +116,17 @@ export const LedgerCardDataList: React.FC<{
 
 export const LedgerCardDataListExpander: React.FC<{
   columns: { key: string; label: string; width?: string }[];
-  rows: Record<string, React.ReactNode>[];
-  expanderContent: React.ReactNode[];
-}> = ({ columns, rows, expanderContent }) => {
+  rows: {
+    columns: Record<string, React.ReactNode>,
+    expanded: React.ReactNode | undefined
+  }[];
+}> = ({ columns, rows }) => {
   const theme = useTheme();
   const [expandedRows, setExpandedRows] = React.useState<{ [key: number]: boolean }>({});
 
   const toggleRow = (index: number) => {
     setExpandedRows(prev => ({ ...prev, [index]: !prev[index] }));
-  };
+  }
 
   return (
     <>
@@ -140,11 +144,10 @@ export const LedgerCardDataListExpander: React.FC<{
             </Typography>
           ))}
         </ListItem>
-      </List>
 
-      {/* ROWS */}
-      {rows.map((row, i) => (
-        <List dense sx={{ padding: theme.spacing(0.5) }} key={i}>
+
+        {/* ROWS */}
+        {rows.map((row, i) => (<div key={i}>
           <ListItem dense
             sx={{
               display: "flex",
@@ -156,50 +159,24 @@ export const LedgerCardDataListExpander: React.FC<{
                   : theme.palette.action.hover
             }}
           >
-            <IconButton size="small" onClick={() => toggleRow(i)} sx={{ mr: 1 }}>
+
+            <IconButton size="small" disabled={!row.expanded} onClick={() => toggleRow(i)} sx={{ mr: 1 }}>
               {expandedRows[i] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
 
-            {/* Render row cells */}
+
             {columns.map((col, i) => (
               <ListItemText key={i} sx={{ width: col.width ?? `${100 / columns.length}%` }}>
-                {row[col.key] ?? "-"}
+                {row.columns[col.key] ?? "-"}
               </ListItemText>
             ))}
           </ListItem>
 
-          {/* Collapsible content */}
-          {expanderContent[i] && (
-            <Collapse in={expandedRows[i]} timeout="auto" unmountOnExit>
-              <Box sx={{
-                paddingLeft: theme.spacing(1),
-                paddingTop: theme.spacing(1),
-                paddingBottom: theme.spacing(1),
-                marginLeft: theme.spacing(5),
-                borderLeft: `2px solid ${alpha(theme.palette.primary.main, 0.8)}`,
-                backgroundColor: alpha(theme.palette.primary.main, 0.05)
-              }}
-              >
-                <Typography variant='subtitle2'>
-                  {expanderContent[i]}
-                </Typography>
-              </Box>
-            </Collapse>
-          )}
-        </List>
-      ))}
+          <Collapse in={expandedRows[i]} timeout="auto" unmountOnExit>
+            {row.expanded}
+          </Collapse>
+        </div>))}
+      </List>
     </>
   );
-};
-
-export const LedgerCardTransitivesRow: React.FC<{ createdAt: string, updatedAt: string }> = ({ createdAt, updatedAt }) => {
-  const intl = useIntl();
-  const theme = useTheme();
-
-  return (
-    <Box display='flex' gap={theme.spacing(1)} marginTop={theme.spacing(1)} justifyContent='end'>
-      <Typography variant='caption'>{intl.formatMessage({ id: 'ledgercard.transitives.createdAt' })}{": "}{createdAt}</Typography>
-      <Typography variant='caption'>{intl.formatMessage({ id: 'ledgercard.transitives.updatedAt' })}{": "}{updatedAt}</Typography>
-    </Box>
-  )
 }

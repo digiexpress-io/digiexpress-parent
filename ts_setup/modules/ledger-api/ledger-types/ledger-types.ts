@@ -330,6 +330,7 @@ export declare namespace LedgerApi {
     ledgerId: string,
     contractNumber: string
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    currentBlackBook: BlackBook | undefined;
   }
 }

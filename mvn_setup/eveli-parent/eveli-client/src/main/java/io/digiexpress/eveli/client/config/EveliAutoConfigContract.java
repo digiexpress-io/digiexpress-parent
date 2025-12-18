@@ -84,7 +84,7 @@ public class EveliAutoConfigContract {
   }
   
   @Bean
-  public LedgerApiController ledgerApiController(LedgerClient ledgerClient) {
-    return new LedgerApiController(ledgerClient);
+  public LedgerApiController ledgerApiController(LedgerClient ledgerClient, ContractClient contractClient) {
+    return new LedgerApiController(ledgerClient, contractClient);
   }
 }

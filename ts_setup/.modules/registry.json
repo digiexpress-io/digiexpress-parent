@@ -2065,10 +2065,10 @@
         "@mui/utils",
         "react-intl",
         "@dxs-ts/ledger-api",
+        "@dxs-ts/xui-datetime",
         "@tanstack/react-table",
         "@tanstack/react-query",
-        "@dxs-ts/xui-table",
-        "luxon"
+        "@dxs-ts/xui-table"
       ],
       "actualExternalDependencies": [
         "react",
@@ -2077,16 +2077,16 @@
         "@mui/utils",
         "react-intl",
         "@tanstack/react-table",
-        "@tanstack/react-query",
-        "luxon"
+        "@tanstack/react-query"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/ledger-api",
+        "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/xui-datetime",
+        "luxon",
         "@mui/system",
         "@monaco-editor/react",
         "yaml"
@@ -4114,6 +4114,6 @@
       ]
     }
   },
-  "checksum": "ea2564d94c41d8a746c772d36fadcd59c29784d00ecf362ef3f986627dfee815",
-  "generatedAt": "2025-12-11T15:03:40.052Z"
+  "checksum": "2ac197953e9aa5d263ba8f785b4146b2187c7a450f9250b35502cc1121577dd4",
+  "generatedAt": "2025-12-17T09:29:19.202Z"
 }

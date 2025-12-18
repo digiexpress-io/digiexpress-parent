@@ -20,16 +20,16 @@ export const ApprovalCount: React.FC<ApprovalCountProps> = ({ approvalCount, dis
       <Typography variant='caption' alignSelf='end' mr={1}>{intl.formatMessage({ id: 'feedback.customerApprovals' })}</Typography>
 
       <Stack spacing={1}>
-        <ThumbDownIcon color='error' />
+        <ThumbUpIcon color='success' />
         <Typography alignSelf='center' variant='caption' fontWeight='bold'>
-          {disapprovalCount}
+          {approvalCount}
         </Typography>
       </Stack>
 
       <Stack spacing={1}>
-        <ThumbUpIcon color='success' />
+        <ThumbDownIcon color='error' />
         <Typography alignSelf='center' variant='caption' fontWeight='bold'>
-          {approvalCount}
+          {disapprovalCount}
         </Typography>
       </Stack>
     </Box>

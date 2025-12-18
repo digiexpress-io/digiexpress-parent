@@ -33,11 +33,20 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.ThenaContainer;
 import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
+
 
 public interface ThenaGrimContainers extends ThenaContainer {
 
+  @Slf4j
+  public static class GrimContainerLogger {
+    
+  }
+  
+  
   @Value.Immutable
   interface GrimMissionContainer extends ThenaGrimContainers { 
     
@@ -65,17 +74,105 @@ public interface ThenaGrimContainers extends ThenaContainer {
       for(final var mission : getMissions().values()) {
         builders.put(mission.getId(), ImmutableGrimMissionContainer.builder().putMissions(mission.getId(), mission));
       }
-      getMissionLabels().values().forEach(label -> builders.get(label.getMissionId()).putMissionLabels(label.getId(), label));
-      getLinks().values().forEach(link -> builders.get(link.getMissionId()).putLinks(link.getId(), link));
-      getRemarks().values().forEach(remark -> builders.get(remark.getMissionId()).putRemarks(remark.getId(), remark));
-      getObjectives().values().forEach(objective -> builders.get(objective.getMissionId()).putObjectives(objective.getId(), objective));
-      getGoals().values().forEach(goals -> builders.get(goals.getTransitives().getMissionId()).putGoals(goals.getId(), goals));
-      getData().values().forEach(data -> builders.get(data.getMissionId()).putData(data.getId(), data));
-      getAssignments().values().forEach(assignment -> builders.get(assignment.getMissionId()).putAssignments(assignment.getId(), assignment));
-      getCommands().values().forEach(commands -> builders.get(commands.getMissionId()).putCommands(commands.getId(), commands));
-      getViews().values().forEach(commands -> builders.get(commands.getMissionId()).putViews(commands.getId(), commands));
-      getCommits().values().stream().filter(e -> builders.containsKey(e.getMissionId())).forEach(commit -> builders.get(commit.getMissionId()).putCommits(commit.getCommitId(), commit));
-      getProcs().values().forEach(proc -> builders.get(proc.getMissionId()).putProcs(proc.getId(), proc));
+      
+      getMissionLabels().values().forEach(label -> 
+        Optional.ofNullable(builders.get(label.getMissionId()))
+          .map(builder -> builder.putMissionLabels(label.getId(), label))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", label.getDocType(), label.getMissionId());
+            return null;
+          })
+      );
+      
+      getLinks().values().forEach(link -> 
+        Optional.ofNullable(builders.get(link.getMissionId()))
+          .map(builder -> builder.putLinks(link.getId(), link))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", link.getDocType(), link.getMissionId());
+            return null;
+          })
+      );
+      
+      getRemarks().values().forEach(remark -> 
+        Optional.ofNullable(builders.get(remark.getMissionId()))
+          .map(builder -> builder.putRemarks(remark.getId(), remark))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", remark.getDocType(), remark.getMissionId());
+            return null;
+          })
+      );
+      
+      getObjectives().values().forEach(objective -> 
+        Optional.ofNullable(builders.get(objective.getMissionId()))
+          .map(builder -> builder.putObjectives(objective.getId(), objective))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", objective.getDocType(), objective.getMissionId());
+            return null;
+          })
+      );
+      
+      getGoals().values().forEach(goals -> 
+        Optional.ofNullable(builders.get(goals.getTransitives().getMissionId()))
+          .map(builder -> builder.putGoals(goals.getId(), goals))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", goals.getDocType(), goals.getTransitives().getMissionId());
+            return null;
+          })
+      );
+      
+      getData().values().forEach(data -> 
+        Optional.ofNullable(builders.get(data.getMissionId()))
+          .map(builder -> builder.putData(data.getId(), data))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", data.getDocType(), data.getMissionId());
+            return null;
+          })
+      );
+      
+      getAssignments().values().forEach(assignment -> 
+        Optional.ofNullable(builders.get(assignment.getMissionId()))
+          .map(builder -> builder.putAssignments(assignment.getId(), assignment))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", assignment.getDocType(), assignment.getMissionId());
+            return null;
+          })
+      );
+      
+      getCommands().values().forEach(commands -> 
+        Optional.ofNullable(builders.get(commands.getMissionId()))
+          .map(builder -> builder.putCommands(commands.getId(), commands))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", commands.getDocType(), commands.getMissionId());
+            return null;
+          })
+      );
+      
+      getViews().values().forEach(commands -> 
+        Optional.ofNullable(builders.get(commands.getMissionId()))
+          .map(builder -> builder.putViews(commands.getId(), commands))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", commands.getDocType(), commands.getMissionId());
+            return null;
+          })
+      );
+      
+      getCommits().values().stream().filter(e -> builders.containsKey(e.getMissionId())).forEach(commit -> 
+        Optional.ofNullable(builders.get(commit.getMissionId()))
+          .map(builder -> builder.putCommits(commit.getCommitId(), commit))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", GrimDocType.GRIM_COMMIT, commit.getMissionId());
+            return null;
+          })
+      );
+      
+      getProcs().values().forEach(proc -> 
+        Optional.ofNullable(builders.get(proc.getMissionId()))
+          .map(builder -> builder.putProcs(proc.getId(), proc))
+          .orElseGet(() -> {
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", proc.getDocType(), proc.getMissionId());
+            return null;
+          })
+      );
       
       return builders.values().stream().map(builder -> builder.build()).collect(Collectors.toList());
     }
