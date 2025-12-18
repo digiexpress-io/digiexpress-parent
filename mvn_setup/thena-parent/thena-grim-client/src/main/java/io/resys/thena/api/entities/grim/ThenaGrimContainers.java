@@ -79,7 +79,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(label.getMissionId()))
           .map(builder -> builder.putMissionLabels(label.getId(), label))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", label.getDocType(), label.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", label.getDocType(), label.getMissionId());
             return null;
           })
       );
@@ -88,7 +88,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(link.getMissionId()))
           .map(builder -> builder.putLinks(link.getId(), link))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", link.getDocType(), link.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", link.getDocType(), link.getMissionId());
             return null;
           })
       );
@@ -97,7 +97,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(remark.getMissionId()))
           .map(builder -> builder.putRemarks(remark.getId(), remark))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", remark.getDocType(), remark.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", remark.getDocType(), remark.getMissionId());
             return null;
           })
       );
@@ -106,7 +106,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(objective.getMissionId()))
           .map(builder -> builder.putObjectives(objective.getId(), objective))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", objective.getDocType(), objective.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", objective.getDocType(), objective.getMissionId());
             return null;
           })
       );
@@ -115,7 +115,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(goals.getTransitives().getMissionId()))
           .map(builder -> builder.putGoals(goals.getId(), goals))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", goals.getDocType(), goals.getTransitives().getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", goals.getDocType(), goals.getTransitives().getMissionId());
             return null;
           })
       );
@@ -124,7 +124,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(data.getMissionId()))
           .map(builder -> builder.putData(data.getId(), data))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", data.getDocType(), data.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", data.getDocType(), data.getMissionId());
             return null;
           })
       );
@@ -133,7 +133,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(assignment.getMissionId()))
           .map(builder -> builder.putAssignments(assignment.getId(), assignment))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", assignment.getDocType(), assignment.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", assignment.getDocType(), assignment.getMissionId());
             return null;
           })
       );
@@ -142,7 +142,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(commands.getMissionId()))
           .map(builder -> builder.putCommands(commands.getId(), commands))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", commands.getDocType(), commands.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", commands.getDocType(), commands.getMissionId());
             return null;
           })
       );
@@ -151,7 +151,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(commands.getMissionId()))
           .map(builder -> builder.putViews(commands.getId(), commands))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", commands.getDocType(), commands.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", commands.getDocType(), commands.getMissionId());
             return null;
           })
       );
@@ -160,7 +160,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(commit.getMissionId()))
           .map(builder -> builder.putCommits(commit.getCommitId(), commit))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", GrimDocType.GRIM_COMMIT, commit.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", GrimDocType.GRIM_COMMIT, commit.getMissionId());
             return null;
           })
       );
@@ -169,7 +169,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
         Optional.ofNullable(builders.get(proc.getMissionId()))
           .map(builder -> builder.putProcs(proc.getId(), proc))
           .orElseGet(() -> {
-            GrimContainerLogger.log.error("Mission not found for entity type: {}, missionId: {}", proc.getDocType(), proc.getMissionId());
+            GrimContainerLogger.log.error("GRIM001: Mission not found for entity type: {}, missionId: {}", proc.getDocType(), proc.getMissionId());
             return null;
           })
       );
