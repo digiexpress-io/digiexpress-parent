@@ -392,7 +392,7 @@ services.desc,,Connect your forms and other integrations to your content with th
 services.add,,Add a service,Lisää palvelu,Lägg till en tjänst,
 services.change,,Change existing services,Muokaa olemassa olevaa palvelua,Ändra befintliga tjänster,
 services.edit,,Edit service,Muokaa palvelua,Redigera tjänst,
-services.technicalname,,User given unique service name,Palvelun nimi,Användarens unika tjänstnamn,
+services.technicalname,,Service name,Palvelun nimi,Användarens unika tjänstnamn,
 services.selected,,Selected services,Valitse palavelu,Utvalda tjänster,
 services.modeselect.title,,Configuration options,Asetusvaihtoehdot,Konfigurationsalternativ,
 services.modeselect.label,,Select,Valitse,Välja,

@@ -390,7 +390,7 @@ export const en = {
   'services.add': 'Add a service',
   'services.change': 'Change existing services',
   'services.edit': 'Edit service',
-  'services.technicalname': 'User given unique service name',
+  'services.technicalname': 'Service name',
   'services.selected': 'Selected services',
   'services.modeselect.title': 'Configuration options',
   'services.modeselect.label': 'Select',
