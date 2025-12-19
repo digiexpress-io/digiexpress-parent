@@ -37,9 +37,6 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
   const { contractContainer } = useContract();
   const { contract, parties, coverages, paymentPlans, invPlans, invPlanAllocations, notes } = contractContainer;
   const [contractBodyOpen, setProductDescriptionOpen] = React.useState(false);
-  const [description, setDescription] = React.useState<any>();
-
-  //console.log(contractContainer)
 
 
   const {
@@ -191,7 +188,6 @@ export const ContractCardFactory: React.FC<{ cardId: ContractCardId }> = (initPr
       const productDescriptionNote = notes.find(n => n.noteType === "product-description");
       const description = productDescriptionNote?.noteBody?.description;
 
-      console.log(notes.filter(n => n.noteType === "product-description"))
       return (
         <ContractCard
           title={intl.formatMessage({ id: "contractcard.product.title" })}
