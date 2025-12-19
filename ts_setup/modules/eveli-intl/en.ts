@@ -42,6 +42,8 @@ export const en = {
   'task.subject': 'Subject',
   'task.additionalInfo': 'Additional info',
   'task.metaData': 'Metadata',
+  'task.status': 'Status',
+  'task.priority': 'Priority',
   'task.status.new': 'New',
   'task.status.open': 'Open',
   'task.status.completed': 'Completed',

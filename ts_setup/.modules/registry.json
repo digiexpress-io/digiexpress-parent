@@ -2067,6 +2067,7 @@
         "luxon",
         "@dxs-ts/ledger-api",
         "@dxs-ts/xui-datetime",
+        "numbro",
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@dxs-ts/xui-table"
@@ -2078,6 +2079,7 @@
         "@mui/utils",
         "react-intl",
         "luxon",
+        "numbro",
         "@tanstack/react-table",
         "@tanstack/react-query"
       ],
@@ -2086,7 +2088,9 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "numbro"
+      ],
       "unusedDependencies": [
         "@mui/system",
         "@monaco-editor/react",
@@ -4115,6 +4119,6 @@
       ]
     }
   },
-  "checksum": "5647ceac384edd9a224aafd8cda8c872c3d513b1cc618ecfbdfd2e4a5619e448",
-  "generatedAt": "2025-12-18T10:07:10.936Z"
+  "checksum": "9fd4bd18569fe00cfe73c53f0f42d7d4dae46b5fc1ede69018aba9afee8ec270",
+  "generatedAt": "2025-12-19T07:24:29.162Z"
 }
