@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, styled, Avatar, generateUtilityClass, Typography, darken, TextField } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import composeClasses from '@mui/utils/composeClasses';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
@@ -21,15 +22,6 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
   const allExternalMessages = task.comments?.filter(c => c.external)
     .sort((a, b) => DateTime.fromISO(a.created).toMillis() - DateTime.fromISO(b.created).toMillis())
     || [];
-
-
-  const formatDate = (value: string): string => {
-    try {
-      return DateTime.fromISO(value).setLocale('fi').toLocaleString(DateTime.DATETIME_SHORT);
-    } catch {
-      return value;
-    }
-  };
 
   const externalCommentCount = allExternalMessages.length;
   React.useEffect(() => {
@@ -54,7 +46,9 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
                   <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
                   <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
                     <Typography className={classes.senderInfo}>
-                      {comment.userName}{intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}{formatDate(comment.created)}
+                      {comment.userName}
+                      {intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}
+                      <DateTimeFormatter value={comment.created} variant='text' />
                     </Typography>
                     <Typography
                       style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}

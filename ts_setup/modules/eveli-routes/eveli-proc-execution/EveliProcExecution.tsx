@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 import { ProcExecutionApi } from '@dxs-ts/eveli-api';
 import { useFetch } from '@dxs-ts/envir-fetch';
 
@@ -8,25 +9,6 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 
 
-const formatDate = (time: unknown) => {
-    if (!time) return '-';
-    const dt = new Date(time as any);
-    if (Number.isNaN(dt.getTime())) return '-';
-  
-    const date = new Intl.DateTimeFormat('fi-FI', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(dt);
-  
-    const clock = new Intl.DateTimeFormat('fi-FI', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).format(dt);
-  
-    return <>{date} - {clock}</>;
-  };
 
 export const EveliProcExecution: React.FC = () => {
   const intl = useIntl();
@@ -36,7 +18,6 @@ export const EveliProcExecution: React.FC = () => {
   React.useEffect(() => {
     findLast6Months().then(setData);
   }, []);
-
 
   const columns: ColumnDef<ProcExecutionApi.ProcessExecution, any>[] = [
     {
@@ -121,7 +102,7 @@ export const EveliProcExecution: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: (info) => formatDate(info.getValue())
+      cell: (info) => <DateTimeFormatter value={info.getValue()} variant='text' />
     },
   ]
   return (
