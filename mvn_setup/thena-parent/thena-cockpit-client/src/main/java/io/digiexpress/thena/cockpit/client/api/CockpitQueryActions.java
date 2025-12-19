@@ -30,7 +30,7 @@ import io.smallrye.mutiny.Uni;
 public interface CockpitQueryActions {
 
   
-  CockpitQuery CockpitQuery();
+  CockpitQuery cockpitQuery();
   
   interface CockpitQuery {
     
