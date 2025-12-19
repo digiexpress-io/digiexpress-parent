@@ -199,10 +199,10 @@ public class AddPayment_FeemiSavings implements CalculationFormula {
       // detail 1 - + payment share against fund 
       final var node = visitPaymentToInvPlanAlloc(new PaymentToInvPlanAlloc.Expression(payment, moneyRequest, invPlan, allocation));
       
-      totalAllocated = totalAllocated.add(node.getAllocatedAmount());
+      totalAllocated = totalAllocated.add(node.getAllocationNetAmount());
       
       // Calculate inflow and outflow for this allocation
-      final var allocationInflow = node.getPaymentGrossAmount(); // Money coming in
+      final var allocationInflow = node.getAllocatedAmount(); // Money coming in
       final var allocationOutflow = node.getPaymentKappaPaymentFeeAmount().add(node.getAllocationGammaMortalityFee()); // Fees going out
       
       totalInflow = totalInflow.add(allocationInflow);
