@@ -40,6 +40,7 @@ import io.vertx.mutiny.sqlclient.Row;
     (
       id UUID PRIMARY KEY,
       parent_id UUID,
+      config_id UUID,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL,
       commit_author VARCHAR(255) NOT NULL,
       commit_message VARCHAR(255) NOT NULL

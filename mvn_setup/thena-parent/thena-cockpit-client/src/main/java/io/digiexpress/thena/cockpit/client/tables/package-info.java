@@ -1,10 +1,11 @@
-package io.resys.thena.api.entities;
+@TenantSql.Registry(name = "COCKPIT", tenantType = StructureType.cockpit)
+package io.digiexpress.thena.cockpit.client.tables;
 
 /*-
  * #%L
- * thena-docdb-api
+ * thena-contract-client
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +20,5 @@ package io.resys.thena.api.entities;
  * limitations under the License.
  * #L%
  */
-
-import org.immutables.value.Value;
-
-import jakarta.annotation.Nullable;
-
-
-@Value.Immutable
-public interface Tenant extends TenantEntity {
-  String getId();
-  String getRev();
-  String getPrefix();
-  String getName();
-  @Nullable String getExternalId();
-  StructureType getType();
-  
-  enum StructureType { doc, git, org, grim, fs, batch, contract, ledger, cockpit }
-}
+import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.entities.Tenant.StructureType;

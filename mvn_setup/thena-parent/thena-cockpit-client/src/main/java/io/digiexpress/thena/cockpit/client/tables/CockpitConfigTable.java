@@ -60,12 +60,12 @@ import io.vertx.mutiny.sqlclient.Row;
       ON {cockpit_config} (cockpit_config_name);
   """,
   constraints = """
-    ALTER TABLE {cockpit_config} ADD CONSTRAINT fk_cockpit_config_commit
-      FOREIGN KEY (commit_id) REFERENCES {cockpit_config_commit}(id);
+    ALTER TABLE {cockpit_config} ADD CONSTRAINT fk_cockpit_commit
+      FOREIGN KEY (commit_id) REFERENCES {cockpit_commit}(id);
     ALTER TABLE {cockpit_config} ADD CONSTRAINT fk_cockpit_config_created_commit
-      FOREIGN KEY (created_commit_id) REFERENCES {cockpit_config_commit}(id);
+      FOREIGN KEY (created_commit_id) REFERENCES {cockpit_commit}(id);
     ALTER TABLE {cockpit_config} ADD CONSTRAINT fk_cockpit_config_updated_tree_commit
-      FOREIGN KEY (updated_tree_commit_id) REFERENCES {cockpit_config_commit}(id);
+      FOREIGN KEY (updated_tree_commit_id) REFERENCES {cockpit_commit}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {cockpit_config} CASCADE;
@@ -77,9 +77,9 @@ public interface CockpitConfigTable {
     sql = """
       SELECT cockpit_config.*
       FROM {cockpit_config} cockpit_config
-      LEFT JOIN {cockpit_config_commit} updated_commit ON cockpit_config.commit_id = updated_commit.id
-      LEFT JOIN {cockpit_config_commit} created_commit ON cockpit_config.created_commit_id = created_commit.id  
-      LEFT JOIN {cockpit_config_commit} updated_tree_commit ON cockpit_config.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {cockpit_commit} updated_commit ON cockpit_config.commit_id = updated_commit.id
+      LEFT JOIN {cockpit_commit} created_commit ON cockpit_config.created_commit_id = created_commit.id  
+      LEFT JOIN {cockpit_commit} updated_tree_commit ON cockpit_config.updated_tree_commit_id = updated_tree_commit.id
     """,
     rowMapper = CockpitConfigMapper.class,
     sqlBuilder = CockpitTableFilter.SQL.class
@@ -90,9 +90,9 @@ public interface CockpitConfigTable {
     sql = """
       SELECT c.*
       FROM {cockpit_config} c
-      LEFT JOIN {cockpit_config_commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {cockpit_config_commit} created_commit ON c.created_commit_id = created_commit.id
-      LEFT JOIN {cockpit_config_commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {cockpit_commit} updated_commit ON c.commit_id = updated_commit.id
+      LEFT JOIN {cockpit_commit} created_commit ON c.created_commit_id = created_commit.id
+      LEFT JOIN {cockpit_commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
       ORDER BY c.cockpit_config_name
     """,
     rowMapper = CockpitConfigMapper.class
@@ -104,9 +104,9 @@ public interface CockpitConfigTable {
     sql = """
       SELECT c.*
       FROM {cockpit_config} c
-      LEFT JOIN {cockpit_config_commit} updated_commit ON c.commit_id = updated_commit.id
-      LEFT JOIN {cockpit_config_commit} created_commit ON c.created_commit_id = created_commit.id  
-      LEFT JOIN {cockpit_config_commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
+      LEFT JOIN {cockpit_commit} updated_commit ON c.commit_id = updated_commit.id
+      LEFT JOIN {cockpit_commit} created_commit ON c.created_commit_id = created_commit.id  
+      LEFT JOIN {cockpit_commit} updated_tree_commit ON c.updated_tree_commit_id = updated_tree_commit.id
       WHERE c.id = $1
     """,
     rowMapper = CockpitConfigMapper.class

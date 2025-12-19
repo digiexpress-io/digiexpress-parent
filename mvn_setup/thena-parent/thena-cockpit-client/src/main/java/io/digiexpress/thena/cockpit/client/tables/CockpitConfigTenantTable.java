@@ -23,9 +23,9 @@ package io.digiexpress.thena.cockpit.client.tables;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.api.annotations.TenantSql;
 import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfigTenant;
 import io.digiexpress.thena.cockpit.client.api.entities.ImmutableCockpitConfigTenant;
+import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -66,15 +66,26 @@ import io.vertx.mutiny.sqlclient.Row;
     ALTER TABLE {cockpit_config_tenant} ADD CONSTRAINT fk_cockpit_config_tenant_config
       FOREIGN KEY (cockpit_config_id) REFERENCES {cockpit_config}(id);
     ALTER TABLE {cockpit_config_tenant} ADD CONSTRAINT fk_cockpit_config_tenant_commit
-      FOREIGN KEY (commit_id) REFERENCES {cockpit_config_commit}(id);
+      FOREIGN KEY (commit_id) REFERENCES {cockpit_commit}(id);
     ALTER TABLE {cockpit_config_tenant} ADD CONSTRAINT fk_cockpit_config_tenant_created_commit
-      FOREIGN KEY (created_commit_id) REFERENCES {cockpit_config_commit}(id);
+      FOREIGN KEY (created_commit_id) REFERENCES {cockpit_commit}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {cockpit_config_tenant} CASCADE;
   """
 )
 public interface CockpitConfigTenantTable {
+
+  @TenantSql.FindAll(
+    sql = """
+      SELECT cockpit_config_tenant.*
+      FROM {cockpit_config_tenant} cockpit_config_tenant
+      LEFT JOIN {cockpit_config} cockpit_config ON cockpit_config_tenant.cockpit_config_id = cockpit_config.id
+    """,
+    rowMapper = CockpitConfigTenantMapper.class,
+    sqlBuilder = CockpitTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(CockpitTableFilter filter);
 
   @TenantSql.FindAll(
     sql = """
@@ -135,6 +146,24 @@ public interface CockpitConfigTenantTable {
   )
   SqlTupleList updateMany(List<CockpitConfigTenant> tenants);
 
+  @TenantSql.Delete(
+    sql = """
+      DELETE FROM {cockpit_config_tenant}
+       WHERE id = $1
+    """,
+    propsMapper = CockpitConfigTenantDeleteMapper.class
+  )
+  SqlTuple deleteOne(CockpitConfigTenant tenant);
+
+  @TenantSql.DeleteAll(
+    sql = """
+      DELETE FROM {cockpit_config_tenant}
+       WHERE id = ANY($1)
+    """,
+    propsMapper = CockpitConfigTenantDeleteMapper.class
+  )
+  SqlTupleList deleteMany(List<CockpitConfigTenant> tenant);
+
   // Mapper classes
   class CockpitConfigTenantMapper implements TenantSql.RowMapper<CockpitConfigTenant> {
     @Override
@@ -181,6 +210,14 @@ public interface CockpitConfigTenantTable {
         doc.getCockpitConfigTenantDesc(),
         doc.getCockpitConfigTenantExtension().orElse(null),
         TableUtils.toUuid(doc.getId())
+      });
+    }
+  }
+  class CockpitConfigTenantDeleteMapper implements TenantSql.PropsMapper<CockpitConfigTenant> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(CockpitConfigTenant reference) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[] {
+        TableUtils.toUuid(reference.getId())
       });
     }
   }

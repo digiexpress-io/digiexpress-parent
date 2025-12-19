@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface CockpitCommit extends CockpitEntity {
   String getId();
   Optional<String> getParentId();
+  String getConfigId();
   
   OffsetDateTime getCreatedAt();
   String getCommitAuthor();

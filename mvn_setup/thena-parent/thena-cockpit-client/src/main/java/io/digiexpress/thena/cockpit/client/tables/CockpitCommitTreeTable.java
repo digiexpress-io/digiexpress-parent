@@ -52,7 +52,7 @@ import io.vertx.mutiny.sqlclient.Row;
   """,
   constraints = """
     ALTER TABLE {cockpit_commit_tree} ADD CONSTRAINT fk_cockpit_commit_tree_commit 
-      FOREIGN KEY (commit_id) REFERENCES {cockpit_config_commit}(id);
+      FOREIGN KEY (commit_id) REFERENCES {cockpit_commit}(id);
   """,
   drop = """
     DROP TABLE IF EXISTS {cockpit_commit_tree} CASCADE;
@@ -64,7 +64,7 @@ public interface CockpitCommitTreeTable {
     sql = """
       SELECT ct.*
       FROM {cockpit_commit_tree} ct
-      LEFT JOIN {cockpit_config_commit} c ON ct.commit_id = c.id
+      LEFT JOIN {cockpit_commit} c ON ct.commit_id = c.id
       ORDER BY c.created_at DESC
     """,
     rowMapper = CockpitConfigCommitTreeMapper.class

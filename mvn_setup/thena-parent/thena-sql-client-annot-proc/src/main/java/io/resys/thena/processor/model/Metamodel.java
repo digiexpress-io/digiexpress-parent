@@ -31,6 +31,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.processor.support.NamingUtils;
 import lombok.Value;
@@ -100,7 +102,7 @@ public class Metamodel {
         } catch (Exception e) {
           processingEnv.getMessager().printMessage(
             javax.tools.Diagnostic.Kind.ERROR,
-            "Failed to extract registry from " + element + ": " + e.getMessage(),
+            "Failed to extract registry from " + element + ": " + e.getMessage() + System.lineSeparator() + ExceptionUtils.getStackTrace(e),
             element
           );
         }
