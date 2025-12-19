@@ -23,9 +23,9 @@ package io.digiexpress.thena.cockpit.client.tables;
 import java.util.List;
 import java.util.Optional;
 
+import io.digiexpress.thena.cockpit.client.api.entities.CockpitCommit;
+import io.digiexpress.thena.cockpit.client.api.entities.ImmutableCockpitCommit;
 import io.resys.thena.api.annotations.TenantSql;
-import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfigCommit;
-import io.digiexpress.thena.cockpit.client.api.entities.ImmutableCockpitConfigCommit;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -33,10 +33,10 @@ import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
-  name = "cockpit_config_commit",
+  name = "cockpit_commit",
   order = 100,
   ddl = """
-    CREATE TABLE IF NOT EXISTS {cockpit_config_commit}
+    CREATE TABLE IF NOT EXISTS {cockpit_commit}
     (
       id UUID PRIMARY KEY,
       parent_id UUID,
@@ -45,24 +45,24 @@ import io.vertx.mutiny.sqlclient.Row;
       commit_message VARCHAR(255) NOT NULL
     );
 
-    CREATE INDEX IF NOT EXISTS {cockpit_config_commit}_PARENT_INDEX
-      ON {cockpit_config_commit} (parent_id);
-    CREATE INDEX IF NOT EXISTS {cockpit_config_commit}_AUTH_INDEX
-      ON {cockpit_config_commit} (commit_author);
+    CREATE INDEX IF NOT EXISTS {cockpit_commit}_PARENT_INDEX
+      ON {cockpit_commit} (parent_id);
+    CREATE INDEX IF NOT EXISTS {cockpit_commit}_AUTH_INDEX
+      ON {cockpit_commit} (commit_author);
   """,
   constraints = """
-    ALTER TABLE {cockpit_config_commit} ADD CONSTRAINT fk_cockpit_config_commit_parent 
-      FOREIGN KEY (parent_id) REFERENCES {cockpit_config_commit}(id);
+    ALTER TABLE {cockpit_commit} ADD CONSTRAINT fk_cockpit_commit_parent 
+      FOREIGN KEY (parent_id) REFERENCES {cockpit_commit}(id);
   """,
   drop = """
-    DROP TABLE IF EXISTS {cockpit_config_commit} CASCADE;
+    DROP TABLE IF EXISTS {cockpit_commit} CASCADE;
   """
 )
-public interface CockpitConfigCommitTable {
+public interface CockpitCommitTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT * FROM {cockpit_config_commit}
+      SELECT * FROM {cockpit_commit}
       ORDER BY created_at DESC
     """,
     rowMapper = CockpitConfigCommitMapper.class
@@ -72,7 +72,7 @@ public interface CockpitConfigCommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT * FROM {cockpit_config_commit}
+      SELECT * FROM {cockpit_commit}
       WHERE id = $1
     """,
     rowMapper = CockpitConfigCommitMapper.class
@@ -81,31 +81,21 @@ public interface CockpitConfigCommitTable {
 
   @TenantSql.InsertAll(
     sql = """
-      INSERT INTO {cockpit_config_commit}
+      INSERT INTO {cockpit_commit}
       (id, parent_id, created_at, commit_author, commit_message)
        VALUES($1, $2, $3, $4, $5)
     """,
-    propsMapper = CockpitConfigCommitInsertMapper.class
+    propsMapper = CockpitCommitInsertMapper.class
   )
-  SqlTupleList insertMany(List<CockpitConfigCommit> commits);
-
-  @TenantSql.UpdateAll(
-    sql = """
-      UPDATE {cockpit_config_commit}
-       SET parent_id = $1, created_at = $2, commit_author = $3, commit_message = $4
-       WHERE id = $5
-    """,
-    propsMapper = CockpitConfigCommitUpdateMapper.class
-  )
-  SqlTupleList updateMany(List<CockpitConfigCommit> commits);
+  SqlTupleList insertMany(List<CockpitCommit> commits);
 
   // Mapper classes
-  class CockpitConfigCommitMapper implements TenantSql.RowMapper<CockpitConfigCommit> {
+  class CockpitConfigCommitMapper implements TenantSql.RowMapper<CockpitCommit> {
     @Override
-    public CockpitConfigCommit apply(Row row) {
+    public CockpitCommit apply(Row row) {
       final String parent_id = TableUtils.toStringUUID(row, "parent_id");
 
-      return ImmutableCockpitConfigCommit.builder()
+      return ImmutableCockpitCommit.builder()
           .id(TableUtils.toStringUUID(row, "id"))
           .parentId(Optional.ofNullable(parent_id))
           .createdAt(row.getOffsetDateTime("created_at"))
@@ -115,9 +105,9 @@ public interface CockpitConfigCommitTable {
     }
   }
 
-  class CockpitConfigCommitInsertMapper implements TenantSql.PropsMapper<CockpitConfigCommit> {
+  class CockpitCommitInsertMapper implements TenantSql.PropsMapper<CockpitCommit> {
     @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(CockpitConfigCommit doc) {
+    public io.vertx.mutiny.sqlclient.Tuple apply(CockpitCommit doc) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         doc.getParentId().map(TableUtils::toUuid).orElse(null),
@@ -128,16 +118,4 @@ public interface CockpitConfigCommitTable {
     }
   }
 
-  class CockpitConfigCommitUpdateMapper implements TenantSql.PropsMapper<CockpitConfigCommit> {
-    @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(CockpitConfigCommit doc) {
-      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        doc.getParentId().map(TableUtils::toUuid).orElse(null),
-        doc.getCreatedAt(),
-        doc.getCommitAuthor(),
-        doc.getCommitMessage(),
-        TableUtils.toUuid(doc.getId())
-      });
-    }
-  }
 }

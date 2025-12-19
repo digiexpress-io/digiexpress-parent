@@ -20,6 +20,7 @@ package io.digiexpress.thena.cockpit.client.api.entities;
  * #L%
  */
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -27,24 +28,19 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.vertx.core.json.JsonObject;
-
 @Value.Immutable
-@JsonSerialize(as = ImmutableCockpitConfigCommitTree.class)
-@JsonDeserialize(as = ImmutableCockpitConfigCommitTree.class)
-public interface CockpitConfigCommitTree extends CockpitEntity {
+@JsonSerialize(as = ImmutableCockpitCommit.class)
+@JsonDeserialize(as = ImmutableCockpitCommit.class)
+public interface CockpitCommit extends CockpitEntity {
   String getId();
-  String getCommitId();
-  CockpitConfigCommitTreeOperation getOperationType();
-  Optional<JsonObject> getBodyAfter();
-  Optional<JsonObject> getBodyBefore();
+  Optional<String> getParentId();
+  
+  OffsetDateTime getCreatedAt();
+  String getCommitAuthor();
+  String getCommitMessage();
 
   @Override 
   default CockpitDocType getDocType() { 
-    return CockpitDocType.CONFIG_COMMIT_TREE; 
-  }
-  
-  enum CockpitConfigCommitTreeOperation {
-    ADD, REMOVE, MERGE
+    return CockpitDocType.CONFIG_COMMIT; 
   }
 }
