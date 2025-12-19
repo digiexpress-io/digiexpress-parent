@@ -66,6 +66,7 @@ public class EveliAutoConfigEnvir {
       ObjectMapper objectMapper, 
       WorkerAuthClient authClient,
       Optional<ExternalDeploymentProvider> depProvider,
+      Optional<EveliRuntimeCache> initCache,
       ApplicationContext context,
       EveliPropsEnvir envirProps,
       TenantConfigClient tenantConfigClient) {
@@ -80,7 +81,7 @@ public class EveliAutoConfigEnvir {
     final var tenantConfig = tenantConfigClient.createConfigQuery().getOne().await().atMost(Duration.ofMinutes(5));
     final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient, tenantConfig);
     
-    final var cache = cache(envirProps);
+    final var cache = initCache.orElseGet(() -> cache(envirProps));
     final var hdesClientConfig = hdesConfig(objectMapper, context);
     final var envir = new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
     
