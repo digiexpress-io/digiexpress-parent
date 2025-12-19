@@ -8,7 +8,7 @@ services:
       - "8085:8085"
     environment:
       # HTTPS Configuration
-      - HTTPS_ENABLED=true
+      - HTTPS_ENABLED=false
       - PORT=8085
       - TLS_CERT_PATH=/etc/tls/cert.pem
       - TLS_KEY_PATH=/etc/tls/key.pem
@@ -16,6 +16,7 @@ services:
       # Font Configuration
       - FONTS_PATH=/app/assets/fonts
       - USE_SYSTEM_FONTS=true
+      - RUST_LOG=info
     volumes:
       # Mount TLS certificates
       - ./certs:/etc/tls:ro
