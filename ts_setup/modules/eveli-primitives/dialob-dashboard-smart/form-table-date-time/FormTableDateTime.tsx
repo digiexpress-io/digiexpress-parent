@@ -1,15 +1,10 @@
 import React from 'react';
-import { DateTime } from 'luxon';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
-
-
-export const FormTableDateTime: React.FC<{ value: string }> = ({ value }) => {
-  const rawDate = value;
-  if (!rawDate) {
-    return <div>--</div>
+export const FormTableDateTime: React.FC<{ value?: string | Date }> = ({ value }) => {
+  if (!value) {
+    return <div>--</div>;
   }
-  const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
-  const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
 
-  return <div>{formatted}</div>;
-}
+  return <DateTimeFormatter value={value} variant="text" />;
+};
