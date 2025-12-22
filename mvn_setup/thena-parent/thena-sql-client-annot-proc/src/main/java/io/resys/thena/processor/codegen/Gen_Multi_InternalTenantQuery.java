@@ -46,9 +46,9 @@ import io.resys.thena.processor.model.RegistryMetamodel;
 import io.resys.thena.processor.model.TableMetamodel;
 import io.resys.thena.processor.spi.MultiTableCodeGenerator;
 import io.resys.thena.processor.support.NamingUtils;
-import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.spi.InternalTenantQueryImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
+import io.resys.thena.spi.TenantRegistrySqlImpl;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 
