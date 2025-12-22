@@ -21,7 +21,7 @@ package io.resys.thena.doc.spi;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.doc.api.DocClient;
 import io.resys.thena.doc.api.DocCommitActions;
@@ -58,7 +58,7 @@ public class DocClientImpl implements DocClient {
   }
 
   @Override
-  public DocStructuredTenant doc(TenantCommitResult repo) {
+  public DocStructuredTenant doc(CreatedTenant repo) {
     return doc(repo.getRepo().getId());
   }
   @Override

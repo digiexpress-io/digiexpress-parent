@@ -24,8 +24,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -37,14 +37,14 @@ public class CreateDropDbTest extends DbTestTemplate {
   @Test
   public void createDropDb() {
     
-    TenantCommitResult repo = getClient().manageTenants().commit()
+    CreatedTenant repo = getClient().manageTenants().createOneTenant()
         .name("my-batch-tenant")
         .build()
         .await().atMost(atMost);
     log.debug("created batch tenant {}", repo);
     
     
-    getClient().manageTenants().find().id(repo.getRepo().getId()).delete().await().atMost(atMost);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    getClient().manageTenants().queryTenants().id(repo.getRepo().getId()).deleteOne().await().atMost(atMost);
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
   }
 }

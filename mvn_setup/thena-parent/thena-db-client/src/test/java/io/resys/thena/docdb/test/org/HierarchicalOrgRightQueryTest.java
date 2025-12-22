@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.org.OrgMember;
@@ -58,12 +58,12 @@ public class HierarchicalOrgRightQueryTest extends DbTestTemplate {
   @Test
   public void createRepoAndUserGroups() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("HierarchicalOrgRightQueryTest-1", StructureType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
 
     final var jailer1 = createRight(repo, "jailer-1");
     final var jailer2 = createRight(repo, "jailer-2");
@@ -172,7 +172,7 @@ jailer-2
   }
 
   
-  private OrgMember createMember(String userName, TenantCommitResult repo, List<OrgParty> groups, List<OrgRight> roles) {
+  private OrgMember createMember(String userName, CreatedTenant repo, List<OrgParty> groups, List<OrgRight> roles) {
     return getClient().org(repo).commit().createOneMember()
         .addMemberToParties(groups.stream().map(group -> group.getId()).toList())
         .addMemberRight(roles.stream().map(role -> role.getId()).toList())
@@ -185,7 +185,7 @@ jailer-2
         .getMember();
   }
   
-  private OrgParty createRootParty(String groupName, TenantCommitResult repo, OrgRight ...roles) {
+  private OrgParty createRootParty(String groupName, CreatedTenant repo, OrgRight ...roles) {
     return getClient().org(repo).commit().createOneParty()
         .partyName(groupName)
         .partyDescription("gd-")
@@ -200,7 +200,7 @@ jailer-2
         .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
-  private OrgParty createChildParty(String groupName, String parentId, TenantCommitResult repo, OrgRight ...roles) {
+  private OrgParty createChildParty(String groupName, String parentId, CreatedTenant repo, OrgRight ...roles) {
     return getClient().org(repo).commit().createOneParty()
         .partyName(groupName)
         .partyDescription("gd-")
@@ -216,7 +216,7 @@ jailer-2
         .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
-  private OrgRight createRight(TenantCommitResult repo, String roleName) {
+  private OrgRight createRight(CreatedTenant repo, String roleName) {
     return getClient().org(repo).commit().createOneRight()
         .rightName(roleName)
         .rightDescription("rd-")

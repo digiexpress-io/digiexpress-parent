@@ -26,8 +26,8 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
@@ -42,12 +42,12 @@ public class MetricsDBtest extends DbTestTemplate {
 
   //@org.junit.jupiter.api.Test
   public void metrics() {
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("create repo for metrics", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     // ~ millis 37282
     runInserts(repo, 500000);
@@ -62,9 +62,9 @@ public class MetricsDBtest extends DbTestTemplate {
     select(repo);
   }
   
-  private void select(TenantCommitResult repo) {
+  private void select(CreatedTenant repo) {
     final var start = System.currentTimeMillis();
-    final var repoState = getClient().tenants().find().id(repo.getRepo().getId()).get().await().atMost(Duration.ofMinutes(1));
+    final var repoState = getClient().tenants().queryTenants().id(repo.getRepo().getId()).getOne().await().atMost(Duration.ofMinutes(1));
     
     final var blobs = getClient().git(repoState).branch()
             .branchQuery()
@@ -79,7 +79,7 @@ public class MetricsDBtest extends DbTestTemplate {
   }
   
   
-  private void runInserts(TenantCommitResult repo, int total) {
+  private void runInserts(CreatedTenant repo, int total) {
     
     final var builder = getClient().git(repo).commit().commitBuilder().latestCommit()
       .branchName("main")

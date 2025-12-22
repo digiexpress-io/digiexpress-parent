@@ -36,8 +36,8 @@ import io.digiexpress.thena.cockpit.client.api.CockpitClient;
 import io.digiexpress.thena.cockpit.client.spi.CockpitClientImpl;
 import io.digiexpress.thena.cockpit.client.spi.CockpitPrinter;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -79,7 +79,7 @@ public class DbTestTemplate {
         .errorHandler(new PgErrors())
         .build();
     if(callback != null) {
-      repo = this.client.tenants().commit()
+      repo = this.client.tenants().createOneTenant()
           .name("junit" + index.incrementAndGet(), StructureType.cockpit)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();
@@ -141,12 +141,12 @@ public class DbTestTemplate {
   
   public CockpitClient createClient(String tenantId) {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name(tenantId)
         .build()
         .await().atMost(atMost);
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     final var tenant = repo.getRepo();
     

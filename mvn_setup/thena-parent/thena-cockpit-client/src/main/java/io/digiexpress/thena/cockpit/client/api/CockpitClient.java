@@ -21,7 +21,7 @@ package io.digiexpress.thena.cockpit.client.api;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 
 public interface CockpitClient {
@@ -29,7 +29,7 @@ public interface CockpitClient {
   
   CockpitTenant withTenant();
   CockpitTenant withTenant(String tenantIdOrName);
-  CockpitTenant withTenant(TenantCommitResult repo);
+  CockpitTenant withTenant(CreatedTenant repo);
   CockpitTenant withTenant(Tenant repo);
 
   

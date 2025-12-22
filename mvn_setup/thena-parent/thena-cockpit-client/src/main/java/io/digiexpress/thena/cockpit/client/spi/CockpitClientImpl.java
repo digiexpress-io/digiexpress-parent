@@ -30,7 +30,7 @@ import io.digiexpress.thena.cockpit.client.spi.actions.CockpitQueryActionsImpl;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import io.digiexpress.thena.cockpit.client.tables.spi.CockpitDbImpl;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -62,7 +62,7 @@ public class CockpitClientImpl implements CockpitClient {
     return withTenant(startingState.getDataSource().getTenant().getName());
   }
   @Override
-  public CockpitTenant withTenant(TenantCommitResult repo) {
+  public CockpitTenant withTenant(CreatedTenant repo) {
     return withTenant(repo.getRepo().getId());
   }
   @Override

@@ -160,7 +160,7 @@ public abstract class TaskEnvirSetup {
       final var store = new TaskStoreImpl(config);
       
       // create task project
-      final var repo = THENA_STATE.tenants().commit()
+      final var repo = THENA_STATE.tenants().createOneTenant()
           .name(repoId, StructureType.grim)
           .build()
           .await().atMost(Duration.ofMinutes(1));

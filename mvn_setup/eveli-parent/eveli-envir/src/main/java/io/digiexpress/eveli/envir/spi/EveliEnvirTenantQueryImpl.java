@@ -90,8 +90,8 @@ public class EveliEnvirTenantQueryImpl implements EveliEnvirTenantQuery {
     RepoAssert.notEmpty(repoName, () -> "tenantName must be defined!");
     
     final var client = ctx.getConfig().getClient();
-    return client.tenants().find().id(repoName)
-        .get().onItem().transform(existing -> {
+    return client.tenants().queryTenants().id(repoName)
+        .getOne().onItem().transform(existing -> {
           if(existing == null) {
             final Optional<EveliEnvirClient> result = Optional.empty();
             return result;

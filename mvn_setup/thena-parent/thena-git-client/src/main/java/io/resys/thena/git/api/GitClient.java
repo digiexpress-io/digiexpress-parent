@@ -21,7 +21,7 @@ package io.resys.thena.git.api;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.GitRepoObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -31,7 +31,7 @@ public interface GitClient {
   TenantActions tenants();
   
   GitStructuredTenant git(String tenantIdOrName);
-  GitStructuredTenant git(TenantCommitResult repo);
+  GitStructuredTenant git(CreatedTenant repo);
   GitStructuredTenant git(Tenant repo);
   
 

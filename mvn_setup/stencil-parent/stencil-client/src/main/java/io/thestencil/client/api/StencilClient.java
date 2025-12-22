@@ -43,6 +43,7 @@ public interface StencilClient {
   MarkdownBuilder markdown();
   SitesBuilder sites();
   SiteCommitLogBuilder commitLog();
+  
   StencilClient withRepo(String repoId);
   StencilClient withRepo(String repoId, String headName);
   
@@ -58,8 +59,6 @@ public interface StencilClient {
   interface SiteCommitLogBuilder {
     Uni<List<SiteCommitLog>> build();
   }
-  
-
   
   interface MarkdownBuilder {
     MarkdownBuilder json(String jsonOfSiteState, boolean dev);

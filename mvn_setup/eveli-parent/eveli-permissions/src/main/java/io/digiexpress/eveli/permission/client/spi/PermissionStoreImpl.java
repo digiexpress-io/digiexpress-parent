@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.ThenaClient.OrgStructuredTenant;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -61,7 +61,7 @@ public class PermissionStoreImpl implements PermissionStore {
   @Override
   public Uni<Tenant> getRepo() {
     final var client = config.getClient();
-    return client.tenants().find().id(config.getRepoId()).get();
+    return client.tenants().queryTenants().id(config.getRepoId()).getOne();
   }
   @Override public PermissionStoreConfig getConfig() { return config; }
   @Override public PermissionRepositoryQuery query() {
@@ -79,7 +79,7 @@ public class PermissionStoreImpl implements PermissionStore {
   private Uni<PermissionStore> createRepoOrGetRepo(String repoName) {
     final var client = config.getClient();
     
-    return client.tenants().find().id(repoName).get()
+    return client.tenants().queryTenants().id(repoName).getOne()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
             return createRepo(repoName); 
@@ -90,7 +90,7 @@ public class PermissionStoreImpl implements PermissionStore {
   
   private Uni<Void> deleteRepos() {
     final var client = config.getClient();
-    final var existingRepos = client.tenants().find().findAll();
+    final var existingRepos = client.tenants().queryTenants().findAll();
     
     
     return existingRepos.onItem().transformToUni((repo) -> {
@@ -98,7 +98,7 @@ public class PermissionStoreImpl implements PermissionStore {
         final var repoId = repo.getId();
         final var rev = repo.getRev();
         
-        return client.tenants().find().id(repoId).rev(rev).delete();
+        return client.tenants().queryTenants().id(repoId).rev(rev).deleteOne();
       })
       .concatenate().collect().asList()
       .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
@@ -124,7 +124,7 @@ public class PermissionStoreImpl implements PermissionStore {
       final var rev = repoResult.getRepo().getRev();
       final var docStore = createClientStore(repoName);
       
-      return client.tenants().find().id(repoId).rev(rev).delete()
+      return client.tenants().queryTenants().id(repoId).rev(rev).deleteOne()
           .onItem().transform(junk -> docStore);
     });
   }
@@ -133,9 +133,9 @@ public class PermissionStoreImpl implements PermissionStore {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.tenants().commit().name(repoName, StructureType.org).build();
+    final var newRepo = client.tenants().createOneTenant().name(repoName, StructureType.org).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != CommitStatus.OK) {
+      if(repoResult.getStatus() != TenantOperationStatus.OK) {
         throw new PermissionStoreException("PERMISSION_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

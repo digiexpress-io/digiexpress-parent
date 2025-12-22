@@ -21,7 +21,7 @@ package io.resys.thena.contract.client.api;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 
 public interface ContractClient {
@@ -29,7 +29,7 @@ public interface ContractClient {
   
   ContractTenant withTenant();
   ContractTenant withTenant(String tenantIdOrName);
-  ContractTenant withTenant(TenantCommitResult repo);
+  ContractTenant withTenant(CreatedTenant repo);
   ContractTenant withTenant(Tenant repo);
 
   

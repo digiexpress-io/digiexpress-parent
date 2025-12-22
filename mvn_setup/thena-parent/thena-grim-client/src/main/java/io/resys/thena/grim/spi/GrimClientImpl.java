@@ -23,7 +23,7 @@ package io.resys.thena.grim.spi;
 import java.util.Optional;
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -58,7 +58,7 @@ public class GrimClientImpl implements GrimClient {
     };
   }
   @Override
-  public GrimStructuredTenant grim(TenantCommitResult repo) {
+  public GrimStructuredTenant grim(CreatedTenant repo) {
     return grim(repo.getRepo().getId());
   }
   @Override

@@ -28,8 +28,8 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.vertx.core.json.JsonObject;
@@ -49,12 +49,12 @@ public class BatchDocTest extends DbTestTemplate {
   public void batch10Docs() {
     // create project
     // with main branch, commit log na doc id from json
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("BatchDocTest-1", StructureType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     final var createdDoc = getClient().doc(repo).commit()
         .createManyDocs()

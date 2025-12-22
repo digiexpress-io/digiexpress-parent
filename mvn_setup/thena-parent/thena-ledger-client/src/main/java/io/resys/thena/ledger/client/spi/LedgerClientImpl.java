@@ -23,7 +23,7 @@ package io.resys.thena.ledger.client.spi;
 import java.util.Optional;
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -67,7 +67,7 @@ public class LedgerClientImpl implements LedgerClient {
   }
 
   @Override
-  public LedgerTenant withTenant(TenantCommitResult repo) {
+  public LedgerTenant withTenant(CreatedTenant repo) {
     return withTenant(repo.getRepo().getId());
   }
 

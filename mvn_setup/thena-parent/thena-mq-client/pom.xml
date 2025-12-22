@@ -10,8 +10,6 @@
   <artifactId>thena-mq-client</artifactId>
 
   <dependencies>
-  
-      
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client</artifactId>

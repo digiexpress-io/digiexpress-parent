@@ -23,7 +23,7 @@ package io.digiexpress.eveli.client.spi.task;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -45,7 +45,7 @@ public class TaskStoreImpl implements TaskStore {
   @Override
   public Uni<Tenant> getRepo() {
     final var client = config.getClient();
-    return client.tenants().find().id(config.getTenantName()).get();
+    return client.tenants().queryTenants().id(config.getTenantName()).getOne();
   }
   @Override public TaskStoreConfig getConfig() { return config; }
   @Override public TaskTenantQuery query() {
@@ -62,7 +62,7 @@ public class TaskStoreImpl implements TaskStore {
   private Uni<TaskStore> createRepoOrGetRepo(String repoName) {
     final var client = config.getClient();
     
-    return client.tenants().find().id(repoName).get()
+    return client.tenants().queryTenants().id(repoName).getOne()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
             return createRepo(repoName); 
@@ -91,7 +91,7 @@ public class TaskStoreImpl implements TaskStore {
       final var rev = repoResult.getRepo().getRev();
       final var docStore = createClientStore(repoName);
       
-      return client.tenants().find().id(repoId).rev(rev).delete()
+      return client.tenants().queryTenants().id(repoId).rev(rev).deleteOne()
           .onItem().transform(junk -> docStore);
     });
   }
@@ -99,9 +99,9 @@ public class TaskStoreImpl implements TaskStore {
   private Uni<TaskStore> createRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var newRepo = client.tenants().commit().name(repoName, StructureType.grim).build();
+    final var newRepo = client.tenants().createOneTenant().name(repoName, StructureType.grim).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != CommitStatus.OK) {
+      if(repoResult.getStatus() != TenantOperationStatus.OK) {
         throw new TaskException("REPO_CREATE_FAIL",
             Collections.emptyList(),
             ImmutableDocumentExceptionMsg.builder()

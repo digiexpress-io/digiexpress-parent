@@ -31,7 +31,7 @@ import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -118,7 +118,7 @@ public class FeedbackTaskEnvirSetup {
     final var store = new TaskStoreImpl(config);
     
     // create task project
-    TenantCommitResult repo = dbState.tenants().commit()
+    CreatedTenant repo = dbState.tenants().createOneTenant()
         .name(repoId, StructureType.grim)
         .build()
         .await().atMost(Duration.ofMinutes(1));

@@ -53,7 +53,7 @@ public class BatchJob_DROP_DB_Ledger implements Executor<Tenant, DropDbConfig> {
       @Override
       public Multi<Tenant> findAll() {
         final var tenantId = ledgerClient.withTenant().getTenantId();
-        return ledgerClient.tenants().find().id(tenantId).findAll();
+        return ledgerClient.tenants().queryTenants().id(tenantId).findAll();
       }
     };
   }
@@ -66,7 +66,7 @@ public class BatchJob_DROP_DB_Ledger implements Executor<Tenant, DropDbConfig> {
               .entityId(tenant.getName())
               .build());
     }
-    return ledgerClient.tenants().find().id(tenant.getId()).delete()
+    return ledgerClient.tenants().queryTenants().id(tenant.getId()).deleteOne()
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()
             .status(ExecutorEntity.ExecutorEntityStatus.OK)
             .entityId(tenant.getName())

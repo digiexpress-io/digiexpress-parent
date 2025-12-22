@@ -58,7 +58,7 @@ public class BatchJob_CREATE_DB_Ledger implements Executor<String, CreateDbConfi
   @Override
   public Uni<ExecutorEntity> accept(String tenantName, CreateDbConfig config, ExecutorContext context) {
     return ledgerClient
-        .tenants().commit()
+        .tenants().createOneTenant()
         .name(tenantName)
         .build()
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()

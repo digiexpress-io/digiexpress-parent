@@ -32,7 +32,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -72,7 +72,7 @@ public class PgTestTemplate {
         .db("junit")
         .client(pgPool)
         .build();
-    this.client.tenants().commit().name("junit", StructureType.git).build();
+    this.client.tenants().createOneTenant().name("junit", StructureType.git).build();
   }
   
   @AfterEach
@@ -114,7 +114,7 @@ public class PgTestTemplate {
     final GitClient client = getClient();
     
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name(repoId, StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));

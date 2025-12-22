@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
@@ -112,9 +112,9 @@ public class StencilStoreImpl extends PersistenceCommands implements StencilStor
       public Uni<StencilStore> create() {
         StencilAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
+        final var newRepo = client.tenants().createOneTenant().name(repoName, StructureType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != CommitStatus.OK) {
+          if(repoResult.getStatus() != TenantOperationStatus.OK) {
             throw new RepoException("Can't create repository with name: '"  + repoName + "'!", repoResult); 
           }
           return build();
@@ -135,7 +135,7 @@ public class StencilStoreImpl extends PersistenceCommands implements StencilStor
         
         return client.git(config.getRepoName()).tenants().get().onItem().transformToUni(repo -> {
           if(repo.getRepo() == null) {
-            return client.tenants().commit()
+            return client.tenants().createOneTenant()
                 .name(config.getRepoName(), StructureType.git).build().onItem().transform(newRepo -> Tuple2.of(true, build())); 
           }
           return Uni.createFrom().item(Tuple2.of(false, build()));

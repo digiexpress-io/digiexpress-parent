@@ -20,11 +20,11 @@ package io.resys.thena.spi;
  * #L%
  */
 
-import io.resys.thena.api.actions.ImmutableTenantCommitResult;
+import io.resys.thena.api.actions.ImmutableCreatedTenant;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantBuilder;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreateOneTenant;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class TenantBuilderImpl implements TenantActions.TenantBuilder {
+public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
 
   private final TenantDataSource state;
   private String externalId;
@@ -58,7 +58,7 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
   }
   
   @Override
-  public TenantBuilder name(String name) {
+  public CreateOneTenant name(String name) {
     this.name = name;
     return this;
   }
@@ -71,7 +71,7 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
   }
   
   @Override
-  public Uni<TenantCommitResult> build() {
+  public Uni<CreatedTenant> build() {
     log.debug("Creating repository '{}' of type {}.", name, type);
 
     RepoAssert.notEmpty(name, () -> "repo name not defined!");
@@ -83,11 +83,11 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
     return state.tenant().getByName(name)
       .onItem().transformToUni((Tenant existing) -> {
      
-      final Uni<TenantCommitResult> result;
+      final Uni<CreatedTenant> result;
       if(existing != null) {
         log.error("Existing repository found with name '{}'", name);
-        result = Uni.createFrom().item(ImmutableTenantCommitResult.builder()
-            .status(CommitStatus.CONFLICT)
+        result = Uni.createFrom().item(ImmutableCreatedTenant.builder()
+            .status(TenantOperationStatus.CONFLICT)
             .addMessages(nameNotUnique(existing.getName(), existing.getId()))
             .build());
       } else {
@@ -108,9 +108,9 @@ public class TenantBuilderImpl implements TenantActions.TenantBuilder {
               .build();
           
           return state.tenant().insert(newRepo)
-            .onItem().transform(next -> (TenantCommitResult) ImmutableTenantCommitResult.builder()
+            .onItem().transform(next -> (CreatedTenant) ImmutableCreatedTenant.builder()
                 .repo(next)
-                .status(CommitStatus.OK)
+                .status(TenantOperationStatus.OK)
                 .build());
         });
       }

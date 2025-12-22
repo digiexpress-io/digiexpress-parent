@@ -21,7 +21,7 @@ package io.resys.thena.doc.api;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -32,7 +32,7 @@ public interface DocClient {
   DocDataSource unwrap();
   
   DocStructuredTenant doc(String tenantIdOrName);
-  DocStructuredTenant doc(TenantCommitResult repo);
+  DocStructuredTenant doc(CreatedTenant repo);
   DocStructuredTenant doc(Tenant repo);
   
   

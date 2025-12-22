@@ -38,7 +38,7 @@ import io.digiexpress.tagomi.spi.TagomiComposerImpl;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
 import io.digiexpress.tagomi.spi.json.ToJsonObject;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -66,7 +66,7 @@ public class PgTestTemplate {
         .db("junit")
         .client(pgPool)
         .build();
-    this.client.tenants().commit().name("junit", StructureType.git).build();
+    this.client.tenants().createOneTenant().name("junit", StructureType.git).build();
   }
   
   @AfterEach
@@ -109,9 +109,9 @@ public class PgTestTemplate {
   public TagomiComposer createTenant(String repoId) {
     
     final GitClient client = getClient();
-    final TenantCommitResult repo = getClient()
+    final CreatedTenant repo = getClient()
       .tenants()
-      .commit()
+      .createOneTenant()
       .name(repoId, StructureType.git)
       .build()
       .await().atMost(Duration.ofMinutes(1));

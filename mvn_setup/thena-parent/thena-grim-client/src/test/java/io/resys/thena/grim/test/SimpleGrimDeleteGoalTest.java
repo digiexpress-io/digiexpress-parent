@@ -30,8 +30,8 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
@@ -50,7 +50,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     String getName();
   }
   
-  private GrimMissionContainer createMission(TenantCommitResult repo) {
+  private GrimMissionContainer createMission(CreatedTenant repo) {
     final var result = getClient().grim(repo).commit()
         .createManyMissions()
         .commitMessage("batching tests")
@@ -117,12 +117,12 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
   @Test
   public void createAndUpdateMission() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("SimpleGrimUpdateTest-1", StructureType.grim)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     final var newMission = createMission(repo);
     

@@ -30,8 +30,8 @@ import io.digiexpress.thena.batch.client.api.BatchClient;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
 import io.digiexpress.thena.batch.client.test.config.DbTestTemplate;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,11 +43,11 @@ public class CreateOneBatchDbTest extends DbTestTemplate {
   BatchClient client;
   
   public void setUp() {
-    final TenantCommitResult repo = getClient().manageTenants().commit()
+    final CreatedTenant repo = getClient().manageTenants().createOneTenant()
         .name("create-one-batch")
         .build()
         .await().atMost(atMost);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     client = getClient().withTenant("create-one-batch");
   }
   

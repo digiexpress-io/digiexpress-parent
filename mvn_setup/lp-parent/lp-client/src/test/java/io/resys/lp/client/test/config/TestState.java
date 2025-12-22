@@ -61,11 +61,11 @@ public class TestState {
   
   private void create() {
     this.client_contract
-      .tenants().commit()
+      .tenants().createOneTenant()
       .build()
       .await().atMost(atMost);
     this.ledger_contract
-      .tenants().commit()
+      .tenants().createOneTenant()
       .build()
       .await().atMost(atMost);
   }

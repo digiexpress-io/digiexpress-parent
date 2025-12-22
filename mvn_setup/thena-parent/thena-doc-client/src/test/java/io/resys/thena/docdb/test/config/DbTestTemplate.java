@@ -89,7 +89,7 @@ public class DbTestTemplate {
     
     this.client = new DocClientImpl(new DocDataSourceImpl(dataSource)); 
     if(callback != null) {
-      repo = this.client.tenants().commit()
+      repo = this.client.tenants().createOneTenant()
           .name("junit" + index.incrementAndGet(), StructureType.doc)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();

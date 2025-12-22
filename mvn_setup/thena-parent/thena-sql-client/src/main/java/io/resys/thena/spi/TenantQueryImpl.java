@@ -66,13 +66,13 @@ public class TenantQueryImpl implements TenantActions.TenantQuery {
   }
 
   @Override
-  public Uni<Tenant> get() {
+  public Uni<Tenant> getOne() {
     RepoAssert.notEmpty(id, () -> "Define id or name!");
     return state.tenant().getByNameOrId(id);
   }
 
   @Override
-  public Uni<Tenant> delete() {
-    return get().onItem().transformToUni(repo -> state.tenant().delete(repo));
+  public Uni<Tenant> deleteOne() {
+    return getOne().onItem().transformToUni(repo -> state.tenant().delete(repo));
   }
 }

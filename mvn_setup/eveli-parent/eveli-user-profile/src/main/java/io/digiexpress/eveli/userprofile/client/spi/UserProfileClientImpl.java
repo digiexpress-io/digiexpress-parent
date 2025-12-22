@@ -91,8 +91,8 @@ public class UserProfileClientImpl implements UserProfileClient {
         RepoAssert.notEmpty(repoName, () -> "repoName must be defined!");
         
         final var client = ctx.getConfig().getClient();
-        return client.tenants().find().id(repoName)
-            .get().onItem().transform(existing -> {
+        return client.tenants().queryTenants().id(repoName)
+            .getOne().onItem().transform(existing -> {
               if(existing == null) {
                 final Optional<UserProfileClient> result = Optional.empty();
                 return result;
