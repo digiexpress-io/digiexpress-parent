@@ -24,6 +24,12 @@ function parse(textOrDate: string | Date): DateTime {
   return sqlDate;
 }
 
+export function formatDateForFilter(value: string | Date | undefined): string {
+  if (!value) {
+    return '';
+  }
+  return parse(value).toLocal().toFormat('d.M.yyyy').toLowerCase();
+}
 
 export const DateTimeFormatter: React.FC<{ value: string | Date | undefined, variant?: 'text' }> = ({ value, variant }) => {
   if (value) {

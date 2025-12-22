@@ -1,6 +1,6 @@
 import { TaskApi } from '@dxs-ts/task-api';
 import { FilterFnOption, Row } from "@tanstack/react-table";
-import { DateTime } from "luxon";
+import { formatDateForFilter } from '@dxs-ts/xui-datetime';
 
 
 const priorityOrder: Record<TaskApi.TaskPriority, number> = {
@@ -74,10 +74,10 @@ export const filterFormattedDateFn: FilterFnOption<TaskApi.Task> = (row, columnI
     return false;
   }
 
-  const formatted = DateTime.fromISO(rawDate).toFormat('d.M.yyyy').toLowerCase();
+  const formatted = formatDateForFilter(rawDate);
   const filters = Array.isArray(filterValue) ? filterValue : [filterValue];
 
-  return filters.some(f => formatted.includes(f.toLowerCase()));
+  return filters.some(f => formatted.includes(String(f).toLowerCase()));
 };
 
 function normalize(input: string | string[]): string[] {

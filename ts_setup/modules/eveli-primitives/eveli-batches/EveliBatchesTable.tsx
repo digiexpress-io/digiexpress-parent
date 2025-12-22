@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, LinkProps, Link } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { DateTime } from 'luxon';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import { Link as RouterLink } from '@tanstack/react-router'
 import { useFetch } from '@dxs-ts/envir-fetch';
@@ -77,15 +77,8 @@ export const EveliBatchesTable: React.FC = () => {
 }
 
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  const rawDate = value;
-  if (!rawDate) {
-    return <div>--</div>
-  }
-  const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
-  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT);
-
-  return <div>{formatted}</div>;
-}
+  return <DateTimeFormatter value={value} variant="text" />;
+};
 
 const BatchLink: React.FC<{ value: BatchApi.Batch }> = ({ value }) => {
 
