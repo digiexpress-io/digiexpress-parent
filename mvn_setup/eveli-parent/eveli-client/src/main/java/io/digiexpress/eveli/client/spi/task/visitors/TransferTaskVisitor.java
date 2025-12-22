@@ -108,7 +108,7 @@ public class TransferTaskVisitor {
         .title(command.getTransferTitle())
         .draftedBy(userId)
         .decidedBy(userId)
-        .createdBy(userId)
+        .createdBy(task.getClientIdentificator())
         .externalId(taskId)
         .props(allProps)
         .build();
