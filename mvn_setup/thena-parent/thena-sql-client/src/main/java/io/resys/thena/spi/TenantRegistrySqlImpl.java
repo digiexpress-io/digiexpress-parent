@@ -1,4 +1,4 @@
-package io.resys.thena.registry;
+package io.resys.thena.spi;
 
 /*-
  * #%L
@@ -25,7 +25,6 @@ import java.util.function.Function;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.registry.TenantRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.TenantContext;

@@ -1,4 +1,4 @@
-package io.resys.thena.api.registry;
+package io.resys.thena.spi;
 
 /*-
  * #%L
@@ -23,6 +23,7 @@ package io.resys.thena.api.registry;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
 

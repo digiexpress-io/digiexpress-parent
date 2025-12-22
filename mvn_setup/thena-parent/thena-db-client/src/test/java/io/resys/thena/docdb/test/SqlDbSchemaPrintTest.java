@@ -31,9 +31,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.datasource.TenantContext;
-import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
+import io.resys.thena.spi.TenantRegistrySqlImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
