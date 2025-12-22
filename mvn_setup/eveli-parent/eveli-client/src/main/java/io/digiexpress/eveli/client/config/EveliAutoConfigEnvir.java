@@ -61,7 +61,7 @@ public class EveliAutoConfigEnvir {
   
   @Bean
   public EveliEnvirClient eveliEnvirClient(
-      io.vertx.mutiny.pgclient.PgPool pool,
+      io.vertx.mutiny.sqlclient.Pool pool,
       DialobClient dialobClient, 
       ObjectMapper objectMapper, 
       WorkerAuthClient authClient,
@@ -107,7 +107,7 @@ public class EveliAutoConfigEnvir {
   }
 
   private EveliEnvirStore envirStore(
-      io.vertx.mutiny.pgclient.PgPool pool, 
+      io.vertx.mutiny.sqlclient.Pool pool, 
       ExternalDeploymentProvider externalProvider, 
       ObjectMapper objectMapper, 
       WorkerAuthClient authClient,

@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.event.TaskEventPublisher;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
@@ -124,7 +121,6 @@ public abstract class TaskEnvirSetupDebugDb {
 
   @Configuration @Slf4j
   public static class TaskEnvirSetupConfig {
-    @MockBean TaskNotificator notificator;
     @Autowired ObjectMapper objectMapper;
     @Autowired ApplicationEventPublisher publisher;
 
@@ -143,11 +139,6 @@ public abstract class TaskEnvirSetupDebugDb {
       return new HdesTypeDefsFactory(objectMapper);
     }
     
-    @Bean
-    public TaskEventPublisher taskPub() {
-      final var taskPublisher = new TaskEventPublisher(publisher);
-      return taskPublisher;
-    }
     
     @Bean
     public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
@@ -166,7 +157,7 @@ public abstract class TaskEnvirSetupDebugDb {
 
       log.info("repo created: {}", repo);
       final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-      return new TaskClientImpl(null, notificator, null, null, store, customer);
+      return new TaskClientImpl(null, null, null, store, customer);
     }
     
     @Bean

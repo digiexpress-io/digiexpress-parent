@@ -25,9 +25,6 @@ import java.time.Duration;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
-import io.digiexpress.eveli.client.event.TaskEventPublisher;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
@@ -52,12 +49,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FeedbackTaskEnvirSetup {
-  private final TaskEventPublisher publisher;
   private final GrimClient dbState;
   private final io.vertx.mutiny.pgclient.PgPool pgPool;
   private final String repoId;
   
-  public FeedbackTaskEnvirSetup(PostgreSQLContainer<?> cont, TaskEventPublisher publisher, String repoId) {
+  public FeedbackTaskEnvirSetup(PostgreSQLContainer<?> cont, String repoId) {
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
         new PgConnectOptions()
           .setHost(cont.getHost())
@@ -71,7 +67,6 @@ public class FeedbackTaskEnvirSetup {
         .db("junit")
         .client(pgPool)
         .build();
-    this.publisher = publisher;
     this.repoId = repoId;
   }
 
@@ -116,7 +111,6 @@ public class FeedbackTaskEnvirSetup {
 
   
   public TaskClient getTaskClient(ProcessRepository proc) {
-    final TaskNotificator notificator = new NotificationMessagingComponent(publisher);
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName(repoId)
         .client(dbState)
@@ -131,7 +125,7 @@ public class FeedbackTaskEnvirSetup {
     log.info("Repo created: " + repo);
     
     final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-    return new TaskClientImpl(null, notificator, null, null, store, customer);
+    return new TaskClientImpl(null, null, null, store, customer);
   }
   
 }

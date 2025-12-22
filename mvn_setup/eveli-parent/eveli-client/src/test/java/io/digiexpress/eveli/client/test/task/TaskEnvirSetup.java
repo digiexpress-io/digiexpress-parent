@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +40,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
-import io.digiexpress.eveli.client.event.TaskEventPublisher;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
@@ -130,7 +127,6 @@ public abstract class TaskEnvirSetup {
 
   @Configuration @Slf4j
   public static class TaskEnvirSetupConfig {
-    @MockBean TaskNotificator notificator;
     @Autowired JdbcTemplate jdbcTemplate;
     @Autowired EntityManager entityManager;
     @Autowired ProcessRepository processJPA;
@@ -154,12 +150,6 @@ public abstract class TaskEnvirSetup {
     }
     
     @Bean
-    public TaskEventPublisher taskPub() {
-      final var taskPublisher = new TaskEventPublisher(publisher);
-      return taskPublisher;
-    }
-    
-    @Bean
     public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
       final var repoId = "task-client-" + TEST_INDEX.incrementAndGet();
       final var config = ImmutableTaskStoreConfig.builder()
@@ -178,7 +168,7 @@ public abstract class TaskEnvirSetup {
       log.info("repo created: {}", repo);
       
       final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-      return new TaskClientImpl(null, notificator, null, null, store, customer);
+      return new TaskClientImpl(null, null, null, store, customer);
     }
     
     @Bean

@@ -31,7 +31,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ModifyTaskCommand;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
@@ -48,7 +47,6 @@ import lombok.RequiredArgsConstructor;
 public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String email;
-  private final TaskNotificator notificator;
   private final String taskId;
   private final ModifyTaskCommand command;
   
@@ -155,7 +153,6 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         commited.getLinks(),
         commited.getLabels(),
         commited.getObjectives());
-    notificator.handleTaskUpdate(task, previousVersion, email);
     return Uni.createFrom().item(task);
   }
 }

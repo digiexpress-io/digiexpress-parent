@@ -36,7 +36,6 @@ import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
@@ -71,7 +70,6 @@ import lombok.RequiredArgsConstructor;
 public class TaskClientImpl implements TaskClient {
 
   private final EveliEnvirClient envirClient;
-  private final TaskNotificator notificator;
   private final TaskFileClient taskFilesClient;
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
@@ -147,22 +145,22 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new CreateOneTaskComment(userId, notificator, command));
+        return ctx.getConfig().accept(new CreateOneTaskComment(userId, command));
       }
       @Override
       public Uni<Task> createTask(CreateTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         if(command.getQuestionnaireId() == null) {
-          return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command, null));  
+          return ctx.getConfig().accept(new CreateOneTask(userId, command, null));  
         }
         return crmClient.accountQuery().getOneByAnyId(command.getQuestionnaireId())
-          .onItem().transformToUni(account -> ctx.getConfig().accept(new CreateOneTask(userId, notificator, command, account)));
+          .onItem().transformToUni(account -> ctx.getConfig().accept(new CreateOneTask(userId, command, account)));
         
       }
       @Override
       public Uni<Task> modifyTask(String taskId, ModifyTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new ModifyOneTask(userId, userEmail, notificator, taskId, command));
+        return ctx.getConfig().accept(new ModifyOneTask(userId, userEmail, taskId, command));
       }
       @Override
       public Uni<Task> deleteTask(String taskId) {

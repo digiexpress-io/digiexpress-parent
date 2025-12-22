@@ -5,15 +5,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
-import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -51,6 +48,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
+import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.PdfClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
@@ -59,14 +57,12 @@ import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
-import io.digiexpress.eveli.client.event.TaskEventPublisher;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import io.digiexpress.eveli.client.spi.dialob.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
+import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
@@ -198,14 +194,6 @@ public class EveliAutoConfig {
     return builder.build();
   }
   
-  @Bean 
-  public TaskNotificator taskNotificator() {
-    return new NotificationMessagingComponent();
-  }
-  @Bean
-  public TaskEventPublisher taskEventPublisher(ApplicationEventPublisher publisher) {
-    return new TaskEventPublisher(publisher);
-  }
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder) {
     return builder.build();
@@ -244,8 +232,7 @@ public class EveliAutoConfig {
       DocContainerClient docContainerClient,
       AttachmentCommands attachmentCommands,
       RestTemplate restTemplate,
-      TaskNotificator taskNotificator, 
-      io.vertx.mutiny.pgclient.PgPool pgPool,
+      io.vertx.mutiny.sqlclient.Pool pgPool,
       EveliEnvirClient envirClient) {
     
     final var config = ImmutableTaskStoreConfig.builder()
@@ -256,11 +243,11 @@ public class EveliAutoConfig {
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(envirClient, taskNotificator, fileClient, docContainerClient, store, crmClient);
+    return new TaskClientImpl(envirClient, fileClient, docContainerClient, store, crmClient);
   }
   
   @Bean
-  public io.vertx.mutiny.pgclient.PgPool pgPool(EveliPropsDb db, EveliPropsDbResolved dbConfig) {
+  public io.vertx.mutiny.sqlclient.Pool pgPool(EveliPropsDb db, EveliPropsDbResolved dbConfig) {
     var trustOptions = new PemTrustOptions();
     if (StringUtils.isNotBlank(dbConfig.getCertPath())) {
       trustOptions.addCertPath(dbConfig.getCertPath());
@@ -352,7 +339,7 @@ public class EveliAutoConfig {
   }
   
   @Bean
-  public UserProfileClient userProfileClient(io.vertx.mutiny.pgclient.PgPool pgPool) {    
+  public UserProfileClient userProfileClient(io.vertx.mutiny.sqlclient.Pool pgPool) {    
     final var store = UserProfileStore.builder()
         .repoName("worker-profile")
         .pgPool(pgPool)
