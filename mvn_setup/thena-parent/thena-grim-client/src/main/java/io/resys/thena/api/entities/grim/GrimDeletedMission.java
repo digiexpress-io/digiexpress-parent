@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 
 
@@ -40,7 +40,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 @JsonSerialize(as = ImmutableGrimDeletedMission.class)
 @JsonDeserialize(as = ImmutableGrimDeletedMission.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public interface GrimDeletedMission extends IsGrimObject, TenantEntity {
+public interface GrimDeletedMission extends IsGrimObject, AnyTenantEntity {
   GrimMission getMission();    
   
   List<GrimMissionLabel> getMissionLabels();

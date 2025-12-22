@@ -22,13 +22,13 @@ package io.resys.thena.api.entities.fs;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.fs.ThenaFsObject.IsFsObject;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface FsCommitTree extends TenantEntity, IsFsObject {
+public interface FsCommitTree extends AnyTenantEntity, IsFsObject {
   String getId();
   String getCommitId();
   @Nullable String getDirentId();  //transitive

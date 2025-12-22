@@ -1,4 +1,4 @@
-package io.resys.thena.api.entities;
+package io.resys.thena.api.envelope;
 
 /*-
  * #%L
@@ -20,4 +20,6 @@ package io.resys.thena.api.entities;
  * #L%
  */
 
-public enum CommitResultStatus { OK, ERROR, CONFLICT, NO_CHANGES }
+public enum CommitLockStatus { 
+  LOCK_TAKEN, NOT_FOUND
+}

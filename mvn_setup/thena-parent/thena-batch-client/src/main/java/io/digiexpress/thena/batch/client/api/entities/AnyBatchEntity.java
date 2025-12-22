@@ -20,10 +20,10 @@ package io.digiexpress.thena.batch.client.api.entities;
  * #L%
  */
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 
 // marker interface
-public interface AnyBatchEntity extends TenantEntity {
+public interface AnyBatchEntity extends AnyTenantEntity {
   String getId(); 
   BatchDocType getDocType();
 

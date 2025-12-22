@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +37,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableGrimProcess.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
-public interface GrimProcess extends IsGrimObject, TenantEntity {
+public interface GrimProcess extends IsGrimObject, AnyTenantEntity {
    String getId(); // auto inserted .... for some reason
    OffsetDateTime getCreated();
    OffsetDateTime getUpdated();

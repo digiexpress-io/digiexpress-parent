@@ -26,12 +26,12 @@ import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;

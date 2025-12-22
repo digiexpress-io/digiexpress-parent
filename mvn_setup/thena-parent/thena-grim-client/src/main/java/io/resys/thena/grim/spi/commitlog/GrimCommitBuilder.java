@@ -24,12 +24,12 @@ import java.time.OffsetDateTime;
 
 import com.google.common.base.Objects;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree.GrimCommitTreeOperation;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitTree;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.support.OidUtils;
 import io.vertx.core.json.JsonObject;

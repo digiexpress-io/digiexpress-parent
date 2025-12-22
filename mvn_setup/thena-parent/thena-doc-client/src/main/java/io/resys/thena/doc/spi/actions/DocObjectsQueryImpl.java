@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
@@ -41,6 +40,7 @@ import io.resys.thena.api.entities.doc.DocContainer.DocTenantObjects;
 import io.resys.thena.api.entities.doc.ImmutableDocFilter;
 import io.resys.thena.api.entities.doc.ImmutableDocObject;
 import io.resys.thena.api.entities.doc.ImmutableDocTenantObjects;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;

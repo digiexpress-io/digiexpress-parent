@@ -22,11 +22,11 @@ package io.resys.thena.grim.spi.modify;
 
 import java.util.Map;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeRemark;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.RepoAssert;

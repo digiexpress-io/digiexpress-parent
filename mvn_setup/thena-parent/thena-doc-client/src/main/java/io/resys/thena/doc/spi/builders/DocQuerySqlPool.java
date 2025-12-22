@@ -23,10 +23,10 @@ import java.util.List;
  */
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.ImmutableDocFilter;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;

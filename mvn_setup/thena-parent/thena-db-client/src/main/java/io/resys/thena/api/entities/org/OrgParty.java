@@ -28,13 +28,13 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgVersionObject;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, TenantEntity {
+public interface OrgParty extends ThenaOrgObject, IsOrgObject, IsOrgVersionObject, AnyTenantEntity {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();

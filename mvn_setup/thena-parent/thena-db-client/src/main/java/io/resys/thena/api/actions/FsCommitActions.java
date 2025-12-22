@@ -27,7 +27,6 @@ import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.fs.FsDirent;
 import io.resys.thena.api.entities.fs.FsDirentAssignment;
 import io.resys.thena.api.entities.fs.FsDirentLabel;
@@ -35,6 +34,7 @@ import io.resys.thena.api.entities.fs.FsDirentLink;
 import io.resys.thena.api.entities.fs.FsDirentRemark;
 import io.resys.thena.api.entities.fs.ThenaFsMergeObject.MergeDirent;
 import io.resys.thena.api.entities.fs.ThenaFsNewObject.NewDirent;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;

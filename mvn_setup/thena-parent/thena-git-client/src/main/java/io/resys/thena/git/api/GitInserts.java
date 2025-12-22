@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
@@ -33,6 +32,7 @@ import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.UpsertStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.Message;
 import io.smallrye.mutiny.Uni;
 

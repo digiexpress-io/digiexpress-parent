@@ -32,7 +32,7 @@ import io.digiexpress.tagomi.api.entities.TagomiContainer;
 import io.digiexpress.tagomi.api.entities.TagomiContainer.IsTagomiObject;
 import io.digiexpress.tagomi.spi.support.StoreException;
 import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;

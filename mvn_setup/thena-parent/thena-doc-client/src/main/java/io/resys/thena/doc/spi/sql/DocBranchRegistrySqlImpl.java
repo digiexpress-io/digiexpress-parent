@@ -28,11 +28,11 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
+import io.resys.thena.api.envelope.CommitLockStatus;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;

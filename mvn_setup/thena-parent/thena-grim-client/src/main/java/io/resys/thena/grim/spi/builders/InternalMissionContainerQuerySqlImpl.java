@@ -31,10 +31,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
+import io.resys.thena.api.envelope.PageQuery.PageSortingOrder;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.grim.api.GrimQueryActions.GrimArchiveQueryType;

@@ -32,11 +32,11 @@ import org.junit.jupiter.api.Test;
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import lombok.extern.slf4j.Slf4j;
 

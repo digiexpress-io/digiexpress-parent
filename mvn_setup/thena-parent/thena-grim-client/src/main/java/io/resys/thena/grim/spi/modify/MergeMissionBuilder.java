@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableMap;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMissionData;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
@@ -57,6 +56,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewe
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.grim.spi.create.NewAssignmentBuilder;

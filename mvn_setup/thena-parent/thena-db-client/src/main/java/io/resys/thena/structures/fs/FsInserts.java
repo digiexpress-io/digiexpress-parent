@@ -26,7 +26,6 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.fs.FsCommit;
 import io.resys.thena.api.entities.fs.FsCommitTree;
 import io.resys.thena.api.entities.fs.FsDirent;
@@ -35,6 +34,7 @@ import io.resys.thena.api.entities.fs.FsDirentData;
 import io.resys.thena.api.entities.fs.FsDirentLabel;
 import io.resys.thena.api.entities.fs.FsDirentLink;
 import io.resys.thena.api.entities.fs.FsDirentRemark;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.Message;
 import io.smallrye.mutiny.Uni;
 

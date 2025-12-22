@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.CommitLockStatus;
+import io.resys.thena.api.envelope.CommitLockStatus;
 
 @Value.Immutable
 public  

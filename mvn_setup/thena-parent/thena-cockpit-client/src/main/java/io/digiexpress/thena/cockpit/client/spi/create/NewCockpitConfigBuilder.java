@@ -32,7 +32,7 @@ import io.digiexpress.thena.cockpit.client.api.entities.ImmutableCockpitConfig;
 import io.digiexpress.thena.cockpit.client.spi.commitlog.CockpitCommitBuilder;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDbBuilder.PersistenceUnit;
 import io.digiexpress.thena.cockpit.client.tables.ImmutablePersistenceUnit;
-import io.resys.thena.api.entities.BatchStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 

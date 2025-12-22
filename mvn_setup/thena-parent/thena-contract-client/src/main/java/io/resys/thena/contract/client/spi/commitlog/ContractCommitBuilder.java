@@ -24,7 +24,7 @@ import java.time.OffsetDateTime;
 
 import com.google.common.base.Objects;
 
-import io.resys.thena.api.entities.BatchStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.contract.client.entities.Commit;
 import io.resys.thena.contract.client.entities.CommitTree.CommitTreeOperation;
 import io.resys.thena.contract.client.entities.ContractEntity;

@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
-public interface Tenant extends TenantEntity {
+public interface Tenant extends AnyTenantEntity {
   String getId();
   String getRev();
   String getPrefix();

@@ -22,11 +22,11 @@ package io.resys.thena.api.entities.git;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 
 // Resource name - blob id(content in blob)
 @Value.Immutable
-public interface TreeValue extends GitEntity, TenantEntity {
+public interface TreeValue extends GitEntity, AnyTenantEntity {
   // Name of the resource
   String getName();
   // Id of the blob that holds content

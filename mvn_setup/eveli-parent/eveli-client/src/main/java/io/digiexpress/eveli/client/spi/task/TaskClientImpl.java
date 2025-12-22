@@ -59,7 +59,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;

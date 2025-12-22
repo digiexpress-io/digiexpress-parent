@@ -27,14 +27,14 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import jakarta.annotation.Nullable;
 
 
 @JsonSerialize(as = ImmutableGrimCommit.class)
 @JsonDeserialize(as = ImmutableGrimCommit.class)
 @Value.Immutable
-public interface GrimCommit extends TenantEntity {
+public interface GrimCommit extends AnyTenantEntity {
   String getCommitId();
   @Nullable String getParentCommitId();  
   @Nullable String getMissionId();

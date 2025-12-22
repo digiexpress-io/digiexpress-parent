@@ -27,7 +27,7 @@ import org.immutables.value.Value;
 
 import io.digiexpress.thena.cockpit.client.api.CockpitMergeObject.MergeCockpitConfig;
 import io.digiexpress.thena.cockpit.client.api.CockpitNewObject.NewCockpitConfig;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;

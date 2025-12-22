@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
@@ -34,6 +33,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;

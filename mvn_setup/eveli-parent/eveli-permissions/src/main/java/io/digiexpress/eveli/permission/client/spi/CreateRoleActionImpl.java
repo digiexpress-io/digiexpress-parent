@@ -27,7 +27,7 @@ import io.digiexpress.eveli.permission.client.api.model.RoleCommand.CreateRole;
 import io.digiexpress.eveli.permission.client.api.model.RoleCommand.RoleCommandType;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

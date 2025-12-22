@@ -28,13 +28,12 @@ import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;

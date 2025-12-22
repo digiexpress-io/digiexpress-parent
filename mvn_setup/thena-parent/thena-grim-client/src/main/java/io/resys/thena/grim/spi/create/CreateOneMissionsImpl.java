@@ -23,10 +23,10 @@ package io.resys.thena.grim.spi.create;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.grim.api.GrimCommitActions.CreateOneMission;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;

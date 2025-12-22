@@ -36,8 +36,8 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.ImmutableBatchLog;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.ImmutableBatchLog;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;

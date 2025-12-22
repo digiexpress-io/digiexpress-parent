@@ -1,4 +1,4 @@
-package io.resys.thena.api.entities;
+package io.resys.thena.api.envelope;
 
 /*-
  * #%L
@@ -20,13 +20,15 @@ package io.resys.thena.api.entities;
  * #L%
  */
 
-import org.immutables.value.Value;
+public enum BatchStatus { 
+  OK, EMPTY, ERROR, CONFLICT;
 
-import jakarta.annotation.Nullable;
-
-
-@Value.Immutable
-public interface BatchLog {
-  String getText();
-  @Nullable Throwable getException();
-}  
+  public static CommitResultStatus mapStatus(BatchStatus src) {
+    if(src == OK) {
+      return CommitResultStatus.OK;
+    } else if(src == CONFLICT) {
+      return CommitResultStatus.CONFLICT;
+    }
+    return CommitResultStatus.ERROR; 
+  } 
+}

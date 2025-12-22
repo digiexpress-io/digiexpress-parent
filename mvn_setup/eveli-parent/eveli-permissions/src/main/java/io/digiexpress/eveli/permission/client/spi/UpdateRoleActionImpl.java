@@ -38,8 +38,8 @@ import io.digiexpress.eveli.permission.client.api.model.RoleCommand.RoleUpdateCo
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
 import io.resys.thena.api.actions.OrgCommitActions.ModifyOneParty;
 import io.resys.thena.api.actions.OrgCommitActions.OnePartyEnvelope;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.OrgActorStatusType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;

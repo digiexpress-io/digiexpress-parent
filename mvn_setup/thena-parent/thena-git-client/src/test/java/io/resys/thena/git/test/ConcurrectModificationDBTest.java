@@ -37,8 +37,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.git.test.config.DbTestTemplate;
 import io.smallrye.mutiny.Multi;

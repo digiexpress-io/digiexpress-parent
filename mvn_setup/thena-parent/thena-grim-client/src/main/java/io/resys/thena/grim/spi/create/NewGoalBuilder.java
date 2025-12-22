@@ -25,7 +25,6 @@ import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoalTransitives;
@@ -35,6 +34,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;

@@ -31,7 +31,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
@@ -46,6 +45,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.OidUtils;

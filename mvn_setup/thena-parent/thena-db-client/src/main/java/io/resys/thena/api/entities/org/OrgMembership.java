@@ -24,12 +24,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.org.ThenaOrgObject.IsOrgObject;
 
 @Value.Immutable
 public
-interface OrgMembership extends ThenaOrgObject, IsOrgObject, TenantEntity {
+interface OrgMembership extends ThenaOrgObject, IsOrgObject, AnyTenantEntity {
   String getId();
   String getMemberId();
   String getPartyId();

@@ -37,7 +37,7 @@ import io.resys.lp.client.api.entities.ImmutableLog;
 import io.resys.lp.client.spi.formula.feemi_savings.BlackBookConstants;
 import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanAllocGrowth;
 import io.resys.lp.client.spi.formula.feemi_savings.monthly.ast.MonthlyInvPlanGrowth;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;

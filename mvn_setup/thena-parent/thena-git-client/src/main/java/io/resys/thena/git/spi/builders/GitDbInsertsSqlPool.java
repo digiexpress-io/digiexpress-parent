@@ -1,7 +1,5 @@
 package io.resys.thena.git.spi.builders;
 
-import io.resys.thena.api.entities.BatchStatus;
-
 /*-
  * #%L
  * thena-docdb-api
@@ -29,6 +27,7 @@ import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.Tag;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.UpsertStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;

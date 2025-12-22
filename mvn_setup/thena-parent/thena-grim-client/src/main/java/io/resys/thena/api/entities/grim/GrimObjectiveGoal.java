@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -49,7 +49,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableGrimObjectiveGoal.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
-public interface GrimObjectiveGoal extends IsGrimObject, TenantEntity {
+public interface GrimObjectiveGoal extends IsGrimObject, AnyTenantEntity {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();  

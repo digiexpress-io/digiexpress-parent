@@ -27,13 +27,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.doc.api.DocCommitActions.CreateOneDocBranch;
 import io.resys.thena.doc.api.DocCommitActions.OneDocEnvelope;

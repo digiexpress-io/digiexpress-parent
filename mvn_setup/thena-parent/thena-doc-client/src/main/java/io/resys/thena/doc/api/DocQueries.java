@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocBranch;
@@ -34,6 +33,7 @@ import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.Message;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;

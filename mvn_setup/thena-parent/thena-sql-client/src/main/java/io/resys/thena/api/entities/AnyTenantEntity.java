@@ -2,9 +2,9 @@ package io.resys.thena.api.entities;
 
 /*-
  * #%L
- * thena-sql-client
+ * thena-docdb-api
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,5 @@ package io.resys.thena.api.entities;
  * #L%
  */
 
-public enum BatchStatus { 
-  OK, EMPTY, ERROR, CONFLICT;
-
-  public static CommitResultStatus mapStatus(BatchStatus src) {
-    if(src == OK) {
-      return CommitResultStatus.OK;
-    } else if(src == CONFLICT) {
-      return CommitResultStatus.CONFLICT;
-    }
-    return CommitResultStatus.ERROR; 
-  } 
-}
+// marker interface
+public interface AnyTenantEntity {}

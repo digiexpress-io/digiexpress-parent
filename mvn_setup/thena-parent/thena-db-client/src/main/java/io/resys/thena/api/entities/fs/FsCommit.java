@@ -24,11 +24,11 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface FsCommit extends TenantEntity {
+public interface FsCommit extends AnyTenantEntity {
   String getCommitId();
   @Nullable String getParentCommitId();  
   @Nullable String getDirentId();

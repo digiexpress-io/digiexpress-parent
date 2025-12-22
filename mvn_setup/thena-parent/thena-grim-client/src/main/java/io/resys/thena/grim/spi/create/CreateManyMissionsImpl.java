@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.grim.api.GrimCommitActions.CreateManyMissions;
 import io.resys.thena.grim.api.GrimCommitActions.ManyMissionsEnvelope;

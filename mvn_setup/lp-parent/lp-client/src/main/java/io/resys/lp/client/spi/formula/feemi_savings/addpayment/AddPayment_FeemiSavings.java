@@ -37,7 +37,7 @@ import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.PaymentToInvP
 import io.resys.lp.client.spi.formula.feemi_savings.addpayment.ast.PaymentToInvPlanAlloc;
 import io.resys.lp.client.api.entities.ImmutableEnvelope;
 import io.resys.lp.client.api.entities.ImmutableLog;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.contract.client.entities.InvPlan;
 import io.resys.thena.contract.client.entities.InvPlanAlloc;
 import io.resys.thena.ledger.client.api.ThenaLedgerMergeObject.MergeLedger;

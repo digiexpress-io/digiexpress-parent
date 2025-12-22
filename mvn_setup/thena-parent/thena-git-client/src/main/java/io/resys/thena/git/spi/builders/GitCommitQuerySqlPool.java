@@ -24,7 +24,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.entities.CommitLockStatus;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.CommitLock;
 import io.resys.thena.api.entities.git.CommitTree;
@@ -32,6 +31,7 @@ import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.entities.git.ImmutableCommitLock;
 import io.resys.thena.api.entities.git.ImmutableTree;
+import io.resys.thena.api.envelope.CommitLockStatus;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
