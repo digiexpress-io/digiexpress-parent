@@ -13,6 +13,7 @@
     "react": "*",
     "react-intl": "*",
     "luxon": "*",
+    "numbro": "*",
     "@mui/material": "*",
     "@mui/utils": "*",
     "@mui/system": "*",

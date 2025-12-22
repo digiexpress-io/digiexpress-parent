@@ -13,7 +13,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    
+    "luxon": "*",
     "react-intl": "*",
     "@tanstack/react-router": "*",
     "@mui/material": "*",
