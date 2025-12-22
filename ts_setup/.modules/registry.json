@@ -1997,6 +1997,7 @@
           "react": "*",
           "react-intl": "*",
           "luxon": "*",
+          "numbro": "*",
           "@mui/material": "*",
           "@mui/utils": "*",
           "@mui/system": "*",
@@ -2018,6 +2019,7 @@
         "react",
         "react-intl",
         "luxon",
+        "numbro",
         "@mui/material",
         "@mui/utils",
         "@mui/system",
@@ -2031,6 +2033,7 @@
         "react",
         "react-intl",
         "luxon",
+        "numbro",
         "@mui/material",
         "@mui/utils",
         "@mui/system",
@@ -2044,6 +2047,7 @@
         "react",
         "react-intl",
         "luxon",
+        "numbro",
         "@mui/material",
         "@mui/utils",
         "@mui/system",
@@ -2088,9 +2092,7 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table"
       ],
-      "missingDependencies": [
-        "numbro"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": [
         "@mui/system",
         "@monaco-editor/react",
@@ -3186,6 +3188,7 @@
         },
         "peerDependencies": {
           "react": "*",
+          "luxon": "*",
           "react-intl": "*",
           "@tanstack/react-router": "*",
           "@mui/material": "*",
@@ -3218,6 +3221,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-datetime",
         "react",
+        "luxon",
         "react-intl",
         "@tanstack/react-router",
         "@mui/material",
@@ -3237,6 +3241,7 @@
       ],
       "peerDependencies": [
         "react",
+        "luxon",
         "react-intl",
         "@tanstack/react-router",
         "@mui/material",
@@ -3256,6 +3261,7 @@
       ],
       "externalDependencies": [
         "react",
+        "luxon",
         "react-intl",
         "@tanstack/react-router",
         "@mui/material",
@@ -3332,9 +3338,7 @@
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api"
       ],
-      "missingDependencies": [
-        "luxon"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/xui-datetime": {
@@ -4119,6 +4123,6 @@
       ]
     }
   },
-  "checksum": "9fd4bd18569fe00cfe73c53f0f42d7d4dae46b5fc1ede69018aba9afee8ec270",
-  "generatedAt": "2025-12-19T07:24:29.162Z"
+  "checksum": "12c41054fc27a055d8c85ec445b2914b2aa018a39d46bbc3f71665151f436941",
+  "generatedAt": "2025-12-22T08:26:50.194Z"
 }
