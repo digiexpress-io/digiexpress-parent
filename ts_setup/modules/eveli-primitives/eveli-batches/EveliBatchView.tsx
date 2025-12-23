@@ -3,6 +3,7 @@ import { BatchApi } from "@dxs-ts/eveli-api";
 import { useFetch } from "@dxs-ts/envir-fetch";
 import { Alert, AlertTitle, Box, Button, Chip, Paper, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 import { DateTime, Interval } from "luxon";
 import { useIntl } from "react-intl";
 import numbro from 'numbro';
@@ -128,25 +129,9 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
   )
 }
 
-
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  const { locale } = useIntl();
-  const intl = useIntl();
-
-  const rawDate = value;
-  if (!rawDate) {
-    return <div>{intl.formatMessage({ id: 'eveli.noValueIndicator' })}</div>
-  }
-  const dateTime = DateTime.fromISO(rawDate).setLocale(locale);
-  const formatted_date = dateTime.toLocaleString(DateTime.DATE_SHORT);
-  const formatted_time = dateTime.toLocaleString(DateTime.TIME_24_WITH_SECONDS);
-
-  return (
-    <Stack direction='column'>
-      <Typography variant='subtitle2'>{formatted_date}</Typography>
-      <Typography variant='subtitle2'>{formatted_time}</Typography>
-    </Stack>);
-}
+  return <DateTimeFormatter value={value} variant="textWithSeconds" />;
+};
 
 const NoBatchInstancesAlert: React.FC = () => {
   const intl = useIntl();

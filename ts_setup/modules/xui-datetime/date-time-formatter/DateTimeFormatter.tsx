@@ -31,15 +31,35 @@ export function formatDateForFilter(value: string | Date | undefined): string {
   return parse(value).toLocal().toFormat('d.M.yyyy').toLowerCase();
 }
 
-export const DateTimeFormatter: React.FC<{ value: string | Date | undefined, variant?: 'text' }> = ({ value, variant }) => {
+export const DateTimeFormatter: React.FC<{
+  value: string | Date | undefined;
+  variant?: 'text' | 'textWithSeconds';
+}> = ({ value, variant }) => {
   if (value) {
     const localTime = parse(value).toLocal().toJSDate();
-    if(variant === 'text') {
-      return (<>
-        <FormattedDate value={localTime} />
-        &nbsp;
-        <FormattedTime value={localTime} />
-      </>)
+    if (variant === 'text') {
+      return (
+        <>
+          <FormattedDate value={localTime} />
+          &nbsp;
+          <FormattedTime value={localTime} />
+        </>
+      );
+    }
+    
+    if (variant === 'textWithSeconds') {
+      return (
+        <>
+          <FormattedDate value={localTime} />
+          &nbsp;
+          <FormattedTime
+            value={localTime}
+            hour="2-digit"
+            minute="2-digit"
+            second="2-digit"
+          />
+        </>
+      );
     }
 
     return (

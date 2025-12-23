@@ -3,11 +3,11 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconBut
 import { EveliBatchStepRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { BatchApi } from '@dxs-ts/eveli-api';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
-import { DateTime } from 'luxon';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 
 export interface EveliBatchStepProps {
@@ -17,7 +17,6 @@ export interface EveliBatchStepProps {
 
 export const EveliBatchStep: React.FC<EveliBatchStepProps> = (initProps) => {
   const classes = useUtilityClasses();
-  const intl = useIntl();
   const { getOne } = useFetch('worker/rest/api/batches/steps/$stepId.GET', {})
   const [data, setData] = React.useState<BatchApi.RuntimeStep>();
 
@@ -115,16 +114,8 @@ export const EveliBatchStep: React.FC<EveliBatchStepProps> = (initProps) => {
 
 
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  const intl = useIntl();
-
-  const rawDate = value;
-  if (!rawDate) {
-    return <div>--</div>
-  }
-  const dateTime = DateTime.fromISO(rawDate).setLocale(intl.locale);
-  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT);
-  return <div>{formatted}</div>;
-}
+  return <DateTimeFormatter value={value} variant="textWithSeconds" />;
+};
 
 
 const HealthLink: React.FC<{ value: BatchApi.RuntimeStepRow }> = ({ value }) => {
