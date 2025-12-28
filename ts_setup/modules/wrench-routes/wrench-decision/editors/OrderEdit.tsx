@@ -8,7 +8,7 @@ import { HdesApi } from '@dxs-ts/wrench-api';
 import { CancelButton, ConfirmDialog } from '@dxs-ts/eveli-primitives';
 
 
-type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN";
+type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN" | "DIRECTION_COLUMN";
 
 interface DelegateProps {
   decision: HdesApi.AstDecision;
@@ -194,6 +194,42 @@ const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   />)
 }
 
+const DirectionColumn: React.FC<DelegateProps> = ({ onChange, decision }) => {
+  const [column, setColumn] = React.useState<string>('');
+  const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
+  const selectedHeader = column ? headers.find(h => h.id === column) : undefined;
+  
+  const handleColumn = (column: string) => {
+    const header = headers.find(h => h.id === column);
+    if (header) {
+      const oppositeDirection: HdesApi.Direction = header.direction === 'IN' ? 'OUT' : 'IN';
+      onChange({ id: column, type: "SET_HEADER_DIRECTION", value: oppositeDirection });
+    }
+    setColumn(column);
+  }
+
+  return (
+    <>
+      <Burger.Select 
+        label="decisions.toolbar.organize.action.direction.column"
+        selected={column}
+        onChange={handleColumn}
+        items={headers.map(v => ({
+          id: v.id,
+          value: (<ListItemText primary={v.name + ' (' + v.direction + ')'} />)
+        }))} 
+      />
+
+      {selectedHeader && <InputLabel sx={{ pt: 2, pl: 2 }}>
+        <FormattedMessage 
+          id='decisions.toolbar.organize.action.direction.change' 
+          values={{ newDirection: selectedHeader.direction === 'IN' ? 'OUT' : 'IN' }} 
+        />
+      </InputLabel>}
+    </>
+  )
+}
+
 const OrderEdit: React.FC<OrderEditProps> = (props) => {
   const intl = useIntl();
   const [commands, setCommands] = React.useState<HdesApi.AstCommand>();
@@ -211,6 +247,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
     "DELETE_ROW": (<DeleteRow {...delegate} />),
     "MOVE_COLUMN": (<MoveColumn {...delegate} />),
     "DELETE_COLUMN": (<DeleteColumn {...delegate} />),
+    "DIRECTION_COLUMN": (<DirectionColumn {...delegate} />),
   };
 
   const editor = (<>

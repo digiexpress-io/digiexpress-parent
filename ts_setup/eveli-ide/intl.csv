@@ -684,6 +684,8 @@ decisions.toolbar.organize.action.move.from.column,theWrench (only EN translatio
 decisions.toolbar.organize.action.move.from.row,theWrench (only EN translations),Row to move,Row to move,Row to move,
 decisions.toolbar.organize.action.move.to.column,theWrench (only EN translations),New Position,New Position,New Position,
 decisions.toolbar.organize.action.move.to.row,theWrench (only EN translations),New Position,New Position,New Position,
+decisions.toolbar.organize.action.direction.column,theWrench (only EN translations),Select column to change direction,Select column to change direction,Select column to change direction,
+decisions.toolbar.organize.action.direction.change,theWrench (only EN translations),Changing direction to {newDirection},Changing direction to {newDirection},Changing direction to {newDirection},
 decisions.csv.delimiter,theWrench (only EN translations),Delimiter,Delimiter,Delimiter,
 decisions.csv.delimiter.custom,theWrench (only EN translations),Custom,Custom,Custom,
 decisions.csv.delimiter.custom.placeholder,theWrench (only EN translations),Enter custom delimiter,Enter custom delimiter,Enter custom delimiter,

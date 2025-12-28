@@ -682,6 +682,8 @@ export const en = {
   'decisions.toolbar.organize.action.move.from.row': 'Row to move',
   'decisions.toolbar.organize.action.move.to.column': 'New Position',
   'decisions.toolbar.organize.action.move.to.row': 'New Position',
+  'decisions.toolbar.organize.action.direction.column': 'Select column to change direction',
+  'decisions.toolbar.organize.action.direction.change': 'Changing direction to {newDirection}',
   'decisions.csv.delimiter': 'Delimiter',
   'decisions.csv.delimiter.custom': 'Custom',
   'decisions.csv.delimiter.custom.placeholder': 'Enter custom delimiter',
