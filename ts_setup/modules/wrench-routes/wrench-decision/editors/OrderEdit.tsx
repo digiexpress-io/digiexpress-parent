@@ -8,7 +8,7 @@ import { HdesApi } from '@dxs-ts/wrench-api';
 import { CancelButton, ConfirmDialog } from '@dxs-ts/eveli-primitives';
 
 
-type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN" | "DIRECTION_COLUMN";
+type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_HEADER" | "DELETE_HEADER" | "SET_HEADER_EXPRESSION" | "SET_HEADER_DIRECTION";
 
 interface DelegateProps {
   decision: HdesApi.AstDecision;
@@ -134,10 +134,10 @@ const DeleteRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
         value: (<ListItemText primary={index} />)
       }))}
     />
-    <div>
-      <InputLabel sx={{ paddingBottom: 1 }}><FormattedMessage id='decisions.toolbar.organize.action.deleteRow.contents' /></InputLabel>
+    <InputLabel sx={{ p: 2 }}>
+      <FormattedMessage id='decisions.toolbar.organize.action.deleteRow.contents' />:
       {preview}
-    </div>
+    </InputLabel>
   </>)
 }
 const MoveColumn: React.FC<DelegateProps> = ({ onChange, decision }) => {
@@ -181,7 +181,7 @@ const MoveColumn: React.FC<DelegateProps> = ({ onChange, decision }) => {
 const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
   const [to, setTo] = React.useState<string>('');
-  return (<Burger.Select label="decisions.toolbar.organize.action.deleteColumn" helperText="decisions.toolbar.organize.action.deleteColumn.helper"
+  return (<Burger.Select label="decisions.toolbar.organize.action.deleteColumn"
     onChange={value => {
       setTo(value);
       onChange({ type: 'DELETE_HEADER', id: value });
@@ -242,22 +242,28 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
     setConfirmDelete
   };  
   const operations: Record<OperationType, React.ReactElement> = {
-    "EXPRESSION_COLUMN": (<ExpressionColumn {...delegate} />),
+    "SET_HEADER_EXPRESSION": (<ExpressionColumn {...delegate} />),
     "MOVE_ROW": (<MoveRow {...delegate} />),
     "DELETE_ROW": (<DeleteRow {...delegate} />),
-    "MOVE_COLUMN": (<MoveColumn {...delegate} />),
-    "DELETE_COLUMN": (<DeleteColumn {...delegate} />),
-    "DIRECTION_COLUMN": (<DirectionColumn {...delegate} />),
+    "MOVE_HEADER": (<MoveColumn {...delegate} />),
+    "DELETE_HEADER": (<DeleteColumn {...delegate} />),
+    "SET_HEADER_DIRECTION": (<DirectionColumn {...delegate} />),
   };
 
+  const helperText = operation 
+    ? `decisions.toolbar.organize.helper.${operation}` 
+    : 'decisions.toolbar.organize.action.helper';
+
   const editor = (<>
-    <Burger.Select label="decisions.toolbar.organize.action" helperText="decisions.toolbar.organize.action.helper"
+    <Burger.Select 
+      label="decisions.toolbar.organize.action" 
+      helperText={helperText}
       selected={operation}
       onChange={setOperation}
       empty={{ id: '', label: 'decisions.toolbar.organize.action' }}
       items={Object.keys(operations).map((type) => ({
         id: type,
-        value: (<ListItemText primary={type} />)
+        value: (<ListItemText primary={<FormattedMessage id={`decisions.toolbar.organize.operation.${type}`} />} />)
       }))}
     />
     {operation ? operations[operation as OperationType] : null}
