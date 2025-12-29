@@ -1,12 +1,8 @@
 package io.digiexpress.eveli.client.config;
 
 import java.time.Duration;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,7 +13,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 /*-
@@ -92,22 +87,17 @@ import io.resys.thena.jackson.JsonObjectDeserializer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
-import io.vertx.core.net.PemTrustOptions;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.SslMode;
-import io.vertx.sqlclient.PoolOptions;
 import jakarta.persistence.EntityManager;
-import lombok.Builder;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @Configuration
 @Import(value = { 
-    EveliBatchesAutoConfig.class,
-    EveliBatchesDevAutoConfig.class,
-    EveliAutoConfigContract.class, 
+    EveliAutoConfigBatches.class,
+    EveliAutoConfigBatchesDev.class,
+    EveliAutoConfigContract.class,
+    EveliAutoConfigDb.class
 })
 @EnableConfigurationProperties( value = {
     EveliProps.class, 
@@ -121,79 +111,11 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsEnvir.class,
     EveliPropsBatch.class,
     EveliPropsTagomi.class,
-    EveliPropsDb.class,
     EveliPropsContract.class
 })
 @Slf4j
 public class EveliAutoConfig {
 
-  @Data
-  @Builder
-  public static class EveliPropsDbResolved {
-    private String host;
-    private int port;
-    private String username;
-    private String password;
-    private String database;
-    @Builder.Default
-    private String sslMode = "allow"; // default ssl mode, can be overridden by EveliPropsDb.sslMode
-    @Builder.Default
-    private Boolean sslTrustAll = false; // By default, don't trust all, can be overridden by EveliPropsDb.sslTrustAll
-    private String certPath; // Path to the certificate file, can be set in EveliPropsDb.certPath
-  }
-  
-  @Bean
-  @ConditionalOnMissingBean
-  public EveliPropsDbResolved eveliPropsDbResolved(
-    @Value("${spring.datasource.url}") String datasourceUrl,
-    @Value("${spring.datasource.username}") String datasourceUsername,
-    @Value("${spring.datasource.password}") String datasourcePassword
-  ) {
-    Assert.isTrue(datasourceUrl.startsWith("jdbc:postgresql://"), "postgresql is only supported database type.");
-    var matcher = Pattern.compile("^jdbc:postgresql://(?<host>[\\p{Lower}-.\\d]+)(:(?<port>\\d+))?/(?<database>[^?]+)(\\?(?<params>.*))?$")
-      .matcher(datasourceUrl);
-    if (!matcher.matches()) {
-      throw new IllegalArgumentException("Invalid datasource URL: " + datasourceUrl);
-    }
-    var pgHost = matcher.group("host");
-    var portMatch = matcher.group("port");
-    var port = Integer.parseInt(Objects.toString(portMatch, "5432")); // default PostgreSQL port
-    var database = matcher.group("database");
-    var params = matcher.group("params");
-    var builder = EveliPropsDbResolved.builder()
-      .host(pgHost)
-      .port(port)
-      .database(database)
-      .username(datasourceUsername)
-      .password(datasourcePassword);
-
-    if (params != null && !params.isEmpty()) {
-      for (String param : params.split("&")) {
-        var paramNameAndValue = param.split("=");
-        var paramName = paramNameAndValue[0];
-        var paramValue = paramNameAndValue[1];
-        if (StringUtils.isBlank(paramValue)) {
-          log.warn("Parameter '{}' in datasource URL is empty, skipping.", paramName);
-          continue;
-        }
-        switch (paramName) {
-          case "sslmode":
-            builder = builder.sslMode(paramValue);
-            break;
-          case "ssltrustall":
-            builder = builder.sslTrustAll(Boolean.parseBoolean(paramValue));
-            break;
-          case "sslrootcert":
-            builder = builder.certPath(paramValue);
-            break;
-          default:
-            log.warn("Unknown parameter in datasource URL: {}", paramName);
-        }
-      }
-    }
-    return builder.build();
-  }
-  
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder) {
     return builder.build();
@@ -245,27 +167,6 @@ public class EveliAutoConfig {
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
     return new TaskClientImpl(envirClient, fileClient, docContainerClient, store, crmClient);
   }
-  
-  @Bean
-  public io.vertx.mutiny.sqlclient.Pool pgPool(EveliPropsDb db, EveliPropsDbResolved dbConfig) {
-    var trustOptions = new PemTrustOptions();
-    if (StringUtils.isNotBlank(dbConfig.getCertPath())) {
-      trustOptions.addCertPath(dbConfig.getCertPath());
-    }
-    final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
-        new PgConnectOptions()
-          .setHost(dbConfig.getHost())
-          .setPort(dbConfig.getPort())
-          .setDatabase(dbConfig.getDatabase())
-          .setUser(dbConfig.getUsername())
-          .setPassword(dbConfig.getPassword())
-          .setTrustAll(dbConfig.getSslTrustAll())
-          .setPemTrustOptions(trustOptions)
-          .setSslMode(SslMode.of(dbConfig.getSslMode())),
-        new PoolOptions().setMaxSize(db.getPoolMaxSize() == null ? 5 : db.getPoolMaxSize()));
-    return pgPool;
-  }
-  
 
   @Bean
   public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
@@ -312,7 +213,6 @@ public class EveliAutoConfig {
     return new ProcessClientImpl(processJPA, ts, envir);
   }
 
-  
   @Bean
   public TaskAuditClient taskAuditClient(
       Optional<ThenaMqClient> mqClient,

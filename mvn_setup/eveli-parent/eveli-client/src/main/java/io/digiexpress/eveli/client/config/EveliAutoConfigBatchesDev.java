@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.config.EveliBatchesDevAutoConfig.BatchTenantCondition;
+import io.digiexpress.eveli.client.config.EveliAutoConfigBatchesDev.BatchTenantCondition;
 import io.digiexpress.eveli.client.spi.batch.delete_all.Batch_DeleteAll_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @org.springframework.context.annotation.Conditional(BatchTenantCondition.class)
 @Slf4j
-public class EveliBatchesDevAutoConfig {
+public class EveliAutoConfigBatchesDev {
   
   
   static class BatchTenantCondition extends EveliTenantCondition {
