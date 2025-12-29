@@ -27,15 +27,10 @@ import io.resys.thena.api.entities.Tenant;
 @Value.Immutable
 public abstract class TenantContext {
 
-  public interface WithTenant<T extends WithTenant<T>> {
-    T withTenant(TenantContext options);
-  }
-  
   public abstract String getDb();
   public abstract String getTenant();
   public abstract String getPrefix();
   
-
   public TenantContext withTenant(Tenant repo) {
     final String prefix = repo.getPrefix();
     return withTenantPrefix(prefix);

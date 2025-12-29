@@ -81,7 +81,7 @@ public class EveliAutoConfigEnvir {
     final var tenantConfig = tenantConfigClient.createConfigQuery().getOne().await().atMost(Duration.ofMinutes(5));
     final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient, tenantConfig);
     
-    final var cache = initCache.orElseGet(() -> cache(envirProps));
+    final var cache = initCache.orElseGet(() -> defaultEnvirCache(envirProps));
     final var hdesClientConfig = hdesConfig(objectMapper, context);
     final var envir = new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
     
@@ -93,7 +93,7 @@ public class EveliAutoConfigEnvir {
     return envir;
   }
 
-  private EveliRuntimeCache cache(EveliPropsEnvir envirProps) {
+  public static EveliRuntimeCacheInMemory defaultEnvirCache(EveliPropsEnvir envirProps) {
     final Cache<String, EveliDeployment> short_deployment_cache = Caffeine.newBuilder()
         .expireAfterWrite(envirProps.getCacheExpirations().getShortDeployment())
         .build();

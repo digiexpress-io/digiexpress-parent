@@ -20,106 +20,93 @@ package io.digiexpress.eveli.integration.cache;
  * #L%
  */
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
+import io.digiexpress.eveli.envir.spi.EveliRuntimeCacheInMemory;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
-
-
 @Slf4j
 @RequiredArgsConstructor
-public class EveliRuntimeCacheRedis implements EveliRuntimeCache {
-  private final RedisTemplate<String, EveliDeployment> deploymentCache;
-  private final RedisTemplate<String, EveliRuntime> runtimeCache;
-  private final Duration shortDeploymentTtl;
-  private final Duration longRuntimeTtl;
-
+public class EveliRuntimeCacheRedis implements EveliRuntimeCache, MessageListener {
+  
+  private final EveliRuntimeCacheInMemory delegate;
+  private final StringRedisTemplate redisTemplate;
+  
+  private static final String CHANNEL_DEPLOYMENT = "eveli:envir:cache:invalidate:deployment";
+  private static final String CHANNEL_RUNTIME = "eveli:envir:cache:invalidate:runtime";
+  private static final String CHANNEL_ALL = "eveli:envir:cache:invalidate:all";
+  public static final String CHANNEL_LISTENER = "eveli:envir:cache:invalidate:*";
+  
+  // ========== Delegate read operations ==========
+  
   @Override
   public Optional<EveliDeployment> getDeployment() {
-    final OffsetDateTime now = OffsetDateTime.now();
-    
-    // Get all deployment keys
-    Set<String> keys = deploymentCache.keys("*");
-    if (keys == null || keys.isEmpty()) {
-      return Optional.empty();
-    }
-    
-    // Fetch all deployments
-    List<EveliDeployment> deployments = deploymentCache.opsForValue().multiGet(keys);
-    if (deployments == null) {
-      return Optional.empty();
-    }
-    
-    final var result = deployments.stream()
-      .filter(Objects::nonNull)
-      .filter(a -> a.getStartsAt().isBefore(now))
-      .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-      .findFirst();
-      
-    log.debug("Redis cache, resolving deployment: {} from cache", result.map(EveliDeployment::getId));
-    return result;
+    return delegate.getDeployment();
   }
-
+  
   @Override
   public Optional<EveliRuntime> getRuntime(String runtimeId) {
-    final var runtime = Optional.ofNullable(runtimeCache.opsForValue().get(runtimeId));
-    log.debug("Redis cache, resolving runtime: {} from cache", runtime.map(EveliRuntime::getDeploymentId));
-    return runtime;
+    return delegate.getRuntime(runtimeId);
   }
-
+  
+  // ========== Write operations with Redis pub/sub ==========
+  
   @Override
   public EveliDeployment save(EveliDeployment deployment) {
-    deploymentCache.opsForValue().set(
-        deployment.getId(), 
-        deployment, 
-        shortDeploymentTtl
-    );
-    log.debug("Redis cache, saving deployment: {} to cache", deployment.getId());
-    return deployment;
+    final var result = delegate.save(deployment);
+    publishInvalidation(CHANNEL_DEPLOYMENT);
+    return result;
   }
-
+  
   @Override
   public EveliRuntime save(EveliRuntime runtime) {
-    runtimeCache.opsForValue().set(
-        runtime.getDeploymentId(), 
-        runtime, 
-        longRuntimeTtl
-    );
-    log.debug("Redis cache, saving runtime: {} from cache", runtime.getDeploymentId());
-    return runtime;
+    final var result = delegate.save(runtime);
+    publishInvalidation(CHANNEL_RUNTIME);
+    return result;
   }
-
+  
   public void invalidateId() {
-    log.debug("Redis cache, invalidating deployment cache");
-    Set<String> keys = deploymentCache.keys("*");
-    if (keys != null && !keys.isEmpty()) {
-      deploymentCache.delete(keys);
+    delegate.invalidateId();
+    publishInvalidation(CHANNEL_DEPLOYMENT);
+  }
+  
+  public void invalidateAll() {
+    delegate.invalidateAll();
+    publishInvalidation(CHANNEL_ALL);
+  }
+  
+  // ========== Redis Pub/Sub ==========
+  
+  private void publishInvalidation(String channel) {
+    try {
+      redisTemplate.convertAndSend(channel, "");
+      log.debug("Published invalidation signal to channel: {}", channel);
+    } catch (Exception e) {
+      log.error("Failed to publish cache invalidation to Redis. Local cache still updated.", e);
     }
   }
-
-  public void invalidateAll() {
-    log.debug("Redis cache, invalidating deployment cache");
-    Set<String> deploymentKeys = deploymentCache.keys("*");
-    if (deploymentKeys != null && !deploymentKeys.isEmpty()) {
-      deploymentCache.delete(deploymentKeys);
-    }
-
-    log.debug("Redis cache, invalidating runtime cache");
-    Set<String> runtimeKeys = runtimeCache.keys("*");
-    if (runtimeKeys != null && !runtimeKeys.isEmpty()) {
-      runtimeCache.delete(runtimeKeys);
+  
+  @Override
+  public void onMessage(Message message, byte[] pattern) {
+    final String channel = new String(message.getChannel());
+    log.info("Received cache invalidation signal from channel: {}", channel);
+    
+    if (channel.endsWith(":deployment")) {
+      delegate.invalidateId();
+    } else if (channel.endsWith(":runtime")) {
+      delegate.invalidateAll();
+    } else if (channel.endsWith(":all")) {
+      delegate.invalidateAll();
+    } else {
+      log.warn("Unknown invalidation channel: {}", channel);
     }
   }
 }
