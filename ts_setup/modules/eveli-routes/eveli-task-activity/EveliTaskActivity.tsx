@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { useQuery } from '@tanstack/react-query';
-import { DateTime } from 'luxon';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 import { useNavigate } from '@tanstack/react-router';
 import { Editor } from '@monaco-editor/react';
 import YAML from 'yaml';
@@ -90,7 +90,7 @@ export const EveliTaskActivity: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: (updated) => flexRender(AnyTaskDateTimeShort, { value: updated.getValue() })
+      cell: (updated) => <DateTimeFormatter value={updated.getValue()} variant="textWithSeconds" />
     },
     {
       header: intl.formatMessage({ id: 'task.audit.health.userActivities.bodyValue', defaultMessage: 'Body value' }),
@@ -180,16 +180,3 @@ const TaskRefLink: React.FC<{ taskRef: string }> = ({ taskRef }) => {
     </Box>
   );
 };
-
-
-const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  const rawDate = value;
-  if (!rawDate) {
-    return <div>--</div>
-  }
-  const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
-  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
-
-  return <div>{formatted}</div>;
-
-}
