@@ -13,7 +13,7 @@ import { Send as SendIcon } from '@mui/icons-material';
 import { useFetch } from '@dxs-ts/envir-fetch';
 import { useConfig, PublicationApi, EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
 import { CancelButton, EveliPermissions } from '@dxs-ts/eveli-primitives';
-import { DateTime } from 'luxon';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
@@ -109,15 +109,6 @@ const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () =>
   );
 };
 
-const PublicationDateTimeFi: React.FC<{ value: any }> = ({ value }) => {
-  if (!value) {
-    return <div>--</div>;
-  }
-  const dateTime = DateTime.fromISO(value).setLocale('fi');
-  const formatted = dateTime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
-  return <div>{formatted}</div>;
-};
-
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
   const config = useConfig();
@@ -155,7 +146,7 @@ export const PublicationsTable: React.FC = () => {
       header: intl.formatMessage({ id: 'publicationsTableHeader.liveDate' }),
       accessorKey: 'startsAt',
       sortingFn: sortingFns.datetime,
-      cell: info => <PublicationDateTimeFi value={info.getValue()} />,
+      cell: info => <DateTimeFormatter value={info.getValue()} variant="textWithSeconds" />,
       size: 160,
       minSize: 140,
       enableColumnFilter: true,
@@ -166,7 +157,7 @@ export const PublicationsTable: React.FC = () => {
       header: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
       accessorKey: 'createdAt',
       sortingFn: sortingFns.datetime,
-      cell: info => <PublicationDateTimeFi value={info.getValue()} />,
+      cell: info => <DateTimeFormatter value={info.getValue()} variant="textWithSeconds" />,
       size: 160,
       minSize: 140,
       enableColumnFilter: true,
