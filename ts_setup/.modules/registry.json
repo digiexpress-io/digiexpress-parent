@@ -144,7 +144,6 @@
         "@monaco-editor/react",
         "yaml",
         "@tanstack/react-table",
-        "@dxs-ts/xui-datetime",
         "@tanstack/react-query",
         "@dxs-ts/xui-table"
       ],
@@ -162,11 +161,11 @@
       ],
       "actualInternalDependencies": [
         "@dxs-ts/contract-api",
-        "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/xui-datetime",
         "@mui/system"
       ]
     },
@@ -4111,6 +4110,6 @@
       ]
     }
   },
-  "checksum": "dc84356dbc1595c749d46572b7e37b67910d2a65966e7fef9a6eb11f784d7678",
-  "generatedAt": "2025-12-19T13:56:26.374Z"
+  "checksum": "2ac197953e9aa5d263ba8f785b4146b2187c7a450f9250b35502cc1121577dd4",
+  "generatedAt": "2025-12-29T09:40:45.207Z"
 }

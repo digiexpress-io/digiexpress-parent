@@ -15,7 +15,7 @@ import { useSnackbar } from 'notistack';
 
 
 import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
-import { CancelButton, EveliDateTimeFormatter } from '@dxs-ts/eveli-primitives';
+import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 import { Release } from "./release-types";
 import { ReleaseComposer } from './ReleaseComposer';
