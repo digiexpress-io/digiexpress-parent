@@ -1,0 +1,27 @@
+{
+  "name": "@dxs-ts/cockpit-composer",
+  "version": "${project.version}",
+  "description": "Cockpit composer",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/contract-api": "*",
+    "@dxs-ts/xui-table": "*",
+    "@dxs-ts/xui-datetime": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-intl": "*",
+    "luxon": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*",
+    "@mui/system": "*",
+    "@mui/icons-material": "*",
+    "@tanstack/react-table": "*",
+    "@tanstack/react-query": "*",
+    "@monaco-editor/react": "*",
+    "yaml": "*"
+  },
+  "keywords": ["cockpit-composer"],
+  "private": true
+}

@@ -1,5 +1,105 @@
 {
   "modules": {
+    "@dxs-ts/cockpit-composer": {
+      "name": "@dxs-ts/cockpit-composer",
+      "path": "modules/cockpit-composer",
+      "packageJson": {
+        "name": "@dxs-ts/cockpit-composer",
+        "version": "${project.version}",
+        "description": "Cockpit composer",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/contract-api": "*",
+          "@dxs-ts/xui-table": "*",
+          "@dxs-ts/xui-datetime": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "react-intl": "*",
+          "luxon": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*",
+          "@mui/system": "*",
+          "@mui/icons-material": "*",
+          "@tanstack/react-table": "*",
+          "@tanstack/react-query": "*",
+          "@monaco-editor/react": "*",
+          "yaml": "*"
+        },
+        "keywords": [
+          "cockpit-composer"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "peerDependencies": [
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "externalDependencies": [
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime",
+        "react",
+        "react-intl",
+        "luxon",
+        "@mui/material",
+        "@mui/utils",
+        "@mui/system",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "@tanstack/react-query",
+        "@monaco-editor/react",
+        "yaml"
+      ]
+    },
     "@dxs-ts/contract-api": {
       "name": "@dxs-ts/contract-api",
       "path": "modules/contract-api",
@@ -3515,6 +3615,11 @@
   },
   "dependencyGraph": {
     "forward": {
+      "@dxs-ts/cockpit-composer": [
+        "@dxs-ts/contract-api",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/xui-datetime"
+      ],
       "@dxs-ts/contract-api": [],
       "@dxs-ts/contract-composer": [
         "@dxs-ts/contract-api",
@@ -3755,7 +3860,9 @@
       ]
     },
     "reverse": {
+      "@dxs-ts/cockpit-composer": [],
       "@dxs-ts/contract-api": [
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
@@ -3975,6 +4082,7 @@
         "@dxs-ts/eveli-ide"
       ],
       "@dxs-ts/xui-datetime": [
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
@@ -3992,6 +4100,7 @@
         "@dxs-ts/xui-table"
       ],
       "@dxs-ts/xui-table": [
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
