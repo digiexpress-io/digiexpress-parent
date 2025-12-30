@@ -18,7 +18,7 @@ FROM debian:bookworm-slim
 
 # Install runtime dependencies
 RUN apt-get update && \
-    apt-get install -y ca-certificates libssl3 && \
+    apt-get install -y ca-certificates libssl3 fontconfig fonts-roboto && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

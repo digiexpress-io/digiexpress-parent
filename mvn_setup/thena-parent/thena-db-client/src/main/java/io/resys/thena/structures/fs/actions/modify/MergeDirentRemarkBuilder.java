@@ -22,10 +22,10 @@ package io.resys.thena.structures.fs.actions.modify;
 
 import java.util.Map;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.fs.FsDirentRemark;
 import io.resys.thena.api.entities.fs.ImmutableFsDirentRemark;
 import io.resys.thena.api.entities.fs.ThenaFsContainers.FsDirentContainer;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.entities.fs.ThenaFsMergeObject;
 import io.resys.thena.structures.fs.ImmutableFsBatchDirents;
 import io.resys.thena.structures.fs.actions.commitlog.FsCommitBuilder;

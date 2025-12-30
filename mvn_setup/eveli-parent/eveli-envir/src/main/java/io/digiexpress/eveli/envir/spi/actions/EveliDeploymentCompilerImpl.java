@@ -32,7 +32,7 @@ import io.resys.hdes.client.spi.HdesClientEnvirBuilder;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.envir.ProgramEnvirFactory;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.doc.api.ThenaDocConfig;
 import io.resys.thena.doc.api.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.doc.spi.support.DocStoreException;

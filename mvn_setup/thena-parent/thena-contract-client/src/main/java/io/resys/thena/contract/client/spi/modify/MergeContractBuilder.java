@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCapability;
 import io.resys.thena.contract.client.api.ThenaContractMergeObject.MergeCommand;

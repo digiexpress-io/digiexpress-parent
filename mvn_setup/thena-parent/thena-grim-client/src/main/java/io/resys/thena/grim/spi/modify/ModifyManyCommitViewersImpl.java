@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimAnyObject;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.grim.api.GrimCommitActions.ManyCommitViewersEnvelope;
 import io.resys.thena.grim.api.GrimCommitActions.ModifyManyCommitViewers;

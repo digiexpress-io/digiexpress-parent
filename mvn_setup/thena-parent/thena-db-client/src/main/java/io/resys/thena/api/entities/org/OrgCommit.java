@@ -28,10 +28,10 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 
 @Value.Immutable
-public interface OrgCommit extends ThenaOrgObject, TenantEntity {
+public interface OrgCommit extends ThenaOrgObject, AnyTenantEntity {
   String getCommitId();
   @Nullable String getParentId();
   OffsetDateTime getCreatedAt();

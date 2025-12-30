@@ -22,13 +22,13 @@ package io.resys.thena.api.entities.git;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.git.GitEntity.IsGitName;
 
 // branch with a name
 @Value.Immutable
 public
-interface Branch extends IsGitName, GitEntity, TenantEntity {
+interface Branch extends IsGitName, GitEntity, AnyTenantEntity {
   // last commit in the branch
   String getCommit();
 }

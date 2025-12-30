@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import com.google.common.base.Objects;
 
-import io.resys.thena.api.entities.BatchStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.ledger.client.entities.Commit;
 import io.resys.thena.ledger.client.entities.ImmutableBlackBook;
 import io.resys.thena.ledger.client.entities.CommitTree.CommitTreeOperation;

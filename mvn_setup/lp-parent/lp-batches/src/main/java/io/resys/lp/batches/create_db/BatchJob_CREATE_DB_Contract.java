@@ -58,7 +58,7 @@ public class BatchJob_CREATE_DB_Contract implements Executor<String, CreateDbCon
   @Override
   public Uni<ExecutorEntity> accept(String tenantName, CreateDbConfig config, ExecutorContext context) {
     return contractClient
-        .tenants().commit()
+        .tenants().createOneTenant()
         .name(tenantName)
         .build()
         .onItem().transform(resp -> ImmutableExecutorEntity.builder()

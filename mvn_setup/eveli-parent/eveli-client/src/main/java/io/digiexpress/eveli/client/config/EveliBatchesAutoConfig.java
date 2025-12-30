@@ -60,7 +60,7 @@ public class EveliBatchesAutoConfig {
   }
   
   @Bean
-  public BatchClient batchClient(io.vertx.mutiny.pgclient.PgPool pgPool) {
+  public BatchClient batchClient(io.vertx.mutiny.sqlclient.Pool pgPool) {
     return BatchDbImpl.create().tenant("batch").client(pgPool).build()
       .createIfNot()
       .onItem().transform(store -> new BatchClientImpl(store))

@@ -23,7 +23,7 @@ package io.resys.thena.contract.client.spi;
 import java.util.Optional;
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.contract.client.api.ContractClient;
@@ -60,7 +60,7 @@ public class ContractClientImpl implements ContractClient {
     return withTenant(startingState.getDataSource().getTenant().getName());
   }
   @Override
-  public ContractTenant withTenant(TenantCommitResult repo) {
+  public ContractTenant withTenant(CreatedTenant repo) {
     return withTenant(repo.getRepo().getId());
   }
   @Override

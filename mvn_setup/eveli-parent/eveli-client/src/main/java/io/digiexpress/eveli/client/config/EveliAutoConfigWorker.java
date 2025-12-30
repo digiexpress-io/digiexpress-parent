@@ -1,6 +1,5 @@
 package io.digiexpress.eveli.client.config;
 
-import io.digiexpress.eveli.client.api.*;
 import org.springframework.context.ApplicationEventPublisher;
 
 /*-

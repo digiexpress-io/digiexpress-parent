@@ -29,16 +29,16 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.entities.ImmutablePageQuery;
-import io.resys.thena.api.entities.ImmutablePageSorting;
-import io.resys.thena.api.entities.ImmutablePageSortingOrder;
-import io.resys.thena.api.entities.PageQuery.PageSortDirection;
-import io.resys.thena.api.entities.PageQuery.PageSorting;
-import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.envelope.ImmutablePageQuery;
+import io.resys.thena.api.envelope.ImmutablePageSorting;
+import io.resys.thena.api.envelope.ImmutablePageSortingOrder;
+import io.resys.thena.api.envelope.PageQuery.PageSortDirection;
+import io.resys.thena.api.envelope.PageQuery.PageSorting;
+import io.resys.thena.api.envelope.PageQuery.PageSortingOrder;
 import io.resys.thena.grim.api.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.grim.test.config.DbTestTemplate;
 import io.vertx.core.json.JsonObject;
@@ -58,12 +58,12 @@ public class PaginateMissionsTest extends DbTestTemplate {
   @Test
   public void createAndUpdateMission() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("PaginateMissionsTest-1", StructureType.grim)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
    
     createTestData(repo);
     
@@ -180,7 +180,7 @@ public class PaginateMissionsTest extends DbTestTemplate {
         .propertyType(propType)
         .build();
   }
-  private void createTestData(TenantCommitResult repo) {
+  private void createTestData(CreatedTenant repo) {
     
     final var builder = getClient().grim(repo).commit()
         .createManyMissions()

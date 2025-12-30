@@ -24,13 +24,11 @@ import java.util.Optional;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.registry.TenantRegistry;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
-import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;

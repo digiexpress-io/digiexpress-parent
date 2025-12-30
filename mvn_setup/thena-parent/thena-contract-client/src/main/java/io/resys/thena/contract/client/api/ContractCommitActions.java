@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.resys.thena.contract.client.api.ThenaContractContainers.ContractContainer;

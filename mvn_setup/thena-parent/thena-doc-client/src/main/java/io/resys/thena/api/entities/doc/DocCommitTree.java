@@ -24,13 +24,13 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface DocCommitTree extends TenantEntity {
+public interface DocCommitTree extends AnyTenantEntity {
   String getId();
   String getCommitId();
   String getDocId();

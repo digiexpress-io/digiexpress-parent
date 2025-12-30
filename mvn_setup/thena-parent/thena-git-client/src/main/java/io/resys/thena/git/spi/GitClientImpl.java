@@ -21,7 +21,7 @@ package io.resys.thena.git.spi;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.git.api.GitBranchActions;
 import io.resys.thena.git.api.GitClient;
@@ -73,7 +73,7 @@ public class GitClientImpl implements GitClient {
 
 
   @Override
-  public GitStructuredTenant git(TenantCommitResult repo) {
+  public GitStructuredTenant git(CreatedTenant repo) {
     return git(repo.getRepo().getId());
   }
   @Override

@@ -43,24 +43,24 @@ public class TenantActionsImpl implements TenantActions {
   }
 
   @Override
-  public TenantQuery find() {
+  public TenantQuery queryTenants() {
     return new TenantQueryImpl(state, type);
   }
 
   @Override
-  public TenantBuilder commit() {
+  public CreateOneTenant createOneTenant() {
     return new TenantBuilderImpl(state, type);
   }
   @Override
-  public Uni<Void> deleteAll() {
+  public Uni<Void> deleteAllTenants() {
 
-    final var existingRepos = find().findAll();
+    final var existingRepos = queryTenants().findAll();
     return existingRepos.onItem().transformToUni((repo) -> {
       
       final var repoId = repo.getId();
       final var rev = repo.getRev();
       
-      return find().id(repoId).rev(rev).delete();
+      return queryTenants().id(repoId).rev(rev).deleteOne();
     })
     .concatenate().collect().asList()
     .onItem().transformToUni(junk -> state.tenant().delete());

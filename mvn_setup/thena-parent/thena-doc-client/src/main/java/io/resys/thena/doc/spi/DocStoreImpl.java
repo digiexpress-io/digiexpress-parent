@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -71,7 +71,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   @Override
   public Uni<Tenant> getTenant() {
     final var client = config.getClient();
-    return client.tenants().find().id(config.getRepoId()).get();
+    return client.tenants().queryTenants().id(config.getRepoId()).getOne();
   }
   
   @Override public ThenaDocConfig getConfig() { return config; }
@@ -99,7 +99,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   protected Uni<T> createRepoOrGetRepo(String repoName, String headName, String externalId, StructureType type) {
     final var client = config.getClient();
     
-    return client.tenants().find().id(repoName).get()
+    return client.tenants().queryTenants().id(repoName).getOne()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
             return createRepo(repoName, headName, externalId, type); 
@@ -110,13 +110,13 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   
   protected Uni<Void> deleteRepos() {
     final var client = config.getClient();    
-    return client.tenants().deleteAll().onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
+    return client.tenants().deleteAllTenants().onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
   protected Uni<T> deleteRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
-    final var existingRepo = client.tenants().find().id(repoName).get();
+    final var existingRepo = client.tenants().queryTenants().id(repoName).getOne();
     
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
@@ -124,7 +124,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
       final var rev = repoResult.getRev();
       final var docStore = withRepo(repoName, headName);
       
-      return client.tenants().find().id(repoId).rev(rev).delete()
+      return client.tenants().queryTenants().id(repoId).rev(rev).deleteOne()
           .onItem().transform(junk -> docStore);
     });
   }
@@ -134,9 +134,9 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     RepoAssert.notNull(type, () -> "type must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.tenants().commit().name(repoName, type).externalId(externalId).build();
+    final var newRepo = client.tenants().createOneTenant().name(repoName, type).externalId(externalId).build();
     return newRepo.onItem().transform((repoResult) -> {
-      if(repoResult.getStatus() != CommitStatus.OK) {
+      if(repoResult.getStatus() != TenantOperationStatus.OK) {
         throw new DocStoreException("DOC_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())

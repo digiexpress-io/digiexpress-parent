@@ -51,6 +51,7 @@ import io.resys.hdes.client.api.HdesComposer.DebugRequest;
 import io.resys.hdes.client.api.HdesComposer.DebugResponse;
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.hdes.client.api.HdesComposer.UpdateEntity;
+import io.resys.hdes.client.api.HdesStore.CommitLog;
 import io.resys.hdes.client.api.HdesStore.HistoryEntity;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
@@ -176,6 +177,11 @@ public class AssetsWrenchController {
       }
       return runtime.get().getWrench().getFlowNames();
     }); 
+  }
+  
+  @GetMapping(path = "/commitlogs", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Uni<List<CommitLog>> commitlogs() {
+    return composer.getClient().store().commitLog().build();
   }
   
   @Data

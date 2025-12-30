@@ -27,7 +27,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.git.api.GitBranchActions;
 import io.resys.thena.git.api.GitClient;
@@ -131,7 +131,7 @@ public class StencilStoreInMemory implements StencilStore {
     }
 
     @Override
-    public GitStructuredTenant git(TenantCommitResult repo) {
+    public GitStructuredTenant git(CreatedTenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
 

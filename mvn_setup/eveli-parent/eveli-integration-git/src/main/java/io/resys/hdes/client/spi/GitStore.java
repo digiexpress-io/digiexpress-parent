@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.resys.hdes.client.spi.git.CommitLogBuilderGitImpl;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.immutables.value.Value;
@@ -501,6 +502,10 @@ public class GitStore implements HdesStore {
   @Override
   public StoreRepoBuilder repo() {
     throw new RuntimeException("not implemented");
+  }
+  @Override
+  public CommitLogBuilder commitLog() {
+    return new CommitLogBuilderGitImpl(conn.getClient());
   }
   @Override
   public BranchQuery queryBranches() {

@@ -27,10 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.CommitLockStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.git.CommitLock;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitLockStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.git.api.GitCommitActions.CommitBuilder;
 import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;

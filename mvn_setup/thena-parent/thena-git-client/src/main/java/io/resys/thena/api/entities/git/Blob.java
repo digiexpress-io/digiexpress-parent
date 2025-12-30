@@ -22,12 +22,12 @@ package io.resys.thena.api.entities.git;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public
-interface Blob extends IsGitObject, GitEntity, TenantEntity {
+interface Blob extends IsGitObject, GitEntity, AnyTenantEntity {
   JsonObject getValue();
 }

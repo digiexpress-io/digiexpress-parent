@@ -26,8 +26,6 @@ const ContractDashboardInternal: React.FC = () => {
 
   const style = styleConfig[cardTheme];
 
-  console.log(contractContainer);
-
   return (
     <Grid2 container spacing={style.cardSpacing} m={1}>
       <Grid2>

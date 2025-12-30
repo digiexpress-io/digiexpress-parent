@@ -28,12 +28,12 @@ import jakarta.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Commit;
 import io.resys.thena.api.entities.git.GitContainer;
 import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.ThenaEnvelope;

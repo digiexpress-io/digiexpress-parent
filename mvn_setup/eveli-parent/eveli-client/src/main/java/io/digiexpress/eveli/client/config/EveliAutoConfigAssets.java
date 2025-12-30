@@ -211,7 +211,7 @@ public class EveliAutoConfigAssets {
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
       ApplicationContext context,
-      io.vertx.mutiny.pgclient.PgPool pgPool
+      io.vertx.mutiny.sqlclient.Pool pgPool
     ) {
     
     final var wrenchClient = HdesClientImpl.builder()

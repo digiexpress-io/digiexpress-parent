@@ -28,8 +28,8 @@ import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.CreateP
 import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.PrincipalCommandType;
 import io.resys.thena.api.actions.OrgCommitActions.CreateOneMember;
 import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.org.OrgActorStatusType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

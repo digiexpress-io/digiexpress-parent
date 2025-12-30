@@ -16,6 +16,7 @@ import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
 import FlowOptions from './FlowOptions';
 import MsgTreeItem from '../MsgTreeItem';
 import { useWrenchNav } from '../../wrench-nav';
+import InfoTreeItem from '../InfoTreeItem';
 
 
 
@@ -123,6 +124,7 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
 
   const saved = isArticleSaved(flow);
   const flowName = flow.ast ? flow.ast.name : flow.id;
+  const lastUpdated = session.getLastUpdated(flowId);
 
   const decisions: RefDecision[] = flow.associations
     .filter(a => a.refType === "DT")
@@ -146,6 +148,9 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
           <FlowOptions flow={flow} />
         </TreeItem>
       </EveliPermissions>
+
+      {/** Flow info */}
+      {lastUpdated && <InfoTreeItem nodeId={flow.id} lastUpdated={lastUpdated} />}
 
       {/** Flow status */}
       <TreeItem itemId={flow.id + 'status-nested'}

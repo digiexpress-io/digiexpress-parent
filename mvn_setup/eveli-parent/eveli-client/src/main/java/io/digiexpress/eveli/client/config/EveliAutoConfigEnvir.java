@@ -61,11 +61,12 @@ public class EveliAutoConfigEnvir {
   
   @Bean
   public EveliEnvirClient eveliEnvirClient(
-      io.vertx.mutiny.pgclient.PgPool pool,
+      io.vertx.mutiny.sqlclient.Pool pool,
       DialobClient dialobClient, 
       ObjectMapper objectMapper, 
       WorkerAuthClient authClient,
       Optional<ExternalDeploymentProvider> depProvider,
+      Optional<EveliRuntimeCache> initCache,
       ApplicationContext context,
       EveliPropsEnvir envirProps,
       TenantConfigClient tenantConfigClient) {
@@ -80,7 +81,7 @@ public class EveliAutoConfigEnvir {
     final var tenantConfig = tenantConfigClient.createConfigQuery().getOne().await().atMost(Duration.ofMinutes(5));
     final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient, tenantConfig);
     
-    final var cache = cache(envirProps);
+    final var cache = initCache.orElseGet(() -> defaultEnvirCache(envirProps));
     final var hdesClientConfig = hdesConfig(objectMapper, context);
     final var envir = new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
     
@@ -92,7 +93,7 @@ public class EveliAutoConfigEnvir {
     return envir;
   }
 
-  private EveliRuntimeCache cache(EveliPropsEnvir envirProps) {
+  public static EveliRuntimeCacheInMemory defaultEnvirCache(EveliPropsEnvir envirProps) {
     final Cache<String, EveliDeployment> short_deployment_cache = Caffeine.newBuilder()
         .expireAfterWrite(envirProps.getCacheExpirations().getShortDeployment())
         .build();
@@ -106,7 +107,7 @@ public class EveliAutoConfigEnvir {
   }
 
   private EveliEnvirStore envirStore(
-      io.vertx.mutiny.pgclient.PgPool pool, 
+      io.vertx.mutiny.sqlclient.Pool pool, 
       ExternalDeploymentProvider externalProvider, 
       ObjectMapper objectMapper, 
       WorkerAuthClient authClient,

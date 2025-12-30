@@ -1997,6 +1997,7 @@
           "react": "*",
           "react-intl": "*",
           "luxon": "*",
+          "numbro": "*",
           "@mui/material": "*",
           "@mui/utils": "*",
           "@mui/system": "*",
@@ -2018,6 +2019,7 @@
         "react",
         "react-intl",
         "luxon",
+        "numbro",
         "@mui/material",
         "@mui/utils",
         "@mui/system",
@@ -2031,6 +2033,7 @@
         "react",
         "react-intl",
         "luxon",
+        "numbro",
         "@mui/material",
         "@mui/utils",
         "@mui/system",
@@ -2044,6 +2047,7 @@
         "react",
         "react-intl",
         "luxon",
+        "numbro",
         "@mui/material",
         "@mui/utils",
         "@mui/system",
@@ -2064,8 +2068,10 @@
         "@mui/icons-material",
         "@mui/utils",
         "react-intl",
+        "luxon",
         "@dxs-ts/ledger-api",
         "@dxs-ts/xui-datetime",
+        "numbro",
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@dxs-ts/xui-table"
@@ -2076,6 +2082,8 @@
         "@mui/icons-material",
         "@mui/utils",
         "react-intl",
+        "luxon",
+        "numbro",
         "@tanstack/react-table",
         "@tanstack/react-query"
       ],
@@ -2086,7 +2094,6 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "luxon",
         "@mui/system",
         "@monaco-editor/react",
         "yaml"
@@ -3181,6 +3188,7 @@
         },
         "peerDependencies": {
           "react": "*",
+          "luxon": "*",
           "react-intl": "*",
           "@tanstack/react-router": "*",
           "@mui/material": "*",
@@ -3213,6 +3221,7 @@
         "@dxs-ts/eveli-primitives",
         "@dxs-ts/xui-datetime",
         "react",
+        "luxon",
         "react-intl",
         "@tanstack/react-router",
         "@mui/material",
@@ -3232,6 +3241,7 @@
       ],
       "peerDependencies": [
         "react",
+        "luxon",
         "react-intl",
         "@tanstack/react-router",
         "@mui/material",
@@ -3251,6 +3261,7 @@
       ],
       "externalDependencies": [
         "react",
+        "luxon",
         "react-intl",
         "@tanstack/react-router",
         "@mui/material",
@@ -3290,6 +3301,7 @@
         "@dxs-ts/envir-fetch",
         "@uiw/react-md-editor",
         "js-file-download",
+        "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -3311,6 +3323,7 @@
         "notistack",
         "@uiw/react-md-editor",
         "js-file-download",
+        "luxon",
         "@mui/x-tree-view",
         "@mui/utils",
         "monaco-editor",
@@ -4110,6 +4123,6 @@
       ]
     }
   },
-  "checksum": "2ac197953e9aa5d263ba8f785b4146b2187c7a450f9250b35502cc1121577dd4",
-  "generatedAt": "2025-12-17T09:29:19.202Z"
+  "checksum": "12c41054fc27a055d8c85ec445b2914b2aa018a39d46bbc3f71665151f436941",
+  "generatedAt": "2025-12-22T08:26:50.194Z"
 }

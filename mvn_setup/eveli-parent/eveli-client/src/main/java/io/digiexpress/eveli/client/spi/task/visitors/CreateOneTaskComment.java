@@ -23,12 +23,11 @@ package io.digiexpress.eveli.client.spi.task.visitors;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.CreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
@@ -38,7 +37,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.TaskComment> {
   private final String userId;
-  private final TaskNotificator notificator;
   private final CreateTaskCommentCommand command;
   
   private String createdRemarkId;
@@ -90,17 +88,6 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
         .findFirst().get();
     
     final var comment = TaskMapper.map(createdRemark);
-    final var task = TaskMapper.map(
-        commited.getMission(), 
-        commited.getAssignments(), 
-        commited.getRemarks(), 
-        commited.getLinks(),
-        commited.getLabels(),
-        commited.getObjectives());
-    
-    if (comment.getExternal()) {
-      notificator.sendNewCommentNotificationToClient(comment, task);
-    }
     return Uni.createFrom().item(comment);
   }
 }

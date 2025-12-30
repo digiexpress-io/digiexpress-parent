@@ -36,13 +36,13 @@ import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.User
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.digiexpress.eveli.userprofile.client.spi.support.DataConstants;
 import io.digiexpress.eveli.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocContainer.DocTenantObjects;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.doc.api.ThenaDocConfig;

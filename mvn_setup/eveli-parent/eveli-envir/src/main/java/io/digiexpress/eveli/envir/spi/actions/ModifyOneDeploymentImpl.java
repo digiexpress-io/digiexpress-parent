@@ -27,7 +27,7 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.ModifyOneDeployment;
 import io.digiexpress.eveli.envir.spi.EveliEnvirStore;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.doc.api.ThenaDocConfig;
 import io.resys.thena.doc.api.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.doc.spi.support.DocStoreException;

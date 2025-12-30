@@ -32,8 +32,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -78,7 +78,7 @@ public class DbTestTemplate {
         .errorHandler(new PgErrors())
         .build();
     if(callback != null) {
-      repo = this.client.tenants().commit()
+      repo = this.client.tenants().createOneTenant()
           .name("junit" + index.incrementAndGet(), StructureType.git)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();
@@ -128,12 +128,12 @@ public class DbTestTemplate {
   
   public LedgerClient createClient(String tenantId) {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name(tenantId)
         .build()
         .await().atMost(atMost);
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     final var tenant = repo.getRepo();
     

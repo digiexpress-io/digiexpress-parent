@@ -27,7 +27,7 @@ import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.fs.actions.FsCommitActionsImpl;
 import io.resys.thena.structures.fs.actions.FsQueryActionsImpl;
@@ -77,7 +77,7 @@ public class ThenaClientPgSql implements ThenaClient {
   
 
   @Override
-  public OrgStructuredTenant org(TenantCommitResult repo) {
+  public OrgStructuredTenant org(CreatedTenant repo) {
     return org(repo.getRepo().getId());
   }
   @Override
@@ -86,7 +86,7 @@ public class ThenaClientPgSql implements ThenaClient {
   }
 
   @Override
-  public FsStructuredTenant fs(TenantCommitResult repo) {
+  public FsStructuredTenant fs(CreatedTenant repo) {
     return this.fs(repo.getRepo().getId());
   }
   @Override

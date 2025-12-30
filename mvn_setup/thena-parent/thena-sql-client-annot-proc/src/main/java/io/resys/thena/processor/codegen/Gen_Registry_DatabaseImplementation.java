@@ -34,7 +34,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -233,11 +233,11 @@ public class Gen_Registry_DatabaseImplementation implements RegistryCodeGenerato
           ClassName.get(StructureType.class),
           registry.getTenantType())
         .indent()
-        .add(".commit()\n")
+        .add(".createOneTenant()\n")
         .add(".name(this.dataSource.getTenant().getName())\n")
         .add(".build().onItem().transform(commit -> {\n")
         .indent()
-        .add("if(commit.getStatus() != $T.OK) {\n", ClassName.get(CommitStatus.class))
+        .add("if(commit.getStatus() != $T.OK) {\n", ClassName.get(TenantOperationStatus.class))
         .indent()
         .add("final var msg = $T.join(\",\", commit.getMessages().stream().map(e -> e.getText()).toList());\n", String.class)
         .add("final var ex = commit.getMessages().stream().map(e -> e.getException()).filter(e -> e != null).toList();\n")

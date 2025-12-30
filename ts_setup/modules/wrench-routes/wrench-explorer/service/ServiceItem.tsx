@@ -16,6 +16,7 @@ import { WrenchComposerApi as Composer } from "@dxs-ts/wrench-api";
 import ServiceOptions from './ServiceOptions';
 import MsgTreeItem from '../MsgTreeItem';
 import { useWrenchNav } from '../../wrench-nav';
+import InfoTreeItem from '../InfoTreeItem';
 
 
 
@@ -121,6 +122,7 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
 
   const saved = isArticleSaved(service);
   const serviceName = service.ast ? service.ast.name : service.id;
+  const lastUpdated = session.getLastUpdated(serviceId);
 
 
   const decisions: RefDecision[] = service.associations
@@ -145,6 +147,9 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
           <ServiceOptions service={service} />
         </TreeItem>
       </EveliPermissions>
+
+      {/** Service info */}
+      {lastUpdated && <InfoTreeItem nodeId={service.id} lastUpdated={lastUpdated} />}
 
       {/** Service status */}
       <TreeItem itemId={service.id + 'status-nested'}

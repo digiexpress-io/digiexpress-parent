@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.fs.ThenaFsObject.IsFsObject;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -41,7 +41,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableFsDirentLink.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
-public interface FsDirentLink extends TenantEntity, IsFsObject {
+public interface FsDirentLink extends AnyTenantEntity, IsFsObject {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();

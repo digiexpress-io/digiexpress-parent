@@ -75,7 +75,7 @@ public class DbTestTemplate {
 
     this.client = GitDataSourceImpl.create().db("junit").client(pgPool).build();
     if(callback != null) {
-      repo = this.client.tenants().commit()
+      repo = this.client.tenants().createOneTenant()
           .name("junit" + index.incrementAndGet(), StructureType.git)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();

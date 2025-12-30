@@ -24,7 +24,7 @@ import java.time.OffsetDateTime;
 
 import java.util.List;
 
-import io.resys.thena.api.entities.BatchStatus;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.doc.api.DocCommitActions.CreateOneDoc;
 import io.resys.thena.doc.api.DocCommitActions.OneDocEnvelope;

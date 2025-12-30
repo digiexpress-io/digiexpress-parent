@@ -32,9 +32,9 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.store.ThenaConfig.EntityState;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -73,9 +73,9 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<HdesStore> create() {
         HdesAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
+        final var newRepo = client.tenants().createOneTenant().name(repoName, StructureType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != CommitStatus.OK) {
+          if(repoResult.getStatus() != TenantOperationStatus.OK) {
             throw new StoreException("REPO_CREATE_FAIL", null, 
                 ImmutableStoreExceptionMsg.builder()
                 .id(repoResult.getStatus().toString())
@@ -102,7 +102,7 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
         
         return client.git(repoName).tenants().get().onItem().transformToUni(repo -> {
           if(repo.getRepo() == null) {
-            return client.tenants().commit().name(repoName, StructureType.git).build()
+            return client.tenants().createOneTenant().name(repoName, StructureType.git).build()
                 .onItem().transform(newRepo -> Tuple2.of(true, build())); 
           }
           return Uni.createFrom().item(Tuple2.of(true, build()));
@@ -236,6 +236,11 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
   public HistoryQuery history() {
     // TODO Auto-generated method stub
     return null;
+  }
+  
+  @Override
+  public CommitLogBuilder commitLog() {
+    return new CommitLogBuilderThenaImpl(config);
   }
   
   private void cantHaveEntityWithId(String id, StoreState currentState) {

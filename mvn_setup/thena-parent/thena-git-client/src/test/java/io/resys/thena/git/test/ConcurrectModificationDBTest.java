@@ -35,10 +35,10 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.git.api.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.git.test.config.DbTestTemplate;
 import io.smallrye.mutiny.Multi;
@@ -64,12 +64,12 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("user-tasks", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     // Create head and first commit
     getClient().git(repo).commit().commitBuilder()
@@ -106,7 +106,7 @@ public class ConcurrectModificationDBTest extends DbTestTemplate {
   }
 
   
-  private void runInserts(TenantCommitResult repo, int total) {
+  private void runInserts(CreatedTenant repo, int total) {
     final var commands = new ArrayList<Uni<CommitResultEnvelope>>();
     for(int index = 0; index < total; index++) {
       // Create head and first commit

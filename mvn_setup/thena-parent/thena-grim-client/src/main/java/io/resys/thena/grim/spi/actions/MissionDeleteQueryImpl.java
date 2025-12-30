@@ -23,13 +23,13 @@ package io.resys.thena.grim.spi.actions;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimDeletedMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ImmutableGrimDeletedMission;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.grim.api.GrimQueryActions.MissionDeleteQuery;

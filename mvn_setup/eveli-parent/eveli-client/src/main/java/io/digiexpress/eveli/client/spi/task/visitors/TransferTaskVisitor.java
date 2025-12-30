@@ -45,8 +45,8 @@ import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -108,7 +108,7 @@ public class TransferTaskVisitor {
         .title(command.getTransferTitle())
         .draftedBy(userId)
         .decidedBy(userId)
-        .createdBy(userId)
+        .createdBy(task.getClientIdentificator())
         .externalId(taskId)
         .props(allProps)
         .build();

@@ -35,34 +35,34 @@ import io.smallrye.mutiny.Uni;
 
 public interface TenantActions {
 
-  TenantQuery find();
-  TenantBuilder commit();  
-  Uni<Void> deleteAll();
+  TenantQuery queryTenants();
+  CreateOneTenant createOneTenant();  
+  Uni<Void> deleteAllTenants();
 
   interface TenantQuery {
     TenantQuery id(String id);
     TenantQuery rev(String rev);
     Multi<Tenant> findAll();
-    Uni<Tenant> delete();
-    Uni<Tenant> get();
+    Uni<Tenant> deleteOne();
+    Uni<Tenant> getOne();
   }
   
-  interface TenantBuilder {
-    TenantBuilder externalId(String externalId); // optional can be null
-    TenantBuilder name(String name, StructureType type);
-    TenantBuilder name(String name);
-    Uni<TenantCommitResult> build();
+  interface CreateOneTenant {
+    CreateOneTenant externalId(String externalId); // optional can be null
+    CreateOneTenant name(String name, StructureType type);
+    CreateOneTenant name(String name);
+    Uni<CreatedTenant> build();
   }
   
-  enum CommitStatus {
+  enum TenantOperationStatus {
     OK, CONFLICT
   }
   
   @Value.Immutable
-  interface TenantCommitResult extends ThenaEnvelope {
+  interface CreatedTenant extends ThenaEnvelope {
     @Nullable
     Tenant getRepo();
-    CommitStatus getStatus();
+    TenantOperationStatus getStatus();
     List<Message> getMessages();
   }
 

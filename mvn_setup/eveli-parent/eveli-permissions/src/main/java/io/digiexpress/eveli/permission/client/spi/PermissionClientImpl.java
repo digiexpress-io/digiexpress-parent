@@ -65,8 +65,8 @@ public class PermissionClientImpl implements PermissionClient {
       public Uni<Optional<PermissionClient>> get() {
         RepoAssert.notEmpty(repoName, () -> "repoName must be defined!");
         final var client = ctx.getConfig().getClient();
-        return client.tenants().find().id(repoName)
-        .get().onItem().transform(existing -> {
+        return client.tenants().queryTenants().id(repoName)
+        .getOne().onItem().transform(existing -> {
           if(existing == null) {
             final Optional<PermissionClient> result = Optional.empty();
             return result;

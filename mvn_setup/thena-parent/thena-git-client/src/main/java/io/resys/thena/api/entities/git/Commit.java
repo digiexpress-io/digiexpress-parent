@@ -25,12 +25,12 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
 
 @Value.Immutable
 public
-interface Commit extends IsGitObject, GitEntity, TenantEntity {
+interface Commit extends IsGitObject, GitEntity, AnyTenantEntity {
   String getAuthor();
   LocalDateTime getDateTime();
   String getMessage();

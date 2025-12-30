@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import jakarta.annotation.Nullable;
 
@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableGrimAssignment.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
-public interface GrimAssignment extends IsGrimObject, TenantEntity {
+public interface GrimAssignment extends IsGrimObject, AnyTenantEntity {
   public static final String ASSIGNMENT_TYPE_USER = "task_user"; // dedicated constant for default assignment
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
   

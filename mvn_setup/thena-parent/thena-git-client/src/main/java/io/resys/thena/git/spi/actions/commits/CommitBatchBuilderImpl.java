@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.git.ImmutableBlob;
 import io.resys.thena.api.entities.git.ImmutableBranch;
 import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.ImmutableTreeValue;
 import io.resys.thena.api.entities.git.TreeValue;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.git.api.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.git.api.GitInserts.GitBatch;

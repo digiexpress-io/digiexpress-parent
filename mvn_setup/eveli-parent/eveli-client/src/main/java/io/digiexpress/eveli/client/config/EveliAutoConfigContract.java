@@ -53,7 +53,7 @@ public class EveliAutoConfigContract {
     final var isAutoCreate = true;
     if(isAutoCreate) {
       contract
-        .tenants().commit()
+        .tenants().createOneTenant()
         .name(contract.getTenantName())
         .build().await().atMost(Duration.ofMinutes(1));
     }
@@ -71,7 +71,7 @@ public class EveliAutoConfigContract {
     final var isAutoCreate = true;
     if(isAutoCreate) {
       ledger
-        .tenants().commit()
+        .tenants().createOneTenant()
         .name(ledger.getTenantName())
         .build().await().atMost(Duration.ofMinutes(1));
     }

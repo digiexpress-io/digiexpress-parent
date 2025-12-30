@@ -38,8 +38,8 @@ import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.api.persistence.BatchPrinter;
 import io.digiexpress.thena.batch.client.spi.BatchClientImpl;
 import io.digiexpress.thena.batch.client.spi.persistence.sql.BatchDbImpl;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -79,11 +79,11 @@ public class DbTestTemplate {
   
   
   protected static BatchClient getOrCreateTenant(BatchClient client, String defaultName) {
-    final TenantCommitResult repo = client.manageTenants().commit()
+    final CreatedTenant repo = client.manageTenants().createOneTenant()
         .name(defaultName)
         .build()
         .await().atMost(atMost);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     return client.withTenant(repo.getRepo().getId()); 
   }
   
@@ -95,7 +95,7 @@ public class DbTestTemplate {
     this.client = new BatchClientImpl(BatchDbImpl.create().tenant("junit").client(pgPool).build());
     if(callback != null && !init_performed) {
       init_performed = true;
-      repo = this.client.manageTenants().commit()
+      repo = this.client.manageTenants().createOneTenant()
           .name("junit" + index.incrementAndGet(), StructureType.batch)
           .build()
           .await().atMost(Duration.ofSeconds(10)).getRepo();

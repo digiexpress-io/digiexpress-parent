@@ -27,7 +27,7 @@ import io.digiexpress.thena.batch.client.api.BatchException;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbBuilder;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
@@ -107,10 +107,10 @@ public class BatchDbImpl implements BatchDb {
         .onItem().transformToUni(repo -> {        
           if(repo.isEmpty()) {
             return new TenantActionsImpl(this, StructureType.batch)
-              .commit()
+              .createOneTenant()
               .name(this.dataSource.getTenant().getName())
               .build().onItem().transform(commit -> {
-                if(commit.getStatus() != CommitStatus.OK) {
+                if(commit.getStatus() != TenantOperationStatus.OK) {
                   
                   final var msg = String.join(",", commit.getMessages().stream().map(e -> e.getText()).toList());
                   final var ex = commit.getMessages().stream().map(e -> e.getException()).filter(e -> e != null).toList();

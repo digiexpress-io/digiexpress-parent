@@ -26,7 +26,7 @@ import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.fs.ThenaFsContainers.FsProjectObjects;
 import io.resys.thena.api.entities.org.ThenaOrgObjects.OrgProjectObjects;
@@ -37,11 +37,11 @@ public interface ThenaClient {
   TenantActions tenants();
 
   OrgStructuredTenant org(String tenantIdOrName);
-  OrgStructuredTenant org(TenantCommitResult repo);
+  OrgStructuredTenant org(CreatedTenant repo);
   OrgStructuredTenant org(Tenant repo);
 
   FsStructuredTenant fs(String tenantIdOrName);
-  FsStructuredTenant fs(TenantCommitResult repo);
+  FsStructuredTenant fs(CreatedTenant repo);
   FsStructuredTenant fs(Tenant repo);  
   
   

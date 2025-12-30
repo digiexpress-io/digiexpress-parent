@@ -29,8 +29,8 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.grim.test.config.DbTestTemplate;
@@ -76,7 +76,7 @@ public class CreateAndDeleteMissionTest extends DbTestTemplate {
 Repo
   - id: 1, rev: 2
     name: CreateAndDeleteMissionTest, prefix: 3, type: grim
-""", toStaticData(getClient().tenants().find().id(tenantId).get().await().atMost(atMost)));
+""", toStaticData(getClient().tenants().queryTenants().id(tenantId).getOne().await().atMost(atMost)));
     
     
     // check for audit commits
@@ -89,12 +89,12 @@ Repo
   
   public void createTestData() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name(tenantId, StructureType.grim)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     
     final var createdTask = getClient().grim(repo).commit()

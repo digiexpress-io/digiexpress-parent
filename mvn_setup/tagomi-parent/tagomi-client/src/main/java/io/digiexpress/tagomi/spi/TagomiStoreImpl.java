@@ -34,7 +34,7 @@ import io.digiexpress.tagomi.spi.builders.UpsertBuilderImpl;
 import io.digiexpress.tagomi.spi.support.RepoException;
 import io.digiexpress.tagomi.spi.support.StoreException;
 import io.digiexpress.tagomi.spi.support.StoreException.StoreExceptionMsg;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -122,9 +122,9 @@ public class TagomiStoreImpl implements TagomiStore {
       public Uni<TagomiStore> create() {
         Objects.requireNonNull(repoName, () -> "tenantName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
+        final var newRepo = client.tenants().createOneTenant().name(repoName, StructureType.git).build();
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != CommitStatus.OK) {
+          if(repoResult.getStatus() != TenantOperationStatus.OK) {
             throw new RepoException("Can't create repository with name: '"  + repoName + "'!", repoResult); 
           }
           return build();
@@ -145,7 +145,7 @@ public class TagomiStoreImpl implements TagomiStore {
         
         return client.git(config.getTenantName()).tenants().get().onItem().transformToUni(repo -> {
           if(repo.getRepo() == null) {
-            return client.tenants().commit()
+            return client.tenants().createOneTenant()
                 .name(config.getTenantName(), StructureType.git).build().onItem().transform(newRepo -> Tuple2.of(true, build())); 
           }
           return Uni.createFrom().item(Tuple2.of(false, build()));

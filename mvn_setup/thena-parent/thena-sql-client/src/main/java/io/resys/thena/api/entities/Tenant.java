@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
-public interface Tenant extends TenantEntity {
+public interface Tenant extends AnyTenantEntity {
   String getId();
   String getRev();
   String getPrefix();
@@ -34,5 +34,5 @@ public interface Tenant extends TenantEntity {
   @Nullable String getExternalId();
   StructureType getType();
   
-  enum StructureType { doc, git, org, grim, fs, batch, contract, ledger }
+  enum StructureType { doc, git, org, grim, fs, batch, contract, ledger, cockpit }
 }

@@ -30,13 +30,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.api.actions.OrgCommitActions.ModType;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.org.OrgMember;
 import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgRight;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,12 +56,12 @@ public class HierarchicalOrgPartyQueryTest extends DbTestTemplate {
   @Test
   public void createRepoAndUserGroups() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("HierarchicalOrgGroupTest-1", StructureType.org)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
 
     final var jailer1 = createRight(repo, "jailer-1");
     final var jailer2 = createRight(repo, "jailer-2");
@@ -265,7 +265,7 @@ group-2 <= you are here
   }
 
   
-  private OrgMember createUser(String userName, TenantCommitResult repo, List<OrgParty> parties, List<OrgRight> roles) {
+  private OrgMember createUser(String userName, CreatedTenant repo, List<OrgParty> parties, List<OrgRight> roles) {
     return getClient().org(repo).commit().createOneMember()
         .addMemberToParties(parties.stream().map(group -> group.getId()).toList())
         .addMemberRight(roles.stream().map(role -> role.getId()).toList())
@@ -278,7 +278,7 @@ group-2 <= you are here
         .getMember();
   }
   
-  private OrgParty createRootGroup(String groupName, TenantCommitResult repo, OrgRight ...roles) {
+  private OrgParty createRootGroup(String groupName, CreatedTenant repo, OrgRight ...roles) {
     return getClient().org(repo).commit().createOneParty()
         .partyName(groupName)
         .partyDescription("gd-")
@@ -293,7 +293,7 @@ group-2 <= you are here
         .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
-  private OrgParty createChildGroup(String groupName, String parentId, TenantCommitResult repo, OrgRight ...roles) {
+  private OrgParty createChildGroup(String groupName, String parentId, CreatedTenant repo, OrgRight ...roles) {
     return getClient().org(repo).commit().createOneParty()
         .partyName(groupName)
         .partyDescription("gd-")
@@ -309,7 +309,7 @@ group-2 <= you are here
         .build().await().atMost(Duration.ofMinutes(1)).getParty();
   }
   
-  private OrgRight createRight(TenantCommitResult repo, String roleName) {
+  private OrgRight createRight(CreatedTenant repo, String roleName) {
     return getClient().org(repo).commit().createOneRight()
         .rightName(roleName)
         .rightDescription("rd-")

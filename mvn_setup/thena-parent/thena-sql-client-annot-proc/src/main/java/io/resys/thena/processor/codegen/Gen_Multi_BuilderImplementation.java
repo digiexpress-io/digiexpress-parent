@@ -36,8 +36,8 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.ImmutableBatchLog;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.datasource.ThenaSqlDataSource;
@@ -320,7 +320,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     method.addCode("    final var text = \"Inserted \" + (row == null ? 0 : row.rowCount()) + \" \" + type.getSimpleName() + \" entries\";\n");
     method.addCode("    final var updatedMessages = new $T<>(container.getCommitLogs());\n", ArrayList.class);
     method.addCode("    updatedMessages.add($T.builder().text(text).build());\n", 
-      ClassName.get(ImmutableBatchLog.class));
+      ClassName.get(ImmutableMessage.class));
     method.addCode("    return ($T) Immutable$L.builder().from(container)\n", ClassName.bestGuess(persistenceUnitName), "PersistenceUnit");
     method.addCode("      .commitLogs(updatedMessages)\n");
     method.addCode("      .build();\n");

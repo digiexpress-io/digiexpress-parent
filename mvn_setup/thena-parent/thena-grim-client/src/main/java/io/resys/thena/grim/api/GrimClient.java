@@ -21,7 +21,7 @@ package io.resys.thena.grim.api;
  */
 
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimProjectObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -31,7 +31,7 @@ public interface GrimClient {
   TenantActions tenants();
 
   GrimStructuredTenant grim(String tenantIdOrName);
-  GrimStructuredTenant grim(TenantCommitResult repo);
+  GrimStructuredTenant grim(CreatedTenant repo);
   GrimStructuredTenant grim(Tenant repo);
 
   

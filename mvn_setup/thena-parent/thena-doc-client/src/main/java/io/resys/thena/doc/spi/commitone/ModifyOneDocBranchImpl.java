@@ -23,9 +23,9 @@ package io.resys.thena.doc.spi.commitone;
 import java.time.Duration;
 import java.util.List;
 
-import io.resys.thena.api.entities.BatchStatus;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.doc.api.DocCommitActions.JsonObjectMerge;
 import io.resys.thena.doc.api.DocCommitActions.ModifyOneDocBranch;

@@ -24,9 +24,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.resys.thena.api.envelope.PageQuery.PageSortingOrder;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.grim.api.GrimQueryActions.MissionOrderByType;

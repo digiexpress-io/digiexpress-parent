@@ -35,12 +35,11 @@ import io.digiexpress.eveli.client.api.TaskClient.CreateTaskCommand;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
 import io.resys.thena.grim.api.GrimCommitActions.CreateOneMission;
 import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
@@ -52,7 +51,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskClient.Task> {
   private final String userId;
-  private final TaskNotificator notificator;
   private final CreateTaskCommand command;
   @Nullable private final CustomerAccount account;
   
@@ -211,7 +209,6 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
         commited.getLinks(),
         commited.getLabels(),
         commited.getObjectives());
-    notificator.handleTaskCreation(task, userId); 
     return Uni.createFrom().item(task);
   }
   

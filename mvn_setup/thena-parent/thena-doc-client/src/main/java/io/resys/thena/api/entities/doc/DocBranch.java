@@ -28,12 +28,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface DocBranch extends DocEntity, IsDocObject, TenantEntity {
+public interface DocBranch extends DocEntity, IsDocObject, AnyTenantEntity {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();

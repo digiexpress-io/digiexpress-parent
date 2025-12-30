@@ -1,7 +1,5 @@
 package io.resys.thena.grim.spi.modify;
 
-import io.resys.thena.api.entities.BatchStatus;
-
 /*-
  * #%L
  * thena-docdb-api
@@ -26,6 +24,7 @@ import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeLink;
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.RepoAssert;

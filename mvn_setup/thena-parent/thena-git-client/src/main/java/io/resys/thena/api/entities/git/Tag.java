@@ -24,12 +24,12 @@ import java.time.LocalDateTime;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.entities.TenantEntity;
+import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.git.GitEntity.IsGitName;
 
 @Value.Immutable
 public
-interface Tag extends IsGitName, GitEntity, TenantEntity {
+interface Tag extends IsGitName, GitEntity, AnyTenantEntity {
   // id of a commit
   String getCommit();
   LocalDateTime getDateTime();

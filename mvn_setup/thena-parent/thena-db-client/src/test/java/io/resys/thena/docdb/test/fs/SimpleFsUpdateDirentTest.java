@@ -27,8 +27,8 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.fs.FsDirent.DirentType;
 import io.resys.thena.api.entities.fs.ThenaFsContainers.FsDirentContainer;
@@ -46,7 +46,7 @@ public class SimpleFsUpdateDirentTest extends DbTestTemplate {
     String getName();
   }
   
-  private FsDirentContainer createDirent(TenantCommitResult repo) {
+  private FsDirentContainer createDirent(CreatedTenant repo) {
     return getClient().fs(repo).commit()
         .createManyDirents()
         .commitMessage("batching tests")
@@ -84,12 +84,12 @@ public class SimpleFsUpdateDirentTest extends DbTestTemplate {
   @Test
   public void createAndUpdateDirent() {
     // create project
-    TenantCommitResult repo = getClient().tenants().commit()
+    CreatedTenant repo = getClient().tenants().createOneTenant()
         .name("SimpleFsUpdateDirentTest-1", StructureType.fs)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     final var newMission = createDirent(repo).getDirents().values().iterator().next();
     

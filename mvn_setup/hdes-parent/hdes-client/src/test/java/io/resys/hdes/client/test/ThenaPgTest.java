@@ -29,10 +29,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.hdes.client.test.config.PgTestTemplate;
-import io.resys.thena.api.actions.TenantActions.CommitStatus;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
-import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
+import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.envelope.CommitResultStatus;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,12 +50,12 @@ public class ThenaPgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithOneCommit() {
     // create project
-    TenantCommitResult repo = getThena().tenants().commit()
+    CreatedTenant repo = getThena().tenants().createOneTenant()
         .name("project-x", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     // Create head and first commit
     var commit_0 = getThena().git("project-x").commit().commitBuilder()
@@ -77,12 +77,12 @@ public class ThenaPgTest extends PgTestTemplate {
   @Test
   public void crateRepoWithTwoCommits() {
     // create project
-    TenantCommitResult repo = getThena().tenants().commit()
+    CreatedTenant repo = getThena().tenants().createOneTenant()
         .name("project-xy", StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);
-    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
     
     // Create head and first commit
     var commit_0 = getThena().git(repo.getRepo().getName()).commit().commitBuilder()

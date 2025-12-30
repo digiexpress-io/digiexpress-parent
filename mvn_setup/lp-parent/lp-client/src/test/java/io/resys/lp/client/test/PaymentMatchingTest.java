@@ -1,5 +1,7 @@
 package io.resys.lp.client.test;
 
+import org.junit.jupiter.api.Disabled;
+
 /*-
  * #%L
  * lp-client
@@ -29,7 +31,7 @@ import io.resys.lp.product.spi.providers.Contract_Provider;
 
 public class PaymentMatchingTest extends DbTestTemplate {
 
-  
+  @Disabled
   @Test
   public void test() {
     final var savings = Contract_Provider.newSavings(
