@@ -10,4 +10,13 @@ public class EveliAutoConfigCockpit {
   // EveliAutoConfigContract
   // EveliAutoConfigAssets
   // EveliAutoConfig
+  // TenantApiController -> /worker/rest/api/tenant-configs
+  // TenantConfigClient
+  // 
+  
+  
+  /**
+   * enabled > assets // boolean
+   * wrench/stencil/tagomi/other asset editors
+   */
 }
