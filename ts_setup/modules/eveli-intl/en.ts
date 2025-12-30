@@ -118,6 +118,7 @@ export const en = {
   'menu.profile': 'Profile',
   'menu.tasks': 'Tasks',
   'menu.forms': 'Dialob',
+  'menu.cockpits': 'Cockpits',
   'menu.queues': 'Queues',
   'menu.help': 'Help',
   'menu.processes': 'Monitoring',

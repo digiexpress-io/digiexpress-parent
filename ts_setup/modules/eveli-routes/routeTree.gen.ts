@@ -20,6 +20,7 @@ import { Route as SecuredLocaleWorkerTasksRouteImport } from './routes/secured.$
 import { Route as SecuredLocaleWorkerProfileRouteImport } from './routes/secured.$locale.worker.profile'
 import { Route as SecuredLocaleWorkerLedgersRouteImport } from './routes/secured.$locale.worker.ledgers'
 import { Route as SecuredLocaleWorkerContractsRouteImport } from './routes/secured.$locale.worker.contracts'
+import { Route as SecuredLocaleWorkerCockpitsRouteImport } from './routes/secured.$locale.worker.cockpits'
 import { Route as SecuredLocaleWorkerBatchesRouteImport } from './routes/secured.$locale.worker.batches'
 import { Route as SecuredLocaleWorkerUserActivityIndexRouteImport } from './routes/secured.$locale.worker.user-activity.index'
 import { Route as SecuredLocaleWorkerTasksIndexRouteImport } from './routes/secured.$locale.worker.tasks.index'
@@ -108,6 +109,12 @@ const SecuredLocaleWorkerContractsRoute =
   SecuredLocaleWorkerContractsRouteImport.update({
     id: '/contracts',
     path: '/contracts',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
+const SecuredLocaleWorkerCockpitsRoute =
+  SecuredLocaleWorkerCockpitsRouteImport.update({
+    id: '/cockpits',
+    path: '/cockpits',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 const SecuredLocaleWorkerBatchesRoute =
@@ -293,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
+  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRoute
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
@@ -333,6 +341,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRoute
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
@@ -373,6 +382,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
+  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRoute
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
@@ -417,6 +427,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker'
     | '/secured/$locale/'
     | '/secured/$locale/worker/batches'
+    | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/contracts'
     | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/profile'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/secured/$locale'
+    | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/profile'
     | '/secured/$locale/publications'
     | '/secured/$locale/assets/forms/$formId'
@@ -496,6 +508,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker'
     | '/secured/$locale/'
     | '/secured/$locale/worker/batches'
+    | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/contracts'
     | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/profile'
@@ -614,6 +627,13 @@ declare module '@tanstack/react-router' {
       path: '/contracts'
       fullPath: '/secured/$locale/worker/contracts'
       preLoaderRoute: typeof SecuredLocaleWorkerContractsRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
+    }
+    '/secured/$locale/worker/cockpits': {
+      id: '/secured/$locale/worker/cockpits'
+      path: '/cockpits'
+      fullPath: '/secured/$locale/worker/cockpits'
+      preLoaderRoute: typeof SecuredLocaleWorkerCockpitsRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/batches': {
@@ -926,6 +946,7 @@ const SecuredLocaleWorkerTasksRouteWithChildren =
 
 interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerBatchesRoute: typeof SecuredLocaleWorkerBatchesRouteWithChildren
+  SecuredLocaleWorkerCockpitsRoute: typeof SecuredLocaleWorkerCockpitsRoute
   SecuredLocaleWorkerContractsRoute: typeof SecuredLocaleWorkerContractsRouteWithChildren
   SecuredLocaleWorkerLedgersRoute: typeof SecuredLocaleWorkerLedgersRouteWithChildren
   SecuredLocaleWorkerProfileRoute: typeof SecuredLocaleWorkerProfileRoute
@@ -944,6 +965,7 @@ interface SecuredLocaleWorkerRouteChildren {
 
 const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerBatchesRoute: SecuredLocaleWorkerBatchesRouteWithChildren,
+  SecuredLocaleWorkerCockpitsRoute: SecuredLocaleWorkerCockpitsRoute,
   SecuredLocaleWorkerContractsRoute:
     SecuredLocaleWorkerContractsRouteWithChildren,
   SecuredLocaleWorkerLedgersRoute: SecuredLocaleWorkerLedgersRouteWithChildren,

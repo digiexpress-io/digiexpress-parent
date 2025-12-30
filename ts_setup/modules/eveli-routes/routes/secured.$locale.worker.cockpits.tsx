@@ -1,0 +1,11 @@
+import { createFileRoute } from '@tanstack/react-router'
+
+
+
+export const Route = createFileRoute('/secured/$locale/worker/cockpits')({
+  component: Component,
+})
+
+function Component() {
+  return (<>cockpits</>)
+}
