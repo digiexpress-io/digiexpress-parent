@@ -5,7 +5,7 @@
   "main": "./index.ts", 
   "type": "module",
   "dependencies": {
-    "@dxs-ts/contract-api": "*",
+    "@dxs-ts/cockpit-api": "*",
     "@dxs-ts/xui-table": "*",
     "@dxs-ts/xui-datetime": "*"
   },
@@ -18,10 +18,10 @@
     "@mui/system": "*",
     "@mui/icons-material": "*",
     "@tanstack/react-table": "*",
-    "@tanstack/react-query": "*",
-    "@monaco-editor/react": "*",
-    "yaml": "*"
+    "@tanstack/react-query": "*"
   },
-  "keywords": ["cockpit-composer"],
+  "keywords": [
+    "cockpit-composer"
+  ],
   "private": true
 }

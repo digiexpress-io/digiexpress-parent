@@ -30,6 +30,8 @@
     "@dxs-ts/ledger-api": "*",
     "@dxs-ts/ledger-composer": "*",
 
+    "@dxs-ts/cockpit-api": "*",
+    "@dxs-ts/cockpit-composer": "*",
     "@dxs-ts/task-api": "*",
     "@dxs-ts/task-feedback": "*",
     "@dxs-ts/eveli-api": "*",

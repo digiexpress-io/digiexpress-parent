@@ -54,4 +54,25 @@ export declare namespace CockpitApi {
 
     docType: 'CONFIG'
   }
+
+  export interface CockpitContainer {
+
+  }
+
+  export interface CockpitSummary {
+    container: CockpitContainer;
+    cockpitConfigId: CockpitConfigId;
+    contractNumber: string;
+    contractIssueDate: Date;
+    contractStartDate: Date;
+    contractMaturityDate?: Date;
+    contractStatusIntl?: string;
+
+    contractType: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+
+  }
+
 }

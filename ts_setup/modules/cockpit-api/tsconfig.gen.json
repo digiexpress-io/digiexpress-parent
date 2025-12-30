@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2025-12-30T10:28:52.094Z",
+    "forModule": "@dxs-ts/cockpit-api",
+    "fromRegistry": "ea92967e2c4f",
+    "alias": {}
+  }
+}

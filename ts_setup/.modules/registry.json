@@ -1,5 +1,51 @@
 {
   "modules": {
+    "@dxs-ts/cockpit-api": {
+      "name": "@dxs-ts/cockpit-api",
+      "path": "modules/cockpit-api",
+      "packageJson": {
+        "name": "@dxs-ts/cockpit-api",
+        "version": "${project.version}",
+        "description": "Cockpit api",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*",
+          "@tanstack/react-query": "*",
+          "react-intl": "*"
+        },
+        "keywords": [
+          "cockpit-api"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ],
+      "peerDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ],
+      "externalDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "react",
+        "@tanstack/react-query",
+        "react-intl"
+      ]
+    },
     "@dxs-ts/cockpit-composer": {
       "name": "@dxs-ts/cockpit-composer",
       "path": "modules/cockpit-composer",
@@ -10,7 +56,7 @@
         "main": "./index.ts",
         "type": "module",
         "dependencies": {
-          "@dxs-ts/contract-api": "*",
+          "@dxs-ts/cockpit-api": "*",
           "@dxs-ts/xui-table": "*",
           "@dxs-ts/xui-datetime": "*"
         },
@@ -23,9 +69,7 @@
           "@mui/system": "*",
           "@mui/icons-material": "*",
           "@tanstack/react-table": "*",
-          "@tanstack/react-query": "*",
-          "@monaco-editor/react": "*",
-          "yaml": "*"
+          "@tanstack/react-query": "*"
         },
         "keywords": [
           "cockpit-composer"
@@ -33,7 +77,7 @@
         "private": true
       },
       "dependencies": [
-        "@dxs-ts/contract-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
         "react",
@@ -44,9 +88,7 @@
         "@mui/system",
         "@mui/icons-material",
         "@tanstack/react-table",
-        "@tanstack/react-query",
-        "@monaco-editor/react",
-        "yaml"
+        "@tanstack/react-query"
       ],
       "peerDependencies": [
         "react",
@@ -57,9 +99,7 @@
         "@mui/system",
         "@mui/icons-material",
         "@tanstack/react-table",
-        "@tanstack/react-query",
-        "@monaco-editor/react",
-        "yaml"
+        "@tanstack/react-query"
       ],
       "externalDependencies": [
         "react",
@@ -70,34 +110,40 @@
         "@mui/system",
         "@mui/icons-material",
         "@tanstack/react-table",
-        "@tanstack/react-query",
-        "@monaco-editor/react",
-        "yaml"
+        "@tanstack/react-query"
       ],
       "internalDependencies": [
-        "@dxs-ts/contract-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
-      "actualDependencies": [],
-      "actualExternalDependencies": [],
-      "actualInternalDependencies": [],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@tanstack/react-table",
+        "luxon",
+        "react-intl",
+        "@dxs-ts/xui-table",
+        "@dxs-ts/cockpit-api"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@tanstack/react-table",
+        "luxon",
+        "react-intl"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/xui-table",
+        "@dxs-ts/cockpit-api"
+      ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/contract-api",
-        "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime",
-        "react",
-        "react-intl",
-        "luxon",
-        "@mui/material",
         "@mui/utils",
         "@mui/system",
         "@mui/icons-material",
-        "@tanstack/react-table",
-        "@tanstack/react-query",
-        "@monaco-editor/react",
-        "yaml"
+        "@tanstack/react-query"
       ]
     },
     "@dxs-ts/contract-api": {
@@ -300,6 +346,8 @@
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
           "@dxs-ts/eveli-ide": "*",
+          "@dxs-ts/cockpit-api": "*",
+          "@dxs-ts/cockpit-composer": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/xui-table": "*",
@@ -349,6 +397,8 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-ide",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
@@ -413,6 +463,8 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-ide",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
@@ -468,6 +520,8 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
@@ -1030,6 +1084,8 @@
           "@dxs-ts/task-composer-v2": "*",
           "@dxs-ts/contract-api": "*",
           "@dxs-ts/contract-composer": "*",
+          "@dxs-ts/cockpit-api": "*",
+          "@dxs-ts/cockpit-composer": "*",
           "@dxs-ts/ledger-api": "*",
           "@dxs-ts/ledger-composer": "*",
           "@dxs-ts/xui-table": "*",
@@ -1082,6 +1138,8 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
@@ -1158,6 +1216,8 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
@@ -1202,6 +1262,7 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-composer"
       ],
@@ -1246,11 +1307,14 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/wrench-api",
         "@dxs-ts/wrench-routes",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
-      "unusedDependencies": []
+      "unusedDependencies": [
+        "@dxs-ts/cockpit-api"
+      ]
     },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
@@ -2231,6 +2295,8 @@
           "@dxs-ts/contract-composer": "*",
           "@dxs-ts/ledger-api": "*",
           "@dxs-ts/ledger-composer": "*",
+          "@dxs-ts/cockpit-api": "*",
+          "@dxs-ts/cockpit-composer": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/eveli-api": "*",
@@ -2271,6 +2337,8 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -2305,6 +2373,8 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -2364,6 +2434,8 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-datetime",
@@ -3615,8 +3687,9 @@
   },
   "dependencyGraph": {
     "forward": {
+      "@dxs-ts/cockpit-api": [],
       "@dxs-ts/cockpit-composer": [
-        "@dxs-ts/contract-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
@@ -3648,6 +3721,8 @@
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-ide",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/user-profile",
         "@dxs-ts/xui-table",
@@ -3721,6 +3796,8 @@
         "@dxs-ts/task-composer-v2",
         "@dxs-ts/contract-api",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
         "@dxs-ts/xui-table",
@@ -3787,6 +3864,8 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -3860,9 +3939,18 @@
       ]
     },
     "reverse": {
-      "@dxs-ts/cockpit-composer": [],
-      "@dxs-ts/contract-api": [
+      "@dxs-ts/cockpit-api": [
         "@dxs-ts/cockpit-composer",
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/cockpit-composer": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/contract-api": [
         "@dxs-ts/contract-composer",
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-api",
@@ -4144,6 +4232,8 @@
         "@dxs-ts/contract-composer",
         "@dxs-ts/ledger-api",
         "@dxs-ts/ledger-composer",
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
@@ -4232,6 +4322,6 @@
       ]
     }
   },
-  "checksum": "ef000489bd838790d5e8b78b2aa4c5101baeac2c55b3e977ec00c2e33f9e8563",
-  "generatedAt": "2025-12-29T11:15:37.248Z"
+  "checksum": "6fe16258c58ff750e269442b3a6f8a03a3a9616bb9e531df4efcb65323c5581a",
+  "generatedAt": "2025-12-30T10:31:54.908Z"
 }
