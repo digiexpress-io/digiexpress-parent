@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormHelperText } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
@@ -8,14 +8,14 @@ import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import { StencilApi } from '@dxs-ts/stencil-api';
 import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 const DUMMY_ID = "none-selected"
 
 
 const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-
+  const intl = useIntl();
   const { service, actions, session } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState("");
@@ -62,12 +62,19 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Box sx={{ width: '10%' }}>
           <ArticleOrderNumberViewer />
         </Box>
-      </Box>
-      <Burger.TextField label="article.name" required
-        value={name}
-        onChange={setName}
-      />
-      <Box maxWidth="50%" sx={{ ml: 1 }}>
+        </Box>
+        <Burger.TextField
+          label="article.name"
+          required
+          value={name}
+          onChange={setName}
+        />
+        {!name && (
+          <FormHelperText error>
+            {intl.formatMessage({ id: 'error.valueRequired' })}
+          </FormHelperText>
+        )}
+        <Box maxWidth="50%" sx={{ ml: 1 }}>
         <Burger.Switch
           checked={devMode}
           helperText="article.devmode.helper"
