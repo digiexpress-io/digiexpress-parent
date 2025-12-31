@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, Grid2, styled, TextField, Typography, Zoom } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, generateUtilityClass, Grid2, styled, Typography, Zoom } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
@@ -7,6 +7,7 @@ import { TaskApi, useTaskBackend } from '@dxs-ts/task-api';
 
 import { useTaskDashboard } from '../task-dashboard';
 import { EditRoles } from './EditRoles';
+import { TaskCreateAssignee } from '../task-create/TaskCreateAssignee';
 
 
 export interface AssigneeRolesEditDialogProps {
@@ -20,13 +21,37 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
   const intl = useIntl();
   const backend = useTaskBackend();
   const { task, saveTask, isTaskChanged } = useTaskDashboard();
-  const [assignee, setAssignee] = React.useState(task.assignedUser);
-  const [roles, setRoles] = React.useState(task.assignedRoles ?? []);
+
+  const [roles, setRoles] = React.useState<string[]>(task.assignedRoles ?? []);
+  const [userList, setUserList] = React.useState<TaskApi.User[]>([]);
+  const [assignee, setAssignee] = React.useState<TaskApi.User | null>(() => {
+    return task.assignedUser
+      ? ({ userName: task.assignedUser, userEmail: task.assignedUserEmail ?? '' } as TaskApi.User)
+      : null;
+  });
+
   const groups = backend.roles;
 
-  function handleSetAssignee(event: React.ChangeEvent<HTMLInputElement>) {
-    setAssignee(event.target.value);
-  }
+  React.useEffect(() => {
+    setRoles(task.assignedRoles ?? []);
+    setAssignee(
+      task.assignedUser
+        ? ({ userName: task.assignedUser, userEmail: task.assignedUserEmail ?? '' } as TaskApi.User)
+        : null
+    );
+  }, [task.assignedRoles, task.assignedUser, task.assignedUserEmail]);
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    backend.persistence.findAllUsers(roles).then((users) => {
+      if (!cancelled) setUserList(users ?? []);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [backend.persistence, roles]);
 
   function handleSetRoles(selectedGroups: TaskApi.Role[]) {
     const roleIds = selectedGroups.map((g) => g.id);
@@ -35,8 +60,9 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
 
   async function handleSave() {
     await saveTask({
-      assignedUser: assignee,
-      assignedRoles: roles
+      assignedUser: assignee?.userName ?? '',
+      assignedUserEmail: assignee?.userEmail ?? '',
+      assignedRoles: roles,
     });
     onClose();
   }
@@ -53,7 +79,15 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignee' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <StyledTextField value={assignee} onChange={handleSetAssignee} />
+            <TaskCreateAssignee
+              userList={userList}
+              value={
+                assignee
+                  ? (userList.find(u => u.userName === assignee.userName) ?? assignee)
+                  : null
+              }
+              onChange={(user) => setAssignee(user)}
+            />
           </Grid2>
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignedRoles' })}</Typography>
@@ -65,25 +99,22 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button onClick={handleSave} disabled={!isTaskChanged({ assignedUser: assignee, assignedRoles: roles })}> {intl.formatMessage({ id: 'button.save' })}</Button>
+        <Button
+          onClick={handleSave}
+          disabled={
+            !isTaskChanged({
+              assignedUser: assignee?.userName ?? '',
+              assignedUserEmail: assignee?.userEmail ?? '',
+              assignedRoles: roles,
+            })
+          }
+        >
+          {intl.formatMessage({ id: 'button.save' })}
+        </Button>
       </DialogActions>
     </StyledAssigneeRolesEditDialog>
   )
 }
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  '& .MuiInputBase-input': {
-    height: '2.5rem',
-    padding: '0 12px'
-  },
-  '& .MuiInputBase-multiline': {
-    paddingLeft: '0px',
-    paddingRight: '0px'
-  },
-}));
-
-
 
 const MUI_NAME = 'AssigneeRolesEditDialog';
 const StyledAssigneeRolesEditDialog = styled(Dialog, {
