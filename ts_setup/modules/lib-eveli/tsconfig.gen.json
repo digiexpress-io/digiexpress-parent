@@ -65,6 +65,12 @@
       "@dxs-ts/ledger-composer": [
         "../ledger-composer/index.ts"
       ],
+      "@dxs-ts/cockpit-api": [
+        "../cockpit-api/index.ts"
+      ],
+      "@dxs-ts/cockpit-composer": [
+        "../cockpit-composer/index.ts"
+      ],
       "@dxs-ts/task-api": [
         "../task-api/index.ts"
       ],
@@ -160,6 +166,12 @@
       "path": "../ledger-composer"
     },
     {
+      "path": "../cockpit-api"
+    },
+    {
+      "path": "../cockpit-composer"
+    },
+    {
       "path": "../task-api"
     },
     {
@@ -192,9 +204,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-12-08T09:28:20.568Z",
+    "at": "2025-12-30T10:30:27.408Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "3f14f8aea948",
+    "fromRegistry": "ac526f9d3f78",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

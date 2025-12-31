@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
+import { SettingsApplicationsOutlined as SettingsApplicationsOutlinedIcon } from '@mui/icons-material';
 import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import { AccountBalance as AccountBalanceIcon } from '@mui/icons-material';
 import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
@@ -187,6 +188,16 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliTenantFeatureEnabled>
 
+      <Button startIcon={<SettingsApplicationsOutlinedIcon />}
+        variant={location.pathname.endsWith('cockpits') ? 'explorerActive' : 'explorerInactive'}
+        onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/worker/cockpits'
+        })}
+      >
+        {intl.formatMessage({ id: 'menu.cockpits', defaultMessage: 'Cockpits' })}
+      </Button>
+
       <EveliPermissions id='NAV_TO_HEALTH'>
         <Button startIcon={<HealthAndSafetyOutlinedIcon />}
           variant={location.pathname.endsWith('task-activity') ? 'explorerActive' : 'explorerInactive'}
@@ -198,7 +209,7 @@ export const Secondary: React.FC = () => {
           {intl.formatMessage({ id: 'menu.task-activity', defaultMessage: 'Task activity' })}
         </Button>
       </EveliPermissions>
-      
+
       <EveliPermissions id='NAV_TO_HEALTH'>
         <Button startIcon={<SupervisedUserCircleOutlinedIcon />}
           variant={location.pathname.endsWith('user-activity') ? 'explorerActive' : 'explorerInactive'}

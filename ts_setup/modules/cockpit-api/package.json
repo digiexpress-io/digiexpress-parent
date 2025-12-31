@@ -1,0 +1,16 @@
+{
+  "name": "@dxs-ts/cockpit-api",
+  "version": "${project.version}",
+  "description": "Cockpit api",
+  "main": "./index.ts", 
+  "type": "module",
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@tanstack/react-query": "*",
+    "react-intl": "*"
+  },
+  "keywords": ["cockpit-api"],
+  "private": true
+}

@@ -112,14 +112,14 @@ services:
       - dialob-backend
 
   # feedback analyzer
-  feedback-analyzer:
-    build:
-      context: ../../../py_setup/feedback-analyzer
-      dockerfile: Dockerfile
-    container_name: feedback-analyzer
-    restart: always
-    ports:
-      - "8083:8000"
+  # feedback-analyzer:
+  #  build:
+  #    context: ../../../py_setup/feedback-analyzer
+  #    dockerfile: Dockerfile
+  #  container_name: feedback-analyzer
+  #  restart: always
+  #  ports:
+  #    - "8083:8000"
 
   # tagomi pdf compiler
   tagomi-pdf:

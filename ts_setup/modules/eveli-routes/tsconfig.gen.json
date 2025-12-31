@@ -68,6 +68,12 @@
       "@dxs-ts/contract-composer": [
         "../contract-composer/index.ts"
       ],
+      "@dxs-ts/cockpit-api": [
+        "../cockpit-api/index.ts"
+      ],
+      "@dxs-ts/cockpit-composer": [
+        "../cockpit-composer/index.ts"
+      ],
       "@dxs-ts/ledger-api": [
         "../ledger-api/index.ts"
       ],
@@ -148,6 +154,12 @@
       "path": "../contract-composer"
     },
     {
+      "path": "../cockpit-api"
+    },
+    {
+      "path": "../cockpit-composer"
+    },
+    {
       "path": "../ledger-api"
     },
     {
@@ -162,9 +174,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-12-08T09:28:20.568Z",
+    "at": "2025-12-30T10:28:52.095Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "3f14f8aea948",
+    "fromRegistry": "ea92967e2c4f",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../xui-datetime"
