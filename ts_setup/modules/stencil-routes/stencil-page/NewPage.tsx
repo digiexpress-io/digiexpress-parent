@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 import { StencilApi } from '@dxs-ts/stencil-api';
 import * as Burger from '@dxs-ts/eveli-primitives';
-import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, FormHelperText } from '@mui/material';
 
 import { useStencilNav } from '../stencil-nav';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
@@ -14,6 +14,7 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 
 const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId }> = (props) => {
+  const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site, session } = Composer.useComposer();
   const [locale, setLocale] = React.useState('');
@@ -61,12 +62,22 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
             value: `${article.body.parentId ? site.articles[article.body.parentId].body.name + "/" : ""}${article.body.name}`
           }))}
         />
+        {!articleId && (
+          <FormHelperText error>
+            {intl.formatMessage({ id: 'error.valueRequired' })}
+          </FormHelperText>
+        )}
         <Burger.Select
           selected={locale}
           onChange={setLocale}
           label='locale'
           items={locales.map((locale) => ({ id: locale.id, value: locale.body.value }))}
         />
+        {!locale && (
+          <FormHelperText error>
+            {intl.formatMessage({ id: 'error.valueRequired' })}
+          </FormHelperText>
+        )}
         {templates.length > 0 ?
           <Burger.Select
             selected={template}
