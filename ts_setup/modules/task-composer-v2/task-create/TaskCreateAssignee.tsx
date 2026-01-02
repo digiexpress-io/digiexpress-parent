@@ -28,7 +28,7 @@ export const TaskCreateAssignee: React.FC<TaskCreateAssigneeProps> = ({ value, u
           placeholder="Select assignee"
           sx={{
             '& .MuiOutlinedInput-root': {
-              height: '3.5rem',
+              height: '2.5rem',
               padding: 0,
               '& .MuiAutocomplete-input': {
                 paddingLeft: 2, 

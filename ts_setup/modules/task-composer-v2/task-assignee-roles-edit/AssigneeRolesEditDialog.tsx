@@ -79,15 +79,17 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignee' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <TaskCreateAssignee
-              userList={userList}
-              value={
-                assignee
-                  ? (userList.find(u => u.userName === assignee.userName) ?? assignee)
-                  : null
-              }
-              onChange={(user) => setAssignee(user)}
-            />
+            <StyledAssigneeAutocomplete>
+              <TaskCreateAssignee
+                userList={userList}
+                value={
+                  assignee
+                    ? (userList.find(u => u.userName === assignee.userName) ?? assignee)
+                    : null
+                }
+                onChange={(user) => setAssignee(user)}
+              />
+            </StyledAssigneeAutocomplete>
           </Grid2>
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.assignedRoles' })}</Typography>
@@ -131,6 +133,18 @@ const StyledAssigneeRolesEditDialog = styled(Dialog, {
   return {};
 })
 
+const StyledAssigneeAutocomplete = styled('div')({
+  width: '100%',
+  '& .MuiInputBase-root': {
+    height: '3.5rem',
+  },
+  '& .MuiInputBase-input': {
+    height: '100%',
+    padding: '0 14px',
+    display: 'flex',
+    alignItems: 'center',
+  },
+});
 
 const useUtilityClasses = () => {
   const slots = {
