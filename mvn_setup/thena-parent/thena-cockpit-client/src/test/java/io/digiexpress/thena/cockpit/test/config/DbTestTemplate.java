@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @ThenaTest
 public class DbTestTemplate {
 
-  private CockpitClient client;
+  private CockpitClientImpl client;
   protected io.vertx.mutiny.sqlclient.Pool pgPool;
 
   protected static Duration atMost = Duration.ofMinutes(1);
@@ -92,7 +92,7 @@ public class DbTestTemplate {
   public void tearDown() {
   }
 
-  public CockpitClient getClient() {
+  public CockpitClientImpl getClient() {
     return client;
   }
   

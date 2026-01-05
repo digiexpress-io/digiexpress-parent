@@ -22,6 +22,7 @@ package io.digiexpress.thena.cockpit.client.spi;
 
 import java.util.Optional;
 
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.digiexpress.thena.cockpit.client.api.CockpitClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitCommitActions;
 import io.digiexpress.thena.cockpit.client.api.CockpitQueryActions;
@@ -30,8 +31,6 @@ import io.digiexpress.thena.cockpit.client.spi.actions.CockpitQueryActionsImpl;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import io.digiexpress.thena.cockpit.client.tables.spi.CockpitDbImpl;
 import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.CreatedTenant;
-import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
@@ -41,6 +40,7 @@ import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -48,30 +48,21 @@ import lombok.RequiredArgsConstructor;
 public class CockpitClientImpl implements CockpitClient {
   private final CockpitDb startingState;
   
+
   @Override
-  public CockpitTenant withTenant(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new CockpitTenant() {
-      @Override public CockpitQueryActions find() { return new CockpitQueryActionsImpl(startingState, repoId); }
-      @Override public CockpitCommitActions commit() { return new CockpitCommitActionsImpl(startingState, repoId); }
-      @Override public String getTenantId() { return repoId; }
-    };
+  public CockpitQueryActions queries() {
+    final var tenantId = startingState.getDataSource().getTenant().getName();
+    RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
+    return new CockpitQueryActionsImpl(startingState, tenantId); 
   }
-  @Override
-  public CockpitTenant withTenant() {
-    return withTenant(startingState.getDataSource().getTenant().getName());
+  @Override 
+  public CockpitCommitActions commits() {
+    final var tenantId = startingState.getDataSource().getTenant().getName();
+    RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
+    return new CockpitCommitActionsImpl(startingState, tenantId); 
   }
-  @Override
-  public CockpitTenant withTenant(CreatedTenant repo) {
-    return withTenant(repo.getRepo().getId());
-  }
-  @Override
-  public CockpitTenant withTenant(Tenant repo) {
-    return this.withTenant(repo.getId());
-  }
-  @Override
   public TenantActions tenants() {
-    return new TenantActionsImpl(startingState, StructureType.contract);
+    return new TenantActionsImpl(startingState, StructureType.cockpit);
   }
   
   
@@ -126,5 +117,11 @@ public class CockpitClientImpl implements CockpitClient {
       final var state = new CockpitDbImpl(dataSource);
       return new CockpitClientImpl(state);
     }
+  }
+
+  @Override
+  public <T extends CockpitAware<T>> Uni<T> register(T aware) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

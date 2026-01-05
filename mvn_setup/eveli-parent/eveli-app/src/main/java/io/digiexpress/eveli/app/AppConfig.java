@@ -1,5 +1,12 @@
 package io.digiexpress.eveli.app;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 /*-
  * #%L
  * eveli-app
@@ -21,7 +28,7 @@ package io.digiexpress.eveli.app;
  */
 
 import io.digiexpress.eveli.client.api.OrgClient;
-import io.digiexpress.eveli.client.config.EveliAutoConfig.EveliPropsDbResolved;
+import io.digiexpress.eveli.client.config.EveliAutoConfigDb.EveliPropsDbResolved;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.spi.persistence.ThenaMqChannelStateImpl;
@@ -29,12 +36,6 @@ import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.Collections;
-import java.util.List;
 
 
 

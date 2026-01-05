@@ -1,4 +1,4 @@
-package io.digiexpress.thena.cockpit.client.spi.actions;
+package io.digiexpress.thena.cockpit.client.api;
 
 /*-
  * #%L
@@ -20,20 +20,25 @@ package io.digiexpress.thena.cockpit.client.spi.actions;
  * #L%
  */
 
-import io.digiexpress.thena.cockpit.client.api.CockpitQueryActions;
-import io.digiexpress.thena.cockpit.client.spi.queries.CockpitQueryImpl;
-import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
-import lombok.RequiredArgsConstructor;
+import org.immutables.value.Value;
 
+import io.smallrye.mutiny.Uni;
 
+public interface CockpitAware<T extends CockpitAware<T>> {
 
-@RequiredArgsConstructor
-public class CockpitQueryActionsImpl implements CockpitQueryActions {
-  private final CockpitDb startingState;
-  private final String repoId;
+  // load the configured cockpit
+  Uni<T> withCockpit();
   
-  @Override
-  public CockpitQuery cockpitQuery() {
-    return new CockpitQueryImpl(startingState.withTenant(repoId));
+  // default settings, when not taking cockpit into account
+  CockpitAwareProps getCockpitAwareProps();
+
+  // load based on default settings
+  Uni<T> withCockpitAwareProps();
+  
+  @Value.Immutable
+  interface CockpitAwareProps {
+    boolean getAutoCreate();
+    String getTenantName();
   }
+  
 }

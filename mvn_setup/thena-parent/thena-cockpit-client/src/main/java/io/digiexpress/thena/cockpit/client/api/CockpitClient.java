@@ -2,9 +2,9 @@ package io.digiexpress.thena.cockpit.client.api;
 
 /*-
  * #%L
- * thena-contract-client
+ * thena-cockpit-client
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,13 @@ package io.digiexpress.thena.cockpit.client.api;
  * #L%
  */
 
-import io.resys.thena.api.actions.TenantActions;
-import io.resys.thena.api.actions.TenantActions.CreatedTenant;
-import io.resys.thena.api.entities.Tenant;
+import io.smallrye.mutiny.Uni;
 
 public interface CockpitClient {
-  TenantActions tenants();
+
+  CockpitCommitActions commits();
+  CockpitQueryActions queries();  
   
-  CockpitTenant withTenant();
-  CockpitTenant withTenant(String tenantIdOrName);
-  CockpitTenant withTenant(CreatedTenant repo);
-  CockpitTenant withTenant(Tenant repo);
-
   
-
-  interface CockpitTenant {
-    String getTenantId();
-    CockpitCommitActions commit();
-    CockpitQueryActions find();
-  }
-
+  <T extends CockpitAware<T>> Uni<T> register(T aware);
 }

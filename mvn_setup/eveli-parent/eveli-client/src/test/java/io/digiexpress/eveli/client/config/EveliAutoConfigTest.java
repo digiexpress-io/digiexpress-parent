@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EveliAutoConfigTest {
   @Test
   void testEveliAutoConfigDatabaseUrlParsing() {
-    EveliAutoConfig config = new EveliAutoConfig();
+    EveliAutoConfigDb config = new EveliAutoConfigDb();
     var datasourcePassword = "password123";
     var datasourceUsername = "username";
     var props = config.eveliPropsDbResolved("jdbc:postgresql://public-postgres.database.com:12343/defaultdb?sslmode=require&sslrootcert=demo/database-ca.pem", datasourceUsername, datasourcePassword);
