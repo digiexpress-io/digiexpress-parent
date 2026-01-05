@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, DialogActions, DialogContent, DialogTitle, Zoom } from '@mui/material';
+import { Box, Button, DialogActions, DialogContent, DialogTitle, Typography, Zoom } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 
@@ -20,6 +20,7 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
 
   const backend = useTaskBackend();
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
+  const [uploadError, setUploadError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     backend.persistence.findAllAttachments(task.id).then(setAttachments);
@@ -35,7 +36,33 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
 
   const handleUploadClick = (files: FileList | null) => {
     if (!files || files.length === 0) return;
-
+  
+    // allow selecting the same file again to re-trigger onChange
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  
+    const normalize = (name: string) => name.trim().toLowerCase();
+  
+    const existingNames = new Set(attachments.map((a) => normalize(a.name)));
+    const selected = Array.from(files);
+  
+    const duplicates = selected
+      .map((f) => f.name)
+      .filter((name) => existingNames.has(normalize(name)));
+  
+    if (duplicates.length > 0) {
+      const unique = Array.from(new Set(duplicates));
+      setUploadError(
+        unique.length === 1
+          ? `A file named "${unique[0]}" already exists. Please rename it before uploading.`
+          : `These files already exist: ${unique.map((n) => `"${n}"`).join(', ')}. Please rename them before uploading.`
+      );
+      return;
+    }
+  
+    setUploadError(null);
+  
     backend.persistence
       .createManyAttachments(task.id, files)
       .then(() => backend.persistence.findAllAttachments(task.id))
@@ -93,6 +120,11 @@ export const FilesEditDialog: React.FC<FilesEditProps> = ({ task, open, onClose 
           >
             {intl.formatMessage({ id: 'task.button.uploadFile' })}
           </Button>
+          {uploadError ? (
+            <Typography color="error" variant="body2">
+              {uploadError}
+            </Typography>
+          ) : null}
         </div>
       </DialogTitle>
 
