@@ -72,14 +72,13 @@ public class HdesClientImpl implements HdesClient {
     this.config = config;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .autoCreate(false)
-        .resolver(Uni.createFrom().item(Optional.empty()))
+        .provider(() -> Uni.createFrom().item(Optional.empty()))
         .build();
   }
   
   @Override
   public Uni<HdesClient> withCockpit() {
-    return cockpitAwareProps.getResolver().onItem()
+    return cockpitAwareProps.getProvider().apply().onItem()
         .transform(cockpit -> {
           
           config.getCache().flushAll();
@@ -184,6 +183,7 @@ public class HdesClientImpl implements HdesClient {
     private ServiceInit serviceInit;
     private HdesStore store;
     private HdesCache cache;
+    private CockpitAwareProvider cockpitAwareProvider;
     private DependencyInjectionContext dependencyInjectionContext;
     private final List<AstFlowNodeVisitor> flowVisitors = new ArrayList<>(Arrays.asList(new IdValidator()));
     
@@ -212,6 +212,10 @@ public class HdesClientImpl implements HdesClient {
       this.store = store;
       return this;
     }
+    public Builder cockpitAwareProvider(Optional<CockpitAwareProvider> cockpitAwareProvider) {
+      this.cockpitAwareProvider = cockpitAwareProvider.orElse(null);
+      return this;
+    }
     public HdesClientImpl build() {
       HdesAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
       HdesAssert.notNull(serviceInit, () -> "serviceInit must be defined!");
@@ -226,7 +230,16 @@ public class HdesClientImpl implements HdesClient {
       final var ast = new HdesAstTypesImpl(types, flowVisitors);
       final var config = new HdesClientConfigImpl(cache, serviceInit, dependencyInjectionContext, types, ast);
 
-      return new HdesClientImpl(store, config);
+      if(cockpitAwareProvider == null) {
+        return new HdesClientImpl(store, config);
+      }
+      
+      final var props = ImmutableCockpitAwareProps.builder()
+          .provider(cockpitAwareProvider)
+          .tenantName(store.getRepoName())
+          .build();
+      
+      return new HdesClientImpl(store, config, props);
     }
   }
 

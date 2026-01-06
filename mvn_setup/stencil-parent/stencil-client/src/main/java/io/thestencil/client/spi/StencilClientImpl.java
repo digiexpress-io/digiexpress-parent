@@ -47,14 +47,20 @@ public class StencilClientImpl implements StencilClient {
     this.store = store;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .autoCreate(false)
-        .resolver(Uni.createFrom().item(Optional.empty()))
+        .provider(() -> Uni.createFrom().item(Optional.empty()))
+        .build();
+  }
+  public StencilClientImpl(StencilStore store, Optional<CockpitAwareProvider> cockpitAwareProvider) {
+    this.store = store;
+    this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
+        .tenantName(store.getRepoName())
+        .provider(cockpitAwareProvider.orElse(() -> Uni.createFrom().item(Optional.empty())))
         .build();
   }
   
   @Override
   public Uni<StencilClient> withCockpit() {
-    return cockpitAwareProps.getResolver().onItem()
+    return cockpitAwareProps.getProvider().apply().onItem()
         .transform(cockpit -> {
           
           if(cockpit.isEmpty()) {

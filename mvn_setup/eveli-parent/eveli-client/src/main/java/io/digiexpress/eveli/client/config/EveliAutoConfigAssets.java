@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.config;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +61,7 @@ import io.digiexpress.tagomi.spi.TagomiComposerImpl;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
 import io.digiexpress.tagomi.spi.json.ToJsonObject;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -206,7 +208,10 @@ public class EveliAutoConfigAssets {
       io.vertx.mutiny.sqlclient.Pool pgPool
     ) {
     
+    final var cockpitProvider = Optional.ofNullable(context.getBeanProvider(CockpitAwareProvider.class).getIfAvailable());
+    
     final var wrenchClient = HdesClientImpl.builder()
+        .cockpitAwareProvider(cockpitProvider)
         .store(ThenaStore.builder()
             .pgPool(pgPool)
             .repoName("wrench-assets")
@@ -236,7 +241,7 @@ public class EveliAutoConfigAssets {
             })
             .gidProvider(type -> UUID.randomUUID().toString())
             .authorProvider(() -> "eveli")
-        ).build());
+        ).build(), cockpitProvider);
     
     final var tagomi = ImmutableTagomiStoreConfig.builder()
         .client(GitDataSourceImpl.create().client(pgPool).build())

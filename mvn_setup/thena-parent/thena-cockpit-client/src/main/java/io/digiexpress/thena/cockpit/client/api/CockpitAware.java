@@ -30,18 +30,23 @@ public interface CockpitAware<T extends CockpitAware<T>> {
 
   // load the configured cockpit
   Uni<T> withCockpit();
-  
-  // default settings, when not taking cockpit into account
-  CockpitAwareProps getCockpitAwareProps();
 
   // load based on default settings
   Uni<T> withCockpitAwareProps();
+
+  // default settings, when not taking cockpit into account
+  CockpitAwareProps getCockpitAwareProps();
+
   
   @Value.Immutable
   interface CockpitAwareProps {
-    boolean getAutoCreate();
     String getTenantName();
-    Uni<Optional<CockpitContainer>> getResolver();
+    CockpitAwareProvider getProvider();
   }
   
+  
+  @FunctionalInterface
+  interface CockpitAwareProvider {
+    Uni<Optional<CockpitContainer>> apply();
+  }
 }
