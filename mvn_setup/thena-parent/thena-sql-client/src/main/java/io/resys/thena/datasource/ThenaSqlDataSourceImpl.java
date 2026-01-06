@@ -54,7 +54,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   }
   
   public ThenaSqlDataSourceImpl(
-      String tenant, 
+      String tenantName, 
       TenantContext tenantTableNames, 
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
@@ -64,7 +64,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     this.tenantCache = tenantCache;
     this.isTenantLoaded = false;
     this.tenant = ImmutableTenant.builder()
-        .name(tenant)
+        .name(tenantName)
         .type(StructureType.git)
         .id("")
         .rev("")

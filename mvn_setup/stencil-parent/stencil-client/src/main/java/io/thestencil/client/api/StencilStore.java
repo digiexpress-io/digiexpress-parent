@@ -48,6 +48,17 @@ public interface StencilStore {
   StencilStore withRepo(String repoId, String headName);
   BranchQuery queryBranches();
 
+
+  QueryBuilder query();
+  StoreRepoBuilder repo();
+  
+  String getRepoName();
+  String getHeadName();
+
+  String gid(EntityType type);
+  
+  
+  
   interface BranchQuery {
     Uni<List<Branch>> findAll();
   }
@@ -70,14 +81,6 @@ public interface StencilStore {
   }
 
 
-  QueryBuilder query();
-  StoreRepoBuilder repo();
-  
-  String getRepoName();
-  String getHeadName();
-
-  String gid(EntityType type);
-  
   interface QueryBuilder {
     Uni<Optional<io.resys.thena.api.entities.git.Branch>> getBranch();
     

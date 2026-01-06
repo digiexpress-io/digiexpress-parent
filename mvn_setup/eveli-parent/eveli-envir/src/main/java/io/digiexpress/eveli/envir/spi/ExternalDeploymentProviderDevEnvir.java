@@ -53,6 +53,7 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   private final HdesClient wrenchClient;
   private final DialobClient dialobClient;
 
+
   @Override
   public Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody) {
     if(emptyBranchBody) {
@@ -62,10 +63,11 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   }
   
   private Uni<Optional<EveliDeployment>> getDeploymentWithoutBody() {
-
-    
     return Uni.combine().all()
-        .unis(wrenchClient.store().query().getBranch(), stencilClient.getStore().query().getBranch())
+        .unis(
+            wrenchClient.withCockpit().onItem().transformToUni(client -> client.store().query().getBranch()), 
+            stencilClient.withCockpit().onItem().transformToUni(client -> client.getStore().query().getBranch())
+        )
         .asTuple().onItem().transform(tuple -> {
           
           final var now = OffsetDateTime.now();

@@ -65,6 +65,11 @@ public class NewCockpitConfigTenantBuilder implements NewCockpitConfigTenant {
     this.tenant.cockpitConfigTenantDesc(RepoAssert.notEmpty(tenantDescription, () -> "tenantDescription can't be empty!"));
     return this;
   }
+  @Override
+  public NewCockpitConfigTenant tenantType(String tenantType) {
+    this.tenant.cockpitConfigTenantType(RepoAssert.notEmpty(tenantType, () -> "tenantType can't be empty!"));
+    return this;
+  }
 
   @Override
   public NewCockpitConfigTenant tenantExtension(@Nullable JsonObject tenantExtension) {

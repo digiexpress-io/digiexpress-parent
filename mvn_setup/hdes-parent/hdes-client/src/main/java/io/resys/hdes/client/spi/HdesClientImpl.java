@@ -29,6 +29,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitAwareProps;
 import io.resys.hdes.client.api.HdesAstTypes;
 import io.resys.hdes.client.api.HdesCache;
 import io.resys.hdes.client.api.HdesClient;
@@ -47,7 +48,6 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.decision.DecisionCSVBuilder;
 import io.resys.hdes.client.spi.decision.DecisionProgramBuilder;
-import io.resys.hdes.client.spi.diff.HdesClientDiffBuilder;
 import io.resys.hdes.client.spi.envir.ProgramEnvirFactory;
 import io.resys.hdes.client.spi.flow.FlowProgramBuilder;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
@@ -55,16 +55,56 @@ import io.resys.hdes.client.spi.groovy.ServiceProgramBuilder;
 import io.resys.hdes.client.spi.summary.HdesClientSummaryBuilder;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.smallrye.mutiny.Uni;
+import lombok.RequiredArgsConstructor;
 
-public class HdesClientImpl implements HdesClient {;
+
+
+@RequiredArgsConstructor
+public class HdesClientImpl implements HdesClient {
   private final HdesStore store;
   private final HdesClientConfig config;
+  private final CockpitAwareProps cockpitAwareProps;
+  private final static String COCKPIT_TYPE = "WRENCH";
   
   public HdesClientImpl(HdesStore store, HdesClientConfig config) {
     super();
     this.store = store;
     this.config = config;
+    this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
+        .tenantName(store.getRepoName())
+        .provider(() -> Uni.createFrom().item(Optional.empty()))
+        .build();
   }
+  
+  @Override
+  public Uni<HdesClient> withCockpit() {
+    return cockpitAwareProps.getProvider().apply().onItem()
+        .transform(cockpit -> {
+          
+          config.getCache().flushAll();
+          
+          if(cockpit.isEmpty()) {
+            return this.repo().repoName(cockpitAwareProps.getTenantName()).build();
+          }
+          
+          final var tenantName = cockpit.get().getTenants().stream()
+            .filter(t -> t.getCockpitConfigTenantType().equals(COCKPIT_TYPE))
+            .map(e -> e.getExternalId())
+            .findFirst()
+            .orElse(cockpitAwareProps.getTenantName());
+          
+          return this.repo().repoName(tenantName).build();
+        });
+  }
+  @Override
+  public CockpitAwareProps getCockpitAwareProps() {
+    return this.cockpitAwareProps;
+  }
+  @Override
+  public Uni<HdesClient> withCockpitAwareProps() {
+    return Uni.createFrom().item(this.repo().repoName(cockpitAwareProps.getTenantName()).build()); 
+  }
+  
   @Override
   public ExecutorBuilder executor(ProgramEnvir envir) {
     return new HdesClientExecutorBuilder(envir, config.getTypes(), config.getDependencyInjectionContext());    
@@ -73,10 +113,6 @@ public class HdesClientImpl implements HdesClient {;
   public EnvirBuilder envir() {
     ProgramEnvirFactory factory = new ProgramEnvirFactory(config);
     return new HdesClientEnvirBuilder(factory, config.getTypes());
-  }
-  @Override
-  public DiffBuilder diff() {
-    return new HdesClientDiffBuilder();
   }
 
   @Override
@@ -147,6 +183,7 @@ public class HdesClientImpl implements HdesClient {;
     private ServiceInit serviceInit;
     private HdesStore store;
     private HdesCache cache;
+    private CockpitAwareProvider cockpitAwareProvider;
     private DependencyInjectionContext dependencyInjectionContext;
     private final List<AstFlowNodeVisitor> flowVisitors = new ArrayList<>(Arrays.asList(new IdValidator()));
     
@@ -175,6 +212,10 @@ public class HdesClientImpl implements HdesClient {;
       this.store = store;
       return this;
     }
+    public Builder cockpitAwareProvider(Optional<CockpitAwareProvider> cockpitAwareProvider) {
+      this.cockpitAwareProvider = cockpitAwareProvider.orElse(null);
+      return this;
+    }
     public HdesClientImpl build() {
       HdesAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
       HdesAssert.notNull(serviceInit, () -> "serviceInit must be defined!");
@@ -189,7 +230,16 @@ public class HdesClientImpl implements HdesClient {;
       final var ast = new HdesAstTypesImpl(types, flowVisitors);
       final var config = new HdesClientConfigImpl(cache, serviceInit, dependencyInjectionContext, types, ast);
 
-      return new HdesClientImpl(store, config);
+      if(cockpitAwareProvider == null) {
+        return new HdesClientImpl(store, config);
+      }
+      
+      final var props = ImmutableCockpitAwareProps.builder()
+          .provider(cockpitAwareProvider)
+          .tenantName(store.getRepoName())
+          .build();
+      
+      return new HdesClientImpl(store, config, props);
     }
   }
 

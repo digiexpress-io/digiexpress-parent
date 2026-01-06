@@ -188,12 +188,12 @@ public class StencilStoreInMemory implements StencilStore {
 
   @Override
   public String getRepoName() {
-    throw new IllegalArgumentException("no read or writes supported!");
+    return "in-memory";
   }
 
   @Override
   public String getHeadName() {
-    throw new IllegalArgumentException("no read or writes supported!");
+    return "in-memory";
   }
 
   @Override

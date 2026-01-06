@@ -1,5 +1,14 @@
 package io.resys.hdes.client.spi.diff;
 
+import static com.github.difflib.UnifiedDiffUtils.generateUnifiedDiff;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /*-
  * #%L
  * hdes-client-api
@@ -22,26 +31,17 @@ package io.resys.hdes.client.spi.diff;
 
 
 import com.github.difflib.DiffUtils;
-import io.resys.hdes.client.api.HdesClient.DiffBuilder;
+
+import io.resys.hdes.client.api.HdesComposer.TagDiff;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
+import io.resys.hdes.client.api.ImmutableTagDiff;
 import io.resys.hdes.client.api.ast.AstTagSummary;
-import io.resys.hdes.client.api.diff.ImmutableTagDiff;
-import io.resys.hdes.client.api.diff.TagDiff;
 import io.resys.hdes.client.spi.summary.HdesClientSummaryBuilder;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.github.difflib.UnifiedDiffUtils.generateUnifiedDiff;
-
 @Slf4j
-public class HdesClientDiffBuilder implements DiffBuilder {
+public class HdesClientDiffBuilder {
 
   private static final int NO_OF_CONTEXT_LINES = 2;
   private static final String LN = "\n";

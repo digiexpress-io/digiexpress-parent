@@ -29,6 +29,7 @@
     <module>thena-product-client</module>
     <module>thena-contract-client</module>
     <module>thena-ledger-client</module>
+    <module>thena-cockpit-client</module>
   </modules>
 
 </project>

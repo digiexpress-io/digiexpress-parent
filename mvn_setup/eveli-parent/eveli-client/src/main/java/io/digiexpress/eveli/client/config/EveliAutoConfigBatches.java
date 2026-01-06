@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.config.EveliBatchesAutoConfig.BatchTenantCondition;
+import io.digiexpress.eveli.client.config.EveliAutoConfigBatches.BatchTenantCondition;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_Definition;
 import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.BatchApiCotroller;
@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @org.springframework.context.annotation.Conditional(BatchTenantCondition.class)
 @Slf4j
-public class EveliBatchesAutoConfig {
+public class EveliAutoConfigBatches {
   
   static class BatchTenantCondition extends EveliTenantCondition {
     public BatchTenantCondition() {

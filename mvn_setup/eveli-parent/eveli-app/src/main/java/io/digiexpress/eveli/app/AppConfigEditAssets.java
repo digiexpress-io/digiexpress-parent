@@ -47,9 +47,9 @@ public class AppConfigEditAssets {
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
       ApplicationContext context,
-      io.vertx.mutiny.pgclient.PgPool pgPool) {
+      io.vertx.mutiny.sqlclient.Pool pgPool) {
     
-    return EveliAutoConfigAssets.getOrCreateDb(EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool))
-        .await().atMost(Duration.ofMinutes(5));
+    final var dev = EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool);
+    return EveliAutoConfigAssets.getOrCreateDb(dev).await().atMost(Duration.ofMinutes(5));
   }
 }

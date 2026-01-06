@@ -1,3 +1,4 @@
 spring:
   config.activate.on-profile: 'fake-user'
 eveli.contract.enabled: true
+eveli.cockpit.enabled: true

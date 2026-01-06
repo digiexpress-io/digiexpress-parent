@@ -1,5 +1,12 @@
 package io.resys.hdes.client.api;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+import org.immutables.value.Value;
+
 /*-
  * #%L
  * hdes-client-api
@@ -23,6 +30,8 @@ package io.resys.hdes.client.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.resys.hdes.client.api.HdesStore.HistoryEntity;
 import io.resys.hdes.client.api.ast.AstBody;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -34,24 +43,18 @@ import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
-import io.resys.hdes.client.api.diff.TagDiff;
 import io.resys.hdes.client.api.programs.Program.ProgramResult;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramAssociation;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramMessage;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
 import io.smallrye.mutiny.Uni;
-import org.immutables.value.Value;
-
 import jakarta.annotation.Nullable;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Backend for composer related service. 
  * Provides mutability of the assets.
  */
-public interface HdesComposer {  
+public interface HdesComposer extends CockpitAware<HdesComposer> {  
   HdesClient getClient();
   
   Uni<ComposerState> get();
@@ -71,6 +74,8 @@ public interface HdesComposer {
   Uni<AstTagSummary> summary(String tagId);
 
   HdesComposer withBranch(String branchName);
+
+  
 
   @JsonSerialize(as = ImmutableDiffRequest.class)
   @JsonDeserialize(as = ImmutableDiffRequest.class)
@@ -162,5 +167,17 @@ public interface HdesComposer {
     String getDesc();
     AstBodyType getType();
     List<AstCommand> getBody();
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableTagDiff.class)
+  @JsonDeserialize(as = ImmutableTagDiff.class)
+  public interface TagDiff {
+    String getBaseName();
+    String getTargetName();
+    String getBaseId();
+    String getTargetId();
+    LocalDateTime getCreated();
+    String getBody();
   }
 }

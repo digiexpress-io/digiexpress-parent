@@ -48,6 +48,7 @@ public interface CockpitNewObject {
     NewCockpitConfigTenant externalId(String externalId);
     NewCockpitConfigTenant externalBranch(@Nullable String externalBranch);
     
+    NewCockpitConfigTenant tenantType(String tenantType);
     NewCockpitConfigTenant tenantDescription(String tenantDescription);
     NewCockpitConfigTenant tenantExtension(@Nullable JsonObject tenantExtension);
     

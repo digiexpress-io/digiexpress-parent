@@ -2,7 +2,6 @@ package io.resys.hdes.client.api;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +32,7 @@ import java.util.function.Function;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.resys.hdes.client.api.HdesAstTypes.DataTypeAstBuilder;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ast.AstCommand;
@@ -43,7 +43,6 @@ import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
 import io.resys.hdes.client.api.ast.TypeDef;
 import io.resys.hdes.client.api.ast.TypeDef.ValueType;
-import io.resys.hdes.client.api.diff.TagDiff;
 import io.resys.hdes.client.api.programs.DecisionProgram;
 import io.resys.hdes.client.api.programs.DecisionProgram.DecisionResult;
 import io.resys.hdes.client.api.programs.ExpressionProgram;
@@ -58,12 +57,12 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
-public interface HdesClient {
+public interface HdesClient extends CockpitAware<HdesClient> {
   AstBuilder ast();
   ProgramBuilder program();
   ExecutorBuilder executor(ProgramEnvir envir);
   EnvirBuilder envir();
-  DiffBuilder diff();
+
   SummaryBuilder summary();
   HdesTypesMapper mapper();
   HdesAstTypes types();
@@ -80,13 +79,7 @@ public interface HdesClient {
     AstTagSummary build();
   }
 
-  interface DiffBuilder {
-    DiffBuilder tags(Collection<StoreEntity> tags);
-    DiffBuilder baseId(String baseId);
-    DiffBuilder targetId(String targetId);
-    DiffBuilder targetDate(LocalDateTime targetDate);
-    TagDiff build();
-  }
+
   
   interface ClientRepoBuilder {
     ClientRepoBuilder repoName(String repoName);

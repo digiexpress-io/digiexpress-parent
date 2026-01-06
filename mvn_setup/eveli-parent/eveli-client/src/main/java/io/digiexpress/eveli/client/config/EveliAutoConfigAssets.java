@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.config;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +61,7 @@ import io.digiexpress.tagomi.spi.TagomiComposerImpl;
 import io.digiexpress.tagomi.spi.TagomiStoreImpl;
 import io.digiexpress.tagomi.spi.json.FromJsonObject;
 import io.digiexpress.tagomi.spi.json.ToJsonObject;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -86,14 +88,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EveliAutoConfigAssets {
   public static final String BEAN_NAME = "eveliEditEnvir";
-  
-  
-  
-  // TODO @Value("${app.version}")
-  private String version = "alpha";
-
-  // TODO  @Value("${build.timestamp}")
-  private String timestamp = "";
 
   @Getter
   @RequiredArgsConstructor
@@ -191,11 +185,11 @@ public class EveliAutoConfigAssets {
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliEditEnvir context, EveliEnvirClient client, ObjectMapper objectMapper) {
-    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, client, version, timestamp);
+    return new AssetsWrenchController(objectMapper, new HdesComposerImpl(context.getWrench()), client);
   }
   @Bean
   public AssetsStencilController assetsStencilController(EveliEditEnvir context, ObjectMapper objectMapper, EveliEnvirClient client) {
-    return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper, client);
+    return new AssetsStencilController(objectMapper, new StencilComposerImpl(context.getStencil()), client);
   }
 
   @Bean
@@ -214,7 +208,10 @@ public class EveliAutoConfigAssets {
       io.vertx.mutiny.sqlclient.Pool pgPool
     ) {
     
+    final var cockpitProvider = Optional.ofNullable(context.getBeanProvider(CockpitAwareProvider.class).getIfAvailable());
+    
     final var wrenchClient = HdesClientImpl.builder()
+        .cockpitAwareProvider(cockpitProvider)
         .store(ThenaStore.builder()
             .pgPool(pgPool)
             .repoName("wrench-assets")
@@ -244,7 +241,7 @@ public class EveliAutoConfigAssets {
             })
             .gidProvider(type -> UUID.randomUUID().toString())
             .authorProvider(() -> "eveli")
-        ).build());
+        ).build(), cockpitProvider);
     
     final var tagomi = ImmutableTagomiStoreConfig.builder()
         .client(GitDataSourceImpl.create().client(pgPool).build())
@@ -293,10 +290,7 @@ public class EveliAutoConfigAssets {
         );
         */
     final var createdStencil = envir.getStencil().repo().create();
-    
     final var createTagomi = new TagomiStoreImpl(envir.getTagomi()).tenantBuilder().createIfNot();
-    
-    
     return Uni.combine().all()
         .unis(createdWrench, createdStencil, createTagomi)
         .asTuple().onItem().transform(e -> envir);

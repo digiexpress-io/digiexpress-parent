@@ -1,10 +1,10 @@
-package io.resys.hdes.client.api.diff;
+package io.digiexpress.eveli.client.config;
 
 /*-
  * #%L
- * hdes-client-api
+ * eveli-client
  * %%
- * Copyright (C) 2020 - 2023 Copyright 2020 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,18 @@ package io.resys.hdes.client.api.diff;
  * #L%
  */
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.value.Value;
+import lombok.Data;
 
-import java.time.LocalDateTime;
 
-@Value.Immutable
-@JsonSerialize(as = ImmutableTagDiff.class)
-@JsonDeserialize(as = ImmutableTagDiff.class)
-public interface TagDiff {
-  String getBaseName();
-  String getTargetName();
-  String getBaseId();
-  String getTargetId();
-  LocalDateTime getCreated();
-  String getBody();
+@Data
+@ConfigurationProperties(prefix = EveliPropsCockpit.PREFIX)
+public class EveliPropsCockpit {
+  public static final String PREFIX = "eveli.cockpit";
+  
+  /**
+   * Enable whole contract management tenant
+   */
+  private Boolean enabled; 
 }
