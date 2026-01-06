@@ -1,5 +1,3 @@
-package io.digiexpress.eveli.client.config;
-
 /*-
  * #%L
  * eveli-client
@@ -20,23 +18,67 @@ package io.digiexpress.eveli.client.config;
  * #L%
  */
 
+package io.digiexpress.eveli.client.config;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.spi.cockpit.CockpitAwareProviderImpl;
+import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitContainerCache;
+import io.digiexpress.thena.cockpit.client.api.CockpitClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitContainer;
+import io.digiexpress.thena.cockpit.client.spi.CockpitClientImpl;
+import io.digiexpress.thena.cockpit.client.spi.CockpitContainerCacheImpl;
+import io.resys.thena.storesql.PgErrors;
+import lombok.extern.slf4j.Slf4j;
+
+
+@ConditionalOnBooleanProperty(matchIfMissing = false, havingValue = true, prefix = EveliPropsCockpit.PREFIX, name = "enabled")
+@ConditionalOnBean(name = EveliAutoConfigAssets.BEAN_NAME)
 @Configuration
+@Slf4j
 public class EveliAutoConfigCockpit {
 
+  @Bean
+  public CockpitAwareProvider cockpitAwareProvider(
+      CockpitClient client,
+      WorkerAuthClient auth, 
+      UserProfileClient userProfileClient, 
+      Optional<CockpitContainerCache> cache) {
+
+    final var cacheImpl = cache.orElseGet(EveliAutoConfigCockpit::cockpitContainerCache);
+    return new CockpitAwareProviderImpl(client, auth, userProfileClient, cacheImpl);
+  }
   
-  // EveliAutoConfigEnvir
-  // EveliAutoConfigContract
-  // EveliAutoConfigAssets
-  // EveliAutoConfig
-  // TenantApiController -> /worker/rest/api/tenant-configs
-  // TenantConfigClient
-  // 
+  @Bean
+  public CockpitClient cockpitClient(List<CockpitAware<?>> aware, io.vertx.mutiny.sqlclient.Pool pgPool) {
+    final var client = CockpitClientImpl.create()
+        .client(pgPool)
+        .errorHandler(new PgErrors())
+        .build();
+    client.tenants().createOneTenant().buildOnlyIfNotCreated().await().atMost(Duration.ofMinutes(5));
+    return client;
+  }
   
   
-  /**
-   * enabled > assets // boolean
-   * wrench/stencil/tagomi/other asset editors
-   */
+  public static CockpitContainerCacheImpl cockpitContainerCache() {
+    final Cache<String, CockpitContainer> long_runtime_cache = Caffeine.newBuilder()
+        .maximumSize(5)
+        .expireAfterWrite(Duration.ofMinutes(15))
+        .build();      
+    return new CockpitContainerCacheImpl(long_runtime_cache);
+  }
 }

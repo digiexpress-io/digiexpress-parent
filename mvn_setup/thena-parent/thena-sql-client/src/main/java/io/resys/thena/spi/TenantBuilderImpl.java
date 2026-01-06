@@ -33,6 +33,7 @@ import io.resys.thena.api.envelope.Message;
 import io.resys.thena.support.Identifiers;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,11 +65,36 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
   }
   
   @Override
-  public TenantBuilderImpl name(String name, StructureType type) {
+  public CreateOneTenant name(String name, StructureType type) {
     this.name = name;
     this.type = type;
     return this;
   }
+
+  @Override
+  public Uni<Tuple2<Boolean, CreatedTenant>> buildOnlyIfNotCreated() {
+    log.debug("Creating repository '{}' of type {}.", name, type);
+
+    RepoAssert.notEmpty(name, () -> "repo name not defined!");
+    RepoAssert.notNull(type, () -> "type name not defined!");
+    RepoAssert.isName(name, () -> "repo name has invalid characters!");
+
+    return state.tenant().getByName(name)
+        .onItem().transformToUni((Tenant existing) -> {
+
+        if(existing == null) {
+          return createTenant().onItem().transform(c -> Tuple2.of(true, c));
+        }
+        
+        log.error("Existing repository found with name '{}'", name);
+        final var resp = ImmutableCreatedTenant.builder()
+          .repo(existing)
+          .status(TenantOperationStatus.OK)
+          .build();
+        return Uni.createFrom().item(Tuple2.of(false, resp));
+      });
+  }
+  
   
   @Override
   public Uni<CreatedTenant> build() {
@@ -78,45 +104,46 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
     RepoAssert.notNull(type, () -> "type name not defined!");
     RepoAssert.isName(name, () -> "repo name has invalid characters!");
 
-    
-    
     return state.tenant().getByName(name)
       .onItem().transformToUni((Tenant existing) -> {
-     
-      final Uni<CreatedTenant> result;
-      if(existing != null) {
-        log.error("Existing repository found with name '{}'", name);
-        result = Uni.createFrom().item(ImmutableCreatedTenant.builder()
-            .status(TenantOperationStatus.CONFLICT)
-            .addMessages(nameNotUnique(existing.getName(), existing.getId()))
-            .build());
-      } else {
-        result = state.tenant().findAll()
-        .collect().asList().onItem()
-        .transformToUni((allRepos) -> {
-          final var codeName = name.toUpperCase();
-          final var prefixStart = codeName.substring(0, Math.min(codeName.length(), 10));
-          
-          final var prefix = prefixStart.replace("-", "_") + (allRepos.size() + 10) + "_" ;
-          final var newRepo = ImmutableTenant.builder()
-              .id(Identifiers.uuid())
-              .rev(Identifiers.uuid())
-              .type(type)
-              .name(name)
-              .externalId(externalId)
-              .prefix(prefix)
-              .build();
-          
-          return state.tenant().insert(newRepo)
-            .onItem().transform(next -> (CreatedTenant) ImmutableCreatedTenant.builder()
-                .repo(next)
-                .status(TenantOperationStatus.OK)
-                .build());
-        });
+
+      if(existing == null) {
+        return createTenant();
       }
-      return result;
+      
+      log.error("Existing repository found with name '{}'", name);      
+      return Uni.createFrom().item(ImmutableCreatedTenant.builder()
+          .status(TenantOperationStatus.CONFLICT)
+          .addMessages(nameNotUnique(existing.getName(), existing.getId()))
+          .build());
     });
   }
+  
+  
+  private Uni<CreatedTenant> createTenant() {
+    return state.tenant().findAll()
+    .collect().asList().onItem()
+    .transformToUni((allRepos) -> {
+      final var codeName = name.toUpperCase();
+      final var prefixStart = codeName.substring(0, Math.min(codeName.length(), 10));
+      
+      final var prefix = prefixStart.replace("-", "_") + (allRepos.size() + 10) + "_" ;
+      final var newRepo = ImmutableTenant.builder()
+          .id(Identifiers.uuid())
+          .rev(Identifiers.uuid())
+          .type(type)
+          .name(name)
+          .externalId(externalId)
+          .prefix(prefix)
+          .build();
+      
+      return state.tenant().insert(newRepo)
+        .onItem().transform(next -> (CreatedTenant) ImmutableCreatedTenant.builder()
+            .repo(next)
+            .status(TenantOperationStatus.OK)
+            .build());
+    });
+  } 
   
   private Message nameNotUnique(String name, String id) {
     return ImmutableMessage.builder()
@@ -127,5 +154,6 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
           .toString())
         .build();
   }
+
 
 }

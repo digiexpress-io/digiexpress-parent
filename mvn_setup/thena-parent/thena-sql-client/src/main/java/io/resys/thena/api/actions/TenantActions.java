@@ -22,8 +22,6 @@ package io.resys.thena.api.actions;
 
 import java.util.List;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.Tenant;
@@ -32,6 +30,8 @@ import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
+import jakarta.annotation.Nullable;
 
 public interface TenantActions {
 
@@ -52,6 +52,8 @@ public interface TenantActions {
     CreateOneTenant name(String name, StructureType type);
     CreateOneTenant name(String name);
     Uni<CreatedTenant> build();
+    
+    Uni<Tuple2<Boolean, CreatedTenant>> buildOnlyIfNotCreated();
   }
   
   enum TenantOperationStatus {

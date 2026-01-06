@@ -49,4 +49,12 @@ public interface CockpitAware<T extends CockpitAware<T>> {
   interface CockpitAwareProvider {
     Uni<Optional<CockpitContainer>> apply();
   }
+  
+  interface CockpitContainerCache {
+    boolean contains(String anyId);
+    Optional<CockpitContainer> get(String anyId);
+    Optional<CockpitContainer> save(String anyId, Optional<CockpitContainer> container);
+    void invalidateAll();
+  }
+  
 }

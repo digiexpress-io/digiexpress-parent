@@ -28,9 +28,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 
+import io.digiexpress.eveli.client.config.EveliAutoConfigCockpit;
 import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliPropsEnvir;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeCache;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitContainerCache;
 
 
 @Configuration
@@ -42,15 +44,24 @@ public class EveliCacheConfiguration {
     final var delegate = EveliAutoConfigEnvir.defaultEnvirCache(envirProps);
     return new EveliRuntimeCacheRedis(delegate, redisTemplate);
   }
+
+  @Bean
+  public CockpitContainerCache cockpitContainerCache(EveliPropsEnvir envirProps, StringRedisTemplate redisTemplate) {
+    final var delegate = EveliAutoConfigCockpit.cockpitContainerCache();
+    return new EveliCockpitCacheRedis(delegate, redisTemplate);
+  }
   
+
   @Bean
   public RedisMessageListenerContainer eveliEnvirCacheListener(
       RedisConnectionFactory connectionFactory,
-      EveliRuntimeCache cache) {
+      EveliRuntimeCache eveliRuntimeCache,
+      CockpitContainerCache cockpitContainerCache) {
     
     final var container = new RedisMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.addMessageListener((EveliRuntimeCacheRedis) cache, new PatternTopic(EveliRuntimeCacheRedis.CHANNEL_LISTENER));
+    container.addMessageListener((EveliRuntimeCacheRedis) eveliRuntimeCache, new PatternTopic(EveliRuntimeCacheRedis.CHANNEL_LISTENER));
+    container.addMessageListener((EveliCockpitCacheRedis) cockpitContainerCache, new PatternTopic(EveliCockpitCacheRedis.CHANNEL_LISTENER));
     return container;
   }
 }
