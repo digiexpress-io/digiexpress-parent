@@ -122,6 +122,7 @@ export const useFilesEditDialogClasses = () => {
         root: ['root'],
         titleRow: ['titleRow'],
         actionsRow: ['actionsRow'],
+        uploadErrorRow: ['uploadErrorRow'],
         grow: ['grow'],
         hiddenInput: ['hiddenInput'],
         uploadBtn: ['uploadBtn'],
@@ -152,6 +153,12 @@ export const FilesEditDialogRoot = styled(Dialog, {
             alignItems: 'center',
             gap: theme.spacing(1.5),
         },
+
+        [`& .${FILES_EDIT_DIALOG_MUI_NAME}-uploadErrorRow`]: {
+            paddingLeft: theme.spacing(3),
+            paddingRight: theme.spacing(3),
+            paddingBottom: theme.spacing(1),
+        },          
 
         [`& .${FILES_EDIT_DIALOG_MUI_NAME}-grow`]: {
             flexGrow: 1,
