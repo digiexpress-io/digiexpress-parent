@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.web.resources.assets;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package io.digiexpress.eveli.client.web.resources.assets;
  * #L%
  */
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,125 +49,142 @@ import io.resys.hdes.client.api.HdesComposer.CreateEntity;
 import io.resys.hdes.client.api.HdesComposer.DebugRequest;
 import io.resys.hdes.client.api.HdesComposer.DebugResponse;
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
+import io.resys.hdes.client.api.HdesComposer.TagDiff;
 import io.resys.hdes.client.api.HdesComposer.UpdateEntity;
 import io.resys.hdes.client.api.HdesStore.CommitLog;
 import io.resys.hdes.client.api.HdesStore.HistoryEntity;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
-import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ImmutableDiffRequest;
 import io.resys.hdes.client.api.ast.AstCommand;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
-import io.resys.hdes.client.api.diff.TagDiff;
 import io.resys.hdes.client.spi.composer.DebugVisitor;
 import io.smallrye.mutiny.Uni;
-import lombok.Data;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
+
 
 
 @RestController
 @RequestMapping("/worker/rest/api/assets/wrench")
 @RequiredArgsConstructor
 public class AssetsWrenchController {
-  private final HdesComposer composer;
   private final ObjectMapper objectMapper;
+  private final HdesComposer composer;
   private final EveliEnvirClient envir;
-  private final String version;
-  private final String timestamp;
-  
-  private static final Duration timeout = Duration.ofMillis(10000);
 
   @GetMapping(path = "/defaultAssets", produces = MediaType.APPLICATION_JSON_VALUE)
   public Uni<List<StoreEntity>> defaultAssets() {
-    return new HdesDefaultAssets(composer.getClient(), true).accept();
+    return getComposer()
+        .onItem().transformToUni(composer ->  new HdesDefaultAssets(composer.getClient(), true).accept());
   }
   
   @GetMapping(path = "/dataModels", produces = MediaType.APPLICATION_JSON_VALUE)
   public Uni<ComposerState> dataModels(@RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).get();
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).get());
   }
 
   @GetMapping(path = "/exports", produces = MediaType.APPLICATION_JSON_VALUE)
-  public StoreDump exports() {
-    return composer.getStoreDump().await().atMost(timeout);
+  public Uni<StoreDump> exports() {
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.getStoreDump());
   }
 
   @PostMapping(path = "/commands", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerEntity<?> commands(@RequestBody String body, @RequestHeader(value = "Branch-Name", required = false) String branchName) throws JsonMappingException, JsonProcessingException {
+  public Uni<ComposerEntity<?>> commands(@RequestBody String body, @RequestHeader(value = "Branch-Name", required = false) String branchName) throws JsonMappingException, JsonProcessingException {
     final var command = objectMapper.readValue(body, UpdateEntity.class);
-    return composer.withBranch(branchName).dryRun(command).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).dryRun(command))
+        .onItem().invoke(() -> envir.invalidateCache());
   }
   
   @GetMapping(path = "/commands/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public List<AstCommand> getCommands(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) throws JsonMappingException, JsonProcessingException {
-    return composer.withBranch(branchName)
-          .getCommands(id)
-          .await().atMost(timeout);
+  public Uni<List<AstCommand>> getCommands(
+      @PathVariable String id, 
+      @RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).getCommands(id));
   }
 
   @PostMapping(path = "/debugs", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public DebugResponse debug(@RequestBody DebugRequest debug, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    final var client = composer.withBranch(branchName).getClient();
-
+  public Uni<DebugResponse> debug(
+      @RequestBody DebugRequest debug, 
+      @RequestHeader(value = "Branch-Name", required = false) String branchName) {
     
-    // you can't remove await because 'somebody' will be using 'await' in asset execution. 
-    final StoreState state = client.store().query().get().await().atMost(timeout);
-    
-    final var response = new DebugVisitor(client).visit(debug, state);
-    return response;
+    return getComposer()
+        .onItem().transform(composer -> composer.withBranch(branchName).getClient())
+        .onItem().transformToUni(client -> client.store().query().get().onItem().transform(state -> Tuple2.of(client, state)))
+        .onItem().transform(tuple -> new DebugVisitor(tuple.getItem1()).visit(debug, tuple.getItem2()));
   }
 
   @PostMapping(path = "/importTag", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerState importTag(@RequestBody AstTag entity) {
-    return composer.importTag(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  public Uni<ComposerState> importTag(@RequestBody AstTag entity) {
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.importTag(entity))
+        .onItem().invoke(() -> envir.invalidateCache());
   }
 
   @PostMapping(path = "/resources", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerState create(@RequestBody CreateEntity entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).create(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  public Uni<ComposerState> create(
+      @RequestBody CreateEntity entity, 
+      @RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).create(entity))
+        .onItem().invoke(() -> envir.invalidateCache());
   }
 
   @PutMapping(path = "/resources", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerState update(@RequestBody UpdateEntity entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).update(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  public Uni<ComposerState> update(
+      @RequestBody UpdateEntity entity, 
+      @RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).update(entity))
+        .onItem().invoke(() -> envir.invalidateCache());
   }
 
   @DeleteMapping(path = "/resources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerState delete(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).delete(id).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  public Uni<ComposerState> delete(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).delete(id))
+        .onItem().invoke(() -> envir.invalidateCache());
   }
 
   @GetMapping(path = "/resources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerEntity<?> get(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).get(id).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  public Uni<ComposerEntity<?>> get(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).get(id))
+        .onItem().invoke(() -> envir.invalidateCache());
   }
 
   @PostMapping(path = "/copyas", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerState copyAs(@RequestBody CopyAs entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).copyAs(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  public Uni<ComposerState> copyAs(@RequestBody CopyAs entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.withBranch(branchName).copyAs(entity)
+        .onItem().invoke(() -> envir.invalidateCache()));
   }
 
   @GetMapping(path = "/history/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public HistoryEntity history(@RequestParam("id") String id) {
-    return composer.getHistory(id).await().atMost(timeout);
+  public Uni<HistoryEntity> history(@RequestParam("id") String id) {
+    return getComposer().onItem().transformToUni(composer -> composer.getHistory(id));
   }
 
   @GetMapping(path = "/diff", produces = MediaType.APPLICATION_JSON_VALUE)
-  public TagDiff diff(@RequestParam("baseId") String baseId, @RequestParam("targetId") String targetId) {
+  public Uni<TagDiff> diff(@RequestParam("baseId") String baseId, @RequestParam("targetId") String targetId) {
     final var request = ImmutableDiffRequest.builder().baseId(baseId).targetId(targetId).build();
-    return composer.diff(request).await().atMost(timeout);
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.diff(request));
   }
 
   @GetMapping(path = "/summary/{tagId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public AstTagSummary summary(@PathVariable("tagId") String tagId) {
-    return composer.summary(tagId).await().atMost(timeout);
+  public Uni<AstTagSummary> summary(@PathVariable("tagId") String tagId) {
+    return getComposer()
+        .onItem().transformToUni(composer -> composer.summary(tagId));
   }
 
-  @GetMapping(path = "/version", produces = MediaType.APPLICATION_JSON_VALUE)
-  public VersionEntity version() {
-    return new VersionEntity(version, timestamp);
-  }
-  
   @GetMapping(path="/flow-names")
   public Uni<List<String>> flowNames() {
     return envir.runtimeQuery().findOne().onItem().transform(runtime -> {
@@ -181,14 +197,13 @@ public class AssetsWrenchController {
   
   @GetMapping(path = "/commitlogs", produces = MediaType.APPLICATION_JSON_VALUE)
   public Uni<List<CommitLog>> commitlogs() {
-    return composer.getClient().store().commitLog().build();
+    return getComposer().onItem().transformToUni(composer -> composer.getClient().store().commitLog().build());
   }
   
-  @Data
-  @RequiredArgsConstructor
-  public static class VersionEntity {
-    private final String version;
-    private final String built;
+  
+  protected Uni<HdesComposer> getComposer() {
+    return this.composer.withCockpit();
   }
+  
 
 }

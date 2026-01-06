@@ -47,6 +47,7 @@ import io.vertx.mutiny.sqlclient.Row;
       external_id VARCHAR(255) NOT NULL,
       external_branch VARCHAR(255) NOT NULL,
 
+      cockpit_config_tenant_type VARCHAR(100) NOT NULL,
       cockpit_config_tenant_desc TEXT,
       cockpit_config_tenant_extension JSONB
     );
@@ -129,8 +130,8 @@ public interface CockpitConfigTenantTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {cockpit_config_tenant}
-      (id, cockpit_config_id, commit_id, created_commit_id, external_id, external_branch, cockpit_config_tenant_desc, cockpit_config_tenant_extension)
-       VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+      (id, cockpit_config_id, commit_id, created_commit_id, external_id, external_branch, cockpit_config_tenant_type, cockpit_config_tenant_desc, cockpit_config_tenant_extension)
+       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
     """,
     propsMapper = CockpitConfigTenantInsertMapper.class
   )
@@ -139,8 +140,8 @@ public interface CockpitConfigTenantTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {cockpit_config_tenant}
-       SET cockpit_config_id = $1, commit_id = $2, external_id = $3, external_branch = $4, cockpit_config_tenant_desc = $5, cockpit_config_tenant_extension = $6
-       WHERE id = $7
+       SET cockpit_config_id = $1, commit_id = $2, external_id = $3, external_branch = $4, cockpit_config_tenant_type = $5, cockpit_config_tenant_desc = $6, cockpit_config_tenant_extension = $7
+       WHERE id = $8
     """,
     propsMapper = CockpitConfigTenantUpdateMapper.class
   )
@@ -177,6 +178,7 @@ public interface CockpitConfigTenantTable {
           .createdCommitId(TableUtils.toStringUUID(row, "created_commit_id"))
           .externalId(row.getString("external_id"))
           .externalBranch(row.getString("external_branch"))
+          .cockpitConfigTenantType(row.getString("cockpit_config_tenant_type"))
           .cockpitConfigTenantDesc(row.getString("cockpit_config_tenant_desc"))
           .cockpitConfigTenantExtension(Optional.ofNullable(cockpit_config_tenant_extension))
           .build();
@@ -193,6 +195,7 @@ public interface CockpitConfigTenantTable {
         TableUtils.toUuid(doc.getCreatedCommitId()),
         doc.getExternalId(),
         doc.getExternalBranch(),
+        doc.getCockpitConfigTenantType(),
         doc.getCockpitConfigTenantDesc(),
         doc.getCockpitConfigTenantExtension().orElse(null)
       });
@@ -207,6 +210,7 @@ public interface CockpitConfigTenantTable {
         TableUtils.toUuid(doc.getCommitId()),
         doc.getExternalId(),
         doc.getExternalBranch(),
+        doc.getCockpitConfigTenantType(),
         doc.getCockpitConfigTenantDesc(),
         doc.getCockpitConfigTenantExtension().orElse(null),
         TableUtils.toUuid(doc.getId())

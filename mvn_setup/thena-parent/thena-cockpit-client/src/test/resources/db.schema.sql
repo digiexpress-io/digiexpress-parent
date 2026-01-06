@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS cockpit_config_tenant (
   created_commit_id UUID NOT NULL,
   external_id VARCHAR(255) NOT NULL,
   external_branch VARCHAR(255) NOT NULL,
+  cockpit_config_tenant_type VARCHAR(100) NOT NULL,
   cockpit_config_tenant_desc TEXT,
   cockpit_config_tenant_extension JSONB
 );

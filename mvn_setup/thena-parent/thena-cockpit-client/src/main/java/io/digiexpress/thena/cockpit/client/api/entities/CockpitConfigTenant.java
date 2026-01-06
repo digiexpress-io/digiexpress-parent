@@ -42,6 +42,8 @@ public interface CockpitConfigTenant extends CockpitEntity {
   String getExternalBranch();
   
   String getCockpitConfigTenantDesc();
+  String getCockpitConfigTenantType();
+  
   Optional<JsonObject> getCockpitConfigTenantExtension();
 
   @Override 

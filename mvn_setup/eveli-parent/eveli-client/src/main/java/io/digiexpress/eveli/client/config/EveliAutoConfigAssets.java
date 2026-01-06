@@ -86,14 +86,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EveliAutoConfigAssets {
   public static final String BEAN_NAME = "eveliEditEnvir";
-  
-  
-  
-  // TODO @Value("${app.version}")
-  private String version = "alpha";
-
-  // TODO  @Value("${build.timestamp}")
-  private String timestamp = "";
 
   @Getter
   @RequiredArgsConstructor
@@ -191,11 +183,11 @@ public class EveliAutoConfigAssets {
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliEditEnvir context, EveliEnvirClient client, ObjectMapper objectMapper) {
-    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, client, version, timestamp);
+    return new AssetsWrenchController(objectMapper, new HdesComposerImpl(context.getWrench()), client);
   }
   @Bean
   public AssetsStencilController assetsStencilController(EveliEditEnvir context, ObjectMapper objectMapper, EveliEnvirClient client) {
-    return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper, client);
+    return new AssetsStencilController(objectMapper, new StencilComposerImpl(context.getStencil()), client);
   }
 
   @Bean
@@ -293,10 +285,7 @@ public class EveliAutoConfigAssets {
         );
         */
     final var createdStencil = envir.getStencil().repo().create();
-    
     final var createTagomi = new TagomiStoreImpl(envir.getTagomi()).tenantBuilder().createIfNot();
-    
-    
     return Uni.combine().all()
         .unis(createdWrench, createdStencil, createTagomi)
         .asTuple().onItem().transform(e -> envir);

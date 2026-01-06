@@ -38,12 +38,9 @@ import io.resys.hdes.client.api.ImmutableStoreExceptionMsg;
 import io.resys.hdes.client.api.exceptions.StoreException;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.git.api.GitClient;
 import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -52,21 +49,14 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
   public ThenaStore(ThenaConfig config) {
     super(config);
   }
-
-  public HdesStore withRepo(String repoName, String headName) {
-    return new ThenaStore(ImmutableThenaConfig.builder().from(config).repoName(repoName).headName(headName).build());
-  }
-  
   @Override
   public Optional<String> getBranchName() {
     return Optional.of(config.getHeadName());
   }
-
   @Override
   public HdesStore withBranch(String branchName) {
     return new ThenaStore(ImmutableThenaConfig.builder().from(config).headName(branchName).build());
   }
-  
   @Override
   protected HdesStore createWithNewConfig(ThenaConfig config) {
     return new ThenaStore(config);
@@ -90,7 +80,6 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
               return objects.getObjects().getBranches().values().stream()
                   .map(branch -> {
                     final Branch result = ImmutableBranch.builder().commitId(branch.getCommit()).name(branch.getName()).build();
-                    
                     return result;
                   })
                   .toList();
@@ -110,12 +99,7 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
     private ThenaConfig.GidProvider gidProvider;
     private ThenaConfig.AuthorProvider authorProvider;
     private io.vertx.mutiny.sqlclient.Pool pgPool;
-    private String pgHost;
-    private String pgDb;
-    private Integer pgPort;
-    private String pgUser;
-    private String pgPass;
-    private Integer pgPoolSize;
+
     
     public Builder repoName(String repoName) {
       this.repoName = repoName;
@@ -141,31 +125,6 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
       this.headName = headName;
       return this;
     }
-    public Builder pgHost(String pgHost) {
-      this.pgHost = pgHost;
-      return this;
-    }
-    public Builder pgDb(String pgDb) {
-      this.pgDb = pgDb;
-      return this;
-    }
-    public Builder pgPort(Integer pgPort) {
-      this.pgPort = pgPort;
-      return this;
-    }
-    public Builder pgUser(String pgUser) {
-      this.pgUser = pgUser;
-      return this;
-    }
-    public Builder pgPass(String pgPass) {
-      this.pgPass = pgPass;
-      return this;
-    }
-    public Builder pgPoolSize(Integer pgPoolSize) {
-      this.pgPoolSize = pgPoolSize;
-      return this;
-    }
-    
     
     private ThenaConfig.GidProvider getGidProvider() {
       return this.gidProvider == null ? type -> {
@@ -191,62 +150,10 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
     
     public ThenaStore build() {
       HdesAssert.notNull(repoName, () -> "repoName must be defined!");
+      HdesAssert.notNull(pgPool, () -> "pgPool must be defined!");
     
-      final var headName = this.headName == null ? "main": this.headName;
-      if(log.isDebugEnabled()) {
-        log.debug("""
-          Configuring Thena:
-            repoName: {}
-            headName: {}
-            objectMapper: {}
-            gidProvider: {}
-            authorProvider: {}
-            pgPool: {}
-            pgPoolSize: {}
-            pgHost: {}
-            pgPort: {}
-            pgDb: {}
-            pgUser: {}
-            pgPass: {}
-          """,
-          this.repoName,
-          headName,
-          this.objectMapper == null ? "configuring" : "provided",
-          this.gidProvider == null ? "configuring" : "provided",
-          this.authorProvider == null ? "configuring" : "provided",
-          this.pgPool == null ? "configuring" : "provided",
-          this.pgPoolSize,
-          this.pgHost,
-          this.pgPort,
-          this.pgDb,
-          this.pgUser == null ? "null" : "***",
-          this.pgPass == null ? "null" : "***");
-      }
-      
-      final GitClient thena;
-      if(pgPool == null) {
-        HdesAssert.notNull(pgHost, () -> "pgHost must be defined!");
-        HdesAssert.notNull(pgPort, () -> "pgPort must be defined!");
-        HdesAssert.notNull(pgDb, () -> "pgDb must be defined!");
-        HdesAssert.notNull(pgUser, () -> "pgUser must be defined!");
-        HdesAssert.notNull(pgPass, () -> "pgPass must be defined!");
-        HdesAssert.notNull(pgPoolSize, () -> "pgPoolSize must be defined!");
-        
-        final PgConnectOptions connectOptions = new PgConnectOptions()
-            .setHost(pgHost)
-            .setPort(pgPort)
-            .setDatabase(pgDb)
-            .setUser(pgUser)
-            .setPassword(pgPass);
-        final PoolOptions poolOptions = new PoolOptions()
-            .setMaxSize(pgPoolSize);
-        
-        final io.vertx.mutiny.sqlclient.Pool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
-        
-        thena = GitDataSourceImpl.create().client(pgPool).db(repoName).build();
-      } else {
-        thena = GitDataSourceImpl.create().client(pgPool).db(repoName).build();
-      }
+      final var headName = this.headName == null ? "main": this.headName;      
+      final var thena = GitDataSourceImpl.create().client(pgPool).db(repoName).build();
       
       final ObjectMapper objectMapper = getObjectMapper();
       final ThenaConfig config = ImmutableThenaConfig.builder()
@@ -265,6 +172,4 @@ public class ThenaStore extends ThenaStoreTemplate implements HdesStore {
       return new ThenaStore(config);
     }
   }
-
-
 }

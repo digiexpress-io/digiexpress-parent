@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 
 /*-
  * #%L
@@ -36,16 +36,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import jakarta.annotation.Nullable;
 
-public interface StencilClient {
+public interface StencilClient extends CockpitAware<StencilClient> {
   ClientRepoBuilder repo();
   StencilStore getStore();
   MarkdownBuilder markdown();
   SitesBuilder sites();
   SiteCommitLogBuilder commitLog();
   
-  StencilClient withRepo(String repoId);
-  StencilClient withRepo(String repoId, String headName);
+  
   
   interface SitesBuilder {
     SitesBuilder imagePath(String imagePath);

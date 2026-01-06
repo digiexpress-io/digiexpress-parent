@@ -47,7 +47,7 @@ public class EveliWrenchOnlyTenantAutoConfig {
   @Bean 
   public AssetsWrenchController assetsWrenchController(ObjectMapper objectMapper, HdesClient client) {
     final EveliEnvirClient envir = new EmptyEnvir(); // not needed
-    return new AssetsWrenchController(new HdesComposerImpl(client), objectMapper, envir, "", "") {
+    return new AssetsWrenchController(objectMapper, new HdesComposerImpl(client), envir) {
       @Override
       public Uni<List<String>> flowNames() {
         return Uni.createFrom().item(Collections.emptyList());

@@ -58,7 +58,11 @@
       <artifactId>value</artifactId>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-cockpit-client</artifactId>
+    </dependency>
+    
     <!-- Tests -->
     <dependency>
       <groupId>org.reactivestreams</groupId>

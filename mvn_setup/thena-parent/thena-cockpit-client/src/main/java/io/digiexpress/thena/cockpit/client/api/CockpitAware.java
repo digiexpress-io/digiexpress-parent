@@ -1,5 +1,7 @@
 package io.digiexpress.thena.cockpit.client.api;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-cockpit-client
@@ -39,6 +41,7 @@ public interface CockpitAware<T extends CockpitAware<T>> {
   interface CockpitAwareProps {
     boolean getAutoCreate();
     String getTenantName();
+    Uni<Optional<CockpitContainer>> getResolver();
   }
   
 }

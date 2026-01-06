@@ -39,7 +39,10 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-test-client</artifactId>
     </dependency>
-    
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-cockpit-client</artifactId>
+    </dependency>
     
     <dependency>
       <groupId>io.digiexpress</groupId>
@@ -98,6 +101,5 @@
       <groupId>io.github.java-diff-utils</groupId>
       <artifactId>java-diff-utils</artifactId>
     </dependency>
-
   </dependencies>
 </project>

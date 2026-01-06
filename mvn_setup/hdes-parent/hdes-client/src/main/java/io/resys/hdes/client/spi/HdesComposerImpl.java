@@ -1,5 +1,9 @@
 package io.resys.hdes.client.spi;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 /*-
  * #%L
  * hdes-client-api
@@ -29,7 +33,6 @@ import io.resys.hdes.client.api.ImmutableUpdateStoreEntity;
 import io.resys.hdes.client.api.ast.AstCommand;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
-import io.resys.hdes.client.api.diff.TagDiff;
 import io.resys.hdes.client.spi.changeset.AstCommandOptimiser;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.composer.CopyAsEntityVisitor;
@@ -39,22 +42,20 @@ import io.resys.hdes.client.spi.composer.DebugVisitor;
 import io.resys.hdes.client.spi.composer.DeleteEntityVisitor;
 import io.resys.hdes.client.spi.composer.DryRunVisitor;
 import io.resys.hdes.client.spi.composer.ImportEntityVisitor;
+import io.resys.hdes.client.spi.diff.HdesClientDiffBuilder;
 import io.smallrye.mutiny.Uni;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HdesComposerImpl implements HdesComposer {
 
   private final HdesClient client;
   private final AstCommandOptimiser opt;
+  
   public HdesComposerImpl(HdesClient client) {
     super();
     this.client = client;
     this.opt = new AstCommandOptimiser(client);
   }
-  
+
   @Override
   public Uni<List<AstCommand>> getCommands(String idOrName) {
     return get(idOrName).onItem()
@@ -144,7 +145,7 @@ public class HdesComposerImpl implements HdesComposer {
 
   @Override
   public Uni<TagDiff> diff(DiffRequest request) {
-    return client.store().query().get().onItem().transform(state -> client.diff()
+    return client.store().query().get().onItem().transform(state -> new HdesClientDiffBuilder()
         .tags(state.getTags().values())
         .baseId(request.getBaseId())
         .targetId(request.getTargetId())
@@ -188,5 +189,18 @@ public class HdesComposerImpl implements HdesComposer {
 
   public HdesClient getClient() {
     return client;
+  }
+
+  @Override
+  public Uni<HdesComposer> withCockpit() {
+    return this.client.withCockpit().onItem().transform(client -> new HdesComposerImpl(client));
+  }
+  @Override
+  public Uni<HdesComposer> withCockpitAwareProps() {
+    return this.client.withCockpitAwareProps().onItem().transform(client -> new HdesComposerImpl(client));
+  }
+  @Override
+  public CockpitAwareProps getCockpitAwareProps() {
+    return this.client.getCockpitAwareProps();
   }
 }

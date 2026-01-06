@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController.VersionEntity;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableArticleMutator;
@@ -79,28 +77,28 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AssetsStencilController {
   
-  private final StencilComposer client;
   private final ObjectMapper objectMapper;
-  private final EveliEnvirClient envir;  
+  private final StencilComposer composer;
+  private final EveliEnvirClient envir;
   
   @GetMapping("/")
   public Uni<SiteState> root() {
-    return getClient().onItem().transformToUni(composer -> composer.query().head());
+    return getComposer().onItem().transformToUni(composer -> composer.query().head());
   }
   
   @PostMapping("/articles")
   public Uni<Entity<Article>> createArticle(@RequestBody ImmutableCreateArticle body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().article(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().article(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PutMapping("/articles") 
   public Uni<Entity<Article>> updateArticle(@RequestBody ImmutableArticleMutator body) {
-    return getClient().onItem().transformToUni(composer -> composer.update().article(body))
+    return getComposer().onItem().transformToUni(composer -> composer.update().article(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @DeleteMapping("/articles/{id}") 
   public Uni<Entity<Article>> deleteArticle(@PathVariable("id") String id) {
-    return getClient().onItem().transformToUni(composer -> composer.delete().article(id))
+    return getComposer().onItem().transformToUni(composer -> composer.delete().article(id))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PostMapping("/migrations") 
@@ -109,49 +107,49 @@ public class AssetsStencilController {
   
     final var sites = parseSites(body);
     if(sites != null) {
-      return getClient().onItem().transformToUni(composer -> composer.migration().importData(sites))
+      return getComposer().onItem().transformToUni(composer -> composer.migration().importData(sites))
           .onItem().invoke(() -> envir.invalidateCache());
     }
     
     final var release = parseSiteState(body);
     if(release != null) {
-      return getClient().onItem().transformToUni(composer -> composer.migration().importData(release))
+      return getComposer().onItem().transformToUni(composer -> composer.migration().importData(release))
           .onItem().invoke(() -> envir.invalidateCache());
     }
     return Uni.createFrom().nullItem();
   }
   @PostMapping("/sites") 
   public Uni<SiteState> createSites() {
-    return getClient().onItem().transformToUni(composer -> composer.create().repo())
+    return getComposer().onItem().transformToUni(composer -> composer.create().repo())
         .onItem().invoke(() -> envir.invalidateCache());
   }
   
   @GetMapping("/commitlogs") 
   public Uni<List<SiteCommitLog>> createCommitLog() {
-    return getClient().onItem().transformToUni(composer -> composer.getClient().commitLog().build());
+    return getComposer().onItem().transformToUni(composer -> composer.getClient().commitLog().build());
   }
 
   @GetMapping("/sites")
   public Uni<SiteState> getSites() {
-    return getClient().onItem().transformToUni(composer -> composer.query().head());
+    return getComposer().onItem().transformToUni(composer -> composer.query().head());
   }
   @PostMapping("/links") 
   public Uni<Entity<Link>> createLink(@RequestBody ImmutableCreateLink body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().link(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().link(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PutMapping("/links") 
   public Uni<Entity<Link>> updateLink(@RequestBody ImmutableLinkMutator body) {
-    return getClient().onItem().transformToUni(composer -> composer.update().link(body))
+    return getComposer().onItem().transformToUni(composer -> composer.update().link(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @DeleteMapping("/links/{id}") 
   public Uni<Entity<Link>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId", required = false) String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return getClient().onItem().transformToUni(composer -> composer.delete().link(linkId))
+      return getComposer().onItem().transformToUni(composer -> composer.delete().link(linkId))
           .onItem().invoke(() -> envir.invalidateCache());
     } 
-    return getClient().onItem().transformToUni(composer -> composer.delete().linkArticlePage(ImmutableLinkArticlePage.builder()
+    return getComposer().onItem().transformToUni(composer -> composer.delete().linkArticlePage(ImmutableLinkArticlePage.builder()
       .articleId(articleId)
       .linkId(linkId)
       .build()))
@@ -160,20 +158,20 @@ public class AssetsStencilController {
   }
   @PostMapping("/workflows") 
   public Uni<Entity<Workflow>> createWorkflow(@RequestBody ImmutableCreateWorkflow body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().workflow(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().workflow(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PutMapping("/workflows") 
   public Uni<Entity<Workflow>> updateWorkflow(@RequestBody ImmutableWorkflowMutator body) {
-    return getClient().onItem().transformToUni(composer -> composer.update().workflow(body))
+    return getComposer().onItem().transformToUni(composer -> composer.update().workflow(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @DeleteMapping("/workflows/{id}") 
   public Uni<Entity<Workflow>> deleteWorkflow(@PathVariable("id") String linkId,  @RequestParam(name = "articleId", required = false) String articleId) {
     if(articleId == null || articleId.isEmpty()) {
-      return getClient().onItem().transformToUni(composer -> composer.delete().workflow(linkId)).onItem().invoke(() -> envir.invalidateCache());
+      return getComposer().onItem().transformToUni(composer -> composer.delete().workflow(linkId)).onItem().invoke(() -> envir.invalidateCache());
     } 
-    return getClient().onItem().transformToUni(composer -> composer.delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
+    return getComposer().onItem().transformToUni(composer -> composer.delete().workflowArticlePage(ImmutableWorkflowArticlePage.builder()
       .articleId(articleId)
       .workflowId(linkId)
       .build()))
@@ -181,71 +179,66 @@ public class AssetsStencilController {
   }
   @PostMapping("/locales") 
   public Uni<Entity<Locale>> createLocale(@RequestBody ImmutableCreateLocale body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().locale(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().locale(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PutMapping("/locales") 
   public Uni<Entity<Locale>> updateLocale(@RequestBody ImmutableLocaleMutator body) {
-    return getClient().onItem().transformToUni(composer -> composer.update().locale(body))
+    return getComposer().onItem().transformToUni(composer -> composer.update().locale(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @DeleteMapping("/locales/{id}") 
   public Uni<Entity<Locale>> deleteLocale(@PathVariable("id") String id) {
-    return getClient().onItem().transformToUni(composer -> composer.delete().locale(id))
+    return getComposer().onItem().transformToUni(composer -> composer.delete().locale(id))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PostMapping("/pages") 
   public Uni<Entity<Page>> createPage(@RequestBody ImmutableCreatePage body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().page(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().page(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PutMapping("/pages") 
   public Uni<List<Entity<Page>>> updatePage(@RequestBody List<ImmutablePageMutator> body) {
-    return getClient().onItem().transformToUni(composer -> composer.update().pages(new ArrayList<>(body)))
+    return getComposer().onItem().transformToUni(composer -> composer.update().pages(new ArrayList<>(body)))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @DeleteMapping("/pages/{id}") 
   public Uni<Entity<Page>> deletePage(@PathVariable("id") String id) {
-    return getClient().onItem().transformToUni(composer -> composer.delete().page(id))
+    return getComposer().onItem().transformToUni(composer -> composer.delete().page(id))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PostMapping("/templates") 
   public Uni<Entity<Template>> createTemplate(@RequestBody ImmutableCreateTemplate body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().template(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().template(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PutMapping("/templates") 
   public Uni<Entity<Template>> updateTemplate(@RequestBody ImmutableTemplateMutator body) {
-    return getClient().onItem().transformToUni(composer -> composer.update().template(body))
+    return getComposer().onItem().transformToUni(composer -> composer.update().template(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @DeleteMapping("/templates/{id}") 
   public Uni<Entity<Template>> deleteTemplate(@PathVariable("id") String id) {
-    return getClient().onItem().transformToUni(composer -> composer.delete().template(id))
+    return getComposer().onItem().transformToUni(composer -> composer.delete().template(id))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @PostMapping("/releases") 
   public Uni<Entity<Release>> createRelease(@RequestBody ImmutableCreateRelease body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().release(body))
+    return getComposer().onItem().transformToUni(composer -> composer.create().release(body))
         .onItem().invoke(() -> envir.invalidateCache());
   }
   @GetMapping("/releases/{id}") 
   public Uni<SiteState> getRelease(@PathVariable("id") String id) {
-    return getClient().onItem().transformToUni(composer -> composer.query().release(id));
+    return getComposer().onItem().transformToUni(composer -> composer.query().release(id));
   }
   @DeleteMapping("/releases/{id}") 
   public Uni<Entity<Release>> deleteRelease(@PathVariable("id") String id) {
-    return getClient().onItem().transformToUni(composer -> composer.delete().release(id))
+    return getComposer().onItem().transformToUni(composer -> composer.delete().release(id))
         .onItem().invoke(() -> envir.invalidateCache());
   }
-  
-  @GetMapping(path = "/version", produces = MediaType.APPLICATION_JSON_VALUE)
-  public VersionEntity version() {
-    return new VersionEntity("", "");
-  }
 
-  protected Uni<StencilComposer> getClient() {
-    return Uni.createFrom().item(this.client);
+  protected Uni<StencilComposer> getComposer() {
+    return this.composer.withCockpit();
   }
   
   private SiteState parseSiteState(byte[] body) {
@@ -263,11 +256,11 @@ public class AssetsStencilController {
       site = objectMapper.readValue(body, ImmutableSites.class);
       
       if(site == null || site.getSites() == null  || site.getSites().isEmpty()) {
-        final var md = client
+        final var md = composer
             .markdown().json(new String(body, StandardCharsets.UTF_8), true)
             .build();
 
-        site = client
+        site = composer
             .sites().imagePath("/images").created(1l)
             .source(md)
             .build();

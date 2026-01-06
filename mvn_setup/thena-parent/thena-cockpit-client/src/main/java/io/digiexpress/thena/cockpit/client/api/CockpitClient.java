@@ -25,7 +25,7 @@ import io.smallrye.mutiny.Uni;
 public interface CockpitClient {
 
   CockpitCommitActions commits();
-  CockpitQueryActions queries();  
+  CockpitQueryActions queries();
   
   
   <T extends CockpitAware<T>> Uni<T> register(T aware);

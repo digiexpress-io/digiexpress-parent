@@ -1,5 +1,6 @@
 package io.thestencil.client.spi;
 
+import io.smallrye.mutiny.Uni;
 /*-
  * #%L
  * stencil-client-api
@@ -19,13 +20,24 @@ package io.thestencil.client.spi;
  * limitations under the License.
  * #L%
  */
-
-import io.thestencil.client.api.*;
+import io.thestencil.client.api.CreateBuilder;
+import io.thestencil.client.api.DeleteBuilder;
+import io.thestencil.client.api.MigrationBuilder;
+import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.MarkdownBuilder;
 import io.thestencil.client.api.StencilClient.SitesBuilder;
+import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.api.StencilStore.QueryBuilder;
-import io.thestencil.client.spi.builders.*;
+import io.thestencil.client.api.UpdateBuilder;
+import io.thestencil.client.api.VersionBuilder;
+import io.thestencil.client.spi.builders.CreateBuilderImpl;
+import io.thestencil.client.spi.builders.DeleteBuilderImpl;
+import io.thestencil.client.spi.builders.MigrationBuilderImpl;
+import io.thestencil.client.spi.builders.UpdateBuilderImpl;
+import io.thestencil.client.spi.builders.VersionBuilderImpl;
 import lombok.RequiredArgsConstructor;
+
+
 
 @RequiredArgsConstructor
 public class StencilComposerImpl implements StencilComposer {
@@ -63,15 +75,20 @@ public class StencilComposerImpl implements StencilComposer {
   public SitesBuilder sites() {
     return client.sites();
   }
-  @Override
-  public StencilComposer withRepo(String repoId, String headName) {
-    return new StencilComposerImpl(client.withRepo(repoId, headName));
-  }
-  @Override
-  public StencilComposer withRepo(String repoId) {
-    return new StencilComposerImpl(client.withRepo(repoId));
-  }
   public StencilClient getClient() {
     return client;
+  }
+  
+  @Override
+  public Uni<StencilComposer> withCockpit() {
+    return this.client.withCockpit().onItem().transform(client -> new StencilComposerImpl(client));
+  }
+  @Override
+  public Uni<StencilComposer> withCockpitAwareProps() {
+    return this.client.withCockpitAwareProps().onItem().transform(client -> new StencilComposerImpl(client));
+  }
+  @Override
+  public CockpitAwareProps getCockpitAwareProps() {
+    return this.client.getCockpitAwareProps();
   }
 }

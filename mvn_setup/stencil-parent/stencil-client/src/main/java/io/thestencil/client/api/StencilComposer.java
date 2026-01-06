@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.Link;
@@ -42,7 +43,7 @@ import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilStore.QueryBuilder;
 
 
-public interface StencilComposer {
+public interface StencilComposer extends CockpitAware<StencilComposer> {
   CreateBuilder create();
   UpdateBuilder update();
   DeleteBuilder delete();
@@ -53,9 +54,6 @@ public interface StencilComposer {
   VersionBuilder version();
   
   StencilClient getClient();
-  
-  StencilComposer withRepo(String repoId);
-  StencilComposer withRepo(String repoId, String headName);
   
 
   @Value.Immutable

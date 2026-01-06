@@ -1,11 +1,14 @@
 package io.thestencil.client.spi;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitAwareProps;
 
 /*-
  * #%L
@@ -36,14 +39,46 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class StencilClientImpl implements StencilClient {
+  private final static String COCKPIT_TYPE = "STENCIL";
   private final StencilStore store;
-
-  public StencilClientImpl withRepo(String repoId, String headName) {
-    return new StencilClientImpl(store.withRepo(repoId, headName));
+  private final CockpitAwareProps cockpitAwareProps;
+  
+  public StencilClientImpl(StencilStore store) {
+    this.store = store;
+    this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
+        .tenantName(store.getRepoName())
+        .autoCreate(false)
+        .resolver(Uni.createFrom().item(Optional.empty()))
+        .build();
   }
-  public StencilClientImpl withRepo(String repoId) {
-    return new StencilClientImpl(store.withRepo(repoId, store.getHeadName()));
-  }  
+  
+  @Override
+  public Uni<StencilClient> withCockpit() {
+    return cockpitAwareProps.getResolver().onItem()
+        .transform(cockpit -> {
+          
+          if(cockpit.isEmpty()) {
+            return this.withRepo(cockpitAwareProps.getTenantName());
+          }
+          
+          final var tenantName = cockpit.get().getTenants().stream()
+            .filter(t -> t.getCockpitConfigTenantType().equals(COCKPIT_TYPE))
+            .map(e -> e.getExternalId())
+            .findFirst()
+            .orElse(cockpitAwareProps.getTenantName());
+          
+          return this.withRepo(tenantName);
+        });
+  }
+  @Override
+  public CockpitAwareProps getCockpitAwareProps() {
+    return this.cockpitAwareProps;
+  }
+  @Override
+  public Uni<StencilClient> withCockpitAwareProps() {
+    return Uni.createFrom().item(this.withRepo(cockpitAwareProps.getTenantName())); 
+  }
+  
   @Override
   public MarkdownBuilder markdown() {
     return new MarkdownBuilderImpl();
@@ -93,6 +128,14 @@ public class StencilClientImpl implements StencilClient {
     return store;
   }
   
+
+
+  public StencilClientImpl withRepo(String repoId, String headName) {
+    return new StencilClientImpl(store.withRepo(repoId, headName));
+  }
+  public StencilClientImpl withRepo(String repoId) {
+    return new StencilClientImpl(store.withRepo(repoId, store.getHeadName()));
+  }
   public static Builder builder() {
     return new Builder();
   }
