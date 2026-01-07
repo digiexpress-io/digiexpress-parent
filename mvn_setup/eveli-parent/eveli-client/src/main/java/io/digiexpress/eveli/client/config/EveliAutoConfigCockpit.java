@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,6 +35,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.spi.cockpit.CockpitAwareProviderImpl;
+import io.digiexpress.eveli.client.web.resources.worker.CockpitApiController;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
@@ -53,20 +55,28 @@ import lombok.extern.slf4j.Slf4j;
 public class EveliAutoConfigCockpit {
 
   @Bean
+  public CockpitApiController cockpitApiController(CockpitClient client, CockpitAwareProvider cockpitAwareProvider, WorkerAuthClient auth) {
+    return new CockpitApiController(client, cockpitAwareProvider, auth);
+  }
+  
+  @Bean
   public CockpitAwareProvider cockpitAwareProvider(
       CockpitClient client,
       WorkerAuthClient auth, 
       UserProfileClient userProfileClient, 
-      Optional<CockpitContainerCache> cache) {
+      Optional<CockpitContainerCache> cache,
+      ApplicationEventPublisher publisher
+      ) {
 
     final var cacheImpl = cache.orElseGet(EveliAutoConfigCockpit::cockpitContainerCache);
-    return new CockpitAwareProviderImpl(client, auth, userProfileClient, cacheImpl);
+    return new CockpitAwareProviderImpl(client, auth, userProfileClient, cacheImpl, publisher);
   }
   
   @Bean
   public CockpitClient cockpitClient(List<CockpitAware<?>> aware, io.vertx.mutiny.sqlclient.Pool pgPool) {
     final var client = CockpitClientImpl.create()
         .client(pgPool)
+        .aware(aware)
         .errorHandler(new PgErrors())
         .build();
     client.tenants().createOneTenant().buildOnlyIfNotCreated().await().atMost(Duration.ofMinutes(5));

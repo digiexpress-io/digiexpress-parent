@@ -1,5 +1,8 @@
 package io.digiexpress.thena.cockpit.client.spi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*-
  * #%L
  * thena-grim-client
@@ -47,7 +50,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CockpitClientImpl implements CockpitClient {
   private final CockpitDb startingState;
-  
 
   @Override
   public CockpitQueryActions queries() {
@@ -89,12 +91,14 @@ public class CockpitClientImpl implements CockpitClient {
     private io.vertx.mutiny.sqlclient.Pool client;
     private String tenantName = "cockpit";
     private ThenaSqlDataSourceErrorHandler errorHandler;
-
+    private List<CockpitAware<?>> aware = new ArrayList<>();
+    
     private TenantCache tenantCache;    
     public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
     public Builder tenantName(String tenantName) { this.tenantName = tenantName; return this; }
     public Builder tenantCache(TenantCache tenantCache) { this.tenantCache = tenantCache; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
+    public Builder aware(List<CockpitAware<?>> aware) { this.aware.addAll(aware); return this; }
 
     
     public CockpitClientImpl build() {
@@ -117,9 +121,4 @@ public class CockpitClientImpl implements CockpitClient {
     }
   }
 
-  @Override
-  public <T extends CockpitAware<T>> Uni<T> register(T aware) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 }

@@ -22,9 +22,14 @@ package io.digiexpress.eveli.client.spi.cockpit;
 
 import java.util.Optional;
 
+import org.springframework.context.ApplicationEventPublisher;
+
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient.User;
+import io.digiexpress.eveli.envir.spi.actions.ImmutableEveliEnvirInvalidateCache;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
+import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettingForConfig;
+import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUpsertUiSettings;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitContainerCache;
 import io.digiexpress.thena.cockpit.client.api.CockpitClient;
@@ -36,20 +41,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CockpitAwareProviderImpl implements CockpitAwareProvider {
   private static final String ACTIVE_COCKPIT = "ACTIVE_COCKPIT_ID";
+  
   private final CockpitClient cockpitClient;
   private final WorkerAuthClient auth;
   private final UserProfileClient userProfileClient;
-  private final CockpitContainerCache cache;
+  private final CockpitContainerCache cockpitCache;
+  private final ApplicationEventPublisher publisher;
   
   @Override
-  public Uni<Optional<CockpitContainer>> apply() {
+  public Uni<Optional<CockpitContainer>> get() {
     return getUser()
       .onItem().transformToUni(user -> {
         final var principal = user.getPrincipal();
         final var sub = principal.getSub();
         
-        if(cache.contains(sub)) {
-          return Uni.createFrom().item(() -> cache.get(sub));
+        if(cockpitCache.contains(sub)) {
+          return Uni.createFrom().item(() -> cockpitCache.get(sub));
         }
         return getAndCache(sub);
       });
@@ -68,13 +75,32 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
           return Uni.createFrom().item(Optional.<CockpitContainer>empty());
         }
         
-        return cockpitClient.queries().cockpitQuery().getOne(ACTIVE_COCKPIT)
+        return cockpitClient.queries().cockpitQuery().getOne(cockpitId.get())
             .onItem().transform(env -> Optional.ofNullable(env.getObjects()))
-            .onItem().invoke(env -> cache.save(userSub, env));
+            .onItem().invoke(env -> cockpitCache.save(userSub, env));
       });
   }
 
   private Uni<User> getUser() {
     return Uni.createFrom().item(() -> auth.getUser());
+  }
+
+  @Override
+  public Uni<Optional<CockpitContainer>> set(String cockpitId) {
+    return cockpitClient.queries().cockpitQuery().getOne(cockpitId)
+        .onItem().transformToUni(env -> {
+          final var command = ImmutableUpsertUiSettings.builder()
+              .settingsId(ACTIVE_COCKPIT)
+              .addConfig(ImmutableUiSettingForConfig.builder()
+                  .dataId(cockpitId)
+                  .value("")
+                  .build())
+              .build();
+          return userProfileClient.updateUiSettings().updateOne(command).onItem().transform((ignore) -> env);
+        })
+        .onItem().transform(env -> Optional.ofNullable(env.getObjects()))
+        .onItem().invoke(env -> cockpitCache.invalidateAll())
+        .onItem().invoke(env -> publisher.publishEvent(ImmutableEveliEnvirInvalidateCache.builder().build()));
+
   }
 }

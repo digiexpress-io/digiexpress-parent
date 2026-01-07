@@ -44,7 +44,7 @@ public interface CockpitCommitActions {
   interface CreateOneCockpitConfig {
     CreateOneCockpitConfig commitAuthor(String author);
     CreateOneCockpitConfig commitMessage(String message);
-    CreateOneCockpitConfig CockpitConfig(Consumer<NewCockpitConfig> addCockpitConfig);
+    CreateOneCockpitConfig cockpitConfig(Consumer<NewCockpitConfig> addCockpitConfig);
     CreateOneCockpitConfig onNewCockpitConfig(Consumer<CockpitContainer> handleNewState);
     Uni<OneCockpitConfigEnvelope> build();
   }
@@ -52,7 +52,7 @@ public interface CockpitCommitActions {
   interface ModifyOneCockpitConfig {
     ModifyOneCockpitConfig commitAuthor(String author);
     ModifyOneCockpitConfig commitMessage(String message);
-    ModifyOneCockpitConfig CockpitConfigId(String CockpitConfigId);
+    ModifyOneCockpitConfig cockpitConfigId(String cockpitConfigId);
     ModifyOneCockpitConfig modifyCockpitConfig(Consumer<MergeCockpitConfig> modifyCockpitConfig);
     Uni<OneCockpitConfigEnvelope> build();
   }

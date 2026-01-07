@@ -47,6 +47,7 @@ import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
+import io.digiexpress.eveli.envir.spi.actions.ImmutableEveliEnvirInvalidateCache;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesComposer.ComposerState;
 import io.resys.hdes.client.api.ImmutableCreateEntity;
@@ -84,25 +85,6 @@ public class AssetsPublicationController {
   private final WorkerAuthClient securityClient;
   private final ApplicationEventPublisher publisher;
 
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCreatePublication.class)
-  @JsonDeserialize(as = ImmutableCreatePublication.class)
-  public interface CreatePublication {
-    @Nullable String getStencilTag(); // auto-create tag on null
-    @Nullable String getWrenchTag();  // auto-create tag on null
-    
-    @Nullable String getName();  // autoname on null
-    @Nullable String getDescription();
-    @Nullable LocalDateTime getLiveDate();
-    
-  }
-  
-  
-  @Getter @RequiredArgsConstructor
-  public static class CompileEvent {
-    private final String deploymentId;
-    private final String userId;
-  }
   
   @GetMapping
   public Uni<List<EveliDeployment>> findAllPublications() {
@@ -223,7 +205,31 @@ public class AssetsPublicationController {
       .compile()
       .await().atMost(Duration.ofMinutes(20));
   }
+  @Async
+  @EventListener
+  public void compile(ImmutableEveliEnvirInvalidateCache event) {
+    envirClient.invalidateCache();
+  }
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableCreatePublication.class)
+  @JsonDeserialize(as = ImmutableCreatePublication.class)
+  public interface CreatePublication {
+    @Nullable String getStencilTag(); // auto-create tag on null
+    @Nullable String getWrenchTag();  // auto-create tag on null
+    
+    @Nullable String getName();  // autoname on null
+    @Nullable String getDescription();
+    @Nullable LocalDateTime getLiveDate();
+    
+  }
+
   
+  @Getter @RequiredArgsConstructor
+  public static class CompileEvent {
+    private final String deploymentId;
+    private final String userId;
+  }
   public class StencilTagNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 7190168525508589141L;
 

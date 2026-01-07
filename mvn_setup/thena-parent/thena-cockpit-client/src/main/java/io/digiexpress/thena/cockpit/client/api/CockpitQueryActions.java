@@ -31,6 +31,7 @@ public interface CockpitQueryActions {
 
   CockpitQuery cockpitQuery();
   
+  
   interface CockpitQuery {
     
     CockpitQuery lockForUpdate();

@@ -22,6 +22,11 @@ package io.digiexpress.eveli.envir.spi.actions;
 
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 
@@ -41,4 +46,13 @@ public interface EveliRuntimeCache {
   void invalidateId();
   
   void invalidateAll();
+  
+  
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableEveliEnvirInvalidateCache.class)
+  @JsonDeserialize(as = ImmutableEveliEnvirInvalidateCache.class)
+  interface EveliEnvirInvalidateCache {
+    
+  }
 }

@@ -44,10 +44,9 @@ public interface CockpitAware<T extends CockpitAware<T>> {
     CockpitAwareProvider getProvider();
   }
   
-  
-  @FunctionalInterface
   interface CockpitAwareProvider {
-    Uni<Optional<CockpitContainer>> apply();
+    Uni<Optional<CockpitContainer>> get();
+    Uni<Optional<CockpitContainer>> set(String cockpitId);
   }
   
   interface CockpitContainerCache {
@@ -57,4 +56,15 @@ public interface CockpitAware<T extends CockpitAware<T>> {
     void invalidateAll();
   }
   
+  
+  public static CockpitAwareProvider EMPTY_PROVIDER = new CockpitAwareProvider() {
+    @Override
+    public Uni<Optional<CockpitContainer>> get() {
+      return Uni.createFrom().item(Optional.empty());
+    }
+    @Override
+    public Uni<Optional<CockpitContainer>> set(String cockpitId) {
+      return Uni.createFrom().item(Optional.empty());
+    }
+  };
 }

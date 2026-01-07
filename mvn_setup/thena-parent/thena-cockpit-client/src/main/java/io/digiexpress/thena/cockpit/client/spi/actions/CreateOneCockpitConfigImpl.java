@@ -68,7 +68,7 @@ public class CreateOneCockpitConfigImpl implements CreateOneCockpitConfig {
   }
   
   @Override
-  public CreateOneCockpitConfig CockpitConfig(Consumer<NewCockpitConfig> addCockpitConfig) {
+  public CreateOneCockpitConfig cockpitConfig(Consumer<NewCockpitConfig> addCockpitConfig) {
     RepoAssert.notNull(addCockpitConfig, () -> "addCockpitConfig can't be empty!");
     config = addCockpitConfig;
     return this;

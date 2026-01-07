@@ -20,13 +20,8 @@ package io.digiexpress.thena.cockpit.client.api;
  * #L%
  */
 
-import io.smallrye.mutiny.Uni;
-
 public interface CockpitClient {
 
   CockpitCommitActions commits();
   CockpitQueryActions queries();
-  
-  
-  <T extends CockpitAware<T>> Uni<T> register(T aware);
 }

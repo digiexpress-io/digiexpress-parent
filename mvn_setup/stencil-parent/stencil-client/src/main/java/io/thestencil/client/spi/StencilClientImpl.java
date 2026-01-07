@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitAwareProps;
 
 /*-
@@ -39,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class StencilClientImpl implements StencilClient {
-  private final static String COCKPIT_TYPE = "STENCIL";
+  public final static String COCKPIT_TYPE = "STENCIL";
   private final StencilStore store;
   private final CockpitAwareProps cockpitAwareProps;
   
@@ -47,20 +48,20 @@ public class StencilClientImpl implements StencilClient {
     this.store = store;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .provider(() -> Uni.createFrom().item(Optional.empty()))
+        .provider(CockpitAware.EMPTY_PROVIDER)
         .build();
   }
   public StencilClientImpl(StencilStore store, Optional<CockpitAwareProvider> cockpitAwareProvider) {
     this.store = store;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .provider(cockpitAwareProvider.orElse(() -> Uni.createFrom().item(Optional.empty())))
+        .provider(cockpitAwareProvider.orElse(CockpitAware.EMPTY_PROVIDER))
         .build();
   }
   
   @Override
   public Uni<StencilClient> withCockpit() {
-    return cockpitAwareProps.getProvider().apply().onItem()
+    return cockpitAwareProps.getProvider().get().onItem()
         .transform(cockpit -> {
           
           if(cockpit.isEmpty()) {
@@ -171,5 +172,4 @@ public class StencilClientImpl implements StencilClient {
       return new StencilClientImpl(store);
     }
   }
-
 }

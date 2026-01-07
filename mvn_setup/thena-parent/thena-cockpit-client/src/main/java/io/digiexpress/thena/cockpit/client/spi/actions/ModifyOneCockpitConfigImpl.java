@@ -71,7 +71,7 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
   }
   
   @Override
-  public ModifyOneCockpitConfig CockpitConfigId(String CockpitConfigId) {
+  public ModifyOneCockpitConfig cockpitConfigId(String CockpitConfigId) {
     this.configId = RepoAssert.notEmpty(CockpitConfigId, () -> "CockpitConfigId can't be empty!");
     return this;
   }

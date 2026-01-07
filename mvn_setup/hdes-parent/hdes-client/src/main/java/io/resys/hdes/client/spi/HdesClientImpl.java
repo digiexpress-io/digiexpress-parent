@@ -29,6 +29,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitAwareProps;
 import io.resys.hdes.client.api.HdesAstTypes;
 import io.resys.hdes.client.api.HdesCache;
@@ -64,7 +65,7 @@ public class HdesClientImpl implements HdesClient {
   private final HdesStore store;
   private final HdesClientConfig config;
   private final CockpitAwareProps cockpitAwareProps;
-  private final static String COCKPIT_TYPE = "WRENCH";
+  public final static String COCKPIT_TYPE = "WRENCH";
   
   public HdesClientImpl(HdesStore store, HdesClientConfig config) {
     super();
@@ -72,13 +73,13 @@ public class HdesClientImpl implements HdesClient {
     this.config = config;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .provider(() -> Uni.createFrom().item(Optional.empty()))
+        .provider(CockpitAware.EMPTY_PROVIDER)
         .build();
   }
   
   @Override
   public Uni<HdesClient> withCockpit() {
-    return cockpitAwareProps.getProvider().apply().onItem()
+    return cockpitAwareProps.getProvider().get().onItem()
         .transform(cockpit -> {
           
           config.getCache().flushAll();
