@@ -208,6 +208,15 @@ export declare namespace TaskApi {
     processId?: string,
   }
 
+  export interface FormAssignment {
+    id: string;
+    locale: string;
+    serviceName: string;
+    formId: string;
+    formName: string;
+    formTag: string;
+  }
+
   export type TaskFeatureType = 'feedback' | 'feedback-ai' | 'transfer' | 'anon' | 'assignable';
 
   export interface TransferTaskCommand {
@@ -328,12 +337,5 @@ export declare namespace TaskApi {
      )[];
   }
 
-  export interface FormAssignment {
-    id: string;
-    locale: string;
-    serviceName: string;
-    formId: string;
-    formName: string;
-    formTag: string;
-  }
+
 }

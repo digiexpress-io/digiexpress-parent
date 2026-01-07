@@ -160,12 +160,12 @@ public class TaskApiController {
   
   @DeleteMapping("/{id}/form-assignments/{assignmentId}")
   public Uni<Task> deleteCustomerTaskAssignment(
-      @PathVariable("id") String id, @PathVariable("assignmentId") String assignmentId) {
+      @PathVariable("id") String id, @PathVariable("assignmentId") String assignmentId, String userId) {
     final var worker = securityClient.getUser().getPrincipal();
     return taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .deleteCustomerTaskAssignment(id, assignmentId)
-        .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishDeleteAssignmentEvent(modifiedTask, assignmentId));
+        .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishDeleteAssignmentEvent(modifiedTask, assignmentId, userId));
   }
 
 
