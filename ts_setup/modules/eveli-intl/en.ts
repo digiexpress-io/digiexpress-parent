@@ -1037,6 +1037,8 @@ export const en = {
   'task.file.fileName': 'File name',
   'task.file.uploadDate': 'Upload date',
   'task.files.none': 'No files',
+  'task.files.error.duplicateSingle': 'A file named "{fileName}" already exists. Please rename it before uploading.,Tiedosto nimeltä "{fileName}" on jo olemassa. Nimeä tiedosto uudelleen ennen lataamista.,En fil med namnet "{fileName}" finns redan. Byt namn på filen innan du laddar upp den.,',
+  'task.files.error.duplicateMultiple': 'These files already exist: {fileNames}. Please rename them before uploading.',
   'task.customerMessages.user.message.wroteOn': 'wrote on',
   'task.notes.edit': 'Edit notes for task',
   'task.notes.history': 'Note history',

@@ -533,7 +533,11 @@ public class MergeMissionBuilder implements MergeMission {
     });
     return this;
   }
-
+  @Override
+  public MergeMission removeObjectives(List<String> objectiveIds) {
+    objectiveIds.forEach(this::removeObjective);
+    return this;
+  }
   @Override
   public MergeMission removeRemark(String remarkId) {
     final var currentRemark = container.getRemarks().get(remarkId);

@@ -167,6 +167,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
   const { getTaskFormAssignment } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.GET', []);
   const { createManyTaskCustomerAssignments } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.POST', []);
 
+  const { deleteManyCustomerAssignment } = useFetch('worker/rest/api/tasks/$taskId/form-assignments.DELETE', {})
 
   const unit:  TaskBackendProviderProps['persistence'] = {
     findAllUnreadTasks: async function (): Promise<string[]> {
@@ -184,6 +185,7 @@ function useTaskPersistence(): TaskBackendProviderProps['persistence'] {
       await Promise.all(promises);
       return {};
     },
+    deleteManyCustomerAssignment,
     getOneTaskAudit: getOneTaskAudit,
     paginateTasks: paginateTasks,
     findAllAttachments: loadAttachments,

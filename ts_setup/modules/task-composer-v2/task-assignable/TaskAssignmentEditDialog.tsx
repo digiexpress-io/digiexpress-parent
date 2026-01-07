@@ -55,6 +55,11 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
     onClose();
   }
 
+  async function handleDelete() {
+    await backend.persistence.deleteManyCustomerAssignment(taskId, cancelledForms.map(form => form.id));
+    onClose();
+  }
+
   function handleCloseDialog() {
     onClose();
   }
@@ -158,7 +163,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
 
       <DialogActions>
         <Button variant='outlined' onClick={handleCloseDialog}>{intl.formatMessage({ id: 'button.close' })}</Button>
-        <CancelButton onClick={() => { }} disabled={cancelledForms.length === 0}>
+        <CancelButton onClick={handleDelete} disabled={cancelledForms.length === 0}>
           {intl.formatMessage({ id: 'button.cancelSelected' }, { count: cancelledForms.length })}
         </CancelButton>
         <Button onClick={handleSave} disabled={assignedForms.length === 0}>

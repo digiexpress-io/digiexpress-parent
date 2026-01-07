@@ -1032,6 +1032,7 @@ export const sv = {
   'task.file.fileName': 'Filnamn',
   'task.file.uploadDate': 'Uppladdningsdatum',
   'task.files.none': 'Inga filer',
+  'task.files.error.duplicateMultiple': 'Dessa filer finns redan: {fileNames}. Byt namn på dem innan du laddar upp dem.',
   'task.customerMessages.user.message.wroteOn': 'skrev på',
   'task.notes.edit': 'Redigera anteckningar för uppgiften',
   'task.notes.history': 'Anteckningshistorik',

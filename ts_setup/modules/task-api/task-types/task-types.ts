@@ -196,6 +196,7 @@ export declare namespace TaskApi {
     customerAssignments: TaskCustomerAssignment[];
   }
 
+  // Form that is created and waiting to be filled by customer or is already filled
   export interface TaskCustomerAssignment {
     id: string;
     serviceName: string,
@@ -208,6 +209,8 @@ export declare namespace TaskApi {
     processId?: string,
   }
 
+
+  // Form that 'could be' assigned to a customer, form is not created just a selection based on what to create instance of the form
   export interface FormAssignment {
     id: string;
     locale: string;

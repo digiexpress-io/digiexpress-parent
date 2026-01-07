@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -35,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class DeleteCustomerAssignment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
-  private final String assignmentId;
+  private final List<String> assignmentIds;
   private TaskClient.Task beforeDelete;
   
   
@@ -59,7 +61,8 @@ public class DeleteCustomerAssignment implements TaskStoreConfig.MergeTaskVisito
             );
           
           
-          modifyTask.removeObjective(assignmentId).build();
+            modifyTask.removeObjectives(assignmentIds).build();
+          
         })
         .commitAuthor(userId)
         .commitMessage("Update task by: " + DeleteCustomerAssignment.class.getSimpleName());

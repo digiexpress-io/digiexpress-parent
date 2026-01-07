@@ -96,6 +96,7 @@ public interface ThenaGrimMergeObject {
     
     MergeMission removeGoal(String goalId);
     MergeMission removeObjective(String objectiveId);
+    MergeMission removeObjectives(List<String> objectiveId);
     MergeMission removeRemark(String remarkId);
 
     void build();

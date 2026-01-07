@@ -1032,6 +1032,7 @@ export const fi = {
   'task.file.fileName': 'Tiedoston nimi',
   'task.file.uploadDate': 'Latauspäivämäärä',
   'task.files.none': 'Ei tiedostoja',
+  'task.files.error.duplicateMultiple': 'Nämä tiedostot ovat jo olemassa: {fileNames}. Nimeä ne uudelleen ennen lataamista.',
   'task.customerMessages.user.message.wroteOn': 'kirjoitti',
   'task.notes.edit': 'Muokkaa tehtävän muistiinpanoja',
   'task.notes.history': 'Muistiinpanojen historia',

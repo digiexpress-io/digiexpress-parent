@@ -59,8 +59,10 @@ import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -158,14 +160,19 @@ public class TaskApiController {
         .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishCreateEvent(modifiedTask));
   }
   
-  @DeleteMapping("/{id}/form-assignments/{assignmentId}")
+  @DeleteMapping("/{id}/form-assignments")
   public Uni<Task> deleteCustomerTaskAssignment(
-      @PathVariable("id") String id, @PathVariable("assignmentId") String assignmentId, String userId) {
+      @PathVariable("id") String id, @RequestBody DeleteCustomerTaskAssignment command) {
     final var worker = securityClient.getUser().getPrincipal();
     return taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .deleteCustomerTaskAssignment(id, assignmentId)
-        .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishDeleteAssignmentEvent(modifiedTask, assignmentId, userId));
+        .deleteCustomerTaskAssignment(id, command.getAssignmentIds())
+        .onItem().invoke(modifiedTask -> {
+          
+          for(final var assignmentId : command.getAssignmentIds()) {
+            dialobCreateEventPublisher.publishDeleteAssignmentEvent(modifiedTask, assignmentId, worker.getEmail());
+          }
+        });
   }
 
 
@@ -351,14 +358,21 @@ public class TaskApiController {
       
     });
   }
-  
-  @Data
-  @AllArgsConstructor
-  private static class KeyWordsResponse { List<String> keyWords; }
-  
+
   @GetMapping("/keywords")
   public Uni<KeyWordsResponse> getKeyWords() {
     return taskClient.queryTaskKeywords().findAllKeywords()
         .onItem().transform(resp -> new KeyWordsResponse(resp));
   }
+  
+  @Data
+  @AllArgsConstructor
+  @Builder
+  @Jacksonized
+  public static class DeleteCustomerTaskAssignment { List<String> assignmentIds; }  
+  
+  @Data
+  @AllArgsConstructor
+  public static class KeyWordsResponse { List<String> keyWords; }
+  
 }

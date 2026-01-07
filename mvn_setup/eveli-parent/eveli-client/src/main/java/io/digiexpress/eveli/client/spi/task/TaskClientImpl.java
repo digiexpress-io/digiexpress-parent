@@ -229,10 +229,11 @@ public class TaskClientImpl implements TaskClient {
         return ctx.getConfig().accept(new AddFormToCustomerAssignment(userId, taskId, command));
       }
       @Override
-      public Uni<Task> deleteCustomerTaskAssignment(String taskId, String assignmentId) {
+      public Uni<Task> deleteCustomerTaskAssignment(String taskId, List<String> assignmentId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        TaskAssert.notEmpty(assignmentId, () -> "assignmentId can't be empty!");
+        TaskAssert.notNull(assignmentId, () -> "assignmentId can't be null!");
+        TaskAssert.isTrue(!assignmentId.isEmpty(), () -> "assignmentId can't be empty!");
 
         return ctx.getConfig().accept(new DeleteCustomerAssignment(userId, taskId, assignmentId));
       }

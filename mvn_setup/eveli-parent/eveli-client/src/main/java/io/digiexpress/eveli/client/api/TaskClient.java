@@ -116,7 +116,7 @@ public interface TaskClient {
     Uni<Task> completeCustomerAssignment(String taskId, CompleteCustomerAssignmentCommand command);
     Uni<Task> createCustomerAssignment(String taskId, List<CreateCustomerAssignmentCommand> command);
     Uni<Task> addFormToCustomerAssignment(String taskId, List<AddFormToCustomerAssignmentCommand> command);
-    Uni<Task> deleteCustomerTaskAssignment(String taskId, String assignmentId);
+    Uni<Task> deleteCustomerTaskAssignment(String taskId, List<String> assignmentId);
     
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
