@@ -501,8 +501,7 @@ public class MergeMissionBuilder implements MergeMission {
   public MergeMission removeObjective(String objectiveId) {
     final var currentObjective = container.getObjectives().get(objectiveId);
     RepoAssert.notNull(currentObjective, () -> "Can't find objective with id: '" + objectiveId + "' for mission: '" + missionId + "'!");
-    
-    
+
     updateVersion();
     
     this.batch.addDeleteObjectives(currentObjective);

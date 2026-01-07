@@ -45,6 +45,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
+import io.digiexpress.eveli.client.spi.task.visitors.DeleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllExternalTaskCommentsByReporterIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskByIdsVisitor;
@@ -226,6 +227,14 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         
         return ctx.getConfig().accept(new AddFormToCustomerAssignment(userId, taskId, command));
+      }
+      @Override
+      public Uni<Task> deleteCustomerTaskAssignment(String taskId, String assignmentId) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        TaskAssert.notEmpty(assignmentId, () -> "assignmentId can't be empty!");
+
+        return ctx.getConfig().accept(new DeleteCustomerAssignment(userId, taskId, assignmentId));
       }
     };
   }

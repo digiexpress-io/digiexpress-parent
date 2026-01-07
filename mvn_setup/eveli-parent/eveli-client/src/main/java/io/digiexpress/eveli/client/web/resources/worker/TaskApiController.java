@@ -158,6 +158,16 @@ public class TaskApiController {
         .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishCreateEvent(modifiedTask));
   }
   
+  @DeleteMapping("/{id}/form-assignments/{assignmentId}")
+  public Uni<Task> deleteCustomerTaskAssignment(
+      @PathVariable("id") String id, @PathVariable("assignmentId") String assignmentId) {
+    final var worker = securityClient.getUser().getPrincipal();
+    return taskClient.taskBuilder()
+        .userId(worker.getUsername(), worker.getEmail())
+        .deleteCustomerTaskAssignment(id, assignmentId)
+        .onItem().invoke(modifiedTask -> dialobCreateEventPublisher.publishDeleteAssignmentEvent(modifiedTask, assignmentId));
+  }
+
 
   @PostMapping
   public Uni<ResponseEntity<TaskClient.Task>> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
@@ -172,7 +182,6 @@ public class TaskApiController {
         .onItem().transform(newTask -> {
           return new ResponseEntity<>(newTask, HttpStatus.CREATED);
         });
-    
   }
   
   @PutMapping("/{id}")
@@ -186,7 +195,6 @@ public class TaskApiController {
       .onItem().transform(modifiedTask -> {
         return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
       });
-      
   }
   
   @PutMapping("/{id}/transfers")

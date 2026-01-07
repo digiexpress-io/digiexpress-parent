@@ -68,18 +68,34 @@ public class DialobCreateEventPublisher {
     private final String taskId;
   }
   
+  @Data
+  @AllArgsConstructor
+  public static class DeleteProcessAndFormEvent {
+    private final String taskId;
+    private final String processId;
+  }
+  
   public void publishCreateEvent(TaskClient.Task task) {
     if(task.isNewCustomerAssignment()) {
       publisher.publishEvent(new CreateProcessAndFormEvent(task.getId()));      
     }
   }
   
+  public void publishDeleteAssignmentEvent(TaskClient.Task task, String assignmentId) {
+    final var processId = task.getCustomerAssignments().stream()
+      .filter(assigment -> assigment.getId().equals(assignmentId))
+      .map(assignment -> assignment.getProcessId())
+      .findFirst();
+    
+    if(processId.isPresent()) {
+      publisher.publishEvent(new DeleteProcessAndFormEvent(task.getId(), processId.get()));
+    }
+  }
+  
+  
   @Async
   @EventListener
   public CompletableFuture<?> handleFillCompleted(CreateProcessAndFormEvent event) {
-    
-    
-    
     return Uni.combine().all().unis(
           taskClient.queryTasks().getOneById(event.getTaskId()),
           taskClient.queryTaskProcesess().findOneByTaskId(event.getTaskId())
