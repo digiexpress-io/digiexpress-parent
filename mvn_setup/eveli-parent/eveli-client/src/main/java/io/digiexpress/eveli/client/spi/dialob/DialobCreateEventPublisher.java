@@ -34,6 +34,7 @@ import org.springframework.scheduling.annotation.Async;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.ImmutableAddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.AddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
@@ -73,29 +74,19 @@ public class DialobCreateEventPublisher {
   public static class DeleteProcessAndFormEvent {
     private final String taskId;
     private final String processId;
+    private final String userId;
   }
   
+
+  // Async create
   public void publishCreateEvent(TaskClient.Task task) {
     if(task.isNewCustomerAssignment()) {
-      publisher.publishEvent(new CreateProcessAndFormEvent(task.getId()));      
+      publisher.publishEvent(new CreateProcessAndFormEvent(task.getId()));
     }
   }
-  
-  public void publishDeleteAssignmentEvent(TaskClient.Task task, String assignmentId) {
-    final var processId = task.getCustomerAssignments().stream()
-      .filter(assigment -> assigment.getId().equals(assignmentId))
-      .map(assignment -> assignment.getProcessId())
-      .findFirst();
-    
-    if(processId.isPresent()) {
-      publisher.publishEvent(new DeleteProcessAndFormEvent(task.getId(), processId.get()));
-    }
-  }
-  
-  
   @Async
   @EventListener
-  public CompletableFuture<?> handleFillCompleted(CreateProcessAndFormEvent event) {
+  public CompletableFuture<?> handleCreateFormAndProcess(CreateProcessAndFormEvent event) {
     return Uni.combine().all().unis(
           taskClient.queryTasks().getOneById(event.getTaskId()),
           taskClient.queryTaskProcesess().findOneByTaskId(event.getTaskId())
@@ -111,7 +102,34 @@ public class DialobCreateEventPublisher {
   }
   
   
+  // Async delete
+  public void publishDeleteAssignmentEvent(TaskClient.Task task, String assignmentId, String userId) {
+    final var processId = task.getCustomerAssignments().stream()
+      .filter(assigment -> assigment.getId().equals(assignmentId))
+      .map(assignment -> assignment.getProcessId())
+      .findFirst();
+    
+    if(processId.isPresent()) {
+      publisher.publishEvent(new DeleteProcessAndFormEvent(task.getId(), processId.get(), userId));
+    }
+  }
   
+  @Async
+  @EventListener
+  public CompletableFuture<?> handleDeleteProcessAndForm(DeleteProcessAndFormEvent event) {
+    return taskClient.modifyProcess()
+        .commitAuthor(event.getProcessId())
+        .commitMessage("Invalidating process")
+        .id(event.getProcessId())
+        .status(ProcessStatus.REJECTED)
+        .build()
+        .subscribeAsCompletionStage()
+        .toCompletableFuture();
+  }
+  
+  
+  
+  // Support
   private Uni<TaskClient.Task> syncWithTask(TaskUpdate taskUpdate) {        
     if(taskUpdate.getValues().isEmpty()) {
       return Uni.createFrom().item(taskUpdate.getTask());
