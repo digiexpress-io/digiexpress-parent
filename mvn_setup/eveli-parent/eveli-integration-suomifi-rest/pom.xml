@@ -30,40 +30,4 @@
 			</dependencies>
 		</profile>
 	</profiles>
-	<build>
-		<plugins>
-
-			<plugin>
-        <groupId>org.jvnet.jaxb</groupId>
-        <artifactId>jaxb-maven-plugin</artifactId>
-        <version>4.0.8</version>
-				<dependencies>
-          <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>4.0.4</version>
-            <scope>runtime</scope>
-          </dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-				
-				<configuration>
-					<schemaLanguage>WSDL</schemaLanguage>
-
-					<generatePackage>suomifi.notification.wsdl</generatePackage>
-					<schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
-					<schemaIncludes>
-						<include>Viranomaispalvelut.wsdl</include>
-					</schemaIncludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 </project>
