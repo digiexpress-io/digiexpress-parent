@@ -54,10 +54,17 @@ export const AnyContractRoute: React.FC<{children: React.ReactNode}> = ({ childr
     );
   };  
 
-  const SlotDateTimeFormatter: React.FC<{ value: any; variant?: "text" }> = ({
-    value,
-    variant,
-  }) => <XuiDateTimeFormatter value={value} variant={variant} />;
+  const SlotDateTimeFormatter: React.FC<{
+    value: any;
+    withSeconds?: boolean;
+    withColumns?: boolean;
+  }> = ({ value, withSeconds, withColumns }) => (
+    <XuiDateTimeFormatter
+      value={value}
+      withSeconds={withSeconds}
+      withColumns={withColumns}
+    />
+  );  
 
   return (
     <ContractBackendProvider

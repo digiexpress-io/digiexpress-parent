@@ -44,8 +44,8 @@ export const CustomerMessagesReadOnly: React.FC<CustomerMessagesReadOnlyProps> =
             <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
               <Typography className={classes.senderInfo} sx={{ ...style.bodyTypography }} >
                 {comment.userName}{" "}
-                {intl.formatMessage({ id: 'task.customerMessages.user.message.wroteOn' })}
-                <DateTimeFormatter value={comment.created} variant='text' />
+                {intl.formatMessage({ id: 'task.customerMessages.user.message.wroteOn' })}{" "}
+                <DateTimeFormatter value={comment.created} />
               </Typography>
               <Typography
                 style={{

@@ -130,7 +130,7 @@ const StepSlot: React.FC<{ value: BatchApi.RuntimeStep, instance: BatchApi.Runti
 }
 
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  return <DateTimeFormatter value={value} variant="textWithSeconds" />;
+  return <DateTimeFormatter value={value} withSeconds />;
 };
 
 const NoBatchInstancesAlert: React.FC = () => {

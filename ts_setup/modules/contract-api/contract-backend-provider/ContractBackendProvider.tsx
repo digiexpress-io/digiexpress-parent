@@ -17,7 +17,11 @@ export interface ContractBackendContextType {
     getOneContract: (contractId: string) => Promise<ContractApi.ContractContainer>;
   };
   slots: {
-    DateTimeFormatter: React.ElementType<{ value: string | Date | undefined, variant?: 'text' }>;
+    DateTimeFormatter: React.ElementType<{
+      value: string | Date | undefined;
+      withSeconds?: boolean;
+      withColumns?: boolean;
+    }>;
     DateTimePicker: React.ElementType<{ 
       label?: string | React.ReactNode,
       readonly?: boolean,

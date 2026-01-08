@@ -96,7 +96,7 @@ export const EveliUserActivity: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: (updated) => <DateTimeFormatter value={updated.getValue()} variant="textWithSeconds" />
+      cell: (updated) => <DateTimeFormatter value={updated.getValue()} withSeconds />
     },
     {
       header: intl.formatMessage({ id: 'task.audit.health.userActivities.bodyValue', defaultMessage: 'Body value' }),

@@ -124,7 +124,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ slots, tas
           {intl.formatMessage({ id: 'feedback.updated' })}
           {": "}
         </Box>
-        <DateTimeFormatter value={feedback.updatedOnDate} variant='text' />
+        <DateTimeFormatter value={feedback.updatedOnDate} />
       </Typography>
 
       <Typography variant='body2'>

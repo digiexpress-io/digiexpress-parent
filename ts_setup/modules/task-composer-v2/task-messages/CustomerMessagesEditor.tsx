@@ -48,7 +48,7 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
                     <Typography className={classes.senderInfo}>
                       {comment.userName}
                       {intl.formatMessage({ id: 'user.message.wroteOn', defaultMessage: ' wrote on ' })}
-                      <DateTimeFormatter value={comment.created} variant='text' />
+                      <DateTimeFormatter value={comment.created} />
                     </Typography>
                     <Typography
                       style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}

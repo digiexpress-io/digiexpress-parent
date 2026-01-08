@@ -114,7 +114,7 @@ export const EveliBatchStep: React.FC<EveliBatchStepProps> = (initProps) => {
 
 
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  return <DateTimeFormatter value={value} variant="textWithSeconds" />;
+  return <DateTimeFormatter value={value} withSeconds />;
 };
 
 

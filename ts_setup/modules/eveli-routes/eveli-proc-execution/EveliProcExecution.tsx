@@ -102,7 +102,7 @@ export const EveliProcExecution: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      cell: (info) => <DateTimeFormatter value={info.getValue()} variant='text' />
+      cell: (info) => <DateTimeFormatter value={info.getValue()} />
     },
   ]
   return (

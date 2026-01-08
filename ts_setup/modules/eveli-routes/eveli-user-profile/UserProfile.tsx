@@ -81,8 +81,8 @@ export const UserProfile: React.FC<{}> = () => {
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={profile.details.username} />
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.firstAndLastName' />} value={profile.details.firstName + " " + profile.details.lastName} />
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.email' />} value={profile.details.email} />
-            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.created' />} value={<DateTimeFormatter value={profile.created} variant="text" />} />
-            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={<DateTimeFormatter value={profile.updated} variant="text" />} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.created' />} value={<DateTimeFormatter value={profile.created} />} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={<DateTimeFormatter value={profile.updated} />} />
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value={userRoles} />
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
           </div>

@@ -63,11 +63,17 @@ export const AnyTaskRoute: React.FC<{children: React.ReactNode}> = ({ children }
     );
   };  
 
-  const SlotDateTimeFormatter: React.FC<{ value: any; variant?: "text" }> = ({
-    value,
-    variant,
-  }) => <XuiDateTimeFormatter value={value} variant={variant} />;
-
+  const SlotDateTimeFormatter: React.FC<{
+    value: any;
+    withSeconds?: boolean;
+    withColumns?: boolean;
+  }> = ({ value, withSeconds, withColumns }) => (
+    <XuiDateTimeFormatter
+      value={value}
+      withSeconds={withSeconds}
+      withColumns={withColumns}
+    />
+  );
 
   function handleClose() {
     setOpen(false);

@@ -6,5 +6,5 @@ export const FormTableDateTime: React.FC<{ value?: string | Date }> = ({ value }
     return <div>--</div>;
   }
 
-  return <DateTimeFormatter value={value} variant="text" />;
+  return <DateTimeFormatter value={value} />;
 };

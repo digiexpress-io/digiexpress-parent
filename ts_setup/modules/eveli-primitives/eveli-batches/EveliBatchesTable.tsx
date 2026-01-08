@@ -77,7 +77,7 @@ export const EveliBatchesTable: React.FC = () => {
 }
 
 const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
-  return <DateTimeFormatter value={value} variant="text" />;
+  return <DateTimeFormatter value={value} />;
 };
 
 const BatchLink: React.FC<{ value: BatchApi.Batch }> = ({ value }) => {
