@@ -21,7 +21,7 @@ PyJWT==2.10.1
 requests==2.32.4
 six==1.17.0
 typing_extensions==4.12.2
-urllib3==2.5.0
+urllib3==2.6.0
 
 # GCP dependencies - Required when FEEDBACK_PROVIDER=gcp
 google-cloud-language==2.11.0
