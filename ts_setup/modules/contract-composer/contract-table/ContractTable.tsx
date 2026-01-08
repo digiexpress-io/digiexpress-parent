@@ -82,7 +82,7 @@ export const ContractTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
       filterFn: filterCreated,
       cell: (created) => flexRender(AnyDateTimeShort, { value: created.getValue() })
     },
@@ -94,7 +94,7 @@ export const ContractTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
       filterFn: filterMaturityDate,
       cell: (dueDate) => flexRender(AnyDateTimeShort, { value: dueDate.getValue() })
     },

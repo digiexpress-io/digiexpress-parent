@@ -159,7 +159,7 @@ export const PublicationsTable: React.FC = () => {
       size: 160,
       minSize: 140,
       enableColumnFilter: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
       filterFn: filterStartsAt,
     },
     {
@@ -170,7 +170,7 @@ export const PublicationsTable: React.FC = () => {
       size: 160,
       minSize: 140,
       enableColumnFilter: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
       filterFn: filterCreatedAt,
     },
     {

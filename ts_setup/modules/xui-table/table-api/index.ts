@@ -75,7 +75,8 @@ export interface TableDateFilter {
   type: 'EQUAL' | 'GTE' | 'LT'
 }
 
-
+// raw GTE filter
+// raw >=  filter
 export const anyDateFilter = (raw: Date | string | null | undefined, filter: TableDateFilter | string | Date) => {
   if (!raw) {
     return false;
@@ -119,6 +120,8 @@ export const anyDateFilter = (raw: Date | string | null | undefined, filter: Tab
   const normalizedFilterDate = new Date(filterDate.getFullYear(), filterDate.getMonth(), filterDate.getDate());
   
   if (filterType === 'GTE') {
+    console.log({normalizedDate, normalizedFilterDate})
+
     return normalizedDate >= normalizedFilterDate;
   }
   

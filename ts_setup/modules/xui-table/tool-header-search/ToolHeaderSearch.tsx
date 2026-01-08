@@ -24,7 +24,7 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
     return (<></>) // hide filter icon to prevent opening the menu popover
   }
 
-  const isDate = header.column.columnDef.meta?.isDate;
+  const isDate = header.column.columnDef.meta?.enableDate;
 
   return (
     <Root className={classes.root}>

@@ -937,6 +937,7 @@ export const fi = {
   'taskTable.col.header.due': 'Määräaika',
   'taskTable.col.header.created': 'Luotu',
   'taskTable.col.header.archive': 'Arkistoi',
+  'taskTable.col.header.overdue': 'Myöhässä',
   'taskTable.button.archive.confirm': 'Olet arkistoimassa tätä tehtävää. Haluatko varmasti jatkaa?',
   'taskTable.confirmArchive.title': 'Vahvista arkistointi',
   'taskTable.title': 'Tehtävät',

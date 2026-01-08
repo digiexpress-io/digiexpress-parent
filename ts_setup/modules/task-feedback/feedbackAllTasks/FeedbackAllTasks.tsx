@@ -152,7 +152,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ onOpenFeedba
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { isDate: true, enableSelection: false },
+      meta: { enableDate: true, enableSelection: false },
       cell: (info) => {
         const dateTime = DateTime.fromJSDate(new Date(info.getValue()))
           .setLocale('fi')

@@ -65,12 +65,13 @@ export interface ToolHeaderSearchDateProps {
   header: Header<unknown, unknown>;
 }
 
+
 export const ToolHeaderSearchDate: React.FC<ToolHeaderSearchDateProps> = ({ header }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const currentFilter = getFilterValue(header.column.getFilterValue());
   
-  const [currentType, setCurrentType] = React.useState(currentFilter?.type ?? 'GTE');
+  const [currentType, setCurrentType] = React.useState<string>(currentFilter?.type ?? 'GTE');
   const [date, setDate] = React.useState(() => currentFilter?.date);
 
   function handleDateChange(newValue: Date | null) {
@@ -85,23 +86,49 @@ export const ToolHeaderSearchDate: React.FC<ToolHeaderSearchDateProps> = ({ head
     header.column.setFilterValue({ date, type });
   }
 
+  function handleDateExtension(newType: string, date:  Date | null) {
+    setCurrentType(newType);
+    setDate(date);
+    header.column.setFilterValue({ date, type: newType });
+  }
+
   if (header.column.getCanFilter() === false) {
     return (<></>) // hide filter icon to prevent opening the menu popover
   }
+
+  const disabled = !(
+    currentType === 'LT' || 
+    currentType === 'GTE' || 
+    currentType === 'EQUAL'
+  );
 
   return (
     <FilterByStringSlot className={classes.filterByString}>
       <FormControl>
         <FormLabel>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateTitle', defaultMessage: 'Date filtering' })}</FormLabel>
         <RadioGroup value={currentType}>
+          <Extensions ownerProps={{header}} onClick={handleDateExtension}/>
           <FormControlLabel value="EQUAL" control={<Radio onClick={() => handleDateType('EQUAL')} />} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateEqual', defaultMessage: 'Date is equal' })} />
           <FormControlLabel value="LT" control={<Radio onClick={() => handleDateType('LT')}/>} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateLt', defaultMessage: 'Date is before' })} />
           <FormControlLabel value="GTE" control={<Radio onClick={() => handleDateType('GTE')} />} label={intl.formatMessage({ id: 'eveli.table.menu.filter.filterByDateGte', defaultMessage: 'Date is greater than or equal' })} />
         </RadioGroup>
       </FormControl>
-
-      <DatePicker value={date} onChange={handleDateChange} sx={{ mx: 4, my: 2 }} />
+      <DatePicker value={date} onChange={handleDateChange} sx={{ mx: 4, my: 2 }} disabled={disabled} />
     </FilterByStringSlot>
   );
 }
 
+
+
+const Extensions: React.FC<{ 
+  ownerProps: ToolHeaderSearchDateProps, 
+  onClick: (type: string, date: Date | null) => void
+}> = ({ ownerProps, onClick }) => {
+  
+  const { header } = ownerProps;
+  const dateFilters = header.column.columnDef.meta?.slots?.dateFilters;
+  if(!dateFilters) {
+    return (<></>);
+  }
+  return (<>{Object.entries(dateFilters).map(([type, Label]) => <Label key={type} onClick={(date) => onClick(type, date)} />)}</>)
+}

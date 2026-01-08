@@ -937,6 +937,7 @@ export const sv = {
   'taskTable.col.header.due': 'Förfallodatum',
   'taskTable.col.header.created': 'Skapad',
   'taskTable.col.header.archive': 'Arkiv',
+  'taskTable.col.header.overdue': 'Försenad',
   'taskTable.button.archive.confirm': 'Du håller på att arkivera den här uppgiften. Är du säker på att du vill fortsätta?',
   'taskTable.confirmArchive.title': 'Bekräftar arkiveringsuppgift',
   'taskTable.title': 'Uppgifter',

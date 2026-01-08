@@ -50,7 +50,7 @@ export const LedgerTable: React.FC = () => {
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
     },
     {
       header: intl.formatMessage({ id: 'ledgerTable.col.header.lastChangeType' }),
@@ -61,7 +61,7 @@ export const LedgerTable: React.FC = () => {
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
     },
     {
       header: intl.formatMessage({ id: 'ledgerTable.col.header.netAddedToAccount' }),
@@ -72,7 +72,7 @@ export const LedgerTable: React.FC = () => {
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
     },
     {
       header: intl.formatMessage({ id: 'ledgerTable.col.header.removedFromAccount' }),
@@ -83,7 +83,7 @@ export const LedgerTable: React.FC = () => {
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
     }
   ]
 

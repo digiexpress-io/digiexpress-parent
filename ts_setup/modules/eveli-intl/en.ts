@@ -941,6 +941,7 @@ export const en = {
   'taskTable.col.header.due': 'Due date',
   'taskTable.col.header.created': 'Created',
   'taskTable.col.header.archive': 'Archive',
+  'taskTable.col.header.overdue': 'Overdue',
   'taskTable.button.archive.confirm': 'You are about to archive this task. Are you sure you want to continue?',
   'taskTable.confirmArchive.title': 'Confirming archive task {taskRef}',
   'taskTable.title': 'Tasks',

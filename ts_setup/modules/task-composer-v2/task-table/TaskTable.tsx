@@ -19,6 +19,7 @@ import { IndicatorSubject } from './IndicatorSubject';
 
 import { filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 import { IndicatorRole } from './IndicatorRole';
+import { filterDueDate, overdueFilter } from './FilterDueDate';
 
 export const TASK_TABLE_QUERY_KEY = 'find-all-tasks';
 
@@ -153,7 +154,7 @@ export const TaskTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { isDate: true },
+      meta: { enableDate: true, slots: { dateFilters: overdueFilter } },
       filterFn: filterDueDate,
       cell: (dueDate) => flexRender(AnyTaskDateTimeShort, { value: dueDate.getValue() })
     },
@@ -165,7 +166,7 @@ export const TaskTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
-      meta: { isDate: true },
+      meta: { enableDate: true },
       filterFn: filterCreated,
       cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },
@@ -246,12 +247,11 @@ const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   return <div>{formatted}</div>;
 }
 
-const filterDueDate: FilterFnOption<TaskApi.Task> = (row, _columnId: string, filterValue: TableDateFilter) => {
-  const latestTagDate = row.original.dueDate;
-  return anyDateFilter(latestTagDate, filterValue);
-}
+
 
 const filterCreated: FilterFnOption<TaskApi.Task> = (row, _columnId: string, filterValue: TableDateFilter) => {
   const lastSaved = row.original.created;
   return anyDateFilter(lastSaved, filterValue);
 }
+
+

@@ -22,7 +22,12 @@ declare module "@tanstack/react-table" {
   // @ts-ignore
   export interface ColumnMeta<TData extends RowData, TValue> {
     enableSelection?: boolean;
-    isDate?: boolean; // allow to cut data that is greate or equal then given date value
+    enableDate?: boolean; // allow to cut data that is greate or equal then given date value
+
+    slots?: {
+      // filter type + render the type
+      dateFilters?: Record<string, React.FC<{ onClick: (date:  Date | null) => void }>>
+    }
   }
 }
 
