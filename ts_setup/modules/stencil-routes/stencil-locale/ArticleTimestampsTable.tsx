@@ -3,7 +3,7 @@ import { Tooltip } from '@mui/material';
 import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { DateTime } from 'luxon';
+import { DateTimeFormatter } from '@dxs-ts/xui-datetime';
 
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
 
@@ -65,13 +65,13 @@ export const ArticleTimestampsTable: React.FC = () => {
       minSize: 160,
       cell: (info: CellContext<RowData, unknown>) => {
         const value = info.getValue() as Date | null;
-        return value
-          ? DateTime.fromJSDate(value).setLocale('fi').toFormat('d.M.yyyy HH:mm')
-          : (
-            <Tooltip title={<FormattedMessage id="locales.nopage" />}>
-              <ErrorOutlineIcon sx={{ color: 'error.main' }} />
-            </Tooltip>
-          );
+        return value ? (
+          <DateTimeFormatter value={value} />
+        ) : (
+          <Tooltip title={<FormattedMessage id="locales.nopage" />}>
+            <ErrorOutlineIcon sx={{ color: 'error.main' }} />
+          </Tooltip>
+        );
       }
     }))
     ,

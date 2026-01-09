@@ -55,7 +55,7 @@ export const DateTimeFormatter: React.FC<{
     : local.toLocaleString(DateTime.TIME_24_SIMPLE);
 
     if (!withColumns) {
-      return <span>{dateText} {timeText}</span>;
+      return <span>{dateText} klo {timeText}</span>;
     }    
 
     return (
