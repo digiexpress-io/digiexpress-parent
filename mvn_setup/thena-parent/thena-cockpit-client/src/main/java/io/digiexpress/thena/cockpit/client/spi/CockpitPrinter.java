@@ -36,7 +36,7 @@ public class CockpitPrinter {
 
   public CockpitPrinter(CockpitDb db) {
     super();
-    this.queryActions = new CockpitQueryActionsImpl(db, db.getDataSource().getTenant().getId());
+    this.queryActions = new CockpitQueryActionsImpl(db, null, db.getDataSource().getTenant().getId());
   }
 
   public String print(Tenant repo) {
