@@ -63,7 +63,6 @@ public class TagomiWorldImpl implements TagomiWorld {
     return new PdfCompiler() {
       String locale;
       JsonObject props;
-
       @Override
       public PdfCompiler locale(String locale) {
         this.locale = locale;
@@ -126,7 +125,6 @@ public class TagomiWorldImpl implements TagomiWorld {
                 .filter(l -> l.getLocale().equals(targetLocale.getLocaleCode()))
                 .map(e -> e.getLabelValue())
                 .findAny().orElse(null);
-
             return ImmutablePdfEnvelope.builder()
                 .status(TagomiPdfStatus.OK)
                 .value(ImmutablePdf.builder()
@@ -141,10 +139,8 @@ public class TagomiWorldImpl implements TagomiWorld {
                 .status(TagomiPdfStatus.ERROR)
                 .statusMessage(e.getMessage())
                 .build();
-
           }
         });
-
       }
     };
   }
