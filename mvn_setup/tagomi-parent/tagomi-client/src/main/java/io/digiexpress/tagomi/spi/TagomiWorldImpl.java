@@ -9,9 +9,9 @@ package io.digiexpress.tagomi.spi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,6 +45,7 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 public class TagomiWorldImpl implements TagomiWorld {
   private final ObjectMapper objectMapper;
@@ -52,17 +53,18 @@ public class TagomiWorldImpl implements TagomiWorld {
   private final WorldDatasource datasource;
   private final RestTemplate restTemplate;
   private final String baseUrl;
-
+  
   @Override
   public Map<String, List<TagomiProgram>> getProgramsByName() {
     return Collections.emptyMap();
   }
-
+  
   @Override
   public PdfCompiler compiler() {
     return new PdfCompiler() {
       String locale;
       JsonObject props;
+      
       @Override
       public PdfCompiler locale(String locale) {
         this.locale = locale;
@@ -79,23 +81,24 @@ public class TagomiWorldImpl implements TagomiWorld {
         final var service = container.getServices().values().stream()
             .filter(e -> e.getId().equals(programIdOrName) || e.getServiceName().equals(programIdOrName))
             .findFirst().orElseThrow();
-
+        
         final var targetLocale = container.getLocales().values().stream()
             .filter(l -> l.getLocaleCode().equalsIgnoreCase(locale) || l.getId().equals(locale))
             .findFirst().orElseThrow();
-
+        
         final var templates = new ArrayList<PdfTemplate>();
         templates.add(PdfTemplate.builder()
             .id(service.getServiceName())
             .value(container.getTemplates().values().stream()
                 .filter(t -> t.getServiceId().equals(service.getId()))
-                    .filter(t -> t.getLocaleId().equals(locale))
+                .filter(t -> t.getLocaleId().equals(targetLocale.getId()))
                 .map(t -> t.getContent())
                 .findFirst().orElseThrow()
             )
             .build());
-
-
+        
+                
+        
         return datasource.get(service, this.props)
         .onItem().transform(resolved -> {
           final var dataModules = new ArrayList<PdfDataModule>();
@@ -110,7 +113,7 @@ public class TagomiWorldImpl implements TagomiWorld {
               .bodyName("props")
               .bodyValue(this.props.mapTo(Map.class))
               .build());
-
+          
           return PdfRequest.builder()
               .timestamp(OffsetDateTime.now())
               .mainTemplateId(service.getServiceName())
@@ -124,7 +127,8 @@ public class TagomiWorldImpl implements TagomiWorld {
             final var localisedName = service.getLabels().stream()
                 .filter(l -> l.getLocale().equals(targetLocale.getLocaleCode()))
                 .map(e -> e.getLabelValue())
-                .findAny().orElse(null);
+                .findAny().orElse(null); 
+            
             return ImmutablePdfEnvelope.builder()
                 .status(TagomiPdfStatus.OK)
                 .value(ImmutablePdf.builder()
@@ -139,8 +143,10 @@ public class TagomiWorldImpl implements TagomiWorld {
                 .status(TagomiPdfStatus.ERROR)
                 .statusMessage(e.getMessage())
                 .build();
+            
           }
         });
+
       }
     };
   }
