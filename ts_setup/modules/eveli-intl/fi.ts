@@ -494,7 +494,7 @@ export const fi = {
   'articleservices': 'Artikkelin palvelut: {name}',
   'articlelinks': 'Artikkelin linkit: {name}',
   'article.composer.orderhelper': 'Mitä pienempi numero sen ylempänän tämä Artikkeli on valinnoissa',
-  'article.timestamps.title': 'Lisätietoa',
+  'article.timestamps.title': 'Historia',
   'button.create': 'Luo',
   'button.add': 'Lisää',
   'button.disable': 'Jatka ja deaktivoi',

@@ -498,7 +498,7 @@ export const en = {
   'articleservices': 'Article services: {name}',
   'articlelinks': 'Article links: {name}',
   'article.composer.orderhelper': 'The lower the number, the higher up this article will appear in your portal UI Topic Menu.  Example: 000 will be the first Topic menu item, while 999 will be the last.',
-  'article.timestamps.title': 'Additional info',
+  'article.timestamps.title': 'History',
   'button.create': 'Create',
   'button.add': 'Add',
   'button.disable': 'Continue and disable',

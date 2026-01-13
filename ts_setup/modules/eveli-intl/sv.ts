@@ -494,7 +494,7 @@ export const sv = {
   'articleservices': 'Artikeltjänster: {name}',
   'articlelinks': 'Artikellänkar: {name}',
   'article.composer.orderhelper': 'Ju lägre siffra, desto högre upp kommer denna artikel att visas i portalens gränssnittsämnesmeny.  Exempel: 000 kommer att vara det första ämnesmenyn, medan 999 kommer att vara det sista.',
-  'article.timestamps.title': 'Ytterligare info',
+  'article.timestamps.title': 'Historik',
   'button.create': 'Skapa',
   'button.add': 'Tillägga',
   'button.disable': 'Fortsätt och inaktivera',

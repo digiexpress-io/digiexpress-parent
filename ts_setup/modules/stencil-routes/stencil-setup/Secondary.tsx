@@ -8,7 +8,6 @@ import { TranslateOutlined as TranslateOutlinedIcon } from '@mui/icons-material'
 import { FormatShapesOutlined as FormatShapesOutlinedIcon } from '@mui/icons-material';
 import { NewReleasesOutlined as NewReleasesOutlinedIcon } from '@mui/icons-material';
 import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
-import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 
@@ -117,14 +116,6 @@ const Secondary: React.FC<{}> = () => {
           </Button>
         </EveliPermissions>
 
-        <EveliPermissions id='NAV_TO_STENCIL_ASSISTANCE'>
-          <Button variant={activeItem?.type === 'ASSISTANCE' ? 'explorerActive' : 'explorerInactive'}
-            startIcon={<HelpOutlineOutlinedIcon />}
-            onClick={() => onNav({ type: 'ASSISTANCE' })}>
-            {intl.formatMessage({ id: 'article.timestamps.title' })}
-          </Button>
-        </EveliPermissions>
-
         <EveliTenantFeatureEnabled id='STENCIL_RELEASES'>
           <EveliPermissions id='NAV_TO_STENCIL_RELEASES'>
             <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
@@ -134,13 +125,6 @@ const Secondary: React.FC<{}> = () => {
             </Button>
           </EveliPermissions>
         </EveliTenantFeatureEnabled>
-
-        <Button variant={activeItem?.type === 'ACTIVITIES' ? 'explorerActive' : 'explorerInactive'}
-          startIcon={<DashboardCustomizeOutlinedIcon />}
-          onClick={() => onNav({ type: 'ACTIVITIES' })}>
-          {intl.formatMessage({ id: 'menu.activities' })}
-        </Button>
-
 
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}

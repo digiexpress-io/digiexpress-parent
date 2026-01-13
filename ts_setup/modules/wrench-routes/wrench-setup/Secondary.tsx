@@ -8,7 +8,6 @@ import { BugReportOutlined as BugReportOutlinedIcon } from '@mui/icons-material'
 import { NewReleasesOutlined as NewReleasesOutlinedIcon } from '@mui/icons-material';
 import { CompareArrowsOutlined as CompareArrowsOutlinedIcon } from '@mui/icons-material';
 import { HelpOutlineOutlined as HelpOutlineOutlinedIcon } from '@mui/icons-material';
-import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
 
 import { useIntl } from 'react-intl';
 import { EveliTenantFeatureEnabled } from '@dxs-ts/eveli-api';
@@ -124,12 +123,6 @@ export const Secondary: React.FC<{}> = () => {
             </Button>
           </EveliPermissions>
         </EveliTenantFeatureEnabled>
-
-        <Button variant={activeItem?.type === 'ACTIVITIES' ? 'explorerActive' : 'explorerInactive'}
-          startIcon={<DashboardCustomizeOutlinedIcon />}
-          onClick={() => onNav({ type: 'ACTIVITIES' })}>
-          {intl.formatMessage({ id: 'menu.activities' })}
-        </Button>
 
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}

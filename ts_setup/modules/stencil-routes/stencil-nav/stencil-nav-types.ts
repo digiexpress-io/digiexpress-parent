@@ -74,7 +74,7 @@ function parseExplorerItems(search: Record<string, unknown>): ExplorerItem[] {
     return [{ type: 'ACTIVITIES' }];
   }
   if (explorerItems.length === 0) {
-    return [{ type: 'ACTIVITIES' }];
+    return [{ type: 'ASSISTANCE' }];
   }
 
   return explorerItems;

@@ -55,7 +55,7 @@ export const Toolbar: React.FC<{}> = ({ }) => {
         <EveliPermissions id='NAV_TO_WRENCH'>
           <div>
             <IconButton
-              {...(location.pathname.includes('wrench') ? { disabled: true, className: classes.itemActive } : {})}
+              {...(location.pathname.includes('wrench') ? { disabled: false, className: classes.itemActive } : {})}
               onClick={() => navigate({
                 from: '/secured/$locale',
                 to: '/secured/$locale/assets/wrench',
@@ -72,7 +72,7 @@ export const Toolbar: React.FC<{}> = ({ }) => {
         <EveliPermissions id='NAV_TO_STENCIL'>
           <div>
             <IconButton
-              {...(location.pathname.includes('stencil') ? { disabled: true, className: classes.itemActive } : {})}
+              {...(location.pathname.includes('stencil') ? { disabled: false, className: classes.itemActive } : {})}
               onClick={() => navigate({
                 from: '/secured/$locale',
                 to: '/secured/$locale/assets/stencil',
