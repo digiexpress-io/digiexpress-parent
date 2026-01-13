@@ -91,6 +91,7 @@ public class TagomiWorldImpl implements TagomiWorld {
             .id(service.getServiceName())
             .value(container.getTemplates().values().stream()
                 .filter(t -> t.getServiceId().equals(service.getId()))
+                .filter(t -> t.getLocaleId().equals(targetLocale.getId()))
                 .map(t -> t.getContent())
                 .findFirst().orElseThrow()
             )

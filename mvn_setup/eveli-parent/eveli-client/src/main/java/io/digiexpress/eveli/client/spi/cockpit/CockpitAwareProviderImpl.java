@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.cockpit;
  */
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -42,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class CockpitAwareProviderImpl implements CockpitAwareProvider {
   private static final String ACTIVE_COCKPIT = "ACTIVE_COCKPIT_ID";
   
-  private final CockpitClient cockpitClient;
+  private final Supplier<CockpitClient> cockpitClient;
   private final WorkerAuthClient auth;
   private final UserProfileClient userProfileClient;
   private final CockpitContainerCache cockpitCache;
@@ -75,7 +76,7 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
           return Uni.createFrom().item(Optional.<CockpitContainer>empty());
         }
         
-        return cockpitClient.queries().cockpitQuery().getOne(cockpitId.get())
+        return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId.get())
             .onItem().transform(env -> Optional.ofNullable(env.getObjects()))
             .onItem().invoke(env -> cockpitCache.save(userSub, env));
       });
@@ -87,7 +88,7 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
 
   @Override
   public Uni<Optional<CockpitContainer>> set(String cockpitId) {
-    return cockpitClient.queries().cockpitQuery().getOne(cockpitId)
+    return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId)
         .onItem().transformToUni(env -> {
           final var command = ImmutableUpsertUiSettings.builder()
               .settingsId(ACTIVE_COCKPIT)

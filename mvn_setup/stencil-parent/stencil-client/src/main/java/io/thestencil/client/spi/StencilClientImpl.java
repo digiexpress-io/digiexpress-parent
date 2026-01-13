@@ -8,7 +8,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.digiexpress.thena.cockpit.client.api.CockpitAware;
+import io.digiexpress.thena.cockpit.client.api.CockpitAwareProvider_Empty;
 import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitAwareProps;
 
 /*-
@@ -48,14 +48,16 @@ public class StencilClientImpl implements StencilClient {
     this.store = store;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .provider(CockpitAware.EMPTY_PROVIDER)
+        .tenantType(COCKPIT_TYPE)
+        .provider(CockpitAwareProvider_Empty.INSTANCE)
         .build();
   }
   public StencilClientImpl(StencilStore store, Optional<CockpitAwareProvider> cockpitAwareProvider) {
     this.store = store;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .provider(cockpitAwareProvider.orElse(CockpitAware.EMPTY_PROVIDER))
+        .tenantType(COCKPIT_TYPE)
+        .provider(cockpitAwareProvider.orElse(CockpitAwareProvider_Empty.INSTANCE))
         .build();
   }
   

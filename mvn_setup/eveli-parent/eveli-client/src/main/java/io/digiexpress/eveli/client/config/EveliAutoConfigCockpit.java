@@ -21,11 +21,13 @@
 package io.digiexpress.eveli.client.config;
 
 import java.time.Duration;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,10 +36,10 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.spi.cockpit.CockpitAwareProviderImpl;
 import io.digiexpress.eveli.client.web.resources.worker.CockpitApiController;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitContainerCache;
 import io.digiexpress.thena.cockpit.client.api.CockpitClient;
@@ -61,19 +63,26 @@ public class EveliAutoConfigCockpit {
   
   @Bean
   public CockpitAwareProvider cockpitAwareProvider(
-      CockpitClient client,
       WorkerAuthClient auth, 
       UserProfileClient userProfileClient, 
       Optional<CockpitContainerCache> cache,
-      ApplicationEventPublisher publisher
+      ApplicationContext appContext,
+      ApplicationEventPublisher appPublisher
       ) {
 
+    final Supplier<CockpitClient> client = () -> {
+      return appContext.getBean(CockpitClient.class);
+    }; 
+    
     final var cacheImpl = cache.orElseGet(EveliAutoConfigCockpit::cockpitContainerCache);
-    return new CockpitAwareProviderImpl(client, auth, userProfileClient, cacheImpl, publisher);
+    return new CockpitAwareProviderImpl(client, auth, userProfileClient, cacheImpl, appPublisher);
   }
   
   @Bean
-  public CockpitClient cockpitClient(List<CockpitAware<?>> aware, io.vertx.mutiny.sqlclient.Pool pgPool) {
+  public CockpitClient cockpitClient(EveliEditEnvir editEnivr, io.vertx.mutiny.sqlclient.Pool pgPool) {
+    
+    final var aware = Arrays.asList(editEnivr.getStencil(), editEnivr.getWrench());
+    
     final var client = CockpitClientImpl.create()
         .client(pgPool)
         .aware(aware)

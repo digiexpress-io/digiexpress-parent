@@ -20,7 +20,7 @@
 
 package io.digiexpress.eveli.client.web.resources.worker;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.immutables.value.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,11 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.ImmutableList;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 import io.digiexpress.thena.cockpit.client.api.CockpitClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitContainer;
+import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfigTenant;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
@@ -56,15 +58,21 @@ public class CockpitApiController {
 
   @GetMapping("/activity")
   public Multi<CockpitActivity> findActivity() {
-    return cockpitAwareProvider.get().onItem().transform(active -> 
-      Arrays.asList(
-        ImmutableCockpitActivityState.builder()
-          .activeId(active.map(c -> c.getConfig().getId()).orElse(null))
+    return Uni.combine().all()
+        .unis(cockpitAwareProvider.get(), cockpitClient.queries().cockpitAwareQuery().findAll().collect().asList())
+        .asTuple()
+        .onItem().transform(tuple -> ImmutableList.<CockpitActivity>builder()
+          .add(ImmutableCockpitActiveState.builder()
+              .activeId(tuple.getItem1().map(c -> c.getConfig().getId()).orElse(null))
+              .build())
+          .add(ImmutableCockpitHardcodedTenant.builder()
+              .hardcodedTenants(tuple.getItem2())
+              .build())
           .build()
-      ))
-      .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
+        )
+        .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
   }
-
+  
   @PostMapping("/activity-state")
   public Multi<CockpitActivity> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
     return cockpitAwareProvider.set(change.getActiveId())
@@ -159,20 +167,35 @@ public class CockpitApiController {
     CockpitActivityType getActivityType();
   }
 
-  @JsonSerialize(as = ImmutableCockpitActivityState.class)
-  @JsonDeserialize(as = ImmutableCockpitActivityState.class)
+  @JsonSerialize(as = ImmutableCockpitActiveState.class)
+  @JsonDeserialize(as = ImmutableCockpitActiveState.class)
   @Value.Immutable
-  interface CockpitActivityState extends CockpitActivity {
+  interface CockpitActiveState extends CockpitActivity {
     @Nullable String getActiveId();
     
     @Override
     default CockpitActivityType getActivityType() {
-      return CockpitActivityType.STATE;
+      return CockpitActivityType.ACTIVE;
     }
-  }  
+  }
   
-  @JsonSerialize(as = ImmutableCockpitActivityState.class)
-  @JsonDeserialize(as = ImmutableCockpitActivityState.class)
+  @JsonSerialize(as = ImmutableCockpitHardcodedTenant.class)
+  @JsonDeserialize(as = ImmutableCockpitHardcodedTenant.class)
+  @Value.Immutable
+  interface CockpitHardcodedTenant extends CockpitActivity {
+    List<CockpitConfigTenant> getHardcodedTenants();
+    
+    @Override
+    default CockpitActivityType getActivityType() {
+      return CockpitActivityType.HARDCODED_TENANT;
+    }
+  }
+  
+  
+
+  
+  @JsonSerialize(as = ImmutableCockpitActivityChangeActiveId.class)
+  @JsonDeserialize(as = ImmutableCockpitActivityChangeActiveId.class)
   @Value.Immutable
   interface CockpitActivityChangeActiveId {
     @Nullable String getActiveId();
@@ -183,6 +206,6 @@ public class CockpitApiController {
     WRENCH(), STENCIL()
   }
   public enum CockpitActivityType {
-    STATE
+    ACTIVE, HARDCODED_TENANT
   }
 }

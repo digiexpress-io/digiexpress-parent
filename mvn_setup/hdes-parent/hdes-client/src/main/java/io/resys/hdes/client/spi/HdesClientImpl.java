@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.thena.cockpit.client.api.CockpitAware;
+import io.digiexpress.thena.cockpit.client.api.CockpitAwareProvider_Empty;
 import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitAwareProps;
 import io.resys.hdes.client.api.HdesAstTypes;
 import io.resys.hdes.client.api.HdesCache;
@@ -73,7 +73,8 @@ public class HdesClientImpl implements HdesClient {
     this.config = config;
     this.cockpitAwareProps = ImmutableCockpitAwareProps.builder()
         .tenantName(store.getRepoName())
-        .provider(CockpitAware.EMPTY_PROVIDER)
+        .tenantType(COCKPIT_TYPE)
+        .provider(CockpitAwareProvider_Empty.INSTANCE)
         .build();
   }
   
@@ -238,6 +239,7 @@ public class HdesClientImpl implements HdesClient {
       final var props = ImmutableCockpitAwareProps.builder()
           .provider(cockpitAwareProvider)
           .tenantName(store.getRepoName())
+          .tenantType(COCKPIT_TYPE)
           .build();
       
       return new HdesClientImpl(store, config, props);

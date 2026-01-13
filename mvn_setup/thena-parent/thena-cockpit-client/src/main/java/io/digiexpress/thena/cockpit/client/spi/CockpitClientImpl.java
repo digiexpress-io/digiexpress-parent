@@ -43,19 +43,19 @@ import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.spi.TenantActionsImpl;
 import io.resys.thena.support.RepoAssert;
-import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class CockpitClientImpl implements CockpitClient {
   private final CockpitDb startingState;
+  private final CockpitAwareQueryImpl awareQuery;
 
   @Override
   public CockpitQueryActions queries() {
     final var tenantId = startingState.getDataSource().getTenant().getName();
     RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
-    return new CockpitQueryActionsImpl(startingState, tenantId); 
+    return new CockpitQueryActionsImpl(startingState, awareQuery, tenantId); 
   }
   @Override 
   public CockpitCommitActions commits() {
@@ -98,8 +98,7 @@ public class CockpitClientImpl implements CockpitClient {
     public Builder tenantName(String tenantName) { this.tenantName = tenantName; return this; }
     public Builder tenantCache(TenantCache tenantCache) { this.tenantCache = tenantCache; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
-    public Builder aware(List<CockpitAware<?>> aware) { this.aware.addAll(aware); return this; }
-
+    public Builder aware(List<? extends CockpitAware<?>>aware) { this.aware.addAll(aware); return this; }
     
     public CockpitClientImpl build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
@@ -117,8 +116,9 @@ public class CockpitClientImpl implements CockpitClient {
       );
       
       final var state = new CockpitDbImpl(dataSource);
-      return new CockpitClientImpl(state);
+      return new CockpitClientImpl(state, new CockpitAwareQueryImpl(this.aware));
     }
+
   }
 
 }

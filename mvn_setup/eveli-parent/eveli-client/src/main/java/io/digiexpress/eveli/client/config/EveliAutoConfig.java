@@ -97,7 +97,8 @@ import lombok.extern.slf4j.Slf4j;
     EveliAutoConfigBatches.class,
     EveliAutoConfigBatchesDev.class,
     EveliAutoConfigContract.class,
-    EveliAutoConfigDb.class
+    EveliAutoConfigDb.class,
+    EveliAutoConfigCockpit.class
 })
 @EnableConfigurationProperties( value = {
     EveliProps.class, 

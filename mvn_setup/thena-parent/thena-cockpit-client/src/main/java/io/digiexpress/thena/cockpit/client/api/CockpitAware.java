@@ -26,6 +26,8 @@ import org.immutables.value.Value;
 
 import io.smallrye.mutiny.Uni;
 
+
+
 public interface CockpitAware<T extends CockpitAware<T>> {
 
   // load the configured cockpit
@@ -36,11 +38,11 @@ public interface CockpitAware<T extends CockpitAware<T>> {
 
   // default settings, when not taking cockpit into account
   CockpitAwareProps getCockpitAwareProps();
-
   
   @Value.Immutable
   interface CockpitAwareProps {
     String getTenantName();
+    String getTenantType();
     CockpitAwareProvider getProvider();
   }
   
@@ -55,16 +57,4 @@ public interface CockpitAware<T extends CockpitAware<T>> {
     Optional<CockpitContainer> save(String anyId, Optional<CockpitContainer> container);
     void invalidateAll();
   }
-  
-  
-  public static CockpitAwareProvider EMPTY_PROVIDER = new CockpitAwareProvider() {
-    @Override
-    public Uni<Optional<CockpitContainer>> get() {
-      return Uni.createFrom().item(Optional.empty());
-    }
-    @Override
-    public Uni<Optional<CockpitContainer>> set(String cockpitId) {
-      return Uni.createFrom().item(Optional.empty());
-    }
-  };
 }
