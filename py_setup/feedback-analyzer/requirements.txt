@@ -6,7 +6,7 @@ numpy>=1.21.0
 # Azure dependencies - Required when FEEDBACK_PROVIDER=azure
 azure-ai-textanalytics==5.3.0
 azure-identity==1.21.0
-azure-core==1.35.0
+azure-core==1.38.0
 azure-common==1.1.28
 certifi==2025.1.31
 cffi==1.17.1
