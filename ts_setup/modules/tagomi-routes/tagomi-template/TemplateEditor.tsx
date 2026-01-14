@@ -6,8 +6,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typogra
 import { useIntl } from 'react-intl';
 
 import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
-import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
-import { DebugPdfViewer, DebugForm } from '../tagomi-debug';
+import { DebugPdfViewer, DebugForm, useGetFlowInput } from '../tagomi-debug';
 
 
 interface Message {
@@ -21,8 +20,6 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const messages: Message[] = [];
   const monaco: typeof monaco_editor | null = useMonaco();
   const composer = TagomiComposerApi.useComposer();
-  const { flows } = Composer.useSite();
-  const [input, setInput] = React.useState<object>({});
   const [inputOpen, setInputOpen] = React.useState<boolean>(false);
   const [base64, setBase64] = React.useState<string>();
 
@@ -30,29 +27,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const service = composer.site.services[serviceId];
   const localeLabel = service.labels.find(l => l.locale === template.localeId)?.labelValue ?? '';
   const [src, setSrc] = React.useState(template.content);
-
-  React.useEffect(() => {
-    const orchestratorName = service.orchestratorName;
-    
-    const asset: HdesApi.Entity<HdesApi.AstBody> | undefined = flows[orchestratorName] 
-      ? flows[orchestratorName]
-      : Object.values(flows).find(flow => flow.ast?.name === orchestratorName);
-    
-    if (!asset?.ast?.headers?.acceptDefs) {
-      return;
-    }
-
-    const initialJson: Record<string, any> = {};
-    asset.ast.headers.acceptDefs.forEach((typeDef) => {
-      if (typeDef.values) {
-        initialJson[typeDef.name] = typeDef.values;
-      }
-    });
-    
-    if (Object.keys(initialJson).length > 0) {
-      setInput(initialJson);
-    }
-  }, [service.orchestratorName, flows]);
+  const { input, setInput } = useGetFlowInput(service.orchestratorName);
 
   async function handleCompile() {
     const pdf = await composer.backend.compileTemplate(serviceId, template.localeId, input);
