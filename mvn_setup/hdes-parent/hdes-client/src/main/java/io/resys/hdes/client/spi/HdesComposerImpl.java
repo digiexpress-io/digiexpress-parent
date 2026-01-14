@@ -3,6 +3,7 @@ package io.resys.hdes.client.spi;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /*-
  * #%L
@@ -194,6 +195,10 @@ public class HdesComposerImpl implements HdesComposer {
   @Override
   public Uni<HdesComposer> withCockpit() {
     return this.client.withCockpit().onItem().transform(client -> new HdesComposerImpl(client));
+  }
+  @Override
+  public Uni<HdesComposer> withCockpit(Optional<String> id) {
+    return this.client.withCockpit(id).onItem().transform(client -> new HdesComposerImpl(client));
   }
   @Override
   public Uni<HdesComposer> withCockpitAwareProps() {

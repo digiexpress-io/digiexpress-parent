@@ -33,6 +33,7 @@ import io.digiexpress.eveli.client.api.TenantConfigClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.smallrye.mutiny.Uni;
@@ -110,6 +111,11 @@ public class EveliWrenchOnlyTenantAutoConfig {
     @Override
     public EveliRuntimeQuery runtimeQuery() {
       throw new RuntimeException("Empty envir does not support this operation!");
+    }
+
+    @Override
+    public EveliEnvirClient withCockpitIdSupplier(CockpitIdSupplier supplier) {
+      return this;
     }
     
   }

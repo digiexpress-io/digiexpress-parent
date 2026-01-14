@@ -126,6 +126,7 @@
         "@tanstack/react-table",
         "luxon",
         "react-intl",
+        "@tanstack/react-query",
         "@dxs-ts/xui-table",
         "@dxs-ts/cockpit-api"
       ],
@@ -134,7 +135,8 @@
         "@mui/material",
         "@tanstack/react-table",
         "luxon",
-        "react-intl"
+        "react-intl",
+        "@tanstack/react-query"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-table",
@@ -145,8 +147,7 @@
         "@dxs-ts/xui-datetime",
         "@mui/utils",
         "@mui/system",
-        "@mui/icons-material",
-        "@tanstack/react-query"
+        "@mui/icons-material"
       ]
     },
     "@dxs-ts/contract-api": {
@@ -4325,6 +4326,6 @@
       ]
     }
   },
-  "checksum": "1c3c7bb5987ce9d3e8373cbc78358099160f6d3065c1d832740965ac3469364d",
-  "generatedAt": "2026-01-14T08:07:02.848Z"
+  "checksum": "5e665a7c7882bf7b52a253f317007372e98aec021ab4fe17a416ec308d25a22e",
+  "generatedAt": "2026-01-14T11:57:59.182Z"
 }

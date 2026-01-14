@@ -30,6 +30,7 @@ import io.digiexpress.eveli.envir.spi.actions.EveliDeploymentCompilerImpl;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeCache;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeQueryImpl;
 import io.digiexpress.eveli.envir.spi.actions.ModifyOneDeploymentImpl;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
@@ -83,8 +84,11 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
 
   @Override
   public void invalidateCache() {
-    cache.invalidateAll();
-    
+    cache.invalidateAll();    
   }
 
+  @Override
+  public EveliEnvirClient withCockpitIdSupplier(CockpitIdSupplier supplier) {
+    return new EveliEnvirClientImpl(ctx.withCockpitIdSupplier(supplier), hdesClientConfig, dialobClient, cache, isDev);
+  }
 }

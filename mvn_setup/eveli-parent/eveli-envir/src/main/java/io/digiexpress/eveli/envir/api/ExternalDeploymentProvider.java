@@ -23,11 +23,16 @@ package io.digiexpress.eveli.envir.api;
 import java.util.Optional;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.smallrye.mutiny.Uni;
 
-public interface ExternalDeploymentProvider {
+public interface ExternalDeploymentProvider extends CockpitAware.CockpitIdAware<ExternalDeploymentProvider> {
 
   // emptyBranchBody = false => with body all the large json assets, stencil, wrench, dialob etc....
   Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody);
   
+  default ExternalDeploymentProvider withCockpitIdSupplier(CockpitIdSupplier supplier) {
+    return this;
+  }
 }

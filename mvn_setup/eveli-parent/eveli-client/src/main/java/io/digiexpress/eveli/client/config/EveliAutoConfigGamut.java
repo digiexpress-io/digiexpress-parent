@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * eveli-client
@@ -41,6 +43,7 @@ import io.digiexpress.eveli.client.web.resources.gamut.GamutSiteController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutUserActionsController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitClient;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -97,8 +100,10 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutSiteController gamutSiteController(EveliEnvirClient envir, FeedbackClient feedback, GamutAuthClient auth) {
-    return new GamutSiteController(envir, feedback, auth);
+  public GamutSiteController gamutSiteController(
+      EveliEnvirClient envir, FeedbackClient feedback, GamutAuthClient auth, Optional<CockpitClient> cockpitClient) {
+    
+    return new GamutSiteController(envir, feedback, auth, cockpitClient);
   }
   
   @Bean

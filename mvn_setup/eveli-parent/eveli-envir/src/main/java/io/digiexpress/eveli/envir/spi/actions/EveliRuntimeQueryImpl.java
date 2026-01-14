@@ -42,7 +42,30 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   private final HdesClientConfig hdesClientConfig;
   
   private final boolean isDev;
-  
+
+  @Override
+  public Uni<EveliRuntime> getOne() {
+    return getLastDeployment().onItem().transformToUni(last -> {
+      
+      if(last.isPresent()) {
+        final Uni<EveliRuntime> external = getOrCreateEnvir(last.get());
+        logging.info();
+        return external;
+      }
+      logging.error();
+      throw new EveliRuntimeQueryException("No deployments that can be activated!");
+    });
+  }
+
+  @Override
+  public Uni<Optional<EveliRuntime>> findOne() {
+    return getLastDeployment().onItem().transformToUni(last -> {
+      if(last.isEmpty()) {
+        return Uni.createFrom().item(Optional.<EveliRuntime>empty());
+      }
+      return getOrCreateEnvir(last.get()).onItem().transform(e -> Optional.of(e));
+    }).onItem().invoke(e -> logging.info());
+  }
 
   private EveliRuntime createEnvir(EveliDeployment deployment) {
     final var envir = new EveliRuntimeImpl(deployment, hdesClientConfig, isDev);
@@ -107,29 +130,7 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   }
   
   
-  @Override
-  public Uni<EveliRuntime> getOne() {
-    return getLastDeployment().onItem().transformToUni(last -> {
-      
-      if(last.isPresent()) {
-        final Uni<EveliRuntime> external = getOrCreateEnvir(last.get());
-        logging.info();
-        return external;
-      }
-      logging.error();
-      throw new EveliRuntimeQueryException("No deployments that can be activated!");
-    });
-  }
 
-  @Override
-  public Uni<Optional<EveliRuntime>> findOne() {
-    return getLastDeployment().onItem().transformToUni(last -> {
-      if(last.isEmpty()) {
-        return Uni.createFrom().item(Optional.<EveliRuntime>empty());
-      }
-      return getOrCreateEnvir(last.get()).onItem().transform(e -> Optional.of(e));
-    }).onItem().invoke(e -> logging.info());
-  }
   public static class EveliRuntimeQueryException extends RuntimeException {
     private static final long serialVersionUID = -6001308683183662536L;
 

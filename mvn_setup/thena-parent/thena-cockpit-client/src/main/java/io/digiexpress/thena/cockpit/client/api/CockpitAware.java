@@ -32,6 +32,9 @@ public interface CockpitAware<T extends CockpitAware<T>> {
 
   // load the configured cockpit
   Uni<T> withCockpit();
+  
+  // load the configured cockpit
+  Uni<T> withCockpit(Optional<String> id);
 
   // load based on default settings
   Uni<T> withCockpitAwareProps();
@@ -47,6 +50,7 @@ public interface CockpitAware<T extends CockpitAware<T>> {
   }
   
   interface CockpitAwareProvider {
+    Uni<Optional<CockpitContainer>> get(Optional<String> cockpitId);
     Uni<Optional<CockpitContainer>> get();
     Uni<Optional<CockpitContainer>> set(String cockpitId);
   }
@@ -56,5 +60,16 @@ public interface CockpitAware<T extends CockpitAware<T>> {
     Optional<CockpitContainer> get(String anyId);
     Optional<CockpitContainer> save(String anyId, Optional<CockpitContainer> container);
     void invalidateAll();
+  }
+  
+  
+  
+  interface CockpitIdAware<T extends CockpitIdAware<T>> {
+    T withCockpitIdSupplier(CockpitIdSupplier supplier);
+  }
+  
+  @FunctionalInterface
+  interface CockpitIdSupplier {
+    Uni<Optional<String>> apply();
   }
 }

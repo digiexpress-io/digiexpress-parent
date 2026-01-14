@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class CockpitAwareProviderImpl implements CockpitAwareProvider {
+public class CockpitAwareProviderWorkerImpl implements CockpitAwareProvider {
   private static final String ACTIVE_COCKPIT = "ACTIVE_COCKPIT_ID";
   
   private final Supplier<CockpitClient> cockpitClient;
@@ -53,6 +53,11 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
   public Uni<Optional<CockpitContainer>> get() {
     return getUser()
       .onItem().transformToUni(user -> {
+        
+        if(!user.isAuthenticated()) {
+          return Uni.createFrom().item(() -> Optional.<CockpitContainer>empty());
+        }
+        
         final var principal = user.getPrincipal();
         final var sub = principal.getSub();
         
@@ -61,6 +66,19 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
         }
         return getAndCache(sub);
       });
+  }
+  
+  @Override
+  public Uni<Optional<CockpitContainer>> get(Optional<String> cockpitId) {
+    if(cockpitId.isEmpty()) {
+      return get();
+    }
+    
+    final var sub = cockpitId.get();
+    if(cockpitCache.contains(sub)) {
+      return Uni.createFrom().item(() -> cockpitCache.get(sub));
+    }
+    return getAndCache(sub);
   }
   
   private Uni<Optional<CockpitContainer>> getAndCache(String userSub) {

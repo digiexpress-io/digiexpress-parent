@@ -1,19 +1,23 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query'
+import { useIntl } from 'react-intl';
+
+import { useLocale } from '../api-locale';
+
 import { SiteApi } from './site-types';
 import { SiteCache } from './site-reducer';
-import { useLocale } from '../api-locale';
 import { getSearchTopics } from './search-topics';
-import { useIntl } from 'react-intl';
 import { maintainace_en } from './fallback-content';
+import { CockpitStore } from './CockpitStore';
 
 
 export interface  SiteBackendProviderProps {
+  fetchCockpitsGet: SiteApi.FetchCockpitsGET;
   fetchSiteGet: SiteApi.FetchSiteGET;
   fetchFeedbackGet: SiteApi.FetchFeedbackGET;
-  fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT
-  children: React.ReactNode;
+  fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT;
 
+  children: React.ReactNode;
   staleTime?: number | undefined;
   refetchTime?: number | false | undefined;
 }
@@ -24,14 +28,25 @@ export interface SiteBackendContextType {
   views: Record<SiteApi.TopicId, SiteApi.TopicView>
   locale: SiteApi.LocaleCode;
   feedback: SiteApi.CustomerFeedback[];
+  cockpits: {
+    options: SiteApi.Cockpit[];
+    active: SiteApi.Cockpit | null;
+    setActive: (active: SiteApi.Cockpit | null | undefined) => void;
+  };
   pending: boolean;
   voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void>;
 }
+
 export const SiteBackendContext = React.createContext<SiteBackendContextType>({
   pending: true,
   locale: 'en',
   views: {},
   feedback: [],
+  cockpits: {
+    options: [],
+    active: null,
+    setActive: () => {}
+  },
   voteOnReply: (() => { }) as any
 });
 
@@ -40,16 +55,21 @@ const staleTime = 15000;
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
   const { locale: selectedLocale } = useLocale();
   const intl = useIntl();
+
+
+  const [cockpit, setCockpit] = React.useState<SiteApi.Cockpit | null>(() => CockpitStore.get());
+  const fetchCockpitsGet: SiteApi.FetchCockpitsGET = React.useMemo(() => props.fetchCockpitsGet, [props.fetchCockpitsGet])
   const fetchSiteGet: SiteApi.FetchSiteGET = React.useMemo(() => props.fetchSiteGet, [props.fetchSiteGet])
   const fetchFeedbackGet: SiteApi.FetchFeedbackGET = React.useMemo(() => props.fetchFeedbackGet, [props.fetchFeedbackGet])
   const fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT = React.useMemo(() => props.fetchFeedbackRatingPut, [props.fetchFeedbackRatingPut])
+
 
   // tanstack query config
   const siteQuery = useQuery({
     staleTime: props.staleTime === undefined ? staleTime : props.staleTime,
     refetchInterval: props.refetchTime === undefined ? staleTime : props.refetchTime,
-    queryKey: ['sites', selectedLocale],
-    queryFn: () => fetchSiteGet(selectedLocale).then(async response => {
+    queryKey: ['sites', selectedLocale, cockpit?.id],
+    queryFn: () => fetchSiteGet(selectedLocale, cockpit?.id).then(async response => {
       if (!response.ok) {
         console.error('site not available', response.status);
         const site: SiteApi.Site = maintainace_en;
@@ -77,31 +97,53 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
     }),
   });
 
+
+  const cockpitsQuery = useQuery({
+    staleTime: Infinity,
+    refetchInterval: false,
+    queryKey: ['cockpits'],
+    queryFn: () => fetchCockpitsGet().then(async response => {
+      if (!response.ok) {
+        // just ignore on any errors, fully optional features
+        const cockpits: SiteApi.Cockpit[] = [];
+        return cockpits;
+      }
+      const cockpits: SiteApi.Cockpit[] = await response.json();
+      return cockpits
+    }),
+  });
+
+  const cockpits = cockpitsQuery.data ?? [];
   const views = siteQuery.data?.views;
   const site = siteQuery.data?.site ?? maintainace_en;
   const pending = siteQuery.isPending;
   const feedback = siteQuery.isPending ? [] : (feedbackQuery.data ?? []);
 
+
   const contextValue: SiteBackendContextType = React.useMemo(() => {
     async function voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void> {
       return fetchFeedbackRatingPut(body).then(_data => feedbackQuery.refetch()).then(_junk => { });
     }
-    return Object.freeze({ site, views: views ?? {}, pending, locale: selectedLocale, feedback, voteOnReply });
-  }, [site, views, pending, selectedLocale, feedback, fetchFeedbackRatingPut]);
+
+    function setActive(active: SiteApi.Cockpit | null | undefined) {
+      CockpitStore.save(active);
+      setCockpit(active ?? null);
+    }
+    
+    return Object.freeze({ 
+      site, 
+      views: views ?? {}, 
+      pending, 
+      locale: selectedLocale, 
+      feedback,
+      cockpits: {
+        options: cockpits,
+        active: cockpit,
+        setActive
+      },
+      voteOnReply
+    });
+  }, [site, views, pending, selectedLocale, feedback, cockpits, cockpit, fetchFeedbackRatingPut]);
 
   return (<SiteBackendContext.Provider value={contextValue}>{props.children}</SiteBackendContext.Provider>);
 }
-
-class SiteRequestError extends Error {
-  reason: string;
-  code: number;
-  constructor(reason: string, code: number) {
-    super(reason);
-
-    Object.setPrototypeOf(this, SiteRequestError.prototype);
-    this.reason = reason;
-    this.code = code;
-    this.name = 'SiteRequestError';
-  }
-}
-

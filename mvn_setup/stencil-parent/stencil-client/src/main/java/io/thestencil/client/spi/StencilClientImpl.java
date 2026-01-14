@@ -63,21 +63,26 @@ public class StencilClientImpl implements StencilClient {
   
   @Override
   public Uni<StencilClient> withCockpit() {
-    return cockpitAwareProps.getProvider().get().onItem()
-        .transform(cockpit -> {
-          
-          if(cockpit.isEmpty()) {
-            return this.withRepo(cockpitAwareProps.getTenantName());
-          }
-          
-          final var tenantName = cockpit.get().getTenants().stream()
-            .filter(t -> t.getCockpitConfigTenantType().equals(COCKPIT_TYPE))
-            .map(e -> e.getExternalId())
-            .findFirst()
-            .orElse(cockpitAwareProps.getTenantName());
-          
-          return this.withRepo(tenantName);
-        });
+    return withCockpit(Optional.empty());
+  }
+
+  @Override
+  public Uni<StencilClient> withCockpit(Optional<String> id) {
+    return cockpitAwareProps.getProvider().get(id).onItem()
+      .transform(cockpit -> {
+        
+        if(cockpit.isEmpty()) {
+          return this.withRepo(cockpitAwareProps.getTenantName());
+        }
+        
+        final var tenantName = cockpit.get().getTenants().stream()
+          .filter(t -> t.getCockpitConfigTenantType().equals(COCKPIT_TYPE))
+          .map(e -> e.getExternalId())
+          .findFirst()
+          .orElse(cockpitAwareProps.getTenantName());
+        
+        return this.withRepo(tenantName);
+      });
   }
   @Override
   public CockpitAwareProps getCockpitAwareProps() {
@@ -174,4 +179,5 @@ public class StencilClientImpl implements StencilClient {
       return new StencilClientImpl(store);
     }
   }
+
 }

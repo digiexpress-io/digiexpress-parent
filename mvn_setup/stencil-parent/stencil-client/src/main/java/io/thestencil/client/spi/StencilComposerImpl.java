@@ -1,5 +1,7 @@
 package io.thestencil.client.spi;
 
+import java.util.Optional;
+
 import io.smallrye.mutiny.Uni;
 /*-
  * #%L
@@ -82,6 +84,10 @@ public class StencilComposerImpl implements StencilComposer {
   @Override
   public Uni<StencilComposer> withCockpit() {
     return this.client.withCockpit().onItem().transform(client -> new StencilComposerImpl(client));
+  }
+  @Override
+  public Uni<StencilComposer> withCockpit(Optional<String> id) {
+    return this.client.withCockpit(id).onItem().transform(client -> new StencilComposerImpl(client));
   }
   @Override
   public Uni<StencilComposer> withCockpitAwareProps() {

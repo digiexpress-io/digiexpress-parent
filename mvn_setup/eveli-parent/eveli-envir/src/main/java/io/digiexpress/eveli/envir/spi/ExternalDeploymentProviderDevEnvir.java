@@ -28,6 +28,7 @@ import io.dialob.api.form.Form;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.eveli.envir.api.ImmutableEveliDeployment;
 import io.digiexpress.eveli.envir.api.ImmutableEveliSources;
@@ -52,8 +53,24 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   private final StencilClient stencilClient;
   private final HdesClient wrenchClient;
   private final DialobClient dialobClient;
-
-
+  private final CockpitIdSupplier cockpitIdSupplier;
+  
+  public ExternalDeploymentProviderDevEnvir(
+      StencilClient stencilClient,
+      HdesClient wrenchClient, 
+      DialobClient dialobClient) {
+    super();
+    this.stencilClient = stencilClient;
+    this.wrenchClient = wrenchClient;
+    this.dialobClient = dialobClient;
+    this.cockpitIdSupplier = () -> Uni.createFrom().item(Optional.<String>empty());
+  }
+  
+  @Override
+  public ExternalDeploymentProvider withCockpitIdSupplier(CockpitIdSupplier supplier) {
+    return new ExternalDeploymentProviderDevEnvir(stencilClient, wrenchClient, dialobClient, supplier);
+  }
+  
   @Override
   public Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody) {
     if(emptyBranchBody) {
@@ -63,12 +80,13 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   }
   
   private Uni<Optional<EveliDeployment>> getDeploymentWithoutBody() {
-    return Uni.combine().all()
+    return this.cockpitIdSupplier.apply().onItem().transformToUni(optionalId -> Uni.combine().all()
         .unis(
-            wrenchClient.withCockpit().onItem().transformToUni(client -> client.store().query().getBranch()), 
-            stencilClient.withCockpit().onItem().transformToUni(client -> client.getStore().query().getBranch())
+            wrenchClient.withCockpit(optionalId).onItem().transformToUni(client -> client.store().query().getBranch()), 
+            stencilClient.withCockpit(optionalId).onItem().transformToUni(client -> client.getStore().query().getBranch())
         )
-        .asTuple().onItem().transform(tuple -> {
+        .asTuple())
+        .onItem().transform(tuple -> {
           
           final var now = OffsetDateTime.now();
   
@@ -167,15 +185,7 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
           JsonObject.mapFrom(stencilService).encodePrettily());
     }
   }
-  
-  public static class DialobFormNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = 1781444267360040922L;
-    public DialobFormNotFoundException(String message) {
-      super(message);
-    }
-  }
-  
-  
+
 
   private Uni<SiteState> stencilState() {
     return stencilClient.getStore().query().head();
@@ -183,5 +193,12 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   
   private Uni<AstTag> wrenchState() {
     return wrenchClient.store().query().get().onItem().transform(ComposerEntityMapper::toTag);
+  }
+  
+  public static class DialobFormNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 1781444267360040922L;
+    public DialobFormNotFoundException(String message) {
+      super(message);
+    }
   }
 }

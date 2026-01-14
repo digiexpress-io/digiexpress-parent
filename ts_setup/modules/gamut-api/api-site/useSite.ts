@@ -5,7 +5,7 @@ import { SiteApi } from "./site-types";
 
 export function useSite() {
   const result: SiteBackendContextType = React.useContext(SiteBackendContext);
-  const { site, views, feedback, voteOnReply } = result;
+  const { site, views, feedback, voteOnReply, cockpits } = result;
   const topics = React.useMemo(() => getSortedTopics(views), [views]);
 
 
@@ -25,7 +25,7 @@ export function useSite() {
     return createTopicGroups(topics, itemsInColumn);
   }
 
-  return { getTopicGroups, getLink, site, views, feedback, topics, voteOnReply, pending: result.pending };
+  return { getTopicGroups, getLink, site, views, feedback, topics, voteOnReply, pending: result.pending, cockpits };
 }
 
 
