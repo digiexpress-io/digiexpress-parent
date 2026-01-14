@@ -41,7 +41,7 @@ export const ToolPagination: React.FC<ToolPaginationProps> = (props) => {
 
 
       <span style={{ marginLeft: 10, marginRight: 10 }}>
-        <Typography>{intl.formatMessage({ id: 'eveli.table.footer.pageNumber', defaultMessage: 'Page ' })}
+        <Typography>{intl.formatMessage({ id: 'eveli.table.footer.pageNumber', defaultMessage: 'Page' })}{' '}
           {props.pagination.pageIndex + 1} / {props.table.getPageCount()}
         </Typography>
       </span>
