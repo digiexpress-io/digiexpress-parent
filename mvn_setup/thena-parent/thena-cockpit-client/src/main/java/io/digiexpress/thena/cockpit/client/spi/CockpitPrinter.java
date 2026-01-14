@@ -79,11 +79,12 @@ public class CockpitPrinter {
         .append(", type: ").append(repo.getType()).append(System.lineSeparator());
 
     queryActions.cockpitQuery().findAll()
+        .collect().asList()
         .onItem()
         .transform(items -> {
           
           // Pre-process all dates and IDs for static replacement
-          for (final var item : items.getObjects()) {
+          for (final var item : items) {
             final var config = item.getConfig();
             ID.apply(config.getId());
             ID.apply(config.getCommitId());
@@ -103,7 +104,7 @@ public class CockpitPrinter {
           }
 
           // Sort and print configs
-          for (final var item : items.getObjects().stream()
+          for (final var item : items.stream()
               .sorted((a, b) -> ComparisonChain.start()
                   .compare(ID.apply(a.getConfig().getId()), ID.apply(b.getConfig().getId()))
                   .result())

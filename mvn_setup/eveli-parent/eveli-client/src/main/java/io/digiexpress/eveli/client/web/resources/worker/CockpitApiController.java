@@ -73,6 +73,12 @@ public class CockpitApiController {
         .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
   }
   
+  @GetMapping
+  public Multi<CockpitContainer> findAllCockpits() {
+    return cockpitClient.queries().cockpitQuery().findAll();
+      
+  }
+  
   @PostMapping("/activity-state")
   public Multi<CockpitActivity> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
     return cockpitAwareProvider.set(change.getActiveId())
