@@ -26,7 +26,7 @@ export const ToolPagination: React.FC<ToolPaginationProps> = (props) => {
 
   return (
     <>
-      <Typography>{intl.formatMessage({ id: 'eveli.table.footer.tasks.total', defaultMessage: 'Total tasks: ' })} {props.table.getRowCount()}</Typography>
+      <Typography>{intl.formatMessage({ id: 'eveli.table.footer.tasks.total', defaultMessage: 'Total tasks: ' })} {props.table.getFilteredRowModel().rows.length}</Typography>
       <Typography>{intl.formatMessage({ id: 'eveli.table.footer.rowsPerPage', defaultMessage: 'Rows per page: ' })}</Typography>
       <TextField select value={props.table.getState().pagination.pageSize} onChange={e => { props.table.setPageSize(Number(e.target.value)) }}>
         {pageSizes.map(pageSize => (
