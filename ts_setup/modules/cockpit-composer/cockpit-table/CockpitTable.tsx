@@ -1,12 +1,13 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-import { ColumnDef, FilterFnOption, flexRender } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 
 import { useIntl } from 'react-intl';
-import { anyDateFilter, TableDateFilter, WithTableStyles } from '@dxs-ts/xui-table';
-import { CockpitApi } from '@dxs-ts/cockpit-api';
+import { useQuery } from '@tanstack/react-query';
+import { WithTableStyles } from '@dxs-ts/xui-table';
+import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
 
 
 
@@ -14,72 +15,44 @@ export const COCKPIT_TABLE_QUERY_KEY = 'find-all-cockpits';
 
 export const CockpitTable: React.FC = () => {
   const intl = useIntl();
+  const backend = useCockpitsBackend();
 
-  const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
-     {
-      header: intl.formatMessage({ id: 'contractTable.col.header.contractNumber'}),
-      accessorKey: 'contractNumber',
-      size: 100,
-      minSize: 100,
-      enableSorting: false,
-      enableResizing: true,
-      enableColumnFilter: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'contractTable.col.header.contractType'}),
-      accessorKey: 'contractType',
-      size: 120,
-      minSize: 120,
-      enableSorting: false,
-      enableResizing: true,
-      enableColumnFilter: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'contractTable.col.header.policyholder'}),
-      accessorKey: 'policyholder.externalId',
-      size: 150,
-      minSize: 150,
-      enableSorting: false,
-      enableResizing: true,
-      enableColumnFilter: true,
-    },
-    {
-      header: intl.formatMessage({ id: 'contractTable.col.header.status' }),
-      accessorKey: 'contractStatusIntl',
-      size: 150,
-      minSize: 150,
-      enableSorting: true,
-      enableColumnFilter: true,
-      enableResizing: true,
-      meta: {
-        enableSelection: true
-      }
-    },
+  const { data, error, refetch, isPending } = useQuery({
+    queryKey: [COCKPIT_TABLE_QUERY_KEY],
+    queryFn: () => backend.persistence.findAllCockpits(),
+    initialData: [],
+  });
 
+  console.log("data", data)
+
+  const columns: ColumnDef<CockpitApi.CockpitContainer, any>[] = [
     {
-      header: intl.formatMessage({ id: 'contractTable.col.header.created'}),
-      accessorKey: 'createdAt',
+      header: intl.formatMessage({ id: 'cockpitTable.col.header.id' }),
+      accessorKey: 'id',
       size: 150,
       minSize: 150,
-      enableSorting: true,
-      enableColumnFilter: true,
+      enableSorting: false,
       enableResizing: true,
-      meta: { enableDate: true },
-      filterFn: filterCreated,
-      cell: (created) => flexRender(AnyDateTimeShort, { value: created.getValue() })
+      enableColumnFilter: true,
     },
     {
-      header: intl.formatMessage({ id: 'contractTable.col.header.maturityDate'}),
-      accessorKey: 'contractMaturityDate',
-      size: 150,
-      minSize: 150,
+      header: intl.formatMessage({ id: 'cockpitTable.col.header.name' }),
+      accessorKey: 'name',
+      size: 200,
+      minSize: 200,
       enableSorting: true,
-      enableColumnFilter: true,
       enableResizing: true,
-      meta: { enableDate: true },
-      filterFn: filterMaturityDate,
-      cell: (dueDate) => flexRender(AnyDateTimeShort, { value: dueDate.getValue() })
+      enableColumnFilter: true,
     },
+    {
+      header: intl.formatMessage({ id: 'cockpitTable.col.header.description' }),
+      accessorKey: 'description',
+      size: 250,
+      minSize: 250,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+    }
   ]
 
 
@@ -88,14 +61,15 @@ export const CockpitTable: React.FC = () => {
       <Box display="flex" alignItems="center" mb={2}>
         <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'cockpitsTable.title' })}</Typography>
       </Box>
-      <WithTableStyles 
-        data={[]} 
-        columns={columns} 
-        options={{ tableId: 'cockpits' }} 
-        theme={{
-          rowProps: { height: '50px' }
-        }}
-      />
+      {data.length === 0 ? <>empty</> :
+        <WithTableStyles
+          data={data}
+          columns={columns}
+          options={{ tableId: 'cockpits' }}
+          theme={{
+            rowProps: { height: '50px' }
+          }}
+        />}
     </>
   );
 }
@@ -106,7 +80,7 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   if (!rawDate) {
     return <div>--</div>
   }
-  if((typeof rawDate)) {
+  if ((typeof rawDate)) {
 
   }
 
@@ -118,12 +92,3 @@ const AnyDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   return <div>{formatted}</div>;
 }
 
-const filterMaturityDate: FilterFnOption<CockpitApi.CockpitSummary> = (row, _columnId: string, filterValue: TableDateFilter) => {
-  const latestTagDate = row.original.contractMaturityDate;
-  return anyDateFilter(latestTagDate, filterValue);
-}
-
-const filterCreated: FilterFnOption<CockpitApi.CockpitSummary> = (row, _columnId: string, filterValue: TableDateFilter) => {
-  const lastSaved = row.original.createdAt;
-  return anyDateFilter(lastSaved, filterValue);
-}
