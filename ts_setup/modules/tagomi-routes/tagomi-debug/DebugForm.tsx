@@ -21,6 +21,21 @@ export const DebugForm: React.FC<DebugFormProps> = ({ selected, onChange }) => {
     return Object.values(flows).find(flow => flow.ast?.name === selected);
   }, [selected, flows, services, decisions]);
 
+  const elements = asset?.ast ? asset.ast.headers.acceptDefs : [];
+
+  React.useEffect(() => {
+    const initialJson: Record<string, any> = {};
+    elements.forEach((typeDef) => {
+      if (typeDef.values) {
+        initialJson[typeDef.name] = typeDef.values;
+      }
+    });
+    
+    if (Object.keys(initialJson).length > 0) {
+      setJson(initialJson);
+      onChange(initialJson);
+    }
+  }, [elements, onChange]);
 
   const handleChange = (newValue: string, typeDef: HdesApi.TypeDef) => {
     const newObject: Record<string, any> = {};
@@ -29,7 +44,6 @@ export const DebugForm: React.FC<DebugFormProps> = ({ selected, onChange }) => {
     setJson(nextJson);
     onChange(nextJson);
   }
-  const elements = asset?.ast ? asset.ast.headers.acceptDefs : [];
 
   return (
     <Grid2 container spacing={2}>
