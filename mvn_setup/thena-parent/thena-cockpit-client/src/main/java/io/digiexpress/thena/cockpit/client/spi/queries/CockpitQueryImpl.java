@@ -26,12 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
-import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
-import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.digiexpress.thena.cockpit.client.api.CockpitContainer;
 import io.digiexpress.thena.cockpit.client.api.CockpitQueryActions.CockpitQuery;
 import io.digiexpress.thena.cockpit.client.api.ImmutableCockpitContainer;
@@ -41,6 +35,7 @@ import io.digiexpress.thena.cockpit.client.tables.CockpitDbQuery;
 import io.digiexpress.thena.cockpit.client.tables.CockpitTableFilter;
 import io.digiexpress.thena.cockpit.client.tables.ImmutableCockpitTableFilter;
 import io.digiexpress.thena.cockpit.client.tables.ImmutableWorld;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -84,51 +79,33 @@ public class CockpitQueryImpl implements CockpitQuery {
   }
 
   @Override
-  public Uni<QueryEnvelope<CockpitContainer>> getOne(String id) {
+  public Uni<CockpitContainer> getOne(String id) {
     this.addCockpitId(id);
-    return this.state
-        .onItem().transformToUni(state -> {
-          return startQuery(state)
-              .onItem().transform((container) -> ImmutableQueryEnvelope.<CockpitContainer>builder()
-                  .repo(state.getDataSource().getTenant())
-                  .status(QueryEnvelopeStatus.OK)
-                  .objects(container.isEmpty() ? null : container.getFirst())
-                  .build());
-        });
+    
+    return findAll().collect().asList().onItem().transform(env -> {
+      if(env.size() == 1) {
+        throw new CockpitQueryException("Expecting exactly 1 result but found: " + env.size());
+      }
+      
+      return env.getFirst();
+    });
   }
 
   @Override
-  public Uni<QueryEnvelopeList<CockpitContainer>> findAll() {
+  public Multi<CockpitContainer> findAll() {
     return this.state
-        .onItem().transformToUni(state -> {
-          return startQuery(state)
-              .onItem().transform(items -> ImmutableQueryEnvelopeList.<CockpitContainer>builder()
-                  .repo(state.getDataSource().getTenant())
-                  .status(QueryEnvelopeStatus.OK)
-                  .objects(items)
-                  .build());
-        });
+        .onItem().transformToUni(state -> startQuery(state))
+        .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
   }
   
   @Override
-  public Uni<QueryEnvelope<CockpitContainer>> findOne() {
-    return findAll().onItem().transform(env -> {
-      if(env.getObjects().size() > 1) {
-        return ImmutableQueryEnvelope.<CockpitContainer>builder()
-            .messages(env.getMessages())
-            .addMessages(ImmutableMessage.builder().text("Expecting exactly 1 or 0 result but found: " + env.getObjects().size()).build())
-            .status(QueryEnvelopeStatus.ERROR)
-            .repo(env.getRepo())
-            .objects(null)
-            .build();
+  public Uni<Optional<CockpitContainer>> findOne() {
+    return findAll().collect().asList().onItem().transform(env -> {
+      if(env.size() > 1) {
+        throw new CockpitQueryException("Expecting exactly 1 or 0 result but found: " + env.size());
       }
       
-      return ImmutableQueryEnvelope.<CockpitContainer>builder()
-          .messages(env.getMessages())
-          .status(env.getStatus())
-          .repo(env.getRepo())
-          .objects(env.getObjects().isEmpty() ? null : env.getObjects().iterator().next())
-          .build();
+      return env.stream().findFirst();
     });
   }
   
@@ -246,5 +223,15 @@ public class CockpitQueryImpl implements CockpitQuery {
     return builders.values().stream()
         .map(builder -> builder.build())
         .collect(Collectors.toList());
+  }
+  
+  
+  private static class CockpitQueryException extends RuntimeException {
+    private static final long serialVersionUID = 7907387187541951150L;
+
+    public CockpitQueryException(String message) {
+      super(message);
+    }
+    
   }
 }

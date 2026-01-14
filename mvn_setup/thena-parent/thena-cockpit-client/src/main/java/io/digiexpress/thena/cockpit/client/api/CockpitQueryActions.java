@@ -21,11 +21,10 @@ package io.digiexpress.thena.cockpit.client.api;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfigTenant;
 import io.digiexpress.thena.cockpit.client.api.entities.CockpitDocType;
-import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -49,8 +48,8 @@ public interface CockpitQueryActions {
     CockpitQuery addCockpitId(String ids);
     CockpitQuery addAllCockpitId(List<String> ids); // include only data for given Cockpit
     
-    Uni<QueryEnvelope<CockpitContainer>> getOne(String id);
-    Uni<QueryEnvelopeList<CockpitContainer>> findAll();
-    Uni<QueryEnvelope<CockpitContainer>> findOne();
+    Uni<CockpitContainer> getOne(String id);
+    Uni<Optional<CockpitContainer>> findOne();
+    Multi<CockpitContainer> findAll();
   } 
 }

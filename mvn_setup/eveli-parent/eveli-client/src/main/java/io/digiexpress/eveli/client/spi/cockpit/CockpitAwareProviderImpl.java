@@ -77,7 +77,7 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
         }
         
         return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId.get())
-            .onItem().transform(env -> Optional.ofNullable(env.getObjects()))
+            .onItem().transform(env -> Optional.ofNullable(env))
             .onItem().invoke(env -> cockpitCache.save(userSub, env));
       });
   }
@@ -88,18 +88,18 @@ public class CockpitAwareProviderImpl implements CockpitAwareProvider {
 
   @Override
   public Uni<Optional<CockpitContainer>> set(String cockpitId) {
+    
+    final var command = ImmutableUpsertUiSettings.builder()
+        .settingsId(ACTIVE_COCKPIT)
+        .addConfig(ImmutableUiSettingForConfig.builder()
+            .dataId(cockpitId)
+            .value("")
+            .build())
+        .build();
+    
     return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId)
-        .onItem().transformToUni(env -> {
-          final var command = ImmutableUpsertUiSettings.builder()
-              .settingsId(ACTIVE_COCKPIT)
-              .addConfig(ImmutableUiSettingForConfig.builder()
-                  .dataId(cockpitId)
-                  .value("")
-                  .build())
-              .build();
-          return userProfileClient.updateUiSettings().updateOne(command).onItem().transform((ignore) -> env);
-        })
-        .onItem().transform(env -> Optional.ofNullable(env.getObjects()))
+        .onItem().transformToUni(env -> userProfileClient.updateUiSettings().updateOne(command).onItem().transform((ignore) -> env))
+        .onItem().transform(env -> Optional.ofNullable(env))
         .onItem().invoke(env -> cockpitCache.invalidateAll())
         .onItem().invoke(env -> publisher.publishEvent(ImmutableEveliEnvirInvalidateCache.builder().build()));
 

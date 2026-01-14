@@ -21,13 +21,10 @@ package io.digiexpress.thena.cockpit.client.spi.actions;
  */
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import io.resys.thena.api.envelope.BatchStatus;
-import io.resys.thena.api.envelope.CommitResultStatus;
-import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.digiexpress.thena.cockpit.client.api.CockpitCommitActions.ModifyOneCockpitConfig;
 import io.digiexpress.thena.cockpit.client.api.CockpitCommitActions.OneCockpitConfigEnvelope;
 import io.digiexpress.thena.cockpit.client.api.CockpitContainer;
@@ -41,6 +38,9 @@ import io.digiexpress.thena.cockpit.client.spi.queries.CockpitQueryImpl;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDbBuilder.PersistenceUnit;
 import io.digiexpress.thena.cockpit.client.tables.ImmutablePersistenceUnit;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -133,13 +133,12 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
       return CockpitQueryImpl.of(tx)
           .addCockpitId(this.configId)
           .excludeDocs(CockpitDocType.CONFIG_COMMIT)
-          .findAll()
+          .findAll().collect().asList()
           .onItem().transform(container -> {
-            final var item = container.getObjects().iterator().next();
+            final var item = container.iterator().next();
             final OneCockpitConfigEnvelope env = ImmutableOneCockpitConfigEnvelope.builder()
               .repoId(tenantId)
               .cockpitConfig(item)
-              .addAllMessages(container.getMessages())
               .status(BatchStatus.mapStatus(rsp.getStatus()))
               .build();
             return env;
@@ -153,14 +152,14 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
       .addCockpitId(this.configId)
       .lockForUpdate()
       .excludeDocs(CockpitDocType.CONFIG_COMMIT)
-      .findAll().onItem()
+      .findAll().collect().asList().onItem()
       .transform(container -> createRequest(tx, container));
   }
   
-  private ImmutablePersistenceUnit createRequest(CockpitDb tx, QueryEnvelopeList<CockpitContainer> env) {
-    RepoAssert.isTrue(env.getObjects().size() == 1, () -> "Cockpit config container must be grouped by configs, one config per container!");
+  private ImmutablePersistenceUnit createRequest(CockpitDb tx, List<CockpitContainer> env) {
+    RepoAssert.isTrue(env.size() == 1, () -> "Cockpit config container must be grouped by configs, one config per container!");
     
-    final var config = env.getObjects().get(0).getConfig();
+    final var config = env.get(0).getConfig();
     final var configId = config.getId();
     
     final var start = ImmutablePersistenceUnit.builder()
@@ -181,7 +180,7 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
           .build()
     );
     
-    final var mergeConfig = new MergeCockpitConfigBuilder(env.getObjects().get(0), logger);
+    final var mergeConfig = new MergeCockpitConfigBuilder(env.get(0), logger);
     this.config.accept(mergeConfig);
     final var created = mergeConfig.close();
     

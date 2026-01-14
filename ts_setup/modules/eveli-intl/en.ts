@@ -1240,5 +1240,6 @@ export const en = {
   'ledgercard.blackBook.detail.expander.collapseBreakdown': 'Hide breakdown',
   'ledgercard.blackBook.detail.expander.expandBreakdown': 'View breakdown',
   'ledgercard.transitives.createdAt': 'Created',
-  'ledgercard.transitives.updatedAt': 'Updated'
+  'ledgercard.transitives.updatedAt': 'Updated',
+  'cockpitsTable.title': 'Cockpits'
 }
