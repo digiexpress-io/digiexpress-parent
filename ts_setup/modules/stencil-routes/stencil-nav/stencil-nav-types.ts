@@ -71,7 +71,7 @@ function parseExplorerItems(search: Record<string, unknown>): ExplorerItem[] {
   const explorerItems = search['explorer'];
 
   if (!Array.isArray(explorerItems)) {
-    return [{ type: 'ACTIVITIES' }];
+    return [{ type: 'ASSISTANCE' }];
   }
   if (explorerItems.length === 0) {
     return [{ type: 'ASSISTANCE' }];

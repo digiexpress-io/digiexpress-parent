@@ -77,10 +77,10 @@ export function mergeWrenchSearchParams(activeItem: ExplorerItem, prev: WrenchRo
 function parseExplorerItems(search: Record<string, unknown>): ExplorerItem[] {
   const explorerItems = search['explorer'];
   if (!Array.isArray(explorerItems)) {
-    return [{ type: 'ACTIVITIES' }];
+    return [{ type: 'RELEASES' }];
   }
   if (explorerItems.length === 0) {
-    return [{ type: 'ACTIVITIES' }];
+    return [{ type: 'RELEASES' }];
   }
   return explorerItems;
 }
