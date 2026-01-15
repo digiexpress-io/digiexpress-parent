@@ -35,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "cockpit_config_tenant",
-  order = 2,
+  order = 120,
   ddl = """
     CREATE TABLE IF NOT EXISTS {cockpit_config_tenant}
     (

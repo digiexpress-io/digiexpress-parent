@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.resys.thena.api.annotations.TenantSql;
 import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfig;
 import io.digiexpress.thena.cockpit.client.api.entities.ImmutableCockpitConfig;
+import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
@@ -35,7 +35,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "cockpit_config",
-  order = 0,
+  order = 110,
   ddl = """
     CREATE TABLE IF NOT EXISTS {cockpit_config}
     (

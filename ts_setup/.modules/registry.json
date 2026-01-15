@@ -122,32 +122,33 @@
       ],
       "actualDependencies": [
         "react",
-        "@mui/material",
-        "@tanstack/react-table",
-        "luxon",
         "react-intl",
         "@tanstack/react-query",
-        "@dxs-ts/xui-table",
-        "@dxs-ts/cockpit-api"
+        "@dxs-ts/cockpit-api",
+        "@mui/material",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "luxon",
+        "@dxs-ts/xui-table"
       ],
       "actualExternalDependencies": [
         "react",
-        "@mui/material",
-        "@tanstack/react-table",
-        "luxon",
         "react-intl",
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "@mui/material",
+        "@mui/icons-material",
+        "@tanstack/react-table",
+        "luxon"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/xui-table",
-        "@dxs-ts/cockpit-api"
+        "@dxs-ts/cockpit-api",
+        "@dxs-ts/xui-table"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/xui-datetime",
         "@mui/utils",
-        "@mui/system",
-        "@mui/icons-material"
+        "@mui/system"
       ]
     },
     "@dxs-ts/contract-api": {
@@ -753,6 +754,7 @@
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/task-api": "*",
           "@dxs-ts/contract-api": "*",
+          "@dxs-ts/cockpit-api": "*",
           "@dxs-ts/ledger-api": "*",
           "@dxs-ts/tagomi-api": "*",
           "@dxs-ts/gamut-theme": "*",
@@ -783,6 +785,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
@@ -820,6 +823,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
@@ -842,6 +846,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/contract-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/task-api",
@@ -865,6 +870,7 @@
         "@dxs-ts/stencil-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/wrench-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/contract-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/task-api"
@@ -1238,6 +1244,7 @@
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
         "@tanstack/react-router",
+        "@dxs-ts/cockpit-api",
         "luxon",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
@@ -1293,6 +1300,7 @@
         "@dxs-ts/envir-fetch",
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-theme",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/eveli-api",
         "@dxs-ts/contract-api",
@@ -1316,9 +1324,7 @@
         "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
-      "unusedDependencies": [
-        "@dxs-ts/cockpit-api"
-      ]
+      "unusedDependencies": []
     },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
@@ -3762,6 +3768,7 @@
         "@dxs-ts/eveli-intl",
         "@dxs-ts/task-api",
         "@dxs-ts/contract-api",
+        "@dxs-ts/cockpit-api",
         "@dxs-ts/ledger-api",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/gamut-theme",
@@ -3946,6 +3953,7 @@
       "@dxs-ts/cockpit-api": [
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/eveli-ide"
       ],
@@ -4326,6 +4334,6 @@
       ]
     }
   },
-  "checksum": "5e665a7c7882bf7b52a253f317007372e98aec021ab4fe17a416ec308d25a22e",
-  "generatedAt": "2026-01-14T11:57:59.182Z"
+  "checksum": "8ffe4f492e466a395875c77a8254144a28834a7cc5563e6e7a81723a12d595ef",
+  "generatedAt": "2026-01-15T10:58:41.114Z"
 }

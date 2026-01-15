@@ -83,8 +83,8 @@ public interface CockpitCommitTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {cockpit_commit}
-      (id, parent_id, created_at, commit_author, commit_message)
-       VALUES($1, $2, $3, $4, $5)
+      (id, parent_id, config_id, created_at, commit_author, commit_message)
+       VALUES($1, $2, $3, $4, $5, $6)
     """,
     propsMapper = CockpitCommitInsertMapper.class
   )
@@ -98,6 +98,7 @@ public interface CockpitCommitTable {
 
       return ImmutableCockpitCommit.builder()
           .id(TableUtils.toStringUUID(row, "id"))
+          .configId(TableUtils.toStringUUID(row, "config_id"))
           .parentId(Optional.ofNullable(parent_id))
           .createdAt(row.getOffsetDateTime("created_at"))
           .commitAuthor(row.getString("commit_author"))
@@ -112,6 +113,7 @@ public interface CockpitCommitTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(doc.getId()),
         doc.getParentId().map(TableUtils::toUuid).orElse(null),
+        TableUtils.toUuid(doc.getConfigId()),
         doc.getCreatedAt(),
         doc.getCommitAuthor(),
         doc.getCommitMessage()

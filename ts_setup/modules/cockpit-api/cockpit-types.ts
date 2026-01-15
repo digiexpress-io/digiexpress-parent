@@ -7,6 +7,11 @@ export declare namespace CockpitApi {
   export type CommitId = string;
   export type CreatedCommitId = string;
 
+  export interface CreateCockpitCommand {
+    configName: string;
+    configDescription: string;
+  }
+
   export type CockpitDocType =
     | "CONFIG"
     | "CONFIG_TENANT"
@@ -42,37 +47,39 @@ export declare namespace CockpitApi {
     docType: 'CONFIG_PROPS'
   }
 
-  export interface CockpitEntity {
+
+  export interface CockpitConfig {
     id: string;
-    commitId: CommitId;
-    createdCommitId: CreatedCommitId;
+    commitId: string;
+    createdCommitId: string;
     updatedTreeCommitId: string;
 
     externalId?: string | undefined;
+
     cockpitConfigName: string;
     cockpitConfigDesc: string;
 
-    docType: 'CONFIG'
+    docType: 'CONFIG';
   }
 
   export interface CockpitContainer {
-
+    config: CockpitConfig;
+    /**
+      
+      List<CockpitCommit> getCommits();
+      List<CockpitCommitTree> getCommitTrees();
+      List<CockpitConfigProps> getProps();
+      List<CockpitConfigTenant> getTenants();
+     */
   }
 
   export interface CockpitSummary {
-    container: CockpitContainer;
-    cockpitConfigId: CockpitConfigId;
-    contractNumber: string;
-    contractIssueDate: Date;
-    contractStartDate: Date;
-    contractMaturityDate?: Date;
-    contractStatusIntl?: string;
+    id: string;
+    name: string;
+    description: string;
 
-    contractType: string;
-
-    createdAt: Date;
-    updatedAt: Date;
-
+    // from what we created
+    src: CockpitContainer;
   }
 
 }
