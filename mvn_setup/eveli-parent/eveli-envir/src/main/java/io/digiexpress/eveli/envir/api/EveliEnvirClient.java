@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
 import io.resys.hdes.client.api.HdesClient.ExecutorBuilder;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.smallrye.mutiny.Uni;
@@ -39,7 +40,7 @@ import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 
-public interface EveliEnvirClient {
+public interface EveliEnvirClient extends CockpitAware.CockpitIdAware<EveliEnvirClient> {
   CreateOneDeployment createOneDeployment();
   ModifyOneDeployment modifyOneDeployment();
   
@@ -51,6 +52,7 @@ public interface EveliEnvirClient {
   DeploymentStatusBuilder deploymentStatusBuilder();
   
   void invalidateCache();
+  
   
   
   // moves given deployment to 'DEPLOYED' and sets any other 'DEPLOYED' entries into 'READY' status

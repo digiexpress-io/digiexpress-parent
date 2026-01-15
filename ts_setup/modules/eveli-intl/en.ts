@@ -1241,5 +1241,10 @@ export const en = {
   'ledgercard.blackBook.detail.expander.expandBreakdown': 'View breakdown',
   'ledgercard.transitives.createdAt': 'Created',
   'ledgercard.transitives.updatedAt': 'Updated',
-  'cockpitsTable.title': 'Cockpits'
+  'cockpitsTable.title': 'Cockpits',
+  'cockpitCreate.dialog.title': 'Create new Cockpit',
+  'cockpitCreate.field.name': 'Cockpit name',
+  'cockpitCreate.field.description': 'Description',
+  'cockpitTable.col.header.name': 'Name',
+  'cockpitTable.col.header.description': 'Description'
 }

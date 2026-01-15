@@ -10,7 +10,8 @@ export declare namespace SiteApi {
   export type BlobId = string;
   export type TopicLinkType = "phone" | "dialob" | "internal" | "external" | "workflow" | string;
 
-  export type FetchSiteGET = (locale: LocaleCode) => Promise<Response>;
+  export type FetchCockpitsGET = () => Promise<Response>;
+  export type FetchSiteGET = (locale: LocaleCode, cockpitId?: string) => Promise<Response>;
   export type FetchFeedbackGET = (locale: LocaleCode) => Promise<Response>;
   export type FetchFeedbackRatingPUT = (command: UpsertFeedbackRankingCommand) => Promise<Response>;
 
@@ -24,6 +25,12 @@ export declare namespace SiteApi {
     blobs: Record<string, Blob>;
     links: Record<string, TopicLink>;
     workflowsInOtherLocales: Record<LocaleCode, TopicLink[]>
+  }
+
+  export interface Cockpit {
+    id: string;
+    name: string;
+    description: string;
   }
 
   export interface Blob {

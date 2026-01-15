@@ -10,6 +10,7 @@ import {
   DialobProvider, SiteBackendProvider,
   IamBackendProvider, useIam 
 } from '@dxs-ts/gamut-api';
+import { GRouterCockpits } from '../g-router-cockpits';
 
 export const Route = createRootRoute({
   component: RouteComponent,
@@ -52,16 +53,16 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const { siteFetch, authFeedbackFetch, dialobFetch, offerFetch, staleTime, processesQueryKey, contractFetch, subjectFetch, bookingFetch } = useConfig();
   return (
     <SiteBackendProvider
+      fetchCockpitsGet={siteFetch.fetchCockpitsGet}
       fetchSiteGet={siteFetch.fetchSiteGet}
       fetchFeedbackGet={authFeedbackFetch.fetchFeedbackGet}
-      fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut} >
+      fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}>
 
       <DialobProvider 
         fetchActionGet={dialobFetch.fetchActionGet} 
         fetchActionPost={dialobFetch.fetchActionPost} 
         fetchReviewGet={dialobFetch.fetchReviewGet}
-        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}
-        >
+        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}>
         
         <OfferProvider 
           cancelOffer={offerFetch.fetchDelete}
@@ -77,9 +78,12 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             options={{ staleTime, queryKey: processesQueryKey }}>
 
             <CommsProvider markViewed={subjectFetch.fetchPut} getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
-            <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
-              {children}
-            </BookingProvider>
+              <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
+                <>
+                  <GRouterCockpits />
+                  {children}
+                </>
+              </BookingProvider>
             </CommsProvider>
           </ContractProvider>
         </OfferProvider>
@@ -88,12 +92,15 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 }
 
 const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { siteFetch, authFeedbackFetch, dialobFetch, staleTime, processesQueryKey, dialobPublicFetch, publicOfferFetch } = useConfig();
+
+  const { siteFetch, authFeedbackFetch, dialobFetch, staleTime, processesQueryKey, dialobPublicFetch, publicOfferFetch } = useConfig();
   return (
     <SiteBackendProvider
+      fetchCockpitsGet={siteFetch.fetchCockpitsGet}
       fetchSiteGet={siteFetch.fetchSiteGet}
       fetchFeedbackGet={siteFetch.fetchFeedbackGet}
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}>
+
       <DialobProvider 
         fetchActionGet={dialobPublicFetch.fetchActionGet} 
         fetchActionPost={dialobPublicFetch.fetchActionPost} 
@@ -106,8 +113,10 @@ const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           getOneOffer={publicOfferFetch.fetchOneGet} 
           getAllOffers={publicOfferFetch.fetchAllGet} 
           options={{ staleTime, queryKey: processesQueryKey }}>
-          
-          {children}
+          <>
+            <GRouterCockpits />
+            {children}
+          </>
         </OfferProvider>
       </DialobProvider>
     </SiteBackendProvider>

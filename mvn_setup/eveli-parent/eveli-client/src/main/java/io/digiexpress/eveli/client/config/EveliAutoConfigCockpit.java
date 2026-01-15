@@ -37,7 +37,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
-import io.digiexpress.eveli.client.spi.cockpit.CockpitAwareProviderImpl;
+import io.digiexpress.eveli.client.spi.cockpit.CockpitAwareProviderWorkerImpl;
 import io.digiexpress.eveli.client.web.resources.worker.CockpitApiController;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
@@ -75,7 +75,7 @@ public class EveliAutoConfigCockpit {
     }; 
     
     final var cacheImpl = cache.orElseGet(EveliAutoConfigCockpit::cockpitContainerCache);
-    return new CockpitAwareProviderImpl(client, auth, userProfileClient, cacheImpl, appPublisher);
+    return new CockpitAwareProviderWorkerImpl(client, auth, userProfileClient, cacheImpl, appPublisher);
   }
   
   @Bean

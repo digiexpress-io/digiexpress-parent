@@ -24,6 +24,9 @@ import java.util.Optional;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.eveli.envir.api.ImmutableEveliDeployment;
 import io.digiexpress.eveli.envir.api.ImmutableEveliSources;
@@ -37,7 +40,7 @@ import io.thestencil.client.api.StencilComposer.SiteState;
 
 
 
-public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
+public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> implements CockpitAware.CockpitIdAware<EveliEnvirStore> {
 
   public static String DOC_TYPE_DEPLOYMENT = "deployment";
   
@@ -54,6 +57,13 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
     this.externalProviderOnly = externalProviderOnly;
   }
 
+  
+
+  @Override
+  public EveliEnvirStore withCockpitIdSupplier(CockpitIdSupplier supplier) {
+    return new EveliEnvirStore(config, factory, externalProvider.withCockpitIdSupplier(supplier), externalProviderOnly);
+  }
+  
   public static Builder<EveliEnvirStore> builder(ExternalDeploymentProvider externalProvider, boolean externalProviderOnly) {
     final DocStoreFactory<EveliEnvirStore> factory = (config, delegate) -> new EveliEnvirStore(config, delegate, externalProvider, externalProviderOnly);
     return new Builder<EveliEnvirStore>(factory);
@@ -129,4 +139,5 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
   public boolean isExternalProviderOnly() {
     return externalProviderOnly;
   }
+
 }

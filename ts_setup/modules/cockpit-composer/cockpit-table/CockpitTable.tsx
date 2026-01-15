@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton, Tooltip } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
@@ -8,6 +9,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
+import { NewCockpitDialog } from '../NewCockpitDialog';
 
 
 
@@ -16,6 +18,7 @@ export const COCKPIT_TABLE_QUERY_KEY = 'find-all-cockpits';
 export const CockpitTable: React.FC = () => {
   const intl = useIntl();
   const backend = useCockpitsBackend();
+  const [createCockpitOpen, setCreateCockpitOpen] = React.useState(false);
 
   const { data, error, refetch, isPending } = useQuery({
     queryKey: [COCKPIT_TABLE_QUERY_KEY],
@@ -23,18 +26,8 @@ export const CockpitTable: React.FC = () => {
     initialData: [],
   });
 
-  console.log("data", data)
 
-  const columns: ColumnDef<CockpitApi.CockpitContainer, any>[] = [
-    {
-      header: intl.formatMessage({ id: 'cockpitTable.col.header.id' }),
-      accessorKey: 'id',
-      size: 150,
-      minSize: 150,
-      enableSorting: false,
-      enableResizing: true,
-      enableColumnFilter: true,
-    },
+  const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
     {
       header: intl.formatMessage({ id: 'cockpitTable.col.header.name' }),
       accessorKey: 'name',
@@ -60,6 +53,13 @@ export const CockpitTable: React.FC = () => {
     <>
       <Box display="flex" alignItems="center" mb={2}>
         <Typography variant="h1" sx={{ flexGrow: 1 }}>{intl.formatMessage({ id: 'cockpitsTable.title' })}</Typography>
+        <Box display="flex" gap={1}>
+          <Tooltip title={intl.formatMessage({ id: 'cockpitsTable.createButton' })}>
+            <IconButton onClick={() => setCreateCockpitOpen(true)}>
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Box>
       {data.length === 0 ? <>empty</> :
         <WithTableStyles
@@ -70,6 +70,11 @@ export const CockpitTable: React.FC = () => {
             rowProps: { height: '50px' }
           }}
         />}
+      <NewCockpitDialog
+        open={createCockpitOpen}
+        setOpen={setCreateCockpitOpen}
+        onSubmit={refetch}
+      />
     </>
   );
 }

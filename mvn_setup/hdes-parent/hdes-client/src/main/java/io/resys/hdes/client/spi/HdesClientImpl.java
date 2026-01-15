@@ -80,7 +80,11 @@ public class HdesClientImpl implements HdesClient {
   
   @Override
   public Uni<HdesClient> withCockpit() {
-    return cockpitAwareProps.getProvider().get().onItem()
+    return withCockpit(Optional.empty());
+  }
+  @Override
+  public Uni<HdesClient> withCockpit(Optional<String> id) {
+    return cockpitAwareProps.getProvider().get(id).onItem()
         .transform(cockpit -> {
           
           config.getCache().flushAll();
@@ -106,7 +110,6 @@ public class HdesClientImpl implements HdesClient {
   public Uni<HdesClient> withCockpitAwareProps() {
     return Uni.createFrom().item(this.repo().repoName(cockpitAwareProps.getTenantName()).build()); 
   }
-  
   @Override
   public ExecutorBuilder executor(ProgramEnvir envir) {
     return new HdesClientExecutorBuilder(envir, config.getTypes(), config.getDependencyInjectionContext());    

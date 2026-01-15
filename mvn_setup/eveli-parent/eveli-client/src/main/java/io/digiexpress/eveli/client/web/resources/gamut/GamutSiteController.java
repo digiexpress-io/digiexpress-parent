@@ -1,7 +1,9 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /*-
  * #%L
@@ -33,6 +35,10 @@ import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
+import io.digiexpress.thena.cockpit.client.api.CockpitClient;
+import io.digiexpress.thena.cockpit.client.api.entities.CockpitConfig;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableLocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
@@ -48,13 +54,17 @@ public class GamutSiteController {
   private final EveliEnvirClient envir;
   private final FeedbackClient feedback;
   private final GamutAuthClient auth;
-
+  private final Optional<CockpitClient> cockpitClient;
+  
   @GetMapping
-  public Uni<LocalizedSite> getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
+  public Uni<LocalizedSite> getOneSiteByLocale(
+      @RequestParam(name = "locale") String locale, 
+      @RequestParam(name = "cockpitId", required = false) String cockpitId) {
     
+    final CockpitIdSupplier cockpitIdSupplier = () -> Uni.createFrom().item(Optional.ofNullable(cockpitId));
     final var isAuth = auth.getCustomer().getType() != CustomerType.ANON; 
     
-    return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
+    return envir.withCockpitIdSupplier(cockpitIdSupplier).runtimeQuery().getOne().onItem().transform(runtime -> {
       final var data = runtime.getStencil(OffsetDateTime.now(), isAuth).getSites().get(locale);
       if(data == null) {
         final LocalizedSite failsafe = ImmutableLocalizedSite.builder().id("not-found")
@@ -79,6 +89,10 @@ public class GamutSiteController {
   public List<CustomerFeedback> findAllFeedback() {
     return feedback.queryCustomerFeedbacks().findAll();
   }
-  
-
+  @GetMapping(path = "cockpits")
+  public Multi<CockpitConfig> findAllCockpits() {
+    return cockpitClient
+        .map(client -> client.queries().cockpitQuery().findAll().onItem().transform(e -> e.getConfig()))
+        .orElse(Multi.createFrom().items(Collections.<CockpitConfig>emptyList().stream()));
+  } 
 }
