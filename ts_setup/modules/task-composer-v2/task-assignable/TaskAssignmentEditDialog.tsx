@@ -28,7 +28,7 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
   const [cancelledForms, setCancelledForms] = React.useState<TaskApi.TaskCustomerAssignment[]>([]);
   const [selectedLocale, setSelectedLocale] = React.useState<string>("");
 
-  const { task } = useTaskDashboard();
+  const { task, reloadTask } = useTaskDashboard();
   const backend = useTaskBackend();
 
 
@@ -51,12 +51,20 @@ export const TaskAssignmentEditDialog: React.FC<TaskAssignmentEditDialogProps> =
 
 
   async function handleSave() {
-    await backend.persistence.createManyTaskCustomerAssignments(taskId, assignedForms.map((service) => ({ taskId, serviceId: service.id })));
+    await backend.persistence.createManyTaskCustomerAssignments(
+      taskId,
+      assignedForms.map((service) => ({ taskId, serviceId: service.id }))
+    );
+    await reloadTask();
     onClose();
   }
 
   async function handleDelete() {
-    await backend.persistence.deleteManyCustomerAssignment(taskId, cancelledForms.map(form => form.id));
+    await backend.persistence.deleteManyCustomerAssignment(
+      taskId,
+      cancelledForms.map(form => form.id)
+    );
+    await reloadTask();
     onClose();
   }
 

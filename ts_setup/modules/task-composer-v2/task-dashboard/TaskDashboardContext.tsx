@@ -10,6 +10,7 @@ interface TaskDashboardContextType {
   saveCustomerComment(changes: { commentText: string }): Promise<TaskApi.Task>;
   saveTaskNote(changes: { commentText: string }): Promise<TaskApi.Task>;
   isTaskChanged(changes: Partial<TaskApi.Task>): boolean;
+  reloadTask(): Promise<TaskApi.Task>;
 }
 
 
@@ -20,12 +21,19 @@ const TaskDashboardContextProvider: React.FC<{ taskId: string, children: React.R
   const [taskAudit, setTaskAudit] = React.useState<TaskApi.TaskAuditLog>();
   const backend = useTaskBackend();
 
+  const reloadTask = React.useCallback(async (): Promise<TaskApi.Task> => {
+    const next = await backend.persistence.getOneTask(props.taskId);
+    setTask(next);
+
+    backend.persistence.getOneTaskAudit(props.taskId).then(setTaskAudit);
+
+    return next;
+  }, [backend, props.taskId]);
+
   React.useEffect(() => {
-    if (props.taskId && task === undefined) {
-      backend.persistence.getOneTask(props.taskId).then(setTask);
-      backend.persistence.getOneTaskAudit(props.taskId).then(setTaskAudit);
-    } 
-  }, [props.taskId, task]);
+    if (!props.taskId) return;
+    reloadTask();
+  }, [props.taskId, reloadTask]);
 
 
   const contextValue: TaskDashboardContextType = React.useMemo(() => {
@@ -79,10 +87,17 @@ const TaskDashboardContextProvider: React.FC<{ taskId: string, children: React.R
       return next;
     }
 
+    return {
+      task: task ?? {} as any,
+      taskAudit: taskAudit ?? {} as any,
+      saveTask,
+      isTaskChanged,
+      saveCustomerComment,
+      saveTaskNote,
+      reloadTask
+    }
 
-    return { task: task ?? {} as any, taskAudit: taskAudit ?? {} as any, saveTask, isTaskChanged, saveCustomerComment, saveTaskNote }
-
-  }, [task, taskAudit]);
+  }, [task, taskAudit, reloadTask, backend]);
 
   return (
     <TaskFeatureProvider options={task}>
