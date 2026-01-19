@@ -10,7 +10,7 @@ import {
   useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowText
 } from '../cockpit-card';
 import { useCockpit } from '../cockpit-provider';
-import { CockpitWrenchStencilEditDialog } from '../cockpit-wrench-stencil-edit';
+import { CockpitTenantEditDialog } from '../cockpit-tenant-create';
 
 export type CockpitFactoryCardId = 'cockpit_main' | 'cockpit_wrench_stencil_config';
 
@@ -24,7 +24,7 @@ const defaultExpandedCards: CockpitFactoryCardId[] = ['cockpit_main', 'cockpit_w
 export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: CockpitFactoryCardId = initProps.cardId as CockpitFactoryCardId;
-  const { cockpitContainer } = useCockpit();
+  const { cockpitContainer, tenants } = useCockpit();
   const { config } = cockpitContainer;
 
   const {
@@ -91,7 +91,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && <CockpitWrenchStencilEditDialog open={isEditOpen} onClose={handleEditClose} />}
+          editDialog={editingCardId === cardId && (<CockpitTenantEditDialog open={isEditOpen} onClose={handleEditClose} cockpitId={config.id} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={BuildIcon} />}
 
           showFlashyToggle={true}
@@ -101,20 +101,17 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
         >
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchTools.title' })}
+              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchConfig.title' })}
             </Typography>
             <Typography variant="body2" sx={{ mb: 2 }}>
-              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchTools.description' })}
+              {tenants.wrench?.cockpitConfigTenantDesc ?? '-'}
             </Typography>
 
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
               {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.title' })}
             </Typography>
             <Typography variant="body2" sx={{ mb: 1 }}>
-              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.description' })}
-            </Typography>
-            <Typography variant="body2">
-              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.combinedDescription' })}
+              {tenants.stencil?.cockpitConfigTenantDesc ?? '-'}
             </Typography>
           </Box>
         </CockpitCard>

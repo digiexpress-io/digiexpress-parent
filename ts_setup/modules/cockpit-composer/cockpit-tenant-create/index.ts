@@ -1,1 +1,1 @@
-export * from './CockpitTenantCreateDialog';
+export * from './CockpitTenantEditDialog';

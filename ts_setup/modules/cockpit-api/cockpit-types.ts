@@ -38,6 +38,7 @@ export declare namespace CockpitApi {
     externalBranch: string;
 
     cockpitConfigTenantDesc: string;
+    cockpitConfigTenantType: CockpitTenantType;
     cockpitConfigTenantExtension?: Object | undefined;
 
     docType: 'CONFIG_TENANT'
@@ -72,13 +73,7 @@ export declare namespace CockpitApi {
 
   export interface CockpitContainer {
     config: CockpitConfig;
-    /**
-      
-      List<CockpitCommit> getCommits();
-      List<CockpitCommitTree> getCommitTrees();
-      List<CockpitConfigProps> getProps();
-      List<CockpitConfigTenant> getTenants();
-     */
+    tenants: CockpitConfigTenant[];
   }
 
   export interface CockpitSummary {

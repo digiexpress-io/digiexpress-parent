@@ -1250,6 +1250,8 @@ export const en = {
   'cockpitCreate.dialog.title': 'Create new Cockpit',
   'cockpitCreate.field.name': 'Cockpit name',
   'cockpitCreate.field.description': 'Description',
+  'cockpitcard.wrenchStencil.wrenchConfig.title': 'Wrench tenant',
+  'cockpitcard.wrenchStencil.stencilConfig.title': 'Stencil tenant',
   'cockpitTable.col.header.name': 'Name',
   'cockpitTable.col.header.description': 'Description',
   'cockpitcard.cockpitMain.title': 'Cockpit main',
@@ -1259,5 +1261,11 @@ export const en = {
   'cockpitcard.body.description': 'Description',
   'cockpit.wrenchStencilEdit.title': 'Edit Wrench and Stencil configurations',
   'cockpit.wrenchStencilEdit.wrenchConfig.title': 'Wrench config',
-  'cockpit.wrenchStencilEdit.stencilConfig.title': 'Stencil config'
+  'cockpit.wrenchStencilEdit.stencilConfig.title': 'Stencil config',
+  'cockpit.tenantCreate.title': 'Create new tenant',
+  'cockpit.tenantCreate.description': 'Select a set of Wrench and Stencil assets to use in this tenant',
+  'cockpit.tenantCreate.stencilConfig.label': 'Stencil assets',
+  'cockpit.tenantCreate.wrenchConfig.label': 'Wrench assets',
+  'cockpit.tenantCreate.tenantDescription.label': 'Tenant description',
+  'cockpit.tenantCreate.description.placeholder': 'Enter a short text to give additional info about this tenant'
 }

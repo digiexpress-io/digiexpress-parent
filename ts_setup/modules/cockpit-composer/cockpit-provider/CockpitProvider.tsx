@@ -4,7 +4,11 @@ import { CockpitApi } from '@dxs-ts/cockpit-api';
 import { useCockpitsBackend } from '@dxs-ts/cockpit-api';
 
 export interface CockpitProviderContextType {
-  cockpitContainer: CockpitApi.CockpitContainer
+  cockpitContainer: CockpitApi.CockpitContainer;
+  tenants: {
+    wrench: CockpitApi.CockpitConfigTenant | undefined;
+    stencil: CockpitApi.CockpitConfigTenant | undefined;
+  }
 }
 
 export const CockpitProviderContext = React.createContext<CockpitProviderContextType | undefined>(undefined);
@@ -27,7 +31,13 @@ export const CockpitProvider: React.FC<CockpitProviderProps> = (props) => {
     if(isPending || !cockpitContainer) {
       return undefined
     }
-    return { cockpitContainer };
+
+    const tenants: CockpitProviderContextType['tenants'] = {
+      stencil: cockpitContainer.tenants.find(tenant => tenant.cockpitConfigTenantType === 'STENCIL'),
+      wrench: cockpitContainer.tenants.find(tenant => tenant.cockpitConfigTenantType === 'WRENCH'),
+    };
+
+    return { cockpitContainer, tenants };
   }, [cockpitId, backend, cockpitContainer, isPending]);
 
   if(contextValue) {
