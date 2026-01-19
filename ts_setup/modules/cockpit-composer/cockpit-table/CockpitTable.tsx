@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
 import { NewCockpitDialog } from '../NewCockpitDialog';
+import { CockpitLink } from './CockpitLink';
 
 
 
@@ -36,6 +37,9 @@ export const CockpitTable: React.FC = () => {
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
+      cell: ({ row }) => (
+        <CockpitLink name={row.original.name} id={row.original.id} />
+      ),
     },
     {
       header: intl.formatMessage({ id: 'cockpitTable.col.header.description' }),
