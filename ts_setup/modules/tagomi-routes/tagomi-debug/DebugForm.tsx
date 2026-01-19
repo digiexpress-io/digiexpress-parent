@@ -3,7 +3,7 @@ import { Grid2 } from '@mui/material';
 
 import { HdesApi } from '@dxs-ts/wrench-api';
 import { InputFORMField } from './InputFORMField';
-import { useGetFlowInput } from './useGetFlowInput';
+import { useFlowInput } from './useFlowInput';
 
 export interface DebugFormProps {
   selected: HdesApi.EntityId;
@@ -11,7 +11,7 @@ export interface DebugFormProps {
 }
 
 export const DebugForm: React.FC<DebugFormProps> = ({ selected, onChange }) => {
-  const { elements, input, setInput } = useGetFlowInput(selected);
+  const { elements, input, setInput } = useFlowInput(selected);
 
   React.useEffect(() => {
     onChange(input);

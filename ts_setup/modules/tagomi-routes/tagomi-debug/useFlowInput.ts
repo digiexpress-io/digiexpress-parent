@@ -1,10 +1,10 @@
 import React from 'react';
 import { HdesApi, WrenchComposerApi as Composer } from '@dxs-ts/wrench-api';
 
-export function useGetFlowInput(orchestratorName: HdesApi.EntityId) {
+export function useFlowInput(orchestratorName: HdesApi.EntityId) {
   const { flows } = Composer.useSite();
   const [input, setInput] = React.useState<Record<string, any>>({});
-
+  
   const asset: HdesApi.Entity<HdesApi.AstBody> | undefined =
     React.useMemo(() => {
       if (flows[orchestratorName]) {

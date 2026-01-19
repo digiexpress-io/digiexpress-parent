@@ -6,7 +6,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typogra
 import { useIntl } from 'react-intl';
 
 import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
-import { DebugPdfViewer, DebugForm, useGetFlowInput } from '../tagomi-debug';
+import { DebugPdfViewer, DebugForm, useFlowInput } from '../tagomi-debug';
 
 
 interface Message {
@@ -27,7 +27,7 @@ export const TemplateEditor: React.FC<{ serviceId: string, templateId: string }>
   const service = composer.site.services[serviceId];
   const localeLabel = service.labels.find(l => l.locale === template.localeId)?.labelValue ?? '';
   const [src, setSrc] = React.useState(template.content);
-  const { input, setInput } = useGetFlowInput(service.orchestratorName);
+  const { input, setInput } = useFlowInput(service.orchestratorName);
 
   async function handleCompile() {
     const pdf = await composer.backend.compileTemplate(serviceId, template.localeId, input);
