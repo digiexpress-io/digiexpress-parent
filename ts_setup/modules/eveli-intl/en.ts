@@ -1257,6 +1257,7 @@ export const en = {
   'cockpitcard.edit': 'Edit',
   'cockpitcard.body.name': 'Name',
   'cockpitcard.body.description': 'Description',
-  'cockpit.wrenchStencilEdit.wrenchTools.title': 'Wrench config',
-  'cockpit.wrenchStencilEdit.stencilTools.title': 'Stencil config'
+  'cockpit.wrenchStencilEdit.title': 'Edit Wrench and Stencil configurations',
+  'cockpit.wrenchStencilEdit.wrenchConfig.title': 'Wrench config',
+  'cockpit.wrenchStencilEdit.stencilConfig.title': 'Stencil config'
 }

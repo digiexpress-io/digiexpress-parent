@@ -45,7 +45,7 @@ export const CockpitWrenchStencilEditDialog: React.FC<CockpitWrenchStencilEditDi
       <DialogContent>
         <Grid2 container display='flex' alignItems='center'>
           <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
-            <Typography>{intl.formatMessage({ id: 'cockpit.wrenchStencilEdit.wrenchTools.title' })}</Typography>
+            <Typography>{intl.formatMessage({ id: 'cockpit.wrenchStencilEdit.wrenchConfig.title' })}</Typography>
             <StyledTextField
               required
               fullWidth
