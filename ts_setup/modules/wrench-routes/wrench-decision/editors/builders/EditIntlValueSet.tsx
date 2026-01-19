@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputLabel, List, ListItem, ListItemText, IconButton, Box, Button, Typography } from '@mui/material';
+import { InputLabel, List, ListItem, IconButton, Box, Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material';
