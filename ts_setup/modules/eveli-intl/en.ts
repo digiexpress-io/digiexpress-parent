@@ -1246,7 +1246,7 @@ export const en = {
   'ledgercard.transitives.createdAt': 'Created',
   'ledgercard.transitives.updatedAt': 'Updated',
   'cockpitsTable.title': 'Cockpits',
-  'cockpit.composer.cockpit.edit': 'Edit',
+  'cockpit.composer.cockpit.edit': 'Edit Cockpit:',
   'cockpitCreate.dialog.title': 'Create new Cockpit',
   'cockpitCreate.field.name': 'Cockpit name',
   'cockpitCreate.field.description': 'Description',
@@ -1256,5 +1256,7 @@ export const en = {
   'cockpitcard.cockpitWrenchStencilConfig.title': 'Wrench and Stencil Config',
   'cockpitcard.edit': 'Edit',
   'cockpitcard.body.name': 'Name',
-  'cockpitcard.body.description': 'Description'
+  'cockpitcard.body.description': 'Description',
+  'cockpit.wrenchStencilEdit.wrenchTools.title': 'Wrench config',
+  'cockpit.wrenchStencilEdit.stencilTools.title': 'Stencil config'
 }

@@ -10,6 +10,7 @@ import {
   useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowText
 } from '../cockpit-card';
 import { useCockpit } from '../cockpit-provider';
+import { CockpitWrenchStencilEditDialog } from '../cockpit-wrench-stencil-edit';
 
 export type CockpitFactoryCardId = 'cockpit_main' | 'cockpit_wrench_stencil_config';
 
@@ -90,7 +91,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && <Typography>Wrench & Stencil config edit dialog placeholder</Typography>}
+          editDialog={editingCardId === cardId && <CockpitWrenchStencilEditDialog open={isEditOpen} onClose={handleEditClose} />}
           startAdornmentIcon={<StartAdornmentIcon icon={BuildIcon} />}
 
           showFlashyToggle={true}
