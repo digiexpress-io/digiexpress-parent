@@ -5,10 +5,12 @@ export interface CockpitsBackendContextType {
   navigate: {
     findAllCockpits: () => void;
     createOneCockpit: () => void;
+    getOneCockpit: (cockpitId: string) => void;
   };
   persistence: {
     findAllCockpits: () => Promise<CockpitApi.CockpitSummary[]>;
     createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitContainer>;
+    getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitContainer>;
   }
 }
 

@@ -1,5 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { CockpitTable } from '@dxs-ts/cockpit-composer'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { AnyCockpitRoute } from '../eveli-any-cockpit-route'
 
 export const Route = createFileRoute('/secured/$locale/worker/cockpits')({
@@ -8,8 +7,6 @@ export const Route = createFileRoute('/secured/$locale/worker/cockpits')({
 
 function Component() {
   return (
-    <AnyCockpitRoute>
-      <CockpitTable />
-    </AnyCockpitRoute>
+    <AnyCockpitRoute><Outlet /></AnyCockpitRoute>
   )
 }

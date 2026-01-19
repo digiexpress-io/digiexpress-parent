@@ -76,9 +76,13 @@ public class CockpitApiController {
   @GetMapping
   public Multi<CockpitContainer> findAllCockpits() {
     return cockpitClient.queries().cockpitQuery().findAll();
-      
   }
   
+  @GetMapping("/{cockpitId}")
+  public Uni<CockpitContainer> getOneCockpit(@PathVariable("cockpitId") String id) {
+    return cockpitClient.queries().cockpitQuery().getOne(id);
+  }
+
   @PostMapping("/activity-state")
   public Multi<CockpitActivity> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
     return cockpitAwareProvider.set(change.getActiveId())

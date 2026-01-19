@@ -31,16 +31,23 @@ function _useCockpitNavigate(): CockpitsBackendProviderProps['navigate'] {
         to: '/secured/$locale/worker/cockpits'
       });
     },
+    getOneCockpit: (cockpitId: string) => navigate({
+      from: '/secured/$locale/worker',
+      to: '/secured/$locale/worker/cockpits/$cockpitId',
+      params: { cockpitId }
+    }),
   }
 }
 
 function _useCockpitPersistence(): CockpitsBackendProviderProps['persistence'] {
   const { findAllCockpits } = useFetch('worker/rest/api/cockpits.GET', []);
   const { createCockpit } = useFetch('worker/rest/api/cockpits.POST', {});
+  const { getOneCockpit } = useFetch('worker/rest/api/cockpits/$cockpitId.GET', {});
 
   const unit: CockpitsBackendProviderProps['persistence'] = {
     findAllCockpits: findAllCockpits,
     createOneCockpit: createCockpit,
+    getOneCockpit: getOneCockpit,
   }
 
   return unit;

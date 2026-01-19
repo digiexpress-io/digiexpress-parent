@@ -25,9 +25,7 @@ export const CockpitLink: React.FC<CockpitLinkProps> = ({ name, id }) => {
       <Link href="#" onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
-        // TODO: Replace with actual navigation method when available
-        // backend.navigate.openOneCockpit(id);
-        console.log('Navigate to cockpit:', id);
+        backend.navigate.getOneCockpit(id);
       }}>
         {name}
       </Link>

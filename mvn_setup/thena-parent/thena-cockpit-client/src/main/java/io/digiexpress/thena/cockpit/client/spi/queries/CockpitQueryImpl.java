@@ -83,7 +83,7 @@ public class CockpitQueryImpl implements CockpitQuery {
     this.addCockpitId(id);
     
     return findAll().collect().asList().onItem().transform(env -> {
-      if(env.size() == 1) {
+      if(env.size() != 1) {
         throw new CockpitQueryException("Expecting exactly 1 result but found: " + env.size());
       }
       
