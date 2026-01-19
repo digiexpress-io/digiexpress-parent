@@ -92,7 +92,7 @@ export const CockpitTenantEditDialog: React.FC<CockpitTenantEditDialog> = ({ ope
     onClose();
   }
 
-  const isFormValid = externalId.trim() && tenantDescription.trim() && (wrenchConfig?.title || stencilConfig?.title);
+  const isFormValid = tenantDescription.trim() && (wrenchConfig?.title || stencilConfig?.title);
 
   return (
     <StyledCockpitTenantEditDialog className={classes.createDialog} open={open} onClose={handleClose} maxWidth='md' slots={{ transition: Zoom }}>
