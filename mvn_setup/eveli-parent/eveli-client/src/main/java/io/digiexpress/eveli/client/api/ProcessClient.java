@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -37,9 +35,9 @@ import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
-
+// should be migrated to task client ... and remove all JPA dependents
+@Deprecated
 public interface ProcessClient {
-  PaginateProcessInstances paginateInstances();
   QueryProcessInstances queryInstances();
   ProcessInstanceStatusBuilder changeInstanceStatus();
   ProcessAuthorizationQuery queryAuthorization();
@@ -89,13 +87,6 @@ public interface ProcessClient {
     ProcessAuthorization get(InitProcessAuthorization init);
   }
 
-  interface PaginateProcessInstances {
-    PaginateProcessInstances status(@Nullable List<String> status);
-    PaginateProcessInstances name(@Nullable String name);
-    PaginateProcessInstances userId(@Nullable String userId);
-    PaginateProcessInstances page(@Nullable Pageable pageable);
-    Page<ProcessInstance> findAll();
-  }
   
   interface QueryProcessInstances {
     Optional<ProcessInstance> findOneById(String id);
