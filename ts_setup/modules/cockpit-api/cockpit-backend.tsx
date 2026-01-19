@@ -1,5 +1,5 @@
 import React from 'react';
-import { CockpitApi } from '../cockpit-types';
+import { CockpitApi } from './cockpit-types';
 
 export interface CockpitsBackendContextType {
   navigate: {
@@ -11,6 +11,7 @@ export interface CockpitsBackendContextType {
     findAllCockpits: () => Promise<CockpitApi.CockpitSummary[]>;
     createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitContainer>;
     getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitContainer>;
+    createOneCockpitTenant: (cockpitId: string, request: CockpitApi.CreateCockpitTenantCommand) => Promise<CockpitApi.CockpitContainer>;
   }
 }
 

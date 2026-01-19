@@ -12,6 +12,14 @@ export declare namespace CockpitApi {
     configDescription: string;
   }
 
+  export interface CreateCockpitTenantCommand {
+    externalId: string;
+    tenantType: CockpitTenantType;
+    tenantDescription: string;
+  }
+
+  export type CockpitTenantType = 'WRENCH' | 'STENCIL'
+
   export type CockpitDocType =
     | "CONFIG"
     | "CONFIG_TENANT"
@@ -78,7 +86,6 @@ export declare namespace CockpitApi {
     name: string;
     description: string;
 
-    // from what we created
     src: CockpitContainer;
   }
 

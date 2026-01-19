@@ -25,7 +25,6 @@ function _useCockpitNavigate(): CockpitsBackendProviderProps['navigate'] {
       to: '/secured/$locale/worker/cockpits'
     }),
     createOneCockpit: () => {
-      // For now, just navigate to cockpits page - create dialog will open from button
       navigate({
         from: '/secured/$locale/worker',
         to: '/secured/$locale/worker/cockpits'
@@ -43,11 +42,13 @@ function _useCockpitPersistence(): CockpitsBackendProviderProps['persistence'] {
   const { findAllCockpits } = useFetch('worker/rest/api/cockpits.GET', []);
   const { createCockpit } = useFetch('worker/rest/api/cockpits.POST', {});
   const { getOneCockpit } = useFetch('worker/rest/api/cockpits/$cockpitId.GET', {});
+  const { createCockpitTenant } = useFetch('worker/rest/api/cockpits/$cockpitId/tenants.POST', {});
 
   const unit: CockpitsBackendProviderProps['persistence'] = {
     findAllCockpits: findAllCockpits,
     createOneCockpit: createCockpit,
     getOneCockpit: getOneCockpit,
+    createOneCockpitTenant: createCockpitTenant,
   }
 
   return unit;
