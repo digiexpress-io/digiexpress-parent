@@ -50,10 +50,6 @@ public class ProcessClientImpl implements ProcessClient {
     return new ProcessInstanceStatusBuilderImpl(processJPA);
   }
   @Override
-  public PaginateProcessInstances paginateInstances() {
-    return new PaginateProcessInstancesImpl(processJPA);
-  }
-  @Override
   public ProcessAuthorizationQuery queryAuthorization() {
     return new ProcessAuthorizationQueryImpl(envir);
   }
