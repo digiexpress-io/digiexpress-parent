@@ -1251,5 +1251,8 @@ export const en = {
   'cockpitCreate.field.name': 'Cockpit name',
   'cockpitCreate.field.description': 'Description',
   'cockpitTable.col.header.name': 'Name',
-  'cockpitTable.col.header.description': 'Description'
+  'cockpitTable.col.header.description': 'Description',
+  'cockpitcard.cockpitMain.title': 'Cockpit main',
+  'cockpitcard.cockpitWrenchStencilConfig.title': 'Wrench and Stencil Config',
+  'cockpitcard.edit': 'Edit'
 }

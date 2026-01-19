@@ -127,8 +127,9 @@
         "@dxs-ts/cockpit-api",
         "@mui/material",
         "@mui/icons-material",
-        "@tanstack/react-table",
+        "@mui/utils",
         "luxon",
+        "@tanstack/react-table",
         "@dxs-ts/xui-table"
       ],
       "actualExternalDependencies": [
@@ -137,8 +138,9 @@
         "@tanstack/react-query",
         "@mui/material",
         "@mui/icons-material",
-        "@tanstack/react-table",
-        "luxon"
+        "@mui/utils",
+        "luxon",
+        "@tanstack/react-table"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/cockpit-api",
@@ -147,7 +149,6 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/xui-datetime",
-        "@mui/utils",
         "@mui/system"
       ]
     },
@@ -4334,6 +4335,6 @@
       ]
     }
   },
-  "checksum": "8ffe4f492e466a395875c77a8254144a28834a7cc5563e6e7a81723a12d595ef",
-  "generatedAt": "2026-01-19T10:30:46.502Z"
+  "checksum": "85219c697dd1d67239d21861c3394f40f7305ac5b9490b59ce50ea14d738c989",
+  "generatedAt": "2026-01-19T11:54:58.312Z"
 }
