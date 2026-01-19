@@ -35,7 +35,9 @@ export const CockpitTenantCreateDialog: React.FC<CockpitTenantCreateDialogProps>
   }
 
   async function handleCreate() {
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      return
+    };
 
     setIsCreating(true);
     try {
@@ -49,8 +51,6 @@ export const CockpitTenantCreateDialog: React.FC<CockpitTenantCreateDialogProps>
 
       onSuccess?.();
       onClose();
-
-      // Reset form
       setExternalId('');
       setTenantType('WRENCH');
       setTenantDescription('');
@@ -62,9 +62,9 @@ export const CockpitTenantCreateDialog: React.FC<CockpitTenantCreateDialogProps>
   }
 
   function handleClose() {
-    if (isCreating) return;
-
-    // Reset form on close
+    if (isCreating) {
+      return;
+    }
     setExternalId('');
     setTenantType('WRENCH');
     setTenantDescription('');
