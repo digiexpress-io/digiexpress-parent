@@ -72,7 +72,7 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
             empty={{ id: '', label: intl.formatMessage({ id: 'dt.header.dataType' }) }}
             items={dt.headerTypes
               .filter(type => {
-                if(header.direction === 'IN' && type === 'INTL') {
+                if (header.direction === 'IN' && type === 'INTL') {
                   return false;
                 }
                 return true;
@@ -82,7 +82,14 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
                 value: (<ListItemText primary={type} />)
               }))}
           />
+
+          {valueType === 'INTL' ? (
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block', marginLeft: 2 }}>
+              <FormattedMessage id="decisions.intl.columnType.help" />
+            </Typography>
+          ) : null}
         </Grid2>
+
         <Grid2 size={{ xs: 12 }}>
           {valueType === 'INTL' && <EditIntlValueSet valueSet={valueSet} 
             setValueSet={setValueSet} 
