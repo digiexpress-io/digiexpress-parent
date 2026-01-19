@@ -49,6 +49,7 @@ public interface GrimProcess extends IsGrimObject, AnyTenantEntity {
    @Nullable Long getExpiresInSeconds();  
    @Nullable String getQuestionnaireId();
    @Nullable String getMissionId();
+   @Nullable String getCockpitId();
    @Nullable String getMissionRef();
    @Nullable String getUserId();
    @Nullable Boolean getAnon();

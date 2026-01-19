@@ -15,6 +15,7 @@ export const GRouterCockpits: React.FC<GRouterCockpitsProps> = ({ }) => {
   const [showDialog, setShowDialog] = React.useState(false);
   const isEnabled = !!cockpits.active;
 
+
   // Keyboard shortcut
   React.useEffect(() => {
     if (!isEnabled) {

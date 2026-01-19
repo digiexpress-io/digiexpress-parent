@@ -62,6 +62,7 @@ public interface GamutClient {
   interface UserActionMetaQuery {
     UserActionMetaQuery locale(String locale);
     UserActionMetaQuery actionId(String actionId);
+    UserActionMetaQuery cockpitId(String cockpitId);
     Uni<UserActionMeta> getOne();
   }
   
@@ -103,6 +104,7 @@ public interface GamutClient {
   }
   
   interface UserActionQuery {
+    UserActionQuery cockpitId(String cockpitId);
     List<UserAction> findAll();
     Optional<UserAction> findOneById(String id);
     Optional<UserAction> findOneAnonById(String id); // only anon forms can be fetched by id
@@ -113,6 +115,7 @@ public interface GamutClient {
     UserActionBuilder customerRoles(CustomerRoles customerRoles);
     UserActionBuilder actionId(String actionId);
     UserActionBuilder taskId(@Nullable String taskId);
+    UserActionBuilder cockpitId(@Nullable String cockpitId);
     UserActionBuilder anon(boolean anon);
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);
@@ -163,9 +166,6 @@ public interface GamutClient {
     String getId();
     String getName();
     String getStatus();
-    String getReviewUri();
-    String getMessagesUri();
-    String getFormUri();
     @Nullable String getFormId();
     OffsetDateTime getCreated();
     OffsetDateTime getUpdated();
@@ -173,7 +173,8 @@ public interface GamutClient {
     @Nullable String getInputContextId();
     @Nullable String getInputParentContextId();
     
-
+    @Nullable
+    String getCockpitId();
     @Nullable
     String getTaskId();
     @Nullable

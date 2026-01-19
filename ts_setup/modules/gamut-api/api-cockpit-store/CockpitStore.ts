@@ -1,4 +1,4 @@
-import { SiteApi } from './site-types';
+import { SiteApi } from '../api-site';
 
 const STORAGE_KEY = 'gamut_cockpit';
 

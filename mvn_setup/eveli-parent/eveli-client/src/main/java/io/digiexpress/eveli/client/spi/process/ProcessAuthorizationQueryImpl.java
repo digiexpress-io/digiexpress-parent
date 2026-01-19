@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.process;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.ImmutableProcessAuthorization;
@@ -32,6 +33,8 @@ import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorizationQuery;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
+import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +50,8 @@ public class ProcessAuthorizationQueryImpl implements ProcessAuthorizationQuery 
   
   @Override
   public ProcessAuthorization get(InitProcessAuthorization init) {
-    final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
+    final CockpitIdSupplier cockpitIdSupplier = () -> Uni.createFrom().item(Optional.ofNullable(init.getCockpitId()));
+    final var runtime = envir.withCockpitIdSupplier(cockpitIdSupplier).runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
     return processRequest(new AuthorizationRequest(runtime, init));
   }
   

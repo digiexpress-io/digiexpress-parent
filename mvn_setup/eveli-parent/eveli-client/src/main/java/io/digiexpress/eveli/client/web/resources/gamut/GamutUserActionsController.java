@@ -88,6 +88,7 @@ public class GamutUserActionsController {
     ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionGet(sessionId);
     return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
   }
+  
   @PostMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
     final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
@@ -102,6 +103,7 @@ public class GamutUserActionsController {
     }
     return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()); 
   }
+  
   @GetMapping(value="/review/{sessionId}")
   public ResponseEntity<?> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
     final var session = dialob.getQuestionnaireById(sessionId);
@@ -113,7 +115,6 @@ public class GamutUserActionsController {
   public ResponseEntity<List<UserMessage>> getMessages() {
     return ResponseEntity.ok(gamutClient.userMessagesQuery().findAllByUserId());
   }
-  
   
   @PutMapping(path = "/feedback")
   public ResponseEntity<?> updateFeedback(@RequestBody UpsertFeedbackRankingCommand upsert) {
@@ -176,27 +177,7 @@ public class GamutUserActionsController {
     }
     
   }
-
-  @GetMapping(value="/authorizations")
-  public ResponseEntity<AuthorizationAction> getAuthorizations() {
-    final var customer = authClient.getCustomer().getPrincipal();
-    
-    final var person = customer.getRepresentedPerson();
-    final var company = customer.getRepresentedCompany();
-    if(person == null && company == null) {
-      return ResponseEntity.ok(null); // Nobody is represented
-    }
-    final var roles = authClient.getCustomerRoles().getRoles();
-    final var allowed = hdes.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
-        .addAllUserRoles(roles)
-        .build());
-    
-    return  ResponseEntity.ok(ImmutableAuthorizationAction.builder()
-        .addAllUserRoles(roles)
-        .allowedProcessNames(allowed.getAllowedProcessNames())
-        .build());
-  }
-
+  
   @DeleteMapping(value="/{actionId}")
   public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
     try {
@@ -208,21 +189,47 @@ public class GamutUserActionsController {
     }
   }
 
+  @GetMapping(value="/authorizations")
+  public ResponseEntity<AuthorizationAction> getAuthorizations(
+      @RequestParam(name = "cockpitId", required = false) String cockpitId
+  ) {
+    
+    final var customer = authClient.getCustomer().getPrincipal();
+    
+    final var person = customer.getRepresentedPerson();
+    final var company = customer.getRepresentedCompany();
+    if(person == null && company == null) {
+      return ResponseEntity.ok(null); // Nobody is represented
+    }
+    final var roles = authClient.getCustomerRoles().getRoles();
+    final var allowed = hdes.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
+        .cockpitId(cockpitId)
+        .addAllUserRoles(roles)
+        .build());
+    
+    return  ResponseEntity.ok(ImmutableAuthorizationAction.builder()
+        .addAllUserRoles(roles)
+        .allowedProcessNames(allowed.getAllowedProcessNames())
+        .build());
+  }
+
   @GetMapping
   public Uni<ResponseEntity<?>> kindOfCreateActionOrGet(
       @RequestParam(name = "id", required = false) String actionId,
+      @RequestParam(name = "cockpitId", required = false) String cockpitId,
       @RequestParam(name = "inputContextId", required = false) String inputContextId,
       @RequestParam(name = "inputParentContextId", required = false) String inputParentContextId,
       @RequestParam(name = "locale", required = false) String actionLocale
   ) {
     
     if(actionId == null) {
-      return Uni.createFrom().item(ResponseEntity.ok(gamutClient.userActionQuery().findAll()));
+      return Uni.createFrom().item(ResponseEntity.ok(gamutClient.userActionQuery().cockpitId(cockpitId).findAll()));
     }
 
     try {
       return gamutClient.userActionBuilder()
           .actionId(actionId)
+          .cockpitId(cockpitId)
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)

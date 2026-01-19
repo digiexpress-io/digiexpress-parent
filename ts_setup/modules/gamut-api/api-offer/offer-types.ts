@@ -43,8 +43,8 @@ export declare namespace OfferApi {
   }
 
 
-  export type CreateOfferFetchPOST = (request: OfferRequest) => Promise<Response>;
-  export type GetOffersFetchGET = () => Promise<Response>;
+  export type CreateOfferFetchPOST = (request: OfferRequest, cockpitId: string | undefined) => Promise<Response>;
+  export type GetOffersFetchGET = (cockpitId: string | undefined) => Promise<Response>;
   export type GetOfferFetchGET = (offerId: OfferId) => Promise<Response>;
   export type CancelOfferFetchDELETE = (request: Offer) => Promise<Response>;
 

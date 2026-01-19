@@ -96,7 +96,7 @@ SET
   flow_name = $6,
   flow_body = $7,
   
-  form_body = $8 
+  form_body = $8
 WHERE id = $9""").ln()
         .build())
         .props(procs.stream()
@@ -133,6 +133,7 @@ WHERE id = $9""").ln()
   expires_at,
   expires_in_seconds,
   questionnaire_id,
+  cockpit_id,
   user_id,
   anon,
   article_name,
@@ -141,7 +142,7 @@ WHERE id = $9""").ln()
   form_tag_name,
   stencil_tag_name,
   wrench_tag_name)""").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)").ln()
         .build())
         .props(procs.stream()
             .map(proc -> Tuple.from(new Object[]{
@@ -155,6 +156,7 @@ WHERE id = $9""").ln()
                 proc.getExpiresAt(),
                 proc.getExpiresInSeconds(),
                 proc.getQuestionnaireId(),
+                proc.getCockpitId(),
                 proc.getUserId(),
                 proc.getAnon(),
                 proc.getArticleName(),
@@ -253,6 +255,7 @@ WHERE id = $9""").ln()
       status              VARCHAR(255) NULL,
       stencil_tag_name    TEXT NULL,
       task_id             VARCHAR(255) NULL,
+      cockpit_id          VARCHAR(255) NULL,
       updated             TIMESTAMPTZ NOT NULL,
       user_id             VARCHAR(255) NULL,
       workflow_name       VARCHAR(255) NOT NULL,
@@ -324,6 +327,7 @@ WHERE id = $9""").ln()
           .status(row.getString("status"))
           .stencilTagName(row.getString("stencil_tag_name"))
           .missionId(row.getString("task_id"))
+          .cockpitId(row.getString("cockpit_id"))
           .missionRef(row.getString("mission_ref"))
           
           

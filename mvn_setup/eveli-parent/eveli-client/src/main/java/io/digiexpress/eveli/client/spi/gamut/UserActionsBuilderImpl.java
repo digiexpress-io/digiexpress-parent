@@ -70,6 +70,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private Optional<CustomerRoles> customerRoles = Optional.empty();
   private Optional<InitUserAction> externalUserActionInit = Optional.empty();
   
+  private String cockpitId;
   private String actionId;
   private String taskId;
   private String clientLocale; 
@@ -173,6 +174,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .stencilTagName(runtime.getStencilTagName())
           .wrenchTagName(runtime.getWrenchTagName())
           .customerAssignment(customerAssignment)
+          .cockpitId(cockpitId)
           
           .create();
       
@@ -191,11 +193,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
           .viewed(true)
           .taskId(process.getTaskId())
-          
-          // deprecated
-          .messagesUri("not-needed")
-          .reviewUri("not-needed")
-          .formUri("not-needed")
+          .cockpitId(process.getCockpitId())
           .build();
     });
   }
@@ -214,11 +212,6 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
         .viewed(true)
         .taskId(process.getTaskId())
-        
-        // deprecated
-        .messagesUri("not-needed")
-        .reviewUri("not-needed")
-        .formUri("not-needed")
         .build();
   }
 

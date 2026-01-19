@@ -112,11 +112,7 @@ public class GamutClientImpl implements GamutClient {
             .formInProgress(true)
             .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
             .viewed(true)
-            
-            // deprecated
-            .messagesUri("not-needed")
-            .reviewUri("not-needed")
-            .formUri("not-needed")
+            .cockpitId(process.getCockpitId())
             .build();
       }
       
@@ -161,8 +157,6 @@ public class GamutClientImpl implements GamutClient {
             .userId(customerId.getSafeId(), null)
             .addCustomerCommitViewer(taskId);
       }
-      
-
     };
   }
 }

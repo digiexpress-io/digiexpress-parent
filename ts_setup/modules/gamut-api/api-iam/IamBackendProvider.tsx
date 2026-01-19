@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { SiteApi } from '../api-site';
 import { IamApi } from './iam-types'
-import { IamLiveness } from './IamLiveness'
 import { useLocale } from '../api-locale';
+import { CockpitStore } from '../api-cockpit-store';
 
+import { IamLiveness } from './IamLiveness'
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -214,7 +215,9 @@ async function getUserRoles(props: IamBackendProviderProps): Promise<IamApi.User
 
 async function getUserProducts(props: IamBackendProviderProps): Promise<IamApi.UserProducts | undefined> {
   try {
-    const products = await props.fetchUserProductsGET();
+    const cockpit = CockpitStore.get();
+    const cockpitId = cockpit?.id;
+    const products = await props.fetchUserProductsGET(cockpitId);
     if(products.ok) {
       return products.json().then(data => {
         const products: IamApi.UserProducts = {

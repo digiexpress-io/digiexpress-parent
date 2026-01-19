@@ -2,7 +2,7 @@ import { OfferApi } from "../api-offer";
 
 
 export function createPublicOfferFetch(url: (string | undefined) = '/portal/feedback') {
-  const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest) => {
+  const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest, cockpitId?: string) => {
 
     const superTestForm = undefined//'5032fb6bbd7d5eed6daf53d0f87603d3';
 
@@ -10,8 +10,8 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     const locale = request.locale;
     const inputContextId = request.pageId;
     const inputParentContextId = request.parentPageId ?? "";
-
-    const query = `${url}?actionId=${id}&actionLocale=${locale}&inputContextId=${inputContextId}&inputParentContextId=${inputParentContextId}`;
+    const tenant = cockpitId ? `&cockpitId=${cockpitId}` : '';
+    const query = `${url}?actionId=${id}&actionLocale=${locale}&inputContextId=${inputContextId}&inputParentContextId=${inputParentContextId}${tenant}`;
 
     const response = await window.fetch(query, {
       method: 'POST',
@@ -21,9 +21,9 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     return response;
   }
 
-  const fetchAllGet: OfferApi.GetOffersFetchGET = async () => {
-    // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(url, {
+  const fetchAllGet: OfferApi.GetOffersFetchGET = async (cockpitId?: string) => {
+    const tenant = cockpitId ? `?cockpitId=${cockpitId}` : '';
+    const response = await window.fetch(`${url}${tenant}`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,
@@ -56,7 +56,7 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
 
 
 export function createOfferFetch(url: (string | undefined) = '/portal/secured/actions') {
-  const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest) => {
+  const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest, cockpitId?: string) => {
 
     const superTestForm = undefined//'5032fb6bbd7d5eed6daf53d0f87603d3';
 
@@ -64,8 +64,9 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     const locale = request.locale;
     const inputContextId = request.pageId;
     const inputParentContextId = request.parentPageId ?? "";
+    const tenant = cockpitId ? `&cockpitId=${cockpitId}` : '';
 
-    const query = `${url}?id=${id}&locale=${locale}&inputContextId=${inputContextId}&inputParentContextId=${inputParentContextId}`;
+    const query = `${url}?id=${id}&locale=${locale}&inputContextId=${inputContextId}&inputParentContextId=${inputParentContextId}${tenant}`;
 
     const response = await window.fetch(query, {
       method: 'GET',
@@ -75,9 +76,9 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     return response;
   }
 
-  const fetchAllGet: OfferApi.GetOffersFetchGET = async () => {
-    // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(url, {
+  const fetchAllGet: OfferApi.GetOffersFetchGET = async (cockpitId?: string) => {
+    const tenant = cockpitId ? `?cockpitId=${cockpitId}` : '';
+    const response = await window.fetch(`${url}${tenant}`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,

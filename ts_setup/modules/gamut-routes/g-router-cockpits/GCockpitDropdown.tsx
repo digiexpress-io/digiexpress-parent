@@ -2,7 +2,7 @@ import React from 'react'
 import { SelectChangeEvent } from '@mui/material';
 import { Check as CheckIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
-import { SiteApi, useSite } from '@dxs-ts/gamut-api';
+import { SiteApi, useIam, useSite } from '@dxs-ts/gamut-api';
 
 
 import { GInputSelect, GInputSelectOption, useUtilityClasses } from './useUtilityClasses';
@@ -12,6 +12,7 @@ const UNDEFINED_SELECTION_VALUE = 'gamut.forms.selectionUndefined';
 
 export const GCockpitDropdown: React.FC<{}> = (props) => {
   const { cockpits } = useSite();  
+  const iam = useIam();
   const classes = useUtilityClasses();
   const intl = useIntl();
   const undefinedValue = intl.formatMessage({ id: UNDEFINED_SELECTION_VALUE });
@@ -19,10 +20,11 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
   const datasource = cockpits.options;
   const selectedValue = cockpits.active;
 
-  function handleChange(selectEvent: SelectChangeEvent) {
+  async function handleChange(selectEvent: SelectChangeEvent) {
     const event: React.ChangeEvent<HTMLInputElement> = selectEvent as React.ChangeEvent<HTMLInputElement>;
     const selected = event.currentTarget.value;
     cockpits.setActive(datasource.find(item => item.id === selected));
+    await iam.reload();
   }
 
   return (
