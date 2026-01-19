@@ -1246,6 +1246,7 @@ export const en = {
   'ledgercard.transitives.createdAt': 'Created',
   'ledgercard.transitives.updatedAt': 'Updated',
   'cockpitsTable.title': 'Cockpits',
+  'cockpit.composer.cockpit.edit': 'Edit',
   'cockpitCreate.dialog.title': 'Create new Cockpit',
   'cockpitCreate.field.name': 'Cockpit name',
   'cockpitCreate.field.description': 'Description',
