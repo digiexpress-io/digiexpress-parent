@@ -1,4 +1,5 @@
 import React from 'react';
+import { Typography, Box } from '@mui/material';
 import { Build as BuildIcon } from '@mui/icons-material';
 import { Speed as SpeedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
@@ -6,7 +7,7 @@ import { DateTime } from 'luxon';
 
 import {
   CockpitCard, CockpitCardId, useCockpitCardConfig,
-  useCockpitCardThemeConfig, StartAdornmentIcon
+  useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowText
 } from '../cockpit-card';
 import { useCockpit } from '../cockpit-provider';
 
@@ -69,7 +70,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && <div>Edit dialog placeholder</div>}
+          editDialog={editingCardId === cardId && <Typography>Edit dialog placeholder</Typography>}
           startAdornmentIcon={<StartAdornmentIcon icon={SpeedIcon} />}
 
           showFlashyToggle={true}
@@ -77,13 +78,8 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <div>
-            <p><strong>ID:</strong> {config.id}</p>
-            <p><strong>Name:</strong> {config.cockpitConfigName}</p>
-            <p><strong>Description:</strong> {config.cockpitConfigDesc}</p>
-            <p><strong>Commit ID:</strong> {config.commitId}</p>
-            <p><strong>External ID:</strong> {config.externalId || 'N/A'}</p>
-          </div>
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.name' })} value={config.cockpitConfigName} style={style} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.description' })} value={config.cockpitConfigDesc} style={style} />
         </CockpitCard>
       );
 
@@ -94,7 +90,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && <div>Wrench & Stencil config edit dialog placeholder</div>}
+          editDialog={editingCardId === cardId && <Typography>Wrench & Stencil config edit dialog placeholder</Typography>}
           startAdornmentIcon={<StartAdornmentIcon icon={BuildIcon} />}
 
           showFlashyToggle={true}
@@ -102,14 +98,24 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <div>
-            <p><strong>Wrench Tools:</strong></p>
-            <p>Cockpit wrench tools and configuration options will go here.</p>
-            <br />
-            <p><strong>Stencil Configuration:</strong></p>
-            <p>Cockpit stencil configuration and management tools will go here.</p>
-            <p>This card manages both wrench and stencil functionality for the cockpit.</p>
-          </div>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchTools.title' })}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchTools.description' })}
+            </Typography>
+
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.title' })}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.description' })}
+            </Typography>
+            <Typography variant="body2">
+              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.combinedDescription' })}
+            </Typography>
+          </Box>
         </CockpitCard>
       );
 

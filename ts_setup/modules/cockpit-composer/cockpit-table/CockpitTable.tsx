@@ -27,7 +27,7 @@ export const CockpitTable: React.FC = () => {
     initialData: [],
   });
 
-
+  console.log("cockpits", data)
   const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
     {
       header: intl.formatMessage({ id: 'cockpitTable.col.header.name' }),

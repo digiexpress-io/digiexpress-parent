@@ -1254,5 +1254,7 @@ export const en = {
   'cockpitTable.col.header.description': 'Description',
   'cockpitcard.cockpitMain.title': 'Cockpit main',
   'cockpitcard.cockpitWrenchStencilConfig.title': 'Wrench and Stencil Config',
-  'cockpitcard.edit': 'Edit'
+  'cockpitcard.edit': 'Edit',
+  'cockpitcard.body.name': 'Name',
+  'cockpitcard.body.description': 'Description'
 }
