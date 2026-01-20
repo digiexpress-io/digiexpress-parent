@@ -21,31 +21,24 @@ export interface CockpitTenantEditDialog {
 
 const filter = createFilterOptions<ConfigOptionType>();
 
-// Initial config options (can be fetched from backend later)
-const wrenchConfigOptions: ConfigOptionType[] = [
-  { title: 'Wrench config 1' },
-  { title: 'Big fat wrench stuff 452' }
-];
-
-const stencilConfigOptions: ConfigOptionType[] = [
-  { title: 'Stencil config 1' },
-  { title: 'xurlu-stuu27ay-d' },
-  { title: 'content' }
-
-];
-
 export const CockpitTenantEditDialog: React.FC<CockpitTenantEditDialog> = ({ open, onClose, cockpitId }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useCockpitsBackend();
-  const { cockpitContainer } = useCockpit();
+  const { cockpitContainer, activity } = useCockpit();
+
+  const wrenchConfigOptions: ConfigOptionType[] = activity.availableTenants.wrench.map(tenant => ({ title: tenant.externalId }));
+  const stencilConfigOptions: ConfigOptionType[] = activity.availableTenants.stencil.map(tenant => ({ title: tenant.externalId }));
 
   const [externalId, setExternalId] = React.useState('');
-  const [wrenchConfig, setWrenchConfig] = React.useState<ConfigOptionType | undefined>(undefined);
-  const [stencilConfig, setStencilConfig] = React.useState<ConfigOptionType | undefined>(undefined);
+  const [wrenchConfig, setWrenchConfig] = React.useState<ConfigOptionType | undefined>(
+    wrenchConfigOptions.length > 0 ? wrenchConfigOptions[0] : undefined
+  );
+  const [stencilConfig, setStencilConfig] = React.useState<ConfigOptionType | undefined>(
+    stencilConfigOptions.length > 0 ? stencilConfigOptions[0] : undefined
+  );
   const [tenantDescription, setTenantDescription] = React.useState('');
 
-  console.log(cockpitContainer)
 
   function handleTenantDescriptionChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTenantDescription(e.target.value);

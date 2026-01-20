@@ -8,6 +8,7 @@ export interface CockpitsBackendContextType {
     getOneCockpit: (cockpitId: string) => void;
   };
   persistence: {
+    findActivity: () => Promise<CockpitApi.CockpitActivity>
     findAllCockpits: () => Promise<CockpitApi.CockpitSummary[]>;
     createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitContainer>;
     getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitContainer>;

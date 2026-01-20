@@ -84,4 +84,11 @@ export declare namespace CockpitApi {
     src: CockpitContainer;
   }
 
+  export interface CockpitActivity {
+    availableTenants: {
+      stencil: CockpitConfigTenant[],
+      wrench: CockpitConfigTenant[],
+    },
+    activeCockpitId: string | undefined;
+  }
 }
