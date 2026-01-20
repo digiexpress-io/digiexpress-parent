@@ -63,6 +63,14 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.Sql findAllWithLabels() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement()
+        .append("SELECT * FROM ").append(options.getTenant()).append(" WHERE label IS NOT NULL")
+        .build())
+        .build();
+  }
+  @Override
   public ThenaSqlClient.SqlTuple getByName(String name) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

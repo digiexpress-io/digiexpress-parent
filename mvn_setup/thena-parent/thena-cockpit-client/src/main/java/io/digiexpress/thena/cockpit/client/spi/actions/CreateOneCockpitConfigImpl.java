@@ -23,6 +23,7 @@ package io.digiexpress.thena.cockpit.client.spi.actions;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
@@ -39,9 +40,12 @@ import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDbBuilder.PersistenceUnit;
 import io.digiexpress.thena.cockpit.client.tables.ImmutablePersistenceUnit;
 import io.resys.thena.spi.ImmutableTxScope;
+import io.resys.thena.spi.TenantBuilderImpl;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -134,6 +138,7 @@ public class CreateOneCockpitConfigImpl implements CreateOneCockpitConfig {
           .build();
       return result;
     })
+    .onItem().call(env -> createIfNotExistsTenants(env.getCockpitConfig(), state))
     .onItem().invoke(newState -> {
       if(handleNewState != null) {
         handleNewState.accept(newState.getCockpitConfig());
@@ -175,6 +180,30 @@ public class CreateOneCockpitConfigImpl implements CreateOneCockpitConfig {
         .build();
   
     return Uni.createFrom().item(next);
+  }
+  
+  
+  public static Uni<Void> createIfNotExistsTenants(CockpitContainer container, CockpitDb state) {
+    return Multi.createFrom().items(container.getTenants().stream())
+    .onItem().transformToUniAndMerge(tenant -> state.tenant()
+        .findByNameOrId(tenant.getExternalId())
+        .onItem().transform(found -> Tuple2.of(found, tenant))
+    )
+
+    .onItem().transformToUniAndMerge(tuple -> {
+      
+      if(tuple.getItem1().isPresent()) {
+        return Uni.createFrom().voidItem();
+      }
+      return new TenantBuilderImpl(state, StructureType.git)
+        .name(tuple.getItem2().getExternalId())
+        .externalId(tuple.getItem2().getExternalId())
+        .label(tuple.getItem2().getCockpitConfigTenantType())
+        .comment(tuple.getItem2().getCockpitConfigTenantDesc())
+        .buildOnlyIfNotCreated()
+        .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
+      
+    }).collect().asList().onItem().transformToUni((ignore) -> Uni.createFrom().voidItem());
   }
   
   public static class CreateOneCockpitConfigException extends RuntimeException {
