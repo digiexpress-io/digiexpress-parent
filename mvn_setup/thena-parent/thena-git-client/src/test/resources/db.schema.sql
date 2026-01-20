@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS tenants
   type VARCHAR(40) NOT NULL,
   name VARCHAR(255) NOT NULL,
   external_id VARCHAR(255),
+  label TEXT,
+  comment TEXT,
   UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)
 );
 CREATE INDEX IF NOT EXISTS tenants_NAME_INDEX ON tenants (name);

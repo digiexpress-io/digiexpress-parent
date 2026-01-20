@@ -52,6 +52,7 @@ import io.resys.hdes.client.spi.cache.HdesClientEhCache;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.resys.thena.api.ThenaAware;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,7 +70,8 @@ public class EveliAutoConfigEnvir {
       Optional<EveliRuntimeCache> initCache,
       ApplicationContext context,
       EveliPropsEnvir envirProps,
-      TenantConfigClient tenantConfigClient) {
+      TenantConfigClient tenantConfigClient,
+      ThenaAware thenaAware) {
     
     final boolean isDev = envirProps.getDevEnabled() == null ? true : Boolean.TRUE.equals(envirProps.getDevEnabled());
     final ExternalDeploymentProvider externalProvider = depProvider.orElse(new ExternalDeploymentProvider() {
@@ -78,6 +80,7 @@ public class EveliAutoConfigEnvir {
         return Uni.createFrom().item(Optional.empty());
       }
     });
+    
     final var tenantConfig = tenantConfigClient.createConfigQuery().getOne().await().atMost(Duration.ofMinutes(5));
     final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient, tenantConfig);
     
@@ -87,8 +90,7 @@ public class EveliAutoConfigEnvir {
     
     // create db only if required by tenant config
     if(!tenantConfig.isExternalDeployment()) {
-      store.query().createIfNot().await().atMost(Duration.ofMinutes(5));
-    
+      thenaAware.register(store.getClass(), store.query().createIfNot());    
     }
     return envir;
   }

@@ -4,7 +4,7 @@ package io.digiexpress.eveli.app;
  * #%L
  * eveli-app
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package io.digiexpress.eveli.app;
  * limitations under the License.
  * #L%
  */
-
-import java.time.Duration;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +48,6 @@ public class AppConfigEditAssets {
       io.vertx.mutiny.sqlclient.Pool pgPool) {
     
     final var dev = EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool);
-    return EveliAutoConfigAssets.getOrCreateDb(dev).await().atMost(Duration.ofMinutes(5));
+    return dev;
   }
 }

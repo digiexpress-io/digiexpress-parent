@@ -51,6 +51,8 @@ public interface TenantActions {
     CreateOneTenant externalId(String externalId); // optional can be null
     CreateOneTenant name(String name, StructureType type);
     CreateOneTenant name(String name);
+    CreateOneTenant label(@Nullable String label);
+    CreateOneTenant comment(@Nullable String comment);
     Uni<CreatedTenant> build();
     
     Uni<Tuple2<Boolean, CreatedTenant>> buildOnlyIfNotCreated();

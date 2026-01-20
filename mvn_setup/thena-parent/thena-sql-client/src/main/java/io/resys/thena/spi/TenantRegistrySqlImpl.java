@@ -1,5 +1,7 @@
 package io.resys.thena.spi;
 
+import java.util.Arrays;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -87,9 +89,15 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getTenant())
-        .append(" (id, rev, prefix, name, type, external_id) VALUES($1, $2, $3, $4, $5, $6)")
+        .append(" (id, rev, prefix, name, type, label, comment, external_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)")
         .build())
-        .props(Tuple.of(newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), newRepo.getName(), newRepo.getType(), newRepo.getExternalId()))
+        .props(Tuple.from(Arrays.asList(
+            newRepo.getId(), newRepo.getRev(), newRepo.getPrefix(), 
+            newRepo.getName(), newRepo.getType(),
+            
+            newRepo.getLabel(), newRepo.getComment(),
+            newRepo.getExternalId()
+        )))
         .build();
   }
   
@@ -124,6 +132,8 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
         .rev(row.getString("rev"))
         .name(row.getString("name"))
         .externalId(row.getString("external_id"))
+        .label(row.getString("label"))
+        .comment(row.getString("comment"))
         .type(StructureType.valueOf(row.getString("type")))
         .prefix(row.getString("prefix"))
         .build();
@@ -140,6 +150,8 @@ public class TenantRegistrySqlImpl implements TenantRegistry {
         .append("  type VARCHAR(40) NOT NULL,").ln()
         .append("  name VARCHAR(255) NOT NULL,").ln()
         .append("  external_id VARCHAR(255),").ln()
+        .append("  label TEXT,").ln()
+        .append("  comment TEXT,").ln()
         .append("  UNIQUE(name), UNIQUE(rev), UNIQUE(prefix), UNIQUE(external_id)").ln()
         .append(");").ln()
 

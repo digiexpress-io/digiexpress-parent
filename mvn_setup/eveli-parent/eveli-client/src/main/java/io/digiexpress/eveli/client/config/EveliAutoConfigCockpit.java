@@ -46,6 +46,7 @@ import io.digiexpress.thena.cockpit.client.api.CockpitClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitContainer;
 import io.digiexpress.thena.cockpit.client.spi.CockpitClientImpl;
 import io.digiexpress.thena.cockpit.client.spi.CockpitContainerCacheImpl;
+import io.resys.thena.api.ThenaAware;
 import io.resys.thena.storesql.PgErrors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -79,7 +80,7 @@ public class EveliAutoConfigCockpit {
   }
   
   @Bean
-  public CockpitClient cockpitClient(EveliEditEnvir editEnivr, io.vertx.mutiny.sqlclient.Pool pgPool) {
+  public CockpitClient cockpitClient(EveliEditEnvir editEnivr, io.vertx.mutiny.sqlclient.Pool pgPool, ThenaAware thenaAware) {
     
     final var aware = Arrays.asList(editEnivr.getStencil(), editEnivr.getWrench());
     
@@ -88,7 +89,7 @@ public class EveliAutoConfigCockpit {
         .aware(aware)
         .errorHandler(new PgErrors())
         .build();
-    client.tenants().createOneTenant().buildOnlyIfNotCreated().await().atMost(Duration.ofMinutes(5));
+    thenaAware.register(client.getClass(), client.tenants().createOneTenant().buildOnlyIfNotCreated());
     return client;
   }
   
