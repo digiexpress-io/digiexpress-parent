@@ -55,38 +55,9 @@ public class CockpitApiController {
   private final CockpitAwareProvider cockpitAwareProvider;
   private final WorkerAuthClient auth;
   
-
-  @GetMapping("/activity")
-  public Multi<CockpitActivity> findActivity() {
-    return Uni.combine().all()
-        .unis(cockpitAwareProvider.get(), cockpitClient.queries().cockpitAwareQuery().findAll().collect().asList())
-        .asTuple()
-        .onItem().transform(tuple -> ImmutableList.<CockpitActivity>builder()
-          .add(ImmutableCockpitActiveState.builder()
-              .activeId(tuple.getItem1().map(c -> c.getConfig().getId()).orElse(null))
-              .build())
-          .add(ImmutableCockpitHardcodedTenant.builder()
-              .hardcodedTenants(tuple.getItem2())
-              .build())
-          .build()
-        )
-        .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
-  }
-  
   @GetMapping
   public Multi<CockpitContainer> findAllCockpits() {
     return cockpitClient.queries().cockpitQuery().findAll();
-  }
-  
-  @GetMapping("/{cockpitId}")
-  public Uni<CockpitContainer> getOneCockpit(@PathVariable("cockpitId") String id) {
-    return cockpitClient.queries().cockpitQuery().getOne(id);
-  }
-
-  @PostMapping("/activity-state")
-  public Multi<CockpitActivity> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
-    return cockpitAwareProvider.set(change.getActiveId())
-        .onItem().transformToMulti(ignore -> findActivity());
   }
   
   @PostMapping
@@ -103,7 +74,11 @@ public class CockpitApiController {
         .build()
         .onItem().transform(env -> env.getCockpitConfig());
   }
-  
+
+  @GetMapping("/{cockpitId}")
+  public Uni<CockpitContainer> getOneCockpit(@PathVariable("cockpitId") String id) {
+    return cockpitClient.queries().cockpitQuery().getOne(id);
+  }
   
   @PostMapping("/{cockpitId}/tenants")
   public Uni<CockpitContainer> createCockpitTenant(
@@ -142,6 +117,40 @@ public class CockpitApiController {
         .build()
         .onItem().transform(env -> env.getCockpitConfig());
   }
+  
+  
+  
+  
+  @PostMapping("/activity/current-state")
+  public Multi<CockpitActivity> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
+    return cockpitAwareProvider.set(change.getActiveId())
+        .onItem().transformToMulti(ignore -> findActivity());
+  }
+  
+  @GetMapping("/activity")
+  public Multi<CockpitActivity> findActivity() {
+    return Uni.combine().all()
+        .unis(
+            cockpitAwareProvider.get(), 
+            cockpitClient.queries().cockpitAwareQuery().findAll().collect().asList(),
+            cockpitClient.queries().cockpitAvailableTenantsQuery().findAll().collect().asList()
+        )
+        .asTuple()
+        .onItem().transform(tuple -> ImmutableList.<CockpitActivity>builder()
+          .add(ImmutableCockpitActiveState.builder()
+              .activeId(tuple.getItem1().map(c -> c.getConfig().getId()).orElse(null))
+              .build())
+          .add(ImmutableCockpitHardcodedTenant.builder()
+              .hardcodedTenants(tuple.getItem2())
+              .build())
+          .add(ImmutableCockpitAvailableTenants.builder()
+              .availableTenants(tuple.getItem3())
+              .build())
+          .build()
+        )
+        .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
+  }
+  
    
   @JsonSerialize(as = ImmutableCreateCockpitCommand.class)
   @JsonDeserialize(as = ImmutableCreateCockpitCommand.class)
@@ -201,6 +210,17 @@ public class CockpitApiController {
     }
   }
   
+  @JsonSerialize(as = ImmutableCockpitAvailableTenants.class)
+  @JsonDeserialize(as = ImmutableCockpitAvailableTenants.class)
+  @Value.Immutable
+  interface CockpitAvailableTenants extends CockpitActivity {
+    List<CockpitConfigTenant> getAvailableTenants();
+    
+    @Override
+    default CockpitActivityType getActivityType() {
+      return CockpitActivityType.AVAILABLE_TENANTS;
+    }
+  }
   
 
   
@@ -216,6 +236,6 @@ public class CockpitApiController {
     WRENCH(), STENCIL()
   }
   public enum CockpitActivityType {
-    ACTIVE, HARDCODED_TENANT
+    ACTIVE, HARDCODED_TENANT, AVAILABLE_TENANTS
   }
 }
