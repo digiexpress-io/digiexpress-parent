@@ -44,6 +44,7 @@ public class NewCockpitConfigTenantBuilder implements NewCockpitConfigTenant {
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .cockpitConfigTenantExtension(Optional.empty());
+    externalBranch(null);
   }
   
   @Override

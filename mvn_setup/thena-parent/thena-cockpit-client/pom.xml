@@ -18,6 +18,10 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>thena-git-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-sql-client-pg</artifactId>
     </dependency>
       

@@ -23,10 +23,6 @@ package io.digiexpress.thena.cockpit.client.spi.actions;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 
-import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.envelope.BatchStatus;
-import io.resys.thena.api.envelope.CommitResultStatus;
-import io.resys.thena.api.envelope.ImmutableMessage;
 import io.digiexpress.thena.cockpit.client.api.CockpitCommitActions.CreateOneCockpitConfig;
 import io.digiexpress.thena.cockpit.client.api.CockpitCommitActions.OneCockpitConfigEnvelope;
 import io.digiexpress.thena.cockpit.client.api.CockpitContainer;
@@ -39,8 +35,14 @@ import io.digiexpress.thena.cockpit.client.spi.create.NewCockpitConfigBuilder;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDbBuilder.PersistenceUnit;
 import io.digiexpress.thena.cockpit.client.tables.ImmutablePersistenceUnit;
+import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
+import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.git.spi.GitClientImpl;
+import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.spi.TenantBuilderImpl;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -195,8 +197,20 @@ public class CreateOneCockpitConfigImpl implements CreateOneCockpitConfig {
       if(tuple.getItem1().isPresent()) {
         return Uni.createFrom().voidItem();
       }
-      return new TenantBuilderImpl(state, StructureType.git)
-        .name(tuple.getItem2().getExternalId())
+      
+      final var raw = (ThenaSqlDataSource) state.getDataSource();
+      final var git = new GitClientImpl(new GitDataSourceImpl(raw));
+      
+      final String junkString = tuple.getItem2().getExternalId();
+      final String validName = junkString
+          .substring(0, Math.min(30, junkString.length()))
+          .replaceAll("[^a-zA-Z0-9_]", "_")
+          .replaceAll("^[0-9]+", "_")
+          .toLowerCase();
+      
+      return git.tenants().createOneTenant()
+        
+        .name(validName, StructureType.git)
         .externalId(tuple.getItem2().getExternalId())
         .label(tuple.getItem2().getCockpitConfigTenantType())
         .comment(tuple.getItem2().getCockpitConfigTenantDesc())

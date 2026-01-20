@@ -177,6 +177,7 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
           .commitAuthor(author)
           .commitMessage(message)
           .createdAt(createdAt)
+          .configId(configId)
           .parentId(Optional.ofNullable(config.getUpdatedTreeCommitId()).orElse(config.getCommitId()))
           .build()
     );
