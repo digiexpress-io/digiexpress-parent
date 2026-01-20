@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { CockpitApi } from '@dxs-ts/cockpit-api';
-import { useCockpitsBackend } from '@dxs-ts/cockpit-api';
+import { CockpitApi } from './cockpit-types';
+import { useCockpitsBackend } from './cockpit-backend'
 
 export interface CockpitProviderContextType {
   cockpitContainer: CockpitApi.CockpitContainer;
@@ -28,7 +28,7 @@ export const CockpitProvider: React.FC<CockpitProviderProps> = (props) => {
   });
 
   const contextValue: CockpitProviderContextType | undefined = React.useMemo(() => {
-    if(isPending || !cockpitContainer) {
+    if (isPending || !cockpitContainer) {
       return undefined
     }
 
@@ -40,7 +40,7 @@ export const CockpitProvider: React.FC<CockpitProviderProps> = (props) => {
     return { cockpitContainer, tenants };
   }, [cockpitId, backend, cockpitContainer, isPending]);
 
-  if(contextValue) {
+  if (contextValue) {
     return (<CockpitProviderContext.Provider value={contextValue}>{props.children}</CockpitProviderContext.Provider>);
   }
   return (<></>);
@@ -48,7 +48,7 @@ export const CockpitProvider: React.FC<CockpitProviderProps> = (props) => {
 
 export function useCockpit() {
   const result = React.useContext(CockpitProviderContext);
-  if(!result) {
+  if (!result) {
     throw new Error('CockpitProviderContext is not created!');
   }
   return result;

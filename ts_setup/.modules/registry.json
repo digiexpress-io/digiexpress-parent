@@ -37,15 +37,16 @@
       ],
       "internalDependencies": [],
       "actualDependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query"
       ],
       "actualExternalDependencies": [
-        "react"
+        "react",
+        "@tanstack/react-query"
       ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@tanstack/react-query",
         "react-intl"
       ]
     },
@@ -4335,6 +4336,6 @@
       ]
     }
   },
-  "checksum": "85219c697dd1d67239d21861c3394f40f7305ac5b9490b59ce50ea14d738c989",
-  "generatedAt": "2026-01-19T13:09:14.376Z"
+  "checksum": "b83f44f5bf2568d3d0ee66e2c8398ebbfa8567ec521c83067350119214e041f6",
+  "generatedAt": "2026-01-20T08:38:19.026Z"
 }

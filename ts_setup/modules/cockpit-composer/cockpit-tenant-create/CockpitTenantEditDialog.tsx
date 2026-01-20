@@ -6,7 +6,7 @@ import {
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
-import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
+import { CockpitApi, useCockpitsBackend, useCockpit } from '@dxs-ts/cockpit-api';
 
 interface ConfigOptionType {
   inputValue?: string;
@@ -38,12 +38,14 @@ export const CockpitTenantEditDialog: React.FC<CockpitTenantEditDialog> = ({ ope
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useCockpitsBackend();
+  const { cockpitContainer } = useCockpit();
 
   const [externalId, setExternalId] = React.useState('');
   const [wrenchConfig, setWrenchConfig] = React.useState<ConfigOptionType | undefined>(undefined);
   const [stencilConfig, setStencilConfig] = React.useState<ConfigOptionType | undefined>(undefined);
   const [tenantDescription, setTenantDescription] = React.useState('');
 
+  console.log(cockpitContainer)
 
   function handleTenantDescriptionChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTenantDescription(e.target.value);

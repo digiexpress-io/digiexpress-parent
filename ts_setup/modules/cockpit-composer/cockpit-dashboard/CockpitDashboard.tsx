@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid2, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 
-import { CockpitProvider, useCockpit } from '../cockpit-provider';
+import { CockpitProvider, useCockpit } from '@dxs-ts/cockpit-api';
 import {
   CockpitCardConfigContextProvider,
   useCockpitCardConfig,

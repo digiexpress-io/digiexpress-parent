@@ -9,7 +9,7 @@ import {
   CockpitCard, CockpitCardId, useCockpitCardConfig,
   useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowText
 } from '../cockpit-card';
-import { useCockpit } from '../cockpit-provider';
+import { useCockpit } from '@dxs-ts/cockpit-api';
 import { CockpitTenantEditDialog } from '../cockpit-tenant-create';
 
 export type CockpitFactoryCardId = 'cockpit_main' | 'cockpit_wrench_stencil_config';
