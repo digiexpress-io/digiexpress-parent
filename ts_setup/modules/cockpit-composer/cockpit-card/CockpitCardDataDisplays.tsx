@@ -14,13 +14,13 @@ export const CockpitCardDataRowText: React.FC<CockpitCardDataRowTextProps> = ({ 
 
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>
-      <Grid2>
+      <Grid2 size={2}>
         <Typography sx={{ fontWeight: 500, marginRight: theme.spacing(1), whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {label}
         </Typography>
       </Grid2>
 
-      <Grid2>
+      <Grid2 size={2}>
         <Typography sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {value}
         </Typography>
@@ -42,7 +42,7 @@ export const CockpitCardDataRowTextWithDescription: React.FC<CockpitCardDataRowT
 
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>
-      <Grid2 size={4}>
+      <Grid2 size={2}>
         <Typography sx={{
           fontWeight: 500,
           marginRight: theme.spacing(1),
@@ -53,13 +53,13 @@ export const CockpitCardDataRowTextWithDescription: React.FC<CockpitCardDataRowT
         </Typography>
       </Grid2>
 
-      <Grid2 size={4}>
+      <Grid2 size={3}>
         <Typography sx={{ fontVariant: 'body1', whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {value}
         </Typography>
       </Grid2>
 
-      <Grid2 size={4}>
+      <Grid2 size={7}>
         <Typography sx={{ fontVariant: 'body1', whiteSpace: 'normal', wordWrap: 'break-word', fontStyle: 'italic', opacity: 0.8 }}>
           {description ?? '-'}
         </Typography>

@@ -25,8 +25,9 @@ const defaultExpandedCards: CockpitFactoryCardId[] = ['cockpit_main', 'cockpit_w
 export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProps) => {
   const intl = useIntl();
   const cardId: CockpitFactoryCardId = initProps.cardId as CockpitFactoryCardId;
-  const { cockpitContainer, tenants } = useCockpit();
+  const { cockpitContainer, tenants, activity } = useCockpit();
   const { config } = cockpitContainer;
+  const isActiveCockpit = activity.activeCockpitId === cockpitContainer.config.id;
 
   const {
     editingCardId, toggleReview, setEditCard,
@@ -75,6 +76,8 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
         >
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.name' })} value={config.cockpitConfigName} />
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.description' })} value={config.cockpitConfigDesc} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.status' })} value={isActiveCockpit ? 'active' : 'inactive'} />
+
         </CockpitCard>
       );
 
