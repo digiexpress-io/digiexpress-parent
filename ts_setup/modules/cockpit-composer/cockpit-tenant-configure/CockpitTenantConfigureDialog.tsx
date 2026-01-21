@@ -21,7 +21,7 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useCockpitsBackend();
-  const { tenants, activity } = useCockpit();
+  const { tenants, activity, cockpitContainer } = useCockpit();
 
   const wrenchConfig = useTenantOptions({ selected: tenants.wrench, options: activity.availableTenants.wrench });
   const stencilConfig = useTenantOptions({ selected: tenants.stencil, options: activity.availableTenants.stencil });
@@ -64,7 +64,7 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
 
   return (
     <StyledCockpitTenantConfigureDialog className={classes.createDialog} open={open} onClose={handleClose} maxWidth='md' slots={{ transition: Zoom }}>
-      <DialogTitle>{intl.formatMessage({ id: 'cockpit.tenantCreate.title' })}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'cockpit.tenantCreate.title' })}{": "}{cockpitContainer.config.cockpitConfigName}</DialogTitle>
 
       <DialogContent>
         <Grid2 container spacing={3}>
