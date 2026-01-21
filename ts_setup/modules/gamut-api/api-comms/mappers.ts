@@ -25,7 +25,6 @@ export function mapToSubjectData(data: LegacyProcessApi.Process[], user: IamApi.
     md5
       .appendStr(proc.id)
       .appendStr(proc.taskStatus ?? '')
-      .appendStr(proc.reviewUri ?? '')
       .appendStr(proc.taskCreated ?? '')
       .appendStr(proc.viewed + '')
       .appendStr(proc.taskUpdated ?? '');

@@ -22,7 +22,7 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
 
   async function handleChange(selectEvent: SelectChangeEvent) {
     const event: React.ChangeEvent<HTMLInputElement> = selectEvent as React.ChangeEvent<HTMLInputElement>;
-    const selected = event.currentTarget.value;
+    const selected = event.target.value;
     cockpits.setActive(datasource.find(item => item.id === selected));
     await iam.reload();
   }
@@ -32,17 +32,19 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
       className={classes.input}
       onChange={handleChange}
       renderValue={(selected: string) => <Collapsed datasource={datasource} selected={selected} className={classes.collapsed} />}
-      value={selectedValue?.id}>
+      value={selectedValue?.id ?? ''}>
 
-      <GInputSelectOption key={undefinedValue} value={undefinedValue}>{intl.formatMessage({ id: 'gamut.buttons.select' })}</GInputSelectOption>
+      <GInputSelectOption key={UNDEFINED_SELECTION_VALUE} value={undefinedValue}>{intl.formatMessage({ id: 'gamut.buttons.select' })}</GInputSelectOption>
 
       {/** All selection from data source */}
-      {datasource.map(({ id, name, description }) => {
+      {datasource.map((option) => {
+        const { id, cockpitConfigName, cockpitConfigDescription } = option;
         const selected = id === selectedValue?.id;
         const prefix = selected ? <CheckIcon /> : null;
+
         return (<GInputSelectOption key={id} value={id} className={classes.option}>
-          {<div className={classes.optionKey}>{name}</div>}
-          <div className={classes.optionValue}>{description}</div>
+          {<div className={classes.optionKey}>{cockpitConfigName}</div>}
+          <div className={classes.optionValue}>{cockpitConfigDescription}</div>
           <div className={classes.optionChecked}>{prefix}</div>
         </GInputSelectOption>);
       })}
@@ -65,8 +67,8 @@ const Collapsed: React.FC<{
 
   return (
     <div className={className}>
-      <div>{selectedItem.name}</div>
-      <div>{selectedItem.description}</div>
+      <div>{selectedItem.cockpitConfigName}</div>
+      <div>{selectedItem.cockpitConfigDescription}</div>
     </div>
   );
 }

@@ -1,11 +1,13 @@
 import React from 'react';
 import {
   Button, DialogActions, DialogContent, DialogTitle, Grid2, Typography, Zoom,
-  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip
+  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip,
+  Box,
+  Divider
 } from '@mui/material';
 import { useIntl } from 'react-intl';
 
-import { useCockpit } from '@dxs-ts/cockpit-api';
+import { useCockpit, useCockpitsBackend } from '@dxs-ts/cockpit-api';
 import { useUtilityClasses, StyledCockpitEditDialog, StyledTextField, StyledEllipsisTypography } from './useUtilityClasses';
 
 export interface CockpitEditDialogProps {
@@ -18,6 +20,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
   const intl = useIntl();
   const { cockpitContainer, tenants, activity } = useCockpit();
   const { config } = cockpitContainer;
+  const backend = useCockpitsBackend();
 
   const [isActive, setIsActive] = React.useState<string>(
     activity.activeCockpitId === config.id ? 'active' : 'inactive'
@@ -27,9 +30,14 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
     setIsActive(event.target.value);
   }
 
-  function handleSave() {
-    // TODO: Add save functionality
-    onClose();
+  async function handleSave() {
+    try {
+      const activeId = isActive === 'active' ? config.id : undefined;
+      await backend.persistence.changeActiveCockpit({ activeId });
+      onClose();
+    } catch (error) {
+      console.error('Error changing active cockpit:', error);
+    }
   }
 
   return (
@@ -101,6 +109,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
               </Grid2>
             </Grid2>
           </Grid2>
+
 
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
             <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.stencilConfig' })}</Typography>

@@ -18,6 +18,10 @@ export declare namespace CockpitApi {
     tenantDescription: string;
   }
 
+  export interface CockpitActivityChangeActiveIdCommand {
+    activeId: string | undefined;
+  }
+
   export type CockpitTenantType = 'WRENCH' | 'STENCIL'
 
   export type CockpitDocType =

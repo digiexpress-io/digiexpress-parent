@@ -29,8 +29,8 @@ export declare namespace SiteApi {
 
   export interface Cockpit {
     id: string;
-    name: string;
-    description: string;
+    cockpitConfigName: string;
+    cockpitConfigDescription: string;
   }
 
   export interface Blob {

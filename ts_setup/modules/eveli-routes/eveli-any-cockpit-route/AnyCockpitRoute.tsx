@@ -43,13 +43,15 @@ function _useCockpitPersistence(): CockpitsBackendProviderProps['persistence'] {
   const { createCockpit } = useFetch('worker/rest/api/cockpits.POST', {});
   const { getOneCockpit } = useFetch('worker/rest/api/cockpits/$cockpitId.GET', {});
   const { createCockpitTenant } = useFetch('worker/rest/api/cockpits/$cockpitId/tenants.POST', {});
+  const { changeActivity } = useFetch('worker/rest/api/cockpits/activity/current-state.POST', {});
 
   const unit: CockpitsBackendProviderProps['persistence'] = {
     findAllCockpits: findAllCockpits,
     createOneCockpit: createCockpit,
     getOneCockpit: getOneCockpit,
     createOneCockpitTenant: createCockpitTenant,
-    findActivity
+    findActivity,
+    changeActiveCockpit: changeActivity
   }
 
   return unit;

@@ -13,6 +13,7 @@ export interface CockpitsBackendContextType {
     createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitContainer>;
     getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitContainer>;
     createOneCockpitTenant: (cockpitId: string, request: CockpitApi.CreateCockpitTenantCommand) => Promise<CockpitApi.CockpitContainer>;
+    changeActiveCockpit: (request: CockpitApi.CockpitActivityChangeActiveIdCommand) => Promise<CockpitApi.CockpitActivity>;
   }
 }
 
