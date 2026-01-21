@@ -85,7 +85,7 @@ export const CockpitCard: React.FC<CockpitCardProps> = (props) => {
           {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
         </Box>
 
-        {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'cockpitcard.edit' })}</Button>}
+        {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'cockpit.edit' })}</Button>}
         <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
         {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
         <Box sx={{ cursor: 'grab', userSelect: 'none', alignSelf: 'center' }}>

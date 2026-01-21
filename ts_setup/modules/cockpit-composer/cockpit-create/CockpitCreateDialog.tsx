@@ -78,7 +78,7 @@ export const CockpitCreateDialog: React.FC<CockpitCreateDialogProps> = ({
       <DialogContent>
         <Stack spacing={1}>
           <Typography fontWeight="bold">
-            {intl.formatMessage({ id: 'cockpitCreate.field.name' })}
+            {intl.formatMessage({ id: 'cockpit.name' })}
           </Typography>
           <TextField
             fullWidth
@@ -88,7 +88,7 @@ export const CockpitCreateDialog: React.FC<CockpitCreateDialogProps> = ({
           />
 
           <Typography fontWeight="bold">
-            {intl.formatMessage({ id: 'cockpitCreate.field.description' })}
+            {intl.formatMessage({ id: 'cockpit.description' })}
           </Typography>
           <TextField
             fullWidth

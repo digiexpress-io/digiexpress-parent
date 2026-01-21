@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   Button, DialogActions, DialogContent, DialogTitle, Grid2, Typography, Zoom,
-  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip
+  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip,
+  Divider
 } from '@mui/material';
 import { useIntl } from 'react-intl';
 
@@ -96,7 +97,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
                 <Typography>{tenants.wrench?.externalId ?? '-'}</Typography>
               </Grid2>
               <Grid2 size={6}>
-                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.config.description' })}</Typography>
+                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
                 {tenants.wrench?.cockpitConfigTenantDesc ? (
                   <Tooltip title={tenants.wrench.cockpitConfigTenantDesc} arrow>
                     <StyledEllipsisTypography>{tenants.wrench.cockpitConfigTenantDesc}</StyledEllipsisTypography>
@@ -119,7 +120,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
                 <Typography>{tenants.stencil?.externalId ?? '-'}</Typography>
               </Grid2>
               <Grid2 size={6}>
-                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.config.description' })}</Typography>
+                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
                 {tenants.stencil?.cockpitConfigTenantDesc ? (
                   <Tooltip title={tenants.stencil.cockpitConfigTenantDesc} arrow>
                     <StyledEllipsisTypography>{tenants.stencil.cockpitConfigTenantDesc}</StyledEllipsisTypography>

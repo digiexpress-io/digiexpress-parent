@@ -36,7 +36,7 @@ export const CockpitTable: React.FC = () => {
   console.log("cockpits", data)
   const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
     {
-      header: intl.formatMessage({ id: 'cockpitTable.col.header.name' }),
+      header: intl.formatMessage({ id: 'cockpit.name' }),
       accessorKey: 'name',
       size: 200,
       minSize: 200,
@@ -48,7 +48,7 @@ export const CockpitTable: React.FC = () => {
       ),
     },
     {
-      header: intl.formatMessage({ id: 'cockpitTable.col.header.description' }),
+      header: intl.formatMessage({ id: 'cockpit.description' }),
       accessorKey: 'description',
       size: 250,
       minSize: 250,

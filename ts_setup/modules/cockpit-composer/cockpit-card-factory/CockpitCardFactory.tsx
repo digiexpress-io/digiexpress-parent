@@ -75,8 +75,8 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.name' })} value={config.cockpitConfigName} />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.description' })} value={config.cockpitConfigDesc} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.name' })} value={config.cockpitConfigName} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.description' })} value={config.cockpitConfigDesc} />
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.status' })} value={isActiveCockpit ? 'active' : 'inactive'} />
 
         </CockpitCard>

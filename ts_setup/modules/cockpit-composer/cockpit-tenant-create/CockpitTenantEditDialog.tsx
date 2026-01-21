@@ -98,7 +98,7 @@ export const CockpitTenantEditDialog: React.FC<CockpitTenantEditDialog> = ({ ope
             />
           </Grid2>
           <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
-            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantCreate.tenantDescription.label' })}</Typography>
+            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
             <TextField required fullWidth value={wrenchConfig.description.value}
               onChange={wrenchConfig.description.setValue}
               placeholder={intl.formatMessage({ id: 'cockpit.tenantCreate.description.placeholder' })}
@@ -133,7 +133,7 @@ export const CockpitTenantEditDialog: React.FC<CockpitTenantEditDialog> = ({ ope
           </Grid2>
 
           <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
-            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantCreate.tenantDescription.label' })}</Typography>
+            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
             <TextField required fullWidth value={stencilConfig.description.value}
               onChange={stencilConfig.description.setValue}
               placeholder={intl.formatMessage({ id: 'cockpit.tenantCreate.description.placeholder' })}
