@@ -45,6 +45,8 @@ export const EveliFeatureMapping = {
   'SMART_TASK_AUDIT': oneOf(['smart_task_audit']),
   'BATCHES': oneOf(['batches']),
   'AI_ASSISTANT': oneOf(['ai-assistant']),
+
+  'COCKPITS': oneOf(['cockpits']),
 }
 
 
