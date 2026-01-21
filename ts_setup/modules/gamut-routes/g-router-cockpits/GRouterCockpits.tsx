@@ -46,7 +46,7 @@ export const GRouterCockpits: React.FC<GRouterCockpitsProps> = ({ }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} autoFocus variant='contained'>
-          <FormattedMessage id='gamut.buttons.close' />
+          <FormattedMessage id='gamut.buttons.select' />
         </Button>
       </DialogActions>
     </Dialog>);

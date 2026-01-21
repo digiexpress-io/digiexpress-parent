@@ -109,6 +109,7 @@ public interface EveliEnvirClient extends CockpitAware.CockpitIdAware<EveliEnvir
     String getId();
     String getName();
     @Nullable String getExternalId();
+    @Nullable String getCockpitId();
     String getCreatedBy();
     OffsetDateTime getCreatedAt();
     OffsetDateTime getStartsAt();
@@ -139,6 +140,7 @@ public interface EveliEnvirClient extends CockpitAware.CockpitIdAware<EveliEnvir
   interface EveliRuntime {
     String getName();
     OffsetDateTime getStartsAt();
+    Optional<String> getCockpitId();
     String getDeploymentId();
     String getWrenchTagName();
     String getStencilTagName();

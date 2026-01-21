@@ -28,16 +28,16 @@ import io.dialob.api.form.Form;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
-import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.eveli.envir.api.ImmutableEveliDeployment;
 import io.digiexpress.eveli.envir.api.ImmutableEveliSources;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple2;
+import io.smallrye.mutiny.tuples.Tuple3;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.Workflow;
@@ -83,7 +83,8 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
     return this.cockpitIdSupplier.apply().onItem().transformToUni(optionalId -> Uni.combine().all()
         .unis(
             wrenchClient.withCockpit(optionalId).onItem().transformToUni(client -> client.store().query().getBranch()), 
-            stencilClient.withCockpit(optionalId).onItem().transformToUni(client -> client.getStore().query().getBranch())
+            stencilClient.withCockpit(optionalId).onItem().transformToUni(client -> client.getStore().query().getBranch()),
+            Uni.createFrom().item(optionalId)
         )
         .asTuple())
         .onItem().transform(tuple -> {
@@ -92,7 +93,7 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   
           final var wrenchCommitId = tuple.getItem1().map(e -> e.getCommit()).orElse("not-created");
           final var stencilCommitId = tuple.getItem2().map(e -> e.getCommit()).orElse("not-created");
-          
+          final var cockpitId = tuple.getItem3().orElse(null);
           
           final var deployment = ImmutableEveliDeployment.builder()
             .id(createId(wrenchCommitId, stencilCommitId))
@@ -102,6 +103,7 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
             .description("live deployment")
             .name("editable asset envir")
             .externalId(null)
+            .cockpitId(cockpitId)
             .external(true)
             .sources(null)
             .status(EveliDeploymentStatus.READY)
@@ -114,18 +116,20 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   
 
   private Uni<Optional<EveliDeployment>> getDeploymentWithBody() {
-    final var stencilAndForms = stencilState().onItem().transformToUni(stencil -> {
-      return getForms(stencil).onItem().transform(forms -> Tuple2.of(stencil, forms));
-    });
-    
-    return Uni.combine().all()
-        .unis(stencilAndForms, wrenchState())
-        .asTuple().onItem().transform(tuple -> {
+    return this.cockpitIdSupplier.apply().onItem()
+      .transformToUni(cockpitId -> Uni.combine().all().unis(
+          stencilState(cockpitId).onItem().transformToUni(stencil -> {
+            return getForms(stencil).onItem().transform(forms -> Tuple3.of(stencil, forms, cockpitId));
+          }),
+          wrenchState(cockpitId)
+      ).asTuple())
+      .onItem().transform(tuple -> {
           
           final var now = OffsetDateTime.now();
           final AstTag wrench = tuple.getItem2();
           final SiteState stencil = tuple.getItem1().getItem1();
           final List<Form> dialob = tuple.getItem1().getItem2();
+          final String cockpitId = tuple.getItem1().getItem3().orElse(null);
           
           
           final var deployment = ImmutableEveliDeployment.builder()
@@ -136,6 +140,7 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
             .description("live deployment")
             .name("editable asset envir")
             .externalId(null)
+            .cockpitId(cockpitId)
             .external(true)
             .sources(ImmutableEveliSources.builder()
                 .stencil(stencil)
@@ -187,12 +192,14 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   }
 
 
-  private Uni<SiteState> stencilState() {
-    return stencilClient.getStore().query().head();
+  private Uni<SiteState> stencilState(Optional<String> cockpitId) {
+    return stencilClient.withCockpit(cockpitId)
+        .onItem().transformToUni(client -> client.getStore().query().head());
   }
   
-  private Uni<AstTag> wrenchState() {
-    return wrenchClient.store().query().get().onItem().transform(ComposerEntityMapper::toTag);
+  private Uni<AstTag> wrenchState(Optional<String> cockpitId) {
+    return wrenchClient.withCockpit(cockpitId)
+        .onItem().transformToUni(client -> client.store().query().get().onItem().transform(ComposerEntityMapper::toTag));
   }
   
   public static class DialobFormNotFoundException extends RuntimeException {
