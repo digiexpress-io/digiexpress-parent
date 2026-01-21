@@ -12,15 +12,15 @@ import {
 import { useIntl } from 'react-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
-import { COCKPIT_TABLE_QUERY_KEY } from './cockpit-table/CockpitTable';
+import { COCKPIT_TABLE_QUERY_KEY } from '../cockpit-table';
 
-export interface NewCockpitDialogProps {
+export interface CockpitCreateDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   onSubmit: () => void;
 }
 
-export const NewCockpitDialog: React.FC<NewCockpitDialogProps> = ({
+export const CockpitCreateDialog: React.FC<CockpitCreateDialogProps> = ({
   open,
   setOpen,
   onSubmit

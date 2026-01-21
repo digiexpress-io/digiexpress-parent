@@ -9,7 +9,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
-import { NewCockpitDialog } from '../NewCockpitDialog';
+import { CockpitCreateDialog } from '../cockpit-create';
 import { CockpitLink } from './CockpitLink';
 
 
@@ -74,7 +74,7 @@ export const CockpitTable: React.FC = () => {
             rowProps: { height: '50px' }
           }}
         />}
-      <NewCockpitDialog
+      <CockpitCreateDialog
         open={createCockpitOpen}
         setOpen={setCreateCockpitOpen}
         onSubmit={refetch}
