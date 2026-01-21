@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Button, DialogActions, DialogContent, DialogTitle, Grid2, Typography, Zoom,
-  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip,
-  Divider
+  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip
 } from '@mui/material';
 import { useIntl } from 'react-intl';
 
 import { useCockpit, useCockpitsBackend } from '@dxs-ts/cockpit-api';
-import { useUtilityClasses, StyledCockpitEditDialog, StyledTextField, StyledEllipsisTypography } from './useUtilityClasses';
+import { useUtilityClasses, StyledCockpitEditDialog, StyledTextField, StyledEllipsisTypography, StyledConfigBox } from './useUtilityClasses';
+
 
 export interface CockpitEditDialogProps {
   open: boolean;
@@ -87,49 +87,60 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
             </FormControl>
           </Grid2>
 
-          <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.wrenchConfig' })}</Typography>
-          </Grid2>
-          <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <Grid2 container>
-              <Grid2 size={6}>
-                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.config.name' })}</Typography>
-                <Typography>{tenants.wrench?.externalId ?? '-'}</Typography>
+          <Grid2 size={12}>
+            <Typography variant='h6' fontWeight={600} mb={1}>
+              {intl.formatMessage({ id: 'cockpit.wrenchConfig' })}
+            </Typography>
+            <StyledConfigBox>
+              <Grid2 container spacing={2}>
+                <Grid2 size={6}>
+                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
+                    {intl.formatMessage({ id: 'cockpit.config.name' })}
+                  </Typography>
+                  <Typography>{tenants.wrench?.externalId ?? '-'}</Typography>
+                </Grid2>
+                <Grid2 size={6}>
+                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
+                    {intl.formatMessage({ id: 'cockpit.tenantDescription' })}
+                  </Typography>
+                  {tenants.wrench?.cockpitConfigTenantDesc ? (
+                    <Tooltip title={tenants.wrench.cockpitConfigTenantDesc} arrow>
+                      <StyledEllipsisTypography>{tenants.wrench.cockpitConfigTenantDesc}</StyledEllipsisTypography>
+                    </Tooltip>
+                  ) : (
+                    <Typography>--</Typography>
+                  )}
+                </Grid2>
               </Grid2>
-              <Grid2 size={6}>
-                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
-                {tenants.wrench?.cockpitConfigTenantDesc ? (
-                  <Tooltip title={tenants.wrench.cockpitConfigTenantDesc} arrow>
-                    <StyledEllipsisTypography>{tenants.wrench.cockpitConfigTenantDesc}</StyledEllipsisTypography>
-                  </Tooltip>
-                ) : (
-                  <Typography>--</Typography>
-                )}
-              </Grid2>
-            </Grid2>
+            </StyledConfigBox>
           </Grid2>
 
-
-          <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.stencilConfig' })}</Typography>
-          </Grid2>
-          <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
-            <Grid2 container>
-              <Grid2 size={6}>
-                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.config.name' })}</Typography>
-                <Typography>{tenants.stencil?.externalId ?? '-'}</Typography>
+          <Grid2 size={12}>
+            <Typography variant='h6' fontWeight={600} mb={1}>
+              {intl.formatMessage({ id: 'cockpit.stencilConfig' })}
+            </Typography>
+            <StyledConfigBox>
+              <Grid2 container spacing={2}>
+                <Grid2 size={6}>
+                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
+                    {intl.formatMessage({ id: 'cockpit.config.name' })}
+                  </Typography>
+                  <Typography>{tenants.stencil?.externalId ?? '-'}</Typography>
+                </Grid2>
+                <Grid2 size={6}>
+                  <Typography fontWeight={500} variant='body2' color='text.secondary'>
+                    {intl.formatMessage({ id: 'cockpit.tenantDescription' })}
+                  </Typography>
+                  {tenants.stencil?.cockpitConfigTenantDesc ? (
+                    <Tooltip title={tenants.stencil.cockpitConfigTenantDesc} arrow>
+                      <StyledEllipsisTypography>{tenants.stencil.cockpitConfigTenantDesc}</StyledEllipsisTypography>
+                    </Tooltip>
+                  ) : (
+                    <Typography>--</Typography>
+                  )}
+                </Grid2>
               </Grid2>
-              <Grid2 size={6}>
-                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.tenantDescription' })}</Typography>
-                {tenants.stencil?.cockpitConfigTenantDesc ? (
-                  <Tooltip title={tenants.stencil.cockpitConfigTenantDesc} arrow>
-                    <StyledEllipsisTypography>{tenants.stencil.cockpitConfigTenantDesc}</StyledEllipsisTypography>
-                  </Tooltip>
-                ) : (
-                  <Typography>--</Typography>
-                )}
-              </Grid2>
-            </Grid2>
+            </StyledConfigBox>
           </Grid2>
         </Grid2>
       </DialogContent>
@@ -145,3 +156,4 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
     </StyledCockpitEditDialog>
   );
 };
+

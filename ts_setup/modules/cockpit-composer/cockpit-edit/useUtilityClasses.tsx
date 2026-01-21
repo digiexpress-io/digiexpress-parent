@@ -1,4 +1,4 @@
-import { Dialog, TextField, Typography, generateUtilityClass, styled } from '@mui/material';
+import { Box, Dialog, TextField, Typography, generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 export const MUI_NAME = 'CockpitEditDialog';
@@ -22,7 +22,7 @@ export const StyledCockpitEditDialog = styled(Dialog, {
     name: MUI_NAME, slot: 'EditDialog',
     overridesResolver: (_p, styles) => [
         styles.editDialog,
-        styles.textField],
+        styles.textField]
 })(() => ({}));
 
 export const StyledTextField = styled(TextField, {
@@ -43,4 +43,12 @@ export const StyledEllipsisTypography = styled(Typography, {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     cursor: 'default'
+}));
+
+
+export const StyledConfigBox = styled(Box)(({ theme }) => ({
+    border: '1px solid',
+    borderColor: theme.palette.divider,
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.grey[50],
 }));

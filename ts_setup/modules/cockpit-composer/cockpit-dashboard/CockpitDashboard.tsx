@@ -18,9 +18,9 @@ const CockpitDashboardInternal: React.FC = () => {
   return (
     <Grid2 container spacing={2} m={1}>
       <Grid2 size={12}>
-        <Box display='flex' alignItems='center' gap={1}>
-          <CockpitStatusBadge isActive={isActive} />
+        <Box display='flex' alignItems='center' justifyContent='space-between' gap={1}>
           <Typography variant='h1'>{cockpitContainer.config.cockpitConfigName}</Typography>
+          <CockpitStatusBadge isActive={isActive} />
         </Box>
       </Grid2>
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
 import { Build as BuildIcon } from '@mui/icons-material';
 import { Speed as SpeedIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
@@ -7,12 +6,13 @@ import { DateTime } from 'luxon';
 
 import {
   CockpitCard, CockpitCardId, useCockpitCardConfig,
-  useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowTextWithDescription,
-  CockpitCardDataRowText
+  StartAdornmentIcon, CockpitCardDataRowTextWithDescription, CockpitCardDataRowText,
+  CockpitCardDataRowElement
 } from '../cockpit-card';
 import { useCockpit } from '@dxs-ts/cockpit-api';
-import { CockpitTenantEditDialog } from '../cockpit-tenant-create';
+import { CockpitTenantConfigureDialog } from '../cockpit-tenant-configure';
 import { CockpitEditDialog } from '../cockpit-edit';
+import { CockpitStatusIndicator } from '../cockpit-status-indicator';
 
 export type CockpitFactoryCardId = 'cockpit_main' | 'cockpit_wrench_stencil_config';
 
@@ -77,7 +77,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
         >
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.name' })} value={config.cockpitConfigName} />
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.description' })} value={config.cockpitConfigDesc} />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.status' })} value={isActiveCockpit ? 'active' : 'inactive'} />
+          <CockpitCardDataRowElement label={intl.formatMessage({ id: 'cockpit.status' })} value={isActiveCockpit ? <CockpitStatusIndicator isActive={true} /> : <CockpitStatusIndicator isActive={false} />} />
 
         </CockpitCard>
       );
@@ -89,7 +89,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && (<CockpitTenantEditDialog open={isEditOpen} onClose={handleEditClose} cockpitId={config.id} />)}
+          editDialog={editingCardId === cardId && (<CockpitTenantConfigureDialog open={isEditOpen} onClose={handleEditClose} cockpitId={config.id} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={BuildIcon} />}
 
           showEditOnMenu={true}

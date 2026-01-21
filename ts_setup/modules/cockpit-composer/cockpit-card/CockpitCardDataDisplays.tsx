@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTheme, Divider, Grid2, Typography, Box, alpha, List, ListItem, ListItemText } from "@mui/material";
-import { CockpitCardStyleDefinition } from "./cockpitCardThemeConfig";
 import { useIntl } from 'react-intl';
 
 
@@ -70,15 +69,14 @@ export const CockpitCardDataRowTextWithDescription: React.FC<CockpitCardDataRowT
   )
 }
 
-export const CockpitCardDataRowElement: React.FC<{ label: string, value: React.ReactNode, style: CockpitCardStyleDefinition }> = ({ label, value, style }) => {
+export const CockpitCardDataRowElement: React.FC<{ label: string, value: React.ReactNode }> = ({ label, value }) => {
   const theme = useTheme();
 
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>
-      <Grid2 size={style.dataRowGridSizes.label}>
+      <Grid2 size={2}>
         <Typography
           sx={{
-            ...style.bodyTypography,
             fontWeight: 500,
             whiteSpace: 'normal',
             wordWrap: 'break-word',
@@ -88,10 +86,11 @@ export const CockpitCardDataRowElement: React.FC<{ label: string, value: React.R
         </Typography>
       </Grid2>
 
-      <Grid2 size={style.dataRowGridSizes.value}>
+      <Grid2 size={2}>
         {value}
       </Grid2>
     </Grid2>
+    <Divider />
   </>
   )
 }

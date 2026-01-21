@@ -20,9 +20,7 @@ export const CockpitStatusIndicator: React.FC<CockpitStatusIndicatorProps> = ({ 
 
   return (
     <Root className={classes.root} ownerState={{ color }}>
-      <Typography>
-        {label}
-      </Typography>
+      <Typography>{label}</Typography>
     </Root>
   );
 };
@@ -41,7 +39,6 @@ const Root = styled('div', {
   borderRadius: theme.spacing(0.5),
   display: 'inline-flex',
   alignItems: 'center',
-  width: 'fit-content',
   '.MuiTypography-root': {
     fontWeight: 500,
     fontSize: '9pt',

@@ -11,7 +11,7 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
 import { CockpitCreateDialog } from '../cockpit-create';
 import { CockpitLink } from './CockpitLink';
-import { CockpitStatusIndicator } from './CockpitStatusIndicator';
+import { CockpitStatusIndicator } from '../cockpit-status-indicator';
 
 
 

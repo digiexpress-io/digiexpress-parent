@@ -17,12 +17,12 @@ export const CockpitStatusBadge: React.FC<CockpitStatusBadgeProps> = ({ isActive
   const classes = useUtilityClasses();
 
   const color = getStatusColor(isActive);
-  const label = intl.formatMessage({ id: isActive ? 'cockpit.status.active' : 'cockpit.status.inactive' });
+  const label = intl.formatMessage({ id: isActive ? 'cockpit.status.active' : 'cockpit.status.inactive' }).toLocaleUpperCase();
 
   return (
     <Root className={classes.root} ownerState={{ color }}>
       {isActive ? (<CheckCircleIcon />) : (<CancelIcon />)}
-      <Typography>{label}</Typography>
+      <Typography fontWeight='bold'>{label}</Typography>
     </Root>
   );
 };
