@@ -33,7 +33,6 @@ export const CockpitTable: React.FC = () => {
     queryFn: () => backend.persistence.findActivity(),
   });
 
-  console.log("cockpits", data)
   const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
     {
       header: intl.formatMessage({ id: 'cockpit.name' }),

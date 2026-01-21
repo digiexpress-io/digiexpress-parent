@@ -69,7 +69,7 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
       <DialogContent>
         <Grid2 container spacing={3}>
           <Grid2 size={12}>
-            <Typography variant="body1">{intl.formatMessage({ id: 'cockpit.tenantCreate.description' })}</Typography>
+            <Typography>{intl.formatMessage({ id: 'cockpit.tenantCreate.description' })}</Typography>
           </Grid2>
 
           <Grid2 size={12}>
