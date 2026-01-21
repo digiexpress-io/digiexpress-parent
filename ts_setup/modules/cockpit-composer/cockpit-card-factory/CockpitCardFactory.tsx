@@ -12,6 +12,7 @@ import {
 } from '../cockpit-card';
 import { useCockpit } from '@dxs-ts/cockpit-api';
 import { CockpitTenantEditDialog } from '../cockpit-tenant-create';
+import { CockpitEditDialog } from '../cockpit-edit';
 
 export type CockpitFactoryCardId = 'cockpit_main' | 'cockpit_wrench_stencil_config';
 
@@ -67,7 +68,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           isMenu
           onDoubleClick={handleEdit}
           onEdit={handleEdit}
-          editDialog={editingCardId === cardId && <Typography>Edit dialog placeholder</Typography>}
+          editDialog={editingCardId === cardId && <CockpitEditDialog open={isEditOpen} onClose={handleEditClose} />}
           startAdornmentIcon={<StartAdornmentIcon icon={SpeedIcon} />}
 
           showEditOnMenu={true}
@@ -76,7 +77,7 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
         >
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.name' })} value={config.cockpitConfigName} />
           <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.description' })} value={config.cockpitConfigDesc} />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.status' })} value={isActiveCockpit ? 'active' : 'inactive'} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpit.status' })} value={isActiveCockpit ? 'active' : 'inactive'} />
 
         </CockpitCard>
       );
