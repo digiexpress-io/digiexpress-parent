@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme, Divider, Grid2, Typography, Box, alpha, List, ListItem, ListItemText, ListSubheader } from "@mui/material";
+import { useTheme, Divider, Grid2, Typography, Box, alpha, List, ListItem, ListItemText } from "@mui/material";
 import { CockpitCardStyleDefinition } from "./cockpitCardThemeConfig";
 import { useIntl } from 'react-intl';
 
@@ -7,17 +7,43 @@ import { useIntl } from 'react-intl';
 interface CockpitCardDataRowTextProps {
   label: string;
   value: string | string[] | undefined;
-  style: CockpitCardStyleDefinition;
 }
 
-export const CockpitCardDataRowText: React.FC<CockpitCardDataRowTextProps> = ({ label, value, style }) => {
+export const CockpitCardDataRowText: React.FC<CockpitCardDataRowTextProps> = ({ label, value }) => {
   const theme = useTheme();
 
   return (<>
     <Grid2 container margin={theme.spacing(0.5)}>
-      <Grid2 size={style.dataRowGridSizes.label}>
+      <Grid2>
+        <Typography sx={{ fontWeight: 500, marginRight: theme.spacing(1), whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {label}
+        </Typography>
+      </Grid2>
+
+      <Grid2>
+        <Typography sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {value}
+        </Typography>
+      </Grid2>
+    </Grid2>
+    <Divider />
+  </>
+  )
+}
+
+interface CockpitCardDataRowTextWithDescriptionProps {
+  label: string;
+  value: string | string[] | undefined;
+  description: string | undefined;
+}
+
+export const CockpitCardDataRowTextWithDescription: React.FC<CockpitCardDataRowTextWithDescriptionProps> = ({ label, value, description }) => {
+  const theme = useTheme();
+
+  return (<>
+    <Grid2 container margin={theme.spacing(0.5)}>
+      <Grid2 size={4}>
         <Typography sx={{
-          ...style.bodyTypography,
           fontWeight: 500,
           marginRight: theme.spacing(1),
           whiteSpace: 'normal',
@@ -27,9 +53,15 @@ export const CockpitCardDataRowText: React.FC<CockpitCardDataRowTextProps> = ({ 
         </Typography>
       </Grid2>
 
-      <Grid2 size={style.dataRowGridSizes.value}>
-        <Typography sx={{ ...style.bodyTypography, whiteSpace: 'normal', wordWrap: 'break-word' }}>
+      <Grid2 size={4}>
+        <Typography sx={{ fontVariant: 'body1', whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {value}
+        </Typography>
+      </Grid2>
+
+      <Grid2 size={4}>
+        <Typography sx={{ fontVariant: 'body1', whiteSpace: 'normal', wordWrap: 'break-word', fontStyle: 'italic', opacity: 0.8 }}>
+          {description ?? '-'}
         </Typography>
       </Grid2>
     </Grid2>
@@ -65,7 +97,7 @@ export const CockpitCardDataRowElement: React.FC<{ label: string, value: React.R
 }
 
 
-export const CockpitCardDataRowGrouped: React.FC<{ titleLabel: string, valueLabel: string, children: React.ReactNode, style: CockpitCardStyleDefinition }> = ({ titleLabel, valueLabel, children, style }) => {
+export const CockpitCardDataRowGrouped: React.FC<{ titleLabel: string, valueLabel: string, children: React.ReactNode }> = ({ titleLabel, valueLabel, children }) => {
   const theme = useTheme();
 
   return (
@@ -73,7 +105,6 @@ export const CockpitCardDataRowGrouped: React.FC<{ titleLabel: string, valueLabe
     <Box margin={theme.spacing(0.5)}>
       <Box display='flex' alignItems='baseline'>
         <Typography sx={{
-          ...style.bodyTypography,
           fontWeight: 500,
           whiteSpace: 'normal',
           wordWrap: 'break-word',
@@ -81,7 +112,7 @@ export const CockpitCardDataRowGrouped: React.FC<{ titleLabel: string, valueLabe
         }}>
           {titleLabel}
         </Typography>
-        <Typography sx={{ ...style.bodyTypography }}>{valueLabel}</Typography>
+        <Typography>{valueLabel}</Typography>
       </Box>
 
       <Box marginLeft={theme.spacing(3)} paddingLeft={theme.spacing(1)} borderLeft={`2px solid ${alpha(theme.palette.primary.main, 0.5)}`}>

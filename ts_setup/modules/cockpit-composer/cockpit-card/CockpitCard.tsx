@@ -19,12 +19,10 @@ export interface CockpitCardProps {
 
   isMenu?: boolean;
   isExpanded?: boolean;
-  isFlashy?: boolean;
 
   startAdornmentIcon?: React.ReactNode;
   editDialog?: React.ReactNode;
 
-  showFlashyToggle: boolean;
   showReviewOnMenu: boolean;
   showEditOnMenu: boolean;
   showEditButton: boolean;
@@ -118,7 +116,7 @@ const CockpitSectionCard = styled(Box, {
     ];
   },
 })<{ ownerState: CockpitCardProps }>(({ theme, ownerState }) => {
-  const { id, isFlashy } = ownerState;
+  const { id } = ownerState;
   const colors = flashyCockpitCardColorsById[id] ?? '#333fff';
 
   const baseStyles: SxProps = {
@@ -160,60 +158,7 @@ const CockpitSectionCard = styled(Box, {
     },
   };
 
-  if (isFlashy) {
-    return {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      border: `1px solid ${darken(colors.flashyBorder, 0.2)}`,
-      color: colors.contrastText,
-      boxShadow: `-4px 4px 10px ${alpha(colors.flashyBorder, 0.1)}`,
 
-      ':hover': {
-        cursor: 'pointer'
-      },
-      '& .MuiSvgIcon-root': {
-        color: darken(colors.flashyBorder, 0.2),
-      },
-      '& .MuiButton-root': {
-        color: colors.contrastText,
-      },
-      '& .MuiDivider-root': {
-        borderColor: `${alpha(colors.flashyBorder, 0.1)}`
-      },
-
-      '& .CockpitSectionCard-cardBody': {
-        flexGrow: 1,
-        borderTop: `1px solid ${colors.flashyBorder}`,
-      },
-      '& .CockpitSectionCard-titleNotifier': {
-        marginLeft: theme.spacing(1),
-        color: 'white',
-        fontWeight: 500,
-        minWidth: '4ch',
-        display: 'flex',
-        justifyContent: 'center',
-        padding: theme.spacing(0.5),
-        borderRadius: theme.spacing(1),
-        border: `1px solid ${colors.flashyBorder}`,
-        backgroundColor: alpha(colors.flashyBorder, 0.9)
-      },
-      '& .CockpitSectionCard-title': {
-        display: 'flex',
-        alignItems: 'center',
-        paddingBottom: theme.spacing(2),
-        padding: theme.spacing(1),
-        backgroundColor: colors.flashyBackground,
-        '& .MuiAvatar-root': {
-          border: `1px solid ${colors.flashyBorder}`,
-          backgroundColor: alpha(colors.flashyBorder, 0.3),
-          '& .MuiSvgIcon-root': {
-            color: colors.flashyBorder,
-          },
-        },
-      }
-    };
-  }
   return {
     ...baseStyles,
   }

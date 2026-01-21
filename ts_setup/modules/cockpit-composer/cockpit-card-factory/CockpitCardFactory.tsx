@@ -7,7 +7,8 @@ import { DateTime } from 'luxon';
 
 import {
   CockpitCard, CockpitCardId, useCockpitCardConfig,
-  useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowText
+  useCockpitCardThemeConfig, StartAdornmentIcon, CockpitCardDataRowTextWithDescription,
+  CockpitCardDataRowText
 } from '../cockpit-card';
 import { useCockpit } from '@dxs-ts/cockpit-api';
 import { CockpitTenantEditDialog } from '../cockpit-tenant-create';
@@ -28,20 +29,14 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
   const { config } = cockpitContainer;
 
   const {
-    cardTheme, editingCardId, toggleReview,
-    isCardFlashy, toggleCardFlashy, setEditCard,
+    editingCardId, toggleReview, setEditCard,
     isCardExpanded, toggleCardExpanded, expandedCards
   } = useCockpitCardConfig();
 
-  const styleConfig = useCockpitCardThemeConfig();
-  const style = styleConfig[cardTheme];
 
   const commonProps = {
     id: cardId,
-    styleVariant: cardTheme,
-    isFlashy: isCardFlashy(cardId),
     isExpanded: expandedCards.find(target => target.cardId === cardId) ? isCardExpanded(cardId) : defaultExpandedCards.includes(cardId),
-    onToggleFlashy: () => toggleCardFlashy(cardId),
     onToggleExpanded: () => {
       const current = expandedCards.find(target => target.cardId === cardId);
       const isDefault = defaultExpandedCards.includes(cardId)
@@ -74,13 +69,12 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           editDialog={editingCardId === cardId && <Typography>Edit dialog placeholder</Typography>}
           startAdornmentIcon={<StartAdornmentIcon icon={SpeedIcon} />}
 
-          showFlashyToggle={true}
           showEditOnMenu={true}
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.name' })} value={config.cockpitConfigName} style={style} />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.description' })} value={config.cockpitConfigDesc} style={style} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.name' })} value={config.cockpitConfigName} />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.body.description' })} value={config.cockpitConfigDesc} />
         </CockpitCard>
       );
 
@@ -94,26 +88,19 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           editDialog={editingCardId === cardId && (<CockpitTenantEditDialog open={isEditOpen} onClose={handleEditClose} cockpitId={config.id} />)}
           startAdornmentIcon={<StartAdornmentIcon icon={BuildIcon} />}
 
-          showFlashyToggle={true}
           showEditOnMenu={true}
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchConfig.title' })}
+          <CockpitCardDataRowTextWithDescription
+            label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchConfig.title' })}
             value={tenants.wrench?.externalId ?? '-'}
-            style={style}
+            description={tenants.wrench?.cockpitConfigTenantDesc}
           />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchTenantDesc.title' })}
-            value={tenants.wrench?.cockpitConfigTenantDesc ?? '-'}
-            style={style}
-          />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.title' })}
+          <CockpitCardDataRowTextWithDescription
+            label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.title' })}
             value={tenants.stencil?.externalId ?? '-'}
-            style={style}
-          />
-          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilTenantDesc.title' })}
-            value={tenants.stencil?.cockpitConfigTenantDesc ?? '-'}
-            style={style}
+            description={tenants.stencil?.cockpitConfigTenantDesc}
           />
 
         </CockpitCard>
