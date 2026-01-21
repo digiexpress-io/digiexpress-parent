@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   Button, DialogActions, DialogContent, DialogTitle, Grid2, Typography, Zoom,
-  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip,
-  Box,
-  Divider
+  FormControl, RadioGroup, FormControlLabel, Radio, Tooltip
 } from '@mui/material';
 import { useIntl } from 'react-intl';
 

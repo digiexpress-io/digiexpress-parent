@@ -1256,6 +1256,7 @@ export const en = {
   'cockpitcard.wrenchStencil.stencilTenantDesc.title': 'Stencil assets description',
   'cockpitTable.col.header.name': 'Name',
   'cockpitTable.col.header.description': 'Description',
+  'cockpitTable.col.header.status': 'Status',
   'cockpitcard.cockpitMain.title': 'Cockpit main',
   'cockpitcard.cockpitWrenchStencilConfig.title': 'Wrench and Stencil Config',
   'cockpitcard.wrenchStencil.tenantDesc.title': 'Tenant description',

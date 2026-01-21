@@ -86,6 +86,7 @@ export declare namespace CockpitApi {
     description: string;
 
     src: CockpitContainer;
+    activity?: CockpitActivity | undefined;
   }
 
   export interface CockpitActivity {

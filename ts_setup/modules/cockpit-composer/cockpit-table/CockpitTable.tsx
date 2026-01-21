@@ -11,6 +11,7 @@ import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
 import { CockpitCreateDialog } from '../cockpit-create';
 import { CockpitLink } from './CockpitLink';
+import { CockpitStatusIndicator } from './CockpitStatusIndicator';
 
 
 
@@ -21,10 +22,15 @@ export const CockpitTable: React.FC = () => {
   const backend = useCockpitsBackend();
   const [createCockpitOpen, setCreateCockpitOpen] = React.useState(false);
 
-  const { data, error, refetch, isPending } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: [COCKPIT_TABLE_QUERY_KEY],
     queryFn: () => backend.persistence.findAllCockpits(),
     initialData: [],
+  });
+
+  const { data: activity } = useQuery({
+    queryKey: [COCKPIT_TABLE_QUERY_KEY, 'activity'],
+    queryFn: () => backend.persistence.findActivity(),
   });
 
   console.log("cockpits", data)
@@ -49,6 +55,19 @@ export const CockpitTable: React.FC = () => {
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
+    },
+    {
+      header: intl.formatMessage({ id: 'cockpitTable.col.header.status' }),
+      accessorKey: 'active',
+      size: 150,
+      minSize: 150,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+      cell: ({ row }) => {
+        const isActive = activity?.activeCockpitId === row.original.id;
+        return (<CockpitStatusIndicator isActive={isActive} />);
+      },
     }
   ]
 
