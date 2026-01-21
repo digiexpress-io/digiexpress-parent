@@ -81,9 +81,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
           </Grid2>
 
           <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-            <Typography fontWeight={500}>
-              {intl.formatMessage({ id: 'cockpit.wrenchConfig' })}
-            </Typography>
+            <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.wrenchConfig' })}</Typography>
           </Grid2>
           <Grid2 size={{ md: 9, lg: 9, xl: 9 }}>
             <Grid2 container>
@@ -114,9 +112,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
                 <Typography>{tenants.stencil?.externalId ?? '-'}</Typography>
               </Grid2>
               <Grid2 size={6}>
-                <Typography fontWeight={500}>
-                  {intl.formatMessage({ id: 'cockpit.config.description' })}
-                </Typography>
+                <Typography fontWeight={500}>{intl.formatMessage({ id: 'cockpit.config.description' })}</Typography>
                 {tenants.stencil?.cockpitConfigTenantDesc ? (
                   <Tooltip title={tenants.stencil.cockpitConfigTenantDesc} arrow>
                     <StyledEllipsisTypography>{tenants.stencil.cockpitConfigTenantDesc}</StyledEllipsisTypography>
