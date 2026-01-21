@@ -99,21 +99,23 @@ export const CockpitCardFactory: React.FC<{ cardId: CockpitCardId }> = (initProp
           showEditButton={true}
           showReviewOnMenu={false}
         >
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchConfig.title' })}
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              {tenants.wrench?.cockpitConfigTenantDesc ?? '-'}
-            </Typography>
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchConfig.title' })}
+            value={tenants.wrench?.externalId ?? '-'}
+            style={style}
+          />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.wrenchTenantDesc.title' })}
+            value={tenants.wrench?.cockpitConfigTenantDesc ?? '-'}
+            style={style}
+          />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.title' })}
+            value={tenants.stencil?.externalId ?? '-'}
+            style={style}
+          />
+          <CockpitCardDataRowText label={intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilTenantDesc.title' })}
+            value={tenants.stencil?.cockpitConfigTenantDesc ?? '-'}
+            style={style}
+          />
 
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-              {intl.formatMessage({ id: 'cockpitcard.wrenchStencil.stencilConfig.title' })}
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              {tenants.stencil?.cockpitConfigTenantDesc ?? '-'}
-            </Typography>
-          </Box>
         </CockpitCard>
       );
 
