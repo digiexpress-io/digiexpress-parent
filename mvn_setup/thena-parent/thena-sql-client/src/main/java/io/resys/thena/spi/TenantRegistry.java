@@ -31,6 +31,7 @@ public interface TenantRegistry extends ThenaRegistryService<Tenant, io.vertx.mu
   
   ThenaSqlClient.SqlTuple exists();
   ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.Sql findAllWithLabels();
   ThenaSqlClient.SqlTuple getByName(String name);
   ThenaSqlClient.SqlTuple getByNameOrId(String name);
   ThenaSqlClient.SqlTuple insertOne(Tenant repo);

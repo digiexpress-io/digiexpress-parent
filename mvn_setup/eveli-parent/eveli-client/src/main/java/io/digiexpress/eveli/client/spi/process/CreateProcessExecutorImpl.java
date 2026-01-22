@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Uni;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -72,7 +73,9 @@ public class CreateProcessExecutorImpl implements CreateProcessExecutor {
     final var flowInput = new HashMap<String, Serializable>();
     flowInput.put("questionnaireId", instance.getQuestionnaireId());
     flowInput.put("workflowName", instance.getWorkflowName());
-    final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
+    final var runtime = envir
+        .withCockpitIdSupplier(() -> Uni.createFrom().item(Optional.ofNullable(instance.getCockpitId())))
+        .runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
     
     
     final var flowName = Optional.ofNullable(instance.getFlowName()).orElseGet(() -> {

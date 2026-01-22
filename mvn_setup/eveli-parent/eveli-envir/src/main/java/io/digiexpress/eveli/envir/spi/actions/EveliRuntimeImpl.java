@@ -21,6 +21,7 @@ package io.digiexpress.eveli.envir.spi.actions;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
@@ -43,7 +44,6 @@ public class EveliRuntimeImpl implements EveliRuntime {
   private final ProgramEnvir wrenchEnvir;
   private final StencilEnvir stencilEnvir;
   private final EveliDeployment deployment;
-
   private final boolean isDev;
   
   public EveliRuntimeImpl(
@@ -94,11 +94,12 @@ public class EveliRuntimeImpl implements EveliRuntime {
   public String getStencilTagName() {
     return deployment.getSources().getStencil().getName();
   }
-
   @Override
   public OffsetDateTime getStartsAt() {
     return deployment.getStartsAt();
   }
-
-
+  @Override
+  public Optional<String> getCockpitId() {
+    return Optional.ofNullable(deployment.getCockpitId());
+  }
 }

@@ -38,7 +38,6 @@ export declare namespace ContractApi {
     created: DateTime; // task created
     updated: DateTime | undefined; // task updated
     status: ContractStatus;
-    reviewUri: string;
     documents: readonly ContractDocument[];
     product: ProductApi.Product;
     offer: OfferApi.Offer;

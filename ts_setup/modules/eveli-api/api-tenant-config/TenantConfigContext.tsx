@@ -35,6 +35,7 @@ export const tenant_features = [
   'tagomi',
   'contract',
   'ai-assistant',
+  'cockpits'
 ] as const;
 
 export type TenantFeature = typeof tenant_features[number];

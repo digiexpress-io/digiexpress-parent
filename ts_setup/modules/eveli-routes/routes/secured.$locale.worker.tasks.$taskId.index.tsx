@@ -4,7 +4,6 @@ import { Container } from '@mui/material';
 import { useTenantConfigFeatures } from '@dxs-ts/eveli-api';
 
 import { TaskComposer } from '@dxs-ts/task-composer-v1';
-import { TaskDashboard } from '@dxs-ts/task-composer-v2';
 import { TaskDashboardProd } from '@dxs-ts/task-composer-v2';
 
 

@@ -19,8 +19,9 @@ export function createIamFetch(url: (string | undefined) = '/portal/secured/iam'
     return response;
   }
 
-  const fetchUserProductsGET: IamApi.FetchUserProductsGET = async () => {
-    const response = await window.fetch(`/portal/secured/actions/authorizations`, {
+  const fetchUserProductsGET: IamApi.FetchUserProductsGET = async (cockpitId?: string) => {
+    const tenant = cockpitId ? `?cockpitId=${cockpitId}` : '';
+    const response = await window.fetch(`/portal/secured/actions/authorizations${tenant}`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,

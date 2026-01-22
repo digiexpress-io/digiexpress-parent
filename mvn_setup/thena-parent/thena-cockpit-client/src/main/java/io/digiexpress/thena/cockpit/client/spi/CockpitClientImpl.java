@@ -31,6 +31,7 @@ import io.digiexpress.thena.cockpit.client.api.CockpitCommitActions;
 import io.digiexpress.thena.cockpit.client.api.CockpitQueryActions;
 import io.digiexpress.thena.cockpit.client.spi.actions.CockpitCommitActionsImpl;
 import io.digiexpress.thena.cockpit.client.spi.actions.CockpitQueryActionsImpl;
+import io.digiexpress.thena.cockpit.client.spi.queries.CockpitAwareQueryImpl;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import io.digiexpress.thena.cockpit.client.tables.spi.CockpitDbImpl;
 import io.resys.thena.api.actions.TenantActions;

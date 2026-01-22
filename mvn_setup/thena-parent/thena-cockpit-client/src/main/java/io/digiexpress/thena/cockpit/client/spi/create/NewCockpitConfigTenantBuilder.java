@@ -33,19 +33,18 @@ import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 public class NewCockpitConfigTenantBuilder implements NewCockpitConfigTenant {
-  private final CockpitCommitBuilder logger;
   private final ImmutableCockpitConfigTenant.Builder tenant;
   private boolean built;
   
   public NewCockpitConfigTenantBuilder(CockpitCommitBuilder logger, String configId, PersistenceUnit batch) {
     super();
-    this.logger = logger;
     this.tenant = ImmutableCockpitConfigTenant.builder()
         .id(OidUtils.genUUID())
         .cockpitConfigId(logger.getConfigId())
         .commitId(logger.getCommitId())
         .createdCommitId(logger.getCommitId())
         .cockpitConfigTenantExtension(Optional.empty());
+    externalBranch(null);
   }
   
   @Override
@@ -87,7 +86,6 @@ public class NewCockpitConfigTenantBuilder implements NewCockpitConfigTenant {
     RepoAssert.isTrue(built, () -> "you must call NewCockpitConfigTenant.build() to finalize tenant CREATE!");
     
     final var entity = tenant.build();
-    logger.add(entity);
     return entity;
   }
 }

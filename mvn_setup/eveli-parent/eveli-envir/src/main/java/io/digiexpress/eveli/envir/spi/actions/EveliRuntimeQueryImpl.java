@@ -24,6 +24,8 @@ import java.time.OffsetDateTime;
 
 import java.util.Optional;
 
+import com.google.common.base.Objects;
+
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
@@ -78,7 +80,17 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
     logging.cachedRuntime(cachedEnvir);
     
     // already created
-    if(cachedEnvir.isPresent() && cachedEnvir.get().getDeploymentId().equals(deployment.getId())) {
+    // cache flush conditions
+    if(cachedEnvir.isPresent() && 
+        
+        // same envir query
+        cachedEnvir.get().getDeploymentId().equals(deployment.getId()) &&
+        
+        // same tenant requested
+        Objects.equal(cachedEnvir.get().getCockpitId(), deployment.getCockpitId())
+    ) {
+      
+      
       return Uni.createFrom().item(cachedEnvir.get());
     }
     

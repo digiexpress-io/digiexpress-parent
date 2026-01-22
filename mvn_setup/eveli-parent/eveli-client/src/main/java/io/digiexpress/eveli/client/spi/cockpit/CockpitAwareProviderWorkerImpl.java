@@ -64,30 +64,43 @@ public class CockpitAwareProviderWorkerImpl implements CockpitAwareProvider {
         if(cockpitCache.contains(sub)) {
           return Uni.createFrom().item(() -> cockpitCache.get(sub));
         }
-        return getAndCache(sub);
+        return getAndCacheByUser(sub);
       });
   }
   
   @Override
   public Uni<Optional<CockpitContainer>> get(Optional<String> cockpitId) {
+    
     if(cockpitId.isEmpty()) {
-      return get();
+      return Uni.createFrom().item(Optional.<CockpitContainer>empty());
     }
     
-    final var sub = cockpitId.get();
-    if(cockpitCache.contains(sub)) {
-      return Uni.createFrom().item(() -> cockpitCache.get(sub));
+    if(cockpitCache.contains(cockpitId.get())) {
+      return Uni.createFrom().item(() -> cockpitCache.get(cockpitId.get()));
     }
-    return getAndCache(sub);
+    return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId.get())
+        .onItem().transform(env -> Optional.ofNullable(env))
+        .onItem().invoke(env -> cockpitCache.save(cockpitId.get(), env));
   }
   
-  private Uni<Optional<CockpitContainer>> getAndCache(String userSub) {
-    return userProfileClient.uiSettingsQuery().findOne(userSub, ACTIVE_COCKPIT)
+
+  
+  private Uni<Optional<CockpitContainer>> getAndCacheByUser(String userSub) {
+    
+    // user based query
+    final Uni<Optional<String>> byUser = userProfileClient.uiSettingsQuery().findOne(userSub, ACTIVE_COCKPIT)
       .onItem().transform(uiSettings -> {
         if(uiSettings.isEmpty()) {
-          return Optional.<String>empty();
+          return Optional.<String>ofNullable(userSub);
         }
         return uiSettings.get().getConfig().stream().map(e -> e.getDataId()).findFirst();
+      });
+    
+    return getUser().onItem().transformToUni(user -> {
+        if(user.isAuthenticated()) {
+          return byUser;
+        }
+        return Uni.createFrom().item(Optional.ofNullable(userSub));
       })
       .onItem().transformToUni(cockpitId -> {
         if(cockpitId.isEmpty()) {
@@ -104,19 +117,31 @@ public class CockpitAwareProviderWorkerImpl implements CockpitAwareProvider {
     return Uni.createFrom().item(() -> auth.getUser());
   }
 
+  private Uni<CockpitContainer> getCockpit(String cockpitId) {
+    return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId);
+  }
+
+  
   @Override
   public Uni<Optional<CockpitContainer>> set(String cockpitId) {
     
-    final var command = ImmutableUpsertUiSettings.builder()
-        .settingsId(ACTIVE_COCKPIT)
-        .addConfig(ImmutableUiSettingForConfig.builder()
-            .dataId(cockpitId)
-            .value("")
-            .build())
-        .build();
-    
-    return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId)
-        .onItem().transformToUni(env -> userProfileClient.updateUiSettings().updateOne(command).onItem().transform((ignore) -> env))
+    return Uni.combine().all().unis(getCockpit(cockpitId), getUser())
+        .asTuple()
+        .onItem().transformToUni(tuple -> {
+          final var env = tuple.getItem1();
+          final var userId = tuple.getItem2().getPrincipal().getSub();
+          
+          final var command = ImmutableUpsertUiSettings.builder()
+              .settingsId(ACTIVE_COCKPIT)
+              .userId(userId)
+              .addConfig(ImmutableUiSettingForConfig.builder()
+                  .dataId(cockpitId)
+                  .value("")
+                  .build())
+              .build();
+          
+          return userProfileClient.updateUiSettings().updateOne(command).onItem().transform((ignore) -> env);
+        })
         .onItem().transform(env -> Optional.ofNullable(env))
         .onItem().invoke(env -> cockpitCache.invalidateAll())
         .onItem().invoke(env -> publisher.publishEvent(ImmutableEveliEnvirInvalidateCache.builder().build()));

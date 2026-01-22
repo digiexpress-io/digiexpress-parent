@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.config;
 
+import java.util.Optional;
+
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 
 /*-
@@ -50,6 +53,7 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 
 
 
@@ -118,9 +122,11 @@ public class EveliAutoConfigWorker {
       ProcessClient processClient,
       DialobClient dialobClient,
       EveliEnvirClient envir,
-      MqEventPublisher mqEventPublisher
+      MqEventPublisher mqEventPublisher,
+      ApplicationContext context
   ) {
-    return new DialobCreateEventPublisher(publisher, taskClient, processClient, dialobClient, envir, mqEventPublisher);
+    final var cockpitProvider = Optional.ofNullable(context.getBeanProvider(CockpitAwareProvider.class).getIfAvailable());
+    return new DialobCreateEventPublisher(publisher, taskClient, processClient, dialobClient, envir, mqEventPublisher, cockpitProvider);
   }
   
   

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -21,6 +23,7 @@ package io.digiexpress.eveli.client.config;
  */
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,14 +32,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.util.Assert;
 
+import io.resys.thena.api.ThenaAware;
+import io.resys.thena.api.ThenaAware.TenantAwareRegistration;
 import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -131,5 +139,28 @@ public class EveliAutoConfigDb {
           .setSslMode(SslMode.of(dbConfig.getSslMode())),
         new PoolOptions().setMaxSize(db.getPoolMaxSize() == null ? 5 : db.getPoolMaxSize()));
     return pgPool;
+  }
+  
+  
+  @Bean
+  public ThenaAware thenaAware() {
+    return new ThenaAware.ThenaAware_Default();
+  }
+  
+  @Bean
+  public CreateThenaTables initThenaTables(ThenaAware aware) {
+    return new CreateThenaTables(aware);
+  }
+  
+  @RequiredArgsConstructor
+  public class CreateThenaTables {
+    private final ThenaAware aware;
+    
+    @EventListener(ContextRefreshedEvent.class)
+    public CompletableFuture<List<TenantAwareRegistration>> onContextRefreshed() {
+      return aware.getOrCreateAll()
+        .collect().asList()
+        .subscribeAsCompletionStage();
+    }
   }
 }

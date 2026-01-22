@@ -109,6 +109,7 @@ public class GamutFeedbackController {
   @PostMapping
   public Uni<ResponseEntity<UserAction>> kindOfCreateAction(
       @RequestParam("actionId") String actionId,
+      @RequestParam(name = "cockpitId", required = false) String cockpitId,
       @RequestParam("inputContextId") String inputContextId,
       @RequestParam("inputParentContextId") String inputParentContextId,
       @RequestParam("actionLocale") String actionLocale) {
@@ -116,7 +117,7 @@ public class GamutFeedbackController {
     final var customer = authClient.getCustomer();
     final var customerRoles = authClient.getCustomerRoles();
     
-    return gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale)
+    return gamutClient.userActionMetaQuery().actionId(actionId).cockpitId(cockpitId).locale(actionLocale)
       .getOne().onItem().transform(meta -> {
         if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
           throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!");
@@ -124,6 +125,7 @@ public class GamutFeedbackController {
         try {
           return ResponseEntity.ok(gamutClient.userActionBuilder()
             .actionId(actionId)
+            .cockpitId(cockpitId)
             .anon(true)
             .customer(customer)
             .customerRoles(customerRoles)

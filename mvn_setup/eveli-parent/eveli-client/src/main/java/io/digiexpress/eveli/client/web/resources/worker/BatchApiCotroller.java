@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import org.immutables.value.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -62,7 +63,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BatchApiCotroller {
   private final WorkerAuthClient auth;
   private final BatchClient batchClient;
-  private final BatchConfig batchConfig;
+  private final Supplier<BatchConfig> batchConfig;
   private final EveliPropsBatch batchProps;
   private final ApplicationEventPublisher publisher;
   
@@ -149,7 +150,7 @@ public class BatchApiCotroller {
     try {
       
       final var envir = batchClient.createBatchEnvir()
-          .config(batchConfig)
+          .config(batchConfig.get())
           .build();
         
       return envir

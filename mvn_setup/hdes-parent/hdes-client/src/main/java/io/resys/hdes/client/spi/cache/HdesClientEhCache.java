@@ -81,6 +81,9 @@ public class HdesClientEhCache implements HdesCache {
   @Override
   public HdesCache withName(String name) {
     final var cacheName = createName(name);
+    if(this.cacheName.equals(cacheName)) {
+      return this;
+    }
     final var cacheHeap = 500;
     final var cacheManager = CacheManagerBuilder.newCacheManagerBuilder() 
         .withCache(cacheName,

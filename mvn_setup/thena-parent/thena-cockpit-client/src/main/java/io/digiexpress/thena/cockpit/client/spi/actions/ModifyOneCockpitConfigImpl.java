@@ -142,7 +142,8 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
               .status(BatchStatus.mapStatus(rsp.getStatus()))
               .build();
             return env;
-          });
+          })
+          .onItem().call(env -> CreateOneCockpitConfigImpl.createIfNotExistsTenants(env.getCockpitConfig(), state));
             
     });
   }
@@ -176,6 +177,7 @@ public class ModifyOneCockpitConfigImpl implements ModifyOneCockpitConfig {
           .commitAuthor(author)
           .commitMessage(message)
           .createdAt(createdAt)
+          .configId(configId)
           .parentId(Optional.ofNullable(config.getUpdatedTreeCommitId()).orElse(config.getCommitId()))
           .build()
     );

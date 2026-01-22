@@ -45,6 +45,8 @@ import io.digiexpress.eveli.client.spi.gamut.UserActionsBuilderImpl;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.AllArgsConstructor;
@@ -61,6 +63,7 @@ public class DialobCreateEventPublisher {
   private final DialobClient dialobClient;
   private final EveliEnvirClient envir;
   private final MqEventPublisher mqEventPublisher;
+  private final Optional<CockpitAwareProvider> cockpitAwareProvider;
   
   
   @Data
@@ -167,9 +170,10 @@ public class DialobCreateEventPublisher {
     }
     
     final String ssn = task.getItem2().map(proc -> proc.getUserId()).orElse(task.getItem1().getClientIdentificator());
+
     
     final var requests = new ArrayList<>(assignments.stream().map(assignment -> 
-        new UserActionsBuilderImpl(processClient, dialobClient, envir)
+        new UserActionsBuilderImpl(processClient, dialobClient, envir.withCockpitIdSupplier(getCockpitIdForFrontoffice(task)))
           .inputContextId("_")
           .inputParentContextId("_")
           .customerAssignment(true)
@@ -185,11 +189,13 @@ public class DialobCreateEventPublisher {
     ).toList());
     
     if(!isMainCreated) {
-      final var mainRequest = Uni.createFrom().item(() -> processClient.createInstance()
+   
+      
+      final var mainRequest = getCockpitIdForBackoffice().apply().onItem().transform((cockpitId) -> processClient.createInstance()
           .anon(false)
           .taskId(task.getItem1().getId())
           .userId(ssn)
-
+          .cockpitId(cockpitId.orElse(null))
           .anon(false)
           .customerAssignment(false)
           
@@ -224,4 +230,18 @@ public class DialobCreateEventPublisher {
     private final List<Tuple2<Optional<TaskCustomerAssignment>, UserAction>> values;
   }
 
+  
+  private CockpitIdSupplier getCockpitIdForFrontoffice(Tuple2<TaskClient.Task, Optional<ProcessClient.ProcessInstance>> task) {
+    return () -> Uni.createFrom().item(task.getItem2().map(p -> p.getCockpitId()));
+  }
+  
+  private CockpitIdSupplier getCockpitIdForBackoffice() {
+    if(cockpitAwareProvider.isEmpty()) {
+      return () -> Uni.createFrom().item(Optional.empty());
+    }
+    final CockpitAwareProvider provider = cockpitAwareProvider.get();
+    final Uni<Optional<String>> cockpitId = provider.get()
+        .onItem().transform(container -> container.map(e -> e.getConfig().getId()));
+    return () -> cockpitId;
+  }
 }

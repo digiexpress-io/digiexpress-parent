@@ -21,7 +21,8 @@ package io.digiexpress.thena.cockpit.client.spi.actions;
  */
 
 import io.digiexpress.thena.cockpit.client.api.CockpitQueryActions;
-import io.digiexpress.thena.cockpit.client.spi.CockpitAwareQueryImpl;
+import io.digiexpress.thena.cockpit.client.spi.queries.CockpitAvailableTenantsQueryImpl;
+import io.digiexpress.thena.cockpit.client.spi.queries.CockpitAwareQueryImpl;
 import io.digiexpress.thena.cockpit.client.spi.queries.CockpitQueryImpl;
 import io.digiexpress.thena.cockpit.client.tables.CockpitDb;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +43,10 @@ public class CockpitQueryActionsImpl implements CockpitQueryActions {
   @Override
   public CockpitAwareQuery cockpitAwareQuery() {
     return awareQuery;
+  }
+
+  @Override
+  public CockpitAvailableTenantsQuery cockpitAvailableTenantsQuery() {
+    return new CockpitAvailableTenantsQueryImpl(startingState.withTenant(repoId));
   }
 }

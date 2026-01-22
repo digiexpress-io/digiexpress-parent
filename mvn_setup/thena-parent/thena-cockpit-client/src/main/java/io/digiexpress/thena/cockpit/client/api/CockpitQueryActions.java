@@ -32,6 +32,14 @@ public interface CockpitQueryActions {
 
   CockpitQuery cockpitQuery();
   CockpitAwareQuery cockpitAwareQuery();
+  CockpitAvailableTenantsQuery cockpitAvailableTenantsQuery();
+  
+  
+  // Returns tenants that can be used in configuring a cockpit... 
+  // Default tenants can't be used in cockpit
+  interface CockpitAvailableTenantsQuery {
+    Multi<CockpitConfigTenant> findAll();    
+  }
   
   interface CockpitAwareQuery {
     // return all registered clients

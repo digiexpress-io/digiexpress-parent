@@ -44,6 +44,8 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
   private final TenantDataSource state;
   private String externalId;
   private String name;
+  private String label;
+  private String comment;
   private StructureType type;
   
   public TenantBuilderImpl(TenantDataSource state, StructureType type) {
@@ -64,6 +66,18 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
     return this;
   }
   
+  @Override
+  public CreateOneTenant label(String label) {
+    this.label = label;
+    return this;
+  }
+  
+  @Override
+  public CreateOneTenant comment(String comment) {
+    this.comment = comment;
+    return this;
+  }
+
   @Override
   public CreateOneTenant name(String name, StructureType type) {
     this.name = name;
@@ -134,6 +148,8 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
           .type(type)
           .name(name)
           .externalId(externalId)
+          .label(label)
+          .comment(comment)
           .prefix(prefix)
           .build();
       

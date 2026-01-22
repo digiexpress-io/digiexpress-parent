@@ -32,6 +32,8 @@ public interface Tenant extends AnyTenantEntity {
   String getPrefix();
   String getName();
   @Nullable String getExternalId();
+  @Nullable String getLabel();
+  @Nullable String getComment();
   StructureType getType();
   
   enum StructureType { doc, git, org, grim, fs, batch, contract, ledger, cockpit }

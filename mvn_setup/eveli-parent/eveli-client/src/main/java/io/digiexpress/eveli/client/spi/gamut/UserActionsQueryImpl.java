@@ -66,8 +66,13 @@ public class UserActionsQueryImpl implements UserActionQuery {
   private final GamutAuthClient authClient;
   private final AttachmentCommands attachmentsCommands;
   private final Duration atMost = Duration.ofSeconds(30);
+  private String cockpitId;
   
-  
+  @Override
+  public UserActionQuery cockpitId(String cockpitId) {
+    this.cockpitId = cockpitId;
+    return this;
+  }
   @Override
   public Optional<UserAction> findOneById(String id) {
     final var customer = authClient.getCustomer().getCustomerId();
@@ -164,6 +169,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     if(authClient.getCustomer().getPrincipal().getRepresentedId() != null) {
       final var userRoles = authClient.getCustomerRoles().getRoles();  
       final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
+          .cockpitId(cockpitId)
           .addAllUserRoles(userRoles)
           .build());
       return Optional.of(allowed);      
@@ -261,11 +267,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .addAllAttachments(att.getTaskAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
         .subActions(subActions)
         .addAllMessages(messages.getMessages())
-        
-        // deprecated
-        .messagesUri("not-needed")
-        .reviewUri("not-needed")
-        .formUri("not-needed")
+        .cockpitId(process.getCockpitId())
         .build();
   }
   
@@ -298,5 +300,4 @@ public class UserActionsQueryImpl implements UserActionQuery {
     private final boolean viewed;
     private final OffsetDateTime updated;
   }
-
 }

@@ -41,6 +41,7 @@ public interface TenantDataSource {
     Uni<Tenant> getByNameOrId(String nameOrId);
     Uni<Optional<Tenant>> findByNameOrId(String nameOrId);
     
+    Multi<Tenant> findAllWithLabels();
     Multi<Tenant> findAll();
     Uni<Void> delete();
     Uni<Tenant> delete(Tenant newRepo);

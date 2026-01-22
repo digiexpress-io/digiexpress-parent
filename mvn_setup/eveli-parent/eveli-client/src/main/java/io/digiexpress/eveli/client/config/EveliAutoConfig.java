@@ -1,6 +1,5 @@
 package io.digiexpress.eveli.client.config;
 
-import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -81,6 +80,7 @@ import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
+import io.resys.thena.api.ThenaAware;
 import io.resys.thena.grim.spi.GrimClientImpl;
 import io.resys.thena.jackson.JsonArrayDeserializer;
 import io.resys.thena.jackson.JsonObjectDeserializer;
@@ -157,14 +157,16 @@ public class EveliAutoConfig {
       AttachmentCommands attachmentCommands,
       RestTemplate restTemplate,
       io.vertx.mutiny.sqlclient.Pool pgPool,
-      EveliEnvirClient envirClient) {
+      EveliEnvirClient envirClient, 
+      ThenaAware thenaAware) {
     
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName("task-tenant")
         .client(GrimClientImpl.create().client(pgPool).build())
         .build();
     final var store = new TaskStoreImpl(config);
-    store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
+    
+    thenaAware.register(store.getClass(), store.query().createIfNot());
     
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
     return new TaskClientImpl(envirClient, fileClient, docContainerClient, store, crmClient);
@@ -241,12 +243,12 @@ public class EveliAutoConfig {
   }
   
   @Bean
-  public UserProfileClient userProfileClient(io.vertx.mutiny.sqlclient.Pool pgPool) {    
+  public UserProfileClient userProfileClient(io.vertx.mutiny.sqlclient.Pool pgPool, ThenaAware thenaAware) {    
     final var store = UserProfileStore.builder()
         .repoName("worker-profile")
         .pgPool(pgPool)
         .build();
-    store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
+    thenaAware.register(store.getClass(), store.query().createIfNot());
     return new UserProfileClientImpl(store);
   }
   

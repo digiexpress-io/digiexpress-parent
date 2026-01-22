@@ -51,6 +51,24 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
   public ThenaSqlClient getClient() {
     return dataSource.getClient();
   }
+  
+  public Multi<Tenant> findAllWithLabels() {
+    final var sql = this.registry.findAllWithLabels();
+    if(log.isDebugEnabled()) {
+      log.debug("Fina all tenants query, with props: {} \r\n{}", 
+          "", 
+          sql.getValue());
+    }
+    
+    return getClient().preparedQuery(sql.getValue())
+      .mapping(registry.defaultMapper())
+      .execute()
+      .onItem()
+      .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
+      .onItem().invoke(newTenant -> this.dataSource.getTenantCache().setTenant(newTenant))
+      .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
+      .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'TENANTS'!", sql, e)));
+  }
 
   @Override
   public Uni<Tenant> getByName(String name) {
@@ -79,7 +97,7 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
         })
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> {
-          dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name'!", sql, e));
+          dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'TENANTS' by 'name'!", sql, e));
         });
   }
 
@@ -110,7 +128,7 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
         })
         .onItem().invoke(tenant -> this.dataSource.getTenantCache().setTenant(tenant))
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'TENANTS' by 'name' or 'id'!", sql, e)));
   }
   
   @Override
@@ -144,7 +162,7 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
           }
         })
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Optional.empty())
-        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'TENANTS' by 'name' or 'id'!", sql, e)));
   }
   
   
@@ -164,7 +182,7 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
       .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
       .onItem().invoke(newTenant -> this.dataSource.getTenantCache().setTenant(newTenant))
       .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
-      .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'REPOS'!", sql, e)));
+      .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'TENANTS'!", sql, e)));
   }
   
   

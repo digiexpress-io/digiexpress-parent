@@ -91,6 +91,9 @@ public class ProcessEntity {
   
   @Column(name="user_id")
   private String userId;
+  
+  @Column(name="cockpit_id")
+  private String cockpitId;
 
   @Column(name="anon")
   private Boolean anon;

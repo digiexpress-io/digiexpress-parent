@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.gamut;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMeta;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMetaQuery;
@@ -31,6 +32,7 @@ import io.digiexpress.eveli.client.api.ImmutableUserActionMeta;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +46,15 @@ public class UserActionMetaQueryImpl implements UserActionMetaQuery {
   
   private String locale;
   private String actionId;
+  private String cockpitId;
   
   @Override
   public Uni<UserActionMeta> getOne() {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(locale, () -> "locale can't be null!");
+    final CockpitIdSupplier cockpitIdSupplier = () -> Uni.createFrom().item(Optional.ofNullable(cockpitId));
     
-    return envir.runtimeQuery().getOne().onItem().transform(runtime -> getOne(runtime));
-
+    return envir.withCockpitIdSupplier(cockpitIdSupplier).runtimeQuery().getOne().onItem().transform(runtime -> getOne(runtime));
   }
   
   
@@ -83,4 +86,7 @@ public class UserActionMetaQueryImpl implements UserActionMetaQuery {
         .topicLink(stencilService)
         .build();
   }
+
+
+
 }

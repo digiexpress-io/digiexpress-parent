@@ -80,6 +80,10 @@ public interface ProcessClient {
     CreateProcessInstance stencilTagName(String stencilTagName);
     CreateProcessInstance wrenchTagName(String wrenchTagName);
     CreateProcessInstance customerAssignment(boolean isCustomerAssignment);
+    
+    CreateProcessInstance cockpitId(@Nullable String cockpitId);
+    
+    
     ProcessInstance create();
   }
   
@@ -148,6 +152,9 @@ public interface ProcessClient {
     @Nullable String getFormTagName();
     @Nullable String getStencilTagName();
     @Nullable String getWrenchTagName();
+    
+    // Additional tenant based configuration is provided
+    @Nullable String getCockpitId();
   }
   
 
@@ -180,6 +187,7 @@ public interface ProcessClient {
   @JsonSerialize(as = ImmutableInitProcessAuthorization.class)
   @JsonDeserialize(as = ImmutableInitProcessAuthorization.class)
   interface InitProcessAuthorization {
+    @Nullable String getCockpitId();
     List<String> getUserRoles();
   }
   

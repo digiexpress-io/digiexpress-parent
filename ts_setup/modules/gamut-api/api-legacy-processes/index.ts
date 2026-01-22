@@ -30,15 +30,12 @@ export namespace LegacyProcessApi {
     | "WAITING";
     taskCreated?: string;
     taskUpdated?: string;
-    reviewUri: string;
     formId: string;
-    formUri: string;
     formInProgress: boolean;
     viewed: boolean;
     messages: ProcessComment[];
     attachments: ProcessAttachment[];
     subActions: { formInProgress: boolean, id: string, formId: string }[];
-    messagesUri: string;
     assigned: boolean;
   }
 

@@ -39,7 +39,6 @@ export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.S
       .appendStr(proc.id)
       .appendStr(proc.name)
       .appendStr(proc.formId)
-      .appendStr(proc.formUri)
       .appendStr(proc.created)
       .appendStr(proc.updated ?? '');
 
@@ -88,7 +87,6 @@ export function mapToOffer(data: LegacyProcessApi.Process, site: SiteApi.Site | 
     created: DateTime.fromISO(data.created),
     updated: DateTime.fromISO(data.updated),
     formId: data.formId,
-    formUri: data.formUri,
     assigned: data.assigned,
 
     id: data.id,

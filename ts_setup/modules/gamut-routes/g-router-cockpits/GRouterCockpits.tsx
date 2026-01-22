@@ -13,9 +13,8 @@ export interface GRouterCockpitsProps {
 export const GRouterCockpits: React.FC<GRouterCockpitsProps> = ({ }) => {
   const { cockpits } = useSite();
   const [showDialog, setShowDialog] = React.useState(false);
-  const isEnabled = !!cockpits.active;
+  const isEnabled = cockpits.options.length > 0;
 
-  // Keyboard shortcut
   React.useEffect(() => {
     if (!isEnabled) {
       return;
@@ -47,7 +46,7 @@ export const GRouterCockpits: React.FC<GRouterCockpitsProps> = ({ }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} autoFocus variant='contained'>
-          <FormattedMessage id='gamut.buttons.close' />
+          <FormattedMessage id='gamut.buttons.select' />
         </Button>
       </DialogActions>
     </Dialog>);

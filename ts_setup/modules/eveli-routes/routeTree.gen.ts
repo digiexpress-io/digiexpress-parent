@@ -32,6 +32,7 @@ import { Route as SecuredLocaleWorkerHelpIndexRouteImport } from './routes/secur
 import { Route as SecuredLocaleWorkerFeedbackIndexRouteImport } from './routes/secured.$locale.worker.feedback.index'
 import { Route as SecuredLocaleWorkerDashboardIndexRouteImport } from './routes/secured.$locale.worker.dashboard.index'
 import { Route as SecuredLocaleWorkerContractsIndexRouteImport } from './routes/secured.$locale.worker.contracts.index'
+import { Route as SecuredLocaleWorkerCockpitsIndexRouteImport } from './routes/secured.$locale.worker.cockpits.index'
 import { Route as SecuredLocaleWorkerBatchesIndexRouteImport } from './routes/secured.$locale.worker.batches.index'
 import { Route as SecuredLocaleAssetsWrenchIndexRouteImport } from './routes/secured.$locale.assets.wrench.index'
 import { Route as SecuredLocaleAssetsTagomiIndexRouteImport } from './routes/secured.$locale.assets.tagomi.index'
@@ -46,6 +47,7 @@ import { Route as SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport } from './
 import { Route as SecuredLocaleWorkerLedgersLedgerIdIndexRouteImport } from './routes/secured.$locale.worker.ledgers.$ledgerId.index'
 import { Route as SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport } from './routes/secured.$locale.worker.feedback.$feedbackId.index'
 import { Route as SecuredLocaleWorkerContractsContractIdIndexRouteImport } from './routes/secured.$locale.worker.contracts.$contractId.index'
+import { Route as SecuredLocaleWorkerCockpitsCockpitIdIndexRouteImport } from './routes/secured.$locale.worker.cockpits.$cockpitId.index'
 import { Route as SecuredLocaleWorkerBatchesCreateIndexRouteImport } from './routes/secured.$locale.worker.batches.create.index'
 import { Route as SecuredLocaleWorkerBatchesBatchIdIndexRouteImport } from './routes/secured.$locale.worker.batches.$batchId.index'
 import { Route as SecuredLocaleWorkerTasksTaskIdReviewIndexRouteImport } from './routes/secured.$locale.worker.tasks.$taskId.review.index'
@@ -183,6 +185,12 @@ const SecuredLocaleWorkerContractsIndexRoute =
     path: '/',
     getParentRoute: () => SecuredLocaleWorkerContractsRoute,
   } as any)
+const SecuredLocaleWorkerCockpitsIndexRoute =
+  SecuredLocaleWorkerCockpitsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SecuredLocaleWorkerCockpitsRoute,
+  } as any)
 const SecuredLocaleWorkerBatchesIndexRoute =
   SecuredLocaleWorkerBatchesIndexRouteImport.update({
     id: '/',
@@ -267,6 +275,12 @@ const SecuredLocaleWorkerContractsContractIdIndexRoute =
     path: '/$contractId/',
     getParentRoute: () => SecuredLocaleWorkerContractsRoute,
   } as any)
+const SecuredLocaleWorkerCockpitsCockpitIdIndexRoute =
+  SecuredLocaleWorkerCockpitsCockpitIdIndexRouteImport.update({
+    id: '/$cockpitId/',
+    path: '/$cockpitId/',
+    getParentRoute: () => SecuredLocaleWorkerCockpitsRoute,
+  } as any)
 const SecuredLocaleWorkerBatchesCreateIndexRoute =
   SecuredLocaleWorkerBatchesCreateIndexRouteImport.update({
     id: '/create/',
@@ -300,7 +314,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
-  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRoute
+  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRouteWithChildren
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
@@ -313,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/assets/tagomi': typeof SecuredLocaleAssetsTagomiIndexRoute
   '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
+  '/secured/$locale/worker/cockpits/': typeof SecuredLocaleWorkerCockpitsIndexRoute
   '/secured/$locale/worker/contracts/': typeof SecuredLocaleWorkerContractsIndexRoute
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
@@ -325,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/user-activity': typeof SecuredLocaleWorkerUserActivityIndexRoute
   '/secured/$locale/worker/batches/$batchId': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  '/secured/$locale/worker/cockpits/$cockpitId': typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
   '/secured/$locale/worker/contracts/$contractId': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   '/secured/$locale/worker/ledgers/$ledgerId': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
@@ -341,7 +357,6 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale': typeof SecuredLocaleIndexRoute
-  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRoute
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
@@ -351,6 +366,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets/tagomi': typeof SecuredLocaleAssetsTagomiIndexRoute
   '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesIndexRoute
+  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsIndexRoute
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsIndexRoute
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
@@ -363,6 +379,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/user-activity': typeof SecuredLocaleWorkerUserActivityIndexRoute
   '/secured/$locale/worker/batches/$batchId': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  '/secured/$locale/worker/cockpits/$cockpitId': typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
   '/secured/$locale/worker/contracts/$contractId': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   '/secured/$locale/worker/ledgers/$ledgerId': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
@@ -382,7 +399,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
-  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRoute
+  '/secured/$locale/worker/cockpits': typeof SecuredLocaleWorkerCockpitsRouteWithChildren
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsRouteWithChildren
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersRouteWithChildren
   '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
@@ -395,6 +412,7 @@ export interface FileRoutesById {
   '/secured/$locale/assets/tagomi/': typeof SecuredLocaleAssetsTagomiIndexRoute
   '/secured/$locale/assets/wrench/': typeof SecuredLocaleAssetsWrenchIndexRoute
   '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
+  '/secured/$locale/worker/cockpits/': typeof SecuredLocaleWorkerCockpitsIndexRoute
   '/secured/$locale/worker/contracts/': typeof SecuredLocaleWorkerContractsIndexRoute
   '/secured/$locale/worker/dashboard/': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
@@ -407,6 +425,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/user-activity/': typeof SecuredLocaleWorkerUserActivityIndexRoute
   '/secured/$locale/worker/batches/$batchId/': typeof SecuredLocaleWorkerBatchesBatchIdIndexRoute
   '/secured/$locale/worker/batches/create/': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  '/secured/$locale/worker/cockpits/$cockpitId/': typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
   '/secured/$locale/worker/contracts/$contractId/': typeof SecuredLocaleWorkerContractsContractIdIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   '/secured/$locale/worker/ledgers/$ledgerId/': typeof SecuredLocaleWorkerLedgersLedgerIdIndexRoute
@@ -440,6 +459,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/tagomi'
     | '/secured/$locale/assets/wrench'
     | '/secured/$locale/worker/batches/'
+    | '/secured/$locale/worker/cockpits/'
     | '/secured/$locale/worker/contracts/'
     | '/secured/$locale/worker/dashboard'
     | '/secured/$locale/worker/feedback'
@@ -452,6 +472,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/user-activity'
     | '/secured/$locale/worker/batches/$batchId'
     | '/secured/$locale/worker/batches/create'
+    | '/secured/$locale/worker/cockpits/$cockpitId'
     | '/secured/$locale/worker/contracts/$contractId'
     | '/secured/$locale/worker/feedback/$feedbackId'
     | '/secured/$locale/worker/ledgers/$ledgerId'
@@ -468,7 +489,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/secured/$locale'
-    | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/profile'
     | '/secured/$locale/publications'
     | '/secured/$locale/assets/forms/$formId'
@@ -478,6 +498,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/tagomi'
     | '/secured/$locale/assets/wrench'
     | '/secured/$locale/worker/batches'
+    | '/secured/$locale/worker/cockpits'
     | '/secured/$locale/worker/contracts'
     | '/secured/$locale/worker/dashboard'
     | '/secured/$locale/worker/feedback'
@@ -490,6 +511,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/user-activity'
     | '/secured/$locale/worker/batches/$batchId'
     | '/secured/$locale/worker/batches/create'
+    | '/secured/$locale/worker/cockpits/$cockpitId'
     | '/secured/$locale/worker/contracts/$contractId'
     | '/secured/$locale/worker/feedback/$feedbackId'
     | '/secured/$locale/worker/ledgers/$ledgerId'
@@ -521,6 +543,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets/tagomi/'
     | '/secured/$locale/assets/wrench/'
     | '/secured/$locale/worker/batches/'
+    | '/secured/$locale/worker/cockpits/'
     | '/secured/$locale/worker/contracts/'
     | '/secured/$locale/worker/dashboard/'
     | '/secured/$locale/worker/feedback/'
@@ -533,6 +556,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/user-activity/'
     | '/secured/$locale/worker/batches/$batchId/'
     | '/secured/$locale/worker/batches/create/'
+    | '/secured/$locale/worker/cockpits/$cockpitId/'
     | '/secured/$locale/worker/contracts/$contractId/'
     | '/secured/$locale/worker/feedback/$feedbackId/'
     | '/secured/$locale/worker/ledgers/$ledgerId/'
@@ -713,6 +737,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerContractsIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerContractsRoute
     }
+    '/secured/$locale/worker/cockpits/': {
+      id: '/secured/$locale/worker/cockpits/'
+      path: '/'
+      fullPath: '/secured/$locale/worker/cockpits/'
+      preLoaderRoute: typeof SecuredLocaleWorkerCockpitsIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerCockpitsRoute
+    }
     '/secured/$locale/worker/batches/': {
       id: '/secured/$locale/worker/batches/'
       path: '/'
@@ -811,6 +842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerContractsContractIdIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerContractsRoute
     }
+    '/secured/$locale/worker/cockpits/$cockpitId/': {
+      id: '/secured/$locale/worker/cockpits/$cockpitId/'
+      path: '/$cockpitId'
+      fullPath: '/secured/$locale/worker/cockpits/$cockpitId'
+      preLoaderRoute: typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerCockpitsRoute
+    }
     '/secured/$locale/worker/batches/create/': {
       id: '/secured/$locale/worker/batches/create/'
       path: '/create'
@@ -886,6 +924,24 @@ const SecuredLocaleWorkerBatchesRouteWithChildren =
     SecuredLocaleWorkerBatchesRouteChildren,
   )
 
+interface SecuredLocaleWorkerCockpitsRouteChildren {
+  SecuredLocaleWorkerCockpitsIndexRoute: typeof SecuredLocaleWorkerCockpitsIndexRoute
+  SecuredLocaleWorkerCockpitsCockpitIdIndexRoute: typeof SecuredLocaleWorkerCockpitsCockpitIdIndexRoute
+}
+
+const SecuredLocaleWorkerCockpitsRouteChildren: SecuredLocaleWorkerCockpitsRouteChildren =
+  {
+    SecuredLocaleWorkerCockpitsIndexRoute:
+      SecuredLocaleWorkerCockpitsIndexRoute,
+    SecuredLocaleWorkerCockpitsCockpitIdIndexRoute:
+      SecuredLocaleWorkerCockpitsCockpitIdIndexRoute,
+  }
+
+const SecuredLocaleWorkerCockpitsRouteWithChildren =
+  SecuredLocaleWorkerCockpitsRoute._addFileChildren(
+    SecuredLocaleWorkerCockpitsRouteChildren,
+  )
+
 interface SecuredLocaleWorkerContractsRouteChildren {
   SecuredLocaleWorkerContractsIndexRoute: typeof SecuredLocaleWorkerContractsIndexRoute
   SecuredLocaleWorkerContractsContractIdIndexRoute: typeof SecuredLocaleWorkerContractsContractIdIndexRoute
@@ -946,7 +1002,7 @@ const SecuredLocaleWorkerTasksRouteWithChildren =
 
 interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerBatchesRoute: typeof SecuredLocaleWorkerBatchesRouteWithChildren
-  SecuredLocaleWorkerCockpitsRoute: typeof SecuredLocaleWorkerCockpitsRoute
+  SecuredLocaleWorkerCockpitsRoute: typeof SecuredLocaleWorkerCockpitsRouteWithChildren
   SecuredLocaleWorkerContractsRoute: typeof SecuredLocaleWorkerContractsRouteWithChildren
   SecuredLocaleWorkerLedgersRoute: typeof SecuredLocaleWorkerLedgersRouteWithChildren
   SecuredLocaleWorkerProfileRoute: typeof SecuredLocaleWorkerProfileRoute
@@ -965,7 +1021,8 @@ interface SecuredLocaleWorkerRouteChildren {
 
 const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerBatchesRoute: SecuredLocaleWorkerBatchesRouteWithChildren,
-  SecuredLocaleWorkerCockpitsRoute: SecuredLocaleWorkerCockpitsRoute,
+  SecuredLocaleWorkerCockpitsRoute:
+    SecuredLocaleWorkerCockpitsRouteWithChildren,
   SecuredLocaleWorkerContractsRoute:
     SecuredLocaleWorkerContractsRouteWithChildren,
   SecuredLocaleWorkerLedgersRoute: SecuredLocaleWorkerLedgersRouteWithChildren,

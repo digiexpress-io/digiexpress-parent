@@ -77,7 +77,7 @@ export declare namespace IamApi {
 
   export type FetchUserGET = () => Promise<Response>;
   export type FetchUserRolesGET = () => Promise<Response>;
-  export type FetchUserProductsGET = () => Promise<Response>;
+  export type FetchUserProductsGET = (cockpitId: string | undefined) => Promise<Response>;
   export type FetchUserLivenessGET = () => Promise<Response>;
 
 

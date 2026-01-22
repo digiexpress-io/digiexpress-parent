@@ -72,7 +72,6 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> implements Co
   @Override
   public StoreTenantQuery<EveliEnvirStore> query() {
     final var resp = super.query().repoType(StructureType.doc).repoName(config.getRepoId());
-    
     return resp;
   }
   

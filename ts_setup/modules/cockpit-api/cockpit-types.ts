@@ -12,6 +12,18 @@ export declare namespace CockpitApi {
     configDescription: string;
   }
 
+  export interface CreateCockpitTenantCommand {
+    externalId: string;
+    tenantType: CockpitTenantType;
+    tenantDescription: string;
+  }
+
+  export interface CockpitActivityChangeActiveIdCommand {
+    activeId: string | undefined;
+  }
+
+  export type CockpitTenantType = 'WRENCH' | 'STENCIL'
+
   export type CockpitDocType =
     | "CONFIG"
     | "CONFIG_TENANT"
@@ -30,6 +42,7 @@ export declare namespace CockpitApi {
     externalBranch: string;
 
     cockpitConfigTenantDesc: string;
+    cockpitConfigTenantType: CockpitTenantType;
     cockpitConfigTenantExtension?: Object | undefined;
 
     docType: 'CONFIG_TENANT'
@@ -64,13 +77,7 @@ export declare namespace CockpitApi {
 
   export interface CockpitContainer {
     config: CockpitConfig;
-    /**
-      
-      List<CockpitCommit> getCommits();
-      List<CockpitCommitTree> getCommitTrees();
-      List<CockpitConfigProps> getProps();
-      List<CockpitConfigTenant> getTenants();
-     */
+    tenants: CockpitConfigTenant[];
   }
 
   export interface CockpitSummary {
@@ -78,8 +85,15 @@ export declare namespace CockpitApi {
     name: string;
     description: string;
 
-    // from what we created
     src: CockpitContainer;
+    activity?: CockpitActivity | undefined;
   }
 
+  export interface CockpitActivity {
+    availableTenants: {
+      stencil: CockpitConfigTenant[],
+      wrench: CockpitConfigTenant[],
+    },
+    activeCockpitId: string | undefined;
+  }
 }

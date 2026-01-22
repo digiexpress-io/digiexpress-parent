@@ -8,7 +8,7 @@ import { SiteApi } from './site-types';
 import { SiteCache } from './site-reducer';
 import { getSearchTopics } from './search-topics';
 import { maintainace_en } from './fallback-content';
-import { CockpitStore } from './CockpitStore';
+import { CockpitStore } from '../api-cockpit-store';
 
 
 export interface  SiteBackendProviderProps {

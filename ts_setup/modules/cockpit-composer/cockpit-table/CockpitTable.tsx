@@ -9,7 +9,9 @@ import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { WithTableStyles } from '@dxs-ts/xui-table';
 import { CockpitApi, useCockpitsBackend } from '@dxs-ts/cockpit-api';
-import { NewCockpitDialog } from '../NewCockpitDialog';
+import { CockpitCreateDialog } from '../cockpit-create';
+import { CockpitLink } from './CockpitLink';
+import { CockpitStatusIndicator } from '../cockpit-status-indicator';
 
 
 
@@ -20,31 +22,51 @@ export const CockpitTable: React.FC = () => {
   const backend = useCockpitsBackend();
   const [createCockpitOpen, setCreateCockpitOpen] = React.useState(false);
 
-  const { data, error, refetch, isPending } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: [COCKPIT_TABLE_QUERY_KEY],
     queryFn: () => backend.persistence.findAllCockpits(),
     initialData: [],
   });
 
+  const { data: activity } = useQuery({
+    queryKey: [COCKPIT_TABLE_QUERY_KEY, 'activity'],
+    queryFn: () => backend.persistence.findActivity(),
+  });
 
   const columns: ColumnDef<CockpitApi.CockpitSummary, any>[] = [
     {
-      header: intl.formatMessage({ id: 'cockpitTable.col.header.name' }),
+      header: intl.formatMessage({ id: 'cockpit.name' }),
       accessorKey: 'name',
       size: 200,
       minSize: 200,
       enableSorting: true,
       enableResizing: true,
       enableColumnFilter: true,
+      cell: ({ row }) => (
+        <CockpitLink name={row.original.name} id={row.original.id} />
+      ),
     },
     {
-      header: intl.formatMessage({ id: 'cockpitTable.col.header.description' }),
+      header: intl.formatMessage({ id: 'cockpit.description' }),
       accessorKey: 'description',
       size: 250,
       minSize: 250,
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
+    },
+    {
+      header: intl.formatMessage({ id: 'cockpitTable.col.header.status' }),
+      accessorKey: 'active',
+      size: 150,
+      minSize: 150,
+      enableSorting: false,
+      enableResizing: true,
+      enableColumnFilter: true,
+      cell: ({ row }) => {
+        const isActive = activity?.activeCockpitId === row.original.id;
+        return (<CockpitStatusIndicator isActive={isActive} />);
+      },
     }
   ]
 
@@ -70,7 +92,7 @@ export const CockpitTable: React.FC = () => {
             rowProps: { height: '50px' }
           }}
         />}
-      <NewCockpitDialog
+      <CockpitCreateDialog
         open={createCockpitOpen}
         setOpen={setCreateCockpitOpen}
         onSubmit={refetch}

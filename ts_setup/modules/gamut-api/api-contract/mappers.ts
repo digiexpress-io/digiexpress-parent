@@ -24,7 +24,6 @@ export function mapToContractData(data: LegacyProcessApi.Process[], site: SiteAp
     md5
       .appendStr(proc.id)
       .appendStr(proc.taskStatus ?? '')
-      .appendStr(proc.reviewUri ?? '')
       .appendStr(proc.taskCreated ?? '')
       .appendStr(proc.taskUpdated ?? '');
 
@@ -60,7 +59,6 @@ function mapToContract(data: LegacyProcessApi.Process, grouped: LegacyProcessApi
     referenceId: data.taskRef!,
     exchangeId: data.id,
     status: data.taskStatus! as any, 
-    reviewUri: data.reviewUri!,
     documents: docs,
     product: {} as any,
     offer: OfferApi.mapper(data, site),

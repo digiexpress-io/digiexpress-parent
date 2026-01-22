@@ -1,4 +1,4 @@
-package io.digiexpress.thena.cockpit.client.spi;
+package io.digiexpress.thena.cockpit.client.spi.queries;
 
 /*-
  * #%L

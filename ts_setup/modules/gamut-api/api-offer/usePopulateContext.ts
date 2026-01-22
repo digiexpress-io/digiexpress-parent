@@ -5,6 +5,7 @@ import { LegacyProcessApi } from '../api-legacy-processes';
 import { mapToOffer, mapToOfferData, toOtherTopicLinkLocales } from './mappers';
 import { SiteApi, useSite } from '../api-site';
 import { useAssertAuthentication, assertAuthenticatedResponse } from '../api-iam';
+import { CockpitStore } from '../api-cockpit-store';
 
 
 
@@ -31,12 +32,14 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
   const { getAllOffers, options } = props;
   const { staleTime, queryKey } = options;
+  const cockpit = CockpitStore.get();
+  const cockpitId = cockpit?.id;
 
   // tanstack query config
   const { data: processes, error, refetch, isPending } = useQuery({
     staleTime,
-    queryKey: [queryKey],
-    queryFn: () => getAllOffers()
+    queryKey: [queryKey, cockpitId],
+    queryFn: () => getAllOffers(cockpitId)
       .then(data => {
         assertAuthenticatedResponse(data);
         return data.json();
@@ -85,7 +88,10 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
 
   // Create new offer and reload after that
   const createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer> = React.useCallback(async (request) => {
-    const newOffer: OfferApi.Offer = await props.createOffer(request).then(resp => resp.json()).then(data => mapToOffer(data, site));
+    const cockpit = CockpitStore.get();
+    const cockpitId = cockpit?.id;
+
+    const newOffer: OfferApi.Offer = await props.createOffer(request, cockpitId).then(resp => resp.json()).then(data => mapToOffer(data, site));
     return refetch().then(() => newOffer);
   }, [refetch, props.createOffer, site]);
 

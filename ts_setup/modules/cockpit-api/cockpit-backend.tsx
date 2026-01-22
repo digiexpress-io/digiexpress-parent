@@ -1,14 +1,19 @@
 import React from 'react';
-import { CockpitApi } from '../cockpit-types';
+import { CockpitApi } from './cockpit-types';
 
 export interface CockpitsBackendContextType {
   navigate: {
     findAllCockpits: () => void;
     createOneCockpit: () => void;
+    getOneCockpit: (cockpitId: string) => void;
   };
   persistence: {
+    findActivity: () => Promise<CockpitApi.CockpitActivity>
     findAllCockpits: () => Promise<CockpitApi.CockpitSummary[]>;
     createOneCockpit: (request: CockpitApi.CreateCockpitCommand) => Promise<CockpitApi.CockpitContainer>;
+    getOneCockpit: (cockpitId: string) => Promise<CockpitApi.CockpitContainer>;
+    createOneCockpitTenant: (cockpitId: string, request: CockpitApi.CreateCockpitTenantCommand) => Promise<CockpitApi.CockpitContainer>;
+    changeActiveCockpit: (request: CockpitApi.CockpitActivityChangeActiveIdCommand) => Promise<CockpitApi.CockpitActivity>;
   }
 }
 

@@ -69,6 +69,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.hdes.client.spi.store.ThenaStore;
+import io.resys.thena.api.ThenaAware;
 import io.resys.thena.git.spi.GitDataSourceImpl;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
@@ -273,8 +274,11 @@ public class EveliAutoConfigAssets {
           }
         })
         .build();
-
-    return new EveliEditEnvir(stencilClient, wrenchClient, assetProps, tagomi);
+    
+    final var dev = new EveliEditEnvir(stencilClient, wrenchClient, assetProps, tagomi);
+    
+    context.getBean(ThenaAware.class).register(dev.getClass(), getOrCreateDb(dev));
+    return dev;
   }
   
   /**

@@ -55,6 +55,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private String formTagName;
   private String stencilTagName;
   private String wrenchTagName;
+  private String cockpitId;
   
   
   public ProcessInstance create() {
@@ -85,6 +86,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setFormName(formName)
       .setFlowName(flowName)
       .setTaskId(taskId)
+      .setCockpitId(cockpitId)
       
       .setFormTagName(formTagName)
       .setStencilTagName(stencilTagName)
@@ -102,6 +104,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .status(entity.getStatus())
       .questionnaireId(entity.getQuestionnaireId())
       .taskId(entity.getTaskId())
+      .cockpitId(entity.getCockpitId())
       .userId(entity.getUserId())
       .created(entity.getCreated())
       .updated(entity.getUpdated())

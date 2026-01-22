@@ -1,5 +1,7 @@
 package io.digiexpress.thena.cockpit.client.spi.modify;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-cockpit-client
@@ -49,6 +51,7 @@ public class MergeCockpitConfigBuilder implements MergeCockpitConfig {
   private final CockpitContainer currentState;
   private final CockpitCommitBuilder logger;
   private final ImmutableCockpitConfig.Builder nextConfig;
+  private final List<CockpitConfigTenant> nextTenants = new ArrayList<>();
   private final ImmutablePersistenceUnit.Builder next;
   
   private final Map<String, CockpitConfigTenant> existingTenants = new HashMap<>();
@@ -70,7 +73,9 @@ public class MergeCockpitConfigBuilder implements MergeCockpitConfig {
         .from(currentState.getConfig())
         .commitId(logger.getCommitId())
         .updatedTreeCommitId(logger.getCommitId());
-        
+    
+    this.nextTenants.addAll(currentState.getTenants());
+    
     this.next = ImmutablePersistenceUnit.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
@@ -118,6 +123,8 @@ public class MergeCockpitConfigBuilder implements MergeCockpitConfig {
   
   @Override
   public <T> MergeCockpitConfig setAllTenants(List<T> replacements, Function<T, Consumer<NewCockpitConfigTenant>> tenants) {
+    this.nextTenants.clear();
+    
     // Remove all existing tenants
     existingTenants.values().forEach(tenant -> {
       logger.rm(tenant);
@@ -149,10 +156,29 @@ public class MergeCockpitConfigBuilder implements MergeCockpitConfig {
   @Override
   public MergeCockpitConfig addTenant(Consumer<NewCockpitConfigTenant> tenant) {
     final var batch = next.build();
+
     final var builder = new NewCockpitConfigTenantBuilder(logger, currentState.getConfig().getId(), batch);
     tenant.accept(builder);
     final var built = builder.close();
-    next.addCockpitConfigTenantInserts(built);
+
+    final var alreadyDefinedForSameType = nextTenants.stream()
+      .filter(exists -> exists.getCockpitConfigTenantType().equals(built.getCockpitConfigTenantType()))
+      .findAny();
+    
+    // this is actually update
+    if(alreadyDefinedForSameType.isPresent()) {
+      this.modifyTenant(alreadyDefinedForSameType.get().getId(), (modify) -> modify
+          .externalBranch(built.getExternalBranch())
+          .externalId(built.getExternalId())
+          .tenantDescription(built.getCockpitConfigTenantDesc())
+          .tenantExtension(built.getCockpitConfigTenantExtension().orElse(null))
+          .build());
+      
+    } else {
+      logger.add(built);
+      next.addCockpitConfigTenantInserts(built);
+    }
+
     return this;
   }
   
@@ -181,9 +207,13 @@ public class MergeCockpitConfigBuilder implements MergeCockpitConfig {
     tenant.accept(builder);
     final var updated = builder.close();
     
+    nextTenants.remove(existing);
+    nextTenants.add(updated);
+    
     if(updated != null) {
       next.addCockpitConfigTenantUpdates(updated);
     }
+    
     
     return this;
   }
@@ -203,6 +233,7 @@ public class MergeCockpitConfigBuilder implements MergeCockpitConfig {
     final var existing = existingTenants.get(tenantId);
     RepoAssert.notNull(existing, () -> "Tenant with id '" + tenantId + "' not found!");
     
+    nextTenants.remove(existing);
     logger.rm(existing);
     next.addCockpitConfigTenantDeletes(existing);
     return this;
