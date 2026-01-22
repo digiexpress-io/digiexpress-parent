@@ -145,7 +145,9 @@ const ArticleItem: React.FC<{
         <TreeItem itemId={article.id + 'pages-nested'}
           labelText={<FormattedMessage id="pages" />}
           labelInfo={`${pages.length}`}
-          labelcolor={saved ? "page" : "secondary.light"}>
+          labelcolor={saved ? "page" : "secondary.light"}
+          interactive={pages.length > 0}
+        >
           {pages.map(pageView => (<ArticlePageItem key={pageView.page.id}
             article={view}
             page={pageView} />))}
@@ -156,7 +158,9 @@ const ArticleItem: React.FC<{
           options ? (<TreeItem itemId={article.id + 'workflows-nested'}
             labelText={<FormattedMessage id="services" />}
             labelInfo={`${workflows.length}`}
-            labelcolor={theme.palette.primary.dark}>
+            labelcolor={theme.palette.primary.dark}
+            interactive={workflows.length > 0}
+          >
 
             {workflows
               .map((w) => ({ w, name: session.getWorkflowName(w.workflow.id)?.name }))
@@ -178,7 +182,9 @@ const ArticleItem: React.FC<{
           options ? (<TreeItem itemId={article.id + 'links-nested'}
             labelText={<FormattedMessage id="links" />}
             labelInfo={`${links.length}`}
-            labelcolor={theme.palette.primary.light}>
+            labelcolor={theme.palette.primary.light}
+            interactive={links.length > 0}
+          >
 
             {links
               .map((w) => ({ w, name: session.getLinkName(w.link.id)?.name }))

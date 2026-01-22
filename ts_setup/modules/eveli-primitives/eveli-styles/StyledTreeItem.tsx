@@ -29,6 +29,7 @@ const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
 }));
 
 type StyledTreeItemProps = TreeItemProps & {
+  interactive?: boolean;
   color?: string;
   labelcolor?: string;
   textcolor?: string;
@@ -45,13 +46,21 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
     labelIcon: LabelIcon,
     labelInfo,
     labelText,
+    interactive = true,
     ...other
   } = props;
 
   const labelTypeToShow = typeof labelInfo === "string" ? <Badge color='primary' badgeContent={labelInfo} /> : <>{labelInfo}</>;
 
+  const blockInteractionCapture: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <StyledTreeItemRoot
+      onMouseDownCapture={!interactive ? blockInteractionCapture : undefined}
+      onClickCapture={!interactive ? blockInteractionCapture : undefined}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           {labelButton ? labelButton : (
