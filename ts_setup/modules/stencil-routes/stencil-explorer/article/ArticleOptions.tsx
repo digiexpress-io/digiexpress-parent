@@ -22,7 +22,17 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
   const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ArticleEdit' | 'NewPage' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ArticleDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
 
-  const { site } = Composer.useComposer();
+  const { site, session } = Composer.useComposer();
+  const view = session.getArticleView(article.id);
+
+  const pagesCount = view.pages.length;
+  const workflowsCount = view.workflows.length;
+  const linksCount = view.links.length;
+
+  // "Create link" is only useful if there is at least one OTHER article to link to.
+  // In this screen, the current article already exists, so we disable when <= 1 total articles.
+  const hasLinkTargets = session.articles.length > 1;
+
   const handleDialogClose = () => setDialogOpen(undefined);
   const { activeItem, onNav } = useStencilNav();
 
@@ -61,6 +71,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'pages.change'}
         color='page'
         icon={EditIcon}
+        disabled={pagesCount === 0}
         onClick={() => setDialogOpen('PageEdit')}
         labelText={<FormattedMessage id="pages.change" />}>
       </Burger.TreeItemOption>
@@ -73,6 +84,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'pages.delete'}
         color='page'
         icon={DeleteOutlineOutlinedIcon}
+        disabled={pagesCount === 0}
         onClick={() => setDialogOpen('PageDelete')}
         labelText={<FormattedMessage id="pages.delete" />}>
       </Burger.TreeItemOption>
@@ -86,6 +98,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.workflows'}
         color={theme.palette.primary.dark}
         icon={EditIcon}
+        disabled={workflowsCount === 0}
         onClick={() => onNav({ article: article.id, type: "ARTICLE_WORKFLOWS" })}
         labelText={<FormattedMessage id="services.change" />}>
       </Burger.TreeItemOption>
@@ -93,6 +106,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'resource.create.links'}
         color={theme.palette.primary.light}
         icon={AddCircleOutlineIcon}
+        disabled={!hasLinkTargets}
         onClick={() => setDialogOpen('LinkComposer')}
         labelText={<FormattedMessage id="link.create" />}>
       </Burger.TreeItemOption>
@@ -100,6 +114,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.links'}
         color={theme.palette.primary.light}
         icon={EditIcon}
+        disabled={linksCount === 0}
         onClick={() => onNav({ article: article.id, type: "ARTICLE_LINKS" })}
         labelText={<FormattedMessage id="links.change" />}>
       </Burger.TreeItemOption>
