@@ -18,6 +18,14 @@ const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
     }
   },
 
+  [`& .${treeItemClasses.content}.${treeItemClasses.disabled}`]: {
+    cursor: "not-allowed",
+    color: theme.palette.action.disabled,
+  },
+
+  [`& .${treeItemClasses.label}.${treeItemClasses.disabled}`]: {
+    color: theme.palette.action.disabled,
+  },
 }));
 
 type StyledTreeItemProps = TreeItemProps & {
@@ -69,26 +77,38 @@ const StyledTreeItemOption: React.FC<{
   nodeId: string;
   color: string;
   icon?: React.ElementType<SvgIconProps>;
-  onClick: () => void
+  onClick: () => void;
+  disabled?: boolean;
 }> = (props) => {
+  const disabled = !!props.disabled;
 
-  return (<>
-    <StyledTreeItemRoot
-      onClick={props.onClick}
-      itemId={props.nodeId}
-
-      label={
-        <Box sx={{ display: "flex", alignItems: "center", p: 0.2, pr: 0 }} >
-          <Typography variant="body2" sx={{ fontWeight: "inherit", flexGrow: 1 }}>
-            {props.labelText}
-          </Typography>
-        </Box>
-      }
-    />
-    <Divider />
-  </>
+  return (
+    <>
+      <StyledTreeItemRoot
+        itemId={props.nodeId}
+        disabled={disabled}
+        onClick={disabled ? undefined : props.onClick}
+        label={
+          <Box sx={{ display: "flex", alignItems: "center", p: 0.2, pr: 0 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "inherit",
+                flexGrow: 1,
+                cursor: disabled ? "not-allowed" : "pointer",
+                color: disabled ? "action.disabled" : "inherit",
+              }}
+            >
+              {props.labelText}
+            </Typography>
+          </Box>
+        }
+      />
+      <Divider />
+    </>
   );
-}
+};
+
 
 
 export type { StyledTreeItemProps };
