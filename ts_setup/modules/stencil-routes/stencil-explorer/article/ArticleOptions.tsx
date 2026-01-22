@@ -28,9 +28,6 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
   const pagesCount = view.pages.length;
   const workflowsCount = view.workflows.length;
   const linksCount = view.links.length;
-
-  // "Create link" is only useful if there is at least one OTHER article to link to.
-  // In this screen, the current article already exists, so we disable when <= 1 total articles.
   const hasLinkTargets = session.articles.length > 1;
 
   const handleDialogClose = () => setDialogOpen(undefined);
