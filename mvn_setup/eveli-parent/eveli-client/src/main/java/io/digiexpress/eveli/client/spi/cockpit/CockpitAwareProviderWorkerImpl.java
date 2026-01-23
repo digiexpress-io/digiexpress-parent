@@ -107,8 +107,8 @@ public class CockpitAwareProviderWorkerImpl implements CockpitAwareProvider {
           return Uni.createFrom().item(Optional.<CockpitContainer>empty());
         }
         
-        return cockpitClient.get().queries().cockpitQuery().getOne(cockpitId.get())
-            .onItem().transform(env -> Optional.ofNullable(env))
+        return cockpitClient.get().queries().cockpitQuery().addCockpitId(cockpitId.get())
+            .findOne()
             .onItem().invoke(env -> cockpitCache.save(userSub, env));
       });
   }
@@ -123,9 +123,25 @@ public class CockpitAwareProviderWorkerImpl implements CockpitAwareProvider {
 
   
   @Override
-  public Uni<Optional<CockpitContainer>> set(String cockpitId) {
+  public Uni<Optional<CockpitContainer>> set(Optional<String> cockpitId) {
+    if(cockpitId.isEmpty()) {
+      return getUser()
+          .onItem().transformToUni(user -> {
+            
+            if(user.isAuthenticated()) {
+              final var principal = user.getPrincipal();
+              final var sub = principal.getSub();
+              return userProfileClient.uiSettingsQuery().deleteOne(sub, ACTIVE_COCKPIT);
+            }
+            
+            return Uni.createFrom().item(Optional.empty());
+          })
+          .onItem().transform(junk -> Optional.<CockpitContainer>empty())
+          .onItem().invoke(junk -> cockpitCache.invalidateAll())
+          .onItem().invoke(junk -> publisher.publishEvent(ImmutableEveliEnvirInvalidateCache.builder().build()));
+    }
     
-    return Uni.combine().all().unis(getCockpit(cockpitId), getUser())
+    return Uni.combine().all().unis(getCockpit(cockpitId.get()), getUser())
         .asTuple()
         .onItem().transformToUni(tuple -> {
           final var env = tuple.getItem1();
@@ -135,7 +151,7 @@ public class CockpitAwareProviderWorkerImpl implements CockpitAwareProvider {
               .settingsId(ACTIVE_COCKPIT)
               .userId(userId)
               .addConfig(ImmutableUiSettingForConfig.builder()
-                  .dataId(cockpitId)
+                  .dataId(cockpitId.get())
                   .value("")
                   .build())
               .build();

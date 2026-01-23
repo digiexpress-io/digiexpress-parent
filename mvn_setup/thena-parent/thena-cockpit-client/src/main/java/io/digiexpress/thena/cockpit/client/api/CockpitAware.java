@@ -52,7 +52,7 @@ public interface CockpitAware<T extends CockpitAware<T>> {
   interface CockpitAwareProvider {
     Uni<Optional<CockpitContainer>> get(Optional<String> cockpitId);
     Uni<Optional<CockpitContainer>> get();
-    Uni<Optional<CockpitContainer>> set(String cockpitId);
+    Uni<Optional<CockpitContainer>> set(Optional<String> cockpitId);
   }
   
   interface CockpitContainerCache {

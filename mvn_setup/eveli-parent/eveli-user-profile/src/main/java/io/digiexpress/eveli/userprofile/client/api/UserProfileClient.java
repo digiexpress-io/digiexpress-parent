@@ -75,6 +75,7 @@ public interface UserProfileClient {
     Uni<List<UiSettings>> findAll(String profileId);
     Uni<Optional<UiSettings>> findOne(String profileId, String settingsId);
     Uni<UiSettings> get(String profileId, String settingsId);
+    Uni<Optional<UiSettings>> deleteOne(String profileId, String settingsId);
   }
   
   public interface RepositoryQuery {

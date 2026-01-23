@@ -28,6 +28,7 @@ import io.digiexpress.eveli.userprofile.client.api.UserProfileClient.UiSettingsQ
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.digiexpress.eveli.userprofile.client.spi.support.DataConstants;
+import io.digiexpress.eveli.userprofile.client.spi.visitors.DeleteUiSettingsVisitor;
 import io.digiexpress.eveli.userprofile.client.spi.visitors.FindAllUserUiSettingsVisitor;
 import io.digiexpress.eveli.userprofile.client.spi.visitors.GetUserUiSettingsVisitor;
 import io.resys.thena.api.entities.doc.Doc;
@@ -52,6 +53,10 @@ public class UiSettingsQueryImpl implements UiSettingsQuery {
   @Override
   public Uni<UiSettings> get(String profileId, String settingsId) {
     return ctx.getConfig().accept(new GetUserUiSettingsVisitor(profileId, settingsId));
+  }
+  @Override
+  public Uni<Optional<UiSettings>> deleteOne(String profileId, String settingsId) {
+    return ctx.getConfig().accept(new DeleteUiSettingsVisitor(profileId, settingsId, ctx));
   }
 
   @Override
@@ -86,5 +91,6 @@ public class UiSettingsQueryImpl implements UiSettingsQuery {
 
       });
   }
+
 
 }
