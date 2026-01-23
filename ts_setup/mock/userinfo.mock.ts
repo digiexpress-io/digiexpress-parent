@@ -25,7 +25,8 @@ export default defineMock({
       'USER_PROFILE_EDIT',
       'HEALTH_VIEW',
       'TAGOMI_EDIT',
-      'CONTRACT_EDIT'
+      'CONTRACT_EDIT',
+      'COCKPITS_EDIT'
     ]
   }
 })

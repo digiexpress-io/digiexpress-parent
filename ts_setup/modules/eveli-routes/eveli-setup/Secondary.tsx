@@ -188,18 +188,6 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliTenantFeatureEnabled>
 
-      <EveliTenantFeatureEnabled id='COCKPITS'>
-        <Button startIcon={<SettingsApplicationsOutlinedIcon />}
-          variant={location.pathname.endsWith('cockpits') ? 'explorerActive' : 'explorerInactive'}
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/cockpits'
-          })}
-        >
-          {intl.formatMessage({ id: 'menu.cockpits', defaultMessage: 'Cockpits' })}
-        </Button>
-      </EveliTenantFeatureEnabled>
-
       <EveliPermissions id='NAV_TO_HEALTH'>
         <Button startIcon={<HealthAndSafetyOutlinedIcon />}
           variant={location.pathname.endsWith('task-activity') ? 'explorerActive' : 'explorerInactive'}

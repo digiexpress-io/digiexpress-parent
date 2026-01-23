@@ -41,6 +41,7 @@ const EveliPermissionMapping = {
 
   'NAV_TO_TAGOMI': oneOf(['TAGOMI_EDIT']),
   'NAV_TO_CONTRACTS': oneOf(['CONTRACT_EDIT']),
+  'NAV_TO_COCKPITS': oneOf(['COCKPITS_EDIT']),
 
   'CREATE_TASK': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT']),
   'CREATE_STENCIL_ASSET': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),

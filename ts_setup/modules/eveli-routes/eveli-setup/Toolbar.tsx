@@ -6,6 +6,7 @@ import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import { BuildOutlined as BuildOutlinedIcon } from '@mui/icons-material';
 import { EditNoteOutlined as EditNoteOutlinedIcon } from '@mui/icons-material';
 import { BeenhereOutlined as BeenhereOutlinedIcon } from '@mui/icons-material';
+import { SettingsApplicationsOutlined as SettingsApplicationsOutlinedIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -116,6 +117,24 @@ export const Toolbar: React.FC<{}> = ({ }) => {
               <EditNoteOutlinedIcon />
             </IconButton>
             <Typography><FormattedMessage id='toolbar.tagomi' /></Typography>
+          </div>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
+
+
+      <EveliTenantFeatureEnabled id='COCKPITS_ENABLED'>
+        <EveliPermissions id='NAV_TO_COCKPITS'>
+          <div>
+            <IconButton
+              {...(location.pathname.includes('cockpits') ? { disabled: true, className: classes.itemActive } : {})}
+              onClick={() => navigate({
+                from: '/secured/$locale',
+                to: '/secured/$locale/worker/cockpits',
+                search: { explorer: [] }
+              })}>
+              <SettingsApplicationsOutlinedIcon />
+            </IconButton>
+            <Typography><FormattedMessage id='toolbar.cockpits' /></Typography>
           </div>
         </EveliPermissions>
       </EveliTenantFeatureEnabled>

@@ -19,6 +19,7 @@ export const EveliFeatureMapping = {
   'WRENCH_ENABLED': notOneOf(['wrench-disabled']),
   'TAGOMI_ENABLED': oneOf(['tagomi']),     
   'CONTRACT_ENABLED': oneOf(['contract']),
+  'COCKPITS_ENABLED': oneOf(['cockpits']),
 
   'PUBLICATION_UPDATE': notOneOf(['external-deployment']),                    
 
@@ -46,7 +47,6 @@ export const EveliFeatureMapping = {
   'BATCHES': oneOf(['batches']),
   'AI_ASSISTANT': oneOf(['ai-assistant']),
 
-  'COCKPITS': oneOf(['cockpits']),
 }
 
 

@@ -19,7 +19,8 @@ export declare namespace IamApi {
     'TASK_REOPEN' | 'USER_PROFILE_EDIT' | 'HEALTH_VIEW' | 
     'TAGOMI_EDIT' |
     'CONTRACT_EDIT' |
-    'TASK_RETRANSFER'
+    'TASK_RETRANSFER' |
+    'COCKPITS_EDIT'
 
   export interface User {
     userId: string;
