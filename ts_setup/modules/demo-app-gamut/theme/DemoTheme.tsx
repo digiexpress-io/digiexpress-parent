@@ -7,6 +7,7 @@ import { components_g } from './components-g';
 
 
 import { GThemeOptions, GThemeOptionsAlt1, GThemeProvider } from '@dxs-ts/gamut';
+import { components_g_alt_1 } from './components-g-alt-1';
 
 
 export const themeOptions: ThemeOptions = {
@@ -23,7 +24,7 @@ export const themeOptionsAlt1: ThemeOptions = {
   typography: GThemeOptionsAlt1.typography,
   components: {
     ...GThemeOptionsAlt1.components,
-    ...components_g,
+    ...components_g_alt_1,
   }
 }
 
