@@ -95,7 +95,9 @@ const ServiceItem: React.FC<{ serviceId: TagomiApi.ServiceId, nodeId?: string }>
         <TreeItem itemId={service.id + 'pages-nested'}
           labelText={<FormattedMessage id="templates" />}
           labelInfo={`${templates.length}`}
-          labelcolor={saved ? "page" : "secondary.light"}>
+          labelcolor={saved ? "page" : "secondary.light"}
+          interactive={templates.length > 0}
+        >
           {templates.map(template => (<TemplateEditMenuItem key={template.template.id} service={view} template={template} />))}
         </TreeItem>
  
