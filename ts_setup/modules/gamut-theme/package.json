@@ -5,8 +5,10 @@
   "main": "./index.ts", 
   "type": "module",
   "dependencies": {
+    "@dxs-ts/gamut-cockpit-store": "*"
   },
   "peerDependencies": {
+    "react": "*",
     "@mui/material": "*",
     "@mui/system": "*"
   },

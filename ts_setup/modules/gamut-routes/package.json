@@ -5,8 +5,10 @@
   "main": "./index.ts", 
   "type": "module",
   "dependencies": {
+    "@dxs-ts/gamut-cockpit-store": "*",
     "@dxs-ts/gamut-api": "*",
     "@dxs-ts/gamut-shell": "*",
+    "@dxs-ts/gamut-theme": "*",
     "@dxs-ts/gamut-md": "*",
     "@dxs-ts/gamut-primitives": "*",
     "@dxs-ts/gamut-form-review": "*",

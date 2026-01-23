@@ -332,6 +332,7 @@
         "type": "module",
         "private": false,
         "dependencies": {
+          "@dxs-ts/gamut-cockpit-store": "*",
           "@dxs-ts/gamut-api": "*",
           "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/gamut-form": "*",
@@ -383,6 +384,7 @@
         ]
       },
       "dependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -449,6 +451,7 @@
         "@mui/utils"
       ],
       "internalDependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -507,6 +510,7 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -555,6 +559,7 @@
         "dependencies": {
           "@dxs-ts/envir-util": "*",
           "@dxs-ts/gamut": "*",
+          "@dxs-ts/gamut-cockpit-store": "*",
           "@dxs-ts/gamut-api": "*",
           "@dxs-ts/gamut-md": "*",
           "@dxs-ts/gamut-primitives": "*",
@@ -584,6 +589,7 @@
       "dependencies": [
         "@dxs-ts/envir-util",
         "@dxs-ts/gamut",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -626,6 +632,7 @@
       "internalDependencies": [
         "@dxs-ts/envir-util",
         "@dxs-ts/gamut",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -662,6 +669,7 @@
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -1339,7 +1347,8 @@
         "type": "module",
         "note": "No internal dependencies - this is the foundation layer",
         "dependencies": {
-          "@dxs-ts/gamut-intl": "*"
+          "@dxs-ts/gamut-intl": "*",
+          "@dxs-ts/gamut-cockpit-store": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -1361,6 +1370,7 @@
       },
       "dependencies": [
         "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-cockpit-store",
         "react",
         "react-intl",
         "@mui/material",
@@ -1391,7 +1401,8 @@
         "ts-md5"
       ],
       "internalDependencies": [
-        "@dxs-ts/gamut-intl"
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-cockpit-store"
       ],
       "actualDependencies": [
         "react",
@@ -1401,6 +1412,7 @@
         "react-intl",
         "@dxs-ts/gamut-intl",
         "leaflet-geosearch",
+        "@dxs-ts/gamut-cockpit-store",
         "@mui/material"
       ],
       "actualExternalDependencies": [
@@ -1413,12 +1425,43 @@
         "@mui/material"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/gamut-intl"
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-cockpit-store"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
         "@tanstack/react-router"
       ]
+    },
+    "@dxs-ts/gamut-cockpit-store": {
+      "name": "@dxs-ts/gamut-cockpit-store",
+      "path": "modules/gamut-cockpit-store",
+      "packageJson": {
+        "name": "@dxs-ts/gamut-cockpit-store",
+        "version": "${project.version}",
+        "description": "Gamut COCKPIT STORE layer",
+        "main": "./index.ts",
+        "type": "module",
+        "note": "No internal dependencies - this is the foundation layer",
+        "dependencies": {},
+        "peerDependencies": {},
+        "keywords": [
+          "gamut",
+          "api",
+          "data",
+          "business-logic"
+        ],
+        "private": true
+      },
+      "dependencies": [],
+      "peerDependencies": [],
+      "externalDependencies": [],
+      "internalDependencies": [],
+      "actualDependencies": [],
+      "actualExternalDependencies": [],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": []
     },
     "@dxs-ts/gamut-form": {
       "name": "@dxs-ts/gamut-form",
@@ -1890,8 +1933,10 @@
         "main": "./index.ts",
         "type": "module",
         "dependencies": {
+          "@dxs-ts/gamut-cockpit-store": "*",
           "@dxs-ts/gamut-api": "*",
           "@dxs-ts/gamut-shell": "*",
+          "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/gamut-md": "*",
           "@dxs-ts/gamut-primitives": "*",
           "@dxs-ts/gamut-form-review": "*",
@@ -1916,8 +1961,10 @@
         "private": true
       },
       "dependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
         "@dxs-ts/gamut-form-review",
@@ -1952,8 +1999,10 @@
         "react-intl"
       ],
       "internalDependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
         "@dxs-ts/gamut-form-review",
@@ -1971,7 +2020,9 @@
         "@mui/utils",
         "@mui/icons-material",
         "react-intl",
-        "@dxs-ts/gamut-api"
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-cockpit-store"
       ],
       "actualExternalDependencies": [
         "@mui/material",
@@ -1987,7 +2038,9 @@
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-form",
         "@dxs-ts/gamut-form-review",
-        "@dxs-ts/gamut-api"
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/gamut-cockpit-store"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -2065,8 +2118,11 @@
         "description": "Gamut theme - mui theme override + few others",
         "main": "./index.ts",
         "type": "module",
-        "dependencies": {},
+        "dependencies": {
+          "@dxs-ts/gamut-cockpit-store": "*"
+        },
         "peerDependencies": {
+          "react": "*",
           "@mui/material": "*",
           "@mui/system": "*"
         },
@@ -2077,27 +2133,38 @@
         "private": true
       },
       "dependencies": [
+        "@dxs-ts/gamut-cockpit-store",
+        "react",
         "@mui/material",
         "@mui/system"
       ],
       "peerDependencies": [
+        "react",
         "@mui/material",
         "@mui/system"
       ],
       "externalDependencies": [
+        "react",
         "@mui/material",
         "@mui/system"
       ],
-      "internalDependencies": [],
+      "internalDependencies": [
+        "@dxs-ts/gamut-cockpit-store"
+      ],
       "actualDependencies": [
         "@mui/material",
-        "@mui/system"
+        "@mui/system",
+        "react",
+        "@dxs-ts/gamut-cockpit-store"
       ],
       "actualExternalDependencies": [
         "@mui/material",
-        "@mui/system"
+        "@mui/system",
+        "react"
       ],
-      "actualInternalDependencies": [],
+      "actualInternalDependencies": [
+        "@dxs-ts/gamut-cockpit-store"
+      ],
       "missingDependencies": [],
       "unusedDependencies": []
     },
@@ -2287,6 +2354,7 @@
           "provenance": true
         },
         "dependencies": {
+          "@dxs-ts/gamut-cockpit-store": "*",
           "@dxs-ts/gamut-api": "*",
           "@dxs-ts/gamut-theme": "*",
           "@dxs-ts/gamut-form": "*",
@@ -2329,6 +2397,7 @@
         ]
       },
       "dependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -2365,6 +2434,7 @@
       "peerDependencies": [],
       "externalDependencies": [],
       "internalDependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -2439,6 +2509,7 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/user-profile",
         "@dxs-ts/tagomi-api",
         "@dxs-ts/tagomi-routes",
@@ -2469,6 +2540,7 @@
         },
         "dependencies": {
           "@dxs-ts/envir-util": "*",
+          "@dxs-ts/gamut-cockpit-store": "*",
           "@dxs-ts/gamut-api": "*",
           "@dxs-ts/gamut-md": "*",
           "@dxs-ts/gamut-primitives": "*",
@@ -2490,6 +2562,7 @@
       },
       "dependencies": [
         "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -2505,6 +2578,7 @@
       "externalDependencies": [],
       "internalDependencies": [
         "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -2543,6 +2617,7 @@
       ],
       "missingDependencies": [],
       "unusedDependencies": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/xui-datetime"
       ]
     },
@@ -3712,6 +3787,7 @@
         "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/eveli-demo-app": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -3749,6 +3825,7 @@
       "@dxs-ts/gamut-demo-app": [
         "@dxs-ts/envir-util",
         "@dxs-ts/gamut",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -3817,8 +3894,10 @@
         "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/gamut-api": [
-        "@dxs-ts/gamut-intl"
+        "@dxs-ts/gamut-intl",
+        "@dxs-ts/gamut-cockpit-store"
       ],
+      "@dxs-ts/gamut-cockpit-store": [],
       "@dxs-ts/gamut-form": [
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
@@ -3839,8 +3918,10 @@
         "@dxs-ts/gamut-form-review"
       ],
       "@dxs-ts/gamut-routes": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-shell",
+        "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
         "@dxs-ts/gamut-form-review",
@@ -3849,7 +3930,9 @@
       "@dxs-ts/gamut-shell": [
         "@dxs-ts/gamut-api"
       ],
-      "@dxs-ts/gamut-theme": [],
+      "@dxs-ts/gamut-theme": [
+        "@dxs-ts/gamut-cockpit-store"
+      ],
       "@dxs-ts/ledger-api": [],
       "@dxs-ts/ledger-composer": [
         "@dxs-ts/ledger-api",
@@ -3857,6 +3940,7 @@
         "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/eveli-ide": [
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -3892,6 +3976,7 @@
       ],
       "@dxs-ts/gamut": [
         "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -4034,6 +4119,15 @@
         "@dxs-ts/eveli-ide",
         "@dxs-ts/gamut"
       ],
+      "@dxs-ts/gamut-cockpit-store": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/gamut-demo-app",
+        "@dxs-ts/gamut-api",
+        "@dxs-ts/gamut-routes",
+        "@dxs-ts/gamut-theme",
+        "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut"
+      ],
       "@dxs-ts/gamut-form": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
@@ -4091,6 +4185,7 @@
         "@dxs-ts/gamut-demo-app",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-routes",
+        "@dxs-ts/gamut-routes",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/gamut"
       ],
@@ -4226,6 +4321,7 @@
       "entryModule": "@dxs-ts/eveli-ide",
       "includedModules": [
         "@dxs-ts/eveli-ide",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-theme",
         "@dxs-ts/gamut-form",
@@ -4301,6 +4397,7 @@
       "includedModules": [
         "@dxs-ts/gamut",
         "@dxs-ts/envir-util",
+        "@dxs-ts/gamut-cockpit-store",
         "@dxs-ts/gamut-api",
         "@dxs-ts/gamut-md",
         "@dxs-ts/gamut-primitives",
@@ -4336,6 +4433,6 @@
       ]
     }
   },
-  "checksum": "b83f44f5bf2568d3d0ee66e2c8398ebbfa8567ec521c83067350119214e041f6",
-  "generatedAt": "2026-01-21T10:47:20.790Z"
+  "checksum": "658af82755500afa111c3a1fff183d5c55cf1b34e073159f48dbed61e46a99fe",
+  "generatedAt": "2026-01-23T09:57:54.625Z"
 }

@@ -5,6 +5,9 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
+      "@dxs-ts/gamut-cockpit-store": [
+        "../gamut-cockpit-store/index.ts"
+      ],
       "@dxs-ts/gamut-api": [
         "../gamut-api/index.ts"
       ],
@@ -106,6 +109,9 @@
   "extends": "../../tsconfig.json",
   "references": [
     {
+      "path": "../gamut-cockpit-store"
+    },
+    {
       "path": "../gamut-api"
     },
     {
@@ -204,9 +210,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-12-30T10:30:27.408Z",
+    "at": "2026-01-23T09:36:18.037Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "ac526f9d3f78",
+    "fromRegistry": "11ffe20f86e2",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

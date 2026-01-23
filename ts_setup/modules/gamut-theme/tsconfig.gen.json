@@ -4,16 +4,27 @@
     "paths": {
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/gamut-cockpit-store": [
+        "../gamut-cockpit-store/index.ts"
       ]
     }
   },
   "extends": "../../tsconfig.json",
-  "references": [],
+  "references": [
+    {
+      "path": "../gamut-cockpit-store"
+    }
+  ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
+    "at": "2026-01-23T09:34:53.907Z",
     "forModule": "@dxs-ts/gamut-theme",
-    "fromRegistry": "59014ff3ca3d",
-    "alias": {}
+    "fromRegistry": "8867ca640517",
+    "alias": {
+      "@dxs-ts/gamut-theme": [
+        "../gamut-cockpit-store"
+      ]
+    }
   }
 }

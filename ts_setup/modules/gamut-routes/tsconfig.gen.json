@@ -5,11 +5,17 @@
       "@emotion/styled": [
         "../../node_modules/@emotion/styled"
       ],
+      "@dxs-ts/gamut-cockpit-store": [
+        "../gamut-cockpit-store/index.ts"
+      ],
       "@dxs-ts/gamut-api": [
         "../gamut-api/index.ts"
       ],
       "@dxs-ts/gamut-shell": [
         "../gamut-shell/index.ts"
+      ],
+      "@dxs-ts/gamut-theme": [
+        "../gamut-theme/index.ts"
       ],
       "@dxs-ts/gamut-md": [
         "../gamut-md/index.ts"
@@ -28,10 +34,16 @@
   "extends": "../../tsconfig.json",
   "references": [
     {
+      "path": "../gamut-cockpit-store"
+    },
+    {
       "path": "../gamut-api"
     },
     {
       "path": "../gamut-shell"
+    },
+    {
+      "path": "../gamut-theme"
     },
     {
       "path": "../gamut-md"
@@ -48,9 +60,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-25T08:29:08.096Z",
+    "at": "2026-01-23T09:33:43.439Z",
     "forModule": "@dxs-ts/gamut-routes",
-    "fromRegistry": "308e7ad54407",
+    "fromRegistry": "c16e7349f2ad",
     "alias": {
       "@dxs-ts/gamut-routes": [
         "../gamut-form"

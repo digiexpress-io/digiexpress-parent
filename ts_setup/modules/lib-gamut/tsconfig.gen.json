@@ -8,6 +8,9 @@
       "@dxs-ts/envir-util": [
         "../envir-util/index.ts"
       ],
+      "@dxs-ts/gamut-cockpit-store": [
+        "../gamut-cockpit-store/index.ts"
+      ],
       "@dxs-ts/gamut-api": [
         "../gamut-api/index.ts"
       ],
@@ -46,6 +49,9 @@
       "path": "../envir-util"
     },
     {
+      "path": "../gamut-cockpit-store"
+    },
+    {
       "path": "../gamut-api"
     },
     {
@@ -78,9 +84,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-09-25T12:40:57.061Z",
+    "at": "2026-01-23T09:36:18.037Z",
     "forModule": "@dxs-ts/gamut",
-    "fromRegistry": "5dbc9bc879a7",
+    "fromRegistry": "11ffe20f86e2",
     "alias": {
       "@dxs-ts/gamut": [
         "../xui-datetime"
