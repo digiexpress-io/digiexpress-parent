@@ -32,7 +32,7 @@ export const DemoTheme: React.FC<{ children: React.ReactNode }> = ({ children })
 
   return (
     <StyledEngineProvider injectFirst>
-      <GThemeProvider themeOptions={themeOptions} secondaryThemeOptions={{ 'test 1': themeOptionsAlt1 }}>
+      <GThemeProvider themeOptions={themeOptionsAlt1} secondaryThemeOptions={{ 'cockpit 1': themeOptionsAlt1 }}>
         {children}
       </GThemeProvider>
     </StyledEngineProvider>);

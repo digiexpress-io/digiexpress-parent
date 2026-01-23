@@ -1,8 +1,8 @@
 import { Theme, Components } from '@mui/material';
-import user_logo_light from './digi_express_logo.png';
-import city1 from './city1.jpg';
 import { DemoFooter } from './DemoFooter';
-
+import logo from './NordInvest-no-background.png';
+import happyCouple from './couple-on-beach-2-cropped.jpg';
+import happyCoupleSmall from './couple-on-beach-2-cropped-small.jpg';
 
 export const components_g_alt_1: Components<Omit<Theme, 'components'>> = {
 
@@ -12,15 +12,15 @@ export const components_g_alt_1: Components<Omit<Theme, 'components'>> = {
     },
     variants: [
       {
-        props: { variant: 'black_lg', img: user_logo_light },
-        style: { width: '200px', height: 'auto' }
+        props: { variant: 'black_lg', img: logo },
+        style: { width: '250px', height: 'auto' }
       },
       {
-        props: { variant: 'black_sm', img: user_logo_light },
+        props: { variant: 'black_sm', img: logo },
         style: { width: '150px', height: 'auto' }
       },
       {
-        props: { variant: 'black_sm_mob', img: user_logo_light },
+        props: { variant: 'black_sm_mob', img: logo },
         style: { width: '120px', height: 'auto' }
       }
     ]
@@ -28,7 +28,34 @@ export const components_g_alt_1: Components<Omit<Theme, 'components'>> = {
 
   GRouterUnsecured: {
     defaultProps: {
-      backgroundImage: city1
+      backgroundImage: happyCouple,
+      responsiveImages: {
+        xs: {
+          image: happyCoupleSmall,
+          width: '100%',
+          height: 250
+        },
+        sm: {
+          image: happyCoupleSmall,
+          width: '100%',
+          height: 450
+        },
+        md: {
+          image: happyCouple,
+          width: '100%',
+          height: 350
+        },
+        lg: {
+          image: happyCouple,
+          width: '100%',
+          height: 500
+        },
+        xl: {
+          image: happyCouple,
+          width: '100%',
+          height: 500
+        },
+      }
     }
   },
 

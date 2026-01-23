@@ -1,48 +1,44 @@
 import { PaletteOptions } from "@mui/material";
 
 export const palette: PaletteOptions = {
+
+
   primary: {
-    main: '#881b1bff',         // blue
-    dark: '#de1616ff',
-    contrastText: '#de1616ff',
-  },
-  secondary: {
-    main: 'rgb(240, 169, 169)', // button border or divider colour
-    light: 'rgb(0, 126, 143)', // breadcrumbs colour
-    dark: 'rgb(3, 50, 47)', // breadcrumbs hover colour
-  },
-  background: {
-    paper: '#f5f5f5',       // light gray for some boxes
-    default: '#ffffff',
-  },
-  text: {
-    primary: '#de1616ff',
-    secondary: '#de1616ff',
-    disabled: '#de1616ff'
-  },
-  action: {
-    disabled: '#de1616ff',
-    active: '#de1616ff' // Mui input adornments inherit this colour -- needed for dialob fill
-  },
-  divider: "#dee2e6",
-  success: {
-    main: '#2e7D32',
-    contrastText: '#FFFFFF'
-  },
-  info: {
-    main: '#0000CC',
-    light: '#3333FF',
-    dark: '#000099',
-    contrastText: '#FFFFFF'
-  },
-  warning: {
-    main: '#FFB020',
-    light: '#FFBF4C',
-    contrastText: '#000000'
-  },
-  error: {
-    main: '#D32F2F',
-    contrastText: '#FFFFFF'
+    main: '#1E3A5F',      // Deep executive navy
+    light: '#4F6D8C',
+    dark: '#14283F',
+    contrastText: '#FFFFFF',
   },
 
+  secondary: {
+    main: '#7A8793',      // Cool steel gray-blue
+    light: '#A7B2BC',
+    dark: '#505A63',
+    contrastText: '#FFFFFF',
+  },
+
+  background: {
+    default: '#F3F5F7',   // Neutral, less blue-tinted
+    paper: '#FFFFFF',
+  },
+
+  text: {
+    primary: '#1A1F24',   // Near-black, strong readability
+    secondary: '#5B6770',
+  },
+
+  divider: '#D6DCE1',
+
+  success: {
+    main: '#2E7D5B',      // Muted corporate green
+  },
+  warning: {
+    main: '#C47A2C',      // Burnt amber (less playful than orange)
+  },
+  error: {
+    main: '#B23A3A',      // Deep red, serious not bright
+  },
+  info: {
+    main: '#2C5282',      // Strong blue, not teal
+  },
 }

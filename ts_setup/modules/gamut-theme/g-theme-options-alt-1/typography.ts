@@ -15,50 +15,50 @@ export const breakpoints = createTheme({ breakpoints: breakpointDefs }).breakpoi
 
 export const typography: TypographyOptions | ((palette: Palette) => TypographyOptions) = {
 
-  fontFamily: '"Outfit", sans-serif',
+  fontFamily: '"DM Serif Text", serif',
 
   h1: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontSize: '2.5rem',
-    fontWeight: 400,
+    fontWeight: 900,
     lineHeight: 1.375,
     [breakpoints.down('sm')]: {
       fontSize: '16pt',
-      fontWeight: 400,
+      fontWeight: 900,
       lineHeight: 1.375,
       letterSpacing: 0.5,
       marginBottom: 2
     },
   },
   h2: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontSize: '1.9rem',
-    fontWeight: 400,
+    fontWeight: 700,
     lineHeight: 1.375,
     [breakpoints.down('sm')]: {
       fontSize: '14pt',
-      fontWeight: 400,
+      fontWeight: 700,
       lineHeight: 1.375,
       letterSpacing: 0.5,
       marginBottom: 2
     },
   },
   h3: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontSize: '1.5rem',
     fontWeight: 500,
     lineHeight: 1.375,
     [breakpoints.down('sm')]: {
       fontSize: '12pt',
-      fontWeight: 400,
+      fontWeight: 500,
       lineHeight: 1.375,
       marginBottom: 2
     },
   },
   h4: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontSize: '1.125rem',
-    fontWeight: 700,
+    fontWeight: 400,
     lineHeight: 1.375,
     [breakpoints.down('sm')]: {
       fontSize: '12pt',
@@ -67,23 +67,23 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     },
   },
   h5: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontSize: '12pt',
-    fontWeight: 600,
+    fontWeight: 400,
     lineHeight: 1.375,
     [breakpoints.down('sm')]: {
-      fontSize: '11pt',
+      fontSize: '12pt',
       fontWeight: 600,
       lineHeight: 1.375,
     },
   },
   h6: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontWeight: 400,
     lineHeight: 1.375
   },
   body1: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontWeight: 500,
     fontSize: '1.125rem',
     lineHeight: 1.4,
@@ -94,7 +94,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     },
   },
   body2: { 
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontWeight: 500,
     fontSize: '1rem',
     lineHeight: 1.4,
@@ -105,7 +105,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     },
   },
   subtitle1: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontWeight: 500,
     lineHeight: 1.75,
     [breakpoints.down('sm')]: {
@@ -115,7 +115,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     },
   },
   subtitle2: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontWeight: 400,
     lineHeight: 1.57,
     color: '#65748B',
@@ -126,14 +126,14 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     },
   },
   overline: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontWeight: 600,
     letterSpacing: '0.5px',
     lineHeight: 2.5,
     textTransform: 'uppercase'
   },
   caption: {
-    fontFamily: '"Outfit", sans-serif',
+    fontFamily: '"DM Serif Text", serif',
     fontSize: '11pt',
     fontWeight: 500,
     lineHeight: 1.375,

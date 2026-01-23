@@ -1,7 +1,16 @@
 import { Interpolation, Theme, CSSInterpolation, CSSObject } from '@mui/material';
 import { OverridesStyleRules } from '@mui/material/styles/overrides';
 
-export const components_g: INTERNAL_TYPE_s<Theme> = {
+export const components_g: INTERNAL_TYPE<Theme> = {
+
+  GLinks: {
+    styleOverrides: {
+      title: ({ theme }) => ({
+        ...theme.typography.h2
+      })
+    }
+  },
+
   GUserOverview: {
     defaultProps: {
       slotProps: {
@@ -74,10 +83,11 @@ interface INTERNAL_TYPE_NameToClassKey {
   GUserOverviewMenu: keyof { root: string  },
   GShell: keyof { root: string },
   GMarkdown: keyof {root: string },
-  GArticleFeedback: keyof {root: string }
+  GArticleFeedback: keyof { root: string },
+  GLinks: keyof { root: string, title: string },
 }
 
-interface INTERNAL_TYPE_s<Theme = unknown> {
+interface INTERNAL_TYPE<Theme = unknown> {
 
   GUserOverview?: {
     defaultProps?: INTERNAL_TYPE_Props['GUserOverview'];
@@ -108,6 +118,12 @@ interface INTERNAL_TYPE_s<Theme = unknown> {
     styleOverrides?: INTERNAL_TYPE_Overrides<Theme>['GArticleFeedback'];
     variants?: INTERNAL_TYPE_Variants['GArticleFeedback'];
   },
+
+  GLinks?: {
+    defaultProps?: INTERNAL_TYPE_Props['GLinks'];
+    styleOverrides?: INTERNAL_TYPE_Overrides<Theme>['GLinks'];
+    variants?: INTERNAL_TYPE_Variants['GLinks'];
+  },
 }
 
 interface INTERNAL_TYPE_PropsList {
@@ -116,6 +132,7 @@ interface INTERNAL_TYPE_PropsList {
   GShell: {},
   GMarkdown: {},
   GArticleFeedback: {}
+  GLinks: {}
 }
 
 type INTERNAL_TYPE_Props = {
