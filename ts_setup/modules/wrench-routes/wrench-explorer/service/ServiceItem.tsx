@@ -59,12 +59,19 @@ function DecisionItem(props: {
   labelText: string;
   nodeId: string;
   children?: React.ReactChild;
-  onClick: () => void;
+  onClick?: () => void;
 }) {
+  const blockInteractionCapture: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
+      onMouseDownCapture={!props.onClick ? blockInteractionCapture : undefined}
+      onClickCapture={!props.onClick ? blockInteractionCapture : undefined}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           <Box component={AccountTreeOutlinedIcon} color="secondary.contrastText" sx={{ pl: 1, mr: 1 }} />
@@ -84,12 +91,19 @@ function FlowItem(props: {
   labelText: string;
   nodeId: string;
   children?: React.ReactChild;
-  onClick: () => void;
+  onClick?: () => void;
 }) {
+  const blockInteractionCapture: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
+      onMouseDownCapture={!props.onClick ? blockInteractionCapture : undefined}
+      onClickCapture={!props.onClick ? blockInteractionCapture : undefined}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           <Box component={AccountTreeOutlinedIcon} color="primary.main" sx={{ pl: 1, mr: 1 }} />
@@ -168,7 +182,9 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
           }
         })()}
         labelInfo={`${service.errors.length + service.warnings.length}`}
-        labelcolor={theme.palette.primary.dark}>
+        labelcolor={theme.palette.primary.dark}
+        interactive={(service.errors.length + service.warnings.length) > 0}
+      >
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -179,24 +195,34 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
       <TreeItem itemId={service.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
         labelInfo={`${flows.length}`}
-        labelcolor="primary">
+        labelcolor="primary"
+        interactive={flows.length > 0}
+      >
 
-        {flows.map(view => (<FlowItem key={view.ref.ref} nodeId={`${service.id}-fl-${view.ref.ref}`}
-          labelText={view.ref.ref}
-          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
-        />)
-        )}
+        {flows.map(view => {
+          const entity = view.entity;
+          return (
+            <FlowItem
+              key={view.ref.ref}
+              nodeId={`${service.id}-fl-${view.ref.ref}`}
+              labelText={view.ref.ref}
+              onClick={entity ? () => onNav({ type: 'ENTITY_EDITOR', id: entity.id }) : undefined}
+            />
+          );
+        })}
       </TreeItem>
 
       {/** Internal decision options */}
       <TreeItem itemId={service.id + 'internal-decisions-nested'}
         labelText={<FormattedMessage id="internal-decisions" />}
         labelInfo={`${decisions.length}`}
-        labelcolor="page">
+        labelcolor="page"
+        interactive={decisions.length > 0}
+      >
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${service.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? onNav({ type: 'DECISIONS' }) : undefined}
+          onClick={view.entity ? () => onNav({ type: 'DECISIONS' }) : undefined}
         />))}
 
       </TreeItem>

@@ -74,7 +74,9 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
       <TreeItem itemId={decision.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
         labelInfo={`${flows.length}`}
-        labelcolor="primary">
+        labelcolor="primary"
+        interactive={flows.length > 0}
+      >
 
         {flows.map(view => (<FlowItem key={view.id} nodeId={view.id}
           labelText={view.ast ? view.ast.name : view.id}
