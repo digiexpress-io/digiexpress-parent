@@ -183,5 +183,6 @@ export const sv = {
   'gamut.feedback.feedbackViewerTitle': 'Kundrespons',
   'gamut.feedback.feedbackViewerSubTitle': 'Organisationens svar',
   'dialob.review.title': 'Formulärgranskning',
-  'dialob.review.button.close': 'Stäng'
+  'dialob.review.button.close': 'Stäng',
+  'gamut.cockpit.selection.dialog': 'Select Cockpit'
 }

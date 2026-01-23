@@ -183,5 +183,6 @@ export const fi = {
   'gamut.feedback.feedbackViewerTitle': 'Asiakas palaute',
   'gamut.feedback.feedbackViewerSubTitle': 'Organisaation palaute',
   'dialob.review.title': 'Lomakkeen esikatselu',
-  'dialob.review.button.close': 'Sulje'
+  'dialob.review.button.close': 'Sulje',
+  'gamut.cockpit.selection.dialog': 'Select Cockpit'
 }

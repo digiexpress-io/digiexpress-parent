@@ -37,7 +37,7 @@ export const GRouterCockpits: React.FC<GRouterCockpitsProps> = ({ }) => {
   }
 
   return (
-    <Dialog open={showDialog} onClose={handleClose}>
+    <Dialog open={showDialog} onClose={handleClose} fullWidth>
       <DialogTitle variant='h2'>
         <FormattedMessage id='gamut.cockpit.selection.dialog' />
       </DialogTitle>
