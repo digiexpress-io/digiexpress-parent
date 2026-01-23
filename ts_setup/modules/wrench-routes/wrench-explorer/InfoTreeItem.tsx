@@ -12,9 +12,16 @@ interface InfoTreeItemProps {
 const InfoTreeItem: React.FC<InfoTreeItemProps> = ({ nodeId, lastUpdated }) => {
   const formattedDate = DateTime.fromISO(lastUpdated, { zone: 'UTC' }).setZone('local').setLocale('fi').toFormat('d.M.yyyy HH:mm');
 
+  const blockInteractionCapture: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <TreeItemRoot
       itemId={nodeId + 'info-last-modified'}
+      onMouseDownCapture={blockInteractionCapture}
+      onClickCapture={blockInteractionCapture}
       label={
         <Box sx={{ p: 0.5, pr: 0 }}>
           <Typography>

@@ -179,7 +179,9 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
       <TreeItem itemId={flow.id + 'decisions-nested'}
         labelText={<FormattedMessage id="decisions" />}
         labelInfo={`${decisions.length}`}
-        labelcolor="page">
+        labelcolor="page"
+        interactive={decisions.length > 0}
+      >
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${flow.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}
@@ -192,7 +194,9 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
       <TreeItem itemId={flow.id + 'services-nested'}
         labelText={<FormattedMessage id="services" />}
         labelInfo={`${services.length}`}
-        labelcolor={theme.palette.primary.light}>
+        labelcolor={theme.palette.primary.light}
+        interactive={services.length > 0}
+      >
 
         {services.map(view => (<ServiceItem key={view.ref.ref} nodeId={`${flow.id}-st-${view.ref.ref}`}
           labelText={view.ref.ref}
