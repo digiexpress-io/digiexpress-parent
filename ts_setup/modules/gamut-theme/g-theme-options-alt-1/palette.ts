@@ -1,8 +1,6 @@
 import { PaletteOptions } from "@mui/material";
 
 export const palette: PaletteOptions = {
-
-
   primary: {
     main: '#1E3A5F',      // Deep executive navy
     light: '#4F6D8C',

@@ -13,7 +13,7 @@ const breakpointDefs = {
 };
 export const breakpoints = createTheme({ breakpoints: breakpointDefs }).breakpoints;
 
-export const typography: TypographyOptions | ((palette: Palette) => TypographyOptions) = {
+export const typography: TypographyOptions | ((palette: Palette) => TypographyOptions) = (palette: Palette) => ({
 
   fontFamily: '"DM Serif Text", serif',
 
@@ -22,12 +22,14 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     fontSize: '2.5rem',
     fontWeight: 900,
     lineHeight: 1.375,
+    color: palette.primary.dark,
     [breakpoints.down('sm')]: {
       fontSize: '16pt',
       fontWeight: 900,
       lineHeight: 1.375,
       letterSpacing: 0.5,
-      marginBottom: 2
+      marginBottom: 2,
+      color: palette.primary.dark,
     },
   },
   h2: {
@@ -35,12 +37,15 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     fontSize: '1.9rem',
     fontWeight: 700,
     lineHeight: 1.375,
+    color: palette.primary.dark,
+
     [breakpoints.down('sm')]: {
       fontSize: '14pt',
       fontWeight: 700,
       lineHeight: 1.375,
       letterSpacing: 0.5,
-      marginBottom: 2
+      marginBottom: 2,
+      color: palette.primary.dark,
     },
   },
   h3: {
@@ -48,11 +53,13 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     fontSize: '1.5rem',
     fontWeight: 500,
     lineHeight: 1.375,
+    color: palette.primary.dark,
     [breakpoints.down('sm')]: {
       fontSize: '12pt',
       fontWeight: 500,
       lineHeight: 1.375,
-      marginBottom: 2
+      marginBottom: 2,
+      color: palette.primary.dark,
     },
   },
   h4: {
@@ -93,7 +100,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
       lineHeight: 1.375,
     },
   },
-  body2: { 
+  body2: {
     fontFamily: '"DM Serif Text", serif',
     fontWeight: 500,
     fontSize: '1rem',
@@ -118,7 +125,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     fontFamily: '"DM Serif Text", serif',
     fontWeight: 400,
     lineHeight: 1.57,
-    color: '#65748B',
+    color: palette.text.secondary,
     [breakpoints.down('sm')]: {
       fontSize: '10pt',
       fontWeight: 400,
@@ -143,4 +150,4 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
       lineHeight: 1.375,
     },
   },
-}
+})

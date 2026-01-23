@@ -1,7 +1,7 @@
 import { Theme, Components } from '@mui/material';
 import { DemoFooter } from './DemoFooter';
 import logo from './NordInvest-no-background.png';
-import happyCouple from './couple-on-beach-2-cropped.jpg';
+import happyCouple from './couple-on-beach-2-cropped-text.jpg';
 import happyCoupleSmall from './couple-on-beach-2-cropped-small.jpg';
 
 export const components_g_alt_1: Components<Omit<Theme, 'components'>> = {
