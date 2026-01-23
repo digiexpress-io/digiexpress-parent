@@ -26,7 +26,6 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
     const found = datasource.find(item => item.id === selected);
     cockpits.setActive(found);
     await iam.reload();
-
     // switch the theme if possible
     gTheme.setThemeOptions(found?.cockpitConfigName);
   }
