@@ -202,7 +202,7 @@ public class AssetsWrenchController {
   
   
   protected Uni<HdesComposer> getComposer() {
-    return this.composer.withCockpit();
+    return this.composer.withCockpitFromProvider();
   }
   
 

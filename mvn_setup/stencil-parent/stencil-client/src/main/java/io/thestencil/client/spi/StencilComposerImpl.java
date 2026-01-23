@@ -97,4 +97,8 @@ public class StencilComposerImpl implements StencilComposer {
   public CockpitAwareProps getCockpitAwareProps() {
     return this.client.getCockpitAwareProps();
   }
+  @Override
+  public Uni<StencilComposer> withCockpitFromProvider() {
+    return this.client.withCockpitFromProvider().onItem().transform(client -> new StencilComposerImpl(client));
+  }
 }

@@ -30,8 +30,12 @@ import io.smallrye.mutiny.Uni;
 
 public interface CockpitAware<T extends CockpitAware<T>> {
 
-  // load the configured cockpit
+  // load the system default cockpit
   Uni<T> withCockpit();
+  
+  //load the provider cockpit
+  Uni<T> withCockpitFromProvider();
+ 
   
   // load the configured cockpit
   Uni<T> withCockpit(Optional<String> id);
