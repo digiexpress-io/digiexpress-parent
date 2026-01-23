@@ -59,6 +59,7 @@ public interface DocQueryActions {
     Uni<QueryEnvelope<DocObject>> get(String idOrExternalIdOrName);
     Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> idOrExternalIdOrName);
     Uni<QueryEnvelope<DocTenantObjects>> findAll();
+    Uni<QueryEnvelope<DocObject>> deleteOne();
     Uni<QueryEnvelope<DocTenantObjects>> deleteAll(List<String> idOrExternalIdOrName);
   }
 }

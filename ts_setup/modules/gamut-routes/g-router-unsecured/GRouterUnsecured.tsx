@@ -21,11 +21,24 @@ import { GRouterUnsecuredRoot, MUI_NAME } from './useUtilityClasses';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
+export interface ResponsiveImageConfig {
+  image: string;
+  width: string | number;
+  height: string | number;
+}
+
 export interface GRouterUnsecuredProps {
   pageId?: string;
   defaultPageId?: string;
   backgroundImage?: string;
-  height?: string | number
+  height?: string | number;
+  responsiveImages?: {
+    xs?: ResponsiveImageConfig;
+    sm?: ResponsiveImageConfig;
+    md?: ResponsiveImageConfig;
+    lg?: ResponsiveImageConfig;
+    xl?: ResponsiveImageConfig;
+  };
 }
 
 const Internal: React.FC<GRouterUnsecuredProps> = (initProps) => {

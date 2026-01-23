@@ -35,7 +35,7 @@ public class CockpitAwareProvider_Empty implements CockpitAwareProvider {
     return Uni.createFrom().item(Optional.empty());
   }
   @Override
-  public Uni<Optional<CockpitContainer>> set(String cockpitId) {
+  public Uni<Optional<CockpitContainer>> set(Optional<String> cockpitId) {
     return Uni.createFrom().item(Optional.empty());
   }
   @Override

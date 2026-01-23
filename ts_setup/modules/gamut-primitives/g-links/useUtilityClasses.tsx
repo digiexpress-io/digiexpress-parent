@@ -70,7 +70,7 @@ export const GLinksTitle = styled(Typography, {
   slot: 'Title',
   overridesResolver: (_props, styles) => {
     return [
-      styles.header,
+      styles.title,
     ];
   },
 })(({ theme }) => {

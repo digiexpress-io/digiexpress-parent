@@ -115,6 +115,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     return get(Optional.of(id), false);
   }
   
+  
   public Uni<QueryEnvelope<DocObject>> get(Optional<String> id, boolean failOnNotFound) {
     final var filterBuilder = ImmutableDocFilter.builder()
         .docType(docType)
@@ -263,8 +264,46 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         })
       );
     });
-    
+  }
+  
+  
 
+  @Override
+  public Uni<QueryEnvelope<DocObject>> deleteOne() {
+    
+    // lets query all docs, before deleting them, if success return all 
+    
+    return this.findAll(null).onItem().transformToUni(found -> {
+      
+      final var scope = ImmutableTxScope.builder()
+          .commitAuthor("")
+          .commitMessage("delete tx, nothing is going to be left anyway")
+          .tenantId(repoId)
+          .build();
+      
+      final var doc = found.getObjects().getDocs().values()
+          .stream().map(e -> e.getId()).toList();
+      
+      return this.state.withDocTransaction(scope, tx -> tx.query().docs().deleteAll(doc)
+        .onItem().transform(deleted -> {
+          if(deleted.getStatus() == BatchStatus.OK) {
+            return ImmutableQueryEnvelope.<DocObject>builder()
+                .repo(found.getRepo())
+                .objects(found.getObjects().toOne())
+                .addAllMessages(deleted.getMessages())
+                .status(found.getStatus())
+                .build();
+          } 
+          
+          return ImmutableQueryEnvelope.<DocObject>builder()
+              .repo(found.getRepo())
+              .objects(null)
+              .addAllMessages(deleted.getMessages())
+              .status(QueryEnvelopeStatus.ERROR)
+              .build();
+        })
+      );
+    });
   }
   
   private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
@@ -314,5 +353,4 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .commits(commits.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .build();
   }
-
 }

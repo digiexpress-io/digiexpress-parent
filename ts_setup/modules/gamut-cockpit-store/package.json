@@ -1,0 +1,17 @@
+{
+  "name": "@dxs-ts/gamut-cockpit-store",
+  "version": "${project.version}",
+  "description": "Gamut COCKPIT STORE layer",
+  "main": "./index.ts",
+  "type": "module",
+
+  "note": "No internal dependencies - this is the foundation layer",
+  "dependencies": {
+
+  },
+  "peerDependencies": {
+
+  },
+  "keywords": ["gamut", "api", "data", "business-logic"],
+  "private": true
+}

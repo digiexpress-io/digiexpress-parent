@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@dxs-ts/envir-util": "*",
+    "@dxs-ts/gamut-cockpit-store": "*",
     "@dxs-ts/gamut-api": "*",
     "@dxs-ts/gamut-md": "*",
     "@dxs-ts/gamut-primitives": "*",

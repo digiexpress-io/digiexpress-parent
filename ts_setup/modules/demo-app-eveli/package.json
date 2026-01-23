@@ -5,6 +5,7 @@
   "type": "module",
   "private": false,
   "dependencies": {
+    "@dxs-ts/gamut-cockpit-store": "*",
     "@dxs-ts/gamut-api": "*",
     "@dxs-ts/gamut-theme": "*",
     "@dxs-ts/gamut-form": "*",

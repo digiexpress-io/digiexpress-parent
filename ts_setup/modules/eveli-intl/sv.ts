@@ -453,6 +453,7 @@ export const sv = {
   'toolbar.import': 'Importera data',
   'toolbar.tasks': 'Uppgifter',
   'toolbar.about': 'Om',
+  'toolbar.cockpits': 'Cockpits',
   'stencil.services.found.none': 'Inga tjänster hittades',
   'link.type.internal': 'Inre',
   'link.type.external': 'Extern',

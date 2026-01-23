@@ -238,7 +238,7 @@ public class AssetsStencilController {
   }
 
   protected Uni<StencilComposer> getComposer() {
-    return this.composer.withCockpit();
+    return this.composer.withCockpitFromProvider();
   }
   
   private SiteState parseSiteState(byte[] body) {

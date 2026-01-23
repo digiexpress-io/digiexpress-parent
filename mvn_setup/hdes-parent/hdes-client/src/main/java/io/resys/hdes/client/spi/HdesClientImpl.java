@@ -82,12 +82,29 @@ public class HdesClientImpl implements HdesClient {
   public Uni<HdesClient> withCockpit() {
     return withCockpit(Optional.empty());
   }
+
+  @Override
+  public Uni<HdesClient> withCockpitFromProvider() {
+    return cockpitAwareProps.getProvider().get().onItem()
+        .transform(cockpit -> {
+          
+          if(cockpit.isEmpty()) {
+            return this.repo().repoName(cockpitAwareProps.getTenantName()).build();
+          }
+          
+          final var tenantName = cockpit.get().getTenants().stream()
+            .filter(t -> t.getCockpitConfigTenantType().equals(COCKPIT_TYPE))
+            .map(e -> e.getExternalId())
+            .findFirst()
+            .orElse(cockpitAwareProps.getTenantName());
+          
+          return this.repo().repoName(tenantName).build();
+        });
+  }
   @Override
   public Uni<HdesClient> withCockpit(Optional<String> id) {
     return cockpitAwareProps.getProvider().get(id).onItem()
         .transform(cockpit -> {
-          
-          config.getCache().flushAll();
           
           if(cockpit.isEmpty()) {
             return this.repo().repoName(cockpitAwareProps.getTenantName()).build();
@@ -365,4 +382,5 @@ public class HdesClientImpl implements HdesClient {
       }
     };
   }
+
 }

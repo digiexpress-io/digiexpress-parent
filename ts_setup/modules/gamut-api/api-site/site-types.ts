@@ -27,12 +27,6 @@ export declare namespace SiteApi {
     workflowsInOtherLocales: Record<LocaleCode, TopicLink[]>
   }
 
-  export interface Cockpit {
-    id: string;
-    cockpitConfigName: string;
-    cockpitConfigDescription: string;
-  }
-
   export interface Blob {
     id: BlobId;
     value: string;

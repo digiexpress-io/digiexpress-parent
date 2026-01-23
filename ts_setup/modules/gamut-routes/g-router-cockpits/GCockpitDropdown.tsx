@@ -1,9 +1,9 @@
 import React from 'react'
 import { SelectChangeEvent } from '@mui/material';
 import { Check as CheckIcon } from '@mui/icons-material';
-import { useIntl } from 'react-intl';
-import { SiteApi, useIam, useSite } from '@dxs-ts/gamut-api';
-
+import { useIam, useSite } from '@dxs-ts/gamut-api';
+import { useGTheme } from '@dxs-ts/gamut-theme';
+import { Cockpit } from '@dxs-ts/gamut-cockpit-store';
 
 import { GInputSelect, GInputSelectOption, useUtilityClasses } from './useUtilityClasses';
 
@@ -15,6 +15,7 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
   const { cockpits } = useSite();  
   const iam = useIam();
   const classes = useUtilityClasses();
+  const gTheme = useGTheme();
   
   const datasource = cockpits.options;
   const selectedValue = cockpits.active;
@@ -25,6 +26,9 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
     const found = datasource.find(item => item.id === selected);
     cockpits.setActive(found);
     await iam.reload();
+
+    // switch the theme if possible
+    gTheme.setThemeOptions(found?.cockpitConfigName);
   }
 
   const value = selectedValue?.id ?? DEFAULT_SELECTION_VALUE;
@@ -59,12 +63,11 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
 }
 
 const Collapsed: React.FC<{
-  datasource: SiteApi.Cockpit[];
+  datasource: Cockpit[];
   selected: string;
   className: string;
 }> = ({ datasource, selected, className }) => {
 
-  const classes = useUtilityClasses();
   const selectedItem = datasource.find(item => item.id === selected);
   
   if (selectedItem) {

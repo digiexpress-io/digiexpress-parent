@@ -21,6 +21,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,7 +124,7 @@ public class CockpitApiController {
   
   @PostMapping("/activity/current-state")
   public Multi<CockpitActivity> changeActivity(@RequestBody CockpitActivityChangeActiveId change) {
-    return cockpitAwareProvider.set(change.getActiveId())
+    return cockpitAwareProvider.set(Optional.ofNullable(change.getActiveId()))
         .onItem().transformToMulti(ignore -> findActivity());
   }
   

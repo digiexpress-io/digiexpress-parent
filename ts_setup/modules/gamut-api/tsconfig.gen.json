@@ -7,6 +7,9 @@
       ],
       "@dxs-ts/gamut-intl": [
         "../gamut-intl/index.ts"
+      ],
+      "@dxs-ts/gamut-cockpit-store": [
+        "../gamut-cockpit-store/index.ts"
       ]
     }
   },
@@ -14,16 +17,19 @@
   "references": [
     {
       "path": "../gamut-intl"
+    },
+    {
+      "path": "../gamut-cockpit-store"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-08-21T14:49:16.870Z",
+    "at": "2026-01-23T09:43:30.655Z",
     "forModule": "@dxs-ts/gamut-api",
-    "fromRegistry": "59014ff3ca3d",
+    "fromRegistry": "658af8275550",
     "alias": {
       "@dxs-ts/gamut-api": [
-        "../gamut-intl"
+        "../gamut-cockpit-store"
       ]
     }
   }

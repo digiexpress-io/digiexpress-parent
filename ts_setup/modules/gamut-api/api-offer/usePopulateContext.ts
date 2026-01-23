@@ -5,7 +5,7 @@ import { LegacyProcessApi } from '../api-legacy-processes';
 import { mapToOffer, mapToOfferData, toOtherTopicLinkLocales } from './mappers';
 import { SiteApi, useSite } from '../api-site';
 import { useAssertAuthentication, assertAuthenticatedResponse } from '../api-iam';
-import { CockpitStore } from '../api-cockpit-store';
+import { CockpitStore } from '@dxs-ts/gamut-cockpit-store';
 
 
 

@@ -1,12 +1,13 @@
 import React from 'react';
 
 import { StyledEngineProvider } from "@mui/material/styles";
-import { ThemeProvider, createTheme, ThemeOptions } from '@mui/material';
+import { ThemeOptions } from '@mui/material';
 
 import { components_g } from './components-g';
 
 
-import { GThemeOptions } from '@dxs-ts/gamut';
+import { GThemeOptions, GThemeOptionsAlt1, GThemeProvider } from '@dxs-ts/gamut';
+import { components_g_alt_1 } from './components-g-alt-1';
 
 
 export const themeOptions: ThemeOptions = {
@@ -16,16 +17,24 @@ export const themeOptions: ThemeOptions = {
     ...GThemeOptions.components,
     ...components_g,
   }
-};
-const siteTheme = createTheme(themeOptions);
+}
+
+export const themeOptionsAlt1: ThemeOptions = {
+  palette: GThemeOptionsAlt1.palette,
+  typography: GThemeOptionsAlt1.typography,
+  components: {
+    ...GThemeOptionsAlt1.components,
+    ...components_g_alt_1,
+  }
+}
 
 export const DemoTheme: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={siteTheme}>
+      <GThemeProvider themeOptions={themeOptionsAlt1} secondaryThemeOptions={{ 'cockpit 1': themeOptionsAlt1 }}>
         {children}
-      </ThemeProvider>
+      </GThemeProvider>
     </StyledEngineProvider>);
 }
 

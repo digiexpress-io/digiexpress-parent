@@ -208,4 +208,8 @@ public class HdesComposerImpl implements HdesComposer {
   public CockpitAwareProps getCockpitAwareProps() {
     return this.client.getCockpitAwareProps();
   }
+  @Override
+  public Uni<HdesComposer> withCockpitFromProvider() {
+    return this.client.withCockpitFromProvider().onItem().transform(client -> new HdesComposerImpl(client));
+  }
 }

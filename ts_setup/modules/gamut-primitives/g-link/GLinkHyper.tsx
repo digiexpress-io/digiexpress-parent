@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, styled, useThemeProps } from '@mui/material';
+import { Link, styled, Typography, useThemeProps } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 
@@ -39,10 +39,10 @@ export const GLinkHyper: React.FC<GLinkHyperProps> = (initProps) => {
   return (
     <Root className={classes.root} ownerState={ownerState}>
       <Link href={props.value} target='_blank'>
-        <span>
+        <Typography>
           {props.label}
           <OpenInNewIcon />
-        </span>
+        </Typography>
       </Link>
     </Root>
   )
@@ -59,6 +59,9 @@ const GLinkHyperRoot = styled("div", {
   },
 })<{ ownerState: GLinkHyperProps }>(({ theme }) => {
   return {
+
+
+
     "span": {
       wordBreak: 'break-word'
     },

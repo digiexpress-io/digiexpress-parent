@@ -1,10 +1,15 @@
-import { SiteApi } from '../api-site';
-
 const STORAGE_KEY = 'gamut_cockpit';
+
+
+export interface Cockpit {
+  id: string;
+  cockpitConfigName: string;
+  cockpitConfigDescription: string;
+}
 
 export class CockpitStore {
   
-  static get(): SiteApi.Cockpit | null {
+  static get(): Cockpit | null {
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) return null;
     try {
@@ -14,7 +19,7 @@ export class CockpitStore {
     }
   }
 
-  static save(cockpit: SiteApi.Cockpit | null | undefined): void {
+  static save(cockpit: Cockpit | null | undefined): void {
     if(cockpit) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cockpit));
     } else {
@@ -34,7 +39,7 @@ export class CockpitStore {
 // Expose to console
 if (typeof window !== 'undefined') {
   (window as any).GamutCockpit = {
-    enable: (cockpit: SiteApi.Cockpit) => {
+    enable: (cockpit: Cockpit) => {
       CockpitStore.save(cockpit);
       console.log('GamutCockpit enabled:', cockpit);
       window.location.reload();

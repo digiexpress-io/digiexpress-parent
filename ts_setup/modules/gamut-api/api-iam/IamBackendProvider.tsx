@@ -1,10 +1,12 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+import { CockpitStore } from '@dxs-ts/gamut-cockpit-store';
+
 import { SiteApi } from '../api-site';
 import { IamApi } from './iam-types'
 import { useLocale } from '../api-locale';
-import { CockpitStore } from '../api-cockpit-store';
+
 
 import { IamLiveness } from './IamLiveness'
 

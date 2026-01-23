@@ -2,13 +2,15 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query'
 import { useIntl } from 'react-intl';
 
+import { CockpitStore, Cockpit } from '@dxs-ts/gamut-cockpit-store';
+
 import { useLocale } from '../api-locale';
 
 import { SiteApi } from './site-types';
 import { SiteCache } from './site-reducer';
 import { getSearchTopics } from './search-topics';
 import { maintainace_en } from './fallback-content';
-import { CockpitStore } from '../api-cockpit-store';
+
 
 
 export interface  SiteBackendProviderProps {
@@ -29,9 +31,9 @@ export interface SiteBackendContextType {
   locale: SiteApi.LocaleCode;
   feedback: SiteApi.CustomerFeedback[];
   cockpits: {
-    options: SiteApi.Cockpit[];
-    active: SiteApi.Cockpit | null;
-    setActive: (active: SiteApi.Cockpit | null | undefined) => void;
+    options: Cockpit[];
+    active: Cockpit | null;
+    setActive: (active: Cockpit | null | undefined) => void;
   };
   pending: boolean;
   voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void>;
@@ -57,7 +59,7 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
   const intl = useIntl();
 
 
-  const [cockpit, setCockpit] = React.useState<SiteApi.Cockpit | null>(() => CockpitStore.get());
+  const [cockpit, setCockpit] = React.useState<Cockpit | null>(() => CockpitStore.get());
   const fetchCockpitsGet: SiteApi.FetchCockpitsGET = React.useMemo(() => props.fetchCockpitsGet, [props.fetchCockpitsGet])
   const fetchSiteGet: SiteApi.FetchSiteGET = React.useMemo(() => props.fetchSiteGet, [props.fetchSiteGet])
   const fetchFeedbackGet: SiteApi.FetchFeedbackGET = React.useMemo(() => props.fetchFeedbackGet, [props.fetchFeedbackGet])
@@ -105,10 +107,10 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
     queryFn: () => fetchCockpitsGet().then(async response => {
       if (!response.ok) {
         // just ignore on any errors, fully optional features
-        const cockpits: SiteApi.Cockpit[] = [];
+        const cockpits: Cockpit[] = [];
         return cockpits;
       }
-      const cockpits: SiteApi.Cockpit[] = await response.json();
+      const cockpits: Cockpit[] = await response.json();
       return cockpits
     }),
   });
@@ -125,7 +127,7 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
       return fetchFeedbackRatingPut(body).then(_data => feedbackQuery.refetch()).then(_junk => { });
     }
 
-    function setActive(active: SiteApi.Cockpit | null | undefined) {
+    function setActive(active: Cockpit | null | undefined) {
       CockpitStore.save(active);
       setCockpit(active ?? null);
     }

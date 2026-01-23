@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2026-01-23T09:32:38.990Z",
+    "forModule": "@dxs-ts/gamut-cockpit-store",
+    "fromRegistry": "0a1e69453c8f",
+    "alias": {}
+  }
+}

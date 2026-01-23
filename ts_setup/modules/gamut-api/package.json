@@ -7,7 +7,8 @@
 
   "note": "No internal dependencies - this is the foundation layer",
   "dependencies": {
-   "@dxs-ts/gamut-intl": "*"
+   "@dxs-ts/gamut-intl": "*",
+   "@dxs-ts/gamut-cockpit-store": "*"
   },
   "peerDependencies": {
     "react": "*",
