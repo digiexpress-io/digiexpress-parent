@@ -14,7 +14,6 @@ const CockpitDashboardInternal: React.FC = () => {
   const { cardOrder } = useCockpitCardConfig();
 
   const isActive = activity.activeCockpitId === cockpitContainer.config.id;
-
   return (
     <Grid2 container spacing={2} m={1}>
       <Grid2 size={12}>

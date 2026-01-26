@@ -21,7 +21,7 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useCockpitsBackend();
-  const { tenants, activity, cockpitContainer } = useCockpit();
+  const { tenants, activity, cockpitContainer, refresh } = useCockpit();
 
   const wrenchConfig = useTenantOptions({ selected: tenants.wrench, options: activity.availableTenants.wrench });
   const stencilConfig = useTenantOptions({ selected: tenants.stencil, options: activity.availableTenants.stencil });
@@ -48,6 +48,7 @@ export const CockpitTenantConfigureDialog: React.FC<CockpitTenantConfigureDialog
         tenantDescription: stencilConfig.description.value ?? ''
       });
 
+      await refresh();
       onClose();
       wrenchConfig.onClose();
       stencilConfig.onClose();

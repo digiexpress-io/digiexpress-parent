@@ -17,7 +17,7 @@ export interface CockpitEditDialogProps {
 export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onClose }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const { cockpitContainer, tenants, activity } = useCockpit();
+  const { cockpitContainer, tenants, activity, refresh } = useCockpit();
   const { config } = cockpitContainer;
   const backend = useCockpitsBackend();
 
@@ -33,6 +33,7 @@ export const CockpitEditDialog: React.FC<CockpitEditDialogProps> = ({ open, onCl
     try {
       const activeId = isActive === 'active' ? config.id : undefined;
       await backend.persistence.changeActiveCockpit({ activeId });
+      await refresh();
       onClose();
     } catch (error) {
       console.error('Error changing active cockpit:', error);
