@@ -38,7 +38,7 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     fontWeight: 700,
     lineHeight: 1.375,
     color: palette.primary.dark,
-
+    marginTop: 10,
     [breakpoints.down('sm')]: {
       fontSize: '14pt',
       fontWeight: 700,
@@ -53,12 +53,14 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
     fontSize: '1.5rem',
     fontWeight: 500,
     lineHeight: 1.375,
+    marginTop: 10,
     color: palette.primary.dark,
     [breakpoints.down('sm')]: {
       fontSize: '12pt',
       fontWeight: 500,
       lineHeight: 1.375,
       marginBottom: 2,
+      marginTop: 10,
       color: palette.primary.dark,
     },
   },

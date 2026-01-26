@@ -12,7 +12,7 @@ export interface GLinkInfoClasses {
 export type GLinkInfoClassKey = keyof GLinkInfoClasses;
 
 export interface GLinkInfoProps {
-  label: string;
+  label?: string | undefined;
   value: string;
   component?: GOverridableComponent<GLinkInfoProps>;
 }
@@ -35,11 +35,14 @@ export const GLinkInfo: React.FC<GLinkInfoProps> = (initProps) => {
   }
   const Root = props.component ?? GLinkInfoRoot
 
+  // Split content at markdown-style line breaks (double space)
+  const lines = props.value.split("  ");
+
   return (
     <Root className={classes.root} ownerState={ownerState}>
       <>
-        <Typography fontWeight='bold'>{props.label}</Typography>
-        <GMarkdown>{props.value}</GMarkdown>
+        <Typography fontWeight='bold' mb={1}>{props.label}</Typography>
+        {lines.map((line, index) => (<GMarkdown key={index}>{line}</GMarkdown>))}
       </>
     </Root>)
 }

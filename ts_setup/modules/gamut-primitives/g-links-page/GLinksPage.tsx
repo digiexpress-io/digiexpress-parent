@@ -87,13 +87,17 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
         </GLinks> : <></>
       }
 
-      {hyperlinks.length || phoneLinks.length || infoLinks.length ?
+      {hyperlinks.length || phoneLinks.length ?
         <GLinks header={intl.formatMessage({ id: 'gamut.article.pagelinks.otherlinks.title' })}>
           {hyperlinks.map(link => <GLinkHyper key={link.id} label={link.name} value={link.value} />)}
           {phoneLinks.map(link => <GLinkPhone key={link.id} label={link.name} value={link.value} />)}
-          {infoLinks.map(link => <GLinkInfo key={link.id} label={link.name} value={link.value} />)}
         </GLinks> : <></>
       }
+
+      {infoLinks.length ? infoLinks.map(link =>
+        <GLinks key={link.id} header={link.name}>
+          <GLinkInfo label={undefined} value={link.value.replace('<info>', '')} />
+        </GLinks>) : <></>}
 
       {childTopics.length ?
         <GLinks header={intl.formatMessage({ id: 'gamut.article.childtopics.title', defaultMessage: 'Pages' })}>
