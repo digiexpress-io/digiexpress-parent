@@ -52,3 +52,6 @@ eveli:
     - path-pattern: /worker/rest/api/ledgers/**
       method: GET,POST,PUT
       roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/cockpits/**
+      method: GET,POST,PUT
+      roles: ROLE_Authorized

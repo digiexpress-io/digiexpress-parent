@@ -24,6 +24,7 @@ export const themeOptionsAlt1: ThemeOptions = {
   typography: GThemeOptionsAlt1.typography,
   components: {
     ...GThemeOptionsAlt1.components,
+    ...components_g,
     ...components_g_alt_1,
   }
 }
