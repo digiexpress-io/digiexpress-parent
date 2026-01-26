@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import io.digiexpress.thena.cockpit.client.api.CockpitAware;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.resys.hdes.client.api.HdesAstTypes.DataTypeAstBuilder;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ast.AstCommand;
@@ -74,7 +75,9 @@ public interface HdesClient extends CockpitAware<HdesClient> {
   HdesClientConfig config();
 
   HdesClient withBranch(String branchName);
-
+  CockpitIdSupplier getCockpitIdSupplier();
+  
+  
   interface SummaryBuilder {
     SummaryBuilder tags(Collection<StoreEntity> tags);
     SummaryBuilder tagId(String tagId);
