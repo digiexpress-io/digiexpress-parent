@@ -174,7 +174,7 @@ public class DialobCreateEventPublisher {
 
     
     final var requests = new ArrayList<>(assignments.stream().map(assignment -> 
-        new UserActionsBuilderImpl(processClient, dialobClient, envir.withCockpitIdSupplier(getCockpitIdForFrontoffice(task)))
+        new UserActionsBuilderImpl(dialobClient, envir.withCockpitIdSupplier(getCockpitIdForFrontoffice(task)), taskClient)
           .inputContextId("_")
           .inputParentContextId("_")
           .customerAssignment(true)

@@ -442,36 +442,36 @@ public class TaskClientImpl implements TaskClient {
 
   }
   @Override
-  public ModifyTaskProcess modifyProcess() {
-    return new ModifyTaskProcess() {
+  public ModifyProcess modifyProcess() {
+    return new ModifyProcess() {
       private String commitMessage;
       private String commitAuthor;
       private String status;
       private String id;
       private Optional<String> taskId;
       @Override
-      public ModifyTaskProcess id(String id) {
+      public ModifyProcess id(String id) {
         this.id = id;
         return this;
       }
       @Override
-      public ModifyTaskProcess commitMessage(String commitMessage) {
+      public ModifyProcess commitMessage(String commitMessage) {
         this.commitMessage = commitMessage;
         return this;
       }
       @Override
-      public ModifyTaskProcess commitAuthor(String commitAuthor) {
+      public ModifyProcess commitAuthor(String commitAuthor) {
         this.commitAuthor = commitAuthor;
         return this;
       }
       @Override
-      public ModifyTaskProcess status(ProcessStatus status) {
+      public ModifyProcess status(ProcessStatus status) {
         TaskAssert.notNull(status, () -> "status can't be empty!");
         this.status = status.name();
         return this;
       }
       @Override
-      public ModifyTaskProcess taskId(String taskId) {
+      public ModifyProcess taskId(String taskId) {
         this.taskId = Optional.ofNullable(taskId);
         return this;
       }

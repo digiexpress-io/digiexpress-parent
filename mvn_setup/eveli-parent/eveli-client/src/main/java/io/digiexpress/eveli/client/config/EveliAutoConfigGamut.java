@@ -109,9 +109,10 @@ public class EveliAutoConfigGamut {
   @Bean
   public GamutUserActionsController gamutUserActionsController(
       FeedbackClient feedback,
-      GamutClient gamutClient, DialobClient dialobClient, GamutAuthClient crmClient, ProcessClient processRepository,
+      GamutClient gamutClient, DialobClient dialobClient, 
+      GamutAuthClient crmClient,
       DialobFillEventPublisher publisher
       ) {
-    return new GamutUserActionsController(publisher, gamutClient, crmClient, dialobClient, processRepository, feedback);
+    return new GamutUserActionsController(publisher, gamutClient, crmClient, dialobClient, feedback);
   }
 }

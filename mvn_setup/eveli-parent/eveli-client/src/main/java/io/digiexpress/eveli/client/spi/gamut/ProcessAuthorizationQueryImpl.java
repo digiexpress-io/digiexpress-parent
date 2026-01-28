@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.process;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -26,15 +26,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.digiexpress.eveli.client.api.GamutClient.ProcessAuthorization;
+import io.digiexpress.eveli.client.api.GamutClient.ProcessAuthorizationQuery;
 import io.digiexpress.eveli.client.api.ImmutableProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessClient.InitProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorizationQuery;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -48,18 +48,33 @@ public class ProcessAuthorizationQueryImpl implements ProcessAuthorizationQuery 
   
   private final EveliEnvirClient envir;
   
-  @Override
-  public ProcessAuthorization get(InitProcessAuthorization init) {
-    final CockpitIdSupplier cockpitIdSupplier = () -> Uni.createFrom().item(Optional.ofNullable(init.getCockpitId()));
-    final var runtime = envir.withCockpitIdSupplier(cockpitIdSupplier).runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
-    return processRequest(new AuthorizationRequest(runtime, init));
-  }
-  
-  
+  private String cockpitId;
+  private final List<String> userRoles = new ArrayList<>();
+
   @Data @RequiredArgsConstructor
   private static class AuthorizationRequest {
     private final EveliRuntime runtime;
-    private final InitProcessAuthorization init;
+    private final @Nullable String cockpitId;
+    private final List<String> userRoles;
+  }
+  
+
+  @Override
+  public ProcessAuthorizationQuery cockpitId(String cockpitId) {
+    this.cockpitId = cockpitId;
+    return this;
+  }
+  @Override
+  public ProcessAuthorizationQuery userRoles(List<String> userRoles) {
+    this.userRoles.addAll(userRoles);
+    return this;
+  }
+  
+  @Override
+  public Uni<ProcessAuthorization> getOne() {
+    final CockpitIdSupplier cockpitIdSupplier = () -> Uni.createFrom().item(Optional.ofNullable(cockpitId));
+    return envir.withCockpitIdSupplier(cockpitIdSupplier).runtimeQuery()
+        .getOne().onItem().transform(runtime -> processRequest(new AuthorizationRequest(runtime, cockpitId, userRoles)));
   }
   
 
@@ -75,7 +90,7 @@ public class ProcessAuthorizationQueryImpl implements ProcessAuthorizationQuery 
     ProcessAssert.notNull(dt, () -> "Authorizations requires DT with name: " + DT_NAME + "!");
     
     final var processNames = new ArrayList<String>();
-    for(final var role : init.getInit().getUserRoles()) {
+    for(final var role : init.getUserRoles()) {
       final List<String> rows = init.runtime.getWrench().inputField(DT_ROLE_INPUT_NAME, role).decision(DT_NAME).andFind()
         .stream().flatMap(row -> {
           final var outputName = row.get(DT_ROLE_OUTPUT_NAME);
@@ -90,7 +105,7 @@ public class ProcessAuthorizationQueryImpl implements ProcessAuthorizationQuery 
     
     return ImmutableProcessAuthorization.builder()
         .addAllAllowedProcessNames(processNames.stream().map(e -> e.trim()).distinct().collect(Collectors.toList()))
-        .userRoles(init.init.getUserRoles())
+        .userRoles(init.getUserRoles())
         .build();
   }
 }

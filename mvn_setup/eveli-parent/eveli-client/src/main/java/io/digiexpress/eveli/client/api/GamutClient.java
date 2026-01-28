@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
 import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
@@ -53,6 +54,17 @@ public interface GamutClient {
   UserActionFillEventBuilder fillEvent();
   UserActionMetaQuery userActionMetaQuery();
   UserActionViewBuilder userActionViewBuilder();
+  
+  ProcessAuthorizationQuery queryAuthorization();
+
+  
+  interface ProcessAuthorizationQuery {
+    ProcessAuthorizationQuery cockpitId(@Nullable String cockpitId);
+    ProcessAuthorizationQuery userRoles(List<String> userRoles);
+    Uni<ProcessAuthorization> getOne();
+  }
+  
+
   
   interface UserActionViewBuilder {
     UserActionViewBuilder actionId(String actionId);
@@ -105,9 +117,9 @@ public interface GamutClient {
   
   interface UserActionQuery {
     UserActionQuery cockpitId(String cockpitId);
-    List<UserAction> findAll();
-    Optional<UserAction> findOneById(String id);
-    Optional<UserAction> findOneAnonById(String id); // only anon forms can be fetched by id
+    Multi<UserAction> findAll();
+    Uni<Optional<UserAction>> findOneById(String id);
+    Uni<Optional<UserAction>> findOneAnonById(String id); // only anon forms can be fetched by id
   }
   
   interface UserActionBuilder {
@@ -245,6 +257,14 @@ public interface GamutClient {
     String getTaskId();
     
   }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableProcessAuthorization.class)
+  @JsonDeserialize(as = ImmutableProcessAuthorization.class)
+  interface ProcessAuthorization {
+    List<String> getUserRoles();
+    List<String> getAllowedProcessNames();
+  }  
   
   public static class UserActionNotAllowedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;

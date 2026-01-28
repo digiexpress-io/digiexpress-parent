@@ -39,16 +39,17 @@ import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMeta;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
-import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
+import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple3;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -61,9 +62,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class UserActionsBuilderImpl implements UserActionBuilder {
-  private final ProcessClient hdesCommands;  
+  
   private final DialobClient dialobCommands;
   private final EveliEnvirClient envir;
+  private final TaskClient taskClient;
+  
   private boolean anon = false;
   private boolean customerAssignment = false;
   private Optional<Customer> customer = Optional.empty();
@@ -98,48 +101,74 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     userActionLogger.startRuntime();
-    return envir.withCockpitIdSupplier(() -> Uni.createFrom().item(Optional.ofNullable(cockpitId))).runtimeQuery().getOne()
-        .invoke(runtime -> userActionLogger.endRuntime(runtime))
-        .onItem().transformToUni(runtime -> createUserAction(runtime))
+    return getRuntime()
+        .onItem().transformToUni(tuple -> createUserAction(tuple.getItem1(), tuple.getItem2()))
         .onItem().invoke(action -> userActionLogger.close());
   }
   
-  private Uni<UserAction> createUserAction(EveliRuntime runtime) {
+  private Uni<Tuple3<EveliRuntime, UserActionMeta, CustomerAuthorization>> getRuntime() {
+    userActionLogger.startRuntime();
+    return envir.withCockpitIdSupplier(cockpitIdSupplier())
+      .runtimeQuery().getOne()
+      .onItem().transformToUni(runtime -> {
+        userActionLogger.endRuntime(runtime);
+        
+        userActionLogger.startStencilService();
+        final UserActionMeta meta = new UserActionMetaQueryImpl(envir)
+            .actionId(actionId)
+            .locale(clientLocale)
+            .cockpitId(cockpitId)
+            .getOne(runtime);
+        userActionLogger.endStencilService(meta);
+        
+        return getCustomerAuthorization(runtime, meta).onItem().transform(auth -> Tuple3.of(runtime, meta, auth));
+      });
+  }
+  
+  
+  private Uni<CustomerAuthorization> getCustomerAuthorization(EveliRuntime runtime, UserActionMeta action) {
+    if(customer.isEmpty()) {
+      return Uni.createFrom().item(ImmutableCustomerAuthorization.builder().actionId(actionId).allowed(true).build());
+    }
     
-    userActionLogger.startStencilService();
-    final UserActionMeta meta = new UserActionMetaQueryImpl(envir).actionId(actionId).locale(clientLocale).getOne(runtime);
-    userActionLogger.endStencilService(meta);
+    if(customer.get().getPrincipal().getRepresentedId() == null) {
+      return Uni.createFrom().item(ImmutableCustomerAuthorization.builder().actionId(actionId).allowed(true).build());
+    }
     
+    userActionLogger.startAuth();
+    final var userRoles = customerRoles.get().getRoles();
+    
+
+    userActionLogger.startWrenchAllowedRoles();
+    return new ProcessAuthorizationQueryImpl(envir)
+      .cockpitId(cockpitId)
+      .userRoles(userRoles)
+      .getOne()
+      .onItem().transform(auth -> {
+        
+        final var allowed = auth.getAllowedProcessNames();
+        userActionLogger.endWrenchAllowedRoles();
+        
+        final var stencilService = action.getTopicLink();
+        
+        if(!(
+            allowed.contains(stencilService.getValue()) ||
+            allowed.contains(actionId) ||
+            allowed.contains(stencilService.getName())
+         )) {
+          throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
+        }
+        userActionLogger.endAuth();        
+        return ImmutableCustomerAuthorization.builder().actionId(actionId).allowed(true).build();
+      });
+  }
+  
+  private Uni<UserAction> createUserAction(EveliRuntime runtime, UserActionMeta meta) {    
     final var now = OffsetDateTime.now();
     final var sites = runtime.getStencil(now);
     final var stencilService = meta.getTopicLink();
     final var expiresInSeconds = meta.getExpiresInSeconds();
     
-    
-    if(customer.isPresent()) {
-      userActionLogger.startAuth();
-      if(customer.get().getPrincipal().getRepresentedId() != null) {
-        final var userRoles = customerRoles.get().getRoles();
-        userActionLogger.endAuth();
-        
-        userActionLogger.startWrenchAllowedRoles();
-        final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
-            .addAllUserRoles(userRoles)
-            .build()).getAllowedProcessNames();
-        userActionLogger.endWrenchAllowedRoles();
-        
-         if(!(
-             allowed.contains(stencilService.getValue()) ||
-             allowed.contains(actionId) ||
-             allowed.contains(stencilService.getName())
-          )) {
-           throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
-         }
-      } else {
-        userActionLogger.endAuth();
-      }
-    }
-
     
     if(sites.getSites().get(clientLocale) == null) {
       throw new WorkflowNotFoundException(new StringBuilder()
@@ -151,51 +180,50 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
       new UserActionNotAllowedException("Process: " + actionId + " blocked, there is no customer data, 'Customer' or 'InitUserAction'!")     
     );
     
-    
-    return visitForm(request, stencilService).onItem().transform(revision -> {
-      
-      final var sessionId = revision.getId();
-      userActionLogger.startProcessInstance();
-      final var process = hdesCommands.createInstance()
-          .questionnaireId(sessionId)
-          .userId(request.getIdentity())
-          .expiresInSeconds(expiresInSeconds)
-          .expiresAt(stencilService.getEndDate() != null ? stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime() : null)
-          .anon(anon)
-          .taskId(taskId)
+    return visitForm(request, stencilService)
+        .onItem().invoke(() -> userActionLogger.startProcessInstance())
+        .onItem().transformToUni(revision -> {
           
-          .workflowName(stencilService.getValue())
-          .articleName(request.getInputContextId())
-          .parentArticleName(request.getInputParentContextId())
-          .flowName(stencilService.getFlowName())
-          .formName(stencilService.getFormName())
-          
-          .formTagName(stencilService.getFormTag())
-          .stencilTagName(runtime.getStencilTagName())
-          .wrenchTagName(runtime.getWrenchTagName())
-          .customerAssignment(customerAssignment)
-          .cockpitId(cockpitId)
-          
-          .create();
-      
-      userActionLogger.endProcessInstance();
-
-      return ImmutableUserAction.builder()
-          .id(process.getId().toString())
-          .status(process.getStatus().name())
-          .created(process.getCreated())
-          .updated(process.getUpdated())
-          .name(process.getWorkflowName())
-          .inputContextId(visitArticleName(process.getArticleName()))
-          .inputParentContextId(process.getParentArticleName())
-          .formId(process.getQuestionnaireId())
-          .formInProgress(true)
-          .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
-          .viewed(true)
-          .taskId(process.getTaskId())
-          .cockpitId(process.getCockpitId())
-          .build();
-    });
+          return taskClient.createProcess()
+            .questionnaireId(revision.getId())
+            .userId(request.getIdentity())
+            .expiresInSeconds(expiresInSeconds)
+            .expiresAt(stencilService.getEndDate() != null ? stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime() : null)
+            .anon(anon)
+            .taskId(taskId)
+            
+            .workflowName(stencilService.getValue())
+            .articleName(request.getInputContextId())
+            .parentArticleName(request.getInputParentContextId())
+            .flowName(stencilService.getFlowName())
+            .formName(stencilService.getFormName())
+            
+            .formTagName(stencilService.getFormTag())
+            .stencilTagName(runtime.getStencilTagName())
+            .wrenchTagName(runtime.getWrenchTagName())
+            .customerAssignment(customerAssignment)
+            .cockpitId(cockpitId)
+            .build();
+        })
+        .onItem().transform(process -> {
+          final UserAction action = ImmutableUserAction.builder()
+            .id(process.getId().toString())
+            .status(process.getStatus().name())
+            .created(process.getCreated())
+            .updated(process.getUpdated())
+            .name(process.getWorkflowName())
+            .inputContextId(visitArticleName(process.getArticleName()))
+            .inputParentContextId(process.getParentArticleName())
+            .formId(process.getQuestionnaireId())
+            .formInProgress(true)
+            .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
+            .viewed(true)
+            .taskId(process.getTaskId())
+            .cockpitId(process.getCockpitId())
+            .build();
+          return action;
+        })
+        .onItem().invoke(() -> userActionLogger.endProcessInstance());
   }
   
   public static UserAction map(ProcessInstance process) {
@@ -375,6 +403,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     }
   }
   
+  private CockpitIdSupplier cockpitIdSupplier() {
+    return () -> Uni.createFrom().item(Optional.ofNullable(cockpitId));
+  }
   
   @Value.Immutable
   @JsonSerialize(as = ImmutableInitUserAction.class)
@@ -407,5 +438,13 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     String getInputContextId();
     @Nullable
     String getInputParentContextId();
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableCustomerAuthorization.class)
+  @JsonDeserialize(as = ImmutableCustomerAuthorization.class)
+  public interface CustomerAuthorization {
+    String getActionId();
+    Boolean getAllowed();
   }
 }

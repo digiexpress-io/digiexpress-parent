@@ -56,7 +56,8 @@ public interface TaskClient {
   
   DeleteTasks deleteTasks();
   
-  ModifyTaskProcess modifyProcess();
+  ModifyProcess modifyProcess();
+  CreateProcess createProcess();
   
   QueryUnreadUserTasks queryUnreadUserTasks();
   QueryTaskComments queryTaskComments();
@@ -73,12 +74,39 @@ public interface TaskClient {
     Multi<FormAssignment> findAll(String taskId);
   }
   
-  interface ModifyTaskProcess {
-    ModifyTaskProcess id(String id);
-    ModifyTaskProcess commitMessage(String commitMessage);
-    ModifyTaskProcess commitAuthor(String commitAuthor);
-    ModifyTaskProcess status(ProcessStatus status);
-    ModifyTaskProcess taskId(String taskId);
+  interface CreateProcess {
+    
+    CreateProcess questionnaireId(String questionnaire);
+    CreateProcess userId(String userId);
+    CreateProcess expiresInSeconds(Long expires_in_seconds);
+    CreateProcess expiresAt(OffsetDateTime expiresAt);
+    CreateProcess workflowName(String name);
+    
+    CreateProcess anon(boolean anon);
+    
+    CreateProcess articleName(String articleName);
+    CreateProcess parentArticleName(String parentArticleName);
+    
+    CreateProcess taskId(@Nullable String taskId);
+    CreateProcess formName(String formName);
+    CreateProcess flowName(String flowName);
+
+    CreateProcess formTagName(String formTagName);
+    CreateProcess stencilTagName(String stencilTagName);
+    CreateProcess wrenchTagName(String wrenchTagName);
+    CreateProcess customerAssignment(boolean isCustomerAssignment);
+    CreateProcess cockpitId(@Nullable String cockpitId);
+    
+    
+    Uni<ProcessInstance> build();
+  }
+  
+  interface ModifyProcess {
+    ModifyProcess id(String id);
+    ModifyProcess commitMessage(String commitMessage);
+    ModifyProcess commitAuthor(String commitAuthor);
+    ModifyProcess status(ProcessStatus status);
+    ModifyProcess taskId(String taskId);
     Uni<ProcessInstance> build();
   }
   

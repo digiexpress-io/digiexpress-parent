@@ -40,7 +40,7 @@ import jakarta.annotation.Nullable;
 public interface ProcessClient {
   QueryProcessInstances queryInstances();
   ProcessInstanceStatusBuilder changeInstanceStatus();
-  ProcessAuthorizationQuery queryAuthorization();
+
   ProcessQuestionnaireQuery queryProcessQuestionnaire();
   
   CreateProcessInstance createInstance();
@@ -86,10 +86,7 @@ public interface ProcessClient {
     
     ProcessInstance create();
   }
-  
-  interface ProcessAuthorizationQuery {
-    ProcessAuthorization get(InitProcessAuthorization init);
-  }
+
 
   
   interface QueryProcessInstances {
@@ -118,25 +115,4 @@ public interface ProcessClient {
     void completed(String id);
     void rejected(String id);
   }
-  
-  //@Relation(collectionRelation = "processDataList", itemRelation = "processDataList", value = "processDataList" )
-
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableProcessAuthorization.class)
-  @JsonDeserialize(as = ImmutableProcessAuthorization.class)
-  interface ProcessAuthorization {
-    List<String> getUserRoles();
-    List<String> getAllowedProcessNames();
-  }
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableInitProcessAuthorization.class)
-  @JsonDeserialize(as = ImmutableInitProcessAuthorization.class)
-  interface InitProcessAuthorization {
-    @Nullable String getCockpitId();
-    List<String> getUserRoles();
-  }
-  
-  
 }

@@ -46,6 +46,11 @@ public class GamutClientImpl implements GamutClient {
   private final GamutAuthClient authClient;
   private final EveliEnvirClient envir;
 
+  
+  @Override
+  public ProcessAuthorizationQuery queryAuthorization() {
+    return new ProcessAuthorizationQueryImpl(envir);
+  }
 
   @Override
   public UserActionFillEventBuilder fillEvent() {
@@ -54,12 +59,12 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, envir);
+    return new UserActionsBuilderImpl(dialobCommands, envir, taskClient);
   }
 
   @Override
   public UserActionQuery userActionQuery() {
-    return new UserActionsQueryImpl(processInstanceClient, taskClient, authClient, attachmentsCommands);
+    return new UserActionsQueryImpl(envir, taskClient, authClient, attachmentsCommands);
   }
 
   @Override
@@ -132,7 +137,6 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public UserActionViewBuilder userActionViewBuilder() {
-
     return new UserActionViewBuilder() {
       private String actionId;
       @Override
@@ -143,19 +147,21 @@ public class GamutClientImpl implements GamutClient {
       }
       @Override
       public Uni<Void> create() {
-        final var action = userActionQuery().findOneById(actionId);
-        if(action.isEmpty()) {
-          return Uni.createFrom().voidItem();        
-        }
-        final var taskId = action.get().getTaskId();
-        if(taskId == null) {
-          return Uni.createFrom().voidItem();
-        }
-        
-        final var customerId = authClient.getCustomer().getCustomerId();
-        return taskClient.taskBuilder()
-            .userId(customerId.getSafeId(), null)
-            .addCustomerCommitViewer(taskId);
+        return userActionQuery().findOneById(actionId).onItem().transformToUni(action -> {
+          
+          if(action.isEmpty()) {
+            return Uni.createFrom().voidItem();        
+          }
+          final var taskId = action.get().getTaskId();
+          if(taskId == null) {
+            return Uni.createFrom().voidItem();
+          }
+          
+          final var customerId = authClient.getCustomer().getCustomerId();
+          return taskClient.taskBuilder()
+              .userId(customerId.getSafeId(), null)
+              .addCustomerCommitViewer(taskId);
+        });
       }
     };
   }

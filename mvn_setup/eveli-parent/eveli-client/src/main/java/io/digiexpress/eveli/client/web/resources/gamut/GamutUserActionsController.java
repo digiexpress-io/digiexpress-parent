@@ -55,8 +55,6 @@ import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
-import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
@@ -73,7 +71,6 @@ public class GamutUserActionsController {
   private final GamutClient gamutClient;
   private final GamutAuthClient authClient;
   private final DialobClient dialob;
-  private final ProcessClient hdes;
   private final FeedbackClient feedback;
   
   @Value.Immutable
@@ -190,7 +187,7 @@ public class GamutUserActionsController {
   }
 
   @GetMapping(value="/authorizations")
-  public ResponseEntity<AuthorizationAction> getAuthorizations(
+  public Uni<ResponseEntity<AuthorizationAction>> getAuthorizations(
       @RequestParam(name = "cockpitId", required = false) String cockpitId
   ) {
     
@@ -199,18 +196,16 @@ public class GamutUserActionsController {
     final var person = customer.getRepresentedPerson();
     final var company = customer.getRepresentedCompany();
     if(person == null && company == null) {
-      return ResponseEntity.ok(null); // Nobody is represented
+      return Uni.createFrom().item(ResponseEntity.ok(null)); // Nobody is represented
     }
     final var roles = authClient.getCustomerRoles().getRoles();
-    final var allowed = hdes.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
+    return gamutClient.queryAuthorization()
         .cockpitId(cockpitId)
-        .addAllUserRoles(roles)
-        .build());
-    
-    return  ResponseEntity.ok(ImmutableAuthorizationAction.builder()
-        .addAllUserRoles(roles)
-        .allowedProcessNames(allowed.getAllowedProcessNames())
-        .build());
+        .userRoles(roles)
+        .getOne().onItem().transform(allowed -> ResponseEntity.ok(ImmutableAuthorizationAction.builder()
+            .addAllUserRoles(roles)
+            .allowedProcessNames(allowed.getAllowedProcessNames())
+            .build()));
   }
 
   @GetMapping
