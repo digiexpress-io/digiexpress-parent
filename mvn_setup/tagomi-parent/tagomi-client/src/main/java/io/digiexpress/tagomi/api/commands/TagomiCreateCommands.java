@@ -69,7 +69,7 @@ public interface TagomiCreateCommands {
   interface CreateResource extends Command {
     @Nullable String getId();
     String getResourceName();
-    String getContentType();
+    TagomiContainer.ResourceType getContentType();
     byte[] getUploadBody(); // some static asset...
     List<String> getTemplateIds();
   }

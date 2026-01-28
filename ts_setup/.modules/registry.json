@@ -1409,10 +1409,10 @@
         "luxon",
         "ts-md5",
         "@tanstack/react-query",
+        "@dxs-ts/gamut-cockpit-store",
         "react-intl",
         "@dxs-ts/gamut-intl",
         "leaflet-geosearch",
-        "@dxs-ts/gamut-cockpit-store",
         "@mui/material"
       ],
       "actualExternalDependencies": [
@@ -1425,8 +1425,8 @@
         "@mui/material"
       ],
       "actualInternalDependencies": [
-        "@dxs-ts/gamut-intl",
-        "@dxs-ts/gamut-cockpit-store"
+        "@dxs-ts/gamut-cockpit-store",
+        "@dxs-ts/gamut-intl"
       ],
       "missingDependencies": [],
       "unusedDependencies": [
@@ -2960,10 +2960,10 @@
         "@dxs-ts/tagomi-api",
         "notistack",
         "@mui/icons-material",
-        "@tanstack/react-router",
-        "@dxs-ts/envir-fetch",
         "@mui/x-tree-view",
         "@mui/utils",
+        "@tanstack/react-router",
+        "@dxs-ts/envir-fetch",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -2973,9 +2973,9 @@
         "react-intl",
         "notistack",
         "@mui/icons-material",
-        "@tanstack/react-router",
         "@mui/x-tree-view",
         "@mui/utils",
+        "@tanstack/react-router",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -4434,5 +4434,5 @@
     }
   },
   "checksum": "658af82755500afa111c3a1fff183d5c55cf1b34e073159f48dbed61e46a99fe",
-  "generatedAt": "2026-01-23T09:57:54.625Z"
+  "generatedAt": "2026-01-27T22:25:35.650Z"
 }

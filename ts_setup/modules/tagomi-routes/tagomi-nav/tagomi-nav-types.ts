@@ -18,7 +18,9 @@ export type ExplorerItem = (
   { type: 'RESOURCES' } |
   { type: 'LOCALES' } |
   { type: 'TEMPLATES' } |
-  { type: 'TAGS' }
+  { type: 'TAGS' } |
+  { type: 'LOGOS' } |
+  { type: 'SCRIPTS' }
 )
 
 export function toExplorerId(data: ExplorerItem): string {
