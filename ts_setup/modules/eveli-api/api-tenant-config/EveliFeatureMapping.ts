@@ -20,6 +20,7 @@ export const EveliFeatureMapping = {
   'TAGOMI_ENABLED': oneOf(['tagomi']),     
   'CONTRACT_ENABLED': oneOf(['contract']),
   'COCKPITS_ENABLED': oneOf(['cockpits']),
+  'EVELI_TREE_ENABLED': oneOf(['eveli_tree']),
 
   'PUBLICATION_UPDATE': notOneOf(['external-deployment']),                    
 
