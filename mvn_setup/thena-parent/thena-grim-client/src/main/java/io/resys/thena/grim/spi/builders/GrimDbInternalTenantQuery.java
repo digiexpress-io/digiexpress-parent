@@ -60,6 +60,7 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
       
       
       tablesCreate
+      .append(grim.processes().createTable().getValue())
       .append(grim.commands().createTable().getValue())
       .append(grim.assignments().createTable().getValue())
       .append(grim.commits().createTable().getValue())
@@ -132,7 +133,7 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
       
       
       tablesDrop
-
+      
       .append(grim.assignments().dropTable().getValue())
       .append(grim.missionData().dropTable().getValue())
       .append(grim.missionLabels().dropTable().getValue())
@@ -145,6 +146,7 @@ public class GrimDbInternalTenantQuery extends InternalTenantQueryImpl implement
       
       .append(grim.commitTrees().dropTable().getValue())
       .append(grim.commitViewers().dropTable().getValue())
+      .append(grim.processes().dropTable().getValue())
       .append(grim.missions().dropTable().getValue())
       .append(grim.commits().dropTable().getValue());
 

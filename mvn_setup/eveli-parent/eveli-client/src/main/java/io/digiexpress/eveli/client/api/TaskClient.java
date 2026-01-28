@@ -74,8 +74,7 @@ public interface TaskClient {
     Multi<FormAssignment> findAll(String taskId);
   }
   
-  interface CreateProcess {
-    
+  interface CreateProcess {  
     CreateProcess questionnaireId(String questionnaire);
     CreateProcess userId(String userId);
     CreateProcess expiresInSeconds(Long expires_in_seconds);
@@ -97,6 +96,8 @@ public interface TaskClient {
     CreateProcess customerAssignment(boolean isCustomerAssignment);
     CreateProcess cockpitId(@Nullable String cockpitId);
     
+    CreateProcess commitAuthor(String author);
+    CreateProcess commitMessage(String message);
     
     Uni<ProcessInstance> build();
   }

@@ -112,7 +112,7 @@ public class GrimDbStateImpl implements GrimState {
     return new InternalProcQueryImpl(dataSource);
   }
   @Override
-  public InternalProcessSequence processSequences() {
+  public InternalProcessSequence missionProcSequences() {
     return new InternalProcessSequenceSqlImpl(dataSource);
   }
 }

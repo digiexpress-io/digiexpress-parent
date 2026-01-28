@@ -43,6 +43,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.CompleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTaskComment;
+import io.digiexpress.eveli.client.spi.task.visitors.CreateProcessVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteCustomerAssignment;
 import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllExternalTaskCommentsByReporterIdVisitor;
@@ -505,5 +506,9 @@ public class TaskClientImpl implements TaskClient {
       }
 
     };
+  }
+  @Override
+  public CreateProcess createProcess() {
+    return new CreateProcessVisitor(ctx);
   }
 }

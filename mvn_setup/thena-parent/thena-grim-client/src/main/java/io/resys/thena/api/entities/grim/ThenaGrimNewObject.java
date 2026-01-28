@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import jakarta.annotation.Nullable;
-
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.vertx.core.json.JsonObject;
 
@@ -88,16 +88,24 @@ public interface ThenaGrimNewObject {
     NewProcess questionnaireId(@Nullable String questionnaire);
     NewProcess userId(@Nullable String userId);
     NewProcess expiresInSeconds(@Nullable Long expires_in_seconds);
-    NewProcess expiresAt(@Nullable OffsetDateTime expiresAt);    
+    NewProcess expiresAt(@Nullable OffsetDateTime expiresAt);
+
     NewProcess anon(@Nullable Boolean anon);
     NewProcess articleName(@Nullable String articleName);
     NewProcess parentArticleName(@Nullable String parentArticleName);
     NewProcess formName(@Nullable String formName);
     NewProcess flowName(@Nullable String flowName);
+    NewProcess missionId(@Nullable String missionId);
+    NewProcess cockpitId(@Nullable String cockpitId);
+    
 
     NewProcess formTagName(@Nullable String formTagName);
     NewProcess stencilTagName(@Nullable String stencilTagName);
     NewProcess wrenchTagName(@Nullable String wrenchTagName);
+    
+    NewProcess status(String status);
+    NewProcess type(GrimProcessType type);
+    
     void build();
   }
   

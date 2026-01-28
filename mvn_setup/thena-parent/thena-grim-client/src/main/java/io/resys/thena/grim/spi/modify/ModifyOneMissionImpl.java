@@ -21,13 +21,17 @@ package io.resys.thena.grim.spi.modify;
  */
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
@@ -45,6 +49,7 @@ import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
 
@@ -58,6 +63,7 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
   private String message;
   private String missionId;
   private Consumer<MergeMission> mission;
+  private List<Consumer<NewProcess>> newProcs = new ArrayList<>();
   
   @Override
   public ModifyOneMission commitAuthor(String author) {
@@ -80,6 +86,14 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
     mission = modifyMission;
     return this;
   }
+
+  @Override
+  public ModifyOneMission addProcess(Consumer<NewProcess> newProc) {
+    RepoAssert.notNull(newProc, () -> "newProc can't be empty!");
+    this.newProcs.add(newProc);
+    return this;
+  }
+  
   @Override
   public Uni<OneMissionEnvelope> build() {
     RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
@@ -176,16 +190,44 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
   }
   
   private Multi<GrimBatchMissions> createRequest(GrimState tx) {
-    return tx.missions()
-    .missionId(this.missionId)
-    .lockForUpdate()
-    .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER)
-    .findAll().onItem().transform(labels -> createRequest(tx, labels));
+    
+    if(this.newProcs.isEmpty()) {
+      return tx.missions()
+          .missionId(this.missionId)
+          .lockForUpdate()
+          .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER)
+          .findAll()
+          .onItem().transform(container -> createRequest(tx, container, null));
+    }
+    
+    
+    return tx.missionProcSequences().nextVal(this.newProcs.size())
+        .onItem()
+        .transform(sequences -> new ConcurrentLinkedQueue<Long>(sequences))
+        .onItem()
+        .transformToMulti(sequences -> 
+          tx.missions()
+            .missionId(this.missionId)
+            .lockForUpdate()
+            .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER)
+            .findAll()
+            .onItem().transform(container -> createRequest(tx, container, sequences))
+        ); 
+        
   }
   
   
-  private GrimBatchMissions createRequest(GrimState tx, GrimMissionContainer container) {
+  private GrimBatchMissions createRequest(
+      GrimState tx, 
+      GrimMissionContainer container, 
+      @Nullable Queue<Long> sequences) {
+    
     RepoAssert.isTrue(container.getMissions().size() == 1, () -> "Mission container must be grouped by missions, one mission per container!");
+    
+    if(!this.newProcs.isEmpty()) {
+      RepoAssert.notNull(sequences, () -> "Process sequence must be defined!");  
+    }
+    
     
     final var mission = container.getMissions().values().iterator().next();
     final var missionId = mission.getId();
@@ -210,6 +252,8 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
     );
     
     final var mergeMission = new MergeMissionBuilder(container, logger);
+    this.newProcs.forEach(callback -> mergeMission.addProcess(callback, sequences.poll()));
+    
     this.mission.accept(mergeMission);
     final var created = mergeMission.close();
     

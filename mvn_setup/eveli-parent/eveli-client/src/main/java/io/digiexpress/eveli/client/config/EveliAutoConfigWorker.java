@@ -119,14 +119,13 @@ public class EveliAutoConfigWorker {
   public DialobCreateEventPublisher dialobCreateEventPublisher(
       ApplicationEventPublisher publisher,
       TaskClient taskClient,
-      ProcessClient processClient,
       DialobClient dialobClient,
       EveliEnvirClient envir,
       MqEventPublisher mqEventPublisher,
       ApplicationContext context
   ) {
     final var cockpitProvider = Optional.ofNullable(context.getBeanProvider(CockpitAwareProvider.class).getIfAvailable());
-    return new DialobCreateEventPublisher(publisher, taskClient, processClient, dialobClient, envir, mqEventPublisher, cockpitProvider);
+    return new DialobCreateEventPublisher(publisher, taskClient, dialobClient, envir, mqEventPublisher, cockpitProvider);
   }
   
   

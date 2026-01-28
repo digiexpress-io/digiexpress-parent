@@ -85,7 +85,7 @@ public interface GrimDataSource extends TenantDataSource {
     InternalCommitTreeQuery commitTree();
     InternalCommitQuery commit();
     InternalProcQuery missionProcs();
-    InternalProcessSequence processSequences();
+    InternalProcessSequence missionProcSequences();
     InternalMissionSequence missionSequences();
     InternalMissionRemarkQuery missionRemarks();
   }

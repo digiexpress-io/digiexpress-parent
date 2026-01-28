@@ -382,9 +382,9 @@ public class MergeMissionBuilder implements MergeMission {
     updateVersion();
     return this;
   }
-  @Override
-  public MergeMission addProcess(Consumer<NewProcess> process) {
-    final var builder = new NewProcessBuilder(logger, missionId);
+
+  public MergeMission addProcess(Consumer<NewProcess> process, long sequence) {
+    final var builder = new NewProcessBuilder(logger, missionId, sequence);
     process.accept(builder);
     final var built = builder.close();
     this.batch.from(built);

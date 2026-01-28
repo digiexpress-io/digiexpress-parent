@@ -24,11 +24,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;

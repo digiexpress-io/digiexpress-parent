@@ -23,8 +23,6 @@ package io.resys.thena.grim.api;
 import java.util.List;
 import java.util.function.Consumer;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.grim.GrimAssignment;
@@ -38,11 +36,13 @@ import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 
 
@@ -57,6 +57,17 @@ public interface GrimCommitActions {
   ModifyManyCommitViewers modifyManyCommitViewer();
   
   ModifyOneProc modifyOneProc();
+  
+  CreateOneProc createOneProc();
+  
+  interface CreateOneProc {
+    CreateOneProc commitAuthor(String author);
+    CreateOneProc commitMessage(String message);
+    CreateOneProc proc(Consumer<NewProcess> modifyProc);
+    
+    Uni<OneProcEnvelope> build();
+  }
+  
   
   interface ModifyOneProc {
     ModifyOneProc commitAuthor(String author);
@@ -80,7 +91,9 @@ public interface GrimCommitActions {
     ModifyOneMission commitAuthor(String author);
     ModifyOneMission commitMessage(String message);
     ModifyOneMission missionId(String missionId);
+    
     ModifyOneMission modifyMission(Consumer<MergeMission> addMission);
+    ModifyOneMission addProcess(Consumer<NewProcess> process);
     
     Uni<OneMissionEnvelope> build();
   }

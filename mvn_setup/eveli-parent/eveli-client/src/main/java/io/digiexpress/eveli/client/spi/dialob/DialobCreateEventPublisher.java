@@ -33,7 +33,6 @@ import org.springframework.scheduling.annotation.Async;
 
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.ImmutableAddFormToCustomerAssignmentCommand;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.AddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
@@ -60,7 +59,6 @@ import lombok.extern.slf4j.Slf4j;
 public class DialobCreateEventPublisher {
   private final ApplicationEventPublisher publisher;
   private final TaskClient taskClient;
-  private final ProcessClient processClient;
   private final DialobClient dialobClient;
   private final EveliEnvirClient envir;
   private final MqEventPublisher mqEventPublisher;
@@ -192,28 +190,29 @@ public class DialobCreateEventPublisher {
     if(!isMainCreated) {
    
       
-      final var mainRequest = getCockpitIdForBackoffice().apply().onItem().transform((cockpitId) -> processClient.createInstance()
-          .anon(false)
-          .taskId(task.getItem1().getId())
-          .userId(ssn)
-          .cockpitId(cockpitId.orElse(null))
-          .anon(false)
-          .customerAssignment(false)
-          
-          .workflowName("_")
-          .articleName("_")
-          .parentArticleName("_")
-
-          .expiresInSeconds(null)
-          .expiresAt(null)
-          
-          .flowName(null)
-          .formName(null)
-          
-          .formTagName(null)
-          .stencilTagName(null)
-          .wrenchTagName(null)
-          .create())
+      final var mainRequest = getCockpitIdForBackoffice().apply()
+          .onItem().transformToUni((cockpitId) -> taskClient.createProcess()
+            .anon(false)
+            .taskId(task.getItem1().getId())
+            .userId(ssn)
+            .cockpitId(cockpitId.orElse(null))
+            .anon(false)
+            .customerAssignment(false)
+            
+            .workflowName("_")
+            .articleName("_")
+            .parentArticleName("_")
+  
+            .expiresInSeconds(null)
+            .expiresAt(null)
+            
+            .flowName(null)
+            .formName(null)
+            
+            .formTagName(null)
+            .stencilTagName(null)
+            .wrenchTagName(null)
+            .build())
           .onItem().transform(UserActionsBuilderImpl::map)
           .onItem().transform(action -> Tuple2.of(Optional.<TaskCustomerAssignment>empty(), action));
   

@@ -119,11 +119,10 @@ WHERE id = $9""").ln()
   public SqlTupleList insertAll(Collection<GrimProcess> procs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getGrimProcesses()).append(" ").ln()
-        .append(" (").ln()        
+        .append("INSERT INTO ").append(options.getGrimProcesses()).append(" ").ln()        
         .append("""
   (
-
+  id,
   type,
   created,
   updated,
@@ -142,11 +141,11 @@ WHERE id = $9""").ln()
   form_tag_name,
   stencil_tag_name,
   wrench_tag_name)""").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)").ln()
         .build())
         .props(procs.stream()
             .map(proc -> Tuple.from(new Object[]{
-                // proc.getId(), ... great, can't create fully qualified object without DB
+                Long.parseLong(proc.getId()),
                 Optional.ofNullable(proc.getType()).map(e -> e.name()).orElse(null),
                 proc.getCreated(),
                 proc.getUpdated(),
@@ -236,10 +235,21 @@ WHERE id = $9""").ln()
   @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
-    .append("CREATE TABLE ").append(options.getGrimProcesses()).ln()
-    .append("(").ln()
-    .append(""" 
-      id                  BIGSERIAL PRIMARY KEY GENERATED ALWAYS AS IDENTITY),
+    
+    .append("CREATE SEQUENCE IF NOT EXISTS ").append(options.getGrimProcessSeq()).ln()
+    .append("""
+      INCREMENT BY 1
+      MINVALUE 1
+      MAXVALUE 9223372036854775807
+      START 1
+      CACHE 1
+      NO CYCLE;
+    """).ln()
+        
+    .append("CREATE TABLE IF NOT EXISTS ").append(options.getGrimProcesses()).ln()
+    .append("""
+    (
+      id                  BIGINT PRIMARY KEY DEFAULT nextval('process_id_seq'::regclass),
       type                VARCHAR(255) NULL,
       article_name        VARCHAR(255) NULL,
       created             TIMESTAMPTZ NOT NULL,
@@ -261,29 +271,28 @@ WHERE id = $9""").ln()
       workflow_name       VARCHAR(255) NOT NULL,
       wrench_tag_name     TEXT NULL,
       anon bool           NULL
-    """)
+    );
+    """).ln()
     
-    .append(");").ln()
-    
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_CREATED_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_CREATED_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (created);").ln()
 
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_TYPE_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_TYPE_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (type);").ln()
     
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_WK_NAME_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_WK_NAME_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (workflow_name);").ln()
 
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_QUESTIONNAIRE_ID_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_QUESTIONNAIRE_ID_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (questionnaire_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_STATUS_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_STATUS_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (status);").ln()
 
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_TASK_ID_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_TASK_ID_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (task_id);").ln()
     
-    .append("CREATE INDEX ").append(options.getGrimProcesses()).append("_FORM_NAME_INDEX")
+    .append("CREATE INDEX IF NOT EXISTS ").append(options.getGrimProcesses()).append("_FORM_NAME_INDEX")
     .append(" ON ").append(options.getGrimProcesses()).append(" (form_name);").ln()
     
     .build()).build();
@@ -302,6 +311,7 @@ WHERE id = $9""").ln()
   public Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getGrimProcesses()).append(";").ln()
+        .append("DROP TABLE ").append(options.getGrimProcessSeq()).append(";").ln()
         .build()).build();
   }
 

@@ -22,6 +22,7 @@ package io.resys.thena.grim.spi.create;
 
 import java.time.OffsetDateTime;
 
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
@@ -32,23 +33,21 @@ import io.resys.thena.support.RepoAssert;
 
 public class NewProcessBuilder implements ThenaGrimNewObject.NewProcess {
   private final GrimCommitBuilder logger;
-  private final String missionId;
   private final OffsetDateTime createdAt = OffsetDateTime.now();
   private final ImmutableGrimBatchMissions.Builder batch;
   private final ImmutableGrimProcess.Builder process;
   
   private boolean built;
   
-  public NewProcessBuilder(GrimCommitBuilder logger, String missionId) {
+  public NewProcessBuilder(GrimCommitBuilder logger, String missionId, long id) {
     super();
     this.logger = logger;
-    this.missionId = missionId;
     this.batch = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
     this.process = ImmutableGrimProcess.builder()
-        .id("broken_id_policy")
+        .id(String.valueOf(id))
         .created(createdAt)
         .updated(createdAt)
         .missionId(missionId)
@@ -125,7 +124,26 @@ public class NewProcessBuilder implements ThenaGrimNewObject.NewProcess {
     this.process.wrenchTagName(wrenchTagName);
     return this;
   }
-  
+  @Override
+  public NewProcess missionId(String missionId) {
+    this.process.missionId(missionId);
+    return this;
+  }
+  @Override
+  public NewProcess cockpitId(String cockpitId) {
+    this.process.cockpitId(cockpitId);
+    return this;
+  }
+  @Override
+  public NewProcess status(String status) {
+    this.process.status(status);
+    return this;
+  }
+  @Override
+  public NewProcess type(GrimProcessType type) {
+    this.process.type(type);
+    return this;
+  }
   public ImmutableGrimBatchMissions close() {
     RepoAssert.isTrue(built, () -> "you must call ObjectiveChanges.build() to finalize mission CREATE or UPDATE!");
     
