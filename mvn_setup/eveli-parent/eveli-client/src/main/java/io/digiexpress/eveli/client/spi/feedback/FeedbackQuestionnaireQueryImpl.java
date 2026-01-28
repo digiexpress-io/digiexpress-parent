@@ -31,8 +31,8 @@ import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireConte
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireQuery;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.dialob.api.DialobClient;

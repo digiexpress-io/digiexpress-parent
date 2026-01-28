@@ -38,7 +38,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

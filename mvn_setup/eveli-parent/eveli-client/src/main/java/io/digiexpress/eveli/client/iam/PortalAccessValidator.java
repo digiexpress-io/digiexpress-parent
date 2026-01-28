@@ -1,12 +1,10 @@
 package io.digiexpress.eveli.client.iam;
 
-import io.digiexpress.eveli.client.api.GamutAuthClient;
-
 /*-
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +20,15 @@ import io.digiexpress.eveli.client.api.GamutAuthClient;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 
 public interface PortalAccessValidator {
 
 
   void validateTaskAccess(Long id, GamutAuthClient.CustomerPrincipal principal) ;
 
-  void validateProcessAccess(ProcessClient.ProcessInstance process, GamutAuthClient.CustomerPrincipal principal);
+  void validateProcessAccess(ProcessInstance process, GamutAuthClient.CustomerPrincipal principal);
 
   void validateProcessIdAccess(String processId, GamutAuthClient.CustomerPrincipal principal);
   

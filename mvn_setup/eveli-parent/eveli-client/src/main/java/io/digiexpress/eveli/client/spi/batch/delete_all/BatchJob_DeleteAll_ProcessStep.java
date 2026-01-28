@@ -21,7 +21,7 @@ package io.digiexpress.eveli.client.spi.batch.delete_all;
  */
 
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.batch.delete_all.BatchJob_DeleteAll_ProcessStep.ProcessCleanupConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;

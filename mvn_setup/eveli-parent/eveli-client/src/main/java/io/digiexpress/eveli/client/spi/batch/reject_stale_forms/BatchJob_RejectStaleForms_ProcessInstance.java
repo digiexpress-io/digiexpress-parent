@@ -24,9 +24,9 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.ProcAndQuestionnaireToReject;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.RejectStaleFormsConfig;
 import io.digiexpress.eveli.dialob.api.DialobClient;

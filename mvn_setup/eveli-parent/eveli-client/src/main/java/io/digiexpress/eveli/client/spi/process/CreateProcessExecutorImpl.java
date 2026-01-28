@@ -29,8 +29,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessExecutor;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;

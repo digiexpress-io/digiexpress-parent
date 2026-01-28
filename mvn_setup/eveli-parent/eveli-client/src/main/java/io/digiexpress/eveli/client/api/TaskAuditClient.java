@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
@@ -71,7 +72,7 @@ public interface TaskAuditClient {
   
   @Value.Immutable @JsonSerialize(as = ImmutableTaskAuditEntryProcess.class) @JsonDeserialize(as = ImmutableTaskAuditEntryProcess.class)
   interface TaskAuditEntryProcess {
-    ProcessClient.ProcessInstance getProcessInstance();
+    ProcessInstance getProcessInstance();
     @Nullable JsonObject getProcessFlowLog(); //FlowProgram.FlowResult
     @Nullable JsonObject getProcessFormLog(); //Questionnaire
     

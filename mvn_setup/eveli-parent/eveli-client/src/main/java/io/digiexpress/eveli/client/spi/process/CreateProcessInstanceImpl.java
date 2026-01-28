@@ -24,8 +24,8 @@ import java.time.OffsetDateTime;
 
 import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;

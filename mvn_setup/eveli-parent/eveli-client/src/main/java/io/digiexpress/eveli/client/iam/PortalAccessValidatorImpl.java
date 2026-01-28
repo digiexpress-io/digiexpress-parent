@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,7 +55,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   }
 
   @Override
-  public void validateProcessAccess(ProcessClient.ProcessInstance process, GamutAuthClient.CustomerPrincipal principal) {
+  public void validateProcessAccess(ProcessInstance process, GamutAuthClient.CustomerPrincipal principal) {
     if (process == null) {
       log.error("Access violation by user: {}, process not found", principal.getUsername());
       throw new ResponseStatusException(
@@ -76,7 +77,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   }
   
 
-  protected ProcessClient.ProcessInstance getProcessFromTask(String taskId) {
+  protected ProcessInstance getProcessFromTask(String taskId) {
     return processClient.queryInstances().findOneByTaskId(taskId).orElse(null);
   }
   

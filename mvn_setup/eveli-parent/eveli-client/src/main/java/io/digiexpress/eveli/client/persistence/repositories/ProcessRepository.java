@@ -31,7 +31,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
 

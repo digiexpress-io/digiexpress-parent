@@ -31,10 +31,9 @@ import org.springframework.data.domain.Sort;
 
 import com.google.common.collect.ImmutableList;
 
-import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,25 +45,25 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   private final ProcessRepository processJPA;
   
   @Override
-  public Optional<ProcessClient.ProcessInstance> findOneById(String id) {
+  public Optional<ProcessInstance> findOneById(String id) {
     return processJPA.findById(Long.parseLong(id)).map(CreateProcessInstanceImpl::map);
   }
   @Override
-  public Optional<ProcessClient.ProcessInstance> findOneByIdAndLock(String id) {
+  public Optional<ProcessInstance> findOneByIdAndLock(String id) {
     return processJPA.findByIdWithLock(Long.parseLong(id)).map(CreateProcessInstanceImpl::map);
   }
   @Override
-  public Optional<ProcessClient.ProcessInstance> findOneByQuestionnaireId(String questionnaireId) {
+  public Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId) {
     return processJPA.findByQuestionnaireId(questionnaireId).map(CreateProcessInstanceImpl::map);
   }
   @Override
-  public List<ProcessClient.ProcessInstance> findAll() {
+  public List<ProcessInstance> findAll() {
     return StreamSupport.stream(processJPA.findAll(Sort.unsorted()).spliterator(), false)
         .map(CreateProcessInstanceImpl::map)
         .collect(Collectors.toList());
   }
   @Override
-  public Optional<ProcessClient.ProcessInstance> findOneByTaskId(String id) {
+  public Optional<ProcessInstance> findOneByTaskId(String id) {
     return processJPA.findByTaskId(id).map(CreateProcessInstanceImpl::map);
   }
 
@@ -74,7 +73,7 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   }
   @Override
   public List<ProcessInstance> findAllAnswered() {
-    return ImmutableList.<ProcessClient.ProcessInstance>builder()
+    return ImmutableList.<ProcessInstance>builder()
         .addAll(processJPA.findAllByStatus(ProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList())
         .addAll(processJPA.findAllByStatus(ProcessStatus.CREATED).stream().map(CreateProcessInstanceImpl::map).toList())
         .build();
@@ -86,7 +85,7 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
 
   @Override
   public List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom) {
-    return ImmutableList.<ProcessClient.ProcessInstance>builder()
+    return ImmutableList.<ProcessInstance>builder()
         .addAll(processJPA.findAllByStatusFromGivenDate(ProcessStatus.ANSWERED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
         .addAll(processJPA.findAllByStatusFromGivenDate(ProcessStatus.CREATED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
         .build();

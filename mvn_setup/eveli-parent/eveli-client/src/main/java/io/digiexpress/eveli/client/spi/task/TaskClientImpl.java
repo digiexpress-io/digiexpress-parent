@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;

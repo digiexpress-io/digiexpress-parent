@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.smallrye.mutiny.Multi;
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +40,7 @@ public class ProcessApiController {
 
 
   @GetMapping("/last-6-months")
-  public Multi<ProcessClient.ProcessInstance> findLast6Months() {
+  public Multi<ProcessInstance> findLast6Months() {
     return taskClient.queryTaskProcesess().findLast6Months();
   }
 }

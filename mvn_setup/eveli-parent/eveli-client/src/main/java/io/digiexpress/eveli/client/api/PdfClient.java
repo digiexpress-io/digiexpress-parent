@@ -22,7 +22,7 @@ package io.digiexpress.eveli.client.api;
 
 import java.util.Collection;
 
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 
 public interface PdfClient {

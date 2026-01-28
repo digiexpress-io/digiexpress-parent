@@ -22,8 +22,8 @@ package io.digiexpress.eveli.client.spi.process;
 
 import java.util.Optional;
 
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstanceBodyBuilder;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert.ProcessException;

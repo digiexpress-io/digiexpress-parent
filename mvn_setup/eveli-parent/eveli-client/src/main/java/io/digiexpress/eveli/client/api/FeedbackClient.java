@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import jakarta.annotation.Nullable;
 
 public interface FeedbackClient {

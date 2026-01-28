@@ -34,9 +34,10 @@ import org.springframework.scheduling.annotation.Async;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.ImmutableAddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.AddFormToCustomerAssignmentCommand;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCustomerAssignment;
@@ -157,7 +158,7 @@ public class DialobCreateEventPublisher {
         .addFormToCustomerAssignment(taskUpdate.getTask().getId(), updates);
   }
   
-  private Uni<TaskUpdate> createFormsAndProcesses(Tuple2<TaskClient.Task, Optional<ProcessClient.ProcessInstance>> task) {
+  private Uni<TaskUpdate> createFormsAndProcesses(Tuple2<TaskClient.Task, Optional<ProcessInstance>> task) {
     final var assignments = task.getItem1().getCustomerAssignments().stream()
         .filter(e -> e.getStatus() == TaskAssignmentStatus.NEW)
         .toList();
@@ -226,12 +227,12 @@ public class DialobCreateEventPublisher {
   @Data @RequiredArgsConstructor
   private static class TaskUpdate {
     private final TaskClient.Task task;
-    private final Optional<ProcessClient.ProcessInstance> process;
+    private final Optional<ProcessInstance> process;
     private final List<Tuple2<Optional<TaskCustomerAssignment>, UserAction>> values;
   }
 
   
-  private CockpitIdSupplier getCockpitIdForFrontoffice(Tuple2<TaskClient.Task, Optional<ProcessClient.ProcessInstance>> task) {
+  private CockpitIdSupplier getCockpitIdForFrontoffice(Tuple2<TaskClient.Task, Optional<ProcessInstance>> task) {
     return () -> Uni.createFrom().item(task.getItem2().map(p -> p.getCockpitId()));
   }
   

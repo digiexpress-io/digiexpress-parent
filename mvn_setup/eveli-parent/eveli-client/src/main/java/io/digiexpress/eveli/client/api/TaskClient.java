@@ -36,12 +36,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskCommand.TaskUpdateCommand;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -80,16 +79,16 @@ public interface TaskClient {
     ModifyTaskProcess commitAuthor(String commitAuthor);
     ModifyTaskProcess status(ProcessStatus status);
     ModifyTaskProcess taskId(String taskId);
-    Uni<ProcessClient.ProcessInstance> build();
+    Uni<ProcessInstance> build();
   }
   
   interface QueryTaskProcesess {
-    Uni<Optional<ProcessClient.ProcessInstance>> findOneByTaskId(String taskId);
-    Multi<ProcessClient.ProcessInstance> findLast6Months();
-    Multi<ProcessClient.ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen);
+    Uni<Optional<ProcessInstance>> findOneByTaskId(String taskId);
+    Multi<ProcessInstance> findLast6Months();
+    Multi<ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen);
     Uni<ProcessInstance> getOneById(String processId); 
     Uni<Optional<ProcessInstance>> findOneById(String processId); 
-    Multi<ProcessClient.ProcessInstance> findAllNotArchivedyUserId(String userId);
+    Multi<ProcessInstance> findAllNotArchivedyUserId(String userId);
   }
   
   interface QueryTaskDasboard {
@@ -453,4 +452,59 @@ public interface TaskClient {
     Boolean getCompleted();
     String getTitle();
   }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableProcessInstance.class)
+  @JsonDeserialize(as = ImmutableProcessInstance.class)
+  interface ProcessInstance {
+    Long getId();
+    ProcessStatus getStatus();
+    OffsetDateTime getCreated();
+    OffsetDateTime getUpdated();
+    
+    @Nullable OffsetDateTime getExpiresAt();
+    @Nullable Long getExpiresInSeconds();
+    
+    String getWorkflowName();
+    @Nullable String getFormName();
+    @Nullable String getFlowName();
+    @Nullable String getArticleName();
+    @Nullable String getParentArticleName();
+    
+    // Entity links
+    @Nullable String getQuestionnaireId();
+    @Nullable String getTaskId();
+    @Nullable String getTaskRef();
+    @Nullable String getUserId();
+    @Nullable GrimProcessType getType();
+
+    
+    Boolean getAnon();
+    
+    // Asset links
+    @Nullable String getFormTagName();
+    @Nullable String getStencilTagName();
+    @Nullable String getWrenchTagName();
+    
+    // Additional tenant based configuration is provided
+    @Nullable String getCockpitId();
+  }
+  
+
+
+  enum ProcessStatus {
+    
+    CREATED,
+    ANSWERING,
+    ANSWERED, // 
+    
+    IN_PROGRESS,
+    WAITING,
+    COMPLETED,
+    REJECTED,
+    WAITING_FOR_SYNC, // complete event arrived from form, waiting to launch flow
+    EXPIRED
+  }
+  
+  
 }

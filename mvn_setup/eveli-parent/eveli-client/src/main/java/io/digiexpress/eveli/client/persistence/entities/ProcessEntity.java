@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;

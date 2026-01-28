@@ -21,7 +21,7 @@ package io.digiexpress.eveli.client.spi.process;
  */
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstanceStatusBuilder;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import lombok.RequiredArgsConstructor;
