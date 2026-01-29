@@ -5,7 +5,7 @@ import {
   ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData } from './mock-tree-data';
-import { useUtilityClasses, EveliTreeRoot, getIcon, getTextColor, getIconClassName, EveliTreeClasses } from './useUtilityClasses';
+import { useUtilityClasses, EveliTreeRoot, getIcon, getNodeColor, getIconClassName, EveliTreeClasses } from './useUtilityClasses';
 
 
 interface TreeItemProps {
@@ -45,22 +45,13 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
             primary={
               <Typography variant='caption'
                 sx={{
-                  color: getTextColor(node),
+                  color: getNodeColor(node.type),
                   fontSize: '13px',
                   fontWeight: node.type === 'folder' ? 500 : 400,
                 }}
               >
                 {node.name}
-                {node.description && (
-                  <Typography variant='caption'
-                    sx={{
-                      ml: 1,
-                      color: '#6a9955',
-                      fontStyle: 'italic',
-                    }}
-                  >
-                    - "{node.description}"
-                  </Typography>
+                {node.description && (<Typography variant='caption' sx={{ ml: 1, color: '#6a9955', fontStyle: 'italic' }}>- "{node.description}"</Typography>
                 )}
               </Typography>
             }

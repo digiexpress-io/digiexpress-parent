@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled, Badge, useTheme } from '@mui/material';
 
-import { TreeNode } from './mock-tree-data';
+import { TreeNode, TreeNodeType } from './mock-tree-data';
 import {
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
@@ -100,7 +100,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconFolder`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#cccccc',
+      color: getNodeColor('folder'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -109,7 +109,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconArticle`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#dcdcaa',
+      color: getNodeColor('article'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -118,7 +118,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconService`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#4ec9b0',
+      color: getNodeColor('service'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -127,7 +127,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconForm`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#9cdcfe',
+      color: getNodeColor('form'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -136,7 +136,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconFlow`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#c586c0',
+      color: getNodeColor('flow'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -145,7 +145,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconLink`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#98d982',
+      color: getNodeColor('link'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -154,7 +154,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconLanguage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#ce9178',
+      color: getNodeColor('language'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -237,10 +237,10 @@ export const getIconClassName = (node: TreeNode, classes: EveliTreeClasses) => {
   }
 };
 
-export const getTextColor = (node: TreeNode) => {
-  switch (node.type) {
+export const getNodeColor = (nodeType: TreeNodeType) => {
+  switch (nodeType) {
     case 'folder':
-      return '#cccccc';
+      return '#cccccc'; // Gray
     case 'article':
       return '#dcdcaa'; // Yellow for articles
     case 'service':

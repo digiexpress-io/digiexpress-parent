@@ -2,12 +2,15 @@
 export interface TreeNode {
   id: string;
   name: string;
-  type: 'folder' | 'article' | 'service' | 'form' | 'flow' | 'link' | 'language';
   description?: string;
   children?: TreeNode[];
   isExpanded?: boolean;
   isReference?: boolean;
+  type: TreeNodeType;
 }
+
+export type TreeNodeType = 'folder' | 'article' | 'service' | 'form' | 'flow' | 'link' | 'language';
+
 
 export const mockTreeData: TreeNode[] = [
   {
