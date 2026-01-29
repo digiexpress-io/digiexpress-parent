@@ -31,8 +31,6 @@ export const LinksList: React.FC<{ searchString: string }> = ({ searchString }) 
   const [editLink, setEditLink] = React.useState<undefined | StencilApi.LinkId>(undefined);
   const classes = useUtilityClasses();
 
-  console.log(session, 'session')
-
   const links: Composer.LinkView[] = React.useMemo(() => {
     if (searchString) {
       return session.search.filterLinks(searchString).map(searchResult => session.getLinkView(searchResult.source.id))
