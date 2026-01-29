@@ -84,6 +84,10 @@ export const EveliTreeRoot = styled('div', {
       borderBottom: '1px solid #3c3c3c',
       padding: theme.spacing(1),
       backgroundColor: '#2d2d30',
+      display: 'flex',
+      justifyContent: 'left',
+      alignItems: 'center',
+      width: '100%'
     },
 
     [`& .${MUI_NAME}-titleText`]: {
@@ -159,7 +163,6 @@ export const EveliTreeRoot = styled('div', {
         fontSize: '15px',
       },
     },
-
 
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
@@ -272,7 +275,7 @@ export function getIconClassName(node: TreeNode, classes: EveliTreeClasses) {
   }
 };
 
-function getNodeColor(nodeType: TreeNodeType) {
+export function getNodeColor(nodeType: TreeNodeType) {
   switch (nodeType) {
     case 'folder':
       return '#e8e5e5'; // Gray

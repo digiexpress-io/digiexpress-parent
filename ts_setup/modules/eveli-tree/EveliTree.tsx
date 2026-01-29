@@ -7,12 +7,14 @@ import {
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData } from './mock-tree-data';
 import { useUtilityClasses, EveliTreeRoot, getIcon, getIconClassName, EveliTreeClasses, StyledListItem, StyledListItemText } from './useUtilityClasses';
+import { EveliTreeItemMenu } from './EveliTreeItemMenu';
 
 
 interface TreeItemProps {
   node: TreeNode;
   level: number;
   onToggle: (nodeId: string) => void;
+  onContextMenu: (event: React.MouseEvent, node: TreeNode) => void;
   classes: EveliTreeClasses;
 }
 
@@ -25,12 +27,16 @@ function sortChildren(children: TreeNode[]) {
   });
 }
 
-const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) => {
+const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMenu, classes }) => {
   const hasChildren = node.children && node.children.length > 0;
 
   return (
     <>
-      <StyledListItem level={level} onClick={() => hasChildren && onToggle(node.id)}>
+      <StyledListItem
+        level={level}
+        onClick={() => hasChildren && onToggle(node.id)}
+        onContextMenu={(event) => onContextMenu(event, node)}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {hasChildren ? (
             <IconButton size='small'>
@@ -58,6 +64,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
                 node={child}
                 level={level + 1}
                 onToggle={onToggle}
+                onContextMenu={onContextMenu}
                 classes={classes}
               />
             ))}
@@ -71,6 +78,11 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
 export const EveliTree: React.FC = () => {
   const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
+  const [contextMenuData, setContextMenuData] = React.useState<{
+    node: TreeNode;
+    anchorPosition: { top: number; left: number };
+  } | null>(null);
+  const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
 
   const collapseAll = () => {
     const collapseNode = (nodes: TreeNode[]): TreeNode[] => {
@@ -99,22 +111,36 @@ export const EveliTree: React.FC = () => {
     setTreeData(updateNode(treeData));
   };
 
+  function handleContextMenu(event: React.MouseEvent, node: TreeNode) {
+    event.preventDefault();
+    setContextMenuData({
+      node,
+      anchorPosition: {
+        top: event.clientY,
+        left: event.clientX,
+      },
+    });
+    setContextMenuOpen(true);
+  }
+
+  function handleContextMenuClose() {
+    setContextMenuOpen(false);
+  }
+
   return (
     <EveliTreeRoot className={classes.root}>
       <Box className={classes.title}>
-        <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center', width: '100%' }}>
-          <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
-          <IconButton size='small' onClick={collapseAll}
-            sx={{
-              color: '#cccccc',
-              '&:hover': {
-                backgroundColor: '#3c3c3c',
-              },
-            }}
-          >
-            <CollapseAllIcon fontSize='small' />
-          </IconButton>
-        </Box>
+        <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
+        <IconButton size='small' onClick={collapseAll}
+          sx={{
+            color: '#cccccc',
+            '&:hover': {
+              backgroundColor: '#3c3c3c',
+            },
+          }}
+        >
+          <CollapseAllIcon fontSize='small' />
+        </IconButton>
       </Box>
       <List component='nav' disablePadding>
         {treeData.map((node) => (
@@ -123,10 +149,19 @@ export const EveliTree: React.FC = () => {
             node={node}
             level={0}
             onToggle={handleToggle}
+            onContextMenu={handleContextMenu}
             classes={classes}
           />
         ))}
       </List>
+
+      <EveliTreeItemMenu
+        node={contextMenuData?.node || null}
+        anchorPosition={contextMenuData?.anchorPosition || null}
+        open={contextMenuOpen}
+        onClose={handleContextMenuClose}
+        onExited={() => setContextMenuData(null)}
+      />
     </EveliTreeRoot>
   );
 }
