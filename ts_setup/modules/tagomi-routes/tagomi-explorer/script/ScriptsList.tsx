@@ -15,16 +15,16 @@ const EndIcon: React.FC = () => {
 
 export const ScriptsList: React.FC<{ searchString: string }> = ({ searchString }) => {
   const intl = useIntl();
-  const { session } = Composer.useComposer();
+  const { site } = Composer.useComposer();
 
   const scripts = React.useMemo(() => {
-    return session.resources.filter(r => r.resource.contentType === 'SCRIPT');
-  }, [session.resources]);
+    return Object.values(site.resources).filter(r => r.contentType === 'SCRIPT');
+  }, [site.resources]);
 
   const filteredScripts = React.useMemo(() => {
     if (!searchString) return scripts;
     return scripts.filter((script) =>
-      script.resource.resourceName.toLowerCase().includes(searchString.toLowerCase())
+      script.resourceName.toLowerCase().includes(searchString.toLowerCase())
     );
   }, [scripts, searchString]);
 
@@ -39,7 +39,7 @@ export const ScriptsList: React.FC<{ searchString: string }> = ({ searchString }
       <SimpleTreeView
         slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
       >
-        {filteredScripts.map(script => (<ScriptItem key={script.resource.id} scriptId={script.resource.id} />))}
+        {filteredScripts.map(script => (<ScriptItem key={script.id} scriptId={script.id} />))}
       </SimpleTreeView>
     </ScriptsListRoot>
   );

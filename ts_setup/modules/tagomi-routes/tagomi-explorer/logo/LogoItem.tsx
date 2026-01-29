@@ -13,14 +13,14 @@ interface LogoItemProps {
 }
 
 const LogoItem: React.FC<LogoItemProps> = ({ logoId }) => {
-  const { session } = Composer.useComposer();
-  const resourceView = session.resources.find(r => r.resource.id === logoId);
+  const { site } = Composer.useComposer();
+  const logo = Object.values(site.resources).find(r => r.id === logoId);
 
-  if (!resourceView) {
+  if (!logo) {
     return null;
   }
 
-  const logoName = resourceView.resource.resourceName;
+  const logoName = logo.resourceName;
 
   return (
     <>

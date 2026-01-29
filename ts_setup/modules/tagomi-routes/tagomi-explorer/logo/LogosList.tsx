@@ -15,16 +15,16 @@ const EndIcon: React.FC = () => {
 
 export const LogosList: React.FC<{ searchString: string }> = ({ searchString }) => {
   const intl = useIntl();
-  const { session } = Composer.useComposer();
+  const { site } = Composer.useComposer();
 
   const logos = React.useMemo(() => {
-    return session.resources.filter(r => r.resource.contentType === 'LOGO');
-  }, [session.resources]);
+    return Object.values(site.resources).filter(r => r.contentType === 'LOGO');
+  }, [site.resources]);
 
   const filteredLogos = React.useMemo(() => {
     if (!searchString) return logos;
     return logos.filter((logo) =>
-      logo.resource.resourceName.toLowerCase().includes(searchString.toLowerCase())
+      logo.resourceName.toLowerCase().includes(searchString.toLowerCase())
     );
   }, [logos, searchString]);
 
@@ -39,7 +39,7 @@ export const LogosList: React.FC<{ searchString: string }> = ({ searchString }) 
       <SimpleTreeView
         slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
       >
-        {filteredLogos.map(logo => (<LogoItem key={logo.resource.id} logoId={logo.resource.id} />))}
+        {filteredLogos.map(logo => (<LogoItem key={logo.id} logoId={logo.id} />))}
       </SimpleTreeView>
     </LogosListRoot>
   );

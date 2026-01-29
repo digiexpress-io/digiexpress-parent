@@ -102,9 +102,6 @@ class SessionData implements TagomiComposerApi.Session {
   get services() {
     return Object.values(this._cache.getServices());
   }
-  get resources() {
-    return Object.values(this._cache.getResources());
-  }
   get site() {
     return this._site;
   }

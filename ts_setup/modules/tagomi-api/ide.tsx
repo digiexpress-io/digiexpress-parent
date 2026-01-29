@@ -10,7 +10,6 @@ export declare namespace TagomiComposerApi {
     site: TagomiApi.TagomiContainer,
     templates: Record<TagomiApi.TemplateId, TemplateUpdate>;
     services: ServiceView[];
-    resources: ResourceView[];
 
     getServiceView(workflowId: TagomiApi.ServiceId): ServiceView;
 

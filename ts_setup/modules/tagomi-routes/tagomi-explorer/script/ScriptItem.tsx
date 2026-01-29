@@ -13,14 +13,14 @@ interface ScriptItemProps {
 }
 
 const ScriptItem: React.FC<ScriptItemProps> = ({ scriptId }) => {
-  const { session } = Composer.useComposer();
-  const resourceView = session.resources.find(r => r.resource.id === scriptId);
+  const { site } = Composer.useComposer();
+  const script = Object.values(site.resources).find(r => r.id === scriptId);
 
-  if (!resourceView) {
+  if (!script) {
     return null;
   }
 
-  const scriptName = resourceView.resource.resourceName;
+  const scriptName = script.resourceName;
 
   return (
     <>
