@@ -3,7 +3,7 @@ import { Typography, Button, Box, Dialog, DialogTitle, DialogContent, DialogActi
 import { useSnackbar } from 'notistack';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor, { commands } from '@uiw/react-md-editor';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
@@ -15,6 +15,17 @@ import { TemplateComposerRoot, useTemplateComposerUtilityClasses } from './useUt
 interface TemplateComposerProps {
   onClose: () => void;
 }
+
+// only show markdown buttons that render correctly in Gamut
+const GAMUT_SAFE_COMMANDS = [
+  commands.bold,
+  commands.italic,
+  commands.hr,
+  commands.title,
+  commands.image,
+  commands.unorderedListCommand,
+  commands.orderedListCommand,
+];
 
 const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
   const classes = useTemplateComposerUtilityClasses();
@@ -75,7 +86,7 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
 
           <Box className={classes.editorRow}>
             <Box className={classes.editorCol}>
-              <MDEditor key={1} value={content} onChange={handleContentChange}
+              <MDEditor key={1} value={content} onChange={handleContentChange} commands={GAMUT_SAFE_COMMANDS}
                 textareaProps={{ placeholder: '# Level 1 Header' }}
                 height={300}
               />
