@@ -15,6 +15,15 @@ interface TreeItemProps {
   classes: EveliTreeClasses;
 }
 
+const sortChildren = (children: TreeNode[]) => {
+  const order = ['article', 'service', 'form', 'flow'];
+  return children.sort((a, b) => {
+    const aIndex = order.indexOf(a.type);
+    const bIndex = order.indexOf(b.type);
+    return aIndex - bIndex;
+  });
+};
+
 const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) => {
   const hasChildren = node.children && node.children.length > 0;
 
@@ -62,7 +71,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
       {hasChildren && (
         <Collapse in={node.isExpanded} timeout={0}>
           <List component='div' disablePadding>
-            {node.children?.map((child) => (
+            {sortChildren(node.children || []).map((child) => (
               <TreeItem
                 key={child.id}
                 node={child}
