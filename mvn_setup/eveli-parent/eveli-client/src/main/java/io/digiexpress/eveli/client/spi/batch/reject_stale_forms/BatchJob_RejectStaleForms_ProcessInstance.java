@@ -63,7 +63,7 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
       public Multi<ProcAndQuestionnaireToReject> findAll() {
         final var config = getConfig();
         return taskClient.queryTaskProcesess()
-            .findStaleWithoutTasks(OffsetDateTime.now().minusMonths(config.getAgeInMonths()))
+            .findAllStaleWithoutTasks(OffsetDateTime.now().minusMonths(config.getAgeInMonths()))
             .onItem().transform(proc -> {
               try {
                 final var questionnaire = Optional.ofNullable(dialobClient.getQuestionnaireById(proc.getQuestionnaireId()));

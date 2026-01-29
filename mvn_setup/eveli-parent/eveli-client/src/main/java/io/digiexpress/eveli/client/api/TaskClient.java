@@ -112,12 +112,17 @@ public interface TaskClient {
   }
   
   interface QueryTaskProcesess {
+    Uni<ProcessInstance> getOneById(String processId);
+    
     Uni<Optional<ProcessInstance>> findOneByTaskId(String taskId);
-    Multi<ProcessInstance> findLast6Months();
-    Multi<ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen);
-    Uni<ProcessInstance> getOneById(String processId); 
     Uni<Optional<ProcessInstance>> findOneById(String processId); 
+    
+    Multi<ProcessInstance> findAll();
+    Multi<ProcessInstance> findAllInLast6Months();
+    Multi<ProcessInstance> findAllStaleWithoutTasks(OffsetDateTime olderThen);
     Multi<ProcessInstance> findAllNotArchivedyUserId(String userId);
+    
+    Uni<ProcessInstance> deleteOneById(String id);
   }
   
   interface QueryTaskDasboard {

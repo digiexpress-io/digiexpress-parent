@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.spi.batch.delete_all;
  */
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.thena.batch.client.api.BatchClient.BatchDefinition;
 import io.digiexpress.thena.batch.client.api.ImmutableBatchDefinition;
@@ -29,14 +28,14 @@ import io.digiexpress.thena.batch.client.api.ImmutableBatchStepDefinition;
 
 public class Batch_DeleteAll_Definition {
 
-  public static BatchDefinition create(ProcessClient processClient, TaskClient taskClient, FeedbackClient feedback) {
+  public static BatchDefinition create(TaskClient taskClient, FeedbackClient feedback) {
     return ImmutableBatchDefinition.builder()
         .batchName("tasks-delete-all")
         .comment("clean up batch for wiping most of the 'task managment' data")
         .addSteps(ImmutableBatchStepDefinition.builder()
             .name("delete-proc")
             .comment("deletes all processes")
-            .executor(new BatchJob_DeleteAll_ProcessStep(processClient))
+            .executor(new BatchJob_DeleteAll_ProcessStep(taskClient))
             .build())
         .addSteps(ImmutableBatchStepDefinition.builder()
             .name("delete-tasks")

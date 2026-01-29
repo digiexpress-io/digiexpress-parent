@@ -387,7 +387,7 @@ public class TaskClientImpl implements TaskClient {
     return new QueryTaskProcesess() {
       
       @Override
-      public Multi<ProcessInstance> findLast6Months() {
+      public Multi<ProcessInstance> findAllInLast6Months() {
         final var startDate = OffsetDateTime.now().minusMonths(6);
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
@@ -397,7 +397,7 @@ public class TaskClientImpl implements TaskClient {
       }
 
       @Override
-      public Multi<ProcessInstance> findStaleWithoutTasks(OffsetDateTime olderThen) {
+      public Multi<ProcessInstance> findAllStaleWithoutTasks(OffsetDateTime olderThen) {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()

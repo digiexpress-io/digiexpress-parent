@@ -1,26 +1,6 @@
 package io.digiexpress.eveli.client.spi.batch.delete_all;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.batch.delete_all.BatchJob_DeleteAll_ProcessStep.ProcessCleanupConfig;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
@@ -39,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BatchJob_DeleteAll_ProcessStep implements Executor<ProcessInstance, ProcessCleanupConfig> {
 
-  private final ProcessClient processClient;
+  private final TaskClient taskClient;
 
   @Override
   public ExecutorQuery<ProcessInstance, ProcessCleanupConfig> before(ExecutorContext context) {
@@ -50,7 +30,7 @@ public class BatchJob_DeleteAll_ProcessStep implements Executor<ProcessInstance,
       }
       @Override
       public Multi<ProcessInstance> findAll() {
-        return Multi.createFrom().items(processClient.queryInstances().findAll().stream());
+        return taskClient.queryTaskProcesess().findAll();
       }
     };
   }
@@ -58,13 +38,11 @@ public class BatchJob_DeleteAll_ProcessStep implements Executor<ProcessInstance,
   @Override
   public Uni<ExecutorEntity> accept(ProcessInstance entity, ProcessCleanupConfig config, ExecutorContext context) {
     
-    // Delete process
-    processClient.queryInstances().deleteOneById(entity.getId());
-    
-    return Uni.createFrom().item(ImmutableExecutorEntity.builder()
-        .status(ExecutorEntity.ExecutorEntityStatus.OK)
-        .entityId("processId: " + entity.getId().toString())
-        .build());
+    return taskClient.queryTaskProcesess().deleteOneById(entity.getId().toString())
+      .onItem().transform(ignore -> ImmutableExecutorEntity.builder()
+          .status(ExecutorEntity.ExecutorEntityStatus.OK)
+          .entityId("processId: " + entity.getId().toString())
+          .build());    
   }
 
   @Override

@@ -41,6 +41,6 @@ public class ProcessApiController {
 
   @GetMapping("/last-6-months")
   public Multi<ProcessInstance> findLast6Months() {
-    return taskClient.queryTaskProcesess().findLast6Months();
+    return taskClient.queryTaskProcesess().findAllInLast6Months();
   }
 }

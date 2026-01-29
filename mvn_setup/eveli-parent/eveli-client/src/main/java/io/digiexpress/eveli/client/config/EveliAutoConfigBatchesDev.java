@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigBatchesDev.BatchTenantCondition;
 import io.digiexpress.eveli.client.spi.batch.delete_all.Batch_DeleteAll_Definition;
@@ -53,8 +52,8 @@ public class EveliAutoConfigBatchesDev {
   }
 
   @Bean
-  public BatchDefinition tasksCleanUpJob(ProcessClient processClient, TaskClient taskClient, FeedbackClient feedback) {
-    return Batch_DeleteAll_Definition.create(processClient, taskClient, feedback);
+  public BatchDefinition tasksCleanUpJob(TaskClient taskClient, FeedbackClient feedback) {
+    return Batch_DeleteAll_Definition.create(taskClient, feedback);
   }
   
   @Bean
