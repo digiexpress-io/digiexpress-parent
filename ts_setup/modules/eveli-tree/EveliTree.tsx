@@ -5,16 +5,17 @@ import {
   ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData } from './mock-tree-data';
-import { useUtilityClasses, EveliTreeRoot, getIcon, getTextColor } from './useUtilityClasses';
+import { useUtilityClasses, EveliTreeRoot, getIcon, getTextColor, getIconClassName, EveliTreeClasses } from './useUtilityClasses';
 
 
 interface TreeItemProps {
   node: TreeNode;
   level: number;
   onToggle: (nodeId: string) => void;
+  classes: EveliTreeClasses;
 }
 
-const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle }) => {
+const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) => {
   const hasChildren = node.children && node.children.length > 0;
 
   return (
@@ -33,23 +34,13 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle }) => {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {hasChildren ? (
-            <IconButton
-              size='small'
-              sx={{
-                p: 0,
-                mr: 0.5,
-                color: '#cccccc',
-                '&:hover': {
-                  backgroundColor: 'transparent',
-                },
-              }}
-            >
+            <IconButton size='small'>
               {node.isExpanded ? <ExpandMoreIcon fontSize='small' /> : <ChevronRightIcon fontSize='small' />}
             </IconButton>
           ) : (
             <Box sx={{ width: 24, mr: 0.5 }} />
           )}
-          <ListItemIcon className={classes.icon} sx={{ color: getTextColor(node) }}>
+          <ListItemIcon className={getIconClassName(node, classes)}>
             {getIcon(node)}
           </ListItemIcon>
           <ListItemText
@@ -89,6 +80,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle }) => {
                 node={child}
                 level={level + 1}
                 onToggle={onToggle}
+                classes={classes}
               />
             ))}
           </List>
@@ -130,6 +122,7 @@ export const EveliTree: React.FC = () => {
             node={node}
             level={0}
             onToggle={handleToggle}
+            classes={classes}
           />
         ))}
       </List>

@@ -20,6 +20,14 @@ export interface EveliTreeClasses {
   title: string;
   titleText: string;
   icon: string;
+  iconFolder: string;
+  iconArticle: string;
+  iconService: string;
+  iconForm: string;
+  iconFlow: string;
+  iconLink: string;
+  iconLanguage: string;
+  iconReference: string;
 }
 
 export type EveliTreeClassKey = keyof EveliTreeClasses;
@@ -29,7 +37,15 @@ export const useUtilityClasses = () => {
     root: ['root'],
     title: ['title'],
     titleText: ['titleText'],
-    icon: ['icon']
+    icon: ['icon'],
+    iconFolder: ['iconFolder'],
+    iconArticle: ['iconArticle'],
+    iconService: ['iconService'],
+    iconForm: ['iconForm'],
+    iconFlow: ['iconFlow'],
+    iconLink: ['iconLink'],
+    iconLanguage: ['iconLanguage'],
+    iconReference: ['iconReference']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -43,7 +59,15 @@ export const EveliTreeRoot = styled('div', {
       styles.root,
       styles.title,
       styles.titleText,
-      styles.icon
+      styles.icon,
+      styles.iconFolder,
+      styles.iconArticle,
+      styles.iconService,
+      styles.iconForm,
+      styles.iconFlow,
+      styles.iconLink,
+      styles.iconLanguage,
+      styles.iconReference
     ];
   },
 })(({ theme }) => {
@@ -66,9 +90,81 @@ export const EveliTreeRoot = styled('div', {
     },
 
     [`& .${MUI_NAME}-icon`]: {
-      minWidth: 20,
+      minWidth: 10,
       marginRight: theme.spacing(1),
-      fontSize: '16px',
+      fontSize: '15px',
+    },
+
+    [`& .${MUI_NAME}-iconFolder`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#cccccc',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconArticle`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#dcdcaa',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconService`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#4ec9b0',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconForm`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#9cdcfe',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconFlow`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#c586c0',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconLink`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#569cd6',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconLanguage`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#ce9178',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconReference`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: '#569cd6',
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
     }
   };
 });
@@ -91,6 +187,30 @@ export const getIcon = (node: TreeNode) => {
       return <LanguageIcon />;
     default:
       return <ArticleIcon />;
+  }
+};
+
+export const getIconClassName = (node: TreeNode, classes: EveliTreeClasses) => {
+  if (node.isReference) {
+    return classes.iconReference;
+  }
+  switch (node.type) {
+    case 'folder':
+      return classes.iconFolder;
+    case 'article':
+      return classes.iconArticle;
+    case 'service':
+      return classes.iconService;
+    case 'form':
+      return classes.iconForm;
+    case 'flow':
+      return classes.iconFlow;
+    case 'link':
+      return classes.iconLink;
+    case 'language':
+      return classes.iconLanguage;
+    default:
+      return classes.iconFolder;
   }
 };
 
