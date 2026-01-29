@@ -3,8 +3,9 @@ import { Menu, MenuItem, Divider, Typography, styled } from '@mui/material';
 import {
   DeleteForever as DeleteIcon,
   Add as NewIcon,
+  Edit as EditIcon,
   ContentCopy as CopyIcon,
-  Edit as RenameIcon
+  DriveFileRenameOutline as RenameIcon
 } from '@mui/icons-material';
 import { TreeNode } from './mock-tree-data';
 import { getNodeColor } from './useUtilityClasses';
@@ -24,6 +25,11 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = ({
   onClose,
   onExited,
 }) => {
+
+  function handleNew() {
+    console.log('New:', node?.name);
+    onClose();
+  }
 
   function handleEdit() {
     console.log('Edit:', node?.name);
@@ -59,55 +65,40 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = ({
         transition: {
           onExited: onExited,
         },
+        paper: {
+          sx: {
+            backgroundColor: '#2d2d30',
+            color: '#cccccc',
+            border: '1px solid #3c3c3c',
+            minWidth: 200,
+          }
+        }
       }}
-      PaperProps={{
-        sx: {
-          backgroundColor: '#2d2d30',
-          color: '#cccccc',
-          border: '1px solid #3c3c3c',
-          minWidth: 200,
-        },
-      }}
+
     >
-      <Typography variant="subtitle2"
-        sx={{
-          px: 2,
-          py: 1,
-          color: node ? getNodeColor(node.type) : '#cccccc',
-          fontWeight: 500,
-          display: 'block',
-        }}
-      >
-        {node?.name}
-      </Typography>
-      <Divider sx={{ borderColor: '#3c3c3c' }} />
-
-      <StyledMenuItem onClick={handleEdit}>
-        <NewIcon fontSize="small" />
-        New
-      </StyledMenuItem>
-
-      <StyledMenuItem onClick={handleCopy}>
-        <CopyIcon fontSize="small" />
-        Copy
-      </StyledMenuItem>
-
-      <StyledMenuItem onClick={handleDuplicate}>
-        <RenameIcon fontSize="small" />
-        Rename
-      </StyledMenuItem>
+      <StyledMenuItemNodeName node={node} />
 
       <Divider sx={{ borderColor: '#3c3c3c' }} />
 
-      <StyledDeleteMenuItem onClick={handleDelete}>
-        <DeleteIcon fontSize="small" />
-        Delete
-      </StyledDeleteMenuItem>
+      <StyledMenuItem onClick={handleNew} icon={<NewIcon fontSize="small" />}>New</StyledMenuItem>
+      <StyledMenuItem onClick={handleEdit} icon={<EditIcon fontSize="small" />}>Edit</StyledMenuItem>
+      <StyledMenuItem onClick={handleCopy} icon={<CopyIcon fontSize="small" />}>Copy</StyledMenuItem>
+      <StyledMenuItem onClick={handleDuplicate} icon={<RenameIcon fontSize="small" />}>Rename</StyledMenuItem>
+
+      <Divider sx={{ borderColor: '#3c3c3c' }} />
+
+      <StyledDeleteMenuItem onClick={handleDelete} icon={<DeleteIcon fontSize="small" />}>Delete</StyledDeleteMenuItem>
     </Menu>
   );
 };
 
-const StyledMenuItem = styled(MenuItem)(() => ({
+interface StyledMenuItemProps {
+  onClick: () => void;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}
+
+const StyledMenuItemBase = styled(MenuItem)(() => ({
   fontSize: '13px',
   display: 'flex',
   alignItems: 'center',
@@ -121,7 +112,14 @@ const StyledMenuItem = styled(MenuItem)(() => ({
   },
 }));
 
-const StyledDeleteMenuItem = styled(MenuItem)(() => ({
+const StyledMenuItem: React.FC<StyledMenuItemProps> = ({ onClick, icon, children }) => (
+  <StyledMenuItemBase onClick={onClick}>
+    {icon}
+    {children}
+  </StyledMenuItemBase>
+);
+
+const StyledDeleteMenuItemBase = styled(MenuItem)(() => ({
   fontSize: '13px',
   color: '#f48771',
   display: 'flex',
@@ -135,3 +133,30 @@ const StyledDeleteMenuItem = styled(MenuItem)(() => ({
     fontSize: '16px',
   },
 }));
+
+const StyledDeleteMenuItem: React.FC<StyledMenuItemProps> = ({ onClick, icon, children }) => (
+  <StyledDeleteMenuItemBase onClick={onClick}>
+    {icon}
+    {children}
+  </StyledDeleteMenuItemBase>
+);
+
+interface MenuItemNodeNameProps {
+  node: TreeNode | null;
+}
+
+const StyledMenuItemNodeName: React.FC<MenuItemNodeNameProps> = ({ node }) => {
+  return (
+    <Typography variant="subtitle2"
+      sx={{
+        px: 2,
+        py: 1,
+        color: node ? getNodeColor(node.type) : '#cccccc',
+        fontWeight: 500,
+        display: 'block',
+      }}
+    >
+      {node?.name}
+    </Typography>
+  );
+};
