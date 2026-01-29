@@ -75,18 +75,12 @@ const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: Stenc
     }),
     commands.bold,
     commands.italic,
-    commands.strikethrough,
     commands.hr,
     commands.divider,
-    commands.link,
-    commands.quote,
-    commands.code,
-    commands.codeBlock,
     commands.image,
     commands.divider,
     commands.unorderedListCommand,
     commands.orderedListCommand,
-    commands.checkedListCommand,
   ];
 }
 
