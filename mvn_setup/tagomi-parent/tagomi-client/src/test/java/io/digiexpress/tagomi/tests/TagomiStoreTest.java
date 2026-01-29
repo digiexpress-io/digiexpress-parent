@@ -92,8 +92,8 @@ public class TagomiStoreTest extends PgTestTemplate {
     
     final var link2 = repo.create().resource(
         ImmutableCreateResource.builder()
-        .resourceName("super_image_1")
-        .contentType(ResourceType.LOGO)
+        .resourceName("super_script_1")
+        .contentType(ResourceType.SCRIPT)
         .uploadBody(new byte[] {})
       .build()
       ).onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));

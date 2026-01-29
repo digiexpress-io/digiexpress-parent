@@ -8,12 +8,12 @@ import { ModeEdit as EditIcon } from '@mui/icons-material';
 import * as Burger from '@dxs-ts/eveli-primitives';
 
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
-import { useTagomiNav } from '../tagomi-nav';
-import { ServiceEdit } from './ServiceEdit';
-import { ServiceDelete } from './ServiceDelete';
-import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../tagomi-template';
-import { TemplateDependenciesAdd, TemplateDependenciesEdit } from '../tagomi-dependencies';
-import { DebugLocale } from '../tagomi-debug';
+import { useTagomiNav } from '../../tagomi-nav';
+import { ServiceEdit } from '../../tagomi-service/ServiceEdit';
+import { ServiceDelete } from '../../tagomi-service/ServiceDelete';
+import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../../tagomi-template';
+import { TemplateDependenciesAdd, TemplateDependenciesEdit } from '../../tagomi-dependencies';
+import { DebugLocale } from '../../tagomi-debug';
 
 
 interface ServiceOptionsProps {

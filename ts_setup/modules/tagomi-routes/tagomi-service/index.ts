@@ -1,3 +1,4 @@
 export * from './ServiceComposer'
-export * from './ServicesList'
 export * from './ServicesView'
+export * from './ServiceEdit'
+export * from './ServiceDelete'

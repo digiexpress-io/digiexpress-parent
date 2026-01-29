@@ -4,8 +4,8 @@ import { Search as SearchIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl'
 
 //import { ArticleList, useUtilityClasses } from '../stencil-explorer/article'
-import { ServicesViewRoot, useUtilityClasses } from './useUtilityClasses';
-import { ServicesList } from './ServicesList';
+import { ServicesViewRoot, useUtilityClasses } from '../tagomi-explorer/service/useUtilityClasses';
+import { ServicesList } from '../tagomi-explorer/service/ServicesList';
 
 
 

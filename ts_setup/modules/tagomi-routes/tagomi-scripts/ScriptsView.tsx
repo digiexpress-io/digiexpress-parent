@@ -3,8 +3,8 @@ import { TextField, InputAdornment } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl'
 
-import { ScriptsViewRoot, useUtilityClasses } from './useUtilityClasses';
-import { ScriptsList } from './ScriptsList';
+import { ScriptsViewRoot, useUtilityClasses } from '../tagomi-explorer/script/useUtilityClasses';
+import { ScriptsList } from '../tagomi-explorer/script/ScriptsList';
 
 
 

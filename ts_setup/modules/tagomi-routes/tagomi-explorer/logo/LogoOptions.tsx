@@ -4,8 +4,8 @@ import { ModeEdit as EditIcon } from '@mui/icons-material';
 import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
-import { LogoEdit } from './LogoEdit';
-import { LogoDelete } from './LogoDelete';
+import { LogoEdit } from '../../tagomi-logos/LogoEdit';
+import { LogoDelete } from '../../tagomi-logos/LogoDelete';
 
 interface LogoOptionsProps {
   logoId: string;

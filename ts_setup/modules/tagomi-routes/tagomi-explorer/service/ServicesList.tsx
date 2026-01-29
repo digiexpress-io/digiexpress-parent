@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 //import { LinkEdit } from '../../stencil-link/LinkEdit';
 //import { WorkflowEdit } from '../../stencil-workflow/WorkflowEdit';
 
-import { ExplorerItemService, useTagomiNav } from '../tagomi-nav';
+import { ExplorerItemService, useTagomiNav } from '../../tagomi-nav';
 import { ServicesListRoot, useUtilityClasses } from './useUtilityClasses';
 import { TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 import { TagomiApi } from '@dxs-ts/tagomi-api';
