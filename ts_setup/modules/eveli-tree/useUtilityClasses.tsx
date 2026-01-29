@@ -1,13 +1,15 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled } from '@mui/material';
+import { generateUtilityClass, styled, Badge, useTheme } from '@mui/material';
 
 import { TreeNode } from './mock-tree-data';
 import {
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
   Article as ArticleIcon,
+  ArticleOutlined as ArticleOutlinedIcon,
   Description as FormIcon,
   Settings as SettingsIcon,
+  SettingsOutlined as SettingsOutlinedIcon,
   Link as LinkIcon,
   Language as LanguageIcon,
   Build as FlowIcon,
@@ -27,7 +29,6 @@ export interface EveliTreeClasses {
   iconFlow: string;
   iconLink: string;
   iconLanguage: string;
-  iconReference: string;
   iconExpand: string;
 }
 
@@ -46,7 +47,6 @@ export const useUtilityClasses = () => {
     iconFlow: ['iconFlow'],
     iconLink: ['iconLink'],
     iconLanguage: ['iconLanguage'],
-    iconReference: ['iconReference'],
     iconExpand: ['iconExpand']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -145,7 +145,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconLink`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: '#569cd6',
+      color: '#98d982',
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -160,14 +160,6 @@ export const EveliTreeRoot = styled('div', {
       },
     },
 
-    [`& .${MUI_NAME}-iconReference`]: {
-      minWidth: 10,
-      marginRight: theme.spacing(1),
-      color: '#569cd6',
-      '& .MuiSvgIcon-root': {
-        fontSize: '15px',
-      },
-    },
 
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
@@ -177,30 +169,54 @@ export const EveliTreeRoot = styled('div', {
 });
 
 export const getIcon = (node: TreeNode) => {
-  switch (node.type) {
-    case 'folder':
-      return node.isExpanded ? <FolderOpenIcon /> : <FolderIcon />;
-    case 'article':
-      return <ArticleIcon />;
-    case 'service':
-      return <SettingsIcon />;
-    case 'form':
-      return <FormIcon />;
-    case 'flow':
-      return <FlowIcon />;
-    case 'link':
-      return <LinkIcon />;
-    case 'language':
-      return <LanguageIcon />;
-    default:
-      return <ArticleIcon />;
+  const getBaseIcon = () => {
+    switch (node.type) {
+      case 'folder':
+        return node.isExpanded ? <FolderOpenIcon /> : <FolderIcon />;
+      case 'article':
+        return node.isExpanded ? <ArticleOutlinedIcon /> : <ArticleIcon />;
+      case 'service':
+        return node.isExpanded ? <SettingsOutlinedIcon /> : <SettingsIcon />;
+      case 'form':
+        return <FormIcon />;
+      case 'flow':
+        return <FlowIcon />;
+      case 'link':
+        return <LinkIcon />;
+      case 'language':
+        return <LanguageIcon />;
+      default:
+        return <ArticleIcon />;
+    }
+  };
+
+  const baseIcon = getBaseIcon();
+  const theme = useTheme();
+
+  if (node.isReference) {
+    return (
+      <Badge variant="dot"
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        sx={{
+          '& .MuiBadge-dot': {
+            backgroundColor: theme.palette.error.main,
+            width: 6,
+            height: 6,
+          },
+        }}
+      >
+        {baseIcon}
+      </Badge>
+    );
   }
+
+  return baseIcon;
 };
 
 export const getIconClassName = (node: TreeNode, classes: EveliTreeClasses) => {
-  if (node.isReference) {
-    return classes.iconReference;
-  }
   switch (node.type) {
     case 'folder':
       return classes.iconFolder;
@@ -222,12 +238,9 @@ export const getIconClassName = (node: TreeNode, classes: EveliTreeClasses) => {
 };
 
 export const getTextColor = (node: TreeNode) => {
-  if (node.isReference) {
-    return '#569cd6'; // Blue for references
-  }
   switch (node.type) {
     case 'folder':
-      return '#eee5e5';
+      return '#cccccc';
     case 'article':
       return '#dcdcaa'; // Yellow for articles
     case 'service':
@@ -237,7 +250,7 @@ export const getTextColor = (node: TreeNode) => {
     case 'flow':
       return '#c586c0'; // Purple for flows
     case 'link':
-      return '#569cd6'; // Blue for links
+      return '#98d982'; // Bright green for links
     case 'language':
       return '#ce9178'; // Orange for languages
     default:
