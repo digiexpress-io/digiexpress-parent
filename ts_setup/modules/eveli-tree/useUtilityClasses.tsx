@@ -28,6 +28,7 @@ export interface EveliTreeClasses {
   iconLink: string;
   iconLanguage: string;
   iconReference: string;
+  iconExpand: string;
 }
 
 export type EveliTreeClassKey = keyof EveliTreeClasses;
@@ -45,7 +46,8 @@ export const useUtilityClasses = () => {
     iconFlow: ['iconFlow'],
     iconLink: ['iconLink'],
     iconLanguage: ['iconLanguage'],
-    iconReference: ['iconReference']
+    iconReference: ['iconReference'],
+    iconExpand: ['iconExpand']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -165,7 +167,12 @@ export const EveliTreeRoot = styled('div', {
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
-    }
+    },
+
+    [`& .${MUI_NAME}-iconExpand`]: {
+      fontSize: '15px',
+      color: '#cccccc',
+    },
   };
 });
 

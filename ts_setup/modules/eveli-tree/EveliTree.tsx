@@ -23,8 +23,6 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
       <ListItem
         sx={{
           pl: level * 1.5,
-          py: 0.25,
-          minHeight: '24px',
           '&:hover': {
             backgroundColor: '#2d2d30',
           },
@@ -35,7 +33,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {hasChildren ? (
             <IconButton size='small'>
-              {node.isExpanded ? <ExpandMoreIcon fontSize='small' /> : <ChevronRightIcon fontSize='small' />}
+              {node.isExpanded ? <ExpandMoreIcon fontSize='small' className={classes.iconExpand} /> : <ChevronRightIcon fontSize='small' className={classes.iconExpand} />}
             </IconButton>
           ) : (
             <Box sx={{ width: 24, mr: 0.5 }} />
@@ -45,7 +43,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
           </ListItemIcon>
           <ListItemText
             primary={
-              <Typography variant='body2'
+              <Typography variant='caption'
                 sx={{
                   color: getTextColor(node),
                   fontSize: '13px',
@@ -54,8 +52,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, classes }) =
               >
                 {node.name}
                 {node.description && (
-                  <Typography
-                    component='span'
+                  <Typography variant='caption'
                     sx={{
                       ml: 1,
                       color: '#6a9955',
