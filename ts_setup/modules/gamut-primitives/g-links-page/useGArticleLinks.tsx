@@ -8,7 +8,7 @@ function filterAndSortLinks(links: SiteApi.TopicLink[], filterType: 'form' | 'ph
       case 'form':
         return link.type === 'dialob' || link.type === 'workflow';
       case 'hyperlink':
-        return link.type === 'internal' || link.type === 'external';
+        return (link.type === 'internal' || link.type === 'external') && !link.value.includes('<info>');
       case 'phone':
         return link.type === 'phone';
       case 'info':

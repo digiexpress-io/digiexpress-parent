@@ -212,4 +212,9 @@ public class HdesComposerImpl implements HdesComposer {
   public Uni<HdesComposer> withCockpitFromProvider() {
     return this.client.withCockpitFromProvider().onItem().transform(client -> new HdesComposerImpl(client));
   }
+
+  @Override
+  public CockpitIdSupplier getCockpitIdSupplier() {
+    return this.client.getCockpitIdSupplier();
+  }
 }

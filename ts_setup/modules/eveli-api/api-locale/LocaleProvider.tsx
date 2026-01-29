@@ -33,7 +33,10 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
       get localeForDate() { return defaultDateLocale(locale); }
       get locale() { return locale; }
       get messages() { return messages; }
-      setLocale(newLocale: string) { setLocale(newLocale) }
+      setLocale(newLocale: string) { 
+        setLocale(newLocale);
+        EveliLocaleStore.save(newLocale);
+      }
     }
 
     return new ContextImpl();
@@ -68,6 +71,11 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
 }
 
 const getLocale = (props: LocaleProviderProps) => {
+
+  if(EveliLocaleStore.isEnabled()) {
+    return EveliLocaleStore.get()!;
+  }
+
   const resolvedDefault = props.defaultLocale ? props.defaultLocale() : undefined;
   if (resolvedDefault) {
     return resolvedDefault;
@@ -109,3 +117,34 @@ const getLocale = (props: LocaleProviderProps) => {
 };
 
 
+
+const STORAGE_KEY = 'eveli_locale_store';
+
+class EveliLocaleStore {
+  
+  static get(): string | null {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (!data) return null;
+    try {
+      return JSON.parse(data);
+    } catch {
+      return null;
+    }
+  }
+
+  static save(cockpit: String | null | undefined): void {
+    if(cockpit) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cockpit));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
+  static clear(): void {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  static isEnabled(): boolean {
+    return this.get() !== null;
+  }
+}

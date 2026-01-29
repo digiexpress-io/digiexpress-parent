@@ -123,7 +123,6 @@ export const Toolbar: React.FC<{}> = ({ }) => {
 
 
       <EveliTenantFeatureEnabled id='COCKPITS_ENABLED'>
-        <EveliPermissions id='NAV_TO_COCKPITS'>
           <div>
             <IconButton
               {...(location.pathname.includes('cockpits') ? { disabled: true, className: classes.itemActive } : {})}
@@ -136,7 +135,6 @@ export const Toolbar: React.FC<{}> = ({ }) => {
             </IconButton>
             <Typography><FormattedMessage id='toolbar.cockpits' /></Typography>
           </div>
-        </EveliPermissions>
       </EveliTenantFeatureEnabled>
 
       <EveliPermissions id='NAV_TO_RELEASES'>

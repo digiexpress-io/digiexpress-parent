@@ -104,41 +104,55 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   }
   
   private Uni<Optional<EveliDeployment>> getLastDeployment() {
-    final var cached = cache.getDeployment();
-    logging.lastCachedDeployment(cached);
 
-    if(cached.isPresent()) {
-      return Uni.createFrom().item(cached);
-    }
     final OffsetDateTime now = OffsetDateTime.now();
-    return new DeploymentQueryImpl(ctx).emptyBranchBody(true)
-      .status(EveliDeploymentStatus.DEPLOYED)
-      .excludeExternal(true)
-      .emptyBranchBody(true)
-      .findAll()
-      .onItem().transformToUni(all -> {
+    
+    
+    return ctx.getCockpitIdSupplier().apply()
+        .onItem().transformToUni(cockpitId -> {
+          
+          final var cached = cache.getDeployment();
+          
+          
+          if(cached.isPresent() && Objects.equal(cached.get().getCockpitId(), cockpitId.orElse(null))) {
+            logging.lastCachedDeployment(cached);
+            return Uni.createFrom().item(cached);
+          }
+
+          return new DeploymentQueryImpl(ctx).emptyBranchBody(true)
+            .status(EveliDeploymentStatus.DEPLOYED)
+            .excludeExternal(true)
+            .emptyBranchBody(true)
+            .findAll()
+            .onItem().transformToUni(all -> {
+              
+              final var latest = all.stream()
+                  .filter((a) -> a.getStartsAt().isBefore(now) || a.getStartsAt().isEqual(now))
+                  .sorted((a, b) -> b.getStartsAt().compareTo(b.getStartsAt()))
+                  .findFirst();
+              
+              logging.lastQueriedDeployment(latest);
+              
+              if(latest.isEmpty()) {
+                return ctx.getExternalProvider().getDeployment(true).onItem().invoke(ext -> logging.lastExternalDeployment(latest));  
+              }
+              
+              return Uni.createFrom().item(latest);
+            })
+            
+            .onItem().transform(latest -> {
+              if(latest.isPresent()) {
+                logging.cachingDeployment(latest);
+                cache.save(latest.get());
+              }
+              return latest;
+            });
+        });
         
-        final var latest = all.stream()
-            .filter((a) -> a.getStartsAt().isBefore(now) || a.getStartsAt().isEqual(now))
-            .sorted((a, b) -> b.getStartsAt().compareTo(b.getStartsAt()))
-            .findFirst();
         
-        logging.lastQueriedDeployment(latest);
         
-        if(latest.isEmpty()) {
-          return ctx.getExternalProvider().getDeployment(true).onItem().invoke(ext -> logging.lastExternalDeployment(latest));  
-        }
         
-        return Uni.createFrom().item(latest);
-      })
-      
-      .onItem().transform(latest -> {
-        if(latest.isPresent()) {
-          logging.cachingDeployment(latest);
-          cache.save(latest.get());
-        }
-        return latest;
-      });
+    
   }
   
   

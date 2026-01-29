@@ -6,12 +6,14 @@ import { useGTheme } from '@dxs-ts/gamut-theme';
 import { Cockpit } from '@dxs-ts/gamut-cockpit-store';
 
 import { GInputSelect, GInputSelectOption, useUtilityClasses } from './useUtilityClasses';
+import { useNavigate } from '@tanstack/react-router';
 
 
 
 const DEFAULT_SELECTION_VALUE = 'System default';
 
 export const GCockpitDropdown: React.FC<{}> = (props) => {
+  const nav = useNavigate();
   const { cockpits } = useSite();  
   const iam = useIam();
   const classes = useUtilityClasses();
@@ -26,9 +28,9 @@ export const GCockpitDropdown: React.FC<{}> = (props) => {
     const found = datasource.find(item => item.id === selected);
     cockpits.setActive(found);
     await iam.reload();
-
     // switch the theme if possible
     gTheme.setThemeOptions(found?.cockpitConfigName);
+    nav({ to: '/public/$locale', params: { locale: 'en' } })
   }
 
   const value = selectedValue?.id ?? DEFAULT_SELECTION_VALUE;

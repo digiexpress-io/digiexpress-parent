@@ -187,7 +187,8 @@ public class AssetsWrenchController {
 
   @GetMapping(path="/flow-names")
   public Uni<List<String>> flowNames() {
-    return envir.runtimeQuery().findOne().onItem().transform(runtime -> {
+    return envir.withCockpitIdSupplier(composer.getCockpitIdSupplier())
+        .runtimeQuery().findOne().onItem().transform(runtime -> {
       if(runtime.isEmpty()) {
         return Collections.emptyList();
       }

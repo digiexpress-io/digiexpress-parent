@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -75,6 +76,7 @@ public interface HdesComposer extends CockpitAware<HdesComposer> {
 
   HdesComposer withBranch(String branchName);
 
+  CockpitIdSupplier getCockpitIdSupplier();
   
 
   @JsonSerialize(as = ImmutableDiffRequest.class)

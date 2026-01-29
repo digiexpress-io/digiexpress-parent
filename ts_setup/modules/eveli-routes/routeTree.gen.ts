@@ -29,6 +29,7 @@ import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/sec
 import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
 import { Route as SecuredLocaleWorkerLedgersIndexRouteImport } from './routes/secured.$locale.worker.ledgers.index'
 import { Route as SecuredLocaleWorkerHelpIndexRouteImport } from './routes/secured.$locale.worker.help.index'
+import { Route as SecuredLocaleWorkerFileexplorerIndexRouteImport } from './routes/secured.$locale.worker.fileexplorer.index'
 import { Route as SecuredLocaleWorkerFeedbackIndexRouteImport } from './routes/secured.$locale.worker.feedback.index'
 import { Route as SecuredLocaleWorkerDashboardIndexRouteImport } from './routes/secured.$locale.worker.dashboard.index'
 import { Route as SecuredLocaleWorkerContractsIndexRouteImport } from './routes/secured.$locale.worker.contracts.index'
@@ -165,6 +166,12 @@ const SecuredLocaleWorkerHelpIndexRoute =
   SecuredLocaleWorkerHelpIndexRouteImport.update({
     id: '/help/',
     path: '/help/',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
+const SecuredLocaleWorkerFileexplorerIndexRoute =
+  SecuredLocaleWorkerFileexplorerIndexRouteImport.update({
+    id: '/fileexplorer/',
+    path: '/fileexplorer/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 const SecuredLocaleWorkerFeedbackIndexRoute =
@@ -331,6 +338,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/contracts/': typeof SecuredLocaleWorkerContractsIndexRoute
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
+  '/secured/$locale/worker/fileexplorer': typeof SecuredLocaleWorkerFileexplorerIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
@@ -370,6 +378,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/contracts': typeof SecuredLocaleWorkerContractsIndexRoute
   '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
+  '/secured/$locale/worker/fileexplorer': typeof SecuredLocaleWorkerFileexplorerIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/ledgers': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
@@ -416,6 +425,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/contracts/': typeof SecuredLocaleWorkerContractsIndexRoute
   '/secured/$locale/worker/dashboard/': typeof SecuredLocaleWorkerDashboardIndexRoute
   '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
+  '/secured/$locale/worker/fileexplorer/': typeof SecuredLocaleWorkerFileexplorerIndexRoute
   '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/ledgers/': typeof SecuredLocaleWorkerLedgersIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
@@ -463,6 +473,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/contracts/'
     | '/secured/$locale/worker/dashboard'
     | '/secured/$locale/worker/feedback'
+    | '/secured/$locale/worker/fileexplorer'
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/ledgers/'
     | '/secured/$locale/worker/monitoring'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/contracts'
     | '/secured/$locale/worker/dashboard'
     | '/secured/$locale/worker/feedback'
+    | '/secured/$locale/worker/fileexplorer'
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/ledgers'
     | '/secured/$locale/worker/monitoring'
@@ -547,6 +559,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/contracts/'
     | '/secured/$locale/worker/dashboard/'
     | '/secured/$locale/worker/feedback/'
+    | '/secured/$locale/worker/fileexplorer/'
     | '/secured/$locale/worker/help/'
     | '/secured/$locale/worker/ledgers/'
     | '/secured/$locale/worker/monitoring/'
@@ -714,6 +727,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/secured/$locale/worker/help'
       preLoaderRoute: typeof SecuredLocaleWorkerHelpIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
+    }
+    '/secured/$locale/worker/fileexplorer/': {
+      id: '/secured/$locale/worker/fileexplorer/'
+      path: '/fileexplorer'
+      fullPath: '/secured/$locale/worker/fileexplorer'
+      preLoaderRoute: typeof SecuredLocaleWorkerFileexplorerIndexRouteImport
       parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/feedback/': {
@@ -1009,6 +1029,7 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerTasksRoute: typeof SecuredLocaleWorkerTasksRouteWithChildren
   SecuredLocaleWorkerDashboardIndexRoute: typeof SecuredLocaleWorkerDashboardIndexRoute
   SecuredLocaleWorkerFeedbackIndexRoute: typeof SecuredLocaleWorkerFeedbackIndexRoute
+  SecuredLocaleWorkerFileexplorerIndexRoute: typeof SecuredLocaleWorkerFileexplorerIndexRoute
   SecuredLocaleWorkerHelpIndexRoute: typeof SecuredLocaleWorkerHelpIndexRoute
   SecuredLocaleWorkerMonitoringIndexRoute: typeof SecuredLocaleWorkerMonitoringIndexRoute
   SecuredLocaleWorkerQueuesIndexRoute: typeof SecuredLocaleWorkerQueuesIndexRoute
@@ -1031,6 +1052,8 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerDashboardIndexRoute:
     SecuredLocaleWorkerDashboardIndexRoute,
   SecuredLocaleWorkerFeedbackIndexRoute: SecuredLocaleWorkerFeedbackIndexRoute,
+  SecuredLocaleWorkerFileexplorerIndexRoute:
+    SecuredLocaleWorkerFileexplorerIndexRoute,
   SecuredLocaleWorkerHelpIndexRoute: SecuredLocaleWorkerHelpIndexRoute,
   SecuredLocaleWorkerMonitoringIndexRoute:
     SecuredLocaleWorkerMonitoringIndexRoute,

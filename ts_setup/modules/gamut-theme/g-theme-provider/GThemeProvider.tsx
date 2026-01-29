@@ -23,10 +23,10 @@ export interface GThemeProviderProps {
 export const GThemeProvider: React.FC<GThemeProviderProps> = (props) => {  
 
   const themeOptionsPrimary = props.themeOptions;
-  const [secondaryOptions, setSecondaryOptions] = React.useState<SecondaryOptions>(() => _getSecondaryOptions(props));
+  const [secondaryOptions, setSecondaryOptions] = React.useState<SecondaryOptions>(() => _getSecondaryInitOptions(props));
 
   const setThemeOptions: GThemeProviderContextType['setThemeOptions'] = React.useCallback((themeOptions) => {
-    setSecondaryOptions({reload: true, value: _getSecondaryOptions(props, themeOptions).value });
+    setSecondaryOptions(_getSecondaryOptions(props, themeOptions));
   }, []);
 
   const contextValue: GThemeProviderContextType = React.useMemo(() => {
@@ -39,7 +39,7 @@ export const GThemeProvider: React.FC<GThemeProviderProps> = (props) => {
       secondaryThemeOptions,
       setThemeOptions
     };
-  }, [secondaryOptions.reload]);
+  }, [secondaryOptions]);
 
   return (
     <GThemeProviderContext.Provider value={contextValue}>
@@ -58,13 +58,23 @@ export function useGTheme() {
 }
 
 
-function _getSecondaryOptions(props: GThemeProviderProps, themeOptions?: string): SecondaryOptions {
+function _getSecondaryInitOptions(props: GThemeProviderProps): SecondaryOptions {
   const cockpit = CockpitStore.get();
   const secondary = props.secondaryThemeOptions ?? {};
 
   return {
     reload: false, 
-    value: cockpit ? secondary[themeOptions ?? cockpit?.cockpitConfigName] : undefined
+    value: cockpit ? secondary[cockpit?.cockpitConfigName] : undefined
+  }
+}
+
+
+function _getSecondaryOptions(props: GThemeProviderProps, themeOptions: string | undefined): SecondaryOptions {
+  const secondary = props.secondaryThemeOptions ?? {};
+
+  return {
+    reload: true, 
+    value: themeOptions ? secondary[themeOptions] : undefined
   }
 }
 

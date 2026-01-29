@@ -79,6 +79,12 @@ public class HdesClientImpl implements HdesClient {
   }
   
   @Override
+  public CockpitIdSupplier getCockpitIdSupplier() {
+    return () -> cockpitAwareProps.getProvider().get()
+        .onItem().transform(cockpit -> cockpit.map(e -> e.getConfig().getId()));
+  }
+  
+  @Override
   public Uni<HdesClient> withCockpit() {
     return withCockpit(Optional.empty());
   }
@@ -382,5 +388,4 @@ public class HdesClientImpl implements HdesClient {
       }
     };
   }
-
 }

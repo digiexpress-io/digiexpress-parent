@@ -98,7 +98,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     userActionLogger.startRuntime();
-    return envir.runtimeQuery().getOne()
+    return envir.withCockpitIdSupplier(() -> Uni.createFrom().item(Optional.ofNullable(cockpitId))).runtimeQuery().getOne()
         .invoke(runtime -> userActionLogger.endRuntime(runtime))
         .onItem().transformToUni(runtime -> createUserAction(runtime))
         .onItem().invoke(action -> userActionLogger.close());

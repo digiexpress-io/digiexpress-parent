@@ -27,7 +27,6 @@ export const InputHidden: React.FC<{
 
     if(inputValue !== newInputValue) {
       setInputValue(newInputValue);
-      console.log("trigger", {id, newInputValue});
       
       const event = new Event('input', { bubbles: true });
       ref.current?.dispatchEvent(event);

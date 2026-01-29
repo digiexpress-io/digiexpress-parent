@@ -24,6 +24,7 @@ export const themeOptionsAlt1: ThemeOptions = {
   typography: GThemeOptionsAlt1.typography,
   components: {
     ...GThemeOptionsAlt1.components,
+    ...components_g,
     ...components_g_alt_1,
   }
 }
@@ -32,7 +33,11 @@ export const DemoTheme: React.FC<{ children: React.ReactNode }> = ({ children })
 
   return (
     <StyledEngineProvider injectFirst>
-      <GThemeProvider themeOptions={themeOptionsAlt1} secondaryThemeOptions={{ 'cockpit 1': themeOptionsAlt1 }}>
+      <GThemeProvider themeOptions={themeOptions} secondaryThemeOptions={{ 
+        'cockpit 1': themeOptionsAlt1,
+        'test 1': themeOptionsAlt1,
+        'life insurance': themeOptionsAlt1
+      }}>
         {children}
       </GThemeProvider>
     </StyledEngineProvider>);

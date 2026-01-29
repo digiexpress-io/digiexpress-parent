@@ -184,5 +184,6 @@ export const en = {
   'gamut.feedback.feedbackViewerTitle': 'Customer feedback',
   'gamut.feedback.feedbackViewerSubTitle': 'Organisation reply',
   'dialob.review.title': 'Form review',
-  'dialob.review.button.close': 'Close'
+  'dialob.review.button.close': 'Close',
+  'gamut.cockpit.selection.dialog': 'Select Cockpit'
 }
