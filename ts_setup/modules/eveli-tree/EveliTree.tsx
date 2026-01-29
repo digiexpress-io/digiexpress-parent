@@ -78,11 +78,11 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMen
 export const EveliTree: React.FC = () => {
   const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
+  const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<{
     node: TreeNode;
     anchorPosition: { top: number; left: number };
-  } | null>(null);
-  const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
+  } | undefined>();
 
   const collapseAll = () => {
     const collapseNode = (nodes: TreeNode[]): TreeNode[] => {
@@ -156,11 +156,11 @@ export const EveliTree: React.FC = () => {
       </List>
 
       <EveliTreeItemMenu
-        node={contextMenuData?.node || null}
-        anchorPosition={contextMenuData?.anchorPosition || null}
+        node={contextMenuData?.node || undefined}
+        anchorPosition={contextMenuData?.anchorPosition || undefined}
         open={contextMenuOpen}
         onClose={handleContextMenuClose}
-        onExited={() => setContextMenuData(null)}
+        onExited={() => setContextMenuData(undefined)}
       />
     </EveliTreeRoot>
   );

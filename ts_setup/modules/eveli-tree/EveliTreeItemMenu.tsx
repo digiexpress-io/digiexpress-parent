@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, MenuItem, Divider, Typography, styled } from '@mui/material';
+import { Menu, MenuItem, Divider, Typography, styled, useTheme } from '@mui/material';
 import {
   DeleteForever as DeleteIcon,
   Add as NewIcon,
@@ -11,59 +11,49 @@ import { TreeNode } from './mock-tree-data';
 import { getNodeColor } from './useUtilityClasses';
 
 interface EveliTreeItemMenuProps {
-  node: TreeNode | null;
-  anchorPosition: { top: number; left: number } | null;
+  node: TreeNode | undefined;
+  anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
   onClose: () => void;
   onExited?: () => void;
 }
 
-export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = ({
-  node,
-  anchorPosition,
-  open,
-  onClose,
-  onExited,
-}) => {
+export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
   function handleNew() {
-    console.log('New:', node?.name);
-    onClose();
+    console.log('New:', props.node?.name);
+    props.onClose();
   }
 
   function handleEdit() {
-    console.log('Edit:', node?.name);
-    onClose();
+    console.log('Edit:', props.node?.name);
+    props.onClose();
   }
 
   function handleCopy() {
-    console.log('Copy:', node?.name);
-    onClose();
+    console.log('Copy:', props.node?.name);
+    props.onClose();
   }
 
   function handleDelete() {
-    console.log('Delete:', node?.name);
-    onClose();
+    console.log('Delete:', props.node?.name);
+    props.onClose();
   }
 
   function handleDuplicate() {
-    console.log('Duplicate:', node?.name);
-    onClose();
+    console.log('Duplicate:', props.node?.name);
+    props.onClose();
   }
 
   return (
-    <Menu
-      open={open}
-      onClose={onClose}
-      anchorReference="anchorPosition"
-      anchorPosition={anchorPosition || undefined}
+    <Menu open={props.open} onClose={props.onClose} anchorReference="anchorPosition" anchorPosition={props.anchorPosition || undefined}
       transformOrigin={{
         vertical: 'top',
         horizontal: 'left',
       }}
       slotProps={{
         transition: {
-          onExited: onExited,
+          onExited: props.onExited,
         },
         paper: {
           sx: {
@@ -76,7 +66,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = ({
       }}
 
     >
-      <StyledMenuItemNodeName node={node} />
+      <StyledMenuItemNodeName node={props.node} />
 
       <Divider sx={{ borderColor: '#3c3c3c' }} />
 
@@ -119,6 +109,31 @@ const StyledMenuItem: React.FC<StyledMenuItemProps> = ({ onClick, icon, children
   </StyledMenuItemBase>
 );
 
+const StyledDeleteMenuItem: React.FC<StyledMenuItemProps> = ({ onClick, icon, children }) => (
+  <StyledDeleteMenuItemBase onClick={onClick}>
+    {icon}
+    {children}
+  </StyledDeleteMenuItemBase>
+);
+
+interface StyledMenuItemNodeNameProps {
+  node: TreeNode | undefined;
+}
+const StyledMenuItemNodeName: React.FC<StyledMenuItemNodeNameProps> = ({ node }) => {
+  const theme = useTheme();
+  return (
+    <Typography variant="subtitle2"
+      sx={{
+        px: theme.spacing(2), py: theme.spacing(1),
+        color: node ? getNodeColor(node.type) : '#cccccc',
+        fontWeight: 500,
+      }}
+    >
+      {node?.name}
+    </Typography>
+  );
+};
+
 const StyledDeleteMenuItemBase = styled(MenuItem)(() => ({
   fontSize: '13px',
   color: '#f48771',
@@ -134,29 +149,7 @@ const StyledDeleteMenuItemBase = styled(MenuItem)(() => ({
   },
 }));
 
-const StyledDeleteMenuItem: React.FC<StyledMenuItemProps> = ({ onClick, icon, children }) => (
-  <StyledDeleteMenuItemBase onClick={onClick}>
-    {icon}
-    {children}
-  </StyledDeleteMenuItemBase>
-);
 
-interface MenuItemNodeNameProps {
-  node: TreeNode | null;
-}
 
-const StyledMenuItemNodeName: React.FC<MenuItemNodeNameProps> = ({ node }) => {
-  return (
-    <Typography variant="subtitle2"
-      sx={{
-        px: 2,
-        py: 1,
-        color: node ? getNodeColor(node.type) : '#cccccc',
-        fontWeight: 500,
-        display: 'block',
-      }}
-    >
-      {node?.name}
-    </Typography>
-  );
-};
+
+
