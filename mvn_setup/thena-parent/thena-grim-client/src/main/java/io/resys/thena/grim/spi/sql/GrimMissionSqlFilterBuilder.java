@@ -74,6 +74,15 @@ public class GrimMissionSqlFilterBuilder {
       params.add(filter.getMissionIds().get().toArray());
     }
     
+    // questionnaire id
+    if(filter.getQuestionnaireIds().isPresent()) {
+      builder.append("(")
+        .append(" mission.questionnaire_id = ANY($").append(index++).append(")")
+        .append(")")
+        .ln();
+      params.add(filter.getQuestionnaireIds().get().toArray());
+    }
+    
     // archive filter
     if(GrimArchiveQueryType.ONLY_ARCHIVED.equals(filter.getArchived())) {
       and();

@@ -102,6 +102,7 @@ public interface GrimDataSource extends TenantDataSource {
   }
   
   interface InternalProcQuery {
+    Uni<GrimProcess> getOneByIdWithLock(String id);
     Uni<GrimProcess> getOneById(String id);
     Uni<Optional<GrimProcess>> findOneById(String id);
     Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
@@ -178,7 +179,8 @@ public interface GrimDataSource extends TenantDataSource {
     
     Uni<List<String>> findAllIdentifiers(List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit);
     Multi<GrimMissionContainer> findAll();
-    Uni<GrimMissionContainer> getById(String missionId);
+    Uni<GrimMissionContainer> getOneById(String missionId);
+    Uni<Optional<GrimMissionContainer>> findOneByQuestionnaireId(String questionnaireId);
     Uni<Long> count();
   }
 

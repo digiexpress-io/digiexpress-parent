@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.dialob;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -75,7 +77,7 @@ public class DialobFillEventPublisher {
           
           if(answeredInstance.isPresent()) {
             log.debug("Executing flow directly for process: {} after dialob completion event!", instance.getId());
-            syncDialobAndProcess.executeFlowForInstance(answeredInstance.get());
+            syncDialobAndProcess.executeFlowForInstance(answeredInstance.get()).await().atMost(Duration.ofMinutes(5));
           }
           
         }

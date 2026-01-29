@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.immutables.value.Value;
 import org.springframework.data.domain.Page;
@@ -106,9 +108,27 @@ public interface TaskClient {
     ModifyProcess id(String id);
     ModifyProcess commitMessage(String commitMessage);
     ModifyProcess commitAuthor(String commitAuthor);
-    ModifyProcess status(ProcessStatus status);
-    ModifyProcess taskId(String taskId);
+    
+    ModifyProcess merge(BiConsumer<ProcessInstance, MergeProcess> merger);
+    
     Uni<ProcessInstance> build();
+  }
+  
+  interface MergeProcess {
+    MergeProcess status(ProcessStatus status);
+    MergeProcess taskId(String taskId);
+    MergeProcess formBody(String formBody);
+    MergeProcess flowBody(String flowBody);
+    
+    MergeProcess onAnyUni(Uni<?> callback); // do some async tasks after locking proc table and before on mission
+    MergeProcess onTask(Consumer<Optional<Task>> callback); //provides task by matching questionnaire id after locking and unis
+    
+    
+    // skips the mod and returns current state without mods
+    ProcessInstance skip();
+    
+    // apply modifications
+    ProcessInstance build();
   }
   
   interface QueryTaskProcesess {
@@ -118,9 +138,11 @@ public interface TaskClient {
     Uni<Optional<ProcessInstance>> findOneById(String processId); 
     
     Multi<ProcessInstance> findAll();
+    Multi<ProcessInstance> findAllExpired();
     Multi<ProcessInstance> findAllInLast6Months();
     Multi<ProcessInstance> findAllStaleWithoutTasks(OffsetDateTime olderThen);
     Multi<ProcessInstance> findAllNotArchivedyUserId(String userId);
+    Multi<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom);
     
     Uni<ProcessInstance> deleteOneById(String id);
   }

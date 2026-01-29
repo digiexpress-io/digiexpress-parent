@@ -58,7 +58,7 @@ public class InternalMissionContainerQuerySqlImpl implements InternalMissionQuer
   private final GrimRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   private final Collection<GrimDocType> docsToExclude = new LinkedHashSet<>();
-  private final ImmutableGrimMissionFilter.Builder builder = ImmutableGrimMissionFilter.builder();
+  private final ImmutableGrimMissionFilter.Builder builder = ImmutableGrimMissionFilter.builder().questionnaireIds(Optional.empty());
   private ImmutableGrimMissionFilter filter;
   private List<String> missionIds;
   private String includeViewerUserId, includeViewerUsedFor;
@@ -166,7 +166,7 @@ public class InternalMissionContainerQuerySqlImpl implements InternalMissionQuer
     return this;
   }
   @Override
-  public Uni<GrimMissionContainer> getById(String missionId) {
+  public Uni<GrimMissionContainer> getOneById(String missionId) {
     builder.missionIds(Arrays.asList(missionId));
     this.filter = builder.build();
     return Uni.combine().all().unis(
@@ -190,6 +190,33 @@ public class InternalMissionContainerQuerySqlImpl implements InternalMissionQuer
           return null;
         }
         return result.iterator().next();
+      });
+  }
+  @Override
+  public Uni<Optional<GrimMissionContainer>> findOneByQuestionnaireId(String questionnaireId) {
+    builder.questionnaireIds(Arrays.asList(questionnaireId));
+    this.filter = builder.build();
+    return Uni.combine().all().unis(
+        findAllLinks(),
+        findAllRemarks(),
+        findAllObjectives(),
+        findAllData(),
+        findAllGoals(),
+        findAllAssignments(),
+        findAllCommits(),
+        findAllMissions(),
+        findAllMissionLabels(),
+        findAllCommands(),
+        findAllViewers()
+      ).with(GrimMissionContainer.class, (containers) -> {
+        final var combined = ImmutableGrimMissionContainer.builder();
+        containers.forEach(container -> combined.from(container));
+        final GrimMissionContainer built = combined.build();
+        final var result = built.groupByMission();
+        if(result.isEmpty()) {
+          return Optional.empty();
+        }
+        return result.stream().findFirst();
       });
   }
   @Override
@@ -526,4 +553,5 @@ public class InternalMissionContainerQuerySqlImpl implements InternalMissionQuer
             .build()
         );
   }
+
 }

@@ -49,9 +49,11 @@ public interface ThenaGrimMergeObject {
     MergeProc status(@Nullable String status);
     
     MergeProc expiresAt(@Nullable OffsetDateTime expiresAt);
-    MergeProc expiresInSeconds(@Nullable Long expiresInSeconds);  
-        
-    void build();
+    MergeProc expiresInSeconds(@Nullable Long expiresInSeconds);
+    
+    GrimProcess getCurrentState();
+    GrimProcess skip(); //cancel the changes and revert to original
+    GrimProcess build();
   }
   
   interface MergeMission {

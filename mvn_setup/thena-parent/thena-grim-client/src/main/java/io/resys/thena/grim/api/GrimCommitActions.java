@@ -21,7 +21,10 @@ package io.resys.thena.grim.api;
  */
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.immutables.value.Value;
 
@@ -33,6 +36,7 @@ import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
@@ -73,7 +77,10 @@ public interface GrimCommitActions {
     ModifyOneProc commitAuthor(String author);
     ModifyOneProc commitMessage(String message);
     ModifyOneProc procId(String procId);
-    ModifyOneProc modifyProc(Consumer<MergeProc> modifyProc);
+
+    ModifyOneProc onAnyUni(Function<MergeProc, Uni<?>> callback); // stage 1: do some async tasks after locking proc table and before on mission
+    ModifyOneProc onMission(BiConsumer<Optional<GrimMissionContainer>, MergeProc> onMission); // stage 2: resolves mission by questionnaire id
+    ModifyOneProc modifyProc(BiConsumer<GrimProcess, MergeProc> modifyProc);
     
     Uni<OneProcEnvelope> build();
   }

@@ -141,7 +141,7 @@ public interface GrimQueryActions {
     
     MissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated);
     
-    Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId);
+    Uni<QueryEnvelope<GrimMissionContainer>> getOne(String missionIdOrExtId);
     Uni<QueryEnvelopeList<GrimMissionContainer>> findAll();
     
     

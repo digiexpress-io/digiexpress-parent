@@ -4,7 +4,7 @@ package io.resys.thena.grim.spi.modify;
  * #%L
  * thena-grim-client
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,17 @@ package io.resys.thena.grim.spi.modify;
  * #L%
  */
 
-import java.util.function.Consumer;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.grim.api.GrimCommitActions.ModifyOneProc;
 import io.resys.thena.grim.api.GrimCommitActions.OneProcEnvelope;
 import io.resys.thena.grim.api.ImmutableOneProcEnvelope;
@@ -34,6 +38,7 @@ import io.resys.thena.grim.spi.GrimDataSource;
 import io.resys.thena.grim.spi.GrimDataSource.GrimBatchMissions;
 import io.resys.thena.grim.spi.GrimDataSource.GrimState;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
+import io.resys.thena.grim.spi.builders.InternalMissionContainerQuerySqlImpl;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -46,8 +51,10 @@ public class ModifyOneProcImpl implements ModifyOneProc {
   
   private String author;
   private String message;
-  private String missionId;
-  private Consumer<MergeProc> mission;
+  private String procId;
+  private BiConsumer<GrimProcess, MergeProc> modifyProc;
+  private Function<MergeProc, Uni<?>> onAnyUni;
+  private BiConsumer<Optional<GrimMissionContainer>, MergeProc> onMission;
   
   @Override
   public ModifyOneProcImpl commitAuthor(String author) {
@@ -61,13 +68,13 @@ public class ModifyOneProcImpl implements ModifyOneProc {
   }
   @Override
   public ModifyOneProcImpl procId(String procId) {
-    this.missionId = RepoAssert.notEmpty(procId, () -> "procId can't be empty!");
+    this.procId = RepoAssert.notEmpty(procId, () -> "procId can't be empty!");
     return this;
   }
   @Override
-  public ModifyOneProcImpl modifyProc(Consumer<MergeProc> modifyProc) {
+  public ModifyOneProcImpl modifyProc(BiConsumer<GrimProcess, MergeProc> modifyProc) {
     RepoAssert.notNull(modifyProc, () -> "modifyProc can't be empty!");
-    mission = modifyProc;
+    this.modifyProc = modifyProc;
     return this;
   }
 
@@ -76,8 +83,8 @@ public class ModifyOneProcImpl implements ModifyOneProc {
     RepoAssert.notEmpty(tenantId, () -> "tenantId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
-    RepoAssert.notNull(mission, () -> "modifyMission can't be empty!");
-    RepoAssert.notEmpty(missionId, () -> "missions can't be empty!");
+    RepoAssert.notNull(modifyProc, () -> "modifyProc can't be empty!");
+    RepoAssert.notEmpty(procId, () -> "procId can't be empty!");
     
     final var scope = ImmutableTxScope.builder()
         .commitAuthor(author)
@@ -86,9 +93,19 @@ public class ModifyOneProcImpl implements ModifyOneProc {
         .build();
     return this.state.withGrimTransaction(scope, this::doInTx);
   }
+  @Override
+  public ModifyOneProc onAnyUni(Function<MergeProc, Uni<?>> onAnyUni) {
+    this.onAnyUni = onAnyUni;
+    return this;
+  }
+  @Override
+  public ModifyOneProc onMission(BiConsumer<Optional<GrimMissionContainer>, MergeProc> onMission) {
+    this.onMission = onMission;
+    return this;
+  }
 
   private Uni<OneProcEnvelope> doInTx(GrimState tx) {
-    return tx.missionProcs().getOneById(missionId)
+    return tx.missionProcs().getOneByIdWithLock(procId)
         .onItem().transformToUni(request -> createResponse(tx, request))
         .onFailure(ModifyOneProcException.class).recoverWithItem(ex -> {
           final ModifyOneProcException error = (ModifyOneProcException) ex;          
@@ -115,33 +132,61 @@ public class ModifyOneProcImpl implements ModifyOneProc {
     }
     
     final var merger = new MergeProcImpl(request);
-    mission.accept(merger);
-    final var merged = merger.close();
+    modifyProc.accept(request, merger);
     
+    return getAnyUni(tx, merger)
+      .onItem().transformToUni(junk -> getMissionContainer(tx, merger))
+      .onItem().transformToUni(container -> {
+        
+        if(merger.isSkipped()) {
+          return Uni.createFrom().item(
+            ImmutableOneProcEnvelope.builder()
+              .repoId(tenantId)
+              .proc(request)
+              .status(CommitResultStatus.OK)
+              .build()
+          );
+        }
     
-    // Merge requests
-    final var start = ImmutableGrimBatchMissions.builder()
-      .tenantId(tenantId)
-      .log("")
-      .addUpdateProcs(merged)
-      .status(BatchStatus.OK);
-    
-    // Patch all in current TX
-    return tx.batchMany(start.build()).onItem().transform(rsp -> {
-      
-      if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-        throw new ModifyOneProcException("Failed to modify proc!", rsp);
-      }
+        final var merged = merger.close();
+        final var start = ImmutableGrimBatchMissions.builder()
+            .tenantId(tenantId)
+            .log("")
+            .addUpdateProcs(merged)
+            .status(BatchStatus.OK);
+        
+        // Patch all in current TX
+        return tx.batchMany(start.build()).onItem().transform(rsp -> {
+          
+          if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
+            throw new ModifyOneProcException("Failed to modify proc!", rsp);
+          }
 
-      return ImmutableOneProcEnvelope.builder()
-          .repoId(tenantId)
-          .proc(merged)
-          .status(CommitResultStatus.OK)
-          .build();
-            
-    });
+          return ImmutableOneProcEnvelope.builder()
+              .repoId(tenantId)
+              .proc(merged)
+              .status(CommitResultStatus.OK)
+              .build();
+                
+        });
+      });
+  }
+
+  private Uni<?> getAnyUni(GrimState tx, MergeProcImpl merger) {
+    if(this.onAnyUni == null) {
+      return Uni.createFrom().voidItem();
+    }
+    return this.onAnyUni.apply(merger);
   }
   
+  private Uni<Optional<GrimMissionContainer>> getMissionContainer(GrimState tx, MergeProcImpl merger) {
+    if(this.onMission == null) {
+      return Uni.createFrom().item(Optional.empty());
+    }
+    return new InternalMissionContainerQuerySqlImpl((ThenaSqlDataSource) tx.getDataSource())
+        .findOneByQuestionnaireId(merger.getCurrentState().getQuestionnaireId());
+  }
+
   private OneProcEnvelope validateRequest(GrimState tx, GrimProcess request) {
     if(request == null) {
       return ImmutableOneProcEnvelope.builder()
@@ -151,7 +196,7 @@ public class ModifyOneProcImpl implements ModifyOneProc {
                   .append("Commit to: '").append(tenantId).append("'")
                   .append(" is rejected.")
                   .append(" Could not find proc, expected: '1' but found: non!\r\n")
-                  .append("  - not found: ").append(String.join(",", missionId))
+                  .append("  - not found: ").append(String.join(",", procId))
                   .toString())
                 .build())
             .status(CommitResultStatus.ERROR)
@@ -171,4 +216,5 @@ public class ModifyOneProcImpl implements ModifyOneProc {
       return batch;
     }
   }
+
 }

@@ -211,10 +211,10 @@ public class GrimMissionQueryImpl implements MissionQuery {
   }
   
   @Override
-  public Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId) {
+  public Uni<QueryEnvelope<GrimMissionContainer>> getOne(String missionIdOrExtId) {
     return this.state
         .onItem().transformToUni(state -> {  
-          return startQuery(state).getById(missionIdOrExtId)
+          return startQuery(state).getOneById(missionIdOrExtId)
             .onItem().transform((items) -> ImmutableQueryEnvelope.<GrimMissionContainer>builder()
                 .repo(state.getDataSource().getTenant())
                 .status(QueryEnvelopeStatus.OK)

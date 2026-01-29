@@ -230,8 +230,25 @@ WHERE id = $9""").ln()
         .props(Tuple.of(id, Long.parseLong(id)))
         .build();
   }
+  @Override
+  public SqlTuple getOneByIdWithLock(String id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(procs.task_id = mission.id)").ln()
+        .append(" WHERE mission.mission_ref = $1 OR procs.id = $2 OR mission.id = $1").ln()
+        .append(" FOR UPDATE OF procs").ln()
+        
+        .build())
+        .props(Tuple.of(id, Long.parseLong(id)))
+        .build();
+  }
+  
+  
 
-  // TODO NOT USED
   @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()

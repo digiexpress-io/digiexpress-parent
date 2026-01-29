@@ -34,7 +34,8 @@ import io.vertx.core.json.JsonObject;
 public class MergeProcImpl implements MergeProc {
   private final GrimProcess grimProcPrevious;
   private final ImmutableGrimProcess.Builder next;
-  private boolean built;
+  private boolean isBuilt;
+  private boolean isSkipped;
   
   private Optional<String> missionId;
   private Optional<String> flowName;
@@ -44,6 +45,7 @@ public class MergeProcImpl implements MergeProc {
   private Optional<OffsetDateTime> expiresAt;
   private Optional<Long> expiresInSeconds;  
   private boolean isUpdated = false;
+  private GrimProcess built;
   
   public MergeProcImpl(GrimProcess state) {
     super();
@@ -86,14 +88,16 @@ public class MergeProcImpl implements MergeProc {
     this.expiresInSeconds = Optional.ofNullable(expiresInSeconds);
     return this;
   }
-
   @Override
-  public void build() {
-    this.built = true;
+  public GrimProcess skip() {
+    this.isSkipped = true;
+    this.isBuilt = true;
+    
+    return this.grimProcPrevious;
   }
-  
-  public GrimProcess close() {
-    RepoAssert.isTrue(built, () -> "you must call MergeProc.build() to finalize proc UPDATE!");
+  @Override
+  public GrimProcess build() {
+    this.isBuilt = true;
     
     
     if(missionId != null) {
@@ -138,12 +142,25 @@ public class MergeProcImpl implements MergeProc {
       next.updated(OffsetDateTime.now());
     }
 
-    return next.build();
+    this.built = next.build();
+    return this.built;
+  }
+  public boolean isSkipped() {
+    return isSkipped;
+  }
+
+  public GrimProcess close() {
+    RepoAssert.isTrue(isBuilt, () -> "you must call MergeProc.build() to finalize proc UPDATE!");
+    return this.built;
   }
   
   private void isUpdated(Object o1, Object o2) {
     if(!java.util.Objects.equals(o1, o2)) {
       isUpdated = true;
     }
+  }
+
+  public GrimProcess getCurrentState() {
+    return grimProcPrevious;
   }
 }

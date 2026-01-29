@@ -103,7 +103,7 @@ public class SimpleGrimUpdateMissionTest extends DbTestTemplate {
         }).build()
         .onItem().transformToUni(resp -> {
           final var missionId = resp.getMissions().iterator().next().getId();
-          return getClient().grim(repo).find().missionQuery().get(missionId);
+          return getClient().grim(repo).find().missionQuery().getOne(missionId);
         })
         .onItem().transform(resp -> resp.getObjects())
         .await().atMost(Duration.ofMinutes(1));

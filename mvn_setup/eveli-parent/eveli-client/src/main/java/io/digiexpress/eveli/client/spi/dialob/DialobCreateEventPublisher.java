@@ -123,7 +123,7 @@ public class DialobCreateEventPublisher {
         .commitAuthor(event.getProcessId())
         .commitMessage("Invalidating process")
         .id(event.getProcessId())
-        .status(ProcessStatus.REJECTED)
+        .merge((current, merger) -> merger.status(ProcessStatus.REJECTED).build())
         .build()
         .subscribeAsCompletionStage()
         .toCompletableFuture();

@@ -32,6 +32,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 public interface GrimMissionFilter {
   Optional<List<String>> getMissionIds();
+  Optional<List<String>> getQuestionnaireIds();
   List<GrimLinkFilter> getLinks();
   List<GrimAssignmentFilter> getAssignments();
   List<String> getStatus();

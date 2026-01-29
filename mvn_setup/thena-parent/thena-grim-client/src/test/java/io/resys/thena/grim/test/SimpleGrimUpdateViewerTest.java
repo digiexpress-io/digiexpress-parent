@@ -73,7 +73,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
         }).build().await().atMost(Duration.ofMinutes(1)).getMission().getId();
         
     version_1 =
-      getClient().grim(repo).find().missionQuery().get(missionId)  
+      getClient().grim(repo).find().missionQuery().getOne(missionId)  
         .onItem().transform(resp -> resp.getObjects())
         .await().atMost(Duration.ofMinutes(1));
     
@@ -86,7 +86,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1)).getMission();
     
     version_2 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
@@ -99,7 +99,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1)).getMission();
     
     version_3 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
@@ -112,7 +112,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1)).getMission();
     
     version_4 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
@@ -124,7 +124,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     version_5 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
@@ -136,7 +136,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     version_6 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
 
@@ -148,7 +148,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     version_7 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
@@ -164,7 +164,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     version_8 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
@@ -196,11 +196,11 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     ).build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     version_9 =
-        getClient().grim(repo).find().missionQuery().get(missionId)  
+        getClient().grim(repo).find().missionQuery().getOne(missionId)  
           .onItem().transform(resp -> resp.getObjects())
           .await().atMost(Duration.ofMinutes(1));
     
-    return getClient().grim(repo).find().missionQuery().get(missionId).await().atMost(Duration.ofMinutes(1)).getObjects();
+    return getClient().grim(repo).find().missionQuery().getOne(missionId).await().atMost(Duration.ofMinutes(1)).getObjects();
   }
 
   @Test
@@ -227,7 +227,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     final var missionWithViewedData = getClient().grim(repo).find().missionQuery()
         .includeViewer("john.doe@morgue.com", "tracing")
-        .get(newMission.getMission().getId())
+        .getOne(newMission.getMission().getId())
         .await().atMost(Duration.ofMinutes(1));
     
     Assertions.assertEquals(1, missionWithViewedData.getObjects().getViews().size());
@@ -236,11 +236,11 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     { // try to duplicate
     getClient().grim(repo).find().missionQuery()
         .includeViewer("john.doe@morgue.com", "tracing")
-        .get(newMission.getMission().getId())
+        .getOne(newMission.getMission().getId())
         .await().atMost(Duration.ofMinutes(1));
     final var missionWithViewedData = getClient().grim(repo).find().missionQuery()
         .includeViewer("john.doe@morgue.com", "tracing")
-        .get(newMission.getMission().getId())
+        .getOne(newMission.getMission().getId())
         .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(1, missionWithViewedData.getObjects().getViews().size());
     

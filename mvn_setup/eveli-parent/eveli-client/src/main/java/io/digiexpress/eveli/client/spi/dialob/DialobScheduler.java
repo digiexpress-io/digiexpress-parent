@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.dialob;
 
 import java.time.OffsetDateTime;
+import java.util.concurrent.CompletableFuture;
 
 /*-
  * #%L
@@ -26,7 +27,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.scheduling.annotation.Scheduled;
 
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,23 +37,39 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DialobScheduler {
   
-  private final ProcessClient processClient;
+  private final TaskClient taskClient;
   private final SyncDialobAndProcess syncDialobAndProcess;
   
-  
-  
   @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
-  public void executeFlow() {
-    for(final var instance : processClient.queryInstances().findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))) {
-      syncDialobAndProcess.executeFlowForInstance(instance);
-    }
+  public CompletableFuture<?> executeFlow() {
+    return taskClient.queryTaskProcesess()
+      .findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))
+      .onItem().transformToUni(instance -> syncDialobAndProcess.executeFlowForInstance(instance))
+      .concatenate()
+      .collect().asList()
+      .subscribeAsCompletionStage()
+      .toCompletableFuture();
   }
   
   @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
-  public void rejectProcessesWithDeadline() {
-    processClient.queryInstances().findAllExpired().forEach(instance -> {
-      log.warn("Expiry for process instance: {}, e: {}!", instance.getId());
-      processClient.changeInstanceStatus().rejected(instance.getId().toString());
-    });
+  public CompletableFuture<?> rejectProcessesWithDeadline() {
+    return taskClient.queryTaskProcesess().findAllExpired()
+        .onItem().transformToUni(proc -> {
+          log.warn("Expiry for process instance: {}, expiresAt: {}!", proc.getId(), proc.getExpiresAt());
+          return taskClient.modifyProcess()
+            .commitAuthor(DialobScheduler.class.getSimpleName())
+            .commitMessage("Rejecting expired")
+            .id(proc.getId().toString())
+            .merge((currentState, merge) -> merge.status(ProcessStatus.EXPIRED).build())
+            .build().onFailure().recoverWithNull();
+        })
+        
+        .concatenate()
+        .collect().asList()
+        .subscribeAsCompletionStage()
+        .toCompletableFuture();
   }
 }
+
+
+

@@ -186,18 +186,17 @@ public class EveliAutoConfig {
   
   @Bean
   public SyncDialobAndProcess syncDialobAndProcess(
-      ProcessClient processClient, 
+      EveliEnvirClient eveliEnvirClient, 
       DialobClient dialobClient,
       ObjectMapper objectMapper,
       TaskClient taskClient) {
-    return new SyncDialobAndProcess(processClient, taskClient, dialobClient, objectMapper);
+    return new SyncDialobAndProcess(taskClient, eveliEnvirClient, dialobClient, objectMapper);
   }
 
   @Bean
-  public DialobScheduler dialobScheduler(ProcessClient processClient, SyncDialobAndProcess sync) {
-    return new DialobScheduler(processClient, sync);
+  public DialobScheduler dialobScheduler(TaskClient taskClient, SyncDialobAndProcess sync) {
+    return new DialobScheduler(taskClient, sync);
   }
-  
 
   @Bean(name="submitTaskScheduler")
   public ThreadPoolTaskScheduler submitTaskScheduler() {

@@ -104,7 +104,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
         }).build()
         .onItem().transformToUni(resp -> {
           final var missionId = resp.getMissions().iterator().next().getId();
-          return getClient().grim(repo).find().missionQuery().get(missionId);
+          return getClient().grim(repo).find().missionQuery().getOne(missionId);
         })
         .onItem().transform(resp -> resp.getObjects())
         .await().atMost(Duration.ofMinutes(1));
@@ -183,7 +183,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
 
     
     
-    final var refreshedMission = getClient().grim(repo).find().missionQuery().get(newMission.getMission().getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
+    final var refreshedMission = getClient().grim(repo).find().missionQuery().getOne(newMission.getMission().getId()).await().atMost(Duration.ofMinutes(1)).getObjects();
     
     // remove goals and objectives
     getClient().grim(repo).commit().modifyManyMissions()

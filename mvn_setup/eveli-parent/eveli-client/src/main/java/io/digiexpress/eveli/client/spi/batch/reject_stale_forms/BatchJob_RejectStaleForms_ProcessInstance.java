@@ -89,8 +89,8 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
     return taskClient.modifyProcess()
         .commitAuthor(BatchJob_RejectStaleForms_ProcessInstance.class.getSimpleName())
         .commitMessage("Older then: " + config.getAgeInMonths() + " months")
-        .status(ProcessStatus.EXPIRED)
         .id(entity.getProcess().getId().toString())
+        .merge((current, merger) -> merger.status(ProcessStatus.EXPIRED).build())
         .build()
         .onItem().transform((rejected) -> {
           
