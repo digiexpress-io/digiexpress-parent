@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled, Badge, useTheme } from '@mui/material';
+import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography } from '@mui/material';
 
 import { TreeNode, TreeNodeType } from './mock-tree-data';
 import {
@@ -216,7 +216,42 @@ export const getIcon = (node: TreeNode) => {
   return baseIcon;
 };
 
-export const getIconClassName = (node: TreeNode, classes: EveliTreeClasses) => {
+export const StyledListItem = styled(ListItem, {
+  name: MUI_NAME,
+  slot: 'StyledListItem',
+})<{ level: number }>(({ theme, level }) => ({
+
+  paddingLeft: theme.spacing(level * 1.2),
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: '#2d2d30',
+  },
+}));
+
+interface StyledListItemTextProps {
+  nodeType: TreeNodeType;
+  nodeName: string;
+  description?: string;
+}
+
+export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType, nodeName, description }) => {
+  return (
+    <ListItemText
+      primary={
+        <Typography variant='subtitle2' sx={{ color: getNodeColor(nodeType), fontWeight: nodeType === 'folder' ? 500 : 400 }}>
+          {nodeName}
+          {description && (
+            <Typography component='span' variant='caption' sx={{ ml: 1, color: '#6a9955', fontStyle: 'italic' }}>
+              - "{description}"
+            </Typography>
+          )}
+        </Typography>
+      }
+    />
+  );
+};
+
+export function getIconClassName(node: TreeNode, classes: EveliTreeClasses) {
   switch (node.type) {
     case 'folder':
       return classes.iconFolder;
@@ -237,10 +272,10 @@ export const getIconClassName = (node: TreeNode, classes: EveliTreeClasses) => {
   }
 };
 
-export const getNodeColor = (nodeType: TreeNodeType) => {
+function getNodeColor(nodeType: TreeNodeType) {
   switch (nodeType) {
     case 'folder':
-      return '#cccccc'; // Gray
+      return '#e8e5e5'; // Gray
     case 'article':
       return '#dcdcaa'; // Yellow for articles
     case 'service':
@@ -257,3 +292,4 @@ export const getNodeColor = (nodeType: TreeNodeType) => {
       return '#cccccc';
   }
 };
+
