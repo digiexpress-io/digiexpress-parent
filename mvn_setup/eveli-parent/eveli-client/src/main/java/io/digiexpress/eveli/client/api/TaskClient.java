@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.immutables.value.Value;
 import org.springframework.data.domain.Page;
@@ -109,20 +109,23 @@ public interface TaskClient {
     ModifyProcess commitMessage(String commitMessage);
     ModifyProcess commitAuthor(String commitAuthor);
     
+    ModifyProcess onAnyUni(Function<MergeProcess, Uni<?>> callback); // stage 1: do some async tasks after locking proc table and before on mission
+    ModifyProcess onTask(BiConsumer<Optional<Task>, MergeProcess> onMission); // stage 2: resolves mission by questionnaire id
+    
     ModifyProcess merge(BiConsumer<ProcessInstance, MergeProcess> merger);
     
     Uni<ProcessInstance> build();
   }
   
   interface MergeProcess {
+    
+    
     MergeProcess status(ProcessStatus status);
     MergeProcess taskId(String taskId);
     MergeProcess formBody(String formBody);
     MergeProcess flowBody(String flowBody);
     
-    MergeProcess onAnyUni(Uni<?> callback); // do some async tasks after locking proc table and before on mission
-    MergeProcess onTask(Consumer<Optional<Task>> callback); //provides task by matching questionnaire id after locking and unis
-    
+    ProcessInstance getCurrentState();
     
     // skips the mod and returns current state without mods
     ProcessInstance skip();
@@ -135,7 +138,8 @@ public interface TaskClient {
     Uni<ProcessInstance> getOneById(String processId);
     
     Uni<Optional<ProcessInstance>> findOneByTaskId(String taskId);
-    Uni<Optional<ProcessInstance>> findOneById(String processId); 
+    Uni<Optional<ProcessInstance>> findOneById(String processId);
+    Uni<Optional<ProcessInstance>> findOneByQuestionnaireId(String questionnaireId);
     
     Multi<ProcessInstance> findAll();
     Multi<ProcessInstance> findAllExpired();

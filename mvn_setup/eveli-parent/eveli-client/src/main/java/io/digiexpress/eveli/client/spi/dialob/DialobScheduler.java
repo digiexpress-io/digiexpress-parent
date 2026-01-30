@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.dialob;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /*-
@@ -44,7 +45,7 @@ public class DialobScheduler {
   public CompletableFuture<?> executeFlow() {
     return taskClient.queryTaskProcesess()
       .findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))
-      .onItem().transformToUni(instance -> syncDialobAndProcess.executeFlowForInstance(instance))
+      .onItem().transformToUni(instance -> syncDialobAndProcess.executeFlowForInstance(instance, Optional.empty()))
       .concatenate()
       .collect().asList()
       .subscribeAsCompletionStage()

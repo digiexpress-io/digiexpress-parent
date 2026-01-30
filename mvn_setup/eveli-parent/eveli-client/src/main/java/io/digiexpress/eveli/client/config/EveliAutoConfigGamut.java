@@ -78,11 +78,11 @@ public class EveliAutoConfigGamut {
   @Bean
   public DialobFillEventPublisher dialobFillEventPublisher(
       ApplicationEventPublisher publisher,
-      ProcessClient processClient,
+      TaskClient taskClient,
       DialobClient dialobClient,
       SyncDialobAndProcess syncDialobAndProcess
   ) {
-    return new DialobFillEventPublisher(publisher, processClient, dialobClient, syncDialobAndProcess);
+    return new DialobFillEventPublisher(publisher, dialobClient, syncDialobAndProcess, taskClient);
   }
   
   @Bean
