@@ -92,6 +92,9 @@
       "@dxs-ts/eveli-routes": [
         "../eveli-routes/index.ts"
       ],
+      "@dxs-ts/eveli-tree": [
+        "../eveli-tree/index.ts"
+      ],
       "@dxs-ts/xui-datetime": [
         "../xui-datetime/index.ts"
       ],
@@ -196,6 +199,9 @@
       "path": "../eveli-routes"
     },
     {
+      "path": "../eveli-tree"
+    },
+    {
       "path": "../xui-datetime"
     },
     {
@@ -210,9 +216,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-01-23T09:36:18.037Z",
+    "at": "2026-01-30T07:09:12.707Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "11ffe20f86e2",
+    "fromRegistry": "dcfbfc924e31",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

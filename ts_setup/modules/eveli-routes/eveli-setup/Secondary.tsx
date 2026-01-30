@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
-import { SettingsApplicationsOutlined as SettingsApplicationsOutlinedIcon } from '@mui/icons-material';
 import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import { AccountBalance as AccountBalanceIcon } from '@mui/icons-material';
 import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
