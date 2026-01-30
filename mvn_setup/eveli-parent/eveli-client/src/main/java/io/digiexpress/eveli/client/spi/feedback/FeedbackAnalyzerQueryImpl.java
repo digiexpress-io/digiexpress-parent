@@ -58,71 +58,83 @@ public class FeedbackAnalyzerQueryImpl implements FeedbackAnalyzerQuery {
 
   @Override
   public Uni<SentimentAndSubcategory> getOneSentimentAndSubcategoryById(String id) {
-    final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
     final var categories = feedbackCategoriesReader.getCategories();
 
-    if (feedback.isPresent()) {
-      final var command = ImmutableFeedbackSentimentAndSubcategoryCommand.builder()
-        .id(id)
-        .language(feedback.get().getLocale())
-        .text(feedback.get().getContent().getQuestion())
-        .mainCategory(feedback.get().getContent().getMain())
-        .categories(categories)
-        .build();
-      return executeCall(command, "sentiment-and-subcategory", SentimentAndSubcategory.class);
-    }
+    return feedbackClient.queryFeedbacks().findOneById(id)
+        .onItem().transformToUni(feedback -> {
+          if (feedback.isPresent()) {
+            final var command = ImmutableFeedbackSentimentAndSubcategoryCommand.builder()
+              .id(id)
+              .language(feedback.get().getLocale())
+              .text(feedback.get().getContent().getQuestion())
+              .mainCategory(feedback.get().getContent().getMain())
+              .categories(categories)
+              .build();
+            return Uni.createFrom().item(executeCall(command, "sentiment-and-subcategory", SentimentAndSubcategory.class));
+          }
 
-    // if feedback not found, try finding feedback questionnaire from task
-    final var questionnaire = feedbackClient.queryQuestionnaire().findOneFromTaskById(id);
-    if (questionnaire.isEmpty()) {
-      throw new FeedbackAnalyzerException("Feedback questionnaire not found for task id: " + id);
-    }
-    final var command = ImmutableFeedbackSentimentAndSubcategoryCommand.builder()
-      .id(id)
-      .language(questionnaire.get().getQuestionnaire().getMetadata().getLanguage())
-      .mainCategory(questionnaire.get().getContent().getMain())
-      .text(questionnaire.get().getContent().getQuestion())
-      .categories(categories)
-      .build();
-    return executeCall(command, "find-sentiment-and-subcategory", SentimentAndSubcategory.class);
+          // if feedback not found, try finding feedback questionnaire from task
+          return feedbackClient.queryQuestionnaire().findOneFromTaskById(id)
+          .onItem().transform(questionnaire -> {
+            if (questionnaire.isEmpty()) {
+              throw new FeedbackAnalyzerException("Feedback questionnaire not found for task id: " + id);
+            }
+            final var command = ImmutableFeedbackSentimentAndSubcategoryCommand.builder()
+              .id(id)
+              .language(questionnaire.get().getQuestionnaire().getMetadata().getLanguage())
+              .mainCategory(questionnaire.get().getContent().getMain())
+              .text(questionnaire.get().getContent().getQuestion())
+              .categories(categories)
+              .build();
+            return executeCall(command, "find-sentiment-and-subcategory", SentimentAndSubcategory.class);              
+          });
+        
+        });
   }
 
   @Override
-  public Optional<SimilarFeedback> findOneSimilarFeedbackById(String id) {
-    final var feedbacks = feedbackClient.queryFeedbacks().findAll();
+  public Uni<Optional<SimilarFeedback>> findOneSimilarFeedbackById(String id) {
+    
+    return Uni.combine().all().unis(
+        feedbackClient.queryFeedbacks().findAll().collect().asList(),
+        feedbackClient.queryQuestionnaire().findOneFromTaskById(id)
+      )
+      .asTuple()
+      .onItem().transform(tuple -> {
 
-    if (feedbacks.isEmpty()) {
-      return Optional.empty();
-    }
+        final var questionnaire = tuple.getItem2();
+        final var feedbacks = tuple.getItem1();
+        
+        if (feedbacks.isEmpty()) {
+          return Optional.empty();
+        }
 
-    List<FeedbackItem> items = new ArrayList<>(feedbacks.stream().map(fb -> ImmutableFeedbackItem.builder()
-        .id(fb.getSourceId())
-        .language(fb.getLocale())
-        .text(fb.getContent().getQuestion())
-        .build())
-      .toList());
+        final List<FeedbackItem> items = new ArrayList<>(feedbacks.stream().map(fb -> ImmutableFeedbackItem.builder()
+            .id(fb.getSourceId())
+            .language(fb.getLocale())
+            .text(fb.getContent().getQuestion())
+            .build())
+          .toList());
 
-    // if given id is not feedback id, use task id to find feedback questionnaire and add it to items
-    if (items.stream().noneMatch(i -> i.getId().equals(id))) {
-      final var questionnaire = feedbackClient.queryQuestionnaire().findOneFromTaskById(id);
-      if (questionnaire.isEmpty()) {
-        throw new FeedbackAnalyzerException("Feedback questionnaire not found for task id: " + id);
-      }
-      items.add(ImmutableFeedbackItem.builder()
-        .id(id)
-        .language(questionnaire.get().getQuestionnaire().getMetadata().getLanguage())
-        .text(questionnaire.get().getContent().getQuestion())
-        .build());
-    }
+        // if given id is not feedback id, use task id to find feedback questionnaire and add it to items
+        if(items.stream().noneMatch(i -> i.getId().equals(id))) {
+          
+          if (questionnaire.isEmpty()) {
+            throw new FeedbackAnalyzerException("Feedback questionnaire not found for task id: " + id);
+          }
+          items.add(ImmutableFeedbackItem.builder()
+            .id(id)
+            .language(questionnaire.get().getQuestionnaire().getMetadata().getLanguage())
+            .text(questionnaire.get().getContent().getQuestion())
+            .build());
+        }
 
-    final var command = ImmutableSimilarFeedbackCommand.builder()
-      .id(id)
-      .entries(items)
-      .build();
+        final var command = ImmutableSimilarFeedbackCommand.builder().id(id).entries(items).build();
+        final var similarFeedback = executeCall(command, "find-similar", SimilarFeedback.class);
+        return Optional.ofNullable(similarFeedback);
+        
+      });
 
-    final var similarFeedback = executeCall(command, "find-similar", SimilarFeedback.class);
-
-    return Optional.ofNullable(similarFeedback);
   }
 
   private RestClient getRestClient() {
