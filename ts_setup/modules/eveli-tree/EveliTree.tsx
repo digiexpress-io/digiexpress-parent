@@ -5,7 +5,7 @@ import {
   ChevronRight as ChevronRightIcon,
   UnfoldLess as CollapseAllIcon
 } from '@mui/icons-material';
-import { TreeNode, mockTreeData } from './mock-tree-data';
+import { TreeNode, mockTreeData, collapseAll, toggleNode, handleContextMenu, ContextMenuData } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot, getIcon, getIconClassName, EveliTreeClasses, StyledListItem, StyledListItemText } from './useUtilityClasses';
 import { EveliTreeItemMenu } from './EveliTreeItemMenu';
 
@@ -19,7 +19,7 @@ interface TreeItemProps {
 }
 
 function sortChildren(children: TreeNode[]) {
-  const order = ['article', 'service', 'form', 'flow'];
+  const order = ['article', 'service', 'dialob', 'flow'];
   return children.sort((a, b) => {
     const aIndex = order.indexOf(a.type);
     const bIndex = order.indexOf(b.type);
@@ -79,49 +79,8 @@ export const EveliTree: React.FC = () => {
   const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
-  const [contextMenuData, setContextMenuData] = React.useState<{
-    node: TreeNode;
-    anchorPosition: { top: number; left: number };
-  } | undefined>();
+  const [contextMenuData, setContextMenuData] = React.useState<ContextMenuData | undefined>();
 
-  const collapseAll = () => {
-    const collapseNode = (nodes: TreeNode[]): TreeNode[] => {
-      return nodes.map((node) => ({
-        ...node,
-        isExpanded: false,
-        children: node.children ? collapseNode(node.children) : undefined,
-      }));
-    };
-    setTreeData(collapseNode(treeData));
-  };
-
-  const handleToggle = (nodeId: string) => {
-    const updateNode = (nodes: TreeNode[]): TreeNode[] => {
-      return nodes.map((node) => {
-        if (node.id === nodeId) {
-          return { ...node, isExpanded: !node.isExpanded };
-        }
-        if (node.children) {
-          return { ...node, children: updateNode(node.children) };
-        }
-        return node;
-      });
-    };
-
-    setTreeData(updateNode(treeData));
-  };
-
-  function handleContextMenu(event: React.MouseEvent, node: TreeNode) {
-    event.preventDefault();
-    setContextMenuData({
-      node,
-      anchorPosition: {
-        top: event.clientY,
-        left: event.clientX,
-      },
-    });
-    setContextMenuOpen(true);
-  }
 
   function handleContextMenuClose() {
     setContextMenuOpen(false);
@@ -131,7 +90,7 @@ export const EveliTree: React.FC = () => {
     <EveliTreeRoot className={classes.root}>
       <Box className={classes.title}>
         <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
-        <IconButton size='small' onClick={collapseAll}
+        <IconButton size='small' onClick={() => collapseAll(treeData, setTreeData)}
           sx={{
             color: '#cccccc',
             '&:hover': {
@@ -148,8 +107,8 @@ export const EveliTree: React.FC = () => {
             key={node.id}
             node={node}
             level={0}
-            onToggle={handleToggle}
-            onContextMenu={handleContextMenu}
+            onToggle={(nodeId) => toggleNode(nodeId, treeData, setTreeData)}
+            onContextMenu={(event, node) => handleContextMenu(event, node, setContextMenuData, setContextMenuOpen)}
             classes={classes}
           />
         ))}

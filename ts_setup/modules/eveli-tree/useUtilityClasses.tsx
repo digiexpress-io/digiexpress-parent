@@ -25,7 +25,7 @@ export interface EveliTreeClasses {
   iconFolder: string;
   iconArticle: string;
   iconService: string;
-  iconForm: string;
+  iconDialob: string;
   iconFlow: string;
   iconLink: string;
   iconLanguage: string;
@@ -43,7 +43,7 @@ export const useUtilityClasses = () => {
     iconFolder: ['iconFolder'],
     iconArticle: ['iconArticle'],
     iconService: ['iconService'],
-    iconForm: ['iconForm'],
+    iconDialob: ['iconDialob'],
     iconFlow: ['iconFlow'],
     iconLink: ['iconLink'],
     iconLanguage: ['iconLanguage'],
@@ -65,7 +65,7 @@ export const EveliTreeRoot = styled('div', {
       styles.iconFolder,
       styles.iconArticle,
       styles.iconService,
-      styles.iconForm,
+      styles.iconDialob,
       styles.iconFlow,
       styles.iconLink,
       styles.iconLanguage,
@@ -128,10 +128,10 @@ export const EveliTreeRoot = styled('div', {
       },
     },
 
-    [`& .${MUI_NAME}-iconForm`]: {
+    [`& .${MUI_NAME}-iconDialob`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('form'),
+      color: getNodeColor('dialob'),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -180,7 +180,7 @@ export const getIcon = (node: TreeNode) => {
         return node.isExpanded ? <ArticleOutlinedIcon /> : <ArticleIcon />;
       case 'service':
         return node.isExpanded ? <SettingsOutlinedIcon /> : <SettingsIcon />;
-      case 'form':
+      case 'dialob':
         return <FormIcon />;
       case 'flow':
         return <FlowIcon />;
@@ -262,8 +262,8 @@ export function getIconClassName(node: TreeNode, classes: EveliTreeClasses) {
       return classes.iconArticle;
     case 'service':
       return classes.iconService;
-    case 'form':
-      return classes.iconForm;
+    case 'dialob':
+      return classes.iconDialob;
     case 'flow':
       return classes.iconFlow;
     case 'link':
@@ -283,8 +283,8 @@ export function getNodeColor(nodeType: TreeNodeType) {
       return '#dcdcaa'; // Yellow for articles
     case 'service':
       return '#4ec9b0'; // Teal for services
-    case 'form':
-      return '#9cdcfe'; // Light blue for forms
+    case 'dialob':
+      return '#9cdcfe'; // Light blue for dialob forms
     case 'flow':
       return '#c586c0'; // Purple for flows
     case 'link':
