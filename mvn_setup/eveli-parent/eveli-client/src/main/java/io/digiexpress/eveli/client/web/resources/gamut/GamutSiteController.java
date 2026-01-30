@@ -2,7 +2,6 @@ package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /*-
@@ -86,7 +85,7 @@ public class GamutSiteController {
   }
   
   @GetMapping(path = "feedback")
-  public List<CustomerFeedback> findAllFeedback() {
+  public Multi<CustomerFeedback> findAllFeedback() {
     return feedback.queryCustomerFeedbacks().findAll();
   }
   @GetMapping(path = "cockpits")

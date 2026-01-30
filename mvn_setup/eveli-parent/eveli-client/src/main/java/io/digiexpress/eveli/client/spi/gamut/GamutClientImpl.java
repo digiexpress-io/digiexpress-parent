@@ -24,7 +24,6 @@ import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
 import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient;
-import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
@@ -98,29 +97,31 @@ public class GamutClientImpl implements GamutClient {
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
         TaskAssert.notNull(customer, () -> "customer can't be null!");
 
-        final var process = processInstanceClient.queryInstances().findOneById(actionId)
-            .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
-                
-        if (process.getStatus() != ProcessStatus.ANSWERING && process.getStatus() != ProcessStatus.CREATED) {
-          throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
-        }
-        
-        processInstanceClient.queryInstances().deleteOneById(process.getId());
-      
-        return ImmutableUserAction.builder()
-            .id(process.getId().toString())
-            .status(process.getStatus().name())
-            .created(process.getCreated())
-            .updated(process.getUpdated())
-            .name(process.getWorkflowName())
-            .inputContextId(process.getArticleName())
-            .inputParentContextId(process.getParentArticleName())
-            .formId(process.getQuestionnaireId())
-            .formInProgress(true)
-            .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
-            .viewed(true)
-            .cockpitId(process.getCockpitId())
-            .build();
+        return taskClient.queryTaskProcesess().findOneById(actionId).onItem().transformToUni(found -> {
+          
+          final var process = found.orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
+                  
+          if (process.getStatus() != ProcessStatus.ANSWERING && process.getStatus() != ProcessStatus.CREATED) {
+            throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
+          }
+          
+          return taskClient.queryTaskProcesess()
+            .deleteOneById(process.getId().toString())
+            .map(ignore -> ImmutableUserAction.builder()
+                .id(process.getId().toString())
+                .status(process.getStatus().name())
+                .created(process.getCreated())
+                .updated(process.getUpdated())
+                .name(process.getWorkflowName())
+                .inputContextId(process.getArticleName())
+                .inputParentContextId(process.getParentArticleName())
+                .formId(process.getQuestionnaireId())
+                .formInProgress(true)
+                .assigned(process.getType() == GrimProcessType.CUSTOMER_ASSIGNMENT ? true : false)
+                .viewed(true)
+                .cockpitId(process.getCockpitId())
+                .build());
+        });
       }
       
       @Override

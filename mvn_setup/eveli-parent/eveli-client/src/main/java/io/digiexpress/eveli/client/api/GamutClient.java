@@ -295,7 +295,7 @@ public interface GamutClient {
   }
   
   
-  public static class ProcessCantBeDeletedException extends Exception {
+  public static class ProcessCantBeDeletedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;
     public ProcessCantBeDeletedException(String message) {
       super(message);

@@ -124,7 +124,7 @@ public class GamutUserActionsController {
   }
   
   @GetMapping(path = "/feedback")
-  public List<CustomerFeedback> findAllFeedback(@RequestParam(name = "locale") String locale) {
+  public Multi<CustomerFeedback> findAllFeedback(@RequestParam(name = "locale") String locale) {
     return feedback.queryCustomerFeedbacks().findAllByCustomerId(authClient.getCustomer().getPrincipal().getUsername());
   }
   
