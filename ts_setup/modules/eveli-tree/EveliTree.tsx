@@ -3,7 +3,9 @@ import { Box, Typography, Collapse, IconButton, List, ListItemIcon } from '@mui/
 import {
   ExpandMore as ExpandMoreIcon,
   ChevronRight as ChevronRightIcon,
-  UnfoldLess as CollapseAllIcon
+  UnfoldLess as CollapseAllIcon,
+  LightMode as LightModeIcon,
+  DarkMode as DarkModeIcon
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData, collapseAll, toggleNode, handleContextMenu, ContextMenuData } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot, getIcon, getIconClassName, EveliTreeClasses, StyledListItem, StyledListItemText } from './useUtilityClasses';
@@ -16,6 +18,7 @@ interface TreeItemProps {
   onToggle: (nodeId: string) => void;
   onContextMenu: (event: React.MouseEvent, node: TreeNode) => void;
   classes: EveliTreeClasses;
+  isDarkTheme: boolean;
 }
 
 function sortChildren(children: TreeNode[]) {
@@ -27,16 +30,12 @@ function sortChildren(children: TreeNode[]) {
   });
 }
 
-const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMenu, classes }) => {
+const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMenu, classes, isDarkTheme }) => {
   const hasChildren = node.children && node.children.length > 0;
 
   return (
     <>
-      <StyledListItem
-        level={level}
-        onClick={() => hasChildren && onToggle(node.id)}
-        onContextMenu={(event) => onContextMenu(event, node)}
-      >
+      <StyledListItem level={level} isDarkTheme={isDarkTheme} onClick={() => hasChildren && onToggle(node.id)} onContextMenu={(event) => onContextMenu(event, node)}>
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {hasChildren ? (
             <IconButton size='small'>
@@ -52,6 +51,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMen
             nodeType={node.type}
             nodeName={node.name}
             description={node.description}
+            isDarkTheme={isDarkTheme}
           />
         </Box>
       </StyledListItem>
@@ -66,6 +66,7 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMen
                 onToggle={onToggle}
                 onContextMenu={onContextMenu}
                 classes={classes}
+                isDarkTheme={isDarkTheme}
               />
             ))}
           </List>
@@ -76,7 +77,8 @@ const TreeItem: React.FC<TreeItemProps> = ({ node, level, onToggle, onContextMen
 };
 
 export const EveliTree: React.FC = () => {
-  const classes = useUtilityClasses();
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const classes = useUtilityClasses(isDarkTheme);
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<ContextMenuData | undefined>();
@@ -87,22 +89,29 @@ export const EveliTree: React.FC = () => {
   }
 
   return (
-    <EveliTreeRoot className={classes.root}>
+    <EveliTreeRoot className={classes.root} isDarkTheme={isDarkTheme}>
       <Box className={classes.title}>
         <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
+        <Box flexGrow={1} />
         <IconButton size='small' onClick={() => collapseAll(treeData, setTreeData)}
           sx={{
-            // color: '#cccccc', // dark theme
-            // '&:hover': {
-            //   backgroundColor: '#3c3c3c', // dark theme
-            // },
-            color: '#666666',
+            color: isDarkTheme ? '#cccccc' : '#666666',
             '&:hover': {
-              backgroundColor: '#e0e0e0',
+              backgroundColor: isDarkTheme ? '#3c3c3c' : '#e0e0e0',
             },
           }}
         >
           <CollapseAllIcon fontSize='small' />
+        </IconButton>
+        <IconButton size='small' onClick={() => setIsDarkTheme(!isDarkTheme)}
+          sx={{
+            color: isDarkTheme ? '#cccccc' : '#666666',
+            '&:hover': {
+              backgroundColor: isDarkTheme ? '#3c3c3c' : '#e0e0e0',
+            },
+          }}
+        >
+          {isDarkTheme ? <LightModeIcon fontSize='small' /> : <DarkModeIcon fontSize='small' />}
         </IconButton>
       </Box>
       <List component='nav' disablePadding>
@@ -114,6 +123,7 @@ export const EveliTree: React.FC = () => {
             onToggle={(nodeId) => toggleNode(nodeId, treeData, setTreeData)}
             onContextMenu={(event, node) => handleContextMenu(event, node, setContextMenuData, setContextMenuOpen)}
             classes={classes}
+            isDarkTheme={isDarkTheme}
           />
         ))}
       </List>

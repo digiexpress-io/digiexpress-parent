@@ -40,7 +40,7 @@ export interface EveliTreeClasses {
 
 export type EveliTreeClassKey = keyof EveliTreeClasses;
 
-export const useUtilityClasses = () => {
+export const useUtilityClasses = (isDarkTheme: boolean = false) => {
   const slots = {
     root: ['root'],
     title: ['title'],
@@ -84,30 +84,26 @@ export const EveliTreeRoot = styled('div', {
       styles.iconTemplate
     ];
   },
-})(({ theme }) => {
+})<{ isDarkTheme?: boolean }>(({ theme, isDarkTheme }) => {
   return {
-    // backgroundColor: '#1e1e1e', // dark theme
-    // color: '#cccccc', // dark theme
+    backgroundColor: isDarkTheme ? '#1e1e1e' : '#ffffff',
+    color: isDarkTheme ? '#cccccc' : '#333333',
     height: '100%',
     maxHeight: '100vh',
     fontSize: '13px',
     overflow: 'auto',
 
     [`& .${MUI_NAME}-title`]: {
-      // borderBottom: '1px solid #3c3c3c', // dark theme
-      // backgroundColor: '#2d2d30', // dark theme
-      borderBottom: '1px solid #e0e0e0',
-      backgroundColor: '#f5f5f5',
+      borderBottom: isDarkTheme ? '1px solid #3c3c3c' : '1px solid #e0e0e0',
+      backgroundColor: isDarkTheme ? '#2d2d30' : '#f5f5f5',
       padding: theme.spacing(1),
       display: 'flex',
-      justifyContent: 'left',
       alignItems: 'center',
       width: '100%'
     },
 
     [`& .${MUI_NAME}-titleText`]: {
-      // color: theme.palette.background.default, // dark theme
-      color: '#333333',
+      color: isDarkTheme ? theme.palette.background.default : '#333333',
       ...theme.typography.body1
     },
 
@@ -120,7 +116,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconFolder`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('folder'),
+      color: getNodeColor('folder', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -129,7 +125,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconArticle`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('article'),
+      color: getNodeColor('article', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -138,7 +134,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconService`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('service'),
+      color: getNodeColor('service', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -147,7 +143,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconDialob`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('dialob'),
+      color: getNodeColor('dialob', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -156,7 +152,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconFlow`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('flow'),
+      color: getNodeColor('flow', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -165,7 +161,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconLink`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('link'),
+      color: getNodeColor('link', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -174,7 +170,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconLanguage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('language'),
+      color: getNodeColor('language', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -183,7 +179,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconPrintout`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('printout'),
+      color: getNodeColor('printout', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -192,7 +188,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconImage`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('image'),
+      color: getNodeColor('image', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -201,7 +197,7 @@ export const EveliTreeRoot = styled('div', {
     [`& .${MUI_NAME}-iconTemplate`]: {
       minWidth: 10,
       marginRight: theme.spacing(1),
-      color: getNodeColor('template'),
+      color: getNodeColor('template', isDarkTheme),
       '& .MuiSvgIcon-root': {
         fontSize: '15px',
       },
@@ -209,8 +205,7 @@ export const EveliTreeRoot = styled('div', {
 
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
-      // color: '#cccccc', // dark theme
-      color: '#666666',
+      color: isDarkTheme ? '#cccccc' : '#666666',
     },
   };
 });
@@ -272,13 +267,12 @@ export const getIcon = (node: TreeNode) => {
 export const StyledListItem = styled(ListItem, {
   name: MUI_NAME,
   slot: 'StyledListItem',
-})<{ level: number }>(({ theme, level }) => ({
+})<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
 
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',
   '&:hover': {
-    // backgroundColor: '#2d2d30', // dark theme
-    backgroundColor: '#f0f0f0',
+    backgroundColor: isDarkTheme ? '#2d2d30' : '#f0f0f0',
   },
 }));
 
@@ -286,16 +280,17 @@ interface StyledListItemTextProps {
   nodeType: TreeNodeType;
   nodeName: string;
   description?: string;
+  isDarkTheme?: boolean;
 }
 
-export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType, nodeName, description }) => {
+export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType, nodeName, description, isDarkTheme }) => {
   return (
     <ListItemText
       primary={
-        <Typography variant='subtitle2' sx={{ color: getNodeColor(nodeType), fontWeight: 500 }}>
+        <Typography variant='subtitle2' sx={{ color: getNodeColor(nodeType, isDarkTheme), fontWeight: isDarkTheme ? 400 : 500 }}>
           {nodeName}
           {description && (
-            <Typography component='span' variant='caption' sx={{ ml: 1, color: '#757575', fontStyle: 'italic' }}> {/* was #6a9955 for dark theme */}
+            <Typography component='span' variant='caption' sx={{ ml: 1, color: isDarkTheme ? '#6a9955' : '#5d5b5b', fontStyle: 'italic' }}>
               - "{description}"
             </Typography>
           )}
@@ -332,41 +327,58 @@ export function getIconClassName(node: TreeNode, classes: EveliTreeClasses) {
   }
 };
 
-export function getNodeColor(nodeType: TreeNodeType) {
-  switch (nodeType) {
-    case 'folder':
-      // return '#e8e5e5'; // Gray - dark theme
-      return '#333333'; // Even darker gray for folders
-    case 'article':
-      // return '#dcdcaa'; // Yellow for articles - dark theme
-      return '#8b008b'; // Dark magenta for articles (7:1 contrast)
-    case 'service':
-      // return '#4ec9b0'; // Teal for services - dark theme
-      return '#1f5f3f'; // Darker sea green for services (7:1 contrast)
-    case 'dialob':
-      // return '#9cdcfe'; // Light blue for dialob forms - dark theme
-      return '#0056b3'; // Darker blue for dialob forms (7:1 contrast)
-    case 'flow':
-      // return '#c586c0'; // Purple for flows - dark theme
-      return '#8e2557'; // Dark fuchsia for flows (7:1 contrast)
-    case 'link':
-      // return '#98d982'; // Bright green for links - dark theme
-      return '#228b22'; // Forest green for links
-    case 'language':
-      // return '#ce9178'; // Orange for languages - dark theme
-      return '#a0122a'; // Darker crimson red for languages (7:1 contrast)
-    case 'printout':
-      // return '#f4b942'; // Golden yellow for printouts - dark theme
-      return '#2e1065'; // Dark indigo for printouts (7:1 contrast)
-    case 'image':
-      // return '#ff6b6b'; // Coral red for images - dark theme
-      return '#a0122a'; // Darker crimson red for images (same as language, 7:1 contrast)
-    case 'template':
-      // return '#ce9178'; // Orange for templates (same as language) - dark theme
-      return '#a0122a'; // Darker crimson red for templates (same as language, 7:1 contrast)
-    default:
-      // return '#cccccc'; // dark theme
-      return '#666666';
+export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = false) {
+  if (isDarkTheme) {
+    switch (nodeType) {
+      case 'folder':
+        return '#e8e5e5'; // Gray - dark theme
+      case 'article':
+        return '#dcdcaa'; // Yellow for articles - dark theme
+      case 'service':
+        return '#4ec9b0'; // Teal for services - dark theme
+      case 'dialob':
+        return '#9cdcfe'; // Light blue for dialob forms - dark theme
+      case 'flow':
+        return '#c586c0'; // Purple for flows - dark theme
+      case 'link':
+        return '#98d982'; // Bright green for links - dark theme
+      case 'language':
+        return '#ce9178'; // Orange for languages - dark theme
+      case 'printout':
+        return '#f4b942'; // Golden yellow for printouts - dark theme
+      case 'image':
+        return '#ff6b6b'; // Coral red for images - dark theme
+      case 'template':
+        return '#ce9178'; // Orange for templates (same as language) - dark theme
+      default:
+        return '#cccccc'; // dark theme
+    }
+  } else {
+    // Light theme colors (7:1 contrast)
+    switch (nodeType) {
+      case 'folder':
+        return '#333333'; // Even darker gray for folders
+      case 'article':
+        return '#8b008b'; // Dark magenta for articles (7:1 contrast)
+      case 'service':
+        return '#1f5f3f'; // Darker sea green for services (7:1 contrast)
+      case 'dialob':
+        return '#0056b3'; // Darker blue for dialob forms (7:1 contrast)
+      case 'flow':
+        return '#8e2557'; // Dark fuchsia for flows (7:1 contrast)
+      case 'link':
+        return '#228b22'; // Forest green for links
+      case 'language':
+        return '#a0122a'; // Darker crimson red for languages (7:1 contrast)
+      case 'printout':
+        return '#2e1065'; // Dark indigo for printouts (7:1 contrast)
+      case 'image':
+        return '#a0122a'; // Darker crimson red for images (same as language, 7:1 contrast)
+      case 'template':
+        return '#a0122a'; // Darker crimson red for templates (same as language, 7:1 contrast)
+      default:
+        return '#666666';
+    }
   }
 };
 
