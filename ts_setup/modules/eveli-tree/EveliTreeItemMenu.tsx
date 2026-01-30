@@ -92,7 +92,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider sx={{ borderColor: '#3c3c3c' }} />
 
-      <StyledMenuItem onClick={() => setLabelsExpanded(!labelsExpanded)}
+      <StyledMenuItem
+        onClick={() => setLabelsExpanded(!labelsExpanded)}
         icon={labelsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         Labels
       </StyledMenuItem>
@@ -110,7 +111,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         </Box>
       </Collapse>
 
-      <StyledMenuItem onClick={() => setCommentsExpanded(!commentsExpanded)}
+      <StyledMenuItem
+        onClick={() => setCommentsExpanded(!commentsExpanded)}
         icon={commentsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         Comments
       </StyledMenuItem>
@@ -128,7 +130,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         </Box>
       </Collapse>
 
-      <StyledMenuItem onClick={() => setSharingExpanded(!sharingExpanded)}
+      <StyledMenuItem
+        onClick={() => setSharingExpanded(!sharingExpanded)}
         icon={sharingExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         Sharing and Permissions
       </StyledMenuItem>
@@ -148,7 +151,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 };
 
 interface StyledMenuItemProps {
-  onClick: () => void;
+  onClick?: () => void;
   icon?: React.ReactNode;
   children: React.ReactNode;
 }
@@ -187,16 +190,19 @@ interface StyledMenuItemNodeNameProps {
 const StyledMenuItemNodeName: React.FC<StyledMenuItemNodeNameProps> = ({ node }) => {
   const theme = useTheme();
   return (
-    <Typography variant="subtitle2"
-      sx={{
-        px: theme.spacing(2),
-        py: theme.spacing(1),
-        color: '#cccccc',
-        fontWeight: 500,
-      }}
-    >
-      {node?.name}
-    </Typography>
+    <Box sx={{ px: theme.spacing(2), py: theme.spacing(1) }} >
+      <Typography variant="subtitle2"
+        sx={{
+          color: '#cccccc',
+          fontWeight: 500,
+        }}
+      >
+        {node?.name}
+      </Typography>
+      <Typography variant="caption">
+        Last edited: 12.05.2025 by John Smith
+      </Typography>
+    </Box>
   );
 };
 
