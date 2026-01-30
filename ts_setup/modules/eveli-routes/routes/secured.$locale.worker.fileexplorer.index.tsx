@@ -9,11 +9,7 @@ export const Route = createFileRoute('/secured/$locale/worker/fileexplorer/')({
 })
 
 const MergedToolbar: React.FC = () => {
-  return (
-    <>
-      <EveliSetup.Toolbar />
-    </>
-  );
+  return (<EveliSetup.Toolbar />);
 };
 
 function Component() {
@@ -22,6 +18,7 @@ function Component() {
       main={() => <></>}
       secondary={Secondary}
       toolbar={MergedToolbar}
+      drawerWidth={450}
     />
   );
 }
