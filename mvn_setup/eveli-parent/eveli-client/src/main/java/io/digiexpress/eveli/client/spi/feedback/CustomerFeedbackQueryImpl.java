@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomerFeedbackQueryImpl implements CustomerFeedbackQuery {
   private final JdbcTemplate jdbc;
+  private final FeedbackWithHistory feedbackWithHistory;
   
   @Override
   public Multi<CustomerFeedback> findAllByCustomerId(String customerId) {
@@ -23,17 +24,16 @@ public class CustomerFeedbackQueryImpl implements CustomerFeedbackQuery {
       .findAllByCustomerId(customerId).stream()
       .collect(Collectors.toMap(e -> e.getReplyId(), e -> e));
 
-    return Multi.createFrom().items(new FeedbackQueryImpl(jdbc)
-      .findAll().stream()
-      .map(entry -> map(entry, ratings.get(entry.getId()))));
+    return new FeedbackQueryImpl(jdbc, feedbackWithHistory)
+      .findAll()
+      .map(entry -> map(entry, ratings.get(entry.getId())));
   }
 
   @Override
   public Multi<CustomerFeedback> findAll() {
-    return Multi.createFrom().items(new FeedbackQueryImpl(jdbc)
+    return new FeedbackQueryImpl(jdbc, feedbackWithHistory)
       .findAll()
-      .stream()
-      .map(entry -> map(entry, null)));
+      .map(entry -> map(entry, null));
   }
 
   
