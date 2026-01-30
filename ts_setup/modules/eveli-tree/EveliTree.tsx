@@ -92,9 +92,13 @@ export const EveliTree: React.FC = () => {
         <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
         <IconButton size='small' onClick={() => collapseAll(treeData, setTreeData)}
           sx={{
-            color: '#cccccc',
+            // color: '#cccccc', // dark theme
+            // '&:hover': {
+            //   backgroundColor: '#3c3c3c', // dark theme
+            // },
+            color: '#666666',
             '&:hover': {
-              backgroundColor: '#3c3c3c',
+              backgroundColor: '#e0e0e0',
             },
           }}
         >
