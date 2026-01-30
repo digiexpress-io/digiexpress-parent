@@ -51,6 +51,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskByIdsVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskCommentsByTaskIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllUnreadTasksVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.FindOneTaskByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FormAssignmentVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisitor;
@@ -99,6 +100,18 @@ public class TaskClientImpl implements TaskClient {
   public QueryTasks queryTasks() {
     return new QueryTasks() {
       private List<String> requireAnyRoles;
+      
+      @Override
+      public QueryTasks requireAnyRoles(List<String> roles) {
+        if (roles != null) {
+          if(requireAnyRoles == null) {
+            requireAnyRoles = new ArrayList<>();
+          }
+          requireAnyRoles.addAll(roles);
+        }
+        return this;
+      }
+      
       @Override
       public Uni<Task> getOneById(String taskId) {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
@@ -116,18 +129,13 @@ public class TaskClientImpl implements TaskClient {
         return new TaskDiffVisitor(ctx, taskId, commitId).accept();
       }
       @Override
-      public QueryTasks requireAnyRoles(List<String> roles) {
-        if (roles != null) {
-          if(requireAnyRoles == null) {
-            requireAnyRoles = new ArrayList<>();
-          }
-          requireAnyRoles.addAll(roles);
-        }
-        return this;
-      }
-      @Override
       public Uni<List<Task>> findAll() {
         return ctx.getConfig().accept(new FindAllTaskVisitor(requireAnyRoles));
+      }
+      @Override
+      public Uni<Optional<Task>> findOneById(String taskId) {
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new FindOneTaskByIdVisitor(taskId));
       }
     };
   }
@@ -247,12 +255,16 @@ public class TaskClientImpl implements TaskClient {
         return ctx.getConfig().accept(new GetOneTaskCommentByIdVisitor(commentId));
       }
       @Override
-      public Uni<List<TaskComment>> findAllByTaskId(String taskId) {        
-        return ctx.getConfig().accept(new FindAllTaskCommentsByTaskIdVisitor(taskId));
+      public Multi<TaskComment> findAllByTaskId(String taskId) {        
+        return ctx.getConfig().accept(new FindAllTaskCommentsByTaskIdVisitor(taskId))
+            .map(e -> e.stream())
+            .onItem().transformToMulti(Multi.createFrom()::items);
       }
       @Override
-      public Uni<List<TaskComment>> findAllByReporterId(String reporterId) {
-        return ctx.getConfig().accept(new FindAllExternalTaskCommentsByReporterIdVisitor(reporterId));
+      public Multi<TaskComment> findAllByReporterId(String reporterId) {
+        return ctx.getConfig().accept(new FindAllExternalTaskCommentsByReporterIdVisitor(reporterId))
+            .map(e -> e.stream())
+            .onItem().transformToMulti(Multi.createFrom()::items);
       }
     };
   }
