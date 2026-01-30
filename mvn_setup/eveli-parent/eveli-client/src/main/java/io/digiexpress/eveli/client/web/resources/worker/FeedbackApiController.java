@@ -1,17 +1,8 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import io.digiexpress.eveli.client.api.FeedbackClient.SentimentAndSubcategory;
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.FeedbackClient.SimilarFeedback;
-import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,10 +35,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
+import io.digiexpress.eveli.client.api.FeedbackClient.SentimentAndSubcategory;
+import io.digiexpress.eveli.client.api.FeedbackClient.SimilarFeedback;
+import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,92 +60,94 @@ public class FeedbackApiController {
   private final WorkerAuthClient securityClient;
   private final FeedbackClient feedbackClient;
   private final TaskClient taskClient;
-  private static final Duration timeout = Duration.ofMillis(10000);
+
   
   @GetMapping
-  public ResponseEntity<List<Feedback>> findAllFeedback()
-  {
-    final var feedbacks = feedbackClient.queryFeedbacks().findAll();
-    return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+  public Multi<Feedback> findAllFeedback() {
+    return feedbackClient.queryFeedbacks().findAll();
   }
+  
+  
   @GetMapping("/{taskIdOrFeedbackId}")
-  public ResponseEntity<Feedback> getOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
-  {
-    var feedback = feedbackClient.queryFeedbacks().findOneById(id);
-    if(feedback.isPresent()) {
-      return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
-    }
-    
-    
-    final var task = taskClient.queryTasks().findAll(Arrays.asList(id)).await().atMost(timeout);
-    if(!task.isEmpty()) {
-      feedback = feedbackClient.queryFeedbacks().findOneById(task.iterator().next().getTaskRef());
-    }
-    if(feedback.isPresent()) {
-      return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
-    }
-    
-    
-    return ResponseEntity.notFound().build();
+  public Uni<ResponseEntity<Feedback>> getOneFeedback(@PathVariable("taskIdOrFeedbackId") String id) {
+    return feedbackClient.queryFeedbacks().findOneById(id)
+      .onItem().transformToUni(feedback -> {
+        
+        if(feedback.isPresent()) {
+          return Uni.createFrom().item(new ResponseEntity<>(feedback.get(), HttpStatus.OK));
+        }
+        
+        return taskClient.queryTasks().findOneById(id)
+          .onItem().transformToUni(task -> {
+            if(task.isPresent()) {
+              return feedbackClient.queryFeedbacks().findOneById(task.get().getTaskRef());
+            }
+            return Uni.createFrom().item(Optional.<Feedback>empty());
+          })
+          .onItem().transform(found -> {
+            if(found.isPresent()) {
+              return new ResponseEntity<>(found.get(), HttpStatus.OK);
+            }
+            return ResponseEntity.notFound().build();  
+          });
+      });
   }
+  
   @PutMapping(value = "/{taskIdOrFeedbackId}", consumes = "application/json")
-  public ResponseEntity<Feedback> modifyOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody ModifyOneFeedbackCommand body) 
-  {
-    // spring quirks
-    final var feedback = feedbackClient.modifyOneFeedback(body, securityClient.getUser().getPrincipal().getUsername());
-    return new ResponseEntity<>(feedback, HttpStatus.OK);
+  public Uni<Feedback> modifyOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody ModifyOneFeedbackCommand body) {
+    return feedbackClient.modifyOneFeedback(body, securityClient.getUser().getPrincipal().getUsername());
   }
+  
   @PostMapping(value="/{taskIdOrFeedbackId}")
-  public ResponseEntity<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody CreateFeedbackCommand command)
-  {
-    final var feedback = feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
-    return new ResponseEntity<>(feedback, HttpStatus.OK);
+  public Uni<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody CreateFeedbackCommand command) {
+    return feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
   }
+  
   @DeleteMapping("/{taskIdOrFeedbackId}")
-  public ResponseEntity<Feedback> deleteOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
-  {
-    final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
-    if(feedback.isEmpty()) {
-      return ResponseEntity.notFound().build(); 
-    }
-    feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
-        .addReplyIds(feedback.get().getId())
-        .build(), securityClient.getUser().getPrincipal().getUsername());
-    return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+  public Uni<ResponseEntity<Feedback>> deleteOneFeedback(@PathVariable("taskIdOrFeedbackId") String id) {
+    final var user = securityClient.getUser().getPrincipal().getUsername();
+    return feedbackClient.queryFeedbacks().findOneById(id)
+        .onItem().transformToUni(feedback -> {
+    
+          if(feedback.isEmpty()) {
+            return Uni.createFrom().item(ResponseEntity.notFound().build()); 
+          }
+
+          final var command = ImmutableDeleteReplyCommand.builder().addReplyIds(feedback.get().getId()).build();
+          return feedbackClient.queryFeedbacks().deleteAll(command, user)
+            .collect().asList()
+            .onItem().transform(found -> new ResponseEntity<>(feedback.get(), HttpStatus.OK));
+        });
   }
   
   
   
   @GetMapping(value="/{taskIdOrFeedbackId}/templates")
-  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") String id)
-  {
+  public Uni<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") String id) {
     final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(id, authentication.getPrincipal().getUsername());
-    return new ResponseEntity<>(template, HttpStatus.OK);
+    return feedbackClient.queryTemplate().getOneByTaskId(id, authentication.getPrincipal().getUsername());
   }
   
   @GetMapping(value="/{taskIdOrFeedbackId}/enabled")
-  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") String id)
-  {
+  public Uni<ResponseEntity<?>> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") String id) {
     final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().findOneByTaskId(id, authentication.getPrincipal().getUsername());
-    return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
+    return feedbackClient.queryTemplate()
+        .findOneByTaskId(id, authentication.getPrincipal().getUsername())
+        .map(template -> new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK));
   }
 
   @GetMapping("/{taskIdOrFeedbackId}/sentiment-and-subcategory")
-  public ResponseEntity<SentimentAndSubcategory> getFeedbackSentimentAndSubcategory(@PathVariable("taskIdOrFeedbackId") String id) throws IOException
-  {
-    final var sentimentAndSubcategory = feedbackClient.queryFeedbackAnalyzer().getSentimentAndSubcategoryById(id);
-    return ResponseEntity.ok(sentimentAndSubcategory);
+  public Uni<SentimentAndSubcategory> getFeedbackSentimentAndSubcategory(@PathVariable("taskIdOrFeedbackId") String id) {
+    return feedbackClient.queryFeedbackAnalyzer().getOneSentimentAndSubcategoryById(id);
   }
 
   @GetMapping("/{taskIdOrFeedbackId}/similar")
-  public ResponseEntity<SimilarFeedback> getSimilarFeedback(@PathVariable("taskIdOrFeedbackId") String id) {
-    final var similarFeedback = feedbackClient.queryFeedbackAnalyzer().findSimilarFeedbackById(id);
-    // empty result expected if there are no existing feedbacks
-    if (similarFeedback.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    return ResponseEntity.ok(similarFeedback.get());
+  public Uni<ResponseEntity<SimilarFeedback>> getSimilarFeedback(@PathVariable("taskIdOrFeedbackId") String id) {
+    return feedbackClient.queryFeedbackAnalyzer().findOneSimilarFeedbackById(id)
+        .map(similarFeedback -> similarFeedback
+            .map(ResponseEntity::ok)
+            // empty result expected if there are no existing feedbacks
+            .orElse(ResponseEntity.notFound().build()));
+
   }
 }

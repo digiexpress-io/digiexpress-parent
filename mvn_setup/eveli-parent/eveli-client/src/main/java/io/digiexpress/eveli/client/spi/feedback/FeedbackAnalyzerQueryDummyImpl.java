@@ -40,7 +40,7 @@ import java.util.Optional;
 public class FeedbackAnalyzerQueryDummyImpl implements FeedbackAnalyzerQuery {
 
   @Override
-  public SentimentAndSubcategory getSentimentAndSubcategoryById(String id) {
+  public SentimentAndSubcategory getOneSentimentAndSubcategoryById(String id) {
     final var sentiment = ImmutableSentiment.builder()
       .id("1")
       .sentiment(SentimentPolarity.unknown)
@@ -66,7 +66,7 @@ public class FeedbackAnalyzerQueryDummyImpl implements FeedbackAnalyzerQuery {
   }
 
   @Override
-  public Optional<SimilarFeedback> findSimilarFeedbackById(String id) {
+  public Optional<SimilarFeedback> findOneSimilarFeedbackById(String id) {
     return Optional.of(ImmutableSimilarFeedback.builder()
       .id("1")
       .modelId("dummy-model")

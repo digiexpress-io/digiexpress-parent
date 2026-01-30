@@ -38,24 +38,22 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
 public interface FeedbackClient {
 
-  Feedback createOneFeedback(CreateFeedbackCommand command, String userId);
-  FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId);
-  Feedback modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId);
+  Uni<Feedback> createOneFeedback(CreateFeedbackCommand command, String userId);
+  Uni<Feedback> modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId);
+  Uni<FeedbackRating> modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId);
   
-  List<Feedback> deleteAll(DeleteReplyCommand command, String userId);
   FeedbackQuestionnaireQuery queryQuestionnaire();
-
   CustomerFeedbackQuery queryCustomerFeedbacks();
   FeedbackQuery queryFeedbacks();
   FeedbackRatingQuery queryFeedbackRatings();
-  FeedbackTemplateQuery queryTemplate();
-  
+  FeedbackTemplateQuery queryTemplate();  
   FeedbackHistoryQuery queryHistory();
-
   FeedbackAnalyzerQuery queryFeedbackAnalyzer();
 
 
@@ -63,18 +61,18 @@ public interface FeedbackClient {
    * Extract task/questionnaire data and map it to possible feedback 
    */
   interface FeedbackTemplateQuery {
-    FeedbackTemplate getOneByTaskId(String taskId, String userId);
-    Optional<FeedbackTemplate> findOneByTaskId(String taskId, String userId);
+    Uni<FeedbackTemplate> getOneByTaskId(String taskId, String userId);
+    Uni<Optional<FeedbackTemplate>> findOneByTaskId(String taskId, String userId);
   }
   
   interface CustomerFeedbackQuery {
-    List<CustomerFeedback> findAll();
-    List<CustomerFeedback> findAllByCustomerId(String customerId);
+    Multi<CustomerFeedback> findAll();
+    Multi<CustomerFeedback> findAllByCustomerId(String customerId);
   }
   
   interface FeedbackRatingQuery {
-    List<FeedbackRating> findAllByCustomerId(String customerId);    
-    FeedbackRating getOneById(String ratingId);
+    Multi<FeedbackRating> findAllByCustomerId(String customerId);    
+    Uni<FeedbackRating> getOneById(String ratingId);
 
   }
 
@@ -82,16 +80,17 @@ public interface FeedbackClient {
    * Query/delete feedback
    */
   interface FeedbackQuery {
-    List<Feedback> findAll();
-    Feedback getOneById(String id);
-    Optional<Feedback> findOneById(String taskIdOrFeedbackId);
+    Multi<Feedback> findAll();
+    Uni<Feedback> getOneById(String id);
+    Uni<Optional<Feedback>> findOneById(String taskIdOrFeedbackId);
+    Multi<Feedback> deleteAll(DeleteReplyCommand command, String userId);
   }
   
   /**
    * Get the commands with what the data was created in the first place
    */
   interface FeedbackHistoryQuery {
-    List<FeedbackHistoryEvent> findAll();
+    Multi<FeedbackHistoryEvent> findAll();
   }
 
   
@@ -282,7 +281,7 @@ public interface FeedbackClient {
   
   
   interface FeedbackQuestionnaireQuery {
-    Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId);
+    Uni<Optional<FeedbackQuestionnaire>> findOneFromTaskById(String taskId);
   }
   
   interface FeedbackQuestionnaire {
@@ -315,8 +314,8 @@ public interface FeedbackClient {
   }
 
   interface FeedbackAnalyzerQuery {
-    SentimentAndSubcategory getSentimentAndSubcategoryById(String id);
-    Optional<SimilarFeedback> findSimilarFeedbackById(String id);
+    Uni<SentimentAndSubcategory> getOneSentimentAndSubcategoryById(String id);
+    Uni<Optional<SimilarFeedback>> findOneSimilarFeedbackById(String id);
   }
 
   @JsonSerialize(as = ImmutableFeedbackSentimentAndSubcategoryCommand.class)

@@ -57,7 +57,7 @@ public class FeedbackAnalyzerQueryImpl implements FeedbackAnalyzerQuery {
   private final FeedbackCategoriesReader feedbackCategoriesReader;
 
   @Override
-  public SentimentAndSubcategory getSentimentAndSubcategoryById(String id) {
+  public Uni<SentimentAndSubcategory> getOneSentimentAndSubcategoryById(String id) {
     final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
     final var categories = feedbackCategoriesReader.getCategories();
 
@@ -88,7 +88,7 @@ public class FeedbackAnalyzerQueryImpl implements FeedbackAnalyzerQuery {
   }
 
   @Override
-  public Optional<SimilarFeedback> findSimilarFeedbackById(String id) {
+  public Optional<SimilarFeedback> findOneSimilarFeedbackById(String id) {
     final var feedbacks = feedbackClient.queryFeedbacks().findAll();
 
     if (feedbacks.isEmpty()) {

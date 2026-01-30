@@ -90,10 +90,13 @@ public class GamutClientImpl implements GamutClient {
   public CancelUserActionBuilder cancelUserActionBuilder() {
     return new CancelUserActionBuilder() {
       
+      private Customer customer;
       private String actionId;
+      
       @Override
-      public UserAction cancelOne() throws ProcessNotFoundException, ProcessCantBeDeletedException {
+      public Uni<UserAction> cancelOne() {
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
+        TaskAssert.notNull(customer, () -> "customer can't be null!");
 
         final var process = processInstanceClient.queryInstances().findOneById(actionId)
             .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
@@ -124,6 +127,12 @@ public class GamutClientImpl implements GamutClient {
       public CancelUserActionBuilder actionId(String actionId) {
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
         this.actionId = actionId;
+        return this;
+      }
+      @Override
+      public CancelUserActionBuilder customer(Customer customer) {
+        TaskAssert.notNull(customer, () -> "customer can't be null!");
+        this.customer = customer;
         return this;
       }
     };
