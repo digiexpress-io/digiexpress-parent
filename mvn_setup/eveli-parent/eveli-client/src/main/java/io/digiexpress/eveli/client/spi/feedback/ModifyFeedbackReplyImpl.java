@@ -44,29 +44,33 @@ public class ModifyFeedbackReplyImpl {
   private final String userId;
 
   public Uni<Feedback> apply(ModifyOneFeedbackCommand command) {
-    final var beforeUpdate = new FeedbackQueryImpl(jdbc, withHistory).findOneById(command.getId());
-    final var replyId = beforeUpdate.get().getId();
-    
-    return withHistory.withHistory(history -> {
-      return jdbc.execute((Connection connection) -> {
+    return new FeedbackQueryImpl(jdbc, withHistory)
+      .findOneById(command.getId())
+      .onItem().transform(beforeUpdate -> {
         
-        connection.setAutoCommit(false);
-        connection.beginRequest();
-        try {
-      
-          final var updated = applyCommand(command, replyId);
-          history.append(command, updated, userId);
-          return updated;
-      
-        } catch(Exception e) {
-          connection.rollback();
-          throw ProcessAssert.fail(e);
-        } finally {
-          JdbcUtils.closeConnection(connection);
-        }
+        final var replyId = beforeUpdate.get().getId();
         
-      });      
-    });
+        return withHistory.withHistory(history -> {
+          return jdbc.execute((Connection connection) -> {
+            
+            connection.setAutoCommit(false);
+            connection.beginRequest();
+            try {
+          
+              final var updated = applyCommand(command, replyId);
+              history.append(command, updated, userId);
+              return updated;
+          
+            } catch(Exception e) {
+              connection.rollback();
+              throw ProcessAssert.fail(e);
+            } finally {
+              JdbcUtils.closeConnection(connection);
+            }
+            
+          });      
+        });
+      });
   }
 
 
@@ -117,14 +121,14 @@ WHERE
     }); 
     
     ProcessAssert.isTrue(updatedRows == 1, () -> "Failed to update reply with command: " + command + "!");
-    final var afterUpdate = new FeedbackQueryImpl(jdbc).findOneById(command.getId()).get();
+    final var afterUpdate = new FeedbackQueryImpl(jdbc, withHistory).findOneByIdSync(command.getId()).get();
     return afterUpdate;
   }
  
 
   
   private String getOrCreateCategory(ModifyOneFeedbackReplyCommand command) {
-     final var beforeMod = new FeedbackQueryImpl(jdbc).getOneById(command.getId());
+     final var beforeMod = new FeedbackQueryImpl(jdbc, withHistory).getOneByIdSync(command.getId());
      ProcessAssert.notEmpty(command.getLabelKey(), () -> "labelKey can't be empty!");
      ProcessAssert.notEmpty(userId, () -> "user id can't be empty!");
      

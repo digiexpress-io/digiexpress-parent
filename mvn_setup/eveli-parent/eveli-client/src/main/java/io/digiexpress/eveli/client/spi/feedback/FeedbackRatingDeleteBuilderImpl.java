@@ -56,7 +56,7 @@ public class FeedbackRatingDeleteBuilderImpl {
     try {
 
       final var entries = command.getReplyIds().stream()
-          .map(id -> new FeedbackQueryImpl(jdbc).findOneById(id))
+          .map(id -> new FeedbackQueryImpl(jdbc, withHistory).findOneByIdSync(id))
           .map(e -> e.orElseThrow(() -> ProcessAssert.fail(() -> "Failed to find feedbacks: " + command.getReplyIds() + " for deletion!")))
           .toList();
       

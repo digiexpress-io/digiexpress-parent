@@ -45,14 +45,15 @@ public class FeedbackRatingBuilderImpl {
   private final String userId;
   
   public Uni<FeedbackRating> execute(UpsertFeedbackRankingCommand command) {
-    return withHistory.withHistory(history -> {
-      final var upserted = upsert(command);
-      history.append(command, upserted, userId);
-      return upserted;
-    });
+    return withHistory.withHistory(history -> 
+      upsert(command).onItem().transform((FeedbackRating upserted) -> {
+        history.append(command, upserted, userId);
+        return upserted;
+      })
+    );
   }
   
-  private FeedbackRating getRatingById(String ratingId) {
+  private Uni<FeedbackRating> getRatingById(String ratingId) {
     return new FeedbackRatingQueryImpl(jdbc).getOneById(ratingId);
   }
   
@@ -60,7 +61,7 @@ public class FeedbackRatingBuilderImpl {
     return DigestUtils.md5Hex(customerId).toUpperCase();
   }
   
-  private FeedbackRating upsert(UpsertFeedbackRankingCommand command) {
+  private Uni<FeedbackRating> upsert(UpsertFeedbackRankingCommand command) {
     final var customerId = maskCustomer(userId);
     
     String categoryId = getCategoryId(command).orElse(null);

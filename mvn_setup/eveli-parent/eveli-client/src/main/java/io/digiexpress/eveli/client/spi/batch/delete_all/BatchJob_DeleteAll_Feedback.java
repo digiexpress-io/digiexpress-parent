@@ -52,7 +52,7 @@ public class BatchJob_DeleteAll_Feedback implements Executor<Feedback, FeedbackC
       }
       @Override
       public Multi<Feedback> findAll() {
-        return Multi.createFrom().items(client.queryFeedbacks().findAll().stream());
+        return client.queryFeedbacks().findAll();
       }
       
     };
@@ -64,14 +64,12 @@ public class BatchJob_DeleteAll_Feedback implements Executor<Feedback, FeedbackC
     final var command = ImmutableDeleteReplyCommand.builder()
         .addReplyIds(entity.getId())
         .build();
-    final var resp = client.deleteAll(command, BatchJob_DeleteAll_Feedback.class.getSimpleName());
-    
-    return Uni.createFrom().item(          
-          ImmutableExecutorEntity.builder()  
-            .status(ExecutorEntity.ExecutorEntityStatus.OK)
-            .entityId("feedback id: " + entity.getId())
-            .inputBody(JsonObject.mapFrom(entity))
-            .build());
+    return client.queryFeedbacks().deleteAll(command, BatchJob_DeleteAll_Feedback.class.getSimpleName())
+      .collect().asList().map(e -> ImmutableExecutorEntity.builder()  
+        .status(ExecutorEntity.ExecutorEntityStatus.OK)
+        .entityId("feedback id: " + entity.getId())
+        .inputBody(JsonObject.mapFrom(entity))
+        .build());
     
   }
 

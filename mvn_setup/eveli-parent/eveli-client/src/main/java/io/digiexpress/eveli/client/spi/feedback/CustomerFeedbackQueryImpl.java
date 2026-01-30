@@ -11,6 +11,7 @@ import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
 import io.digiexpress.eveli.client.api.ImmutableCustomerFeedback;
 import io.digiexpress.eveli.client.api.ImmutableFeedback;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,13 +21,15 @@ public class CustomerFeedbackQueryImpl implements CustomerFeedbackQuery {
   
   @Override
   public Multi<CustomerFeedback> findAllByCustomerId(String customerId) {
-    final var ratings = new FeedbackRatingQueryImpl(jdbc)
-      .findAllByCustomerId(customerId).stream()
-      .collect(Collectors.toMap(e -> e.getReplyId(), e -> e));
-
-    return new FeedbackQueryImpl(jdbc, feedbackWithHistory)
-      .findAll()
-      .map(entry -> map(entry, ratings.get(entry.getId())));
+    return Uni.combine().all().unis(
+        new FeedbackQueryImpl(jdbc, feedbackWithHistory).findAll().collect().asList(),
+        new FeedbackRatingQueryImpl(jdbc).findAllByCustomerId(customerId).collect().asList()
+      )
+      .asTuple()
+      .onItem().transformToMulti(tuple -> {
+        final var ratings = tuple.getItem2().stream().collect(Collectors.toMap(e -> e.getReplyId(), e -> e));
+        return Multi.createFrom().items(tuple.getItem1().stream().map(entry -> map(entry, ratings.get(entry.getId()))));
+      });
   }
 
   @Override

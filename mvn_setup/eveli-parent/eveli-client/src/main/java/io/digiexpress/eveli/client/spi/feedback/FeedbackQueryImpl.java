@@ -94,6 +94,10 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   
   @Override
   public Uni<Feedback> getOneById(String id) {
+    return Uni.createFrom().item(getOneByIdSync(id));
+  }
+
+  public Feedback getOneByIdSync(String id) {
     final Feedback resp = jdbc.query(SELECT_REPLY + " WHERE feedback_reply.id = ?", (PreparedStatement ps) -> ps.setObject(1, UUID.fromString(id)), (ResultSet rs) -> {
       if(rs.next()) {
         return map(rs);
@@ -101,7 +105,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
       throw ProcessAssert.fail(() -> "can't find feedback reply by id = '" + id + "'");
     });
     
-    return Uni.createFrom().item(resp);
+    return resp;
   }
   
   private Feedback map(ResultSet rs) throws SQLException {
@@ -136,6 +140,11 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
 
   @Override
   public Uni<Optional<Feedback>> findOneById(String taskIdOrFeedbackId) {
+    return Uni.createFrom().item(findOneByIdSync(taskIdOrFeedbackId));
+  }
+  
+
+  public Optional<Feedback> findOneByIdSync(String taskIdOrFeedbackId) {
     ProcessAssert.notNull(taskIdOrFeedbackId, () -> "taskIdOrFeedbackId mus be defined!");
     final Optional<Feedback> resp = jdbc.query(SELECT_REPLY + 
 """
@@ -155,7 +164,7 @@ WHERE feedback_reply.id = ? OR feedback_reply.source_id = ?
       }    
       return Optional.empty();
     });
-    return Uni.createFrom().item(resp);
+    return resp;
   }
   
   

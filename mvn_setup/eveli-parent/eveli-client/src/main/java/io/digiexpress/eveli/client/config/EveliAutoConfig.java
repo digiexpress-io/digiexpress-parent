@@ -125,7 +125,6 @@ public class EveliAutoConfig {
   @Bean
   public FeedbackClient feedbackClient(
       TaskClient taskClient,
-      ProcessClient processClient,
       JdbcTemplate jdbc,
       ObjectMapper om,
       TransactionTemplate tx,
@@ -134,7 +133,7 @@ public class EveliAutoConfig {
       FeedbackCategoriesReader feedbackCategoriesReader
   ) {
     final var history = new FeedbackWithHistory(tx, jdbc, om);
-    return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbc, history, feedbackProps, om, feedbackCategoriesReader);
+    return new FeedbackClientImpl(taskClient, dialobClient, jdbc, history, feedbackProps, om, feedbackCategoriesReader);
   }
   @Bean
   public FeedbackCategoriesReader feedbackCategoriesReader(ObjectMapper objectMapper) {
