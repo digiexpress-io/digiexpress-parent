@@ -1,14 +1,15 @@
 import React from 'react';
-import { Menu, MenuItem, Divider, Typography, styled, useTheme } from '@mui/material';
+import { Menu, MenuItem, Divider, Typography, styled, useTheme, TextField, Box, Collapse, IconButton } from '@mui/material';
 import {
   DeleteForever as DeleteIcon,
   Add as NewIcon,
   Edit as EditIcon,
   ContentCopy as CopyIcon,
-  DriveFileRenameOutline as RenameIcon
+  DriveFileRenameOutline as RenameIcon,
+  ExpandMore as ExpandMoreIcon,
+  ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
 import { TreeNode } from '../eveli-tree-api';
-import { getNodeColor } from './useUtilityClasses';
 
 interface EveliTreeItemMenuProps {
   node: TreeNode | undefined;
@@ -19,6 +20,20 @@ interface EveliTreeItemMenuProps {
 }
 
 export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
+  const [labels, setLabels] = React.useState('');
+  const [comments, setComments] = React.useState('');
+  const [labelsExpanded, setLabelsExpanded] = React.useState(false);
+  const [commentsExpanded, setCommentsExpanded] = React.useState(false);
+  const [sharingExpanded, setSharingExpanded] = React.useState(false);
+
+  // Reset all expander states when menu closes
+  React.useEffect(() => {
+    if (!props.open) {
+      setLabelsExpanded(false);
+      setCommentsExpanded(false);
+      setSharingExpanded(false);
+    }
+  }, [props.open]);
 
   function handleNew() {
     console.log('New:', props.node?.name);
@@ -60,7 +75,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
             backgroundColor: '#2d2d30',
             color: '#cccccc',
             border: '1px solid #3c3c3c',
-            minWidth: 200,
+            minWidth: 300,
           }
         }
       }}
@@ -74,6 +89,53 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <StyledMenuItem onClick={handleEdit} icon={<EditIcon fontSize="small" />}>Edit</StyledMenuItem>
       <StyledMenuItem onClick={handleCopy} icon={<CopyIcon fontSize="small" />}>Copy</StyledMenuItem>
       <StyledMenuItem onClick={handleDuplicate} icon={<RenameIcon fontSize="small" />}>Rename</StyledMenuItem>
+
+      <Divider sx={{ borderColor: '#3c3c3c' }} />
+
+      <StyledMenuItem onClick={() => setLabelsExpanded(!labelsExpanded)} icon={labelsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
+        Labels
+      </StyledMenuItem>
+      <Collapse in={labelsExpanded}>
+        <Box sx={{ px: 2, pb: 1 }}>
+          <StyledTextField
+            multiline
+            minRows={2}
+            maxRows={5}
+            value={labels}
+            onChange={(e) => setLabels(e.target.value)}
+            placeholder="Add labels..."
+            size="small"
+          />
+        </Box>
+      </Collapse>
+
+      <StyledMenuItem onClick={() => setCommentsExpanded(!commentsExpanded)} icon={commentsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
+        Comments
+      </StyledMenuItem>
+      <Collapse in={commentsExpanded}>
+        <Box sx={{ px: 2, pb: 1 }}>
+          <StyledTextField
+            multiline
+            minRows={2}
+            maxRows={5}
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            placeholder="Add comments..."
+            size="small"
+          />
+        </Box>
+      </Collapse>
+
+      <StyledMenuItem onClick={() => setSharingExpanded(!sharingExpanded)} icon={sharingExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
+        Sharing and Permissions
+      </StyledMenuItem>
+      <Collapse in={sharingExpanded}>
+        <Box sx={{ px: 2, pb: 1 }}>
+          <Typography variant="body2" sx={{ color: '#888888', fontStyle: 'italic' }}>
+            info here
+          </Typography>
+        </Box>
+      </Collapse>
 
       <Divider sx={{ borderColor: '#3c3c3c' }} />
 
@@ -124,8 +186,9 @@ const StyledMenuItemNodeName: React.FC<StyledMenuItemNodeNameProps> = ({ node })
   return (
     <Typography variant="subtitle2"
       sx={{
-        px: theme.spacing(2), py: theme.spacing(1),
-        color: node ? getNodeColor(node.type) : '#cccccc',
+        px: theme.spacing(2),
+        py: theme.spacing(1),
+        color: '#cccccc',
         fontWeight: 500,
       }}
     >
@@ -146,6 +209,35 @@ const StyledDeleteMenuItemBase = styled(MenuItem)(() => ({
   '& .MuiSvgIcon-root': {
     color: '#f48771',
     fontSize: '16px',
+  },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  marginTop: '5px !important',
+  '& .MuiInputBase-root': {
+    backgroundColor: '#1e1e1e',
+    color: '#cccccc',
+    ...theme.typography.caption,
+    borderRadius: 0,
+    '& fieldset': {
+      borderColor: '#3c3c3c',
+      borderRadius: 0,
+    },
+    '&:hover fieldset': {
+      borderColor: '#555555',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+  '& .MuiInputBase-input': {
+    color: '#cccccc',
+    padding: '0px',
+    '&::placeholder': {
+      color: '#888888',
+      opacity: 1,
+    },
   },
 }));
 
