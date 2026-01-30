@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
+import java.time.OffsetDateTime;
+import java.util.Optional;
+
 /*-
  * #%L
  * eveli-client
@@ -29,18 +32,16 @@ import io.digiexpress.eveli.client.api.ImmutableSentiment;
 import io.digiexpress.eveli.client.api.ImmutableSentimentAndSubcategory;
 import io.digiexpress.eveli.client.api.ImmutableSimilarFeedback;
 import io.digiexpress.eveli.client.api.ImmutableSubcategory;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.time.OffsetDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
 public class FeedbackAnalyzerQueryDummyImpl implements FeedbackAnalyzerQuery {
 
   @Override
-  public SentimentAndSubcategory getOneSentimentAndSubcategoryById(String id) {
+  public Uni<SentimentAndSubcategory> getOneSentimentAndSubcategoryById(String id) {
     final var sentiment = ImmutableSentiment.builder()
       .id("1")
       .sentiment(SentimentPolarity.unknown)
@@ -59,19 +60,19 @@ public class FeedbackAnalyzerQueryDummyImpl implements FeedbackAnalyzerQuery {
       .modelVersion("1.0")
       .build();
 
-    return ImmutableSentimentAndSubcategory.builder()
+    return Uni.createFrom().item(ImmutableSentimentAndSubcategory.builder()
       .sentiment(sentiment)
       .subcategory(subcategory)
-      .build();
+      .build());
   }
 
   @Override
-  public Optional<SimilarFeedback> findOneSimilarFeedbackById(String id) {
-    return Optional.of(ImmutableSimilarFeedback.builder()
+  public Uni<Optional<SimilarFeedback>> findOneSimilarFeedbackById(String id) {
+    return Uni.createFrom().item(Optional.of(ImmutableSimilarFeedback.builder()
       .id("1")
       .modelId("dummy-model")
       .modelVersion("1.0")
       .timestamp(OffsetDateTime.now())
-      .build());
+      .build()));
   }
 }

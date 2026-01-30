@@ -32,11 +32,14 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.DeleteReplyCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.api.ImmutableFeedback;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -74,26 +77,31 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   
   
   private final JdbcTemplate jdbc;
+  private final FeedbackWithHistory feedbackWithHistory;
   
   @Override
-  public List<Feedback> findAll() {
-    return jdbc.query(SELECT_REPLY, (ResultSet rs) -> {
+  public Multi<Feedback> findAll() {
+    final List<Feedback> resp = jdbc.query(SELECT_REPLY, (ResultSet rs) -> {
       final var result = new ArrayList<Feedback>();
       while(rs.next()) {
         result.add(map(rs));
       }    
       return Collections.unmodifiableList(result);
     });
+    
+    return Multi.createFrom().items(resp.stream());
   }
   
   @Override
-  public Feedback getOneById(String id) {
-    return jdbc.query(SELECT_REPLY + " WHERE feedback_reply.id = ?", (PreparedStatement ps) -> ps.setObject(1, UUID.fromString(id)), (ResultSet rs) -> {
+  public Uni<Feedback> getOneById(String id) {
+    final Feedback resp = jdbc.query(SELECT_REPLY + " WHERE feedback_reply.id = ?", (PreparedStatement ps) -> ps.setObject(1, UUID.fromString(id)), (ResultSet rs) -> {
       if(rs.next()) {
         return map(rs);
       }    
       throw ProcessAssert.fail(() -> "can't find feedback reply by id = '" + id + "'");
     });
+    
+    return Uni.createFrom().item(resp);
   }
   
   private Feedback map(ResultSet rs) throws SQLException {
@@ -127,9 +135,9 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   }
 
   @Override
-  public Optional<Feedback> findOneById(String taskIdOrFeedbackId) {
+  public Uni<Optional<Feedback>> findOneById(String taskIdOrFeedbackId) {
     ProcessAssert.notNull(taskIdOrFeedbackId, () -> "taskIdOrFeedbackId mus be defined!");
-    return jdbc.query(SELECT_REPLY + 
+    final Optional<Feedback> resp = jdbc.query(SELECT_REPLY + 
 """
 WHERE feedback_reply.id = ? OR feedback_reply.source_id = ?
 """, (PreparedStatement ps) -> {
@@ -147,5 +155,12 @@ WHERE feedback_reply.id = ? OR feedback_reply.source_id = ?
       }    
       return Optional.empty();
     });
+    return Uni.createFrom().item(resp);
+  }
+  
+  
+  @Override
+  public Multi<Feedback> deleteAll(DeleteReplyCommand command, String userId) {
+    return Multi.createFrom().items(new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command).stream());
   }
 }

@@ -2,6 +2,8 @@ package io.digiexpress.eveli.client.spi.feedback;
 
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 /*-
  * #%L
  * eveli-client
@@ -24,20 +26,19 @@ import java.util.List;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
-import org.springframework.jdbc.core.JdbcTemplate;
 
+import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FeedbackClientImpl implements FeedbackClient {
   private final TaskClient taskClient;
-  private final ProcessClient processClient;
   private final DialobClient dialobClient;
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory feedbackWithHistory;
@@ -46,23 +47,28 @@ public class FeedbackClientImpl implements FeedbackClient {
   private final FeedbackCategoriesReader feedbackCategoriesReader;
   
   @Override
-  public Feedback createOneFeedback(CreateFeedbackCommand command, String userId) {
-    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command);
+  public Uni<Feedback> createOneFeedback(CreateFeedbackCommand command, String userId) {
+    return Uni.createFrom().item(new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command));
   }
 
   @Override
-  public FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId) {
-    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
+  public Uni<FeedbackRating> modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId) {
+    return Uni.createFrom().item(new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command));
+  }
+
+  @Override
+  public Uni<Feedback> modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId) {
+    return Uni.createFrom().item(new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands));
   }
 
   @Override
   public FeedbackQuery queryFeedbacks() {
-    return new FeedbackQueryImpl(jdbc);
+    return new FeedbackQueryImpl(jdbc, feedbackWithHistory);
   }
   
   @Override
   public FeedbackQuestionnaireQuery queryQuestionnaire() {
-    return new FeedbackQuestionnaireQueryImpl(taskClient, dialobClient, processClient, configProps);
+    return new FeedbackQuestionnaireQueryImpl(taskClient, dialobClient, configProps);
   }
 
   @Override
@@ -75,16 +81,6 @@ public class FeedbackClientImpl implements FeedbackClient {
     return new FeedbackHistoryQueryImpl(jdbc);
   }
   
-  @Override
-  public List<Feedback> deleteAll(DeleteReplyCommand command, String userId) {
-    return new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
-  }
-
-  @Override
-  public Feedback modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId) {
-    return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
-  }
-
   @Override
   public CustomerFeedbackQuery queryCustomerFeedbacks() {
     return new CustomerFeedbackQueryImpl(jdbc);

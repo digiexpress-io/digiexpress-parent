@@ -1,5 +1,14 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.MediaType;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestClient;
+
 /*-
  * #%L
  * eveli-client
@@ -33,20 +42,11 @@ import io.digiexpress.eveli.client.api.ImmutableFeedbackItem;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackSentimentAndSubcategoryCommand;
 import io.digiexpress.eveli.client.api.ImmutableSimilarFeedbackCommand;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
-
-import io.digiexpress.eveli.client.spi.feedback.AnalyzerApiCallException.HttpValidationError;
 import io.digiexpress.eveli.client.spi.feedback.AnalyzerApiCallException.HttpErrorDetail;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.client.RestClient;
-
+import io.digiexpress.eveli.client.spi.feedback.AnalyzerApiCallException.HttpValidationError;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
