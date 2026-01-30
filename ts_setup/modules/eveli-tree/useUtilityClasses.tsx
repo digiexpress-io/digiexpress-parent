@@ -264,10 +264,7 @@ export const getIcon = (node: TreeNode) => {
   return baseIcon;
 };
 
-export const StyledListItem = styled(ListItem, {
-  name: MUI_NAME,
-  slot: 'StyledListItem',
-})<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
+export const StyledListItem = styled(ListItem)<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
 
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',

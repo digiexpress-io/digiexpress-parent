@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, MenuItem, Divider, Typography, styled, useTheme, TextField, Box, Collapse } from '@mui/material';
+import { Menu, MenuItem, Divider, Typography, styled, useTheme, TextField, Box, Collapse, Chip } from '@mui/material';
 import {
   DeleteForever as DeleteIcon,
   Add as NewIcon,
@@ -10,6 +10,8 @@ import {
   ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
 import { TreeNode } from '../eveli-tree-api';
+
+const MENU_WIDTH = 300;
 
 interface EveliTreeItemMenuProps {
   node: TreeNode | undefined;
@@ -75,7 +77,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
             backgroundColor: '#2d2d30',
             color: '#cccccc',
             border: '1px solid #3c3c3c',
-            minWidth: 300,
+            minWidth: MENU_WIDTH,
           }
         }
       }}
@@ -93,10 +95,29 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <Divider sx={{ borderColor: '#3c3c3c' }} />
 
       <StyledMenuItem
+        node={props.node}
         onClick={() => setLabelsExpanded(!labelsExpanded)}
         icon={labelsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
-        Labels
+        <div>
+          <div>Labels</div>
+          <div>{props.node?.labels && props.node.labels.length > 0 && (
+            <Box sx={{
+              mt: 0.5,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 0.5,
+              maxWidth: MENU_WIDTH - 32, // Account for menu padding
+              overflow: 'hidden'
+            }}>
+              {props.node.labels.map(label => (<StyledLabel key={label.id} label={label.value} />))}
+            </Box>
+          )}
+          </div>
+        </div>
       </StyledMenuItem>
+
+      <Divider sx={{ borderColor: '#3c3c3c' }} />
+
       <Collapse in={labelsExpanded}>
         <Box sx={{ px: 2, pb: 1 }}>
           <StyledTextField
@@ -110,6 +131,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
           />
         </Box>
       </Collapse>
+
+
 
       <StyledMenuItem
         onClick={() => setCommentsExpanded(!commentsExpanded)}
@@ -129,6 +152,9 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
           />
         </Box>
       </Collapse>
+
+      <Divider sx={{ borderColor: '#3c3c3c' }} />
+
 
       <StyledMenuItem
         onClick={() => setSharingExpanded(!sharingExpanded)}
@@ -151,6 +177,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 };
 
 interface StyledMenuItemProps {
+  node?: TreeNode;
   onClick?: () => void;
   icon?: React.ReactNode;
   children: React.ReactNode;
@@ -244,6 +271,27 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
   },
 }));
+
+interface StyledLabelProps {
+  label: string;
+}
+
+const StyledLabel: React.FC<StyledLabelProps> = ({ label }) => (
+  <Chip
+    label={label}
+    size="small"
+    sx={{
+      backgroundColor: '#3c3c3c',
+      color: '#cccccc',
+      fontSize: '10px',
+      height: '18px',
+      '& .MuiChip-label': {
+        padding: '0 6px',
+      },
+      border: '1px solid #555555',
+    }}
+  />
+);
 
 
 

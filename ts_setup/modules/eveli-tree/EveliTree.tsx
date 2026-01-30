@@ -7,7 +7,7 @@ import {
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon
 } from '@mui/icons-material';
-import { TreeNode, mockTreeData, collapseAll, toggleNode, handleContextMenu, ContextMenuData } from '../eveli-tree-api';
+import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot, getIcon, getIconClassName, EveliTreeClasses, StyledListItem, StyledListItemText } from './useUtilityClasses';
 import { EveliTreeItemMenu } from './EveliTreeItemMenu';
 

@@ -13,6 +13,18 @@ export const mockTreeData: TreeNode[] = [
         name: '000_index',
         type: 'folder',
         isExpanded: true,
+        labels: [
+          {
+            id: 'index-label-1',
+            value: 'main-content',
+            nodeId: '000_index'
+          },
+          {
+            id: 'index-label-2',
+            value: 'featured',
+            nodeId: '000_index'
+          }
+        ],
         children: [
           {
             id: 'main.article',
@@ -78,6 +90,18 @@ export const mockTreeData: TreeNode[] = [
         id: '100_residence',
         name: '100_residence',
         type: 'folder',
+        labels: [
+          {
+            id: 'residence-label-1',
+            value: 'housing',
+            nodeId: '100_residence'
+          },
+          {
+            id: 'residence-label-2',
+            value: 'category-100',
+            nodeId: '100_residence'
+          }
+        ],
         children: [
           {
             id: 'main-residence.article',
@@ -113,6 +137,33 @@ export const mockTreeData: TreeNode[] = [
         id: '200_democracy',
         name: '200_democracy',
         type: 'folder',
+        labels: [
+          {
+            id: 'democracy-label-1',
+            value: 'governance',
+            nodeId: '200_democracy'
+          },
+          {
+            id: 'democracy-label-2',
+            value: 'sensitive',
+            nodeId: '200_democracy'
+          },
+          {
+            id: 'democracy-label-3',
+            value: 'temporary',
+            nodeId: '200_democracy'
+          },
+          {
+            id: 'democracy-label-4',
+            value: 'voting-rights',
+            nodeId: '200_democracy'
+          },
+          {
+            id: 'democracy-label-5',
+            value: 'hasPrintout',
+            nodeId: '200_democracy'
+          }
+        ],
         children: [
           {
             id: 'main-democracy.article',
