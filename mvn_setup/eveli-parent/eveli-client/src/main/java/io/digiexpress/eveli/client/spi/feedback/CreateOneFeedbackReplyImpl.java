@@ -34,6 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -43,12 +44,11 @@ public class CreateOneFeedbackReplyImpl {
   private final FeedbackWithHistory withHistory;
   private final String userId;
   
-  public Feedback apply(CreateFeedbackCommand command) {
+  public Uni<Feedback> apply(CreateFeedbackCommand command) {
     return withHistory.withHistory(history -> {
       final var id = jdbc.execute((Connection conn) -> doInConnection(conn, command));
-      final var created = new FeedbackQueryImpl(jdbc).getOneById(id);
-      history.append(command, created, userId);
-      return created;
+      return new FeedbackQueryImpl(jdbc, withHistory).getOneById(id)
+          .onItem().invoke(created -> history.append(command, created, userId));
     });
     
     
