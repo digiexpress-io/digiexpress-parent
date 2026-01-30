@@ -48,7 +48,7 @@ public class FeedbackClientImpl implements FeedbackClient {
   
   @Override
   public Uni<Feedback> createOneFeedback(CreateFeedbackCommand command, String userId) {
-    return Uni.createFrom().item(new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command));
+    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command);
   }
 
   @Override
@@ -83,7 +83,7 @@ public class FeedbackClientImpl implements FeedbackClient {
   
   @Override
   public CustomerFeedbackQuery queryCustomerFeedbacks() {
-    return new CustomerFeedbackQueryImpl(jdbc);
+    return new CustomerFeedbackQueryImpl(jdbc, feedbackWithHistory);
   }
 
   @Override
