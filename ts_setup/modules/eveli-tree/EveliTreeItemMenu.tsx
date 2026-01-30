@@ -191,12 +191,7 @@ const StyledMenuItemNodeName: React.FC<StyledMenuItemNodeNameProps> = ({ node })
   const theme = useTheme();
   return (
     <Box sx={{ px: theme.spacing(2), py: theme.spacing(1) }} >
-      <Typography variant="subtitle2"
-        sx={{
-          color: '#cccccc',
-          fontWeight: 500,
-        }}
-      >
+      <Typography variant="subtitle2" sx={{ color: '#cccccc', fontWeight: 500 }}>
         {node?.name}
       </Typography>
       <Typography variant="caption">
