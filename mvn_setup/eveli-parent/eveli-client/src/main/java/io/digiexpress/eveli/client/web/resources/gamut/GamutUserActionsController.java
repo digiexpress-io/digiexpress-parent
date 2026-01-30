@@ -45,9 +45,6 @@ import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingComma
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
-import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
-import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
-import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
@@ -57,6 +54,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,18 +85,19 @@ public class GamutUserActionsController {
   }
   
   @PostMapping(value="/fill/{sessionId}")
-  public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+  public Uni<ResponseEntity<String>> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
     final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
     
     if(resp.getStatusCode().is2xxSuccessful()) {
-      final var event = gamutClient.fillEvent()
+      return gamutClient.fillEvent()
         .requestBody(body)
         .responseBody(resp.getBody())
         .sessionId(sessionId)
-        .create();
-      publisher.publishEvent(event);
+        .create()
+        .onItem().invoke(event -> publisher.publishEvent(event))
+        .map(ignore -> ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()));
     }
-    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()); 
+    return Uni.createFrom().item(() -> ResponseEntity.status(resp.getStatusCode()).body(resp.getBody())); 
   }
   
   @GetMapping(value="/review/{sessionId}")
@@ -109,8 +108,9 @@ public class GamutUserActionsController {
   }
 
   @GetMapping(value="/messages")
-  public ResponseEntity<List<UserMessage>> getMessages() {
-    return ResponseEntity.ok(gamutClient.userMessagesQuery().findAllByUserId());
+  public Multi<UserMessage> getMessages() {
+    final var customer = authClient.getCustomer();
+    return gamutClient.userMessagesQuery().findAllByUserId(customer);
   }
   
   @PutMapping(path = "/feedback")
@@ -129,61 +129,56 @@ public class GamutUserActionsController {
   }
   
   @GetMapping(value="{actionId}/messages")
-  public ResponseEntity<List<UserMessage>> getMessages(@PathVariable("actionId") String actionId) {
-    try {
-      return ResponseEntity.ok(gamutClient.userMessagesQuery().findAllByActionId(actionId));
-    } catch (ProcessNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+  public Multi<UserMessage> getMessages(@PathVariable("actionId") String actionId) {
+    final var customer = authClient.getCustomer();
+    return gamutClient.userMessagesQuery().findAllByActionId(customer, actionId);
   }
   
   @PutMapping(value="{actionId}/views")
   public Uni<ResponseEntity<?>> markUserActionViewed(@PathVariable("actionId") String actionId) {
-    return gamutClient.userActionViewBuilder().actionId(actionId).create().onItem().transform(junk -> ResponseEntity.ok().build());
+    final var customer = authClient.getCustomer();
+    return gamutClient.userActionViewBuilder()
+        .actionId(actionId).customer(customer, authClient.getCustomerRoles()).create()
+        .onItem().transform(junk -> ResponseEntity.ok().build());
   }
   
   @PostMapping(value="{actionId}/messages")
-  public ResponseEntity<UserMessage> createMessage(@PathVariable("actionId") String actionId, @RequestBody ReplayToInit raw) {
-    try {
-      return ResponseEntity.ok(gamutClient.replyToBuilder().actionId(actionId).from(raw).createOne());
-    } catch (ProcessNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+  public Uni<ResponseEntity<UserMessage>> createMessage(@PathVariable("actionId") String actionId, @RequestBody ReplayToInit raw) {
+    final var customer = authClient.getCustomer();
+    return gamutClient.replyToBuilder().actionId(actionId).customer(customer).from(raw).createOne()
+        .map(msg -> ResponseEntity.ok(msg))
+        .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
   
   @PostMapping(value="{actionId}/attachments")
-  public ResponseEntity<List<UserActionAttachment>> createAttachments(@PathVariable("actionId") String actionId, @RequestBody List<UserAttachmentUploadInit> raw) {
-    try {
-      return new ResponseEntity<>(gamutClient.userAttachmentBuilder().actionId(actionId).addAll(raw).createMany(), HttpStatus.CREATED);
-    } catch (ProcessNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    } catch (AttachmentUploadUrlException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+  public Uni<ResponseEntity<List<UserActionAttachment>>> createAttachments(
+      @PathVariable("actionId") String actionId, 
+      @RequestBody List<UserAttachmentUploadInit> raw) {
+    
+    final var customer = authClient.getCustomer();
+    return gamutClient.userAttachmentBuilder().customer(customer).actionId(actionId).addAll(raw).createMany()
+        .collect().asList().onItem().transform(entries -> new ResponseEntity<>(entries, HttpStatus.CREATED))
+        .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+        
   }
   
   @GetMapping(value="{actionId}/attachments/{filename}")
-  public ResponseEntity<AttachmentDownloadUrl> getAttachment(
+  public Uni<ResponseEntity<AttachmentDownloadUrl>> getAttachment(
       @PathVariable("actionId") String actionId, 
       @PathVariable("filename") String filename) {
     
-    try {
-      return new ResponseEntity<>(gamutClient.attachmentDownloadQuery().actionId(actionId).filename(filename).getOne(), HttpStatus.OK);
-    } catch (ProcessNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-    
+      return gamutClient.attachmentDownloadQuery()
+          .actionId(actionId).filename(filename).getOne().map(body -> new ResponseEntity<>(body, HttpStatus.OK))    
+          .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
   }
   
   @DeleteMapping(value="/{actionId}")
-  public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
-    try {
-      return new ResponseEntity<>(gamutClient.cancelUserActionBuilder().actionId(actionId).cancelOne(), HttpStatus.OK);
-    } catch (ProcessNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    } catch (ProcessCantBeDeletedException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+  public Uni<ResponseEntity<UserAction>> cancelAction(@PathVariable("actionId") String actionId) {
+    final var customer = authClient.getCustomer();
+    
+    return gamutClient.cancelUserActionBuilder()
+        .actionId(actionId).customer(customer).cancelOne().map(body -> new ResponseEntity<>(body, HttpStatus.OK))
+        .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
   }
 
   @GetMapping(value="/authorizations")
@@ -218,7 +213,12 @@ public class GamutUserActionsController {
   ) {
     
     if(actionId == null) {
-      return Uni.createFrom().item(ResponseEntity.ok(gamutClient.userActionQuery().cockpitId(cockpitId).findAll()));
+      return Uni.createFrom().item(ResponseEntity.ok(
+          gamutClient.userActionQuery()
+            .customer(authClient.getCustomer(), authClient.getCustomerRoles())
+            .cockpitId(cockpitId)
+            .findAll()
+        ));
     }
 
     try {

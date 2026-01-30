@@ -31,7 +31,6 @@ import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.client.spi.dialob.SyncDialobAndProcess;
@@ -54,22 +53,18 @@ public class EveliAutoConfigGamut {
   
   @Bean
   public GamutClient gamutClient(
-      ProcessClient processRepository,
       TaskClient taskclient,
       AttachmentCommands attachmentCommands,
       EveliEnvirClient envir, 
       DialobClient dialobCommands,
-      GamutAuthClient authClient,
       MqEventPublisher mqEventPublisher
     ) {
     
-    return new GamutClientImpl(
-        processRepository, 
+    return new GamutClientImpl( 
         taskclient, 
         mqEventPublisher,
         attachmentCommands, 
         dialobCommands,
-        authClient,
         envir
         
     );

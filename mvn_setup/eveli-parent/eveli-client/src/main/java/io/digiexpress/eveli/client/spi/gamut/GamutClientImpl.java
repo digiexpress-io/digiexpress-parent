@@ -21,10 +21,11 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient;
+import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
@@ -38,12 +39,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GamutClientImpl implements GamutClient {
-  private final ProcessClient processInstanceClient;
   private final TaskClient taskClient;
   private final MqEventPublisher mqEventPublisher;
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
-  private final GamutAuthClient authClient;
   private final EveliEnvirClient envir;
 
   
@@ -64,27 +63,27 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public UserActionQuery userActionQuery() {
-    return new UserActionsQueryImpl(envir, taskClient, authClient, attachmentsCommands);
+    return new UserActionsQueryImpl(envir, taskClient, attachmentsCommands);
   }
 
   @Override
   public UserMessagesQuery userMessagesQuery() {
-    return new UserMessagesQueryImpl(processInstanceClient, taskClient, authClient);
+    return new UserMessagesQueryImpl(taskClient);
   }
 
   @Override
   public UserAttachmentBuilder userAttachmentBuilder() {
-    return new UserAttachmentBuilderImpl(processInstanceClient, attachmentsCommands);
+    return new UserAttachmentBuilderImpl(taskClient, attachmentsCommands);
   }
 
   @Override
   public ReplyToBuilder replyToBuilder() {
-    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient, mqEventPublisher);
+    return new ReplyToBuilderImpl(taskClient, mqEventPublisher);
   }
 
   @Override
   public AttachmentDownloadQuery attachmentDownloadQuery() {
-    return new AttachmentDownloadQueryImpl(processInstanceClient, attachmentsCommands);
+    return new AttachmentDownloadQueryImpl(taskClient, attachmentsCommands);
   }
 
   @Override
@@ -139,6 +138,8 @@ public class GamutClientImpl implements GamutClient {
   public UserActionViewBuilder userActionViewBuilder() {
     return new UserActionViewBuilder() {
       private String actionId;
+      private Customer customer;
+      private CustomerRoles customerRoles;
       @Override
       public UserActionViewBuilder actionId(String actionId) {
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
@@ -146,21 +147,34 @@ public class GamutClientImpl implements GamutClient {
         return this;
       }
       @Override
+      public UserActionViewBuilder customer(Customer customer, CustomerRoles customerRoles) {
+        TaskAssert.notNull(customer, () -> "customer can't be null!");
+        TaskAssert.notNull(customerRoles, () -> "customerRoles can't be null!");
+        this.customer = customer;
+        this.customerRoles = customerRoles;
+        return this;
+      }
+      @Override
       public Uni<Void> create() {
-        return userActionQuery().findOneById(actionId).onItem().transformToUni(action -> {
+        TaskAssert.notNull(customer, () -> "customer can't be null!");
+        TaskAssert.notNull(customerRoles, () -> "customerRoles can't be null!");
+        TaskAssert.notNull(actionId, () -> "actionId can't be null!");
+        
+        return userActionQuery().customer(customer, customerRoles).findOneById(actionId)
+          .onItem().transformToUni(action -> {
           
-          if(action.isEmpty()) {
-            return Uni.createFrom().voidItem();        
-          }
-          final var taskId = action.get().getTaskId();
-          if(taskId == null) {
-            return Uni.createFrom().voidItem();
-          }
-          
-          final var customerId = authClient.getCustomer().getCustomerId();
-          return taskClient.taskBuilder()
-              .userId(customerId.getSafeId(), null)
-              .addCustomerCommitViewer(taskId);
+            if(action.isEmpty()) {
+              return Uni.createFrom().voidItem();        
+            }
+            final var taskId = action.get().getTaskId();
+            if(taskId == null) {
+              return Uni.createFrom().voidItem();
+            }
+            
+            final var customerId = customer.getCustomerId();
+            return taskClient.taskBuilder()
+                .userId(customerId.getSafeId(), null)
+                .addCustomerCommitViewer(taskId);
         });
       }
     };

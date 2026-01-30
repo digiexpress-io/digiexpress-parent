@@ -249,19 +249,13 @@ public class TaskApiController {
   
   
   @GetMapping(value="/{id}/comments")
-  public Uni<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)
+  public Multi<TaskClient.TaskComment> getTaskComments(@PathVariable("id") String id)
   {
     final var authentication = securityClient.getUser();    
     return taskClient.queryTaskComments().findAllByTaskId(id)
-        .onItem().transformToUni(comments -> {
-          
-          return taskClient.taskBuilder()
+        .onItem().call(comments -> taskClient.taskBuilder()
             .userId(authentication.getPrincipal().getUsername(), null)
-            .addWorkerCommitViewer(id)
-            .onItem().transform(junk -> comments);
-          
-        });
-    
+            .addWorkerCommitViewer(id));
   }
   
   @PostMapping(value="/{id}/comments")

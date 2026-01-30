@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
+import java.nio.charset.StandardCharsets;
+
 /*-
  * #%L
  * eveli-client
@@ -22,24 +24,25 @@ package io.digiexpress.eveli.client.spi.gamut;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -48,7 +51,8 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
-  private final ProcessClient processRepository;
+
+  private final TaskClient taskClient;
   private final AttachmentCommands attachmentCommands;
   private final List<UserAttachmentUploadInit> attachments = new ArrayList<>();
   private String actionId;
@@ -67,25 +71,29 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
     this.actionId = actionId;
     return this;
   }
-
   @Override
-  public List<UserActionAttachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException {
-    TaskAssert.notNull(actionId, () -> "actionId can't be null!");
-    
-    final var process = processRepository.queryInstances().findOneById(actionId)
-        .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
-    
-    final var result = new ArrayList<UserActionAttachment>();
-    for(final var file : this.attachments) {
-      final var att = visitAttachment(process, file);
-      result.add(att);
-    }
-    
-    return Collections.unmodifiableList(result);
+  public UserAttachmentBuilder customer(Customer customer) {
+    return this;
   }
 
-  
-  private UserActionAttachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
+  @Override
+  public Multi<UserActionAttachment> createMany() {
+    TaskAssert.notNull(actionId, () -> "actionId can't be null!");
+    
+    return taskClient.queryTaskProcesess()
+      .findOneById(actionId)
+      .onItem().transformToMulti(found -> {
+        final var process = found.orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
+        
+        return Multi.createFrom().items(this.attachments.stream())
+          .onItem().transformToUni(file -> Uni.createFrom().item(visitAttachment(process, file)))
+          .concatenate();
+      });
+    
+  }
+
+
+  private UserActionAttachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) {
     final var taskId = process.getTaskId();
     final var filename = file.getName();
     final Optional<AttachmentUpload> uploadUrl = attachmentCommands.upload().encodePath(filename).processId(actionId);
@@ -108,9 +116,9 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
 
   public static String attachmentId(String name, ProcessInstance process) {
     return Hashing
-    .murmur3_128()
-    .hashString(name + "::" + process.getTaskId() + "::" + process.getId(), Charsets.UTF_8)
-    .toString();
+      .murmur3_128()
+      .hashString(name + "::" + process.getTaskId() + "::" + process.getId(), StandardCharsets.UTF_8)
+      .toString();
 
   }
 }

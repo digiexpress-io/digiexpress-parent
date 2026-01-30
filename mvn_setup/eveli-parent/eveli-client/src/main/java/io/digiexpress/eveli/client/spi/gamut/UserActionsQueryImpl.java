@@ -32,8 +32,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.GamutAuthClient;
-import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerId;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
@@ -65,11 +65,17 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private final EveliEnvirClient eveliEnvir;
   private final TaskClient taskClient;
-  private final GamutAuthClient authClient;
   private final AttachmentCommands attachmentsCommands;
 
   private String cockpitId;
-  
+  private Customer customer;
+  private CustomerRoles customerRoles;
+  @Override
+  public UserActionQuery customer(Customer customer, CustomerRoles customerRoles) {
+    this.customerRoles = customerRoles;
+    this.customer = customer;
+    return this;
+  }
   @Override
   public UserActionQuery cockpitId(String cockpitId) {
     this.cockpitId = cockpitId;
@@ -77,7 +83,6 @@ public class UserActionsQueryImpl implements UserActionQuery {
   }
   @Override
   public Uni<Optional<UserAction>> findOneById(String id) {
-    final var customer = authClient.getCustomer().getCustomerId();
     
     return Uni.combine().all().unis(
       taskClient.queryTaskProcesess().findOneById(id), 
@@ -87,14 +92,14 @@ public class UserActionsQueryImpl implements UserActionQuery {
     .onItem().transformToUni(tuple -> {
       final var processes = tuple.getItem1().map(e -> Arrays.asList(e)).orElse(Collections.emptyList());
       final var auth = tuple.getItem2();
-      return visitTasks(processes, customer).onItem().transform(tasks -> Tuple3.of(processes, auth, tasks));
+      return visitTasks(processes).onItem().transform(tasks -> Tuple3.of(processes, auth, tasks));
     })
     .onItem().transform(tuple -> {
       final var processes = tuple.getItem1();
       final var auth = tuple.getItem2();
       final var tasks = tuple.getItem3();
       
-      return processes.stream().filter(proc -> customer.getHolderId().equals(proc.getUserId()))
+      return processes.stream().filter(proc -> customer.getCustomerId().getHolderId().equals(proc.getUserId()))
         .filter(process -> isAuthorizedProcess(process, auth))
         .map(process -> visitUserAction(process, tasks))
         .findFirst();
@@ -103,8 +108,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   @Override
   public Multi<UserAction> findAll() {
-    final var customer = authClient.getCustomer().getCustomerId();
-    
+    final var customer = this.customer.getCustomerId();
     return Uni.combine().all().unis(
         taskClient.queryTaskProcesess().findAllNotArchivedyUserId(customer.getHolderId()).collect().asList(), 
         visitAuthorization()
@@ -114,7 +118,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
       final var processes = tuple.getItem1();
       final var auth = tuple.getItem2();
       
-      return visitTasks(processes, customer).onItem().transform(tasks -> Tuple3.of(processes, auth, tasks));
+      return visitTasks(processes).onItem().transform(tasks -> Tuple3.of(processes, auth, tasks));
     })
     .onItem().transformToMulti(tuple -> {
       final var processes = tuple.getItem1();
@@ -169,14 +173,14 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .build();
   }
   
-  private Uni<TasksContext> visitTasks(List<ProcessInstance> processes, CustomerId userId) {
+  private Uni<TasksContext> visitTasks(List<ProcessInstance> processes) {
     final var config = taskClient.unwrap().getConfig();
     final var grim = config.getClient().grim(config.getTenantName());
     final var taskIds = processes.stream().filter(t -> t.getTaskId() != null).map(t -> t.getTaskId()).toList();
     
     return Uni.combine().all().unis(
         taskClient.queryTasks().findAll(taskIds), 
-        grim.find().commitViewersQuery().usedBy(userId.getSafeId()).findAll()
+        grim.find().commitViewersQuery().usedBy(customer.getCustomerId().getSafeId()).findAll()
       )
       .asTuple()
       .onItem().transform(tuple -> {
@@ -193,8 +197,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
   }
   
   private Uni<Optional<ProcessAuthorization>> visitAuthorization() {
-    if(authClient.getCustomer().getPrincipal().getRepresentedId() != null) {
-      final var userRoles = authClient.getCustomerRoles().getRoles();  
+    if(customer.getPrincipal().getRepresentedId() != null) {
+      final var userRoles = customerRoles.getRoles();  
       return new ProcessAuthorizationQueryImpl(eveliEnvir)
           .cockpitId(cockpitId)
           .userRoles(userRoles)
@@ -211,7 +215,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     if(process.getTaskId() == null) {
       return new UserMessagesContext(Collections.emptyList(), true, process.getUpdated());
     }
-    final var user = authClient.getCustomer();
+    final var user = customer;
     final var task = tasks.getTasksById().get(process.getTaskId());
     
     if(task == null) {

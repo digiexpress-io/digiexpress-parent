@@ -27,7 +27,8 @@ import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadQuery;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableAttachmentDownloadUrl;
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -36,7 +37,7 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class AttachmentDownloadQueryImpl implements AttachmentDownloadQuery {
   
-  private final ProcessClient processClient;
+  private final TaskClient taskClient;
   private final AttachmentCommands attachmentCommands;
   
   private String actionId;
@@ -44,17 +45,19 @@ public class AttachmentDownloadQueryImpl implements AttachmentDownloadQuery {
   
   
   @Override
-  public AttachmentDownloadUrl getOne() throws ProcessNotFoundException {
-    final var process = processClient.queryInstances().findOneById(actionId)
-        .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
-    
-    try {
-      final var attachments = attachmentCommands.url().encodePath(filename).processId(process.getId().toString());
-      return ImmutableAttachmentDownloadUrl.builder()
-          .download(attachments.get().toString())
-          .build();
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+  public Uni<AttachmentDownloadUrl> getOne() {
+    return taskClient.queryTaskProcesess()
+      .findOneById(actionId)
+      .onItem().transform(found -> {
+        final var process = found.orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
+        try {
+          final var attachments = attachmentCommands.url().encodePath(filename).processId(process.getId().toString());
+          return ImmutableAttachmentDownloadUrl.builder()
+              .download(attachments.get().toString())
+              .build();
+        } catch (URISyntaxException e) {
+          throw new RuntimeException(e.getMessage(), e);
+        }
+      });
   }
 }

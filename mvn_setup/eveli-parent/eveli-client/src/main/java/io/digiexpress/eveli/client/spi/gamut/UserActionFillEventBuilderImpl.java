@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.gamut;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEventBuilder;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -36,7 +37,7 @@ public class UserActionFillEventBuilderImpl implements UserActionFillEventBuilde
   private String responseBody;
 
   @Override
-  public UserActionFillEvent create() {
+  public Uni<UserActionFillEvent> create() {
     TaskAssert.notNull(sessionId, () -> "sessionId can't be null!");    
     TaskAssert.notNull(requestBody, () -> "requestBody can't be null!");    
     TaskAssert.notNull(responseBody, () -> "responseBody can't be null!");    
@@ -46,7 +47,7 @@ public class UserActionFillEventBuilderImpl implements UserActionFillEventBuilde
         .responseBody(responseBody)
         .sessionId(sessionId)
         .build();
-    return event;
+    return Uni.createFrom().item(event);
   }
   
 }

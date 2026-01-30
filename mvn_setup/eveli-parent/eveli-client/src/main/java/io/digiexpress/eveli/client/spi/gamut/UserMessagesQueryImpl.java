@@ -1,85 +1,49 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.List;
-
-import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
-import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
 import io.digiexpress.eveli.client.api.ImmutableUserMessage;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.digiexpress.eveli.client.spi.task.TaskMapper;
+import io.smallrye.mutiny.Multi;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class UserMessagesQueryImpl implements UserMessagesQuery {
-  private final ProcessClient processRepository;
+
   private final TaskClient taskClient;
-  private final GamutAuthClient authClient;
   
   @Override
-  public List<UserMessage> findAllByActionId(String actionId) throws ProcessNotFoundException {
+  public Multi<UserMessage> findAllByActionId(Customer customer, String actionId) {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     
-    final var process = processRepository.queryInstances().findOneById(actionId)
-        .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
-    
-    
-    final var customer = authClient.getCustomer();
-    final var taskId = process.getTaskId();
-    final var comments = taskClient.queryTaskComments()
-        .findAllByTaskId(taskId)
-        .await().atMost(TaskMapper.atMost)
-        .stream()
-        .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
-        .map(comment -> visitUserMessage(comment, customer))
-        .toList();
-    
-    taskClient.taskBuilder()
-      .userId(customer.getPrincipal().getUsername(), null)
-      .addCustomerCommitViewer(taskId)
-      .await().atMost(TaskMapper.atMost);
-    
-    
-    return comments;
+    return taskClient.queryTaskProcesess().findOneById(actionId)
+      .onItem().transformToMulti(process -> {
+        if(process.isEmpty()) {
+          return Multi.createFrom().empty();
+        }
+        
+        final var taskId = process.get().getTaskId();
+        return taskClient.queryTaskComments()
+          .findAllByTaskId(taskId)
+          .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
+          .map(comment -> visitUserMessage(comment, customer))
+          .onSubscription().call(sub -> taskClient.taskBuilder()
+            .userId(customer.getPrincipal().getUsername(), null)
+            .addCustomerCommitViewer(taskId)
+          );
+      });
   }
   
   @Override
-  public List<UserMessage> findAllByUserId() {
-    final var customer = authClient.getCustomer();
-    final var comments = taskClient.queryTaskComments()
+  public Multi<UserMessage> findAllByUserId(Customer customer) {
+    return taskClient.queryTaskComments()
         .findAllByReporterId(customer.getPrincipal().getUsername())
-        .await().atMost(TaskMapper.atMost)
-        .stream()
         .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
-        .map(comment -> visitUserMessage(comment, customer))
-        .toList();
-    return comments;
+        .map(comment -> visitUserMessage(comment, customer));
   }
   
   public static UserMessage visitUserMessage(TaskComment msg, Customer customer) {

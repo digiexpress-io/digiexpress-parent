@@ -183,8 +183,8 @@ public interface TaskClient {
   }
   
   interface QueryTaskComments {
-    Uni<List<TaskComment>> findAllByTaskId(String taskId);
-    Uni<List<TaskComment>> findAllByReporterId(String reporterId);
+    Multi<TaskComment> findAllByTaskId(String taskId);
+    Multi<TaskComment> findAllByReporterId(String reporterId);
     Uni<TaskComment> getOneById(String commentId);
   }
   

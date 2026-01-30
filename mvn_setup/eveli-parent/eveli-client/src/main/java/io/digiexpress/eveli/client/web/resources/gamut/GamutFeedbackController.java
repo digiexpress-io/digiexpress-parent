@@ -39,8 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
-import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
-import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
@@ -69,27 +67,29 @@ public class GamutFeedbackController {
     return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    ResponseEntity<String> resp = dialob.createProxyClient().sessionPost(sessionId, body);
+  public Uni<ResponseEntity<String>> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
+    
     if(resp.getStatusCode().is2xxSuccessful()) {
-      final var event = gamutClient.fillEvent()
+      return gamutClient.fillEvent()
         .requestBody(body)
         .responseBody(resp.getBody())
         .sessionId(sessionId)
-        .create();
-      publisher.publishEvent(event);
+        .create()
+        .onItem().invoke(publisher::publishEvent)
+        .map(ignore -> ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()));
+      
     }
-    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody());
+    return Uni.createFrom().item(ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()));
   }
+  
   @DeleteMapping(value="/{actionId}")
-  public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
-    try {
-      return new ResponseEntity<>(gamutClient.cancelUserActionBuilder().actionId(actionId).cancelOne(), HttpStatus.OK);
-    } catch (ProcessNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    } catch (ProcessCantBeDeletedException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+  public Uni<ResponseEntity<UserAction>> cancelAction(@PathVariable("actionId") String actionId) {
+    final var customer = authClient.getCustomer();    
+    return gamutClient.cancelUserActionBuilder()
+        .actionId(actionId).customer(customer).cancelOne()
+        .map(body -> new ResponseEntity<>(body, HttpStatus.OK))
+        .onFailure().recoverWithItem(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
   }
   
   @GetMapping
@@ -98,8 +98,14 @@ public class GamutFeedbackController {
   }
   
   @GetMapping(value="/{actionId}")
-  public Uni<ResponseEntity<UserAction>> getActionById(@PathVariable("actionId") String actionId) {
-    return gamutClient.userActionQuery().findOneAnonById(actionId)
+  public Uni<ResponseEntity<UserAction>> getActionById(
+      @PathVariable("actionId") String actionId, 
+      @RequestParam(name = "cockpitId", required = false) String cockpitId) {
+    
+    return gamutClient.userActionQuery()
+        .cockpitId(cockpitId)
+        .customer(authClient.getCustomer(), authClient.getCustomerRoles())
+        .findOneAnonById(actionId)
         .onItem().transform(action -> {
           if(action.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

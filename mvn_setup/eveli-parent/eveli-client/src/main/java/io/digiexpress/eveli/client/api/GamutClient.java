@@ -67,8 +67,10 @@ public interface GamutClient {
 
   
   interface UserActionViewBuilder {
+    UserActionViewBuilder customer(Customer customer, CustomerRoles customerRoles);
     UserActionViewBuilder actionId(String actionId);
     Uni<Void> create();
+
   }
   
   interface UserActionMetaQuery {
@@ -82,41 +84,46 @@ public interface GamutClient {
     UserActionFillEventBuilder sessionId(String sessionId);
     UserActionFillEventBuilder requestBody(String req);
     UserActionFillEventBuilder responseBody(String resp);
-    UserActionFillEvent create();
+    Uni<UserActionFillEvent> create();
   }
   
   interface CancelUserActionBuilder {
+    CancelUserActionBuilder customer(Customer customer);
     CancelUserActionBuilder actionId(String id);
-    UserAction cancelOne() throws ProcessNotFoundException, ProcessCantBeDeletedException;
+    Uni<UserAction> cancelOne();
   }
   
   
   interface AttachmentDownloadQuery {
     AttachmentDownloadQuery filename(String filename);
     AttachmentDownloadQuery actionId(String actionId);
-    AttachmentDownloadUrl getOne() throws ProcessNotFoundException;
+    Uni<AttachmentDownloadUrl> getOne();
   }
   
   interface ReplyToBuilder {
     ReplyToBuilder actionId(String actionId);
     ReplyToBuilder from(ReplayToInit init);
-    UserMessage createOne() throws ProcessNotFoundException;;
+    ReplyToBuilder customer(Customer customer);
+    Uni<UserMessage> createOne();
   }
   
   
   interface UserAttachmentBuilder {
     UserAttachmentBuilder actionId(String actionId);
     UserAttachmentBuilder addAll(List<UserAttachmentUploadInit> init);
-    List<UserActionAttachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException;
+    UserAttachmentBuilder customer(Customer customer);
+    Multi<UserActionAttachment> createMany();
   }
   
   interface UserMessagesQuery {
-    List<UserMessage> findAllByActionId(String actionId) throws ProcessNotFoundException;
-    List<UserMessage> findAllByUserId();
+    Multi<UserMessage> findAllByActionId(Customer customer, String actionId);
+    Multi<UserMessage> findAllByUserId(Customer customer);
   }
   
   interface UserActionQuery {
     UserActionQuery cockpitId(String cockpitId);
+    UserActionQuery customer(Customer customer, CustomerRoles customerRoles);
+    
     Multi<UserAction> findAll();
     Uni<Optional<UserAction>> findOneById(String id);
     Uni<Optional<UserAction>> findOneAnonById(String id); // only anon forms can be fetched by id
@@ -295,14 +302,14 @@ public interface GamutClient {
     }
   }
   
-  public static class ProcessNotFoundException extends Exception {
+  public static class ProcessNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;
     public ProcessNotFoundException(String message) {
       super(message);
     }
   }
   
-  public static class AttachmentUploadUrlException extends Exception {
+  public static class AttachmentUploadUrlException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;
     public AttachmentUploadUrlException(String message) {
       super(message);
