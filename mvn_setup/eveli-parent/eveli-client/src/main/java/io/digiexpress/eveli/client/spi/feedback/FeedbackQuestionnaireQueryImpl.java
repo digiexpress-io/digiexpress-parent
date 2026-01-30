@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * eveli-client
@@ -30,7 +28,6 @@ import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaire;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireQuery;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackQuestionnaireContent;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
@@ -38,6 +35,7 @@ import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobClient.ProxyAnswer;
 import io.digiexpress.eveli.dialob.spi.QuestionnaireWrapperImpl;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,28 +46,36 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
 
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
-  private final ProcessClient processClient;
   private final EveliPropsFeedback configProps;
-  private final static Duration atMost = Duration.ofMinutes(1);
   
   
   @Override
-  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskIdOrRef) {
-    final var task = taskClient.queryTasks().getOneById(taskIdOrRef).await().atMost(atMost);
-    final var comments = taskClient.queryTaskComments().findAllByTaskId(task.getId()).await().atMost(atMost);
+  public Uni<Optional<FeedbackQuestionnaire>> findOneFromTaskById(String taskIdOrRef) {
+    return Uni.combine().all().unis(
+        taskClient.queryTasks().getOneById(taskIdOrRef),
+        taskClient.queryTaskProcesess().includeQuestionnaire().findOneByTaskId(taskIdOrRef)
+      )
+      .asTuple()
+      .onItem().transform(tuple -> {
+        
+        final var task = tuple.getItem1();
+        final var comments = task.getComments();
 
-    final var process = processClient.queryInstances().findOneByTaskId(task.getId());
-    if(process.isEmpty()) {
-      return Optional.empty();
-    }
+        final var process = tuple.getItem2();
+        if(process.isEmpty()) {
+          return Optional.empty();
+        }
 
-    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(task.getId());
-    if(processQuestionnaire.isEmpty()) {
-      return Optional.empty();
-    }
+        final var processQuestionnaire = Optional.ofNullable(process.get().getQuestionnaire());
+        if(processQuestionnaire.isEmpty()) {
+          return Optional.empty();
+        }
 
-    final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
-    return Optional.of(new FeedbackQuestionnaireImpl(dialobClient,task, process.get(), comments, questionnaire, configProps));
+        final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
+        return Optional.of(new FeedbackQuestionnaireImpl(dialobClient,task, process.get(), comments, questionnaire, configProps));
+      });
+    
+
   }
 
   @RequiredArgsConstructor

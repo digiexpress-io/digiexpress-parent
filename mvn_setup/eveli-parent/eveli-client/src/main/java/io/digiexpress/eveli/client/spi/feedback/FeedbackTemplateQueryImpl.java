@@ -28,6 +28,7 @@ import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplateQuery;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackTemplate;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -36,19 +37,22 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
   private final FeedbackQuestionnaireQuery query;
 
   @Override
-  public Optional<FeedbackTemplate> findOneByTaskId(String taskId, String userId) {
-    final var questionnaire = query.findOneFromTaskById(taskId);
-    if(questionnaire.isPresent()) {
-      return Optional.of(map(questionnaire.get(), taskId, userId));  
-    }
-    return Optional.empty();
+  public Uni<Optional<FeedbackTemplate>> findOneByTaskId(String taskId, String userId) {
+    return query.findOneFromTaskById(taskId).map(questionnaire -> {
+      if(questionnaire.isPresent()) {
+        return Optional.of(map(questionnaire.get(), taskId, userId));  
+      }
+      return Optional.empty();
+    
+    });
   }
   
   @Override
-  public FeedbackTemplate getOneByTaskId(String taskId, String userId) {
-    final var questionnaire = query.findOneFromTaskById(taskId);
-    ProcessAssert.isTrue(questionnaire.isPresent(), () -> "Process must be synced and form enabled for feedback!");
-    return map(questionnaire.get(), taskId, userId);
+  public Uni<FeedbackTemplate> getOneByTaskId(String taskId, String userId) {
+    return query.findOneFromTaskById(taskId).map(questionnaire -> {
+      ProcessAssert.isTrue(questionnaire.isPresent(), () -> "Process must be synced and form enabled for feedback!");
+      return map(questionnaire.get(), taskId, userId);
+    });
   }
   
   

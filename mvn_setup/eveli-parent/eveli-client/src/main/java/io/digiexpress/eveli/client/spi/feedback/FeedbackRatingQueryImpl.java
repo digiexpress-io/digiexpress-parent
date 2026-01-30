@@ -25,7 +25,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +33,8 @@ import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRatingQuery;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackRating;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -57,9 +58,9 @@ FROM
   private final JdbcTemplate jdbc;
 
   @Override
-  public List<FeedbackRating> findAllByCustomerId(String customerId) {
+  public Multi<FeedbackRating> findAllByCustomerId(String customerId) {
     // find existing record
-    return jdbc.query(SELECT + " WHERE source_id = ?", (PreparedStatement ps) -> {
+    final var resp = jdbc.query(SELECT + " WHERE source_id = ?", (PreparedStatement ps) -> {
       ps.setString(1, FeedbackRatingBuilderImpl.maskCustomer(customerId));
     }, (ResultSet rs) -> {
       final var result = new ArrayList<FeedbackRating>();
@@ -68,11 +69,14 @@ FROM
       }
       return Collections.unmodifiableList(result);
     });
+    
+    return Multi.createFrom().items(resp.stream());
   }
   
-  public FeedbackRating getOneById(String ratingId) {
+  @Override
+  public Uni<FeedbackRating> getOneById(String ratingId) {
     // find existing record
-    return jdbc.query(SELECT + " WHERE id = ?", (PreparedStatement ps) -> {
+    final var resp = jdbc.query(SELECT + " WHERE id = ?", (PreparedStatement ps) -> {
       ps.setObject(1, UUID.fromString(ratingId));
     }, (ResultSet rs) -> {
       if(rs.next()) {
@@ -80,6 +84,8 @@ FROM
       }
       throw ProcessAssert.fail(() -> "Can't find feedback_rating by id: '" + ratingId + "'!");
     });
+    
+    return Uni.createFrom().item(resp);
   }
   
   private FeedbackRating map(ResultSet rs) throws SQLException {

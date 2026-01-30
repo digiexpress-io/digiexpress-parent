@@ -56,8 +56,8 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
         .append(" ON(procs.task_id = mission.id)").ln()
-        
-        .append(" WHERE procs.task_id = $1 and procs.type is null").ln()
+
+        .append(" WHERE (procs.task_id = $1 OR mission.mission_ref = $1) and procs.type is null").ln()
         .build())
         .props(Tuple.of(missionId))
         .build();

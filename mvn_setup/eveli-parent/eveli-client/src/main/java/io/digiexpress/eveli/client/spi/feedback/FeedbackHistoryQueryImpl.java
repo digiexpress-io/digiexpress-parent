@@ -25,13 +25,13 @@ import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackHistoryEvent;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackHistoryQuery;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackHistoryEvent;
+import io.smallrye.mutiny.Multi;
 import lombok.RequiredArgsConstructor;
 
 
@@ -61,14 +61,14 @@ FROM feedback_history as feedback_history
   private final JdbcTemplate jdbc;
   
   @Override
-  public List<FeedbackHistoryEvent> findAll() {
-    return jdbc.query(SELECT_HISTORY_EVENTS, (ResultSet rs) -> {
+  public Multi<FeedbackHistoryEvent> findAll() {
+    return Multi.createFrom().items(jdbc.query(SELECT_HISTORY_EVENTS, (ResultSet rs) -> {
       final var result = new ArrayList<FeedbackHistoryEvent>();
       while(rs.next()) {
         result.add(map(rs));
       }    
       return Collections.unmodifiableList(result);
-    });
+    }).stream());
   }
   
 

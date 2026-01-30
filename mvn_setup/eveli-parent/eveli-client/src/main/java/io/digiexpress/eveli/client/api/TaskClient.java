@@ -135,6 +135,8 @@ public interface TaskClient {
   }
   
   interface QueryTaskProcesess {
+    QueryTaskProcesess includeQuestionnaire();
+    
     Uni<ProcessInstance> getOneById(String processId);
     
     Uni<Optional<ProcessInstance>> findOneByTaskId(String taskId);
@@ -534,11 +536,15 @@ public interface TaskClient {
     
     // Entity links
     @Nullable String getQuestionnaireId();
+    // only when explicitly loaded 
+    @Nullable JsonObject getQuestionnaire();
+    
     @Nullable String getTaskId();
     @Nullable String getTaskRef();
     @Nullable String getUserId();
     @Nullable GrimProcessType getType();
 
+    
     
     Boolean getAnon();
     
