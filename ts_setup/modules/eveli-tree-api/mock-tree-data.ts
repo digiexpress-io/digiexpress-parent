@@ -31,58 +31,213 @@ export const mockTreeData: TreeNode[] = [
             name: 'main.article',
             type: 'article',
             isExpanded: true,
+            labels: [
+              {
+                id: 'main-article-label-1',
+                value: 'homepage',
+                nodeId: 'main.article'
+              },
+              {
+                id: 'main-article-label-2',
+                value: 'welcome',
+                nodeId: 'main.article'
+              },
+              {
+                id: 'main-article-label-3',
+                value: 'multilingual',
+                nodeId: 'main.article'
+              }
+            ],
             children: [
               {
                 id: 'fi-main',
                 name: 'fi',
                 type: 'language',
-                description: 'Tervetuloa Sipoon Oma asiointiin!'
+                description: 'Tervetuloa Sipoon Oma asiointiin!',
+                labels: [
+                  {
+                    id: 'fi-main-label-1',
+                    value: 'finnish',
+                    nodeId: 'fi-main'
+                  },
+                  {
+                    id: 'fi-main-label-2',
+                    value: 'primary-language',
+                    nodeId: 'fi-main'
+                  }
+                ]
               },
               {
                 id: 'sv-main',
                 name: 'sv',
-                type: 'language'
+                type: 'language',
+                labels: [
+                  {
+                    id: 'sv-main-label-1',
+                    value: 'swedish',
+                    nodeId: 'sv-main'
+                  },
+                  {
+                    id: 'sv-main-label-2',
+                    value: 'secondary-language',
+                    nodeId: 'sv-main'
+                  }
+                ]
               },
               {
                 id: 'en-main',
                 name: 'en',
-                type: 'language'
+                type: 'language',
+                labels: [
+                  {
+                    id: 'en-main-label-1',
+                    value: 'english',
+                    nodeId: 'en-main'
+                  },
+                  {
+                    id: 'en-main-label-2',
+                    value: 'international',
+                    nodeId: 'en-main'
+                  }
+                ]
               }
             ]
           },
           {
             id: 'info-gdpr.article',
             name: 'info-gdpr.article',
-            type: 'article'
+            type: 'article',
+            labels: [
+              {
+                id: 'gdpr-label-1',
+                value: 'privacy',
+                nodeId: 'info-gdpr.article'
+              },
+              {
+                id: 'gdpr-label-2',
+                value: 'legal',
+                nodeId: 'info-gdpr.article'
+              },
+              {
+                id: 'gdpr-label-3',
+                value: 'compliance',
+                nodeId: 'info-gdpr.article'
+              },
+              {
+                id: 'gdpr-label-4',
+                value: 'data-protection',
+                nodeId: 'info-gdpr.article'
+              }
+            ]
           },
           {
             id: 'general-message.service',
             name: 'general-message.service',
             type: 'service',
             isExpanded: true,
+            labels: [
+              {
+                id: 'general-msg-label-1',
+                value: 'communication',
+                nodeId: 'general-message.service'
+              },
+              {
+                id: 'general-msg-label-2',
+                value: 'messaging',
+                nodeId: 'general-message.service'
+              },
+              {
+                id: 'general-msg-label-3',
+                value: 'contact-form',
+                nodeId: 'general-message.service'
+              },
+              {
+                id: 'general-msg-label-4',
+                value: 'public-service',
+                nodeId: 'general-message.service'
+              },
+              {
+                id: 'general-msg-label-5',
+                value: 'reusable',
+                nodeId: 'general-message.service'
+              }
+            ],
             children: [
               {
                 id: 'fi-general',
                 name: 'fi',
                 type: 'language',
-                description: 'Lähetä viesti'
+                description: 'Lähetä viesti',
+                labels: [
+                  {
+                    id: 'fi-general-label-1',
+                    value: 'finnish',
+                    nodeId: 'fi-general'
+                  },
+                  {
+                    id: 'fi-general-label-2',
+                    value: 'send-message',
+                    nodeId: 'fi-general'
+                  }
+                ]
               },
               {
                 id: 'sv-general',
                 name: 'sv',
-                type: 'language'
+                type: 'language',
+                labels: [
+                  {
+                    id: 'sv-general-label-1',
+                    value: 'swedish',
+                    nodeId: 'sv-general'
+                  }
+                ]
               }
             ]
           },
           {
             id: 'general-message.dialob',
             name: 'general-message.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            labels: [
+              {
+                id: 'general-dialob-label-1',
+                value: 'form',
+                nodeId: 'general-message.dialob'
+              },
+              {
+                id: 'general-dialob-label-2',
+                value: 'user-input',
+                nodeId: 'general-message.dialob'
+              },
+              {
+                id: 'general-dialob-label-3',
+                value: 'messaging',
+                nodeId: 'general-message.dialob'
+              }
+            ]
           },
           {
             id: 'taskMsgFlow.flow',
             name: 'taskMsgFlow.flow',
-            type: 'flow'
+            type: 'flow',
+            labels: [
+              {
+                id: 'msg-flow-label-1',
+                value: 'workflow',
+                nodeId: 'taskMsgFlow.flow'
+              },
+              {
+                id: 'msg-flow-label-2',
+                value: 'task-management',
+                nodeId: 'taskMsgFlow.flow'
+              },
+              {
+                id: 'msg-flow-label-3',
+                value: 'message-routing',
+                nodeId: 'taskMsgFlow.flow'
+              }
+            ]
           }
         ]
       },
