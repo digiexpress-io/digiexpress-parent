@@ -1336,6 +1336,72 @@
       "missingDependencies": [],
       "unusedDependencies": []
     },
+    "@dxs-ts/eveli-tree": {
+      "name": "@dxs-ts/eveli-tree",
+      "path": "modules/eveli-tree",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-tree",
+        "version": "${project.version}",
+        "description": "Eveli tree components",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {
+          "@dxs-ts/eveli-primitives": "*"
+        },
+        "peerDependencies": {
+          "react": "*",
+          "@mui/material": "*",
+          "@mui/icons-material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "eveli",
+          "tree",
+          "components"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "@dxs-ts/eveli-primitives",
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/icons-material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [
+        "@dxs-ts/eveli-primitives"
+      ],
+      "actualDependencies": [
+        "react",
+        "@mui/material",
+        "@dxs-ts/eveli-primitives",
+        "@mui/utils"
+      ],
+      "actualExternalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "actualInternalDependencies": [
+        "@dxs-ts/eveli-primitives"
+      ],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@mui/icons-material"
+      ]
+    },
     "@dxs-ts/gamut-api": {
       "name": "@dxs-ts/gamut-api",
       "path": "modules/gamut-api",
@@ -3893,6 +3959,9 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
+      "@dxs-ts/eveli-tree": [
+        "@dxs-ts/eveli-primitives"
+      ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-cockpit-store"
@@ -4097,6 +4166,7 @@
       "@dxs-ts/eveli-primitives": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-routes",
@@ -4106,6 +4176,7 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-ide"
       ],
+      "@dxs-ts/eveli-tree": [],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
@@ -4433,6 +4504,6 @@
       ]
     }
   },
-  "checksum": "658af82755500afa111c3a1fff183d5c55cf1b34e073159f48dbed61e46a99fe",
-  "generatedAt": "2026-01-30T07:12:56.938Z"
+  "checksum": "013a381657c8dc42075acbaf144601b3e70dd9666f8688b6918debd71a477311",
+  "generatedAt": "2026-01-30T07:21:14.554Z"
 }
