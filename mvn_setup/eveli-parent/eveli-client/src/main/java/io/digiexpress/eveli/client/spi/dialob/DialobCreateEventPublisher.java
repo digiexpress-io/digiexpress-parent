@@ -212,6 +212,8 @@ public class DialobCreateEventPublisher {
             .formTagName(null)
             .stencilTagName(null)
             .wrenchTagName(null)
+            .commitAuthor(DialobCreateEventPublisher.class.getSimpleName())
+            .commitMessage("creating main proc")
             .build())
           .onItem().transform(UserActionsBuilderImpl::map)
           .onItem().transform(action -> Tuple2.of(Optional.<TaskCustomerAssignment>empty(), action));

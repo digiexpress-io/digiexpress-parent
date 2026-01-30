@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.test.feedback;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.AfterAll;
 
 /*-
@@ -52,7 +54,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
   @Test
   void testReplyUpdate() {
     final var taskId = setupTasks.generateOneTask();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId, "");
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId, "").await().atMost(Duration.ofMinutes(1));
     final var feedback = feedbackClient.createOneFeedback(ImmutableCreateFeedbackCommand.builder()
         .content(template.getContent())
         
@@ -74,9 +76,10 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
         
         .reply("Proletariat John here, replying to you")
         .taskId(taskId)
-        .build(), "user-john");
+        .build(), "user-john")
+        .await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(1, feedbackClient.queryFeedbacks().findAll().size());
+    Assertions.assertEquals(1, feedbackClient.queryFeedbacks().findAll().collect().asList().await().atMost(Duration.ofMinutes(1)).size());
     
     {
       final var updatedReply = feedbackClient.modifyOneFeedback(
@@ -95,7 +98,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
       
       Assertions.assertNotNull(updatedReply, "Can't find modified feedback reply!");
       
-      final var afterUpdate = feedbackClient.queryFeedbacks().findAll().stream()
+      final var afterUpdate = feedbackClient.queryFeedbacks().findAll().collect().asList().await().atMost(Duration.ofMinutes(1)).stream()
         .filter(e -> e.getId().equals(feedback.getId()))
         .findFirst()
         .get();

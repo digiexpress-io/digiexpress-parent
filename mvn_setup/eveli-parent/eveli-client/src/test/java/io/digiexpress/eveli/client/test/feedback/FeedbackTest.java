@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.test.feedback;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.AfterAll;
@@ -53,7 +54,7 @@ public class FeedbackTest extends FeedbackEnvirSetup {
   @Test
   void run() {
     final var taskId = setupTasks.generateOneTask();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId, "");
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId, "").await().atMost(Duration.ofMinutes(1));
     final var feedback = feedbackClient.createOneFeedback(ImmutableCreateFeedbackCommand.builder()
         .content(template.getContent())
         
@@ -72,15 +73,15 @@ public class FeedbackTest extends FeedbackEnvirSetup {
         .customerTitle(template.getCustomerTitle())
         
         .reply("super-reply-by-worker")
-        .build(), "super-user");
+        .build(), "super-user").await().atMost(Duration.ofMinutes(1));
         
     Assertions.assertEquals("same,vimes", template.getReporterNames());
     
     
-    final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
+    final var queryFeedback = feedbackClient.queryFeedbacks().findAll().collect().asList().await().atMost(Duration.ofMinutes(1)).stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
-    Assertions.assertTrue(feedbackClient.queryFeedbacks().findAll().size() == 1, "Can't find created feedback");
-    final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(template.getTaskId());
+    Assertions.assertTrue(feedbackClient.queryFeedbacks().findAll().collect().asList().await().atMost(Duration.ofMinutes(1)).size() == 1, "Can't find created feedback");
+    final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(template.getTaskId()).await().atMost(Duration.ofMinutes(1));
     Assertions.assertTrue(queryFeedbackById.isPresent(), "Can't find created feedback");
     
     Assertions.assertEquals("same,vimes", queryFeedback.get().getReporterNames());
@@ -97,7 +98,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
-      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll().stream()
+      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll()
+        .collect().asList().await().atMost(Duration.ofMinutes(1)).stream()
         .filter(e -> e.getId().equals(feedback.getId()))
         .findFirst()
         .get();
@@ -116,7 +118,9 @@ public class FeedbackTest extends FeedbackEnvirSetup {
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
-      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll().stream()
+      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll()
+        .collect().asList().await().atMost(Duration.ofMinutes(1))
+        .stream()
         .filter(e -> e.getId().equals(feedback.getId()))
         .findFirst()
         .get();
@@ -127,7 +131,9 @@ public class FeedbackTest extends FeedbackEnvirSetup {
     
     // Query customer rating
     {
-      final var ratedFeedback = feedbackClient.queryCustomerFeedbacks().findAllByCustomerId("BOB").stream()
+      final var ratedFeedback = feedbackClient.queryCustomerFeedbacks().findAllByCustomerId("BOB")
+          .collect().asList().await().atMost(Duration.ofMinutes(1))
+          .stream()
           .findFirst()
           .get();
       Assertions.assertEquals(1, ratedFeedback.getFeedback().getThumbsUpCount());
@@ -144,7 +150,9 @@ public class FeedbackTest extends FeedbackEnvirSetup {
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
-      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll().stream()
+      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll()
+        .collect().asList().await().atMost(Duration.ofMinutes(1))
+        .stream()
         .filter(e -> e.getId().equals(feedback.getId()))
         .findFirst()
         .get();
@@ -153,14 +161,14 @@ public class FeedbackTest extends FeedbackEnvirSetup {
       Assertions.assertEquals(0, ratedFeedback.getThumbsUpCount());
     }
     
-    final var history = feedbackClient.queryHistory().findAll();
+    final var history = feedbackClient.queryHistory().findAll().collect().asList().await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(4, history.size());
     
     
-    feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
+    feedbackClient.queryFeedbacks().deleteAll(ImmutableDeleteReplyCommand.builder()
         .replyIds(Arrays.asList(template.getTaskId()))
-        .build(), "userId");
+        .build(), "userId").collect().asList().await().atMost(Duration.ofMinutes(1));
     
-    Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().size());
+    Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().collect().asList().await().atMost(Duration.ofMinutes(1)).size());
   }
 }

@@ -203,6 +203,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
             .wrenchTagName(runtime.getWrenchTagName())
             .customerAssignment(customerAssignment)
             .cockpitId(cockpitId)
+            .commitAuthor(request.getIdentity())
+            .commitMessage("creating default proc")
             .build();
         })
         .onItem().transform(process -> {

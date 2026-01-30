@@ -45,8 +45,8 @@ import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommand;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
@@ -54,7 +54,6 @@ import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
-import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.test.BaseEnvir;
 import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
 import io.vertx.core.json.JsonObject;
@@ -110,22 +109,17 @@ public abstract class FeedbackEnvirSetup {
     }
     
     @Bean
-    public SetupTask setupTask(ProcessClient processClient, TaskClient taskClient) {    
-      return new SetupTask(taskClient, processClient);
+    public SetupTask setupTask(TaskClient taskClient) {    
+      return new SetupTask(taskClient);
     }
 
-    @Bean
-    public ProcessClient processClient() {
-      final var processClient = new ProcessClientImpl(processJPA, null, null);
-      return processClient;
-    }
 
     @Bean FeedbackCategoriesReader feedbackCategoriesReader(ObjectMapper objectMapper) {
       return new FeedbackCategoriesReaderImpl(objectMapper);
     }
     
     @Bean
-    public FeedbackClient feedbackClient(ProcessClient processClient, TaskClient taskClient, FeedbackCategoriesReader feedbackCategoriesReader) {
+    public FeedbackClient feedbackClient(TaskClient taskClient, FeedbackCategoriesReader feedbackCategoriesReader) {
       final var feedbackWithHistory = new FeedbackWithHistory(tx, jdbcTemplate, objectMapper);
       final var dialobClient = new DialobClientImpl(objectMapper, null);
       final var configProps = new EveliPropsFeedback();
@@ -139,7 +133,7 @@ public abstract class FeedbackEnvirSetup {
       configProps.setUsername("FirstNames, LastName");
       configProps.setUsernameAllowed("publicAnswerAllowed");
       
-      return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbcTemplate, feedbackWithHistory, configProps, objectMapper, feedbackCategoriesReader);
+      return new FeedbackClientImpl(taskClient, dialobClient, jdbcTemplate, feedbackWithHistory, configProps, objectMapper, feedbackCategoriesReader);
 
     }
   }
@@ -148,7 +142,6 @@ public abstract class FeedbackEnvirSetup {
   @RequiredArgsConstructor
   public static class SetupTask {
     private final TaskClient taskClient;
-    private final ProcessClient processClient;
     
     @Transactional
     public String generateOneTask() {
@@ -168,12 +161,15 @@ public abstract class FeedbackEnvirSetup {
             .commentText(BaseEnvir.FAKER.chuckNorris().fact())
             .taskId(task.getId())
             .source(TaskCommentSource.FRONTDESK)
-            .build());
+            .build()).await().atMost(Duration.ofMinutes(1));
     
+      
+      
+      
       
       final var formBody = new JsonObject(fileToString("feedback/filled-form.json"));
       
-      final var process = processClient.createInstance()
+      final var process = taskClient.createProcess()
         .parentArticleName(null)  
         .articleName("no-article")
         .flowName("no-flow-name")
@@ -186,10 +182,21 @@ public abstract class FeedbackEnvirSetup {
         .formTagName("dev")
         .stencilTagName("dev")
         .wrenchTagName("dev")
-        .create();
+        .commitAuthor("")
+        .commitMessage("")
+        .build()
+        
+        .await().atMost(Duration.ofMinutes(1));
       
-      processClient.changeInstanceStatus().answeredByQuestionnaire(process.getQuestionnaireId(), task.getId().toString());
-      processClient.createBodyBuilder().processInstanceId(process.getId()).formBody(formBody.toString()).build();
+      taskClient.modifyProcess()
+        .commitAuthor("")
+        .commitMessage("")
+        .id(process.getId().toString())
+        .merge((current, merger) -> merger
+            .status(ProcessStatus.ANSWERED)
+            .formBody(formBody.toString()).build())
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
       
       return task.getId().toString();
     }
