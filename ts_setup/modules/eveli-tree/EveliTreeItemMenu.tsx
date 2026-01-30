@@ -92,11 +92,9 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <StyledMenuItem onClick={handleCopy} icon={<CopyIcon fontSize="small" />}>Copy</StyledMenuItem>
       <StyledMenuItem onClick={handleDuplicate} icon={<RenameIcon fontSize="small" />}>Rename</StyledMenuItem>
 
-      <Divider sx={{ borderColor: '#3c3c3c' }} />
+      <Divider sx={{ borderColor: '#3c3c3c', my: 0 }} />
 
-      <StyledMenuItem
-        node={props.node}
-        onClick={() => setLabelsExpanded(!labelsExpanded)}
+      <StyledMenuItem node={props.node} onClick={() => setLabelsExpanded(!labelsExpanded)}
         icon={labelsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         <div>
           <div>Labels</div>
@@ -116,8 +114,6 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         </div>
       </StyledMenuItem>
 
-      <Divider sx={{ borderColor: '#3c3c3c' }} />
-
       <Collapse in={labelsExpanded}>
         <Box sx={{ px: 2, pb: 1 }}>
           <StyledTextField
@@ -132,6 +128,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         </Box>
       </Collapse>
 
+      <Divider sx={{ borderColor: '#3c3c3c' }} />
 
 
       <StyledMenuItem
@@ -154,7 +151,6 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       </Collapse>
 
       <Divider sx={{ borderColor: '#3c3c3c' }} />
-
 
       <StyledMenuItem
         onClick={() => setSharingExpanded(!sharingExpanded)}
@@ -183,10 +179,11 @@ interface StyledMenuItemProps {
   children: React.ReactNode;
 }
 
-const StyledMenuItemBase = styled(MenuItem)(() => ({
+const StyledMenuItemBase = styled(MenuItem)(({ theme }) => ({
   fontSize: '13px',
   display: 'flex',
   alignItems: 'center',
+  paddingTop: theme.spacing(0.5),
   gap: '8px',
   '&:hover': {
     backgroundColor: '#3c3c3c',
