@@ -121,36 +121,44 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   @Override
   public MissionProcsQuery missionProcsQuery() {
     return new MissionProcsQuery() {
+      
+      private boolean includeFormBody = false;
+      @Override
+      public MissionProcsQuery includeFormBody(boolean includeFormBody) {
+        this.includeFormBody = includeFormBody;
+        return this;
+      }
       @Override
       public Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter) {
         return startingState.toGrimState(repoId)
-            .onItem().transformToMulti(state -> state.missionProcs().findOnOrAfter(onOrAfter));
+            .onItem().transformToMulti(state -> state.missionProcs().includeFormBody(includeFormBody).findOnOrAfter(onOrAfter));
       }
       @Override
       public Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
         return startingState.toGrimState(repoId)
-            .onItem().transformToMulti(state -> state.missionProcs().findOnOrBeforeWithoutMission(onOrBefore));
+            .onItem().transformToMulti(state -> state.missionProcs().includeFormBody(includeFormBody).findOnOrBeforeWithoutMission(onOrBefore));
       }
       @Override
       public Uni<Optional<GrimProcess>> findOneByMissionId(String missionId) {
         return startingState.toGrimState(repoId)
-            .onItem().transformToUni(state -> state.missionProcs().findOneByMissionId(missionId));
+            .onItem().transformToUni(state -> state.missionProcs().includeFormBody(includeFormBody).findOneByMissionId(missionId));
       }
       @Override
       public Uni<GrimProcess> getOneById(String processId) {
         return startingState.toGrimState(repoId)
-            .onItem().transformToUni(state -> state.missionProcs().getOneById(processId));
+            .onItem().transformToUni(state -> state.missionProcs().includeFormBody(includeFormBody).getOneById(processId));
       }
       @Override
       public Uni<Optional<GrimProcess>> findOneById(String processId) {
         return startingState.toGrimState(repoId)
-            .onItem().transformToUni(state -> state.missionProcs().findOneById(processId));
+            .onItem().transformToUni(state -> state.missionProcs().includeFormBody(includeFormBody).findOneById(processId));
       }
       @Override
       public Multi<GrimProcess> findAllNotArchivedyUserId(String userId) {
         return startingState.toGrimState(repoId)
-            .onItem().transformToMulti(state -> state.missionProcs().findAllNotArchivedyUserId(userId));
+            .onItem().transformToMulti(state -> state.missionProcs().includeFormBody(includeFormBody).findAllNotArchivedyUserId(userId));
       }
+
     };
   }
 }

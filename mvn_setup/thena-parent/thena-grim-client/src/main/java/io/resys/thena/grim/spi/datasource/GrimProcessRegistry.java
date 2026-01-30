@@ -30,19 +30,18 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 
 public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, io.vertx.mutiny.sqlclient.Row> {
-  ThenaSqlClient.Sql findAll();
+  ThenaSqlClient.Sql findAll(boolean includeFormBody);
   
   ThenaSqlClient.Sql getNextSequence();
   ThenaSqlClient.SqlTuple getNextSequence(long howMany);
   
-  ThenaSqlClient.SqlTuple getById(String id);
-  ThenaSqlClient.SqlTuple getOneByIdWithLock(String id);
+  ThenaSqlClient.SqlTuple getById(String id, boolean includeFormBody);
+  ThenaSqlClient.SqlTuple getOneByIdWithLock(String id, boolean includeFormBody);
   
-  ThenaSqlClient.SqlTuple findOneByMissionId(String missionId);
-
-  ThenaSqlClient.SqlTuple findNotArchivedByUserId(String userId);
-  ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter);
-  ThenaSqlClient.SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
+  ThenaSqlClient.SqlTuple findOneByMissionId(String missionId, boolean includeFormBody);
+  ThenaSqlClient.SqlTuple findNotArchivedByUserId(String userId, boolean includeFormBody);
+  ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter, boolean includeFormBody);
+  ThenaSqlClient.SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore, boolean includeFormBody);
   
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimProcess> mission);
   ThenaSqlClient.SqlTupleList updateAll(Collection<GrimProcess> mission);

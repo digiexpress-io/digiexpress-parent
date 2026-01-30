@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.entities.AnyTenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 
@@ -62,8 +63,8 @@ public interface GrimProcess extends IsGrimObject, AnyTenantEntity {
    @Nullable String getStencilTagName();
   
    @Nullable String getWrenchTagName();
-   @Nullable String getFormBody();
-   @Nullable String getFlowBody();
+   @Nullable JsonObject getFormBody();
+   @Nullable JsonObject getFlowBody();
 
    
    @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_PROCESS; };

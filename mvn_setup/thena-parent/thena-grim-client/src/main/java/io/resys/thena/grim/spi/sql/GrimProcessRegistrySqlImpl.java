@@ -48,10 +48,20 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
 
 
   @Override
-  public SqlTuple findOneByMissionId(String missionId) {
+  public Sql findAll() {
+    return findAll(false);
+  }
+
+  @Override
+  public SqlTuple getById(String id) {
+    return getById(id, false);
+  }
+
+  @Override
+  public SqlTuple findOneByMissionId(String missionId, boolean includeFormBody) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
@@ -64,10 +74,10 @@ public class GrimProcessRegistrySqlImpl implements GrimProcessRegistry {
   }
   
   @Override
-  public SqlTuple findNotArchivedByUserId(String userId) {
+  public SqlTuple findNotArchivedByUserId(String userId, boolean includeFormBody) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
@@ -170,10 +180,10 @@ WHERE id = $9""").ln()
   }
   
   @Override
-  public SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter) {
+  public SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter, boolean includeFormBody) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
@@ -186,10 +196,10 @@ WHERE id = $9""").ln()
   }
 
   @Override
-  public Sql findAll() {
+  public Sql findAll(boolean includeFormBody) {
     return ImmutableSql.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
@@ -199,10 +209,10 @@ WHERE id = $9""").ln()
   }
 
   @Override
-  public SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
+  public SqlTuple findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore, boolean includeFormBody) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, null AS mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" AS procs ")
         
         .append(" WHERE procs.created <= $1 ").ln()
@@ -216,10 +226,10 @@ WHERE id = $9""").ln()
 
   
   @Override
-  public SqlTuple getById(String id) {
+  public SqlTuple getById(String id, boolean includeFormBody) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
@@ -231,10 +241,10 @@ WHERE id = $9""").ln()
         .build();
   }
   @Override
-  public SqlTuple getOneByIdWithLock(String id) {
+  public SqlTuple getOneByIdWithLock(String id, boolean includeFormBody) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT procs.*, mission.mission_ref").ln()        
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
         .append(" FROM ").append(options.getGrimProcesses()).append(" as procs ")
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
@@ -287,7 +297,7 @@ WHERE id = $9""").ln()
       user_id             VARCHAR(255) NULL,
       workflow_name       VARCHAR(255) NOT NULL,
       wrench_tag_name     TEXT NULL,
-      anon bool           NULL
+      anon                BOOL NULL
     );
     """).ln()
     
@@ -331,6 +341,37 @@ WHERE id = $9""").ln()
         .append("DROP TABLE ").append(options.getGrimProcessSeq()).append(";").ln()
         .build()).build();
   }
+  
+  private String getColumns(boolean includeFormBody) {
+    final var optional = includeFormBody ? 
+        "flow_body, form_body," : 
+        "null as flow_body, null as form_body,";
+    
+    return optional + 
+"""
+  id,
+  type,
+  article_name,
+  created,
+  expires_at,
+  expires_in_seconds,
+  flow_name,
+  form_name,
+  form_tag_name,
+  parent_article_name,
+  questionnaire_id,
+  status,
+  stencil_tag_name,
+  task_id,
+  cockpit_id,
+  updated,
+  user_id,
+  workflow_name,
+  wrench_tag_name,
+  anon,
+  mission.mission_ref
+""";
+  }
 
   @Override
   public Function<Row, GrimProcess> defaultMapper() {
@@ -344,9 +385,9 @@ WHERE id = $9""").ln()
           .type(Optional.ofNullable(row.getString("type")).map(e -> GrimProcessType.valueOf(e)).orElse(null))
           .expiresAt(row.getOffsetDateTime("expires_at"))
           .expiresInSeconds(row.getLong("expires_in_seconds"))
-          .flowBody(Optional.ofNullable(row.getJsonObject("flow_body")).map(e -> e.encode()).orElse(null))
+          .flowBody(Optional.ofNullable(row.getJsonObject("flow_body")).orElse(null))
           .flowName(row.getString("flow_name"))
-          .formBody(Optional.ofNullable(row.getJsonObject("form_body")).map(e -> e.encode()).orElse(null))
+          .formBody(Optional.ofNullable(row.getJsonObject("form_body")).orElse(null))
           .formName(row.getString("form_name"))
           .formTagName(row.getString("form_tag_name"))
           .parentArticleName(row.getString("parent_article_name"))
@@ -387,4 +428,5 @@ WHERE id = $9""").ln()
         .props(Tuple.of(howMany))
         .build();
   }
+
 }

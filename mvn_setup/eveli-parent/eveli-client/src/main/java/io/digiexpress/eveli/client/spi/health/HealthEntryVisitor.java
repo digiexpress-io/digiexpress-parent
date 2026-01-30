@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import io.digiexpress.eveli.client.api.HealthClient;
 import io.digiexpress.eveli.client.api.HealthClient.HealthEntry;
 import io.digiexpress.eveli.client.api.HealthClient.ProcessHealth;
-import io.digiexpress.eveli.client.api.HealthClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.HealthClient.ProcessHealthStatus;
 import io.digiexpress.eveli.client.api.HealthClient.TaskHealth;
 import io.digiexpress.eveli.client.api.ImmutableProcessHealth;
 import io.digiexpress.eveli.client.api.ImmutableTaskHealth;
@@ -43,7 +43,6 @@ import io.resys.thena.api.entities.grim.GrimProcess;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple3;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -83,18 +82,18 @@ public class HealthEntryVisitor {
     return Multi.createFrom().items(Stream.concat(
         procs.stream().filter(proc -> !tasksById.containsKey(proc.getMissionId())).map(proc -> {
       
-        final HealthClient.ProcessStatus errorStatus = 
+        final HealthClient.ProcessHealthStatus errorStatus = 
             (proc.getMissionId() == null && proc.getFlowBody() != null) ? 
-            HealthClient.ProcessStatus.ERRORS : 
-            HealthClient.ProcessStatus.RUNNING;
+            HealthClient.ProcessHealthStatus.ERRORS : 
+            HealthClient.ProcessHealthStatus.RUNNING;
         
         return diagnose(ImmutableProcessHealth.builder()
           .ageInDays(Duration.between(proc.getCreated(), OffsetDateTime.now()).toDays())
           .customerId(proc.getUserId())
           .taskRef(proc.getMissionRef())
-          .status(proc.getMissionId() == null ? errorStatus : HealthClient.ProcessStatus.COMPLETED)
-          .flowBody(Optional.ofNullable(proc.getFlowBody()).map(JsonObject::new).orElse(null))
-          .formBody(Optional.ofNullable(proc.getFormBody()).map(JsonObject::new).orElse(null))
+          .status(proc.getMissionId() == null ? errorStatus : HealthClient.ProcessHealthStatus.COMPLETED)
+          .flowBody(Optional.ofNullable(proc.getFlowBody()).orElse(null))
+          .formBody(Optional.ofNullable(proc.getFormBody()).orElse(null))
           .flowName(proc.getFlowName())
           .formName(proc.getFormName())
           .name(proc.getWorkflowName())
@@ -111,8 +110,8 @@ public class HealthEntryVisitor {
           .ageInDays(Duration.between(task.getCreated(), OffsetDateTime.now()).toDays())
           .customerId(task.getClientIdentificator())
           .taskRef(task.getTaskRef())
-          .flowBody(proc.map(GrimProcess::getFlowBody).map(JsonObject::new).orElse(null))
-          .formBody(proc.map(GrimProcess::getFormBody).map(JsonObject::new).orElse(null))
+          .flowBody(proc.map(GrimProcess::getFlowBody).orElse(null))
+          .formBody(proc.map(GrimProcess::getFormBody).orElse(null))
           .flowName(proc.map(GrimProcess::getFlowName).orElse(null))
           .formName(proc.map(GrimProcess::getFormName).orElse(null))
           .name(proc.map(GrimProcess::getWorkflowName).orElse(null))
@@ -146,7 +145,7 @@ public class HealthEntryVisitor {
   }
   
   private ProcessHealth diagnose(ProcessHealth healthData) {
-    if(healthData.getStatus() == ProcessStatus.ERRORS) {
+    if(healthData.getStatus() == ProcessHealthStatus.ERRORS) {
       return ImmutableProcessHealth.builder().from(healthData)
           .diagnosis(HealthClient.DiagnosisType.ERROR)
           .diagnosisDescription("Flow execution is broken")

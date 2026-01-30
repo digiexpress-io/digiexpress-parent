@@ -28,7 +28,6 @@ import io.digiexpress.eveli.client.api.TaskAuditClient.TaskAuditEntryProcess;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -42,14 +41,15 @@ public class TaskAuditEntryProcessVisitor {
     final var config = taskClient.unwrap().getConfig();
     final var grim = config.getClient().grim(config.getTenantName());
     return grim.find().missionProcsQuery()
+      .includeFormBody(true)
       .findOneByMissionId(taskId)
       .onItem().transform(proc -> {
         if(proc.isEmpty()) {
           return Optional.<TaskAuditEntryProcess>empty();
         }
         return Optional.of(ImmutableTaskAuditEntryProcess.builder()
-            .processFlowLog(Optional.ofNullable(proc.get().getFlowBody()).map(json -> new JsonObject(json)).orElse(null))
-            .processFormLog(Optional.ofNullable(proc.get().getFormBody()).map(json -> new JsonObject(json)).orElse(null))
+            .processFlowLog(Optional.ofNullable(proc.get().getFlowBody()).orElse(null))
+            .processFormLog(Optional.ofNullable(proc.get().getFormBody()).orElse(null))
             .processInstance(ImmutableProcessInstance.builder()
                 .from(TaskMapper.map(proc.get()))
                 .build())

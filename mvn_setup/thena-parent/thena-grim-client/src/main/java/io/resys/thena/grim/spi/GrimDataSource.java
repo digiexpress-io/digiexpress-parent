@@ -102,6 +102,7 @@ public interface GrimDataSource extends TenantDataSource {
   }
   
   interface InternalProcQuery {
+    InternalProcQuery includeFormBody(boolean includeFormBody);
     Uni<GrimProcess> getOneByIdWithLock(String id);
     Uni<GrimProcess> getOneById(String id);
     Uni<Optional<GrimProcess>> findOneById(String id);

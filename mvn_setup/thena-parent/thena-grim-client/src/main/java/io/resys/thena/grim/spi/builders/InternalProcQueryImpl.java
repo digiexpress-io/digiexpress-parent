@@ -42,6 +42,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
   private final ThenaSqlDataSource dataSource;
   private final GrimRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
+  private boolean includeFormBody = false;
   
   public InternalProcQueryImpl(ThenaSqlDataSource dataSource) {
     super();
@@ -49,10 +50,15 @@ public class InternalProcQueryImpl implements InternalProcQuery {
     this.registry = new GrimRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
-
+  @Override
+  public InternalProcQuery includeFormBody(boolean includeFormBody) {
+    this.includeFormBody = includeFormBody;
+    return this;
+  }
+  
   @Override
   public Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter) {
-    final var sql = registry.processes().findOnOrAfter(onOrAfter);
+    final var sql = registry.processes().findOnOrAfter(onOrAfter, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findOnOrAfter query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -68,7 +74,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
 
   @Override
   public Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
-    final var sql = registry.processes().findOnOrBeforeWithoutMission(onOrBefore);
+    final var sql = registry.processes().findOnOrBeforeWithoutMission(onOrBefore, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findOnOrBeforeWithoutMission query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -84,7 +90,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
 
   @Override
   public Uni<GrimProcess> getOneById(String id) {
-    final var sql = registry.processes().getById(id);
+    final var sql = registry.processes().getById(id, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.getById query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -107,7 +113,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
 
   @Override
   public Uni<Optional<GrimProcess>> findOneByMissionId(String missionId) {
-    final var sql = registry.processes().findOneByMissionId(missionId);
+    final var sql = registry.processes().findOneByMissionId(missionId, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findOneByMissionId query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -129,7 +135,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
 
   @Override
   public Uni<Optional<GrimProcess>> findOneById(String id) {
-    final var sql = registry.processes().getById(id);
+    final var sql = registry.processes().getById(id, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findOneById query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -151,7 +157,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
 
   @Override
   public Multi<GrimProcess> findAllNotArchivedyUserId(String userId) {
-    final var sql = registry.processes().findNotArchivedByUserId(userId);
+    final var sql = registry.processes().findNotArchivedByUserId(userId, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findActiveByUserId query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -167,7 +173,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
 
   @Override
   public Uni<GrimProcess> getOneByIdWithLock(String id) {
-    final var sql = registry.processes().getOneByIdWithLock(id);
+    final var sql = registry.processes().getOneByIdWithLock(id, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.getOneByIdWithLock query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),

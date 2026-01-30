@@ -397,13 +397,21 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryTaskProcesess queryTaskProcesess() {
     return new QueryTaskProcesess() {
-      
+      private boolean includeQuestionnaire = false;
+
+      @Override
+      public QueryTaskProcesess includeQuestionnaire() {
+        this.includeQuestionnaire = true;
+        return this;
+      }
+
       @Override
       public Multi<ProcessInstance> findAllInLast6Months() {
         final var startDate = OffsetDateTime.now().minusMonths(6);
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
+            .includeFormBody(includeQuestionnaire)
           .findOnOrAfter(startDate)
           .onItem().transform(TaskMapper::map);
       }
@@ -413,6 +421,7 @@ public class TaskClientImpl implements TaskClient {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
           .findOnOrBeforeWithoutMission(olderThen)
           .onItem().transform(TaskMapper::map);
       }
@@ -422,6 +431,7 @@ public class TaskClientImpl implements TaskClient {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
           .findOneByMissionId(taskId)
           .onItem().transform(optional -> optional.map(TaskMapper::map));
       }
@@ -430,6 +440,7 @@ public class TaskClientImpl implements TaskClient {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
           .getOneById(processId)
           .onItem().transform(TaskMapper::map);
       }
@@ -439,6 +450,7 @@ public class TaskClientImpl implements TaskClient {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
           .findOneById(processId)
           .onItem().transform(optional -> optional.map(TaskMapper::map));
       }
@@ -448,8 +460,40 @@ public class TaskClientImpl implements TaskClient {
         final var config = ctx.getConfig();
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
           .findAllNotArchivedyUserId(userId)
           .onItem().transform(TaskMapper::map);
+      }
+
+      @Override
+      public Uni<Optional<ProcessInstance>> findOneByQuestionnaireId(String questionnaireId) {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public Multi<ProcessInstance> findAll() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public Multi<ProcessInstance> findAllExpired() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public Multi<ProcessInstance> findAllAnsweredFrom(
+          OffsetDateTime pickupFrom) {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public Uni<ProcessInstance> deleteOneById(String id) {
+        // TODO Auto-generated method stub
+        return null;
       }
     };
 

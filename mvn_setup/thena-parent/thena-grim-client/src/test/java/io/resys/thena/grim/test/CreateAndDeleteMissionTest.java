@@ -60,7 +60,7 @@ public class CreateAndDeleteMissionTest extends DbTestTemplate {
     Assertions.assertEquals(1, mission.getObjects().size());
     
     
-    final var deleted = getClient().grim(tenantId).find().missionDeleteQuery()
+    getClient().grim(tenantId).find().missionDeleteQuery()
       .commitAuthor("mis. delete")
       .commitMessage("lets wipe the DB >_<")
       .missionId(mission.getObjects().stream().map(e -> e.getMission().getId()).toList())

@@ -59,6 +59,9 @@ public interface GrimQueryActions {
   
   
   interface MissionProcsQuery {
+    // force form to load
+    MissionProcsQuery includeFormBody(boolean includeFormBody);
+    
     Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
     Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
     Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);

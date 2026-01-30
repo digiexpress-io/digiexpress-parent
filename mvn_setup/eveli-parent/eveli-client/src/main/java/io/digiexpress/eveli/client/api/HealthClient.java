@@ -86,7 +86,7 @@ public interface HealthClient {
   
   @Value.Immutable
   interface ProcessHealth extends HealthEntry {
-    ProcessStatus getStatus();
+    ProcessHealthStatus getStatus();
     
     default HealthEntryType getType() {
       return HealthEntryType.PROCESS;
@@ -114,7 +114,7 @@ public interface HealthClient {
     WARNING, ERROR, OK
   }
   
-  enum ProcessStatus {
+  enum ProcessHealthStatus {
     RUNNING, COMPLETED, ERRORS
   }
   

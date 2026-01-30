@@ -113,12 +113,12 @@ public class MergeProcImpl implements MergeProc {
     }
     
     if(flowBody != null) {
-      final var newValue = flowBody.map(e -> e.encode()).orElse(null);
+      final var newValue = flowBody.orElse(null);
       next.flowBody(newValue);
       isUpdated(newValue, grimProcPrevious.getFlowBody());
     }
     if(formBody != null) {
-      final var newValue = formBody.map(e -> e.encode()).orElse(null); 
+      final var newValue = formBody.orElse(null); 
       next.formBody(newValue);
       isUpdated(newValue, grimProcPrevious.getFormBody());
     }
