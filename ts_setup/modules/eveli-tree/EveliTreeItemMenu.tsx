@@ -7,7 +7,7 @@ import {
   ContentCopy as CopyIcon,
   DriveFileRenameOutline as RenameIcon
 } from '@mui/icons-material';
-import { TreeNode } from './mock-tree-data';
+import { TreeNode } from '../eveli-tree-api';
 import { getNodeColor } from './useUtilityClasses';
 
 interface EveliTreeItemMenuProps {
