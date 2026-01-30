@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, MenuItem, Divider, Typography, styled, useTheme, TextField, Box, Collapse, IconButton } from '@mui/material';
+import { Menu, MenuItem, Divider, Typography, styled, useTheme, TextField, Box, Collapse } from '@mui/material';
 import {
   DeleteForever as DeleteIcon,
   Add as NewIcon,
@@ -92,7 +92,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider sx={{ borderColor: '#3c3c3c' }} />
 
-      <StyledMenuItem onClick={() => setLabelsExpanded(!labelsExpanded)} icon={labelsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
+      <StyledMenuItem onClick={() => setLabelsExpanded(!labelsExpanded)}
+        icon={labelsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         Labels
       </StyledMenuItem>
       <Collapse in={labelsExpanded}>
@@ -109,7 +110,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         </Box>
       </Collapse>
 
-      <StyledMenuItem onClick={() => setCommentsExpanded(!commentsExpanded)} icon={commentsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
+      <StyledMenuItem onClick={() => setCommentsExpanded(!commentsExpanded)}
+        icon={commentsExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         Comments
       </StyledMenuItem>
       <Collapse in={commentsExpanded}>
@@ -126,7 +128,8 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         </Box>
       </Collapse>
 
-      <StyledMenuItem onClick={() => setSharingExpanded(!sharingExpanded)} icon={sharingExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
+      <StyledMenuItem onClick={() => setSharingExpanded(!sharingExpanded)}
+        icon={sharingExpanded ? <ExpandMoreIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}>
         Sharing and Permissions
       </StyledMenuItem>
       <Collapse in={sharingExpanded}>
