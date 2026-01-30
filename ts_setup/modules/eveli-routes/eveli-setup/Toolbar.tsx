@@ -7,6 +7,7 @@ import { BuildOutlined as BuildOutlinedIcon } from '@mui/icons-material';
 import { EditNoteOutlined as EditNoteOutlinedIcon } from '@mui/icons-material';
 import { BeenhereOutlined as BeenhereOutlinedIcon } from '@mui/icons-material';
 import { SettingsApplicationsOutlined as SettingsApplicationsOutlinedIcon } from '@mui/icons-material';
+import { FolderOutlined as FolderOutlinedIcon } from '@mui/icons-material';
 
 import { FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -35,6 +36,22 @@ export const Toolbar: React.FC<{}> = ({ }) => {
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName}>
+
+      <EveliTenantFeatureEnabled id='EVELI_TREE_ENABLED'>
+        <div> {/* divs needed to maintain IconButton styling, otherwise IconButton background stretches */}
+          <IconButton {...(location.pathname.includes('fileexplorer') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/fileexplorer',
+              search: { explorer: [] }
+            })}>
+            <FolderOutlinedIcon />
+          </IconButton>
+          <Typography {...(location.pathname.includes('fileexplorer') ? { className: classes.textActive } : {})}>
+            <FormattedMessage id='toolbar.files' />
+          </Typography>
+        </div>
+      </EveliTenantFeatureEnabled>
 
       <EveliPermissions id='NAV_TO_TASKS'>
         <div> {/* divs needed to maintain IconButton styling, otherwise IconButton background stretches */}
@@ -123,18 +140,18 @@ export const Toolbar: React.FC<{}> = ({ }) => {
 
 
       <EveliTenantFeatureEnabled id='COCKPITS_ENABLED'>
-          <div>
-            <IconButton
-              {...(location.pathname.includes('cockpits') ? { disabled: true, className: classes.itemActive } : {})}
-              onClick={() => navigate({
-                from: '/secured/$locale',
-                to: '/secured/$locale/worker/cockpits',
-                search: { explorer: [] }
-              })}>
-              <SettingsApplicationsOutlinedIcon />
-            </IconButton>
-            <Typography><FormattedMessage id='toolbar.cockpits' /></Typography>
-          </div>
+        <div>
+          <IconButton
+            {...(location.pathname.includes('cockpits') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/cockpits',
+              search: { explorer: [] }
+            })}>
+            <SettingsApplicationsOutlinedIcon />
+          </IconButton>
+          <Typography><FormattedMessage id='toolbar.cockpits' /></Typography>
+        </div>
       </EveliTenantFeatureEnabled>
 
       <EveliPermissions id='NAV_TO_RELEASES'>
@@ -199,7 +216,7 @@ export const Toolbar: React.FC<{}> = ({ }) => {
       </Dialog>
 
     </EveliShellMiniBarRoot>
-    
+
   );
 }
 

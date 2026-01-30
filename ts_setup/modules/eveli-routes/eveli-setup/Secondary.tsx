@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { CreateOutlined as CreateOutlinedIcon } from '@mui/icons-material';
-import { SettingsApplicationsOutlined as SettingsApplicationsOutlinedIcon } from '@mui/icons-material';
 import { TaskOutlined as TaskOutlinedIcon } from '@mui/icons-material';
 import { AccountBalance as AccountBalanceIcon } from '@mui/icons-material';
 import { DashboardCustomizeOutlined as DashboardCustomizeOutlinedIcon } from '@mui/icons-material';
@@ -71,17 +70,6 @@ export const Secondary: React.FC = () => {
 
     <EveliShellExplorer>
       <CreateTaskButton />
-      <EveliTenantFeatureEnabled id='EVELI_TREE_ENABLED'>
-        <Button startIcon={<HandshakeOutlinedIcon />}
-          variant={location.pathname.includes('file_explorer') ? 'explorerActive' : 'explorerInactive'}
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/fileexplorer',
-          })}>
-          {intl.formatMessage({ id: 'toolbar.fileexplorer' })}
-        </Button>
-      </EveliTenantFeatureEnabled>
-
       <EveliTenantFeatureEnabled id='CONTRACT_ENABLED'>
         <EveliPermissions id='NAV_TO_CONTRACTS'>
           <Button startIcon={<HandshakeOutlinedIcon />}
