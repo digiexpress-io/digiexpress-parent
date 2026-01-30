@@ -34,6 +34,7 @@ import io.digiexpress.eveli.client.api.FeedbackClient.ModifyFeedbackCommandType;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackReplyCommand;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -42,8 +43,8 @@ public class ModifyFeedbackReplyImpl {
   private final FeedbackWithHistory withHistory;
   private final String userId;
 
-  public Feedback apply(ModifyOneFeedbackCommand command) {
-    final var beforeUpdate = new FeedbackQueryImpl(jdbc).findOneById(command.getId());
+  public Uni<Feedback> apply(ModifyOneFeedbackCommand command) {
+    final var beforeUpdate = new FeedbackQueryImpl(jdbc, withHistory).findOneById(command.getId());
     final var replyId = beforeUpdate.get().getId();
     
     return withHistory.withHistory(history -> {

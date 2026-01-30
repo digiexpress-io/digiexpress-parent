@@ -33,6 +33,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class FeedbackRatingBuilderImpl {
   private final FeedbackWithHistory withHistory;
   private final String userId;
   
-  public FeedbackRating execute(UpsertFeedbackRankingCommand command) {
+  public Uni<FeedbackRating> execute(UpsertFeedbackRankingCommand command) {
     return withHistory.withHistory(history -> {
       final var upserted = upsert(command);
       history.append(command, upserted, userId);

@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
-import java.util.List;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /*-
@@ -29,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -53,12 +50,12 @@ public class FeedbackClientImpl implements FeedbackClient {
 
   @Override
   public Uni<FeedbackRating> modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId) {
-    return Uni.createFrom().item(new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command));
+    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
   }
 
   @Override
   public Uni<Feedback> modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId) {
-    return Uni.createFrom().item(new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands));
+    return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
   }
 
   @Override
