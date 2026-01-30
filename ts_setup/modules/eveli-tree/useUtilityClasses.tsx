@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography } from '@mui/material';
 
-import { TreeNode, TreeNodeType } from './mock-tree-data';
+import { TreeNode, TreeNodeType } from '../eveli-tree-api';
 import {
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
@@ -13,6 +13,9 @@ import {
   Link as LinkIcon,
   Language as LanguageIcon,
   Build as FlowIcon,
+  PrintOutlined as PrintIcon,
+  ImageOutlined as ImageIcon,
+  PictureAsPdf as PdfIcon,
 } from '@mui/icons-material';
 
 export const MUI_NAME = 'EveliTree';
@@ -29,6 +32,9 @@ export interface EveliTreeClasses {
   iconFlow: string;
   iconLink: string;
   iconLanguage: string;
+  iconPrintout: string;
+  iconImage: string;
+  iconTemplate: string;
   iconExpand: string;
 }
 
@@ -47,6 +53,9 @@ export const useUtilityClasses = () => {
     iconFlow: ['iconFlow'],
     iconLink: ['iconLink'],
     iconLanguage: ['iconLanguage'],
+    iconPrintout: ['iconPrintout'],
+    iconImage: ['iconImage'],
+    iconTemplate: ['iconTemplate'],
     iconExpand: ['iconExpand']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -69,7 +78,10 @@ export const EveliTreeRoot = styled('div', {
       styles.iconFlow,
       styles.iconLink,
       styles.iconLanguage,
-      styles.iconReference
+      styles.iconReference,
+      styles.iconPrintout,
+      styles.iconImage,
+      styles.iconTemplate
     ];
   },
 })(({ theme }) => {
@@ -164,6 +176,33 @@ export const EveliTreeRoot = styled('div', {
       },
     },
 
+    [`& .${MUI_NAME}-iconPrintout`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: getNodeColor('printout'),
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconImage`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: getNodeColor('image'),
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
+    [`& .${MUI_NAME}-iconTemplate`]: {
+      minWidth: 10,
+      marginRight: theme.spacing(1),
+      color: getNodeColor('template'),
+      '& .MuiSvgIcon-root': {
+        fontSize: '15px',
+      },
+    },
+
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
       color: '#cccccc',
@@ -188,6 +227,12 @@ export const getIcon = (node: TreeNode) => {
         return <LinkIcon />;
       case 'language':
         return <LanguageIcon />;
+      case 'printout':
+        return <PrintIcon />;
+      case 'image':
+        return <ImageIcon />;
+      case 'template':
+        return <PdfIcon />;
       default:
         return <ArticleIcon />;
     }
@@ -270,6 +315,12 @@ export function getIconClassName(node: TreeNode, classes: EveliTreeClasses) {
       return classes.iconLink;
     case 'language':
       return classes.iconLanguage;
+    case 'printout':
+      return classes.iconPrintout;
+    case 'image':
+      return classes.iconImage;
+    case 'template':
+      return classes.iconTemplate;
     default:
       return classes.iconFolder;
   }
@@ -291,6 +342,12 @@ export function getNodeColor(nodeType: TreeNodeType) {
       return '#98d982'; // Bright green for links
     case 'language':
       return '#ce9178'; // Orange for languages
+    case 'printout':
+      return '#f4b942'; // Golden yellow for printouts
+    case 'image':
+      return '#ff6b6b'; // Coral red for images
+    case 'template':
+      return '#ce9178'; // Orange for templates (same as language)
     default:
       return '#cccccc';
   }
