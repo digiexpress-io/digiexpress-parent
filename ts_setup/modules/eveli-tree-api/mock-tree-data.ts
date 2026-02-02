@@ -13,6 +13,9 @@ export const mockTreeData: TreeNode[] = [
         name: '000_index',
         type: 'folder',
         isExpanded: true,
+        configOptions: [{
+          devMode: true,
+        }],
         labels: [
           {
             id: 'index-label-1',
@@ -31,6 +34,9 @@ export const mockTreeData: TreeNode[] = [
             name: 'main.article',
             type: 'article',
             isExpanded: true,
+            configOptions: [{
+              disabledMode: true,
+            }],
             labels: [
               {
                 id: 'main-article-label-1',
@@ -107,6 +113,10 @@ export const mockTreeData: TreeNode[] = [
             id: 'info-gdpr.article',
             name: 'info-gdpr.article',
             type: 'article',
+            configOptions: [{
+              devMode: true,
+              disabledMode: true,
+            }],
             labels: [
               {
                 id: 'gdpr-label-1',
@@ -135,6 +145,12 @@ export const mockTreeData: TreeNode[] = [
             name: 'general-message.service',
             type: 'service',
             isExpanded: true,
+            configOptions: [{
+              devMode: true,
+              assignableMode: true,
+              disabledMode: true,
+              anonymousMode: true,
+            }],
             labels: [
               {
                 id: 'general-msg-label-1',
@@ -221,6 +237,10 @@ export const mockTreeData: TreeNode[] = [
             id: 'taskMsgFlow.flow',
             name: 'taskMsgFlow.flow',
             type: 'flow',
+            configOptions: [{
+              assignableMode: true,
+              anonymousMode: true,
+            }],
             labels: [
               {
                 id: 'msg-flow-label-1',
@@ -262,7 +282,10 @@ export const mockTreeData: TreeNode[] = [
             id: 'main-residence.article',
             name: 'main.article',
             type: 'article',
-            description: 'Asuminen'
+            description: 'Asuminen',
+            configOptions: [{
+              disabledMode: true,
+            }]
           },
           {
             id: 'general-message-ref1',
@@ -273,7 +296,11 @@ export const mockTreeData: TreeNode[] = [
           {
             id: 'public-inforeq.service',
             name: 'public-inforeq.service',
-            type: 'service'
+            type: 'service',
+            configOptions: [{
+              devMode: true,
+              assignableMode: true,
+            }]
           },
           {
             id: 'public-inforeq.dialob',
@@ -447,7 +474,12 @@ export const mockTreeData: TreeNode[] = [
           {
             id: 'taskSplitFlow.flow',
             name: 'taskSplitFlow.flow',
-            type: 'flow'
+            type: 'flow',
+            configOptions: [{
+              devMode: true,
+              disabledMode: true,
+              anonymousMode: true,
+            }]
           },
           {
             id: 'rent-street-area.service',
@@ -718,7 +750,10 @@ export const mockTreeData: TreeNode[] = [
         id: 'sipoo-main-site.link',
         name: 'sipoo-main-site.link',
         type: 'link',
-        description: 'https://www.sipoo.fi'
+        description: 'https://www.sipoo.fi',
+        configOptions: [{
+          devMode: true,
+        }]
       },
       {
         id: 'wilma-info.link',
@@ -728,7 +763,10 @@ export const mockTreeData: TreeNode[] = [
       {
         id: 'lupapiste.link',
         name: 'lupapiste.link',
-        type: 'link'
+        type: 'link',
+        configOptions: [{
+          disabledMode: true,
+        }]
       }
     ]
   },

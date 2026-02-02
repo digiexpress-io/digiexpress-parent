@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography } from '@mui/material';
+import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 import {
@@ -16,9 +16,13 @@ import {
   PrintOutlined as PrintIcon,
   ImageOutlined as ImageIcon,
   PictureAsPdf as PdfIcon,
+  Construction as DevModeIcon,
+  Assignment as AssignmentIcon,
+  Block as DisabledIcon,
+  VisibilityOff as AnonymousIcon,
 } from '@mui/icons-material';
 
-import { TreeNode, TreeNodeType } from '../../eveli-tree-api';
+import { ConfigOption, TreeNode, TreeNodeType } from '../../eveli-tree-api';
 
 
 
@@ -38,6 +42,7 @@ export interface EveliTreeItemClasses {
   iconImage: string;
   iconTemplate: string;
   iconExpand: string;
+  iconConfig: string;
 }
 
 export type EveliTreeItemClassKey = keyof EveliTreeItemClasses;
@@ -56,67 +61,12 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
     iconPrintout: ['iconPrintout'],
     iconImage: ['iconImage'],
     iconTemplate: ['iconTemplate'],
-    iconExpand: ['iconExpand']
+    iconExpand: ['iconExpand'],
+    iconConfig: ['iconConfig']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 };
-
-
-export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = false) {
-  if (isDarkTheme) {
-    switch (nodeType) {
-      case 'folder':
-        return '#e8e5e5'; // Gray - dark theme
-      case 'article':
-        return '#dcdcaa'; // Yellow for articles - dark theme
-      case 'service':
-        return '#4ec9b0'; // Teal for services - dark theme
-      case 'dialob':
-        return '#9cdcfe'; // Light blue for dialob forms - dark theme
-      case 'flow':
-        return '#c586c0'; // Purple for flows - dark theme
-      case 'link':
-        return '#98d982'; // Bright green for links - dark theme
-      case 'language':
-        return '#ce9178'; // Orange for languages - dark theme
-      case 'printout':
-        return '#f4b942'; // Golden yellow for printouts - dark theme
-      case 'image':
-        return '#ff6b6b'; // Coral red for images - dark theme
-      case 'template':
-        return '#ce9178'; // Orange for templates (same as language) - dark theme
-      default:
-        return '#cccccc'; // dark theme
-    }
-  } else {
-    // Light theme colors (7:1 contrast)
-    switch (nodeType) {
-      case 'folder':
-        return '#333333'; // Even darker gray for folders
-      case 'article':
-        return '#8b008b'; // Dark magenta for articles (7:1 contrast)
-      case 'service':
-        return '#1f5f3f'; // Darker sea green for services (7:1 contrast)
-      case 'dialob':
-        return '#0056b3'; // Darker blue for dialob forms (7:1 contrast)
-      case 'flow':
-        return '#8e2557'; // Dark fuchsia for flows (7:1 contrast)
-      case 'link':
-        return '#228b22'; // Forest green for links
-      case 'language':
-        return '#a0122a'; // Darker crimson red for languages (7:1 contrast)
-      case 'printout':
-        return '#2e1065'; // Dark indigo for printouts (7:1 contrast)
-      case 'image':
-        return '#a0122a'; // Darker crimson red for images (same as language, 7:1 contrast)
-      case 'template':
-        return '#a0122a'; // Darker crimson red for templates (same as language, 7:1 contrast)
-      default:
-        return '#666666';
-    }
-  }
-}
 
 export const EveliTreeItemRoot = styled('div', {
   name: MUI_NAME,
@@ -135,7 +85,8 @@ export const EveliTreeItemRoot = styled('div', {
       styles.iconPrintout,
       styles.iconImage,
       styles.iconTemplate,
-      styles.iconExpand
+      styles.iconExpand,
+      styles.iconConfig
     ];
   },
 })<{ isDarkTheme?: boolean }>(({ theme, isDarkTheme }) => {
@@ -239,6 +190,12 @@ export const EveliTreeItemRoot = styled('div', {
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
       color: isDarkTheme ? '#cccccc' : '#666666',
+    },
+
+    [`& .${MUI_NAME}-iconConfig`]: {
+      fontSize: '14px',
+      color: isDarkTheme ? '#ffa500' : '#ff3c00',
+      opacity: 0.8,
     },
   };
 });
@@ -353,5 +310,102 @@ export function getIconClassName(node: TreeNode, classes: EveliTreeItemClasses) 
       return classes.iconTemplate;
     default:
       return classes.iconFolder;
+  }
+}
+
+export function getConfigIcons(configOptions: ConfigOption[], iconClassName: string) {
+  const icons: React.ReactElement[] = [];
+
+  for (const config of configOptions) {
+    if (config.devMode) {
+      icons.push(
+        <Tooltip key="dev" title="Development Mode" arrow>
+          <DevModeIcon fontSize='small' className={iconClassName} />
+        </Tooltip>
+      );
+    }
+    if (config.assignableMode) {
+      icons.push(
+        <Tooltip key="assign" title="Assignable Mode" arrow>
+          <AssignmentIcon fontSize='small' className={iconClassName} />
+        </Tooltip>
+      );
+    }
+    if (config.disabledMode) {
+      icons.push(
+        <Tooltip key="disabled" title="Disabled Mode" arrow>
+          <DisabledIcon fontSize='small' className={iconClassName} />
+        </Tooltip>
+      );
+    }
+    if (config.anonymousMode) {
+      icons.push(
+        <Tooltip key="anonymous" title="Anonymous Mode" arrow>
+          <AnonymousIcon fontSize='small' className={iconClassName} />
+        </Tooltip>
+      );
+    }
+  }
+
+  return icons.length > 0 ? icons : [
+    <Tooltip key="default" title="Configuration" arrow>
+      <SettingsIcon fontSize='small' className={iconClassName} />
+    </Tooltip>
+  ];
+}
+
+
+export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = false) {
+  if (isDarkTheme) {
+    switch (nodeType) {
+      case 'folder':
+        return '#e8e5e5'; // Gray - dark theme
+      case 'article':
+        return '#dcdcaa'; // Yellow for articles - dark theme
+      case 'service':
+        return '#4ec9b0'; // Teal for services - dark theme
+      case 'dialob':
+        return '#9cdcfe'; // Light blue for dialob forms - dark theme
+      case 'flow':
+        return '#c586c0'; // Purple for flows - dark theme
+      case 'link':
+        return '#98d982'; // Bright green for links - dark theme
+      case 'language':
+        return '#ce9178'; // Orange for languages - dark theme
+      case 'printout':
+        return '#f4b942'; // Golden yellow for printouts - dark theme
+      case 'image':
+        return '#ff6b6b'; // Coral red for images - dark theme
+      case 'template':
+        return '#ce9178'; // Orange for templates (same as language) - dark theme
+      default:
+        return '#cccccc'; // dark theme
+    }
+  } else {
+    // Light theme colors (7:1 contrast)
+    switch (nodeType) {
+      case 'folder':
+        return '#333333'; // Even darker gray for folders
+      case 'article':
+        return '#8b008b'; // Dark magenta for articles (7:1 contrast)
+      case 'service':
+        return '#1f5f3f'; // Darker sea green for services (7:1 contrast)
+      case 'dialob':
+        return '#0056b3'; // Darker blue for dialob forms (7:1 contrast)
+      case 'flow':
+        return '#8e2557'; // Dark fuchsia for flows (7:1 contrast)
+      case 'link':
+        return '#228b22'; // Forest green for links
+      case 'language':
+        return '#a0122a'; // Darker crimson red for languages (7:1 contrast)
+      case 'printout':
+        return '#2e1065'; // Dark indigo for printouts (7:1 contrast)
+      case 'image':
+        return '#a0122a'; // Darker crimson red for images (same as language, 7:1 contrast)
+      case 'template':
+        return '#a0122a'; // Darker crimson red for templates (same as language, 7:1 contrast)
+      default:
+        return '#666666';
+    }
   }
 }

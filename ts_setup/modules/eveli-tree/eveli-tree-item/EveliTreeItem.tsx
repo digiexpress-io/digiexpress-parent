@@ -4,9 +4,11 @@ import {
   ExpandMore as ExpandMoreIcon,
   ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
+
 import { TreeNode } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName } from './useUtilityClasses';
+import { useUtilityClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
 import { sortChildren } from './eveli-tree-item-helpers';
+
 
 export interface EveliTreeItemProps {
   node: TreeNode;
@@ -18,6 +20,7 @@ export interface EveliTreeItemProps {
 
 export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onToggle, onContextMenu, isDarkTheme }) => {
   const hasChildren = node.children && node.children.length > 0;
+  const hasConfigOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
 
   return (
@@ -40,6 +43,15 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onTog
             description={node.description}
             isDarkTheme={isDarkTheme}
           />
+          {hasConfigOptions && (
+            <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
+              {getConfigIcons(node.configOptions!, classes.iconConfig).map((tooltipIcon, index) => (
+                <Box key={tooltipIcon.key || index}>
+                  {tooltipIcon}
+                </Box>
+              ))}
+            </Box>
+          )}
         </Box>
       </StyledListItem>
       {hasChildren && (

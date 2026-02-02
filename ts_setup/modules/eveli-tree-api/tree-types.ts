@@ -8,6 +8,14 @@ export interface TreeNode {
   isExpanded?: boolean;
   isReference?: boolean;
   type: TreeNodeType;
+  configOptions?: ConfigOption[] | undefined;
+}
+
+export interface ConfigOption {
+  devMode?: boolean | undefined;
+  assignableMode?: boolean | undefined;
+  disabledMode?: boolean | undefined;
+  anonymousMode?: boolean | undefined;
 }
 
 export interface TreeNodeLabel {
