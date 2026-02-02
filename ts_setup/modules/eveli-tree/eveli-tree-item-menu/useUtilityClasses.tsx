@@ -98,8 +98,8 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
 
     [`& .${MUI_NAME}-divider`]: {
       borderColor: '#3c3c3c',
-      marginTop: 0,
-      marginBottom: 0,
+      marginTop: `0px !important`,
+      marginBottom: `0px !important`,
     },
 
     [`& .${MUI_NAME}-textField`]: {
