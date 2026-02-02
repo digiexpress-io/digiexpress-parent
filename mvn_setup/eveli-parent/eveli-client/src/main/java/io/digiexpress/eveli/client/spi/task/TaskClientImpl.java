@@ -56,11 +56,11 @@ import io.digiexpress.eveli.client.spi.task.visitors.FormAssignmentVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
+import io.digiexpress.eveli.client.spi.task.visitors.ModifyProcessVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -393,6 +393,40 @@ public class TaskClientImpl implements TaskClient {
     };
   }    
 
+  @Override
+  public DeleteProcesses deleteProcesses() {
+
+    return new DeleteProcesses() {
+      private String commitMessage;
+      private String commitAuthor;
+      @Override
+      public DeleteProcesses commitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+        return this;
+      }
+      @Override
+      public DeleteProcesses commitAuthor(String commitAuthor) {
+        this.commitAuthor = commitAuthor;
+        return this;
+      }
+      @Override
+      public Uni<ProcessInstance> deleteOne(String id) {
+        TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
+        TaskAssert.notEmpty(commitAuthor, () -> "commitAuthor can't be empty!");
+        TaskAssert.notEmpty(id, () -> "id can't be empty!");
+        
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        
+        return grim.find().missionProcDeleteQuery()
+          .commitAuthor(commitAuthor)
+          .commitMessage(commitMessage)
+          .procId(id)
+          .deleteOne()
+          .map(TaskMapper::map);
+        };
+    };
+  }    
 
   @Override
   public QueryTaskProcesess queryTaskProcesess() {
@@ -413,7 +447,7 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
             .includeFormBody(includeQuestionnaire)
           .findOnOrAfter(startDate)
-          .onItem().transform(TaskMapper::map);
+          .map(TaskMapper::map);
       }
 
       @Override
@@ -423,7 +457,7 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
           .includeFormBody(includeQuestionnaire)
           .findOnOrBeforeWithoutMission(olderThen)
-          .onItem().transform(TaskMapper::map);
+          .map(TaskMapper::map);
       }
 
       @Override
@@ -433,7 +467,7 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
           .includeFormBody(includeQuestionnaire)
           .findOneByMissionId(taskId)
-          .onItem().transform(optional -> optional.map(TaskMapper::map));
+          .map(optional -> optional.map(TaskMapper::map));
       }
       @Override
       public Uni<ProcessInstance> getOneById(String processId) {
@@ -442,7 +476,7 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
           .includeFormBody(includeQuestionnaire)
           .getOneById(processId)
-          .onItem().transform(TaskMapper::map);
+          .map(TaskMapper::map);
       }
 
       @Override
@@ -452,7 +486,7 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
           .includeFormBody(includeQuestionnaire)
           .findOneById(processId)
-          .onItem().transform(optional -> optional.map(TaskMapper::map));
+          .map(optional -> optional.map(TaskMapper::map));
       }
 
       @Override
@@ -462,106 +496,53 @@ public class TaskClientImpl implements TaskClient {
         return grim.find().missionProcsQuery()
           .includeFormBody(includeQuestionnaire)
           .findAllNotArchivedyUserId(userId)
-          .onItem().transform(TaskMapper::map);
+          .map(TaskMapper::map);
       }
 
       @Override
       public Uni<Optional<ProcessInstance>> findOneByQuestionnaireId(String questionnaireId) {
-        // TODO Auto-generated method stub
-        return null;
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
+          .findOneByQuestionnaireId(questionnaireId)
+          .map(optional -> optional.map(TaskMapper::map));
       }
 
       @Override
       public Multi<ProcessInstance> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
+          .findAll()
+          .map(TaskMapper::map);
       }
 
       @Override
       public Multi<ProcessInstance> findAllExpired() {
-        // TODO Auto-generated method stub
-        return null;
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
+          .findAllExpired()
+          .map(TaskMapper::map);
       }
 
       @Override
-      public Multi<ProcessInstance> findAllAnsweredFrom(
-          OffsetDateTime pickupFrom) {
-        // TODO Auto-generated method stub
-        return null;
-      }
-
-      @Override
-      public Uni<ProcessInstance> deleteOneById(String id) {
-        // TODO Auto-generated method stub
-        return null;
+      public Multi<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom) {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionProcsQuery()
+          .includeFormBody(includeQuestionnaire)
+          .findAllAnsweredFrom(pickupFrom)
+          .map(TaskMapper::map);
       }
     };
-
   }
   @Override
   public ModifyProcess modifyProcess() {
-    return new ModifyProcess() {
-      private String commitMessage;
-      private String commitAuthor;
-      private String status;
-      private String id;
-      private Optional<String> taskId;
-      @Override
-      public ModifyProcess id(String id) {
-        this.id = id;
-        return this;
-      }
-      @Override
-      public ModifyProcess commitMessage(String commitMessage) {
-        this.commitMessage = commitMessage;
-        return this;
-      }
-      @Override
-      public ModifyProcess commitAuthor(String commitAuthor) {
-        this.commitAuthor = commitAuthor;
-        return this;
-      }
-      @Override
-      public ModifyProcess status(ProcessStatus status) {
-        TaskAssert.notNull(status, () -> "status can't be empty!");
-        this.status = status.name();
-        return this;
-      }
-      @Override
-      public ModifyProcess taskId(String taskId) {
-        this.taskId = Optional.ofNullable(taskId);
-        return this;
-      }
-      @Override
-      public Uni<ProcessInstance> build() {
-        TaskAssert.notEmpty(commitMessage, () -> "commitMessage can't be empty!");
-        TaskAssert.notEmpty(commitAuthor, () -> "commitAuthor can't be empty!");
-        TaskAssert.notEmpty(id, () -> "id can't be empty!");
-        
-        final var config = ctx.getConfig();
-        final var grim = config.getClient().grim(config.getTenantName());
-        
-        return grim.commit().modifyOneProc()
-            .commitAuthor(commitAuthor)
-            .commitMessage(commitMessage)
-            .procId(id)
-            .modifyProc(proc -> {
-              if(taskId != null) {
-                proc.missionId(taskId.orElse(null));
-              }
-              proc.status(status).build();
-            })
-            .build()
-            .onItem().transform(e -> {
-              if(e.getStatus() != CommitResultStatus.OK || e.getProc() == null) {
-                throw TaskException.builder("MODIFY_ONE_TASK_PROC_FAIL").add(grim, e).build();
-              }
-              return TaskMapper.map(e.getProc());
-            });
-        
-      }
-
-    };
+    return new ModifyProcessVisitor(ctx);
   }
   @Override
   public CreateProcess createProcess() {

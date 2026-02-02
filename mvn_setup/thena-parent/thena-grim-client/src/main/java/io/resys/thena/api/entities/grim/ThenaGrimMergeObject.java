@@ -40,16 +40,16 @@ import jakarta.annotation.Nullable;
 // Generic interfaces for create/update/delete operations 
 public interface ThenaGrimMergeObject {  
   
-  interface MergeProc {
+  interface MergeProcess {
 
-    MergeProc missionId(@Nullable String missionId);
-    MergeProc flowName(@Nullable String flowName);
-    MergeProc flowBody(@Nullable JsonObject flowBody);
-    MergeProc formBody(@Nullable JsonObject formBody);
-    MergeProc status(@Nullable String status);
+    MergeProcess missionId(@Nullable String missionId);
+    MergeProcess flowName(@Nullable String flowName);
+    MergeProcess flowBody(@Nullable JsonObject flowBody);
+    MergeProcess formBody(@Nullable JsonObject formBody);
+    MergeProcess status(@Nullable String status);
     
-    MergeProc expiresAt(@Nullable OffsetDateTime expiresAt);
-    MergeProc expiresInSeconds(@Nullable Long expiresInSeconds);
+    MergeProcess expiresAt(@Nullable OffsetDateTime expiresAt);
+    MergeProcess expiresInSeconds(@Nullable Long expiresInSeconds);
     
     GrimProcess getCurrentState();
     GrimProcess skip(); //cancel the changes and revert to original

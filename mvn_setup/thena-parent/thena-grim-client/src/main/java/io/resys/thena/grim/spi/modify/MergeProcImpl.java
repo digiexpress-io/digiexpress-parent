@@ -25,13 +25,13 @@ import java.util.Optional;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
-import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProcess;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 
 
 
-public class MergeProcImpl implements MergeProc {
+public class MergeProcImpl implements MergeProcess {
   private final GrimProcess grimProcPrevious;
   private final ImmutableGrimProcess.Builder next;
   private boolean isBuilt;
@@ -54,37 +54,37 @@ public class MergeProcImpl implements MergeProc {
   }
 
   @Override
-  public MergeProc missionId(String missionId) {
+  public MergeProcess missionId(String missionId) {
     this.missionId = Optional.ofNullable(missionId);
     return this;
   }
   @Override
-  public MergeProc flowName(String flowName) {
+  public MergeProcess flowName(String flowName) {
     this.flowName = Optional.ofNullable(flowName);
     return this;
   }
   @Override
-  public MergeProc flowBody(JsonObject flowBody) {
+  public MergeProcess flowBody(JsonObject flowBody) {
     this.flowBody = Optional.ofNullable(flowBody);
     return this;
   }
   @Override
-  public MergeProc formBody(JsonObject formBody) {
+  public MergeProcess formBody(JsonObject formBody) {
     this.formBody = Optional.ofNullable(formBody);
     return this;
   }
   @Override
-  public MergeProc status(String status) {
+  public MergeProcess status(String status) {
     this.status = Optional.ofNullable(status);
     return this;
   }
   @Override
-  public MergeProc expiresAt(OffsetDateTime expiresAt) {
+  public MergeProcess expiresAt(OffsetDateTime expiresAt) {
     this.expiresAt = Optional.ofNullable(expiresAt);
     return this;
   }
   @Override
-  public MergeProc expiresInSeconds(Long expiresInSeconds) {
+  public MergeProcess expiresInSeconds(Long expiresInSeconds) {
     this.expiresInSeconds = Optional.ofNullable(expiresInSeconds);
     return this;
   }

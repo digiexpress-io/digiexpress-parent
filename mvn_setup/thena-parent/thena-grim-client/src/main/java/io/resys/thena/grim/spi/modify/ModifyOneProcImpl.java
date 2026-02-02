@@ -26,7 +26,7 @@ import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
-import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProcess;
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
@@ -52,9 +52,9 @@ public class ModifyOneProcImpl implements ModifyOneProc {
   private String author;
   private String message;
   private String procId;
-  private BiConsumer<GrimProcess, MergeProc> modifyProc;
-  private Function<MergeProc, Uni<?>> onAnyUni;
-  private BiConsumer<Optional<GrimMissionContainer>, MergeProc> onMission;
+  private BiConsumer<GrimProcess, MergeProcess> modifyProc;
+  private Function<MergeProcess, Uni<?>> onAnyUni;
+  private BiConsumer<Optional<GrimMissionContainer>, MergeProcess> onMission;
   
   @Override
   public ModifyOneProcImpl commitAuthor(String author) {
@@ -72,7 +72,7 @@ public class ModifyOneProcImpl implements ModifyOneProc {
     return this;
   }
   @Override
-  public ModifyOneProcImpl modifyProc(BiConsumer<GrimProcess, MergeProc> modifyProc) {
+  public ModifyOneProcImpl modifyProc(BiConsumer<GrimProcess, MergeProcess> modifyProc) {
     RepoAssert.notNull(modifyProc, () -> "modifyProc can't be empty!");
     this.modifyProc = modifyProc;
     return this;
@@ -94,12 +94,12 @@ public class ModifyOneProcImpl implements ModifyOneProc {
     return this.state.withGrimTransaction(scope, this::doInTx);
   }
   @Override
-  public ModifyOneProc onAnyUni(Function<MergeProc, Uni<?>> onAnyUni) {
+  public ModifyOneProc onAnyUni(Function<MergeProcess, Uni<?>> onAnyUni) {
     this.onAnyUni = onAnyUni;
     return this;
   }
   @Override
-  public ModifyOneProc onMission(BiConsumer<Optional<GrimMissionContainer>, MergeProc> onMission) {
+  public ModifyOneProc onMission(BiConsumer<Optional<GrimMissionContainer>, MergeProcess> onMission) {
     this.onMission = onMission;
     return this;
   }

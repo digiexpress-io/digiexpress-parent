@@ -57,6 +57,7 @@ public interface TaskClient {
   QueryTasks queryTasks();
   
   DeleteTasks deleteTasks();
+  DeleteProcesses deleteProcesses();
   
   ModifyProcess modifyProcess();
   CreateProcess createProcess();
@@ -150,7 +151,6 @@ public interface TaskClient {
     Multi<ProcessInstance> findAllNotArchivedyUserId(String userId);
     Multi<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom);
     
-    Uni<ProcessInstance> deleteOneById(String id);
   }
   
   interface QueryTaskDasboard {
@@ -162,6 +162,12 @@ public interface TaskClient {
     DeleteTasks commitMessage(String commitMessage);
     DeleteTasks commitAuthor(String commitAuthor);
     Uni<TaskArchivePointer> deleteOne(String id);
+  }
+  
+  interface DeleteProcesses {
+    DeleteProcesses commitMessage(String commitMessage);
+    DeleteProcesses commitAuthor(String commitAuthor);
+    Uni<ProcessInstance> deleteOne(String id);
   }
   
   interface TaskCommandBuilder {

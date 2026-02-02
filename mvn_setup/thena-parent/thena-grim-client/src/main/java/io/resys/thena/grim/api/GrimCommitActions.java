@@ -38,7 +38,7 @@ import io.resys.thena.api.entities.grim.GrimProcess;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
-import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProc;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -78,9 +78,9 @@ public interface GrimCommitActions {
     ModifyOneProc commitMessage(String message);
     ModifyOneProc procId(String procId);
 
-    ModifyOneProc onAnyUni(Function<MergeProc, Uni<?>> callback); // stage 1: do some async tasks after locking proc table and before on mission
-    ModifyOneProc onMission(BiConsumer<Optional<GrimMissionContainer>, MergeProc> onMission); // stage 2: resolves mission by questionnaire id
-    ModifyOneProc modifyProc(BiConsumer<GrimProcess, MergeProc> modifyProc);
+    ModifyOneProc onAnyUni(Function<MergeProcess, Uni<?>> callback); // stage 1: do some async tasks after locking proc table and before on mission
+    ModifyOneProc onMission(BiConsumer<Optional<GrimMissionContainer>, MergeProcess> onMission); // stage 2: resolves mission by questionnaire id
+    ModifyOneProc modifyProc(BiConsumer<GrimProcess, MergeProcess> modifyProc);
     
     Uni<OneProcEnvelope> build();
   }

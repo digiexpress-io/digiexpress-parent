@@ -56,6 +56,7 @@ public interface GrimQueryActions {
   MissionStatsQuery missionStatsQuery();
   
   MissionProcsQuery missionProcsQuery();
+  MissionProcDeleteQuery missionProcDeleteQuery();
   
   
   interface MissionProcsQuery {
@@ -68,6 +69,19 @@ public interface GrimQueryActions {
     Uni<Optional<GrimProcess>> findOneById(String processId);
     Uni<GrimProcess> getOneById(String processId);
     Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
+    Uni<Optional<GrimProcess>> findOneByQuestionnaireId(String questionnaireId);
+    
+    Multi<GrimProcess> findAll();
+    Multi<GrimProcess> findAllExpired();
+    Multi<GrimProcess> findAllAnsweredFrom(OffsetDateTime pickupFrom);
+  }
+  
+  
+  interface MissionProcDeleteQuery {
+    MissionProcDeleteQuery procId(String procId);
+    MissionProcDeleteQuery commitAuthor(String author);
+    MissionProcDeleteQuery commitMessage(String message);
+    Uni<GrimProcess> deleteOne();
   }
   
   interface MissionDeleteQuery {

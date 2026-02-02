@@ -105,8 +105,11 @@ public class GamutClientImpl implements GamutClient {
             throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
           }
           
-          return taskClient.queryTaskProcesess()
-            .deleteOneById(process.getId().toString())
+          return taskClient
+            .deleteProcesses()
+            .commitAuthor(customer.getCustomerId().getSafeId())
+            .commitMessage("Customer cancellation")
+            .deleteOne(process.getId().toString())
             .map(ignore -> ImmutableUserAction.builder()
                 .id(process.getId().toString())
                 .status(process.getStatus().name())

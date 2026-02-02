@@ -38,7 +38,10 @@ public class BatchJob_DeleteAll_ProcessStep implements Executor<ProcessInstance,
   @Override
   public Uni<ExecutorEntity> accept(ProcessInstance entity, ProcessCleanupConfig config, ExecutorContext context) {
     
-    return taskClient.queryTaskProcesess().deleteOneById(entity.getId().toString())
+    return taskClient.deleteProcesses()
+        .commitAuthor(BatchJob_DeleteAll_ProcessStep.class.getSimpleName())
+        .commitMessage("Batch clean up")
+        .deleteOne(entity.getId().toString())
       .onItem().transform(ignore -> ImmutableExecutorEntity.builder()
           .status(ExecutorEntity.ExecutorEntityStatus.OK)
           .entityId("processId: " + entity.getId().toString())
