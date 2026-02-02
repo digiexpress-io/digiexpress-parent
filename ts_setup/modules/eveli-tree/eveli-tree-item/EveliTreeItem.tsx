@@ -5,7 +5,7 @@ import {
   ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 import { TreeNode } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName } from './useUtilityClasses';
+import { useUtilityClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName } from './useUtilityClasses';
 import { sortChildren } from './eveli-tree-item-helpers';
 
 export interface EveliTreeItemProps {
