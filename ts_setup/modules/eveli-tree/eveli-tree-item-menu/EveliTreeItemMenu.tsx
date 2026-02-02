@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, MenuItem, Divider, Typography, TextField, Box, Collapse, Chip } from '@mui/material';
+import { MenuItem, Divider, Typography, TextField, Box, Collapse, Chip } from '@mui/material';
 import {
   DeleteForever as DeleteIcon,
   Add as NewIcon,
@@ -10,9 +10,9 @@ import {
   ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
 import { TreeNode } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemMenuRoot } from './useUtilityClasses';
+import { useUtilityClasses, EveliTreeItemMenuRoot, MENU_WIDTH } from './useUtilityClasses';
+import { EveliTreeItemSharingPermissions } from './EveliTreeItemSharingPermissions';
 
-const MENU_WIDTH = 300;
 
 interface EveliTreeItemMenuProps {
   node: TreeNode | undefined;
@@ -65,26 +65,19 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
   }
 
   return (
-    <EveliTreeItemMenuRoot className={classes.root}>
-      <Menu open={props.open} onClose={props.onClose} anchorReference="anchorPosition" anchorPosition={props.anchorPosition || undefined}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        slotProps={{
-          transition: {
-            onExited: props.onExited,
-          },
-          paper: {
-            sx: {
-              backgroundColor: '#2d2d30',
-              color: '#cccccc',
-              border: '1px solid #3c3c3c',
-              minWidth: MENU_WIDTH,
-            }
-          }
-        }}
-      >
+    <EveliTreeItemMenuRoot className={classes.root} open={props.open} onClose={props.onClose}
+      anchorReference="anchorPosition"
+      anchorPosition={props.anchorPosition || undefined}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      slotProps={{
+        transition: {
+          onExited: props.onExited,
+        },
+      }}
+    >
       <Box className={classes.nodeNameContainer}>
         <Typography variant='subtitle2'>
           {props.node?.name}
@@ -181,9 +174,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       </MenuItem>
       <Collapse in={sharingExpanded}>
         <Box className={classes.expandedContent}>
-          <Typography variant='body2'>
-            info here
-          </Typography>
+          <EveliTreeItemSharingPermissions />
         </Box>
       </Collapse>
 
@@ -193,7 +184,6 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         <DeleteIcon fontSize='small' />
         Delete
       </MenuItem>
-      </Menu>
     </EveliTreeItemMenuRoot>
   );
 };

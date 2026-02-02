@@ -1,7 +1,8 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled } from '@mui/material';
+import { generateUtilityClass, styled, Menu } from '@mui/material';
 
 export const MUI_NAME = 'EveliTreeItemMenu';
+export const MENU_WIDTH = 350;
 
 export interface EveliTreeItemMenuClasses {
   root: string;
@@ -31,7 +32,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const EveliTreeItemMenuRoot = styled('div', {
+export const EveliTreeItemMenuRoot = styled(Menu, {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -48,8 +49,15 @@ export const EveliTreeItemMenuRoot = styled('div', {
   },
 })(({ theme }) => {
   return {
+    // Menu paper styles
+    '& .MuiPaper-root': {
+      backgroundColor: '#2d2d30',
+      color: '#cccccc',
+      border: '1px solid #3c3c3c',
+      minWidth: MENU_WIDTH,
+    },
     [`& .${MUI_NAME}-nodeNameContainer`]: {
-      padding: theme.spacing(2, 2, 1, 2),
+      padding: theme.spacing(0.5, 2, 0.5, 2),
       '& .MuiTypography-subtitle2': {
         color: '#cccccc',
         fontWeight: 500,
