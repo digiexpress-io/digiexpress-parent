@@ -42,6 +42,7 @@ import io.digiexpress.eveli.client.api.TaskCommand.TaskUpdateCommand;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -121,7 +122,7 @@ public interface TaskClient {
   interface MergeProcess {
     
     
-    MergeProcess status(ProcessStatus status);
+    MergeProcess status(GrimProcessStatus status);
     MergeProcess taskId(String taskId);
     MergeProcess formBody(String formBody);
     MergeProcess flowBody(String flowBody);
@@ -527,7 +528,7 @@ public interface TaskClient {
   @JsonDeserialize(as = ImmutableProcessInstance.class)
   interface ProcessInstance {
     Long getId();
-    ProcessStatus getStatus();
+    GrimProcessStatus getStatus();
     OffsetDateTime getCreated();
     OffsetDateTime getUpdated();
     
@@ -562,22 +563,4 @@ public interface TaskClient {
     // Additional tenant based configuration is provided
     @Nullable String getCockpitId();
   }
-  
-
-
-  enum ProcessStatus {
-    
-    CREATED,
-    ANSWERING,
-    ANSWERED, // 
-    
-    IN_PROGRESS,
-    WAITING,
-    COMPLETED,
-    REJECTED,
-    WAITING_FOR_SYNC, // complete event arrived from form, waiting to launch flow
-    EXPIRED
-  }
-  
-  
 }

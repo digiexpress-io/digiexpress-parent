@@ -24,11 +24,11 @@ import java.time.OffsetDateTime;
 
 import io.digiexpress.eveli.client.api.TaskClient.CreateProcess;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
@@ -87,7 +87,7 @@ public class CreateProcessVisitor implements CreateProcess {
           
           newProc
           .expiresAt(expiresAt)
-          .status(ProcessStatus.CREATED.name())
+          .status(GrimProcessStatus.CREATED)
           .expiresInSeconds(expiresInSeconds)
           .expiresAt(expiresAt)
           

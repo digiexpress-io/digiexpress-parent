@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.grim.test.config.DbTestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class SimpleGrimProcTest extends DbTestTemplate {
         .expiresAt(null)
         .expiresInSeconds(null)
         .expiresAt(null)
-        .status("xyz")
+        .status(GrimProcessStatus.ANSWERED)
         
         .questionnaireId("questionnaireId")
         .userId("userId")

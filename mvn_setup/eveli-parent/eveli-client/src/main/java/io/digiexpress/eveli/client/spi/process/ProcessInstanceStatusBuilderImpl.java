@@ -21,9 +21,9 @@ package io.digiexpress.eveli.client.spi.process;
  */
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstanceStatusBuilder;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,26 +37,26 @@ public class ProcessInstanceStatusBuilderImpl implements ProcessInstanceStatusBu
   public void answeredByQuestionnaire(String questionnaireId, String taskId) {
     final var process = processJPA.findByQuestionnaireId(questionnaireId);
     if (process.isPresent()) {
-      processJPA.save(process.get().setStatus(ProcessStatus.ANSWERED).setTaskId(taskId));
+      processJPA.save(process.get().setStatus(GrimProcessStatus.ANSWERED).setTaskId(taskId));
     } else {
       log.warn("No process for questionnaire id {}, ignoring.", questionnaireId);
     }
   }
   @Override
   public void inProgress(String id) {
-    setStatus(id, ProcessStatus.IN_PROGRESS);
+    setStatus(id, GrimProcessStatus.IN_PROGRESS);
   }
   @Override
   public void completed(String id) {
-    setStatus(id, ProcessStatus.COMPLETED);
+    setStatus(id, GrimProcessStatus.COMPLETED);
   }
   @Override
   public void rejected(String id) {
-    setStatus(id, ProcessStatus.REJECTED);
+    setStatus(id, GrimProcessStatus.REJECTED);
   }
   @Override
   public void answered(String id) {
-    setStatus(id, ProcessStatus.ANSWERED);
+    setStatus(id, GrimProcessStatus.ANSWERED);
   }
   @Override
   public void taskStatusChange(String taskId, TaskStatus taskStatus) {
@@ -66,12 +66,12 @@ public class ProcessInstanceStatusBuilderImpl implements ProcessInstanceStatusBu
       final var status = entity.getStatus();
       log.debug("Handling task {} status change to {} for process {} with status {}", taskId, taskStatus, entity.getId(), status);
       
-      if (status != ProcessStatus.COMPLETED && status != ProcessStatus.REJECTED) {
+      if (status != GrimProcessStatus.COMPLETED && status != GrimProcessStatus.REJECTED) {
         if (taskStatus == TaskStatus.COMPLETED) {
-          entity.setStatus(ProcessStatus.COMPLETED);
+          entity.setStatus(GrimProcessStatus.COMPLETED);
         }
         else if (taskStatus == TaskStatus.REJECTED) {
-          entity.setStatus(ProcessStatus.REJECTED);
+          entity.setStatus(GrimProcessStatus.REJECTED);
         }
         processJPA.save(entity);
       }
@@ -80,7 +80,7 @@ public class ProcessInstanceStatusBuilderImpl implements ProcessInstanceStatusBu
     }
   }
   
-  private void setStatus(String id, ProcessStatus status) {
+  private void setStatus(String id, GrimProcessStatus status) {
     processJPA.findById(Long.parseLong(id)).ifPresent(entity -> processJPA.save(entity.setStatus(status)));
   }
 }

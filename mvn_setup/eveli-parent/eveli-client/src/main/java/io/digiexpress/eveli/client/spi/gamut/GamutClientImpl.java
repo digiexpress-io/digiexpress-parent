@@ -26,11 +26,11 @@ import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -101,7 +101,7 @@ public class GamutClientImpl implements GamutClient {
           
           final var process = found.orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
                   
-          if (process.getStatus() != ProcessStatus.ANSWERING && process.getStatus() != ProcessStatus.CREATED) {
+          if (process.getStatus() != GrimProcessStatus.ANSWERING && process.getStatus() != GrimProcessStatus.CREATED) {
             throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
           }
           

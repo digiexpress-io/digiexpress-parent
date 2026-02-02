@@ -35,7 +35,6 @@ import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.ImmutableTaskCustomerAssignment;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
@@ -249,7 +248,7 @@ public class TaskMapper {
   public static ProcessInstance map(GrimProcess entity) {
     return ImmutableProcessInstance.builder()
         .id(Long.parseLong(entity.getId()))
-        .status(entity.getStatus() == null ? null : ProcessStatus.valueOf(entity.getStatus()))
+        .status(entity.getStatus() == null ? null : entity.getStatus())
         .questionnaireId(entity.getQuestionnaireId())
         .taskId(entity.getMissionId())
         .taskRef(entity.getMissionRef())

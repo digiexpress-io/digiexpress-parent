@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
 import io.resys.thena.datasource.ImmutableSql;
@@ -112,7 +113,7 @@ WHERE id = $9""").ln()
         .props(procs.stream()
             .map(proc -> Tuple.from(new Object[]{ 
                 proc.getUpdated(),
-                proc.getStatus(),
+                Optional.ofNullable(proc.getStatus()).map(e -> e.name()).orElse(null),
                 proc.getExpiresAt(),
                 proc.getExpiresInSeconds(),
                 proc.getMissionId(),
@@ -161,7 +162,7 @@ WHERE id = $9""").ln()
                 proc.getUpdated(),
                 proc.getFlowName(),
                 proc.getWorkflowName(),
-                proc.getStatus(),
+                Optional.ofNullable(proc.getStatus()).map(e -> e.name()).orElse(null),
                 proc.getExpiresAt(),
                 proc.getExpiresInSeconds(),
                 proc.getQuestionnaireId(),
@@ -392,7 +393,7 @@ WHERE id = $9""").ln()
           .formTagName(row.getString("form_tag_name"))
           .parentArticleName(row.getString("parent_article_name"))
           .questionnaireId(row.getString("questionnaire_id"))
-          .status(row.getString("status"))
+          .status(GrimProcessStatus.valueOf(row.getString("status")))
           .stencilTagName(row.getString("stencil_tag_name"))
           .missionId(row.getString("task_id"))
           .cockpitId(row.getString("cockpit_id"))
@@ -426,6 +427,83 @@ WHERE id = $9""").ln()
         .append(" from generate_series(1, $1)")
         .build())
         .props(Tuple.of(howMany))
+        .build();
+  }
+  
+  
+  
+
+  @Override
+  public SqlTuple deleteOneById(String id) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimProcesses())
+        .append(" WHERE id = $1")
+        .build())
+        .props(Tuple.of(id))
+        .build();
+  }
+
+  @Override
+  public SqlTuple findAllExpired(boolean includeFormBody) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()        
+        .append(" FROM ").append(options.getGrimProcesses()).append(" AS procs ")
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(procs.task_id = mission.id)").ln()
+        .append(
+"""
+  WHERE procs.expires_in_seconds is not null
+  and procs.created + make_interval(secs => procs.expires_in_seconds) < procs.expires_at
+  and procs.status IN($1)            
+"""
+        ).ln()
+        .build())
+        .props(Tuple.of(
+            new String[] {GrimProcessStatus.ANSWERED.name(), GrimProcessStatus.CREATED.name()}
+        ))
+        .build();
+  }
+
+  @Override
+  public SqlTuple findAllAnsweredFrom(OffsetDateTime pickupFrom, boolean includeFormBody) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()
+        .append(" FROM ").append(options.getGrimProcesses()).append(" AS procs ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(procs.task_id = mission.id)").ln()
+        
+        .append(" WHERE procs.status = ANY($1)").ln()
+        .append(" AND procs.task_id IS NULL").ln()
+        .append(" AND procs.created >= $2").ln()
+        
+        .build())
+        .props(Tuple.of(
+            new String[] {GrimProcessStatus.ANSWERED.name(), GrimProcessStatus.CREATED.name()},
+            pickupFrom
+        ))
+        .build();
+  }
+
+  @Override
+  public SqlTuple findOneByQuestionnaireId(String questionnaireId, boolean includeFormBody) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT ").append(getColumns(includeFormBody)).ln()
+        .append(" FROM ").append(options.getGrimProcesses()).append(" AS procs ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(procs.task_id = mission.id)").ln()
+        
+        .append(" WHERE procs.questionnaire_id = $1").ln()
+        
+        .build())
+        .props(Tuple.of(
+            questionnaireId
+        ))
         .build();
   }
 

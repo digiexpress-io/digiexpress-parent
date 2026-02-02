@@ -446,7 +446,7 @@ public class TaskClientImpl implements TaskClient {
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
             .includeFormBody(includeQuestionnaire)
-          .findOnOrAfter(startDate)
+          .findAllOnOrAfter(startDate)
           .map(TaskMapper::map);
       }
 
@@ -456,7 +456,7 @@ public class TaskClientImpl implements TaskClient {
         final var grim = config.getClient().grim(config.getTenantName());
         return grim.find().missionProcsQuery()
           .includeFormBody(includeQuestionnaire)
-          .findOnOrBeforeWithoutMission(olderThen)
+          .findAllOnOrBeforeWithoutMission(olderThen)
           .map(TaskMapper::map);
       }
 

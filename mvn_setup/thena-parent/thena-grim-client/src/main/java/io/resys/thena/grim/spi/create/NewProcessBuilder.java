@@ -22,6 +22,7 @@ package io.resys.thena.grim.spi.create;
 
 import java.time.OffsetDateTime;
 
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject;
@@ -135,7 +136,7 @@ public class NewProcessBuilder implements ThenaGrimNewObject.NewProcess {
     return this;
   }
   @Override
-  public NewProcess status(String status) {
+  public NewProcess status(GrimProcessStatus status) {
     this.process.status(status);
     return this;
   }

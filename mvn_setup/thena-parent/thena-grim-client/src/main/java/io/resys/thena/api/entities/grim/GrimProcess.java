@@ -44,7 +44,7 @@ public interface GrimProcess extends IsGrimObject, AnyTenantEntity {
    OffsetDateTime getUpdated();
    String getWorkflowName();
    
-   @Nullable String getStatus();
+   @Nullable GrimProcessStatus getStatus();
    @Nullable GrimProcessType getType();
    @Nullable OffsetDateTime getExpiresAt();
    @Nullable Long getExpiresInSeconds();  
@@ -68,6 +68,21 @@ public interface GrimProcess extends IsGrimObject, AnyTenantEntity {
 
    
    @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_PROCESS; };
+   
+
+   enum GrimProcessStatus {
+     
+     CREATED,
+     ANSWERING,
+     ANSWERED, // 
+     
+     IN_PROGRESS,
+     WAITING,
+     COMPLETED,
+     REJECTED,
+     WAITING_FOR_SYNC, // complete event arrived from form, waiting to launch flow
+     EXPIRED
+   }
    
    
    enum GrimProcessType {

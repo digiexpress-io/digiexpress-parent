@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
@@ -46,7 +47,7 @@ public interface ThenaGrimMergeObject {
     MergeProcess flowName(@Nullable String flowName);
     MergeProcess flowBody(@Nullable JsonObject flowBody);
     MergeProcess formBody(@Nullable JsonObject formBody);
-    MergeProcess status(@Nullable String status);
+    MergeProcess status(@Nullable GrimProcessStatus status);
     
     MergeProcess expiresAt(@Nullable OffsetDateTime expiresAt);
     MergeProcess expiresInSeconds(@Nullable Long expiresInSeconds);

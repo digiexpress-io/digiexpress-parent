@@ -33,8 +33,8 @@ import com.google.common.collect.ImmutableList;
 
 import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,8 +74,8 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   @Override
   public List<ProcessInstance> findAllAnswered() {
     return ImmutableList.<ProcessInstance>builder()
-        .addAll(processJPA.findAllByStatus(ProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList())
-        .addAll(processJPA.findAllByStatus(ProcessStatus.CREATED).stream().map(CreateProcessInstanceImpl::map).toList())
+        .addAll(processJPA.findAllByStatus(GrimProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList())
+        .addAll(processJPA.findAllByStatus(GrimProcessStatus.CREATED).stream().map(CreateProcessInstanceImpl::map).toList())
         .build();
   }
   @Override
@@ -86,8 +86,8 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   @Override
   public List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom) {
     return ImmutableList.<ProcessInstance>builder()
-        .addAll(processJPA.findAllByStatusFromGivenDate(ProcessStatus.ANSWERED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
-        .addAll(processJPA.findAllByStatusFromGivenDate(ProcessStatus.CREATED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
+        .addAll(processJPA.findAllByStatusFromGivenDate(GrimProcessStatus.ANSWERED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
+        .addAll(processJPA.findAllByStatusFromGivenDate(GrimProcessStatus.CREATED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
         .build();
   }
 }

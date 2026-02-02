@@ -31,8 +31,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 
 
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
@@ -63,16 +63,16 @@ FOR UPDATE
       " and status in :status")
   Page<ProcessEntity> searchProcesses(
       @Param("name") String name,
-      @Param("status") List<ProcessStatus> status,
+      @Param("status") List<GrimProcessStatus> status,
       @Param("userId") String userId,
       Pageable page);
 
 
   @Query(value="select p from ProcessEntity p where status = :status and taskId is null")
-  List<ProcessEntity> findAllByStatus(ProcessStatus status);
+  List<ProcessEntity> findAllByStatus(GrimProcessStatus status);
   
   @Query(value="select p from ProcessEntity p where status = :status and taskId is null and created > :created")
-  List<ProcessEntity> findAllByStatusFromGivenDate(ProcessStatus status, OffsetDateTime created);
+  List<ProcessEntity> findAllByStatusFromGivenDate(GrimProcessStatus status, OffsetDateTime created);
   
   
 

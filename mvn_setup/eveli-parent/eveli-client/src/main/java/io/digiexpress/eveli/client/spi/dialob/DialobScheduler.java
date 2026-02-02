@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +61,7 @@ public class DialobScheduler {
             .commitAuthor(DialobScheduler.class.getSimpleName())
             .commitMessage("Rejecting expired")
             .id(proc.getId().toString())
-            .merge((currentState, merge) -> merge.status(ProcessStatus.EXPIRED).build())
+            .merge((currentState, merge) -> merge.status(GrimProcessStatus.EXPIRED).build())
             .build().onFailure().recoverWithNull();
         })
         

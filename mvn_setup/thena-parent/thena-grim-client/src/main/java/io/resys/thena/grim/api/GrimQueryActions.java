@@ -63,17 +63,19 @@ public interface GrimQueryActions {
     // force form to load
     MissionProcsQuery includeFormBody(boolean includeFormBody);
     
-    Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
-    Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
+    Uni<GrimProcess> getOneById(String processId);
+
     Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
     Uni<Optional<GrimProcess>> findOneById(String processId);
-    Uni<GrimProcess> getOneById(String processId);
-    Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
     Uni<Optional<GrimProcess>> findOneByQuestionnaireId(String questionnaireId);
     
     Multi<GrimProcess> findAll();
     Multi<GrimProcess> findAllExpired();
     Multi<GrimProcess> findAllAnsweredFrom(OffsetDateTime pickupFrom);
+    Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
+    
+    Multi<GrimProcess> findAllOnOrAfter(OffsetDateTime onOrAfter);
+    Multi<GrimProcess> findAllOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
   }
   
   

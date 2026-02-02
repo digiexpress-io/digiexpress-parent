@@ -44,11 +44,11 @@ import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ImmutableUserSubAction;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -286,7 +286,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .inputContextId(process.getArticleName())
         .inputParentContextId(process.getParentArticleName())
         .formId(process.getQuestionnaireId() == null ? null : process.getQuestionnaireId())
-        .formInProgress(process.getStatus() == ProcessStatus.ANSWERING || process.getStatus() == ProcessStatus.CREATED)        
+        .formInProgress(process.getStatus() == GrimProcessStatus.ANSWERING || process.getStatus() == GrimProcessStatus.CREATED)        
         .taskRef(taskRef)
         .taskStatus(task.map(t -> t.getStatus().name()).orElse(null))
         .taskCreated(task.map(t -> t.getCreated()).orElse(null))

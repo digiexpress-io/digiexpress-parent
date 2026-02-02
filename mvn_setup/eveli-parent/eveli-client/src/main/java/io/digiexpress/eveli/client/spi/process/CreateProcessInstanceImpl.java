@@ -25,10 +25,10 @@ import java.time.OffsetDateTime;
 import io.digiexpress.eveli.client.api.ImmutableProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +72,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
         
     final var entity = processRepository.save(new ProcessEntity()
       .setExpiresAt(expiresAt)
-      .setStatus(ProcessStatus.CREATED)
+      .setStatus(GrimProcessStatus.CREATED)
       .setExpiresInSeconds(expiresInSeconds)
       .setExpiresAt(expiresAt)
       

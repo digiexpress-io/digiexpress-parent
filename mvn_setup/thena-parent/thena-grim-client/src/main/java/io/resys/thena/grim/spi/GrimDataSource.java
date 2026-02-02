@@ -107,9 +107,15 @@ public interface GrimDataSource extends TenantDataSource {
     Uni<GrimProcess> getOneById(String id);
     Uni<Optional<GrimProcess>> findOneById(String id);
     Uni<Optional<GrimProcess>> findOneByMissionId(String missionId);
-    Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter);
-    Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
+    Uni<Optional<GrimProcess>> findOneByQuestionnaireId(String questionnaireId);
+
+    Multi<GrimProcess> findAll();
+    Multi<GrimProcess> findAllExpired();
+    Multi<GrimProcess> findAllOnOrAfter(OffsetDateTime onOrAfter);
+    Multi<GrimProcess> findAllOnOrBeforeWithoutMission(OffsetDateTime onOrBefore);
     Multi<GrimProcess> findAllNotArchivedyUserId(String userId);
+    Multi<GrimProcess> findAllAnsweredFrom(OffsetDateTime pickupFrom);
+    
   }
   
   interface InternalCommitQuery {

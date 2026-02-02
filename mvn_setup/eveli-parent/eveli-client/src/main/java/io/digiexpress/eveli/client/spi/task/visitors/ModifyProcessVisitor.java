@@ -7,13 +7,13 @@ import java.util.function.Function;
 import io.digiexpress.eveli.client.api.TaskClient.MergeProcess;
 import io.digiexpress.eveli.client.api.TaskClient.ModifyProcess;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject;
 import io.resys.thena.api.envelope.CommitResultStatus;
@@ -110,7 +110,7 @@ public class ModifyProcessVisitor implements ModifyProcess {
     private ThenaGrimMergeObject.MergeProcess delegate;
     private ProcessInstance currentState;
     
-    private Optional<ProcessStatus> status;
+    private Optional<GrimProcessStatus> status;
     private Optional<String> taskId;
     private Optional<String> formBody;
     private Optional<String> flowBody;
@@ -123,7 +123,7 @@ public class ModifyProcessVisitor implements ModifyProcess {
     } 
     
     @Override
-    public MergeProcess status(ProcessStatus status) {
+    public MergeProcess status(GrimProcessStatus status) {
       TaskAssert.notNull(status, () -> "status can't be null!");
       this.status = Optional.ofNullable(status);
       return this;
@@ -157,7 +157,7 @@ public class ModifyProcessVisitor implements ModifyProcess {
     @Override
     public ProcessInstance build() {
       if(status != null) {
-        delegate.status(status.get().name());
+        delegate.status(status.get());
       }
       if(taskId != null) {
         delegate.missionId(taskId.orElse(null));

@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import io.resys.thena.api.entities.grim.GrimProcess;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.ImmutableGrimProcess;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeProcess;
 import io.resys.thena.support.RepoAssert;
@@ -41,7 +42,7 @@ public class MergeProcImpl implements MergeProcess {
   private Optional<String> flowName;
   private Optional<JsonObject> flowBody;
   private Optional<JsonObject> formBody;
-  private Optional<String> status;
+  private Optional<GrimProcessStatus> status;
   private Optional<OffsetDateTime> expiresAt;
   private Optional<Long> expiresInSeconds;  
   private boolean isUpdated = false;
@@ -74,7 +75,7 @@ public class MergeProcImpl implements MergeProcess {
     return this;
   }
   @Override
-  public MergeProcess status(String status) {
+  public MergeProcess status(GrimProcessStatus status) {
     this.status = Optional.ofNullable(status);
     return this;
   }

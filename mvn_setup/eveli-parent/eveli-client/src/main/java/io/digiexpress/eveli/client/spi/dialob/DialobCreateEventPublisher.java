@@ -36,7 +36,6 @@ import io.digiexpress.eveli.client.api.ImmutableAddFormToCustomerAssignmentComma
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.AddFormToCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCustomerAssignment;
@@ -47,6 +46,7 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider;
 import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitIdSupplier;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.AllArgsConstructor;
@@ -123,7 +123,7 @@ public class DialobCreateEventPublisher {
         .commitAuthor(event.getProcessId())
         .commitMessage("Invalidating process")
         .id(event.getProcessId())
-        .merge((current, merger) -> merger.status(ProcessStatus.REJECTED).build())
+        .merge((current, merger) -> merger.status(GrimProcessStatus.REJECTED).build())
         .build()
         .subscribeAsCompletionStage()
         .toCompletableFuture();

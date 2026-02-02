@@ -57,7 +57,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
   }
   
   @Override
-  public Multi<GrimProcess> findOnOrAfter(OffsetDateTime onOrAfter) {
+  public Multi<GrimProcess> findAllOnOrAfter(OffsetDateTime onOrAfter) {
     final var sql = registry.processes().findOnOrAfter(onOrAfter, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findOnOrAfter query, with props: {} \r\n{}", 
@@ -73,7 +73,7 @@ public class InternalProcQueryImpl implements InternalProcQuery {
   }
 
   @Override
-  public Multi<GrimProcess> findOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
+  public Multi<GrimProcess> findAllOnOrBeforeWithoutMission(OffsetDateTime onOrBefore) {
     final var sql = registry.processes().findOnOrBeforeWithoutMission(onOrBefore, includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findOnOrBeforeWithoutMission query, with props: {} \r\n{}", 
@@ -190,6 +190,73 @@ public class InternalProcQueryImpl implements InternalProcQuery {
           }
           return null;
         })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+  
+  @Override
+  public Uni<Optional<GrimProcess>> findOneByQuestionnaireId(String questionnaireId) {
+    final var sql = registry.processes().findOneByQuestionnaireId(questionnaireId, includeFormBody);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findOneByQuestionnaireId query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform(rowset -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return Optional.of(it.next());
+          }
+          return Optional.<GrimProcess>empty();
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+  @Override
+  public Multi<GrimProcess> findAll() {
+    final var sql = registry.processes().findAll(includeFormBody);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findAll query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute()
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+  @Override
+  public Multi<GrimProcess> findAllExpired() {
+    final var sql = registry.processes().findAllExpired(includeFormBody);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findAllExpired query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute()
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
+  }
+  @Override
+  public Multi<GrimProcess> findAllAnsweredFrom(OffsetDateTime pickupFrom) {
+    final var sql = registry.processes().findAllAnsweredFrom(pickupFrom, includeFormBody);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalProcQueryImpl.findAllAnsweredFrom query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.processes().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));
   }
 }

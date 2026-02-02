@@ -46,7 +46,6 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommand;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
@@ -56,6 +55,7 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.test.BaseEnvir;
 import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.vertx.core.json.JsonObject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -193,7 +193,7 @@ public abstract class FeedbackEnvirSetup {
         .commitMessage("")
         .id(process.getId().toString())
         .merge((current, merger) -> merger
-            .status(ProcessStatus.ANSWERED)
+            .status(GrimProcessStatus.ANSWERED)
             .formBody(formBody.toString()).build())
         .build()
         .await().atMost(Duration.ofMinutes(1));

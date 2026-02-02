@@ -35,9 +35,15 @@ public interface GrimProcessRegistry extends ThenaRegistryService<GrimProcess, i
   ThenaSqlClient.Sql getNextSequence();
   ThenaSqlClient.SqlTuple getNextSequence(long howMany);
   
+  
+  
+  ThenaSqlClient.SqlTuple deleteOneById(String id);
   ThenaSqlClient.SqlTuple getById(String id, boolean includeFormBody);
   ThenaSqlClient.SqlTuple getOneByIdWithLock(String id, boolean includeFormBody);
+  ThenaSqlClient.SqlTuple findAllExpired(boolean includeFormBody);
+  ThenaSqlClient.SqlTuple findAllAnsweredFrom(OffsetDateTime pickupFrom, boolean includeFormBody);
   
+  ThenaSqlClient.SqlTuple findOneByQuestionnaireId(String questionnaireId, boolean includeFormBody);
   ThenaSqlClient.SqlTuple findOneByMissionId(String missionId, boolean includeFormBody);
   ThenaSqlClient.SqlTuple findNotArchivedByUserId(String userId, boolean includeFormBody);
   ThenaSqlClient.SqlTuple findOnOrAfter(OffsetDateTime createdOnOrAfter, boolean includeFormBody);

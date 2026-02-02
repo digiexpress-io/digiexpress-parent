@@ -26,7 +26,6 @@ import java.util.Optional;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.ProcAndQuestionnaireToReject;
 import io.digiexpress.eveli.client.spi.batch.reject_stale_forms.BatchJob_RejectStaleForms_ProcessInstance.RejectStaleFormsConfig;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -38,6 +37,7 @@ import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorResult;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -90,7 +90,7 @@ public class BatchJob_RejectStaleForms_ProcessInstance implements Executor<ProcA
         .commitAuthor(BatchJob_RejectStaleForms_ProcessInstance.class.getSimpleName())
         .commitMessage("Older then: " + config.getAgeInMonths() + " months")
         .id(entity.getProcess().getId().toString())
-        .merge((current, merger) -> merger.status(ProcessStatus.EXPIRED).build())
+        .merge((current, merger) -> merger.status(GrimProcessStatus.EXPIRED).build())
         .build()
         .onItem().transform((rejected) -> {
           

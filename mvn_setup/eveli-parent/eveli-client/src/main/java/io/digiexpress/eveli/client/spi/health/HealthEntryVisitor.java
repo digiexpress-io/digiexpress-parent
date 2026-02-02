@@ -56,7 +56,7 @@ public class HealthEntryVisitor {
     final var config = taskClient.unwrap().getConfig();
     final var grim = config.getClient().grim(config.getTenantName());
     
-    return grim.find().missionProcsQuery().findOnOrAfter(OffsetDateTime.now().minusMonths(6)).collect().asList()
+    return grim.find().missionProcsQuery().findAllOnOrAfter(OffsetDateTime.now().minusMonths(6)).collect().asList()
       .onItem().transformToUni(procs -> {
         final var taskIds = procs.stream().map(e -> e.getMissionId()).toList();
         return Uni.combine().all().unis(

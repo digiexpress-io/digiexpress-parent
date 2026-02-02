@@ -25,10 +25,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
-import jakarta.annotation.Nullable;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 // Generic interfaces for create/update/delete operations 
 public interface ThenaGrimNewObject {
@@ -103,7 +104,7 @@ public interface ThenaGrimNewObject {
     NewProcess stencilTagName(@Nullable String stencilTagName);
     NewProcess wrenchTagName(@Nullable String wrenchTagName);
     
-    NewProcess status(String status);
+    NewProcess status(GrimProcessStatus status);
     NewProcess type(GrimProcessType type);
     
     void build();

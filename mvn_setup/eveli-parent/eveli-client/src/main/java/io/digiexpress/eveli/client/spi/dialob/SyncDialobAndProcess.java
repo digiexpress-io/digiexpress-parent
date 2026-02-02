@@ -13,13 +13,13 @@ import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
 import io.digiexpress.eveli.client.api.ImmutableCompleteCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
-import io.digiexpress.eveli.client.api.TaskClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -100,7 +100,7 @@ public class SyncDialobAndProcess {
           })
           .merge((currentState, merge) -> merge
               .formBody(toJsonString(questionnaire))
-              .status(ProcessStatus.COMPLETED)
+              .status(GrimProcessStatus.COMPLETED)
               .build())
           .build();
         }
@@ -133,7 +133,7 @@ public class SyncDialobAndProcess {
               merge.skip();
               return;
             }
-            merge.status(ProcessStatus.ANSWERED).build();
+            merge.status(GrimProcessStatus.ANSWERED).build();
           })
           .build();
       });
