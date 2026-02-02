@@ -94,7 +94,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
           ImmutableUpsertFeedbackRankingCommand.builder()
           .rating(1)
           .replyIdOrCategoryId(feedback.getId())
-          .build(), "BOB");
+          .build(), "BOB")
+          .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -114,7 +115,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
           ImmutableUpsertFeedbackRankingCommand.builder()
           .rating(5)
           .replyIdOrCategoryId(feedback.getId())
-          .build(), "BOB");
+          .build(), "BOB")
+          .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -123,7 +125,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
         .stream()
         .filter(e -> e.getId().equals(feedback.getId()))
         .findFirst()
-        .get();
+        .get()
+        ;
       
       Assertions.assertEquals(0, ratedFeedback.getThumbsDownCount());
       Assertions.assertEquals(1, ratedFeedback.getThumbsUpCount());
@@ -146,7 +149,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
           ImmutableUpsertFeedbackRankingCommand.builder()
           .rating(null)
           .replyIdOrCategoryId(feedback.getId())
-          .build(), "BOB");
+          .build(), "BOB")
+          .await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -161,7 +165,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
       Assertions.assertEquals(0, ratedFeedback.getThumbsUpCount());
     }
     
-    final var history = feedbackClient.queryHistory().findAll().collect().asList().await().atMost(Duration.ofMinutes(1));
+    final var history = feedbackClient.queryHistory().findAll().collect().asList()
+        .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(4, history.size());
     
     

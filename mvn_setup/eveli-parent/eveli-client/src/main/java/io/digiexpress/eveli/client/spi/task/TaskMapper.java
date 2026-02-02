@@ -262,6 +262,7 @@ public class TaskMapper {
         .anon(Boolean.TRUE.equals(entity.getAnon()))
         .formName(entity.getFormName())
         .flowName(entity.getFlowName())
+        .questionnaire(entity.getFormBody())
         
         .formTagName(entity.getFormTagName())
         .stencilTagName(entity.getStencilTagName())

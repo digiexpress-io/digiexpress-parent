@@ -94,6 +94,7 @@ public interface TaskClient {
     CreateProcess formName(String formName);
     CreateProcess flowName(String flowName);
 
+    CreateProcess formBody(@Nullable String formBody);
     CreateProcess formTagName(String formTagName);
     CreateProcess stencilTagName(String stencilTagName);
     CreateProcess wrenchTagName(String wrenchTagName);

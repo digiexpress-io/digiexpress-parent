@@ -32,6 +32,7 @@ import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessStatus;
 import io.resys.thena.api.entities.grim.GrimProcess.GrimProcessType;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -51,6 +52,7 @@ public class CreateProcessVisitor implements CreateProcess {
   private boolean anon = false;
   private boolean customerAssignment = false;
   private String formName;
+  private String formBody;
   private String flowName;
   private String taskId;
   private String formTagName;
@@ -101,6 +103,7 @@ public class CreateProcessVisitor implements CreateProcess {
           .formName(formName)
           .flowName(flowName)
           .missionId(taskId)
+          .formBody(formBody == null ? null : new JsonObject(formBody))
           .cockpitId(cockpitId)
           
           .formTagName(formTagName)

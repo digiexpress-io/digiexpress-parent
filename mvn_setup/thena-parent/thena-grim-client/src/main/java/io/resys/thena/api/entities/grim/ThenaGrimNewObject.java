@@ -95,6 +95,7 @@ public interface ThenaGrimNewObject {
     NewProcess articleName(@Nullable String articleName);
     NewProcess parentArticleName(@Nullable String parentArticleName);
     NewProcess formName(@Nullable String formName);
+    NewProcess formBody(@Nullable JsonObject formBody);
     NewProcess flowName(@Nullable String flowName);
     NewProcess missionId(@Nullable String missionId);
     NewProcess cockpitId(@Nullable String cockpitId);

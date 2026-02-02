@@ -94,7 +94,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
           .subLabelKey("bad")
           .subLabelValue("label for super bad")
           .customerTitle("My opinion to you: a poem")
-          .build(), "JOHN");
+          .build(), "JOHN").await().atMost(Duration.ofMinutes(1));
       
       Assertions.assertNotNull(updatedReply, "Can't find modified feedback reply!");
       

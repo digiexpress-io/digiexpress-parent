@@ -103,11 +103,9 @@ SET
   expires_at = $3,
   expires_in_seconds = $4,
   task_id = $5,
-  
   flow_name = $6,
-  flow_body = $7,
-  
-  form_body = $8
+  flow_body = COALESCE($7, flow_body),
+  form_body = COALESCE($8, form_body)
 WHERE id = $9""").ln()
         .build())
         .props(procs.stream()
@@ -138,6 +136,7 @@ WHERE id = $9""").ln()
   created,
   updated,
   flow_name,
+  flow_body,
   workflow_name,
   status,
   expires_at,
@@ -149,10 +148,11 @@ WHERE id = $9""").ln()
   article_name,
   parent_article_name,
   form_name,
+  form_body,
   form_tag_name,
   stencil_tag_name,
   wrench_tag_name)""").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)").ln()
         .build())
         .props(procs.stream()
             .map(proc -> Tuple.from(new Object[]{
@@ -161,6 +161,7 @@ WHERE id = $9""").ln()
                 proc.getCreated(),
                 proc.getUpdated(),
                 proc.getFlowName(),
+                proc.getFlowBody(),
                 proc.getWorkflowName(),
                 Optional.ofNullable(proc.getStatus()).map(e -> e.name()).orElse(null),
                 proc.getExpiresAt(),
@@ -172,6 +173,7 @@ WHERE id = $9""").ln()
                 proc.getArticleName(),
                 proc.getParentArticleName(),
                 proc.getFormName(),
+                proc.getFormBody(),
                 proc.getFormTagName(),
                 proc.getStencilTagName(),
                 proc.getWrenchTagName()
@@ -350,26 +352,26 @@ WHERE id = $9""").ln()
     
     return optional + 
 """
-  id,
-  type,
-  article_name,
-  created,
-  expires_at,
-  expires_in_seconds,
-  flow_name,
-  form_name,
-  form_tag_name,
-  parent_article_name,
-  questionnaire_id,
-  status,
-  stencil_tag_name,
-  task_id,
-  cockpit_id,
-  updated,
-  user_id,
-  workflow_name,
-  wrench_tag_name,
-  anon,
+  procs.id,
+  procs.type,
+  procs.article_name,
+  procs.created,
+  procs.expires_at,
+  procs.expires_in_seconds,
+  procs.flow_name,
+  procs.form_name,
+  procs.form_tag_name,
+  procs.parent_article_name,
+  procs.questionnaire_id,
+  procs.status,
+  procs.stencil_tag_name,
+  procs.task_id,
+  procs.cockpit_id,
+  procs.updated,
+  procs.user_id,
+  procs.workflow_name,
+  procs.wrench_tag_name,
+  procs.anon,
   mission.mission_ref
 """;
   }

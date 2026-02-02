@@ -31,6 +31,7 @@ import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.grim.spi.ImmutableGrimBatchMissions;
 import io.resys.thena.grim.spi.commitlog.GrimCommitBuilder;
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.JsonObject;
 
 public class NewProcessBuilder implements ThenaGrimNewObject.NewProcess {
   private final GrimCommitBuilder logger;
@@ -59,7 +60,11 @@ public class NewProcessBuilder implements ThenaGrimNewObject.NewProcess {
   public void build() {
     this.built = true;
   }
-
+  @Override
+  public NewProcess formBody(JsonObject formBody) {
+    this.process.formBody(formBody);
+    return this;
+  }
   @Override
   public NewProcess workflowName(String workflowName) {
     this.process.workflowName(workflowName);
@@ -154,5 +159,6 @@ public class NewProcessBuilder implements ThenaGrimNewObject.NewProcess {
     this.batch.addProcs(objective);
     return this.batch.build();
   }
+
 
 }
