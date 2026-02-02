@@ -71,7 +71,6 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       fontSize: '13px',
       display: 'flex',
       alignItems: 'center',
-      paddingTop: theme.spacing(0.5),
       gap: '8px',
       '&:hover': {
         backgroundColor: '#3c3c3c',

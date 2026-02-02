@@ -16,6 +16,7 @@ import {
 import { TreeNode } from '../../eveli-tree-api';
 import { useUtilityClasses, EveliTreeItemMenuRoot, MENU_WIDTH } from './useUtilityClasses';
 import { EveliTreeItemSharingPermissions } from './EveliTreeItemSharingPermissions';
+import { EveliTreeItemHistory } from './EveliTreeItemHistory';
 
 
 interface EveliTreeItemMenuProps {
@@ -33,6 +34,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
   const [labelsExpanded, setLabelsExpanded] = React.useState(false);
   const [commentsExpanded, setCommentsExpanded] = React.useState(false);
   const [sharingExpanded, setSharingExpanded] = React.useState(false);
+  const [historyExpanded, setHistoryExpanded] = React.useState(false);
 
   // Reset all expander states when menu closes
   React.useEffect(() => {
@@ -40,6 +42,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       setLabelsExpanded(false);
       setCommentsExpanded(false);
       setSharingExpanded(false);
+      setHistoryExpanded(false);
     }
   }, [props.open]);
 
@@ -72,6 +75,10 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
     <EveliTreeItemMenuRoot className={classes.root} open={props.open} onClose={props.onClose}
       anchorReference="anchorPosition"
       anchorPosition={props.anchorPosition || undefined}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
       transformOrigin={{
         vertical: 'top',
         horizontal: 'left',
@@ -113,7 +120,6 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <Divider className={classes.divider} />
 
       {props.node?.configOptions && props.node.configOptions.length > 0 && (
-        <>
           <MenuItem className={classes.menuItem}>
             <ExpandMoreIcon fontSize='small' sx={{ visibility: 'hidden' }} />
             <div>
@@ -129,30 +135,19 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
                 }}>
                   {props.node.configOptions.map((config, index) => (
                     <React.Fragment key={index}>
-                      {config.devMode && (
-                        <Chip icon={<DevModeIcon />} label="Development" size='small' className={classes.label} />
-                      )}
-                      {config.assignableMode && (
-                        <Chip icon={<AssignmentIcon />} label="Assignable" size='small' className={classes.label} />
-                      )}
-                      {config.disabledMode && (
-                        <Chip icon={<DisabledIcon />} label="Disabled" size='small' className={classes.label} />
-                      )}
-                      {config.anonymousMode && (
-                        <Chip icon={<AnonymousIcon />} label="Anonymous" size='small' className={classes.label} />
-                      )}
+                      {config.devMode && (<Chip icon={<DevModeIcon />} label="Development" size='small' className={classes.label} />)}
+                      {config.assignableMode && (<Chip icon={<AssignmentIcon />} label="Assignable" size='small' className={classes.label} />)}
+                      {config.disabledMode && (<Chip icon={<DisabledIcon />} label="Disabled" size='small' className={classes.label} />)}
+                      {config.anonymousMode && (<Chip icon={<AnonymousIcon />} label="Anonymous" size='small' className={classes.label} />)}
                     </React.Fragment>
                   ))}
                 </Box>
               </div>
             </div>
-          </MenuItem>
-          <Divider className={classes.divider} />
-        </>
+        </MenuItem>
       )}
 
       <Divider className={classes.divider} />
-
 
       <MenuItem className={classes.menuItem} onClick={() => setLabelsExpanded(!labelsExpanded)}>
         {labelsExpanded ? <ExpandMoreIcon fontSize='small' /> : <ChevronRightIcon fontSize='small' />}
@@ -221,6 +216,18 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <Collapse in={sharingExpanded}>
         <Box className={classes.expandedContent}>
           <EveliTreeItemSharingPermissions />
+        </Box>
+      </Collapse>
+
+      <Divider className={classes.divider} />
+
+      <MenuItem className={classes.menuItem} onClick={() => setHistoryExpanded(!historyExpanded)}>
+        {historyExpanded ? <ExpandMoreIcon fontSize='small' /> : <ChevronRightIcon fontSize='small' />}
+        History
+      </MenuItem>
+      <Collapse in={historyExpanded}>
+        <Box className={classes.expandedContent}>
+          <EveliTreeItemHistory />
         </Box>
       </Collapse>
 
