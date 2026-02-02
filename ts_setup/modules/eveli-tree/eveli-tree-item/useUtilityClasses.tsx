@@ -243,7 +243,7 @@ export const EveliTreeItemRoot = styled('div', {
   };
 });
 
-export const getIcon = (node: TreeNode) => {
+export function getIcon(node: TreeNode) {
   const getBaseIcon = () => {
     switch (node.type) {
       case 'folder':
