@@ -458,7 +458,7 @@ WHERE id = $9""").ln()
 """
   WHERE procs.expires_in_seconds is not null
   and procs.created + make_interval(secs => procs.expires_in_seconds) < procs.expires_at
-  and procs.status IN($1)            
+  and procs.status = ANY($1)            
 """
         ).ln()
         .build())

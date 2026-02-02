@@ -234,12 +234,12 @@ public class InternalProcQueryImpl implements InternalProcQuery {
     final var sql = registry.processes().findAllExpired(includeFormBody);
     if(log.isDebugEnabled()) {
       log.debug("InternalProcQueryImpl.findAllExpired query, with props: {} \r\n{}", 
-          "",
+          sql.getPropsDeepString(),
           sql.getValue());
     }
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(registry.processes().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
         .transformToMulti(RowSet::toMulti)
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_PROCESS)));

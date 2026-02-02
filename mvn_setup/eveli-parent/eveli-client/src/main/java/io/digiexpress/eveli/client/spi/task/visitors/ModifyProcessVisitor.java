@@ -102,6 +102,7 @@ public class ModifyProcessVisitor implements ModifyProcess {
   }
   
   private void visitStep3_addNewProps(GrimProcess grimProcess, ThenaGrimMergeObject.MergeProcess mergeProc) {
+    internalMerger.start(mergeProc);
     onMerger.accept(internalMerger.getCurrentState(), internalMerger.start(mergeProc));
   }
   

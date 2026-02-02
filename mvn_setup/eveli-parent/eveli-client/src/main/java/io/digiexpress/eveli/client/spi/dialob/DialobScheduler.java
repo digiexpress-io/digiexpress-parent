@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.spi.dialob;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -42,19 +43,18 @@ public class DialobScheduler {
   private final SyncDialobAndProcess syncDialobAndProcess;
   
   @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
-  public CompletableFuture<?> executeFlow() {
-    return taskClient.queryTaskProcesess()
+  public void executeFlow() {
+    taskClient.queryTaskProcesess()
       .findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))
       .onItem().transformToUni(instance -> syncDialobAndProcess.executeFlowForInstance(instance, Optional.empty()))
       .concatenate()
       .collect().asList()
-      .subscribeAsCompletionStage()
-      .toCompletableFuture();
+      .await().atMost(Duration.ofHours(1));
   }
   
   @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
-  public CompletableFuture<?> rejectProcessesWithDeadline() {
-    return taskClient.queryTaskProcesess().findAllExpired()
+  public void rejectProcessesWithDeadline() {
+    taskClient.queryTaskProcesess().findAllExpired()
         .onItem().transformToUni(proc -> {
           log.warn("Expiry for process instance: {}, expiresAt: {}!", proc.getId(), proc.getExpiresAt());
           return taskClient.modifyProcess()
@@ -67,8 +67,7 @@ public class DialobScheduler {
         
         .concatenate()
         .collect().asList()
-        .subscribeAsCompletionStage()
-        .toCompletableFuture();
+        .await().atMost(Duration.ofHours(1));
   }
 }
 
