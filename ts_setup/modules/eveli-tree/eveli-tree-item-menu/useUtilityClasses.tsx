@@ -1,0 +1,146 @@
+import composeClasses from '@mui/utils/composeClasses';
+import { generateUtilityClass, styled } from '@mui/material';
+
+export const MUI_NAME = 'EveliTreeItemMenu';
+
+export interface EveliTreeItemMenuClasses {
+  root: string;
+  nodeNameContainer: string;
+  menuItem: string;
+  menuItemDelete: string;
+  divider: string;
+  textField: string;
+  label: string;
+  expandedContent: string;
+}
+
+export type EveliTreeItemMenuClassKey = keyof EveliTreeItemMenuClasses;
+
+export const useUtilityClasses = () => {
+  const slots = {
+    root: ['root'],
+    nodeNameContainer: ['nodeNameContainer'],
+    menuItem: ['menuItem'],
+    menuItemDelete: ['menuItemDelete'],
+    divider: ['divider'],
+    textField: ['textField'],
+    label: ['label'],
+    expandedContent: ['expandedContent']
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
+  return composeClasses(slots, getUtilityClass, {});
+};
+
+export const EveliTreeItemMenuRoot = styled('div', {
+  name: MUI_NAME,
+  slot: 'Root',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+      styles.nodeNameContainer,
+      styles.menuItem,
+      styles.menuItemDelete,
+      styles.divider,
+      styles.textField,
+      styles.label,
+      styles.expandedContent
+    ];
+  },
+})(({ theme }) => {
+  return {
+    [`& .${MUI_NAME}-nodeNameContainer`]: {
+      padding: theme.spacing(2, 2, 1, 2),
+      '& .MuiTypography-subtitle2': {
+        color: '#cccccc',
+        fontWeight: 500,
+      },
+      '& .MuiTypography-caption': {
+        color: '#888888',
+      },
+    },
+
+    [`& .${MUI_NAME}-menuItem`]: {
+      fontSize: '13px',
+      display: 'flex',
+      alignItems: 'center',
+      paddingTop: theme.spacing(0.5),
+      gap: '8px',
+      '&:hover': {
+        backgroundColor: '#3c3c3c',
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#cccccc',
+        fontSize: '16px',
+      },
+    },
+
+    [`& .${MUI_NAME}-menuItemDelete`]: {
+      fontSize: '13px',
+      color: '#f48771',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      '&:hover': {
+        backgroundColor: '#3c3c3c',
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#f48771',
+        fontSize: '16px',
+      },
+    },
+
+    [`& .${MUI_NAME}-divider`]: {
+      borderColor: '#3c3c3c',
+      marginTop: 0,
+      marginBottom: 0,
+    },
+
+    [`& .${MUI_NAME}-textField`]: {
+      width: '100%',
+      marginTop: '5px !important',
+      '& .MuiInputBase-root': {
+        backgroundColor: '#1e1e1e',
+        color: '#cccccc',
+        ...theme.typography.caption,
+        borderRadius: 0,
+        '& fieldset': {
+          borderColor: '#3c3c3c',
+          borderRadius: 0,
+        },
+        '&:hover fieldset': {
+          borderColor: '#555555',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: theme.palette.primary.main,
+        },
+      },
+      '& .MuiInputBase-input': {
+        color: '#cccccc',
+        padding: '0px',
+        '&::placeholder': {
+          color: '#888888',
+          opacity: 1,
+        },
+      },
+    },
+
+    [`& .${MUI_NAME}-label`]: {
+      backgroundColor: '#3c3c3c',
+      color: '#cccccc',
+      fontSize: '10px',
+      height: '18px',
+      border: '1px solid #555555',
+      '& .MuiChip-label': {
+        padding: '0 6px',
+      },
+    },
+
+    [`& .${MUI_NAME}-expandedContent`]: {
+      padding: theme.spacing(0, 2, 1, 2),
+      '& .MuiTypography-body2': {
+        color: '#888888',
+        fontStyle: 'italic',
+      },
+    },
+  };
+});

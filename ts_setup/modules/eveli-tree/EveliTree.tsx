@@ -7,8 +7,8 @@ import {
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
-import { EveliTreeItem, EveliTreeItemMenu } from './eveli-tree-item';
-
+import { EveliTreeItem } from './eveli-tree-item';
+import { EveliTreeItemMenu } from './eveli-tree-item-menu';
 
 
 export const EveliTree: React.FC = () => {
