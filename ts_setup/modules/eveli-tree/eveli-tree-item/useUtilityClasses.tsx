@@ -195,11 +195,6 @@ export const EveliTreeItemRoot = styled('div', {
     [`& .${MUI_NAME}-iconConfig`]: {
       fontSize: '14px',
       color: isDarkTheme ? '#ffa500' : '#d90429',
-      opacity: 0.8,
-      '& .MuiSvgIcon-root': {
-        fontSize: 'inherit',
-        color: 'inherit',
-      },
     },
   };
 });

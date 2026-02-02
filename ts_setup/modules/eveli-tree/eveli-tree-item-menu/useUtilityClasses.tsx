@@ -141,6 +141,10 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       '& .MuiChip-label': {
         padding: '0 6px',
       },
+      '& .MuiSvgIcon-root': {
+        fontSize: '14px',
+        color: '#ffa500'
+      }
     },
 
     [`& .${MUI_NAME}-expandedContent`]: {

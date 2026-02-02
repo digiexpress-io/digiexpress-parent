@@ -7,7 +7,11 @@ import {
   ContentCopy as CopyIcon,
   DriveFileRenameOutline as RenameIcon,
   ExpandMore as ExpandMoreIcon,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  Construction as DevModeIcon,
+  Assignment as AssignmentIcon,
+  Block as DisabledIcon,
+  VisibilityOff as AnonymousIcon,
 } from '@mui/icons-material';
 import { TreeNode } from '../../eveli-tree-api';
 import { useUtilityClasses, EveliTreeItemMenuRoot, MENU_WIDTH } from './useUtilityClasses';
@@ -107,6 +111,48 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       </MenuItem>
 
       <Divider className={classes.divider} />
+
+      {props.node?.configOptions && props.node.configOptions.length > 0 && (
+        <>
+          <MenuItem className={classes.menuItem}>
+            <ExpandMoreIcon fontSize='small' sx={{ visibility: 'hidden' }} />
+            <div>
+              <div>Configuration Options</div>
+              <div>
+                <Box sx={{
+                  mt: 0.5,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 0.5,
+                  maxWidth: MENU_WIDTH - 32,
+                  overflow: 'hidden'
+                }}>
+                  {props.node.configOptions.map((config, index) => (
+                    <React.Fragment key={index}>
+                      {config.devMode && (
+                        <Chip icon={<DevModeIcon />} label="Development" size='small' className={classes.label} />
+                      )}
+                      {config.assignableMode && (
+                        <Chip icon={<AssignmentIcon />} label="Assignable" size='small' className={classes.label} />
+                      )}
+                      {config.disabledMode && (
+                        <Chip icon={<DisabledIcon />} label="Disabled" size='small' className={classes.label} />
+                      )}
+                      {config.anonymousMode && (
+                        <Chip icon={<AnonymousIcon />} label="Anonymous" size='small' className={classes.label} />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </Box>
+              </div>
+            </div>
+          </MenuItem>
+          <Divider className={classes.divider} />
+        </>
+      )}
+
+      <Divider className={classes.divider} />
+
 
       <MenuItem className={classes.menuItem} onClick={() => setLabelsExpanded(!labelsExpanded)}>
         {labelsExpanded ? <ExpandMoreIcon fontSize='small' /> : <ChevronRightIcon fontSize='small' />}

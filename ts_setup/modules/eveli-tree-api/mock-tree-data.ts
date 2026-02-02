@@ -617,6 +617,9 @@ export const mockTreeData: TreeNode[] = [
         id: '520_sipoo-water',
         name: '520_sipoo-water',
         type: 'folder',
+        configOptions: [{
+          disabledMode: true,
+        }],
         children: [
           {
             id: 'main-water.article',
