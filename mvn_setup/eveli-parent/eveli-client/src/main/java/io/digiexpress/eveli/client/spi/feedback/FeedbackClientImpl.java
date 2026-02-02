@@ -45,17 +45,17 @@ public class FeedbackClientImpl implements FeedbackClient {
   
   @Override
   public Uni<Feedback> createOneFeedback(CreateFeedbackCommand command, String userId) {
-    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command);
+    return Uni.createFrom().item(new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command));
   }
 
   @Override
   public Uni<FeedbackRating> modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId) {
-    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
+    return Uni.createFrom().item(new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command));
   }
 
   @Override
   public Uni<Feedback> modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId) {
-    return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
+    return Uni.createFrom().item(new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands));
   }
 
   @Override

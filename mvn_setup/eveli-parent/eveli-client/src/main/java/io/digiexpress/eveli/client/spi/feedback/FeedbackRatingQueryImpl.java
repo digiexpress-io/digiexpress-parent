@@ -75,8 +75,12 @@ FROM
   
   @Override
   public Uni<FeedbackRating> getOneById(String ratingId) {
+    return Uni.createFrom().item(getOneByIdSync(ratingId));
+  }
+  
+  public FeedbackRating getOneByIdSync(String ratingId) {
     // find existing record
-    final var resp = jdbc.query(SELECT + " WHERE id = ?", (PreparedStatement ps) -> {
+    return jdbc.query(SELECT + " WHERE id = ?", (PreparedStatement ps) -> {
       ps.setObject(1, UUID.fromString(ratingId));
     }, (ResultSet rs) -> {
       if(rs.next()) {
@@ -84,8 +88,6 @@ FROM
       }
       throw ProcessAssert.fail(() -> "Can't find feedback_rating by id: '" + ratingId + "'!");
     });
-    
-    return Uni.createFrom().item(resp);
   }
   
   private FeedbackRating map(ResultSet rs) throws SQLException {

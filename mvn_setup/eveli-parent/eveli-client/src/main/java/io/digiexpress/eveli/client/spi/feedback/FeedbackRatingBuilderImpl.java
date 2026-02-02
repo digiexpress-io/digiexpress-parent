@@ -33,10 +33,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
-import io.smallrye.mutiny.Uni;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 public class FeedbackRatingBuilderImpl {
@@ -44,24 +44,23 @@ public class FeedbackRatingBuilderImpl {
   private final FeedbackWithHistory withHistory;
   private final String userId;
   
-  public Uni<FeedbackRating> execute(UpsertFeedbackRankingCommand command) {
-    return withHistory.withHistory(history -> 
-      upsert(command).onItem().transform((FeedbackRating upserted) -> {
-        history.append(command, upserted, userId);
-        return upserted;
-      })
-    );
+  public FeedbackRating execute(UpsertFeedbackRankingCommand command) {
+    return withHistory.withHistory(history -> {
+      final var upserted = upsert(command);
+      history.append(command, upserted, userId);
+      return upserted;
+    });
   }
   
-  private Uni<FeedbackRating> getRatingById(String ratingId) {
-    return new FeedbackRatingQueryImpl(jdbc).getOneById(ratingId);
+  private FeedbackRating getRatingById(String ratingId) {
+    return new FeedbackRatingQueryImpl(jdbc).getOneByIdSync(ratingId);
   }
   
   public static String maskCustomer(String customerId) {
     return DigestUtils.md5Hex(customerId).toUpperCase();
   }
   
-  private Uni<FeedbackRating> upsert(UpsertFeedbackRankingCommand command) {
+  private FeedbackRating upsert(UpsertFeedbackRankingCommand command) {
     final var customerId = maskCustomer(userId);
     
     String categoryId = getCategoryId(command).orElse(null);

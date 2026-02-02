@@ -34,7 +34,6 @@ import io.digiexpress.eveli.client.api.FeedbackClient.ModifyFeedbackCommandType;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackReplyCommand;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
-import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -43,34 +42,28 @@ public class ModifyFeedbackReplyImpl {
   private final FeedbackWithHistory withHistory;
   private final String userId;
 
-  public Uni<Feedback> apply(ModifyOneFeedbackCommand command) {
-    return new FeedbackQueryImpl(jdbc, withHistory)
-      .findOneById(command.getId())
-      .onItem().transform(beforeUpdate -> {
-        
-        final var replyId = beforeUpdate.get().getId();
-        
-        return withHistory.withHistory(history -> {
-          return jdbc.execute((Connection connection) -> {
-            
-            connection.setAutoCommit(false);
-            connection.beginRequest();
-            try {
-          
-              final var updated = applyCommand(command, replyId);
-              history.append(command, updated, userId);
-              return updated;
-          
-            } catch(Exception e) {
-              connection.rollback();
-              throw ProcessAssert.fail(e);
-            } finally {
-              JdbcUtils.closeConnection(connection);
-            }
-            
-          });      
-        });
-      });
+  public Feedback apply(ModifyOneFeedbackCommand command) {
+    final var beforeUpdate = new FeedbackQueryImpl(jdbc, withHistory).findOneByIdSync(command.getId());
+    final var replyId = beforeUpdate.get().getId();
+    
+    return withHistory.withHistory(history -> {
+      return jdbc.execute((Connection connection) -> {
+        connection.setAutoCommit(false);
+        connection.beginRequest();
+        try {
+      
+          final var updated = applyCommand(command, replyId);
+          history.append(command, updated, userId);
+          return updated;
+      
+        } catch(Exception e) {
+          connection.rollback();
+          throw ProcessAssert.fail(e);
+        } finally {
+          JdbcUtils.closeConnection(connection);
+        }
+      });      
+    });
   }
 
 
