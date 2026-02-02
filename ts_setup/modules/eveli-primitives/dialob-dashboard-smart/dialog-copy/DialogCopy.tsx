@@ -11,7 +11,7 @@ export interface DialogCopyProps {
 
 export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
   const intl = useIntl();
-  const { copyForm } = useDialobForms();
+  const { copyForm, openForm } = useDialobForms();
 
   const [label, setLabel] = React.useState("Copy of " + source.metadata.label);
   const [name, setName] = React.useState('');
@@ -28,11 +28,30 @@ export const DialogCopy: React.FC<DialogCopyProps> = ({ onClose, source }) => {
   }
 
   const handleSubmit = async () => {
-    setSubmitting(false);
-    const copy = await copyForm({ newLabel: label, newName: name, sourceFormId: source.id });
-    console.log('Form copied', copy);
+    if (isErrors) return;
+  
     setSubmitting(true);
-  }
+    try {
+      const copy = await copyForm({ newLabel: label, newName: name, sourceFormId: source.id });
+
+      if (copy) {
+        const copyId =
+          typeof copy === 'string'
+            ? copy
+            : (copy as any).id ?? (copy as any)._id ?? (copy as any).formId;
+      
+        const id = copyId ?? name;
+      
+        openForm({ ...(typeof copy === 'object' ? (copy as any) : {}), id } as any);
+      }      
+  
+      onClose();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };  
 
   return (
     <Dialog maxWidth='md' open={true} onClose={onClose}>

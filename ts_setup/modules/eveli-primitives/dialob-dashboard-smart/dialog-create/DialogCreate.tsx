@@ -29,7 +29,7 @@ export interface DialogCreateProps {
 
 export const DialogCreate: React.FC<DialogCreateProps> = ({ onClose }) => {
   const intl = useIntl();
-  const { createForm } = useDialobForms();  
+  const { createForm, openForm } = useDialobForms();
   
   const [label, setLabel] = React.useState('New form');
   const [name, setName] = React.useState('');
@@ -51,7 +51,19 @@ export const DialogCreate: React.FC<DialogCreateProps> = ({ onClose }) => {
   
     setSubmitting(true);
     try {
-      await createForm({ label, name, template });
+      const created = await createForm({ label, name, template });
+
+      if (created) {
+        const createdId =
+          typeof created === 'string'
+            ? created
+            : (created as any).id ?? (created as any)._id ?? (created as any).formId;
+      
+        const id = createdId ?? name;
+      
+        openForm({ ...(typeof created === 'object' ? (created as any) : {}), id } as any);
+      }
+       
       onClose();
     } catch (e) {
       console.error(e);
