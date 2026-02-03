@@ -6,7 +6,6 @@ import {
   Edit as EditIcon,
   ContentCopy as CopyIcon,
   DriveFileRenameOutline as RenameIcon,
-  ExpandMore as ExpandMoreIcon,
   ChevronRight as ChevronRightIcon,
   Construction as DevModeIcon,
   Assignment as AssignmentIcon,
@@ -78,10 +77,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
   }
 
   return (<>
-    <EveliTreeItemMenuRoot
-      className={classes.root}
-      open={props.open}
-      onClose={props.onClose}
+    <EveliTreeItemMenuRoot className={classes.root} open={props.open} onClose={props.onClose}
       anchorReference="anchorPosition"
       anchorPosition={props.anchorPosition || undefined}
       anchorOrigin={{
@@ -184,10 +180,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
-        className={classes.menuItem}
-        onClick={(e) => handleSubmenuOpen(e, 'comments')}
-      >
+      <MenuItem className={classes.menuItem} onClick={(e) => handleSubmenuOpen(e, 'comments')}>
         Comments
         <Box flex={1} />
         <ChevronRightIcon fontSize='small' />
@@ -195,10 +188,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
-        className={classes.menuItem}
-        onClick={(e) => handleSubmenuOpen(e, 'sharing')}
-      >
+      <MenuItem className={classes.menuItem} onClick={(e) => handleSubmenuOpen(e, 'sharing')}>
         Sharing and Permissions
         <Box flex={1} />
         <ChevronRightIcon fontSize='small' />
@@ -227,13 +217,9 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
         horizontal: 'left',
       }}
     >
-      <Box sx={{ width: MENU_WIDTH, p: 2 }}>
+      <Box sx={{ width: MENU_WIDTH + 40, pl: 1, pr: 1 }}>
         {openSubmenu === 'labels' && (
-          <TextField
-            className={classes.textField}
-            multiline
-            minRows={2}
-            maxRows={5}
+          <TextField className={classes.textField} multiline minRows={2} maxRows={5}
             value={labels}
             onChange={(e) => setLabels(e.target.value)}
             placeholder='Add labels...'
@@ -241,11 +227,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
           />
         )}
         {openSubmenu === 'comments' && (
-          <TextField
-            className={classes.textField}
-            multiline
-            minRows={2}
-            maxRows={5}
+          <TextField className={classes.textField} multiline minRows={2} maxRows={5}
             value={comments}
             onChange={(e) => setComments(e.target.value)}
             placeholder='Add comments...'

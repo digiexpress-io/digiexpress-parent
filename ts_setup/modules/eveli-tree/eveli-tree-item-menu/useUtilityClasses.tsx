@@ -55,6 +55,7 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       color: '#cccccc',
       border: '1px solid #3c3c3c',
       minWidth: MENU_WIDTH,
+      padding: theme.spacing(0.5)
     },
     [`& .${MUI_NAME}-nodeNameContainer`]: {
       padding: theme.spacing(0.5, 2, 0.5, 2),
@@ -71,7 +72,7 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       fontSize: '13px',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
+      gap: theme.spacing(1),
       '&:hover': {
         backgroundColor: '#3c3c3c',
       },
@@ -98,36 +99,20 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
 
     [`& .${MUI_NAME}-divider`]: {
       borderColor: '#3c3c3c',
-      marginTop: `0px !important`,
-      marginBottom: `0px !important`,
+      margin: '0px !important',
     },
 
     [`& .${MUI_NAME}-textField`]: {
       width: '100%',
-      marginTop: '5px !important',
       '& .MuiInputBase-root': {
         backgroundColor: '#1e1e1e',
         color: '#cccccc',
         ...theme.typography.caption,
         borderRadius: 0,
-        '& fieldset': {
-          borderColor: '#3c3c3c',
-          borderRadius: 0,
-        },
-        '&:hover fieldset': {
-          borderColor: '#555555',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: theme.palette.primary.main,
-        },
       },
       '& .MuiInputBase-input': {
         color: '#cccccc',
-        padding: '0px',
-        '&::placeholder': {
-          color: '#888888',
-          opacity: 1,
-        },
+        padding: '0px'
       },
     },
 

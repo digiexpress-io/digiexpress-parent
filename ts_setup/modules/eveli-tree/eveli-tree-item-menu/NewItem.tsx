@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem, Chip, OutlinedInput, styled } from '@mui/material';
+import { Box, TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, styled, Button } from '@mui/material';
 import {
   Construction as DevModeIcon,
   Assignment as AssignmentIcon,
@@ -21,43 +21,24 @@ export const NewItem: React.FC = () => {
     <>
       <StyledCaption variant='caption'>Create new item</StyledCaption>
       <StyledFormContainer>
-        <StyledTextField
-          label="Name"
-          size='small'
-          fullWidth
-        />
+        <Typography variant='caption'>Name</Typography>
+        <StyledTextField placeholder='Asset name' size='small' fullWidth />
 
-        <StyledTextField
-          label="Order Number"
-          size='small'
-          fullWidth
-        />
+        <Typography variant='caption'>3-digit order number</Typography>
+        <StyledTextField placeholder="100" size='small' fullWidth />
 
-        <StyledTextField
-          label="Description"
-          size='small'
-          fullWidth
-          multiline
-          rows={2}
-        />
+        <Typography variant='caption'>Description</Typography>
+        <StyledTextField placeholder="Description" size='small' fullWidth multiline minRows={2} maxRows={5} />
 
+        <Typography variant='caption'>Config options</Typography>
         <StyledFormControl fullWidth size='small'>
-          <StyledSelect
-            multiple
-            value={mockSelectedValues}
-            input={<OutlinedInput />}
+          <StyledSelect multiple value={mockSelectedValues} input={<OutlinedInput />}
             renderValue={(selected) => (
               <StyledChipContainer>
                 {(selected as string[]).map((value) => {
                   const option = configOptions.find(opt => opt.value === value);
                   return (
-                    <StyledChip
-                      key={value}
-                      icon={option?.icon}
-                      label={option?.label}
-                      size="small"
-                      variant='outlined'
-                    />
+                    <StyledChip key={value} icon={option?.icon} label={option?.label} size="small" variant='outlined' />
                   );
                 })}
               </StyledChipContainer>
@@ -74,29 +55,22 @@ export const NewItem: React.FC = () => {
           </StyledSelect>
         </StyledFormControl>
 
-        <StyledTextField
-          label="Labels"
-          size='small'
-          fullWidth
-          multiline
-          rows={2}
-          placeholder="Enter labels separated by commas"
-        />
+        <Typography variant='caption'>Labels</Typography>
+        <StyledTextField size='small' fullWidth placeholder="Select or add new labels" />
 
-        <StyledTextField
-          label="Comments"
-          size='small'
-          fullWidth
-          multiline
-          rows={3}
-        />
+        <Typography variant='caption'>Comments</Typography>
+        <StyledTextField placeholder="Notes about this asset" size='small' fullWidth multiline minRows={2} maxRows={5} />
 
+        <StyledSectionTitle variant='caption'>Sharing and Permissions</StyledSectionTitle>
         <StyledSectionBox>
-          <StyledSectionTitle variant='caption'>Sharing and Permissions</StyledSectionTitle>
           <StyledSectionContent variant='body2'>Put content here</StyledSectionContent>
         </StyledSectionBox>
+        <StyledButtonContainer>
+          <StyledCancelButton>Cancel</StyledCancelButton>
+          <StyledSaveButton>Save</StyledSaveButton>
+        </StyledButtonContainer>
       </StyledFormContainer>
-    </>
+    </ >
   );
 };
 
@@ -104,16 +78,16 @@ const StyledCaption = styled(Typography)(() => ({
   color: '#cccccc',
 }));
 
-const StyledFormContainer = styled(Box)(() => ({
+const StyledFormContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '12px',
+  gap: theme.spacing(0.5),
   padding: '8px 0',
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
-  marginTop: '5px !important',
+  marginTop: '0px',
   '& .MuiInputBase-root': {
     backgroundColor: '#1e1e1e',
     color: '#cccccc',
@@ -126,7 +100,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       borderColor: '#555555',
     },
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.primary.main,
+      border: `1px solid #cccccc`
     },
   },
   '& .MuiInputBase-input': {
@@ -139,6 +113,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       ...theme.typography.caption,
     },
   },
+  '& .MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputMultiline': {
+    padding: 'unset',
+  },
   '& .MuiInputLabel-root': {
     color: '#cccccc',
     ...theme.typography.caption,
@@ -147,7 +124,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   width: '100%',
-  marginTop: '5px !important',
+  marginTop: 'unset !important',
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -227,6 +204,7 @@ const StyledSectionBox = styled(Box)(() => ({
   border: '1px solid #555555',
   borderRadius: '4px',
   padding: '12px',
+  marginTop: '0px !important'
 }));
 
 const StyledSectionTitle = styled(Typography)(() => ({
@@ -237,4 +215,39 @@ const StyledSectionTitle = styled(Typography)(() => ({
 
 const StyledSectionContent = styled(Typography)(() => ({
   color: '#888888',
+}));
+
+const StyledButtonContainer = styled(Box)(() => ({
+  display: 'flex',
+  gap: '12px',
+  marginTop: '16px',
+  justifyContent: 'flex-end',
+}));
+
+const StyledCancelButton = styled(Button)(() => ({
+  backgroundColor: 'rgba(255, 0, 0, 0.1)',
+  color: '#ff4444',
+  border: '1px solid rgba(255, 0, 0, 0.3)',
+  borderRadius: '4px',
+  padding: '6px 16px',
+  textTransform: 'none',
+  fontSize: '12px',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 0, 0, 0.2)',
+  },
+}));
+
+const StyledSaveButton = styled(Button)(() => ({
+  backgroundColor: '#404040',
+  color: '#ffffff',
+  border: '1px solid #777777',
+  borderRadius: '4px',
+  padding: '6px 16px',
+  textTransform: 'none',
+  fontSize: '12px',
+  fontWeight: 500,
+  '&:hover': {
+    backgroundColor: '#505050',
+    borderColor: '#999999',
+  },
 }));
