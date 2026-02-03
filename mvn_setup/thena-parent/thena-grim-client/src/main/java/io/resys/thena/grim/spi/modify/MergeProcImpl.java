@@ -99,7 +99,9 @@ public class MergeProcImpl implements MergeProcess {
   @Override
   public GrimProcess build() {
     this.isBuilt = true;
-    
+    if(isSkipped) {
+      return this.grimProcPrevious;
+    }
     
     if(missionId != null) {
       final var newValue = missionId.orElse(null);

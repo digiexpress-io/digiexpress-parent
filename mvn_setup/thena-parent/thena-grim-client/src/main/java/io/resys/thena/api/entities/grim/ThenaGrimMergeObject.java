@@ -52,6 +52,7 @@ public interface ThenaGrimMergeObject {
     MergeProcess expiresAt(@Nullable OffsetDateTime expiresAt);
     MergeProcess expiresInSeconds(@Nullable Long expiresInSeconds);
     
+    boolean isSkipped();
     GrimProcess getCurrentState();
     GrimProcess skip(); //cancel the changes and revert to original
     GrimProcess build();

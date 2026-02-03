@@ -32,6 +32,7 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
 import io.digiexpress.eveli.client.api.ImmutableCompleteCustomerAssignmentCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.MergeProcess;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskAssignmentStatus;
@@ -139,22 +140,15 @@ public class SyncDialobAndProcess {
           .commitAuthor(SyncDialobAndProcess.class.getSimpleName())
           .commitMessage("Sync Form and Eveli")
           .id(init.getId().toString())
-          .onAnyUni((merger) -> executeWorkflow(questionnaire, merger.getCurrentState(), runtime)
+          .onAnyUni((merger) -> executeWorkflow(questionnaire, merger, runtime)
               .onItem().invoke(flow -> merger
-                .flowBody(toJsonString(flow))
+                .flowBody(flow.map(this::toJsonString).orElse("{}"))
                 .formBody(toJsonString(questionnaire))
               )
+              // ENABLE this for artificially testing tx locks .onItem().delayIt().by(Duration.ofMinutes(1))
           )
           .onTask((task, merger) -> task.stream().forEach(t -> merger.taskId(t.getId())))
-          .merge((currentState, merge) -> {
-  
-            if(currentState.getTaskId() != null) {
-              log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", currentState.getId());
-              merge.skip();
-              return;
-            }
-            merge.status(GrimProcessStatus.ANSWERED).build();
-          })
+          .merge((currentState, merge) -> merge.status(GrimProcessStatus.ANSWERED).build())
           .build();
       });
   }
@@ -195,7 +189,16 @@ public class SyncDialobAndProcess {
     }
   }
   
-  private Uni<FlowResult> executeWorkflow(Questionnaire questionnaire, ProcessInstance instance, EveliRuntime runtime) {
+  private Uni<Optional<FlowResult>> executeWorkflow(Questionnaire questionnaire, MergeProcess merger, EveliRuntime runtime) {
+    
+    final var instance = merger.getCurrentState();
+    
+    if(instance.getTaskId() != null) {
+      log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
+      merger.skip();
+      return Uni.createFrom().item(Optional::empty);
+    }
+    
     return Uni.createFrom().item(() -> {
       final var flowInput = new HashMap<String, Serializable>();
       flowInput.put("questionnaireId", instance.getQuestionnaireId());
@@ -219,7 +222,7 @@ public class SyncDialobAndProcess {
           .flow(flowName)
           .andGetBody();
       
-      return run;
+      return Optional.of(run);
     })
     .runSubscriptionOn(Infrastructure.getDefaultWorkerPool());
   }

@@ -182,6 +182,10 @@ public class ModifyProcessVisitor implements ModifyProcess {
 
     @Override
     public ProcessInstance build() {
+      if(delegate.isSkipped()) {
+        return currentState;
+      }
+      
       if(status != null) {
         delegate.status(status.get());
       }
