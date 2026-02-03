@@ -132,12 +132,16 @@ public class ModifyOneProcImpl implements ModifyOneProc {
     }
     
     final var merger = new MergeProcImpl(request);
-    modifyProc.accept(request, merger);
     
     return getAnyUni(tx, merger)
       .onItem().transformToUni(junk -> getMissionContainer(tx, merger))
       .onItem().transformToUni(container -> {
-        
+
+        if(onMission != null) {
+          onMission.accept(container, merger);
+        }
+
+        modifyProc.accept(request, merger);
         if(merger.isSkipped()) {
           return Uni.createFrom().item(
             ImmutableOneProcEnvelope.builder()
