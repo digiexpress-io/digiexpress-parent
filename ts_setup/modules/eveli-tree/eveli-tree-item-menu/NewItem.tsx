@@ -65,12 +65,13 @@ export const NewItem: React.FC = () => {
         <StyledSectionBox>
           <StyledSectionContent variant='body2'>Put content here</StyledSectionContent>
         </StyledSectionBox>
+
         <StyledButtonContainer>
           <StyledCancelButton>Cancel</StyledCancelButton>
           <StyledSaveButton>Save</StyledSaveButton>
         </StyledButtonContainer>
       </StyledFormContainer>
-    </ >
+    </>
   );
 };
 

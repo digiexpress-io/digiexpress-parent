@@ -72,7 +72,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       styles.sectionSub
     ];
   },
-})<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, shouldExpandUpward, isSubmenuOpen }) => {
+})<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, isSubmenuOpen }) => {
   return {
     // Menu paper styles
     '& .MuiPaper-root': {
@@ -267,11 +267,12 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
     },
 
     [`& .${MUI_NAME}-sectionSub`]: {
-      width: MENU_WIDTH,
+      width: MENU_WIDTH - MENU_PADDING,
       maxHeight: MENU_HEIGHT - MENU_PADDING,
-      padding: theme.spacing(2),
+      padding: theme.spacing(1),
       overflowY: 'auto',
       overflowX: 'hidden',
+      boxSizing: 'border-box',
     },
   };
 });
