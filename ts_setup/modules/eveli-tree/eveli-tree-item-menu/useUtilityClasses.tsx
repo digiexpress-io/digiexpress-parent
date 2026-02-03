@@ -13,6 +13,8 @@ export interface EveliTreeItemMenuClasses {
   menuItem: string;
   menuItemActive: string;
   menuItemDelete: string;
+  menuItemLocked: string;
+  menuItemUnlocked: string;
   divider: string;
   textField: string;
   label: string;
@@ -32,6 +34,8 @@ export const useUtilityClasses = () => {
     menuItem: ['menuItem'],
     menuItemActive: ['menuItemActive'],
     menuItemDelete: ['menuItemDelete'],
+    menuItemLocked: ['menuItemLocked'],
+    menuItemUnlocked: ['menuItemUnlocked'],
     divider: ['divider'],
     textField: ['textField'],
     label: ['label'],
@@ -56,6 +60,8 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       styles.menuItem,
       styles.menuItemActive,
       styles.menuItemDelete,
+      styles.menuItemLocked,
+      styles.menuItemUnlocked,
       styles.divider,
       styles.textField,
       styles.label,
@@ -116,7 +122,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
 
     [`& .${MUI_NAME}-menuItemDelete`]: {
       fontSize: '13px',
-      color: '#f48771',
+      color: '#ff6b6b',
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
@@ -124,7 +130,36 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
         backgroundColor: '#3c3c3c',
       },
       '& .MuiSvgIcon-root': {
-        color: '#f48771',
+        color: '#ff6b6b',
+        fontSize: '16px',
+      },
+    },
+
+    [`& .${MUI_NAME}-menuItemLocked`]: {
+      fontSize: '13px',
+      color: '#ffa500',
+      display: 'flex',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: '#3c3c3c',
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#ffa500',
+        fontSize: '16px',
+      },
+    },
+
+    [`& .${MUI_NAME}-menuItemUnlocked`]: {
+      fontSize: '13px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: '#3c3c3c',
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#cccccc',
         fontSize: '16px',
       },
     },

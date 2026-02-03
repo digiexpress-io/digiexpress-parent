@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemMenuRoot as Root } from './useUtilityClasses';
+import { useUtilityClasses, EveliTreeItemMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { EveliTreeItemMenuMain } from './EveliTreeItemMenuMain';
 import { EveliTreeItemMenuSub } from './EveliTreeItemMenuSub';
 
@@ -17,27 +17,45 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
   const classes = useUtilityClasses();
   const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
 
-  // Calculate if menu should expand upward based on available space
-  const shouldExpandUpward = React.useMemo(() => {
+  // Calculate optimal menu positioning based on available space
+  const positioningStrategy = React.useMemo(() => {
     if (!props.anchorPosition) {
-      return false;
+      return { vertical: 'center' as const, shouldExpandUpward: false };
     }
+
     const viewportHeight = window.innerHeight;
     const clickY = props.anchorPosition.top;
+    const menuHalfHeight = MENU_HEIGHT / 2;
+
+    const spaceAbove = clickY;
     const spaceBelow = viewportHeight - clickY;
 
-    // Choose the direction with more available space
-    const spaceAbove = clickY;
-    const shouldExpand = spaceAbove > spaceBelow;
+    // Check if we can center the menu (enough space above and below)
+    const canCenter = spaceAbove >= menuHalfHeight && spaceBelow >= menuHalfHeight;
+
+    let vertical: 'center' | 'top' | 'bottom';
+    let shouldExpandUpward: boolean;
+
+    if (canCenter) {
+      vertical = 'center';
+      shouldExpandUpward = false; // Not relevant for center positioning
+    } else {
+      // Fall back to up/down positioning based on available space
+      shouldExpandUpward = spaceAbove > spaceBelow;
+      vertical = shouldExpandUpward ? 'bottom' : 'top';
+    }
 
     // Debug: Remove this once working
     console.log('Smart positioning debug:', {
-      shouldExpandUpward: shouldExpand,
+      vertical,
+      shouldExpandUpward,
+      canCenter,
       spaceAbove,
-      spaceBelow
+      spaceBelow,
+      menuHalfHeight
     });
 
-    return shouldExpand;
+    return { vertical, shouldExpandUpward };
   }, [props.anchorPosition]);
 
   React.useEffect(() => {
@@ -56,15 +74,15 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       open={props.open}
       onClose={props.onClose}
       isSubmenuOpen={!!openSubmenu}
-      shouldExpandUpward={shouldExpandUpward}
+      shouldExpandUpward={positioningStrategy.shouldExpandUpward}
       anchorReference="anchorPosition"
       anchorPosition={props.anchorPosition || undefined}
       anchorOrigin={{
-        vertical: shouldExpandUpward ? 'bottom' : 'top',
+        vertical: positioningStrategy.vertical,
         horizontal: 'left',
       }}
       transformOrigin={{
-        vertical: shouldExpandUpward ? 'bottom' : 'top',
+        vertical: positioningStrategy.vertical,
         horizontal: 'left',
       }}
       slotProps={{

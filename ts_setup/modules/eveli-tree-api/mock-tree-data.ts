@@ -13,6 +13,7 @@ export const mockTreeData: TreeNode[] = [
         name: '000_index',
         type: 'folder',
         isExpanded: true,
+        isLocked: true,
         configOptions: [{
           devMode: true,
         }],
@@ -34,6 +35,7 @@ export const mockTreeData: TreeNode[] = [
             name: 'main.article',
             type: 'article',
             isExpanded: true,
+            isLocked: false,
             configOptions: [{
               disabledMode: true,
             }],
@@ -145,6 +147,7 @@ export const mockTreeData: TreeNode[] = [
             name: 'general-message.service',
             type: 'service',
             isExpanded: true,
+            isLocked: true,
             configOptions: [{
               devMode: true,
               assignableMode: true,

@@ -7,6 +7,7 @@ export interface TreeNode {
   labels?: TreeNodeLabel[] | undefined;
   isExpanded?: boolean;
   isReference?: boolean;
+  isLocked?: boolean;
   type: TreeNodeType;
   configOptions?: ConfigOption[] | undefined;
 }

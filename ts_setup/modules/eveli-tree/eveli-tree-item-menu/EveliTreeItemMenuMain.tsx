@@ -11,6 +11,8 @@ import {
   Assignment as AssignmentIcon,
   Block as DisabledIcon,
   VisibilityOff as AnonymousIcon,
+  Lock as LockedIcon,
+  LockOpen as UnlockedIcon,
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData } from '../../eveli-tree-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
@@ -69,6 +71,12 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
     props.onClose();
   }
 
+  function handleLock() {
+    const action = props.node?.isLocked ? 'Unlock' : 'Lock';
+    console.log(`${action}:`, props.node?.name);
+    props.onClose();
+  }
+
   return (
     <Box className={classes.sectionMain}>
       <Box className={classes.headerMain}>
@@ -90,6 +98,17 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleEdit}>
         <EditIcon fontSize='small' />Edit</MenuItem>
+      <MenuItem
+        className={props.node?.isLocked ? classes.menuItemLocked : classes.menuItemUnlocked}
+        onClick={handleLock}
+      >
+        {props.node?.isLocked ? (
+          <LockedIcon fontSize='small' />
+        ) : (
+          <UnlockedIcon fontSize='small' />
+        )}
+        {props.node?.isLocked ? 'Unlock' : 'Lock'}
+      </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleCopy}>
         <CopyIcon fontSize='small' />Copy</MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleDuplicate}>
