@@ -11,12 +11,20 @@ The same functionality can be accessed via `TaskClient` methods. See:
 
 ## Migration Path
 
-"Wrench flow services" that previously used `ProcessClient` require no changes. Process status handling is now automatic within the transaction lock after wrench flow execution.
+"Wrench flow services" that previously used `ProcessClient` should remove all `ProcessClient` usage. Process status handling is now automatic within the transaction lock after wrench flow execution.
 
 The process is automatically updated with:
 - `form_body`
 - `flow_body`
 - `task_id` (queried by questionnaire ID after execution)
+
+Wrench flows have the following properties available in their input:
+
+```java
+flowInput.put("processId", instance.getId());
+flowInput.put("questionnaireId", instance.getQuestionnaireId());
+flowInput.put("workflowName", instance.getWorkflowName());
+```
 
 ```groovy
 package io.resys.wrench.assets.bundle.groovy;
