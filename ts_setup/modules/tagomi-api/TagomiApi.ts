@@ -93,10 +93,9 @@ export declare namespace TagomiApi {
     | 'LOCALE'
     | 'TAG';
 
-  export enum ResourceType {
-    IMAGE = 'image/*',
-    SCRIPT = 'text/*'
-  }
+  export type ResourceContentType =
+    | 'image/*'
+    | 'text/*';
 
   export interface TagomiContainer {
     tagName: string;
@@ -130,7 +129,7 @@ export declare namespace TagomiApi {
     docType: 'RESOURCE';
     externalLocation: string;
     resourceName: string;
-    contentType: ResourceType;
+    contentType: ResourceContentType;
     templateIds: string[];
     content?: string;
   }
@@ -175,7 +174,7 @@ export declare namespace TagomiApi {
   export interface CreateResource {
     id?: string;
     resourceName: string;
-    contentType: ResourceType;
+    contentType: ResourceContentType;
     uploadBody: string;
     templateIds: string[];
   }
@@ -213,7 +212,7 @@ export declare namespace TagomiApi {
 
   export interface ResourceMutator {
     resourceId: string;
-    contentType?: ResourceType;
+    contentType?: ResourceContentType;
     resourceName?: string;
     uploadBody?: string;
     templateIds?: string[];

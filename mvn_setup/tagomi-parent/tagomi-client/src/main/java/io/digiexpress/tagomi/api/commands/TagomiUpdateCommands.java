@@ -68,7 +68,7 @@ public interface TagomiUpdateCommands {
   @JsonDeserialize(as = ImmutableResourceMutator.class)
   interface ResourceMutator {
     String getResourceId();
-    @Nullable TagomiContainer.ResourceType getContentType();
+    @Nullable String getContentType();
     @Nullable String getResourceName();
     @Nullable String getUploadBody();
     @Nullable List<String> getTemplateIds();

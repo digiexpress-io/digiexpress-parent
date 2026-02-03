@@ -21,6 +21,7 @@ export const ImageEdit: React.FC<ImageEditProps> = ({ imageId, onClose }) => {
   const image = site.resources[imageId];
   const [resourceName, setResourceName] = React.useState(image.resourceName);
   const [uploadBody, setUploadBody] = React.useState<string | undefined>(undefined);
+  const [previewUrl, setPreviewUrl] = React.useState<string | undefined>(undefined);
   const [uploadError, setUploadError] = React.useState<string>();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -36,6 +37,7 @@ export const ImageEdit: React.FC<ImageEditProps> = ({ imageId, onClose }) => {
         const dataUrl = event.target?.result as string;
         const base64String = dataUrl.split(',')[1];
         setUploadBody(base64String);
+        setPreviewUrl(dataUrl);
         setUploadError(undefined);
       };
       reader.onerror = () => {
@@ -95,12 +97,11 @@ export const ImageEdit: React.FC<ImageEditProps> = ({ imageId, onClose }) => {
 
         <Box mb={2} />
 
-        {/* Current image preview */}
-        {image.content && !uploadBody && (
+        {(previewUrl || image.content) && (
           <Box mb={2} textAlign="center">
             <img
-              src={`data:image/*;base64,${image.content}`}
-              alt={image.resourceName}
+              src={previewUrl || `data:image/*;base64,${image.content}`}
+              alt={resourceName}
               style={{ maxWidth: '100%', maxHeight: '300px', border: '1px solid #ccc', borderRadius: '4px' }}
             />
           </Box>
@@ -111,7 +112,9 @@ export const ImageEdit: React.FC<ImageEditProps> = ({ imageId, onClose }) => {
           onClick={() => fileInputRef.current?.click()}
           fullWidth
         >
-          {uploadBody ? intl.formatMessage({ id: 'tagomi.image.edit.dialog.fileSelected' }) : intl.formatMessage({ id: 'tagomi.image.edit.dialog.uploadFile' })}
+          {uploadBody 
+            ? intl.formatMessage({ id: 'tagomi.image.edit.dialog.fileSelected' }) 
+            : intl.formatMessage({ id: 'tagomi.image.edit.dialog.uploadFile' })}
         </Button>
       </DialogContent>
 

@@ -18,7 +18,7 @@ export const ScriptsList: React.FC = () => {
   const { site } = Composer.useComposer();
 
   const scripts = React.useMemo(() => {
-    return Object.values(site.resources).filter(r => r.contentType === TagomiApi.ResourceType.SCRIPT);
+    return Object.values(site.resources).filter(r => r.contentType === 'text/*');
   }, [site.resources]);
 
   const classes = useUtilityClasses();

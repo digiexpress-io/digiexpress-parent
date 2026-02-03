@@ -28,7 +28,7 @@ export const ScriptComposer: React.FC<{ onClose: () => void }> = ({ onClose }) =
     setError(undefined);
     const entity: TagomiApi.CreateResource = {
       resourceName,
-      contentType: TagomiApi.ResourceType.SCRIPT,
+      contentType: 'text/*',
       uploadBody,
       templateIds: []
     };

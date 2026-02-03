@@ -118,7 +118,7 @@ public interface TagomiContainer {
     String getId();
     String getExternalLocation();
     String getResourceName();
-    ResourceType getContentType();
+    String getContentType();
     List<String> getTemplateIds();
     @Nullable String getContent();
     @Override default public TagomiDocType getDocType() { return TagomiDocType.RESOURCE; };

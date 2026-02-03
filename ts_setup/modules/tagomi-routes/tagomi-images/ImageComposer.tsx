@@ -58,7 +58,7 @@ export const ImageComposer: React.FC<{ onClose: () => void }> = ({ onClose }) =>
     setUploadError(undefined);
     const entity: TagomiApi.CreateResource = {
       resourceName,
-      contentType: TagomiApi.ResourceType.IMAGE,
+      contentType: 'image/*',
       uploadBody,
       templateIds: []
     };
@@ -77,7 +77,7 @@ export const ImageComposer: React.FC<{ onClose: () => void }> = ({ onClose }) =>
         ref={fileInputRef}
         type="file"
         hidden
-        accept={TagomiApi.ResourceType.IMAGE}
+        accept="image/*"
         onChange={handleFileChange}
       />
       <DialogTitle>{intl.formatMessage({ id: 'tagomi.image.create.dialog.title' })}</DialogTitle>

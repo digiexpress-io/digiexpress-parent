@@ -18,7 +18,7 @@ export const ImagesList: React.FC = () => {
   const { site } = Composer.useComposer();
 
   const images = React.useMemo(() => {
-    return Object.values(site.resources).filter(r => r.contentType === TagomiApi.ResourceType.IMAGE);
+    return Object.values(site.resources).filter(r => r.contentType === 'image/*');
   }, [site.resources]);
   const classes = useUtilityClasses();
 

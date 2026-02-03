@@ -167,9 +167,10 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
   public Uni<Resource> resource(ResourceMutator changes) {
     return client.stateQuery().getState()
       .onItem().transformToUni(state -> {
-        final var contentType = changes.getContentType();
+        final var existingResource = state.getResources().get(changes.getResourceId());
+        final var contentType = changes.getContentType() != null ? changes.getContentType() : existingResource.getContentType();
 
-        if(changes.getUploadBody() == null || contentType == TagomiContainer.ResourceType.SCRIPT) {
+        if(changes.getUploadBody() == null || "text/*".equals(contentType)) {
           return client.upsertBuilder().save(changeLink(state, changes, null));
         }
 
