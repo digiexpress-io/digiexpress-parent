@@ -1,11 +1,12 @@
 package io.digiexpress.eveli.client.spi.mq;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableSet;
 
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 
 /*-
@@ -41,7 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumerForCustomerNotification implements ThenaMqConsumer {
 
   private final CommsClient commsClient;
-  private final ProcessClient processClient;
+  private final TaskClient processClient;
+  private static final Duration timeout = Duration.ofMillis(10000);
   
   @Override
   public String getRoutingKey() {
@@ -61,7 +63,7 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
       
-      final var process = processClient.queryInstances().findOneByTaskId(notification.getTaskId());
+      final var process = processClient.queryTaskProcesess().findOneByTaskId(notification.getTaskId()).await().atMost(timeout);
       final Optional<String> userId = process.map(p->p.getUserId());
       
       if (userId.isEmpty()) {

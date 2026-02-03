@@ -60,15 +60,11 @@ public class TaskStoreImpl implements TaskStore {
   }
   
   private Uni<TaskStore> createRepoOrGetRepo(String repoName) {
-    final var client = config.getClient();
-    
-    return client.tenants().queryTenants().id(repoName).getOne()
-        .onItem().transformToUni(repo -> {        
-          if(repo == null) {
-            return createRepo(repoName); 
-          }
-          return Uni.createFrom().item(createClientStore(repoName));
-    });
+    return config.getClient().tenants()
+        .createOneTenant()
+        .name(repoName)
+        .buildOnlyIfNotCreated()
+        .map(repo -> createClientStore(repoName));
   }
   private Uni<TaskStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");

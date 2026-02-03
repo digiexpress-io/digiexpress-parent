@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -35,7 +34,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  */
 
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 
 
 @Testcontainers
@@ -44,14 +42,12 @@ import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 @ContextConfiguration(classes = {EveliAutoConfigJpa.class, IntegrationTest.IntegrationTestConfig.class})
 public class IntegrationTest {
 
-  @Autowired
-  ProcessRepository taskRepository;
 
   public static class IntegrationTestConfig {
     @Bean
     @ServiceConnection(name = "postgres")
     public PostgreSQLContainer<?> postgresContainer() {
-      var container = new PostgreSQLContainer<>("postgres:17");
+      final var container = new PostgreSQLContainer<>("postgres:17");
       container.start();
       for (int i = 0; i < 100; i++) {
         try (var c = DriverManager.getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword())) {

@@ -22,18 +22,15 @@ package io.digiexpress.eveli.client.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.persistence.entities.FeedbackApprovalEntity;
 
 
 
 @Configuration
 @EnableTransactionManagement
-@EntityScan(basePackageClasses = { ProcessEntity.class })
-@EnableJpaRepositories(basePackageClasses = { ProcessRepository.class })
+@EntityScan(basePackageClasses = { FeedbackApprovalEntity.class })
 public class EveliAutoConfigJpa {
   
 }

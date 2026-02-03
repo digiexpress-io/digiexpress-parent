@@ -25,9 +25,6 @@ import java.time.Duration;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
-import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
-import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -110,7 +107,7 @@ public class FeedbackTaskEnvirSetup {
   }
 
   
-  public TaskClient getTaskClient(ProcessRepository proc) {
+  public TaskClient getTaskClient() {
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName(repoId)
         .client(dbState)
@@ -124,8 +121,7 @@ public class FeedbackTaskEnvirSetup {
         .await().atMost(Duration.ofMinutes(1));
     log.info("Repo created: " + repo);
     
-    final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-    return new TaskClientImpl(null, null, null, store, customer);
+    return new TaskClientImpl(null, null, null, store);
   }
   
 }

@@ -29,12 +29,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.ImmutableTaskArchivePointer;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.AddFormToCustomerAssignment;
@@ -74,7 +74,7 @@ public class TaskClientImpl implements TaskClient {
   private final TaskFileClient taskFilesClient;
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
-  private final CustomerAccountClient crmClient;
+
   
   public TaskStore unwrap() {
     return ctx;
@@ -142,6 +142,7 @@ public class TaskClientImpl implements TaskClient {
 
   @Override
   public TaskCommandBuilder taskBuilder() {
+    final var taskClient = this;
     return new TaskCommandBuilder() {
       private String userId, userEmail;
       @Override
@@ -161,7 +162,7 @@ public class TaskClientImpl implements TaskClient {
         if(command.getQuestionnaireId() == null) {
           return ctx.getConfig().accept(new CreateOneTask(userId, command, null));  
         }
-        return crmClient.accountQuery().getOneByAnyId(command.getQuestionnaireId())
+        return new CustomerAccountClientImpl(taskClient).accountQuery().getOneByAnyId(command.getQuestionnaireId())
           .onItem().transformToUni(account -> ctx.getConfig().accept(new CreateOneTask(userId, command, account)));
         
       }

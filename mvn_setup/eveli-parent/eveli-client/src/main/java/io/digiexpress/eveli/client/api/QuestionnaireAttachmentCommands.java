@@ -23,10 +23,10 @@ package io.digiexpress.eveli.client.api;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 
 public interface QuestionnaireAttachmentCommands {
-  
+  // only used in WRENCH FLOW
   QuestionnaireAttachmentBuilder attachmentBuilder();
 
-  public interface QuestionnaireAttachmentBuilder {
+  interface QuestionnaireAttachmentBuilder {
     QuestionnaireAttachmentBuilder processId(String processId);
     QuestionnaireAttachmentBuilder taskId(String taskId);
     QuestionnaireAttachmentBuilder questionnaireId(String questionnaireId);

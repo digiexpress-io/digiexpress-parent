@@ -22,45 +22,51 @@ package io.digiexpress.eveli.client.spi.crm;
 
 import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomerAccount;
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomerAccountClientImpl implements CustomerAccountClient {  
-  private final ProcessClient processClient;
+  private final TaskClient processClient;
 
   @Override
   public CustomerAccountQuery accountQuery() {
     return new CustomerAccountQuery() {
-      
       @Override
       public Uni<CustomerAccount> getOneByAnyId(String id) {
-        var proc = processClient.queryInstances().findOneByQuestionnaireId(id).orElse(null);
-        if(proc == null) {
-          proc = processClient.queryInstances().findOneByTaskId(id).orElse(null);
-        }
-        if(proc == null) {
-          proc = processClient.queryInstances().findOneById(id).orElse(null);
-        }
         
-        if(proc == null) {
-          final var notFound = ImmutableCustomerAccount.builder()
-              .customerId("")
-              .id(id)
-              .type(CrmAccountType.ANON)
-              .build();
-          return Uni.createFrom().item(notFound);  
-        }
-        
-        final var found = ImmutableCustomerAccount.builder()
-          .customerId(proc.getUserId() == null ? "" : proc.getUserId())
-          .id(proc.getId().toString())
-          .type(Boolean.TRUE.equals(proc.getAnon()) ? CrmAccountType.ANON : CrmAccountType.AUTH)
-          .build();
-        
-        return Uni.createFrom().item(found);
-        
+        return Uni.combine().all().unis(
+            processClient.queryTaskProcesess().findOneByQuestionnaireId(id),
+            processClient.queryTaskProcesess().findOneByTaskId(id),
+            processClient.queryTaskProcesess().findOneById(id)
+        ).asTuple()
+        .map(tuple -> {
+          
+          var proc = tuple.getItem1().orElse(null);
+          if(proc == null) {
+            proc = tuple.getItem2().orElse(null);
+          }
+          if(proc == null) {
+            proc = tuple.getItem3().orElse(null);
+          }
+          
+          if(proc == null) {
+            final var notFound = ImmutableCustomerAccount.builder()
+                .customerId("")
+                .id(id)
+                .type(CrmAccountType.ANON)
+                .build();
+            return notFound;  
+          }
+          
+          return ImmutableCustomerAccount.builder()
+            .customerId(proc.getUserId() == null ? "" : proc.getUserId())
+            .id(proc.getId().toString())
+            .type(Boolean.TRUE.equals(proc.getAnon()) ? CrmAccountType.ANON : CrmAccountType.AUTH)
+            .build();
+        });
+
       }
     };
   }

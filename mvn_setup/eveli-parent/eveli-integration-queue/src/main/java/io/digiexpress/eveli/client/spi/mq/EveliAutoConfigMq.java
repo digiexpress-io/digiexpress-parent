@@ -32,7 +32,6 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.OrgClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.eveli.client.web.resources.worker.QueueApiController;
@@ -52,7 +51,7 @@ public class EveliAutoConfigMq {
  
   @Bean 
   @ConditionalOnMissingBean(value = ThenaMqClient.class)
-  public ThenaMqClient mqClient(io.vertx.mutiny.pgclient.PgPool pgPool, EveliPropsMq props) {
+  public ThenaMqClient mqClient(io.vertx.mutiny.sqlclient.Pool pgPool, EveliPropsMq props) {
     return ThenaMqChannelStateImpl.create()
         .db(props.getChannelName()).client(pgPool)
         .build();
@@ -108,7 +107,7 @@ public class EveliAutoConfigMq {
     return new DeliveryForChannels(config, client);
   }
   @Bean
-  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, ProcessClient proc) {
+  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, TaskClient proc) {
     return new ConsumerForCustomerNotification(client, proc);
   }
   @Bean

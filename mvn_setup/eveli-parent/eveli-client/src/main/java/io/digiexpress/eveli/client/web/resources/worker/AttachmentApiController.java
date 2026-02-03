@@ -37,9 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,7 +54,6 @@ public class AttachmentApiController {
   private final AttachmentCommands client;
   private final TaskClient taskClient;  
   private final WorkerAuthClient securityClient;
-  private final ProcessClient processClient;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   /**
@@ -182,6 +180,10 @@ public class AttachmentApiController {
   }
 
   private String getProcessIdFromTask(String taskId) {
-    return processClient.queryInstances().findOneByTaskId(taskId).map(e -> e.getId().toString()).orElse(null);
+    return taskClient
+        .queryTaskProcesess()
+        .findOneByTaskId(taskId)
+        .map(e -> e.map(x ->  x.getId().toString()).orElse(null))
+        .await().atMost(timeout);
   }
 }

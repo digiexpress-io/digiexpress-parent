@@ -49,7 +49,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
@@ -96,16 +95,15 @@ public abstract class FeedbackEnvirSetup {
   public static class FeedbackEnvirSetupConfig {
     @Autowired JdbcTemplate jdbcTemplate;
     @Autowired EntityManager entityManager;
-    @Autowired ProcessRepository processJPA;
     @Autowired ObjectMapper objectMapper;
     @Autowired TransactionTemplate tx;
     @Autowired ApplicationEventPublisher publisher;
 
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository processJPA) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher) {
       final var repoId = "test-task-client-" + TEST_INDEX.incrementAndGet();
       final var setup = new FeedbackTaskEnvirSetup(CONTAINER, repoId);
-      return setup.getTaskClient(processJPA);
+      return setup.getTaskClient();
     }
     
     @Bean

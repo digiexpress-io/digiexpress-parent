@@ -41,18 +41,14 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.FeedbackCategoriesReader;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.PdfClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.QuestionnaireAttachmentCommands;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
-import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.dialob.DialobScheduler;
 import io.digiexpress.eveli.client.spi.dialob.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
@@ -60,10 +56,7 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackCategoriesReaderImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.health.HealthClientImpl;
-import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
-import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.PdfClientRest;
-import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessQuestionnaireAttachmentCommand;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -87,7 +80,6 @@ import io.resys.thena.jackson.JsonObjectDeserializer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -139,19 +131,9 @@ public class EveliAutoConfig {
   public FeedbackCategoriesReader feedbackCategoriesReader(ObjectMapper objectMapper) {
     return new FeedbackCategoriesReaderImpl(objectMapper);
   }
-  @Bean
-  public TransactionWrapper transactionWrapper(EntityManager entityManager) {
-    return new SpringTransactionWrapper(entityManager);
-  }
-  
-  @Bean 
-  public CustomerAccountClient customerAccountClient(ProcessClient processClient) {
-    return new CustomerAccountClientImpl(processClient);
-  }
-  
+
   @Bean 
   public TaskClient taskClient(
-      CustomerAccountClient crmClient,
       DocContainerClient docContainerClient,
       AttachmentCommands attachmentCommands,
       RestTemplate restTemplate,
@@ -168,7 +150,7 @@ public class EveliAutoConfig {
     thenaAware.register(store.getClass(), store.query().createIfNot());
     
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(envirClient, fileClient, docContainerClient, store, crmClient);
+    return new TaskClientImpl(envirClient, fileClient, docContainerClient, store);
   }
 
   @Bean
@@ -203,16 +185,6 @@ public class EveliAutoConfig {
     threadPoolTaskScheduler.setPoolSize(10);
     threadPoolTaskScheduler.setThreadNamePrefix("SubmitTaskScheduler-");
     return threadPoolTaskScheduler;
-  }
-
-  @Bean
-  public ProcessClient processClient(
-      ProcessRepository processJPA,
-      TransactionWrapper ts,
-      EveliEnvirClient envir
-      ) {
-
-    return new ProcessClientImpl(processJPA, ts, envir);
   }
 
   @Bean
@@ -264,8 +236,7 @@ public class EveliAutoConfig {
   public QuestionnaireAttachmentCommands questionnaireAttachmentCommands(
       AttachmentCommands attachments, 
       PdfClient pdf, 
-      TaskClient tasks, 
-      ProcessClient processClient) {
-    return new ProcessQuestionnaireAttachmentCommand(attachments, pdf, tasks, processClient);
+      TaskClient tasks) {
+    return new ProcessQuestionnaireAttachmentCommand(attachments, pdf, tasks);
   }
 }

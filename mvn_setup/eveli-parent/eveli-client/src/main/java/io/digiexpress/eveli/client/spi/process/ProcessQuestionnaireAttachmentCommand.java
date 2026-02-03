@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.PdfClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.QuestionnaireAttachmentCommands;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
@@ -42,10 +41,9 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
   private final AttachmentCommands attachments;
   private final PdfClient pdf;
   private final TaskClient tasks;
-  private final ProcessClient processClient;
+
   @Override
   public QuestionnaireAttachmentBuilder attachmentBuilder() {
-    // TODO Auto-generated method stub
     return new QuestionnaireAttachmentBuilder() {
       private String taskId;
       private String processId;
@@ -65,14 +63,13 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
       @Override
       public Attachment build() {
         ProcessInstance process;
+        
         if (questionnaireId != null) {
-          process = processClient.queryInstances().findOneByQuestionnaireId(questionnaireId).get();
+          process = tasks.queryTaskProcesess().findOneByQuestionnaireId(questionnaireId).await().atMost(timeout).get();
           processId = process.getId().toString();
-        }
-        else if (processId != null) {
+        } else if (processId != null) {
           process = tasks.queryTaskProcesess().getOneById(processId).await().atMost(timeout);
-        }
-        else {
+        } else {
           if (taskId == null) {
             throw new IllegalStateException("Process or task Id is missing");
           }
@@ -80,6 +77,8 @@ public class ProcessQuestionnaireAttachmentCommand implements QuestionnaireAttac
           process = taskProcess.get();
           processId = process.getId().toString();
         }
+        
+        
         String formName = process.getFormName();
         Task task = tasks.queryTasks().getOneById(taskId != null ? taskId : process.getTaskId()).await().atMost(timeout);
         String taskRef = task.getTaskRef();

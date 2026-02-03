@@ -100,7 +100,7 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
           return createTenant().onItem().transform(c -> Tuple2.of(true, c));
         }
         
-        log.error("Existing repository found with name '{}'", name);
+        log.debug("Existing repository found with name '{}'", name);
         final var resp = ImmutableCreatedTenant.builder()
           .repo(existing)
           .status(TenantOperationStatus.OK)
@@ -125,7 +125,7 @@ public class TenantBuilderImpl implements TenantActions.CreateOneTenant {
         return createTenant();
       }
       
-      log.error("Existing repository found with name '{}'", name);      
+      log.debug("Existing repository found with name '{}'", name);      
       return Uni.createFrom().item(ImmutableCreatedTenant.builder()
           .status(TenantOperationStatus.CONFLICT)
           .addMessages(nameNotUnique(existing.getName(), existing.getId()))

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.iam;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -27,7 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.digiexpress.eveli.client.api.GamutAuthClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.ProcessInstance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +38,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PortalAccessValidatorImpl implements PortalAccessValidator {
 
-  private final ProcessClient processClient;
-
+  private final TaskClient processClient;
+  private static final Duration timeout = Duration.ofMillis(10000);
+  
   @Override
   public void validateTaskAccess(Long id, GamutAuthClient.CustomerPrincipal principal) {
     if (id == null || principal == null) {
@@ -67,7 +70,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
 
   @Override
   public void validateProcessIdAccess(String processId, GamutAuthClient.CustomerPrincipal principal) {
-    final var process = processClient.queryInstances().findOneById(processId).orElse(null);
+    final var process = processClient.queryTaskProcesess().findOneById(processId).await().atMost(timeout).orElse(null);
     if (process == null) {
       log.error("Access violation by user: {}, process by id {} not found", principal.getUsername(), processId);
       throw new ResponseStatusException(
@@ -78,7 +81,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   
 
   protected ProcessInstance getProcessFromTask(String taskId) {
-    return processClient.queryInstances().findOneByTaskId(taskId).orElse(null);
+    return processClient.queryTaskProcesess().findOneByTaskId(taskId).await().atMost(timeout).orElse(null);
   }
   
   @Override
@@ -92,6 +95,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
     
     if (!StringUtils.equals(Optional.ofNullable(principal).map(p -> p.getUsername()).orElse(null), userId) &&
         !StringUtils.equals(Optional.ofNullable(principal.getRepresentedId()).orElse(null), userId)) {
+      
       log.error("Access violation by user: {}, unmatched user ID: {}", principal.getUsername(), userId);
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
@@ -101,7 +105,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
 
   @Override
   public void validateProcessAnonymousAccess(String processId, String anonymousUserId) {
-    final var process = processClient.queryInstances().findOneById(processId).orElse(null);
+    final var process = processClient.queryTaskProcesess().findOneById(processId).await().atMost(timeout).orElse(null);
     if (!anonymousUserId.equals(process.getUserId())) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access violation, not anonymous process");
     }

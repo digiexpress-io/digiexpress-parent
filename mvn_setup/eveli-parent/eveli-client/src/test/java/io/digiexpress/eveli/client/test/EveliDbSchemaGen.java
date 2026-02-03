@@ -34,7 +34,7 @@ import org.hibernate.tool.schema.TargetType;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
+import io.digiexpress.eveli.client.persistence.entities.FeedbackReplyEntity;
 
 
 
@@ -47,35 +47,13 @@ public class EveliDbSchemaGen {
     .applySetting("org.hibernate.envers.revision_type_field_name", "revtype")
     .applySetting("org.hibernate.envers.do_not_audit_optimistic_locking_field", "false")
     .build();
-  
-  @Test
-  @Disabled
-  public void taskDb() throws Exception {
-    final var metadata = new MetadataSources(PROPS);
-    
-    for (Class<?> clazz : getClasses(ProcessEntity.class.getPackageName())) {
-      if(!clazz.getSimpleName().toLowerCase().contains("task") && !clazz.getSimpleName().toLowerCase().contains("process")) {
-        continue;
-      }
-      metadata.addAnnotatedClass(clazz);
-    }
-    
-    new SchemaExport()
-        .setDelimiter(";")
-        .setFormat(true)
-        .execute(
-            EnumSet.of(TargetType.STDOUT), 
-            SchemaExport.Action.CREATE, 
-            metadata.buildMetadata());
-  }
-  
-  
+
   @Test
   @Disabled
   public void feedbackDb() throws Exception {
     final var metadata = new MetadataSources(PROPS);
     
-    for (Class<?> clazz : getClasses(ProcessEntity.class.getPackageName())) {
+    for (Class<?> clazz : getClasses(FeedbackReplyEntity.class.getPackageName())) {
       if(!clazz.getSimpleName().toLowerCase().contains("feedback")) {
         continue;
       }

@@ -37,12 +37,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
-import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
-import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -129,7 +125,6 @@ public abstract class TaskEnvirSetup {
   public static class TaskEnvirSetupConfig {
     @Autowired JdbcTemplate jdbcTemplate;
     @Autowired EntityManager entityManager;
-    @Autowired ProcessRepository processJPA;
     @Autowired ObjectMapper objectMapper;
     @Autowired TransactionTemplate tx;
     @Autowired ApplicationEventPublisher publisher;
@@ -150,7 +145,7 @@ public abstract class TaskEnvirSetup {
     }
     
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher) {
       final var repoId = "task-client-" + TEST_INDEX.incrementAndGet();
       final var config = ImmutableTaskStoreConfig.builder()
           .tenantName(repoId)
@@ -167,14 +162,8 @@ public abstract class TaskEnvirSetup {
 
       log.info("repo created: {}", repo);
       
-      final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-      return new TaskClientImpl(null, null, null, store, customer);
-    }
-    
-    @Bean
-    public ProcessClient processClient() {
-      final var processClient = new ProcessClientImpl(processJPA, null, null);
-      return processClient;
+
+      return new TaskClientImpl(null, null, null, store);
     }
   }
 }

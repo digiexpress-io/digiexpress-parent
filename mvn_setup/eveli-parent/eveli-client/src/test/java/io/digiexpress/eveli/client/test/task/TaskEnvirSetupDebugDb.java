@@ -34,11 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
-import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
-import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -141,7 +137,7 @@ public abstract class TaskEnvirSetupDebugDb {
     
     
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher) {
       final var config = ImmutableTaskStoreConfig.builder()
           .tenantName("task-tenant")
           .client(THENA_STATE)
@@ -156,14 +152,7 @@ public abstract class TaskEnvirSetupDebugDb {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
-      return new TaskClientImpl(null, null, null, store, customer);
-    }
-    
-    @Bean
-    public ProcessClient processClient() {
-      final var processClient = new ProcessClientImpl(null, null, null);
-      return processClient;
+      return new TaskClientImpl(null, null, null, store);
     }
   }
 }

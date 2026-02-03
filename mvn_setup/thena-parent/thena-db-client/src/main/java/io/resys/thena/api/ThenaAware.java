@@ -55,8 +55,8 @@ public interface ThenaAware {
     @Override
     public Multi<TenantAwareRegistration> getOrCreateAll() {
       return Multi.createFrom().iterable(items)
-      .onItem().transformToUniAndMerge(tuple -> tuple.getItem2())
-      .onItem().transform(item -> ImmutableTenantAwareRegistration.builder().build());
+        .onItem().transformToUniAndConcatenate(tuple -> tuple.getItem2())
+        .onItem().transform(item -> ImmutableTenantAwareRegistration.builder().build());
     }
     
   }

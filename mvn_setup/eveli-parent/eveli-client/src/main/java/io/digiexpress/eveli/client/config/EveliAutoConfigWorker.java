@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Configuration;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.PdfClient;
-import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskAuditClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
@@ -60,8 +59,8 @@ import io.digiexpress.thena.cockpit.client.api.CockpitAware.CockpitAwareProvider
 @Configuration
 public class EveliAutoConfigWorker {
   @Bean 
-  public AttachmentApiController attachmentApiController(ProcessClient processClient, WorkerAuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
-    return new AttachmentApiController(attachments, taskClient, security, processClient);
+  public AttachmentApiController attachmentApiController(WorkerAuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
+    return new AttachmentApiController(attachments, taskClient, security);
   }
   @Bean 
   public PrintoutController printoutController(
@@ -96,7 +95,7 @@ public class EveliAutoConfigWorker {
     return new ProcessApiController(taskClient);
   }
   @Bean
-  public PortalAccessValidator portalAccessValidator(ProcessClient client) {
+  public PortalAccessValidator portalAccessValidator(TaskClient client) {
       return new PortalAccessValidatorImpl(client);
   }
   @Bean

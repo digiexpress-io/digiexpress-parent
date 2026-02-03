@@ -3,7 +3,6 @@ package io.digiexpress.eveli.client.spi.dialob;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /*-
  * #%L
@@ -42,7 +41,7 @@ public class DialobScheduler {
   private final TaskClient taskClient;
   private final SyncDialobAndProcess syncDialobAndProcess;
   
-  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
+  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS, initialDelay = 1000 * 60)
   public void executeFlow() {
     taskClient.queryTaskProcesess()
       .findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))
@@ -52,7 +51,7 @@ public class DialobScheduler {
       .await().atMost(Duration.ofHours(1));
   }
   
-  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
+  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS, initialDelay = 1000 * 60)
   public void rejectProcessesWithDeadline() {
     taskClient.queryTaskProcesess().findAllExpired()
         .onItem().transformToUni(proc -> {
