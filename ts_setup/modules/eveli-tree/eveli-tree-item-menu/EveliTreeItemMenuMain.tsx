@@ -77,10 +77,18 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
     props.onClose();
   }
 
+  function handleSubmenuToggle(submenuType: string) {
+    if (props.openSubmenu === submenuType) {
+      props.onSubmenuOpen(''); // Close the submenu by passing empty string
+    } else {
+      props.onSubmenuOpen(submenuType); // Open the submenu
+    }
+  }
+
   return (
     <Box className={classes.sectionMain}>
       <Box className={classes.headerMain}>
-        <Typography variant='h3'>{props.node?.name}</Typography>
+        <Typography variant='h3' paddingBottom={0}>{props.node?.name}</Typography>
         <Typography variant='caption'>
           Last edited: 12.05.2025 by John Smith
         </Typography>
@@ -90,7 +98,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
       <MenuItem
         className={props.openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => props.onSubmenuOpen('new')}
+        onClick={() => handleSubmenuToggle('new')}
       >
         <NewIcon fontSize='small' />New
         <Box flex={1} />
@@ -149,7 +157,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
       <MenuItem
         className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => props.onSubmenuOpen('labels')}
+        onClick={() => handleSubmenuToggle('labels')}
       >
         <div>
           <div>Labels</div>
@@ -175,7 +183,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
       <MenuItem
         className={props.openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => props.onSubmenuOpen('comments')}
+        onClick={() => handleSubmenuToggle('comments')}
       >
         Comments
         <Box flex={1} />
@@ -186,7 +194,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
       <MenuItem
         className={props.openSubmenu === 'sharing' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => props.onSubmenuOpen('sharing')}
+        onClick={() => handleSubmenuToggle('sharing')}
       >
         Sharing and Permissions
         <Box flex={1} />
@@ -197,7 +205,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
       <MenuItem
         className={props.openSubmenu === 'history' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => props.onSubmenuOpen('history')}
+        onClick={() => handleSubmenuToggle('history')}
       >
         History
         <Box flex={1} />
@@ -208,7 +216,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
       <MenuItem
         className={props.openSubmenu === 'references' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => props.onSubmenuOpen('references')}
+        onClick={() => handleSubmenuToggle('references')}
       >
         References ({referencesCount})
         <Box flex={1} />
