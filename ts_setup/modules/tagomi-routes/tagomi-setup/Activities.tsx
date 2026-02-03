@@ -9,7 +9,7 @@ import { useTagomiNav } from '../tagomi-nav';
 import { ServiceComposer } from '../tagomi-service';
 import { LocaleComposer } from '../tagomi-locale';
 import { NewTemplate } from '../tagomi-template';
-import { LogoComposer } from '../tagomi-logos';
+import { ImageComposer } from '../tagomi-images';
 import { ScriptComposer } from '../tagomi-scripts';
 
 
@@ -74,11 +74,11 @@ export function useActivities(): ActivityProps[] {
       buttonViewAll: undefined,
     },
     {
-      composer: LogoComposer,
-      onView: () => nav.onNav({ type: 'LOGOS' }),
-      title: <FormattedMessage id="tagomi.logos.title" />,
-      desc: <FormattedMessage id="tagomi.logos.desc" />,
-      buttonCreate: <FormattedMessage id="tagomi.logo.create" />,
+      composer: ImageComposer,
+      onView: () => nav.onNav({ type: 'IMAGES' }),
+      title: <FormattedMessage id="tagomi.images.title" />,
+      desc: <FormattedMessage id="tagomi.images.desc" />,
+      buttonCreate: <FormattedMessage id="tagomi.image.create" />,
       buttonViewAll: undefined,
     },
     {

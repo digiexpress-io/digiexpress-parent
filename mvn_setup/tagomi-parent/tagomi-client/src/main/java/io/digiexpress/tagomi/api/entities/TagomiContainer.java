@@ -78,8 +78,8 @@ public interface TagomiContainer {
   }
 
   enum ResourceType {
-    LOGO,
-    SCRIPT
+    IMAGE,
+    SCRIPT;
   }
   
   
@@ -120,6 +120,7 @@ public interface TagomiContainer {
     String getResourceName();
     ResourceType getContentType();
     List<String> getTemplateIds();
+    @Nullable String getContent();
     @Override default public TagomiDocType getDocType() { return TagomiDocType.RESOURCE; };
 
   }

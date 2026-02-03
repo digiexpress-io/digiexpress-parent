@@ -93,9 +93,10 @@ export declare namespace TagomiApi {
     | 'LOCALE'
     | 'TAG';
 
-  export type ResourceType =
-    | 'LOGO'
-    | 'SCRIPT';
+  export enum ResourceType {
+    IMAGE = 'image/*',
+    SCRIPT = 'text/*'
+  }
 
   export interface TagomiContainer {
     tagName: string;
@@ -131,6 +132,7 @@ export declare namespace TagomiApi {
     resourceName: string;
     contentType: ResourceType;
     templateIds: string[];
+    content?: string;
   }
 
   export interface Locale {
@@ -174,7 +176,7 @@ export declare namespace TagomiApi {
     id?: string;
     resourceName: string;
     contentType: ResourceType;
-    uploadBody: string; // Base64 encoded bytes
+    uploadBody: string;
     templateIds: string[];
   }
 
@@ -213,7 +215,7 @@ export declare namespace TagomiApi {
     resourceId: string;
     contentType?: ResourceType;
     resourceName?: string;
-    uploadBody?: string; // Base64 encoded bytes
+    uploadBody?: string;
     templateIds?: string[];
   }
 

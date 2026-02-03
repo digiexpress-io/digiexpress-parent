@@ -2,6 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Alert } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl';
+import MonacoReact, { OnChange } from '@monaco-editor/react';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
@@ -19,63 +20,43 @@ export const ScriptEdit: React.FC<ScriptEditProps> = ({ scriptId, onClose }) => 
   const { enqueueSnackbar } = useSnackbar();
 
   const script = site.resources[scriptId];
+
   const [resourceName, setResourceName] = React.useState(script.resourceName);
-  const [uploadBody, setUploadBody] = React.useState<string | undefined>(undefined);
-  const [uploadError, setUploadError] = React.useState<string>();
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [uploadBody, setUploadBody] = React.useState(script.content ?? '');
+  const [error, setError] = React.useState<string>();
 
   const message = intl.formatMessage({ id: 'snack.script.editedMessage' }, { resourceName });
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    try {
-      const file: File = (e.target as any).files[0];
-      if (!file) return;
-
-      const arrayBuffer = await file.arrayBuffer();
-      const base64String = btoa(
-        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-      setUploadBody(base64String);
-      setUploadError(undefined);
-    } catch (error: any) {
-      console.error(error);
-      if (error instanceof Error) {
-        setUploadError(error.message);
-        return;
-      }
-      setUploadError(JSON.stringify(error));
-    }
-  }
+  const handleChange: OnChange = (newValue) => {
+    const scriptContent = newValue ?? '';
+    setUploadBody(scriptContent);
+  };
 
   const handleUpdate = () => {
+    setError(undefined);
     const entity: TagomiApi.ResourceMutator = {
       resourceId: scriptId,
       resourceName,
       uploadBody
     };
 
-    backend.updateResource(entity).then(_success => {
-      enqueueSnackbar(message, { variant: 'success' });
-      onClose();
-      actions.handleLoadSite();
-    });
+    backend.updateResource(entity)
+      .then(_success => {
+        enqueueSnackbar(message, { variant: 'success' });
+        onClose();
+        actions.handleLoadSite();
+      })
   };
 
   const updateDisabled = !resourceName;
 
   return (
-    <Dialog open={true} onClose={onClose}>
-      <input
-        ref={fileInputRef}
-        type="file"
-        hidden
-        onChange={handleFileChange}
-      />
+    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>{intl.formatMessage({ id: 'tagomi.script.edit.dialog.title' })}{" "}{script.resourceName}</DialogTitle>
 
       <DialogContent>
-        {!!uploadError && (
-          <Alert severity="error">{uploadError}</Alert>
+        {!!error && (
+          <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
         )}
 
         <Burger.TextField
@@ -87,13 +68,17 @@ export const ScriptEdit: React.FC<ScriptEditProps> = ({ scriptId, onClose }) => 
 
         <Box mb={2} />
 
-        <Button
-          variant="outlined"
-          onClick={() => fileInputRef.current?.click()}
-          fullWidth
-        >
-          {uploadBody ? intl.formatMessage({ id: 'tagomi.script.edit.dialog.fileSelected' }) : intl.formatMessage({ id: 'tagomi.script.edit.dialog.uploadFile' })}
-        </Button>
+        <Box height="400px">
+          <MonacoReact
+            onChange={handleChange}
+            value={uploadBody}
+            defaultLanguage='yaml'
+            options={{
+              wordBasedSuggestions: 'off',
+              minimap: { enabled: false }
+            }}
+          />
+        </Box>
       </DialogContent>
 
       <DialogActions>

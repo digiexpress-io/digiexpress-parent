@@ -1,4 +1,5 @@
 package io.digiexpress.tagomi.spi.commands;
+import java.util.Base64;
 
 /*-
  * #%L
@@ -164,31 +165,33 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
 
   @Override
   public Uni<Resource> resource(ResourceMutator changes) {
-    
-    if(changes.getUploadBody() == null) {
-      return client.stateQuery().getState()
-          .onItem().transformToUni(state -> client.upsertBuilder().save(changeLink(state, changes, null)));
-    }
+    return client.stateQuery().getState()
+      .onItem().transformToUni(state -> {
+        final var contentType = changes.getContentType();
 
-    return imageStorage.write(changes.getUploadBody())
-        .onItem().transform(image -> {
-          if(image.getOperationStatus() == OperationStatus.OK) {
-            return image.getObject();  
-          }
-          throw new StoreException("FAILED_TO_STORE_IMAGE", null, 
-              StoreExceptionMsg.builder()
-              .id("image-store-error")
-              .value("Can't save image because of unknown error!")
-              .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
-              .build()); 
-        })
-        .onItem().transformToUni(image -> client.stateQuery().getState()
-        .onItem().transformToUni(state -> client.upsertBuilder().save(changeLink(state, changes, image))));
+        if(changes.getUploadBody() == null || contentType == TagomiContainer.ResourceType.SCRIPT) {
+          return client.upsertBuilder().save(changeLink(state, changes, null));
+        }
+
+        final byte[] bytesToStore = Base64.getDecoder().decode(changes.getUploadBody());
+
+        return imageStorage.write(bytesToStore)
+          .onItem().transform(image -> {
+            if(image.getOperationStatus() == OperationStatus.OK) {
+              return image.getObject();
+            }
+            throw new StoreException("FAILED_TO_STORE_IMAGE", null,
+                StoreExceptionMsg.builder()
+                .id("image-store-error")
+                .value("Can't save image because of unknown error!")
+                .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
+                .build());
+          })
+          .onItem().transformToUni(image -> client.upsertBuilder().save(changeLink(state, changes, image)));
+      });
   }
-  
   private Resource changeLink(TagomiContainer site, ResourceMutator changes, Image image) {
     final var start = site.getResources().get(changes.getResourceId());
-    
 
     if(start == null) {
       throw new ConstraintException("Can't find resource: '" + changes.getResourceId() + "' to update!");
@@ -218,6 +221,7 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
         .contentType(changes.getContentType() == null ? start.getContentType() : changes.getContentType())
         .resourceName(changes.getResourceName() == null ? start.getResourceName() : changes.getResourceName())
         .externalLocation(image == null ? start.getExternalLocation() : image.getId())
+        .content(changes.getUploadBody() == null ? start.getContent() : changes.getUploadBody())
         .templateIds(changes.getTemplateIds() == null ? start.getTemplateIds() : new HashSet<>(changes.getTemplateIds()))
         .build();
   }

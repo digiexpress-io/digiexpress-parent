@@ -1,6 +1,7 @@
 package io.digiexpress.tagomi.spi.commands;
 
 import java.util.ArrayList;
+import java.util.Base64;
 
 /*-
  * #%L
@@ -138,29 +139,61 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
   }
   @Override
   public Uni<TagomiContainer.Resource> resource(CreateResource init) {
-    // predefine id
-    final var gid = OidUtils.gen();    
-    
-    return imageStorage.write(init.getUploadBody())
-      .onItem().transform(image -> {
-        if(image.getOperationStatus() == OperationStatus.OK) {
-          return image.getObject();  
-        }
-        throw new StoreException("FAILED_TO_STORE_IMAGE", null, 
-            StoreExceptionMsg.builder()
-            .id("image-store-error")
-            .value("Can't save image because of unknown error!")
-            .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
-            .build()); 
-      })
-      .onItem().transformToUni(image -> store.stateQuery().getState()
-      .onItem().transform(state -> {
+    final var gid = OidUtils.gen();
 
+    if (init.getUploadBody() == null) {
+      throw new ConstraintException("uploadBody must be provided for resource: " + init.getResourceName());
+    }
+
+    if (init.getContentType() == TagomiContainer.ResourceType.SCRIPT) {
+      return store.stateQuery().getState()
+        .onItem().transform(state -> {
+          final var templateIds = new ArrayList<String>();
+          for(final var templateId : init.getTemplateIds()) {
+            final var template = Optional.of(state.getTemplates().get(templateId));
+
+            if(template.isEmpty()) {
+              throw new ConstraintException(
+                  "Template with id: '" + template + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");
+            }
+            templateIds.add(template.get().getId());
+          }
+
+          final var resource = ImmutableResource.builder()
+            .id(gid)
+            .externalLocation("")
+            .resourceName(init.getResourceName())
+            .contentType(init.getContentType())
+            .content(init.getUploadBody())
+            .templateIds(templateIds)
+            .build();
+          return assertUniqueId(resource, state);
+        })
+        .onItem().transformToUni(request -> store.upsertBuilder().create(request));
+
+    } else { 
+      final byte[] bytesToStore = Base64.getDecoder().decode(init.getUploadBody());
+
+      return imageStorage.write(bytesToStore)
+        .onItem().transform(image -> {
+          if(image.getOperationStatus() == OperationStatus.OK) {
+            return image.getObject();
+          }
+          throw new StoreException("FAILED_TO_STORE_IMAGE", null,
+              StoreExceptionMsg.builder()
+              .id("image-store-error")
+              .value("Can't save image because of unknown error!")
+              .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
+              .build());
+        })
+        .onItem().transformToUni(image -> store.stateQuery().getState()
+        .onItem().transform(state -> {
           final var link = ImmutableResource.builder()
               .id(gid)
               .externalLocation(image.getId())
               .resourceName(init.getResourceName())
               .contentType(init.getContentType())
+              .content(init.getUploadBody())
               ;
           
           final var templateIds = new ArrayList<String>();
@@ -178,6 +211,7 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
           return assertUniqueId(link.build(), state);
       }))
       .onItem().transformToUni(request -> store.upsertBuilder().create(request));
+    }
   }
   @Override
   public Uni<TagomiContainer.Service> service(CreateService init) {

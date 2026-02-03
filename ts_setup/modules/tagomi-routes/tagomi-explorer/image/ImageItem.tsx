@@ -4,42 +4,42 @@ import { Image as ImageIcon } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 
 import { TreeItem } from "@dxs-ts/eveli-primitives";
-import { LogoOptions } from './LogoOptions';
+import { ImageOptions } from './ImageOptions';
 import { TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 
-interface LogoItemProps {
-  logoId: string;
+interface ImageItemProps {
+  imageId: string;
 }
 
-const LogoItem: React.FC<LogoItemProps> = ({ logoId }) => {
+const ImageItem: React.FC<ImageItemProps> = ({ imageId }) => {
   const { site } = Composer.useComposer();
-  const logo = Object.values(site.resources).find(r => r.id === logoId);
+  const image = Object.values(site.resources).find(r => r.id === imageId);
 
-  if (!logo) {
+  if (!image) {
     return null;
   }
 
-  const logoName = logo.resourceName;
+  const imageName = image.resourceName;
 
   return (
     <>
       <TreeItem
-        itemId={logoId}
+        itemId={imageId}
         labelcolor="explorerItem"
         labelIcon={ImageIcon}
         labelText={
           <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-            {logoName}
+            {imageName}
           </Box>
         }
       >
-        <TreeItem itemId={logoId + '-options-nested'} labelText={<FormattedMessage id="options" />}>
-          <LogoOptions logoId={logoId} />
+        <TreeItem itemId={imageId + '-options-nested'} labelText={<FormattedMessage id="options" />}>
+          <ImageOptions imageId={imageId} />
         </TreeItem>
       </TreeItem>
     </>
   );
 }
 
-export default LogoItem;
+export default ImageItem;

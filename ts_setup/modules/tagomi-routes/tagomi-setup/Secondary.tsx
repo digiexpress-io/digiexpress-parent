@@ -69,10 +69,10 @@ export const Secondary: React.FC<{}> = () => {
           {intl.formatMessage({ id: 'menu.services.tagomi' })}
         </Button>
 
-        <Button variant={activeItem?.type === 'LOGOS' ? 'explorerActive' : 'explorerInactive'}
+        <Button variant={activeItem?.type === 'IMAGES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<ImageOutlinedIcon />}
-          onClick={() => onNav({ type: 'LOGOS' })}>
-          {intl.formatMessage({ id: 'menu.logos.tagomi' })}
+          onClick={() => onNav({ type: 'IMAGES' })}>
+          {intl.formatMessage({ id: 'menu.images.tagomi' })}
         </Button>
 
         <Button variant={activeItem?.type === 'SCRIPTS' ? 'explorerActive' : 'explorerInactive'}

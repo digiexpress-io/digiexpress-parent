@@ -4,7 +4,7 @@ import { TagomiComposerApi } from '@dxs-ts/tagomi-api';
 import { ExplorerItem, useTagomiNav } from '../tagomi-nav';
 import { ServicesView } from '../tagomi-service';
 import { TemplateEditor } from '../tagomi-template';
-import { LogosView } from '../tagomi-logos';
+import { ImagesView } from '../tagomi-images';
 import { ScriptsView } from '../tagomi-scripts';
 import { EveliSpinner } from '@dxs-ts/eveli-primitives';
 
@@ -37,8 +37,8 @@ const Main: React.FC<{}> = () => {
       return <TemplateEditor serviceId={serviceId} templateId={template[0].id} />
     }
 
-    if (explorer?.type === 'LOGOS') {
-      return (<Box sx={root}><LogosView /></Box>)
+    if (explorer?.type === 'IMAGES') {
+      return (<Box sx={root}><ImagesView /></Box>)
     }
 
     if (explorer?.type === 'SCRIPTS') {

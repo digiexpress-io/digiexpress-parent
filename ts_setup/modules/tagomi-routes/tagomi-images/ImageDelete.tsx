@@ -7,21 +7,21 @@ import { CancelButton } from '@dxs-ts/eveli-primitives';
 import { TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 
-interface LogoDeleteProps {
-  logoId: string;
+interface ImageDeleteProps {
+  imageId: string;
   onClose: () => void;
 }
 
-export const LogoDelete: React.FC<LogoDeleteProps> = ({ logoId, onClose }) => {
+export const ImageDelete: React.FC<ImageDeleteProps> = ({ imageId, onClose }) => {
   const { site, actions, backend } = Composer.useComposer();
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
-  const logo = site.resources[logoId];
+  const image = site.resources[imageId];
 
-  const message = intl.formatMessage({ id: 'snack.logo.deletedMessage' });
+  const message = intl.formatMessage({ id: 'snack.image.deletedMessage' });
 
   const handleDelete = () => {
-    backend.deleteResource(logo.id).then(_success => {
+    backend.deleteResource(image.id).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });
       onClose();
       actions.handleLoadSite();
@@ -30,14 +30,14 @@ export const LogoDelete: React.FC<LogoDeleteProps> = ({ logoId, onClose }) => {
 
   return (
     <Dialog open={true} onClose={onClose}>
-      <DialogTitle>{intl.formatMessage({ id: 'tagomi.logo.delete.dialog.title' })}{" "}{logo.resourceName}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'tagomi.image.delete.dialog.title' })}{" "}{image.resourceName}</DialogTitle>
       <DialogContent>
-        <Typography>{intl.formatMessage({ id: 'tagomi.logo.delete.dialog.desc' })}</Typography>
+        <Typography>{intl.formatMessage({ id: 'tagomi.image.delete.dialog.desc' })}</Typography>
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
         <Button onClick={handleDelete}>
-          {intl.formatMessage({ id: 'tagomi.logo.delete.dialog.button' })}
+          {intl.formatMessage({ id: 'tagomi.image.delete.dialog.button' })}
         </Button>
       </DialogActions>
     </Dialog>

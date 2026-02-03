@@ -8,35 +8,40 @@ import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 
 
-interface LogoEditProps {
-  logoId: string;
+interface ImageEditProps {
+  imageId: string;
   onClose: () => void;
 }
 
-export const LogoEdit: React.FC<LogoEditProps> = ({ logoId, onClose }) => {
+export const ImageEdit: React.FC<ImageEditProps> = ({ imageId, onClose }) => {
   const { backend, actions, site } = Composer.useComposer();
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
 
-  const logo = site.resources[logoId];
-  const [resourceName, setResourceName] = React.useState(logo.resourceName);
+  const image = site.resources[imageId];
+  const [resourceName, setResourceName] = React.useState(image.resourceName);
   const [uploadBody, setUploadBody] = React.useState<string | undefined>(undefined);
   const [uploadError, setUploadError] = React.useState<string>();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const message = intl.formatMessage({ id: 'snack.logo.editedMessage' }, { resourceName });
+  const message = intl.formatMessage({ id: 'snack.image.editedMessage' }, { resourceName });
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     try {
       const file: File = (e.target as any).files[0];
       if (!file) return;
 
-      const arrayBuffer = await file.arrayBuffer();
-      const base64String = btoa(
-        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
-      setUploadBody(base64String);
-      setUploadError(undefined);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        const base64String = dataUrl.split(',')[1];
+        setUploadBody(base64String);
+        setUploadError(undefined);
+      };
+      reader.onerror = () => {
+        setUploadError('Failed to read file');
+      };
+      reader.readAsDataURL(file);
     } catch (error: any) {
       console.error(error);
       if (error instanceof Error) {
@@ -48,17 +53,19 @@ export const LogoEdit: React.FC<LogoEditProps> = ({ logoId, onClose }) => {
   }
 
   const handleUpdate = () => {
+    setUploadError(undefined);
     const entity: TagomiApi.ResourceMutator = {
-      resourceId: logoId,
+      resourceId: imageId,
       resourceName,
       uploadBody
     };
 
-    backend.updateResource(entity).then(_success => {
-      enqueueSnackbar(message, { variant: 'success' });
-      onClose();
-      actions.handleLoadSite();
-    });
+    backend.updateResource(entity)
+      .then(_success => {
+        enqueueSnackbar(message, { variant: 'success' });
+        onClose();
+        actions.handleLoadSite();
+      })
   };
 
   const updateDisabled = !resourceName;
@@ -72,7 +79,7 @@ export const LogoEdit: React.FC<LogoEditProps> = ({ logoId, onClose }) => {
         accept="image/*"
         onChange={handleFileChange}
       />
-      <DialogTitle>{intl.formatMessage({ id: 'tagomi.logo.edit.dialog.title' })}{" "}{logo.resourceName}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'tagomi.image.edit.dialog.title' })}{" "}{image.resourceName}</DialogTitle>
 
       <DialogContent>
         {!!uploadError && (
@@ -80,7 +87,7 @@ export const LogoEdit: React.FC<LogoEditProps> = ({ logoId, onClose }) => {
         )}
 
         <Burger.TextField
-          label='tagomi.logo.edit.dialog.resourceName'
+          label='tagomi.image.edit.dialog.resourceName'
           required
           onChange={setResourceName}
           value={resourceName}
@@ -88,12 +95,23 @@ export const LogoEdit: React.FC<LogoEditProps> = ({ logoId, onClose }) => {
 
         <Box mb={2} />
 
+        {/* Current image preview */}
+        {image.content && !uploadBody && (
+          <Box mb={2} textAlign="center">
+            <img
+              src={`data:image/*;base64,${image.content}`}
+              alt={image.resourceName}
+              style={{ maxWidth: '100%', maxHeight: '300px', border: '1px solid #ccc', borderRadius: '4px' }}
+            />
+          </Box>
+        )}
+
         <Button
           variant="outlined"
           onClick={() => fileInputRef.current?.click()}
           fullWidth
         >
-          {uploadBody ? intl.formatMessage({ id: 'tagomi.logo.edit.dialog.fileSelected' }) : intl.formatMessage({ id: 'tagomi.logo.edit.dialog.uploadFile' })}
+          {uploadBody ? intl.formatMessage({ id: 'tagomi.image.edit.dialog.fileSelected' }) : intl.formatMessage({ id: 'tagomi.image.edit.dialog.uploadFile' })}
         </Button>
       </DialogContent>
 

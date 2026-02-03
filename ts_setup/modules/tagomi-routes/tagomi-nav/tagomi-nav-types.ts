@@ -19,7 +19,7 @@ export type ExplorerItem = (
   { type: 'LOCALES' } |
   { type: 'TEMPLATES' } |
   { type: 'TAGS' } |
-  { type: 'LOGOS' } |
+  { type: 'IMAGES' } |
   { type: 'SCRIPTS' }
 )
 

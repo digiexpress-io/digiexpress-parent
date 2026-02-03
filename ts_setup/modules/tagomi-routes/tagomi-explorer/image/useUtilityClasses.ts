@@ -1,16 +1,16 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
-export const ScriptsViewClassName = 'ScriptsView';
-export const ScriptsListClassName = 'ScriptsList';
-export const ScriptsViewRootClassName = 'ScriptsViewRoot';
+export const ImagesViewClassName = 'ImagesView';
+export const ImagesListClassName = 'ImagesList';
+export const ImagesViewRootClassName = 'ImagesViewRoot';
 
-export interface ScriptsViewClasses {
+export interface ImagesViewClasses {
   root: string;
   title: string;
 }
 
-export type ScriptsViewClassKey = keyof ScriptsViewClasses;
+export type ImagesViewClassKey = keyof ImagesViewClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -18,24 +18,21 @@ export const useUtilityClasses = () => {
     title: ['title'],
   };
   const getUtilityClass = (slot: string) =>
-    generateUtilityClass(ScriptsViewClassName, slot);
+    generateUtilityClass(ImagesViewClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const ScriptsViewRoot = styled('div', {
-  name: ScriptsViewClassName,
-  slot: 'AllScripts',
+export const ImagesViewRoot = styled('div', {
+  name: ImagesViewClassName,
+  slot: 'AllImages',
   overridesResolver: (props, styles) => {
     return [styles.root, styles.title];
   },
 })<{}>(({ theme }) => {
   return {
-    '& .ScriptsView-title': {
+    '& .ImagesView-title': {
       marginLeft: theme.spacing(1),
       ...theme.typography.h1,
-    },
-    '& .MuiOutlinedInput-root': {
-      borderRadius: theme.spacing(3),
     },
 
     '& .MuiTreeItem-root': {
@@ -56,12 +53,12 @@ export const ScriptsViewRoot = styled('div', {
   };
 });
 
-export const ScriptsListRoot = styled('div', {
-  name: ScriptsListClassName,
+export const ImagesListRoot = styled('div', {
+  name: ImagesListClassName,
   slot: 'TreeItems',
   overridesResolver: (_props, styles) => {
     return [styles.root];
   },
-})<{}>(({ theme }) => {
+})<{}>(() => {
   return {};
 });

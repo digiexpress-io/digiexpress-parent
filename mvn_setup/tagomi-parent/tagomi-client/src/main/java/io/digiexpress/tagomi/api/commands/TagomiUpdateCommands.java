@@ -70,7 +70,7 @@ public interface TagomiUpdateCommands {
     String getResourceId();
     @Nullable TagomiContainer.ResourceType getContentType();
     @Nullable String getResourceName();
-    @Nullable byte[] getUploadBody(); // some static asset...
+    @Nullable String getUploadBody();
     @Nullable List<String> getTemplateIds();
 
   }
