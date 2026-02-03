@@ -5,6 +5,7 @@ export interface TreeNode {
   description?: string;
   children?: TreeNode[];
   labels?: TreeNodeLabel[] | undefined;
+  comments?: TreeNodeComment[] | undefined;
   isExpanded?: boolean;
   isReference?: boolean;
   isLocked?: boolean;
@@ -23,6 +24,12 @@ export interface TreeNodeLabel {
   id: TreeNodeLabelId;
   value: string;
   nodeId: string;
+}
+
+export interface TreeNodeComment {
+  comment: string;
+  author: string;
+  created: string;
 }
 
 export type TreeNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';

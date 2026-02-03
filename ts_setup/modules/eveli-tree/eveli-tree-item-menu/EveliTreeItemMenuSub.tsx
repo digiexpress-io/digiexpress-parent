@@ -5,6 +5,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 import { EveliTreeItemSharingPermissions } from './EveliTreeItemSharingPermissions';
 import { EveliTreeItemHistory } from './EveliTreeItemHistory';
 import { EveliTreeItemReferences } from './EveliTreeItemReferences';
+import { EveliTreeItemComments } from './EveliTreeItemComments';
 import { NewItem } from './NewItem';
 
 export interface EveliTreeItemMenuSubProps {
@@ -15,7 +16,6 @@ export interface EveliTreeItemMenuSubProps {
 export const EveliTreeItemMenuSub: React.FC<EveliTreeItemMenuSubProps> = (props) => {
   const classes = useUtilityClasses();
   const [labels, setLabels] = React.useState('');
-  const [comments, setComments] = React.useState('');
 
   return (
     <Collapse orientation="horizontal" in={!!props.openSubmenu}>
@@ -29,14 +29,7 @@ export const EveliTreeItemMenuSub: React.FC<EveliTreeItemMenuSubProps> = (props)
             size='small'
           />
         )}
-        {props.openSubmenu === 'comments' && (
-          <TextField className={classes.textField} multiline minRows={2} maxRows={5}
-            value={comments}
-            onChange={(e) => setComments(e.target.value)}
-            placeholder='Add comments...'
-            size='small'
-          />
-        )}
+        {props.openSubmenu === 'comments' && <EveliTreeItemComments node={props.node} />}
         {props.openSubmenu === 'sharing' && <EveliTreeItemSharingPermissions />}
         {props.openSubmenu === 'history' && <EveliTreeItemHistory />}
         {props.openSubmenu === 'references' && <EveliTreeItemReferences node={props.node} />}

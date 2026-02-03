@@ -185,7 +185,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
         className={props.openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('comments')}
       >
-        Comments
+        Comments ({props.node?.comments?.length || 0})
         <Box flex={1} />
         <ChevronRightIcon fontSize='small' />
       </MenuItem>

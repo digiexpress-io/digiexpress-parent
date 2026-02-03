@@ -171,15 +171,38 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
 
     [`& .${MUI_NAME}-textField`]: {
       width: '100%',
+      marginTop: theme.spacing(0.5),
       '& .MuiInputBase-root': {
         backgroundColor: '#1e1e1e',
         color: '#cccccc',
-        ...theme.typography.caption,
         borderRadius: 0,
+        '& fieldset': {
+          borderColor: '#3c3c3c',
+          borderRadius: 0,
+        },
+        '&:hover fieldset': {
+          borderColor: '#555555',
+        },
+        '&.Mui-focused fieldset': {
+          border: `1px solid #cccccc`
+        },
       },
       '& .MuiInputBase-input': {
         color: '#cccccc',
-        padding: '0px'
+        ...theme.typography.caption,
+        padding: '8px 12px',
+        '&::placeholder': {
+          color: '#888888',
+          opacity: 1,
+          ...theme.typography.caption,
+        },
+      },
+      '& .MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputMultiline': {
+        padding: 'unset',
+      },
+      '& .MuiInputLabel-root': {
+        color: '#cccccc',
+        ...theme.typography.caption,
       },
     },
 

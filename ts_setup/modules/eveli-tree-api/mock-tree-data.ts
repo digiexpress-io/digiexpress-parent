@@ -56,6 +56,23 @@ export const mockTreeData: TreeNode[] = [
                 nodeId: 'main.article'
               }
             ],
+            comments: [
+              {
+                comment: 'Found a typo in the content - should be "municipality" not "municipalty"',
+                author: 'Sarah Johnson',
+                created: '1.2.2025 14:30'
+              },
+              {
+                comment: 'The Finnish translation needs review by a native speaker',
+                author: 'Michael Chen',
+                created: '28.1.2025 10:15'
+              },
+              {
+                comment: 'Consider adding a confirmation dialog before deletion',
+                author: 'Tom Walsh',
+                created: '18.1.2025 11:35'
+              }
+            ],
             children: [
               {
                 id: 'fi-main',
