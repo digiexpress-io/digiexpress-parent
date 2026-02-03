@@ -3,6 +3,8 @@ import { generateUtilityClass, styled, Menu } from '@mui/material';
 
 export const MUI_NAME = 'EveliTreeItemMenu';
 export const MENU_WIDTH = 350;
+export const MENU_WIDTH_EXTENDED = MENU_WIDTH * 3;
+export const MENU_HEIGHT = 800; // Approximate height when submenu is open
 
 export interface EveliTreeItemMenuClasses {
   root: string;
@@ -14,6 +16,10 @@ export interface EveliTreeItemMenuClasses {
   textField: string;
   label: string;
   expandedContent: string;
+  menuContainer: string;
+  leftMenuSection: string;
+  menuDivider: string;
+  submenuSection: string;
 }
 
 export type EveliTreeItemMenuClassKey = keyof EveliTreeItemMenuClasses;
@@ -28,7 +34,11 @@ export const useUtilityClasses = () => {
     divider: ['divider'],
     textField: ['textField'],
     label: ['label'],
-    expandedContent: ['expandedContent']
+    expandedContent: ['expandedContent'],
+    menuContainer: ['menuContainer'],
+    leftMenuSection: ['leftMenuSection'],
+    menuDivider: ['menuDivider'],
+    submenuSection: ['submenuSection']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -47,10 +57,14 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       styles.divider,
       styles.textField,
       styles.label,
-      styles.expandedContent
+      styles.expandedContent,
+      styles.menuContainer,
+      styles.leftMenuSection,
+      styles.menuDivider,
+      styles.submenuSection
     ];
   },
-})(({ theme }) => {
+})<{ isSubmenuOpen?: boolean }>(({ theme }) => {
   return {
     // Menu paper styles
     '& .MuiPaper-root': {
@@ -58,6 +72,7 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       color: '#cccccc',
       border: '1px solid #3c3c3c',
       minWidth: MENU_WIDTH,
+      width: 'auto',
       padding: theme.spacing(0.5)
     },
     [`& .${MUI_NAME}-nodeNameContainer`]: {
@@ -155,6 +170,47 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
         color: '#888888',
         fontStyle: 'italic',
       },
+    },
+
+    [`& .${MUI_NAME}-menuContainer`]: {
+      display: 'flex',
+      width: '100%',
+      alignItems: 'flex-start',
+    },
+
+    [`& .${MUI_NAME}-leftMenuSection`]: {
+      width: MENU_WIDTH,
+      overflow: 'visible',
+      display: 'flex',
+      flexDirection: 'column',
+      flexShrink: 0,
+    },
+
+    [`& .${MUI_NAME}-menuDivider`]: {
+      borderColor: '#3c3c3c',
+      margin: '0',
+    },
+
+    // Collapse component styling to ensure proper flex behavior
+    '& .MuiCollapse-root': {
+      display: 'flex',
+      alignItems: 'flex-start',
+    },
+    '& .MuiCollapse-wrapper': {
+      display: 'flex',
+      alignItems: 'flex-start',
+    },
+    '& .MuiCollapse-wrapperInner': {
+      display: 'flex',
+      alignItems: 'flex-start',
+    },
+
+    [`& .${MUI_NAME}-submenuSection`]: {
+      width: MENU_WIDTH,
+      maxHeight: MENU_HEIGHT,
+      padding: theme.spacing(2),
+      overflowY: 'auto',
+      overflowX: 'hidden',
     },
   };
 });
