@@ -48,10 +48,8 @@ import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
-import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
-import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Multi;
@@ -213,29 +211,23 @@ public class GamutUserActionsController {
   ) {
     
     if(actionId == null) {
-      return Uni.createFrom().item(ResponseEntity.ok(
-          gamutClient.userActionQuery()
-            .customer(authClient.getCustomer(), authClient.getCustomerRoles())
-            .cockpitId(cockpitId)
-            .findAll()
-        ));
+      return gamutClient.userActionQuery()
+          .customer(authClient.getCustomer(), authClient.getCustomerRoles())
+          .cockpitId(cockpitId)
+          .findAll().collect().asList().map(ResponseEntity::ok);
     }
 
-    try {
-      return gamutClient.userActionBuilder()
-          .actionId(actionId)
-          .cockpitId(cockpitId)
-          .clientLocale(actionLocale)
-          .inputContextId(inputContextId)
-          .inputParentContextId(inputParentContextId)
-          .customer(authClient.getCustomer())
-          .customerRoles(authClient.getCustomerRoles())
-          .createOne().onItem().transform(e -> ResponseEntity.ok(e));
-      
-    } catch(UserActionNotAllowedException e) {
-      return Uni.createFrom().item(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
-    } catch (WorkflowNotFoundException e) {
-      return Uni.createFrom().item(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+    return gamutClient.userActionBuilder()
+        .actionId(actionId)
+        .cockpitId(cockpitId)
+        .clientLocale(actionLocale)
+        .inputContextId(inputContextId)
+        .inputParentContextId(inputParentContextId)
+        .customer(authClient.getCustomer())
+        .customerRoles(authClient.getCustomerRoles())
+        .createOne().map(ResponseEntity::ok)
+        .onFailure().recoverWithItem(() -> ResponseEntity.notFound().build())
+        // make the type as "<?>"
+        .map(e -> e);
   }
 }

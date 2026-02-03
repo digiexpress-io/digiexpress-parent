@@ -230,6 +230,14 @@ WHERE id = $9""").ln()
   
   @Override
   public SqlTuple getById(String id, boolean includeFormBody) {
+    // if not valid id just add non sequential id
+    Long actualId;
+    try {
+      actualId = Long.parseLong(id);
+    } catch (Exception e) {
+      actualId = -90000l;
+    }
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT ").append(getColumns(includeFormBody)).ln()        
@@ -240,7 +248,7 @@ WHERE id = $9""").ln()
         .append(" WHERE mission.mission_ref = $1 OR procs.id = $2 OR mission.id = $1").ln()
         
         .build())
-        .props(Tuple.of(id, Long.parseLong(id)))
+        .props(Tuple.of(id, actualId))
         .build();
   }
   @Override
