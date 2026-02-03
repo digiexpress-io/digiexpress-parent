@@ -3,7 +3,7 @@ import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, But
 import { useSnackbar } from 'notistack';
 
 import { FormattedMessage } from 'react-intl';
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor, { commands } from '@uiw/react-md-editor';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { StencilComposerApi as Composer } from '@dxs-ts/stencil-api';
@@ -15,6 +15,17 @@ interface TemplateEditProps {
   templateId: StencilApi.TemplateId;
   onClose: () => void;
 }
+
+// only show markdown buttons that render correctly in Gamut
+const GAMUT_SAFE_COMMANDS = [
+  commands.bold,
+  commands.italic,
+  commands.hr,
+  commands.title,
+  commands.image,
+  commands.unorderedListCommand,
+  commands.orderedListCommand,
+];
 
 const TemplateEdit: React.FC<TemplateEditProps> = ({ onClose, templateId }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -74,7 +85,7 @@ const TemplateEdit: React.FC<TemplateEditProps> = ({ onClose, templateId }) => {
   
       <Box display="flex" flexDirection="row" flexWrap="wrap" sx={{ mt: 2 }}>
         <Box flex="1" sx={{ paddingRight: 1 }}>
-          <MDEditor key={1} value={content} onChange={handleContentChange}
+          <MDEditor key={1} value={content} onChange={handleContentChange} commands={GAMUT_SAFE_COMMANDS}
             textareaProps={{ placeholder: '# Level 1 Header' }}
             height={300}
           />

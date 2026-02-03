@@ -1306,5 +1306,6 @@ export const en = {
   'cockpit.tenantCreate.description': 'Select a set of Wrench and Stencil assets to use in this tenant',
   'cockpit.tenantCreate.stencilConfig.label': 'Stencil assets',
   'cockpit.tenantCreate.wrenchConfig.label': 'Wrench assets',
-  'cockpit.tenantCreate.description.placeholder': 'Enter a short text to give additional info about this tenant'
+  'cockpit.tenantCreate.description.placeholder': 'Enter a short text to give additional info about this tenant',
+  'toolbar.files': 'Explorer'
 }

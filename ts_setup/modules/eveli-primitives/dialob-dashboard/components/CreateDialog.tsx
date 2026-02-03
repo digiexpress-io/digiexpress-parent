@@ -62,14 +62,21 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
 
     const handleResponse = async (response: any) => {
       try {
-        const jsonResponse = await response.json();
-        setFetchAgain((prevState) => !prevState);
-        handleCreateModalClose();
-        return jsonResponse;
+        return await response.json();
       } catch (ex) {
         handleRejection(ex, config.setTechnicalError);
         throw ex;
       }
+    };
+
+    const openCreatedForm = (created: any) => {
+      const formId: string | undefined = created?.id ?? created?._id ?? created?.name ?? values.name;
+      if (!formId) return;
+
+      const tenantParam = config.tenantId ? `?tenantId=${config.tenantId}` : "";
+      const url = `${config.dialobApiUrl}/composer/${formId}${tenantParam}`;
+
+      window.location.replace(url);
     };
 
     const checkHttpResponseAsync = async (response: any, setLoginRequired: any) => {
@@ -81,34 +88,42 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
       }
     };
 
-    if (formConfiguration) {    // Copy
-      try {
+    try {
+      if (formConfiguration) {    // Copy
         const response = await getAdminFormConfiguration(formConfiguration.id!);
         const checkedResponse = await checkHttpResponseAsync(response, config.setLoginRequired);
         const json = await handleResponse(checkedResponse);
+
         delete json._id;
         delete json._rev;
         json.name = values.name!;
         json.metadata.label = values.label || "";
+
         const addResponse = await addAdminFormConfiguration(json);
         await checkHttpResponseAsync(addResponse, config.setLoginRequired);
-        await handleResponse({ json: () => json });
-      } catch (ex) {
-        handleRejection(ex, config.setTechnicalError);
-      }
-    } else {    // Create new
-      const result: DefaultForm = DEFAULT_FORM;
-      result.name = values.name!;
-      result.metadata.label = values.label || "";
-      try {
+        const created = await handleResponse(addResponse);
+
+        setFetchAgain(prev => !prev);
+        handleCreateModalClose();
+        openCreatedForm(created);
+
+      } else {    // Create new
+        const result: DefaultForm = DEFAULT_FORM;
+        result.name = values.name!;
+        result.metadata.label = values.label || "";
+
         const addResponse = await addAdminFormConfiguration(result);
         await checkHttpResponseAsync(addResponse, config.setLoginRequired);
-        await handleResponse(addResponse);
-      } catch (ex) {
-        handleRejection(ex, config.setTechnicalError);
-      } finally {
-        setIsSubmitting(false);
+        const created = await handleResponse(addResponse);
+
+        setFetchAgain(prev => !prev);
+        handleCreateModalClose();
+        openCreatedForm(created);
       }
+    } catch (ex) {
+      handleRejection(ex, config.setTechnicalError);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

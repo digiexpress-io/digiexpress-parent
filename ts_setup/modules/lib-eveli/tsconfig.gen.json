@@ -210,9 +210,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-01-23T09:36:18.037Z",
+    "at": "2026-01-30T07:17:51.545Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "11ffe20f86e2",
+    "fromRegistry": "bdc520919c83",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"
