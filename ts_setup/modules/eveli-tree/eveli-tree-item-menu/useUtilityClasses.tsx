@@ -8,6 +8,7 @@ export interface EveliTreeItemMenuClasses {
   root: string;
   nodeNameContainer: string;
   menuItem: string;
+  menuItemActive: string;
   menuItemDelete: string;
   divider: string;
   textField: string;
@@ -22,6 +23,7 @@ export const useUtilityClasses = () => {
     root: ['root'],
     nodeNameContainer: ['nodeNameContainer'],
     menuItem: ['menuItem'],
+    menuItemActive: ['menuItemActive'],
     menuItemDelete: ['menuItemDelete'],
     divider: ['divider'],
     textField: ['textField'],
@@ -40,6 +42,7 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       styles.root,
       styles.nodeNameContainer,
       styles.menuItem,
+      styles.menuItemActive,
       styles.menuItemDelete,
       styles.divider,
       styles.textField,
@@ -73,6 +76,21 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       display: 'flex',
       alignItems: 'center',
       gap: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: '#3c3c3c',
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#cccccc',
+        fontSize: '16px',
+      },
+    },
+
+    [`& .${MUI_NAME}-menuItemActive`]: {
+      fontSize: '13px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+      backgroundColor: '#4c4b4b',
       '&:hover': {
         backgroundColor: '#3c3c3c',
       },

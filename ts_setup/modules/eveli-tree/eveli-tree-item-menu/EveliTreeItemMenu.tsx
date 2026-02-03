@@ -106,7 +106,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <Divider className={classes.divider} />
 
       <MenuItem
-        className={classes.menuItem}
+        className={openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
         onClick={(e) => handleSubmenuOpen(e, 'new')}
       >
         <NewIcon fontSize='small' />New
@@ -154,7 +154,7 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       <Divider className={classes.divider} />
 
       <MenuItem
-        className={classes.menuItem}
+        className={openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem}
         onClick={(e) => handleSubmenuOpen(e, 'labels')}
       >
         <div>
@@ -180,7 +180,10 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem className={classes.menuItem} onClick={(e) => handleSubmenuOpen(e, 'comments')}>
+      <MenuItem
+        className={openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
+        onClick={(e) => handleSubmenuOpen(e, 'comments')}
+      >
         Comments
         <Box flex={1} />
         <ChevronRightIcon fontSize='small' />
@@ -188,7 +191,10 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem className={classes.menuItem} onClick={(e) => handleSubmenuOpen(e, 'sharing')}>
+      <MenuItem
+        className={openSubmenu === 'sharing' ? classes.menuItemActive : classes.menuItem}
+        onClick={(e) => handleSubmenuOpen(e, 'sharing')}
+      >
         Sharing and Permissions
         <Box flex={1} />
         <ChevronRightIcon fontSize='small' />
@@ -196,7 +202,10 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem className={classes.menuItem} onClick={(e) => handleSubmenuOpen(e, 'history')}>
+      <MenuItem
+        className={openSubmenu === 'history' ? classes.menuItemActive : classes.menuItem}
+        onClick={(e) => handleSubmenuOpen(e, 'history')}
+      >
         History
         <Box flex={1} />
         <ChevronRightIcon fontSize='small' />

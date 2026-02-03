@@ -139,7 +139,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     borderColor: '#555555',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.palette.primary.main,
+    border: `1px solid #cccccc`
   },
   '& .MuiSvgIcon-root': {
     color: '#cccccc',
