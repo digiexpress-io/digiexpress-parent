@@ -201,6 +201,7 @@ public class SyncDialobAndProcess {
     
     return Uni.createFrom().item(() -> {
       final var flowInput = new HashMap<String, Serializable>();
+      flowInput.put("processId", instance.getId());
       flowInput.put("questionnaireId", instance.getQuestionnaireId());
       flowInput.put("workflowName", instance.getWorkflowName());
       
