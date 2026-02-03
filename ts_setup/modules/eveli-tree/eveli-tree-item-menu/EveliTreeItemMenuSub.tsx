@@ -19,8 +19,8 @@ export const EveliTreeItemMenuSub: React.FC<EveliTreeItemMenuSubProps> = (props)
 
   return (
     <Collapse orientation="horizontal" in={!!props.openSubmenu}>
-      <Divider orientation="vertical" className={classes.menuDivider} />
-      <Box className={classes.submenuSection}>
+      <Divider orientation="vertical" className={classes.dividerSub} />
+      <Box className={classes.sectionSub}>
         {props.openSubmenu === 'labels' && (
           <TextField className={classes.textField} multiline minRows={2} maxRows={5}
             value={labels}

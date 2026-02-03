@@ -9,7 +9,7 @@ export const MENU_PADDING = 8; // theme.spacing(0.5) * 2 for top and bottom padd
 
 export interface EveliTreeItemMenuClasses {
   root: string;
-  nodeNameContainer: string;
+  headerMain: string;
   menuItem: string;
   menuItemActive: string;
   menuItemDelete: string;
@@ -18,9 +18,9 @@ export interface EveliTreeItemMenuClasses {
   label: string;
   expandedContent: string;
   menuContainer: string;
-  leftMenuSection: string;
-  menuDivider: string;
-  submenuSection: string;
+  sectionMain: string;
+  dividerSub: string;
+  sectionSub: string;
 }
 
 export type EveliTreeItemMenuClassKey = keyof EveliTreeItemMenuClasses;
@@ -28,7 +28,7 @@ export type EveliTreeItemMenuClassKey = keyof EveliTreeItemMenuClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    nodeNameContainer: ['nodeNameContainer'],
+    headerMain: ['headerMain'],
     menuItem: ['menuItem'],
     menuItemActive: ['menuItemActive'],
     menuItemDelete: ['menuItemDelete'],
@@ -37,9 +37,9 @@ export const useUtilityClasses = () => {
     label: ['label'],
     expandedContent: ['expandedContent'],
     menuContainer: ['menuContainer'],
-    leftMenuSection: ['leftMenuSection'],
-    menuDivider: ['menuDivider'],
-    submenuSection: ['submenuSection']
+    sectionMain: ['sectionMain'],
+    dividerSub: ['dividerSub'],
+    sectionSub: ['sectionSub']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -52,7 +52,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
-      styles.nodeNameContainer,
+      styles.headerMain,
       styles.menuItem,
       styles.menuItemActive,
       styles.menuItemDelete,
@@ -61,9 +61,9 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       styles.label,
       styles.expandedContent,
       styles.menuContainer,
-      styles.leftMenuSection,
-      styles.menuDivider,
-      styles.submenuSection
+      styles.sectionMain,
+      styles.dividerSub,
+      styles.sectionSub
     ];
   },
 })<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, shouldExpandUpward, isSubmenuOpen }) => {
@@ -81,7 +81,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       overflow: 'hidden',
       transition: 'width 0.3s ease-out'
     },
-    [`& .${MUI_NAME}-nodeNameContainer`]: {
+    [`& .${MUI_NAME}-headerMain`]: {
       padding: theme.spacing(0.5, 2, 0.5, 2),
     },
 
@@ -177,7 +177,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       alignItems: 'flex-start',
     },
 
-    [`& .${MUI_NAME}-leftMenuSection`]: {
+    [`& .${MUI_NAME}-sectionMain`]: {
       width: MENU_WIDTH,
       maxHeight: MENU_HEIGHT - MENU_PADDING,
       overflowY: 'hidden',
@@ -187,7 +187,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       flexShrink: 0,
     },
 
-    [`& .${MUI_NAME}-menuDivider`]: {
+    [`& .${MUI_NAME}-dividerSub`]: {
       borderColor: '#3c3c3c',
       margin: '0',
       height: '100%',
@@ -208,7 +208,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       alignItems: 'flex-start',
     },
 
-    [`& .${MUI_NAME}-submenuSection`]: {
+    [`& .${MUI_NAME}-sectionSub`]: {
       width: MENU_WIDTH,
       maxHeight: MENU_HEIGHT - MENU_PADDING,
       padding: theme.spacing(2),

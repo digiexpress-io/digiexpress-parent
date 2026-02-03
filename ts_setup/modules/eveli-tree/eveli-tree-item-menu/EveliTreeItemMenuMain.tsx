@@ -70,11 +70,9 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
   }
 
   return (
-    <Box className={classes.leftMenuSection}>
-      <Box className={classes.nodeNameContainer}>
-        <Typography variant='subtitle2'>
-          {props.node?.name}
-        </Typography>
+    <Box className={classes.sectionMain}>
+      <Box className={classes.headerMain}>
+        <Typography variant='h3'>{props.node?.name}</Typography>
         <Typography variant='caption'>
           Last edited: 12.05.2025 by John Smith
         </Typography>
