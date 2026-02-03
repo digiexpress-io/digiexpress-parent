@@ -1,44 +1,9 @@
 import React from 'react';
-import { MenuItem, Divider, Typography, TextField, Box, Collapse, Chip } from '@mui/material';
-import {
-  DeleteForever as DeleteIcon,
-  Add as NewIcon,
-  Edit as EditIcon,
-  ContentCopy as CopyIcon,
-  DriveFileRenameOutline as RenameIcon,
-  ChevronRight as ChevronRightIcon,
-  Construction as DevModeIcon,
-  Assignment as AssignmentIcon,
-  Block as DisabledIcon,
-  VisibilityOff as AnonymousIcon,
-} from '@mui/icons-material';
-import { TreeNode, mockTreeData } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemMenuRoot, MENU_WIDTH, MENU_HEIGHT } from './useUtilityClasses';
-import { EveliTreeItemSharingPermissions } from './EveliTreeItemSharingPermissions';
-import { EveliTreeItemHistory } from './EveliTreeItemHistory';
-import { EveliTreeItemReferences } from './EveliTreeItemReferences';
-import { NewItem } from './NewItem';
-
-function getReferencesCount(nodeId: string, nodeName: string): number {
-  let count = 0;
-
-  function searchInNode(node: TreeNode): void {
-    // Check if this node is a reference to our target node
-    if (node.isReference && node.name === nodeName && node.id !== nodeId) {
-      count++;
-    }
-
-    // Recursively search children
-    if (node.children) {
-      node.children.forEach(child => searchInNode(child));
-    }
-  }
-
-  // Search through all mock data
-  mockTreeData.forEach(rootNode => searchInNode(rootNode));
-
-  return count;
-}
+import { Box } from '@mui/material';
+import { TreeNode } from '../../eveli-tree-api';
+import { useUtilityClasses, EveliTreeItemMenuRoot as Root } from './useUtilityClasses';
+import { EveliTreeItemMenuMain } from './EveliTreeItemMenuMain';
+import { EveliTreeItemMenuSub } from './EveliTreeItemMenuSub';
 
 interface EveliTreeItemMenuProps {
   node: TreeNode | undefined;
@@ -50,8 +15,6 @@ interface EveliTreeItemMenuProps {
 
 export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
   const classes = useUtilityClasses();
-  const [labels, setLabels] = React.useState('');
-  const [comments, setComments] = React.useState('');
   const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
 
   // Calculate if menu should expand upward based on available space
@@ -77,44 +40,18 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
     return shouldExpand;
   }, [props.anchorPosition]);
 
-  // Calculate reference count for this node
-  const referencesCount = props.node ? getReferencesCount(props.node.id, props.node.name) : 0;
-
   React.useEffect(() => {
     if (!props.open) {
       setOpenSubmenu(undefined);
     }
   }, [props.open]);
 
-
-  function handleSubmenuOpen(event: React.MouseEvent<HTMLElement>, submenuType: string) {
+  function handleSubmenuOpen(submenuType: string) {
     setOpenSubmenu(submenuType);
   }
 
-
-  function handleEdit() {
-    console.log('Edit:', props.node?.name);
-    props.onClose();
-  }
-
-  function handleCopy() {
-    console.log('Copy:', props.node?.name);
-    props.onClose();
-  }
-
-  function handleDelete() {
-    console.log('Delete:', props.node?.name);
-    props.onClose();
-  }
-
-  function handleDuplicate() {
-    console.log('Duplicate:', props.node?.name);
-    props.onClose();
-  }
-
-
-  return (<>
-    <EveliTreeItemMenuRoot
+  return (
+    <Root
       className={classes.root}
       open={props.open}
       onClose={props.onClose}
@@ -137,160 +74,17 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       }}
     >
       <Box className={classes.menuContainer}>
-        {/* Left section - main menu */}
-        <Box className={classes.leftMenuSection}>
-          <Box className={classes.nodeNameContainer}>
-            <Typography variant='body1' fontWeight={500}> {props.node?.name}</Typography>
-            <Typography variant='subtitle2'>Last edited: 12.05.2025 by John Smith</Typography>
-          </Box>
-
-          <Divider className={classes.divider} />
-
-          <MenuItem
-            className={openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
-            onClick={(e) => handleSubmenuOpen(e, 'new')}
-          >
-            <NewIcon fontSize='small' />New
-            <Box flex={1} />
-            <ChevronRightIcon fontSize='small' />
-          </MenuItem>
-          <MenuItem className={classes.menuItem} onClick={handleEdit}>
-            <EditIcon fontSize='small' />Edit</MenuItem>
-          <MenuItem className={classes.menuItem} onClick={handleCopy}>
-            <CopyIcon fontSize='small' />Copy</MenuItem>
-          <MenuItem className={classes.menuItem} onClick={handleDuplicate}>
-            <RenameIcon fontSize='small' />Rename</MenuItem>
-          <MenuItem className={classes.menuItemDelete} onClick={handleDelete}>
-            <DeleteIcon fontSize='small' />Delete</MenuItem>
-
-          <Divider className={classes.divider} />
-
-          {props.node?.configOptions && props.node.configOptions.length > 0 && (
-            <MenuItem className={classes.menuItem}>
-              <div>
-                <div>Configuration Options</div>
-                <div>
-                  <Box sx={{
-                    mt: 0.5,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 0.5,
-                    maxWidth: MENU_WIDTH - 32,
-                    overflow: 'hidden'
-                  }}>
-                    {props.node.configOptions.map((config, index) => (
-                      <React.Fragment key={index}>
-                        {config.devMode && (<Chip icon={<DevModeIcon />} label="Development" size='small' className={classes.label} />)}
-                        {config.assignableMode && (<Chip icon={<AssignmentIcon />} label="Assignable" size='small' className={classes.label} />)}
-                        {config.disabledMode && (<Chip icon={<DisabledIcon />} label="Disabled" size='small' className={classes.label} />)}
-                        {config.anonymousMode && (<Chip icon={<AnonymousIcon />} label="Anonymous" size='small' className={classes.label} />)}
-                      </React.Fragment>
-                    ))}
-                  </Box>
-                </div>
-              </div>
-            </MenuItem>
-          )}
-
-          <Divider className={classes.divider} />
-
-          <MenuItem
-            className={openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem}
-            onClick={(e) => handleSubmenuOpen(e, 'labels')}
-          >
-            <div>
-              <div>Labels</div>
-              {props.node?.labels && props.node.labels.length > 0 && (
-                <Box sx={{
-                  mt: 0.5,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 0.5,
-                  overflow: 'hidden'
-                }}>
-                  {props.node.labels.map(label => (
-                    <Chip key={label.id} label={label.value} size='small' className={classes.label} />
-                  ))}
-                </Box>
-              )}
-            </div>
-            <Box flex={1} />
-            <ChevronRightIcon fontSize='small' />
-          </MenuItem>
-
-          <Divider className={classes.divider} />
-
-          <MenuItem
-            className={openSubmenu === 'comments' ? classes.menuItemActive : classes.menuItem}
-            onClick={(e) => handleSubmenuOpen(e, 'comments')}
-          >
-            Comments
-            <Box flex={1} />
-            <ChevronRightIcon fontSize='small' />
-          </MenuItem>
-
-          <Divider className={classes.divider} />
-
-          <MenuItem
-            className={openSubmenu === 'sharing' ? classes.menuItemActive : classes.menuItem}
-            onClick={(e) => handleSubmenuOpen(e, 'sharing')}
-          >
-            Sharing and Permissions
-            <Box flex={1} />
-            <ChevronRightIcon fontSize='small' />
-          </MenuItem>
-
-          <Divider className={classes.divider} />
-
-          <MenuItem
-            className={openSubmenu === 'history' ? classes.menuItemActive : classes.menuItem}
-            onClick={(e) => handleSubmenuOpen(e, 'history')}
-          >
-            History
-            <Box flex={1} />
-            <ChevronRightIcon fontSize='small' />
-          </MenuItem>
-
-          <Divider className={classes.divider} />
-
-          <MenuItem
-            className={openSubmenu === 'references' ? classes.menuItemActive : classes.menuItem}
-            onClick={(e) => handleSubmenuOpen(e, 'references')}
-          >
-            References ({referencesCount})
-            <Box flex={1} />
-            <ChevronRightIcon fontSize='small' />
-          </MenuItem>
-        </Box>
-
-        {/* Conditional divider and right section */}
-        <Collapse orientation="horizontal" in={!!openSubmenu}>
-          <Divider orientation="vertical" className={classes.menuDivider} />
-          <Box className={classes.submenuSection}>
-            {openSubmenu === 'labels' && (
-              <TextField className={classes.textField} multiline minRows={2} value={labels}
-                onChange={(e) => setLabels(e.target.value)}
-                placeholder='Add labels...'
-                size='small'
-              />
-            )}
-            {openSubmenu === 'comments' && (
-              <TextField className={classes.textField} multiline minRows={2} maxRows={5}
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                placeholder='Add comments...'
-                size='small'
-              />
-            )}
-            {openSubmenu === 'sharing' && <EveliTreeItemSharingPermissions />}
-            {openSubmenu === 'history' && <EveliTreeItemHistory />}
-            {openSubmenu === 'references' && <EveliTreeItemReferences node={props.node} />}
-            {openSubmenu === 'new' && <NewItem />}
-          </Box>
-        </Collapse>
+        <EveliTreeItemMenuMain
+          node={props.node}
+          openSubmenu={openSubmenu}
+          onSubmenuOpen={handleSubmenuOpen}
+          onClose={props.onClose}
+        />
+        <EveliTreeItemMenuSub
+          node={props.node}
+          openSubmenu={openSubmenu}
+        />
       </Box>
-    </EveliTreeItemMenuRoot>
-  </>
+    </Root>
   );
 };
-
