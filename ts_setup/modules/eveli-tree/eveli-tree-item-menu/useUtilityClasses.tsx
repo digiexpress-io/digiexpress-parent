@@ -1,10 +1,11 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { generateUtilityClass, styled, Menu } from '@mui/material';
+import { generateUtilityClass, styled, Popover } from '@mui/material';
 
 export const MUI_NAME = 'EveliTreeItemMenu';
 export const MENU_WIDTH = 350;
-export const MENU_WIDTH_EXTENDED = MENU_WIDTH * 3;
-export const MENU_HEIGHT = 800; // Approximate height when submenu is open
+export const MENU_WIDTH_EXTENDED = MENU_WIDTH * 2;
+export const MENU_HEIGHT = 700; // Approximate height when submenu is open
+export const MENU_PADDING = 8; // theme.spacing(0.5) * 2 for top and bottom padding
 
 export interface EveliTreeItemMenuClasses {
   root: string;
@@ -44,9 +45,10 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const EveliTreeItemMenuRoot = styled(Menu, {
+export const EveliTreeItemMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
+  shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward'].includes(prop as string),
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
@@ -64,7 +66,7 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       styles.submenuSection
     ];
   },
-})<{ isSubmenuOpen?: boolean }>(({ theme }) => {
+})<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, shouldExpandUpward, isSubmenuOpen }) => {
   return {
     // Menu paper styles
     '& .MuiPaper-root': {
@@ -72,18 +74,15 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
       color: '#cccccc',
       border: '1px solid #3c3c3c',
       minWidth: MENU_WIDTH,
-      width: 'auto',
-      padding: theme.spacing(0.5)
+      width: isSubmenuOpen ? MENU_WIDTH_EXTENDED : 'auto',
+      height: MENU_HEIGHT,
+      maxHeight: MENU_HEIGHT,
+      padding: theme.spacing(0.5),
+      overflow: 'hidden',
+      transition: 'width 0.3s ease-out'
     },
     [`& .${MUI_NAME}-nodeNameContainer`]: {
       padding: theme.spacing(0.5, 2, 0.5, 2),
-      '& .MuiTypography-subtitle2': {
-        color: '#cccccc',
-        fontWeight: 500,
-      },
-      '& .MuiTypography-caption': {
-        color: '#888888',
-      },
     },
 
     [`& .${MUI_NAME}-menuItem`]: {
@@ -180,7 +179,9 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
 
     [`& .${MUI_NAME}-leftMenuSection`]: {
       width: MENU_WIDTH,
-      overflow: 'visible',
+      maxHeight: MENU_HEIGHT - MENU_PADDING,
+      overflowY: 'hidden',
+      overflowX: 'hidden',
       display: 'flex',
       flexDirection: 'column',
       flexShrink: 0,
@@ -189,6 +190,8 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
     [`& .${MUI_NAME}-menuDivider`]: {
       borderColor: '#3c3c3c',
       margin: '0',
+      height: '100%',
+      minHeight: MENU_HEIGHT - MENU_PADDING,
     },
 
     // Collapse component styling to ensure proper flex behavior
@@ -207,7 +210,7 @@ export const EveliTreeItemMenuRoot = styled(Menu, {
 
     [`& .${MUI_NAME}-submenuSection`]: {
       width: MENU_WIDTH,
-      maxHeight: MENU_HEIGHT,
+      maxHeight: MENU_HEIGHT - MENU_PADDING,
       padding: theme.spacing(2),
       overflowY: 'auto',
       overflowX: 'hidden',
