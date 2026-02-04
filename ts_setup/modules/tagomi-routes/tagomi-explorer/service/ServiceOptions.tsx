@@ -8,9 +8,7 @@ import { ModeEdit as EditIcon } from '@mui/icons-material';
 import * as Burger from '@dxs-ts/eveli-primitives';
 
 import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
-import { useTagomiNav } from '../../tagomi-nav';
-import { ServiceEdit } from '../../tagomi-service/ServiceEdit';
-import { ServiceDelete } from '../../tagomi-service/ServiceDelete';
+import { ServiceEdit, ServiceDelete } from '../../tagomi-service';
 import { NewTemplate, TemplateDelete, TemplateLocaleEdit } from '../../tagomi-template';
 import { TemplateDependenciesAdd, TemplateDependenciesEdit } from '../../tagomi-dependencies';
 import { DebugLocale } from '../../tagomi-debug';
@@ -22,7 +20,7 @@ interface ServiceOptionsProps {
 
 export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const intl = useIntl();
-  const { site, backend } = Composer.useComposer();
+  const { site } = Composer.useComposer();
   
   const serviceTemplates = Object.values(site.templates).filter(t => t.serviceId === service.id);
   const hasTemplates = serviceTemplates.length > 0;
@@ -34,8 +32,6 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   
   const dependencyTemplates = Object.values(site.templates).filter(t => t.serviceId !== service.id);
   const hasAddableDependencies = dependencyTemplates.length > 0;
-
-  const { activeItem, onNav } = useTagomiNav();
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 
     'ServiceEdit' | 

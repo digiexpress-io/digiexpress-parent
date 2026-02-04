@@ -2,17 +2,13 @@ import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { useIntl } from 'react-intl'
-
-//import { ArticleList, useUtilityClasses } from '../stencil-explorer/article'
-import { ServicesViewRoot, useUtilityClasses } from '../tagomi-explorer/service/useUtilityClasses';
-import { ServicesList } from '../tagomi-explorer/service/ServicesList';
-
+import { ServicesViewRoot, useServiceUtilityClasses, ServicesList } from '../tagomi-explorer';
 
 
 export const ServicesView: React.FC = () => {
   const intl = useIntl();
   const [searchString, setSearchString] = React.useState('')
-  const classes = useUtilityClasses();
+  const classes = useServiceUtilityClasses();
 
   return (
     <ServicesViewRoot className={classes.root}>

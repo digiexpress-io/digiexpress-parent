@@ -4,8 +4,7 @@ import { ModeEdit as EditIcon } from '@mui/icons-material';
 import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
-import { ImageEdit } from '../../tagomi-images/ImageEdit';
-import { ImageDelete } from '../../tagomi-images/ImageDelete';
+import { ImageEdit, ImageDelete } from '../../tagomi-images';
 
 interface ImageOptionsProps {
   imageId: string;

@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 
 import { ImagesListRoot, useUtilityClasses } from './useUtilityClasses';
 import ImageItem from './ImageItem';
-import { TagomiComposerApi as Composer, TagomiApi } from '@dxs-ts/tagomi-api';
+import { TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
 
 
 const EndIcon: React.FC = () => {

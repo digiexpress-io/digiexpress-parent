@@ -4,8 +4,7 @@ import { ModeEdit as EditIcon } from '@mui/icons-material';
 import { DeleteOutlineOutlined as DeleteOutlineOutlinedIcon } from '@mui/icons-material';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
-import { ScriptEdit } from '../../tagomi-scripts/ScriptEdit';
-import { ScriptDelete } from '../../tagomi-scripts/ScriptDelete';
+import { ScriptEdit, ScriptDelete } from '../../tagomi-scripts';
 
 interface ScriptOptionsProps {
   scriptId: string;

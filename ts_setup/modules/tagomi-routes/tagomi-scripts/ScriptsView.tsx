@@ -1,9 +1,8 @@
 import React from 'react';
-import { ScriptsViewRoot, useUtilityClasses } from '../tagomi-explorer/script/useUtilityClasses';
-import { ScriptsList } from '../tagomi-explorer/script/ScriptsList';
+import { ScriptsViewRoot, useScriptUtilityClasses, ScriptsList } from '../tagomi-explorer';
 
 export const ScriptsView: React.FC = () => {
-  const classes = useUtilityClasses();
+  const classes = useScriptUtilityClasses();
 
   return (
     <ScriptsViewRoot className={classes.root}>

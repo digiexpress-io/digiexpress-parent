@@ -1,10 +1,9 @@
 import React from 'react';
-import { ImagesViewRoot, useUtilityClasses } from '../tagomi-explorer/image/useUtilityClasses';
-import { ImagesList } from '../tagomi-explorer/image/ImagesList';
+import { ImagesViewRoot, useImageUtilityClasses, ImagesList } from '../tagomi-explorer';
 
 export const ImagesView: React.FC = () => {
-  const classes = useUtilityClasses();
-
+  const classes = useImageUtilityClasses();
+  
   return (
     <ImagesViewRoot className={classes.root}>
       <ImagesList />
