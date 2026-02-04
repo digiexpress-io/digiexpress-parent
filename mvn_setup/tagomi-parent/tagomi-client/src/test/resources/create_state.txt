@@ -106,5 +106,5 @@ Blobs
   - 6: {"id":"26","default":false,"docType":"LOCALE","enabled":true,"localeCode":"fi"}
   - 7: {"id":"27","content":"# English content","docType":"TEMPLATE","localeId":"25","serviceId":"21"}
   - 8: {"id":"28","content":"# Finnish content","docType":"TEMPLATE","localeId":"26","serviceId":"21"}
-  - 9: {"id":"29","docType":"RESOURCE","contentType":"image/jpeg","templateIds":[],"resourceName":"super_image_1","externalLocation":"1234"}
-  - 10: {"id":"30","docType":"RESOURCE","contentType":"image/jpeg","templateIds":[],"resourceName":"super_image_1","externalLocation":"1234"}
+  - 9: {"id":"29","content":"","docType":"RESOURCE","contentType":"image/*","templateIds":[],"resourceName":"super_image_1","externalLocation":"1234"}
+  - 10: {"id":"30","content":"# Test script content","docType":"RESOURCE","contentType":"text/*","templateIds":[],"resourceName":"super_script_1","externalLocation":""}
