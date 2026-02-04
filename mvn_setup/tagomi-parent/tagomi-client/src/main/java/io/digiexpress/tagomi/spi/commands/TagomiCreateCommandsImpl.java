@@ -1,6 +1,7 @@
 package io.digiexpress.tagomi.spi.commands;
 
 import java.util.ArrayList;
+import java.util.Base64;
 
 /*-
  * #%L
@@ -138,47 +139,86 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
   }
   @Override
   public Uni<TagomiContainer.Resource> resource(CreateResource init) {
-    // predefine id
-    final var gid = OidUtils.gen();    
+    final var gid = OidUtils.gen();
+
+    if (init.getUploadBody() == null) {
+      throw new ConstraintException("uploadBody must be provided for resource: " + init.getResourceName());
+    }
+
+    if ("text/*".equals(init.getContentType())) {
+      return createScriptResource(gid, init);
+    } 
     
-    return imageStorage.write(init.getUploadBody())
+    if ("image/*".equals(init.getContentType())) {
+      return createImageResource(gid, init);
+    }
+    
+    throw new ConstraintException("Unsupported content type: " + init.getContentType());
+  }
+  
+  private Uni<TagomiContainer.Resource> createScriptResource(String gid, CreateResource init) {
+    return store.stateQuery().getState()
+      .onItem().transform(state -> {
+        final var templateIds = validateAndCollectTemplateIds(init.getTemplateIds(), state);
+
+        final var resource = ImmutableResource.builder()
+          .id(gid)
+          .externalLocation("")
+          .resourceName(init.getResourceName())
+          .contentType(init.getContentType())
+          .content(init.getUploadBody())
+          .templateIds(templateIds)
+          .build();
+        return assertUniqueId(resource, state);
+      })
+      .onItem().transformToUni(request -> store.upsertBuilder().create(request));
+  }
+  
+  private Uni<TagomiContainer.Resource> createImageResource(String gid, CreateResource init) {
+    final byte[] imageBytes = Base64.getDecoder().decode(init.getUploadBody());
+
+    return imageStorage.write(imageBytes)
       .onItem().transform(image -> {
         if(image.getOperationStatus() == OperationStatus.OK) {
-          return image.getObject();  
+          return image.getObject();
         }
-        throw new StoreException("FAILED_TO_STORE_IMAGE", null, 
+        throw new StoreException("FAILED_TO_STORE_IMAGE", null,
             StoreExceptionMsg.builder()
             .id("image-store-error")
             .value("Can't save image because of unknown error!")
             .args(image.getOperationLogs().stream().map(message -> message.getText()).collect(Collectors.toList()))
-            .build()); 
+            .build());
       })
       .onItem().transformToUni(image -> store.stateQuery().getState()
-      .onItem().transform(state -> {
-
-          final var link = ImmutableResource.builder()
+        .onItem().transform(state -> {
+          final var templateIds = validateAndCollectTemplateIds(init.getTemplateIds(), state);
+          
+          final var resource = ImmutableResource.builder()
               .id(gid)
               .externalLocation(image.getId())
               .resourceName(init.getResourceName())
               .contentType(init.getContentType())
-              ;
-          
-          final var templateIds = new ArrayList<String>();
-          for(final var templateId : init.getTemplateIds()) {
-            final var template = Optional.of(state.getTemplates().get(templateId));
-
-            if(template.isEmpty()) {
-              throw new ConstraintException(
-                  link.build(), 
-                  "Template with id: '" + template + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");          
-            }
-            templateIds.add(template.get().getId());
-          }
-          link.templateIds(templateIds);
-          return assertUniqueId(link.build(), state);
-      }))
+              .content(init.getUploadBody())
+              .templateIds(templateIds)
+              .build();
+          return assertUniqueId(resource, state);
+        }))
       .onItem().transformToUni(request -> store.upsertBuilder().create(request));
   }
+  
+  private ArrayList<String> validateAndCollectTemplateIds(java.util.List<String> templateIds, TagomiContainer state) {
+    final var validatedIds = new ArrayList<String>();
+    for(final var templateId : templateIds) {
+      final var template = state.getTemplates().get(templateId);
+      if(template == null) {
+        throw new ConstraintException(
+            "Template with id: '" + templateId + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");
+      }
+      validatedIds.add(template.getId());
+    }
+    return validatedIds;
+  }
+
   @Override
   public Uni<TagomiContainer.Service> service(CreateService init) {
     return store.stateQuery().getState()

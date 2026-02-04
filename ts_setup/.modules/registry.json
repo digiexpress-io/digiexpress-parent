@@ -3024,10 +3024,10 @@
         "@dxs-ts/tagomi-api",
         "notistack",
         "@mui/icons-material",
-        "@tanstack/react-router",
-        "@dxs-ts/envir-fetch",
         "@mui/x-tree-view",
         "@mui/utils",
+        "@tanstack/react-router",
+        "@dxs-ts/envir-fetch",
         "@monaco-editor/react",
         "monaco-editor"
       ],
@@ -3037,9 +3037,9 @@
         "react-intl",
         "notistack",
         "@mui/icons-material",
-        "@tanstack/react-router",
         "@mui/x-tree-view",
         "@mui/utils",
+        "@tanstack/react-router",
         "@monaco-editor/react",
         "monaco-editor"
       ],

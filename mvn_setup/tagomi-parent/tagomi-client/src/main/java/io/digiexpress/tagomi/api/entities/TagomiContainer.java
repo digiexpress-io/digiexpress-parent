@@ -76,6 +76,11 @@ public interface TagomiContainer {
     LOCALE,   // locale code and enabled/disabled flag
     TAG       // very small meta object for holding some commit data
   }
+
+  enum ResourceType {
+    IMAGE,
+    SCRIPT;
+  }
   
   
   @Value.Immutable
@@ -115,6 +120,7 @@ public interface TagomiContainer {
     String getResourceName();
     String getContentType();
     List<String> getTemplateIds();
+    @Nullable String getContent();
     @Override default public TagomiDocType getDocType() { return TagomiDocType.RESOURCE; };
 
   }

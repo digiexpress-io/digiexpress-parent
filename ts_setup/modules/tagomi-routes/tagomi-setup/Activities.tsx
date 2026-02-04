@@ -9,6 +9,8 @@ import { useTagomiNav } from '../tagomi-nav';
 import { ServiceComposer } from '../tagomi-service';
 import { LocaleComposer } from '../tagomi-locale';
 import { NewTemplate } from '../tagomi-template';
+import { ImageComposer } from '../tagomi-images';
+import { ScriptComposer } from '../tagomi-scripts';
 
 
 export interface ActivityProps {
@@ -69,6 +71,22 @@ export function useActivities(): ActivityProps[] {
       title: <FormattedMessage id="tagomi.templates.title" />,
       desc: <FormattedMessage id="tagomi.templates.desc" />,
       buttonCreate: <FormattedMessage id="tagomi.template.create" />,
+      buttonViewAll: undefined,
+    },
+    {
+      composer: ImageComposer,
+      onView: () => nav.onNav({ type: 'IMAGES' }),
+      title: <FormattedMessage id="tagomi.images.title" />,
+      desc: <FormattedMessage id="tagomi.images.desc" />,
+      buttonCreate: <FormattedMessage id="tagomi.image.create" />,
+      buttonViewAll: undefined,
+    },
+    {
+      composer: ScriptComposer,
+      onView: () => nav.onNav({ type: 'SCRIPTS' }),
+      title: <FormattedMessage id="tagomi.scripts.title" />,
+      desc: <FormattedMessage id="tagomi.scripts.desc" />,
+      buttonCreate: <FormattedMessage id="tagomi.script.create" />,
       buttonViewAll: undefined,
     },
   ])

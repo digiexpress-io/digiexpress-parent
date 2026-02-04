@@ -86,12 +86,16 @@ export declare namespace TagomiApi {
    * Commands are mutation operations following CQRS pattern.
    */
 
-  export type TagomiDocType = 
+  export type TagomiDocType =
     | 'TEMPLATE'
     | 'RESOURCE'
     | 'SERVICE'
     | 'LOCALE'
     | 'TAG';
+
+  export type ResourceContentType =
+    | 'image/*'
+    | 'text/*';
 
   export interface TagomiContainer {
     tagName: string;
@@ -125,8 +129,9 @@ export declare namespace TagomiApi {
     docType: 'RESOURCE';
     externalLocation: string;
     resourceName: string;
-    contentType: string;
+    contentType: ResourceContentType;
     templateIds: string[];
+    content?: string;
   }
 
   export interface Locale {
@@ -169,8 +174,8 @@ export declare namespace TagomiApi {
   export interface CreateResource {
     id?: string;
     resourceName: string;
-    contentType: string;
-    uploadBody: string; // Base64 encoded bytes
+    contentType: ResourceContentType;
+    uploadBody: string;
     templateIds: string[];
   }
 
@@ -207,9 +212,9 @@ export declare namespace TagomiApi {
 
   export interface ResourceMutator {
     resourceId: string;
-    contentType?: string;
+    contentType?: ResourceContentType;
     resourceName?: string;
-    uploadBody?: string; // Base64 encoded bytes
+    uploadBody?: string;
     templateIds?: string[];
   }
 

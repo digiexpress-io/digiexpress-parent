@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Divider, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SimpleTreeView } from "@mui/x-tree-view";
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
 
@@ -11,10 +11,9 @@ import { useIntl } from 'react-intl';
 //import { LinkEdit } from '../../stencil-link/LinkEdit';
 //import { WorkflowEdit } from '../../stencil-workflow/WorkflowEdit';
 
-import { ExplorerItemService, useTagomiNav } from '../tagomi-nav';
+import { useTagomiNav } from '../../tagomi-nav';
 import { ServicesListRoot, useUtilityClasses } from './useUtilityClasses';
 import { TagomiComposerApi as Composer } from '@dxs-ts/tagomi-api';
-import { TagomiApi } from '@dxs-ts/tagomi-api';
 import ServiceItem from './ServiceItem';
 
 
@@ -33,7 +32,7 @@ const EndIcon: React.FC = () => {
 
 export const ServicesList: React.FC<{ searchString: string }> = ({ searchString }) => {
   const intl = useIntl();
-  const { session, backend } = Composer.useComposer();
+  const { session } = Composer.useComposer();
   const { getService, onNav } = useTagomiNav();
   const expanded = getService().expanded ?? [];
    // const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilApi.WorkflowId>(undefined);

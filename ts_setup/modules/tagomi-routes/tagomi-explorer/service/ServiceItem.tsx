@@ -14,7 +14,7 @@ import { TreeItem, TreeItemRoot } from "@dxs-ts/eveli-primitives";
 
 import { TagomiApi, TagomiComposerApi as Composer } from "@dxs-ts/tagomi-api";
 import { ServiceOptions } from "./ServiceOptions";
-import { TemplateEditMenuItem } from "../tagomi-template";
+import { TemplateEditMenuItem } from "../../tagomi-template";
 
 //import { ArticleOptions } from './ArticleOptions';
 //import ArticlePageItem from './ArticlePageItem';

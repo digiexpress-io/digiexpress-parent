@@ -34,6 +34,7 @@ import io.digiexpress.tagomi.api.commands.ImmutableCreateTemplate;
 import io.digiexpress.tagomi.api.commands.ImmutableLocaleMutator;
 import io.digiexpress.tagomi.api.commands.ImmutableResourceMutator;
 import io.digiexpress.tagomi.api.commands.ImmutableTemplateMutator;
+import io.digiexpress.tagomi.api.entities.TagomiContainer.ResourceType;
 import io.digiexpress.tagomi.tests.config.PgTestTemplate;
 
 
@@ -84,16 +85,16 @@ public class TagomiStoreTest extends PgTestTemplate {
     final var link1 = repo.create().resource(
         ImmutableCreateResource.builder()
           .resourceName("super_image_1")
-          .contentType("image/jpeg")
-          .uploadBody(new byte[] {})
+          .contentType("image/*")
+          .uploadBody("")
         .build()
       ).onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
     
     final var link2 = repo.create().resource(
         ImmutableCreateResource.builder()
-        .resourceName("super_image_1")
-        .contentType("image/jpeg")
-        .uploadBody(new byte[] {})
+        .resourceName("super_script_1")
+        .contentType("text/*")
+        .uploadBody("# Test script content")
       .build()
       ).onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
     
