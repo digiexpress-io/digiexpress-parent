@@ -17,7 +17,7 @@ import { EveliTreeItemMenu } from './eveli-tree-item-menu';
 
 export const EveliTree: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-  const classes = useUtilityClasses(isDarkTheme);
+  const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<ContextMenuData | undefined>();

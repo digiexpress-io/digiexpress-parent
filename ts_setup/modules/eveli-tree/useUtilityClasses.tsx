@@ -1,6 +1,6 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled } from '@mui/material';
-import { TreeColors, getThemeColors } from './tree-theme';
+import { getThemeColors } from './tree-theme';
 
 export const MUI_NAME = 'EveliTree';
 
@@ -12,7 +12,7 @@ export interface EveliTreeClasses {
 
 export type EveliTreeClassKey = keyof EveliTreeClasses;
 
-export const useUtilityClasses = (isDarkTheme: boolean = false) => {
+export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     title: ['title'],
