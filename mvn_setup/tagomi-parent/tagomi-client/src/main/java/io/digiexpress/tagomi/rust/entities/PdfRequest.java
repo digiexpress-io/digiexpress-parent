@@ -28,7 +28,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Builder
@@ -64,6 +63,6 @@ public class PdfRequest {
     private String bodyName;
     
     @JsonProperty("body_value")
-    private Map<String, Object> bodyValue;
+    private Object bodyValue;
   }
 }

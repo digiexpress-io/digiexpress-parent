@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, ListItemText, FormHelperText } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, ListItemText, FormHelperText, Typography } from '@mui/material';
 
 import * as Burger from '@dxs-ts/eveli-primitives';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
@@ -14,10 +14,9 @@ export const TemplateDependenciesAdd: React.FC<{ onClose: () => void, serviceId:
   const intl = useIntl();
   const { backend, actions, site } = Composer.useComposer();
   const [templateId, setTemplateId] = React.useState<string>('');
-  const [newLocale, setNewLocale] = React.useState('');
   const [selectedTemplates, setSelectedTemplates] = React.useState<string[]>([]);
+  const [selectedResources, setSelectedResources] = React.useState<string[]>([]);
 
-  const valid = templateId && newLocale;
   const message = <FormattedMessage id="snack.template.savedMessage" />
 
   const service = site.services[props.serviceId];
@@ -38,11 +37,22 @@ export const TemplateDependenciesAdd: React.FC<{ onClose: () => void, serviceId:
     };
   });
 
+  const resourceItems = Object.values(site.resources).map(resource => ({
+    id: resource.id,
+    value: `${resource.resourceName} (${resource.contentType})`
+  }));
 
   const noTemplates = serviceTemplates.length === 0;
 
   const handleUpdate = () => {
-    const entity: TagomiApi.TemplateMutator = { locale: newLocale, templateId, content: '#content', resourceIds: [] };
+    const template = site.templates[templateId];
+    if (!template) return;
+    
+    const entity: TagomiApi.TemplateMutator = { 
+      templateId, 
+      content: template.content,
+      resourceIds: selectedResources 
+    };
     backend.updateTemplate([entity]).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });
       props.onClose();
@@ -67,33 +77,61 @@ export const TemplateDependenciesAdd: React.FC<{ onClose: () => void, serviceId:
         />
         {!templateId && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
+        {dependenciesTemplateItems.length > 0 && (
+          <Burger.SelectMultiple
+            multiline
+            disabled={!templateId}
+            selected={selectedTemplates}
+            onChange={setSelectedTemplates}
+            label={intl.formatMessage({ id: 'tagomi.template.dependencies.add.dialog.selectTargets' })}
+            renderValue={(selected) => (
+              selected as TagomiApi.TemplateId[])
+              .map(id => dependenciesTemplateItems.find(template => template.id === id)?.value)
+              .flatMap((item, index) => (item ? <div key={index}>{item}</div> : [])
+              )}
+            items={dependenciesTemplateItems.map((template) => ({
+              id: template.id,
+              value: (<>
+                <Checkbox checked={selectedTemplates.indexOf(template.id) > -1} />
+                <ListItemText primary={template.value} />
+              </>
+              )
+            }))}
+          />
+        )}
 
-        <Burger.SelectMultiple
-          multiline
-          disabled={!templateId}
-          selected={selectedTemplates}
-          onChange={setSelectedTemplates}
-          label={intl.formatMessage({ id: 'tagomi.template.dependencies.add.dialog.selectTargets' })}
-          renderValue={(selected) => (
-            selected as TagomiApi.TemplateId[])
-            .map(id => dependenciesTemplateItems.find(template => template.id === id)?.value)
-            .flatMap((item, index) => (item ? <div key={index}>{item}</div> : [])
-            )}
-          items={dependenciesTemplateItems.map((template) => ({
-            id: template.id,
-            value: (<>
-              <Checkbox checked={selectedTemplates.indexOf(template.id) > -1} />
-              <ListItemText primary={template.value} />
-            </>
-            )
-          }))}
-        />
+        {resourceItems.length > 0 && (
+          <>
+            <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>Resources (Images & Scripts)</Typography>
+            <Burger.SelectMultiple
+              multiline
+              disabled={!templateId}
+              selected={selectedResources}
+              onChange={setSelectedResources}
+              label={intl.formatMessage({ id: 'tagomi.template.dependencies.add.dialog.selectResources' }, { defaultMessage: 'Select resources' })}
+              renderValue={(selected) => (
+                selected as TagomiApi.ResourceId[])
+                .map(id => resourceItems.find(r => r.id === id)?.value)
+                .flatMap((item, index) => (item ? <div key={index}>{item}</div> : [])
+                )}
+              items={resourceItems.map((resource) => ({
+                id: resource.id,
+                value: (<>
+                  <Checkbox checked={selectedResources.indexOf(resource.id) > -1} />
+                  <ListItemText primary={resource.value} />
+                </>
+                )
+              }))}
+            />
+          </>
+        )}
+
         {!templateId && <FormHelperText>{intl.formatMessage({ id: 'tagomi.template.dependencies.add.dialog.helperText.noTemplateSelected' })}</FormHelperText>}
       </DialogContent>
 
       <DialogActions>
         <CancelButton onClick={props.onClose} />
-        <Button onClick={handleUpdate} disabled={!templateId && selectedTemplates.length === 0}>
+        <Button onClick={handleUpdate} disabled={!templateId || (selectedTemplates.length === 0 && selectedResources.length === 0)}>
           <FormattedMessage id='button.update' />
         </Button>
       </DialogActions>

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.digiexpress.tagomi.rust.entities.PdfRequest.PdfDataModule;
 import org.springframework.web.client.RestTemplate;
@@ -86,18 +87,29 @@ public class TagomiWorldImpl implements TagomiWorld {
             .filter(l -> l.getLocaleCode().equalsIgnoreCase(locale) || l.getId().equals(locale))
             .findFirst().orElseThrow();
         
+        final var template = container.getTemplates().values().stream()
+            .filter(t -> t.getServiceId().equals(service.getId()))
+            .filter(t -> t.getLocaleId().equals(targetLocale.getId()))
+            .findFirst().orElseThrow();
+        
         final var templates = new ArrayList<PdfTemplate>();
         templates.add(PdfTemplate.builder()
             .id(service.getServiceName())
-            .value(container.getTemplates().values().stream()
-                .filter(t -> t.getServiceId().equals(service.getId()))
-                .filter(t -> t.getLocaleId().equals(targetLocale.getId()))
-                .map(t -> t.getContent())
-                .findFirst().orElseThrow()
-            )
+            .value(template.getContent())
             .build());
         
-                
+        final var templateResources = container.getResources().values().stream()
+            .filter(r -> r.getTemplateIds().contains(template.getId()))
+            .collect(Collectors.toList());
+        
+        for (final var resource : templateResources) {
+          if ("text/*".equals(resource.getContentType())) {
+            templates.add(PdfTemplate.builder()
+                .id(resource.getResourceName())
+                .value(resource.getContent())
+                .build());
+          }
+        }
         
         return datasource.get(service, this.props)
         .onItem().transform(resolved -> {
@@ -114,6 +126,16 @@ public class TagomiWorldImpl implements TagomiWorld {
               .bodyValue(this.props.mapTo(Map.class))
               .build());
           
+          for (final var resource : templateResources) {
+            if ("image/*".equals(resource.getContentType())) {
+              dataModules.add(PdfDataModule.builder()
+                  .moduleName("resources")
+                  .bodyName(resource.getResourceName())
+                  .bodyValue(Map.of("__base64__", resource.getContent()))
+                  .build());
+            }
+          }
+
           return PdfRequest.builder()
               .timestamp(OffsetDateTime.now())
               .mainTemplateId(service.getServiceName())

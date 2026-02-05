@@ -31,7 +31,8 @@ export const ServiceOptions: React.FC<ServiceOptionsProps> = ({ service }) => {
   const canChangeTemplateLocale = hasTemplates && selectableLocaleIds.length > 0;
   
   const dependencyTemplates = Object.values(site.templates).filter(t => t.serviceId !== service.id);
-  const hasAddableDependencies = dependencyTemplates.length > 0;
+  const availableResources = Object.values(site.resources);
+  const hasAddableDependencies = dependencyTemplates.length > 0 || availableResources.length > 0;
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 
     'ServiceEdit' | 
