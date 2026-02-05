@@ -1,7 +1,7 @@
 import React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { Secondary } from '../../eveli-tree/eveli-tree-setup/Secondary';
 import { EveliSetup } from '../eveli-setup';
+import { EveliTreeSetup } from '../../eveli-tree';
 import { EveliApp } from '../eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/worker/fileexplorer/')({
@@ -15,8 +15,8 @@ const MergedToolbar: React.FC = () => {
 function Component() {
   return (
     <EveliApp
-      main={() => <></>}
-      secondary={Secondary}
+      main={EveliTreeSetup.Main}
+      secondary={EveliTreeSetup.Secondary}
       toolbar={MergedToolbar}
       drawerWidth={450}
     />

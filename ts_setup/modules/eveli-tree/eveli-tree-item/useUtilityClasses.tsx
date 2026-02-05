@@ -1,6 +1,7 @@
 import React from 'react';
 import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
+import { TreeColors, getNodeColor } from '../tree-theme';
 
 import {
   Folder as FolderIcon,
@@ -71,6 +72,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
 export const EveliTreeItemRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
+  shouldForwardProp: (prop) => prop !== 'isDarkTheme',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
@@ -189,12 +191,12 @@ export const EveliTreeItemRoot = styled('div', {
 
     [`& .${MUI_NAME}-iconExpand`]: {
       fontSize: '15px',
-      color: isDarkTheme ? '#cccccc' : '#666666',
+      color: isDarkTheme ? TreeColors.dark.text : TreeColors.light.textSecondary,
     },
 
     [`& .${MUI_NAME}-iconConfig`]: {
       fontSize: '14px',
-      color: isDarkTheme ? '#ffa500' : '#d90429',
+      color: isDarkTheme ? TreeColors.semantic.warning : TreeColors.semantic.warningLight,
     },
   };
 });
@@ -253,11 +255,13 @@ export function getIcon(node: TreeNode) {
   return baseIcon;
 };
 
-export const StyledListItem = styled(ListItem)<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
+export const StyledListItem = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== 'isDarkTheme'
+})<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: isDarkTheme ? '#2d2d30' : '#f0f0f0',
+    backgroundColor: isDarkTheme ? TreeColors.dark.surface : TreeColors.light.surface,
   },
 }));
 
@@ -275,7 +279,7 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType
         <Typography variant='subtitle2' sx={{ color: getNodeColor(nodeType, isDarkTheme), fontWeight: isDarkTheme ? 400 : 500 }}>
           {nodeName}
           {description && (
-            <Typography component='span' variant='caption' sx={{ ml: 1, color: isDarkTheme ? '#6a9955' : '#5d5b5b', fontStyle: 'italic' }}>
+            <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
               - "{description}"
             </Typography>
           )}
@@ -353,58 +357,3 @@ export function getConfigIcons(configOptions: ConfigOption[], iconClassName: str
   ];
 }
 
-
-export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = false) {
-  if (isDarkTheme) {
-    switch (nodeType) {
-      case 'folder':
-        return '#e8e5e5'; // Gray - dark theme
-      case 'article':
-        return '#dcdcaa'; // Yellow for articles - dark theme
-      case 'service':
-        return '#4ec9b0'; // Teal for services - dark theme
-      case 'dialob':
-        return '#9cdcfe'; // Light blue for dialob forms - dark theme
-      case 'flow':
-        return '#c586c0'; // Purple for flows - dark theme
-      case 'link':
-        return '#98d982'; // Bright green for links - dark theme
-      case 'language':
-        return '#ce9178'; // Orange for languages - dark theme
-      case 'printout':
-        return '#f4b942'; // Golden yellow for printouts - dark theme
-      case 'image':
-        return '#ff6b6b'; // Coral red for images - dark theme
-      case 'template':
-        return '#ce9178'; // Orange for templates (same as language) - dark theme
-      default:
-        return '#cccccc'; // dark theme
-    }
-  } else {
-    // Light theme colors (7:1 contrast)
-    switch (nodeType) {
-      case 'folder':
-        return '#333333'; // Even darker gray for folders
-      case 'article':
-        return '#8b008b'; // Dark magenta for articles (7:1 contrast)
-      case 'service':
-        return '#1f5f3f'; // Darker sea green for services (7:1 contrast)
-      case 'dialob':
-        return '#0056b3'; // Darker blue for dialob forms (7:1 contrast)
-      case 'flow':
-        return '#8e2557'; // Dark fuchsia for flows (7:1 contrast)
-      case 'link':
-        return '#228b22'; // Forest green for links
-      case 'language':
-        return '#a0122a'; // Darker crimson red for languages (7:1 contrast)
-      case 'printout':
-        return '#2e1065'; // Dark indigo for printouts (7:1 contrast)
-      case 'image':
-        return '#a0122a'; // Darker crimson red for images (same as language, 7:1 contrast)
-      case 'template':
-        return '#a0122a'; // Darker crimson red for templates (same as language, 7:1 contrast)
-      default:
-        return '#666666';
-    }
-  }
-}

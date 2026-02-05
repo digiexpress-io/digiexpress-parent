@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, List, IconButton, Badge, styled, Tooltip } from '@mui/material';
+import { TreeColors } from './tree-theme';
 import {
   UnfoldLessOutlined as CollapseAllIcon,
   LightModeOutlined as LightModeIcon,
@@ -32,30 +33,58 @@ export const EveliTree: React.FC = () => {
         <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
         <Box flexGrow={1} />
         <Tooltip title='New file' arrow enterDelay={1000}>
-          <StyledIcon isDarkTheme={isDarkTheme}>
-            <StyledBadge isDarkTheme={isDarkTheme} badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-              <FileIcon sx={{ fontSize: '15px' }} />
-            </StyledBadge>
-          </StyledIcon>
+          {isDarkTheme ? (
+            <StyledIconDark>
+              <StyledBadgeDark badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <FileIcon sx={{ fontSize: '15px' }} />
+              </StyledBadgeDark>
+            </StyledIconDark>
+          ) : (
+            <StyledIconLight>
+              <StyledBadgeLight badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <FileIcon sx={{ fontSize: '15px' }} />
+              </StyledBadgeLight>
+            </StyledIconLight>
+          )}
         </Tooltip>
         <Tooltip title='New folder' arrow enterDelay={1000}>
-          <StyledIcon isDarkTheme={isDarkTheme}>
-            <StyledBadge isDarkTheme={isDarkTheme} badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-              <FolderIcon sx={{ fontSize: '15px' }} />
-            </StyledBadge>
-          </StyledIcon>
+          {isDarkTheme ? (
+            <StyledIconDark>
+              <StyledBadgeDark badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <FolderIcon sx={{ fontSize: '15px' }} />
+              </StyledBadgeDark>
+            </StyledIconDark>
+          ) : (
+            <StyledIconLight>
+              <StyledBadgeLight badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <FolderIcon sx={{ fontSize: '15px' }} />
+              </StyledBadgeLight>
+            </StyledIconLight>
+          )}
         </Tooltip>
 
         <Tooltip title='Collapse all' arrow enterDelay={1000}>
-          <StyledIcon isDarkTheme={isDarkTheme} onClick={() => collapseAll(treeData, setTreeData)}>
-            <CollapseAllIcon sx={{ fontSize: '15px' }} />
-          </StyledIcon>
+          {isDarkTheme ? (
+            <StyledIconDark onClick={() => collapseAll(treeData, setTreeData)}>
+              <CollapseAllIcon sx={{ fontSize: '15px' }} />
+            </StyledIconDark>
+          ) : (
+            <StyledIconLight onClick={() => collapseAll(treeData, setTreeData)}>
+              <CollapseAllIcon sx={{ fontSize: '15px' }} />
+            </StyledIconLight>
+          )}
         </Tooltip>
 
         <Tooltip title='Toggle light/dark mode' arrow enterDelay={1000}>
-          <StyledIcon isDarkTheme={isDarkTheme} onClick={() => setIsDarkTheme(!isDarkTheme)}>
-            {isDarkTheme ? <LightModeIcon sx={{ fontSize: '15px' }} /> : <DarkModeIcon sx={{ fontSize: '15px' }} />}
-          </StyledIcon>
+          {isDarkTheme ? (
+            <StyledIconDark onClick={() => setIsDarkTheme(!isDarkTheme)}>
+              <LightModeIcon sx={{ fontSize: '15px' }} />
+            </StyledIconDark>
+          ) : (
+            <StyledIconLight onClick={() => setIsDarkTheme(!isDarkTheme)}>
+              <DarkModeIcon sx={{ fontSize: '15px' }} />
+            </StyledIconLight>
+          )}
         </Tooltip>
       </Box>
       <List component='nav' disablePadding>
@@ -82,16 +111,37 @@ export const EveliTree: React.FC = () => {
   );
 }
 
-const StyledIcon = styled(IconButton)<{ isDarkTheme: boolean }>(({ isDarkTheme }) => ({
+const StyledIconDark = styled(IconButton)(() => ({
   size: 'small',
-  color: isDarkTheme ? '#cccccc' : '#666666',
+  color: TreeColors.dark.text,
 }));
 
+const StyledIconLight = styled(IconButton)(() => ({
+  size: 'small',
+  color: TreeColors.light.textSecondary,
+}));
 
-const StyledBadge = styled(Badge)<{ isDarkTheme: boolean }>(({ isDarkTheme }) => ({
+const StyledBadgeDark = styled(Badge)(() => ({
   '& .MuiBadge-badge': {
-    backgroundColor: isDarkTheme ? '#cccccc' : '#666666',
-    color: isDarkTheme ? '#2d2d30' : 'white',
+    backgroundColor: TreeColors.dark.text,
+    color: TreeColors.dark.surface,
+    height: '10px',
+    width: '10px',
+    minWidth: '10px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2px',
+    right: '2px',
+    bottom: '2px',
+  },
+}));
+
+const StyledBadgeLight = styled(Badge)(() => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: TreeColors.light.textSecondary,
+    color: TreeColors.light.background,
     height: '10px',
     width: '10px',
     minWidth: '10px',

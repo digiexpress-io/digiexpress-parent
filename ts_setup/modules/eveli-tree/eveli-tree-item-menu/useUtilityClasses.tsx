@@ -1,5 +1,6 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled, Popover } from '@mui/material';
+import { TreeColors } from '../tree-theme';
 
 export const MUI_NAME = 'EveliTreeItemMenu';
 export const MENU_WIDTH = 350;
@@ -76,9 +77,9 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
   return {
     // Menu paper styles
     '& .MuiPaper-root': {
-      backgroundColor: '#2d2d30',
-      color: '#cccccc',
-      border: '1px solid #3c3c3c',
+      backgroundColor: TreeColors.dark.surface,
+      color: TreeColors.dark.text,
+      border: `1px solid ${TreeColors.dark.border}`,
       minWidth: MENU_WIDTH,
       width: isSubmenuOpen ? MENU_WIDTH_EXTENDED : 'auto',
       height: MENU_HEIGHT,
@@ -97,10 +98,10 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: '#3c3c3c',
+        backgroundColor: TreeColors.dark.border,
       },
       '& .MuiSvgIcon-root': {
-        color: '#cccccc',
+        color: TreeColors.dark.text,
         fontSize: '16px',
       },
     },
@@ -110,42 +111,42 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       display: 'flex',
       alignItems: 'center',
       gap: theme.spacing(1),
-      backgroundColor: '#4c4b4b',
+      backgroundColor: TreeColors.semantic.active,
       '&:hover': {
-        backgroundColor: '#3c3c3c',
+        backgroundColor: TreeColors.dark.border,
       },
       '& .MuiSvgIcon-root': {
-        color: '#cccccc',
+        color: TreeColors.dark.text,
         fontSize: '16px',
       },
     },
 
     [`& .${MUI_NAME}-menuItemDelete`]: {
       fontSize: '13px',
-      color: '#ff6b6b',
+      color: TreeColors.semantic.danger,
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
       '&:hover': {
-        backgroundColor: '#3c3c3c',
+        backgroundColor: TreeColors.dark.border,
       },
       '& .MuiSvgIcon-root': {
-        color: '#ff6b6b',
+        color: TreeColors.semantic.danger,
         fontSize: '16px',
       },
     },
 
     [`& .${MUI_NAME}-menuItemLocked`]: {
       fontSize: '13px',
-      color: '#ffa500',
+      color: TreeColors.semantic.warning,
       display: 'flex',
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: '#3c3c3c',
+        backgroundColor: TreeColors.dark.border,
       },
       '& .MuiSvgIcon-root': {
-        color: '#ffa500',
+        color: TreeColors.semantic.warning,
         fontSize: '16px',
       },
     },
@@ -156,16 +157,16 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       alignItems: 'center',
       gap: theme.spacing(1),
       '&:hover': {
-        backgroundColor: '#3c3c3c',
+        backgroundColor: TreeColors.dark.border,
       },
       '& .MuiSvgIcon-root': {
-        color: '#cccccc',
+        color: TreeColors.dark.text,
         fontSize: '16px',
       },
     },
 
     [`& .${MUI_NAME}-divider`]: {
-      borderColor: '#3c3c3c',
+      borderColor: TreeColors.dark.border,
       margin: '0px !important',
     },
 
@@ -173,26 +174,26 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       width: '100%',
       marginTop: theme.spacing(0.5),
       '& .MuiInputBase-root': {
-        backgroundColor: '#1e1e1e',
-        color: '#cccccc',
+        backgroundColor: TreeColors.dark.background,
+        color: TreeColors.dark.text,
         borderRadius: 0,
         '& fieldset': {
-          borderColor: '#3c3c3c',
+          borderColor: TreeColors.dark.border,
           borderRadius: 0,
         },
         '&:hover fieldset': {
-          borderColor: '#555555',
+          borderColor: TreeColors.light.textSecondary,
         },
         '&.Mui-focused fieldset': {
-          border: `1px solid #cccccc`
+          border: `1px solid ${TreeColors.dark.text}`
         },
       },
       '& .MuiInputBase-input': {
-        color: '#cccccc',
+        color: TreeColors.dark.text,
         ...theme.typography.caption,
         padding: '8px 12px',
         '&::placeholder': {
-          color: '#888888',
+          color: TreeColors.dark.textSecondary,
           opacity: 1,
           ...theme.typography.caption,
         },
@@ -201,30 +202,30 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
         padding: 'unset',
       },
       '& .MuiInputLabel-root': {
-        color: '#cccccc',
+        color: TreeColors.dark.text,
         ...theme.typography.caption,
       },
     },
 
     [`& .${MUI_NAME}-label`]: {
-      backgroundColor: '#3c3c3c',
-      color: '#cccccc',
+      backgroundColor: TreeColors.dark.border,
+      color: TreeColors.dark.text,
       fontSize: '10px',
       height: '18px',
-      border: '1px solid #555555',
+      border: `1px solid ${TreeColors.light.textSecondary}`,
       '& .MuiChip-label': {
         padding: '0 6px',
       },
       '& .MuiSvgIcon-root': {
         fontSize: '14px',
-        color: '#ffa500'
+        color: TreeColors.semantic.warning
       }
     },
 
     [`& .${MUI_NAME}-expandedContent`]: {
       padding: theme.spacing(0, 2, 1, 2),
       '& .MuiTypography-body2': {
-        color: '#888888',
+        color: TreeColors.dark.textSecondary,
         fontStyle: 'italic',
       },
     },
@@ -246,7 +247,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
     },
 
     [`& .${MUI_NAME}-dividerSub`]: {
-      borderColor: '#3c3c3c',
+      borderColor: TreeColors.dark.border,
       margin: '0',
       height: '100%',
       minHeight: MENU_HEIGHT - MENU_PADDING,
@@ -272,7 +273,6 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
       padding: theme.spacing(1),
       overflowY: 'auto',
       overflowX: 'hidden',
-      boxSizing: 'border-box',
     },
   };
 });
