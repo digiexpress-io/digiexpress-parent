@@ -94,7 +94,29 @@ COMMENT ON COLUMN tag.external_tenant_id IS 'External tenant identifier for mult
 COMMENT ON COLUMN tag.tag_starts_at IS 'Scheduled activation timestamp when this tag becomes effective or goes live';
 COMMENT ON COLUMN tag.tag_report IS 'Operational reports and status information stored in JSONB format';
 CREATE
-OR REPLACE FUNCTION fs_tree_validate_tree() RETURNS TRIGGER AS $$ DECLARE missing_count INTEGER; BEGIN -- Validate blob_id references SELECT count(*) INTO missing_count FROM unnest(NEW.tree_nodes) nodes LEFT JOIN blob b ON b.id = nodes.blob_id WHERE nodes.blob_id IS NOT NULL AND b.id IS NULL; IF missing_count > 0 THEN RAISE EXCEPTION 'Validation failed: % blob_id references do not exist', missing_count; END IF; -- Validate props_id references SELECT count(*) INTO missing_count FROM unnest(NEW.tree_nodes) nodes LEFT JOIN props p ON p.id = nodes.props_id WHERE nodes.props_id IS NOT NULL AND p.id IS NULL; IF missing_count > 0 THEN RAISE EXCEPTION 'Validation failed: % props_id references do not exist', missing_count; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql;
+OR REPLACE FUNCTION fs_tree_validate_tree() RETURNS TRIGGER AS $$
+ DECLARE
+ missing_count INTEGER;
+ BEGIN
+ -- Validate blob_id references
+ SELECT count(*) INTO missing_count
+ FROM unnest(NEW.tree_nodes) nodes
+ LEFT JOIN blob b ON b.id = nodes.blob_id
+ WHERE nodes.blob_id IS NOT NULL AND b.id IS NULL;
+ IF missing_count > 0 THEN
+ RAISE EXCEPTION 'Validation failed: % blob_id references do not exist', missing_count;
+ END IF;
+ -- Validate props_id references
+ SELECT count(*) INTO missing_count
+ FROM unnest(NEW.tree_nodes) nodes
+ LEFT JOIN props p ON p.id = nodes.props_id
+ WHERE nodes.props_id IS NOT NULL AND p.id IS NULL;
+ IF missing_count > 0 THEN
+ RAISE EXCEPTION 'Validation failed: % props_id references do not exist', missing_count;
+ END IF;
+ RETURN NEW;
+ END;
+ $$ LANGUAGE plpgsql;
 CREATE TRIGGER fs_tree_validation_trigger BEFORE
 INSERT
   OR

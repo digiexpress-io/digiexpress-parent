@@ -26,6 +26,28 @@ import io.vertx.mutiny.sqlclient.Row;
     DECLARE
         missing_count INTEGER;
     BEGIN
+        -- Validate that both node_path and node_name are not null
+        SELECT count(*) INTO missing_count
+        FROM unnest(NEW.tree_nodes) nodes
+        WHERE nodes.node_path IS NULL OR nodes.node_name IS NULL;
+
+        IF missing_count > 0 THEN
+            RAISE EXCEPTION 'Validation failed: % nodes have null node_path or node_name', missing_count;
+        END IF;
+
+        -- Validate path + name uniqueness within the tree
+        SELECT count(*) INTO missing_count
+        FROM (
+            SELECT nodes.node_path, nodes.node_name, count(*)
+            FROM unnest(NEW.tree_nodes) nodes
+            GROUP BY nodes.node_path, nodes.node_name
+            HAVING count(*) > 1
+        ) duplicates;
+
+        IF missing_count > 0 THEN
+            RAISE EXCEPTION 'Validation failed: % duplicate path+name combinations in tree', missing_count;
+        END IF;
+
         -- Validate blob_id references
         SELECT count(*) INTO missing_count
         FROM unnest(NEW.tree_nodes) nodes
