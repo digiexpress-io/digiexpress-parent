@@ -7,9 +7,11 @@ import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.FsDb;
+import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -32,23 +34,47 @@ public class BranchQueryImpl implements BranchQuery {
     return this;
   }
   
-  private
+  private Multi<Ref> baseline() {
+    final var filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
+    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
+  }
+  
+  @Override
+  public Multi<Ref> findAll() {
+    return baseline();
+  }
 
   @Override
   public Uni<Optional<Ref>> findOne() {
-    // TODO Auto-generated method stub
-    return null;
+    return baseline().collect().asList().map(found -> {
+      final var actual = found.size();
+      if(actual > 1) {
+        throw new FileSystemQueryException("Expecting exactly 1 or 0 result but found: " + actual + "!", 
+          JsonObject.of(
+            "branchId", branchId,
+            "isNameExpr", nameExpr == null ? false : true 
+          )
+        );
+      }
+      
+      return found.stream().findFirst();
+    });
   }
-
-  @Override
-  public Multi<Ref> findAll() {
-    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(null));
-  }
-
   @Override
   public Uni<Ref> getOne() {
-    // TODO Auto-generated method stub
-    return null;
+    return baseline().collect().asList().map(found -> {
+      final var actual = found.size();
+      if(actual != 1) {
+        throw new FileSystemQueryException("Expecting exactly 1 result but found: " + actual + "!", 
+          JsonObject.of(
+            "branchId", branchId,
+            "isNameExpr", nameExpr == null ? false : true 
+          )
+        );
+      }
+      
+      return found.stream().findFirst().get();
+    });
   }
 
 }

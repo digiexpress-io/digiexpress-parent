@@ -17,12 +17,20 @@ public class ReadWrite_Test extends DbTestTemplate {
 
   @Test
   public void createAndUpdateMission() {
+    final var tenant = "ReadWrite_1";
     final CreatedTenant repo = getClient().tenants().createOneTenant()
-        .name("ReadWrite_Test-1", StructureType.fs)
+        .name(tenant, StructureType.fs)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     
     log.debug("created repo {}", repo);
     Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
+    
+    final var fs = getClient().withTenant(tenant);
+    
+    fs.commitBuilder()
+    
+      .build().await().atMost(atMost);
+    
   }
 }
