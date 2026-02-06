@@ -39,6 +39,8 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.fs.api.FileSystem;
+import io.resys.thena.fs.printer.FileSystemPrinter;
+import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.test.ThenaTest;
@@ -73,7 +75,7 @@ public class DbTestTemplate {
   public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) throws InterruptedException {
     this.pgPool = pgPool;
     this.replacements.clear();
-    this.client = ContractClientImpl.create().tenantName("junit").client(pgPool)
+    this.client = FileSystem_ThenaImpl.createInstance().tenantName("junit").client(pgPool)
         .errorHandler(new PgErrors())
         .build();
     if(callback != null) {
@@ -96,11 +98,11 @@ public class DbTestTemplate {
   
   public FsDb createState() {
     final var ctx = TenantContext.defaults(db);
-    return ContractClientImpl.create(ctx, pgPool, new TenantCacheImpl(), new PgErrors());
+    return FileSystem_ThenaImpl.createInstance(ctx, pgPool, new TenantCacheImpl(), new PgErrors());
   }
   
   public void printRepo(Tenant repo) {
-    final String result = new ContractPrinter(createState()).print(repo);
+    final String result = new FileSystemPrinter(createState()).printSync();
     log.debug(result);
   }
   public Tenant getRepo() {
@@ -132,8 +134,8 @@ public class DbTestTemplate {
     }
   }
   
-  public String toStaticData(Tenant client) {    
-    return new ContractPrinter(createState()).printWithStaticIds(client, replacements);
+  public String toStaticData(Tenant client) {
+    return new FileSystemPrinter(createState(), replacements).printSync();
   }
   
   
@@ -148,7 +150,7 @@ public class DbTestTemplate {
     
     final var tenant = repo.getRepo();
     
-    return ContractClientImpl.create()
+    return FileSystem_ThenaImpl.createInstance()
         .client(pgPool)
         .tenantName(tenant.getName())
         .errorHandler(new PgErrors())

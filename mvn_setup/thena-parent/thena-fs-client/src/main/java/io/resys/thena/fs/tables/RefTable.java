@@ -4,12 +4,14 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
+import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -41,7 +43,8 @@ public interface RefTable {
       FROM {ref} r
       LEFT JOIN {commit} c ON r.commit_id = c.id
     """,
-    rowMapper = RefMapper.class
+    rowMapper = RefMapper.class,
+    wrapper = WrapperType.MULTI
   )
   Sql findAll();
 
@@ -66,6 +69,7 @@ public interface RefTable {
       LEFT JOIN {commit} c ON r.commit_id = c.id
       WHERE r.commit_id = $1
     """,
+    wrapper = WrapperType.MULTI,
     rowMapper = RefMapper.class
   )
   SqlTuple findAllByCommitId(String commitId);
@@ -95,6 +99,22 @@ public interface RefTable {
     propsMapper = RefDeleteMapper.class
   )
   SqlTupleList deleteAll(List<Ref> refs);
+  
+  
+  @TenantSql.FindAll(
+    sql = """
+      SELECT r.ref_name, r.commit_id,
+             c.commit_created_at, c.commit_author, c.commit_message
+      FROM {ref} r
+      LEFT JOIN {commit} c ON r.commit_id = c.id
+    """,
+    wrapper = WrapperType.MULTI,
+    rowMapper = RefMapper.class,
+    sqlBuilder = RefTableFilter.SQL.class
+  )
+  SqlTuple findAllByFilter(RefTableFilter filter);
+  
+  
 
   class RefMapper implements TenantSql.RowMapper<Ref> {
     @Override

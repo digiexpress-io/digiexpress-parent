@@ -28,9 +28,6 @@ import io.vertx.mutiny.sqlclient.Row;
       BEFORE INSERT OR UPDATE ON {fs_tree}
       FOR EACH ROW EXECUTE FUNCTION {fs_tree}_validate_tree();
 
-    ALTER TABLE {tree_name}
-      ADD CONSTRAINT uq_tree_name_path UNIQUE (name, path)
-      WHERE name IS NOT NULL AND path IS NOT NULL;
   """,
   drop = """
     DROP TRIGGER IF EXISTS {fs_tree}_validation_trigger ON {fs_tree};

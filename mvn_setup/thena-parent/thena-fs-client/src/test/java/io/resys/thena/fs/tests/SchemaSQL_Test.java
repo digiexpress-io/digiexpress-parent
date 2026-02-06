@@ -41,8 +41,8 @@ import io.resys.thena.fs.tables.spi.FsTableNames;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SchemaTest {
-  final InputStream expected_stream = SchemaTest.class.getClassLoader().getResourceAsStream("db.schema.sql");
+public class SchemaSQL_Test {
+  final InputStream expected_stream = SchemaSQL_Test.class.getClassLoader().getResourceAsStream("db.schema.sql");
   final Charset UTF_8 = StandardCharsets.UTF_8;
   @Test
   public void printSchema() throws Exception {

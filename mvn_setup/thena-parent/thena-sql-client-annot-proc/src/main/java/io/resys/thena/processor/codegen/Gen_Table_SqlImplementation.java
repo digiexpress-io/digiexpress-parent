@@ -420,27 +420,33 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
   }
   
   private String resolveSqlPlaceholders(String sql, java.util.List<String> tableNames) {
-    // Normalize SQL - replace newlines and excess whitespace
-    final var normalizedSql = sql.replaceAll("\\s+", " ").trim().replace("\"", "\\\"");;
-    
+    // Preserve line breaks where -- comments exist, collapse other whitespace
+    final var normalizedSql = sql
+        .replaceAll("--[^\n]*", "$0\n")  // Ensure -- comments end with newline
+        .replaceAll("[ \t]+", " ")        // Collapse horizontal whitespace only
+        .replaceAll("\n+", "\n")          // Collapse multiple newlines to single
+        .trim()
+        .replace("\"", "\\\"")
+        .replace("\n", "\\n");            // Escape newlines for Java string literal
+
     if (tableNames.isEmpty()) {
       return "\"" + normalizedSql + "\"";
     }
-    
+
     // Build the SQL string with table name replacements
     final var result = new StringBuilder("\"");
     var current = normalizedSql;
-    
+
     for (final var tableName : tableNames) {
       final var placeholder = "{" + tableName + "}";
       final var parts = current.split(java.util.regex.Pattern.quote(placeholder), -1);
-      
+
       if (parts.length > 1) {
         final var getterName = NamingUtils.toCamelCaseCapitalized(tableName);
         current = String.join("\" + tables.get" + getterName + "() + \"", parts);
       }
     }
-    
+
     result.append(current).append("\"");
     return result.toString();
   }
