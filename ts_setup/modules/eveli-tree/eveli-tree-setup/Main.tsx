@@ -9,12 +9,11 @@ const Main: React.FC<{}> = () => {
 
   return (
     <Box sx={{
-      p: 1,
       backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.background,
       color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text
     }}>
       <EveliTreeTabs />
-      <Box pt={2}>MAIN</Box>
+      <Box p={2}>MAIN</Box>
     </Box>)
 }
 export { Main }

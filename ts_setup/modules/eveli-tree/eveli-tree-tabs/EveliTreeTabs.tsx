@@ -37,16 +37,10 @@ export const EveliTreeTabs: React.FC = () => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                flex: 1,
-                minWidth: 0,
                 color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text
               }}>{tab.name}</Typography>
           </Tooltip>
-          <IconButton
-            size="small"
-            sx={{ ml: 0.5, p: 0.25 }}
-            onClick={(event) => handleCloseTab(index, event)}
-          >
+          <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }} onClick={(event) => handleCloseTab(index, event)}>
             <CloseIcon
               fontSize="inherit"
               sx={{ color: isDarkMode ? TreeColors.dark.text : TreeColors.light.textSecondary }}
