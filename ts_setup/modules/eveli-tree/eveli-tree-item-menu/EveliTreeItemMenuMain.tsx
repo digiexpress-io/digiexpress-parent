@@ -14,7 +14,7 @@ import {
   Lock as LockedIcon,
   LockOpen as UnlockedIcon,
 } from '@mui/icons-material';
-import { TreeNode, mockTreeData } from '../../eveli-tree-api';
+import { TreeNode, mockTreeData, useEveliTree } from '../../eveli-tree-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 
 function getReferencesCount(nodeId: string, nodeName: string): number {
@@ -47,12 +47,15 @@ export interface EveliTreeItemMenuMainProps {
 
 export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (props) => {
   const classes = useUtilityClasses();
+  const { openAsset } = useEveliTree();
 
   // Calculate reference count for this node
   const referencesCount = props.node ? getReferencesCount(props.node.id, props.node.name) : 0;
 
   function handleEdit() {
-    console.log('Edit:', props.node?.name);
+    if (props.node) {
+      openAsset(props.node);
+    }
     props.onClose();
   }
 

@@ -20,16 +20,18 @@ export const EveliTreeTabs: React.FC = () => {
     return null;
   }
 
+  const TabContainer = isDarkMode ? StyledTabContainerDark : StyledTabContainerLight;
+  const Tab = isDarkMode ? StyledTabDark : StyledTabLight;
+
   return (
-    <StyledTabContainer isDarkMode={isDarkMode}>
+    <TabContainer>
       {openTabs.map((tab, index) => (
-        <StyledTab
+        <Tab
           key={tab.id}
           isActive={activeTabIndex === index}
           onClick={() => handleTabClick(index)}
           isFirst={index === 0}
           isLast={index === openTabs.length - 1}
-          isDarkMode={isDarkMode}
         >
           <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">
             <Typography variant='subtitle2'
@@ -37,6 +39,8 @@ export const EveliTreeTabs: React.FC = () => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                flex: 1,
+                minWidth: 0,
                 color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text
               }}>{tab.name}</Typography>
           </Tooltip>
@@ -46,18 +50,20 @@ export const EveliTreeTabs: React.FC = () => {
               sx={{ color: isDarkMode ? TreeColors.dark.text : TreeColors.light.textSecondary }}
             />
           </IconButton>
-        </StyledTab>
+        </Tab>
       ))}
-    </StyledTabContainer>
+    </TabContainer>
   );
 };
 
-const StyledTab = styled(Box)<{
+
+interface TabProps {
   isActive?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
-  isDarkMode?: boolean;
-}>(({ theme, isActive, isFirst, isDarkMode }) => ({
+}
+
+const StyledTabLight = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => ({
   display: 'flex',
   alignItems: 'center',
   paddingLeft: theme.spacing(1),
@@ -65,22 +71,43 @@ const StyledTab = styled(Box)<{
   minWidth: '10ch',
   maxWidth: '20ch',
   overflow: 'hidden',
-  borderTop: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
-  borderLeft: isFirst ? `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}` : 'none',
-  borderRight: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
-  borderBottom: isActive
-    ? `1px solid ${isDarkMode ? TreeColors.dark.surface : TreeColors.light.background}`
-    : 'none',
-  backgroundColor: isActive
-    ? (isDarkMode ? TreeColors.dark.surface : TreeColors.light.background)
-    : (isDarkMode ? TreeColors.dark.background : TreeColors.light.surface),
+  borderTop: `1px solid ${TreeColors.light.border}`,
+  borderLeft: isFirst ? `1px solid ${TreeColors.light.border}` : 'none',
+  borderRight: `1px solid ${TreeColors.light.border}`,
+  borderBottom: isActive ? `1px solid ${TreeColors.light.background}` : 'none',
+  backgroundColor: isActive ? TreeColors.light.background : TreeColors.light.surface,
   cursor: 'pointer',
   marginBottom: isActive ? '-1px' : 0
 }));
 
-const StyledTabContainer = styled(Box)<{ isDarkMode?: boolean }>(({ theme, isDarkMode }) => ({
+const StyledTabDark = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  minWidth: '10ch',
+  maxWidth: '20ch',
+  overflow: 'hidden',
+  borderTop: `1px solid ${TreeColors.dark.border}`,
+  borderLeft: isFirst ? `1px solid ${TreeColors.dark.border}` : 'none',
+  borderRight: `1px solid ${TreeColors.dark.border}`,
+  borderBottom: isActive ? `1px solid ${TreeColors.dark.surface}` : 'none',
+  backgroundColor: isActive ? TreeColors.dark.surface : TreeColors.dark.background,
+  cursor: 'pointer',
+  marginBottom: isActive ? '-1px' : 0
+}));
+
+
+const StyledTabContainerLight = styled(Box)(() => ({
   height: 35,
   display: 'flex',
-  borderBottom: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
+  borderBottom: `1px solid ${TreeColors.light.border}`,
+  width: '100%'
+}));
+
+const StyledTabContainerDark = styled(Box)(() => ({
+  height: 35,
+  display: 'flex',
+  borderBottom: `1px solid ${TreeColors.dark.border}`,
   width: '100%'
 }));
