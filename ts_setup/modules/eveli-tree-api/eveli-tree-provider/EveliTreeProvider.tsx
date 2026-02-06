@@ -1,10 +1,12 @@
 import React from 'react';
 import { TreeNode, TreeNodeType } from '../tree-types';
+import { mockTreeData } from '../mock-tree-data';
 
 export interface EveliTreeOpenTab {
   id: string;
   name: string;
   type: TreeNodeType;
+  pathToTopParent: string;
 }
 
 export interface EveliTreeContextType {
@@ -29,7 +31,6 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
 
   const openAsset = React.useCallback((asset: TreeNode) => {
-    // Don't open tabs for folders
     if (asset.type === 'folder') {
       return;
     }
