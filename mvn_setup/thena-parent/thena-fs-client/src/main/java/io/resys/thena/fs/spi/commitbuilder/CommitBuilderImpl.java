@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.resys.thena.api.envelope.BatchStatus;
+import io.resys.thena.api.envelope.CommitResultStatus;
+import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.fs.api.commits.CommitBuilder;
+import io.resys.thena.fs.api.commits.ImmutableCommitResult;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -153,11 +157,37 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
   
   private CommitResult visitFailure(Throwable t) {
-    return null;
+    return ImmutableCommitResult.builder()
+        .tenantId(tenantId)
+        .status(CommitResultStatus.ERROR)
+        .addMessages(ImmutableMessage.builder()
+            .text("Commit has failed with unknown exception!")
+            .exception(t)
+            .build())
+        .build();
+    
   }
   
   private CommitResult visitSuccess(PersistenceUnit unit) {
-    return null;
+    return ImmutableCommitResult.builder()
+      .addAllMessages(
+          unit.getCommitMessages().stream()
+            .map(text -> ImmutableMessage.builder().text(text).build())
+            .toList()
+      )
+      .addAllMessages(unit.getCommitLogs())
+      .status(mapCommitStatus(unit.getStatus()))
+      .commit(unit.getCommitInserts().getLast())
+      .build();
+  }
+
+  private static CommitResultStatus mapCommitStatus(BatchStatus src) {
+    if(src == BatchStatus.OK) {
+      return CommitResultStatus.OK;
+    } else if(src == BatchStatus.CONFLICT) {
+      return CommitResultStatus.CONFLICT;
+    }
+    return CommitResultStatus.ERROR;
   }
   
   private Uni<Optional<Ref>> visitLock(FsDb tx) {    
@@ -172,4 +202,6 @@ public class CommitBuilderImpl implements CommitBuilder {
     final var unit = ImmutablePersistenceUnit.builder().build();
     return tx.builder().from(unit).persist();
   }
+  
+  
 }
