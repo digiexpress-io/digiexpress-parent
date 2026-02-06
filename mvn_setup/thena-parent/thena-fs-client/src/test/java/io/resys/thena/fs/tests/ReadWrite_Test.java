@@ -28,9 +28,14 @@ public class ReadWrite_Test extends DbTestTemplate {
     
     final var fs = getClient().withTenant(tenant);
     
-    fs.commitBuilder()
     
-      .build().await().atMost(atMost);
+    fs
+      .commitBuilder()
+      .commitAuthor("john smith")
+      .commitMessage("create main branch with some content")
+      .newFile((newFile) -> newFile.build())
+      .build()
+      .await().atMost(atMost);
     
   }
 }

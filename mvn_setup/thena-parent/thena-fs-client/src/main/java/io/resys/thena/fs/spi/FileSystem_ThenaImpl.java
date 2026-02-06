@@ -20,6 +20,7 @@ import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.CommitQuery;
 import io.resys.thena.fs.api.tags.TagBuilder;
 import io.resys.thena.fs.api.tags.TagQuery;
+import io.resys.thena.fs.spi.commitbuilder.CommitBuilderImpl;
 import io.resys.thena.fs.spi.queries.BranchQueryImpl;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.spi.FsDbImpl;
@@ -63,7 +64,7 @@ public class FileSystem_ThenaImpl implements FileSystem {
       }
       @Override
       public CommitBuilder commitBuilder() {
-        return null;
+        return new CommitBuilderImpl(start, tenantId);
       }
       @Override
       public CommitQuery commitQuery() {

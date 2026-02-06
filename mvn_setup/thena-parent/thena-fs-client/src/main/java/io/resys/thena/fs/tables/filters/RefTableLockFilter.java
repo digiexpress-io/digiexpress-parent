@@ -26,11 +26,14 @@ public interface RefTableLockFilter {
     public SqlTuple apply(Tenant tenant, String baseline, RefTableLockFilter filter) {
       final var stmt = new SqlStatement();
       final var params = new ArrayList<Object>();
+      params.add(filter.getRefName());
       final MutableInt index = new MutableInt(1);
 
       if(filter.getDocIds().isPresent()) {
-        stmt.append("(node_path, node_name) = ANY($").append(index.incrementAndGet()).append(")");
-        params.add(filter.getRefName());
+        final var nextIndex = index.incrementAndGet();
+        stmt.append("(node.node_id = ANY($").append(nextIndex).append(")").append(")").ln();
+        params.add(filter.getDocIds().get().toArray(new String[]{}));
+        
       }
       
       final var result = stmt.toString();

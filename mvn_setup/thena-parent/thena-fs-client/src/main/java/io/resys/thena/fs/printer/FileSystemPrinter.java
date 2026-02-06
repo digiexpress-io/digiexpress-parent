@@ -109,7 +109,7 @@ public class FileSystemPrinter {
       ID.apply(ref.getId());
       ID.apply(ref.getCommitId());
       if (ref.getTransitives() != null) {
-        DATES.apply(ref.getTransitives().getCommitCreatedAt());
+        DATES.apply(ref.getTransitives().getCommit().getCommitCreatedAt());
       }
     }
     

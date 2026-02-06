@@ -1,6 +1,5 @@
 package io.resys.thena.fs.tables;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.resys.thena.api.annotations.TenantSql;
@@ -8,12 +7,15 @@ import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.ImmutableCommit;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
 import io.resys.thena.fs.entities.Ref;
-import io.resys.thena.fs.tables.RefTable.RefMapper;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -48,10 +50,18 @@ public interface RefTable {
     sql = """
       SELECT 
         r.ref_name, 
+        r.ref_description,
+        r.ref_props,
+        r.ref_permissions,
+        r.ref_flags,
+        r.ref_author,
         r.commit_id,
         c.commit_created_at, 
         c.commit_author, 
-        c.commit_message
+        c.commit_message,
+        c.tree_id,
+        c.parent_id,
+        c.merge_id
       FROM {ref} r
       LEFT JOIN {commit} c ON r.commit_id = c.id
     """,
@@ -63,8 +73,8 @@ public interface RefTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT r.ref_name, r.commit_id,
-             c.commit_created_at, c.commit_author, c.commit_message
+      SELECT r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author,
+             r.commit_id, c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id
       FROM {ref} r
       LEFT JOIN {commit} c ON r.commit_id = c.id
       WHERE r.ref_name = $1
@@ -75,8 +85,8 @@ public interface RefTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT r.ref_name, r.commit_id,
-             c.commit_created_at, c.commit_author, c.commit_message
+      SELECT r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author,
+             r.commit_id, c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id
       FROM {ref} r
       LEFT JOIN {commit} c ON r.commit_id = c.id
       WHERE r.commit_id = $1
@@ -115,8 +125,8 @@ public interface RefTable {
   
   @TenantSql.FindAll(
     sql = """
-      SELECT r.ref_name, r.commit_id,
-             c.commit_created_at, c.commit_author, c.commit_message
+      SELECT r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author,
+             r.commit_id, c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id
       FROM {ref} r
       LEFT JOIN {commit} c ON r.commit_id = c.id
     """,
@@ -130,9 +140,13 @@ public interface RefTable {
   // -- Lock branch, get current commit tree
   @TenantSql.Find(
     sql = """
-      SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT
-      JOIN {commit} ON {commit}.id = {ref}.commit_id
-      JOIN {tree} ON fs_tree.id = {commit}.tree_id
+      SELECT 
+        r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author, r.commit_id, 
+        c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id,
+        t.tree_nodes
+      FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as r
+      JOIN {commit} as c ON c.id = r.commit_id
+      JOIN {tree} as t ON t.id = c.tree_id
     """,
     rowMapper = RefLockMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
@@ -142,35 +156,78 @@ public interface RefTable {
   class RefLockMapper implements TenantSql.RowMapper<Ref> {
     @Override
     public Ref apply(Row row) {
-      final OffsetDateTime commitCreatedAt = row.getOffsetDateTime("commit_created_at");
-      final String commitAuthor = row.getString("commit_author");
-      final String commitMessage = row.getString("commit_message");
-
-      return ImmutableRef.builder()
-          .refName(row.getString("ref_name"))
-          .commitId(row.getString("commit_id"))
-          .transitives(ImmutableRefTransitives.builder()
-              
-              .build())
+      final var baseline = RefMapper.baseline(row);
+      final var trs = ImmutableRefTransitives.builder()
+          .commit(baseline.getItem2())
           .build();
+      return baseline.getItem1().transitives(trs).build();
     }
   }
 
 
   class RefMapper implements TenantSql.RowMapper<Ref> {
+    
+    public static Tuple2<ImmutableRef.Builder, Commit> baseline(Row row) {
+      final var refBuilder = ImmutableRef.builder()
+          .refName(row.getString("ref_name"))
+          .commitId(row.getString("commit_id"));
+      
+      // Add optional ref properties
+      final String refDescription = row.getString("ref_description");
+      if (refDescription != null) {
+        refBuilder.branchDescription(refDescription);
+      }
+      
+      final JsonObject refProps = row.getJsonObject("ref_props");
+      if (refProps != null) {
+        refBuilder.branchProps(refProps);
+      }
+      
+      final JsonObject refPermissions = row.getJsonObject("ref_permissions");
+      if (refPermissions != null) {
+        refBuilder.branchPermissions(refPermissions);
+      }
+      
+      final JsonObject refFlags = row.getJsonObject("ref_flags");
+      if (refFlags != null) {
+        refBuilder.branchFlags(refFlags);
+      }
+      
+      final String refAuthor = row.getString("ref_author");
+      if (refAuthor != null) {
+        refBuilder.branchAuthor(refAuthor);
+      }
+      
+      // Build commit object from joined data
+      final String commitId = row.getString("commit_id");
+      
+    
+      final var commitBuilder = ImmutableCommit.builder()
+          .id(commitId)
+          .commitCreatedAt(row.getOffsetDateTime("commit_created_at"))
+          .commitAuthor(row.getString("commit_author"))
+          .commitMessage(row.getString("commit_message"))
+          .treeId(row.getString("tree_id"));
+      
+      final String parentId = row.getString("parent_id");
+      if (parentId != null) {
+        commitBuilder.parentId(parentId);
+      }
+      
+      final String mergeId = row.getString("merge_id");
+      if (mergeId != null) {
+        commitBuilder.mergeId(mergeId);
+      }
+      
+      final var commit = commitBuilder.build();
+      return Tuple2.of(refBuilder, commit);
+    }
+
     @Override
     public Ref apply(Row row) {
-      final OffsetDateTime commitCreatedAt = row.getOffsetDateTime("commit_created_at");
-      final String commitAuthor = row.getString("commit_author");
-      final String commitMessage = row.getString("commit_message");
-
-      return ImmutableRef.builder()
-          .refName(row.getString("ref_name"))
-          .commitId(row.getString("commit_id"))
-          .transitives(ImmutableRefTransitives.builder()
-
-              .build())
-          .build();
+      final var baseline = baseline(row);
+      final var trs = ImmutableRefTransitives.builder().commit(baseline.getItem2()).build();
+      return baseline.getItem1().transitives(trs).build();
     }
   }
 

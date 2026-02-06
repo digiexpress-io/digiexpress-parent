@@ -24,7 +24,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   
   // Builder state
   private String branchHeadId;
-  private String branchNameValue;
+  private String branchNameValue = "main";
   private String commitAuthorValue;
   private String commitMessageValue;
   
