@@ -13,16 +13,20 @@ import { sortChildren } from './eveli-tree-item-helpers';
 export interface EveliTreeItemProps {
   node: TreeNode;
   level: number;
+  parentPath?: string;
   onToggle: (nodeId: string) => void;
   onContextMenu: (event: React.MouseEvent, node: TreeNode) => void;
-  onDoubleClick: (node: TreeNode) => void;
+  onDoubleClick: (node: TreeNode, pathToTopParent: string) => void;
   isDarkTheme: boolean;
 }
 
-export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onToggle, onContextMenu, onDoubleClick, isDarkTheme }) => {
+export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme }) => {
   const hasChildren = node.children && node.children.length > 0;
   const hasConfigOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
+
+  // Build the full path for this node
+  const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
 
   return (
     <EveliTreeItemRoot className={classes.root} isDarkTheme={isDarkTheme}>
@@ -30,7 +34,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onTog
         level={level}
         isDarkTheme={isDarkTheme}
         onClick={() => hasChildren && onToggle(node.id)}
-        onDoubleClick={() => onDoubleClick(node)}
+        onDoubleClick={() => onDoubleClick(node, fullPath)}
         onContextMenu={(event) => onContextMenu(event, node)}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -69,6 +73,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onTog
                 key={child.id}
                 node={child}
                 level={level + 1}
+                parentPath={fullPath}
                 onToggle={onToggle}
                 onContextMenu={onContextMenu}
                 onDoubleClick={onDoubleClick}

@@ -19,20 +19,16 @@ import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 
 function getReferencesCount(nodeId: string, nodeName: string): number {
   let count = 0;
-
   function searchInNode(node: TreeNode): void {
-    // Check if this node is a reference to our target node
     if (node.isReference && node.name === nodeName && node.id !== nodeId) {
       count++;
     }
 
-    // Recursively search children
     if (node.children) {
       node.children.forEach(child => searchInNode(child));
     }
   }
 
-  // Search through all mock data
   mockTreeData.forEach(rootNode => searchInNode(rootNode));
 
   return count;
@@ -49,12 +45,11 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
   const classes = useUtilityClasses();
   const { openAsset } = useEveliTree();
 
-  // Calculate reference count for this node
   const referencesCount = props.node ? getReferencesCount(props.node.id, props.node.name) : 0;
 
   function handleEdit() {
     if (props.node) {
-      openAsset(props.node);
+      openAsset(props.node, props.node.name);
     }
     props.onClose();
   }
@@ -82,9 +77,9 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
 
   function handleSubmenuToggle(submenuType: string) {
     if (props.openSubmenu === submenuType) {
-      props.onSubmenuOpen(''); // Close the submenu by passing empty string
+      props.onSubmenuOpen(''); 
     } else {
-      props.onSubmenuOpen(submenuType); // Open the submenu
+      props.onSubmenuOpen(submenuType); 
     }
   }
 

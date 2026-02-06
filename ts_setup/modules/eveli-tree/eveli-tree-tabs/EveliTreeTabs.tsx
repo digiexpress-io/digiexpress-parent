@@ -45,10 +45,7 @@ export const EveliTreeTabs: React.FC = () => {
               }}>{tab.name}</Typography>
           </Tooltip>
           <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }} onClick={(event) => handleCloseTab(index, event)}>
-            <CloseIcon
-              fontSize="inherit"
-              sx={{ color: isDarkMode ? TreeColors.dark.text : TreeColors.light.textSecondary }}
-            />
+            <CloseIcon fontSize="inherit" sx={{ color: isDarkMode ? TreeColors.dark.text : TreeColors.light.textSecondary }} />
           </IconButton>
         </Tab>
       ))}
@@ -63,7 +60,9 @@ interface TabProps {
   isLast?: boolean;
 }
 
-const StyledTabLight = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => ({
+const StyledTabLight = styled(Box, {
+  shouldForwardProp: (prop) => !['isActive', 'isFirst', 'isLast'].includes(prop as string)
+})<TabProps>(({ theme, isActive }) => ({
   display: 'flex',
   alignItems: 'center',
   paddingLeft: theme.spacing(1),
@@ -80,7 +79,9 @@ const StyledTabLight = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => (
   marginBottom: isActive ? '-1px' : 0
 }));
 
-const StyledTabDark = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => ({
+const StyledTabDark = styled(Box, {
+  shouldForwardProp: (prop) => !['isActive', 'isFirst', 'isLast'].includes(prop as string)
+})<TabProps>(({ theme, isActive }) => ({
   display: 'flex',
   alignItems: 'center',
   paddingLeft: theme.spacing(1),

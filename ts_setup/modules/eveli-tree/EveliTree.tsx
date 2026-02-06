@@ -26,12 +26,8 @@ export const EveliTree: React.FC = () => {
     setContextMenuOpen(false);
   }
 
-  function handleDoubleClick(node: TreeNode) {
-    openAsset({
-      id: node.id,
-      name: node.name,
-      type: node.type
-    });
+  function handleDoubleClick(node: TreeNode, pathToTopParent: string) {
+    openAsset(node, pathToTopParent);
   }
 
   return (
