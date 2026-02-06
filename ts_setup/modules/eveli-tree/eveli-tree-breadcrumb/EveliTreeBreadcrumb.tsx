@@ -32,7 +32,9 @@ export const EveliTreeBreadcrumb: React.FC = () => {
   );
 };
 
-const BreadcrumbContainer = styled(Box)<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
+const BreadcrumbContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
   height: 30,
   display: 'flex',
   alignItems: 'center',
