@@ -91,7 +91,7 @@ export const EveliTreeItemRoot = styled('div', {
       styles.iconConfig
     ];
   },
-})<{ isDarkTheme?: boolean }>(({ theme, isDarkTheme }) => {
+})<{ isDarkTheme: boolean }>(({ theme, isDarkTheme }) => {
   return {
     [`& .${MUI_NAME}-icon`]: {
       minWidth: 10,
@@ -269,7 +269,7 @@ interface StyledListItemTextProps {
   nodeType: TreeNodeType;
   nodeName: string;
   description?: string;
-  isDarkTheme?: boolean;
+  isDarkTheme: boolean;
 }
 
 export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType, nodeName, description, isDarkTheme }) => {

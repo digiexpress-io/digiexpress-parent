@@ -1,12 +1,3 @@
-/**
- * Centralized Color System for EveliTree Components
- *
- * NOTE: If theme changes are too drastic and need to be reverted,
- * restore the original hard-coded colors from git history before this change.
- *
- * This ultra-consolidates 32+ scattered colors down to just 12 core unique colors
- * to improve maintainability and consistency.
- */
 
 // =============================================================================
 // ULTRA-CONSOLIDATED COLOR PALETTE (12 Unique Colors)
@@ -74,10 +65,7 @@ export const TreeColors = {
 
 export type TreeNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
 
-/**
- * Get the appropriate color for a node type based on theme
- */
-export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = false) {
+export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean) {
   const colors = isDarkTheme ? TreeColors.nodeTypes.dark : TreeColors.nodeTypes.light;
 
   switch (nodeType) {
@@ -104,9 +92,6 @@ export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = fals
   }
 }
 
-/**
- * Get theme colors based on dark/light mode
- */
 export function getThemeColors(isDarkTheme: boolean) {
   return isDarkTheme ? TreeColors.dark : TreeColors.light;
 }

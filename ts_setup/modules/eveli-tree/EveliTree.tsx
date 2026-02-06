@@ -9,14 +9,14 @@ import {
   FolderOutlined as FolderIcon,
   Add as AddIcon
 } from '@mui/icons-material';
-import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu } from '../eveli-tree-api';
+import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu, useEveliTree } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
 import { EveliTreeItem } from './eveli-tree-item';
 import { EveliTreeItemMenu } from './eveli-tree-item-menu';
 
 
 export const EveliTree: React.FC = () => {
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const { isDarkMode, setIsDarkMode } = useEveliTree();
   const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
@@ -28,12 +28,12 @@ export const EveliTree: React.FC = () => {
   }
 
   return (
-    <EveliTreeRoot className={classes.root} isDarkTheme={isDarkTheme}>
+    <EveliTreeRoot className={classes.root} isDarkTheme={isDarkMode}>
       <Box className={classes.title}>
         <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
         <Box flexGrow={1} />
         <Tooltip title='New file' arrow enterDelay={1000}>
-          {isDarkTheme ? (
+          {isDarkMode ? (
             <StyledIconDark>
               <StyledBadgeDark badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <FileIcon sx={{ fontSize: '15px' }} />
@@ -48,7 +48,7 @@ export const EveliTree: React.FC = () => {
           )}
         </Tooltip>
         <Tooltip title='New folder' arrow enterDelay={1000}>
-          {isDarkTheme ? (
+          {isDarkMode ? (
             <StyledIconDark>
               <StyledBadgeDark badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <FolderIcon sx={{ fontSize: '15px' }} />
@@ -64,7 +64,7 @@ export const EveliTree: React.FC = () => {
         </Tooltip>
 
         <Tooltip title='Collapse all' arrow enterDelay={1000}>
-          {isDarkTheme ? (
+          {isDarkMode ? (
             <StyledIconDark onClick={() => collapseAll(treeData, setTreeData)}>
               <CollapseAllIcon sx={{ fontSize: '15px' }} />
             </StyledIconDark>
@@ -76,12 +76,12 @@ export const EveliTree: React.FC = () => {
         </Tooltip>
 
         <Tooltip title='Toggle light/dark mode' arrow enterDelay={1000}>
-          {isDarkTheme ? (
-            <StyledIconDark onClick={() => setIsDarkTheme(!isDarkTheme)}>
+          {isDarkMode ? (
+            <StyledIconDark onClick={() => setIsDarkMode(!isDarkMode)}>
               <LightModeIcon sx={{ fontSize: '15px' }} />
             </StyledIconDark>
           ) : (
-            <StyledIconLight onClick={() => setIsDarkTheme(!isDarkTheme)}>
+            <StyledIconLight onClick={() => setIsDarkMode(!isDarkMode)}>
               <DarkModeIcon sx={{ fontSize: '15px' }} />
             </StyledIconLight>
           )}
@@ -95,7 +95,7 @@ export const EveliTree: React.FC = () => {
             level={0}
             onToggle={(nodeId) => toggleNode(nodeId, treeData, setTreeData)}
             onContextMenu={(event, node) => handleContextMenu(event, node, setContextMenuData, setContextMenuOpen)}
-            isDarkTheme={isDarkTheme}
+            isDarkTheme={isDarkMode}
           />
         ))}
       </List>
