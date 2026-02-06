@@ -2,12 +2,15 @@ package io.resys.thena.fs.spi.commitbuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.commits.CommitBuilder;
+import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
 import io.resys.thena.fs.tables.ImmutablePersistenceUnit;
+import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -24,11 +27,14 @@ public class CommitBuilderImpl implements CommitBuilder {
   private String branchNameValue;
   private String commitAuthorValue;
   private String commitMessageValue;
+  
   private final List<Consumer<NewFolder>> newFolders = new ArrayList<>();
-  private final List<MergeFolderCommand> mergeFolders = new ArrayList<>();
   private final List<Consumer<NewFile>> newFiles = new ArrayList<>();
+  
+  private final List<MergeFolderCommand> mergeFolders = new ArrayList<>();
   private final List<MergeFileCommand> mergeFiles = new ArrayList<>();
   private final List<String> removedDocIds = new ArrayList<>();
+  private final List<String> allIds = new ArrayList<>();
   
   private static record MergeFolderCommand(String docId, Consumer<MergeFolder> consumer) {}
   private static record MergeFileCommand(String docId, Consumer<MergeFile> consumer) {}
@@ -74,6 +80,7 @@ public class CommitBuilderImpl implements CommitBuilder {
     RepoAssert.notEmpty(docId, () -> "mergeFile docId can't be empty!");
     RepoAssert.notNull(doc, () -> "mergeFile consumer can't be null!");
     this.mergeFiles.add(new MergeFileCommand(docId, doc));
+    this.allIds.add(docId);
     return this;
   }
 
@@ -81,6 +88,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   public CommitBuilder remove(String docId) {
     RepoAssert.notEmpty(docId, () -> "remove docId can't be empty!");
     this.removedDocIds.add(docId);
+    this.allIds.add(docId);
     return this;
   }
 
@@ -95,6 +103,7 @@ public class CommitBuilderImpl implements CommitBuilder {
     }
     
     this.removedDocIds.addAll(docIds);
+    this.allIds.addAll(docIds);
     return this;
   }
 
@@ -133,18 +142,34 @@ public class CommitBuilderImpl implements CommitBuilder {
         .commitMessage(commitMessageValue)
         .tenantId(tenantId)
         .build();
-    return this.db_uni.onItem().transformToUni(db -> db.withTransaction(scope, this::doInTx));
+    return this.db_uni.onItem().transformToUni(db -> db.withTransaction(scope, this::visitTransaction));
   }
   
-  private Uni<CommitResult> doInTx(FsDb tx) {
-    
-    // choose locking 
-    tx.query().queryRef().findOneWithLock(null);
-    
-    return tx.builder().from(visitPersistenceUnit()).persist();
+  private Uni<CommitResult> visitTransaction(FsDb tx) {
+    return visitLock(tx)
+        .onItem().transformToUni(lock -> visitPersistenceUnit(tx, lock))
+        .onItem().transform(this::visitSuccess)
+        .onFailure().recoverWithItem(this::visitFailure);
   }
   
-  private PersistenceUnit visitPersistenceUnit() {
+  private CommitResult visitFailure(Throwable t) {
+    return null;
+  }
+  
+  private CommitResult visitSuccess(PersistenceUnit unit) {
+    return null;
+  }
+  
+  private Uni<Optional<Ref>> visitLock(FsDb tx) {    
+    final var query = ImmutableRefTableLockFilter.builder()
+      .refName(branchNameValue)
+      .docIds(Optional.ofNullable(allIds.isEmpty() ? null : allIds))
+      .build();
+    return tx.query().queryRef().findOneWithLock(query);
+  }
+  
+  private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
     final var unit = ImmutablePersistenceUnit.builder().build();
+    return tx.builder().from(unit).persist();
   }
 }

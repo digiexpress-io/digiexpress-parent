@@ -11,6 +11,7 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.tables.RefTable.RefMapper;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
 import io.vertx.mutiny.sqlclient.Row;
@@ -45,8 +46,12 @@ public interface RefTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT r.ref_name, r.commit_id,
-             c.commit_created_at, c.commit_author, c.commit_message
+      SELECT 
+        r.ref_name, 
+        r.commit_id,
+        c.commit_created_at, 
+        c.commit_author, 
+        c.commit_message
       FROM {ref} r
       LEFT JOIN {commit} c ON r.commit_id = c.id
     """,
@@ -123,18 +128,34 @@ public interface RefTable {
 
   
   // -- Lock branch, get current commit tree
-  @TenantSql.FindAll(
+  @TenantSql.Find(
     sql = """
       SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT
       JOIN {commit} ON {commit}.id = {ref}.commit_id
       JOIN {tree} ON fs_tree.id = {commit}.tree_id
     """,
-    rowMapper = RefMapper.class,
+    rowMapper = RefLockMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
   )
   SqlTuple findOneWithLock(RefTableLockFilter filter);
 
-  
+  class RefLockMapper implements TenantSql.RowMapper<Ref> {
+    @Override
+    public Ref apply(Row row) {
+      final OffsetDateTime commitCreatedAt = row.getOffsetDateTime("commit_created_at");
+      final String commitAuthor = row.getString("commit_author");
+      final String commitMessage = row.getString("commit_message");
+
+      return ImmutableRef.builder()
+          .refName(row.getString("ref_name"))
+          .commitId(row.getString("commit_id"))
+          .transitives(ImmutableRefTransitives.builder()
+              
+              .build())
+          .build();
+    }
+  }
+
 
   class RefMapper implements TenantSql.RowMapper<Ref> {
     @Override
@@ -147,9 +168,7 @@ public interface RefTable {
           .refName(row.getString("ref_name"))
           .commitId(row.getString("commit_id"))
           .transitives(ImmutableRefTransitives.builder()
-              .commitCreatedAt(commitCreatedAt)
-              .commitAuthor(commitAuthor)
-              .commitMessage(commitMessage)
+
               .build())
           .build();
     }

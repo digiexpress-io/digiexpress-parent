@@ -1,6 +1,6 @@
 package io.resys.thena.fs.entities;
 
-import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -73,8 +73,12 @@ public interface Ref extends FileSystemEntity {
   @JsonSerialize(as = ImmutableRefTransitives.class)
   @JsonDeserialize(as = ImmutableRefTransitives.class)
   interface RefTransitives {
-    OffsetDateTime getCommitCreatedAt();
-    String getCommitAuthor();
-    String getCommitMessage();
+    Commit getCommit();
+    
+    // might not be loaded
+    @Nullable Tree getTree();
+
+    // might not be loaded
+    @Nullable Map<String, Blob> getBlobsById();  
   }
 }

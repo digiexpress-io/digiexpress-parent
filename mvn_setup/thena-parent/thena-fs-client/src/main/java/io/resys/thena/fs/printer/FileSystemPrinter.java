@@ -125,7 +125,7 @@ public class FileSystemPrinter {
       }
     }
     
-    for (final var tree : world.getFsTree().values()) {
+    for (final var tree : world.getTree().values()) {
       ID.apply(tree.getId());
       for (final var node : tree.getTreeNodes()) {
         ID.apply(node.getId());
@@ -217,7 +217,7 @@ public class FileSystemPrinter {
 
     // Print Trees
     result.append("Trees:").append(System.lineSeparator());
-    for (final var tree : world.getFsTree().values().stream()
+    for (final var tree : world.getTree().values().stream()
         .sorted((a, b) -> ComparisonChain.start()
             .compare(ID.apply(a.getId()), ID.apply(b.getId()))
             .result())
