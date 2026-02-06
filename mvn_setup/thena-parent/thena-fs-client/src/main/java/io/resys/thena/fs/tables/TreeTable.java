@@ -11,27 +11,27 @@ import io.resys.thena.fs.entities.ImmutableTree;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
-  name = "fs_tree",
+  name = "tree",
   order = 400,
   ddl = """
-    CREATE TABLE {fs_tree} (
+    CREATE TABLE {tree} (
       id TEXT PRIMARY KEY,
-      tree_nodes {fs_node}[] NOT NULL
+      tree_nodes {node}[] NOT NULL
     );
     
-    COMMENT ON TABLE {fs_tree} IS 'Directory structure snapshots. Each tree represents the complete filesystem hierarchy state at a specific point in time. Referential integrity for fs_node array elements is enforced via triggers.';
-    COMMENT ON COLUMN {fs_tree}.id IS 'Content hash of the tree structure, enabling deduplication of identical directory states';
-    COMMENT ON COLUMN {fs_tree}.tree_nodes IS 'Array of fs_node entries representing files and subdirectories in this tree';
+    COMMENT ON TABLE {tree} IS 'Directory structure snapshots. Each tree represents the complete filesystem hierarchy state at a specific point in time. Referential integrity for node array elements is enforced via triggers.';
+    COMMENT ON COLUMN {tree}.id IS 'Content hash of the tree structure, enabling deduplication of identical directory states';
+    COMMENT ON COLUMN {tree}.tree_nodes IS 'Array of node entries representing files and subdirectories in this tree';
   """,
   constraints = """
-    CREATE TRIGGER {fs_tree}_validation_trigger
-      BEFORE INSERT OR UPDATE ON {fs_tree}
-      FOR EACH ROW EXECUTE FUNCTION {fs_tree}_validate_tree();
+    CREATE TRIGGER {tree}_validation_trigger
+      BEFORE INSERT OR UPDATE ON {tree}
+      FOR EACH ROW EXECUTE FUNCTION {tree}_validate_tree();
 
   """,
   drop = """
-    DROP TRIGGER IF EXISTS {fs_tree}_validation_trigger ON {fs_tree};
-    DROP TABLE IF EXISTS {fs_tree} CASCADE;
+    DROP TRIGGER IF EXISTS {tree}_validation_trigger ON {tree};
+    DROP TABLE IF EXISTS {tree} CASCADE;
   """
 )
 public interface TreeTable {
@@ -39,7 +39,7 @@ public interface TreeTable {
   @TenantSql.FindAll(
     sql = """
       SELECT id, tree_nodes
-      FROM {fs_tree}
+      FROM {tree}
     """,
     rowMapper = TreeMapper.class
   )
@@ -49,7 +49,7 @@ public interface TreeTable {
     optional = false,
     sql = """
       SELECT id, tree_nodes
-      FROM {fs_tree}
+      FROM {tree}
       WHERE id = $1
     """,
     rowMapper = TreeMapper.class
@@ -58,7 +58,7 @@ public interface TreeTable {
 
   @TenantSql.InsertAll(
     sql = """
-      INSERT INTO {fs_tree}
+      INSERT INTO {tree}
       (id, tree_nodes)
       VALUES($1, $2)
     """,
@@ -68,7 +68,7 @@ public interface TreeTable {
 
   @TenantSql.UpdateAll(
     sql = """
-      UPDATE {fs_tree}
+      UPDATE {tree}
       SET tree_nodes = $1
       WHERE id = $2
     """,
@@ -77,7 +77,7 @@ public interface TreeTable {
   SqlTupleList updateMany(List<Tree> trees);
 
   @TenantSql.DeleteAll(
-    sql = "DELETE FROM {fs_tree} WHERE id = $1",
+    sql = "DELETE FROM {tree} WHERE id = $1",
     propsMapper = TreeDeleteMapper.class
   )
   SqlTupleList deleteAll(List<Tree> trees);
@@ -85,11 +85,11 @@ public interface TreeTable {
   class TreeMapper implements TenantSql.RowMapper<Tree> {
     @Override
     public Tree apply(Row row) {
-      // Note: Complex mapping for fs_node[] array would need custom logic
+      // Note: Complex mapping for node[] array would need custom logic
       // This is a simplified version - actual implementation would need to parse the array
       return ImmutableTree.builder()
           .id(row.getString("id"))
-          .treeNodes(List.of()) // TODO: Parse fs_node[] array
+          .treeNodes(List.of()) // TODO: Parse node[] array
           .build();
     }
   }
@@ -97,10 +97,10 @@ public interface TreeTable {
   class TreeInsertMapper implements TenantSql.PropsMapper<Tree> {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tree tree) {
-      // Note: Complex mapping for fs_node[] array would need custom logic
+      // Note: Complex mapping for node[] array would need custom logic
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         tree.getId(),
-        null // TODO: Convert List<FsNode> to PostgreSQL fs_node[] array
+        null // TODO: Convert List<FsNode> to PostgreSQL node[] array
       });
     }
   }
@@ -109,7 +109,7 @@ public interface TreeTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tree tree) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        null, // TODO: Convert List<FsNode> to PostgreSQL fs_node[] array
+        null, // TODO: Convert List<FsNode> to PostgreSQL node[] array
         tree.getId()
       });
     }

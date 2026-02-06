@@ -22,7 +22,7 @@ import io.vertx.mutiny.sqlclient.Row;
       commit_created_at TIMESTAMPTZ NOT NULL,
       commit_author TEXT NOT NULL,
       commit_message TEXT NOT NULL,
-      tree_id TEXT NOT NULL REFERENCES {fs_tree}(id),
+      tree_id TEXT NOT NULL REFERENCES {tree}(id),
       parent_id TEXT REFERENCES {commit}(id),
       merge_id TEXT REFERENCES {commit}(id)
     );

@@ -58,16 +58,16 @@ public class SchemaSQL_Test {
     final var registry = new FsRegistry(names, datasource);
 
     final var schema = SqlFormatter.of(Dialect.PostgreSql).format(new StringBuilder()
-      .append(registry.fsNodes().createTable().getValue())
+      .append(registry.nodes().createTable().getValue())
       .append(registry.blobs().createTable().getValue())
       .append(registry.props().createTable().getValue())
-      .append(registry.fsTrees().createTable().getValue())
+      .append(registry.trees().createTable().getValue())
       .append(registry.commits().createTable().getValue())
       .append(registry.refs().createTable().getValue())
       .append(registry.tags().createTable().getValue())
 
-      .append(registry.fsNodes().createConstraints().getValue())
-      .append(registry.fsTrees().createConstraints().getValue())
+      .append(registry.nodes().createConstraints().getValue())
+      .append(registry.trees().createConstraints().getValue())
       .toString()
     );
 

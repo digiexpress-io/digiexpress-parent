@@ -6,6 +6,9 @@ import java.util.function.Consumer;
 
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.tables.FsDb;
+import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
+import io.resys.thena.fs.tables.ImmutablePersistenceUnit;
+import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommitBuilderImpl implements CommitBuilder {
   private final Uni<FsDb> db_uni;
+  private final String tenantId;
   
   // Builder state
   private String branchHeadId;
@@ -124,7 +128,23 @@ public class CommitBuilderImpl implements CommitBuilder {
     RepoAssert.isTrue(hasOperations, 
         () -> "At least one operation (newFolder, mergeFolder, newFile, mergeFile, or remove) must be added before calling build()!");
     
-    // TODO: Implement the actual commit creation logic
-    return null;
+    final var scope = ImmutableTxScope.builder()
+        .commitAuthor(commitAuthorValue)
+        .commitMessage(commitMessageValue)
+        .tenantId(tenantId)
+        .build();
+    return this.db_uni.onItem().transformToUni(db -> db.withTransaction(scope, this::doInTx));
+  }
+  
+  private Uni<CommitResult> doInTx(FsDb tx) {
+    
+    // choose locking 
+    tx.query().queryRef().findOneWithLock(null);
+    
+    return tx.builder().from(visitPersistenceUnit()).persist();
+  }
+  
+  private PersistenceUnit visitPersistenceUnit() {
+    final var unit = ImmutablePersistenceUnit.builder().build();
   }
 }

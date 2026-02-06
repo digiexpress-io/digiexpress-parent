@@ -12,6 +12,7 @@ import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
+import io.resys.thena.fs.tables.filters.RefTableLockFilter;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -20,6 +21,12 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE {ref} (
       ref_name TEXT PRIMARY KEY,
+      ref_description TEXT,
+      ref_props JSONB,
+      ref_permissions JSONB,
+      ref_flags JSONB,
+      ref_author TEXT,
+      
       commit_id TEXT NOT NULL REFERENCES {commit}(id)
     );
     
@@ -113,7 +120,20 @@ public interface RefTable {
     sqlBuilder = RefTableFilter.SQL.class
   )
   SqlTuple findAllByFilter(RefTableFilter filter);
+
   
+  // -- Lock branch, get current commit tree
+  @TenantSql.FindAll(
+    sql = """
+      SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT
+      JOIN {commit} ON {commit}.id = {ref}.commit_id
+      JOIN {tree} ON fs_tree.id = {commit}.tree_id
+    """,
+    rowMapper = RefMapper.class,
+    sqlBuilder = RefTableLockFilter.SQL.class
+  )
+  SqlTuple findOneWithLock(RefTableLockFilter filter);
+
   
 
   class RefMapper implements TenantSql.RowMapper<Ref> {

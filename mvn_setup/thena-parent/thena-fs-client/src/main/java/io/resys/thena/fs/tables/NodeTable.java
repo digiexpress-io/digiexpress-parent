@@ -8,20 +8,20 @@ import io.resys.thena.fs.entities.ImmutableNode;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
-  name = "fs_node",
+  name = "node",
   order = 100,
   ddl = """
-    CREATE TYPE {fs_node} AS (
+    CREATE TYPE {node} AS (
       node_path TEXT,
       node_name TEXT,
       blob_id TEXT,
       props_id TEXT
     );
     
-    COMMENT ON TYPE {fs_node} IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
+    COMMENT ON TYPE {node} IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
   """,
   constraints = """
-    CREATE OR REPLACE FUNCTION {fs_tree}_validate_tree() 
+    CREATE OR REPLACE FUNCTION {tree}_validate_tree() 
     RETURNS TRIGGER AS $$
     DECLARE
         missing_count INTEGER;
@@ -73,8 +73,8 @@ import io.vertx.mutiny.sqlclient.Row;
     $$ LANGUAGE plpgsql;
   """,
   drop = """
-    DROP FUNCTION IF EXISTS {fs_tree}_validate_tree() CASCADE;
-    DROP TYPE IF EXISTS {fs_node} CASCADE;
+    DROP FUNCTION IF EXISTS {tree}_validate_tree() CASCADE;
+    DROP TYPE IF EXISTS {node} CASCADE;
   """
 )
 public interface NodeTable {

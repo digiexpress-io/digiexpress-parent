@@ -1,10 +1,10 @@
-CREATE TYPE fs_node AS (
+CREATE TYPE node AS (
   node_path TEXT,
   node_name TEXT,
   blob_id TEXT,
   props_id TEXT
 );
-COMMENT ON TYPE fs_node IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
+COMMENT ON TYPE node IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
 CREATE TABLE blob (
   id TEXT PRIMARY KEY,
   blob_type TEXT NOT NULL,
@@ -28,16 +28,16 @@ COMMENT ON COLUMN props.props_labels IS 'User-defined labels and tags in JSONB f
 COMMENT ON COLUMN props.props_comments IS 'Comments and annotations in JSONB format';
 COMMENT ON COLUMN props.props_permissions IS 'Access control and permission settings in JSONB format';
 COMMENT ON COLUMN props.props_flags IS 'Boolean flags like hidden, disabled, etc. in JSONB format';
-CREATE TABLE fs_tree (id TEXT PRIMARY KEY, tree_nodes fs_node [ ] NOT NULL);
-COMMENT ON TABLE fs_tree IS 'Directory structure snapshots. Each tree represents the complete filesystem hierarchy state at a specific point in time. Referential integrity for fs_node array elements is enforced via triggers.';
-COMMENT ON COLUMN fs_tree.id IS 'Content hash of the tree structure, enabling deduplication of identical directory states';
-COMMENT ON COLUMN fs_tree.tree_nodes IS 'Array of fs_node entries representing files and subdirectories in this tree';
+CREATE TABLE tree (id TEXT PRIMARY KEY, tree_nodes node [ ] NOT NULL);
+COMMENT ON TABLE tree IS 'Directory structure snapshots. Each tree represents the complete filesystem hierarchy state at a specific point in time. Referential integrity for node array elements is enforced via triggers.';
+COMMENT ON COLUMN tree.id IS 'Content hash of the tree structure, enabling deduplication of identical directory states';
+COMMENT ON COLUMN tree.tree_nodes IS 'Array of node entries representing files and subdirectories in this tree';
 CREATE TABLE commit (
   id TEXT PRIMARY KEY,
   commit_created_at TIMESTAMPTZ NOT NULL,
   commit_author TEXT NOT NULL,
   commit_message TEXT NOT NULL,
-  tree_id TEXT NOT NULL REFERENCES fs_tree(id),
+  tree_id TEXT NOT NULL REFERENCES tree(id),
   parent_id TEXT REFERENCES commit(id),
   merge_id TEXT REFERENCES commit(id)
 );
@@ -94,7 +94,7 @@ COMMENT ON COLUMN tag.external_tenant_id IS 'External tenant identifier for mult
 COMMENT ON COLUMN tag.tag_starts_at IS 'Scheduled activation timestamp when this tag becomes effective or goes live';
 COMMENT ON COLUMN tag.tag_report IS 'Operational reports and status information stored in JSONB format';
 CREATE
-OR REPLACE FUNCTION fs_tree_validate_tree() RETURNS TRIGGER AS $$
+OR REPLACE FUNCTION tree_validate_tree() RETURNS TRIGGER AS $$
  DECLARE
  missing_count INTEGER;
  BEGIN
@@ -117,8 +117,8 @@ OR REPLACE FUNCTION fs_tree_validate_tree() RETURNS TRIGGER AS $$
  RETURN NEW;
  END;
  $$ LANGUAGE plpgsql;
-CREATE TRIGGER fs_tree_validation_trigger BEFORE
+CREATE TRIGGER tree_validation_trigger BEFORE
 INSERT
   OR
 UPDATE
-  ON fs_tree FOR EACH ROW EXECUTE FUNCTION fs_tree_validate_tree();
+  ON tree FOR EACH ROW EXECUTE FUNCTION tree_validate_tree();
