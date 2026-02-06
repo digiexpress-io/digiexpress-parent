@@ -15,17 +15,24 @@ export interface EveliTreeItemProps {
   level: number;
   onToggle: (nodeId: string) => void;
   onContextMenu: (event: React.MouseEvent, node: TreeNode) => void;
+  onDoubleClick: (node: TreeNode) => void;
   isDarkTheme: boolean;
 }
 
-export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onToggle, onContextMenu, isDarkTheme }) => {
+export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onToggle, onContextMenu, onDoubleClick, isDarkTheme }) => {
   const hasChildren = node.children && node.children.length > 0;
   const hasConfigOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
 
   return (
     <EveliTreeItemRoot className={classes.root} isDarkTheme={isDarkTheme}>
-      <StyledListItem level={level} isDarkTheme={isDarkTheme} onClick={() => hasChildren && onToggle(node.id)} onContextMenu={(event) => onContextMenu(event, node)}>
+      <StyledListItem
+        level={level}
+        isDarkTheme={isDarkTheme}
+        onClick={() => hasChildren && onToggle(node.id)}
+        onDoubleClick={() => onDoubleClick(node)}
+        onContextMenu={(event) => onContextMenu(event, node)}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {hasChildren ? (
             <IconButton size='small'>
@@ -64,6 +71,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, onTog
                 level={level + 1}
                 onToggle={onToggle}
                 onContextMenu={onContextMenu}
+                onDoubleClick={onDoubleClick}
                 isDarkTheme={isDarkTheme}
               />
             ))}

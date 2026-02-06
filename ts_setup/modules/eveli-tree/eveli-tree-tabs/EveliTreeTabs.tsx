@@ -5,29 +5,33 @@ import { useEveliTree } from '../../eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 
 export const EveliTreeTabs: React.FC = () => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const { isDarkMode } = useEveliTree();
+  const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useEveliTree();
 
   const handleTabClick = (index: number) => {
-    setActiveIndex(index);
+    setActiveTab(index);
   };
 
-  const tabs = [
-    'general-message.dialob',
-    'info-gdpr.article',
-    'fi'
-  ];
+  const handleCloseTab = (index: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    closeTab(index);
+  };
+
+  if (openTabs.length === 0) {
+    return null;
+  }
 
   return (
     <StyledTabContainer isDarkMode={isDarkMode}>
-      {tabs.map((tabName, index) => (
-        <StyledTab key={tabName} isActive={activeIndex === index}
+      {openTabs.map((tab, index) => (
+        <StyledTab
+          key={tab.id}
+          isActive={activeTabIndex === index}
           onClick={() => handleTabClick(index)}
           isFirst={index === 0}
-          isLast={index === tabs.length - 1}
+          isLast={index === openTabs.length - 1}
           isDarkMode={isDarkMode}
         >
-          <Tooltip title={tabName} arrow enterDelay={700} placement="bottom">
+          <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">
             <Typography variant='subtitle2'
               sx={{
                 overflow: 'hidden',
@@ -36,9 +40,13 @@ export const EveliTreeTabs: React.FC = () => {
                 flex: 1,
                 minWidth: 0,
                 color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text
-              }}>{tabName}</Typography>
+              }}>{tab.name}</Typography>
           </Tooltip>
-          <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }}>
+          <IconButton
+            size="small"
+            sx={{ ml: 0.5, p: 0.25 }}
+            onClick={(event) => handleCloseTab(index, event)}
+          >
             <CloseIcon
               fontSize="inherit"
               sx={{ color: isDarkMode ? TreeColors.dark.text : TreeColors.light.textSecondary }}

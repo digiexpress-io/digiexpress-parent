@@ -16,15 +16,22 @@ import { EveliTreeItemMenu } from './eveli-tree-item-menu';
 
 
 export const EveliTree: React.FC = () => {
-  const { isDarkMode, setIsDarkMode } = useEveliTree();
+  const { isDarkMode, setIsDarkMode, openAsset } = useEveliTree();
   const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<ContextMenuData | undefined>();
 
-
   function handleContextMenuClose() {
     setContextMenuOpen(false);
+  }
+
+  function handleDoubleClick(node: TreeNode) {
+    openAsset({
+      id: node.id,
+      name: node.name,
+      type: node.type
+    });
   }
 
   return (
@@ -95,6 +102,7 @@ export const EveliTree: React.FC = () => {
             level={0}
             onToggle={(nodeId) => toggleNode(nodeId, treeData, setTreeData)}
             onContextMenu={(event, node) => handleContextMenu(event, node, setContextMenuData, setContextMenuOpen)}
+            onDoubleClick={handleDoubleClick}
             isDarkTheme={isDarkMode}
           />
         ))}

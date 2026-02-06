@@ -1,8 +1,20 @@
 import React from 'react';
+import { TreeNode, TreeNodeType } from '../tree-types';
+
+export interface EveliTreeOpenTab {
+  id: string;
+  name: string;
+  type: TreeNodeType;
+}
 
 export interface EveliTreeContextType {
   isDarkMode: boolean;
   setIsDarkMode: (isDarkMode: boolean) => void;
+  openTabs: EveliTreeOpenTab[];
+  activeTabIndex: number;
+  openAsset: (asset: TreeNode) => void;
+  closeTab: (index: number) => void;
+  setActiveTab: (index: number) => void;
 }
 
 export const EveliTreeContext = React.createContext<EveliTreeContextType | undefined>(undefined);
@@ -13,10 +25,60 @@ export interface EveliTreeProviderProps {
 
 export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const [openTabs, setOpenTabs] = React.useState<EveliTreeOpenTab[]>([]);
+  const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+
+  const openAsset = React.useCallback((asset: TreeNode) => {
+    // Don't open tabs for folders
+    if (asset.type === 'folder') {
+      return;
+    }
+
+    setOpenTabs(prevTabs => {
+      const existingIndex = prevTabs.findIndex(tab => tab.id === asset.id);
+      if (existingIndex !== -1) {
+        setActiveTabIndex(existingIndex);
+        return prevTabs;
+      }
+
+      const newTab: EveliTreeOpenTab = {
+        id: asset.id,
+        name: asset.name,
+        type: asset.type
+      };
+      const newTabs = [...prevTabs, newTab];
+      setActiveTabIndex(newTabs.length - 1);
+      return newTabs;
+    });
+  }, []);
+
+  const closeTab = React.useCallback((index: number) => {
+    setOpenTabs(prevTabs => {
+      const newTabs = prevTabs.filter((_, i) => i !== index);
+      if (index <= activeTabIndex) {
+        const newActiveIndex = Math.max(0, activeTabIndex - 1);
+        setActiveTabIndex(newActiveIndex);
+      }
+
+      return newTabs;
+    });
+  }, [activeTabIndex]);
+
+  const setActiveTab = React.useCallback((index: number) => {
+    setActiveTabIndex(index);
+  }, []);
 
   const contextValue: EveliTreeContextType = React.useMemo(() => {
-    return { isDarkMode, setIsDarkMode };
-  }, [isDarkMode]);
+    return {
+      isDarkMode,
+      setIsDarkMode,
+      openTabs,
+      activeTabIndex,
+      openAsset,
+      closeTab,
+      setActiveTab
+    };
+  }, [isDarkMode, openTabs, activeTabIndex, openAsset, closeTab, setActiveTab]);
 
   return (
     <EveliTreeContext.Provider value={contextValue}>
