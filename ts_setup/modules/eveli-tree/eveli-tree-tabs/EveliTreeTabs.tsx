@@ -72,7 +72,7 @@ const StyledTabLight = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => (
   maxWidth: '20ch',
   overflow: 'hidden',
   borderTop: `1px solid ${TreeColors.light.border}`,
-  borderLeft: isFirst ? `1px solid ${TreeColors.light.border}` : 'none',
+  //borderLeft: isFirst ? `1px solid ${TreeColors.light.border}` : 'none', // might need this, not sure
   borderRight: `1px solid ${TreeColors.light.border}`,
   borderBottom: isActive ? `1px solid ${TreeColors.light.background}` : 'none',
   backgroundColor: isActive ? TreeColors.light.background : TreeColors.light.surface,
@@ -89,7 +89,7 @@ const StyledTabDark = styled(Box)<TabProps>(({ theme, isActive, isFirst }) => ({
   maxWidth: '20ch',
   overflow: 'hidden',
   borderTop: `1px solid ${TreeColors.dark.border}`,
-  borderLeft: isFirst ? `1px solid ${TreeColors.dark.border}` : 'none',
+  //borderLeft: isFirst ? `1px solid ${TreeColors.dark.border}` : 'none',  // might need this, not sure
   borderRight: `1px solid ${TreeColors.dark.border}`,
   borderBottom: isActive ? `1px solid ${TreeColors.dark.surface}` : 'none',
   backgroundColor: isActive ? TreeColors.dark.surface : TreeColors.dark.background,
