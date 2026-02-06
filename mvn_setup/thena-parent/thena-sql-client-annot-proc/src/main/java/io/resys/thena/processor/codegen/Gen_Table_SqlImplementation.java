@@ -421,7 +421,7 @@ public class Gen_Table_SqlImplementation implements TableCodeGenerator {
   
   private String resolveSqlPlaceholders(String sql, java.util.List<String> tableNames) {
     // Normalize SQL - replace newlines and excess whitespace
-    var normalizedSql = sql.replaceAll("\\s+", " ").trim();
+    final var normalizedSql = sql.replaceAll("\\s+", " ").trim().replace("\"", "\\\"");;
     
     if (tableNames.isEmpty()) {
       return "\"" + normalizedSql + "\"";

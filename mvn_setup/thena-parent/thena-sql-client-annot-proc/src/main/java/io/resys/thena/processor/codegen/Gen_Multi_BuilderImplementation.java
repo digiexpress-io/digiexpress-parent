@@ -418,6 +418,14 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
       .superclass(RuntimeException.class);
     
     exceptionClass.addField(FieldSpec.builder(
+        long.class,
+        "serialVersionUID",
+        Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC
+      ).initializer("1l").build());
+      
+    
+    
+    exceptionClass.addField(FieldSpec.builder(
       ClassName.bestGuess(persistenceUnitName),
       "container",
       Modifier.PRIVATE, Modifier.FINAL

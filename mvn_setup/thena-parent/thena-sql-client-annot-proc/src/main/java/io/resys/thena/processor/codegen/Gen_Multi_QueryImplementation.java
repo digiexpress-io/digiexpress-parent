@@ -110,7 +110,9 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
   private MethodSpec generateFindAllMethod(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var method = MethodSpec.methodBuilder("findAll")
       .addAnnotation(Override.class)
+      .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build())
       .addModifiers(Modifier.PUBLIC)
+      
       .returns(ParameterizedTypeName.get(
         ClassName.get(Uni.class),
         ClassName.bestGuess(registry.getWorldName())

@@ -76,6 +76,7 @@ package io.resys.thena.processor.codegen;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -92,6 +93,12 @@ public class Gen_Registry_Exception implements RegistryCodeGenerator {
     final var classBuilder = TypeSpec.classBuilder(className)
       .addModifiers(Modifier.PUBLIC)
       .superclass(RuntimeException.class);
+    
+    classBuilder.addField(FieldSpec.builder(
+        long.class,
+        "serialVersionUID",
+        Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC
+      ).initializer("1l").build());
     
     classBuilder.addMethod(MethodSpec.constructorBuilder()
       .addModifiers(Modifier.PUBLIC)
