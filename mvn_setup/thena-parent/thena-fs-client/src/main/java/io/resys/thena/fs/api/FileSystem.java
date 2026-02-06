@@ -2,7 +2,7 @@ package io.resys.thena.fs.api;
 
 /*-
  * #%L
- * thena-contract-client
+ * thena-fs-client
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
