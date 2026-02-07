@@ -40,12 +40,11 @@ public interface Blob extends FileSystemEntity {
   
   
   // H(blob) = μ(blob_value)
-  public static Blob newInstance(JsonObject content, String type) {
+  public static ImmutableBlob.Builder newInstance(JsonObject content, String type) {
     final var hash = Hashing.murmur3_128().hashString(content.encode(), StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
         .blobType(type)
-        .blobValue(content)
-        .build();
+        .blobValue(content);
   }
 }

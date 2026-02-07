@@ -11,13 +11,15 @@ import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.ImmutableCommitResult;
-import io.resys.thena.fs.entities.ImmutableCommit;
-import io.resys.thena.fs.entities.ImmutableRef;
-import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.spi.commitbuilder.Snapshot.ChangeCommand;
+import io.resys.thena.fs.spi.commitbuilder.Snapshot.MergeFileCommand;
+import io.resys.thena.fs.spi.commitbuilder.Snapshot.MergeFolderCommand;
+import io.resys.thena.fs.spi.commitbuilder.Snapshot.NewFileCommand;
+import io.resys.thena.fs.spi.commitbuilder.Snapshot.NewFolderCommand;
+import io.resys.thena.fs.spi.commitbuilder.Snapshot.RmCommand;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
-import io.resys.thena.fs.tables.ImmutablePersistenceUnit;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
@@ -37,16 +39,8 @@ public class CommitBuilderImpl implements CommitBuilder {
   private String commitMessageValue;
   private OffsetDateTime commitCreatedAtValue;
   
-  private final List<Consumer<NewFolder>> newFolders = new ArrayList<>();
-  private final List<Consumer<NewFile>> newFiles = new ArrayList<>();
-  
-  private final List<MergeFolderCommand> mergeFolders = new ArrayList<>();
-  private final List<MergeFileCommand> mergeFiles = new ArrayList<>();
-  private final List<String> removedDocIds = new ArrayList<>();
+  private final List<ChangeCommand> changes = new ArrayList<>();
   private final List<String> allIds = new ArrayList<>();
-  
-  private static record MergeFolderCommand(String docId, Consumer<MergeFolder> consumer) {}
-  private static record MergeFileCommand(String docId, Consumer<MergeFile> consumer) {}
 
   @Override
   public CommitBuilder branchHead(String commitId) {
@@ -65,7 +59,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   @Override
   public CommitBuilder newFolder(Consumer<NewFolder> doc) {
     RepoAssert.notNull(doc, () -> "newFolder consumer can't be null!");
-    this.newFolders.add(doc);
+    this.changes.add(new NewFolderCommand(doc));
     return this;
   }
 
@@ -73,14 +67,15 @@ public class CommitBuilderImpl implements CommitBuilder {
   public CommitBuilder mergeFolder(String docId, Consumer<MergeFolder> doc) {
     RepoAssert.notEmpty(docId, () -> "mergeFolder docId can't be empty!");
     RepoAssert.notNull(doc, () -> "mergeFolder consumer can't be null!");
-    this.mergeFolders.add(new MergeFolderCommand(docId, doc));
+    this.changes.add(new MergeFolderCommand(docId, doc));
+    this.allIds.add(docId);
     return this;
   }
 
   @Override
   public CommitBuilder newFile(Consumer<NewFile> doc) {
     RepoAssert.notNull(doc, () -> "newFile consumer can't be null!");
-    this.newFiles.add(doc);
+    this.changes.add(new NewFileCommand(doc));
     return this;
   }
 
@@ -88,7 +83,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   public CommitBuilder mergeFile(String docId, Consumer<MergeFile> doc) {
     RepoAssert.notEmpty(docId, () -> "mergeFile docId can't be empty!");
     RepoAssert.notNull(doc, () -> "mergeFile consumer can't be null!");
-    this.mergeFiles.add(new MergeFileCommand(docId, doc));
+    this.changes.add(new MergeFileCommand(docId, doc));
     this.allIds.add(docId);
     return this;
   }
@@ -96,7 +91,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   @Override
   public CommitBuilder remove(String docId) {
     RepoAssert.notEmpty(docId, () -> "remove docId can't be empty!");
-    this.removedDocIds.add(docId);
+    this.changes.add(new RmCommand(docId));
     this.allIds.add(docId);
     return this;
   }
@@ -109,9 +104,8 @@ public class CommitBuilderImpl implements CommitBuilder {
     // Validate each docId
     for (final var docId : docIds) {
       RepoAssert.notEmpty(docId, () -> "remove docId in list can't be empty!");
+      this.changes.add(new RmCommand(docId));
     }
-    
-    this.removedDocIds.addAll(docIds);
     this.allIds.addAll(docIds);
     return this;
   }
@@ -147,9 +141,7 @@ public class CommitBuilderImpl implements CommitBuilder {
         () -> "Either branchName or branchHead must be set before calling build()!");
     
     // Ensure at least one operation is defined
-    final boolean hasOperations = !newFolders.isEmpty() || !mergeFolders.isEmpty() || 
-        !newFiles.isEmpty() || !mergeFiles.isEmpty() || !removedDocIds.isEmpty();
-    RepoAssert.isTrue(hasOperations, 
+    RepoAssert.isTrue(!changes.isEmpty(), 
         () -> "At least one operation (newFolder, mergeFolder, newFile, mergeFile, or remove) must be added before calling build()!");
     
     final var scope = ImmutableTxScope.builder()
@@ -210,30 +202,12 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
   
   private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
-    final var unit = ImmutablePersistenceUnit.builder();
-    
-    final var tree = ImmutableTree.builder()
-        .build();
-    
-    
-    final var commit = ImmutableCommit.builder()
-        //.id(Sha2.commitId(template))
+    final var createdAt = commitCreatedAtValue != null ? commitCreatedAtValue : OffsetDateTime.now();
+    final var snapshot = new Snapshot(lock, branchNameValue);
+    final var unit = snapshot.addAll(this.changes).build(commit -> commit
         .commitAuthor(commitAuthorValue)
         .commitMessage(commitMessageValue)
-        .commitCreatedAt(commitCreatedAtValue != null ? commitCreatedAtValue : OffsetDateTime.now())
-        .mergeId(Optional.empty())
-        .parentId(lock.map(r -> r.getCommitId()))
-        .treeId(tree.getId())
-        .build();
-    
-    ImmutableRef.builder()
-        .refName(branchNameValue)
-        .commitId(commit.getId())
-        .build();
-    
-    
-    return tx.builder().from(unit.build()).persist();
+        .commitCreatedAt(createdAt));
+    return tx.builder().from(unit).persist();
   }
-  
-  
 }

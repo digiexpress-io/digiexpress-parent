@@ -43,8 +43,14 @@ public interface Commit extends FileSystemEntity {
   }
 
   // H(commit) = μ(H(tree) ⊕ H(parent) ⊕ H(merge) ⊕ author ⊕ timestamp ⊕ message)
-  public static Commit newInstance(String treeId, Optional<String> parentId, Optional<String> mergeId, 
-                      String author, OffsetDateTime createdAt, String message) {
+  public static ImmutableCommit.Builder newInstance(
+      String treeId, 
+      Optional<String> parentId, 
+      Optional<String> mergeId, 
+      String author, 
+      OffsetDateTime createdAt, 
+      String message) {
+    
     final var content = new StringBuilder();
     content.append("tree ").append(treeId);
     if (parentId.isPresent()) {
@@ -65,7 +71,6 @@ public interface Commit extends FileSystemEntity {
         .mergeId(mergeId)
         .commitAuthor(author)
         .commitCreatedAt(createdAt)
-        .commitMessage(message)
-        .build();
+        .commitMessage(message);
   }
 }

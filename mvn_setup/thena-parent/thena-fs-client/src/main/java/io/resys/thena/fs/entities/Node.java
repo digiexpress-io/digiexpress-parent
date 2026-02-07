@@ -42,7 +42,7 @@ public interface Node extends FileSystemEntity {
   
   
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
-  public static Node newInstance(String path, String name, Optional<String> blobId, Optional<String> propsId) {
+  public static ImmutableNode.Builder newInstance(String path, String name, Optional<String> blobId, Optional<String> propsId) {
     final var content = new StringBuilder();
     content.append(path);
     content.append(name);
@@ -55,7 +55,6 @@ public interface Node extends FileSystemEntity {
         .nodePath(path)
         .nodeName(name)
         .blobId(blobId)
-        .propsId(propsId)
-        .build();
+        .propsId(propsId);
   }
 }

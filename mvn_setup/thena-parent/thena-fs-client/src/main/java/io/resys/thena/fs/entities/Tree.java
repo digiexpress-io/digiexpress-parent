@@ -38,7 +38,7 @@ public interface Tree extends FileSystemEntity {
   }
 
   // H(tree) = μ(∑ᵢ₌₁ⁿ H(nodeᵢ))
-  public static Tree newInstance(List<Node> nodes) {
+  public static ImmutableTree.Builder newInstance(List<Node> nodes) {
     final var content = new StringBuilder();
     nodes.stream()
         .sorted((a, b) -> (a.getNodePath() + "/" + a.getNodeName()).compareTo(b.getNodePath() + "/" + b.getNodeName()))
@@ -47,7 +47,6 @@ public interface Tree extends FileSystemEntity {
     final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableTree.builder()
         .id(hash)
-        .treeNodes(nodes)
-        .build();
+        .treeNodes(nodes);
   }
 }

@@ -42,7 +42,7 @@ public interface Props extends FileSystemEntity {
   
   
   // H(props) = μ(props_labels ⊕ props_comments ⊕ props_permissions ⊕ props_flags)
-  public static Props newInstance(JsonObject labels, JsonObject comments, JsonObject permissions, JsonObject flags) {
+  public static ImmutableProps.Builder newInstance(JsonObject labels, JsonObject comments, JsonObject permissions, JsonObject flags) {
     final var content = new StringBuilder();
     content.append(labels != null ? labels.encode() : "null");
     content.append(comments != null ? comments.encode() : "null");
@@ -55,7 +55,6 @@ public interface Props extends FileSystemEntity {
         .propsLabels(labels)
         .propsComments(comments)
         .propsPermissions(permissions)
-        .propsFlags(flags)
-        .build();
+        .propsFlags(flags);
   }
 }
