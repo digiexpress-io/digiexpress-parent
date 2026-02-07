@@ -1,5 +1,6 @@
 package io.resys.thena.fs.spi.commitbuilder;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,9 @@ import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.ImmutableCommitResult;
+import io.resys.thena.fs.entities.ImmutableCommit;
+import io.resys.thena.fs.entities.ImmutableRef;
+import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -31,6 +35,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   private String branchNameValue = "main";
   private String commitAuthorValue;
   private String commitMessageValue;
+  private OffsetDateTime commitCreatedAtValue;
   
   private final List<Consumer<NewFolder>> newFolders = new ArrayList<>();
   private final List<Consumer<NewFile>> newFiles = new ArrayList<>();
@@ -126,6 +131,12 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
 
   @Override
+  public CommitBuilder commitCreatedAt(OffsetDateTime createdAt) {
+    this.commitCreatedAtValue = createdAt;
+    return this;
+  }
+
+  @Override
   public Uni<CommitResult> build() {
     // Double validation - ensure required fields were set
     RepoAssert.notEmpty(commitAuthorValue, () -> "commitAuthor must be set before calling build()!");
@@ -199,8 +210,29 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
   
   private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
-    final var unit = ImmutablePersistenceUnit.builder().build();
-    return tx.builder().from(unit).persist();
+    final var unit = ImmutablePersistenceUnit.builder();
+    
+    final var tree = ImmutableTree.builder()
+        .build();
+    
+    
+    final var commit = ImmutableCommit.builder()
+        //.id(Sha2.commitId(template))
+        .commitAuthor(commitAuthorValue)
+        .commitMessage(commitMessageValue)
+        .commitCreatedAt(commitCreatedAtValue != null ? commitCreatedAtValue : OffsetDateTime.now())
+        .mergeId(Optional.empty())
+        .parentId(lock.map(r -> r.getCommitId()))
+        .treeId(tree.getId())
+        .build();
+    
+    ImmutableRef.builder()
+        .refName(branchNameValue)
+        .commitId(commit.getId())
+        .build();
+    
+    
+    return tx.builder().from(unit.build()).persist();
   }
   
   

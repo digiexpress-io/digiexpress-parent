@@ -61,13 +61,13 @@ public interface TagTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT t.id, t.tag_name, t.tag_description, t.commit_id, 
-             t.tag_created_at, t.tag_author, t.tag_extension,
-             t.tag_errors, t.external_id, t.external_tenant_id, 
-             t.tag_starts_at, t.tag_report,
-             c.commit_created_at, c.commit_author as commit_author_name, c.commit_message
-      FROM {tag} t
-      LEFT JOIN {commit} c ON t.commit_id = c.id
+      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
+             tag.tag_created_at, tag.tag_author, tag.tag_extension,
+             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
+             tag.tag_starts_at, tag.tag_report,
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+      FROM {tag} as tag
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
     """,
     rowMapper = TagMapper.class
   )
@@ -76,14 +76,14 @@ public interface TagTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT t.id, t.tag_name, t.tag_description, t.commit_id, 
-             t.tag_created_at, t.tag_author, t.tag_extension,
-             t.tag_errors, t.external_id, t.external_tenant_id, 
-             t.tag_starts_at, t.tag_report,
-             c.commit_created_at, c.commit_author as commit_author_name, c.commit_message
-      FROM {tag} t
-      LEFT JOIN {commit} c ON t.commit_id = c.id
-      WHERE t.id = $1
+      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
+             tag.tag_created_at, tag.tag_author, tag.tag_extension,
+             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
+             tag.tag_starts_at, tag.tag_report,
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+      FROM {tag} as tag
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
+      WHERE tag.id = $1
     """,
     rowMapper = TagMapper.class
   )
@@ -92,14 +92,14 @@ public interface TagTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT t.id, t.tag_name, t.tag_description, t.commit_id, 
-             t.tag_created_at, t.tag_author, t.tag_extension,
-             t.tag_errors, t.external_id, t.external_tenant_id, 
-             t.tag_starts_at, t.tag_report,
-             c.commit_created_at, c.commit_author as commit_author_name, c.commit_message
-      FROM {tag} t
-      LEFT JOIN {commit} c ON t.commit_id = c.id
-      WHERE t.tag_name = $1
+      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
+             tag.tag_created_at, tag.tag_author, tag.tag_extension,
+             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
+             tag.tag_starts_at, tag.tag_report,
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+      FROM {tag} as tag
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
+      WHERE tag.tag_name = $1
     """,
     rowMapper = TagMapper.class
   )
@@ -107,14 +107,14 @@ public interface TagTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT t.id, t.tag_name, t.tag_description, t.commit_id, 
-             t.tag_created_at, t.tag_author, t.tag_extension,
-             t.tag_errors, t.external_id, t.external_tenant_id, 
-             t.tag_starts_at, t.tag_report,
-             c.commit_created_at, c.commit_author as commit_author_name, c.commit_message
-      FROM {tag} t
-      LEFT JOIN {commit} c ON t.commit_id = c.id
-      WHERE t.commit_id = $1
+      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
+             tag.tag_created_at, tag.tag_author, tag.tag_extension,
+             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
+             tag.tag_starts_at, tag.tag_report,
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+      FROM {tag} as tag
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
+      WHERE tag.commit_id = $1
     """,
     rowMapper = TagMapper.class
   )

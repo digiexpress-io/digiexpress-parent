@@ -1,5 +1,6 @@
 package io.resys.thena.fs.api.commits;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -114,6 +115,15 @@ public interface CommitBuilder {
    * @return builder for method chaining
    */
   CommitBuilder commitMessage(String message);
+  
+  /**
+   * Sets the creation timestamp for this commit.
+   * When null, the system will use the current timestamp.
+   * 
+   * @param createdAt the commit creation timestamp, null for current time
+   * @return builder for method chaining
+   */
+  CommitBuilder commitCreatedAt(@Nullable OffsetDateTime createdAt);
   
   /**
    * Executes all configured operations as a single atomic transaction.

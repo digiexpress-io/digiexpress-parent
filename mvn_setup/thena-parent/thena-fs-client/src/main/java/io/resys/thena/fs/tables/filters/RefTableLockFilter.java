@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.annotations.TenantSql.SqlBuilder;
@@ -24,24 +23,43 @@ public interface RefTableLockFilter {
     
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, RefTableLockFilter filter) {
-      final var stmt = new SqlStatement();
       final var params = new ArrayList<Object>();
       params.add(filter.getRefName());
-      final MutableInt index = new MutableInt(1);
 
-      if(filter.getDocIds().isPresent()) {
-        final var nextIndex = index.incrementAndGet();
-        stmt.append("(node.node_id = ANY($").append(nextIndex).append(")").append(")").ln();
-        params.add(filter.getDocIds().get().toArray(new String[]{}));
-        
-      }
-      
-      final var result = stmt.toString();
-      final var clause = (result.isBlank() ? "" : " WHERE ") + result;
       return ImmutableSqlTuple.builder()
-          .value(baseline + clause)
+          .value(baseline + extendedQuery(filter, params))
           .props(Tuple.from(params))
           .build();
+    }
+    
+    public String extendedQuery(
+        RefTableLockFilter filter, 
+        List<Object> params) {
+      
+      if(filter.getDocIds().isEmpty()) {
+        return """
+  CROSS JOIN (
+    SELECT
+      NULL::JSONB as props_labels,
+      NULL::JSONB as props_comments,
+      NULL::JSONB as props_permissions,
+      NULL::JSONB as props_flags
+  ) as props
+  CROSS JOIN (
+    SELECT
+      NULL::TEXT as blob_type,
+      NULL::JSONB as blob_value
+  ) as blobs""";
+      }
+      
+      final var stmt = new SqlStatement();
+      final var index = params.size() +1;
+      
+      stmt
+        .append("LEFT JOIN {props} props ON props.id = node.props_id AND node.node_id = ANY($").append(index).append(")")
+        .append("LEFT JOIN {blobs} blobs ON blobs.id = node.blob_id AND node.node_id = ANY($").append(index).append(")");
+      
+      return stmt.build();
     }
   }
 }

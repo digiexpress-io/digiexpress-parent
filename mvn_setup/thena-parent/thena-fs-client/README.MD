@@ -426,16 +426,6 @@ return db_uni.onItem().transformToUni(db -> db.withTransaction(scope, this::visi
 - Leverage the FileSystemPrinter for state verification
 - Test trigger validation with edge cases
 
-## Migration Strategy
-
-When replacing legacy systems:
-
-1. **Schema Migration**: Create tables with proper constraints and triggers
-2. **Data Migration**: Transform existing data to new entity structure
-3. **API Migration**: Implement builders and queries for existing use cases
-4. **Performance Testing**: Validate trigger performance vs foreign keys
-5. **Gradual Rollout**: Use feature flags for incremental adoption
-
 ## Troubleshooting
 
 ### Common Issues
@@ -451,30 +441,3 @@ EXPLAIN ANALYZE INSERT INTO {tree} VALUES (...);
 // Handle lock failures gracefully
 .onFailure(LockException.class).recoverWithItem(fallbackStrategy)
 ```
-
-**Memory Usage**: Monitor node array sizes in trees
-```java
-// Consider splitting large trees
-if (tree.getTreeNodes().size() > MAX_NODES_PER_TREE) {
-  // Implement tree splitting logic
-}
-```
-
-### Performance Monitoring
-
-Key metrics to track:
-- Average trigger execution time
-- Blob deduplication ratio
-- Transaction rollback rate
-- Lock wait times
-- Query response times by entity type
-
-## Future Enhancements
-
-- **Compression**: Add blob compression for large files
-- **Caching**: Implement Redis caching for frequently accessed trees
-- **Sharding**: Partition large tenants across multiple databases
-- **Audit Trail**: Track all entity modifications
-- **Backup Strategy**: Point-in-time recovery for versioned data
-- **Search Integration**: Full-text search across blob content
-- **Metrics Dashboard**: Real-time performance monitoring

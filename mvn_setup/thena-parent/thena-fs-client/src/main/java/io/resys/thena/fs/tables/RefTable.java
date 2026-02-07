@@ -49,21 +49,21 @@ public interface RefTable {
   @TenantSql.FindAll(
     sql = """
       SELECT 
-        r.ref_name, 
-        r.ref_description,
-        r.ref_props,
-        r.ref_permissions,
-        r.ref_flags,
-        r.ref_author,
-        r.commit_id,
-        c.commit_created_at, 
-        c.commit_author, 
-        c.commit_message,
-        c.tree_id,
-        c.parent_id,
-        c.merge_id
-      FROM {ref} r
-      LEFT JOIN {commit} c ON r.commit_id = c.id
+        ref.ref_name, 
+        ref.ref_description,
+        ref.ref_props,
+        ref.ref_permissions,
+        ref.ref_flags,
+        ref.ref_author,
+        ref.commit_id,
+        commit.commit_created_at, 
+        commit.commit_author, 
+        commit.commit_message,
+        commit.tree_id,
+        commit.parent_id,
+        commit.merge_id
+      FROM {ref} as ref
+      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
     """,
     rowMapper = RefMapper.class,
     wrapper = WrapperType.MULTI
@@ -73,11 +73,11 @@ public interface RefTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author,
-             r.commit_id, c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id
-      FROM {ref} r
-      LEFT JOIN {commit} c ON r.commit_id = c.id
-      WHERE r.ref_name = $1
+      SELECT ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+             ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
+      FROM {ref} as ref
+      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
+      WHERE ref.ref_name = $1
     """,
     rowMapper = RefMapper.class
   )
@@ -85,11 +85,11 @@ public interface RefTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author,
-             r.commit_id, c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id
-      FROM {ref} r
-      LEFT JOIN {commit} c ON r.commit_id = c.id
-      WHERE r.commit_id = $1
+      SELECT ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+             ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
+      FROM {ref} as ref
+      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
+      WHERE ref.commit_id = $1
     """,
     wrapper = WrapperType.MULTI,
     rowMapper = RefMapper.class
@@ -125,10 +125,10 @@ public interface RefTable {
   
   @TenantSql.FindAll(
     sql = """
-      SELECT r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author,
-             r.commit_id, c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id
-      FROM {ref} r
-      LEFT JOIN {commit} c ON r.commit_id = c.id
+      SELECT ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+             ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
+      FROM {ref} as ref
+      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
     """,
     wrapper = WrapperType.MULTI,
     rowMapper = RefMapper.class,
@@ -141,12 +141,17 @@ public interface RefTable {
   @TenantSql.Find(
     sql = """
       SELECT 
-        r.ref_name, r.ref_description, r.ref_props, r.ref_permissions, r.ref_flags, r.ref_author, r.commit_id, 
-        c.commit_created_at, c.commit_author, c.commit_message, c.tree_id, c.parent_id, c.merge_id,
-        t.tree_nodes
-      FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as r
-      JOIN {commit} as c ON c.id = r.commit_id
-      JOIN {tree} as t ON t.id = c.tree_id
+        ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
+        commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id,
+        node.node_id, node.node_path, node.node_name, node.blob_id, node.props_id,
+        
+        props.props_labels, props.props_comments, props.props_permissions, props.props_flags,
+        blob.blob_type, blob.blob_value
+        
+      FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
+      JOIN {commit} as commit ON commit.id = ref.commit_id
+      JOIN {tree} as tree ON tree.id = commit.tree_id
+      JOIN unnest(tree.tree_nodes) as node ON true
     """,
     rowMapper = RefLockMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class

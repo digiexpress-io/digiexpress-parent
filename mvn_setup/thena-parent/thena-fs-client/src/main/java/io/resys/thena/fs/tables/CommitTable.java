@@ -50,13 +50,13 @@ public interface CommitTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT c.id, c.commit_created_at, c.commit_author, c.commit_message, 
-             c.tree_id, c.parent_id, c.merge_id,
-             pc.commit_created_at as parent_created_at,
-             mc.commit_created_at as merge_created_at
-      FROM {commit} c
-      LEFT JOIN {commit} pc ON c.parent_id = pc.id
-      LEFT JOIN {commit} mc ON c.merge_id = mc.id
+      SELECT commit.id, commit.commit_created_at, commit.commit_author, commit.commit_message, 
+             commit.tree_id, commit.parent_id, commit.merge_id,
+             parent_commit.commit_created_at as parent_created_at,
+             merge_commit.commit_created_at as merge_created_at
+      FROM {commit} as commit
+      LEFT JOIN {commit} as parent_commit ON commit.parent_id = parent_commit.id
+      LEFT JOIN {commit} as merge_commit ON commit.merge_id = merge_commit.id
     """,
     rowMapper = CommitMapper.class
   )
@@ -65,14 +65,14 @@ public interface CommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT c.id, c.commit_created_at, c.commit_author, c.commit_message, 
-             c.tree_id, c.parent_id, c.merge_id,
-             pc.commit_created_at as parent_created_at,
-             mc.commit_created_at as merge_created_at
-      FROM {commit} c
-      LEFT JOIN {commit} pc ON c.parent_id = pc.id
-      LEFT JOIN {commit} mc ON c.merge_id = mc.id
-      WHERE c.id = $1
+      SELECT commit.id, commit.commit_created_at, commit.commit_author, commit.commit_message, 
+             commit.tree_id, commit.parent_id, commit.merge_id,
+             parent_commit.commit_created_at as parent_created_at,
+             merge_commit.commit_created_at as merge_created_at
+      FROM {commit} as commit
+      LEFT JOIN {commit} as parent_commit ON commit.parent_id = parent_commit.id
+      LEFT JOIN {commit} as merge_commit ON commit.merge_id = merge_commit.id
+      WHERE commit.id = $1
     """,
     rowMapper = CommitMapper.class
   )
@@ -80,14 +80,14 @@ public interface CommitTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT c.id, c.commit_created_at, c.commit_author, c.commit_message, 
-             c.tree_id, c.parent_id, c.merge_id,
-             pc.commit_created_at as parent_created_at,
-             mc.commit_created_at as merge_created_at
-      FROM {commit} c
-      LEFT JOIN {commit} pc ON c.parent_id = pc.id
-      LEFT JOIN {commit} mc ON c.merge_id = mc.id
-      WHERE c.tree_id = $1
+      SELECT commit.id, commit.commit_created_at, commit.commit_author, commit.commit_message, 
+             commit.tree_id, commit.parent_id, commit.merge_id,
+             parent_commit.commit_created_at as parent_created_at,
+             merge_commit.commit_created_at as merge_created_at
+      FROM {commit} as commit
+      LEFT JOIN {commit} as parent_commit ON commit.parent_id = parent_commit.id
+      LEFT JOIN {commit} as merge_commit ON commit.merge_id = merge_commit.id
+      WHERE commit.tree_id = $1
     """,
     rowMapper = CommitMapper.class
   )

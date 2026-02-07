@@ -1,11 +1,13 @@
 package io.resys.thena.fs.entities;
 
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.hash.Hashing;
 
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -34,5 +36,16 @@ public interface Blob extends FileSystemEntity {
   interface BlobTransitives {
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
+  }
+  
+  
+  // H(blob) = μ(blob_value)
+  public static Blob newInstance(JsonObject content, String type) {
+    final var hash = Hashing.murmur3_128().hashString(content.encode(), StandardCharsets.UTF_8).toString();
+    return ImmutableBlob.builder()
+        .id(hash)
+        .blobType(type)
+        .blobValue(content)
+        .build();
   }
 }
