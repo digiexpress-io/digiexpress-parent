@@ -9,6 +9,7 @@ import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.OidUtils;
+import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
@@ -20,6 +21,7 @@ public class NewFolderImpl implements NewFolder {
   private String folderName;
   private String folderId;
   private Consumer<PropsBuilder> folderProps;
+  private boolean validated = false;
 
   @Override
   public NewFolder folderPath(String folderPath) {
@@ -43,10 +45,14 @@ public class NewFolderImpl implements NewFolder {
   }
   @Override
   public void build() {
-    // Validation placeholder
+    validateFolderPath(this.folderPath);
+    validateFolderName(this.folderName);
+    this.validated = true;
   }
   
   public NewFolderResult close() {
+    RepoAssert.isTrue(validated, () -> "build() method must be called before close()");
+    
     final var nodeId = Optional
         .ofNullable(this.folderId)
         .orElseGet(() -> OidUtils.genUUID());
@@ -65,6 +71,21 @@ public class NewFolderImpl implements NewFolder {
     final var node = Node.newInstance(path, nodeId, name, blobId, propsId).build();
     
     return new NewFolderResult(node, props);
+  }
+  
+  private void validateFolderPath(String path) {
+    RepoAssert.notNull(path, () -> "folderPath is required");
+    RepoAssert.isTrue(!path.trim().isEmpty(), () -> "folderPath cannot be empty");
+    RepoAssert.isTrue(path.matches("^[a-zA-Z0-9/_-]+$"), () -> "folderPath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
+    RepoAssert.isTrue(!path.contains("//"), () -> "folderPath cannot contain double slashes");
+    RepoAssert.isTrue(!path.endsWith("/"), () -> "folderPath cannot end with slash");
+  }
+  
+  private void validateFolderName(String name) {
+    RepoAssert.notNull(name, () -> "folderName is required");
+    RepoAssert.isTrue(!name.trim().isEmpty(), () -> "folderName cannot be empty");
+    RepoAssert.isTrue(name.matches("^[a-zA-Z0-9_-]+$"), () -> "folderName contains invalid characters, only a-z, A-Z, 0-9, _, - allowed");
+    RepoAssert.isTrue(!name.contains("/"), () -> "folderName cannot contain slashes");
   }
   
   @Value
