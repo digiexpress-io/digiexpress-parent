@@ -18,7 +18,8 @@ public class NewTree {
   private final List<Blob> blobs;
   
   public NewTreeResult close() {
-    
+    final var newTree = Tree.newInstance(nodes).build();
+    return new NewTreeResult(newTree);
   }
   
   @Value

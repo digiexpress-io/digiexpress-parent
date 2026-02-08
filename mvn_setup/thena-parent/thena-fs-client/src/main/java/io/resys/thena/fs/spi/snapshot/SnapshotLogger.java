@@ -280,7 +280,4 @@ public class SnapshotLogger {
     }
     return data.toString();
   }
-
-  
-
 } 
