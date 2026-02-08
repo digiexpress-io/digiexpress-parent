@@ -1,8 +1,12 @@
 package io.resys.thena.fs.spi.snapshot;
 
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.github.difflib.DiffUtils;
+import com.github.difflib.UnifiedDiffUtils;
+import com.github.difflib.patch.Patch;
 
 /*-
  * #%L
@@ -111,14 +115,37 @@ public class SnapshotLogger {
     
     data.append("\nTree changes:\n");
     
-    var prevNodes = prev.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
-    var nextNodes = next.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
+    final var prevNodes = prev.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
+    final var nextNodes = next.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
     
     for(String path : nextNodes.keySet()) {
+      final var nextNode = nextNodes.get(path);
       if(!prevNodes.containsKey(path)) {
         data.append("A    ").append(path).append("\n");
-      } else if(!prevNodes.get(path).getId().equals(nextNodes.get(path).getId())) {
-        data.append("M    ").append(path).append("\n");
+      } else {
+        final var prevNode = prevNodes.get(path);
+        if(!prevNode.getId().equals(nextNode.getId())) {
+          data.append("M    ").append(path).append("\n");
+          
+          if(fullDiff) {
+            if(prevNode.getBlobId().isPresent() && nextNode.getBlobId().isPresent()) {
+              final var blobDiff = diffBlobs(null, null);
+              if(blobDiff.hasChanges()) {
+                for(String line : blobDiff.getUnifiedDiff()) {
+                  data.append("    ").append(line).append("\n");
+                }
+              }
+            }
+            if(prevNode.getPropsId().isPresent() && nextNode.getPropsId().isPresent()) {
+              final var propsDiff = diffProps(null, null);
+              if(propsDiff.hasChanges()) {
+                for(String line : propsDiff.getUnifiedDiff()) {
+                  data.append("    ").append(line).append("\n");
+                }
+              }
+            }
+          }
+        }
       }
     }
     
@@ -169,25 +196,72 @@ public class SnapshotLogger {
   }
   
   private DiffResult diffBlobs(Blob oldBlob, Blob newBlob) {
-    return new DiffResult(oldBlob, newBlob);
+    if(oldBlob == null || newBlob == null) {
+      return new DiffResult(oldBlob, newBlob, DiffUtils.diff(List.of(), List.of()), List.of());
+    }
+    
+    final var oldLines = jsonToLines(oldBlob.getBlobValue());
+    final var newLines = jsonToLines(newBlob.getBlobValue());
+    
+    final var patch = DiffUtils.diff(oldLines, newLines);
+    final var unifiedDiff = UnifiedDiffUtils.generateUnifiedDiff(
+      "a/" + shortHash(oldBlob.getId()),
+      "b/" + shortHash(newBlob.getId()),
+      oldLines, patch, 3
+    );
+    
+    return new DiffResult(oldBlob, newBlob, patch, unifiedDiff);
   }
   
   private DiffResult diffProps(Props oldProps, Props newProps) {
-    return new DiffResult(oldProps, newProps);
+    if(oldProps == null || newProps == null) {
+      return new DiffResult(oldProps, newProps, DiffUtils.diff(List.of(), List.of()), List.of());
+    }
+    
+    final var oldLines = propsToLines(oldProps);
+    final var newLines = propsToLines(newProps);
+    
+    final var patch = DiffUtils.diff(oldLines, newLines);
+    final var unifiedDiff = UnifiedDiffUtils.generateUnifiedDiff(
+      "a/props",
+      "b/props", 
+      oldLines, patch, 3
+    );
+    
+    return new DiffResult(oldProps, newProps, patch, unifiedDiff);
+  }
+  
+  private List<String> jsonToLines(JsonObject json) {
+    return List.of(json.encodePrettily().split("\n"));
+  }
+  
+  private List<String> propsToLines(Props props) {
+    final var lines = new ArrayList<String>();
+    lines.addAll(jsonToLines(props.getPropsLabels()));
+    lines.addAll(jsonToLines(props.getPropsComments()));
+    lines.addAll(jsonToLines(props.getPropsPermissions()));
+    lines.addAll(jsonToLines(props.getPropsFlags()));
+    return lines;
   }
   
   public static class DiffResult {
     private final Object oldObj;
     private final Object newObj;
+    private final Patch<?> patch;
+    private final List<String> unifiedDiff;
     
-    public DiffResult(Object oldObj, Object newObj) {
+    public DiffResult(Object oldObj, Object newObj, Patch<?> patch, List<String> unifiedDiff) {
       this.oldObj = oldObj;
       this.newObj = newObj;
+      this.patch = patch;
+      this.unifiedDiff = unifiedDiff;
     }
     
     public Object getOld() { return oldObj; }
     public Object getNew() { return newObj; }
-    public boolean hasChanges() { return !java.util.Objects.equals(oldObj, newObj); }
+    public Patch<?> getPatch() { return patch; }
+    public List<String> getUnifiedDiff() { return unifiedDiff; }
+    public boolean hasChanges() { return !patch.getDeltas().isEmpty(); }
   }
   
   public SnapshotLogger append(String data) {
