@@ -1,5 +1,7 @@
 package io.resys.thena.fs.spi.snapshot;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /*-
@@ -23,10 +25,13 @@ import java.util.List;
  */
 
 import io.resys.thena.api.LogConstants;
+import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.Node;
+import io.resys.thena.fs.entities.Props;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -72,34 +77,117 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j(topic = LogConstants.SHOW_COMMIT)
 public class SnapshotLogger {
+  private static final DateTimeFormatter UTC_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss UTC");
+  
   private final StringBuilder data = new StringBuilder();
+  private boolean fullDiff = false;
 
+  public SnapshotLogger setFullDiff(boolean fullDiff) {
+    this.fullDiff = fullDiff;
+    return this;
+  }
   
   public SnapshotLogger rmNodes(List<Node> nodes) {
+    if(!log.isDebugEnabled()) return this;
     
+    for(Node node : nodes) {
+      data.append("D    ").append(node.getNodePath()).append("/").append(node.getNodeName()).append("\n");
+    }
+    return this;
   }
   
   public SnapshotLogger newTree(Tree next) {
+    if(!log.isDebugEnabled()) return this;
     
+    data.append("\nTree changes:\n");
+    for(Node node : next.getTreeNodes()) {
+      data.append("A    ").append(node.getNodePath()).append("/").append(node.getNodeName()).append("\n");
+    }
+    return this;
   }
 
   public SnapshotLogger mergeTree(Tree prev, Tree next) {
+    if(!log.isDebugEnabled()) return this;
     
+    data.append("\nTree changes:\n");
+    
+    var prevNodes = prev.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
+    var nextNodes = next.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
+    
+    for(String path : nextNodes.keySet()) {
+      if(!prevNodes.containsKey(path)) {
+        data.append("A    ").append(path).append("\n");
+      } else if(!prevNodes.get(path).getId().equals(nextNodes.get(path).getId())) {
+        data.append("M    ").append(path).append("\n");
+      }
+    }
+    
+    for(String path : prevNodes.keySet()) {
+      if(!nextNodes.containsKey(path)) {
+        data.append("D    ").append(path).append("\n");
+      }
+    }
+    return this;
   }
   
   public SnapshotLogger newCommit(Commit next) {
+    if(!log.isDebugEnabled()) return this;
     
+    data.append("commit ").append(shortHash(next.getId())).append("\n");
+    data.append("Author: ").append(next.getCommitAuthor()).append("\n");
+    data.append("Date: ").append(next.getCommitCreatedAt().format(UTC_FORMATTER)).append("\n\n");
+    data.append("    ").append(next.getCommitMessage()).append("\n");
+    return this;
   }
   
   public SnapshotLogger mergeCommit(Commit prev, Commit next) {
+    if(!log.isDebugEnabled()) return this;
     
+    data.append("commit ").append(shortHash(next.getId())).append("\n");
+    data.append("Author: ").append(next.getCommitAuthor()).append("\n");
+    data.append("Date: ").append(next.getCommitCreatedAt().format(UTC_FORMATTER)).append("\n\n");
+    data.append("    ").append(next.getCommitMessage()).append("\n");
+    return this;
   }
   
   public SnapshotLogger newBranch(Ref ref) {
+    if(!log.isDebugEnabled()) return this;
     
+    data.append("\nBranch created: ").append(ref.getRefName()).append(" -> ").append(shortHash(ref.getCommitId())).append("\n");
+    return this;
   }
+  
   public SnapshotLogger mergeBranch(Ref prev, Ref next) {
+    if(!log.isDebugEnabled()) return this;
     
+    data.append("\nBranch updated: ").append(next.getRefName()).append(" ").append(shortHash(prev.getCommitId())).append("..").append(shortHash(next.getCommitId())).append("\n");
+    return this;
+  }
+
+  private String shortHash(String hash) {
+    return hash != null && hash.length() > 7 ? hash.substring(0, 8) : hash;
+  }
+  
+  private DiffResult diffBlobs(Blob oldBlob, Blob newBlob) {
+    return new DiffResult(oldBlob, newBlob);
+  }
+  
+  private DiffResult diffProps(Props oldProps, Props newProps) {
+    return new DiffResult(oldProps, newProps);
+  }
+  
+  public static class DiffResult {
+    private final Object oldObj;
+    private final Object newObj;
+    
+    public DiffResult(Object oldObj, Object newObj) {
+      this.oldObj = oldObj;
+      this.newObj = newObj;
+    }
+    
+    public Object getOld() { return oldObj; }
+    public Object getNew() { return newObj; }
+    public boolean hasChanges() { return !java.util.Objects.equals(oldObj, newObj); }
   }
   
   public SnapshotLogger append(String data) {
@@ -108,6 +196,7 @@ public class SnapshotLogger {
     }
     return this;
   }
+  
   @Override
   public String toString() {
     if(log.isDebugEnabled()) {
