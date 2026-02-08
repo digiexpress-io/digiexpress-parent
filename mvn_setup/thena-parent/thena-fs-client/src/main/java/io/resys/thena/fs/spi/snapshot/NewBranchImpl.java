@@ -17,7 +17,6 @@ public class NewBranchImpl {
         .refName(branchName)
         .commitId(commit.getId())
         .build();
-        
     return new NewBranchResult(newRef);
   }
   

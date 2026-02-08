@@ -26,5 +26,4 @@ public class MergeTree {
   public static class MergeTreeResult {
     Tree tree;
   }
-
 }

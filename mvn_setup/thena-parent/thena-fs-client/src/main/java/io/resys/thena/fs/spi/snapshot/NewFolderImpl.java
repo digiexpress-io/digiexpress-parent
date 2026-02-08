@@ -13,37 +13,24 @@ import lombok.Value;
 
 @RequiredArgsConstructor
 public class NewFolderImpl implements NewFolder {
-
   private final Optional<Ref> lock;
 
   @Override
   public NewFolder folderPath(String path) {
-    // TODO Auto-generated method stub
     return null;
   }
-
-
   @Override
   public NewFolder folderId(String folderId) {
-    // TODO Auto-generated method stub
     return null;
   }
-
-
   @Override
   public NewFolder folderProps(Consumer<PropsBuilder> props) {
-    // TODO Auto-generated method stub
     return null;
   }
-
-
   @Override
   public void build() {
-    // TODO Auto-generated method stub
     
   }
-  
-  
   public NewFolderResult close() {
     
   }
