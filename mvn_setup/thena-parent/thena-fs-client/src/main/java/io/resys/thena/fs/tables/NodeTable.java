@@ -12,7 +12,8 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 100,
   ddl = """
     CREATE TYPE {node} AS (
-      node_id TEXT,
+      id TEXT,
+      node_id TEXT, -- not part of hash calculation, technical id of the object (user api generated)
       node_path TEXT,
       node_name TEXT,
       blob_id TEXT,
@@ -27,6 +28,27 @@ import io.vertx.mutiny.sqlclient.Row;
     DECLARE
         missing_count INTEGER;
     BEGIN
+        -- Validate that id, node_path and node_name are not null
+        SELECT count(*) INTO missing_count
+        FROM unnest(NEW.tree_nodes) nodes
+        WHERE nodes.id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
+  
+        IF missing_count > 0 THEN
+            RAISE EXCEPTION 'Validation failed: % nodes have null id, node_path or node_name', missing_count;
+        END IF;
+  
+        -- Validate id uniqueness within the tree
+        SELECT count(*) INTO missing_count
+        FROM (
+            SELECT nodes.id, count(*)
+            FROM unnest(NEW.tree_nodes) nodes
+            GROUP BY nodes.id
+            HAVING count(*) > 1
+        ) duplicates;
+  
+        IF missing_count > 0 THEN
+            RAISE EXCEPTION 'Validation failed: % duplicate id values in tree', missing_count;
+        END IF;
     
         -- Validate that node_id, node_path and node_name are not null
         SELECT count(*) INTO missing_count
@@ -108,7 +130,8 @@ public interface NodeTable {
     @Override
     public Node apply(Row row) {
       return ImmutableNode.builder()
-          .id(row.getString("node_id"))
+          .id(row.getString("id"))
+          .nodeId(row.getString("node_id"))
           .nodePath(row.getString("node_path"))
           .nodeName(row.getString("node_name"))
           .blobId(Optional.ofNullable(row.getString("blob_id")))

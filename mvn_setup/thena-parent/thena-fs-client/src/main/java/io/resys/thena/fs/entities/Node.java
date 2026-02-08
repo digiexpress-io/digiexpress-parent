@@ -18,8 +18,10 @@ import jakarta.annotation.Nullable;
 public interface Node extends FileSystemEntity {
   
   String getId();
+  String getNodeId();
   String getNodePath();
   String getNodeName();
+  
   Optional<String> getBlobId();
   Optional<String> getPropsId();
 
@@ -31,7 +33,7 @@ public interface Node extends FileSystemEntity {
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.NODE; 
   }
-
+  
   @Value.Immutable
   @JsonSerialize(as = ImmutableNodeTransitives.class)
   @JsonDeserialize(as = ImmutableNodeTransitives.class)
@@ -42,7 +44,7 @@ public interface Node extends FileSystemEntity {
   
   
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
-  public static ImmutableNode.Builder newInstance(String path, String name, Optional<String> blobId, Optional<String> propsId) {
+  public static ImmutableNode.Builder newInstance(String path, String nodeId, String name, Optional<String> blobId, Optional<String> propsId) {
     final var content = new StringBuilder();
     content.append(path);
     content.append(name);
@@ -52,6 +54,7 @@ public interface Node extends FileSystemEntity {
     final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableNode.builder()
         .id(hash)
+        .nodeId(nodeId)
         .nodePath(path)
         .nodeName(name)
         .blobId(blobId)

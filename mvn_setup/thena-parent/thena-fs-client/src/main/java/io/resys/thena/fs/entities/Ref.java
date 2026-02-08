@@ -73,12 +73,20 @@ public interface Ref extends FileSystemEntity {
   @JsonSerialize(as = ImmutableRefTransitives.class)
   @JsonDeserialize(as = ImmutableRefTransitives.class)
   interface RefTransitives {
-    Commit getCommit();
+    // might not be loaded
+    @Nullable Commit getCommit();
     
     // might not be loaded
     @Nullable Tree getTree();
 
     // might not be loaded
-    @Nullable Map<String, Blob> getBlobsById();  
+    Map<String, Node> getNodesById();
+    
+    // might not be loaded
+    Map<String, Blob> getBlobsById();
+    
+    // might not be loaded
+    Map<String, Props> getPropsById();  
   }
+
 }
