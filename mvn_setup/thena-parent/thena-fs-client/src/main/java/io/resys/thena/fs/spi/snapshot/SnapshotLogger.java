@@ -29,6 +29,47 @@ import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Git-like logging for filesystem commits and operations.
+ * Generates commit logs in Git format with diff-style output.
+ * 
+ * Commit Header Format:
+ * commit <commit-hash>
+ * Author: <author>
+ * Date: <timestamp>
+ * 
+ *     <commit-message>
+ * 
+ * File Change Summary:
+ *  <files-changed> files changed, <insertions> insertions(+), <deletions> deletions(-)
+ * 
+ * File Diff Format:
+ * diff --git a/<old-path> b/<new-path>
+ * index <old-hash>..<new-hash> <mode>
+ * --- a/<old-path>
+ * +++ b/<new-path>
+ * @@ -<old-line>,<old-count> +<new-line>,<new-count> @@
+ * -<deleted-line>
+ * +<added-line>
+ *  <unchanged-line>
+ * 
+ * Tree Changes:
+ * A    <path>/<filename>     # Added file
+ * M    <path>/<filename>     # Modified file  
+ * D    <path>/<filename>     # Deleted file
+ * R100 <old-path> -> <new-path>  # Renamed file
+ * 
+ * Props/Metadata Changes:
+ * diff --props a/<path> b/<path>
+ * -label: old-value
+ * +label: new-value
+ * 
+ * The logger generates:
+ * 1. Commit header with hash, author, timestamp, message
+ * 2. Summary of nodes changed (added/modified/deleted)
+ * 3. Tree diff showing node changes with +/- prefixes
+ * 4. Props/blob changes with diff format
+ */
 @Slf4j(topic = LogConstants.SHOW_COMMIT)
 public class SnapshotLogger {
   private final StringBuilder data = new StringBuilder();
