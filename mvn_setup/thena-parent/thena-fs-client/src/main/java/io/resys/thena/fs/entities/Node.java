@@ -17,12 +17,22 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableNode.class)
 public interface Node extends FileSystemEntity {
   
+  // the actual hash calculated based on the contents
   String getId();
+  
+  // convenience junk data, the json content object id thats connected to json in the blob, its excluded from hash calculation
   String getNodeId();
+  
+  // path to whatever we have part of hash calc
   String getNodePath();
+  
+  // last path fragment to whatever we have part of hash calc, never empty for files
   String getNodeName();
   
+  // for folders this is not present, for actual files its always present, part of has calculation
   Optional<String> getBlobId();
+  
+  // extra comments, permissions, docs for everything in file or folder... meta content, part of has calculation
   Optional<String> getPropsId();
 
   @Value.Auxiliary
