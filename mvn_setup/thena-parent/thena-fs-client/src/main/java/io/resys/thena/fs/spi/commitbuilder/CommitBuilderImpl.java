@@ -205,10 +205,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
     final var createdAt = commitCreatedAtValue != null ? commitCreatedAtValue : OffsetDateTime.now();
     final var snapshot = new Snapshot(lock, branchNameValue);
-    final var unit = snapshot.addAll(this.changes).build(commit -> commit
-        .commitAuthor(commitAuthorValue)
-        .commitMessage(commitMessageValue)
-        .commitCreatedAt(createdAt));
+    final var unit = snapshot.addAll(this.changes).build(commitAuthorValue, commitMessageValue, createdAt);
     return tx.builder().from(unit).persist();
   }
 }

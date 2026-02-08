@@ -148,6 +148,15 @@ public interface CommitBuilder {
     NewFolder folderPath(String path);
     
     /**
+     * Sets the filename (basename) for the file.
+     * Combined with the path to determine the full file location.
+     * 
+     * @param path the target path for the new folder
+     * @return builder for method chaining
+     */
+    NewFolder folderName(String folderName);
+    
+    /**
      * Sets a custom identifier for the folder.
      * When null, the system will auto-generate a unique identifier.
      * 

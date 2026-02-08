@@ -41,7 +41,12 @@ public interface Tree extends FileSystemEntity {
   public static ImmutableTree.Builder newInstance(List<Node> nodes) {
     final var content = new StringBuilder();
     nodes.stream()
-        .sorted((a, b) -> (a.getNodePath() + "/" + a.getNodeName()).compareTo(b.getNodePath() + "/" + b.getNodeName()))
+        .sorted(
+            (a, b) -> 
+              (a.getNodePath().map(n -> n + "/").orElse("") + a.getNodeName())
+            .compareTo
+              (b.getNodePath().map(n -> n + "/").orElse("") + b.getNodeName())
+        )
         .forEach(node -> content.append(node.getId()));
     
     final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();

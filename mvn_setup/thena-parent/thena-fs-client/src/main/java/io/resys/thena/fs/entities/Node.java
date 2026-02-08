@@ -24,7 +24,7 @@ public interface Node extends FileSystemEntity {
   String getNodeId();
   
   // path to whatever we have part of hash calc
-  String getNodePath();
+  Optional<String> getNodePath();
   
   // last path fragment to whatever we have part of hash calc, never empty for files
   String getNodeName();
@@ -54,7 +54,10 @@ public interface Node extends FileSystemEntity {
   
   
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
-  public static ImmutableNode.Builder newInstance(String path, String nodeId, String name, Optional<String> blobId, Optional<String> propsId) {
+  public static ImmutableNode.Builder newInstance(
+      String path, String nodeId, String name,
+      Optional<String> blobId, Optional<String> propsId) {
+    
     final var content = new StringBuilder();
     content.append(path);
     content.append(name);
