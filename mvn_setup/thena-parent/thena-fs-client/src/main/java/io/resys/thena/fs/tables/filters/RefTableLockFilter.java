@@ -21,45 +21,48 @@ public interface RefTableLockFilter {
   
   final static class SQL implements SqlBuilder<RefTableLockFilter> {
     
+    private static final String NULL_QUERY =
+"""
+ CROSS JOIN (
+   SELECT
+     NULL::JSONB as props_labels,
+     NULL::JSONB as props_comments,
+     NULL::JSONB as props_permissions,
+     NULL::JSONB as props_flags
+ ) as props
+ CROSS JOIN (
+   SELECT
+     NULL::TEXT as blob_type,
+     NULL::JSONB as blob_value
+ ) as blobs
+""";
+    
+    
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, RefTableLockFilter filter) {
       final var params = new ArrayList<Object>();
       params.add(filter.getRefName());
 
       return ImmutableSqlTuple.builder()
-          .value(baseline + extendedQuery(filter, params))
+          .value(baseline + " " + extendedQuery(filter, params))
           .props(Tuple.from(params))
           .build();
     }
     
-    public String extendedQuery(
-        RefTableLockFilter filter, 
-        List<Object> params) {
-      
+    public String extendedQuery(RefTableLockFilter filter, List<Object> params) {
+      final var stmt = new SqlStatement();
       if(filter.getDocIds().isEmpty()) {
-        return """
-  CROSS JOIN (
-    SELECT
-      NULL::JSONB as props_labels,
-      NULL::JSONB as props_comments,
-      NULL::JSONB as props_permissions,
-      NULL::JSONB as props_flags
-  ) as props
-  CROSS JOIN (
-    SELECT
-      NULL::TEXT as blob_type,
-      NULL::JSONB as blob_value
-  ) as blobs""";
+        return stmt.ln().append(NULL_QUERY).ln().build();
       }
       
-      final var stmt = new SqlStatement();
+    
       final var index = params.size() +1;
       
-      stmt
-        .append("LEFT JOIN {props} props ON props.id = node.props_id AND node.node_id = ANY($").append(index).append(")")
-        .append("LEFT JOIN {blobs} blobs ON blobs.id = node.blob_id AND node.node_id = ANY($").append(index).append(")");
+      return stmt
+        .append("LEFT JOIN {props} props ON props.id = node.props_id AND nodes.node_id = ANY($").append(index).append(")")
+        .append("LEFT JOIN {blobs} blobs ON blobs.id = node.blob_id AND nodes.node_id = ANY($").append(index).append(")")
+        .build();
       
-      return stmt.build();
     }
   }
 }

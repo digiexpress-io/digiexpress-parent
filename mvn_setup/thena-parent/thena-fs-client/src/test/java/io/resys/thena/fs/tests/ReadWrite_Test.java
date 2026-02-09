@@ -9,6 +9,7 @@ import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.fs.tests.config.DbTestTemplate;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -33,7 +34,11 @@ public class ReadWrite_Test extends DbTestTemplate {
       .commitBuilder()
       .commitAuthor("john smith")
       .commitMessage("create main branch with some content")
-      .newFile((newFile) -> newFile.build())
+      .newFile((newFile) -> newFile
+          .fileName("xxx.txt")
+          .filePath("root/xyz")
+          .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+          .build())
       .build()
       .await().atMost(atMost);
     

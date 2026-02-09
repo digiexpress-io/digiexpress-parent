@@ -142,16 +142,16 @@ public interface RefTable {
     sql = """
       SELECT 
         ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
-        commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id,
-        node.node_id, node.node_path, node.node_name, node.blob_id, node.props_id,
+        commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
+        nodes.node_id, nodes.node_path, nodes.node_name, nodes.blob_id, nodes.props_id,
         
         props.props_labels, props.props_comments, props.props_permissions, props.props_flags,
-        blob.blob_type, blob.blob_value
+        blobs.blob_type, blobs.blob_value
         
       FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
-      JOIN {commit} as commit ON commit.id = ref.commit_id
-      JOIN {tree} as tree ON tree.id = commit.tree_id
-      JOIN unnest(tree.tree_nodes) as node ON true
+      JOIN {commit} as commits ON commits.id = ref.commit_id
+      JOIN {tree} as tree ON tree.id = commits.tree_id
+      JOIN unnest(tree.tree_nodes) as nodes ON true
     """,
     rowMapper = RefLockMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
