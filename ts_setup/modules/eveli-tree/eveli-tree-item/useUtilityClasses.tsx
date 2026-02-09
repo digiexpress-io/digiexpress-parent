@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip, alpha } from '@mui/material';
+import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeColors, getNodeColor } from '../tree-theme';
 
@@ -232,6 +232,13 @@ export function getIcon(node: TreeNode) {
   const baseIcon = getBaseIcon();
   const theme = useTheme();
 
+  if (node.error) {
+    return (
+      <Box display='flex' alignItems='center' sx={{ color: TreeColors.semantic.danger }}>
+        {baseIcon}
+      </Box>
+    );
+  }
   if (node.reference) {
     return (
       <Badge variant="dot"
@@ -241,7 +248,7 @@ export function getIcon(node: TreeNode) {
         }}
         sx={{
           '& .MuiBadge-dot': {
-            backgroundColor: theme.palette.error.main,
+            backgroundColor: TreeColors.semantic.danger,
             width: 6,
             height: 6,
           },
@@ -262,13 +269,19 @@ export const StyledListItem = styled(ListItem, {
     prop !== 'error'
 })<{
   level: number, isDarkTheme: boolean, error: boolean
-}>(({ theme, level, isDarkTheme }) => ({
+}>(({ theme, level, isDarkTheme, error }) => ({
 
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: isDarkTheme ? TreeColors.dark.surface : TreeColors.light.surface,
   },
+  ...error && {
+    backgroundColor: alpha(TreeColors.semantic.danger, 0.1),
+    '&:hover': {
+      backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.danger, 0.3) : alpha(TreeColors.semantic.danger, 0.2),
+    },
+  }
 }));
 
 interface StyledListItemTextProps {
