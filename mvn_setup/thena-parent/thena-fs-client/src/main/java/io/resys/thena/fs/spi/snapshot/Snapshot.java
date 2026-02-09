@@ -244,7 +244,7 @@ public class Snapshot {
     
     final var rm = visitRemovals(removals, nodes);
 
-    // tree, cut off - everything gets real in here... no dups, all must be valid in here 
+    // tree
     final var tree = visitTree(nodes, props, blobs, rm);
     
     // commit

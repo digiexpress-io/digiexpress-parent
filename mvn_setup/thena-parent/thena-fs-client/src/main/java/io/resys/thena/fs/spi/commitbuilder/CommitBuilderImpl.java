@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.envelope.BatchStatus;
@@ -11,14 +12,15 @@ import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.ImmutableCommitResult;
+import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.MergeFileCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.MergeFolderCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.NewFileCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.NewFolderCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.RmCommand;
 import io.resys.thena.fs.spi.snapshot.Snapshot;
-import io.resys.thena.fs.spi.snapshot.Snapshot.ChangeCommand;
-import io.resys.thena.fs.spi.snapshot.Snapshot.MergeFileCommand;
-import io.resys.thena.fs.spi.snapshot.Snapshot.MergeFolderCommand;
-import io.resys.thena.fs.spi.snapshot.Snapshot.NewFileCommand;
-import io.resys.thena.fs.spi.snapshot.Snapshot.NewFolderCommand;
-import io.resys.thena.fs.spi.snapshot.Snapshot.RmCommand;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
@@ -65,7 +67,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
 
   @Override
-  public CommitBuilder mergeFolder(String docId, Consumer<MergeFolder> doc) {
+  public CommitBuilder mergeFolder(String docId, BiConsumer<Node, MergeFolder> doc) {
     RepoAssert.notEmpty(docId, () -> "mergeFolder docId can't be empty!");
     RepoAssert.notNull(doc, () -> "mergeFolder consumer can't be null!");
     this.changes.add(new MergeFolderCommand(docId, doc));
@@ -81,7 +83,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
 
   @Override
-  public CommitBuilder mergeFile(String docId, Consumer<MergeFile> doc) {
+  public CommitBuilder mergeFile(String docId, BiConsumer<Node, MergeFile> doc) {
     RepoAssert.notEmpty(docId, () -> "mergeFile docId can't be empty!");
     RepoAssert.notNull(doc, () -> "mergeFile consumer can't be null!");
     this.changes.add(new MergeFileCommand(docId, doc));

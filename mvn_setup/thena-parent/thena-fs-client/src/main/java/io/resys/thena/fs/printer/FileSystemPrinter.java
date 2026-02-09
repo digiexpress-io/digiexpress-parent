@@ -229,8 +229,7 @@ public class FileSystemPrinter {
       
       for (final var node : tree.getTreeNodes().stream()
           .sorted((a, b) -> ComparisonChain.start()
-              .compare(a.getNodePath(), b.getNodePath())
-              .compare(a.getNodeName(), b.getNodeName())
+              .compare(a.getFullPath(), b.getFullPath())
               .result())
           .toList()) {
         
