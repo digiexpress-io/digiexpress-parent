@@ -23,7 +23,7 @@ import {
   VisibilityOff as AnonymousIcon,
 } from '@mui/icons-material';
 
-import { ConfigOption, TreeNode, TreeNodeType } from '../../eveli-tree-api';
+import { ConfigOption, TreeNode, TreeNodeType, useEveliTree } from '../../eveli-tree-api';
 
 
 
@@ -202,6 +202,8 @@ export const EveliTreeItemRoot = styled('div', {
 });
 
 export function getIcon(node: TreeNode) {
+  const { isDarkMode } = useEveliTree();
+
   const getBaseIcon = () => {
     switch (node.type) {
       case 'folder':
@@ -230,11 +232,10 @@ export function getIcon(node: TreeNode) {
   };
 
   const baseIcon = getBaseIcon();
-  const theme = useTheme();
 
   if (node.error) {
     return (
-      <Box display='flex' alignItems='center' sx={{ color: TreeColors.semantic.danger }}>
+      <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight }}>
         {baseIcon}
       </Box>
     );
@@ -248,7 +249,7 @@ export function getIcon(node: TreeNode) {
         }}
         sx={{
           '& .MuiBadge-dot': {
-            backgroundColor: TreeColors.semantic.danger,
+            backgroundColor: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight,
             width: 6,
             height: 6,
           },
@@ -277,9 +278,9 @@ export const StyledListItem = styled(ListItem, {
     backgroundColor: isDarkTheme ? TreeColors.dark.surface : TreeColors.light.surface,
   },
   ...error && {
-    backgroundColor: alpha(TreeColors.semantic.danger, 0.1),
+    backgroundColor: alpha(isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight, 0.1),
     '&:hover': {
-      backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.danger, 0.3) : alpha(TreeColors.semantic.danger, 0.2),
+      backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2),
     },
   }
 }));
@@ -296,9 +297,10 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
   nodeType, nodeName, description, isDarkTheme, error
 }) => {
   return (
-    <ListItemText primary={<Typography variant='subtitle2'
-      sx={{
-        color: error ? 'error.main' : getNodeColor(nodeType, isDarkTheme),
+    <ListItemText primary={<Typography variant='subtitle2' sx={{
+        color: error
+          ? (isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight)
+          : getNodeColor(nodeType, isDarkTheme),
         fontWeight: isDarkTheme ? 400 : 500
       }}
     >

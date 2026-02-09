@@ -34,7 +34,7 @@ export const EveliTreeBreadcrumb: React.FC = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
         {activeNode?.error && (
           <IconButton size="small" color='error' onClick={handleHelpClick}>
-            <ErrorIcon fontSize="small" sx={{ color: TreeColors.semantic.danger }} />
+            <ErrorIcon fontSize="small" sx={{ color: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight }} />
           </IconButton>
         )}
         <Popover
@@ -46,8 +46,8 @@ export const EveliTreeBreadcrumb: React.FC = () => {
             paper: {
               sx: {
                 color: TreeColors.light.text,
-                border: `1px solid ${alpha(TreeColors.semantic.danger, 0.5)}`,
-                backgroundColor: lighten(TreeColors.semantic.danger, 0.95),
+                border: `1px solid ${alpha(isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight, 0.5)}`,
+                backgroundColor: lighten(TreeColors.semantic.dangerLight, 0.95),
                 borderRadius: theme.spacing(1),
                 minWidth: 300,
                 maxWidth: 350,
@@ -60,7 +60,6 @@ export const EveliTreeBreadcrumb: React.FC = () => {
             <Typography variant='subtitle2' sx={{ fontWeight: 500 }}>
               An issue with this asset needs attention.
             </Typography>
-            <Divider sx={{ my: 1, border: `0.5px solid ${alpha(TreeColors.semantic.danger, 0.3)}` }} />
             <Typography variant='subtitle2' sx={{ fontStyle: 'italic' }}>
               Page en does not have a Markdown level 1 heading.
             </Typography>

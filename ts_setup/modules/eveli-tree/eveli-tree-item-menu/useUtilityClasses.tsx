@@ -123,7 +123,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
 
     [`& .${MUI_NAME}-menuItemDelete`]: {
       fontSize: '13px',
-      color: TreeColors.semantic.danger,
+      color: TreeColors.semantic.dangerDark,
       display: 'flex',
       alignItems: 'center',
       gap: '8px',
@@ -131,7 +131,7 @@ export const EveliTreeItemMenuRoot = styled(Popover, {
         backgroundColor: TreeColors.dark.border,
       },
       '& .MuiSvgIcon-root': {
-        color: TreeColors.semantic.danger,
+        color: TreeColors.semantic.dangerDark,
         fontSize: '16px',
       },
     },

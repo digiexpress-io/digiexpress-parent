@@ -44,13 +44,14 @@ export const EveliTreeTabs: React.FC = () => {
                 whiteSpace: 'nowrap',
                 flex: 1,
                 minWidth: 0,
-                color: tab.node.error ? TreeColors.semantic.danger
+                color: tab.node.error
+                  ? (isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight)
                   : (isDarkMode ? TreeColors.dark.text : TreeColors.light.text),
-                fontWeight: tab.node.error ? 500 : 400
+                fontWeight: tab.node.error && isDarkMode ? 400 : 500
               }}>{tab.node.name}</Typography>
           </Tooltip>
           <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }} onClick={(event) => handleCloseTab(index, event)}>
-            <CloseIcon fontSize="inherit" sx={{ color: tab.node.error ? TreeColors.semantic.danger : TreeColors.light.textSecondary }} />
+            <CloseIcon fontSize="inherit" sx={{ color: tab.node.error ? (isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight) : (isDarkMode ? TreeColors.dark.textSecondary : TreeColors.light.textSecondary) }} />
           </IconButton>
         </Tab>
       ))}
