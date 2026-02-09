@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
+import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -28,6 +29,11 @@ public interface Blob extends FileSystemEntity {
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.BLOB; 
+  }
+  
+  @Value.Check
+  default void check() {
+    RepoAssert.isTrue(!getBlobValue().isEmpty(), () -> "blobValue cannot be empty");
   }
 
   @Value.Immutable

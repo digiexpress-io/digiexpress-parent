@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import io.resys.thena.fs.api.commits.CommitBuilder.MergeFile;
 import io.resys.thena.fs.api.commits.CommitBuilder.MergeFolder;
@@ -43,9 +44,10 @@ public class Snapshot {
   public static record NewFolderCommand(Consumer<NewFolder> consumer) implements ChangeCommand {}
   public static record NewFileCommand(Consumer<NewFile> consumer) implements ChangeCommand {}
   
-  public static record MergeFolderCommand(String docId, Consumer<MergeFolder> consumer) implements ChangeCommand{}
-  public static record MergeFileCommand(String docId, Consumer<MergeFile> consumer) implements ChangeCommand {}
+  public static record MergeFolderCommand(String docId, BiConsumer<Node, MergeFolder> consumer) implements ChangeCommand {}
+  public static record MergeFileCommand(String docId, BiConsumer<Node, MergeFile> consumer) implements ChangeCommand {}
 
+  
   private Tuple2<Node, Props> visitNewFolderCommand(NewFolderCommand command) {
     final var merger = new NewFolderImpl(lock);
     command.consumer().accept(merger);
@@ -70,9 +72,14 @@ public class Snapshot {
   }
   
   private Tuple2<Node, Props>  visitMergeFolderCommand(MergeFolderCommand command) {
+    RepoAssert.isTrue(lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
-    final var merger = new MergeFolderImpl(lock.get()); 
-    command.consumer().accept(merger);
+    final var prev = lock.get();
+    final var prevNode = prev.getTransitives().getNodesById().get(command.docId);
+    RepoAssert.notNull(prevNode, () -> "Can't find target node(props) with id = '"+ command.docId + "'!");
+    
+    final var merger = new MergeFolderImpl(lock.get(), prevNode); 
+    command.consumer().accept(prevNode, merger);
     
     final var result = merger.close();
     final var mergeNode = result.getNode();
@@ -82,9 +89,14 @@ public class Snapshot {
   }
   
   private Tuple3<Node, Props, Blob> visitMergeFileCommand(MergeFileCommand command) {
+    RepoAssert.isTrue(this.lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
-    final var merger = new MergeFileImpl(lock.get()); 
-    command.consumer().accept(merger);
+    final var prev = lock.get();
+    final var prevNode = prev.getTransitives().getNodesById().get(command.docId);
+    RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId + "'!");
+    
+    final var merger = new MergeFileImpl(prev, prevNode);
+    command.consumer().accept(prevNode, merger);
     final var result = merger.close();
     
     final var mergeNode = result.getNode();
@@ -153,9 +165,13 @@ public class Snapshot {
       
       final var result = lock.get().getTransitives()
         .getTree().getTreeNodes()
+        
         .stream().filter(node -> (
+            
             removals.contains(node.getId()) || 
             removals.contains(node.getNodeId()) ||
+            
+            
             removals.contains(node.getNodePath()) || 
             removals.contains(node.getNodePath() + "/" + node.getNodeName())
         ))
@@ -224,7 +240,6 @@ public class Snapshot {
         nodes.add(result.getItem1());
         props.add(result.getItem2());
         blobs.add(result.getItem3());
-        nodes.add(result.getItem1());
       }
       
       RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());

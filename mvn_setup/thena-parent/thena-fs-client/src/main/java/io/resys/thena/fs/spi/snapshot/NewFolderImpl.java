@@ -45,8 +45,6 @@ public class NewFolderImpl implements NewFolder {
   }
   @Override
   public void build() {
-    validateFolderPath(this.folderPath);
-    validateFolderName(this.folderName);
     this.validated = true;
   }
   
@@ -65,32 +63,18 @@ public class NewFolderImpl implements NewFolder {
       final var builder = new PropsBuilderImpl(lock);
       p.accept(builder);
       return builder.close().getProps();
-    }).orElse(null);
+    });
     
-    final var propsId = Optional.ofNullable(props).map(Props::getId);
-    final var node = Node.newInstance(path, nodeId, name, blobId, propsId).build();
+    final var propsId = props.map(Props::getId);
+    final var node = Node.newInstance(Optional.ofNullable(path), nodeId, name, blobId, propsId).build();
     
     return new NewFolderResult(node, props);
   }
   
-  private void validateFolderPath(String path) {
-    RepoAssert.notNull(path, () -> "folderPath is required");
-    RepoAssert.isTrue(!path.trim().isEmpty(), () -> "folderPath cannot be empty");
-    RepoAssert.isTrue(path.matches("^[a-zA-Z0-9/_-]+$"), () -> "folderPath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
-    RepoAssert.isTrue(!path.contains("//"), () -> "folderPath cannot contain double slashes");
-    RepoAssert.isTrue(!path.endsWith("/"), () -> "folderPath cannot end with slash");
-  }
-  
-  private void validateFolderName(String name) {
-    RepoAssert.notNull(name, () -> "folderName is required");
-    RepoAssert.isTrue(!name.trim().isEmpty(), () -> "folderName cannot be empty");
-    RepoAssert.isTrue(name.matches("^[a-zA-Z0-9_-]+$"), () -> "folderName contains invalid characters, only a-z, A-Z, 0-9, _, - allowed");
-    RepoAssert.isTrue(!name.contains("/"), () -> "folderName cannot contain slashes");
-  }
-  
+
   @Value
   public static class NewFolderResult {
     Node node;
-    Props props;
+    Optional<Props> props;
   }
 }

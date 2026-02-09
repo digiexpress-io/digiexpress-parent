@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
+import io.resys.thena.support.RepoAssert;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
@@ -29,15 +30,62 @@ public interface Node extends FileSystemEntity {
   // last path fragment to whatever we have part of hash calc, never empty for files
   String getNodeName();
   
-  // for folders this is not present, for actual files its always present, part of has calculation
+  // for directorys this is not present, for actual files its always present, part of has calculation
   Optional<String> getBlobId();
   
-  // extra comments, permissions, docs for everything in file or folder... meta content, part of has calculation
+  // extra comments, permissions, docs for everything in file or directory... meta content, part of has calculation
   Optional<String> getPropsId();
 
   @Value.Auxiliary
   @Nullable 
   NodeTransitives getTransitives();
+  
+  
+  default boolean isDirectory() {
+    return getBlobId().isEmpty();
+  }
+  
+  default String getFullPath() {
+    return getNodePath().map(e -> e + "/").orElse("") + getNodeName();
+  }
+  
+  @Value.Check
+  default void check() {
+    
+    if(isDirectory()) {
+      
+      if(getNodePath().isPresent()) {
+        final var directoryPath = getNodePath().get();
+        RepoAssert.isTrue(!directoryPath.trim().isEmpty(), () -> "directoryPath cannot be empty");
+        RepoAssert.isTrue(directoryPath.matches("^[a-zA-Z0-9/_-]+$"), () -> "directoryPath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
+        RepoAssert.isTrue(!directoryPath.contains("//"), () -> "directoryPath cannot contain double slashes");
+        RepoAssert.isTrue(!directoryPath.endsWith("/"), () -> "directoryPath cannot end with slash");      
+      }
+
+      final var directoryName = getNodeName();
+      RepoAssert.notNull(directoryName, () -> "directoryName is required");
+      RepoAssert.isTrue(!directoryName.trim().isEmpty(), () -> "directoryName cannot be empty");
+      RepoAssert.isTrue(directoryName.matches("^[a-zA-Z0-9_-]+$"), () -> "directoryName contains invalid characters, only a-z, A-Z, 0-9, _, - allowed");
+      RepoAssert.isTrue(!directoryName.contains("/"), () -> "directoryName cannot contain slashes");   
+      return;
+    }
+ 
+    if(getNodePath().isPresent()) {
+      final var filePath = getNodePath().get();
+      RepoAssert.notNull(filePath, () -> "filePath is required");
+      RepoAssert.isTrue(!filePath.trim().isEmpty(), () -> "filePath cannot be empty");
+      RepoAssert.isTrue(filePath.matches("^[a-zA-Z0-9/_-]+$"), () -> "filePath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
+      RepoAssert.isTrue(!filePath.contains("//"), () -> "filePath cannot contain double slashes");
+      RepoAssert.isTrue(!filePath.endsWith("/"), () -> "filePath cannot end with slash");
+    }
+    
+    final var fileName = getNodeName();
+    RepoAssert.notNull(fileName, () -> "fileName is required");
+    RepoAssert.isTrue(!fileName.trim().isEmpty(), () -> "fileName cannot be empty");
+    RepoAssert.isTrue(fileName.matches("^[a-zA-Z0-9_.-]+$"), () -> "fileName contains invalid characters, only a-z, A-Z, 0-9, _, ., - allowed");
+    RepoAssert.isTrue(!fileName.contains("/"), () -> "fileName cannot contain slashes");
+  }
+  
 
   @Override
   default FileSystemEntityType getDocType() { 
@@ -50,12 +98,15 @@ public interface Node extends FileSystemEntity {
   interface NodeTransitives {
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
+    
+    @Nullable Blob getBlob();
+    @Nullable Props getProps();
   }
-  
-  
+    
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
   public static ImmutableNode.Builder newInstance(
-      String path, String nodeId, String name,
+      Optional<String> path, 
+      String nodeId, String name,
       Optional<String> blobId, Optional<String> propsId) {
     
     final var content = new StringBuilder();

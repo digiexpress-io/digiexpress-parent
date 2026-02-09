@@ -67,10 +67,6 @@ public class NewFileImpl implements NewFile {
 
   @Override
   public void build() {
-    validateFilePath(this.filePath);
-    validateFileName(this.fileName);
-    validateFileValue(this.fileValue);
-    validateFileType(this.fileType);
     this.validated = true;
   }
   
@@ -87,45 +83,24 @@ public class NewFileImpl implements NewFile {
       final var builder = new PropsBuilderImpl(lock);
       p.accept(builder);
       return builder.close().getProps();
-    }).orElse(null);
+    });
     
     final var blobId = Optional.of(blob.getId());
-    final var propsId = Optional.ofNullable(props).map(Props::getId);
-    final var node = Node.newInstance(this.filePath, nodeId, this.fileName, blobId, propsId).build();
+    final var propsId = props.map(Props::getId);
+    final var node = Node.newInstance(
+        Optional.ofNullable(this.filePath), 
+        nodeId, this.fileName, 
+        blobId, propsId
+    ).build();
     
     return new NewFileResult(node, blob, props);
   }
   
-  private void validateFilePath(String path) {
-    RepoAssert.notNull(path, () -> "filePath is required");
-    RepoAssert.isTrue(!path.trim().isEmpty(), () -> "filePath cannot be empty");
-    RepoAssert.isTrue(path.matches("^[a-zA-Z0-9/_-]+$"), () -> "filePath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
-    RepoAssert.isTrue(!path.contains("//"), () -> "filePath cannot contain double slashes");
-    RepoAssert.isTrue(!path.endsWith("/"), () -> "filePath cannot end with slash");
-  }
-  
-  private void validateFileName(String name) {
-    RepoAssert.notNull(name, () -> "fileName is required");
-    RepoAssert.isTrue(!name.trim().isEmpty(), () -> "fileName cannot be empty");
-    RepoAssert.isTrue(name.matches("^[a-zA-Z0-9_.-]+$"), () -> "fileName contains invalid characters, only a-z, A-Z, 0-9, _, ., - allowed");
-    RepoAssert.isTrue(!name.contains("/"), () -> "fileName cannot contain slashes");
-  }
-  
-  private void validateFileValue(JsonObject value) {
-    RepoAssert.notNull(value, () -> "fileValue is required");
-    RepoAssert.isTrue(!value.isEmpty(), () -> "fileValue cannot be empty");
-  }
-  
-  private void validateFileType(String type) {
-    RepoAssert.notNull(type, () -> "fileType is required");
-    RepoAssert.isTrue(!type.trim().isEmpty(), () -> "fileType cannot be empty");
-    RepoAssert.isTrue(type.matches("^[a-zA-Z0-9_/-]+$"), () -> "fileType contains invalid characters, only a-z, A-Z, 0-9, _, /, - allowed");
-  }
-
+ 
   @Value
   public static class NewFileResult {
     Node node;
     Blob blob;
-    Props props;    
+    Optional<Props> props;    
   }
 }

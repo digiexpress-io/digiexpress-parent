@@ -2,6 +2,7 @@ package io.resys.thena.fs.api.commits;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -11,6 +12,7 @@ import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -58,7 +60,7 @@ public interface CommitBuilder {
    * @param doc lambda that receives current folder state and configures changes
    * @return builder for method chaining
    */
-  CommitBuilder mergeFolder(String docId, Consumer<MergeFolder> doc);
+  CommitBuilder mergeFolder(String docId, BiConsumer<Node, MergeFolder> doc);
   
   /**
    * Adds a new file creation operation to this commit.
@@ -78,7 +80,7 @@ public interface CommitBuilder {
    * @param doc lambda that receives current file state and configures changes
    * @return builder for method chaining
    */
-  CommitBuilder mergeFile(String docId, Consumer<MergeFile> doc);
+  CommitBuilder mergeFile(String docId, BiConsumer<Node, MergeFile> doc);
   
   /**
    * Adds a single item deletion operation to this commit.
@@ -196,6 +198,15 @@ public interface CommitBuilder {
     MergeFolder folderPath(String path);
     
     /**
+     * Updates the foldername (basename).
+     * Combined with the path to determine the full file location.
+     * 
+     * @param path the target path for the new folder
+     * @return builder for method chaining
+     */
+    MergeFolder folderName(String folderName);
+    
+    /**
      * Updates the folder properties with access to current state.
      * The BiConsumer receives both current properties and a builder for updates.
      * Enables conditional modifications based on existing values.
@@ -203,7 +214,7 @@ public interface CommitBuilder {
      * @param props lambda that receives current props and configures updates
      * @return builder for method chaining
      */
-    MergeFolder folderProps(BiConsumer<Props, PropsBuilder> props);
+    MergeFolder folderProps(BiConsumer<Optional<Props>, PropsBuilder> props);
     
     /**
      * Completes the folder modification configuration and adds it to the commit.
@@ -318,7 +329,7 @@ public interface CommitBuilder {
      * @param props lambda that receives current props and configures updates
      * @return builder for method chaining
      */
-    MergeFile fileProps(BiConsumer<Props, PropsBuilder> props);
+    MergeFile fileProps(BiConsumer<Optional<Props>, PropsBuilder> props);
     
     /**
      * Completes the file modification configuration and adds it to the commit.
