@@ -116,13 +116,17 @@ public class Snapshot {
   }
     
   private Tree visitTree(List<Node> nodes, List<Props> props, List<Blob> blobs, List<Node> rm) {
-    final Tree result = lock.isPresent() ?
-      new MergeTree(lock.get(), nodes, props, blobs).close().getTree() : 
-      Tree.newInstance(nodes).build();
+    final Tree result;
     
     if(lock.isPresent()) {
+      result = new MergeTree(lock.get(), nodes, props, blobs).close().getTree();
       sp_logger.mergeTree(lock.get().getTransitives().getTree(), result);
+      persistenceUnit.addAllBlobInserts(blobs);
+      persistenceUnit.addAllPropsInserts(props);
     } else {
+      result = Tree.newInstance(nodes).build();
+      persistenceUnit.addAllBlobInserts(blobs);
+      persistenceUnit.addAllPropsInserts(props);
       sp_logger.newTree(result);  
     }
     

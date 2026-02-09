@@ -23,7 +23,6 @@ package io.resys.thena.fs.tests;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
