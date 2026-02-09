@@ -40,6 +40,7 @@ export const mockTreeData: TreeNode[] = [
             id: 'main.article',
             name: 'main.article',
             type: 'article',
+            error: true,
             comments: [
               {
                 comment: 'Found a typo in the content - should be "municipality" not "municipalty"',
@@ -60,7 +61,6 @@ export const mockTreeData: TreeNode[] = [
             expanded: true,
             reference: false,
             locked: false,
-            error: true,
             configOptions: [{
               disabledMode: true,
             }],

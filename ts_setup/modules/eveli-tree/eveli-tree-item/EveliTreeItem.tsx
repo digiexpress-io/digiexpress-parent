@@ -36,6 +36,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
         onClick={() => children && onToggle(node.id)}
         onDoubleClick={() => onDoubleClick(node, fullPath)}
         onContextMenu={(event) => onContextMenu(event, node)}
+        error={node.error}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {children ? (
@@ -53,6 +54,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
             nodeName={node.name}
             description={node.description}
             isDarkTheme={isDarkTheme}
+            error={node.error}
           />
           {configOptions && (
             <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>

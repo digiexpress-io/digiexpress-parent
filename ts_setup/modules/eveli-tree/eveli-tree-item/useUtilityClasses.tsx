@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip } from '@mui/material';
+import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip, alpha } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeColors, getNodeColor } from '../tree-theme';
 
@@ -256,8 +256,14 @@ export function getIcon(node: TreeNode) {
 };
 
 export const StyledListItem = styled(ListItem, {
-  shouldForwardProp: (prop) => prop !== 'isDarkTheme'
-})<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
+  shouldForwardProp: (prop) =>
+    prop !== 'isDarkTheme' &&
+    prop !== 'level' &&
+    prop !== 'error'
+})<{
+  level: number, isDarkTheme: boolean, error: boolean
+}>(({ theme, level, error, isDarkTheme }) => ({
+
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',
   '&:hover': {
@@ -270,24 +276,37 @@ interface StyledListItemTextProps {
   nodeName: string;
   description?: string;
   isDarkTheme: boolean;
+  error: boolean;
 }
 
-export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType, nodeName, description, isDarkTheme }) => {
+export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
+  nodeType, nodeName, description, isDarkTheme, error
+}) => {
   return (
-    <ListItemText
-      primary={
-        <Typography variant='subtitle2' sx={{ color: getNodeColor(nodeType, isDarkTheme), fontWeight: isDarkTheme ? 400 : 500 }}>
-          {nodeName}
-          {description && (
-            <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
-              - "{description}"
-            </Typography>
-          )}
+    <ListItemText primary={<Typography variant='subtitle2'
+      sx={{
+        color: error ? 'error.main' : getNodeColor(nodeType, isDarkTheme),
+        fontWeight: isDarkTheme ? 400 : 500
+      }}
+    >
+      {nodeName}
+      {description && (
+        <Typography component='span' variant='caption'
+          sx={{
+            ml: 1,
+            color: TreeColors.dark.textMuted,
+            fontStyle: 'italic'
+          }}
+        >
+          - "{description}"
         </Typography>
-      }
+      )}
+    </Typography>
+    }
     />
   );
 }
+
 
 export function getIconClassName(node: TreeNode, classes: EveliTreeItemClasses) {
   switch (node.type) {
