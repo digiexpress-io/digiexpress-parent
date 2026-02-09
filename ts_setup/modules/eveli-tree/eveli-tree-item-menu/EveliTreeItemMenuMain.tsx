@@ -14,25 +14,21 @@ import {
   Lock as LockedIcon,
   LockOpen as UnlockedIcon,
 } from '@mui/icons-material';
-import { TreeNode, mockTreeData } from '../../eveli-tree-api';
+import { TreeNode, mockTreeData, useEveliTree } from '../../eveli-tree-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 
 function getReferencesCount(nodeId: string, nodeName: string): number {
   let count = 0;
-
   function searchInNode(node: TreeNode): void {
-    // Check if this node is a reference to our target node
-    if (node.isReference && node.name === nodeName && node.id !== nodeId) {
+    if (node.reference && node.name === nodeName && node.id !== nodeId) {
       count++;
     }
 
-    // Recursively search children
     if (node.children) {
       node.children.forEach(child => searchInNode(child));
     }
   }
 
-  // Search through all mock data
   mockTreeData.forEach(rootNode => searchInNode(rootNode));
 
   return count;
@@ -47,12 +43,14 @@ export interface EveliTreeItemMenuMainProps {
 
 export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (props) => {
   const classes = useUtilityClasses();
+  const { openAsset } = useEveliTree();
 
-  // Calculate reference count for this node
   const referencesCount = props.node ? getReferencesCount(props.node.id, props.node.name) : 0;
 
   function handleEdit() {
-    console.log('Edit:', props.node?.name);
+    if (props.node) {
+      openAsset(props.node, props.node.name);
+    }
     props.onClose();
   }
 
@@ -72,16 +70,16 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
   }
 
   function handleLock() {
-    const action = props.node?.isLocked ? 'Unlock' : 'Lock';
+    const action = props.node?.locked ? 'Unlock' : 'Lock';
     console.log(`${action}:`, props.node?.name);
     props.onClose();
   }
 
   function handleSubmenuToggle(submenuType: string) {
     if (props.openSubmenu === submenuType) {
-      props.onSubmenuOpen(''); // Close the submenu by passing empty string
+      props.onSubmenuOpen(''); 
     } else {
-      props.onSubmenuOpen(submenuType); // Open the submenu
+      props.onSubmenuOpen(submenuType); 
     }
   }
 
@@ -107,15 +105,15 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
       <MenuItem className={classes.menuItem} onClick={handleEdit}>
         <EditIcon fontSize='small' />Edit</MenuItem>
       <MenuItem
-        className={props.node?.isLocked ? classes.menuItemLocked : classes.menuItemUnlocked}
+        className={props.node?.locked ? classes.menuItemLocked : classes.menuItemUnlocked}
         onClick={handleLock}
       >
-        {props.node?.isLocked ? (
+        {props.node?.locked ? (
           <LockedIcon fontSize='small' />
         ) : (
           <UnlockedIcon fontSize='small' />
         )}
-        {props.node?.isLocked ? 'Unlock' : 'Lock'}
+        {props.node?.locked ? 'Unlock' : 'Lock'}
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleCopy}>
         <CopyIcon fontSize='small' />Copy</MenuItem>

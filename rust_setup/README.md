@@ -126,3 +126,42 @@ curl -s -X POST http://localhost:8085/compile \
     ]
   }' | jq -r '.data.base64' | base64 -d > example_output.pdf
 ```
+
+
+### Using Images in PDFs
+
+```bash
+# Change image.jpg to the path of the image you want to show
+IMAGE_BASE64=$(base64 -i image.jpg)
+curl -s -X POST http://localhost:8085/compile \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "main_template_id": "greeting_with_image",
+    "timestamp": "2025-12-01T20:00:00+00:00",
+    "templates": [
+      {
+        "id": "greeting_with_image",
+        "value": "#set page(width: 400pt, height: 600pt, margin: 20pt)\n#set text(size: 14pt)\n\n= Hello from Typst with Image!\n\nWelcome *#sys.inputs.data.user.name*!\n\nYou have #sys.inputs.data.user.points points.\n\n#if sys.inputs.data.user.premium [\n  _Thank you for being a premium member!_\n] else [\n  _Upgrade to premium for more features._\n]\n\n== Your Profile Picture\n\n#image.decode(sys.inputs.images.profile_picture, width: 200pt)\n\n_Image embedded successfully!_"
+      }
+    ],
+    "data_modules": [
+      {
+        "module_name": "data",
+        "body_name": "user",
+        "body_value": {
+          "name": "Alice",
+          "points": 1250,
+          "premium": true
+        }
+      },
+      {
+        "module_name": "images",
+        "body_name": "profile_picture",
+        "body_value": {
+          "__base64__": "'$IMAGE_BASE64'"
+        }
+      }
+    ]
+  }' | jq -r '.data.base64' | base64 -d > example_with_image.pdf
+
+```

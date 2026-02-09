@@ -5,10 +5,11 @@ export interface TreeNode {
   description?: string;
   children?: TreeNode[];
   labels?: TreeNodeLabel[] | undefined;
-  comments?: TreeNodeComment[] | undefined;
-  isExpanded?: boolean;
-  isReference?: boolean;
-  isLocked?: boolean;
+  comments: TreeNodeComment[] | undefined;
+  expanded: boolean;
+  reference: boolean;
+  locked: boolean;
+  error: boolean;
   type: TreeNodeType;
   configOptions?: ConfigOption[] | undefined;
 }

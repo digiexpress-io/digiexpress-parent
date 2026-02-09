@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
 import { Box } from '@mui/material';
 
 import { Secondary } from '../eveli-setup/Secondary';
@@ -14,6 +14,17 @@ export const Route = createFileRoute('/secured/$locale/worker')({
 
 function Component() {
   const { mode } = Route.useSearch();
+  const location = useLocation();
+
+  // IMPORTANT: Let fileexplorer child route handle its own EveliApp layout
+  // This prevents nested EveliApp components which cause:
+  // - Duplicate CSS classes with same specificity
+  // - Conflicting drawer width settings (parent=300px vs child=450px)
+  // - Multiple shell layouts stacking on top of each other
+  // Instead of wrapping fileexplorer in our EveliApp, let it render its own
+  if (location.pathname.includes('/fileexplorer')) {
+    return <Outlet />;
+  }
 
   if (mode === 'CONTENT_ONLY') {
     return (<EveliApp contentOnly drawerOpen={false} main={Main} secondary={() => <></>} toolbar={() => <></>} />)

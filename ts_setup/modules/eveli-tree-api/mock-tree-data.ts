@@ -1,19 +1,25 @@
 import { TreeNode } from '../eveli-tree-api'
 
-
 export const mockTreeData: TreeNode[] = [
   {
     id: 'content',
     name: 'content',
     type: 'folder',
-    isExpanded: true,
+    comments: undefined,
+    expanded: true,
+    reference: false,
+    locked: false,
+    error: false,
     children: [
       {
         id: '000_index',
         name: '000_index',
         type: 'folder',
-        isExpanded: true,
-        isLocked: true,
+        comments: undefined,
+        expanded: true,
+        reference: false,
+        locked: true,
+        error: false,
         configOptions: [{
           devMode: true,
         }],
@@ -34,8 +40,27 @@ export const mockTreeData: TreeNode[] = [
             id: 'main.article',
             name: 'main.article',
             type: 'article',
-            isExpanded: true,
-            isLocked: false,
+            comments: [
+              {
+                comment: 'Found a typo in the content - should be "municipality" not "municipalty"',
+                author: 'Sarah Johnson',
+                created: '1.2.2025 14:30'
+              },
+              {
+                comment: 'The Finnish translation needs review by a native speaker',
+                author: 'Michael Chen',
+                created: '28.1.2025 10:15'
+              },
+              {
+                comment: 'Consider adding a confirmation dialog before deletion',
+                author: 'Tom Walsh',
+                created: '18.1.2025 11:35'
+              }
+            ],
+            expanded: true,
+            reference: false,
+            locked: false,
+            error: true,
             configOptions: [{
               disabledMode: true,
             }],
@@ -56,28 +81,16 @@ export const mockTreeData: TreeNode[] = [
                 nodeId: 'main.article'
               }
             ],
-            comments: [
-              {
-                comment: 'Found a typo in the content - should be "municipality" not "municipalty"',
-                author: 'Sarah Johnson',
-                created: '1.2.2025 14:30'
-              },
-              {
-                comment: 'The Finnish translation needs review by a native speaker',
-                author: 'Michael Chen',
-                created: '28.1.2025 10:15'
-              },
-              {
-                comment: 'Consider adding a confirmation dialog before deletion',
-                author: 'Tom Walsh',
-                created: '18.1.2025 11:35'
-              }
-            ],
             children: [
               {
                 id: 'fi-main',
                 name: 'fi',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 description: 'Tervetuloa Sipoon Oma asiointiin!',
                 labels: [
                   {
@@ -96,6 +109,11 @@ export const mockTreeData: TreeNode[] = [
                 id: 'sv-main',
                 name: 'sv',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 labels: [
                   {
                     id: 'sv-main-label-1',
@@ -113,6 +131,11 @@ export const mockTreeData: TreeNode[] = [
                 id: 'en-main',
                 name: 'en',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 labels: [
                   {
                     id: 'en-main-label-1',
@@ -132,6 +155,11 @@ export const mockTreeData: TreeNode[] = [
             id: 'info-gdpr.article',
             name: 'info-gdpr.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             configOptions: [{
               devMode: true,
               disabledMode: true,
@@ -163,8 +191,11 @@ export const mockTreeData: TreeNode[] = [
             id: 'general-message.service',
             name: 'general-message.service',
             type: 'service',
-            isExpanded: true,
-            isLocked: true,
+            comments: undefined,
+            expanded: true,
+            reference: false,
+            locked: true,
+            error: false,
             configOptions: [{
               devMode: true,
               assignableMode: true,
@@ -203,6 +234,11 @@ export const mockTreeData: TreeNode[] = [
                 id: 'fi-general',
                 name: 'fi',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 description: 'Lähetä viesti',
                 labels: [
                   {
@@ -221,6 +257,11 @@ export const mockTreeData: TreeNode[] = [
                 id: 'sv-general',
                 name: 'sv',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 labels: [
                   {
                     id: 'sv-general-label-1',
@@ -235,6 +276,11 @@ export const mockTreeData: TreeNode[] = [
             id: 'general-message.dialob',
             name: 'general-message.dialob',
             type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             labels: [
               {
                 id: 'general-dialob-label-1',
@@ -257,6 +303,11 @@ export const mockTreeData: TreeNode[] = [
             id: 'taskMsgFlow.flow',
             name: 'taskMsgFlow.flow',
             type: 'flow',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             configOptions: [{
               assignableMode: true,
               anonymousMode: true,
@@ -285,6 +336,11 @@ export const mockTreeData: TreeNode[] = [
         id: '100_residence',
         name: '100_residence',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         labels: [
           {
             id: 'residence-label-1',
@@ -302,6 +358,11 @@ export const mockTreeData: TreeNode[] = [
             id: 'main-residence.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Asuminen',
             configOptions: [{
               disabledMode: true,
@@ -311,12 +372,21 @@ export const mockTreeData: TreeNode[] = [
             id: 'general-message-ref1',
             name: 'general-message.service',
             type: 'service',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'public-inforeq.service',
             name: 'public-inforeq.service',
             type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             configOptions: [{
               devMode: true,
               assignableMode: true,
@@ -325,13 +395,22 @@ export const mockTreeData: TreeNode[] = [
           {
             id: 'public-inforeq.dialob',
             name: 'public-inforeq.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref1',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -339,6 +418,11 @@ export const mockTreeData: TreeNode[] = [
         id: '200_democracy',
         name: '200_democracy',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         labels: [
           {
             id: 'democracy-label-1',
@@ -371,18 +455,32 @@ export const mockTreeData: TreeNode[] = [
             id: 'main-democracy.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Demokratia'
           },
           {
             id: 'trustee-info-form.service',
             name: 'trustee-info-form.service',
             type: 'service',
-            isExpanded: true,
+            comments: undefined,
+            expanded: true,
+            reference: false,
+            locked: false,
+            error: false,
             children: [
               {
                 id: 'fi-trustee',
                 name: 'fi',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 description: 'Luottamushenkilön tietolomake'
               }
             ]
@@ -390,29 +488,52 @@ export const mockTreeData: TreeNode[] = [
           {
             id: 'trustee-info.dialob',
             name: 'trustee-info.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref2',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'trustee-travel-pay.service',
             name: 'trustee-travel-pay.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'trustee-travel-pay.dialob',
             name: 'trustee-travel-pay.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'general-message-ref2',
             name: 'general-message.service',
             type: 'service',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -420,23 +541,42 @@ export const mockTreeData: TreeNode[] = [
         id: '350_education',
         name: '350_education',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'main-education.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Koulutus'
           },
           {
             id: 'wilma-preschool.service',
             name: 'wilma-preschool.service',
             type: 'service',
-            isExpanded: true,
+            comments: undefined,
+            expanded: true,
+            reference: false,
+            locked: false,
+            error: false,
             children: [
               {
                 id: 'fi-wilma',
                 name: 'fi',
                 type: 'language',
+                comments: undefined,
+                expanded: false,
+                reference: false,
+                locked: false,
+                error: false,
                 description: 'Wilmatunnukset esiopetuslapsen huoltajalle'
               }
             ]
@@ -444,29 +584,52 @@ export const mockTreeData: TreeNode[] = [
           {
             id: 'wilma-preschool.dialob',
             name: 'wilma-preschool.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref3',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'protection-order-school.service',
             name: 'protection-order-school.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'protection-order-school.dialob',
             name: 'protection-order-school.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'general-message-ref3',
             name: 'general-message.service',
             type: 'service',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -474,27 +637,52 @@ export const mockTreeData: TreeNode[] = [
         id: '400_traffic-and-roads',
         name: '400_traffic-and-roads',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'main-traffic.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Kadut ja viheralueet'
           },
           {
             id: 'dig-permit.service',
             name: 'dig-permit.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'dig-permit.dialob',
             name: 'dig-permit.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskSplitFlow.flow',
             name: 'taskSplitFlow.flow',
             type: 'flow',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             configOptions: [{
               devMode: true,
               disabledMode: true,
@@ -504,28 +692,52 @@ export const mockTreeData: TreeNode[] = [
           {
             id: 'rent-street-area.service',
             name: 'rent-street-area.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'rent-street-area.dialob',
             name: 'rent-street-area.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'private-road-sign.service',
             name: 'private-road-sign.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'private-road-sign.dialob',
             name: 'private-road-sign.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'general-message-ref4',
             name: 'general-message.service',
             type: 'service',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -533,48 +745,92 @@ export const mockTreeData: TreeNode[] = [
         id: '425_invoicing',
         name: '425_invoicing',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'main-invoicing.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Laskutus'
           },
           {
             id: 'invoicing-erapaiva.service',
             name: 'invoicing-erapaiva.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'invoicing-erapaiva.dialob',
             name: 'invoicing-erapaiva.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref4',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'invoice-copy-request.service',
             name: 'invoice-copy-request.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'invoice-copy-request.dialob',
             name: 'invoice-copy-request.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'bank-account-info.service',
             name: 'bank-account-info.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'bank-account-info.dialob',
             name: 'bank-account-info.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -582,54 +838,102 @@ export const mockTreeData: TreeNode[] = [
         id: '517_sipoo-institute',
         name: '517_sipoo-institute',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'main-institute.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Sipoon opisto'
           },
           {
             id: 'teacher-info.service',
             name: 'teacher-info.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'teacher-info.dialob',
             name: 'teacher-info.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref5',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'teacher-travel-pay.service',
             name: 'teacher-travel-pay.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'teacher-travel-pay.dialob',
             name: 'teacher-travel-pay.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'study-voucher.service',
             name: 'study-voucher.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'study-voucher.dialob',
             name: 'study-voucher.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'general-message-ref5',
             name: 'general-message.service',
             type: 'service',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -637,6 +941,11 @@ export const mockTreeData: TreeNode[] = [
         id: '520_sipoo-water',
         name: '520_sipoo-water',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         configOptions: [{
           disabledMode: true,
         }],
@@ -645,49 +954,92 @@ export const mockTreeData: TreeNode[] = [
             id: 'main-water.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Sipoon Vesi'
           },
           {
             id: 'water-supply-maintenance.service',
             name: 'water-supply-maintenance.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'water-supply-maintenance.dialob',
             name: 'water-supply-maintenance.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref6',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'water-invoice-erapaiva.service',
             name: 'water-invoice-erapaiva.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'water-invoice-erapaiva.dialob',
             name: 'water-invoice-erapaiva.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'water-connection-statement.service',
             name: 'water-connection-statement.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'water-connection-statement.dialob',
             name: 'water-connection-statement.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'general-message-ref6',
             name: 'general-message.service',
             type: 'service',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           }
         ]
       },
@@ -695,48 +1047,92 @@ export const mockTreeData: TreeNode[] = [
         id: '650_leisure-time-and-youth',
         name: '650_leisure-time-and-youth',
         type: 'folder',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'main-leisure.article',
             name: 'main.article',
             type: 'article',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Vapaa-aika ja nuoret'
           },
           {
             id: 'sports-grant-settlement.service',
             name: 'sports-grant-settlement.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'sports-grant-settlement.dialob',
             name: 'sports-grant-settlement.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'taskGenericFlow-ref7',
             name: 'taskGenericFlow.flow',
             type: 'flow',
-            isReference: true
+            comments: undefined,
+            expanded: false,
+            reference: true,
+            locked: false,
+            error: false
           },
           {
             id: 'sports-fee-return.service',
             name: 'sports-fee-return.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'sports-fee-return.dialob',
             name: 'sports-fee-return.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'children-sport-grant.service',
             name: 'children-sport-grant.service',
-            type: 'service'
+            type: 'service',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           },
           {
             id: 'children-sport-grant.dialob',
             name: 'children-sport-grant.dialob',
-            type: 'dialob'
+            type: 'dialob',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false
           }
         ]
       }
@@ -746,21 +1142,41 @@ export const mockTreeData: TreeNode[] = [
     id: 'shared',
     name: 'shared',
     type: 'folder',
+    comments: undefined,
+    expanded: false,
+    reference: false,
+    locked: false,
+    error: false,
     children: [
       {
         id: 'shared-taskGenericFlow.flow',
         name: 'taskGenericFlow.flow',
-        type: 'flow'
+        type: 'flow',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false
       },
       {
         id: 'shared-taskMsgFlow.flow',
         name: 'taskMsgFlow.flow',
-        type: 'flow'
+        type: 'flow',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false
       },
       {
         id: 'shared-taskSplitFlow.flow',
         name: 'taskSplitFlow.flow',
-        type: 'flow'
+        type: 'flow',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false
       }
     ]
   },
@@ -768,11 +1184,21 @@ export const mockTreeData: TreeNode[] = [
     id: 'links',
     name: 'links',
     type: 'folder',
+    comments: undefined,
+    expanded: false,
+    reference: false,
+    locked: false,
+    error: false,
     children: [
       {
         id: 'sipoo-main-site.link',
         name: 'sipoo-main-site.link',
         type: 'link',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         description: 'https://www.sipoo.fi',
         configOptions: [{
           devMode: true,
@@ -781,57 +1207,101 @@ export const mockTreeData: TreeNode[] = [
       {
         id: 'wilma-info.link',
         name: 'wilma-info.link',
-        type: 'link'
+        type: 'link',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false
       },
       {
         id: 'lupapiste.link',
         name: 'lupapiste.link',
         type: 'link',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         configOptions: [{
           disabledMode: true,
         }]
       }
     ]
   },
-   {
+  {
     id: 'printouts',
     name: 'printouts',
     type: 'folder',
+    comments: undefined,
+    expanded: false,
+    reference: false,
+    locked: false,
+    error: false,
     children: [
       {
         id: 'sipoo-main-logo.png',
         name: 'sipoo-main-logo.png',
         type: 'image',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         description: 'logo: black and white'
       },
       {
         id: 'sipoo-color-logo.png',
         name: 'sipoo-color-logo.png',
         type: 'image',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         description: 'logo: full color version'
       },
       {
         id: 'municipal-seal.svg',
         name: 'municipal-seal.svg',
         type: 'image',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         description: 'official municipal seal'
       },
       {
         id: 'new-construction-permit.printout',
         name: 'new-construction-permit.printout',
         type: 'printout',
-        isExpanded: false,
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'fi-construction-permit',
             name: 'fi',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Finnish construction permit template'
           },
-           {
+          {
             id: 'sv-construction-permit',
             name: 'sv',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Swedish construction permit template'
           }
         ]
@@ -840,24 +1310,43 @@ export const mockTreeData: TreeNode[] = [
         id: 'municipal-services-guide.printout',
         name: 'municipal-services-guide.printout',
         type: 'printout',
-        isExpanded: false,
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'fi-services-guide',
             name: 'fi',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Kunnan palveluopas'
           },
           {
             id: 'sv-services-guide',
             name: 'sv',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Kommunal servicehandbok'
           },
           {
             id: 'en-services-guide',
             name: 'en',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Municipal services guide'
           }
         ]
@@ -866,11 +1355,21 @@ export const mockTreeData: TreeNode[] = [
         id: 'waste-management-info.printout',
         name: 'waste-management-info.printout',
         type: 'printout',
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'fi-waste-info',
             name: 'fi',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Jätehuolto-ohje'
           }
         ]
@@ -879,30 +1378,54 @@ export const mockTreeData: TreeNode[] = [
         id: 'tax-information-leaflet.printout',
         name: 'tax-information-leaflet.printout',
         type: 'printout',
-        isExpanded: false,
+        comments: undefined,
+        expanded: false,
+        reference: false,
+        locked: false,
+        error: false,
         children: [
           {
             id: 'fi-tax-info',
             name: 'fi',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Verotietoesite'
           },
           {
             id: 'sv-tax-info',
             name: 'sv',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Skatteinformationsbroschyr'
           },
           {
             id: 'en-tax-info',
             name: 'en',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Tax information leaflet'
           },
           {
             id: 'ee-tax-info',
             name: 'ee',
             type: 'template',
+            comments: undefined,
+            expanded: false,
+            reference: false,
+            locked: false,
+            error: false,
             description: 'Maksuteabe leht'
           }
         ]

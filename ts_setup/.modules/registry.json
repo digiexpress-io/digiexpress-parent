@@ -1386,18 +1386,19 @@
       "actualDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils"
+        "@mui/utils",
+        "@mui/icons-material"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils"
+        "@mui/utils",
+        "@mui/icons-material"
       ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/eveli-primitives",
-        "@mui/icons-material"
+        "@dxs-ts/eveli-primitives"
       ]
     },
     "@dxs-ts/gamut-api": {
@@ -3027,8 +3028,8 @@
         "@mui/x-tree-view",
         "@mui/utils",
         "@tanstack/react-router",
-        "@dxs-ts/envir-fetch",
         "@monaco-editor/react",
+        "@dxs-ts/envir-fetch",
         "monaco-editor"
       ],
       "actualExternalDependencies": [
@@ -4502,6 +4503,6 @@
       ]
     }
   },
-  "checksum": "e296261578987f4da99dcce48cd24da45423fcff1811abeb6833c833bf139627",
-  "generatedAt": "2026-01-30T07:33:45.044Z"
+  "checksum": "32c2e67ef7795659f2249e6c25c3b299caf83d36b4094cf5713d69522e1548e3",
+  "generatedAt": "2026-02-06T11:24:21.240Z"
 }

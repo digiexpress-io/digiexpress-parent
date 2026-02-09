@@ -1,7 +1,8 @@
 use ecow::EcoVec;
 use itertools::Itertools;
-use typst::foundations::{Dict, Str, Value};
+use typst::foundations::{Bytes, Dict, Str, Value};
 use typst::{ Features, Library };
+use base64::{ Engine, engine::general_purpose };
 
 
 use crate::pdf_compiler::{PdfDataModule};
@@ -31,6 +32,17 @@ fn map_from_json_to_typst_value(value: serde_json::Value) -> Option<Value> {
         },
 
         serde_json::Value::Object(obj) => {
+            if let Some(serde_json::Value::String(base64_str)) = obj.get("__base64__") {
+                match general_purpose::STANDARD.decode(base64_str) {
+                    Ok(decoded_bytes) => {
+                        let bytes = Bytes::new(decoded_bytes);
+                        return Some(Value::Bytes(bytes));
+                    },
+                    Err(_) => {
+                    }
+                }
+            }
+            
             let mut dict = Dict::new();
             for (key, val) in obj {
                 if let Some(typst_val) = map_from_json_to_typst_value(val) {
