@@ -20,6 +20,7 @@ public class MergeTree {
   
   public MergeTreeResult close() {
     
+
   }
   
   @Value

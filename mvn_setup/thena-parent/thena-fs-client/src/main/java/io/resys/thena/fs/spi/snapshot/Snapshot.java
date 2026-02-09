@@ -4,19 +4,18 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.BiConsumer;
 
-import io.resys.thena.fs.api.commits.CommitBuilder.MergeFile;
-import io.resys.thena.fs.api.commits.CommitBuilder.MergeFolder;
-import io.resys.thena.fs.api.commits.CommitBuilder.NewFile;
-import io.resys.thena.fs.api.commits.CommitBuilder.NewFolder;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.MergeFileCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.MergeFolderCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.NewFileCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.NewFolderCommand;
+import io.resys.thena.fs.spi.snapshot.ChangeCommand.RmCommand;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
 import io.resys.thena.fs.tables.ImmutablePersistenceUnit;
 import io.resys.thena.support.RepoAssert;
@@ -36,18 +35,6 @@ public class Snapshot {
   private final SnapshotLogger sp_logger = new SnapshotLogger();
   private final List<ChangeCommand> changes = new ArrayList<>();
 
-  
-  public interface ChangeCommand {};
-  
-  public static record RmCommand(String docId) implements ChangeCommand {}
-  
-  public static record NewFolderCommand(Consumer<NewFolder> consumer) implements ChangeCommand {}
-  public static record NewFileCommand(Consumer<NewFile> consumer) implements ChangeCommand {}
-  
-  public static record MergeFolderCommand(String docId, BiConsumer<Node, MergeFolder> consumer) implements ChangeCommand {}
-  public static record MergeFileCommand(String docId, BiConsumer<Node, MergeFile> consumer) implements ChangeCommand {}
-
-  
   private Tuple2<Node, Optional<Props>> visitNewFolderCommand(NewFolderCommand command) {
     final var merger = new NewFolderImpl();
     command.consumer().accept(merger);
@@ -75,8 +62,8 @@ public class Snapshot {
     RepoAssert.isTrue(lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
-    final var prevNode = prev.getTransitives().getNodesById().get(command.docId);
-    RepoAssert.notNull(prevNode, () -> "Can't find target node(props) with id = '"+ command.docId + "'!");
+    final var prevNode = prev.getTransitives().getNodesById().get(command.docId());
+    RepoAssert.notNull(prevNode, () -> "Can't find target node(props) with id = '"+ command.docId() + "'!");
     
     final var merger = new MergeFolderImpl(prevNode); 
     command.consumer().accept(prevNode, merger);
@@ -92,8 +79,8 @@ public class Snapshot {
     RepoAssert.isTrue(this.lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
-    final var prevNode = prev.getTransitives().getNodesById().get(command.docId);
-    RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId + "'!");
+    final var prevNode = prev.getTransitives().getNodesById().get(command.docId());
+    RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId() + "'!");
     
     final var merger = new MergeFileImpl(prevNode);
     command.consumer().accept(prevNode, merger);
@@ -109,7 +96,7 @@ public class Snapshot {
   private Tree visitTree(List<Node> nodes, List<Props> props, List<Blob> blobs, List<Node> rm) {
     final Tree result = lock.isPresent() ?
       new MergeTree(lock.get(), nodes, props, blobs).close().getTree() : 
-      new NewTree(nodes, props, blobs).close().getTree();
+      Tree.newInstance(nodes).build();
     
     if(lock.isPresent()) {
       sp_logger.mergeTree(lock.get().getTransitives().getTree(), result);
@@ -217,7 +204,7 @@ public class Snapshot {
     for(final var change : changes) {
       if(change instanceof RmCommand) {
       
-        removals.add(((RmCommand) change).docId);
+        removals.add(((RmCommand) change).docId());
         
       } else if(change instanceof NewFolderCommand) {
         final var result = visitNewFolderCommand((NewFolderCommand) change);
@@ -257,7 +244,7 @@ public class Snapshot {
     
     final var rm = visitRemovals(removals, nodes);
 
-    // tree 
+    // tree, cut off - everything gets real in here... no dups, all must be valid in here 
     final var tree = visitTree(nodes, props, blobs, rm);
     
     // commit
