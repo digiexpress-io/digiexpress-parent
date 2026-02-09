@@ -262,7 +262,7 @@ export const StyledListItem = styled(ListItem, {
     prop !== 'error'
 })<{
   level: number, isDarkTheme: boolean, error: boolean
-}>(({ theme, level, error, isDarkTheme }) => ({
+}>(({ theme, level, isDarkTheme }) => ({
 
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',
