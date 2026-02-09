@@ -7,7 +7,6 @@ import io.resys.thena.fs.api.commits.CommitBuilder.NewFolder;
 import io.resys.thena.fs.api.commits.CommitBuilder.PropsBuilder;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
-import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.Value;
 
 @RequiredArgsConstructor
 public class NewFolderImpl implements NewFolder {
-  private final Optional<Ref> lock;
   
   private String folderPath;
   private String folderName;
@@ -60,7 +58,7 @@ public class NewFolderImpl implements NewFolder {
     final var blobId = Optional.<String>empty(); 
     
     final var props = Optional.ofNullable(this.folderProps).map(p -> {
-      final var builder = new PropsBuilderImpl(lock);
+      final var builder = new PropsBuilderImpl(Optional.empty());
       p.accept(builder);
       return builder.close().getProps();
     });

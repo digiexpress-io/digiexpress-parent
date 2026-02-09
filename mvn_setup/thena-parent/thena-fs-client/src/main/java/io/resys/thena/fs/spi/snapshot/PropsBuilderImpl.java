@@ -13,41 +13,49 @@ import lombok.Value;
 
 @RequiredArgsConstructor
 public class PropsBuilderImpl implements PropsBuilder {
-  private final Optional<Ref> lock;
+  private final Optional<Props> lock;
   
-  private JsonObject propsLabels;
-  private JsonObject propsComments;
-  private JsonObject propsPermissions;
-  private JsonObject propsFlags;
+  private MutableField<JsonObject> propsLabels = new MutableField<JsonObject>();
+  private MutableField<JsonObject> propsComments = new MutableField<JsonObject>();
+  private MutableField<JsonObject> propsPermissions = new MutableField<JsonObject>();
+  private MutableField<JsonObject> propsFlags = new MutableField<JsonObject>();
   private boolean validated = false;
 
+  
   @Override
   public PropsBuilder propsLabels(JsonObject labels) {
-    this.propsLabels = labels;
+    this.propsLabels.withNewValue(labels);
     return this;
   }
 
   @Override
   public PropsBuilder propsComments(JsonObject comments) {
-    this.propsComments = comments;
+    this.propsComments.withNewValue(comments);
     return this;
   }
 
   @Override
   public PropsBuilder propsPermissions(JsonObject permissions) {
-    this.propsPermissions = permissions;
+    this.propsPermissions.withNewValue(permissions);
     return this;
   }
 
   @Override
   public PropsBuilder propsFlags(JsonObject flags) {
-    this.propsFlags = flags;
+    this.propsFlags.withNewValue(flags);
     return this;
   }
 
   @Override
   public void build() {
-    validateProps();
+    RepoAssert.isTrue(
+        !(
+          propsComments == null || 
+          propsLabels == null || 
+          propsFlags == null ||
+          propsPermissions == null
+        ), 
+        () -> "props cannot be all nulls if provided");
     this.validated = true;
   }
   
@@ -64,17 +72,7 @@ public class PropsBuilderImpl implements PropsBuilder {
     return new NewPropsResult(props);
   }
   
-  private void validateProps() {
-    RepoAssert.isTrue(
-      !(
-        propsComments == null || 
-        propsLabels == null || 
-        propsFlags == null ||
-        propsPermissions == null
-      ), 
-      () -> "props cannot be all nulls if provided");
-  }
-  
+
   @Value
   public static class NewPropsResult {
     Props props;

@@ -48,8 +48,8 @@ public class Snapshot {
   public static record MergeFileCommand(String docId, BiConsumer<Node, MergeFile> consumer) implements ChangeCommand {}
 
   
-  private Tuple2<Node, Props> visitNewFolderCommand(NewFolderCommand command) {
-    final var merger = new NewFolderImpl(lock);
+  private Tuple2<Node, Optional<Props>> visitNewFolderCommand(NewFolderCommand command) {
+    final var merger = new NewFolderImpl();
     command.consumer().accept(merger);
     final var result = merger.close();
     
@@ -59,8 +59,8 @@ public class Snapshot {
     return Tuple2.of(newNode, newProps);
   }
 
-  private Tuple3<Node, Props, Blob> visitNewFileCommand(NewFileCommand command) {
-    final var merger = new NewFileImpl(lock);
+  private Tuple3<Node, Optional<Props>, Blob> visitNewFileCommand(NewFileCommand command) {
+    final var merger = new NewFileImpl();
     command.consumer().accept(merger);
     
     final var result = merger.close();
@@ -71,14 +71,14 @@ public class Snapshot {
     return Tuple3.of(newNode, newProps, newBlobs);
   }
   
-  private Tuple2<Node, Props>  visitMergeFolderCommand(MergeFolderCommand command) {
+  private Tuple2<Node, Optional<Props>>  visitMergeFolderCommand(MergeFolderCommand command) {
     RepoAssert.isTrue(lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
     final var prevNode = prev.getTransitives().getNodesById().get(command.docId);
     RepoAssert.notNull(prevNode, () -> "Can't find target node(props) with id = '"+ command.docId + "'!");
     
-    final var merger = new MergeFolderImpl(lock.get(), prevNode); 
+    final var merger = new MergeFolderImpl(prevNode); 
     command.consumer().accept(prevNode, merger);
     
     final var result = merger.close();
@@ -88,14 +88,14 @@ public class Snapshot {
     return Tuple2.of(mergeNode, mergeProps);
   }
   
-  private Tuple3<Node, Props, Blob> visitMergeFileCommand(MergeFileCommand command) {
+  private Tuple3<Node, Optional<Props>, Blob> visitMergeFileCommand(MergeFileCommand command) {
     RepoAssert.isTrue(this.lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
     final var prevNode = prev.getTransitives().getNodesById().get(command.docId);
     RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId + "'!");
     
-    final var merger = new MergeFileImpl(prev, prevNode);
+    final var merger = new MergeFileImpl(prevNode);
     command.consumer().accept(prevNode, merger);
     final var result = merger.close();
     
@@ -170,10 +170,9 @@ public class Snapshot {
             
             removals.contains(node.getId()) || 
             removals.contains(node.getNodeId()) ||
+            removals.contains(node.getFullPath()) ||
             
-            
-            removals.contains(node.getNodePath()) || 
-            removals.contains(node.getNodePath() + "/" + node.getNodeName())
+            (node.getNodePath().isPresent() && removals.contains(node.getNodePath().get()))
         ))
         .toList();
       
@@ -186,8 +185,9 @@ public class Snapshot {
         .stream().filter(node -> (
             removals.contains(node.getId()) || 
             removals.contains(node.getNodeId()) ||
-            removals.contains(node.getNodePath()) || 
-            removals.contains(node.getNodePath() + "/" + node.getNodeName())
+            
+            removals.contains(node.getFullPath()) ||
+            (node.getNodePath().isPresent() && removals.contains(node.getNodePath().get()))
         ))
         .toList();
       
@@ -222,23 +222,33 @@ public class Snapshot {
       } else if(change instanceof NewFolderCommand) {
         final var result = visitNewFolderCommand((NewFolderCommand) change);
         nodes.add(result.getItem1());
-        props.add(result.getItem2());
+        if(result.getItem2().isPresent()) {
+          props.add(result.getItem2().get());  
+        }
         
       } else if(change instanceof NewFileCommand) {
         final var result = visitNewFileCommand((NewFileCommand) change);
         nodes.add(result.getItem1());
-        props.add(result.getItem2());
+        
+        if(result.getItem2().isPresent()) {
+          props.add(result.getItem2().get());  
+        }
+        
         blobs.add(result.getItem3());
         
       } else if(change instanceof MergeFolderCommand) {
         final var result = visitMergeFolderCommand((MergeFolderCommand) change);
         nodes.add(result.getItem1());
-        props.add(result.getItem2());
+        if(result.getItem2().isPresent()) {
+          props.add(result.getItem2().get());  
+        }
         
       } else if(change instanceof MergeFileCommand) {
         final var result = visitMergeFileCommand((MergeFileCommand) change);
         nodes.add(result.getItem1());
-        props.add(result.getItem2());
+        if(result.getItem2().isPresent()) {
+          props.add(result.getItem2().get());  
+        }
         blobs.add(result.getItem3());
       }
       

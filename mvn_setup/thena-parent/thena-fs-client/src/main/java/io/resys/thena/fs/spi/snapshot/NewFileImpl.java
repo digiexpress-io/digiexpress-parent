@@ -8,7 +8,6 @@ import io.resys.thena.fs.api.commits.CommitBuilder.PropsBuilder;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
-import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
@@ -18,8 +17,6 @@ import lombok.Value;
 
 @RequiredArgsConstructor
 public class NewFileImpl implements NewFile {
-  
-  private final Optional<Ref> lock;
   
   private String filePath;
   private String fileName;
@@ -80,7 +77,7 @@ public class NewFileImpl implements NewFile {
     final var blob = Blob.newInstance(this.fileValue, this.fileType).build();
     
     final var props = Optional.ofNullable(this.fileProps).map(p -> {
-      final var builder = new PropsBuilderImpl(lock);
+      final var builder = new PropsBuilderImpl(Optional.empty());
       p.accept(builder);
       return builder.close().getProps();
     });

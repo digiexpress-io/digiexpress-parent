@@ -7,7 +7,6 @@ import io.resys.thena.fs.api.commits.CommitBuilder.MergeFolder;
 import io.resys.thena.fs.api.commits.CommitBuilder.PropsBuilder;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
-import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -15,7 +14,6 @@ import lombok.Value;
 
 @RequiredArgsConstructor
 public class MergeFolderImpl implements MergeFolder {
-  private final Ref lock;
   private final Node prevNode;
   
   private final MutableField<String> folderPath = new MutableField<String>();
@@ -54,8 +52,8 @@ public class MergeFolderImpl implements MergeFolder {
     
     // Merge props if provided
     final var nextProps = Optional.ofNullable(folderProps).map(p -> {
-      final var builder = new PropsBuilderImpl(Optional.of(lock));
       final var prevProps = Optional.ofNullable(prevNode.getTransitives().getProps());
+      final var builder = new PropsBuilderImpl(prevProps);
       p.accept(prevProps, builder);
       return builder.close().getProps();
     });
