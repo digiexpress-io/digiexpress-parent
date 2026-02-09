@@ -1,10 +1,31 @@
 package io.resys.thena.fs.spi.snapshot;
 
+/*-
+ * #%L
+ * thena-fs-client
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.Node;
@@ -28,6 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class Snapshot {
+  private final String tenantId;
   private final Optional<Ref> lock;
   private final String branchName;
   
@@ -237,9 +259,11 @@ public class Snapshot {
           props.add(result.getItem2().get());  
         }
         blobs.add(result.getItem3());
+      } else {
+        RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());        
       }
       
-      RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());
+
     }
     
     final var rm = visitRemovals(removals, nodes);
@@ -255,6 +279,10 @@ public class Snapshot {
     log.trace("Commiting to branch_name: '{}', commit_id: '{}', commit_message: '{}'", branch.getRefName(), commit.getId(), commit.getCommitMessage());
     
     // finalize 
-    return persistenceUnit.build();
+    return persistenceUnit
+        .status(BatchStatus.OK)
+        .tenantId(tenantId)
+        .log("")
+        .build();
   }
 }

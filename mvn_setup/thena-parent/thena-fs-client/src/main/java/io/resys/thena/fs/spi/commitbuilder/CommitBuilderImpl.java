@@ -1,5 +1,25 @@
 package io.resys.thena.fs.spi.commitbuilder;
 
+/*-
+ * #%L
+ * thena-fs-client
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +42,7 @@ import io.resys.thena.fs.spi.snapshot.ChangeCommand.NewFolderCommand;
 import io.resys.thena.fs.spi.snapshot.ChangeCommand.RmCommand;
 import io.resys.thena.fs.spi.snapshot.Snapshot;
 import io.resys.thena.fs.tables.FsDb;
+import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
@@ -152,17 +173,39 @@ public class CommitBuilderImpl implements CommitBuilder {
         .commitMessage(commitMessageValue)
         .tenantId(tenantId)
         .build();
-    return this.db_uni.onItem().transformToUni(db -> db.withTransaction(scope, this::visitTransaction));
+    return this.db_uni
+        .onItem().transformToUni(db -> db.withTransaction(scope, this::visitTransaction))
+        .onFailure().recoverWithItem(this::visitFailure);
   }
+  
+
   
   private Uni<CommitResult> visitTransaction(FsDb tx) {
     return visitLock(tx)
         .onItem().transformToUni(lock -> visitPersistenceUnit(tx, lock))
-        .onItem().transform(this::visitSuccess)
-        .onFailure().recoverWithItem(this::visitFailure);
+        .onItem().transform(this::visitSuccess);
   }
   
   private CommitResult visitFailure(Throwable t) {
+    if(t instanceof FsBuilderException) {
+      final var fs = (FsBuilderException) t;
+      final var builder = ImmutableCommitResult.builder()
+          .tenantId(tenantId)
+          .status(CommitResultStatus.ERROR)
+          .addMessages(ImmutableMessage.builder()
+              .exception(fs)
+              .text(fs.getMessage())
+              .build());
+      
+      if(t.getCause() != null) {
+        return builder
+          .addMessages(ImmutableMessage.builder().text(fs.getCause().getMessage()).build())
+          .build();
+      }
+      
+      return builder.build();
+    }
+    
     return ImmutableCommitResult.builder()
         .tenantId(tenantId)
         .status(CommitResultStatus.ERROR)
@@ -182,8 +225,9 @@ public class CommitBuilderImpl implements CommitBuilder {
             .toList()
       )
       .addAllMessages(unit.getCommitLogs())
+      .tenantId(tenantId)
       .status(mapCommitStatus(unit.getStatus()))
-      .commit(unit.getCommitInserts().getLast())
+      .commit(unit.getCommitInserts().isEmpty() ? null : unit.getCommitInserts().getLast())
       .build();
   }
 
@@ -206,7 +250,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   
   private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
     final var createdAt = commitCreatedAtValue != null ? commitCreatedAtValue : OffsetDateTime.now();
-    final var snapshot = new Snapshot(lock, branchNameValue);
+    final var snapshot = new Snapshot(tenantId, lock, branchNameValue);
     final var unit = snapshot.addAll(this.changes).build(commitAuthorValue, commitMessageValue, createdAt);
     return tx.builder().from(unit).persist();
   }

@@ -81,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j(topic = LogConstants.SHOW_COMMIT)
 public class SnapshotLogger {
-  private static final DateTimeFormatter UTC_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss UTC");
+  private static final DateTimeFormatter UTC_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'");
   
   private final StringBuilder data = new StringBuilder();
   private boolean fullDiff = false;

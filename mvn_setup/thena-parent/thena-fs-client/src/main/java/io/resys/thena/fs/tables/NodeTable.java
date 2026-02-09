@@ -1,5 +1,25 @@
 package io.resys.thena.fs.tables;
 
+/*-
+ * #%L
+ * thena-fs-client
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
@@ -34,7 +54,7 @@ import io.vertx.mutiny.sqlclient.Row;
         WHERE nodes.id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % nodes have null id, node_path or node_name', missing_count;
+            RAISE EXCEPTION 'Node(code 001) validation failed: % nodes have null id, node_path or node_name', missing_count;
         END IF;
   
         -- Validate id uniqueness within the tree
@@ -47,7 +67,7 @@ import io.vertx.mutiny.sqlclient.Row;
         ) duplicates;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % duplicate id values in tree', missing_count;
+            RAISE EXCEPTION 'Node(code 002) validation failed: % duplicate id values in tree', missing_count;
         END IF;
     
         -- Validate that node_id, node_path and node_name are not null
@@ -56,7 +76,7 @@ import io.vertx.mutiny.sqlclient.Row;
         WHERE nodes.node_id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % nodes have null node_id, node_path or node_name', missing_count;
+            RAISE EXCEPTION 'Node(code 003) validation failed: % nodes have null node_id, node_path or node_name', missing_count;
         END IF;
   
         -- Validate node_id uniqueness within the tree
@@ -69,7 +89,7 @@ import io.vertx.mutiny.sqlclient.Row;
         ) duplicates;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % duplicate node_id values in tree', missing_count;
+            RAISE EXCEPTION 'Node(code 004) validation failed: % duplicate node_id values in tree', missing_count;
         END IF;
  
     
@@ -79,7 +99,7 @@ import io.vertx.mutiny.sqlclient.Row;
         WHERE nodes.node_path IS NULL OR nodes.node_name IS NULL;
 
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % nodes have null node_path or node_name', missing_count;
+            RAISE EXCEPTION 'Node(code 005) validation failed: % nodes have null node_path or node_name', missing_count;
         END IF;
 
         -- Validate path + name uniqueness within the tree
@@ -92,7 +112,7 @@ import io.vertx.mutiny.sqlclient.Row;
         ) duplicates;
 
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % duplicate path+name combinations in tree', missing_count;
+            RAISE EXCEPTION 'Node(code 006) validation failed: % duplicate path+name combinations in tree', missing_count;
         END IF;
 
         -- Validate blob_id references
@@ -102,7 +122,7 @@ import io.vertx.mutiny.sqlclient.Row;
         WHERE nodes.blob_id IS NOT NULL AND b.id IS NULL;
 
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % blob_id references do not exist', missing_count;
+            RAISE EXCEPTION 'Node(code 007) validation failed: % blob_id references do not exist', missing_count;
         END IF;
 
         -- Validate props_id references
@@ -112,7 +132,7 @@ import io.vertx.mutiny.sqlclient.Row;
         WHERE nodes.props_id IS NOT NULL AND p.id IS NULL;
 
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Validation failed: % props_id references do not exist', missing_count;
+            RAISE EXCEPTION 'Node(code 008) validation failed: % props_id references do not exist', missing_count;
         END IF;
 
         RETURN NEW;

@@ -42,4 +42,10 @@ public class RegistryMetamodel {
   String tenantType;
   @Builder.Default
   List<String> nonTenantTables = List.of();  // ["process", "process_id_seq"]
+  
+  
+  public String getExceptionClassName() {
+    final var exceptionClassName = name + "BuilderException";
+    return exceptionClassName;
+  }
 }

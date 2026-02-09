@@ -1,13 +1,35 @@
 package io.resys.thena.fs.tables;
 
+/*-
+ * #%L
+ * thena-fs-client
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.List;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.entities.Tree;
 import io.resys.thena.fs.entities.ImmutableTree;
+import io.resys.thena.fs.entities.Tree;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -60,7 +82,12 @@ public interface TreeTable {
     sql = """
       INSERT INTO {tree}
       (id, tree_nodes)
-      VALUES($1, $2)
+      VALUES($1,
+      
+        ARRAY(
+          SELECT node::{node} FROM jsonb_populate_recordset(NULL::{node}, $2::jsonb) as node
+        )
+      )
     """,
     propsMapper = TreeInsertMapper.class
   )
@@ -97,14 +124,40 @@ public interface TreeTable {
   class TreeInsertMapper implements TenantSql.PropsMapper<Tree> {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tree tree) {
-      // Note: Complex mapping for node[] array would need custom logic
-      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
+      // 
+      /**
+       * Note: Complex mapping for node[] array would need custom logic
+       *   id TEXT,
+       *   node_id TEXT, -- not part of hash calculation, technical id of the object (user api generated)
+       *   node_path TEXT,
+       *   node_name TEXT,
+       *   blob_id TEXT,
+       *   props_id TEXT
+       */
+      
+      final var nodes = tree.getTreeNodes().stream()
+          .map(node -> JsonObject.of(
+              "id", node.getId(),
+              "node_id", node.getNodeId(),
+              "node_path", node.getNodePath().orElse(null),
+              "node_name", node.getNodeName(),
+              "blob_id", node.getBlobId().orElse(null),
+              "props_id", node.getPropsId().orElse(null)
+              )
+          )
+          .toArray();
+      
+      return io.vertx.mutiny.sqlclient.Tuple.of(
         tree.getId(),
-        null // TODO: Convert List<FsNode> to PostgreSQL node[] array
-      });
+        JsonArray.of(nodes)
+        
+        //tree.getTreeNodes().stream().toArray(Tuple[]::new)
+      );
     }
   }
 
+  
+  
   class TreeUpdateMapper implements TenantSql.PropsMapper<Tree> {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tree tree) {
