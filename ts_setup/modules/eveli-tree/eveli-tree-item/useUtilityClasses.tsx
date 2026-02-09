@@ -196,7 +196,7 @@ export const EveliTreeItemRoot = styled('div', {
 
     [`& .${MUI_NAME}-iconConfig`]: {
       fontSize: '14px',
-      color: isDarkTheme ? TreeColors.semantic.warning : TreeColors.semantic.warningLight,
+      color: isDarkTheme ? TreeColors.dark.text : TreeColors.light.text,
     },
   };
 });
@@ -300,21 +300,15 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
 }) => {
   return (
     <ListItemText primary={<Typography variant='subtitle2' sx={{
-        color: error
-          ? (isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight)
-          : getNodeColor(nodeType, isDarkTheme),
+      color: error
+        ? (isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight)
+        : getNodeColor(nodeType, isDarkTheme),
       fontWeight: isDarkTheme ? 400 : 500,
-      }}
+    }}
     >
       {nodeName}
       {description && (
-        <Typography component='span' variant='caption'
-          sx={{
-            ml: 1,
-            color: TreeColors.dark.textMuted,
-            fontStyle: 'italic'
-          }}
-        >
+        <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
           - "{description}"
         </Typography>
       )}
