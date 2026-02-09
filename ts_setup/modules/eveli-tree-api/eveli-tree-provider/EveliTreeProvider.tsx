@@ -1,9 +1,10 @@
-import React, { act } from 'react';
+import React from 'react';
 import { TreeNode } from '../tree-types';
 
 export interface EveliTreeOpenTab {
   node: TreeNode;
   pathToTopParent: string;
+
 }
 
 export interface EveliTreeContextType {
@@ -12,6 +13,7 @@ export interface EveliTreeContextType {
   activeTabIndex: number;
   activeTabPath: string;
   activeNode: TreeNode | undefined;
+  isChildError: (node: TreeNode) => boolean; 
   openAsset: (asset: TreeNode, pathToTopParent: string) => void;
   closeTab: (index: number) => void;
   setActiveTab: (index: number) => void;
@@ -49,7 +51,7 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
 
       const newTab: EveliTreeOpenTab = {
         node: asset,
-        pathToTopParent
+        pathToTopParent,
       };
       const newTabs = [...prevTabs, newTab];
       setActiveTabIndex(newTabs.length - 1);
@@ -79,9 +81,20 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
     });
   }, []);
 
+  const isChildError = React.useCallback((node: TreeNode): boolean => {
+    if (node.error) {
+      return true;
+    }
+    if (node.children) {
+      return node.children.some(child => isChildError(child));
+    }
+    return false;
+  }, []);
+
   const contextValue: EveliTreeContextType = React.useMemo(() => {
     return {
       isDarkMode,
+      isChildError,
       openTabs,
       activeTabIndex,
       activeTabPath,
@@ -91,8 +104,7 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
       setActiveTab,
       setIsDarkMode,
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode
-  ]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError]);
 
   return (
     <EveliTreeContext.Provider value={contextValue}>

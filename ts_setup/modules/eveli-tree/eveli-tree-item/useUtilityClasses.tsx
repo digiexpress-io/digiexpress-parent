@@ -277,12 +277,8 @@ export const StyledListItem = styled(ListItem, {
   '&:hover': {
     backgroundColor: isDarkTheme ? TreeColors.dark.surface : TreeColors.light.surface,
   },
-  ...error && {
-    backgroundColor: alpha(isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight, 0.1),
-    '&:hover': {
-      backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2),
-    },
-  }
+
+
 }));
 
 interface StyledListItemTextProps {
