@@ -25,7 +25,7 @@ export const TreeColors = {
 
   // Semantic accent colors
   semantic: {
-    danger: '#bc1010',         // Error states and cancel buttons ONLY
+    danger: '#dc1e1e',         // Error states and cancel buttons ONLY
     warning: '#ffa500',        // Lock states, warnings (dark theme)
     warningLight: '#ff8c00',   // Lock states, warnings (light theme) - changed from red to orange
     success: '#228b22',        // Success states, links (also used for link icons in light theme)

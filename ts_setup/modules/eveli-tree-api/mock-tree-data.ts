@@ -615,11 +615,11 @@ export const mockTreeData: TreeNode[] = [
             id: 'protection-order-school.dialob',
             name: 'protection-order-school.dialob',
             type: 'dialob',
+            error: true,
             comments: undefined,
             expanded: false,
             reference: false,
             locked: false,
-            error: false
           },
           {
             id: 'general-message-ref3',

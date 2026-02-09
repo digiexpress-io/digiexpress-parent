@@ -7,6 +7,7 @@ import { TreeColors } from '../tree-theme';
 export const EveliTreeTabs: React.FC = () => {
   const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useEveliTree();
 
+
   const handleTabClick = (index: number) => {
     setActiveTab(index);
   };
@@ -23,17 +24,19 @@ export const EveliTreeTabs: React.FC = () => {
   const TabContainer = isDarkMode ? StyledTabContainerDark : StyledTabContainerLight;
   const Tab = isDarkMode ? StyledTabDark : StyledTabLight;
 
+
   return (
     <TabContainer>
       {openTabs.map((tab, index) => (
         <Tab
-          key={tab.id}
+          key={tab.node.id}
           isActive={activeTabIndex === index}
           onClick={() => handleTabClick(index)}
           isFirst={index === 0}
           isLast={index === openTabs.length - 1}
+          error={tab.node.error}
         >
-          <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">
+          <Tooltip title={tab.node.name} arrow enterDelay={700} placement="bottom">
             <Typography variant='subtitle2'
               sx={{
                 overflow: 'hidden',
@@ -41,11 +44,13 @@ export const EveliTreeTabs: React.FC = () => {
                 whiteSpace: 'nowrap',
                 flex: 1,
                 minWidth: 0,
-                color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text
-              }}>{tab.name}</Typography>
+                color: tab.node.error ? TreeColors.semantic.danger
+                  : (isDarkMode ? TreeColors.dark.text : TreeColors.light.text),
+                fontWeight: tab.node.error ? 500 : 400
+              }}>{tab.node.name}</Typography>
           </Tooltip>
           <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }} onClick={(event) => handleCloseTab(index, event)}>
-            <CloseIcon fontSize="inherit" sx={{ color: isDarkMode ? TreeColors.dark.text : TreeColors.light.textSecondary }} />
+            <CloseIcon fontSize="inherit" sx={{ color: tab.node.error ? TreeColors.semantic.danger : TreeColors.light.textSecondary }} />
           </IconButton>
         </Tab>
       ))}
@@ -58,10 +63,11 @@ interface TabProps {
   isActive?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
+  error: boolean;
 }
 
 const StyledTabLight = styled(Box, {
-  shouldForwardProp: (prop) => !['isActive', 'isFirst', 'isLast'].includes(prop as string)
+  shouldForwardProp: (prop) => !['isActive', 'isFirst', 'isLast', 'error'].includes(prop as string)
 })<TabProps>(({ theme, isActive }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -80,7 +86,7 @@ const StyledTabLight = styled(Box, {
 }));
 
 const StyledTabDark = styled(Box, {
-  shouldForwardProp: (prop) => !['isActive', 'isFirst', 'isLast'].includes(prop as string)
+  shouldForwardProp: (prop) => !['isActive', 'isFirst', 'isLast', 'error'].includes(prop as string)
 })<TabProps>(({ theme, isActive }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -92,6 +98,7 @@ const StyledTabDark = styled(Box, {
   borderTop: `1px solid ${TreeColors.dark.border}`,
   //borderLeft: isFirst ? `1px solid ${TreeColors.dark.border}` : 'none',  // might need this, not sure
   borderRight: `1px solid ${TreeColors.dark.border}`,
+  //borderBottom: isActive ? `1px solid ${error ? errorColor : TreeColors.dark.surface}` : 'none',
   borderBottom: isActive ? `1px solid ${TreeColors.dark.surface}` : 'none',
   backgroundColor: isActive ? TreeColors.dark.surface : TreeColors.dark.background,
   cursor: 'pointer',

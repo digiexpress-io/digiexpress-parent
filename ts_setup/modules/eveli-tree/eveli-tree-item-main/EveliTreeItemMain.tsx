@@ -11,7 +11,7 @@ export const EveliTreeItemMain: React.FC = () => {
   return (
     <SplitContainer isDarkMode={isDarkMode}>
       <LeftPanel isDarkMode={isDarkMode}>
-        <Box p={2}>{activeTab ? (<Typography variant='subtitle2' fontWeight={500}>{activeTab.name}</Typography>) : 'No asset selected'}</Box>
+        <Box p={2}>{activeTab ? (<Typography variant='subtitle2' fontWeight={500}>{activeTab.node.name}</Typography>) : 'No asset selected'}</Box>
       </LeftPanel>
       <Divider isDarkMode={isDarkMode} />
       <RightPanel isDarkMode={isDarkMode}>
