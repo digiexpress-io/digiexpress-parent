@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
 
-interface HistoryEntry {
+interface ItemHistoryEntry {
   user: string;
   change: string;
   date: string;
 }
 
-const historyData: HistoryEntry[] = [
+const historyData: ItemHistoryEntry[] = [
   { user: 'Diana Hasselback', change: 'Updated content', date: '15.01.2025' },
   { user: 'office-staff', change: 'Modified labels', date: '14.01.2025' },
   { user: 'John Smith', change: 'Updated description', date: '13.01.2025' },
@@ -20,7 +20,7 @@ const historyData: HistoryEntry[] = [
   { user: 'System', change: 'File created', date: '20.12.2024' }
 ];
 
-export const EveliTreeItemHistory: React.FC = () => {
+export const ItemHistory: React.FC = () => {
   return (
     <>
       <Typography variant='caption'>Recent changes to this item</Typography>

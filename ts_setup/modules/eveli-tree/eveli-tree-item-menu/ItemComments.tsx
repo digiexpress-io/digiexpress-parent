@@ -3,11 +3,11 @@ import { Box, TextField, Typography, Divider } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
-export interface EveliTreeItemCommentsProps {
+export interface ItemCommentsProps {
   node: TreeNode | undefined;
 }
 
-export const EveliTreeItemComments: React.FC<EveliTreeItemCommentsProps> = (props) => {
+export const ItemComments: React.FC<ItemCommentsProps> = (props) => {
   const classes = useUtilityClasses();
   const [newComment, setNewComment] = React.useState('');
 

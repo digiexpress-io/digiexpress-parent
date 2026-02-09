@@ -16,7 +16,7 @@ const configOptions = [
 
 const mockSelectedValues = ['devMode', 'assignableMode', 'disabledMode', 'anonymousMode'];
 
-export const NewItem: React.FC = () => {
+export const ItemCreate: React.FC = () => {
   return (
     <>
       <StyledCaption variant='caption'>Create new item</StyledCaption>

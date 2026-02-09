@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Divider, styled, Typography } from '@mui/material';
 
-interface SharingPermission {
+interface ItemSharingAndPermissions {
   name: string;
   privilege: string;
 }
 
-const permissions: SharingPermission[] = [
+const permissions: ItemSharingAndPermissions[] = [
   { name: 'John Smith (Me)', privilege: 'Read & write' },
   { name: 'Diana Hasselback', privilege: 'Read & write' },
   { name: 'office-staff', privilege: 'read' },
@@ -14,7 +14,7 @@ const permissions: SharingPermission[] = [
   { name: 'everyone', privilege: 'read' }
 ];
 
-export const EveliTreeItemSharingPermissions: React.FC = () => {
+export const ItemSharingAndPermissions: React.FC = () => {
   return (<>
     <Typography variant='caption'>You can read and write</Typography>
     <StyledTableContainer>
