@@ -77,4 +77,36 @@ public class ReadWrite_Test extends DbTestTemplate {
         CommitResultStatus.ERROR, 
         "Node(code 002) validation failed: 1 duplicate id values in tree (P0001)");
   }
+  
+  
+  @Test
+  public void readWrite() {
+    final var tenant = "ReadWrite_2";
+    final CreatedTenant repo = getClient().tenants().createOneTenant()
+        .name(tenant, StructureType.fs)
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
+    
+    log.debug("created repo {}", repo);
+    Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
+    
+    final var fs = getClient().withTenant(tenant);
+    
+    
+    final var result = fs
+      .commitBuilder()
+      .commitAuthor("john smith")
+      .commitMessage("create main branch with some content")
+      .newFile((newFile) -> newFile
+          .fileName("xxx.txt")
+          .filePath("root/xyz")
+          .fileType("text")
+          .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+          .build())
+      .build()
+      .await().atMost(atMost);
+    
+    
+    Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
+  }
 }
