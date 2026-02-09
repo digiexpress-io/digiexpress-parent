@@ -277,8 +277,14 @@ export const StyledListItem = styled(ListItem, {
   '&:hover': {
     backgroundColor: isDarkTheme ? TreeColors.dark.surface : TreeColors.light.surface,
   },
-
-
+  ...error && {
+    backgroundColor: alpha(isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight, 0.1),
+    borderBottom: `1px solid ${isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2)}`,
+    '&:hover': {
+      backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2),
+      borderBottom: `1px solid ${TreeColors.semantic.dangerDark}`
+    }
+  }
 }));
 
 interface StyledListItemTextProps {
@@ -297,7 +303,7 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
         color: error
           ? (isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight)
           : getNodeColor(nodeType, isDarkTheme),
-        fontWeight: isDarkTheme ? 400 : 500
+      fontWeight: isDarkTheme ? 400 : 500,
       }}
     >
       {nodeName}

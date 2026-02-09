@@ -63,7 +63,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
           {configOptions && (
             <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
               {getConfigIcons(node.configOptions!, classes.iconConfig).map((tooltipIcon) => (
-                <Box key={tooltipIcon.key}>
+                <Box key={tooltipIcon.key} display='flex' alignItems='center'>
                   {tooltipIcon}
                 </Box>
               ))}
