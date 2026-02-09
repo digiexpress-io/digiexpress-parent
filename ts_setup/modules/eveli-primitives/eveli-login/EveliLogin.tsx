@@ -50,7 +50,7 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
           </Stack>
         </EveliLogoutButton>) :
         (<Button type='submit' variant='contained' startIcon={<StartIcon />} onClick={handleOnClick}>
-          <FormattedMessage id='explorer.login' />
+          <FormattedMessage id='explorer.login' defaultMessage='Log in'/>
         </Button>)}
       </Root>
     </EveliTenantFeatureEnabled>
