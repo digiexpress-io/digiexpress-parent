@@ -19,7 +19,7 @@ export interface EveliTreeContextType {
   setActiveTab: (index: number) => void;
 }
 
-export const EveliTreeContext = React.createContext<EveliTreeContextType | undefined>(undefined);
+const EveliTreeContext = React.createContext<EveliTreeContextType | undefined>(undefined);
 
 export interface EveliTreeProviderProps {
   children: React.ReactNode;
@@ -100,7 +100,7 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
   );
 };
 
-export function useEveliTree() {
+export function useEveliTree(): EveliTreeContextType {
   const result = React.useContext(EveliTreeContext);
   if (!result) {
     throw new Error('EveliTreeContext is not created!');

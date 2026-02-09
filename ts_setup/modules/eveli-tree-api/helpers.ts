@@ -4,7 +4,7 @@ import { TreeNode, ContextMenuData } from './tree-types';
 function collapseAllNodesInternal(nodes: TreeNode[]): TreeNode[] {
   return nodes.map((node) => ({
     ...node,
-    isExpanded: false,
+    expanded: false,
     children: node.children ? collapseAllNodesInternal(node.children) : undefined,
   }));
 }
@@ -19,7 +19,7 @@ export function collapseAll(
 function toggleNodeInternal(nodes: TreeNode[], nodeId: string): TreeNode[] {
   return nodes.map((node) => {
     if (node.id === nodeId) {
-      return { ...node, isExpanded: !node.isExpanded };
+      return { ...node, expanded: !node.expanded };
     }
     if (node.children) {
       return { ...node, children: toggleNodeInternal(node.children, nodeId) };

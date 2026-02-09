@@ -14,7 +14,7 @@ function findReferencesToNode(nodeId: string, nodeName: string): ReferenceEntry[
     const currentPath = [...path, node.name];
 
     // Check if this node is a reference to our target node
-    if (node.isReference && node.name === nodeName && node.id !== nodeId) {
+    if (node.reference && node.name === nodeName && node.id !== nodeId) {
       references.push({
         assetName: node.name,
         location: currentPath.slice(0, -1).join(' / ')

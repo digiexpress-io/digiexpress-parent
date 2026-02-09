@@ -21,8 +21,8 @@ export interface EveliTreeItemProps {
 }
 
 export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme }) => {
-  const hasChildren = node.children && node.children.length > 0;
-  const hasConfigOptions = node.configOptions && node.configOptions.length > 0;
+  const children = node.children && node.children.length > 0;
+  const configOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
 
   // Build the full path for this node
@@ -33,14 +33,14 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
       <StyledListItem
         level={level}
         isDarkTheme={isDarkTheme}
-        onClick={() => hasChildren && onToggle(node.id)}
+        onClick={() => children && onToggle(node.id)}
         onDoubleClick={() => onDoubleClick(node, fullPath)}
         onContextMenu={(event) => onContextMenu(event, node)}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          {hasChildren ? (
+          {children ? (
             <IconButton size='small'>
-              {node.isExpanded ? <ExpandMoreIcon fontSize='small' className={classes.iconExpand} /> : <ChevronRightIcon fontSize='small' className={classes.iconExpand} />}
+              {node.expanded ? <ExpandMoreIcon fontSize='small' className={classes.iconExpand} /> : <ChevronRightIcon fontSize='small' className={classes.iconExpand} />}
             </IconButton>
           ) : (
               <Box sx={{ width: 21, mr: 0.5 }} />
@@ -54,7 +54,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
             description={node.description}
             isDarkTheme={isDarkTheme}
           />
-          {hasConfigOptions && (
+          {configOptions && (
             <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
               {getConfigIcons(node.configOptions!, classes.iconConfig).map((tooltipIcon, index) => (
                 <Box key={tooltipIcon.key || index}>
@@ -65,8 +65,8 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
           )}
         </Box>
       </StyledListItem>
-      {hasChildren && (
-        <Collapse in={node.isExpanded} timeout={0}>
+      {children && (
+        <Collapse in={node.expanded} timeout={0}>
           <List component='div' disablePadding>
             {sortChildren(node.children || []).map((child) => (
               <EveliTreeItem

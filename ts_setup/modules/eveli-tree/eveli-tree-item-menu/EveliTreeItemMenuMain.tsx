@@ -20,7 +20,7 @@ import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 function getReferencesCount(nodeId: string, nodeName: string): number {
   let count = 0;
   function searchInNode(node: TreeNode): void {
-    if (node.isReference && node.name === nodeName && node.id !== nodeId) {
+    if (node.reference && node.name === nodeName && node.id !== nodeId) {
       count++;
     }
 
@@ -70,7 +70,7 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
   }
 
   function handleLock() {
-    const action = props.node?.isLocked ? 'Unlock' : 'Lock';
+    const action = props.node?.locked ? 'Unlock' : 'Lock';
     console.log(`${action}:`, props.node?.name);
     props.onClose();
   }
@@ -105,15 +105,15 @@ export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (prop
       <MenuItem className={classes.menuItem} onClick={handleEdit}>
         <EditIcon fontSize='small' />Edit</MenuItem>
       <MenuItem
-        className={props.node?.isLocked ? classes.menuItemLocked : classes.menuItemUnlocked}
+        className={props.node?.locked ? classes.menuItemLocked : classes.menuItemUnlocked}
         onClick={handleLock}
       >
-        {props.node?.isLocked ? (
+        {props.node?.locked ? (
           <LockedIcon fontSize='small' />
         ) : (
           <UnlockedIcon fontSize='small' />
         )}
-        {props.node?.isLocked ? 'Unlock' : 'Lock'}
+        {props.node?.locked ? 'Unlock' : 'Lock'}
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleCopy}>
         <CopyIcon fontSize='small' />Copy</MenuItem>

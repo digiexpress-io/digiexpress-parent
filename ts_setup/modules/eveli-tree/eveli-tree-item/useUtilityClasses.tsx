@@ -205,11 +205,11 @@ export function getIcon(node: TreeNode) {
   const getBaseIcon = () => {
     switch (node.type) {
       case 'folder':
-        return node.isExpanded ? <FolderOpenIcon /> : <FolderIcon />;
+        return node.expanded ? <FolderOpenIcon /> : <FolderIcon />;
       case 'article':
-        return node.isExpanded ? <ArticleOutlinedIcon /> : <ArticleIcon />;
+        return node.expanded ? <ArticleOutlinedIcon /> : <ArticleIcon />;
       case 'service':
-        return node.isExpanded ? <SettingsOutlinedIcon /> : <SettingsIcon />;
+        return node.expanded ? <SettingsOutlinedIcon /> : <SettingsIcon />;
       case 'dialob':
         return <FormIcon />;
       case 'flow':
@@ -232,7 +232,7 @@ export function getIcon(node: TreeNode) {
   const baseIcon = getBaseIcon();
   const theme = useTheme();
 
-  if (node.isReference) {
+  if (node.reference) {
     return (
       <Badge variant="dot"
         anchorOrigin={{
