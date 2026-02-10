@@ -1,5 +1,7 @@
 package io.resys.thena.fs.tables;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-fs-client
@@ -175,16 +177,23 @@ SELECT
     commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
     tree.id as tree_id,
     
-    -- Aggregated Nodes: Hydrated only if node_id matches $2 (your filter.getDocIds())
+    -- Aggregated Nodes: Hydrated only if object_id matches $2 (your filter.getDocIds())
     (SELECT json_agg(
         json_build_object(
             'id', n.id,
-            'node_id', n.node_id,
+            'object_id', n.object_id,
             'node_path', n.node_path,
             'node_name', n.node_name,
+            
+            'created_at', idx.created_at,
+            'updated_at', idx.updated_at,
+            'created_by', idx.created_by,
+            'updated_by', idx.updated_by,
+
+                                    
             'blob_id', n.blob_id,
             'props_id', n.props_id,
-            -- These will be NULL if the node_id isn't in the filter list
+            -- These will be NULL if the object_id isn't in the filter list
             
             'blob', CASE WHEN b.id IS NOT NULL 
               THEN json_build_object(
@@ -204,8 +213,16 @@ SELECT
         )
     ) FROM unnest(tree.tree_nodes) AS n
       -- "Extended Query" logic inside the aggregator
-      LEFT JOIN {props} p ON p.id = n.props_id AND n.node_id = ANY($2)
-      LEFT JOIN {blob} b ON b.id = n.blob_id AND n.node_id = ANY($2)
+      LEFT JOIN {props} p ON p.id = n.props_id AND n.object_id = ANY($2)
+      LEFT JOIN {blob} b ON b.id = n.blob_id AND n.object_id = ANY($2)
+      LEFT JOIN (
+        SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
+               created_commit.commit_created_at as created_at,
+               updated_commit.commit_created_at as updated_at
+        FROM {object_index} as object_index
+        LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
+        LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+      ) as idx ON idx.object_id = n.object_id
     ) as nodes_json
 
 FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
@@ -228,7 +245,9 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
         .forEach(node_json -> {
           final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
           final var propsId = Optional.ofNullable(node_json.getString("props_id"));
-          final var nodeTrs = ImmutableNodeTransitives.builder();
+          final var nodeTrs = ImmutableNodeTransitives.builder()
+              .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
+              .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")));
 
           // optional when queried
           final var json_blob = node_json.getJsonObject("blob");
@@ -259,7 +278,7 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
           // main node
           final var node = ImmutableNode.builder()
             .id(node_json.getString("id"))
-            .nodeId(node_json.getString("node_id"))
+            .objectId(node_json.getString("object_id"))
             .nodePath(node_json.getString("node_path"))
             .nodeName(node_json.getString("node_name"))
             .blobId(blobId)

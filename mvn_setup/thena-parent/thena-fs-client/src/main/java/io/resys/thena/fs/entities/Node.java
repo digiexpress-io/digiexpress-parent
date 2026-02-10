@@ -42,7 +42,7 @@ public interface Node extends FileSystemEntity {
   String getId();
   
   // convenience junk data, the json content object id thats connected to json in the blob
-  String getNodeId();
+  String getObjectId();
   
   // path to whatever we have part of hash calc
   Optional<String> getNodePath();
@@ -126,20 +126,20 @@ public interface Node extends FileSystemEntity {
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
   public static ImmutableNode.Builder newInstance(
       Optional<String> path, 
-      String nodeId, String name,
+      String objectId, String name,
       Optional<String> blobId, Optional<String> propsId) {
     
     final var content = new StringBuilder();
     content.append(path);
     content.append(name);
-    content.append(nodeId);
+    content.append(objectId);
     content.append(blobId.orElse(""));
     content.append(propsId.orElse(""));
     
     final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableNode.builder()
         .id(hash)
-        .nodeId(nodeId)
+        .objectId(objectId)
         .nodePath(path)
         .nodeName(name)
         .blobId(blobId)

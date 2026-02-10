@@ -119,9 +119,12 @@ public class DbTestTemplate {
       .execute().await().atMost(Duration.ofMillis(100));
     
     datasource.getClient().query("delete from " + names.getProps())
-    .execute().await().atMost(Duration.ofMillis(100));
+      .execute().await().atMost(Duration.ofMillis(100));
     
     datasource.getClient().query("delete from " + names.getBlob())
+      .execute().await().atMost(Duration.ofMillis(100));
+    
+    datasource.getClient().query("delete from " + names.getObjectIndex())
       .execute().await().atMost(Duration.ofMillis(100));
     
   }

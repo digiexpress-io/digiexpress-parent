@@ -34,7 +34,7 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE TYPE {node} AS (
       id TEXT,
       
-      node_id TEXT, -- technical id of the object (user api generated)
+      object_id TEXT, -- technical id of the object (user api generated)
       node_path TEXT,
       node_name TEXT,
 
@@ -72,26 +72,26 @@ import io.vertx.mutiny.sqlclient.Row;
             RAISE EXCEPTION 'Node(code 002) validation failed: % duplicate id values in tree', missing_count;
         END IF;
     
-        -- Validate that node_id, node_path and node_name are not null
+        -- Validate that object_id, node_path and node_name are not null
         SELECT count(*) INTO missing_count
         FROM unnest(NEW.tree_nodes) nodes
-        WHERE nodes.node_id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
+        WHERE nodes.object_id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Node(code 003) validation failed: % nodes have null node_id, node_path or node_name', missing_count;
+            RAISE EXCEPTION 'Node(code 003) validation failed: % nodes have null object_id, node_path or node_name', missing_count;
         END IF;
   
-        -- Validate node_id uniqueness within the tree
+        -- Validate object_id uniqueness within the tree
         SELECT count(*) INTO missing_count
         FROM (
-            SELECT nodes.node_id, count(*)
+            SELECT nodes.object_id, count(*)
             FROM unnest(NEW.tree_nodes) nodes
-            GROUP BY nodes.node_id
+            GROUP BY nodes.object_id
             HAVING count(*) > 1
         ) duplicates;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Node(code 004) validation failed: % duplicate node_id values in tree', missing_count;
+            RAISE EXCEPTION 'Node(code 004) validation failed: % duplicate object_id values in tree', missing_count;
         END IF;
  
     
@@ -153,7 +153,7 @@ public interface NodeTable {
     public Node apply(Row row) {
       return ImmutableNode.builder()
           .id(row.getString("id"))
-          .nodeId(row.getString("node_id"))
+          .objectId(row.getString("object_id"))
           .nodePath(row.getString("node_path"))
           .nodeName(row.getString("node_name"))
           .blobId(Optional.ofNullable(row.getString("blob_id")))

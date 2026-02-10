@@ -79,7 +79,7 @@ public class MergeFolderImpl implements MergeFolder {
     });
     
     // static data, once in its in... can't change PK
-    final var nodeId = prevNode.getNodeId();
+    final var nodeId = prevNode.getObjectId();
     
     final String folderPath = this.folderPath.orElse(prevNode.getNodePath().orElse(null));
 

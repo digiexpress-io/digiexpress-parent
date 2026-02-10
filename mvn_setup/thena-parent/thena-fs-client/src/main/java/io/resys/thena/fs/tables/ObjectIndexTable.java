@@ -1,14 +1,14 @@
 package io.resys.thena.fs.tables;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableObjectIndex;
 import io.resys.thena.fs.entities.ObjectIndex;
-import io.resys.thena.fs.tables.ObjectIndexTable.ObjectIndexMapper;
-import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 
@@ -17,7 +17,7 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 800,
   ddl = """
 CREATE TABLE {object_index} (
-  object_id UUID PRIMARY KEY,
+  object_id TEXT PRIMARY KEY,
   
   created_by TEXT NOT NULL REFERENCES {commit}(id),
   updated_by TEXT NOT NULL REFERENCES {commit}(id)
@@ -80,9 +80,9 @@ public interface ObjectIndexTable {
     """,
     rowMapper = ObjectIndexMapper.class
   )
-  SqlTuple findById(UUID objectId);
+  SqlTuple findById(String objectId);
 
-  @TenantSql.FindMany(
+  @TenantSql.FindAll(
     sql = """
       SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
              created_commit.commit_created_at as created_at,
@@ -94,51 +94,59 @@ public interface ObjectIndexTable {
     """,
     rowMapper = ObjectIndexMapper.class
   )
-  SqlTuple findByIds(UUID[] objectIds);
+  SqlTuple findByIds(String[] objectIds);
 
-  @TenantSql.Insert(
+  @TenantSql.InsertAll(
     sql = """
       INSERT INTO {object_index} (object_id, created_by, updated_by)
       VALUES ($1, $2, $3)
-    """
+    """,
+    propsMapper = ObjectIndexInsertMapper.class
   )
-  SqlTuple insertOne(UUID objectId, String createdBy, String updatedBy);
+  SqlTupleList insertMany(List<ObjectIndex> objectIndices);
 
-  @TenantSql.Update(
+  @TenantSql.UpdateAll(
     sql = """
       UPDATE {object_index}
-      SET updated_by = $2
+      SET created_by = $2, updated_by = $3
       WHERE object_id = $1
-    """
+    """,
+    propsMapper = ObjectIndexUpdateMapper.class
   )
-  SqlTuple updateOne(UUID objectId, String updatedBy);
-
-  @TenantSql.Delete(
-    sql = """
-      DELETE FROM {object_index}
-      WHERE object_id = $1
-    """
-  )
-  SqlTuple deleteById(UUID objectId);
-
-  @TenantSql.DeleteMany(
-    sql = """
-      DELETE FROM {object_index}
-      WHERE object_id = ANY($1)
-    """
-  )
-  SqlTuple deleteByIds(UUID[] objectIds);
+  SqlTupleList updateMany(List<ObjectIndex> objectIndices);
 
   public static class ObjectIndexMapper implements TenantSql.RowMapper<ObjectIndex> {
     @Override
     public ObjectIndex apply(Row row) {
       return ImmutableObjectIndex.builder()
-          .objectId(TableUtils.toStringUUID(row, "object_id"))
+          .objectId(row.getString("object_id"))
           .createdBy(row.getString("created_by"))
           .updatedBy(row.getString("updated_by"))
           .createdAt(row.getOffsetDateTime("created_at"))
           .updatedAt(row.getOffsetDateTime("updated_at"))
           .build();
+    }
+  }
+
+  public static class ObjectIndexInsertMapper implements TenantSql.PropsMapper<ObjectIndex> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(ObjectIndex objectIndex) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
+        UUID.fromString(objectIndex.getObjectId()),
+        objectIndex.getCreatedBy(),
+        objectIndex.getUpdatedBy()
+      });
+    }
+  }
+
+  public static class ObjectIndexUpdateMapper implements TenantSql.PropsMapper<ObjectIndex> {
+    @Override
+    public io.vertx.mutiny.sqlclient.Tuple apply(ObjectIndex objectIndex) {
+      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
+        UUID.fromString(objectIndex.getObjectId()),
+        objectIndex.getCreatedBy(),
+        objectIndex.getUpdatedBy()
+      });
     }
   }
 }

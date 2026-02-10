@@ -128,7 +128,7 @@ public interface TreeTable {
       /**
        * Note: Complex mapping for node[] array would need custom logic
        *   id TEXT,
-       *   node_id TEXT, -- not part of hash calculation, technical id of the object (user api generated)
+       *   object_id TEXT, -- technical id of the object (user api generated)
        *   node_path TEXT,
        *   node_name TEXT,
        *   blob_id TEXT,
@@ -138,7 +138,7 @@ public interface TreeTable {
       final var nodes = tree.getTreeNodes().stream()
           .map(node -> JsonObject.of(
               "id", node.getId(),
-              "node_id", node.getNodeId(),
+              "object_id", node.getObjectId(),
               "node_path", node.getNodePath().orElse(null),
               "node_name", node.getNodeName(),
               "blob_id", node.getBlobId().orElse(null),
