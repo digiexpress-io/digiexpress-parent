@@ -139,13 +139,13 @@ import io.vertx.mutiny.sqlclient.Row;
         
         
         -- Validate object index
-        SELECT count(*) INTO missing_count
-        FROM unnest(NEW.tree_nodes) nodes
-        RIGHT JOIN {object_index} p ON p.object_id = nodes.object_id;
+        -- SELECT count(*) INTO missing_count
+        -- FROM unnest(NEW.tree_nodes) nodes
+        -- RIGHT JOIN {object_index} p ON p.object_id = nodes.object_id;
 
-        IF missing_count <> 1 THEN
-            RAISE EXCEPTION 'Node(code 009) validation failed: % object_id references do not exist', missing_count;
-        END IF;
+        -- IF missing_count <> 1 THEN
+        --     RAISE EXCEPTION 'Node(code 009) validation failed: % object_id references do not exist', missing_count;
+        -- END IF;
 
         RETURN NEW;
     END;

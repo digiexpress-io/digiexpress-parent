@@ -152,8 +152,8 @@ public class FileSystemPrinter {
         ID.apply(node.getBlobId().orElse(null));
         ID.apply(node.getPropsId().orElse(null));
         if (node.getTransitives() != null) {
-          DATES.apply(node.getTransitives().getCreatedAt());
-          DATES.apply(node.getTransitives().getUpdatedAt());
+          DATES.apply(node.getTransitives().getObjectIndex().getCreatedAt());
+          DATES.apply(node.getTransitives().getObjectIndex().getUpdatedAt());
         }
       }
       if (tree.getTransitives() != null) {

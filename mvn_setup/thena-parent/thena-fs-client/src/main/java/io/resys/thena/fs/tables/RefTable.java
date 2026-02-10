@@ -35,6 +35,7 @@ import io.resys.thena.fs.entities.ImmutableBlob;
 import io.resys.thena.fs.entities.ImmutableCommit;
 import io.resys.thena.fs.entities.ImmutableNode;
 import io.resys.thena.fs.entities.ImmutableNodeTransitives;
+import io.resys.thena.fs.entities.ImmutableObjectIndex;
 import io.resys.thena.fs.entities.ImmutableProps;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
@@ -243,25 +244,38 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
       row.getJsonArray("nodes_json")
         .stream().map(node_json -> (JsonObject) node_json)
         .forEach(node_json -> {
+
           final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
           final var propsId = Optional.ofNullable(node_json.getString("props_id"));
-          final var nodeTrs = ImmutableNodeTransitives.builder()
+          final var objectId = node_json.getString("object_id");
+
+          final var index = ImmutableObjectIndex.builder()
+              .objectId(objectId)
+              
               .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
-              .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")));
+              .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")))
+              
+              .createdBy(node_json.getString("created_by"))
+              .updatedBy(node_json.getString("updated_by"))
+              
+              .build();
+
+          final var nodeTrs = ImmutableNodeTransitives.builder()
+              .objectIndex(index);
 
           // optional when queried
           final var json_blob = node_json.getJsonObject("blob");
           if(json_blob != null) {
             final var blob = ImmutableBlob.builder()
-                .blobType(json_blob.getString("blob_type"))
-                .blobValue(json_blob.getJsonObject("blob_value"))
-                .id(blobId.get())
-                .build();
-            
+              .blobType(json_blob.getString("blob_type"))
+              .blobValue(json_blob.getJsonObject("blob_value"))
+              .id(blobId.get())
+              .build();
             nodeTrs.blob(blob);
             trs.putBlobsById(blob.getId(), blob);
           }
           
+          // optional 
           final var json_props = node_json.getJsonObject("props");
           if(json_props != null) {
             final var props = ImmutableProps.builder()
@@ -278,7 +292,7 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
           // main node
           final var node = ImmutableNode.builder()
             .id(node_json.getString("id"))
-            .objectId(node_json.getString("object_id"))
+            .objectId(objectId)
             .nodePath(node_json.getString("node_path"))
             .nodeName(node_json.getString("node_name"))
             .blobId(blobId)

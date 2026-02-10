@@ -52,6 +52,7 @@ public class Snapshot {
   private final String tenantId;
   private final Optional<Ref> lock;
   private final String branchName;
+  private final OffsetDateTime now;
   
   private final ImmutablePersistenceUnit.Builder persistenceUnit = ImmutablePersistenceUnit.builder();  
   private final SnapshotLogger sp_logger = new SnapshotLogger();
@@ -120,7 +121,10 @@ public class Snapshot {
     final var mergeProps = result.getProps();
     final var mergeBlobs = result.getBlob();
     
-    mergeTree.add(mergeNode).add(mergeProps).add(mergeBlobs);
+    mergeTree
+      .add(mergeNode)
+      .add(mergeProps)
+      .add(mergeBlobs);
     return Tuple3.of(mergeNode, mergeProps, mergeBlobs);
   }
     
@@ -178,22 +182,26 @@ public class Snapshot {
   }
   
   
-  private void visitCommand(MergeTree mergeTree, ChangeCommand change) {
+  private void visitCommand(MergeTree mergeTree, MergeIndex mergeIndex, ChangeCommand change) {
     if(change instanceof RmCommand) {
       
       // do nothing
-      mergeTree.rm(((RmCommand) change).docId());
-      
+      final var result = mergeTree.rm(((RmCommand) change).docId());
+      mergeIndex.rm(result);
+          
     } else if(change instanceof NewFolderCommand) {
-      visitNewFolderCommand(mergeTree, (NewFolderCommand) change);
+      final var result = visitNewFolderCommand(mergeTree, (NewFolderCommand) change);
+      mergeIndex.create(result.getItem1());
     } else if(change instanceof NewFileCommand) {
-      visitNewFileCommand(mergeTree, (NewFileCommand) change);
+      final var result = visitNewFileCommand(mergeTree, (NewFileCommand) change);
+      mergeIndex.create(result.getItem1());
       
     } else if(change instanceof MergeFolderCommand) {
-      visitMergeFolderCommand(mergeTree, (MergeFolderCommand) change);
+      final var result = visitMergeFolderCommand(mergeTree, (MergeFolderCommand) change);
+      mergeIndex.create(result.getItem1());
     } else if(change instanceof MergeFileCommand) {
-      visitMergeFileCommand(mergeTree, (MergeFileCommand) change);
-
+      final var result = visitMergeFileCommand(mergeTree, (MergeFileCommand) change);
+      mergeIndex.create(result.getItem1());
     } else {
       RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());        
     }
@@ -236,16 +244,21 @@ public class Snapshot {
       RepoAssert.isTrue(lock.getTransitives().getTree() != null, () -> "lock transitives.tree must be loaded!");
     }
     
-    final var mergeTree = new MergeTree(this.lock);    
-    this.creates.forEach(command -> visitCommand(mergeTree, command));
-    this.updates.forEach(command -> visitCommand(mergeTree, command));
-    this.removals.forEach(command -> visitCommand(mergeTree, command));
+    final var mergeIndex = new MergeIndex(this.lock, this.now);
+    final var mergeTree = new MergeTree(this.lock);
+    
+    this.creates.forEach(command -> visitCommand(mergeTree, mergeIndex, command));
+    this.updates.forEach(command -> visitCommand(mergeTree, mergeIndex, command));
+    this.removals.forEach(command -> visitCommand(mergeTree, mergeIndex, command));
 
     // tree
     final var tree = visitTree(mergeTree);
-    
+
     // commit
     final var commit = visitCommit(tree, commitAuthor, commitMessage, commitCreatedAt);
+
+    // index
+    final var index = mergeIndex.close(commit);
     
     // branch
     final var branch = visitBranch(commit);
@@ -255,6 +268,8 @@ public class Snapshot {
     return persistenceUnit
         .status(BatchStatus.OK)
         .tenantId(tenantId)
+        .addAllObjectIndexInserts(index.getInserts())
+        .addAllObjectIndexUpdates(index.getUpdates())
         .log("")
         .build();
   }

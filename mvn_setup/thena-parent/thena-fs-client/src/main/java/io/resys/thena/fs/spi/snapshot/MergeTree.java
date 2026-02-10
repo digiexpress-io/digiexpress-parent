@@ -1,6 +1,7 @@
 package io.resys.thena.fs.spi.snapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /*-
  * #%L
@@ -46,42 +47,39 @@ public class MergeTree {
   
   private final List<Blob> newBlobs = new ArrayList<>();
   private final List<Props> newProps = new ArrayList<>();
-  
-  
+
   public MergeTree(Optional<Ref> ref) {
     super();
     this.ref = ref;
-    
-    if(ref.isPresent()) {
-      final var prevTree = ref.get().getTransitives().getTree();
-      for(final var node : prevTree.getTreeNodes()) {
-        
-        nodes.put(node.getId(), node);
-        
-        if(node.getBlobId().isPresent()) {
-          final var blobId = node.getBlobId().get();
-          final var props = ref.get().getTransitives().getBlobsById().get(blobId);
-          this.blobs.put(blobId, Optional.ofNullable(props));   
-        }
-        
-        if(node.getPropsId().isPresent()) {
-          final var propsId = node.getPropsId().get();
-          final var props = ref.get().getTransitives().getPropsById().get(propsId);
-          this.props.put(propsId, Optional.ofNullable(props));
-        }
-        
+    if(ref.isEmpty()) {
+      return;
+    }
+    final var prevTree = ref.get().getTransitives().getTree();
+    for(final var node : prevTree.getTreeNodes()) {
+      nodes.put(node.getId(), node);
+      
+      if(node.getBlobId().isPresent()) {
+        final var blobId = node.getBlobId().get();
+        final var props = ref.get().getTransitives().getBlobsById().get(blobId);
+        this.blobs.put(blobId, Optional.ofNullable(props));   
+      }
+      if(node.getPropsId().isPresent()) {
+        final var propsId = node.getPropsId().get();
+        final var props = ref.get().getTransitives().getPropsById().get(propsId);
+        this.props.put(propsId, Optional.ofNullable(props));
       }
     }
   }
 
-  public void rm(String idOrPath) {
-    
+  public List<Node> rm(String idOrPath) {
+    return Collections.emptyList();
   }
+  
   public MergeTree add(Node node) {
     // hash based check
     if(nodes.containsKey(node.getId())) {
       return this;  
-    } 
+    }
     
     // brand new node
     nodes.put(node.getId(), node);
@@ -99,6 +97,7 @@ public class MergeTree {
     blobs.put(blob.getId(), Optional.of(blob));
     return this;
   }
+  
   public MergeTree add(Optional<Props> props) {
     if(props.isEmpty()) {
       return this;      

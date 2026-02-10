@@ -21,7 +21,6 @@ package io.resys.thena.fs.entities;
  */
 
 import java.nio.charset.StandardCharsets;
-import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -116,9 +115,7 @@ public interface Node extends FileSystemEntity {
   @JsonSerialize(as = ImmutableNodeTransitives.class)
   @JsonDeserialize(as = ImmutableNodeTransitives.class)
   interface NodeTransitives {
-    OffsetDateTime getCreatedAt();
-    OffsetDateTime getUpdatedAt();
-    
+    @Nullable ObjectIndex getObjectIndex();
     @Nullable Blob getBlob();
     @Nullable Props getProps();
   }

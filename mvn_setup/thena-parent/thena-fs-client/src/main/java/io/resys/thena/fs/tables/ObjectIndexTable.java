@@ -14,7 +14,7 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "object_index",
-  order = 350,
+  order = 700,
   ddl = """
 CREATE TABLE {object_index} (
   object_id TEXT PRIMARY KEY,
@@ -139,7 +139,7 @@ public interface ObjectIndexTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(ObjectIndex objectIndex) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(objectIndex.getObjectId()),
+        objectIndex.getObjectId(),
         objectIndex.getCreatedBy(),
         objectIndex.getUpdatedBy()
       });
@@ -150,7 +150,7 @@ public interface ObjectIndexTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(ObjectIndex objectIndex) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        UUID.fromString(objectIndex.getObjectId()),
+        objectIndex.getObjectId(),
         objectIndex.getCreatedBy(),
         objectIndex.getUpdatedBy()
       });
