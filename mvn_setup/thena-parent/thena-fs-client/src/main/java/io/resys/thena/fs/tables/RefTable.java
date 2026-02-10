@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.api.annotations.TenantSql.WrapperType;
@@ -28,12 +29,17 @@ import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.Commit;
+import io.resys.thena.fs.entities.ImmutableBlob;
 import io.resys.thena.fs.entities.ImmutableCommit;
+import io.resys.thena.fs.entities.ImmutableNode;
+import io.resys.thena.fs.entities.ImmutableNodeTransitives;
+import io.resys.thena.fs.entities.ImmutableProps;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
+import io.resys.thena.support.TableUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
@@ -43,7 +49,8 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 600,
   ddl = """
     CREATE TABLE {ref} (
-      ref_name TEXT PRIMARY KEY,
+      id UUID PRIMARY KEY,
+      ref_name TEXT UNIQUE NOT NULL,
       ref_description TEXT,
       ref_props JSONB,
       ref_permissions JSONB,
@@ -54,6 +61,8 @@ import io.vertx.mutiny.sqlclient.Row;
     );
     
     CREATE INDEX {ref}_commit_idx ON {ref}(commit_id);
+    CREATE INDEX {ref}_name_idx ON {ref}(ref_name);
+    CREATE INDEX {ref}_desc_idx ON {ref}(ref_description);
     
     COMMENT ON TABLE {ref} IS 'Named references to commits, typically representing branches or bookmarks that can move to point to different commits over time.';
     COMMENT ON COLUMN {ref}.ref_name IS 'Reference name (e.g., "main", "develop", "feature/xyz")';
@@ -69,6 +78,7 @@ public interface RefTable {
   @TenantSql.FindAll(
     sql = """
       SELECT 
+        ref.id,
         ref.ref_name, 
         ref.ref_description,
         ref.ref_props,
@@ -93,7 +103,7 @@ public interface RefTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
              ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
       FROM {ref} as ref
       LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
@@ -105,7 +115,7 @@ public interface RefTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
              ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
       FROM {ref} as ref
       LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
@@ -119,8 +129,8 @@ public interface RefTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ref}
-      (ref_name, commit_id)
-      VALUES($1, $2)
+      (id, ref_name, commit_id)
+      VALUES($1, $2, $3)
     """,
     propsMapper = RefInsertMapper.class
   )
@@ -130,7 +140,7 @@ public interface RefTable {
     sql = """
       UPDATE {ref}
       SET commit_id = $1
-      WHERE ref_name = $2
+      WHERE id = $2
     """,
     propsMapper = RefUpdateMapper.class
   )
@@ -145,7 +155,7 @@ public interface RefTable {
   
   @TenantSql.FindAll(
     sql = """
-      SELECT ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
              ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
       FROM {ref} as ref
       LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
@@ -160,18 +170,47 @@ public interface RefTable {
   // -- Lock branch, get current commit tree
   @TenantSql.Find(
     sql = """
-      SELECT 
-        ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
-        commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
-        nodes.node_id, nodes.node_path, nodes.node_name, nodes.blob_id, nodes.props_id,
-        
-        props.props_labels, props.props_comments, props.props_permissions, props.props_flags,
-        blobs.blob_type, blobs.blob_value
-        
-      FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
-      JOIN {commit} as commits ON commits.id = ref.commit_id
-      JOIN {tree} as tree ON tree.id = commits.tree_id
-      JOIN unnest(tree.tree_nodes) as nodes ON true
+SELECT 
+    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
+    commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
+    tree.id as tree_id,
+    
+    -- Aggregated Nodes: Hydrated only if node_id matches $2 (your filter.getDocIds())
+    (SELECT json_agg(
+        json_build_object(
+            'id', n.id,
+            'node_id', n.node_id,
+            'node_path', n.node_path,
+            'node_name', n.node_name,
+            'blob_id', n.blob_id,
+            'props_id', n.props_id,
+            -- These will be NULL if the node_id isn't in the filter list
+            
+            'blob', CASE WHEN b.id IS NOT NULL 
+              THEN json_build_object(
+                'blob_type', b.blob_type, 
+                'blob_value', b.blob_value
+              ) 
+              ELSE NULL END,
+            
+            'props', CASE WHEN p.id IS NOT NULL 
+              THEN json_build_object(
+                'props_labels', p.props_labels, 
+                'props_flags', p.props_flags,
+                'props_comments', p.props_comments,
+                'props_permissions', p.props_permissions
+              ) 
+              ELSE NULL END
+        )
+    ) FROM unnest(tree.tree_nodes) AS n
+      -- "Extended Query" logic inside the aggregator
+      LEFT JOIN {props} p ON p.id = n.props_id AND n.node_id = ANY($2)
+      LEFT JOIN {blob} b ON b.id = n.blob_id AND n.node_id = ANY($2)
+    ) as nodes_json
+
+FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
+JOIN {commit} as commits ON commits.id = ref.commit_id
+JOIN {tree} as tree ON tree.id = commits.tree_id
     """,
     rowMapper = RefLockMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
@@ -182,10 +221,56 @@ public interface RefTable {
     @Override
     public Ref apply(Row row) {
       final var baseline = RefMapper.baseline(row);
-      final var trs = ImmutableRefTransitives.builder()
-          .commit(baseline.getItem2())
-          .build();
-      return baseline.getItem1().transitives(trs).build();
+      final var trs = ImmutableRefTransitives.builder().commit(baseline.getItem2());
+      
+      row.getJsonArray("nodes_json")
+        .stream().map(node_json -> (JsonObject) node_json)
+        .forEach(node_json -> {
+          final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
+          final var propsId = Optional.ofNullable(node_json.getString("props_id"));
+          final var nodeTrs = ImmutableNodeTransitives.builder();
+
+          // optional when queried
+          final var json_blob = node_json.getJsonObject("blob");
+          if(json_blob != null) {
+            final var blob = ImmutableBlob.builder()
+                .blobType(json_blob.getString("blob_type"))
+                .blobValue(json_blob.getJsonObject("blob_value"))
+                .id(blobId.get())
+                .build();
+            
+            nodeTrs.blob(blob);
+            trs.putBlobsById(blob.getId(), blob);
+          }
+          
+          final var json_props = node_json.getJsonObject("props");
+          if(json_props != null) {
+            final var props = ImmutableProps.builder()
+              .id(propsId.get())
+              .propsLabels(json_props.getJsonObject("props_labels"))
+              .propsComments(json_props.getJsonObject("props_comments"))
+              .propsPermissions(json_props.getJsonObject("props_permissions"))
+              .propsFlags(json_props.getJsonObject("props_flags"))
+              .build();
+            nodeTrs.props(props);
+            trs.putPropsById(props.getId(), props);
+          }
+          
+          // main node
+          final var node = ImmutableNode.builder()
+            .id(node_json.getString("id"))
+            .nodeId(node_json.getString("node_id"))
+            .nodePath(node_json.getString("node_path"))
+            .nodeName(node_json.getString("node_name"))
+            .blobId(blobId)
+            .propsId(propsId)
+            .transitives(nodeTrs.build())
+            .build();
+          trs.putNodesById(node.getId(), node);
+          
+        });
+      
+      return baseline.getItem1().transitives(trs.build()).build();
     }
   }
 
@@ -194,6 +279,7 @@ public interface RefTable {
     
     public static Tuple2<ImmutableRef.Builder, Commit> baseline(Row row) {
       final var refBuilder = ImmutableRef.builder()
+          .id(TableUtils.toStringUUID(row, "id"))
           .refName(row.getString("ref_name"))
           .commitId(row.getString("commit_id"));
       
@@ -260,6 +346,7 @@ public interface RefTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Ref ref) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
+        TableUtils.toUuid(ref.getId()),
         ref.getRefName(),
         ref.getCommitId()
       });
@@ -271,7 +358,7 @@ public interface RefTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(Ref ref) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         ref.getCommitId(),
-        ref.getRefName()
+        TableUtils.toUuid(ref.getId())
       });
     }
   }
@@ -280,7 +367,7 @@ public interface RefTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Ref ref) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        ref.getRefName()
+          TableUtils.toUuid(ref.getId())
       });
     }
   }

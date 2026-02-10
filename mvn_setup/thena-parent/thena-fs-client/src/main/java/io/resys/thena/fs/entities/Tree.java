@@ -22,6 +22,7 @@ package io.resys.thena.fs.entities;
 
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -58,20 +59,25 @@ public interface Tree extends FileSystemEntity {
   }
 
   // H(tree) = μ(∑ᵢ₌₁ⁿ H(nodeᵢ))
-  public static ImmutableTree.Builder newInstance(List<Node> nodes) {
+  public static ImmutableTree.Builder newInstance(Collection<Node> nodes) {
     final var content = new StringBuilder();
-    nodes.stream()
+    
+    final var sorted = nodes.stream()
         .sorted(
             (a, b) -> 
               (a.getNodePath().map(n -> n + "/").orElse("") + a.getNodeName())
             .compareTo
               (b.getNodePath().map(n -> n + "/").orElse("") + b.getNodeName())
         )
-        .forEach(node -> content.append(node.getId()));
+        .map(node -> {
+          content.append(node.getId());
+          return node;
+        })
+        .toList();
     
     final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableTree.builder()
         .id(hash)
-        .treeNodes(nodes);
+        .treeNodes(sorted);
   }
 }

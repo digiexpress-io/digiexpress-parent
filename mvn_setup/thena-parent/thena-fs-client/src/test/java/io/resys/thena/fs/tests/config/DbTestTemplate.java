@@ -42,14 +42,22 @@ import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.printer.FileSystemPrinter;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
 import io.resys.thena.fs.tables.FsDb;
+import io.resys.thena.fs.tables.spi.FsTableNames;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.test.ThenaTest;
+import io.resys.thena.test.ThenaTestDbConfig;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@ThenaTest
+@ThenaTest(database = @ThenaTestDbConfig(
+  enabled = true, 
+  database = "eveli-app", 
+  host = "localhost",
+  port = 5433,
+  user = "eveli-app", password = "password123"
+))
 public class DbTestTemplate {
 
   private FileSystem client;
@@ -75,7 +83,9 @@ public class DbTestTemplate {
   public void setUp(io.vertx.mutiny.sqlclient.Pool pgPool) throws InterruptedException {
     this.pgPool = pgPool;
     this.replacements.clear();
-    this.client = FileSystem_ThenaImpl.createInstance().tenantName("junit").client(pgPool)
+    this.client = FileSystem_ThenaImpl.createInstance()
+        .tenantName("junit")
+        .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
     if(callback != null) {
@@ -86,7 +96,35 @@ public class DbTestTemplate {
       callback.accept(client, repo);
     }
   }
-
+  
+  public void wipeRepo(Tenant repo) {
+    final var datasource = FileSystem_ThenaImpl.createInstance()
+      .tenantName(repo.getName())
+      .client(pgPool)
+      .errorHandler(new PgErrors())
+      .datasource();
+    
+    final var names = FsTableNames.defaults().toRepo(repo);
+    
+    datasource.getClient().query("delete from " + names.getTag())
+      .execute().await().atMost(Duration.ofMillis(100));
+    
+    datasource.getClient().query("delete from " + names.getRef())
+      .execute().await().atMost(Duration.ofMillis(100));
+    
+    datasource.getClient().query("delete from " + names.getCommit())
+      .execute().await().atMost(Duration.ofMillis(100));
+    
+    datasource.getClient().query("delete from " + names.getTree())
+      .execute().await().atMost(Duration.ofMillis(100));
+    
+    datasource.getClient().query("delete from " + names.getProps())
+    .execute().await().atMost(Duration.ofMillis(100));
+    
+    datasource.getClient().query("delete from " + names.getBlob())
+      .execute().await().atMost(Duration.ofMillis(100));
+    
+  }
 
   @AfterEach
   public void tearDown() {

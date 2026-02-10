@@ -55,20 +55,27 @@ public class Snapshot {
   
   private final ImmutablePersistenceUnit.Builder persistenceUnit = ImmutablePersistenceUnit.builder();  
   private final SnapshotLogger sp_logger = new SnapshotLogger();
-  private final List<ChangeCommand> changes = new ArrayList<>();
+  
+  private final List<ChangeCommand> updates = new ArrayList<>();
+  private final List<ChangeCommand> creates = new ArrayList<>();
+  private final List<RmCommand> removals = new ArrayList<>();
+  
+  
 
-  private Tuple2<Node, Optional<Props>> visitNewFolderCommand(NewFolderCommand command) {
+  private Tuple2<Node, Optional<Props>> visitNewFolderCommand(MergeTree mergeTree, NewFolderCommand command) {
     final var merger = new NewFolderImpl();
     command.consumer().accept(merger);
     final var result = merger.close();
     
+    
     final var newNode = result.getNode();
     final var newProps = result.getProps();
     
+    mergeTree.add(newNode).add(newProps);
     return Tuple2.of(newNode, newProps);
   }
 
-  private Tuple3<Node, Optional<Props>, Blob> visitNewFileCommand(NewFileCommand command) {
+  private Tuple3<Node, Optional<Props>, Blob> visitNewFileCommand(MergeTree mergeTree, NewFileCommand command) {
     final var merger = new NewFileImpl();
     command.consumer().accept(merger);
     
@@ -77,10 +84,11 @@ public class Snapshot {
     final var newProps = result.getProps();
     final var newBlobs = result.getBlob();
 
+    mergeTree.add(newNode).add(newProps).add(newBlobs);
     return Tuple3.of(newNode, newProps, newBlobs);
   }
   
-  private Tuple2<Node, Optional<Props>>  visitMergeFolderCommand(MergeFolderCommand command) {
+  private Tuple2<Node, Optional<Props>> visitMergeFolderCommand(MergeTree mergeTree, MergeFolderCommand command) {
     RepoAssert.isTrue(lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
@@ -93,11 +101,11 @@ public class Snapshot {
     final var result = merger.close();
     final var mergeNode = result.getNode();
     final var mergeProps = result.getProps();
-    
+    mergeTree.add(mergeNode).add(mergeProps);
     return Tuple2.of(mergeNode, mergeProps);
   }
   
-  private Tuple3<Node, Optional<Props>, Blob> visitMergeFileCommand(MergeFileCommand command) {
+  private Tuple3<Node, Optional<Props>, Blob> visitMergeFileCommand(MergeTree mergeTree, MergeFileCommand command) {
     RepoAssert.isTrue(this.lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
@@ -112,26 +120,25 @@ public class Snapshot {
     final var mergeProps = result.getProps();
     final var mergeBlobs = result.getBlob();
     
+    mergeTree.add(mergeNode).add(mergeProps).add(mergeBlobs);
     return Tuple3.of(mergeNode, mergeProps, mergeBlobs);
   }
     
-  private Tree visitTree(List<Node> nodes, List<Props> props, List<Blob> blobs, List<Node> rm) {
-    final Tree result;
+  private Tree visitTree(MergeTree merger) {
+    final var result = merger.close();
+    persistenceUnit.addAllBlobInserts(result.getBlobs());
+    persistenceUnit.addAllPropsInserts(result.getProps());
+    
+    final Tree tree = result.getTree(); 
     
     if(lock.isPresent()) {
-      result = new MergeTree(lock.get(), nodes, props, blobs).close().getTree();
-      sp_logger.mergeTree(lock.get().getTransitives().getTree(), result);
-      persistenceUnit.addAllBlobInserts(blobs);
-      persistenceUnit.addAllPropsInserts(props);
+      sp_logger.mergeTree(lock.get().getTransitives().getTree(), tree);
     } else {
-      result = Tree.newInstance(nodes).build();
-      persistenceUnit.addAllBlobInserts(blobs);
-      persistenceUnit.addAllPropsInserts(props);
-      sp_logger.newTree(result);  
+      sp_logger.newTree(tree);
     }
     
-    persistenceUnit.addTreeInserts(result);
-    return result;
+    persistenceUnit.addTreeInserts(tree);
+    return tree;
   }
   
   private Commit visitCommit(
@@ -170,51 +177,50 @@ public class Snapshot {
     return result.getBranch();
   }
   
+  
+  private void visitCommand(MergeTree mergeTree, ChangeCommand change) {
+    if(change instanceof RmCommand) {
+      
+      // do nothing
+      mergeTree.rm(((RmCommand) change).docId());
+      
+    } else if(change instanceof NewFolderCommand) {
+      visitNewFolderCommand(mergeTree, (NewFolderCommand) change);
+    } else if(change instanceof NewFileCommand) {
+      visitNewFileCommand(mergeTree, (NewFileCommand) change);
+      
+    } else if(change instanceof MergeFolderCommand) {
+      visitMergeFolderCommand(mergeTree, (MergeFolderCommand) change);
+    } else if(change instanceof MergeFileCommand) {
+      visitMergeFileCommand(mergeTree, (MergeFileCommand) change);
 
-  private List<Node> visitRemovals(List<String> removals, List<Node> newNodes) {
-    // removal from known tree
-    final List<Node> removalNodes = new ArrayList<>(); 
-    if(lock.isPresent() && !removals.isEmpty()) {
-      
-      final var result = lock.get().getTransitives()
-        .getTree().getTreeNodes()
-        
-        .stream().filter(node -> (
-            
-            removals.contains(node.getId()) || 
-            removals.contains(node.getNodeId()) ||
-            removals.contains(node.getFullPath()) ||
-            
-            (node.getNodePath().isPresent() && removals.contains(node.getNodePath().get()))
-        ))
-        .toList();
-      
-      removalNodes.addAll(result);
-      sp_logger.rmNodes(result);
+    } else {
+      RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());        
     }
-    
-  if(!removals.isEmpty()) {
-      final var result = newNodes
-        .stream().filter(node -> (
-            removals.contains(node.getId()) || 
-            removals.contains(node.getNodeId()) ||
-            
-            removals.contains(node.getFullPath()) ||
-            (node.getNodePath().isPresent() && removals.contains(node.getNodePath().get()))
-        ))
-        .toList();
-      
-      RepoAssert.isTrue(result.isEmpty(), () -> "Can't add and remove same data in the same tx, outcome is nothing!");
-    }
-    
-    return removalNodes;
   }
+  
   
   public Snapshot addAll(List<ChangeCommand> changes) {
-    this.changes.addAll(changes);
+    for(final var anyCommand : changes) {
+      if(anyCommand instanceof RmCommand) {
+        removals.add((RmCommand) anyCommand);
+        
+      } else if(anyCommand instanceof NewFolderCommand) {
+        creates.add(anyCommand);
+      } else if(anyCommand instanceof NewFileCommand) {
+        creates.add(anyCommand);
+        
+      } else if(anyCommand instanceof MergeFolderCommand) {
+        updates.add(anyCommand);
+      } else if(anyCommand instanceof MergeFileCommand) {
+        updates.add(anyCommand);
+
+      } else {
+        RepoAssert.fail("Unknown command: " + anyCommand.getClass().getSimpleName());        
+      }
+    }
     return this;
   }
-  
   
   public PersistenceUnit build(
       String commitAuthor,
@@ -222,58 +228,21 @@ public class Snapshot {
       OffsetDateTime commitCreatedAt
       ) {
     
-    final List<Node> nodes = new ArrayList<>();
-    final List<Props> props = new ArrayList<>();
-    final List<Blob> blobs = new ArrayList<>();
-    final List<String> removals = new ArrayList<>();
-    
-    for(final var change : changes) {
-      if(change instanceof RmCommand) {
-      
-        removals.add(((RmCommand) change).docId());
-        
-      } else if(change instanceof NewFolderCommand) {
-        final var result = visitNewFolderCommand((NewFolderCommand) change);
-        nodes.add(result.getItem1());
-        if(result.getItem2().isPresent()) {
-          props.add(result.getItem2().get());  
-        }
-        
-      } else if(change instanceof NewFileCommand) {
-        final var result = visitNewFileCommand((NewFileCommand) change);
-        nodes.add(result.getItem1());
-        
-        if(result.getItem2().isPresent()) {
-          props.add(result.getItem2().get());  
-        }
-        
-        blobs.add(result.getItem3());
-        
-      } else if(change instanceof MergeFolderCommand) {
-        final var result = visitMergeFolderCommand((MergeFolderCommand) change);
-        nodes.add(result.getItem1());
-        if(result.getItem2().isPresent()) {
-          props.add(result.getItem2().get());  
-        }
-        
-      } else if(change instanceof MergeFileCommand) {
-        final var result = visitMergeFileCommand((MergeFileCommand) change);
-        nodes.add(result.getItem1());
-        if(result.getItem2().isPresent()) {
-          props.add(result.getItem2().get());  
-        }
-        blobs.add(result.getItem3());
-      } else {
-        RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());        
-      }
-      
-
+    // check if lock is loaded correctly
+    if(this.lock.isPresent()) {
+      final var lock = this.lock.get();
+      RepoAssert.isTrue(lock.getTransitives() != null, () -> "lock transitives must be loaded!");
+      RepoAssert.isTrue(lock.getTransitives().getCommit() != null, () -> "lock transitives.commit must be loaded!");
+      RepoAssert.isTrue(lock.getTransitives().getTree() != null, () -> "lock transitives.tree must be loaded!");
     }
     
-    final var rm = visitRemovals(removals, nodes);
+    final var mergeTree = new MergeTree(this.lock);    
+    this.creates.forEach(command -> visitCommand(mergeTree, command));
+    this.updates.forEach(command -> visitCommand(mergeTree, command));
+    this.removals.forEach(command -> visitCommand(mergeTree, command));
 
     // tree
-    final var tree = visitTree(nodes, props, blobs, rm);
+    final var tree = visitTree(mergeTree);
     
     // commit
     final var commit = visitCommit(tree, commitAuthor, commitMessage, commitCreatedAt);

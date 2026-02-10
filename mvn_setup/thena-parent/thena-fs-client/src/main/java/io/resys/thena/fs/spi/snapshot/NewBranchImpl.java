@@ -23,6 +23,7 @@ package io.resys.thena.fs.spi.snapshot;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.support.OidUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
@@ -34,6 +35,7 @@ public class NewBranchImpl {
   
   public NewBranchResult close() {
     final var newRef = ImmutableRef.builder()
+        .id(OidUtils.genUUID())
         .refName(branchName)
         .commitId(commit.getId())
         .build();

@@ -33,9 +33,11 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TYPE {node} AS (
       id TEXT,
-      node_id TEXT, -- not part of hash calculation, technical id of the object (user api generated)
+      
+      node_id TEXT, -- technical id of the object (user api generated)
       node_path TEXT,
       node_name TEXT,
+
       blob_id TEXT,
       props_id TEXT
     );

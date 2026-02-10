@@ -142,15 +142,13 @@ public class FileSystem_ThenaImpl implements FileSystem {
     public CreateInstance client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
 
     
-    public FileSystem_ThenaImpl build() {
+    public ThenaSqlDataSourceImpl datasource() {
       RepoAssert.notNull(client, () -> "client must be defined!");
       RepoAssert.notNull(tenantName, () -> "tenantName must be defined!");
       RepoAssert.notNull(errorHandler, () -> "errorHandler must be defined!");
       
       final var tenantCache = this.tenantCache == null ? new TenantCacheImpl() : this.tenantCache;
       final var ctx = TenantContext.defaults(tenantName);
-      
-      
       final var pool = new ThenaSqlPoolVertx(client);
       
       final var dataSource = new ThenaSqlDataSourceImpl(
@@ -159,7 +157,11 @@ public class FileSystem_ThenaImpl implements FileSystem {
           tenantCache
       );
       
-      final var state = new FsDbImpl(dataSource);
+      return dataSource;
+    }
+    
+    public FileSystem_ThenaImpl build() {
+      final var state = new FsDbImpl(datasource());
       return new FileSystem_ThenaImpl(state);
     }
   }

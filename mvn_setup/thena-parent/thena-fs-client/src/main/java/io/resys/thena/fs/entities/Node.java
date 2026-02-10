@@ -41,7 +41,7 @@ public interface Node extends FileSystemEntity {
   // the actual hash calculated based on the contents
   String getId();
   
-  // convenience junk data, the json content object id thats connected to json in the blob, its excluded from hash calculation
+  // convenience junk data, the json content object id thats connected to json in the blob
   String getNodeId();
   
   // path to whatever we have part of hash calc
@@ -132,6 +132,7 @@ public interface Node extends FileSystemEntity {
     final var content = new StringBuilder();
     content.append(path);
     content.append(name);
+    content.append(nodeId);
     content.append(blobId.orElse(""));
     content.append(propsId.orElse(""));
     

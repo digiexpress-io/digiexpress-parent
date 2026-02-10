@@ -79,10 +79,6 @@ public interface Ref extends FileSystemEntity {
   @Nullable 
   RefTransitives getTransitives();
 
-  @Override
-  default String getId() {
-    return getRefName();
-  }
 
   @Override
   default FileSystemEntityType getDocType() { 
