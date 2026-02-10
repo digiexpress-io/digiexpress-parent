@@ -12,11 +12,11 @@ function RouteComponent() {
   return (
     <Dialog open={true}>
       <DialogTitle>
-        <FormattedMessage id='login.dialog.title' defaultMessage='Use DigiExpress services'/>
+        <FormattedMessage id='login.dialog.title' />
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <FormattedMessage id='login.dialog.message' defaultMessage='Please login to proceed'/>
+          <FormattedMessage id='login.dialog.message' />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
