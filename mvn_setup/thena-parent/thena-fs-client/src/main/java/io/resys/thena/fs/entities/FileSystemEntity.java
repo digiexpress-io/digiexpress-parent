@@ -37,6 +37,7 @@ public interface FileSystemEntity {
     COMMIT,
     REF,
     TAG,
-    NODE
+    NODE,
+    INDEX
   }
 }

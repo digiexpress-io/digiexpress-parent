@@ -23,8 +23,8 @@ package io.resys.thena.fs.tables;
 import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
-import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.ImmutableNode;
+import io.resys.thena.fs.entities.Node;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(

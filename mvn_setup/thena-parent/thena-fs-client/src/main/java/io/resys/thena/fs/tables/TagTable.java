@@ -28,9 +28,9 @@ import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.ImmutableTag;
 import io.resys.thena.fs.entities.ImmutableTagTransitives;
+import io.resys.thena.fs.entities.Tag;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(

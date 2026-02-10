@@ -26,8 +26,8 @@ import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.entities.Props;
 import io.resys.thena.fs.entities.ImmutableProps;
+import io.resys.thena.fs.entities.Props;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(

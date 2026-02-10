@@ -21,7 +21,6 @@ package io.resys.thena.fs.tables.filters;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
