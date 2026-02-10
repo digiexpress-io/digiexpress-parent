@@ -60,7 +60,7 @@ export const EveliTreeSearch: React.FC<EveliTreeSearchProps> = ({ searchTerm, on
 
 
   return (<>
-    <Box display='flex' p={1} flexDirection='column'>
+    <Box display='flex' p={1} flexDirection='column' sx={{ backgroundColor: TreeColors.light.surface }}>
       <StyledSearchFieldLightMode placeholder='search' fullWidth value={searchTerm} onChange={handleSearchChange} type='search' />
       <Box display='flex' mt={1} gap={0.5} flexWrap='wrap'>
         {visibleChips.map(chip => (
@@ -165,16 +165,8 @@ const StyledChip = styled(Chip, {
         color: baseColor,
         '&:hover': {
           color: baseColor,
-          opacity: 0.8,
         }
       }
     };
   }
 );
-const StyledBox = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode?: boolean }>(() => ({
-  display: 'flex',
-  padding: '8px',
-  flexDirection: 'column'
-}));
