@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box, styled, TextField, Typography, useTheme } from '@mui/material';
-import { TreeColors } from '../tree-theme';
-
+import { Box, Chip, Divider, styled, TextField, Typography, useTheme } from '@mui/material';
+import { TreeColors, getNodeColor, TreeNodeType } from '../tree-theme';
 
 interface EveliTreeSearchProps {
   searchTerm: string;
@@ -9,6 +8,10 @@ interface EveliTreeSearchProps {
   isDarkMode: boolean;
 }
 
+interface ChipData {
+  label: string;
+  type: TreeNodeType;
+}
 
 export const EveliTreeSearch: React.FC<EveliTreeSearchProps> = ({ searchTerm, onSearchChange, isDarkMode }) => {
 
@@ -16,18 +19,65 @@ export const EveliTreeSearch: React.FC<EveliTreeSearchProps> = ({ searchTerm, on
     onSearchChange(event.target.value);
   }
 
+  const [visibleChips, setVisibleChips] = React.useState<ChipData[]>([
+    { label: 'Articles', type: 'article' },
+    { label: 'Dialobs', type: 'dialob' },
+    { label: 'Services', type: 'service' },
+    { label: 'Pages', type: 'folder' },
+    { label: 'Links', type: 'link' },
+    { label: 'Flows', type: 'flow' },
+    { label: 'Printouts', type: 'printout' },
+    { label: 'Images', type: 'image' }
+  ]);
+
+  function handleChipDelete(chipLabel: string) {
+    setVisibleChips(prev => prev.filter(chip => chip.label !== chipLabel));
+  }
+
+
   if (isDarkMode === true) {
-    return (
-      <Box display='flex' p={1}>
+    return (<>
+      <Box display='flex' p={1} flexDirection='column'>
         <StyledSearchFieldDarkMode placeholder='search' fullWidth value={searchTerm} onChange={handleSearchChange} type='search' />
-      </Box>
+        <Box display='flex' mt={1} gap={0.5} flexWrap='wrap'>
+          {visibleChips.map(chip => (
+            <StyledChip
+              key={chip.type}
+              label={chip.label}
+              chipType={chip.type}
+              isDarkMode={isDarkMode}
+              size='small'
+              variant='filled'
+              onDelete={() => handleChipDelete(chip.label)}
+            />
+          ))}
+        </Box>
+      </Box >
+      <Divider />
+    </>
     )
   }
 
-  return (
-    <Box display='flex' p={1}>
+
+  return (<>
+    <Box display='flex' p={1} flexDirection='column'>
       <StyledSearchFieldLightMode placeholder='search' fullWidth value={searchTerm} onChange={handleSearchChange} type='search' />
+      <Box display='flex' mt={1} gap={0.5} flexWrap='wrap'>
+        {visibleChips.map(chip => (
+          <StyledChip
+            key={chip.type}
+            label={chip.label}
+            chipType={chip.type}
+            isDarkMode={isDarkMode}
+            size='small'
+            variant='filled'
+            onDelete={() => handleChipDelete(chip.label)}
+          />
+        ))}
+      </Box>
     </Box>
+    <Divider />
+  </>
   );
 };
 
@@ -42,7 +92,9 @@ export const EveliTreeSearchNoResults: React.FC = () => {
 }
 
 
-const StyledSearchFieldLightMode = styled(TextField)(({ theme }) => ({
+const StyledSearchFieldLightMode = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'chipType' && prop !== 'isDarkMode'
+})(({ theme }) => ({
   marginTop: '0px',
   '& .MuiInputBase-root': {
     borderRadius: 0,
@@ -61,7 +113,10 @@ const StyledSearchFieldLightMode = styled(TextField)(({ theme }) => ({
 }))
 
 
-const StyledSearchFieldDarkMode = styled(TextField)(({ theme }) => ({
+const StyledSearchFieldDarkMode = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== 'chipType' && prop !== 'isDarkMode'
+})(({ theme }) => ({
+
   marginTop: '0px',
   padding: '0px',
   '& .MuiInputBase-input': {
@@ -89,3 +144,37 @@ const StyledSearchFieldDarkMode = styled(TextField)(({ theme }) => ({
     }
   }
 }))
+
+const StyledChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== 'chipType' && prop !== 'isDarkMode'
+})<{ chipType: TreeNodeType; isDarkMode: boolean }>(
+  ({ chipType, isDarkMode, theme }) => {
+    const baseColor = getNodeColor(chipType, isDarkMode);
+    return {
+      backgroundColor: baseColor + '20',
+      borderColor: baseColor,
+      border: `1px solid ${baseColor}`,
+      ...theme.typography.caption,
+      color: baseColor,
+      fontWeight: 'bold',
+      '&:hover': {
+        backgroundColor: baseColor + '50',
+        borderColor: baseColor,
+      },
+      '& .MuiChip-deleteIcon': {
+        color: baseColor,
+        '&:hover': {
+          color: baseColor,
+          opacity: 0.8,
+        }
+      }
+    };
+  }
+);
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode?: boolean }>(() => ({
+  display: 'flex',
+  padding: '8px',
+  flexDirection: 'column'
+}));
