@@ -176,3 +176,4 @@ const StyledChip = styled(Chip, {
     };
   }
 );
+
