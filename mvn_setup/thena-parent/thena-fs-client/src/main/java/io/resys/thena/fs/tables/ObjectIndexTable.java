@@ -14,13 +14,13 @@ import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
   name = "object_index",
-  order = 800,
+  order = 350,
   ddl = """
 CREATE TABLE {object_index} (
   object_id TEXT PRIMARY KEY,
   
-  created_by TEXT NOT NULL REFERENCES {commit}(id),
-  updated_by TEXT NOT NULL REFERENCES {commit}(id)
+  created_by TEXT NOT NULL,
+  updated_by TEXT NOT NULL 
 );
 
 CREATE INDEX {object_index}_created_by_idx ON {object_index}(created_by);
@@ -32,6 +32,13 @@ COMMENT ON COLUMN {object_index}.created_by IS 'Points to commit with what this 
 COMMENT ON COLUMN {object_index}.updated_by IS 'Points to commit with what this object was updated.';
   """,
   constraints = """
+      
+  ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_created_by
+    FOREIGN KEY (created_by) REFERENCES {commit}(id);
+    
+  ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_updated_by
+    FOREIGN KEY (updated_by) REFERENCES {commit}(id);
+
   """,
   drop = """
 DROP TABLE IF EXISTS {object_index} CASCADE;
