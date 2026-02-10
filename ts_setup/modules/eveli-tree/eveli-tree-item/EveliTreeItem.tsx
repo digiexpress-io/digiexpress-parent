@@ -9,7 +9,6 @@ import { TreeNode, useEveliTree } from '../../eveli-tree-api';
 import { useUtilityClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
 import { sortChildren } from './eveli-tree-item-helpers';
 
-
 export interface EveliTreeItemProps {
   node: TreeNode;
   level: number;
@@ -18,9 +17,10 @@ export interface EveliTreeItemProps {
   onContextMenu: (event: React.MouseEvent, node: TreeNode) => void;
   onDoubleClick: (node: TreeNode, pathToTopParent: string) => void;
   isDarkTheme: boolean;
+  searchTerm: string;
 }
 
-export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme }) => {
+export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
   const children = node.children && node.children.length > 0;
   const configOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
@@ -59,6 +59,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
             description={node.description}
             isDarkTheme={isDarkTheme}
             error={showError ? true : false}
+            searchTerm={searchTerm}
           />
           {configOptions && (
             <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
@@ -84,6 +85,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
                 onContextMenu={onContextMenu}
                 onDoubleClick={onDoubleClick}
                 isDarkTheme={isDarkTheme}
+                searchTerm={searchTerm}
               />
             ))}
           </List>

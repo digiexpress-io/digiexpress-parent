@@ -1,8 +1,8 @@
 import React from 'react';
-import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
+import { generateUtilityClass, styled, Badge, ListItem, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeColors, getNodeColor } from '../tree-theme';
-
+import { SearchResultHighlight } from '../eveli-tree-search/SearchResultHighlight';
 import {
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
@@ -279,10 +279,10 @@ export const StyledListItem = styled(ListItem, {
   },
   ...error && {
     backgroundColor: alpha(isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight, 0.1),
-    borderBottom: `1px solid ${isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2)}`,
+    //borderBottom: `1px solid ${isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2)}`,
     '&:hover': {
       backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2),
-      borderBottom: `1px solid ${TreeColors.semantic.dangerDark}`
+      //borderBottom: `1px solid ${TreeColors.semantic.dangerDark}`
     }
   }
 }));
@@ -293,10 +293,11 @@ interface StyledListItemTextProps {
   description?: string;
   isDarkTheme: boolean;
   error: boolean;
+  searchTerm: string;
 }
 
 export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
-  nodeType, nodeName, description, isDarkTheme, error
+  nodeType, nodeName, description, isDarkTheme, error, searchTerm = ''
 }) => {
   return (
     <ListItemText primary={<Typography variant='subtitle2' sx={{
@@ -306,10 +307,10 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
       fontWeight: isDarkTheme ? 400 : 500,
     }}
     >
-      {nodeName}
+      <SearchResultHighlight text={nodeName} searchTerm={searchTerm} />
       {description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
-          - "{description}"
+          - "<SearchResultHighlight text={description} searchTerm={searchTerm} />"
         </Typography>
       )}
     </Typography>

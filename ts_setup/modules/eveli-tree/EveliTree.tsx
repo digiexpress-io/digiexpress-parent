@@ -13,7 +13,8 @@ import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handl
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
 import { EveliTreeItem } from './eveli-tree-item';
 import { EveliTreeItemMenu } from './eveli-tree-item-menu';
-
+import { EveliTreeSearch, EveliTreeSearchNoResults } from './eveli-tree-search';
+import { filterTreeNodes } from './eveli-tree-search/search-helpers';
 
 export const EveliTree: React.FC = () => {
   const { isDarkMode, setIsDarkMode, openAsset } = useEveliTree();
@@ -21,6 +22,11 @@ export const EveliTree: React.FC = () => {
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<ContextMenuData | undefined>();
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  const filteredTreeData = React.useMemo(() => {
+    return filterTreeNodes(treeData, searchTerm)
+  }, [treeData, searchTerm])
 
   function handleContextMenuClose() {
     setContextMenuOpen(false);
@@ -90,20 +96,24 @@ export const EveliTree: React.FC = () => {
           )}
         </Tooltip>
       </Box>
-      <List component='nav' disablePadding>
-        {treeData.map((node) => (
-          <EveliTreeItem
-            key={node.id}
-            node={node}
-            level={0}
-            onToggle={(nodeId) => toggleNode(nodeId, treeData, setTreeData)}
-            onContextMenu={(event, node) => handleContextMenu(event, node, setContextMenuData, setContextMenuOpen)}
-            onDoubleClick={handleDoubleClick}
-            isDarkTheme={isDarkMode}
-          />
-        ))}
-      </List>
+      <EveliTreeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
+      {filteredTreeData.length === 0 ? <EveliTreeSearchNoResults /> :
+        <List component='nav' disablePadding>
+          {filteredTreeData.map((node) => (
+            <EveliTreeItem
+              key={node.id}
+              node={node}
+              level={0}
+              onToggle={(nodeId) => toggleNode(nodeId, treeData, setTreeData)}
+              onContextMenu={(event, node) => handleContextMenu(event, node, setContextMenuData, setContextMenuOpen)}
+              onDoubleClick={handleDoubleClick}
+              isDarkTheme={isDarkMode}
+              searchTerm={searchTerm}
+            />
+          ))}
+        </List>
+      }
       <EveliTreeItemMenu
         node={contextMenuData?.node || undefined}
         anchorPosition={contextMenuData?.anchorPosition || undefined}
