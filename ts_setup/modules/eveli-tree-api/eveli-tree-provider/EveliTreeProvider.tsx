@@ -1,22 +1,25 @@
 import React from 'react';
-import { TreeNode, TreeNodeType } from '../tree-types';
+import { TreeNode } from '../tree-types';
 
 export interface EveliTreeOpenTab {
-  id: string;
-  name: string;
-  type: TreeNodeType;
+  node: TreeNode;
   pathToTopParent: string;
+
 }
 
 export interface EveliTreeContextType {
   isDarkMode: boolean;
-  setIsDarkMode: (isDarkMode: boolean) => void;
+  searchExpanded: boolean;
   openTabs: EveliTreeOpenTab[];
   activeTabIndex: number;
   activeTabPath: string;
+  activeNode: TreeNode | undefined;
+  isChildError: (node: TreeNode) => boolean; 
   openAsset: (asset: TreeNode, pathToTopParent: string) => void;
   closeTab: (index: number) => void;
   setActiveTab: (index: number) => void;
+  setIsDarkMode: (isDarkMode: boolean) => void;
+  setSearchExpanded: (expanded: boolean) => void;
 }
 
 const EveliTreeContext = React.createContext<EveliTreeContextType | undefined>(undefined);
@@ -27,9 +30,14 @@ export interface EveliTreeProviderProps {
 
 export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const [searchExpanded, setSearchExpanded] = React.useState(false);
   const [openTabs, setOpenTabs] = React.useState<EveliTreeOpenTab[]>([]);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [activeTabPath, setActiveTabPath] = React.useState('');
+  const activeTab = openTabs[activeTabIndex];
+  const activeNode = activeTab?.node;
+
+
 
   const openAsset = React.useCallback((asset: TreeNode, pathToTopParent: string) => {
     if (asset.type === 'folder') {
@@ -39,7 +47,7 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
     setActiveTabPath(pathToTopParent);
 
     setOpenTabs(prevTabs => {
-      const existingIndex = prevTabs.findIndex(tab => tab.id === asset.id);
+      const existingIndex = prevTabs.findIndex(tab => tab.node.id === asset.id);
       if (existingIndex !== -1) {
         setActiveTabIndex(existingIndex);
         setActiveTabPath(prevTabs[existingIndex].pathToTopParent);
@@ -47,10 +55,8 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
       }
 
       const newTab: EveliTreeOpenTab = {
-        id: asset.id,
-        name: asset.name,
-        type: asset.type,
-        pathToTopParent
+        node: asset,
+        pathToTopParent,
       };
       const newTabs = [...prevTabs, newTab];
       setActiveTabIndex(newTabs.length - 1);
@@ -80,18 +86,33 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
     });
   }, []);
 
+  const isChildError = React.useCallback((node: TreeNode): boolean => {
+    if (node.error) {
+      return true;
+    }
+    if (node.children) {
+      return node.children.some(child => isChildError(child));
+    }
+    return false;
+  }, []);
+
   const contextValue: EveliTreeContextType = React.useMemo(() => {
     return {
       isDarkMode,
       setIsDarkMode,
+      searchExpanded,
+      setSearchExpanded,
+      isChildError,
       openTabs,
       activeTabIndex,
       activeTabPath,
+      activeNode,
       openAsset,
       closeTab,
-      setActiveTab
+      setActiveTab,
+
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError, searchExpanded]);
 
   return (
     <EveliTreeContext.Provider value={contextValue}>

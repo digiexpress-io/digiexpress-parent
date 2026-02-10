@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Collapse, Divider, TextField } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
 import { useUtilityClasses } from './useUtilityClasses';
-import { EveliTreeItemSharingPermissions } from './EveliTreeItemSharingPermissions';
-import { EveliTreeItemHistory } from './EveliTreeItemHistory';
-import { EveliTreeItemReferences } from './EveliTreeItemReferences';
-import { EveliTreeItemComments } from './EveliTreeItemComments';
-import { NewItem } from './NewItem';
+import { ItemSharingAndPermissions } from './ItemSharingAndPermissions';
+import { ItemHistory } from './ItemHistory';
+import { ItemReferences } from './ItemReferences';
+import { ItemCreate } from './ItemCreate';
+import { ItemComments } from './ItemComments';
 
 export interface EveliTreeItemMenuSubProps {
   node: TreeNode | undefined;
@@ -29,11 +29,11 @@ export const EveliTreeItemMenuSub: React.FC<EveliTreeItemMenuSubProps> = (props)
             size='small'
           />
         )}
-        {props.openSubmenu === 'comments' && <EveliTreeItemComments node={props.node} />}
-        {props.openSubmenu === 'sharing' && <EveliTreeItemSharingPermissions />}
-        {props.openSubmenu === 'history' && <EveliTreeItemHistory />}
-        {props.openSubmenu === 'references' && <EveliTreeItemReferences node={props.node} />}
-        {props.openSubmenu === 'new' && <NewItem />}
+        {props.openSubmenu === 'comments' && <ItemComments node={props.node} />}
+        {props.openSubmenu === 'sharing' && <ItemSharingAndPermissions />}
+        {props.openSubmenu === 'history' && <ItemHistory />}
+        {props.openSubmenu === 'references' && <ItemReferences node={props.node} />}
+        {props.openSubmenu === 'new' && <ItemCreate />}
       </Box>
     </Collapse>
   );

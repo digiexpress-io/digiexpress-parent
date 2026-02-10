@@ -2,13 +2,13 @@ import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { TreeNode, mockTreeData } from '../../eveli-tree-api';
 
-interface ReferenceEntry {
+interface ItemReferencesEntry {
   assetName: string;
   location: string;
 }
 
-function findReferencesToNode(nodeId: string, nodeName: string): ReferenceEntry[] {
-  const references: ReferenceEntry[] = [];
+function findReferencesToNode(nodeId: string, nodeName: string): ItemReferencesEntry[] {
+  const references: ItemReferencesEntry[] = [];
 
   function searchInNode(node: TreeNode, path: string[] = []): void {
     const currentPath = [...path, node.name];
@@ -33,11 +33,11 @@ function findReferencesToNode(nodeId: string, nodeName: string): ReferenceEntry[
   return references;
 }
 
-interface EveliTreeItemReferencesProps {
+interface ItemReferencessProps {
   node?: TreeNode;
 }
 
-export const EveliTreeItemReferences: React.FC<EveliTreeItemReferencesProps> = ({ node }) => {
+export const ItemReferences: React.FC<ItemReferencessProps> = ({ node }) => {
   const references = React.useMemo(() => {
     if (!node) {
       return [];

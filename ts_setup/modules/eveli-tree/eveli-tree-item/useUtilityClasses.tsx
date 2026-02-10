@@ -1,8 +1,8 @@
 import React from 'react';
-import { generateUtilityClass, styled, Badge, useTheme, ListItem, ListItemText, Typography, Tooltip } from '@mui/material';
+import { generateUtilityClass, styled, Badge, ListItem, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { TreeColors, getNodeColor } from '../tree-theme';
-
+import { SearchResultHighlight } from '../eveli-tree-search/SearchResultHighlight';
 import {
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
@@ -23,7 +23,7 @@ import {
   VisibilityOff as AnonymousIcon,
 } from '@mui/icons-material';
 
-import { ConfigOption, TreeNode, TreeNodeType } from '../../eveli-tree-api';
+import { ConfigOption, TreeNode, TreeNodeType, useEveliTree } from '../../eveli-tree-api';
 
 
 
@@ -196,12 +196,14 @@ export const EveliTreeItemRoot = styled('div', {
 
     [`& .${MUI_NAME}-iconConfig`]: {
       fontSize: '14px',
-      color: isDarkTheme ? TreeColors.semantic.warning : TreeColors.semantic.warningLight,
+      color: isDarkTheme ? TreeColors.dark.text : TreeColors.light.text,
     },
   };
 });
 
 export function getIcon(node: TreeNode) {
+  const { isDarkMode } = useEveliTree();
+
   const getBaseIcon = () => {
     switch (node.type) {
       case 'folder':
@@ -230,8 +232,14 @@ export function getIcon(node: TreeNode) {
   };
 
   const baseIcon = getBaseIcon();
-  const theme = useTheme();
 
+  if (node.error) {
+    return (
+      <Box display='flex' alignItems='center' sx={{ color: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight }}>
+        {baseIcon}
+      </Box>
+    );
+  }
   if (node.reference) {
     return (
       <Badge variant="dot"
@@ -241,7 +249,7 @@ export function getIcon(node: TreeNode) {
         }}
         sx={{
           '& .MuiBadge-dot': {
-            backgroundColor: theme.palette.error.main,
+            backgroundColor: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight,
             width: 6,
             height: 6,
           },
@@ -256,13 +264,27 @@ export function getIcon(node: TreeNode) {
 };
 
 export const StyledListItem = styled(ListItem, {
-  shouldForwardProp: (prop) => prop !== 'isDarkTheme'
-})<{ level: number; isDarkTheme?: boolean }>(({ theme, level, isDarkTheme }) => ({
+  shouldForwardProp: (prop) =>
+    prop !== 'isDarkTheme' &&
+    prop !== 'level' &&
+    prop !== 'error'
+})<{
+  level: number, isDarkTheme: boolean, error: boolean
+}>(({ theme, level, isDarkTheme, error }) => ({
+
   paddingLeft: theme.spacing(level * 1.2),
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: isDarkTheme ? TreeColors.dark.surface : TreeColors.light.surface,
   },
+  ...error && {
+    backgroundColor: alpha(isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight, 0.1),
+    //borderBottom: `1px solid ${isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2)}`,
+    '&:hover': {
+      backgroundColor: isDarkTheme ? alpha(TreeColors.semantic.dangerDark, 0.3) : alpha(TreeColors.semantic.dangerLight, 0.2),
+      //borderBottom: `1px solid ${TreeColors.semantic.dangerDark}`
+    }
+  }
 }));
 
 interface StyledListItemTextProps {
@@ -270,24 +292,33 @@ interface StyledListItemTextProps {
   nodeName: string;
   description?: string;
   isDarkTheme: boolean;
+  error: boolean;
+  searchTerm: string;
 }
 
-export const StyledListItemText: React.FC<StyledListItemTextProps> = ({ nodeType, nodeName, description, isDarkTheme }) => {
+export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
+  nodeType, nodeName, description, isDarkTheme, error, searchTerm = ''
+}) => {
   return (
-    <ListItemText
-      primary={
-        <Typography variant='subtitle2' sx={{ color: getNodeColor(nodeType, isDarkTheme), fontWeight: isDarkTheme ? 400 : 500 }}>
-          {nodeName}
-          {description && (
-            <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
-              - "{description}"
-            </Typography>
-          )}
+    <ListItemText primary={<Typography variant='subtitle2' sx={{
+      color: error
+        ? (isDarkTheme ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight)
+        : getNodeColor(nodeType, isDarkTheme),
+      fontWeight: isDarkTheme ? 400 : 500,
+    }}
+    >
+      <SearchResultHighlight text={nodeName} searchTerm={searchTerm} isDarkMode={isDarkTheme} />
+      {description && (
+        <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
+          - "<SearchResultHighlight text={description} searchTerm={searchTerm} isDarkMode={isDarkTheme} />"
         </Typography>
-      }
+      )}
+    </Typography>
+    }
     />
   );
 }
+
 
 export function getIconClassName(node: TreeNode, classes: EveliTreeItemClasses) {
   switch (node.type) {

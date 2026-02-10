@@ -5,10 +5,9 @@ import {
   ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode, useEveliTree } from '../../eveli-tree-api';
 import { useUtilityClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
 import { sortChildren } from './eveli-tree-item-helpers';
-
 
 export interface EveliTreeItemProps {
   node: TreeNode;
@@ -18,12 +17,17 @@ export interface EveliTreeItemProps {
   onContextMenu: (event: React.MouseEvent, node: TreeNode) => void;
   onDoubleClick: (node: TreeNode, pathToTopParent: string) => void;
   isDarkTheme: boolean;
+  searchTerm: string;
 }
 
-export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme }) => {
+export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
   const children = node.children && node.children.length > 0;
   const configOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
+  const { isChildError } = useEveliTree();
+
+  const childWithError = children && node.children!.some(child => isChildError(child));
+  const showError = node.error || childWithError;
 
   // Build the full path for this node
   const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
@@ -36,6 +40,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
         onClick={() => children && onToggle(node.id)}
         onDoubleClick={() => onDoubleClick(node, fullPath)}
         onContextMenu={(event) => onContextMenu(event, node)}
+        error={showError ? true : false}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {children ? (
@@ -53,11 +58,13 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
             nodeName={node.name}
             description={node.description}
             isDarkTheme={isDarkTheme}
+            error={showError ? true : false}
+            searchTerm={searchTerm}
           />
           {configOptions && (
             <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
-              {getConfigIcons(node.configOptions!, classes.iconConfig).map((tooltipIcon, index) => (
-                <Box key={tooltipIcon.key || index}>
+              {getConfigIcons(node.configOptions!, classes.iconConfig).map((tooltipIcon) => (
+                <Box key={tooltipIcon.key} display='flex' alignItems='center'>
                   {tooltipIcon}
                 </Box>
               ))}
@@ -78,6 +85,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
                 onContextMenu={onContextMenu}
                 onDoubleClick={onDoubleClick}
                 isDarkTheme={isDarkTheme}
+                searchTerm={searchTerm}
               />
             ))}
           </List>
