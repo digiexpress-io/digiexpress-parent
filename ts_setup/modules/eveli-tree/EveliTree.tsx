@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, List, IconButton, Badge, styled, Tooltip } from '@mui/material';
+import { Box, Typography, List, IconButton, Badge, styled, Tooltip, Button } from '@mui/material';
 import { TreeColors } from './tree-theme';
 import {
   UnfoldLessOutlined as CollapseAllIcon,
@@ -7,7 +7,9 @@ import {
   DarkModeOutlined as DarkModeIcon,
   InsertDriveFileOutlined as FileIcon,
   FolderOutlined as FolderIcon,
-  Add as AddIcon
+  Add as AddIcon,
+  Search as SearchIcon,
+  Close as CloseIcon
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu, useEveliTree } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
@@ -17,7 +19,7 @@ import { EveliTreeSearch, EveliTreeSearchNoResults } from './eveli-tree-search';
 import { filterTreeNodes } from './eveli-tree-search/search-helpers';
 
 export const EveliTree: React.FC = () => {
-  const { isDarkMode, setIsDarkMode, openAsset } = useEveliTree();
+  const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useEveliTree();
   const classes = useUtilityClasses();
   const [treeData, setTreeData] = React.useState<TreeNode[]>(mockTreeData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
@@ -36,11 +38,34 @@ export const EveliTree: React.FC = () => {
     openAsset(node, pathToTopParent);
   }
 
+
+
   return (
     <EveliTreeRoot className={classes.root} isDarkTheme={isDarkMode}>
       <Box className={classes.title}>
         <Typography className={classes.titleText} mr={3}>Eveli Tree</Typography>
         <Box flexGrow={1} />
+        <Tooltip title='Toggle search' arrow enterDelay={1000}>
+          {isDarkMode ? (
+            <StyledIconDark onClick={() => setSearchExpanded(!searchExpanded)}>
+              <StyledBadgeDark
+                badgeContent={searchExpanded ? <CloseIcon sx={{ fontSize: '8px' }} /> : undefined}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              >
+                <SearchIcon sx={{ fontSize: '15px', transform: 'scaleX(-1)' }} />
+              </StyledBadgeDark>
+            </StyledIconDark>
+          ) : (
+            <StyledIconLight onClick={() => setSearchExpanded(!searchExpanded)}>
+              <StyledBadgeLight
+                badgeContent={searchExpanded ? <CloseIcon sx={{ fontSize: '8px' }} /> : undefined}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              >
+                <SearchIcon sx={{ fontSize: '15px', transform: 'rotate(90deg)' }} />
+              </StyledBadgeLight>
+            </StyledIconLight>
+          )}
+        </Tooltip>
         <Tooltip title='New file' arrow enterDelay={1000}>
           {isDarkMode ? (
             <StyledIconDark>
@@ -70,6 +95,7 @@ export const EveliTree: React.FC = () => {
               </StyledBadgeLight>
             </StyledIconLight>
           )}
+
         </Tooltip>
 
         <Tooltip title='Collapse all' arrow enterDelay={1000}>
@@ -96,7 +122,7 @@ export const EveliTree: React.FC = () => {
           )}
         </Tooltip>
       </Box>
-      <EveliTreeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} isDarkMode={isDarkMode} />
+      <EveliTreeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} isDarkMode={isDarkMode} open={searchExpanded} />
 
       {filteredTreeData.length === 0 ? <EveliTreeSearchNoResults /> :
         <List component='nav' disablePadding>

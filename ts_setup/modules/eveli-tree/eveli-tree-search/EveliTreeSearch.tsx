@@ -6,6 +6,7 @@ interface EveliTreeSearchProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   isDarkMode: boolean;
+  open: boolean;
 }
 
 interface ChipData {
@@ -13,7 +14,12 @@ interface ChipData {
   type: TreeNodeType;
 }
 
-export const EveliTreeSearch: React.FC<EveliTreeSearchProps> = ({ searchTerm, onSearchChange, isDarkMode }) => {
+export const EveliTreeSearch: React.FC<EveliTreeSearchProps> = ({ searchTerm, onSearchChange, isDarkMode, open }) => {
+
+  if (!open) {
+    return;
+  }
+
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     onSearchChange(event.target.value);

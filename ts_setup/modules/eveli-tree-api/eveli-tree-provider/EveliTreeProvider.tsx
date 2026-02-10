@@ -9,6 +9,7 @@ export interface EveliTreeOpenTab {
 
 export interface EveliTreeContextType {
   isDarkMode: boolean;
+  searchExpanded: boolean;
   openTabs: EveliTreeOpenTab[];
   activeTabIndex: number;
   activeTabPath: string;
@@ -18,6 +19,7 @@ export interface EveliTreeContextType {
   closeTab: (index: number) => void;
   setActiveTab: (index: number) => void;
   setIsDarkMode: (isDarkMode: boolean) => void;
+  setSearchExpanded: (expanded: boolean) => void;
 }
 
 const EveliTreeContext = React.createContext<EveliTreeContextType | undefined>(undefined);
@@ -28,11 +30,14 @@ export interface EveliTreeProviderProps {
 
 export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const [searchExpanded, setSearchExpanded] = React.useState(false);
   const [openTabs, setOpenTabs] = React.useState<EveliTreeOpenTab[]>([]);
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [activeTabPath, setActiveTabPath] = React.useState('');
   const activeTab = openTabs[activeTabIndex];
   const activeNode = activeTab?.node;
+
+
 
   const openAsset = React.useCallback((asset: TreeNode, pathToTopParent: string) => {
     if (asset.type === 'folder') {
@@ -94,6 +99,9 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
   const contextValue: EveliTreeContextType = React.useMemo(() => {
     return {
       isDarkMode,
+      setIsDarkMode,
+      searchExpanded,
+      setSearchExpanded,
       isChildError,
       openTabs,
       activeTabIndex,
@@ -102,9 +110,9 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
       openAsset,
       closeTab,
       setActiveTab,
-      setIsDarkMode,
+
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError, searchExpanded]);
 
   return (
     <EveliTreeContext.Provider value={contextValue}>
