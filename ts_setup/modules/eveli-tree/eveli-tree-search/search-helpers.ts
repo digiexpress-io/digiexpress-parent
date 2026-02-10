@@ -12,9 +12,10 @@ export function filterTreeNodes(nodes: TreeNode[], searchTerm: string): TreeNode
 
   for (const node of nodes) {
     const nameMatches = node.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const descriptionMatches = node.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const childMatches = node.children ? filterTreeNodes(node.children, searchTerm) : [];
 
-    if (nameMatches || childMatches.length > 0) {
+    if (nameMatches || descriptionMatches || childMatches.length > 0) {
       filtered.push({
         ...node,
         expanded: childMatches.length > 0 ? true : node.expanded,

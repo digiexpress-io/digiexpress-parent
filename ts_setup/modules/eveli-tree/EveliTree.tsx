@@ -96,7 +96,7 @@ export const EveliTree: React.FC = () => {
           )}
         </Tooltip>
       </Box>
-      <EveliTreeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+      <EveliTreeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} isDarkMode={isDarkMode} />
 
       {filteredTreeData.length === 0 ? <EveliTreeSearchNoResults /> :
         <List component='nav' disablePadding>

@@ -1,16 +1,19 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { TreeColors } from '../tree-theme';
 
 interface HighlightProps {
   text: string;
   searchTerm: string;
-  highlightColor?: string;
+  isDarkMode: boolean
 }
 
-export const SearchResultHighlight: React.FC<HighlightProps> = ({ text, searchTerm, highlightColor = 'yellow' }) => {
+export const SearchResultHighlight: React.FC<HighlightProps> = ({ text, searchTerm, isDarkMode }) => {
+
   if (!searchTerm.trim()) {
     return <>{text}</>;
   }
+
   const sanitizedText = text.toLowerCase();
   const sanitizedSearchTerm = searchTerm.toLowerCase();
   const parts: string[] = [];
@@ -30,6 +33,8 @@ export const SearchResultHighlight: React.FC<HighlightProps> = ({ text, searchTe
     parts.push(text.substring(lastIndex));
   }
 
+
+
   return (
     <>
       {parts.map((part, index) => {
@@ -37,7 +42,7 @@ export const SearchResultHighlight: React.FC<HighlightProps> = ({ text, searchTe
         return isMatch ? (
           <Box key={index} component='span'
             sx={{
-              backgroundColor: highlightColor,
+              backgroundColor: isDarkMode ? TreeColors.semantic.highlightDark : TreeColors.semantic.highlightLight,
               borderRadius: '2px',
               fontWeight: 'bold'
             }}

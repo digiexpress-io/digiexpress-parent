@@ -307,10 +307,10 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
       fontWeight: isDarkTheme ? 400 : 500,
     }}
     >
-      <SearchResultHighlight text={nodeName} searchTerm={searchTerm} />
+      <SearchResultHighlight text={nodeName} searchTerm={searchTerm} isDarkMode={isDarkTheme} />
       {description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: TreeColors.dark.textMuted, fontStyle: 'italic' }}>
-          - "<SearchResultHighlight text={description} searchTerm={searchTerm} />"
+          - "<SearchResultHighlight text={description} searchTerm={searchTerm} isDarkMode={isDarkTheme} />"
         </Typography>
       )}
     </Typography>
