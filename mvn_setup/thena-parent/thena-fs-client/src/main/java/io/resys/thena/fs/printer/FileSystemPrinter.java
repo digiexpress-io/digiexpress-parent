@@ -156,10 +156,6 @@ public class FileSystemPrinter {
           DATES.apply(node.getTransitives().getObjectIndex().getUpdatedAt());
         }
       }
-      if (tree.getTransitives() != null) {
-        DATES.apply(tree.getTransitives().getCreatedAt());
-        DATES.apply(tree.getTransitives().getUpdatedAt());
-      }
     }
     
     for (final var blob : world.getBlob().values()) {

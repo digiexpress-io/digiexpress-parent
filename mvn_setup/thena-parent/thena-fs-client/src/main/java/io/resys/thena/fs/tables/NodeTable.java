@@ -50,14 +50,6 @@ import io.vertx.mutiny.sqlclient.Row;
     DECLARE
         missing_count INTEGER;
     BEGIN
-        -- Validate that id, node_path and node_name are not null
-        SELECT count(*) INTO missing_count
-        FROM unnest(NEW.tree_nodes) nodes
-        WHERE nodes.id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
-  
-        IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Node(code 001) validation failed: % nodes have null id, node_path or node_name', missing_count;
-        END IF;
   
         -- Validate id uniqueness within the tree
         SELECT count(*) INTO missing_count
@@ -75,10 +67,10 @@ import io.vertx.mutiny.sqlclient.Row;
         -- Validate that object_id, node_path and node_name are not null
         SELECT count(*) INTO missing_count
         FROM unnest(NEW.tree_nodes) nodes
-        WHERE nodes.object_id IS NULL OR nodes.node_path IS NULL OR nodes.node_name IS NULL;
+        WHERE nodes.object_id IS NULL OR nodes.node_name IS NULL;
   
         IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Node(code 003) validation failed: % nodes have null object_id, node_path or node_name', missing_count;
+            RAISE EXCEPTION 'Node(code 003) validation failed: % nodes have null object_id or node_name', missing_count;
         END IF;
   
         -- Validate object_id uniqueness within the tree
@@ -94,16 +86,6 @@ import io.vertx.mutiny.sqlclient.Row;
             RAISE EXCEPTION 'Node(code 004) validation failed: % duplicate object_id values in tree', missing_count;
         END IF;
  
-    
-        -- Validate that both node_path and node_name are not null
-        SELECT count(*) INTO missing_count
-        FROM unnest(NEW.tree_nodes) nodes
-        WHERE nodes.node_path IS NULL OR nodes.node_name IS NULL;
-
-        IF missing_count > 0 THEN
-            RAISE EXCEPTION 'Node(code 005) validation failed: % nodes have null node_path or node_name', missing_count;
-        END IF;
-
         -- Validate path + name uniqueness within the tree
         SELECT count(*) INTO missing_count
         FROM (

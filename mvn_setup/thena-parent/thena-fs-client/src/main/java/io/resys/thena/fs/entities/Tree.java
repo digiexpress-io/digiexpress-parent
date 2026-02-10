@@ -21,7 +21,6 @@ package io.resys.thena.fs.entities;
  */
 
 import java.nio.charset.StandardCharsets;
-import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,8 +53,6 @@ public interface Tree extends FileSystemEntity {
   @JsonSerialize(as = ImmutableTreeTransitives.class)
   @JsonDeserialize(as = ImmutableTreeTransitives.class)
   interface TreeTransitives {
-    OffsetDateTime getCreatedAt();
-    OffsetDateTime getUpdatedAt();
   }
 
   // H(tree) = μ(∑ᵢ₌₁ⁿ H(nodeᵢ))

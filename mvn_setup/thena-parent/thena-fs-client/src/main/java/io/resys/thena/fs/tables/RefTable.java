@@ -39,6 +39,7 @@ import io.resys.thena.fs.entities.ImmutableObjectIndex;
 import io.resys.thena.fs.entities.ImmutableProps;
 import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
+import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
@@ -239,11 +240,12 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
     @Override
     public Ref apply(Row row) {
       final var baseline = RefMapper.baseline(row);
-      final var trs = ImmutableRefTransitives.builder().commit(baseline.getItem2());
+      final var trs = ImmutableRefTransitives.builder()
+          .commit(baseline.getItem2());
       
-      row.getJsonArray("nodes_json")
+      final var allNodes = row.getJsonArray("nodes_json")
         .stream().map(node_json -> (JsonObject) node_json)
-        .forEach(node_json -> {
+        .map(node_json -> {
 
           final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
           final var propsId = Optional.ofNullable(node_json.getString("props_id"));
@@ -260,8 +262,7 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
               
               .build();
 
-          final var nodeTrs = ImmutableNodeTransitives.builder()
-              .objectIndex(index);
+          final var nodeTrs = ImmutableNodeTransitives.builder().objectIndex(index);
 
           // optional when queried
           final var json_blob = node_json.getJsonObject("blob");
@@ -301,9 +302,14 @@ JOIN {tree} as tree ON tree.id = commits.tree_id
             .build();
           trs.putNodesById(node.getId(), node);
           
-        });
+          
+          return node;
+        })
+        .toList();
       
-      return baseline.getItem1().transitives(trs.build()).build();
+      return baseline.getItem1()
+          .transitives(trs.tree(ImmutableTree.builder().id(row.getString("tree_id")).treeNodes(allNodes).build()).build())
+          .build();
     }
   }
 
