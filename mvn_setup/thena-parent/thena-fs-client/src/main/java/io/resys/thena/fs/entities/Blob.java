@@ -22,6 +22,8 @@ package io.resys.thena.fs.entities;
 
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
@@ -30,6 +32,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -67,10 +71,30 @@ public interface Blob extends FileSystemEntity {
   
   // H(blob) = μ(blob_value)
   public static ImmutableBlob.Builder newInstance(JsonObject content, String type) {
-    final var hash = Hashing.murmur3_128().hashString(content.encode(), StandardCharsets.UTF_8).toString();
+    final var hash = Hashing.murmur3_128().hashString(canonicalizeJson(content), StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
         .blobType(type)
         .blobValue(content);
+  }
+  
+  private static String canonicalizeJson(JsonObject json) {
+    return json.stream()
+      .sorted(Map.Entry.comparingByKey())
+      .map(entry -> "\"" + entry.getKey() + "\":" + canonicalizeValue(entry.getValue()))
+      .collect(Collectors.joining(",", "{", "}"));
+  }
+
+  private static String canonicalizeValue(Object value) {
+    if (value instanceof JsonObject) {
+      return canonicalizeJson((JsonObject) value);
+    }
+    if (value instanceof JsonArray) {
+      JsonArray arr = (JsonArray) value;
+      return arr.stream()
+        .map(Blob::canonicalizeValue)
+        .collect(Collectors.joining(",", "[", "]"));
+    }
+    return Json.encode(value);
   }
 }

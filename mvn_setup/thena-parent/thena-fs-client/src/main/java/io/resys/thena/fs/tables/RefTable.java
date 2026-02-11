@@ -187,8 +187,8 @@ public interface RefTable {
           ELSE NULL END
       )
     ) FROM unnest(tree.tree_nodes) AS nodes
-      LEFT JOIN {props} as props ON props.id = nodes.props_id
-      LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id
+      LEFT JOIN {props} as props ON props.id = nodes.props_id AND nodes.props_id IS NOT NULL
+      LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id AND nodes.blob_id IS NOT NULL
       LEFT JOIN (
         SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
                created_commit.commit_created_at as created_at,
