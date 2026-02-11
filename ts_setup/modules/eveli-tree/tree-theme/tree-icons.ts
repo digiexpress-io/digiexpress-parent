@@ -7,6 +7,7 @@ import {
   // Navigation & Expansion Icons
   ExpandMore,
   ChevronRight,
+  UnfoldLess,
   UnfoldLessOutlined,
 
   // Theme & Mode Icons
@@ -55,13 +56,15 @@ import {
   Language,
   Build,
   Error,
+  BugReport,
+  Visibility,
 } from '@mui/icons-material';
 
 export const TreeIcons = {
   // Navigation & Expansion
   ExpandMore: ExpandMore,
   ChevronRight: ChevronRight,
-  CollapseAll: UnfoldLessOutlined,
+  CollapseAll: UnfoldLess,
 
   // Theme & Mode
   LightMode: LightModeOutlined,
@@ -110,4 +113,6 @@ export const TreeIcons = {
   Language: Language,
   Flow: Build,
   Error: Error,
+  Debug: BugReport,
+  Preview: Visibility,
 };

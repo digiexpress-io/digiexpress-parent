@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled, Typography, Tooltip } from '@mui/material';
 import { TreeColors } from '../tree-theme';
+import { TreeIcons } from '../tree-theme/tree-icons';
 
 
 export const TOOLBAR_WIDTH = '50px';
@@ -18,21 +19,47 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 }) => {
   return (
     <ToolbarContainer isDarkMode={isDarkMode}>
-      <StyledToolbarButton onClick={onClick}>
-        {isOpen ? 'Close' : 'Open'}
-      </StyledToolbarButton>
+      <Tooltip title={isOpen ? 'Collapse Panel' : 'Expand Panel'} placement="left">
+        <StyledToolbarButton onClick={onClick}>
+          <TreeIcons.CollapseAll />
+        </StyledToolbarButton>
+      </Tooltip>
 
-      <StyledToolbarButton onClick={() => console.log('References clicked')}>
-        Refs
-      </StyledToolbarButton>
+      <Tooltip title="Properties" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.Assignment />
+        </StyledToolbarButton>
+      </Tooltip>
 
-      <StyledToolbarButton onClick={() => console.log('Preview clicked')}>
-        Preview
-      </StyledToolbarButton>
+      <Tooltip title="Configuration" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.Settings />
+        </StyledToolbarButton>
+      </Tooltip>
 
-      <StyledToolbarButton onClick={() => console.log('Help clicked')}>
-        Help
-      </StyledToolbarButton>
+      <Tooltip title="References" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.Link />
+        </StyledToolbarButton>
+      </Tooltip>
+
+      <Tooltip title="Debug" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.Debug />
+        </StyledToolbarButton>
+      </Tooltip>
+
+      <Tooltip title="Preview" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.Preview />
+        </StyledToolbarButton>
+      </Tooltip>
+
+      <Tooltip title="Help" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.Language />
+        </StyledToolbarButton>
+      </Tooltip>
 
     </ToolbarContainer>
   );
@@ -40,26 +67,30 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 
 const ToolbarContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
   width: TOOLBAR_WIDTH,
   height: '100%',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  display: 'flex',
+  gap: theme.spacing(2),
+  flexDirection: 'column',
   backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
   borderLeft: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
-  display: 'flex',
-  flexDirection: 'column',
   alignItems: 'center',
   flexShrink: 0
 }));
 
-const StyledToolbarButton = styled(Typography)(({ theme }) => ({
-  padding: theme.spacing(1),
+const StyledToolbarButton = styled(Box)(({ theme }) => ({
   cursor: 'pointer',
   userSelect: 'none',
-  writingMode: 'vertical-rl',
-  textAlign: 'center',
-  ...theme.typography.caption,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  '& .MuiSvgIcon-root': {
+    fontSize: '1.2rem',
+  },
   '&:hover': {
     opacity: 0.7
   },
-
 }));
