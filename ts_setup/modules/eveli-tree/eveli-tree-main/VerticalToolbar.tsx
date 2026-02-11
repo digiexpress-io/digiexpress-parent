@@ -27,7 +27,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 
       <Tooltip title="Properties" placement="left" arrow>
         <StyledToolbarButton onClick={() => { }}>
-          <TreeIcons.Assignment />
+          <TreeIcons.Info />
         </StyledToolbarButton>
       </Tooltip>
 
@@ -39,7 +39,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 
       <Tooltip title="References" placement="left" arrow>
         <StyledToolbarButton onClick={() => { }}>
-          <TreeIcons.Link />
+          <TreeIcons.Tree />
         </StyledToolbarButton>
       </Tooltip>
 
@@ -52,6 +52,12 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
       <Tooltip title="Preview" placement="left" arrow>
         <StyledToolbarButton onClick={() => { }}>
           <TreeIcons.Preview />
+        </StyledToolbarButton>
+      </Tooltip>
+
+      <Tooltip title="History" placement="left" arrow>
+        <StyledToolbarButton onClick={() => { }}>
+          <TreeIcons.History />
         </StyledToolbarButton>
       </Tooltip>
 

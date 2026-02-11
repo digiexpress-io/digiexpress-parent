@@ -59,6 +59,9 @@ import {
   Error,
   BugReport,
   Visibility,
+  Info,
+  AccountTree,
+  WorkHistory,
 } from '@mui/icons-material';
 
 export const TreeIcons = {
@@ -117,4 +120,7 @@ export const TreeIcons = {
   Error: Error,
   Debug: BugReport,
   Preview: Visibility,
+  Info: Info,
+  Tree: AccountTree,
+  History: WorkHistory,
 };
