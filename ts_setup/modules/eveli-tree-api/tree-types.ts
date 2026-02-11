@@ -34,6 +34,7 @@ export interface TreeNodeComment {
 }
 
 export type TreeNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
+export type TreeNodeSecondaryView = 'references' | 'properties'
 
 export type FolderId = string;
 export type ArticleId = string;

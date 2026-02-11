@@ -1,30 +1,42 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
-import { useEveliTree } from '../../eveli-tree-api';
+import { TreeNodeSecondaryView, useEveliTree } from '../../eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 import { EveliTreeMainLeft } from './EveliTreeMainLeft';
 import { EveliTreeMainRight } from './EveliTreeMainRight';
 import { VerticalToolbar, TOOLBAR_WIDTH } from './VerticalToolbar';
 
 export const EveliTreeMain: React.FC = () => {
-  const { isDarkMode } = useEveliTree();
+  const { isDarkMode, activeNode } = useEveliTree();
   const [isRightPanelOpen, setIsRightPanelOpen] = React.useState(true);
+  const [selectedView, setSelectedView] = React.useState<TreeNodeSecondaryView | undefined>();
 
-  const toggleRightPanel = () => {
+  function toggleRightPanel() {
     setIsRightPanelOpen(!isRightPanelOpen);
   };
+
+  function handleViewChange(view: TreeNodeSecondaryView) {
+    setSelectedView(view);
+    if (!isRightPanelOpen) {
+      setIsRightPanelOpen(true);
+    }
+  }
+
 
   return (
     <SplitContainer isDarkMode={isDarkMode}>
       <EveliTreeMainLeft />
       <Divider isDarkMode={isDarkMode} />
       <RightPanelContainer isOpen={isRightPanelOpen} toolbarWidth={TOOLBAR_WIDTH}>
-        <EveliTreeMainRight />
+        <EveliTreeMainRight activeNode={activeNode} selectedView={selectedView} />
       </RightPanelContainer>
       <VerticalToolbar
         isDarkMode={isDarkMode}
         isOpen={isRightPanelOpen}
         onClick={toggleRightPanel}
+        selectedView={selectedView}
+        onViewChange={handleViewChange}
+        activeNode={activeNode}
       />
     </SplitContainer>
   );
