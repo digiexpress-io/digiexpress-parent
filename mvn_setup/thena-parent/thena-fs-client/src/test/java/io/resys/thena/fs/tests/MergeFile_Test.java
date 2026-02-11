@@ -145,23 +145,22 @@ Date: 2024-01-01 12:00:00 UTC
 Branch updated: main commit02..commit01
       """);
       
-      { // pull all files
-        final var result = fs
-            .branchQuery().getOne()
-            .await().atMost(atMost);
-  
-        final var blob = result.getTransitives().getBlobsById().values().iterator().next();
-        Assertions.assertEquals(1, result.getTransitives().getTree().getTreeNodes().size());
-        Assertions.assertEquals(1, result.getTransitives().getBlobsById().size());
-        Assertions.assertEquals(2, blob.getBlobValue().size());
-        Assertions.assertEquals("Lady Sybil", blob.getBlobValue().getString("firstName"));
-        Assertions.assertEquals("Vimes", blob.getBlobValue().getString("lastName"));
-        
-        final var wholeDb = createState().withTenant(tenant)
-            .onItem().transformToUni(t -> t.query().findAll())
-            .await().atMost(atMost);
-        Assertions.assertEquals(2, wholeDb.getBlob().size());
-      }
+      // pull all files
+      final var result = fs
+          .branchQuery().getOne()
+          .await().atMost(atMost);
+
+      final var blob = result.getTransitives().getBlobsById().values().iterator().next();
+      Assertions.assertEquals(1, result.getTransitives().getTree().getTreeNodes().size());
+      Assertions.assertEquals(1, result.getTransitives().getBlobsById().size());
+      Assertions.assertEquals(2, blob.getBlobValue().size());
+      Assertions.assertEquals("Lady Sybil", blob.getBlobValue().getString("firstName"));
+      Assertions.assertEquals("Vimes", blob.getBlobValue().getString("lastName"));
+      
+      final var wholeDb = createState().withTenant(tenant)
+          .onItem().transformToUni(t -> t.query().findAll())
+          .await().atMost(atMost);
+      Assertions.assertEquals(2, wholeDb.getBlob().size());
     }
   }
 }
