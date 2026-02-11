@@ -14,7 +14,7 @@ const permissions: ItemSharingAndPermissions[] = [
   { name: 'everyone', privilege: 'read' }
 ];
 
-export const ItemSharingAndPermissions: React.FC = () => {
+export const NodeSharingAndPermissions: React.FC = () => {
   return (<>
     <Typography variant='caption'>You can read and write</Typography>
     <StyledTableContainer>

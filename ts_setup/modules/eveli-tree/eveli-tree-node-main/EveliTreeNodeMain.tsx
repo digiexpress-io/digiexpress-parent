@@ -3,7 +3,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { useEveliTree } from '../../eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 
-export const EveliTreeItemMain: React.FC = () => {
+export const EveliTreeNodeMain: React.FC = () => {
   const { isDarkMode, activeTabIndex, openTabs } = useEveliTree();
 
   const activeTab = openTabs[activeTabIndex];

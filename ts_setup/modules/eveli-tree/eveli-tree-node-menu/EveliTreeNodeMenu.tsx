@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
-import { EveliTreeItemMenuMain } from './EveliTreeItemMenuMain';
-import { EveliTreeItemMenuSub } from './EveliTreeItemMenuSub';
+import { useUtilityClasses, EveliTreeNodeMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
+import { EveliTreeNodeMenuMain } from './EveliTreeNodeMenuMain';
+import { EveliTreeNodeMenuSub } from './EveliTreeNodeMenuSub';
 import { usePositioningStrategy } from './helpers';
 
-interface EveliTreeItemMenuProps {
+interface EveliTreeNodeMenuProps {
   node: TreeNode | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
@@ -14,7 +14,7 @@ interface EveliTreeItemMenuProps {
   onExited?: () => void;
 }
 
-export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
+export const EveliTreeNodeMenu: React.FC<EveliTreeNodeMenuProps> = (props) => {
   const classes = useUtilityClasses();
   const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
   const { shouldExpandUpward, vertical } = usePositioningStrategy(props.anchorPosition, MENU_HEIGHT);
@@ -53,13 +53,13 @@ export const EveliTreeItemMenu: React.FC<EveliTreeItemMenuProps> = (props) => {
       }}
     >
       <Box className={classes.menuContainer}>
-        <EveliTreeItemMenuMain
+        <EveliTreeNodeMenuMain
           node={props.node}
           openSubmenu={openSubmenu}
           onSubmenuOpen={handleSubmenuOpen}
           onClose={props.onClose}
         />
-        <EveliTreeItemMenuSub
+        <EveliTreeNodeMenuSub
           node={props.node}
           openSubmenu={openSubmenu}
         />

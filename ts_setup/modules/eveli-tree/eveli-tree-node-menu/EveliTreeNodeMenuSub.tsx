@@ -2,18 +2,18 @@ import React from 'react';
 import { Box, Collapse, Divider, TextField } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
 import { useUtilityClasses } from './useUtilityClasses';
-import { ItemSharingAndPermissions } from './ItemSharingAndPermissions';
-import { ItemHistory } from './ItemHistory';
-import { ItemReferences } from './ItemReferences';
-import { ItemCreate } from './ItemCreate';
-import { ItemComments } from './ItemComments';
+import { NodeSharingAndPermissions } from './NodeSharingAndPermissions';
+import { NodeHistory } from './NodeHistory';
+import { NodeReferences } from './NodeReferences';
+import { NodeCreate } from './NodeCreate';
+import { NodeComments } from './NodeComments';
 
-export interface EveliTreeItemMenuSubProps {
+export interface EveliTreeNodeMenuSubProps {
   node: TreeNode | undefined;
   openSubmenu: string | undefined;
 }
 
-export const EveliTreeItemMenuSub: React.FC<EveliTreeItemMenuSubProps> = (props) => {
+export const EveliTreeNodeMenuSub: React.FC<EveliTreeNodeMenuSubProps> = (props) => {
   const classes = useUtilityClasses();
   const [labels, setLabels] = React.useState('');
 
@@ -29,11 +29,11 @@ export const EveliTreeItemMenuSub: React.FC<EveliTreeItemMenuSubProps> = (props)
             size='small'
           />
         )}
-        {props.openSubmenu === 'comments' && <ItemComments node={props.node} />}
-        {props.openSubmenu === 'sharing' && <ItemSharingAndPermissions />}
-        {props.openSubmenu === 'history' && <ItemHistory />}
-        {props.openSubmenu === 'references' && <ItemReferences node={props.node} />}
-        {props.openSubmenu === 'new' && <ItemCreate />}
+        {props.openSubmenu === 'comments' && <NodeComments node={props.node} />}
+        {props.openSubmenu === 'sharing' && <NodeSharingAndPermissions />}
+        {props.openSubmenu === 'history' && <NodeHistory />}
+        {props.openSubmenu === 'references' && <NodeReferences node={props.node} />}
+        {props.openSubmenu === 'new' && <NodeCreate />}
       </Box>
     </Collapse>
   );

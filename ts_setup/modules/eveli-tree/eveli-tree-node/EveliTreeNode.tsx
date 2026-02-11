@@ -6,10 +6,10 @@ import {
 } from '@mui/icons-material';
 
 import { TreeNode, useEveliTree } from '../../eveli-tree-api';
-import { useUtilityClasses, EveliTreeItemRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
-import { sortChildren } from './eveli-tree-item-helpers';
+import { useUtilityClasses, EveliTreeNodeRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
+import { sortChildren } from './eveli-tree-node-helpers';
 
-export interface EveliTreeItemProps {
+export interface EveliTreeNodeProps {
   node: TreeNode;
   level: number;
   parentPath?: string;
@@ -20,7 +20,7 @@ export interface EveliTreeItemProps {
   searchTerm: string;
 }
 
-export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
+export const EveliTreeNode: React.FC<EveliTreeNodeProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
   const children = node.children && node.children.length > 0;
   const configOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
@@ -33,7 +33,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
   const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
 
   return (
-    <EveliTreeItemRoot className={classes.root} isDarkTheme={isDarkTheme}>
+    <EveliTreeNodeRoot className={classes.root} isDarkTheme={isDarkTheme}>
       <StyledListItem
         level={level}
         isDarkTheme={isDarkTheme}
@@ -76,7 +76,7 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
         <Collapse in={node.expanded} timeout={0}>
           <List component='div' disablePadding>
             {sortChildren(node.children || []).map((child) => (
-              <EveliTreeItem
+              <EveliTreeNode
                 key={child.id}
                 node={child}
                 level={level + 1}
@@ -91,6 +91,6 @@ export const EveliTreeItem: React.FC<EveliTreeItemProps> = ({ node, level, paren
           </List>
         </Collapse>
       )}
-    </EveliTreeItemRoot>
+    </EveliTreeNodeRoot>
   );
 };

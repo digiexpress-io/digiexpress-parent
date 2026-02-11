@@ -13,8 +13,8 @@ import {
 } from '@mui/icons-material';
 import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu, useEveliTree } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
-import { EveliTreeItem } from './eveli-tree-item';
-import { EveliTreeItemMenu } from './eveli-tree-item-menu';
+import { EveliTreeNode } from './eveli-tree-node';
+import { EveliTreeNodeMenu } from './eveli-tree-node-menu';
 import { EveliTreeSearch, EveliTreeSearchNoResults } from './eveli-tree-search';
 import { filterTreeNodes } from './eveli-tree-search/search-helpers';
 
@@ -127,7 +127,7 @@ export const EveliTree: React.FC = () => {
       {filteredTreeData.length === 0 ? <EveliTreeSearchNoResults /> :
         <List component='nav' disablePadding>
           {filteredTreeData.map((node) => (
-            <EveliTreeItem
+            <EveliTreeNode
               key={node.id}
               node={node}
               level={0}
@@ -140,7 +140,7 @@ export const EveliTree: React.FC = () => {
           ))}
         </List>
       }
-      <EveliTreeItemMenu
+      <EveliTreeNodeMenu
         node={contextMenuData?.node || undefined}
         anchorPosition={contextMenuData?.anchorPosition || undefined}
         open={contextMenuOpen}

@@ -20,7 +20,7 @@ const historyData: ItemHistoryEntry[] = [
   { user: 'System', change: 'File created', date: '20.12.2024' }
 ];
 
-export const ItemHistory: React.FC = () => {
+export const NodeHistory: React.FC = () => {
   return (
     <>
       <Typography variant='caption'>Recent changes to this item</Typography>

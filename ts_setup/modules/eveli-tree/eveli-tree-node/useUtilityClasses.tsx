@@ -27,9 +27,9 @@ import { ConfigOption, TreeNode, TreeNodeType, useEveliTree } from '../../eveli-
 
 
 
-export const MUI_NAME = 'EveliTreeItem';
+export const MUI_NAME = 'EveliTreeNode';
 
-export interface EveliTreeItemClasses {
+export interface EveliTreeNodeClasses {
   root: string;
   icon: string;
   iconFolder: string;
@@ -46,7 +46,7 @@ export interface EveliTreeItemClasses {
   iconConfig: string;
 }
 
-export type EveliTreeItemClassKey = keyof EveliTreeItemClasses;
+export type EveliTreeNodeClassKey = keyof EveliTreeNodeClasses;
 
 export const useUtilityClasses = (_isDarkTheme: boolean) => {
   const slots = {
@@ -69,7 +69,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const EveliTreeItemRoot = styled('div', {
+export const EveliTreeNodeRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkTheme',
@@ -320,7 +320,7 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
 }
 
 
-export function getIconClassName(node: TreeNode, classes: EveliTreeItemClasses) {
+export function getIconClassName(node: TreeNode, classes: EveliTreeNodeClasses) {
   switch (node.type) {
     case 'folder':
       return classes.iconFolder;

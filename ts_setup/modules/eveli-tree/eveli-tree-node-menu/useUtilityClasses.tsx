@@ -2,13 +2,13 @@ import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled, Popover } from '@mui/material';
 import { TreeColors } from '../tree-theme';
 
-export const MUI_NAME = 'EveliTreeItemMenu';
+export const MUI_NAME = 'EveliTreeNodeMenu';
 export const MENU_WIDTH = 350;
 export const MENU_WIDTH_EXTENDED = MENU_WIDTH * 2;
 export const MENU_HEIGHT = 700; // Approximate height when submenu is open
 export const MENU_PADDING = 8; // theme.spacing(0.5) * 2 for top and bottom padding
 
-export interface EveliTreeItemMenuClasses {
+export interface EveliTreeNodeMenuClasses {
   root: string;
   headerMain: string;
   menuItem: string;
@@ -26,7 +26,7 @@ export interface EveliTreeItemMenuClasses {
   sectionSub: string;
 }
 
-export type EveliTreeItemMenuClassKey = keyof EveliTreeItemMenuClasses;
+export type EveliTreeNodeMenuClassKey = keyof EveliTreeNodeMenuClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -50,7 +50,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const EveliTreeItemMenuRoot = styled(Popover, {
+export const EveliTreeNodeMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward'].includes(prop as string),

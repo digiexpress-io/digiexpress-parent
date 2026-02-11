@@ -33,11 +33,11 @@ function findReferencesToNode(nodeId: string, nodeName: string): ItemReferencesE
   return references;
 }
 
-interface ItemReferencessProps {
+interface NodeReferencessProps {
   node?: TreeNode;
 }
 
-export const ItemReferences: React.FC<ItemReferencessProps> = ({ node }) => {
+export const NodeReferences: React.FC<NodeReferencessProps> = ({ node }) => {
   const references = React.useMemo(() => {
     if (!node) {
       return [];

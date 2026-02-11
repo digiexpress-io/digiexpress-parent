@@ -34,14 +34,14 @@ function getReferencesCount(nodeId: string, nodeName: string): number {
   return count;
 }
 
-export interface EveliTreeItemMenuMainProps {
+export interface EveliTreeNodeMenuMainProps {
   node: TreeNode | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;
 }
 
-export const EveliTreeItemMenuMain: React.FC<EveliTreeItemMenuMainProps> = (props) => {
+export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (props) => {
   const classes = useUtilityClasses();
   const { openAsset } = useEveliTree();
 
