@@ -161,11 +161,7 @@ Branch updated: main commit02..commit01
             .onItem().transformToUni(t -> t.query().findAll())
             .await().atMost(atMost);
         Assertions.assertEquals(2, wholeDb.getBlob().size());
-        
-        
-        
       }
     }
-    
   }
 }
