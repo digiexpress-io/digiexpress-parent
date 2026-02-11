@@ -1,49 +1,20 @@
 import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
-import { TreeNode, mockTreeData } from '../../eveli-tree-api';
-
-interface ItemReferencesEntry {
-  assetName: string;
-  location: string;
-}
-
-function findReferencesToNode(nodeId: string, nodeName: string): ItemReferencesEntry[] {
-  const references: ItemReferencesEntry[] = [];
-
-  function searchInNode(node: TreeNode, path: string[] = []): void {
-    const currentPath = [...path, node.name];
-
-    // Check if this node is a reference to our target node
-    if (node.reference && node.name === nodeName && node.id !== nodeId) {
-      references.push({
-        assetName: node.name,
-        location: currentPath.slice(0, -1).join(' / ')
-      });
-    }
-
-    // Recursively search children
-    if (node.children) {
-      node.children.forEach(child => searchInNode(child, currentPath));
-    }
-  }
-
-  // Search through all mock data
-  mockTreeData.forEach(rootNode => searchInNode(rootNode));
-
-  return references;
-}
+import { TreeNode, useEveliTree } from '../../eveli-tree-api';
 
 interface NodeReferencessProps {
   node?: TreeNode;
 }
 
 export const NodeReferences: React.FC<NodeReferencessProps> = ({ node }) => {
+  const { findReferencesToNode } = useEveliTree();
+
   const references = React.useMemo(() => {
     if (!node) {
       return [];
     }
-    return findReferencesToNode(node.id, node.name);
-  }, [node]);
+    return findReferencesToNode(node);
+  }, [node, findReferencesToNode]);
 
   return (
     <>

@@ -10,9 +10,8 @@ interface ReferencesViewProps {
 
 export const ReferencesView: React.FC<ReferencesViewProps> = ({ node }) => {
   const { isDarkMode } = useEveliTree();
-
-  // Check if this node has references
-  const hasReferences = node.reference;
+  const { findReferencesToNode } = useEveliTree();
+  const references = findReferencesToNode(node)
 
   return (
     <ViewContainer isDarkMode={isDarkMode}>
@@ -23,14 +22,14 @@ export const ReferencesView: React.FC<ReferencesViewProps> = ({ node }) => {
 
       <Content>
         <NodeInfo>
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography variant="subtitle1">
             {node.name}
           </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Typography variant="body2" color="text.secondary">
             Type: {node.type} • ID: {node.id}
           </Typography>
 
-          {hasReferences ? (
+          {references ? (
             <Chip
               label="Has References"
               color="primary"
@@ -49,27 +48,12 @@ export const ReferencesView: React.FC<ReferencesViewProps> = ({ node }) => {
         </NodeInfo>
 
         <ReferenceSection>
-          <Typography variant="subtitle2" gutterBottom sx={{ mt: 3, mb: 2 }}>
+          <Typography variant="subtitle2">
             Reference Information
           </Typography>
 
-          {hasReferences ? (
-            <Box>
-              <Typography variant="body2" sx={{ mb: 2 }}>
-                This node is marked as a reference and may be used by other components in the tree structure.
-              </Typography>
-
-              <ReferenceDetails isDarkMode={isDarkMode}>
-                <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                  reference: {String(node.reference)}
-                </Typography>
-                {node.description && (
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Description: {node.description}
-                  </Typography>
-                )}
-              </ReferenceDetails>
-            </Box>
+          {references ? (
+            <>{references.map(r => <div><span>{r.location}{": "}{r.assetName}</span></div>)}</>
           ) : (
             <Typography variant="body2" color="text.secondary">
               This node does not contain any reference markers.
@@ -79,7 +63,7 @@ export const ReferencesView: React.FC<ReferencesViewProps> = ({ node }) => {
 
         {node.children && node.children.length > 0 && (
           <ChildrenSection>
-            <Typography variant="subtitle2" gutterBottom sx={{ mt: 3, mb: 2 }}>
+            <Typography variant="subtitle2">
               Child References
             </Typography>
             <List dense>

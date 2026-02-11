@@ -39,3 +39,8 @@ export function usePositioningStrategy(
     return { vertical, shouldExpandUpward };
   }, [anchorPosition, menuHeight]);
 }
+
+export interface ItemReferencesEntry {
+  assetName: string;
+  location: string;
+}

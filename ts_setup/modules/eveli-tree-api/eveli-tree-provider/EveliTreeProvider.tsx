@@ -1,10 +1,15 @@
 import React from 'react';
 import { TreeNode } from '../tree-types';
+import { mockTreeData } from '../mock-tree-data';
 
 export interface EveliTreeOpenTab {
   node: TreeNode;
   pathToTopParent: string;
+}
 
+export interface ItemReferencesEntry {
+  assetName: string;
+  location: string;
 }
 
 export interface EveliTreeContextType {
@@ -14,7 +19,8 @@ export interface EveliTreeContextType {
   activeTabIndex: number;
   activeTabPath: string;
   activeNode: TreeNode | undefined;
-  isChildError: (node: TreeNode) => boolean; 
+  isChildError: (node: TreeNode) => boolean;
+  findReferencesToNode: (node: TreeNode) => ItemReferencesEntry[];
   openAsset: (asset: TreeNode, pathToTopParent: string) => void;
   closeTab: (index: number) => void;
   setActiveTab: (index: number) => void;
@@ -96,6 +102,32 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
     return false;
   }, []);
 
+  const findReferencesToNode = React.useCallback((targetNode: TreeNode): ItemReferencesEntry[] => {
+    const references: ItemReferencesEntry[] = [];
+
+    function searchInNode(node: TreeNode, path: string[] = []): void {
+      const currentPath = [...path, node.name];
+
+      // Check if this node is a reference to our target node
+      if (node.reference && node.name === targetNode.name && node.id !== targetNode.id) {
+        references.push({
+          assetName: node.name,
+          location: currentPath.slice(0, -1).join(' / ')
+        });
+      }
+
+      // Recursively search children
+      if (node.children) {
+        node.children.forEach(child => searchInNode(child, currentPath));
+      }
+    }
+
+    // Search through all mock data
+    mockTreeData.forEach(rootNode => searchInNode(rootNode));
+
+    return references;
+  }, []);
+
   const contextValue: EveliTreeContextType = React.useMemo(() => {
     return {
       isDarkMode,
@@ -103,6 +135,7 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
       searchExpanded,
       setSearchExpanded,
       isChildError,
+      findReferencesToNode,
       openTabs,
       activeTabIndex,
       activeTabPath,
@@ -112,7 +145,7 @@ export const EveliTreeProvider: React.FC<EveliTreeProviderProps> = (props) => {
       setActiveTab,
 
     };
-  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError, searchExpanded]);
+  }, [isDarkMode, openTabs, activeTabIndex, activeTabPath, openAsset, closeTab, setActiveTab, activeNode, isChildError, findReferencesToNode, searchExpanded]);
 
   return (
     <EveliTreeContext.Provider value={contextValue}>

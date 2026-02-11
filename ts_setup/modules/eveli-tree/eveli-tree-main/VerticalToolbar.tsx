@@ -25,7 +25,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
   activeNode
 }) => {
   const isActiveNode = !!activeNode;
-  const isReference = !!activeNode?.reference;
+  const isNodeReferencePresent = !!activeNode?.reference;
   return (
     <ToolbarContainer isDarkMode={isDarkMode}>
       <Tooltip title={isOpen ? 'Collapse Panel' : 'Expand Panel'} placement="left">
@@ -47,7 +47,11 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
       </Tooltip>
 
       <Tooltip title="References" placement="left" arrow>
-        <StyledToolbarButton onClick={() => onViewChange('references')} disabled={!isActiveNode || !isReference} isSelected={isActiveNode && isReference && selectedView === 'references'} isDarkMode={isDarkMode}>
+        <StyledToolbarButton isDarkMode={isDarkMode}
+          onClick={() => onViewChange('references')}
+          disabled={!isActiveNode || !isNodeReferencePresent}
+          isSelected={selectedView === 'references'}
+        >
           <TreeIcons.Tree />
         </StyledToolbarButton>
       </Tooltip>
