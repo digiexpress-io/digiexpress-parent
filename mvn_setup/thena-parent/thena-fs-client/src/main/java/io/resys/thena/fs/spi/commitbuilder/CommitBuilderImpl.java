@@ -201,7 +201,8 @@ public class CommitBuilderImpl implements CommitBuilder {
     
   }
   
-  private CommitResult visitSuccess(PersistenceUnit unit) {
+  private CommitResult visitSuccess(Snapshot.SnapshotResult result) {
+    final PersistenceUnit unit = result.getPersistenceUnit();
     return ImmutableCommitResult.builder()
       .addAllMessages(
           unit.getCommitMessages().stream()
@@ -211,6 +212,7 @@ public class CommitBuilderImpl implements CommitBuilder {
       .addAllMessages(unit.getCommitLogs())
       .tenantId(tenantId)
       .status(mapCommitStatus(unit.getStatus()))
+      .log(result.getLog())
       .commit(unit.getCommitInserts().isEmpty() ? null : unit.getCommitInserts().getLast())
       .build();
   }
@@ -232,10 +234,11 @@ public class CommitBuilderImpl implements CommitBuilder {
     return tx.query().queryRef().findOneWithLock(query);
   }
   
-  private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
+  private Uni<Snapshot.SnapshotResult> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
     final var createdAt = commitCreatedAt != null ? commitCreatedAt : OffsetDateTime.now();
     final var snapshot = new Snapshot(tenantId, lock, branchName, createdAt);
     final var unit = snapshot.addAll(this.changes).build(commitAuthor, commitMessage, createdAt);
-    return tx.builder().from(unit).persist();
+    return tx.builder().from(unit.getPersistenceUnit()).persist()
+        .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()));
   }
 }

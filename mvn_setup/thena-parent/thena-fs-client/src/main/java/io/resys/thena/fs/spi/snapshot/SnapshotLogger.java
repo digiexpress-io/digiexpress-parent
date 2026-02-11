@@ -95,7 +95,7 @@ public class SnapshotLogger {
     if(!log.isDebugEnabled()) return this;
     
     for(Node node : nodes) {
-      data.append("D    ").append(node.getNodePath()).append("/").append(node.getNodeName()).append("\n");
+      data.append("D    ").append(node.getFullPath()).append("\n");
     }
     return this;
   }
@@ -105,7 +105,7 @@ public class SnapshotLogger {
     
     data.append("\nTree changes:\n");
     for(Node node : next.getTreeNodes()) {
-      data.append("A    ").append(node.getNodePath()).append("/").append(node.getNodeName()).append("\n");
+      data.append("A    ").append(node.getFullPath()).append("\n");
     }
     return this;
   }
@@ -115,11 +115,12 @@ public class SnapshotLogger {
     
     data.append("\nTree changes:\n");
     
-    final var prevNodes = prev.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
-    final var nextNodes = next.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getNodePath() + "/" + n.getNodeName(), n -> n));
+    final var prevNodes = prev.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getFullPath(), n -> n));
+    final var nextNodes = next.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getFullPath(), n -> n));
     
-    for(String path : nextNodes.keySet()) {
+    for(final var path : nextNodes.keySet()) {
       final var nextNode = nextNodes.get(path);
+      
       if(!prevNodes.containsKey(path)) {
         data.append("A    ").append(path).append("\n");
       } else {
@@ -149,7 +150,7 @@ public class SnapshotLogger {
       }
     }
     
-    for(String path : prevNodes.keySet()) {
+    for(final var path : prevNodes.keySet()) {
       if(!nextNodes.containsKey(path)) {
         data.append("D    ").append(path).append("\n");
       }

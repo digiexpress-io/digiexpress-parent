@@ -110,6 +110,7 @@ public class ReadWrite_Test extends DbTestTemplate {
       .build()
       .await().atMost(atMost);
     
+    Assertions.assertEquals("", commit_1.getLog());
     Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
   
   
@@ -127,6 +128,7 @@ public class ReadWrite_Test extends DbTestTemplate {
       .build()
       .await().atMost(atMost);
     
+    Assertions.assertEquals("", commit_2.getLog());
     Assertions.assertEquals(CommitResultStatus.OK, commit_2.getStatus());
   
     

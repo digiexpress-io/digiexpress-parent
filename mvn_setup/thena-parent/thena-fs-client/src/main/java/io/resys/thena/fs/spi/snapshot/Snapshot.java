@@ -43,6 +43,7 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.smallrye.mutiny.tuples.Tuple3;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -230,7 +231,7 @@ public class Snapshot {
     return this;
   }
   
-  public PersistenceUnit build(
+  public SnapshotResult build(
       String commitAuthor,
       String commitMessage,
       OffsetDateTime commitCreatedAt
@@ -264,13 +265,21 @@ public class Snapshot {
     final var branch = visitBranch(commit);
     log.trace("Commiting to branch_name: '{}', commit_id: '{}', commit_message: '{}'", branch.getRefName(), commit.getId(), commit.getCommitMessage());
     
+    final var logged = sp_logger.toString();
+    
     // finalize 
-    return persistenceUnit
+    return new SnapshotResult(persistenceUnit
         .status(BatchStatus.OK)
         .tenantId(tenantId)
         .addAllObjectIndexInserts(index.getInserts())
         .addAllObjectIndexUpdates(index.getUpdates())
-        .log("")
-        .build();
+        .log(logged)
+        .build(), logged);
+  }
+  
+  @Value
+  public static class SnapshotResult {
+    PersistenceUnit persistenceUnit;
+    String log;
   }
 }

@@ -428,6 +428,11 @@ public interface CommitBuilder {
     CommitResultStatus getStatus();
     
     /**
+     * @return git style log of what was added/merged/deleted, only when enabled using {@link LogConstants.SHOW_COMMIT)}
+     */
+    @Nullable String getLog();
+    
+    /**
      * @return list of diagnostic messages from the commit process
      */
     List<Message> getMessages();
