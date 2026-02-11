@@ -38,7 +38,7 @@ import jakarta.annotation.Nullable;
  * Builder for creating tags that mark specific commits with metadata and scheduling information.
  * Supports both simple tagging and complex workflow integration with external systems.
  */
-public interface TagBuilder {
+public interface NewTag {
   
   /**
    * Sets the name identifier for this tag.
@@ -47,7 +47,7 @@ public interface TagBuilder {
    * @param tagName the unique tag name
    * @return builder for method chaining
    */
-  TagBuilder tagName(String tagName);
+  NewTag tagName(String tagName);
   
   /**
    * Sets an optional description for the tag.
@@ -56,7 +56,7 @@ public interface TagBuilder {
    * @param tagDescription descriptive text for the tag, null for no description
    * @return builder for method chaining
    */
-  TagBuilder tagDescription(@Nullable String tagDescription);
+  NewTag tagDescription(@Nullable String tagDescription);
   
   /**
    * Sets the commit that this tag points to.
@@ -65,7 +65,7 @@ public interface TagBuilder {
    * @param commitId the hash identifier of the target commit
    * @return builder for method chaining
    */
-  TagBuilder commitId(String commitId);
+  NewTag commitId(String commitId);
   
   /**
    * Sets the creation timestamp for this tag.
@@ -75,7 +75,7 @@ public interface TagBuilder {
    * @param tagCreatedAt the tag creation timestamp, null for current time
    * @return builder for method chaining
    */
-  TagBuilder tagCreatedAt(@Nullable OffsetDateTime tagCreatedAt);
+  NewTag tagCreatedAt(@Nullable OffsetDateTime tagCreatedAt);
   
   /**
    * Sets the author who created this tag.
@@ -84,7 +84,7 @@ public interface TagBuilder {
    * @param tagAuthor the tag creator identifier
    * @return builder for method chaining
    */
-  TagBuilder tagAuthor(String tagAuthor);
+  NewTag tagAuthor(String tagAuthor);
   
   /**
    * Sets custom extension data for the tag.
@@ -93,7 +93,7 @@ public interface TagBuilder {
    * @param tagExtension JSON object containing extension data, null for no extensions
    * @return builder for method chaining
    */
-  TagBuilder tagExtension(@Nullable JsonObject tagExtension);
+  NewTag tagExtension(@Nullable JsonObject tagExtension);
   
   /**
    * Sets error information associated with this tag.
@@ -103,7 +103,7 @@ public interface TagBuilder {
    * @param tagErrors JSON object containing error details, null for no errors
    * @return builder for method chaining
    */
-  TagBuilder tagErrors(@Nullable JsonObject tagErrors);
+  NewTag tagErrors(@Nullable JsonObject tagErrors);
   
   /**
    * Sets an external system identifier for this tag.
@@ -112,7 +112,7 @@ public interface TagBuilder {
    * @param externalId identifier from external system, null if not applicable
    * @return builder for method chaining
    */
-  TagBuilder externalId(@Nullable String externalId);
+  NewTag externalId(@Nullable String externalId);
   
   /**
    * Sets the external tenant identifier for this tag.
@@ -121,7 +121,7 @@ public interface TagBuilder {
    * @param externalTenantId external tenant identifier, null if not applicable
    * @return builder for method chaining
    */
-  TagBuilder externalTenantId(@Nullable String externalTenantId);
+  NewTag externalTenantId(@Nullable String externalTenantId);
   
   /**
    * Sets the scheduled start time for tag-related operations.
@@ -130,7 +130,7 @@ public interface TagBuilder {
    * @param tagStartsAt when tag processing should begin, null for immediate
    * @return builder for method chaining
    */
-  TagBuilder tagStartsAt(@Nullable OffsetDateTime tagStartsAt);
+  NewTag tagStartsAt(@Nullable OffsetDateTime tagStartsAt);
   
   /**
    * Sets the processing report for this tag.
@@ -139,7 +139,7 @@ public interface TagBuilder {
    * @param tagReport JSON object containing processing report, null if no report
    * @return builder for method chaining
    */
-  TagBuilder tagReport(@Nullable JsonObject tagReport);
+  NewTag tagReport(@Nullable JsonObject tagReport);
   
   /**
    * Registers a callback that executes before tag completion.
@@ -149,7 +149,7 @@ public interface TagBuilder {
    * @param callback lambda that receives loaded context and can modify the builder
    * @return builder for method chaining
    */
-  TagBuilder beforeTagCompletion(BeforeTagCompletion callback);
+  NewTag beforeTagCompletion(BeforeTagCompletion callback);
   
   /**
    * Executes the tag creation operation.
@@ -172,7 +172,7 @@ public interface TagBuilder {
      * @param loaded the loaded tag context with related entities
      * @param builder the tag builder that can be modified
      */
-    void apply(TagTransitives loaded, TagBuilder builder);
+    void apply(TagTransitives loaded, NewTag builder);
   }
   
   

@@ -28,7 +28,7 @@ import io.resys.thena.fs.api.branches.BranchBuilder;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.CommitQuery;
-import io.resys.thena.fs.api.tags.TagBuilder;
+import io.resys.thena.fs.api.tags.NewTag;
 import io.resys.thena.fs.api.tags.TagQuery;
 
 /**
@@ -117,7 +117,7 @@ public interface FileSystem {
      * 
      * @return builder for creating tags
      */
-    TagBuilder tagBuilder();
+    NewTag newTag();
     
     /**
      * Creates a query interface for retrieving tags with configurable
