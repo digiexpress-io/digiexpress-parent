@@ -5,7 +5,7 @@ import { TreeColors } from '../tree-theme';
 import { EveliTreeMainLeft } from './EveliTreeMainLeft';
 import { EveliTreeMainRight } from './EveliTreeMainRight';
 
-export const EveliTreeNodeMain: React.FC = () => {
+export const EveliTreeMain: React.FC = () => {
   const { isDarkMode } = useEveliTree();
 
   return (

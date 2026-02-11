@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { EveliTreeTabs } from '../eveli-tree-tabs';
 import { EveliTreeBreadcrumb } from '../eveli-tree-breadcrumb';
-import { EveliTreeNodeMain } from '../eveli-tree-node-main';
+import { EveliTreeMain } from '../eveli-tree-main';
 import { useEveliTree } from '../../eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 
@@ -20,7 +20,7 @@ const Main: React.FC<{}> = () => {
       <EveliTreeTabs />
       <EveliTreeBreadcrumb />
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
-        <EveliTreeNodeMain />
+        <EveliTreeMain />
       </Box>
     </Box>)
 }
