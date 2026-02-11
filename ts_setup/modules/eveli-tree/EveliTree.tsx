@@ -28,6 +28,8 @@ export const EveliTree: React.FC = () => {
     openAsset(node, pathToTopParent);
   }
 
+  const isAnyNodeExpanded = treeData.some(node => node.expanded || (node.children && node.children.some(child => child.expanded)));
+
 
 
   return (
@@ -90,11 +92,17 @@ export const EveliTree: React.FC = () => {
 
         <Tooltip title='Collapse all' arrow enterDelay={1000}>
           {isDarkMode ? (
-            <StyledIconDark onClick={() => collapseAll(treeData, setTreeData)}>
+            <StyledIconDark
+              onClick={() => collapseAll(treeData, setTreeData)}
+              disabled={!isAnyNodeExpanded}
+            >
               <TreeIcons.CollapseAll sx={{ fontSize: '15px' }} />
             </StyledIconDark>
           ) : (
-            <StyledIconLight onClick={() => collapseAll(treeData, setTreeData)}>
+            <StyledIconLight
+              onClick={() => collapseAll(treeData, setTreeData)}
+              disabled={!isAnyNodeExpanded}
+            >
               <TreeIcons.CollapseAll sx={{ fontSize: '15px' }} />
             </StyledIconLight>
           )}
@@ -148,7 +156,7 @@ const StyledIconDark = styled(IconButton)(() => ({
 
 const StyledIconLight = styled(IconButton)(() => ({
   size: 'small',
-  color: TreeColors.light.textSecondary,
+  color: TreeColors.light.text,
 }));
 
 const StyledBadgeDark = styled(Badge)(() => ({
@@ -170,7 +178,7 @@ const StyledBadgeDark = styled(Badge)(() => ({
 
 const StyledBadgeLight = styled(Badge)(() => ({
   '& .MuiBadge-badge': {
-    backgroundColor: TreeColors.light.textSecondary,
+    backgroundColor: TreeColors.light.text,
     color: TreeColors.light.background,
     height: '10px',
     width: '10px',

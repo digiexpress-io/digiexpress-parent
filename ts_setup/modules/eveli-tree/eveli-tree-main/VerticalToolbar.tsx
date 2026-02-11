@@ -21,7 +21,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
     <ToolbarContainer isDarkMode={isDarkMode}>
       <Tooltip title={isOpen ? 'Collapse Panel' : 'Expand Panel'} placement="left">
         <StyledToolbarButton onClick={onClick}>
-          <TreeIcons.CollapseAll />
+          {isOpen ? <TreeIcons.CollapseAll /> : <TreeIcons.ExpandAll />}
         </StyledToolbarButton>
       </Tooltip>
 

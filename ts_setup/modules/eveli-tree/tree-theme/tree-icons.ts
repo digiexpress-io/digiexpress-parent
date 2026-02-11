@@ -8,6 +8,7 @@ import {
   ExpandMore,
   ChevronRight,
   UnfoldLess,
+  UnfoldMore,
   UnfoldLessOutlined,
 
   // Theme & Mode Icons
@@ -65,6 +66,7 @@ export const TreeIcons = {
   ExpandMore: ExpandMore,
   ChevronRight: ChevronRight,
   CollapseAll: UnfoldLess,
+  ExpandAll: UnfoldMore,
 
   // Theme & Mode
   LightMode: LightModeOutlined,
