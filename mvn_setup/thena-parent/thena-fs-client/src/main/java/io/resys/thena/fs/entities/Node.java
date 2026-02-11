@@ -127,7 +127,7 @@ public interface Node extends FileSystemEntity {
       Optional<String> blobId, Optional<String> propsId) {
     
     final var content = new StringBuilder();
-    content.append(path);
+    content.append(path.orElse(""));
     content.append(name);
     content.append(objectId);
     content.append(blobId.orElse(""));

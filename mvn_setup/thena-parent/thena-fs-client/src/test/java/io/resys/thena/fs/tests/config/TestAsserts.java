@@ -43,4 +43,12 @@ public class TestAsserts {
     Assertions.assertEquals(expectedStatus, result.getStatus());
     Assertions.assertEquals(count, 1);
   }
+  
+  
+  public static void assertLog(CommitResult result, String expected) {
+   
+    final var norm = new TestLogDataNormalizer();
+    
+    Assertions.assertEquals(expected, norm.normalizeLogData(result.getLog()));
+  }
 }

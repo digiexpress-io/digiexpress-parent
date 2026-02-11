@@ -98,11 +98,26 @@ public interface Ref extends FileSystemEntity {
     // might not be loaded
     Map<String, Node> getNodesById();
     
+    // might not be loaded, path to id
+    Map<String, String> getNodesByPath();
+    
     // might not be loaded
     Map<String, Blob> getBlobsById();
     
     // might not be loaded
     Map<String, Props> getPropsById();  
+    
+    
+    default Optional<Node> findOneNode(String objectIdOrFullPath) {
+      var node = getNodesById().get(objectIdOrFullPath);
+      if(node == null) {
+        final var nodeId = getNodesByPath().get(objectIdOrFullPath);
+        if(nodeId != null) {
+          node = getNodesById().get(nodeId);
+        }
+      }
+      return Optional.ofNullable(node);
+    }
   }
 
 }

@@ -103,7 +103,7 @@ public class SnapshotLogger {
   public SnapshotLogger newTree(Tree next) {
     if(!log.isDebugEnabled()) return this;
     
-    data.append("\nTree changes:\n");
+    data.append("Tree changes:\n");
     for(Node node : next.getTreeNodes()) {
       data.append("A    ").append(node.getFullPath()).append("\n");
     }
@@ -113,7 +113,7 @@ public class SnapshotLogger {
   public SnapshotLogger mergeTree(Tree prev, Tree next) {
     if(!log.isDebugEnabled()) return this;
     
-    data.append("\nTree changes:\n");
+    data.append("Tree changes:\n");
     
     final var prevNodes = prev.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getFullPath(), n -> n));
     final var nextNodes = next.getTreeNodes().stream().collect(java.util.stream.Collectors.toMap(n -> n.getFullPath(), n -> n));

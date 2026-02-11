@@ -34,6 +34,7 @@ import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Props;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
+import io.resys.thena.support.RepoAssert;
 import lombok.Value;
 
 
@@ -41,6 +42,7 @@ import lombok.Value;
 public class MergeTree {
   private final Optional<Ref> ref;
   private final Map<String, Node> nodes = new HashedMap<>();
+  private final List<String> sessionNodeIds = new ArrayList<>();
   
   private final Map<String, Optional<Props>> props = new HashedMap<>();
   private final Map<String, Optional<Blob>> blobs = new HashedMap<>();
@@ -56,7 +58,8 @@ public class MergeTree {
     }
     final var prevTree = ref.get().getTransitives().getTree();
     for(final var node : prevTree.getTreeNodes()) {
-      nodes.put(node.getId(), node);
+      // all old nodes
+      nodes.put(node.getObjectId(), node);
       
       if(node.getBlobId().isPresent()) {
         final var blobId = node.getBlobId().get();
@@ -76,13 +79,11 @@ public class MergeTree {
   }
   
   public MergeTree add(Node node) {
-    // hash based check
-    if(nodes.containsKey(node.getId())) {
-      return this;  
-    }
+    RepoAssert.isTrue(!sessionNodeIds.contains(node.getObjectId()), () -> "Can't add the same node multiple times: '" + node.getFullPath() + "'");
     
     // brand new node
-    nodes.put(node.getId(), node);
+    sessionNodeIds.add(node.getObjectId());
+    nodes.put(node.getObjectId(), node);
     return this;
   }
 

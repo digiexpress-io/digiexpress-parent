@@ -80,6 +80,7 @@ public class ReadWrite_Test extends DbTestTemplate {
   
   @Test
   public void create2FileWith2Commits() {
+
     final var tenant = "ReadWrite_2";
     final CreatedTenant repo = getClient().tenants()
         .createOneTenant()
@@ -90,9 +91,6 @@ public class ReadWrite_Test extends DbTestTemplate {
     
     log.debug("created repo {}", repo);
     Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
-    
-    
-    wipeRepo(repo.getRepo());
     
     final var fs = getClient().withTenant(tenant);
     
@@ -110,7 +108,18 @@ public class ReadWrite_Test extends DbTestTemplate {
       .build()
       .await().atMost(atMost);
     
-    Assertions.assertEquals("", commit_1.getLog());
+    TestAsserts.assertLog(commit_1, 
+    """
+Tree changes:
+A    root/xyz/xxx.txt
+commit commit01
+Author: john smith
+Date: 2024-01-01 12:00:00 UTC
+
+    create main branch with some content
+
+Branch created: main -> commit01
+    """);
     Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
   
   
@@ -128,7 +137,18 @@ public class ReadWrite_Test extends DbTestTemplate {
       .build()
       .await().atMost(atMost);
     
-    Assertions.assertEquals("", commit_2.getLog());
+    TestAsserts.assertLog(commit_2, 
+    """
+Tree changes:
+A    xxx.txt
+commit commit01
+Author: john smith
+Date: 2024-01-01 12:00:00 UTC
+
+    create main branch with some content
+
+Branch updated: main commit02..commit01
+    """);
     Assertions.assertEquals(CommitResultStatus.OK, commit_2.getStatus());
   
     

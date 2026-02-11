@@ -254,8 +254,15 @@ public interface RefTable {
       )
     ) FROM unnest(tree.tree_nodes) AS nodes
       -- "Extended Query" logic inside the aggregator
-      LEFT JOIN {props} as props ON props.id = nodes.props_id AND nodes.object_id = ANY($2)
-      LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id AND nodes.object_id = ANY($2)
+      
+      LEFT JOIN {props} as props 
+        ON props.id = nodes.props_id 
+        AND (nodes.object_id = ANY($2) OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY($2) )
+            
+      LEFT JOIN {blob} as blobs 
+        ON blobs.id = nodes.blob_id   
+        AND (nodes.object_id = ANY($2) OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY($2) )
+      
       LEFT JOIN (
         SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
                created_commit.commit_created_at as created_at,

@@ -64,7 +64,7 @@ public class Snapshot {
   
   
 
-  private Tuple2<Node, Optional<Props>> visitNewFolderCommand(MergeTree mergeTree, NewFolderCommand command) {
+  private Tuple2<Node, Optional<Props>> visitNewFolderCommand(MergeTree mergeTree, MergeIndex mergeIndex, NewFolderCommand command) {
     final var merger = new NewFolderImpl();
     command.consumer().accept(merger);
     final var result = merger.close();
@@ -73,11 +73,12 @@ public class Snapshot {
     final var newNode = result.getNode();
     final var newProps = result.getProps();
     
+    mergeIndex.create(newNode);
     mergeTree.add(newNode).add(newProps);
     return Tuple2.of(newNode, newProps);
   }
 
-  private Tuple3<Node, Optional<Props>, Blob> visitNewFileCommand(MergeTree mergeTree, NewFileCommand command) {
+  private Tuple3<Node, Optional<Props>, Blob> visitNewFileCommand(MergeTree mergeTree, MergeIndex mergeIndex, NewFileCommand command) {
     final var merger = new NewFileImpl();
     command.consumer().accept(merger);
     
@@ -86,15 +87,16 @@ public class Snapshot {
     final var newProps = result.getProps();
     final var newBlobs = result.getBlob();
 
+    mergeIndex.create(newNode);
     mergeTree.add(newNode).add(newProps).add(newBlobs);
     return Tuple3.of(newNode, newProps, newBlobs);
   }
   
-  private Tuple2<Node, Optional<Props>> visitMergeFolderCommand(MergeTree mergeTree, MergeFolderCommand command) {
+  private Tuple2<Node, Optional<Props>> visitMergeFolderCommand(MergeTree mergeTree, MergeIndex mergeIndex, MergeFolderCommand command) {
     RepoAssert.isTrue(lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
-    final var prevNode = prev.getTransitives().getNodesById().get(command.docId());
+    final var prevNode = prev.getTransitives().findOneNode(command.docId()).orElse(null);
     RepoAssert.notNull(prevNode, () -> "Can't find target node(props) with id = '"+ command.docId() + "'!");
     
     final var merger = new MergeFolderImpl(prevNode); 
@@ -104,14 +106,16 @@ public class Snapshot {
     final var mergeNode = result.getNode();
     final var mergeProps = result.getProps();
     mergeTree.add(mergeNode).add(mergeProps);
+    mergeIndex.merge(prevNode, mergeNode);
+    
     return Tuple2.of(mergeNode, mergeProps);
   }
   
-  private Tuple3<Node, Optional<Props>, Blob> visitMergeFileCommand(MergeTree mergeTree, MergeFileCommand command) {
+  private Tuple3<Node, Optional<Props>, Blob> visitMergeFileCommand(MergeTree mergeTree, MergeIndex mergeIndex, MergeFileCommand command) {
     RepoAssert.isTrue(this.lock.isPresent(), () -> "lock is missing, no previous data, merge requires previous change into what to apply changes!");
     
     final var prev = lock.get();
-    final var prevNode = prev.getTransitives().getNodesById().get(command.docId());
+    final var prevNode = prev.getTransitives().findOneNode(command.docId()).orElse(null);
     RepoAssert.notNull(prevNode, () -> "Can't find target node(props, blob) with id = '"+ command.docId() + "'!");
     
     final var merger = new MergeFileImpl(prevNode);
@@ -126,6 +130,9 @@ public class Snapshot {
       .add(mergeNode)
       .add(mergeProps)
       .add(mergeBlobs);
+    
+    mergeIndex.merge(prevNode, mergeNode);
+    
     return Tuple3.of(mergeNode, mergeProps, mergeBlobs);
   }
     
@@ -191,18 +198,15 @@ public class Snapshot {
       mergeIndex.rm(result);
           
     } else if(change instanceof NewFolderCommand) {
-      final var result = visitNewFolderCommand(mergeTree, (NewFolderCommand) change);
-      mergeIndex.create(result.getItem1());
+      visitNewFolderCommand(mergeTree, mergeIndex, (NewFolderCommand) change);
     } else if(change instanceof NewFileCommand) {
-      final var result = visitNewFileCommand(mergeTree, (NewFileCommand) change);
-      mergeIndex.create(result.getItem1());
+      visitNewFileCommand(mergeTree, mergeIndex, (NewFileCommand) change);
       
     } else if(change instanceof MergeFolderCommand) {
-      final var result = visitMergeFolderCommand(mergeTree, (MergeFolderCommand) change);
-      mergeIndex.create(result.getItem1());
+      visitMergeFolderCommand(mergeTree, mergeIndex, (MergeFolderCommand) change);
     } else if(change instanceof MergeFileCommand) {
-      final var result = visitMergeFileCommand(mergeTree, (MergeFileCommand) change);
-      mergeIndex.create(result.getItem1());
+      visitMergeFileCommand(mergeTree, mergeIndex, (MergeFileCommand) change);
+      
     } else {
       RepoAssert.fail("Unknown command: " + change.getClass().getSimpleName());        
     }

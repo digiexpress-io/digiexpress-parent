@@ -92,6 +92,8 @@ public class RefSelectMapper {
           .propsId(propsId)
           .transitives(nodeTrs.build())
           .build();
+        
+        refTransitives.putNodesByPath(node.getFullPath(), node.getId());
         refTransitives.putNodesById(node.getId(), node);
         
         

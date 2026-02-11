@@ -59,12 +59,7 @@ public interface Tree extends FileSystemEntity {
     final var content = new StringBuilder();
     
     final var sorted = nodes.stream()
-        .sorted(
-            (a, b) -> 
-              (a.getNodePath().map(n -> n + "/").orElse("") + a.getNodeName())
-            .compareTo
-              (b.getNodePath().map(n -> n + "/").orElse("") + b.getNodeName())
-        )
+        .sorted((a, b) -> (a.getFullPath()).compareTo(b.getFullPath()))
         .map(node -> {
           content.append(node.getId());
           return node;
@@ -72,8 +67,6 @@ public interface Tree extends FileSystemEntity {
         .toList();
     
     final var hash = Hashing.murmur3_128().hashString(content.toString(), StandardCharsets.UTF_8).toString();
-    return ImmutableTree.builder()
-        .id(hash)
-        .treeNodes(sorted);
+    return ImmutableTree.builder().id(hash).treeNodes(sorted);
   }
 }

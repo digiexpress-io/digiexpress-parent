@@ -49,6 +49,7 @@ import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -159,7 +160,8 @@ public class CommitBuilderImpl implements CommitBuilder {
         .build();
     return this.db_uni
         .onItem().transformToUni(db -> db.withTransaction(scope, this::visitTransaction))
-        .onFailure().recoverWithItem(this::visitFailure);
+        .onFailure(t -> !(t instanceof CommitBuilderException))
+        .recoverWithItem(this::visitFailure);
   }
   
 
@@ -235,10 +237,16 @@ public class CommitBuilderImpl implements CommitBuilder {
   }
   
   private Uni<Snapshot.SnapshotResult> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
-    final var createdAt = commitCreatedAt != null ? commitCreatedAt : OffsetDateTime.now();
-    final var snapshot = new Snapshot(tenantId, lock, branchName, createdAt);
-    final var unit = snapshot.addAll(this.changes).build(commitAuthor, commitMessage, createdAt);
-    return tx.builder().from(unit.getPersistenceUnit()).persist()
-        .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()));
+    try {
+      final var createdAt = commitCreatedAt != null ? commitCreatedAt : OffsetDateTime.now();
+      final var snapshot = new Snapshot(tenantId, lock, branchName, createdAt);
+      final var unit = snapshot.addAll(this.changes).build(commitAuthor, commitMessage, createdAt);
+
+      return tx.builder().from(unit.getPersistenceUnit()).persist()
+          .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()));
+      
+    } catch(Exception e) {
+      throw new CommitBuilderException(e, JsonObject.of("tenantId", tenantId, "message", e.getMessage()));
+    }
   }
 }
