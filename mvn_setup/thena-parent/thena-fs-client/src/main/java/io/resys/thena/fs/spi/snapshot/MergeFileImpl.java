@@ -93,6 +93,8 @@ public class MergeFileImpl implements MergeFile {
       return builder.close().getProps();
     });
     
+    final var propsId = this.fileProps == null ? prevNode.getPropsId() : nextProps.map(Props::getId);
+    
     
     // update only if defined
     final var prevBlob = prevNode.getTransitives().getBlob();
@@ -114,7 +116,7 @@ public class MergeFileImpl implements MergeFile {
         objectId, 
         fileName, 
         Optional.of(nextBlob.getId()), 
-        nextProps.map(Props::getId)
+        propsId
       ).build();
     
     return new MergeFileResult(node, nextBlob, nextProps);

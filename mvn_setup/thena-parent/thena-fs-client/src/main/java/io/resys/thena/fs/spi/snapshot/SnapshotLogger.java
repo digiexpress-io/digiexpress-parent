@@ -2,7 +2,9 @@ package io.resys.thena.fs.spi.snapshot;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
@@ -201,8 +203,8 @@ public class SnapshotLogger {
       return new DiffResult(oldBlob, newBlob, DiffUtils.diff(List.of(), List.of()), List.of());
     }
     
-    final var oldLines = jsonToLines(oldBlob.getBlobValue());
-    final var newLines = jsonToLines(newBlob.getBlobValue());
+    final var oldLines = jsonToLines(Optional.of(oldBlob.getBlobValue()));
+    final var newLines = jsonToLines(Optional.of(newBlob.getBlobValue()));
     
     final var patch = DiffUtils.diff(oldLines, newLines);
     final var unifiedDiff = UnifiedDiffUtils.generateUnifiedDiff(
@@ -232,8 +234,12 @@ public class SnapshotLogger {
     return new DiffResult(oldProps, newProps, patch, unifiedDiff);
   }
   
-  private List<String> jsonToLines(JsonObject json) {
-    return List.of(json.encodePrettily().split("\n"));
+  private List<String> jsonToLines(Optional<JsonObject> json) {
+    if(json.isEmpty()) {
+      return Collections.emptyList();
+    }
+    
+    return List.of(json.get().encodePrettily().split("\n"));
   }
   
   private List<String> propsToLines(Props props) {

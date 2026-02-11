@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -107,10 +108,10 @@ public interface PropsTable {
     public Props apply(Row row) {
       return ImmutableProps.builder()
           .id(row.getString("id"))
-          .propsLabels(row.getJsonObject("props_labels"))
-          .propsComments(row.getJsonObject("props_comments"))
-          .propsPermissions(row.getJsonObject("props_permissions"))
-          .propsFlags(row.getJsonObject("props_flags"))
+          .propsLabels(Optional.ofNullable(row.getJsonObject("props_labels")))
+          .propsComments(Optional.ofNullable(row.getJsonObject("props_comments")))
+          .propsPermissions(Optional.ofNullable(row.getJsonObject("props_permissions")))
+          .propsFlags(Optional.ofNullable(row.getJsonObject("props_flags")))
           .build();
     }
   }
@@ -120,10 +121,10 @@ public interface PropsTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(Props props) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         props.getId(),
-        props.getPropsLabels(),
-        props.getPropsComments(),
-        props.getPropsPermissions(),
-        props.getPropsFlags()
+        props.getPropsLabels().orElse(null),
+        props.getPropsComments().orElse(null),
+        props.getPropsPermissions().orElse(null),
+        props.getPropsFlags().orElse(null)
       });
     }
   }
@@ -132,10 +133,10 @@ public interface PropsTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Props props) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        props.getPropsLabels(),
-        props.getPropsComments(),
-        props.getPropsPermissions(),
-        props.getPropsFlags(),
+        props.getPropsLabels().orElse(null),
+        props.getPropsComments().orElse(null),
+        props.getPropsPermissions().orElse(null),
+        props.getPropsFlags().orElse(null),
         props.getId()
       });
     }

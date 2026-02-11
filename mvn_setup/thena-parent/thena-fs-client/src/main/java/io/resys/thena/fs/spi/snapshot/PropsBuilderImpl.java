@@ -68,7 +68,7 @@ public class PropsBuilderImpl implements PropsBuilder {
   @Override
   public void build() {
     RepoAssert.isTrue(
-        !(
+        (
           propsComments.isNewValueSet() || 
           propsLabels.isNewValueSet() || 
           propsFlags.isNewValueSet() ||
@@ -82,10 +82,10 @@ public class PropsBuilderImpl implements PropsBuilder {
     RepoAssert.isTrue(validated, () -> "build() method must be called before close()");
     
     final var props = Props.newInstance(
-        this.propsLabels.orElse(lock.map(Props::getPropsLabels).orElse(null)),
-        this.propsComments.orElse(lock.map(Props::getPropsComments).orElse(null)),
-        this.propsPermissions.orElse(lock.map(Props::getPropsPermissions).orElse(null)),
-        this.propsFlags.orElse(lock.map(Props::getPropsFlags).orElse(null))
+        this.propsLabels.orElse(lock.flatMap(Props::getPropsLabels).orElse(null)),
+        this.propsComments.orElse(lock.flatMap(Props::getPropsComments).orElse(null)),
+        this.propsPermissions.orElse(lock.flatMap(Props::getPropsPermissions).orElse(null)),
+        this.propsFlags.orElse(lock.flatMap(Props::getPropsFlags).orElse(null))
     ).build();
     
     return new NewPropsResult(props);

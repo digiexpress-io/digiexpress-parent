@@ -78,7 +78,7 @@ public interface Blob extends FileSystemEntity {
         .blobValue(content);
   }
   
-  private static String canonicalizeJson(JsonObject json) {
+  public static String canonicalizeJson(JsonObject json) {
     return json.stream()
       .sorted(Map.Entry.comparingByKey())
       .map(entry -> "\"" + entry.getKey() + "\":" + canonicalizeValue(entry.getValue()))

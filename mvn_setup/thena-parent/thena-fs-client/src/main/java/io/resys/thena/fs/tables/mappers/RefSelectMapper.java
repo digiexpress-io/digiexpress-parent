@@ -72,10 +72,10 @@ public class RefSelectMapper {
         if(json_props != null && !visited_props.contains(propsId.get())) {
           final var props = ImmutableProps.builder()
             .id(propsId.get())
-            .propsLabels(json_props.getJsonObject("props_labels"))
-            .propsComments(json_props.getJsonObject("props_comments"))
-            .propsPermissions(json_props.getJsonObject("props_permissions"))
-            .propsFlags(json_props.getJsonObject("props_flags"))
+            .propsLabels(Optional.ofNullable(json_props.getJsonObject("props_labels")))
+            .propsComments(Optional.ofNullable(json_props.getJsonObject("props_comments")))
+            .propsPermissions(Optional.ofNullable(json_props.getJsonObject("props_permissions")))
+            .propsFlags(Optional.ofNullable(json_props.getJsonObject("props_flags")))
             .build();
           nodeTrs.props(props);
           refTransitives.putPropsById(props.getId(), props);

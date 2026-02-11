@@ -68,6 +68,7 @@ public class MergeFile_Test extends DbTestTemplate {
           .filePath("root/xyz")
           .fileType("text")
           .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+          .fileProps(props -> props.propsComments(JsonObject.of("comment 1", "very very good first file")).build())
           .build())
       .build()
       .await().atMost(atMost);
@@ -150,10 +151,17 @@ Branch updated: main commit02..commit01
           .branchQuery().getOne()
           .await().atMost(atMost);
 
-      final var blob = result.getTransitives().getBlobsById().values().iterator().next();
       Assertions.assertEquals(1, result.getTransitives().getTree().getTreeNodes().size());
       Assertions.assertEquals(1, result.getTransitives().getBlobsById().size());
+      Assertions.assertEquals(1, result.getTransitives().getPropsById().size());
+      
+      final var blob = result.getTransitives().getBlobsById().values().iterator().next();
+      final var props = result.getTransitives().getPropsById().values().iterator().next();
+    
+      Assertions.assertEquals(1, props.getPropsComments().get().size());
+      Assertions.assertEquals("very very good first file", props.getPropsComments().get().getString("comment 1"));
       Assertions.assertEquals(2, blob.getBlobValue().size());
+      
       Assertions.assertEquals("Lady Sybil", blob.getBlobValue().getString("firstName"));
       Assertions.assertEquals("Vimes", blob.getBlobValue().getString("lastName"));
       
@@ -161,6 +169,7 @@ Branch updated: main commit02..commit01
           .onItem().transformToUni(t -> t.query().findAll())
           .await().atMost(atMost);
       Assertions.assertEquals(2, wholeDb.getBlob().size());
+      Assertions.assertEquals(1, wholeDb.getProps().size());
     }
   }
 }

@@ -257,10 +257,12 @@ public interface RefTable {
       
       LEFT JOIN {props} as props 
         ON props.id = nodes.props_id 
+        AND nodes.props_id IS NOT NULL
         AND (nodes.object_id = ANY($2) OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY($2) )
             
       LEFT JOIN {blob} as blobs 
-        ON blobs.id = nodes.blob_id   
+        ON blobs.id = nodes.blob_id
+        AND nodes.blob_id IS NOT NULL   
         AND (nodes.object_id = ANY($2) OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY($2) )
       
       LEFT JOIN (
