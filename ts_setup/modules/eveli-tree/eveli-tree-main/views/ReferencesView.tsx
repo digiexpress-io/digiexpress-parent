@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, styled, List, ListItem, ListItemText, Chip } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import { TreeNode } from '../../../eveli-tree-api';
 import { TreeColors, TreeIcons } from '../../tree-theme';
 import { useEveliTree } from '../../../eveli-tree-api';
@@ -15,79 +15,44 @@ export const ReferencesView: React.FC<ReferencesViewProps> = ({ node }) => {
 
   return (
     <ViewContainer isDarkMode={isDarkMode}>
-      <Header>
-        <TreeIcons.Tree sx={{ mr: 1, fontSize: '1.5rem' }} />
-        <Typography variant="h6">References</Typography>
-      </Header>
+
 
       <Content>
-        <NodeInfo>
-          <Typography variant="subtitle1">
-            {node.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Type: {node.type} • ID: {node.id}
-          </Typography>
-
-          {references ? (
-            <Chip
-              label="Has References"
-              color="primary"
-              size="small"
-              icon={<TreeIcons.Tree />}
-              sx={{ mt: 1 }}
-            />
-          ) : (
-            <Chip
-              label="No References"
-              color="default"
-              size="small"
-              sx={{ mt: 1 }}
-            />
-          )}
-        </NodeInfo>
+        <Header>
+          <TreeIcons.Tree sx={{ mr: 1 }} />
+          <Typography variant="body1" fontWeight={500}>References: {node.name}</Typography>
+        </Header>
 
         <ReferenceSection>
-          <Typography variant="subtitle2">
-            Reference Information
-          </Typography>
-
-          {references ? (
-            <>{references.map(r => <div><span>{r.location}{": "}{r.assetName}</span></div>)}</>
+          {references.length > 0 ? (
+            <ReferencesContainer isDarkMode={isDarkMode}>
+              {references.map((ref, index) => (
+                <ReferenceRow key={index} isDarkMode={isDarkMode}>
+                  <ReferenceLocation isDarkMode={isDarkMode}>{ref.location}</ReferenceLocation>
+                  {/*<ReferenceAssetName isDarkMode={isDarkMode}>{ref.assetName}</ReferenceAssetName> */}
+                </ReferenceRow>
+              ))}
+            </ReferencesContainer>
           ) : (
             <Typography variant="body2" color="text.secondary">
-              This node does not contain any reference markers.
+                This node does not contain any references.
             </Typography>
           )}
         </ReferenceSection>
 
         {node.children && node.children.length > 0 && (
           <ChildrenSection>
-            <Typography variant="subtitle2">
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Child References
             </Typography>
-            <List dense>
-              {node.children.map((child) => (
-                <ListItem key={child.id} sx={{ py: 0.5 }}>
-                  <ListItemText
-                    primary={child.name}
-                    secondary={
-                      <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <span>Type: {child.type}</span>
-                        {child.reference && (
-                          <Chip
-                            label="REF"
-                            size="small"
-                            color="primary"
-                            sx={{ height: '16px', fontSize: '10px' }}
-                          />
-                        )}
-                      </Box>
-                    }
-                  />
-                </ListItem>
-              ))}
-            </List>
+            {node.children.map((child) => (
+              <Box key={child.id} sx={{ mb: 1 }}>
+                <Typography variant="body2">{child.name}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Type: {child.type} {child.reference && ' (REF)'}
+                </Typography>
+              </Box>
+            ))}
           </ChildrenSection>
         )}
       </Content>
@@ -99,7 +64,6 @@ const ViewContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
 })<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
   height: '100%',
-  padding: '16px',
   backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
   color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
   overflow: 'auto'
@@ -108,39 +72,59 @@ const ViewContainer = styled(Box, {
 const Header = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
-  marginBottom: '20px',
-  paddingBottom: '12px',
-  borderBottom: '2px solid',
-  borderColor: 'rgba(255, 255, 255, 0.1)'
+  marginBottom: '10px'
 }));
 
 const Content = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px'
+  padding: '8px'
 }));
 
-const NodeInfo = styled(Box)(() => ({
-  padding: '12px',
-  borderRadius: '8px',
-  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.1)'
-}));
 
 const ReferenceSection = styled(Box)(() => ({
-  // No specific styling needed
+  marginBottom: '16px'
 }));
 
-const ReferenceDetails = styled(Box, {
+const ReferencesContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
 })<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
-  padding: '12px',
-  borderRadius: '6px',
-  backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
+  display: 'flex',
+  flexDirection: 'column',
   border: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
-  marginTop: '8px'
+  '& > div:nth-of-type(odd)': {
+    backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
+  },
+}));
+
+const ReferenceRow = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '8px 12px',
+  backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
+  borderBottom: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
+  '&:last-child': {
+    borderBottom: 'none'
+  }
+}));
+
+const ReferenceLocation = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
+  ...theme.typography.subtitle2,
+  color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
+}));
+
+const ReferenceAssetName = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  fontSize: '14px',
+  color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
+  marginTop: '2px'
 }));
 
 const ChildrenSection = styled(Box)(() => ({
-  // No specific styling needed
+  marginTop: '16px'
 }));

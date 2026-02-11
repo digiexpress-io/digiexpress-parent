@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { TreeNode, useEveliTree } from '../../eveli-tree-api';
+import { TreeColors } from '../tree-theme';
 
 interface NodeReferencessProps {
   node?: TreeNode;
@@ -46,17 +47,17 @@ export const NodeReferences: React.FC<NodeReferencessProps> = ({ node }) => {
 const StyledTableContainer = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
-  border: '1px solid #555555',
+  border: `1px solid ${TreeColors.dark.border}`,
   '& > div:nth-of-type(even)': {
     '& > div': {
-      backgroundColor: '#292828',
+      backgroundColor: TreeColors.dark.surface,
     },
   },
 }));
 
 const StyledDivider = styled(Box)(() => ({
   height: '1px',
-  backgroundColor: '#555555',
+  backgroundColor: TreeColors.dark.border,
 }));
 
 const StyledTableRow = styled(Box)(() => ({
@@ -65,8 +66,8 @@ const StyledTableRow = styled(Box)(() => ({
 }));
 
 const StyledTableHeader = styled(Box)(() => ({
-  backgroundColor: '#2d2d30',
-  color: '#cccccc',
+  backgroundColor: TreeColors.dark.surface,
+  color: TreeColors.dark.text,
   fontSize: '10px',
   fontWeight: 500,
   padding: '4px 6px',
@@ -74,8 +75,8 @@ const StyledTableHeader = styled(Box)(() => ({
 }));
 
 const StyledTableCell = styled(Box)(() => ({
-  backgroundColor: '#3c3c3c',
-  color: '#cccccc',
+  backgroundColor: TreeColors.dark.background,
+  color: TreeColors.dark.text,
   fontSize: '10px',
   padding: '2px 6px',
   flex: 1,

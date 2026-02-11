@@ -22,10 +22,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
   onClick,
   selectedView,
   onViewChange,
-  activeNode
 }) => {
-  const isActiveNode = !!activeNode;
-  const isNodeReferencePresent = !!activeNode?.reference;
   return (
     <ToolbarContainer isDarkMode={isDarkMode}>
       <Tooltip title={isOpen ? 'Collapse Panel' : 'Expand Panel'} placement="left">
@@ -35,13 +32,13 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
       </Tooltip>
 
       <Tooltip title="Properties" placement="left" arrow>
-        <StyledToolbarButton onClick={() => { }} disabled={!isActiveNode} isDarkMode={isDarkMode}>
+        <StyledToolbarButton onClick={() => onViewChange('properties')} isDarkMode={isDarkMode} isSelected={selectedView === 'properties'}>
           <TreeIcons.Info />
         </StyledToolbarButton>
       </Tooltip>
 
       <Tooltip title="Configuration" placement="left" arrow>
-        <StyledToolbarButton onClick={() => { }} disabled={!isActiveNode} isDarkMode={isDarkMode}>
+        <StyledToolbarButton onClick={() => onViewChange('configuration')} isDarkMode={isDarkMode} isSelected={selectedView === 'configuration'}>
           <TreeIcons.Settings />
         </StyledToolbarButton>
       </Tooltip>
@@ -49,7 +46,6 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
       <Tooltip title="References" placement="left" arrow>
         <StyledToolbarButton isDarkMode={isDarkMode}
           onClick={() => onViewChange('references')}
-          disabled={!isActiveNode || !isNodeReferencePresent}
           isSelected={selectedView === 'references'}
         >
           <TreeIcons.Tree />
@@ -57,25 +53,25 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
       </Tooltip>
 
       <Tooltip title="Debug" placement="left" arrow>
-        <StyledToolbarButton onClick={() => { }} disabled={!isActiveNode} isDarkMode={isDarkMode}>
+        <StyledToolbarButton onClick={() => onViewChange('debug')} isDarkMode={isDarkMode} isSelected={selectedView === 'debug'}>
           <TreeIcons.Debug />
         </StyledToolbarButton>
       </Tooltip>
 
       <Tooltip title="Preview" placement="left" arrow>
-        <StyledToolbarButton onClick={() => { }} disabled={!isActiveNode} isDarkMode={isDarkMode}>
+        <StyledToolbarButton onClick={() => onViewChange('preview')} isDarkMode={isDarkMode} isSelected={selectedView === 'preview'}>
           <TreeIcons.Preview />
         </StyledToolbarButton>
       </Tooltip>
 
       <Tooltip title="History" placement="left" arrow>
-        <StyledToolbarButton onClick={() => { }} disabled={!isActiveNode} isDarkMode={isDarkMode}>
+        <StyledToolbarButton onClick={() => onViewChange('history')} isDarkMode={isDarkMode} isSelected={selectedView === 'history'}>
           <TreeIcons.History />
         </StyledToolbarButton>
       </Tooltip>
 
       <Tooltip title="Help" placement="left" arrow>
-        <StyledToolbarButton onClick={() => { }} disabled={!isActiveNode} isDarkMode={isDarkMode}>
+        <StyledToolbarButton onClick={() => onViewChange('help')} isDarkMode={isDarkMode} isSelected={selectedView === 'help'}>
           <TreeIcons.Language />
         </StyledToolbarButton>
       </Tooltip>
