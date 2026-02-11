@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
 import { useEveliTree } from '../../eveli-tree-api';
-import { TreeColors } from '../tree-theme';
+import { TreeColors, TreeIcons } from '../tree-theme';
 
 export const EveliTreeTabs: React.FC = () => {
   const { isDarkMode, openTabs, activeTabIndex, setActiveTab, closeTab } = useEveliTree();
@@ -51,7 +50,7 @@ export const EveliTreeTabs: React.FC = () => {
               }}>{tab.node.name}</Typography>
           </Tooltip>
           <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }} onClick={(event) => handleCloseTab(index, event)}>
-            <CloseIcon fontSize="inherit" sx={{ color: tab.node.error ? (isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight) : (isDarkMode ? TreeColors.dark.textSecondary : TreeColors.light.textSecondary) }} />
+            <TreeIcons.Close fontSize="inherit" sx={{ color: tab.node.error ? (isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight) : (isDarkMode ? TreeColors.dark.textSecondary : TreeColors.light.textSecondary) }} />
           </IconButton>
         </Tab>
       ))}

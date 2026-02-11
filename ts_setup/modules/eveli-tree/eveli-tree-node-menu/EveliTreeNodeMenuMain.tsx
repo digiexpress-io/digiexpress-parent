@@ -1,21 +1,8 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
-import {
-  DeleteForever as DeleteIcon,
-  Add as NewIcon,
-  Edit as EditIcon,
-  ContentCopy as CopyIcon,
-  DriveFileRenameOutline as RenameIcon,
-  ChevronRight as ChevronRightIcon,
-  Construction as DevModeIcon,
-  Assignment as AssignmentIcon,
-  Block as DisabledIcon,
-  VisibilityOff as AnonymousIcon,
-  Lock as LockedIcon,
-  LockOpen as UnlockedIcon,
-} from '@mui/icons-material';
 import { TreeNode, mockTreeData, useEveliTree } from '../../eveli-tree-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
+import { TreeIcons } from '../tree-theme';
 
 function getReferencesCount(nodeId: string, nodeName: string): number {
   let count = 0;
@@ -98,29 +85,29 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
         className={props.openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('new')}
       >
-        <NewIcon fontSize='small' />New
+        <TreeIcons.New fontSize='small' />New
         <Box flex={1} />
-        <ChevronRightIcon fontSize='small' />
+        <TreeIcons.ChevronRight fontSize='small' />
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleEdit}>
-        <EditIcon fontSize='small' />Edit</MenuItem>
+        <TreeIcons.Edit fontSize='small' />Edit</MenuItem>
       <MenuItem
         className={props.node?.locked ? classes.menuItemLocked : classes.menuItemUnlocked}
         onClick={handleLock}
       >
         {props.node?.locked ? (
-          <LockedIcon fontSize='small' />
+          <TreeIcons.Locked fontSize='small' />
         ) : (
-          <UnlockedIcon fontSize='small' />
+          <TreeIcons.Unlocked fontSize='small' />
         )}
         {props.node?.locked ? 'Unlock' : 'Lock'}
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleCopy}>
-        <CopyIcon fontSize='small' />Copy</MenuItem>
+        <TreeIcons.Copy fontSize='small' />Copy</MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleDuplicate}>
-        <RenameIcon fontSize='small' />Rename</MenuItem>
+        <TreeIcons.Rename fontSize='small' />Rename</MenuItem>
       <MenuItem className={classes.menuItemDelete} onClick={handleDelete}>
-        <DeleteIcon fontSize='small' />Delete</MenuItem>
+        <TreeIcons.Delete fontSize='small' />Delete</MenuItem>
 
       <Divider className={classes.divider} />
 
@@ -139,10 +126,10 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
               }}>
                 {props.node.configOptions.map((config, index) => (
                   <React.Fragment key={index}>
-                    {config.devMode && (<Chip icon={<DevModeIcon />} label="Development" size='small' className={classes.label} />)}
-                    {config.assignableMode && (<Chip icon={<AssignmentIcon />} label="Assignable" size='small' className={classes.label} />)}
-                    {config.disabledMode && (<Chip icon={<DisabledIcon />} label="Disabled" size='small' className={classes.label} />)}
-                    {config.anonymousMode && (<Chip icon={<AnonymousIcon />} label="Anonymous" size='small' className={classes.label} />)}
+                    {config.devMode && (<Chip icon={<TreeIcons.DevMode />} label="Development" size='small' className={classes.label} />)}
+                    {config.assignableMode && (<Chip icon={<TreeIcons.Assignment />} label="Assignable" size='small' className={classes.label} />)}
+                    {config.disabledMode && (<Chip icon={<TreeIcons.Disabled />} label="Disabled" size='small' className={classes.label} />)}
+                    {config.anonymousMode && (<Chip icon={<TreeIcons.Anonymous />} label="Anonymous" size='small' className={classes.label} />)}
                   </React.Fragment>
                 ))}
               </Box>
@@ -174,7 +161,7 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
           )}
         </div>
         <Box flex={1} />
-        <ChevronRightIcon fontSize='small' />
+        <TreeIcons.ChevronRight fontSize='small' />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -185,7 +172,7 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
       >
         Comments ({props.node?.comments?.length || 0})
         <Box flex={1} />
-        <ChevronRightIcon fontSize='small' />
+        <TreeIcons.ChevronRight fontSize='small' />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -196,7 +183,7 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
       >
         Sharing and Permissions
         <Box flex={1} />
-        <ChevronRightIcon fontSize='small' />
+        <TreeIcons.ChevronRight fontSize='small' />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -207,7 +194,7 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
       >
         History
         <Box flex={1} />
-        <ChevronRightIcon fontSize='small' />
+        <TreeIcons.ChevronRight fontSize='small' />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -218,7 +205,7 @@ export const EveliTreeNodeMenuMain: React.FC<EveliTreeNodeMenuMainProps> = (prop
       >
         References ({referencesCount})
         <Box flex={1} />
-        <ChevronRightIcon fontSize='small' />
+        <TreeIcons.ChevronRight fontSize='small' />
       </MenuItem>
     </Box>
   );

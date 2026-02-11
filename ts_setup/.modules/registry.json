@@ -1386,19 +1386,18 @@
       "actualDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils",
-        "@mui/icons-material"
+        "@mui/utils"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
-        "@mui/utils",
-        "@mui/icons-material"
+        "@mui/utils"
       ],
       "actualInternalDependencies": [],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/eveli-primitives",
+        "@mui/icons-material"
       ]
     },
     "@dxs-ts/gamut-api": {
@@ -4503,6 +4502,6 @@
       ]
     }
   },
-  "checksum": "32c2e67ef7795659f2249e6c25c3b299caf83d36b4094cf5713d69522e1548e3",
-  "generatedAt": "2026-02-06T11:24:21.240Z"
+  "checksum": "e296261578987f4da99dcce48cd24da45423fcff1811abeb6833c833bf139627",
+  "generatedAt": "2026-02-11T06:40:07.502Z"
 }

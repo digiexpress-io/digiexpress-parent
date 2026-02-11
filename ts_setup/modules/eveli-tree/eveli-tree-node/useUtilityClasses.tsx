@@ -1,27 +1,8 @@
 import React from 'react';
 import { generateUtilityClass, styled, Badge, ListItem, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { TreeColors, getNodeColor } from '../tree-theme';
+import { TreeColors, getNodeColor, TreeIcons } from '../tree-theme';
 import { SearchResultHighlight } from '../eveli-tree-search/SearchResultHighlight';
-import {
-  Folder as FolderIcon,
-  FolderOpen as FolderOpenIcon,
-  Article as ArticleIcon,
-  ArticleOutlined as ArticleOutlinedIcon,
-  Description as FormIcon,
-  Settings as SettingsIcon,
-  SettingsOutlined as SettingsOutlinedIcon,
-  Link as LinkIcon,
-  Language as LanguageIcon,
-  Build as FlowIcon,
-  PrintOutlined as PrintIcon,
-  ImageOutlined as ImageIcon,
-  PictureAsPdf as PdfIcon,
-  Construction as DevModeIcon,
-  Assignment as AssignmentIcon,
-  Block as DisabledIcon,
-  VisibilityOff as AnonymousIcon,
-} from '@mui/icons-material';
 
 import { ConfigOption, TreeNode, TreeNodeType, useEveliTree } from '../../eveli-tree-api';
 
@@ -207,27 +188,27 @@ export function getIcon(node: TreeNode) {
   const getBaseIcon = () => {
     switch (node.type) {
       case 'folder':
-        return node.expanded ? <FolderOpenIcon /> : <FolderIcon />;
+        return node.expanded ? <TreeIcons.FolderOpen /> : <TreeIcons.FolderClosed />;
       case 'article':
-        return node.expanded ? <ArticleOutlinedIcon /> : <ArticleIcon />;
+        return node.expanded ? <TreeIcons.ArticleOutlined /> : <TreeIcons.Article />;
       case 'service':
-        return node.expanded ? <SettingsOutlinedIcon /> : <SettingsIcon />;
+        return node.expanded ? <TreeIcons.SettingsOutlined /> : <TreeIcons.Settings />;
       case 'dialob':
-        return <FormIcon />;
+        return <TreeIcons.Form />;
       case 'flow':
-        return <FlowIcon />;
+        return <TreeIcons.Flow />;
       case 'link':
-        return <LinkIcon />;
+        return <TreeIcons.Link />;
       case 'language':
-        return <LanguageIcon />;
+        return <TreeIcons.Language />;
       case 'printout':
-        return <PrintIcon />;
+        return <TreeIcons.Print />;
       case 'image':
-        return <ImageIcon />;
+        return <TreeIcons.Image />;
       case 'template':
-        return <PdfIcon />;
+        return <TreeIcons.Pdf />;
       default:
-        return <ArticleIcon />;
+        return <TreeIcons.Article />;
     }
   };
 
@@ -354,28 +335,28 @@ export function getConfigIcons(configOptions: ConfigOption[], iconClassName: str
     if (config.devMode) {
       icons.push(
         <Tooltip key="dev" title="Development Mode" arrow>
-          <DevModeIcon fontSize='small' className={iconClassName} />
+          <TreeIcons.DevMode fontSize='small' className={iconClassName} />
         </Tooltip>
       );
     }
     if (config.assignableMode) {
       icons.push(
         <Tooltip key="assign" title="Assignable Mode" arrow>
-          <AssignmentIcon fontSize='small' className={iconClassName} />
+          <TreeIcons.Assignment fontSize='small' className={iconClassName} />
         </Tooltip>
       );
     }
     if (config.disabledMode) {
       icons.push(
         <Tooltip key="disabled" title="Disabled Mode" arrow>
-          <DisabledIcon fontSize='small' className={iconClassName} />
+          <TreeIcons.Disabled fontSize='small' className={iconClassName} />
         </Tooltip>
       );
     }
     if (config.anonymousMode) {
       icons.push(
         <Tooltip key="anonymous" title="Anonymous Mode" arrow>
-          <AnonymousIcon fontSize='small' className={iconClassName} />
+          <TreeIcons.Anonymous fontSize='small' className={iconClassName} />
         </Tooltip>
       );
     }
@@ -383,7 +364,7 @@ export function getConfigIcons(configOptions: ConfigOption[], iconClassName: str
 
   return icons.length > 0 ? icons : [
     <Tooltip key="default" title="Configuration" arrow>
-      <SettingsIcon fontSize='small' className={iconClassName} />
+      <TreeIcons.Settings fontSize='small' className={iconClassName} />
     </Tooltip>
   ];
 }

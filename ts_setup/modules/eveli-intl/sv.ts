@@ -103,6 +103,8 @@ export const sv = {
   'table.toolbar.addRemoveColumns': 'Lägg till eller ta bort kolumner',
   'taskLink.pdf.open': 'PDF',
   'explorer.login': 'Logga in',
+  'login.dialog.title': 'Använd DigiExpress tjänster',
+  'login.dialog.message': 'Vänligen logga in för att fortsätta',
   'locale.fi': 'Finska',
   'locale.sv': 'Svenska',
   'locale.en': 'Engelska',

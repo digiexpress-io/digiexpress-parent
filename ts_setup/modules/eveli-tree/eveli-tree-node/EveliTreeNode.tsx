@@ -1,12 +1,9 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItemIcon } from '@mui/material';
-import {
-  ExpandMore as ExpandMoreIcon,
-  ChevronRight as ChevronRightIcon,
-} from '@mui/icons-material';
 
 import { TreeNode, useEveliTree } from '../../eveli-tree-api';
 import { useUtilityClasses, EveliTreeNodeRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
+import { TreeIcons } from '../tree-theme';
 import { sortChildren } from './eveli-tree-node-helpers';
 
 export interface EveliTreeNodeProps {
@@ -45,7 +42,7 @@ export const EveliTreeNode: React.FC<EveliTreeNodeProps> = ({ node, level, paren
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {children ? (
             <IconButton size='small'>
-              {node.expanded ? <ExpandMoreIcon fontSize='small' className={classes.iconExpand} /> : <ChevronRightIcon fontSize='small' className={classes.iconExpand} />}
+              {node.expanded ? <TreeIcons.ExpandMore fontSize='small' className={classes.iconExpand} /> : <TreeIcons.ChevronRight fontSize='small' className={classes.iconExpand} />}
             </IconButton>
           ) : (
               <Box sx={{ width: 21, mr: 0.5 }} />

@@ -1,17 +1,12 @@
 import React from 'react';
 import { Box, TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput, styled, Button } from '@mui/material';
-import {
-  Construction as DevModeIcon,
-  Assignment as AssignmentIcon,
-  Block as DisabledIcon,
-  VisibilityOff as AnonymousIcon,
-} from '@mui/icons-material';
+import { TreeIcons } from '../tree-theme';
 
 const configOptions = [
-  { value: 'devMode', label: 'Development', icon: <DevModeIcon fontSize='small' /> },
-  { value: 'assignableMode', label: 'Assignable', icon: <AssignmentIcon fontSize='small' /> },
-  { value: 'disabledMode', label: 'Disabled', icon: <DisabledIcon fontSize='small' /> },
-  { value: 'anonymousMode', label: 'Anonymous', icon: <AnonymousIcon fontSize='small' /> },
+  { value: 'devMode', label: 'Development', icon: <TreeIcons.DevMode fontSize='small' /> },
+  { value: 'assignableMode', label: 'Assignable', icon: <TreeIcons.Assignment fontSize='small' /> },
+  { value: 'disabledMode', label: 'Disabled', icon: <TreeIcons.Disabled fontSize='small' /> },
+  { value: 'anonymousMode', label: 'Anonymous', icon: <TreeIcons.Anonymous fontSize='small' /> },
 ];
 
 const mockSelectedValues = ['devMode', 'assignableMode', 'disabledMode', 'anonymousMode'];

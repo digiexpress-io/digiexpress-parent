@@ -1,16 +1,6 @@
 import React from 'react';
 import { Box, Typography, List, IconButton, Badge, styled, Tooltip, Button } from '@mui/material';
-import { TreeColors } from './tree-theme';
-import {
-  UnfoldLessOutlined as CollapseAllIcon,
-  LightModeOutlined as LightModeIcon,
-  DarkModeOutlined as DarkModeIcon,
-  InsertDriveFileOutlined as FileIcon,
-  FolderOutlined as FolderIcon,
-  Add as AddIcon,
-  Search as SearchIcon,
-  Close as CloseIcon
-} from '@mui/icons-material';
+import { TreeColors, TreeIcons } from './tree-theme';
 import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu, useEveliTree } from '../eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
 import { EveliTreeNode } from './eveli-tree-node';
@@ -49,19 +39,19 @@ export const EveliTree: React.FC = () => {
           {isDarkMode ? (
             <StyledIconDark onClick={() => setSearchExpanded(!searchExpanded)}>
               <StyledBadgeDark
-                badgeContent={searchExpanded ? <CloseIcon sx={{ fontSize: '8px' }} /> : undefined}
+                badgeContent={searchExpanded ? <TreeIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
-                <SearchIcon sx={{ fontSize: '15px', transform: 'scaleX(-1)' }} />
+                <TreeIcons.Search sx={{ fontSize: '15px', transform: 'scaleX(-1)' }} />
               </StyledBadgeDark>
             </StyledIconDark>
           ) : (
             <StyledIconLight onClick={() => setSearchExpanded(!searchExpanded)}>
               <StyledBadgeLight
-                badgeContent={searchExpanded ? <CloseIcon sx={{ fontSize: '8px' }} /> : undefined}
+                badgeContent={searchExpanded ? <TreeIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
-                <SearchIcon sx={{ fontSize: '15px', transform: 'rotate(90deg)' }} />
+                <TreeIcons.Search sx={{ fontSize: '15px', transform: 'rotate(90deg)' }} />
               </StyledBadgeLight>
             </StyledIconLight>
           )}
@@ -69,14 +59,14 @@ export const EveliTree: React.FC = () => {
         <Tooltip title='New file' arrow enterDelay={1000}>
           {isDarkMode ? (
             <StyledIconDark>
-              <StyledBadgeDark badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FileIcon sx={{ fontSize: '15px' }} />
+              <StyledBadgeDark badgeContent={<TreeIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <TreeIcons.File sx={{ fontSize: '15px' }} />
               </StyledBadgeDark>
             </StyledIconDark>
           ) : (
             <StyledIconLight>
-              <StyledBadgeLight badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FileIcon sx={{ fontSize: '15px' }} />
+              <StyledBadgeLight badgeContent={<TreeIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <TreeIcons.File sx={{ fontSize: '15px' }} />
               </StyledBadgeLight>
             </StyledIconLight>
           )}
@@ -84,14 +74,14 @@ export const EveliTree: React.FC = () => {
         <Tooltip title='New folder' arrow enterDelay={1000}>
           {isDarkMode ? (
             <StyledIconDark>
-              <StyledBadgeDark badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FolderIcon sx={{ fontSize: '15px' }} />
+              <StyledBadgeDark badgeContent={<TreeIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <TreeIcons.Folder sx={{ fontSize: '15px' }} />
               </StyledBadgeDark>
             </StyledIconDark>
           ) : (
             <StyledIconLight>
-              <StyledBadgeLight badgeContent={<AddIcon sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FolderIcon sx={{ fontSize: '15px' }} />
+              <StyledBadgeLight badgeContent={<TreeIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <TreeIcons.Folder sx={{ fontSize: '15px' }} />
               </StyledBadgeLight>
             </StyledIconLight>
           )}
@@ -101,11 +91,11 @@ export const EveliTree: React.FC = () => {
         <Tooltip title='Collapse all' arrow enterDelay={1000}>
           {isDarkMode ? (
             <StyledIconDark onClick={() => collapseAll(treeData, setTreeData)}>
-              <CollapseAllIcon sx={{ fontSize: '15px' }} />
+              <TreeIcons.CollapseAll sx={{ fontSize: '15px' }} />
             </StyledIconDark>
           ) : (
             <StyledIconLight onClick={() => collapseAll(treeData, setTreeData)}>
-              <CollapseAllIcon sx={{ fontSize: '15px' }} />
+              <TreeIcons.CollapseAll sx={{ fontSize: '15px' }} />
             </StyledIconLight>
           )}
         </Tooltip>
@@ -113,11 +103,11 @@ export const EveliTree: React.FC = () => {
         <Tooltip title='Toggle light/dark mode' arrow enterDelay={1000}>
           {isDarkMode ? (
             <StyledIconDark onClick={() => setIsDarkMode(!isDarkMode)}>
-              <LightModeIcon sx={{ fontSize: '15px' }} />
+              <TreeIcons.LightMode sx={{ fontSize: '15px' }} />
             </StyledIconDark>
           ) : (
             <StyledIconLight onClick={() => setIsDarkMode(!isDarkMode)}>
-              <DarkModeIcon sx={{ fontSize: '15px' }} />
+              <TreeIcons.DarkMode sx={{ fontSize: '15px' }} />
             </StyledIconLight>
           )}
         </Tooltip>

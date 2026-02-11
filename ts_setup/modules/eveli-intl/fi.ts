@@ -103,6 +103,8 @@ export const fi = {
   'table.toolbar.addRemoveColumns': 'Lisää tai poista sarakkeita',
   'taskLink.pdf.open': 'PDF',
   'explorer.login': 'Kirjaudu sisään',
+  'login.dialog.title': 'Käytä DigiExpressin palveluita',
+  'login.dialog.message': 'Kirjaudu sisään jatkaaksesi',
   'locale.fi': 'Suomi',
   'locale.sv': 'Ruotsi',
   'locale.en': 'Englanti',

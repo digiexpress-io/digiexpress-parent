@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, styled, Typography, IconButton, Popover, useTheme, Divider, alpha, lighten } from '@mui/material';
+import { Box, styled, Typography, IconButton, Popover, useTheme, alpha, lighten } from '@mui/material';
 import { TreeNode, useEveliTree } from '../../eveli-tree-api';
-import { TreeColors } from '../tree-theme';
-import { Error as ErrorIcon } from '@mui/icons-material';
+import { TreeColors, TreeIcons } from '../tree-theme';
 
 export const EveliTreeBreadcrumb: React.FC = () => {
   const { isDarkMode, activeTabPath, openTabs, activeTabIndex, activeNode } = useEveliTree();
@@ -34,7 +33,7 @@ export const EveliTreeBreadcrumb: React.FC = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
         {activeNode?.error && (
           <IconButton size="small" color='error' onClick={handleHelpClick}>
-            <ErrorIcon fontSize="small" sx={{ color: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight }} />
+            <TreeIcons.Error fontSize="small" sx={{ color: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight }} />
           </IconButton>
         )}
         <Popover
