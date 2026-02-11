@@ -79,7 +79,7 @@ public class ReadWrite_Test extends DbTestTemplate {
   
   
   @Test
-  public void readWrite() {
+  public void create2FileWith2Commits() {
     final var tenant = "ReadWrite_2";
     final CreatedTenant repo = getClient().tenants()
         .createOneTenant()
@@ -96,38 +96,68 @@ public class ReadWrite_Test extends DbTestTemplate {
     
     final var fs = getClient().withTenant(tenant);
     
-    { // commit 1
-      final var result = fs
-        .commitBuilder()
-        .commitAuthor("john smith")
-        .commitMessage("create main branch with some content")
-        .newFile((newFile) -> newFile
-            .fileName("xxx.txt")
-            .filePath("root/xyz")
-            .fileType("text")
-            .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
-            .build())
-        .build()
-        .await().atMost(atMost);
-      
-      Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
-    }
+     // commit 1
+    final var commit_1 = fs
+      .commitBuilder()
+      .commitAuthor("john smith")
+      .commitMessage("create main branch with some content")
+      .newFile((newFile) -> newFile
+          .fileName("xxx.txt")
+          .filePath("root/xyz")
+          .fileType("text")
+          .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+          .build())
+      .build()
+      .await().atMost(atMost);
+    
+    Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
+  
+  
+    
+    // commit 2 
+    final var commit_2 = fs
+      .commitBuilder()
+      .commitAuthor("john smith")
+      .commitMessage("create main branch with some content")
+      .newFile((newFile) -> newFile
+          .fileName("xxx.txt")
+          .fileType("text")
+          .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+          .build())
+      .build()
+      .await().atMost(atMost);
+    
+    Assertions.assertEquals(CommitResultStatus.OK, commit_2.getStatus());
+  
     
     
-    { // commit 2 
+    { // pull 2 files
       final var result = fs
-        .commitBuilder()
-        .commitAuthor("john smith")
-        .commitMessage("create main branch with some content")
-        .newFile((newFile) -> newFile
-            .fileName("xxx.txt")
-            .fileType("text")
-            .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
-            .build())
-        .build()
-        .await().atMost(atMost);
+          .branchQuery().getOne()
+          .await().atMost(atMost);
       
-      Assertions.assertEquals(CommitResultStatus.OK, result.getStatus());
+      Assertions.assertNotNull(result.getTransitives(), "transitives must be loaded!");
+      Assertions.assertNotNull(result.getTransitives().getTree(), "transitives.tree must be loaded!");
+      Assertions.assertNotNull(result.getTransitives().getCommit(), "transitives.commit must be loaded!");
+      Assertions.assertEquals(result.getTransitives().getBlobsById().size(), 1);
+      Assertions.assertEquals(result.getTransitives().getTree().getTreeNodes().size(), 2);
+      
+      
+      final var createdAt = result.getTransitives().getCommit().getCommitCreatedAt();
+      // same content
+      final var blob = result.getTransitives().getBlobsById().values().iterator().next();
+      Assertions.assertEquals(blob.getBlobValue().size(), 2);
+      Assertions.assertEquals(blob.getBlobValue().getString("firstName"), "Sam");
+      Assertions.assertEquals(blob.getBlobValue().getString("lastName"), "Vimes");
+      
+      final var node_1 = result.getTransitives().getTree().getOneNode("root/xyz/xxx.txt");
+      final var node_1Created = node_1.getTransitives().getObjectIndex().getCreatedAt();
+      Assertions.assertEquals(commit_1.getCommit().getCommitCreatedAt().toEpochSecond(), node_1Created.toEpochSecond());
+      
+      final var node_2 = result.getTransitives().getTree().getOneNode("xxx.txt");
+      final var node_2Created = node_2.getTransitives().getObjectIndex().getCreatedAt();      
+      Assertions.assertEquals(createdAt.toEpochSecond(), node_2Created.toEpochSecond());
+      Assertions.assertEquals(commit_2.getCommit().getCommitCreatedAt().toEpochSecond(), node_2Created.toEpochSecond());
     }
   }
 }

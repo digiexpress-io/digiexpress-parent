@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables.filters;
  */
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -32,6 +33,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.storesql.support.SqlStatement;
+import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Tuple;
 import jakarta.annotation.Nullable;
 
@@ -51,7 +53,15 @@ public interface RefTableFilter {
 
       // Handle branch ID filter
       if (filter.getBranchId() != null) {
-        stmt.append("ref_name = $").append(index.incrementAndGet());
+        stmt.append("(");
+        
+        try {
+          final UUID uuid =  TableUtils.toUuid(filter.getBranchId());
+          stmt.append("ref.id = $").append(index.incrementAndGet());
+          params.add(uuid);
+        } catch(Exception e) {}
+        
+        stmt.append("ref.ref_name = $").append(index.incrementAndGet()).append(")");
         params.add(filter.getBranchId());
       }
       
@@ -64,7 +74,7 @@ public interface RefTableFilter {
         
         final var nameSql = new StringBuilder();
         final var nameBuilder = new NameExpressionBuilderImpl(
-          "ref_name",
+          "ref.ref_name",
           param -> {
             params.add(param);
             return index.incrementAndGet();

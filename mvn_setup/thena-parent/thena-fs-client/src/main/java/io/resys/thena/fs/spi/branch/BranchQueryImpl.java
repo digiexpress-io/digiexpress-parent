@@ -1,4 +1,4 @@
-package io.resys.thena.fs.spi.queries;
+package io.resys.thena.fs.spi.branch;
 
 /*-
  * #%L
@@ -42,34 +42,36 @@ public class BranchQueryImpl implements BranchQuery {
   private Consumer<NameExpressionBuilder> nameExpr;
   private String branchId;
   
+  
+  private Multi<Ref> baseline() {
+    final ImmutableRefTableFilter filter;
+    if(branchId == null && nameExpr == null) {
+      filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
+    } else {
+      filter = ImmutableRefTableFilter.builder().branchId(BranchConstants.DEFAULT_BRANCH).build();
+    }
+    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
+  }
   @Override
   public BranchQuery branchId(String branchId) {
-    RepoAssert.notEmpty(branchId, () -> "branchId can't be empty!");
-    this.branchId = branchId;
+    this.branchId = RepoAssert.notEmpty(branchId, () -> "branchId can't be empty!");
     return this;
   }  
   @Override
   public BranchQuery branchName(Consumer<NameExpressionBuilder> nameExpr) {
-    RepoAssert.notNull(nameExpr, () -> "nameExpr can't be empty!");
+    this.nameExpr = RepoAssert.notNull(nameExpr, () -> "nameExpr can't be empty!");
     return this;
   }
-  
-  private Multi<Ref> baseline() {
-    final var filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
-    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
-  }
-  
   @Override
   public Multi<Ref> findAll() {
     return baseline();
   }
-
   @Override
   public Uni<Optional<Ref>> findOne() {
     return baseline().collect().asList().map(found -> {
       final var actual = found.size();
       if(actual > 1) {
-        throw new FileSystemQueryException("Expecting exactly 1 or 0 result but found: " + actual + "!", 
+        throw new BranchQueryException("Expecting exactly 1 or 0 result but found: " + actual + "!", 
           JsonObject.of(
             "branchId", branchId,
             "isNameExpr", nameExpr == null ? false : true 
@@ -85,16 +87,14 @@ public class BranchQueryImpl implements BranchQuery {
     return baseline().collect().asList().map(found -> {
       final var actual = found.size();
       if(actual != 1) {
-        throw new FileSystemQueryException("Expecting exactly 1 result but found: " + actual + "!", 
+        throw new BranchQueryException("Expecting exactly 1 result but found: " + actual + "!", 
           JsonObject.of(
             "branchId", branchId,
             "isNameExpr", nameExpr == null ? false : true 
           )
         );
       }
-      
       return found.stream().findFirst().get();
     });
   }
-
 }

@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
-import jakarta.annotation.Nullable;
+import io.resys.thena.support.RepoAssert;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableTree.class)
@@ -40,20 +40,19 @@ public interface Tree extends FileSystemEntity {
   String getId();
   List<Node> getTreeNodes();
 
-  @Value.Auxiliary
-  @Nullable 
-  TreeTransitives getTransitives();
-
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.TREE; 
   }
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableTreeTransitives.class)
-  @JsonDeserialize(as = ImmutableTreeTransitives.class)
-  interface TreeTransitives {
+  
+  default Node getOneNode(String fullPath) {
+    final var found = getTreeNodes().stream()
+        .filter(node -> node.getFullPath().equals(fullPath))
+        .toList();
+    RepoAssert.isTrue(found.size() == 1, () -> "Expected exactly 1 node but found: " + found.size() + " for path: " + fullPath);
+    return found.getFirst();
   }
+
 
   // H(tree) = μ(∑ᵢ₌₁ⁿ H(nodeᵢ))
   public static ImmutableTree.Builder newInstance(Collection<Node> nodes) {

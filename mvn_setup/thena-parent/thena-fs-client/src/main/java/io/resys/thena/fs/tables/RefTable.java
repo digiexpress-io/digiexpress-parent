@@ -1,7 +1,5 @@
 package io.resys.thena.fs.tables;
 
-import java.time.OffsetDateTime;
-
 /*-
  * #%L
  * thena-fs-client
@@ -23,29 +21,18 @@ import java.time.OffsetDateTime;
  */
 
 import java.util.List;
-import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.entities.Commit;
-import io.resys.thena.fs.entities.ImmutableBlob;
-import io.resys.thena.fs.entities.ImmutableCommit;
-import io.resys.thena.fs.entities.ImmutableNode;
-import io.resys.thena.fs.entities.ImmutableNodeTransitives;
-import io.resys.thena.fs.entities.ImmutableObjectIndex;
-import io.resys.thena.fs.entities.ImmutableProps;
-import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
-import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
+import io.resys.thena.fs.tables.mappers.RefSelectMapper;
 import io.resys.thena.support.TableUtils;
-import io.smallrye.mutiny.tuples.Tuple2;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -90,12 +77,14 @@ public interface RefTable {
         ref.ref_flags,
         ref.ref_author,
         ref.commit_id,
+        
         commit.commit_created_at, 
         commit.commit_author, 
         commit.commit_message,
         commit.tree_id,
         commit.parent_id,
         commit.merge_id
+        
       FROM {ref} as ref
       LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
     """,
@@ -155,68 +144,51 @@ public interface RefTable {
     propsMapper = RefDeleteMapper.class
   )
   SqlTupleList deleteAll(List<Ref> refs);
-  
-  
-  @TenantSql.FindAll(
-    sql = """
-      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
-             ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
-      FROM {ref} as ref
-      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
-    """,
-    wrapper = WrapperType.MULTI,
-    rowMapper = RefMapper.class,
-    sqlBuilder = RefTableFilter.SQL.class
-  )
-  SqlTuple findAllByFilter(RefTableFilter filter);
 
   
-  // -- Lock branch, get current commit tree
-  @TenantSql.Find(
-    sql = """
-SELECT 
+  @TenantSql.FindAll(
+      sql = """
+  SELECT 
     ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
     commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
     tree.id as tree_id,
     
-    -- Aggregated Nodes: Hydrated only if object_id matches $2 (your filter.getDocIds())
+    -- Aggregated Nodes
     (SELECT json_agg(
-        json_build_object(
-            'id', n.id,
-            'object_id', n.object_id,
-            'node_path', n.node_path,
-            'node_name', n.node_name,
-            
-            'created_at', idx.created_at,
-            'updated_at', idx.updated_at,
-            'created_by', idx.created_by,
-            'updated_by', idx.updated_by,
-
-                                    
-            'blob_id', n.blob_id,
-            'props_id', n.props_id,
-            -- These will be NULL if the object_id isn't in the filter list
-            
-            'blob', CASE WHEN b.id IS NOT NULL 
-              THEN json_build_object(
-                'blob_type', b.blob_type, 
-                'blob_value', b.blob_value
-              ) 
-              ELSE NULL END,
-            
-            'props', CASE WHEN p.id IS NOT NULL 
-              THEN json_build_object(
-                'props_labels', p.props_labels, 
-                'props_flags', p.props_flags,
-                'props_comments', p.props_comments,
-                'props_permissions', p.props_permissions
-              ) 
-              ELSE NULL END
-        )
-    ) FROM unnest(tree.tree_nodes) AS n
-      -- "Extended Query" logic inside the aggregator
-      LEFT JOIN {props} p ON p.id = n.props_id AND n.object_id = ANY($2)
-      LEFT JOIN {blob} b ON b.id = n.blob_id AND n.object_id = ANY($2)
+      json_build_object(
+        'id', nodes.id,
+        'object_id', nodes.object_id,
+        'node_path', nodes.node_path,
+        'node_name', nodes.node_name,
+        
+        'created_at', idx.created_at,
+        'updated_at', idx.updated_at,
+        'created_by', idx.created_by,
+        'updated_by', idx.updated_by,
+                                
+        'blob_id', nodes.blob_id,
+        'props_id', nodes.props_id,
+        
+        'blob', 
+          CASE WHEN blobs.id IS NOT NULL 
+          THEN json_build_object(
+            'blob_type', blobs.blob_type, 
+            'blob_value', blobs.blob_value
+          ) 
+          ELSE NULL END,
+        'props', 
+          CASE WHEN props.id IS NOT NULL 
+          THEN json_build_object(
+            'props_labels', props.props_labels, 
+            'props_flags', props.props_flags,
+            'props_comments', props.props_comments,
+            'props_permissions', props.props_permissions
+          ) 
+          ELSE NULL END
+      )
+    ) FROM unnest(tree.tree_nodes) AS nodes
+      LEFT JOIN {props} as props ON props.id = nodes.props_id
+      LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id
       LEFT JOIN (
         SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
                created_commit.commit_created_at as created_at,
@@ -224,158 +196,105 @@ SELECT
         FROM {object_index} as object_index
         LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
         LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
-      ) as idx ON idx.object_id = n.object_id
+      ) as idx ON idx.object_id = nodes.object_id
     ) as nodes_json
 
-FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
-JOIN {commit} as commits ON commits.id = ref.commit_id
-JOIN {tree} as tree ON tree.id = commits.tree_id
+  FROM {ref} as ref
+  JOIN {commit} as commits ON commits.id = ref.commit_id
+  JOIN {tree} as tree ON tree.id = commits.tree_id
+      """,
+      wrapper = WrapperType.MULTI,
+      rowMapper = RefFilterMapper.class,
+      sqlBuilder = RefTableFilter.SQL.class
+    )
+    SqlTuple findAllByFilter(RefTableFilter filter);
+  
+  
+  // -- Lock branch, get current commit tree
+  @TenantSql.Find(
+    sql = """
+  SELECT 
+    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
+    commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
+    tree.id as tree_id,
+    
+    -- Aggregated Nodes: Hydrated only if object_id matches $2 (your filter.getDocIds())
+    (SELECT json_agg(
+      json_build_object(
+        'id', nodes.id,
+        'object_id', nodes.object_id,
+        'node_path', nodes.node_path,
+        'node_name', nodes.node_name,
+        
+        'created_at', idx.created_at,
+        'updated_at', idx.updated_at,
+        'created_by', idx.created_by,
+        'updated_by', idx.updated_by,
+                                
+        'blob_id', nodes.blob_id,
+        'props_id', nodes.props_id,
+        
+        -- These will be NULL if the object_id isn't in the filter list
+        'blob', 
+          CASE WHEN blobs.id IS NOT NULL 
+          THEN json_build_object(
+            'blob_type', blobs.blob_type, 
+            'blob_value', blobs.blob_value
+          ) 
+          ELSE NULL END,
+        'props', 
+          CASE WHEN props.id IS NOT NULL 
+          THEN json_build_object(
+            'props_labels', props.props_labels, 
+            'props_flags', props.props_flags,
+            'props_comments', props.props_comments,
+            'props_permissions', props.props_permissions
+          ) 
+          ELSE NULL END
+      )
+    ) FROM unnest(tree.tree_nodes) AS nodes
+      -- "Extended Query" logic inside the aggregator
+      LEFT JOIN {props} as props ON props.id = nodes.props_id AND nodes.object_id = ANY($2)
+      LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id AND nodes.object_id = ANY($2)
+      LEFT JOIN (
+        SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
+               created_commit.commit_created_at as created_at,
+               updated_commit.commit_created_at as updated_at
+        FROM {object_index} as object_index
+        LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
+        LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+      ) as idx ON idx.object_id = nodes.object_id
+    ) as nodes_json
+
+  FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
+  JOIN {commit} as commits ON commits.id = ref.commit_id
+  JOIN {tree} as tree ON tree.id = commits.tree_id
     """,
     rowMapper = RefLockMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
   )
   SqlTuple findOneWithLock(RefTableLockFilter filter);
 
+  
+  class RefFilterMapper implements TenantSql.RowMapper<Ref> {
+    @Override
+    public Ref apply(Row row) {
+      return RefSelectMapper.refAndCommitAndPropsAndBlob(row);
+    }
+  }
+  
   class RefLockMapper implements TenantSql.RowMapper<Ref> {
     @Override
     public Ref apply(Row row) {
-      final var baseline = RefMapper.baseline(row);
-      final var trs = ImmutableRefTransitives.builder()
-          .commit(baseline.getItem2());
-      
-      final var allNodes = row.getJsonArray("nodes_json")
-        .stream().map(node_json -> (JsonObject) node_json)
-        .map(node_json -> {
-
-          final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
-          final var propsId = Optional.ofNullable(node_json.getString("props_id"));
-          final var objectId = node_json.getString("object_id");
-
-          final var index = ImmutableObjectIndex.builder()
-              .objectId(objectId)
-              
-              .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
-              .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")))
-              
-              .createdBy(node_json.getString("created_by"))
-              .updatedBy(node_json.getString("updated_by"))
-              
-              .build();
-
-          final var nodeTrs = ImmutableNodeTransitives.builder().objectIndex(index);
-
-          // optional when queried
-          final var json_blob = node_json.getJsonObject("blob");
-          if(json_blob != null) {
-            final var blob = ImmutableBlob.builder()
-              .blobType(json_blob.getString("blob_type"))
-              .blobValue(json_blob.getJsonObject("blob_value"))
-              .id(blobId.get())
-              .build();
-            nodeTrs.blob(blob);
-            trs.putBlobsById(blob.getId(), blob);
-          }
-          
-          // optional 
-          final var json_props = node_json.getJsonObject("props");
-          if(json_props != null) {
-            final var props = ImmutableProps.builder()
-              .id(propsId.get())
-              .propsLabels(json_props.getJsonObject("props_labels"))
-              .propsComments(json_props.getJsonObject("props_comments"))
-              .propsPermissions(json_props.getJsonObject("props_permissions"))
-              .propsFlags(json_props.getJsonObject("props_flags"))
-              .build();
-            nodeTrs.props(props);
-            trs.putPropsById(props.getId(), props);
-          }
-          
-          // main node
-          final var node = ImmutableNode.builder()
-            .id(node_json.getString("id"))
-            .objectId(objectId)
-            .nodePath(node_json.getString("node_path"))
-            .nodeName(node_json.getString("node_name"))
-            .blobId(blobId)
-            .propsId(propsId)
-            .transitives(nodeTrs.build())
-            .build();
-          trs.putNodesById(node.getId(), node);
-          
-          
-          return node;
-        })
-        .toList();
-      
-      return baseline.getItem1()
-          .transitives(trs.tree(ImmutableTree.builder().id(row.getString("tree_id")).treeNodes(allNodes).build()).build())
-          .build();
+      return RefSelectMapper.refAndCommitAndPropsAndBlob(row);
     }
   }
 
 
   class RefMapper implements TenantSql.RowMapper<Ref> {
-    
-    public static Tuple2<ImmutableRef.Builder, Commit> baseline(Row row) {
-      final var refBuilder = ImmutableRef.builder()
-          .id(TableUtils.toStringUUID(row, "id"))
-          .refName(row.getString("ref_name"))
-          .commitId(row.getString("commit_id"));
-      
-      // Add optional ref properties
-      final String refDescription = row.getString("ref_description");
-      if (refDescription != null) {
-        refBuilder.branchDescription(refDescription);
-      }
-      
-      final JsonObject refProps = row.getJsonObject("ref_props");
-      if (refProps != null) {
-        refBuilder.branchProps(refProps);
-      }
-      
-      final JsonObject refPermissions = row.getJsonObject("ref_permissions");
-      if (refPermissions != null) {
-        refBuilder.branchPermissions(refPermissions);
-      }
-      
-      final JsonObject refFlags = row.getJsonObject("ref_flags");
-      if (refFlags != null) {
-        refBuilder.branchFlags(refFlags);
-      }
-      
-      final String refAuthor = row.getString("ref_author");
-      if (refAuthor != null) {
-        refBuilder.branchAuthor(refAuthor);
-      }
-      
-      // Build commit object from joined data
-      final String commitId = row.getString("commit_id");
-      
-    
-      final var commitBuilder = ImmutableCommit.builder()
-          .id(commitId)
-          .commitCreatedAt(row.getOffsetDateTime("commit_created_at"))
-          .commitAuthor(row.getString("commit_author"))
-          .commitMessage(row.getString("commit_message"))
-          .treeId(row.getString("tree_id"));
-      
-      final String parentId = row.getString("parent_id");
-      if (parentId != null) {
-        commitBuilder.parentId(parentId);
-      }
-      
-      final String mergeId = row.getString("merge_id");
-      if (mergeId != null) {
-        commitBuilder.mergeId(mergeId);
-      }
-      
-      final var commit = commitBuilder.build();
-      return Tuple2.of(refBuilder, commit);
-    }
-
     @Override
     public Ref apply(Row row) {
-      final var baseline = baseline(row);
+      final var baseline = RefSelectMapper.refAndCommit(row);
       final var trs = ImmutableRefTransitives.builder().commit(baseline.getItem2()).build();
       return baseline.getItem1().transitives(trs).build();
     }
