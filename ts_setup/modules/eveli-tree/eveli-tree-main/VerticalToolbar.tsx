@@ -81,27 +81,6 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 };
 
 
-interface ToolbarButtonProps {
-  disabled?: boolean;
-  isSelected?: boolean;
-  isDarkMode: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}
-
-const StyledToolbarButton: React.FC<ToolbarButtonProps> = (props) => {
-  const ButtonComponent = props.isDarkMode ? StyledToolbarButtonDark : StyledToolbarButtonLight;
-
-  return (
-    <ButtonComponent
-      disabled={props.disabled}
-      isSelected={props.isSelected}
-      onClick={props.onClick}
-    >
-      {props.children}
-    </ButtonComponent>
-  );
-};
 
 const ToolbarContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
@@ -119,9 +98,9 @@ const ToolbarContainer = styled(Box, {
   flexShrink: 0
 }));
 
-const ButtonComponent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'disabled' && prop !== 'isSelected'
-})<{ disabled?: boolean; isSelected?: boolean }>(({ disabled }) => ({
+const StyledToolbarButton = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'disabled' && prop !== 'isSelected' && prop !== 'isDarkMode'
+})<{ disabled?: boolean; isSelected?: boolean; isDarkMode?: boolean }>(({ disabled, isSelected, isDarkMode }) => ({
   cursor: disabled ? 'not-allowed' : 'pointer',
   userSelect: 'none' as const,
   display: 'flex',
@@ -130,32 +109,23 @@ const ButtonComponent = styled(Box, {
   opacity: disabled ? 0.3 : 1,
   borderRadius: '4px',
   padding: '4px',
+  backgroundColor: isSelected ?
+    (isDarkMode ? TreeColors.semantic.primary + '26' : TreeColors.semantic.warningLight + '26') :
+    'transparent',
+  border: isSelected ?
+    (isDarkMode ? `1px solid ${TreeColors.semantic.primary}` : `1px solid ${TreeColors.semantic.warningLight}`) :
+    '1px solid transparent',
   '& .MuiSvgIcon-root': {
     fontSize: '1.2rem',
+    color: isSelected ?
+      (isDarkMode ? TreeColors.semantic.primary : TreeColors.semantic.warningLight) :
+      (isDarkMode ? TreeColors.dark.text : TreeColors.light.text),
   },
   '&:hover': {
     opacity: disabled ? 0.3 : 1,
-  },
-}));
-
-const StyledToolbarButtonDark = styled(ButtonComponent)(({ disabled, isSelected }) => ({
-  backgroundColor: isSelected ? TreeColors.semantic.primary + '26' : 'transparent',
-  border: isSelected ? `1px solid ${TreeColors.semantic.primary}` : '1px solid transparent',
-  '& .MuiSvgIcon-root': {
-    color: isSelected ? TreeColors.semantic.primary : TreeColors.dark.text,
-  },
-  '&:hover': {
-    backgroundColor: disabled ? 'transparent' : isSelected ? TreeColors.semantic.primary + '40' : TreeColors.dark.border + '20'
-  },
-}));
-
-const StyledToolbarButtonLight = styled(ButtonComponent)(({ disabled, isSelected }) => ({
-  backgroundColor: isSelected ? TreeColors.semantic.warningLight + '26' : 'transparent',
-  border: isSelected ? `1px solid ${TreeColors.semantic.warningLight}` : '1px solid transparent',
-  '& .MuiSvgIcon-root': {
-    color: isSelected ? TreeColors.semantic.warningLight : TreeColors.light.text,
-  },
-  '&:hover': {
-    backgroundColor: disabled ? 'transparent' : isSelected ? TreeColors.semantic.warningLight + '40' : TreeColors.light.surface
+    backgroundColor: disabled ? 'transparent' :
+      isSelected ?
+        (isDarkMode ? TreeColors.semantic.primary + '40' : TreeColors.semantic.warningLight + '40') :
+        (isDarkMode ? TreeColors.dark.border + '20' : TreeColors.light.surface)
   },
 }));
