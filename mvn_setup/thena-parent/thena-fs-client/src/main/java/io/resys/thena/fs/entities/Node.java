@@ -76,7 +76,7 @@ public interface Node extends FileSystemEntity {
       if(getNodePath().isPresent()) {
         final var directoryPath = getNodePath().get();
         RepoAssert.isTrue(!directoryPath.trim().isEmpty(), () -> "directoryPath cannot be empty");
-        RepoAssert.isTrue(directoryPath.matches("^[a-zA-Z0-9/_-]+$"), () -> "directoryPath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
+        RepoAssert.isTrue(directoryPath.matches("^[a-zA-Z0-9/_ -]+$"), () -> "directoryPath contains invalid characters, only a-z, A-Z, 0-9, /, _, -, space allowed");
         RepoAssert.isTrue(!directoryPath.contains("//"), () -> "directoryPath cannot contain double slashes");
         RepoAssert.isTrue(!directoryPath.endsWith("/"), () -> "directoryPath cannot end with slash");      
       }
@@ -84,7 +84,7 @@ public interface Node extends FileSystemEntity {
       final var directoryName = getNodeName();
       RepoAssert.notNull(directoryName, () -> "directoryName is required");
       RepoAssert.isTrue(!directoryName.trim().isEmpty(), () -> "directoryName cannot be empty");
-      RepoAssert.isTrue(directoryName.matches("^[a-zA-Z0-9_-]+$"), () -> "directoryName contains invalid characters, only a-z, A-Z, 0-9, _, - allowed");
+      RepoAssert.isTrue(directoryName.matches("^[a-zA-Z0-9_ -]+$"), () -> "directoryPath contains invalid characters, only a-z, A-Z, 0-9, /, _, -, space allowed");
       RepoAssert.isTrue(!directoryName.contains("/"), () -> "directoryName cannot contain slashes");   
       return;
     }

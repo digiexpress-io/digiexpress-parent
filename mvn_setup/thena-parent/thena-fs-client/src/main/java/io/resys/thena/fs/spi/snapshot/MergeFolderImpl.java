@@ -77,6 +77,7 @@ public class MergeFolderImpl implements MergeFolder {
       p.accept(prevProps, builder);
       return builder.close().getProps();
     });
+    final var propsId = this.folderProps == null ? prevNode.getPropsId() : nextProps.map(Props::getId);
     
     // static data, once in its in... can't change PK
     final var nodeId = prevNode.getObjectId();
@@ -91,7 +92,7 @@ public class MergeFolderImpl implements MergeFolder {
         nodeId, 
         folderName, 
         blobId, 
-        nextProps.map(Props::getId)
+        propsId
     ).build();
     
     return new MergeFolderResult(nextNode, nextProps);
