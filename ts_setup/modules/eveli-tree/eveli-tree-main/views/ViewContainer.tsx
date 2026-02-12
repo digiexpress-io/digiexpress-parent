@@ -66,7 +66,6 @@ const Content = styled(Box)(() => ({
 
 const Header = styled(Box)(() => ({
   display: 'flex',
-  alignItems: 'center',
   marginBottom: '10px'
 }));
 

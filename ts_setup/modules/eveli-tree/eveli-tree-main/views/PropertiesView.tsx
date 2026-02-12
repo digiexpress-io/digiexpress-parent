@@ -1,7 +1,8 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Box, styled } from '@mui/material';
 import { TreeNode } from '../../../eveli-tree-api';
-import { TreeIcons } from '../../tree-theme';
+import { TreeColors, TreeIcons } from '../../tree-theme';
+import { useEveliTree } from '../../../eveli-tree-api';
 import { ViewContainer } from './ViewContainer';
 
 export interface PropertiesViewProps {
@@ -9,6 +10,8 @@ export interface PropertiesViewProps {
 }
 
 export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
+  const { isDarkMode } = useEveliTree();
+
   if (!node) {
     return (
       <ViewContainer
@@ -22,10 +25,91 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
     );
   }
 
+  // Dummy data structure
+  const properties = {
+    localeLabels: ['en', 'sv', 'fi'],
+    serviceName: 'General Message',
+    comments: 'Still needs spellcheck in Swedish language translations',
+    dialobFormName: 'feedback_form',
+    dialobFormTag: 'v1.0',
+    flowName: 'General_Message_Flow',
+    validityStart: '11.01.2025',
+    validityEnd: '12.03.2025',
+    validityPeriod: '30 days',
+    configOptionsEnabled: ['Assignable', 'DevMode'],
+    selectedArticles: ['000_index', '230_send_feedback', '400_contact_us']
+  };
+
   const mainContent = (
-    <Typography variant="body2" color="text.secondary">
-      Properties view for {node.name} - Coming soon
-    </Typography>
+    <PropertiesContainer isDarkMode={isDarkMode}>
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Locale Labels</PropertyLabel>
+        <PropertyList className="property-list">
+          {properties.localeLabels.map((label, index) => (
+            <PropertyListItem key={index} className="property-list-item">{label}</PropertyListItem>
+          ))}
+        </PropertyList>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Service Name</PropertyLabel>
+        <PropertyValue className="property-value">{properties.serviceName}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Comments</PropertyLabel>
+        <PropertyValue className="property-value">{properties.comments}</PropertyValue>
+      </PropertyRow>
+
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Dialob Form Name</PropertyLabel>
+        <PropertyValue className="property-value">{properties.dialobFormName}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Dialob Form Tag</PropertyLabel>
+        <PropertyValue className="property-value">{properties.dialobFormTag}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Flow Name</PropertyLabel>
+        <PropertyValue className="property-value">{properties.flowName}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Validity Start</PropertyLabel>
+        <PropertyValue className="property-value">{properties.validityStart}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Validity End</PropertyLabel>
+        <PropertyValue className="property-value">{properties.validityEnd}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Validity Period</PropertyLabel>
+        <PropertyValue className="property-value">{properties.validityPeriod}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Config Options Enabled</PropertyLabel>
+        <PropertyList className="property-list">
+          {properties.configOptionsEnabled.map((option, index) => (
+            <PropertyListItem key={index} className="property-list-item">{option}</PropertyListItem>
+          ))}
+        </PropertyList>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Selected Articles</PropertyLabel>
+        <PropertyList className="property-list">
+          {properties.selectedArticles.map((article, index) => (
+            <PropertyListItem key={index} className="property-list-item">{article}</PropertyListItem>
+          ))}
+        </PropertyList>
+      </PropertyRow>
+    </PropertiesContainer>
   );
 
   return (
@@ -37,4 +121,72 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
       {mainContent}
     </ViewContainer>
   );
-}
+};
+
+const PropertiesContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  border: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
+  '& > div:nth-of-type(odd)': {
+    backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
+  },
+}));
+
+const PropertyRow = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDarkMode'
+})<{ isDarkMode?: boolean }>(({ isDarkMode }) => ({
+  display: 'flex',
+  gap: '16px',
+  padding: '8px 12px',
+  backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
+  borderBottom: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
+  '&:last-child': {
+    borderBottom: 'none'
+  },
+  '& .property-label': {
+    color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
+    width: '200px',
+    flexShrink: 0,
+    paddingRight: '15px'
+  },
+  '& .property-value': {
+    color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
+    flex: 1
+  },
+  '& .property-list': {
+    flex: 1
+  },
+  '& .property-list-item': {
+    color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+    borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+  }
+}));
+
+const PropertyLabel = styled(Typography)(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  alignContent: 'center',
+  fontWeight: 500,
+  textTransform: 'uppercase',
+}));
+
+const PropertyValue = styled(Typography)(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  fontWeight: 400,
+}));
+
+const PropertyList = styled(Box)(() => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '6px',
+}));
+
+const PropertyListItem = styled(Box)(({ theme }) => ({
+  fontWeight: 400,
+  ...theme.typography.subtitle2,
+  border: '1px solid',
+  paddingLeft: '5px',
+  paddingRight: '5px'
+}));

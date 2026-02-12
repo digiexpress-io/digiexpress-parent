@@ -83,6 +83,82 @@ export const mockTreeData: TreeNode[] = [
             ],
             children: [
               {
+                id: 'ref.article',
+                name: 'ref.article',
+                type: 'article',
+                comments: undefined,
+                expanded: false,
+                reference: true,
+                locked: false,
+                error: false,
+                description: 'Reference article for common content',
+                labels: [
+                  {
+                    id: 'ref-article-label-1',
+                    value: 'reference',
+                    nodeId: 'ref.article'
+                  },
+                  {
+                    id: 'ref-article-label-2',
+                    value: 'reusable',
+                    nodeId: 'ref.article'
+                  },
+                  {
+                    id: 'ref-article-label-3',
+                    value: 'common-content',
+                    nodeId: 'ref.article'
+                  }
+                ],
+                children: [
+                  {
+                    id: 'fi-ref',
+                    name: 'fi',
+                    type: 'language',
+                    comments: undefined,
+                    expanded: false,
+                    reference: false,
+                    locked: false,
+                    error: false,
+                    description: 'Yleinen viitesisältö',
+                    labels: [
+                      {
+                        id: 'fi-ref-label-1',
+                        value: 'finnish',
+                        nodeId: 'fi-ref'
+                      },
+                      {
+                        id: 'fi-ref-label-2',
+                        value: 'reference-content',
+                        nodeId: 'fi-ref'
+                      }
+                    ]
+                  },
+                  {
+                    id: 'en-ref',
+                    name: 'en',
+                    type: 'language',
+                    comments: undefined,
+                    expanded: false,
+                    reference: false,
+                    locked: false,
+                    error: false,
+                    description: 'Common reference content',
+                    labels: [
+                      {
+                        id: 'en-ref-label-1',
+                        value: 'english',
+                        nodeId: 'en-ref'
+                      },
+                      {
+                        id: 'en-ref-label-2',
+                        value: 'reference-content',
+                        nodeId: 'en-ref'
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 id: 'fi-main',
                 name: 'fi',
                 type: 'language',
@@ -355,18 +431,14 @@ export const mockTreeData: TreeNode[] = [
         ],
         children: [
           {
-            id: 'main-residence.article',
-            name: 'main.article',
+            id: 'ref-article-ref1',
+            name: 'ref.article',
             type: 'article',
             comments: undefined,
             expanded: false,
-            reference: false,
+            reference: true,
             locked: false,
-            error: false,
-            description: 'Asuminen',
-            configOptions: [{
-              disabledMode: true,
-            }]
+            error: false
           },
           {
             id: 'general-message-ref1',
@@ -452,15 +524,14 @@ export const mockTreeData: TreeNode[] = [
         ],
         children: [
           {
-            id: 'main-democracy.article',
-            name: 'main.article',
+            id: 'ref-article-ref2',
+            name: 'ref.article',
             type: 'article',
             comments: undefined,
             expanded: false,
-            reference: false,
+            reference: true,
             locked: false,
-            error: false,
-            description: 'Demokratia'
+            error: false
           },
           {
             id: 'trustee-info-form.service',
@@ -548,15 +619,14 @@ export const mockTreeData: TreeNode[] = [
         error: false,
         children: [
           {
-            id: 'main-education.article',
-            name: 'main.article',
+            id: 'ref-article-ref3',
+            name: 'ref.article',
             type: 'article',
             comments: undefined,
             expanded: false,
-            reference: false,
+            reference: true,
             locked: false,
-            error: false,
-            description: 'Koulutus'
+            error: false
           },
           {
             id: 'wilma-preschool.service',
@@ -644,15 +714,14 @@ export const mockTreeData: TreeNode[] = [
         error: false,
         children: [
           {
-            id: 'main-traffic.article',
-            name: 'main.article',
+            id: 'ref-article-ref4',
+            name: 'ref.article',
             type: 'article',
             comments: undefined,
             expanded: false,
-            reference: false,
+            reference: true,
             locked: false,
-            error: false,
-            description: 'Kadut ja viheralueet'
+            error: false
           },
           {
             id: 'dig-permit.service',
