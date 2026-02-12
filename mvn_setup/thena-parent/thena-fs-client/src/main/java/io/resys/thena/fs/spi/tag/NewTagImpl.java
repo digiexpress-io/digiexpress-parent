@@ -16,8 +16,8 @@ import io.resys.thena.fs.entities.ImmutableTagTransitives;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.Tree;
-import io.resys.thena.fs.spi.commitbuilder.CommitBuilderException;
-import io.resys.thena.fs.spi.commitbuilder.CommitBuilderImpl;
+import io.resys.thena.fs.spi.commit.CommitBuilderException;
+import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -88,13 +88,13 @@ public class NewTagImpl implements NewTag {
     return tx.query().queryCommit().findByCommitIdOrRef(commitIdOrBranchName)
         .map(found -> {
           if(found.isEmpty()) {
-            throw new TagCreationFailedCommitNotFoundException("Can't find commit or branch by given id", JsonObject.of("id", commitIdOrBranchName));
+            throw new TagCreationException("Can't find commit or branch by given id", JsonObject.of("id", commitIdOrBranchName));
           }
           return found.get();
         })
         .onItem().transformToUni(found -> {
           if(callback != null) {
-            return tx.query().queryCommit().getById(found.getItem1().getId())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId())
               .map(tuple -> tuple.getItem2())
               .onItem().transform(tree -> new TagRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
           }

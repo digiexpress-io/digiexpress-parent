@@ -63,16 +63,6 @@ public interface TagQuery {
   TagQuery excludeNodes(boolean excludeNodes);
   
   /**
-   * Excludes tree structure from the result set to reduce payload size.
-   * When true, also automatically excludes nodes and blobs since they depend on tree structure.
-   * Only tag and commit information is returned.
-   * 
-   * @param excludeTrees true to exclude trees (nodes, and blobs), false to include them
-   * @return query builder for method chaining
-   */
-  TagQuery excludeTrees(boolean excludeTrees);
-  
-  /**
    * Applies complex tag name filtering using expression builder patterns.
    * Supports operations like startsWith("v"), endsWith(".0"), contains("release"), etc.
    * 

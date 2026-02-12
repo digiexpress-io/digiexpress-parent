@@ -1,4 +1,4 @@
-package io.resys.thena.fs.spi.commitbuilder;
+package io.resys.thena.fs.spi.commit;
 
 /*-
  * #%L

@@ -1,4 +1,4 @@
-package io.resys.thena.fs.spi.commitbuilder;
+package io.resys.thena.fs.spi.tag;
 
 /*-
  * #%L
@@ -22,14 +22,11 @@ package io.resys.thena.fs.spi.commitbuilder;
 
 import io.vertx.core.json.JsonObject;
 
-public class CommitBuilderException extends RuntimeException {
+public class TagCreationException extends RuntimeException {
 
   private static final long serialVersionUID = 3868491498774789368L;
 
-  public CommitBuilderException(Exception e, String msg, JsonObject props) {
-    super(msg + System.lineSeparator() + props.encodePrettily(), e);
-  }
-  public CommitBuilderException(Exception e, JsonObject props) {
-    super(props.encodePrettily(), e);
+  public TagCreationException(String msg, JsonObject props) {
+    super(msg + System.lineSeparator() + props.encodePrettily());
   }
 }

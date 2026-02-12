@@ -21,7 +21,6 @@ package io.resys.thena.fs.entities;
  */
 
 import java.time.OffsetDateTime;
-import java.util.Map;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -71,8 +70,14 @@ public interface Tag extends FileSystemEntity {
     
     // might not be loaded
     @Nullable Tree getTree();
-
-    // might not be loaded
-    @Nullable Map<String, Blob> getBlobsById();  
+  }
+  
+  default Tag withTransitives(Commit commit, Tree tree) {
+    return ImmutableTag.builder().from(this)
+        .transitives(ImmutableTagTransitives.builder()
+            .commit(commit)
+            .tree(tree)
+            .build())
+        .build();
   }
 }

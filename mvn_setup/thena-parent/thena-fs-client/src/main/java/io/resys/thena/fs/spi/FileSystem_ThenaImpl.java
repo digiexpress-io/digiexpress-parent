@@ -42,7 +42,7 @@ import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.NewTag;
 import io.resys.thena.fs.api.tags.TagQuery;
 import io.resys.thena.fs.spi.branch.BranchQueryImpl;
-import io.resys.thena.fs.spi.commitbuilder.CommitBuilderImpl;
+import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
 import io.resys.thena.fs.spi.tag.NewTagImpl;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.spi.FsDbImpl;

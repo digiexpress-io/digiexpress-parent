@@ -117,8 +117,55 @@ public interface CommitTable {
     """,
     rowMapper = CommitAndTreeMapper.class
   )
-  SqlTuple getById(String id);
+  SqlTuple getByIdWithNodesAndBlobs(String id);
   
+  @TenantSql.Find(
+    optional = false,
+    sql = """
+    SELECT 
+      commits.id,
+      commits.commit_created_at, commits.commit_author, 
+      commits.commit_message, commits.tree_id, 
+      commits.parent_id, commits.merge_id,
+      tree.id as tree_id,
+    
+      -- Aggregated Nodes
+      (SELECT json_agg(
+        json_build_object(
+          'id', nodes.id,
+          'object_id', nodes.object_id,
+          'node_path', nodes.node_path,
+          'node_name', nodes.node_name,
+          
+          'created_at', idx.created_at,
+          'updated_at', idx.updated_at,
+          'created_by', idx.created_by,
+          'updated_by', idx.updated_by,
+                                  
+          'blob_id', nodes.blob_id,
+          'props_id', nodes.props_id,
+          
+          'blob', null,
+          'props', null
+        )
+      ) 
+      FROM unnest(tree.tree_nodes) AS nodes
+        LEFT JOIN (
+          SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
+                 created_commit.commit_created_at as created_at,
+                 updated_commit.commit_created_at as updated_at
+          FROM {object_index} as object_index
+          LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
+          LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+        ) as idx ON idx.object_id = nodes.object_id
+      ) as nodes_json
+
+    FROM {commit} as commits ON commits.id = ref.commit_id
+    JOIN {tree} as tree ON tree.id = commits.tree_id
+    """,
+    rowMapper = CommitAndTreeMapper.class
+  )
+  SqlTuple getByIdWithNodes(String id);
   
   @TenantSql.Find(
       optional = true,

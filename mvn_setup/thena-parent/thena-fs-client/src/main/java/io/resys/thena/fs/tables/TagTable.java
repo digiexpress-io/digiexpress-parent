@@ -25,12 +25,14 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableTag;
 import io.resys.thena.fs.entities.ImmutableTagTransitives;
 import io.resys.thena.fs.entities.Tag;
+import io.resys.thena.fs.tables.filters.TagTableFilter;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -135,6 +137,18 @@ public interface TagTable {
     rowMapper = TagMapper.class
   )
   SqlTuple findByTagName(String tagName);
+  
+  
+  @TenantSql.FindAll(
+    sql = """
+      SELECT tag.*
+      FROM {tag} as tag
+    """,
+    rowMapper = TagMapper.class,
+    wrapper = WrapperType.MULTI
+  )
+  SqlTuple findAllByFilter(TagTableFilter filter);
+  
 
   @TenantSql.FindAll(
     sql = """
@@ -190,9 +204,6 @@ public interface TagTable {
       final String externalTenantId = row.getString("external_tenant_id");
       final OffsetDateTime tagStartsAt = row.getOffsetDateTime("tag_starts_at");
       
-      final OffsetDateTime commitCreatedAt = row.getOffsetDateTime("commit_created_at");
-      final String commitAuthorName = row.getString("commit_author_name");
-      final String commitMessage = row.getString("commit_message");
 
       return ImmutableTag.builder()
           .id(row.getString("id"))

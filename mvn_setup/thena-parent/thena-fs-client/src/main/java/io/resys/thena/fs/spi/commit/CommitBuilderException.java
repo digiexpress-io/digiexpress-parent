@@ -1,4 +1,4 @@
-package io.resys.thena.fs.spi.tag;
+package io.resys.thena.fs.spi.commit;
 
 /*-
  * #%L
@@ -22,11 +22,14 @@ package io.resys.thena.fs.spi.tag;
 
 import io.vertx.core.json.JsonObject;
 
-public class TagCreationFailedCommitNotFoundException extends RuntimeException {
+public class CommitBuilderException extends RuntimeException {
 
   private static final long serialVersionUID = 3868491498774789368L;
 
-  public TagCreationFailedCommitNotFoundException(String msg, JsonObject props) {
-    super(msg + System.lineSeparator() + props.encodePrettily());
+  public CommitBuilderException(Exception e, String msg, JsonObject props) {
+    super(msg + System.lineSeparator() + props.encodePrettily(), e);
+  }
+  public CommitBuilderException(Exception e, JsonObject props) {
+    super(props.encodePrettily(), e);
   }
 }
