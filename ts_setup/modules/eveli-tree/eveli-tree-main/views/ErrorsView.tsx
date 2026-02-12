@@ -29,19 +29,19 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
   const errors = [
     {
       id: 1,
-      severity: 'critical',
-      title: 'Missing Finnish Translation',
-      description: 'The required Finnish translation for field "title" is missing from the language node.',
-      howToFix: 'Navigate to the Finnish language node (fi) and add the missing "title" field with appropriate translation.',
+      severity: 'warning',
+      title: 'Missing Translation Warning',
+      description: 'Main.article does not have a Finnish language page',
+      howToFix: 'Select "New Page with the language fi to create this page.',
       affectedFile: 'fi.language',
       timestamp: '12.02.2025 14:30'
     },
     {
       id: 2,
       severity: 'critical',
-      title: 'Schema Validation Failed',
-      description: 'Required field "description" is empty and violates the content schema.',
-      howToFix: 'Add a meaningful description to the node. Description should be 10-500 characters long.',
+      title: 'Missing Markdown level 1 heading error',
+      description: 'Page in main.article cannot be rendered in portal if no level 1 heading is defined.',
+      howToFix: 'Open en page and add a level 1 heading (# My Heading) at the top of the page.',
       affectedFile: 'main.article',
       timestamp: '12.02.2025 14:28'
     },
@@ -110,10 +110,6 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
             <ErrorDescription isDarkMode={isDarkMode}>
               {error.description}
             </ErrorDescription>
-
-            <ErrorFile isDarkMode={isDarkMode}>
-              <strong>Affected:</strong> {error.affectedFile}
-            </ErrorFile>
 
             <FixInstruction severity={error.severity} isDarkMode={isDarkMode}>
               <FixLabel>How to fix:</FixLabel>
@@ -244,14 +240,6 @@ const ErrorDescription = styled(Typography, {
   ...theme.typography.subtitle2,
   color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
   marginBottom: '8px',
-}));
-
-const ErrorFile = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ theme, isDarkMode }) => ({
-  ...theme.typography.subtitle2,
-  color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
-  marginBottom: '12px',
 }));
 
 const FixInstruction = styled(Box, {

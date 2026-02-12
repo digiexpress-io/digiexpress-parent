@@ -27,7 +27,7 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
 
   // Dummy data structure
   const properties = {
-    localeLabels: ['en', 'sv', 'fi'],
+    serviceLocaleLabels: ['en', 'sv', 'fi'],
     serviceName: 'General Message',
     comments: 'Still needs spellcheck in Swedish language translations',
     dialobFormName: 'feedback_form',
@@ -37,16 +37,19 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
     validityEnd: '12.03.2025',
     validityPeriod: '30 days',
     configOptionsEnabled: ['Assignable', 'DevMode'],
-    selectedArticles: ['000_index', '230_send_feedback', '400_contact_us']
+    selectedArticles: ['000_index', '230_send_feedback', '400_contact_us'],
+    pages: ['en', 'fi', 'sv']
   };
 
   const mainContent = (
     <PropertiesContainer isDarkMode={isDarkMode}>
+
+
       <PropertyRow isDarkMode={isDarkMode}>
-        <PropertyLabel className="property-label">Locale Labels</PropertyLabel>
+        <PropertyLabel className="property-label">Page Locales</PropertyLabel>
         <PropertyList className="property-list">
-          {properties.localeLabels.map((label, index) => (
-            <PropertyListItem key={index} className="property-list-item">{label}</PropertyListItem>
+          {properties.pages.map((locale, index) => (
+            <PropertyListItem key={index} className="property-list-item">{locale}</PropertyListItem>
           ))}
         </PropertyList>
       </PropertyRow>
@@ -56,9 +59,29 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
         <PropertyValue className="property-value">{properties.serviceName}</PropertyValue>
       </PropertyRow>
 
+
       <PropertyRow isDarkMode={isDarkMode}>
-        <PropertyLabel className="property-label">Comments</PropertyLabel>
-        <PropertyValue className="property-value">{properties.comments}</PropertyValue>
+        <PropertyLabel className="property-label">Service Locales</PropertyLabel>
+        <PropertyList className="property-list">
+          {properties.serviceLocaleLabels.map((label, index) => (
+            <PropertyListItem key={index} className="property-list-item">{label}</PropertyListItem>
+          ))}
+        </PropertyList>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Service Validity Start</PropertyLabel>
+        <PropertyValue className="property-value">{properties.validityStart}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label"> Service Validity End</PropertyLabel>
+        <PropertyValue className="property-value">{properties.validityEnd}</PropertyValue>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Service Validity Period</PropertyLabel>
+        <PropertyValue className="property-value">{properties.validityPeriod}</PropertyValue>
       </PropertyRow>
 
 
@@ -77,20 +100,6 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
         <PropertyValue className="property-value">{properties.flowName}</PropertyValue>
       </PropertyRow>
 
-      <PropertyRow isDarkMode={isDarkMode}>
-        <PropertyLabel className="property-label">Validity Start</PropertyLabel>
-        <PropertyValue className="property-value">{properties.validityStart}</PropertyValue>
-      </PropertyRow>
-
-      <PropertyRow isDarkMode={isDarkMode}>
-        <PropertyLabel className="property-label">Validity End</PropertyLabel>
-        <PropertyValue className="property-value">{properties.validityEnd}</PropertyValue>
-      </PropertyRow>
-
-      <PropertyRow isDarkMode={isDarkMode}>
-        <PropertyLabel className="property-label">Validity Period</PropertyLabel>
-        <PropertyValue className="property-value">{properties.validityPeriod}</PropertyValue>
-      </PropertyRow>
 
       <PropertyRow isDarkMode={isDarkMode}>
         <PropertyLabel className="property-label">Config Options Enabled</PropertyLabel>
@@ -109,6 +118,12 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
           ))}
         </PropertyList>
       </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Comments</PropertyLabel>
+        <PropertyValue className="property-value">{properties.comments}</PropertyValue>
+      </PropertyRow>
+
     </PropertiesContainer>
   );
 
@@ -147,7 +162,7 @@ const PropertyRow = styled(Box, {
   },
   '& .property-label': {
     color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
-    width: '200px',
+    width: '230px',
     flexShrink: 0,
     paddingRight: '15px'
   },
