@@ -1,37 +1,15 @@
 package io.resys.thena.fs.tables;
 
-/*-
- * #%L
- * thena-fs-client
- * %%
- * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.Commit;
-import io.resys.thena.fs.entities.ImmutableCommit;
-import io.resys.thena.fs.entities.ImmutableCommitTransitives;
-import io.vertx.mutiny.sqlclient.Row;
+import io.resys.thena.fs.tables.mappers.CommitAndTreeMapper;
+import io.resys.thena.fs.tables.mappers.CommitMapper;
+import io.resys.thena.fs.tables.mappers.CommitOrRefMapper;
 
 @TenantSql.Table(
   name = "commit",
@@ -70,13 +48,8 @@ public interface CommitTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT commit.id, commit.commit_created_at, commit.commit_author, commit.commit_message, 
-             commit.tree_id, commit.parent_id, commit.merge_id,
-             parent_commit.commit_created_at as parent_created_at,
-             merge_commit.commit_created_at as merge_created_at
+      SELECT commit.*
       FROM {commit} as commit
-      LEFT JOIN {commit} as parent_commit ON commit.parent_id = parent_commit.id
-      LEFT JOIN {commit} as merge_commit ON commit.merge_id = merge_commit.id
     """,
     rowMapper = CommitMapper.class
   )
@@ -85,28 +58,109 @@ public interface CommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT commit.id, commit.commit_created_at, commit.commit_author, commit.commit_message, 
-             commit.tree_id, commit.parent_id, commit.merge_id,
-             parent_commit.commit_created_at as parent_created_at,
-             merge_commit.commit_created_at as merge_created_at
-      FROM {commit} as commit
-      LEFT JOIN {commit} as parent_commit ON commit.parent_id = parent_commit.id
-      LEFT JOIN {commit} as merge_commit ON commit.merge_id = merge_commit.id
-      WHERE commit.id = $1
+    SELECT 
+      commits.id,
+      commits.commit_created_at, commits.commit_author, 
+      commits.commit_message, commits.tree_id, 
+      commits.parent_id, commits.merge_id,
+      tree.id as tree_id,
+    
+      -- Aggregated Nodes
+      (SELECT json_agg(
+        json_build_object(
+          'id', nodes.id,
+          'object_id', nodes.object_id,
+          'node_path', nodes.node_path,
+          'node_name', nodes.node_name,
+          
+          'created_at', idx.created_at,
+          'updated_at', idx.updated_at,
+          'created_by', idx.created_by,
+          'updated_by', idx.updated_by,
+                                  
+          'blob_id', nodes.blob_id,
+          'props_id', nodes.props_id,
+          
+          'blob', 
+            CASE WHEN blobs.id IS NOT NULL 
+            THEN json_build_object(
+              'blob_type', blobs.blob_type, 
+              'blob_value', blobs.blob_value
+            ) 
+            ELSE NULL END,
+          'props', 
+            CASE WHEN props.id IS NOT NULL 
+            THEN json_build_object(
+              'props_labels', props.props_labels, 
+              'props_flags', props.props_flags,
+              'props_comments', props.props_comments,
+              'props_permissions', props.props_permissions
+            ) 
+            ELSE NULL END
+        )
+      ) 
+      FROM unnest(tree.tree_nodes) AS nodes
+        LEFT JOIN {props} as props ON props.id = nodes.props_id AND nodes.props_id IS NOT NULL
+        LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id AND nodes.blob_id IS NOT NULL
+        LEFT JOIN (
+          SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
+                 created_commit.commit_created_at as created_at,
+                 updated_commit.commit_created_at as updated_at
+          FROM {object_index} as object_index
+          LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
+          LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+        ) as idx ON idx.object_id = nodes.object_id
+      ) as nodes_json
+
+    FROM {commit} as commits ON commits.id = ref.commit_id
+    JOIN {tree} as tree ON tree.id = commits.tree_id
     """,
-    rowMapper = CommitMapper.class
+    rowMapper = CommitAndTreeMapper.class
   )
   SqlTuple getById(String id);
+  
+  
+  @TenantSql.Find(
+      optional = true,
+      sql = """
+        SELECT 
+            commit.*, 
+            'commit' as found_by, 
+            null as ref_id,
+            null as ref_name, 
+            null as ref_description,
+            null as ref_props,
+            null as ref_permissions,
+            null as ref_flags,
+            null as ref_author
+        FROM {commit}
+        WHERE commit_id = $1 
+        
+        UNION 
+        
+        SELECT 
+            commit.*, 
+            'ref' as found_by,
+            ref.id as ref_id,
+            ref.ref_name, 
+            ref.ref_description,
+            ref.ref_props,
+            ref.ref_permissions,
+            ref.ref_flags,
+            ref.ref_author            
+        FROM {ref} as ref
+        RIGHT JOIN {commit} as commit ON commit.id = ref.commit_id
+        WHERE ref.id::text = $1 OR ref_name = $1
+      """,
+      rowMapper = CommitOrRefMapper.class
+    )
+  SqlTuple findByCommitIdOrRef(String commitId);
+  
 
   @TenantSql.FindAll(
     sql = """
-      SELECT commit.id, commit.commit_created_at, commit.commit_author, commit.commit_message, 
-             commit.tree_id, commit.parent_id, commit.merge_id,
-             parent_commit.commit_created_at as parent_created_at,
-             merge_commit.commit_created_at as merge_created_at
+      SELECT commit.*
       FROM {commit} as commit
-      LEFT JOIN {commit} as parent_commit ON commit.parent_id = parent_commit.id
-      LEFT JOIN {commit} as merge_commit ON commit.merge_id = merge_commit.id
       WHERE commit.tree_id = $1
     """,
     rowMapper = CommitMapper.class
@@ -140,30 +194,7 @@ public interface CommitTable {
   )
   SqlTupleList deleteAll(List<Commit> commits);
 
-  class CommitMapper implements TenantSql.RowMapper<Commit> {
-    @Override
-    public Commit apply(Row row) {
-      final String parentId = row.getString("parent_id");
-      final String mergeId = row.getString("merge_id");
-      final OffsetDateTime parentCreatedAt = row.getOffsetDateTime("parent_created_at");
-      final OffsetDateTime mergeCreatedAt = row.getOffsetDateTime("merge_created_at");
-
-      return ImmutableCommit.builder()
-          .id(row.getString("id"))
-          .commitCreatedAt(row.getOffsetDateTime("commit_created_at"))
-          .commitAuthor(row.getString("commit_author"))
-          .commitMessage(row.getString("commit_message"))
-          .treeId(row.getString("tree_id"))
-          .parentId(Optional.ofNullable(parentId))
-          .mergeId(Optional.ofNullable(mergeId))
-          .transitives(ImmutableCommitTransitives.builder()
-              .parentCreatedAt(Optional.ofNullable(parentCreatedAt))
-              .mergeCreatedAt(Optional.ofNullable(mergeCreatedAt))
-              .build())
-          .build();
-    }
-  }
-
+  
   class CommitInsertMapper implements TenantSql.PropsMapper<Commit> {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit commit) {

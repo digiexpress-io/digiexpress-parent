@@ -2,6 +2,7 @@ package io.resys.thena.fs.api.tags;
 
 import java.util.function.BiConsumer;
 
+import io.resys.thena.fs.api.tags.TagBuilder.BeforeTagCompletion;
 import io.resys.thena.fs.entities.Tag;
 import io.smallrye.mutiny.Uni;
 
@@ -28,6 +29,16 @@ public interface ModifyTag {
    * @return builder for method chaining
    */
   ModifyTag modifyTag(BiConsumer<Tag, TagBuilder> tagBuilder);
+  
+  /**
+   * Registers a callback that executes before tag completion.
+   * Allows for dynamic validation, error handling, and default value setting
+   * based on the loaded tag context and related entities.
+   * 
+   * @param callback lambda that receives loaded context and can modify the builder
+   * @return builder for method chaining
+   */
+  ModifyTag beforeTagCompletion(BeforeTagCompletion callback);
   
   /**
    * Executes the tag creation operation.

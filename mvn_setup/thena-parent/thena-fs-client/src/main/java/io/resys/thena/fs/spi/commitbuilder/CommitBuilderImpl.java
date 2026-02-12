@@ -219,7 +219,7 @@ public class CommitBuilderImpl implements CommitBuilder {
       .build();
   }
 
-  private static CommitResultStatus mapCommitStatus(BatchStatus src) {
+  public static CommitResultStatus mapCommitStatus(BatchStatus src) {
     if(src == BatchStatus.OK) {
       return CommitResultStatus.OK;
     } else if(src == BatchStatus.CONFLICT) {

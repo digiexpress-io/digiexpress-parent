@@ -58,8 +58,6 @@ public interface Commit extends FileSystemEntity {
   @JsonSerialize(as = ImmutableCommitTransitives.class)
   @JsonDeserialize(as = ImmutableCommitTransitives.class)
   interface CommitTransitives {
-    Optional<OffsetDateTime> getParentCreatedAt();
-    Optional<OffsetDateTime> getMergeCreatedAt();
   }
 
   // H(commit) = μ(H(tree) ⊕ H(parent) ⊕ H(merge) ⊕ author ⊕ timestamp ⊕ message)

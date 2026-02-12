@@ -40,6 +40,7 @@ import lombok.Value;
 
 
 public class MergeTree {
+  @SuppressWarnings("unused")
   private final Optional<Ref> ref;
   private final Map<String, Node> nodes = new HashedMap<>();
   private final List<String> sessionNodeIds = new ArrayList<>();

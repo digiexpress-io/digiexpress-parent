@@ -139,10 +139,6 @@ public class FileSystemPrinter {
       ID.apply(commit.getParentId().orElse(null));
       ID.apply(commit.getMergeId().orElse(null));
       DATES.apply(commit.getCommitCreatedAt());
-      if (commit.getTransitives() != null) {
-        DATES.apply(commit.getTransitives().getParentCreatedAt().orElse(null));
-        DATES.apply(commit.getTransitives().getMergeCreatedAt().orElse(null));
-      }
     }
     
     for (final var tree : world.getTree().values()) {

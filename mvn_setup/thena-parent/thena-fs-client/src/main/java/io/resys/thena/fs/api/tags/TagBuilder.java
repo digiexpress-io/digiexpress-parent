@@ -22,7 +22,6 @@ package io.resys.thena.fs.api.tags;
 
 import java.time.OffsetDateTime;
 
-import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.Tag.TagTransitives;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -49,25 +48,6 @@ public interface TagBuilder {
    * @return builder for method chaining
    */
   TagBuilder tagDescription(@Nullable String tagDescription);
-  
-  /**
-   * Sets the creation timestamp for this tag.
-   * Used for audit trails and chronological ordering.
-   * When null, the current system time will be used automatically.
-   * 
-   * @param tagCreatedAt the tag creation timestamp, null for current time
-   * @return builder for method chaining
-   */
-  TagBuilder tagCreatedAt(@Nullable OffsetDateTime tagCreatedAt);
-  
-  /**
-   * Sets the author who created this tag.
-   * Used for accountability and audit purposes.
-   * 
-   * @param tagAuthor the tag creator identifier
-   * @return builder for method chaining
-   */
-  TagBuilder tagAuthor(String tagAuthor);
   
   /**
    * Sets custom extension data for the tag.
@@ -125,22 +105,12 @@ public interface TagBuilder {
   TagBuilder tagReport(@Nullable JsonObject tagReport);
   
   /**
-   * Registers a callback that executes before tag completion.
-   * Allows for dynamic validation, error handling, and default value setting
-   * based on the loaded tag context and related entities.
-   * 
-   * @param callback lambda that receives loaded context and can modify the builder
-   * @return builder for method chaining
-   */
-  TagBuilder beforeTagCompletion(BeforeTagCompletion callback);
-  
-  /**
    * Executes the tag creation operation.
    * Creates the tag and associates it with the specified commit.
    * 
    * @return reactive stream containing the tag creation result
    */
-  Tag build();
+  void build();
   
   /**
    * Callback interface for pre-completion tag processing.
