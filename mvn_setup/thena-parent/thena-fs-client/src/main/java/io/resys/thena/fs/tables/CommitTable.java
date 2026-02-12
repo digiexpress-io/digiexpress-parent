@@ -112,8 +112,9 @@ public interface CommitTable {
         ) as idx ON idx.object_id = nodes.object_id
       ) as nodes_json
 
-    FROM {commit} as commits ON commits.id = ref.commit_id
+    FROM {commit} as commits
     JOIN {tree} as tree ON tree.id = commits.tree_id
+    WHERE commits.id = $1
     """,
     rowMapper = CommitAndTreeMapper.class
   )
@@ -171,7 +172,7 @@ public interface CommitTable {
       optional = true,
       sql = """
         SELECT 
-            commit.*, 
+            commit.*,
             'commit' as found_by, 
             null as ref_id,
             null as ref_name, 
@@ -180,13 +181,13 @@ public interface CommitTable {
             null as ref_permissions,
             null as ref_flags,
             null as ref_author
-        FROM {commit}
-        WHERE commit_id = $1 
+        FROM {commit} as commit
+        WHERE commit.id = $1 
         
         UNION 
         
         SELECT 
-            commit.*, 
+            commit.*,
             'ref' as found_by,
             ref.id as ref_id,
             ref.ref_name, 
@@ -197,7 +198,7 @@ public interface CommitTable {
             ref.ref_author            
         FROM {ref} as ref
         RIGHT JOIN {commit} as commit ON commit.id = ref.commit_id
-        WHERE ref.id::text = $1 OR ref_name = $1
+        WHERE ref.id::text = $1 OR ref.ref_name = $1
       """,
       rowMapper = CommitOrRefMapper.class
     )

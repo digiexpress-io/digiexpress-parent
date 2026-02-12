@@ -4,10 +4,11 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
+import io.resys.thena.fs.api.tags.CreateTag;
 import io.resys.thena.fs.api.tags.ImmutableTagResult;
-import io.resys.thena.fs.api.tags.NewTag;
 import io.resys.thena.fs.api.tags.TagBuilder;
 import io.resys.thena.fs.api.tags.TagBuilder.BeforeTagCompletion;
 import io.resys.thena.fs.api.tags.TagResult;
@@ -31,7 +32,7 @@ import lombok.Value;
 
 
 @RequiredArgsConstructor
-public class NewTagImpl implements NewTag {
+public class NewTagImpl implements CreateTag {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
   
@@ -42,27 +43,27 @@ public class NewTagImpl implements NewTag {
   private BeforeTagCompletion callback;
   
   @Override
-  public NewTag commitId(String commitIdOrBranchName) {
+  public CreateTag commitId(String commitIdOrBranchName) {
     this.commitIdOrBranchName = commitIdOrBranchName;
     return this;
   }
   @Override
-  public NewTag newTag(Consumer<TagBuilder> tagBuilder) {
+  public CreateTag newTag(Consumer<TagBuilder> tagBuilder) {
     this.tagBuilder = RepoAssert.notNull(tagBuilder, () -> "tagBuilder cannot be empty!");
     return this;
   }
   @Override
-  public NewTag tagCreatedAt(OffsetDateTime tagCreatedAt) {
+  public CreateTag tagCreatedAt(OffsetDateTime tagCreatedAt) {
     this.tagCreatedAt = tagCreatedAt;
     return this;
   }
   @Override
-  public NewTag tagAuthor(String tagAuthor) {
+  public CreateTag tagAuthor(String tagAuthor) {
     this.tagAuthor = RepoAssert.notEmpty(tagAuthor, () -> "tagAuthor cannot be empty!");
     return this;
   }
   @Override
-  public NewTag beforeTagCompletion(BeforeTagCompletion callback) {
+  public CreateTag beforeTagCompletion(BeforeTagCompletion callback) {
     this.callback = RepoAssert.notNull(callback, () -> "beforeTagCompletion cannot be empty!");
     return this;
   }
@@ -80,7 +81,10 @@ public class NewTagImpl implements NewTag {
         .build();
     return this.db_uni
         .onItem().transformToUni(db -> db.withTransaction(scope, this::visitTransaction))
-        .onFailure(t -> !(t instanceof CommitBuilderException))
+        .onFailure(t -> {
+          // force crash on anything
+          return false;
+        })
         .recoverWithItem(this::visitFailure);
   }
 
@@ -152,7 +156,7 @@ public class NewTagImpl implements NewTag {
     try {
       final var createdAt = tagCreatedAt != null ? tagCreatedAt : OffsetDateTime.now();
       final var prevTag = Optional.<Tag>empty();
-      final var commitId = "";
+      final var commitId = request.getLock().getId();
       final var refId = Optional.<String>ofNullable("");
       final var tagTransitives = ImmutableTagTransitives.builder().build();  
       
@@ -163,10 +167,15 @@ public class NewTagImpl implements NewTag {
       }
       final var result = tagBuilder.close();
       
-      final var unit = ImmutablePersistenceUnit.builder().addTagInserts(result.getTag()).build();
+      final var unit = ImmutablePersistenceUnit.builder()
+          .tenantId(tenantId)
+          .status(BatchStatus.OK)
+          .log("")
+          .addTagInserts(result.getTag())
+          .build();
       return tx.builder().from(unit).persist();
     } catch(Exception e) {
-      throw new CommitBuilderException(e, JsonObject.of("tenantId", tenantId, "message", e.getMessage()));
+      throw new CommitBuilderException(e, JsonObject.of("error", e.getMessage(), "tenantId", tenantId, "message", e.getMessage()));
     }
   }
   

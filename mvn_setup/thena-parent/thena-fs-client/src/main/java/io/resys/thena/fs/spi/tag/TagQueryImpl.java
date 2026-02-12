@@ -92,7 +92,7 @@ public class TagQueryImpl implements TagQuery {
     // load all 
     if(isBlobs) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tagId))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId()))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
     }
     
@@ -100,7 +100,7 @@ public class TagQueryImpl implements TagQuery {
     final var isNodes = !excludeNodes;
     if(isNodes) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tagId))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId()))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
     }    
     return Uni.createFrom().item(tag);

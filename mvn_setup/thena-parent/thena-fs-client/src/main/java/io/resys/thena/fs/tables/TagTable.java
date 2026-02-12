@@ -145,7 +145,8 @@ public interface TagTable {
       FROM {tag} as tag
     """,
     rowMapper = TagMapper.class,
-    wrapper = WrapperType.MULTI
+    wrapper = WrapperType.MULTI,
+    sqlBuilder = TagTableFilter.SQL.class
   )
   SqlTuple findAllByFilter(TagTableFilter filter);
   
@@ -243,7 +244,7 @@ public interface TagTable {
         tag.getExternalTenantId().orElse(null),
         tag.getTagStartsAt().orElse(null),
         tag.getTagReport().orElse(null),
-        tag.getRefId().or(null)
+        tag.getRefId().orElse(null)
       });
     }
   }

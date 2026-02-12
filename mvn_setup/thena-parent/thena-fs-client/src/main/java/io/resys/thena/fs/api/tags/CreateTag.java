@@ -11,7 +11,7 @@ import jakarta.annotation.Nullable;
  * Builder for creating tags that mark specific commits with metadata and scheduling information.
  * Supports both simple tagging and complex workflow integration with external systems.
  */
-public interface NewTag {
+public interface CreateTag {
   
   /**
    * Sets the commit that this tag points to.
@@ -20,7 +20,7 @@ public interface NewTag {
    * @param commitIdOrBranchName the hash identifier of the target commit OR branch id OR branch name
    * @return builder for method chaining
    */
-  NewTag commitId(String commitIdOrBranchName);
+  CreateTag commitId(String commitIdOrBranchName);
   
   /**
    * Create new tag based on commitId or branchName.
@@ -30,7 +30,7 @@ public interface NewTag {
    * @param tagBuilder lambda that receives current commit state and configures changes
    * @return builder for method chaining
    */
-  NewTag newTag(Consumer<TagBuilder> tagBuilder);
+  CreateTag newTag(Consumer<TagBuilder> tagBuilder);
   
   /**
    * Sets the creation timestamp for this tag.
@@ -40,7 +40,7 @@ public interface NewTag {
    * @param tagCreatedAt the tag creation timestamp, null for current time
    * @return builder for method chaining
    */
-  NewTag tagCreatedAt(@Nullable OffsetDateTime tagCreatedAt);
+  CreateTag tagCreatedAt(@Nullable OffsetDateTime tagCreatedAt);
   
   /**
    * Sets the author who created this tag.
@@ -49,7 +49,7 @@ public interface NewTag {
    * @param tagAuthor the tag creator identifier
    * @return builder for method chaining
    */
-  NewTag tagAuthor(String tagAuthor);
+  CreateTag tagAuthor(String tagAuthor);
   
   /**
    * Registers a callback that executes before tag completion.
@@ -59,7 +59,7 @@ public interface NewTag {
    * @param callback lambda that receives loaded context and can modify the builder
    * @return builder for method chaining
    */
-  NewTag beforeTagCompletion(BeforeTagCompletion callback);
+  CreateTag beforeTagCompletion(BeforeTagCompletion callback);
   
   /**
    * Executes the tag creation operation.

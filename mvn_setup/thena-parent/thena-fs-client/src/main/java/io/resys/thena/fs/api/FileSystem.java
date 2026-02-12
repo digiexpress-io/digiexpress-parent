@@ -29,7 +29,7 @@ import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.CommitQuery;
 import io.resys.thena.fs.api.tags.ModifyTag;
-import io.resys.thena.fs.api.tags.NewTag;
+import io.resys.thena.fs.api.tags.CreateTag;
 import io.resys.thena.fs.api.tags.TagQuery;
 
 /**
@@ -118,7 +118,7 @@ public interface FileSystem {
      * 
      * @return builder for creating tags
      */
-    NewTag newTag();
+    CreateTag createTag();
     
     /**
      * Creates a builder for creating tags that mark specific commits.

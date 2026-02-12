@@ -23,9 +23,9 @@ public class CommitOrRefMapper implements TenantSql.RowMapper<Tuple2<Commit, Opt
       
     } else {
       final var refBuilder = ImmutableRef.builder()
-          .id(TableUtils.toStringUUID(row, "id"))
+          .id(TableUtils.toStringUUID(row, "ref_id"))
           .refName(row.getString("ref_name"))
-          .commitId(row.getString("commit_id"));
+          .commitId(row.getString("id"));
       
       // Add optional ref properties
       final String refDescription = row.getString("ref_description");
