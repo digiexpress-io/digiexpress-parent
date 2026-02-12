@@ -3,83 +3,78 @@ import { Box, Typography, styled } from '@mui/material';
 import { TreeNode } from '../../../eveli-tree-api';
 import { TreeColors, TreeIcons } from '../../tree-theme';
 import { useEveliTree } from '../../../eveli-tree-api';
+import { ViewContainer } from './ViewContainer';
 
 interface ReferencesViewProps {
-  node: TreeNode;
+  node: TreeNode | undefined;
 }
 
 export const ReferencesView: React.FC<ReferencesViewProps> = ({ node }) => {
   const { isDarkMode } = useEveliTree();
   const { findReferencesToNode } = useEveliTree();
-  const references = findReferencesToNode(node)
+
+  if (!node) {
+    return (
+      <ViewContainer
+        title="References"
+        icon={<TreeIcons.Tree />}
+        activeNode={false}
+        noNodeMessage="Select a node from the tree to view references."
+      >
+        <></>
+      </ViewContainer>
+    );
+  }
+
+  const references = findReferencesToNode(node);
+
+  const mainContent = (
+    <ReferenceSection>
+      {references.length > 0 ? (
+        <ReferencesContainer isDarkMode={isDarkMode}>
+          {references.map((ref, index) => (
+            <ReferenceRow key={index} isDarkMode={isDarkMode}>
+              <ReferenceLocation isDarkMode={isDarkMode}>{ref.location}</ReferenceLocation>
+              {/*<ReferenceAssetName isDarkMode={isDarkMode}>{ref.assetName}</ReferenceAssetName> */}
+            </ReferenceRow>
+          ))}
+        </ReferencesContainer>
+      ) : (
+        <Typography variant="body2" color="text.secondary">
+            This node does not contain any references.
+        </Typography>
+      )}
+    </ReferenceSection>
+  );
+
+  const secondaryContent = node.children && node.children.length > 0 ? (
+    <ChildrenSection>
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        Child References
+      </Typography>
+      {node.children.map((child) => (
+        <Box key={child.id} sx={{ mb: 1 }}>
+          <Typography variant="body2">{child.name}</Typography>
+          <Typography variant="caption" color="text.secondary">
+            Type: {child.type} {child.reference && ' (REF)'}
+          </Typography>
+        </Box>
+      ))}
+    </ChildrenSection>
+  ) : undefined;
 
   return (
-    <ViewContainer isDarkMode={isDarkMode}>
-
-
-      <Content>
-        <Header>
-          <TreeIcons.Tree sx={{ mr: 1 }} />
-          <Typography variant="body1" fontWeight={500}>References: {node.name}</Typography>
-        </Header>
-
-        <ReferenceSection>
-          {references.length > 0 ? (
-            <ReferencesContainer isDarkMode={isDarkMode}>
-              {references.map((ref, index) => (
-                <ReferenceRow key={index} isDarkMode={isDarkMode}>
-                  <ReferenceLocation isDarkMode={isDarkMode}>{ref.location}</ReferenceLocation>
-                  {/*<ReferenceAssetName isDarkMode={isDarkMode}>{ref.assetName}</ReferenceAssetName> */}
-                </ReferenceRow>
-              ))}
-            </ReferencesContainer>
-          ) : (
-            <Typography variant="body2" color="text.secondary">
-                This node does not contain any references.
-            </Typography>
-          )}
-        </ReferenceSection>
-
-        {node.children && node.children.length > 0 && (
-          <ChildrenSection>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Child References
-            </Typography>
-            {node.children.map((child) => (
-              <Box key={child.id} sx={{ mb: 1 }}>
-                <Typography variant="body2">{child.name}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Type: {child.type} {child.reference && ' (REF)'}
-                </Typography>
-              </Box>
-            ))}
-          </ChildrenSection>
-        )}
-      </Content>
+    <ViewContainer
+      title={`References: ${node.name}`}
+      icon={<TreeIcons.Tree />}
+      secondaryChildren={secondaryContent}
+      activeNode={true}
+    >
+      {mainContent}
     </ViewContainer>
   );
 };
 
-const ViewContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
-  height: '100%',
-  backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
-  color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
-  overflow: 'auto'
-}));
-
-const Header = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: '10px'
-}));
-
-const Content = styled(Box)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '8px'
-}));
 
 
 const ReferenceSection = styled(Box)(() => ({

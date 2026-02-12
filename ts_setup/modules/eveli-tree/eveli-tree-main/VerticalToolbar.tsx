@@ -58,6 +58,12 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
         </StyledToolbarButton>
       </Tooltip>
 
+      <Tooltip title="Errors" placement="left" arrow>
+        <StyledToolbarButton onClick={() => onViewChange('errors')} isDarkMode={isDarkMode} isSelected={selectedView === 'errors'}>
+          <TreeIcons.Error />
+        </StyledToolbarButton>
+      </Tooltip>
+
       <Tooltip title="Preview" placement="left" arrow>
         <StyledToolbarButton onClick={() => onViewChange('preview')} isDarkMode={isDarkMode} isSelected={selectedView === 'preview'}>
           <TreeIcons.Preview />

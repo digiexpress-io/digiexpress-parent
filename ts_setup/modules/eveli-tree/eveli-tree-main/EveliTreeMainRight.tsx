@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, styled, Typography } from '@mui/material';
-import { TreeColors } from '../tree-theme';
-import { TreeNode, useEveliTree } from '../../eveli-tree-api';
-import { ReferencesView } from './views/ReferencesView';
+import { Typography } from '@mui/material';
+import { TreeNode } from '../../eveli-tree-api';
+import { ReferencesView, PropertiesView, ViewContainer } from './views';
 
 export interface EveliTreeMainRightProps {
   activeNode: TreeNode | undefined;
@@ -10,77 +9,45 @@ export interface EveliTreeMainRightProps {
 }
 
 export const EveliTreeMainRight: React.FC<EveliTreeMainRightProps> = ({ activeNode, selectedView }) => {
-  const { isDarkMode } = useEveliTree();
 
   if (!selectedView) {
     return (
-      <RightPanel isDarkMode={isDarkMode}>
-        <Box p={2}>
-          <Typography variant='subtitle2'>Choose a View</Typography>
-          <Typography variant='body2' sx={{ mt: 1, color: 'text.secondary' }}>
-            Select an option from the toolbar to view details.
-          </Typography>
-        </Box>
-      </RightPanel>
+      <ViewContainer title='Choose a View'>
+        <Typography variant='body2' color='text.secondary'>
+          Select an option from the toolbar to view details.
+        </Typography>
+      </ViewContainer>
     );
   }
 
-  const renderNoContentMessage = (viewName: string) => (
-    <RightPanel isDarkMode={isDarkMode}>
-      <Box p={2}>
-        <Typography variant='subtitle2'>{viewName}</Typography>
-        {!activeNode ? (
-          <Typography variant='body2' sx={{ mt: 1, color: 'text.secondary' }}>
-            Select a node from the tree to view {viewName.toLowerCase()} details.
-          </Typography>
-        ) : (
-          <Typography variant='body2' sx={{ mt: 1, color: 'text.secondary' }}>
-            No content available for this view.
-          </Typography>
-        )}
-      </Box>
-    </RightPanel>
-  );
+
 
   switch (selectedView) {
     case 'references':
-      return (
-        <RightPanel isDarkMode={isDarkMode}>
-          {activeNode ? <ReferencesView node={activeNode} /> : renderNoContentMessage('References')}
-        </RightPanel>
-      );
+      return <ReferencesView node={activeNode} />;
     case 'properties':
-      return renderNoContentMessage('Properties');
+      return <PropertiesView node={activeNode} />;
+      /*
     case 'configuration':
-      return renderNoContentMessage('Configuration');
+      return 'Configuration';
     case 'debug':
-      return renderNoContentMessage('Debug');
+      return 'Debug';
     case 'preview':
-      return renderNoContentMessage('Preview');
+      return 'Preview';
     case 'history':
-      return renderNoContentMessage('History');
+      return 'History';
     case 'help':
-      return renderNoContentMessage('Help');
+      return 'Help';
+      */
     default:
       return (
-        <RightPanel isDarkMode={isDarkMode}>
-          <Box p={2}>
-            <Typography variant='subtitle2'>View Not Implemented</Typography>
-            <Typography variant='body2' sx={{ mt: 1, color: 'text.secondary' }}>
-              The "{selectedView}" view is not yet implemented.
-            </Typography>
-          </Box>
-        </RightPanel>
+        <ViewContainer title='View not implemented'>
+          <Typography>
+            The "{selectedView}" view is not yet implemented.
+          </Typography>
+        </ViewContainer>
       );
   }
 };
 
-const RightPanel = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
-  flex: 1,
-  height: '100%',
-  backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
-  overflow: 'auto'
-}));
 
