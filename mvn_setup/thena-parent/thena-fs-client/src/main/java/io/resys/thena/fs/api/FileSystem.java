@@ -28,6 +28,7 @@ import io.resys.thena.fs.api.branches.BranchBuilder;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.CommitQuery;
+import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.NewTag;
 import io.resys.thena.fs.api.tags.TagQuery;
 
@@ -118,6 +119,15 @@ public interface FileSystem {
      * @return builder for creating tags
      */
     NewTag newTag();
+    
+    /**
+     * Creates a builder for creating tags that mark specific commits.
+     * Supports rich metadata, external system integration, and workflow
+     * automation with scheduling and error tracking capabilities.
+     * 
+     * @return builder for modifying tags
+     */
+    ModifyTag modifyTag();
     
     /**
      * Creates a query interface for retrieving tags with configurable

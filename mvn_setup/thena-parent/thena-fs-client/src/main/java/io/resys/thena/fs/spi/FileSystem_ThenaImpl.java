@@ -38,6 +38,7 @@ import io.resys.thena.fs.api.branches.BranchBuilder;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.CommitQuery;
+import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.NewTag;
 import io.resys.thena.fs.api.tags.TagQuery;
 import io.resys.thena.fs.spi.branch.BranchQueryImpl;
@@ -78,39 +79,17 @@ public class FileSystem_ThenaImpl implements FileSystem {
     final Uni<FsDb> start = startingState.withTenant(tenantId);
     
     return new FileSystemTenant() {
-      @Override
-      public String getTenantId() {
-        return tenantId;
-      }
-      @Override
-      public CommitBuilder commitBuilder() {
-        return new CommitBuilderImpl(start, tenantId);
-      }
-      @Override
-      public CommitQuery commitQuery() {
-        return null;
-      }
-      @Override
-      public NewTag newTag() {
-        return null;
-      }
-      @Override
-      public TagQuery tagQuery() {
-        return null;
-      }
-      @Override
-      public BranchBuilder branchBuilder() {
-        return null;
-      }
-      @Override
-      public BranchQuery branchQuery() {
-        return new BranchQueryImpl(start);
-      }
-      @Override
-      public BlobQuery blobQuery() {
-        return null;
-      }
-
+      @Override public String getTenantId() { return tenantId; }
+      @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId); }
+      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start); }
+      
+      @Override public NewTag newTag() { return null; }
+      @Override public ModifyTag modifyTag() { return null; }      
+      @Override public TagQuery tagQuery() { return null; }
+      
+      @Override public CommitQuery commitQuery() { return null; }
+      @Override public BranchBuilder branchBuilder() { return null; }
+      @Override public BlobQuery blobQuery() { return null; }
     };
   }
   

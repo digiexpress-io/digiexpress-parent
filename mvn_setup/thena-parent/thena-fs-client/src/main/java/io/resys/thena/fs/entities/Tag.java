@@ -50,6 +50,9 @@ public interface Tag extends FileSystemEntity {
   Optional<OffsetDateTime> getTagStartsAt();
   Optional<JsonObject> getTagReport();
 
+  Optional<String> getRefId();
+  
+  
   @Value.Auxiliary
   @Nullable 
   TagTransitives getTransitives();

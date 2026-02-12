@@ -39,17 +39,23 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE {tag} (
       id TEXT PRIMARY KEY,
-      tag_name TEXT NOT NULL,
+
+      tag_name TEXT UNIQUE NOT NULL,
       tag_description TEXT,
-      commit_id TEXT NOT NULL REFERENCES {commit}(id),
+      
+      tag_starts_at TIMESTAMPTZ,
       tag_created_at TIMESTAMPTZ NOT NULL,
+            
       tag_author TEXT NOT NULL,
       tag_extension JSONB,
       tag_errors JSONB NOT NULL,
+      tag_report JSONB,
+      
       external_id TEXT,
       external_tenant_id TEXT,
-      tag_starts_at TIMESTAMPTZ,
-      tag_report JSONB
+      
+      ref_id TEXT,
+      commit_id TEXT NOT NULL REFERENCES {commit}(id)      
     );
     
     CREATE INDEX {tag}_name_idx ON {tag}(tag_name);
@@ -57,6 +63,7 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE INDEX {tag}_created_at_idx ON {tag}(tag_created_at);
     CREATE INDEX {tag}_external_id_idx ON {tag}(external_id);
     CREATE INDEX {tag}_starts_at_idx ON {tag}(tag_starts_at);
+    CREATE INDEX {tag}_ref_idx ON {tag}(ref_id);
     
     COMMENT ON TABLE {tag} IS 'Immutable named markers for specific commits, typically used for releases or important milestones.';
     COMMENT ON COLUMN {tag}.id IS 'Unique tag identifier (hash)';
@@ -71,6 +78,7 @@ import io.vertx.mutiny.sqlclient.Row;
     COMMENT ON COLUMN {tag}.external_tenant_id IS 'External tenant identifier for multi-tenant system integration';
     COMMENT ON COLUMN {tag}.tag_starts_at IS 'Scheduled activation timestamp when this tag becomes effective or goes live';
     COMMENT ON COLUMN {tag}.tag_report IS 'Operational reports and status information stored in JSONB format';
+    COMMENT ON COLUMN {tag}.ref_id IS 'Branch pointer when created from specific branch, otherwise just commit id is used';
   """,
   constraints = "",
   drop = """
@@ -84,7 +92,8 @@ public interface TagTable {
       SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
              tag.tag_created_at, tag.tag_author, tag.tag_extension,
              tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report,
+             tag.tag_starts_at, tag.tag_report, tag.ref_id,
+             
              commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
@@ -99,7 +108,8 @@ public interface TagTable {
       SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
              tag.tag_created_at, tag.tag_author, tag.tag_extension,
              tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report,
+             tag.tag_starts_at, tag.tag_report, tag.ref_id,
+
              commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
@@ -115,8 +125,9 @@ public interface TagTable {
       SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
              tag.tag_created_at, tag.tag_author, tag.tag_extension,
              tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report,
-             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+             tag.tag_starts_at, tag.tag_report, tag.ref_id,
+
+             commit.commit_created_at, commit.commit_author, commit.commit_message
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
       WHERE tag.tag_name = $1
@@ -130,8 +141,9 @@ public interface TagTable {
       SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
              tag.tag_created_at, tag.tag_author, tag.tag_extension,
              tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report,
-             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+             tag.tag_starts_at, tag.tag_report, tag.ref_id,
+
+             commit.commit_created_at, commit.commit_author, commit.commit_message
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
       WHERE tag.commit_id = $1
@@ -144,8 +156,8 @@ public interface TagTable {
     sql = """
       INSERT INTO {tag}
       (id, tag_name, tag_description, commit_id, tag_created_at, tag_author, 
-       tag_extension, tag_errors, external_id, external_tenant_id, tag_starts_at, tag_report)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       tag_extension, tag_errors, external_id, external_tenant_id, tag_starts_at, tag_report, ref_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     """,
     propsMapper = TagInsertMapper.class
   )
@@ -177,12 +189,15 @@ public interface TagTable {
       final String externalId = row.getString("external_id");
       final String externalTenantId = row.getString("external_tenant_id");
       final OffsetDateTime tagStartsAt = row.getOffsetDateTime("tag_starts_at");
+      
       final OffsetDateTime commitCreatedAt = row.getOffsetDateTime("commit_created_at");
       final String commitAuthorName = row.getString("commit_author_name");
       final String commitMessage = row.getString("commit_message");
 
       return ImmutableTag.builder()
           .id(row.getString("id"))
+          .refId(Optional.ofNullable(row.getString("ref_id")))
+          
           .tagName(row.getString("tag_name"))
           .tagDescription(Optional.ofNullable(tagDescription))
           .commitId(row.getString("commit_id"))
@@ -216,7 +231,8 @@ public interface TagTable {
         tag.getExternalId().orElse(null),
         tag.getExternalTenantId().orElse(null),
         tag.getTagStartsAt().orElse(null),
-        tag.getTagReport().orElse(null)
+        tag.getTagReport().orElse(null),
+        tag.getRefId().or(null)
       });
     }
   }
