@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, styled } from '@mui/material';
+import { Box, Typography, darken, lighten, styled } from '@mui/material';
 import { TreeColors } from '../../tree-theme';
 import { useEveliTree } from '../../../eveli-tree-api';
 
@@ -53,7 +53,7 @@ const ViewContainerRoot = styled(Box, {
 })<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
   flex: 1,
   height: '100%',
-  backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
+  backgroundColor: isDarkMode ? lighten(TreeColors.dark.background, 0.03) : darken(TreeColors.light.background, 0.01),
   color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
   overflow: 'auto'
 }));
