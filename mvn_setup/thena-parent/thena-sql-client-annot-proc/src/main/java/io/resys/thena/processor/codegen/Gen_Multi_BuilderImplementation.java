@@ -117,8 +117,6 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     classBuilder.addMethod(generateVisitSuccessMethod(registry, persistenceUnitName));
     classBuilder.addMethod(generateVisitErrorMethod(registry, persistenceUnitName));
     
-    classBuilder.addType(generateExceptionClass(registry, persistenceUnitName));
-    
     return JavaFile.builder(registry.getPackageName() + ".spi", classBuilder.build())
       .indent("  ")
       .build();
@@ -252,7 +250,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     
     method.addCode("  .onFailure($LException.class)\n", 
       registry.getName() + "Builder");
-    method.addStatement("  .recoverWithUni(this::visitError)");
+    method.addStatement("  .call(this::visitError)");
     
     return method.build();
   }
@@ -327,7 +325,7 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
     method.addCode("  })\n");
     method.addCode("  .onFailure().transform(t -> {\n");
     method.addCode("    final var text = \"Failed to insert \" + sql.getProps().size() + \" \" + type.getSimpleName() + \" entries\";\n");
-    method.addCode("    return new $LException(container, text, t);\n",
+    method.addCode("    return new $LException(container, text, txLog.toString(), t);\n",
       registry.getName() + "Builder");
     method.addStatement("  })");
     
@@ -384,62 +382,24 @@ public class Gen_Multi_BuilderImplementation implements MultiTableCodeGenerator 
   }
   
   private MethodSpec generateVisitErrorMethod(RegistryMetamodel registry, String persistenceUnitName) {
-    final var exceptionClassName = registry.getName() + "BuilderException";
-    
     final var method = MethodSpec.methodBuilder("visitError")
       .addModifiers(Modifier.PRIVATE)
       .addParameter(Throwable.class, "ex")
       .returns(ParameterizedTypeName.get(
         ClassName.get(Uni.class),
-        ClassName.bestGuess(persistenceUnitName)
+        ClassName.get(Void.class)
       ));
     
-    method.addStatement("final var msg = $T.lineSeparator() + \"--- TX LOG\" + $T.lineSeparator() + txLog",
-      System.class, System.class);
-    method.addStatement("final var builderError = ($L) ex", exceptionClassName);
+    method.addStatement("final var msg = $T.lineSeparator() + \"--- TX LOG\" + $T.lineSeparator() + txLog", System.class, System.class);
     method.addStatement("log.error(\"Failed to persist because of: {},\\r\\n{}\", ex.getMessage(), msg, ex)");
     
     method.addCode("\n");
-    method.addStatement("return tx.rollback().onItem().transform(junk -> \n" +
-      "  Immutable$L.builder().from(builderError.getContainer())\n" +
-      "    .log(msg)\n" +
-      "    .build()\n" +
-      ")",
-      "PersistenceUnit");
+    method.addStatement("return tx.rollback()");
     
     return method.build();
   }
   
-  private TypeSpec generateExceptionClass(RegistryMetamodel registry, String persistenceUnitName) {
-    final var exceptionClassName = registry.getName() + "BuilderException";
-    
-    final var exceptionClass = TypeSpec.classBuilder(exceptionClassName)
-      .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-      .superclass(RuntimeException.class);
-    
-    exceptionClass.addField(FieldSpec.builder(
-      ClassName.bestGuess(persistenceUnitName),
-      "container",
-      Modifier.PRIVATE, Modifier.FINAL
-    ).build());
-    
-    exceptionClass.addMethod(MethodSpec.constructorBuilder()
-      .addModifiers(Modifier.PUBLIC)
-      .addParameter(ClassName.bestGuess(persistenceUnitName), "container")
-      .addParameter(String.class, "message")
-      .addParameter(Throwable.class, "cause")
-      .addStatement("super(message, cause)")
-      .addStatement("this.container = container")
-      .build());
-    
-    exceptionClass.addMethod(MethodSpec.methodBuilder("getContainer")
-      .addModifiers(Modifier.PUBLIC)
-      .returns(ClassName.bestGuess(persistenceUnitName))
-      .addStatement("return container")
-      .build());
-    
-    return exceptionClass.build();
-  }
+
   
   private Map<String, OperationInfo> extractOperations(List<TableMetamodel> tables) {
     final var operations = new HashMap<String, OperationInfo>();

@@ -1,12 +1,3 @@
-/**
- * Centralized Color System for EveliTree Components
- *
- * NOTE: If theme changes are too drastic and need to be reverted,
- * restore the original hard-coded colors from git history before this change.
- *
- * This ultra-consolidates 32+ scattered colors down to just 12 core unique colors
- * to improve maintainability and consistency.
- */
 
 // =============================================================================
 // ULTRA-CONSOLIDATED COLOR PALETTE (12 Unique Colors)
@@ -34,13 +25,16 @@ export const TreeColors = {
 
   // Semantic accent colors
   semantic: {
-    danger: '#ff6b6b',         // Delete actions, error states (also used for asset icons)
+    dangerLight: '#ae0e0e',    // Dark red for light backgrounds (9.3:1 contrast)
+    dangerDark: '#ff8c8c',     // Bright red for dark backgrounds (7.1:1 contrast)
     warning: '#ffa500',        // Lock states, warnings (dark theme)
-    warningLight: '#d90429',   // Lock states, warnings (light theme)
+    warningLight: '#ff8c00',   // Lock states, warnings (light theme) - changed from red to orange
     success: '#228b22',        // Success states, links (also used for link icons in light theme)
     info: '#9cdcfe',           // Information, dialob forms (also used for form icons in dark theme)
     primary: '#4ec9b0',        // Primary actions, services (also used for service icons in dark theme)
     active: '#4c4b4b',         // Active menu item background
+    highlightLight: '#eaea25', // Search result text highlighting
+    highlightDark: '#403d3d'   // Search result text highlighting
   },
 
   // Node type colors - ultra-consolidated
@@ -53,7 +47,7 @@ export const TreeColors = {
       flow: '#c586c0',         // Purple for workflows
       link: '#98d982',         // Green for external links
       document: '#ce9178',     // Orange for documents (language, template, printout)
-      asset: '#ff6b6b',        // Coral for assets/images (same as semantic.danger)
+      asset: '#dda0dd',        // Light purple for assets/images (changed from red)
     },
     light: {
       folder: '#333333',       // Dark gray for containers (same as text)
@@ -62,8 +56,8 @@ export const TreeColors = {
       form: '#0056b3',         // Dark blue for forms/dialobs
       flow: '#8b008b',         // Dark magenta for workflows (merged with content)
       link: '#228b22',         // Forest green for external links (same as semantic.success)
-      document: '#a0122a',     // Dark red for all documents (language, template, printout, image)
-      asset: '#a0122a',        // Dark red for assets (same as document)
+      document: '#5d2f0a',     // Darker brown for all documents (language, template, printout) - made darker for better visibility
+      asset: '#663399',        // Dark purple for assets/images - changed from red
     }
   }
 } as const;
@@ -74,10 +68,7 @@ export const TreeColors = {
 
 export type TreeNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
 
-/**
- * Get the appropriate color for a node type based on theme
- */
-export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = false) {
+export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean) {
   const colors = isDarkTheme ? TreeColors.nodeTypes.dark : TreeColors.nodeTypes.light;
 
   switch (nodeType) {
@@ -104,9 +95,6 @@ export function getNodeColor(nodeType: TreeNodeType, isDarkTheme: boolean = fals
   }
 }
 
-/**
- * Get theme colors based on dark/light mode
- */
 export function getThemeColors(isDarkTheme: boolean) {
   return isDarkTheme ? TreeColors.dark : TreeColors.light;
 }

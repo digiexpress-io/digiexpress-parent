@@ -55,7 +55,8 @@ export const EveliTreeRoot = styled('div', {
 
     [`& .${MUI_NAME}-titleText`]: {
       color: treeThemeColors.text,
-      ...theme.typography.body1
+      ...theme.typography.subtitle2,
+      fontWeight: 500
     },
   };
 });

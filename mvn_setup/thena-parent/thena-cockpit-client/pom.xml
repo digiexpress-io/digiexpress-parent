@@ -40,11 +40,5 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-test-client</artifactId>
     </dependency>
-    
-    <dependency>
-      <groupId>com.github.vertical-blank</groupId>
-      <artifactId>sql-formatter</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 </project>

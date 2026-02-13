@@ -3027,8 +3027,8 @@
         "@mui/x-tree-view",
         "@mui/utils",
         "@tanstack/react-router",
-        "@dxs-ts/envir-fetch",
         "@monaco-editor/react",
+        "@dxs-ts/envir-fetch",
         "monaco-editor"
       ],
       "actualExternalDependencies": [
@@ -4503,5 +4503,5 @@
     }
   },
   "checksum": "e296261578987f4da99dcce48cd24da45423fcff1811abeb6833c833bf139627",
-  "generatedAt": "2026-01-30T07:33:45.044Z"
+  "generatedAt": "2026-02-11T06:40:07.502Z"
 }

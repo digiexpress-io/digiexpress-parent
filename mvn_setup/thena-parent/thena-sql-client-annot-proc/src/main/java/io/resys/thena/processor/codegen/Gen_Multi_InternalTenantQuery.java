@@ -27,6 +27,8 @@ import javax.lang.model.element.Modifier;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import com.github.vertical_blank.sqlformatter.languages.Dialect;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -146,7 +148,10 @@ public class Gen_Multi_InternalTenantQuery implements MultiTableCodeGenerator {
     code.add("log.debug(new $T(\"Creating schema: \")\n", StringBuilder.class);
     code.indent();
     code.add(".append($T.lineSeparator())\n", System.class);
-    code.add(".append(tablesCreate.toString())\n");
+    
+    code.add(".append($T.of($T.PostgreSql).format(tablesCreate.toString()))\n", 
+        SqlFormatter.class, Dialect.class);
+    
     code.add(".toString());\n");
     code.unindent();
     code.unindent();

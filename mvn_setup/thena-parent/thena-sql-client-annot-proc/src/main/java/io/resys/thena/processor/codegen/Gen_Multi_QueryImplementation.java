@@ -110,7 +110,9 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
   private MethodSpec generateFindAllMethod(RegistryMetamodel registry, List<TableMetamodel> tables) {
     final var method = MethodSpec.methodBuilder("findAll")
       .addAnnotation(Override.class)
+      .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build())
       .addModifiers(Modifier.PUBLIC)
+      
       .returns(ParameterizedTypeName.get(
         ClassName.get(Uni.class),
         ClassName.bestGuess(registry.getWorldName())
@@ -139,8 +141,16 @@ public class Gen_Multi_QueryImplementation implements MultiTableCodeGenerator {
       final var methodName = "query" + NamingUtils.toPascalCase(table.getTableName());
       final var findAllMethod = findNoArgFindAllMethod(table);
       
-      if (i > 0) method.addCode(",\n");
-      method.addCode("$L().$L()", methodName, findAllMethod.getMethodName());
+      if (i > 0) {
+        method.addCode(",\n");
+      }
+      
+      if(findAllMethod.isMultiWrapper()) {
+        method.addCode("$L().$L().collect().asList()", methodName, findAllMethod.getMethodName());
+      } else {
+        method.addCode("$L().$L()", methodName, findAllMethod.getMethodName());  
+      }
+      
     }
     
     method.addCode("\n$<");

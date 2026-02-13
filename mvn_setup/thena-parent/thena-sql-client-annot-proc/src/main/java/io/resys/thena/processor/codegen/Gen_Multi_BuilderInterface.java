@@ -29,6 +29,7 @@ import javax.lang.model.element.Modifier;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -66,6 +67,8 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
         ClassName.bestGuess(persistenceUnitName)
       ))
       .build());
+    
+    interfaceBuilder.addType(generateExceptionClass(registry, persistenceUnitName));
     
     final var operations = extractOperations(tables);
     interfaceBuilder.addType(generatePersistenceUnitInterface(persistenceUnitName, operations));
@@ -231,4 +234,55 @@ public class Gen_Multi_BuilderInterface implements MultiTableCodeGenerator {
     return method.build();
   }
 
+  
+  private TypeSpec generateExceptionClass(RegistryMetamodel registry, String persistenceUnitName) {
+    final var exceptionClassName = registry.getExceptionClassName();
+    
+    final var exceptionClass = TypeSpec.classBuilder(exceptionClassName)
+      .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+      .superclass(RuntimeException.class);
+    
+    exceptionClass.addField(FieldSpec.builder(
+        long.class,
+        "serialVersionUID",
+        Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC
+      ).initializer("1l").build());
+      
+    exceptionClass.addField(FieldSpec.builder(
+      ClassName.bestGuess(persistenceUnitName),
+      "container",
+      Modifier.PRIVATE, Modifier.FINAL
+    ).build());
+    
+    exceptionClass.addField(FieldSpec.builder(
+      String.class,
+      "txLog",
+      Modifier.PRIVATE, Modifier.FINAL
+    ).build());
+      
+    
+    exceptionClass.addMethod(MethodSpec.constructorBuilder()
+      .addModifiers(Modifier.PUBLIC)
+      .addParameter(ClassName.bestGuess(persistenceUnitName), "container")
+      .addParameter(String.class, "message")
+      .addParameter(String.class, "txLog")
+      .addParameter(Throwable.class, "cause")
+      .addStatement("super(message, cause)")
+      .addStatement("this.txLog = txLog")
+      .addStatement("this.container = container")
+      .build());
+    
+    exceptionClass.addMethod(MethodSpec.methodBuilder("getContainer")
+      .addModifiers(Modifier.PUBLIC)
+      .returns(ClassName.bestGuess(persistenceUnitName))
+      .addStatement("return container")
+      .build());
+    
+    exceptionClass.addMethod(MethodSpec.methodBuilder("getTxLog")
+      .addModifiers(Modifier.PUBLIC)
+      .returns(String.class)
+      .addStatement("return txLog")
+      .build());
+    return exceptionClass.build();
+  }
 }

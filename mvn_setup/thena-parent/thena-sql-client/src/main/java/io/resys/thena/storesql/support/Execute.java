@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Execute {
 
-  private static class ThenaSqlBatchException extends RuntimeException {
+  public static class ThenaSqlBatchException extends RuntimeException {
     private static final long serialVersionUID = -6960481243464191887L;
     public ThenaSqlBatchException(Throwable e) {
       super(e);

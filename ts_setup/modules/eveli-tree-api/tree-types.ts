@@ -5,10 +5,11 @@ export interface TreeNode {
   description?: string;
   children?: TreeNode[];
   labels?: TreeNodeLabel[] | undefined;
-  comments?: TreeNodeComment[] | undefined;
-  isExpanded?: boolean;
-  isReference?: boolean;
-  isLocked?: boolean;
+  comments: TreeNodeComment[] | undefined;
+  expanded: boolean;
+  reference: boolean;
+  locked: boolean;
+  error: boolean;
   type: TreeNodeType;
   configOptions?: ConfigOption[] | undefined;
 }
@@ -33,6 +34,7 @@ export interface TreeNodeComment {
 }
 
 export type TreeNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
+export type TreeNodeSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors';
 
 export type FolderId = string;
 export type ArticleId = string;

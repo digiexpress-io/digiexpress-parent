@@ -105,6 +105,8 @@ export const en = {
   'table.toolbar.addRemoveColumns': 'Add or remove columns',
   'taskLink.pdf.open': 'PDF',
   'explorer.login': 'Log in',
+  'login.dialog.title': 'Use DigiExpress services',
+  'login.dialog.message': 'Please login to proceed',
   'locale.fi': 'Suomi',
   'locale.sv': 'Svenska',
   'locale.en': 'English',
