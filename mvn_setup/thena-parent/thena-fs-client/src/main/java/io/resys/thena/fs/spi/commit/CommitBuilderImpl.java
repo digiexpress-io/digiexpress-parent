@@ -59,7 +59,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final String tenantId;
   
   // Builder state
-  private String branchHeadId;
+  private String lockCommitId;
   private String branchName = BranchConstants.DEFAULT_BRANCH;
   private String commitAuthor;
   private String commitMessage;
@@ -69,8 +69,8 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final List<String> allIds = new ArrayList<>();
 
   @Override
-  public CommitBuilder branchHead(String commitId) {
-    this.branchHeadId = RepoAssert.notEmpty(commitId, () -> "branchHead commitId can't be empty!");
+  public CommitBuilder branchLock(String commitId) {
+    this.lockCommitId = RepoAssert.notEmpty(commitId, () -> "branchHead commitId can't be empty!");
     return this;
   }
   @Override
@@ -146,7 +146,7 @@ public class CommitBuilderImpl implements CommitBuilder {
     RepoAssert.notEmpty(commitMessage, () -> "commitMessage must be set before calling build()!");
     
     // Ensure either branch name or branch head is set
-    RepoAssert.isTrue(branchName != null || branchHeadId != null, 
+    RepoAssert.isTrue(branchName != null || lockCommitId != null, 
         () -> "Either branchName or branchHead must be set before calling build()!");
     
     // Ensure at least one operation is defined
@@ -233,7 +233,33 @@ public class CommitBuilderImpl implements CommitBuilder {
       .refName(branchName)
       .docIds(Optional.ofNullable(allIds.isEmpty() ? null : allIds))
       .build();
-    return tx.query().queryRef().findOneWithLock(query);
+    return tx.query().queryRef().findOneWithLock(query)
+        .invoke(lock -> {
+          if(lockCommitId == null) {
+            return;
+          }
+          
+          if(lock.isEmpty() && lockCommitId != null) {
+            throw new CommitBuilderException(
+                "Could not find branch for locking", 
+                JsonObject.of("tenantId", tenantId, "lockCommitId", lockCommitId)
+            );
+          }
+          
+          if( lock.isPresent() && lockCommitId != null &&
+              !lock.get().getCommitId().equals(lockCommitId)) {
+          
+            throw new CommitBuilderException(
+                "Find branch for locking but commits do not match", 
+                JsonObject.of(
+                    "tenantId", tenantId, 
+                    "expectedCommitId", lockCommitId,
+                    "actualCommitId", lock.get().getCommitId()
+                ));
+          }
+          
+          
+        });
   }
   
   private Uni<Snapshot.SnapshotResult> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {

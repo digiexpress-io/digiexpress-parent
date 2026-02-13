@@ -89,6 +89,7 @@ public interface BlobTable {
       INSERT INTO {blob}
       (id, blob_type, blob_value)
       VALUES($1, $2, $3)
+      ON CONFLICT (id) DO NOTHING
     """,
     propsMapper = BlobInsertMapper.class
   )

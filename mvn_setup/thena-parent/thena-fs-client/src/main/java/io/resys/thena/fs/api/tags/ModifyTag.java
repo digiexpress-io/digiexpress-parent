@@ -7,7 +7,7 @@ import io.resys.thena.fs.entities.Tag;
 import io.smallrye.mutiny.Uni;
 
 /**
- * Builder for creating tags that mark specific commits with metadata and scheduling information.
+ * Builder for modifying tags that mark specific commits with metadata and scheduling information.
  * Supports both simple tagging and complex workflow integration with external systems.
  */
 public interface ModifyTag {

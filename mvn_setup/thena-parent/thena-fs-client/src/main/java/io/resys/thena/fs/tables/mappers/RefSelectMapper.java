@@ -17,37 +17,43 @@ import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.TableUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 public class RefSelectMapper {
   
+  private static ImmutableObjectIndex mapIndex(JsonObject node_json) {
+    final var objectId = node_json.getString("object_id");
+    final var index = ImmutableObjectIndex.builder()
+        .objectId(objectId)
+        
+        .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
+        .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")))
+        
+        .createdBy(node_json.getString("created_by"))
+        .updatedBy(node_json.getString("updated_by"))
+        
+        .build();
+    return index;
+  }
+  
+  
   public static Ref refAndCommitAndPropsAndBlob(Row row) {
-    
     final var refTransitives = ImmutableRefTransitives.builder();
     final var visited_blobs = new ArrayList<String>();
     final var visited_props = new ArrayList<String>();
     
-    
-    final var allNodes = row.getJsonArray("nodes_json")
+    final var allNodes = Optional
+      .ofNullable(row.getJsonArray("nodes_json"))
+      .orElseGet(() -> new JsonArray())
       .stream().map(node_json -> (JsonObject) node_json)
       .map(node_json -> {
 
+        final var index = mapIndex(node_json);
         final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
         final var propsId = Optional.ofNullable(node_json.getString("props_id"));
-        final var objectId = node_json.getString("object_id");
 
-        
-        final var index = ImmutableObjectIndex.builder()
-            .objectId(objectId)
-            
-            .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
-            .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")))
-            
-            .createdBy(node_json.getString("created_by"))
-            .updatedBy(node_json.getString("updated_by"))
-            
-            .build();
 
         final var nodeTrs = ImmutableNodeTransitives.builder().objectIndex(index);
 
@@ -85,7 +91,7 @@ public class RefSelectMapper {
         // main node
         final var node = ImmutableNode.builder()
           .id(node_json.getString("id"))
-          .objectId(objectId)
+          .objectId(index.getObjectId())
           .nodePath(Optional.ofNullable(node_json.getString("node_path")))
           .nodeName(node_json.getString("node_name"))
           .blobId(blobId)

@@ -88,6 +88,7 @@ public interface TreeTable {
           SELECT node::{node} FROM jsonb_populate_recordset(NULL::{node}, $2::jsonb) as node
         )
       )
+      ON CONFLICT (id) DO NOTHING
     """,
     propsMapper = TreeInsertMapper.class
   )

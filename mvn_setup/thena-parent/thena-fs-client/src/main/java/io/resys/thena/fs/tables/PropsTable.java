@@ -82,6 +82,7 @@ public interface PropsTable {
       INSERT INTO {props}
       (id, props_labels, props_comments, props_permissions, props_flags)
       VALUES($1, $2, $3, $4, $5)
+      ON CONFLICT (id) DO NOTHING
     """,
     propsMapper = PropsInsertMapper.class
   )

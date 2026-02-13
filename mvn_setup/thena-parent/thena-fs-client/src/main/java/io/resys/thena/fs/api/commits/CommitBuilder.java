@@ -45,13 +45,12 @@ import jakarta.annotation.Nullable;
  */
 public interface CommitBuilder {
   /**
-   * Sets the parent commit for this new commit by its hash identifier.
-   * When specified, creates a commit that builds upon the given parent state.
+   * Expected commit id on current branch head. 
    * 
-   * @param commitId the hash of the parent commit, null for branch HEAD
+   * @param commitId the hash of the parent commit, null(no locking) for branch HEAD
    * @return builder for method chaining
    */
-  CommitBuilder branchHead(@Nullable String commitId);
+  CommitBuilder branchLock(@Nullable String commitId);
   
   /**
    * Sets the target branch where this commit will be applied.

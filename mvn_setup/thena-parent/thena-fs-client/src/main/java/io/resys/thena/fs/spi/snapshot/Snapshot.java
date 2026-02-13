@@ -63,6 +63,11 @@ public class Snapshot {
   private final List<RmCommand> removals = new ArrayList<>();
   
   
+  
+  private boolean isChanged() {
+    return !updates.isEmpty() || !creates.isEmpty() || !removals.isEmpty();
+  }
+  
 
   private Tuple2<Node, Optional<Props>> visitNewFolderCommand(MergeTree mergeTree, MergeIndex mergeIndex, NewFolderCommand command) {
     final var merger = new NewFolderImpl();
@@ -137,6 +142,11 @@ public class Snapshot {
   }
     
   private Tree visitTree(MergeTree merger) {
+    if(!isChanged()) {
+      RepoAssert.isTrue(lock.isPresent(), () -> "Lock must be defined when creating new branch!");
+      return lock.get().getTransitives().getTree();
+    }
+    
     final var result = merger.close();
     persistenceUnit.addAllBlobInserts(result.getBlobs());
     persistenceUnit.addAllPropsInserts(result.getProps());
@@ -158,6 +168,12 @@ public class Snapshot {
       String commitAuthor,
       String commitMessage,
       OffsetDateTime commitCreatedAt) {
+    
+    if(!isChanged()) {
+      RepoAssert.isTrue(lock.isPresent(), () -> "Lock must be defined when creating new branch!");
+      return lock.get().getTransitives().getCommit();
+    }
+    
     
     final var result = Commit.newInstance(tree.getId(), 
         lock.map(e -> e.getCommitId()), 

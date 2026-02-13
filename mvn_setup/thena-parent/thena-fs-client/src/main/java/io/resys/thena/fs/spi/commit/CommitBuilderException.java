@@ -32,4 +32,8 @@ public class CommitBuilderException extends RuntimeException {
   public CommitBuilderException(Exception e, JsonObject props) {
     super(props.encodePrettily(), e);
   }
+  
+  public CommitBuilderException(String msg, JsonObject props) {
+    super(msg + System.lineSeparator() + props.encodePrettily());
+  }
 }

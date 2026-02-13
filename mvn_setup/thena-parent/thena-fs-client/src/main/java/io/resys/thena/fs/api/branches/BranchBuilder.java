@@ -1,35 +1,9 @@
 package io.resys.thena.fs.api.branches;
 
-/*-
- * #%L
- * thena-fs-client
- * %%
- * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.List;
 import java.util.function.Consumer;
 
-import org.immutables.value.Value;
-
-import io.resys.thena.api.envelope.CommitResultStatus;
-import io.resys.thena.api.envelope.Message;
-import io.resys.thena.api.envelope.ThenaEnvelope;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
-import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.entities.Ref.RefTransitives;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
@@ -88,16 +62,7 @@ public interface BranchBuilder {
    * @return builder for method chaining
    */
   BranchBuilder branchFlags(@Nullable JsonObject branchFlags);
-  
-  /**
-   * Sets the identifier of who created this branch.
-   * Used for accountability, notifications, and ownership tracking.
-   * 
-   * @param branchAuthor the creator's identifier, null if unknown or system-created
-   * @return builder for method chaining
-   */
-  BranchBuilder branchAuthor(@Nullable String branchAuthor);
-  
+
   /**
    * Executes the branch creation or update operation.
    * Creates the branch reference with all configured metadata and settings.
@@ -107,29 +72,19 @@ public interface BranchBuilder {
   Uni<BranchResult> build();
   
   /**
-   * Result envelope containing the outcome of a branch operation.
-   * Includes the created/updated branch reference and operation status.
+   * Callback interface for pre-completion branch processing.
+   * Provides access to loaded branch context and allows builder modification.
    */
-  @Value.Immutable
-  interface BranchResult extends ThenaEnvelope {
+  @FunctionalInterface
+  interface BeforeBranchCompletion {
     /**
-     * @return the tenant identifier where the branch operation was performed
+     * Applies custom logic before tag completion.
+     * Can modify the builder based on the loaded tag context and related entities.
+     * 
+     * @param loaded the loaded branch context with related entities
+     * @param builder the branch builder that can be modified
      */
-    String getTenantId();
-    
-    /**
-     * @return the created/updated branch reference, null if operation failed
-     */
-    @Nullable Ref getBranch();
-    
-    /**
-     * @return the overall status of the branch operation
-     */
-    CommitResultStatus getStatus();
-    
-    /**
-     * @return list of diagnostic messages from the branch operation
-     */
-    List<Message> getMessages();
+    void apply(RefTransitives loaded, BranchBuilder builder);
   }
+  
 }
