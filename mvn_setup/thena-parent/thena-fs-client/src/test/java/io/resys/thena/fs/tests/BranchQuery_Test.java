@@ -46,7 +46,7 @@ public class BranchQuery_Test extends DbTestTemplate {
   @Test
   public void createBranchesAndQueryThem() {
     // creates main branch with one commit
-    final var mainCommit = setup();
+    final var main_commit = setup();
     
     // create dev from main branch
     final var devCommit = addCommit("dev");
