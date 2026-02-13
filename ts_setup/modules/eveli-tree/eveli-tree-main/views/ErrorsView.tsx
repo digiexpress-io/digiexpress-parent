@@ -18,7 +18,7 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
         title="Errors"
         icon={<TreeIcons.Error />}
         activeNode={false}
-        noNodeMessage="Select a node from the tree to view errors."
+        noNodeMessage="Select a node from the tree to view errors1."
       >
         <></>
       </ViewContainer>
