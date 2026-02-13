@@ -603,6 +603,12 @@ public class FlowProgramExecutor {
       
         // resolve from executed steps
         // TODO: refactor this mess
+        
+        // referring to step but it was not executed
+        if(program.getSteps().containsKey(path) && paths.length > 1 && !stepLogs.containsKey(path)) {
+          return null;
+        }
+        
         if(stepLogs.containsKey(path)) {
           FlowResultLog target = stepLogs.get(path);
           
