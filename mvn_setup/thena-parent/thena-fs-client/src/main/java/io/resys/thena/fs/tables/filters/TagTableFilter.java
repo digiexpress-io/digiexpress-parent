@@ -66,7 +66,7 @@ public interface TagTableFilter {
         
         final var nameSql = new StringBuilder();
         final var nameBuilder = new NameExpressionBuilderImpl(
-          "ref.ref_name",
+          "tag.tag_name",
           param -> {
             params.add(param);
             return index.incrementAndGet();

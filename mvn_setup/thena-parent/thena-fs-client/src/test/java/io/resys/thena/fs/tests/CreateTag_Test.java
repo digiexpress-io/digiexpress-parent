@@ -102,27 +102,79 @@ public class CreateTag_Test extends DbTestTemplate {
     Assertions.assertEquals(CommitResultStatus.OK, commit_3.getStatus());
 
     
+    {
+      final var tag_0 = fs.createTag()
+        .commitId(commit_1.getCommit().getId())
+        .tagAuthor("john doe")
+        .newTag(newTag -> newTag.tagName("super-tag-0").build())
+        .build()
+        .await().atMost(atMost);
+      
+      Assertions.assertEquals(commit_1.getCommit().getId(), tag_0.getTag().getCommitId());
+    }
     
     
-    final var tag_1 = fs.createTag()
-      .commitId("main")
-      .tagAuthor("john doe")
-      .newTag(newTag -> newTag.tagName("super-tag-1").build())
-      .build()
-      .await().atMost(atMost);
-    Assertions.assertEquals(commit_3.getCommit().getId(), tag_1.getTag().getCommitId());
+    {
+      final var tag_1 = fs.createTag()
+        .commitId("main")
+        .tagAuthor("john doe")
+        .newTag(newTag -> newTag.tagName("super-tag-1").build())
+        .build()
+        .await().atMost(atMost);
+      
+      Assertions.assertEquals(commit_3.getCommit().getId(), tag_1.getTag().getCommitId());
+    }
+    
+    {
+      final var tag_2 = fs.createTag()
+        .commitId(commit_2.getCommit().getId())
+        .tagAuthor("john doe")
+        .newTag(newTag -> newTag.tagName("super-tag-2").build())
+        .build()
+        .await().atMost(atMost);
+      Assertions.assertEquals(commit_2.getCommit().getId(), tag_2.getTag().getCommitId());
+    }
     
     
-    final var tag_2 = fs.createTag()
-      .commitId(commit_2.getCommit().getId())
-      .tagAuthor("john doe")
-      .newTag(newTag -> newTag.tagName("super-tag-2").build())
-      .build()
-      .await().atMost(atMost);
-    Assertions.assertEquals(commit_2.getCommit().getId(), tag_2.getTag().getCommitId());
+    {
+      final var tags = fs.tagQuery().findAll().collect().asList().await().atMost(atMost);
+      Assertions.assertEquals(3, tags.size());
+    }
     
     
-    final var tags = fs.tagQuery().findAll().collect().asList().await().atMost(atMost);
-    Assertions.assertEquals(2, tags.size());    
+    
+    // QUERY tag and validate blobs
+    {
+      final var tag_1 = fs.tagQuery()
+          .tagName(name -> name.equals("super-tag-0"))
+          .getOne()
+          .await().atMost(atMost);
+      
+      
+      Assertions.assertNotNull(tag_1.getTransitives().getCommit());
+      Assertions.assertNotNull(tag_1.getTransitives().getTree());
+      
+      Assertions.assertEquals(commit_1.getCommit().getId(), tag_1.getTransitives().getCommit().getId());
+      Assertions.assertEquals(1, tag_1.getTransitives().getTree().getTreeNodes().size());
+      Assertions.assertEquals("Sam", tag_1.getTransitives().getTree().getTreeNodes().getFirst().getTransitives().getBlob().getBlobValue().getString("firstName")); 
+    }
+    
+    
+    
+    // QUERY tag and validate blobs
+    {
+      final var tag_1 = fs.tagQuery()
+          .tagName(name -> name.equals("super-tag-1"))
+          .getOne()
+          .await().atMost(atMost);
+      
+      
+      Assertions.assertNotNull(tag_1.getTransitives().getCommit());
+      Assertions.assertNotNull(tag_1.getTransitives().getTree());
+      
+      Assertions.assertEquals(commit_3.getCommit().getId(), tag_1.getTransitives().getCommit().getId());
+      Assertions.assertEquals(1, tag_1.getTransitives().getTree().getTreeNodes().size());
+      Assertions.assertEquals("Lady Sybil", tag_1.getTransitives().getTree().getTreeNodes().getFirst().getTransitives().getBlob().getBlobValue().getString("firstName")); 
+    }
   }
 }
