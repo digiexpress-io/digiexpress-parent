@@ -51,7 +51,8 @@ export const TemplateDependenciesAdd: React.FC<{ onClose: () => void, serviceId:
     const entity: TagomiApi.TemplateMutator = { 
       templateId, 
       content: template.content,
-      resourceIds: selectedResources 
+      resourceIds: selectedResources,
+      templateIds: selectedTemplates
     };
     backend.updateTemplate([entity]).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });

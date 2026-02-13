@@ -23,8 +23,10 @@ package io.digiexpress.tagomi.spi;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.digiexpress.tagomi.rust.entities.PdfRequest.PdfDataModule;
@@ -98,8 +100,21 @@ public class TagomiWorldImpl implements TagomiWorld {
             .value(template.getContent())
             .build());
         
+        for (final var depTemplateId : template.getTemplateIds()) {
+          final var depTemplate = container.getTemplates().get(depTemplateId);
+          if (depTemplate != null) {
+            templates.add(PdfTemplate.builder()
+                .id(depTemplateId)
+                .value(depTemplate.getContent())
+                .build());
+          }
+        }
+        
+        final Set<String> templateIdsForResources = new LinkedHashSet<>();
+        templateIdsForResources.add(template.getId());
+        templateIdsForResources.addAll(template.getTemplateIds());
         final var templateResources = container.getResources().values().stream()
-            .filter(r -> r.getTemplateIds().contains(template.getId()))
+            .filter(r -> r.getTemplateIds().stream().anyMatch(templateIdsForResources::contains))
             .collect(Collectors.toList());
         
         for (final var resource : templateResources) {

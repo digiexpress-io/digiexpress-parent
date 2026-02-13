@@ -152,10 +152,20 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
         }
       }
     }
+    List<String> templateDependencies = start.getTemplateIds();
+    if(changes.getTemplateIds() != null) {
+      for(final var depTemplateId : changes.getTemplateIds()) {
+        if(!site.getTemplates().containsKey(depTemplateId)) {
+          throw new ConstraintException(start, "Template: '" + depTemplateId + "' does not exist!");
+        }
+      }      
+      templateDependencies = new ArrayList<>(changes.getTemplateIds());
+    }
     
     final var updated = ImmutableTemplate.builder()
       .from(start)
       .content(changes.getContent())
+      .templateIds(templateDependencies)
       .build();
     
     allChanges.add(updated);
@@ -306,12 +316,23 @@ public class TagomiUpdateCommandsImpl implements TagomiUpdateCommands {
               }
             }
           }
+          
+          List<String> templateDependencies = start.getTemplateIds();
+          if(mutator.getTemplateIds() != null) {
+            for(final var depTemplateId : mutator.getTemplateIds()) {
+              if(!state.getTemplates().containsKey(depTemplateId)) {
+                throw new ConstraintException(start, "Template: '" + depTemplateId + "' does not exist!");
+              }
+            }     
+            templateDependencies = new ArrayList<>(mutator.getTemplateIds());
+          }
 
           final var end = ImmutableTemplate.builder()
               .from(start)
               // only content change
               .localeId(locale.get().getId())
               .content(mutator.getContent())
+              .templateIds(templateDependencies)
               .build();
           return end;
         }).collect(Collectors.toList());

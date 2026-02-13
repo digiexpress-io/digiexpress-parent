@@ -46,6 +46,8 @@ export const TemplateDependenciesEdit: React.FC<{ onClose: () => void, serviceId
 
   React.useEffect(() => {
     if (templateId) {
+      const template = site.templates[templateId];  
+      setSelectedTemplates(template.templateIds || []);      
       const linkedResources = Object.values(site.resources)
         .filter(r => r.templateIds.includes(templateId))
         .map(r => r.id);
@@ -54,7 +56,7 @@ export const TemplateDependenciesEdit: React.FC<{ onClose: () => void, serviceId
       setSelectedResources([]);
       setSelectedTemplates([]);
     }
-  }, [templateId, site.resources]);
+  }, [templateId, site.resources, site.templates]);
 
   const handleUpdate = () => {
     const template = site.templates[templateId];
@@ -63,7 +65,8 @@ export const TemplateDependenciesEdit: React.FC<{ onClose: () => void, serviceId
     const entity: TagomiApi.TemplateMutator = { 
       templateId, 
       content: template.content,
-      resourceIds: selectedResources 
+      resourceIds: selectedResources,
+      templateIds: selectedTemplates
     };
     backend.updateTemplate([entity]).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });

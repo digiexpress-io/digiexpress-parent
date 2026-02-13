@@ -61,6 +61,7 @@ public interface TagomiUpdateCommands {
     String getContent();
     @Nullable String getLocale();
     @Nullable List<String> getResourceIds(); // id-s to ResourceLink
+    @Nullable List<String> getTemplateIds(); // template dependencies
   }
   
   @Value.Immutable

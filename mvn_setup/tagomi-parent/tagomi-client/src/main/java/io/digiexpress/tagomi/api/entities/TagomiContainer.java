@@ -106,6 +106,7 @@ public interface TagomiContainer {
     
     String getLocaleId();
     String getServiceId();
+    List<String> getTemplateIds();
     
     @Override default public TagomiDocType getDocType() { return TagomiDocType.TEMPLATE; };
   }

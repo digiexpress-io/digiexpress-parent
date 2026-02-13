@@ -111,11 +111,23 @@ public class TagomiCreateCommandsImpl implements TagomiCreateCommands {
           Optional.of(state.getServices().get(articleRef)) : 
           state.getServices().values().stream().filter(l -> l.getServiceName().equalsIgnoreCase(articleRef)).findFirst();
 
+      final var templateIds = new ArrayList<String>();
+      if(init.getTemplateIds() != null) {
+        for(final var depTemplateId : init.getTemplateIds()) {
+          if(!state.getTemplates().containsKey(depTemplateId)) {
+            throw new ConstraintException(
+                "Template with id: '" + depTemplateId + "' does not exist in: '" + String.join(",", state.getTemplates().keySet()) + "'!");
+          }
+          templateIds.add(depTemplateId);
+        }
+      }
+
       final var page = ImmutableTemplate.builder()
           .id(gid)
           .serviceId(article.map(e -> e.getId()).orElse(articleRef))
           .content(Optional.ofNullable(init.getContent()).orElse(""))
           .localeId(locale.map(e -> e.getId()).orElse(localeRef))
+          .templateIds(templateIds)
           .build();
 
       if(locale.isEmpty()) {
