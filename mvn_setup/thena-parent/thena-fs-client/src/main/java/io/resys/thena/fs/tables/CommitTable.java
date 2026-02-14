@@ -180,7 +180,9 @@ public interface CommitTable {
             null as ref_props,
             null as ref_permissions,
             null as ref_flags,
-            null as ref_author
+            null as ref_author,
+            null as ref_created_at,
+            null as ref_created_from
         FROM {commit} as commit
         WHERE commit.id = $1 
         
@@ -195,7 +197,9 @@ public interface CommitTable {
             ref.ref_props,
             ref.ref_permissions,
             ref.ref_flags,
-            ref.ref_author            
+            ref.ref_author,
+            ref.ref_created_at,
+            ref.ref_created_from
         FROM {ref} as ref
         RIGHT JOIN {commit} as commit ON commit.id = ref.commit_id
         WHERE ref.id::text = $1 OR ref.ref_name = $1

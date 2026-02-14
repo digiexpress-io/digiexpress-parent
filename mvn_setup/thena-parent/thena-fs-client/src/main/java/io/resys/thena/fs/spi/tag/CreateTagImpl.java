@@ -32,7 +32,7 @@ import lombok.Value;
 
 
 @RequiredArgsConstructor
-public class NewTagImpl implements CreateTag {
+public class CreateTagImpl implements CreateTag {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
   

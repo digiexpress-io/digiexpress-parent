@@ -41,13 +41,16 @@ import io.vertx.mutiny.sqlclient.Row;
   ddl = """
     CREATE TABLE {ref} (
       id UUID PRIMARY KEY,
+
       ref_name TEXT UNIQUE NOT NULL,
       ref_description TEXT,
       ref_props JSONB,
       ref_permissions JSONB,
       ref_flags JSONB,
       ref_author TEXT,
-      
+      ref_created_at TIMESTAMPTZ NOT NULL,
+      ref_created_from UUID,
+
       commit_id TEXT NOT NULL REFERENCES {commit}(id)
     );
     
@@ -58,6 +61,15 @@ import io.vertx.mutiny.sqlclient.Row;
     COMMENT ON TABLE {ref} IS 'Named references to commits, typically representing branches or bookmarks that can move to point to different commits over time.';
     COMMENT ON COLUMN {ref}.ref_name IS 'Reference name (e.g., "main", "develop", "feature/xyz")';
     COMMENT ON COLUMN {ref}.commit_id IS 'Current commit that this reference points to';
+    
+    COMMENT ON COLUMN {ref}.ref_description IS 'Optional detailed description of this branch';
+    COMMENT ON COLUMN {ref}.ref_created_from IS 'Id of the {ref} from what this branch was created';
+    COMMENT ON COLUMN {ref}.ref_created_at IS 'Timestamp when this branch was created, stored in UTC';
+    COMMENT ON COLUMN {ref}.ref_author IS 'Author who created this branch';
+    
+    COMMENT ON COLUMN {ref}.ref_props IS 'User annotations in JSONB format';
+    COMMENT ON COLUMN {ref}.ref_permissions IS 'Access control and permission settings in JSONB format';
+    COMMENT ON COLUMN {ref}.ref_flags IS 'Boolean flags like hidden, disabled, etc. in JSONB format';
   """,
   constraints = "",
   drop = """
@@ -76,7 +88,9 @@ public interface RefTable {
         ref.ref_permissions,
         ref.ref_flags,
         ref.ref_author,
+        ref.ref_created_at,
         ref.commit_id,
+        ref.ref_created_from,
         
         commit.commit_created_at, 
         commit.commit_author, 
@@ -96,7 +110,7 @@ public interface RefTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.ref_created_at, ref.ref_created_from,
              ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
       FROM {ref} as ref
       LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
@@ -108,7 +122,7 @@ public interface RefTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author,
+      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.ref_created_at, ref.ref_created_from,
              ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
       FROM {ref} as ref
       LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
@@ -119,11 +133,12 @@ public interface RefTable {
   )
   SqlTuple findAllByCommitId(String commitId);
 
+  
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ref}
-      (id, ref_name, commit_id)
-      VALUES($1, $2, $3)
+      (id, ref_name, commit_id, ref_description, ref_props, ref_permissions, ref_flags, ref_author, ref_created_at, ref_created_from)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     """,
     propsMapper = RefInsertMapper.class
   )
@@ -132,8 +147,14 @@ public interface RefTable {
   @TenantSql.UpdateAll(
     sql = """
       UPDATE {ref}
-      SET commit_id = $1
-      WHERE id = $2
+      SET 
+        commit_id = $1,
+        ref_name = $2,
+        ref_description = $3, 
+        ref_props = $4, 
+        ref_permissions = $5, 
+        ref_flags = $6
+      WHERE id = $7
     """,
     propsMapper = RefUpdateMapper.class
   )
@@ -149,7 +170,7 @@ public interface RefTable {
   @TenantSql.FindAll(
       sql = """
   SELECT 
-    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
+    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, ref.ref_created_at, ref.ref_created_from,
     commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
     tree.id as tree_id,
     
@@ -214,7 +235,7 @@ public interface RefTable {
   @TenantSql.Find(
     sql = """
   SELECT 
-    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, 
+    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, ref.ref_created_at, ref.ref_created_from,
     commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
     tree.id as tree_id,
     
@@ -315,7 +336,16 @@ public interface RefTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         TableUtils.toUuid(ref.getId()),
         ref.getRefName(),
-        ref.getCommitId()
+        ref.getCommitId(),
+        
+        ref.getRefDescription().orElse(null),
+        ref.getRefProps().orElse(null),
+        ref.getRefPermissions().orElse(null),
+        ref.getRefFlags().orElse(null),
+        
+        ref.getRefAuthor().orElse(null),
+        ref.getRefCreatedAt(),
+        ref.getRefCreatedFrom().orElse(null),
       });
     }
   }
@@ -325,6 +355,13 @@ public interface RefTable {
     public io.vertx.mutiny.sqlclient.Tuple apply(Ref ref) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         ref.getCommitId(),
+        ref.getRefName(),
+        
+        ref.getRefDescription().orElse(null),
+        ref.getRefProps().orElse(null),
+        ref.getRefPermissions().orElse(null),
+        ref.getRefFlags().orElse(null),
+        
         TableUtils.toUuid(ref.getId())
       });
     }

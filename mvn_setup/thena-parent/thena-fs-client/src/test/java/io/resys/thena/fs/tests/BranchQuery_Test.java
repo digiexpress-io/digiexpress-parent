@@ -49,9 +49,10 @@ public class BranchQuery_Test extends DbTestTemplate {
     final var main_commit = setup();
     
     // create dev from main branch
-    final var devCommit = addCommit("dev");
-
+    createBranch("dev", "main").getTransitives().getCommit();
+    
     // create issue-1 branch
+    final var devCommit = createBranch("issue-1", "dev").getTransitives().getCommit();
     getClient().withTenant(tenant)
         .commitBuilder()
         .branchLock(devCommit.getId())
@@ -122,8 +123,17 @@ public class BranchQuery_Test extends DbTestTemplate {
   }
   
   
-  private Ref createBranch() {
+  private Ref createBranch(String newBranchName, String createFrom) {
+    final var result = getClient()
+        .withTenant(tenant)
+        .createBranch()
+          .branchAuthor("john doe")
+          .commitIdOrBranchName(createFrom)
+          .newBranch(branch -> branch.branchName(newBranchName).build())
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
     
+    return result.getBranch();
   }
   
   private Commit addCommit(String branchName) {

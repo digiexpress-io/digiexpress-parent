@@ -107,8 +107,6 @@ public interface TagBuilder {
   /**
    * Executes the tag creation operation.
    * Creates the tag and associates it with the specified commit.
-   * 
-   * @return reactive stream containing the tag creation result
    */
   void build();
   

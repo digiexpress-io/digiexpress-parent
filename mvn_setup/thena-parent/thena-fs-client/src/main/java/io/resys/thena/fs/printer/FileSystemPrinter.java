@@ -191,11 +191,11 @@ public class FileSystemPrinter {
       result.append("  - ").append(ref.getRefName())
           .append(" -> ").append(ID.apply(ref.getCommitId()));
       
-      if (ref.getBranchDescription().isPresent()) {
-        result.append(" (").append(ref.getBranchDescription().get()).append(")");
+      if (ref.getRefDescription().isPresent()) {
+        result.append(" (").append(ref.getRefDescription().get()).append(")");
       }
-      if (ref.getBranchAuthor().isPresent()) {
-        result.append(" by ").append(ref.getBranchAuthor().get());
+      if (ref.getRefAuthor().isPresent()) {
+        result.append(" by ").append(ref.getRefAuthor().get());
       }
       
       result.append(System.lineSeparator());

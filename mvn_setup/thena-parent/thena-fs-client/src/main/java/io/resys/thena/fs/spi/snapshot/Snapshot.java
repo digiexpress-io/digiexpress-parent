@@ -199,7 +199,7 @@ public class Snapshot {
       return result.getBranch();
     }
     
-    final var result = new NewBranchImpl(branchName, commit).close();
+    final var result = new NewBranchImpl(branchName, commit, now).close();
     sp_logger.newBranch(result.getBranch());
     persistenceUnit.addRefInserts(result.getBranch());
     return result.getBranch();

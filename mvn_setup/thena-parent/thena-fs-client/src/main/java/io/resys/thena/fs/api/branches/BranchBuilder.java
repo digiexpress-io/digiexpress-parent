@@ -1,10 +1,6 @@
 package io.resys.thena.fs.api.branches;
 
-import java.util.function.Consumer;
-
-import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref.RefTransitives;
-import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -15,14 +11,13 @@ import jakarta.annotation.Nullable;
 public interface BranchBuilder {
 
   /**
-   * Applies complex branch name filtering using expression builder patterns.
-   * Supports operations like startsWith("feature/"), endsWith("-dev"), contains("hotfix"), etc.
-   * Used for conditional branch operations or validation.
+   * Sets the name identifier for this branch.
+   * Must be unique within the repository to avoid conflicts.
    * 
-   * @param nameExpr lambda that configures the name expression builder
+   * @param branchName the unique branch name
    * @return builder for method chaining
    */
-  BranchBuilder branchName(Consumer<NameExpressionBuilder> nameExpr);
+  BranchBuilder branchName(String branchName);
   
   /**
    * Sets a descriptive explanation for the branch purpose.
@@ -66,10 +61,8 @@ public interface BranchBuilder {
   /**
    * Executes the branch creation or update operation.
    * Creates the branch reference with all configured metadata and settings.
-   * 
-   * @return reactive stream containing the branch operation result
    */
-  Uni<BranchResult> build();
+  void build();
   
   /**
    * Callback interface for pre-completion branch processing.

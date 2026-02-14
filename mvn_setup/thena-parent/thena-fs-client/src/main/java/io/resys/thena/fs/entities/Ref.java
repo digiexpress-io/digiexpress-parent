@@ -1,5 +1,7 @@
 package io.resys.thena.fs.entities;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-fs-client
@@ -53,27 +55,33 @@ public interface Ref extends FileSystemEntity {
   /**
    * @return optional description explaining the purpose of this branch
    */
-  Optional<String> getBranchDescription();
+  Optional<String> getRefDescription();
   
   /**
    * @return optional extension properties for UI configuration and custom behavior
    */
-  Optional<JsonObject> getBranchProps();
+  Optional<JsonObject> getRefProps();
   
   /**
    * @return optional permission settings controlling branch access and operations
    */
-  Optional<JsonObject> getBranchPermissions();
+  Optional<JsonObject> getRefPermissions();
   
   /**
    * @return optional behavioral flags for branch-specific feature toggles
    */
-  Optional<JsonObject> getBranchFlags();
+  Optional<JsonObject> getRefFlags();
   
   /**
    * @return optional author identifier who created this branch
    */
-  Optional<String> getBranchAuthor();
+  Optional<String> getRefAuthor();
+  
+
+  OffsetDateTime getRefCreatedAt();
+  
+  Optional<String> getRefCreatedFrom();
+  
 
   @Value.Auxiliary
   @Nullable 

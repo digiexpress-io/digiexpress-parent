@@ -24,33 +24,39 @@ public class CommitOrRefMapper implements TenantSql.RowMapper<Tuple2<Commit, Opt
     } else {
       final var refBuilder = ImmutableRef.builder()
           .id(TableUtils.toStringUUID(row, "ref_id"))
+          
+          .refAuthor(Optional.ofNullable(row.getString("ref_author")))
           .refName(row.getString("ref_name"))
+          
+          .refCreatedAt(row.getOffsetDateTime("ref_created_at"))
+          .refCreatedFrom(Optional.ofNullable(TableUtils.toStringUUID(row, "ref_created_from")))
+          
           .commitId(row.getString("id"));
       
       // Add optional ref properties
       final String refDescription = row.getString("ref_description");
       if (refDescription != null) {
-        refBuilder.branchDescription(refDescription);
+        refBuilder.refDescription(refDescription);
       }
       
       final JsonObject refProps = row.getJsonObject("ref_props");
       if (refProps != null) {
-        refBuilder.branchProps(refProps);
+        refBuilder.refProps(refProps);
       }
       
       final JsonObject refPermissions = row.getJsonObject("ref_permissions");
       if (refPermissions != null) {
-        refBuilder.branchPermissions(refPermissions);
+        refBuilder.refPermissions(refPermissions);
       }
       
       final JsonObject refFlags = row.getJsonObject("ref_flags");
       if (refFlags != null) {
-        refBuilder.branchFlags(refFlags);
+        refBuilder.refFlags(refFlags);
       }
       
       final String refAuthor = row.getString("ref_author");
       if (refAuthor != null) {
-        refBuilder.branchAuthor(refAuthor);
+        refBuilder.refAuthor(refAuthor);
       }
       
       ref = refBuilder.build();
