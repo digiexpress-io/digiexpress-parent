@@ -46,13 +46,16 @@ public class BranchQuery_Test extends DbTestTemplate {
   @Test
   public void createBranchesAndQueryThem() {
     // creates main branch with one commit
-    final var main_commit = setup();
+    setup();
     
     // create dev from main branch
-    createBranch("dev", "main").getTransitives().getCommit();
+    final var devCommit = createBranch("dev", "main").getTransitives().getCommit();
     
-    // create issue-1 branch
-    final var devCommit = createBranch("issue-1", "dev").getTransitives().getCommit();
+    createBranch("issue-1", "dev").getTransitives().getCommit();
+    createBranch("issue-2", "dev").getTransitives().getCommit();
+    
+    
+    // create issue-1 branch    
     getClient().withTenant(tenant)
         .commitBuilder()
         .branchLock(devCommit.getId())
@@ -60,7 +63,7 @@ public class BranchQuery_Test extends DbTestTemplate {
         .commitAuthor("john smith")
         .commitMessage("create main branch with some content")
         .newFile((newFile) -> newFile
-            .fileName("xxx.txt")
+            .fileName("xxx2.txt")
             .filePath("root/xyz")
             .fileType("text")
             .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes", "uuid", UUID.randomUUID().toString()))
@@ -71,6 +74,7 @@ public class BranchQuery_Test extends DbTestTemplate {
     
     
     // create issue-2 branch
+    
     getClient().withTenant(tenant)
         .commitBuilder()
         .branchLock(devCommit.getId())
@@ -78,7 +82,7 @@ public class BranchQuery_Test extends DbTestTemplate {
         .commitAuthor("john smith")
         .commitMessage("create main branch with some content")
         .newFile((newFile) -> newFile
-            .fileName("xxx.txt")
+            .fileName("xxx2.txt")
             .filePath("root/xyz")
             .fileType("text")
             .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes", "uuid", UUID.randomUUID().toString()))
@@ -99,9 +103,11 @@ public class BranchQuery_Test extends DbTestTemplate {
     final var issue_1 = branches.get("issue-1");
     final var issue_2 = branches.get("issue-2");
     
-    Assertions.assertEquals(main.getCommitId(), dev.getTransitives().getCommit().getParentId().get());
-    Assertions.assertEquals(dev.getCommitId(), issue_1.getCommitId());
-    Assertions.assertEquals(dev.getCommitId(), issue_2.getCommitId());
+    
+    Assertions.assertEquals(main.getTransitives().getCommit().getId(), dev.getTransitives().getCommit().getId());
+    Assertions.assertEquals(null, dev.getTransitives().getCommit().getParentId().orElse(null));
+    Assertions.assertEquals(dev.getCommitId(), issue_1.getTransitives().getCommit().getParentId().get());
+    Assertions.assertEquals(dev.getCommitId(), issue_2.getTransitives().getCommit().getParentId().get());
     
   }
   

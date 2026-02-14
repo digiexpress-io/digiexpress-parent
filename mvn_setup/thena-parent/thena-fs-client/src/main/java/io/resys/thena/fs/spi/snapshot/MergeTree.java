@@ -44,6 +44,7 @@ public class MergeTree {
   private final Optional<Ref> ref;
   private final Map<String, Node> nodes = new HashedMap<>();
   private final List<String> sessionNodeIds = new ArrayList<>();
+  private final List<String> sessionNodePaths = new ArrayList<>();
   
   private final Map<String, Optional<Props>> props = new HashedMap<>();
   private final Map<String, Optional<Blob>> blobs = new HashedMap<>();
@@ -61,6 +62,7 @@ public class MergeTree {
     for(final var node : prevTree.getTreeNodes()) {
       // all old nodes
       nodes.put(node.getObjectId(), node);
+      
       
       if(node.getBlobId().isPresent()) {
         final var blobId = node.getBlobId().get();
@@ -81,10 +83,18 @@ public class MergeTree {
   
   public MergeTree add(Node node) {
     RepoAssert.isTrue(!sessionNodeIds.contains(node.getObjectId()), () -> "Can't add the same node multiple times: '" + node.getFullPath() + "'");
+    RepoAssert.isTrue(!sessionNodePaths.contains(node.getFullPath()), () -> "Can't add the same node multiple times: '" + node.getFullPath() + "'");
     
     // brand new node
+    sessionNodePaths.add(node.getFullPath());
     sessionNodeIds.add(node.getObjectId());
+    
     nodes.put(node.getObjectId(), node);
+    
+    if(nodes.values().stream().filter(t -> t.getFullPath().equals(node.getFullPath())).count() != 1) {
+      RepoAssert.fail("Can't add the same node multiple times: '" + node.getFullPath() + "'");  
+    }
+    
     return this;
   }
 
