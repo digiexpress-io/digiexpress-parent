@@ -70,6 +70,7 @@ public interface Node extends FileSystemEntity {
   
   @Value.Check
   default void check() {
+    RepoAssert.isTrue(getPropsId().isPresent() || getBlobId().isPresent(), () -> "blobId and propsId both cannot be empty");
     
     if(isDirectory()) {
       

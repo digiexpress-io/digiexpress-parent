@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
 import io.resys.thena.support.RepoAssert;
@@ -42,15 +43,19 @@ public class BranchQueryImpl implements BranchQuery {
   private Consumer<NameExpressionBuilder> nameExpr;
   private String branchId;
   
+  private boolean excludeBlobs;
+  private boolean excludeNodes;
   
-  private Multi<Ref> baseline() {
-    final ImmutableRefTableFilter filter;
-    if(branchId == null && nameExpr == null) {
-      filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
-    } else {
-      filter = ImmutableRefTableFilter.builder().branchId(BranchConstants.DEFAULT_BRANCH).build();
-    }
-    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
+
+  @Override
+  public BranchQuery excludeBlobs(boolean excludeBlobs) {
+    this.excludeBlobs = excludeBlobs;
+    return this;
+  }
+  @Override
+  public BranchQuery excludeNodes(boolean excludeNodes) {
+    this.excludeNodes = excludeNodes;
+    return this;
   }
   @Override
   public BranchQuery branchId(String branchId) {
@@ -97,4 +102,39 @@ public class BranchQueryImpl implements BranchQuery {
       return found.stream().findFirst().get();
     });
   }
+
+  
+  private Multi<Ref> baseline() {
+
+    
+    
+    final ImmutableRefTableFilter filter;
+    if(branchId == null && nameExpr == null) {
+      filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
+    } else {
+      filter = ImmutableRefTableFilter.builder().branchId(BranchConstants.DEFAULT_BRANCH).build();
+    }
+    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
+  }
+  
+  private Uni<Tag> join(Tag tag) {
+    final var isBlobs = !excludeBlobs && !excludeNodes;
+    
+    // load all 
+    if(isBlobs) {
+      return db_uni
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId()))
+        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
+    }
+    
+    // load nodes
+    final var isNodes = !excludeNodes;
+    if(isNodes) {
+      return db_uni
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId()))
+        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
+    }    
+    return Uni.createFrom().item(tag);
+  }
+  
 }

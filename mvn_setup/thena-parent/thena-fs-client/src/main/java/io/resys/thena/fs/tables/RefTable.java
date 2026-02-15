@@ -1,5 +1,7 @@
 package io.resys.thena.fs.tables;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-fs-client
@@ -21,18 +23,22 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.fs.entities.ImmutableRef;
 import io.resys.thena.fs.entities.ImmutableRefTransitives;
+import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.tables.filters.RefTableFilter;
 import io.resys.thena.fs.tables.filters.RefTableLockFilter;
-import io.resys.thena.fs.tables.mappers.RefSelectMapper;
 import io.resys.thena.support.TableUtils;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -40,8 +46,7 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 600,
   ddl = """
     CREATE TABLE {ref} (
-      id UUID PRIMARY KEY,
-
+      ref_id UUID PRIMARY KEY,
       ref_name TEXT UNIQUE NOT NULL,
       ref_description TEXT,
       ref_props JSONB,
@@ -51,7 +56,7 @@ import io.vertx.mutiny.sqlclient.Row;
       ref_created_at TIMESTAMPTZ NOT NULL,
       ref_created_from UUID,
 
-      commit_id TEXT NOT NULL REFERENCES {commit}(id)
+      commit_id TEXT NOT NULL REFERENCES {commit}(commit_id)
     );
     
     CREATE INDEX {ref}_commit_idx ON {ref}(commit_id);
@@ -79,65 +84,16 @@ import io.vertx.mutiny.sqlclient.Row;
 public interface RefTable {
 
   @TenantSql.FindAll(
-    sql = """
-      SELECT 
-        ref.id,
-        ref.ref_name, 
-        ref.ref_description,
-        ref.ref_props,
-        ref.ref_permissions,
-        ref.ref_flags,
-        ref.ref_author,
-        ref.ref_created_at,
-        ref.commit_id,
-        ref.ref_created_from,
-        
-        commit.commit_created_at, 
-        commit.commit_author, 
-        commit.commit_message,
-        commit.tree_id,
-        commit.parent_id,
-        commit.merge_id
-        
-      FROM {ref} as ref
-      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
-    """,
+    sql = "SELECT * FROM {ref} as ref",
     rowMapper = RefMapper.class,
     wrapper = WrapperType.MULTI
   )
   Sql findAll();
-
-  @TenantSql.Find(
-    optional = false,
-    sql = """
-      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.ref_created_at, ref.ref_created_from,
-             ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
-      FROM {ref} as ref
-      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
-      WHERE ref.ref_name = $1
-    """,
-    rowMapper = RefMapper.class
-  )
-  SqlTuple getByName(String refName);
-
-  @TenantSql.FindAll(
-    sql = """
-      SELECT ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.ref_created_at, ref.ref_created_from,
-             ref.commit_id, commit.commit_created_at, commit.commit_author, commit.commit_message, commit.tree_id, commit.parent_id, commit.merge_id
-      FROM {ref} as ref
-      LEFT JOIN {commit} as commit ON ref.commit_id = commit.id
-      WHERE ref.commit_id = $1
-    """,
-    wrapper = WrapperType.MULTI,
-    rowMapper = RefMapper.class
-  )
-  SqlTuple findAllByCommitId(String commitId);
-
   
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {ref}
-      (id, ref_name, commit_id, ref_description, ref_props, ref_permissions, ref_flags, ref_author, ref_created_at, ref_created_from)
+      (ref_id, ref_name, commit_id, ref_description, ref_props, ref_permissions, ref_flags, ref_author, ref_created_at, ref_created_from)
       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     """,
     propsMapper = RefInsertMapper.class
@@ -154,14 +110,14 @@ public interface RefTable {
         ref_props = $4, 
         ref_permissions = $5, 
         ref_flags = $6
-      WHERE id = $7
+      WHERE ref_id = $7
     """,
     propsMapper = RefUpdateMapper.class
   )
   SqlTupleList updateMany(List<Ref> refs);
 
   @TenantSql.DeleteAll(
-    sql = "DELETE FROM {ref} WHERE ref_name = $1",
+    sql = "DELETE FROM {ref} WHERE ref_name = $1 OR ref_id::text = $1",
     propsMapper = RefDeleteMapper.class
   )
   SqlTupleList deleteAll(List<Ref> refs);
@@ -170,163 +126,116 @@ public interface RefTable {
   @TenantSql.FindAll(
       sql = """
   SELECT 
-    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, ref.ref_created_at, ref.ref_created_from,
-    commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
-    tree.id as tree_id,
+    ref.*,
+    
+    commit.commit_created_at, 
+    commit.commit_author, 
+    commit.commit_message, 
+    commit.tree_id, 
+    commit.parent_id, 
+    commit.merge_id,
     
     -- Aggregated Nodes
-    (SELECT json_agg(
-      json_build_object(
-        'id', nodes.id,
-        'object_id', nodes.object_id,
-        'node_path', nodes.node_path,
-        'node_name', nodes.node_name,
-        
-        'created_at', idx.created_at,
-        'updated_at', idx.updated_at,
-        'created_by', idx.created_by,
-        'updated_by', idx.updated_by,
-                                
-        'blob_id', nodes.blob_id,
-        'props_id', nodes.props_id,
-        
-        'blob', 
-          CASE WHEN blobs.id IS NOT NULL 
-          THEN json_build_object(
-            'blob_type', blobs.blob_type, 
-            'blob_value', blobs.blob_value
-          ) 
-          ELSE NULL END,
-        'props', 
-          CASE WHEN props.id IS NOT NULL 
-          THEN json_build_object(
-            'props_labels', props.props_labels, 
-            'props_flags', props.props_flags,
-            'props_comments', props.props_comments,
-            'props_permissions', props.props_permissions
-          ) 
-          ELSE NULL END
-      )
-    ) FROM unnest(tree.tree_nodes) AS nodes
-      LEFT JOIN {props} as props ON props.id = nodes.props_id AND nodes.props_id IS NOT NULL
-      LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id AND nodes.blob_id IS NOT NULL
-      LEFT JOIN (
-        SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-               created_commit.commit_created_at as created_at,
-               updated_commit.commit_created_at as updated_at
-        FROM {object_index} as object_index
-        LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-        LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
-      ) as idx ON idx.object_id = nodes.object_id
-    ) as nodes_json
+    __nodes_json
 
   FROM {ref} as ref
-  JOIN {commit} as commits ON commits.id = ref.commit_id
-  JOIN {tree} as tree ON tree.id = commits.tree_id
+  JOIN {commit} as commit ON commit.commit_id = ref.commit_id
+  JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       """,
       wrapper = WrapperType.MULTI,
-      rowMapper = RefFilterMapper.class,
+      rowMapper = RefMapper.class,
       sqlBuilder = RefTableFilter.SQL.class
     )
     SqlTuple findAllByFilter(RefTableFilter filter);
-  
   
   // -- Lock branch, get current commit tree
   @TenantSql.Find(
     sql = """
   SELECT 
-    ref.id, ref.ref_name, ref.ref_description, ref.ref_props, ref.ref_permissions, ref.ref_flags, ref.ref_author, ref.commit_id, ref.ref_created_at, ref.ref_created_from,
-    commits.commit_created_at, commits.commit_author, commits.commit_message, commits.tree_id, commits.parent_id, commits.merge_id,
-    tree.id as tree_id,
-    
-    -- Aggregated Nodes: Hydrated only if object_id matches $2 (your filter.getDocIds())
-    (SELECT json_agg(
-      json_build_object(
-        'id', nodes.id,
-        'object_id', nodes.object_id,
-        'node_path', nodes.node_path,
-        'node_name', nodes.node_name,
-        
-        'created_at', idx.created_at,
-        'updated_at', idx.updated_at,
-        'created_by', idx.created_by,
-        'updated_by', idx.updated_by,
-                                
-        'blob_id', nodes.blob_id,
-        'props_id', nodes.props_id,
-        
-        -- These will be NULL if the object_id isn't in the filter list
-        'blob', 
-          CASE WHEN blobs.id IS NOT NULL 
-          THEN json_build_object(
-            'blob_type', blobs.blob_type, 
-            'blob_value', blobs.blob_value
-          ) 
-          ELSE NULL END,
-        'props', 
-          CASE WHEN props.id IS NOT NULL 
-          THEN json_build_object(
-            'props_labels', props.props_labels, 
-            'props_flags', props.props_flags,
-            'props_comments', props.props_comments,
-            'props_permissions', props.props_permissions
-          ) 
-          ELSE NULL END
-      )
-    ) FROM unnest(tree.tree_nodes) AS nodes
-      -- "Extended Query" logic inside the aggregator
-      
-      LEFT JOIN {props} as props 
-        ON props.id = nodes.props_id 
-        AND nodes.props_id IS NOT NULL
-        AND (nodes.object_id = ANY($2) OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY($2) )
-            
-      LEFT JOIN {blob} as blobs 
-        ON blobs.id = nodes.blob_id
-        AND nodes.blob_id IS NOT NULL   
-        AND (nodes.object_id = ANY($2) OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY($2) )
-      
-      LEFT JOIN (
-        SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-               created_commit.commit_created_at as created_at,
-               updated_commit.commit_created_at as updated_at
-        FROM {object_index} as object_index
-        LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-        LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
-      ) as idx ON idx.object_id = nodes.object_id
-    ) as nodes_json
+    ref.*,
 
+    commit.commit_created_at, 
+    commit.commit_author, 
+    commit.commit_message, 
+    commit.tree_id, 
+    commit.parent_id, 
+    commit.merge_id,
+    
+    -- Aggregated Nodes
+    __nodes_json
+    
   FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
-  JOIN {commit} as commits ON commits.id = ref.commit_id
-  JOIN {tree} as tree ON tree.id = commits.tree_id
+  JOIN {commit} as commit ON commit.commit_id = ref.commit_id
+  JOIN {tree} as tree ON tree.tree_id = commit.tree_id
     """,
-    rowMapper = RefLockMapper.class,
+    rowMapper = RefMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
   )
   SqlTuple findOneWithLock(RefTableLockFilter filter);
-
-  
-  class RefFilterMapper implements TenantSql.RowMapper<Ref> {
-    @Override
-    public Ref apply(Row row) {
-      return RefSelectMapper.refAndCommitAndPropsAndBlob(row);
-    }
-  }
-  
-  class RefLockMapper implements TenantSql.RowMapper<Ref> {
-    @Override
-    public Ref apply(Row row) {
-      return RefSelectMapper.refAndCommitAndPropsAndBlob(row);
-    }
-  }
 
 
   class RefMapper implements TenantSql.RowMapper<Ref> {
     @Override
     public Ref apply(Row row) {
-      final var baseline = RefSelectMapper.refAndCommit(row);
-      final var trs = ImmutableRefTransitives.builder().commit(baseline.getItem2()).build();
-      return baseline.getItem1().transitives(trs).build();
+      return fromRow(row);
+    }
+    
+    public static Ref fromRow(Row row) {
+      final var refTransitives = ImmutableRefTransitives.builder();
+      final var visited_blobs = new ArrayList<String>();
+      final var visited_props = new ArrayList<String>();
+      
+      final var isTreeEnabled = row.getColumnIndex("nodes_json") != -1;
+      
+      final var allNodes = Optional
+        .ofNullable(isTreeEnabled ? row.getJsonArray("nodes_json") : new JsonArray())
+        .orElseGet(() -> new JsonArray())
+        .stream().map(node_json -> (JsonObject) node_json)
+        .map(node_json -> {
+
+          final var node = NodeTable.NodeMapper.fromJson(node_json);
+
+          final var blob = node.getTransitives().getBlob();
+          if(blob != null && !visited_blobs.contains(blob.getId())) {
+            refTransitives.putBlobsById(blob.getId(), blob);            
+            visited_blobs.add(blob.getId());
+          }
+
+          final var props = node.getTransitives().getProps();
+          if(props != null && !visited_props.contains(props.getId())) {
+            refTransitives.putPropsById(props.getId(), props);
+            visited_props.add(props.getId());
+          }
+          
+          refTransitives.putNodesByPath(node.getFullPath(), node.getId());
+          refTransitives.putNodesById(node.getId(), node);
+          return node;
+        })
+        .toList();
+      
+      final var tree = isTreeEnabled ? ImmutableTree.builder().id(row.getString("tree_id")).treeNodes(allNodes).build() : null;
+      
+      final var isCommitEnabled = row.getColumnIndex("commit_created_at") != -1;
+      final var commit = isCommitEnabled ? CommitTable.CommitMapper.fromRow(row) : null;
+      
+      
+      return ImmutableRef.builder()
+        .id(TableUtils.toStringUUID(row, "ref_id"))
+        .commitId(row.getString("commit_id"))
+        
+        .refAuthor(Optional.ofNullable(row.getString("ref_author")))
+        .refName(row.getString("ref_name"))
+        .refCreatedAt(row.getOffsetDateTime("ref_created_at"))
+        .refCreatedFrom(Optional.ofNullable(TableUtils.toStringUUID(row, "ref_created_from")))
+        
+        // Add optional ref properties
+        .refDescription(Optional.ofNullable(row.getString("ref_description")))
+        .refProps(Optional.ofNullable(row.getJsonObject("ref_props")))
+        .refPermissions(Optional.ofNullable(row.getJsonObject("ref_permissions")))
+        .refFlags(Optional.ofNullable(row.getJsonObject("ref_flags")))
+      
+        .transitives(refTransitives.commit(commit).tree(tree).build())
+        .build(); 
     }
   }
 

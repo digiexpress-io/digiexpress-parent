@@ -83,15 +83,18 @@ public class FileSystem_ThenaImpl implements FileSystem {
     
     return new FileSystemTenant() {
       @Override public String getTenantId() { return tenantId; }
+      
+      @Override public CommitQuery commitQuery() { return null; }
       @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId); }
+      
       @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start); }
+      @Override public CreateBranch createBranch() { return new CreateBranchImpl(start, tenantId); }
       
       @Override public CreateTag createTag() { return new CreateTagImpl(start, tenantId); }
       @Override public ModifyTag modifyTag() { return null; }      
       @Override public TagQuery tagQuery() { return new TagQueryImpl(start, tenantId); }
       
-      @Override public CommitQuery commitQuery() { return null; }
-      @Override public CreateBranch createBranch() { return new CreateBranchImpl(start, tenantId); }
+
       @Override public BlobQuery blobQuery() { return null; }
     };
   }

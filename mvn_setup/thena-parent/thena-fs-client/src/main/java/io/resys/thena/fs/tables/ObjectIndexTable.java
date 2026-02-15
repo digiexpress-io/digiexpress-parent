@@ -1,5 +1,6 @@
 package io.resys.thena.fs.tables;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableObjectIndex;
 import io.resys.thena.fs.entities.ObjectIndex;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 
@@ -34,10 +36,10 @@ COMMENT ON COLUMN {object_index}.updated_by IS 'Points to commit with what this 
   constraints = """
       
   ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_created_by
-    FOREIGN KEY (created_by) REFERENCES {commit}(id);
+    FOREIGN KEY (created_by) REFERENCES {commit}(commit_id);
     
   ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_updated_by
-    FOREIGN KEY (updated_by) REFERENCES {commit}(id);
+    FOREIGN KEY (updated_by) REFERENCES {commit}(commit_id);
 
   """,
   drop = """
@@ -52,8 +54,8 @@ public interface ObjectIndexTable {
              created_commit.commit_created_at as created_at,
              updated_commit.commit_created_at as updated_at
       FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
+      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
     """,
     rowMapper = ObjectIndexMapper.class
   )
@@ -66,8 +68,8 @@ public interface ObjectIndexTable {
              created_commit.commit_created_at as created_at,
              updated_commit.commit_created_at as updated_at
       FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
+      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
       WHERE object_index.object_id = $1
     """,
     rowMapper = ObjectIndexMapper.class
@@ -81,8 +83,8 @@ public interface ObjectIndexTable {
              created_commit.commit_created_at as created_at,
              updated_commit.commit_created_at as updated_at
       FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
+      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
       WHERE object_index.object_id = $1
     """,
     rowMapper = ObjectIndexMapper.class
@@ -95,8 +97,8 @@ public interface ObjectIndexTable {
              created_commit.commit_created_at as created_at,
              updated_commit.commit_created_at as updated_at
       FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
+      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
+      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
       WHERE object_index.object_id = ANY($1)
     """,
     rowMapper = ObjectIndexMapper.class
@@ -132,6 +134,19 @@ public interface ObjectIndexTable {
           .createdAt(row.getOffsetDateTime("created_at"))
           .updatedAt(row.getOffsetDateTime("updated_at"))
           .build();
+    }
+    
+    public static ObjectIndex fromJson(JsonObject node_json) {
+      return ImmutableObjectIndex.builder()
+        .objectId(node_json.getString("object_id"))
+        
+        .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
+        .updatedAt(OffsetDateTime.parse(node_json.getString("updated_at")))
+        
+        .createdBy(node_json.getString("created_by"))
+        .updatedBy(node_json.getString("updated_by"))
+        
+        .build();
     }
   }
 

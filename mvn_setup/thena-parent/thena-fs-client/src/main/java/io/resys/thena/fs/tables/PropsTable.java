@@ -25,10 +25,10 @@ import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
-import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableProps;
 import io.resys.thena.fs.entities.Props;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -36,7 +36,7 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 300,
   ddl = """
     CREATE TABLE {props} (
-      id TEXT PRIMARY KEY,
+      props_id TEXT PRIMARY KEY,
       props_labels JSONB,
       props_comments JSONB,
       props_permissions JSONB,
@@ -44,7 +44,7 @@ import io.vertx.mutiny.sqlclient.Row;
     );
     
     COMMENT ON TABLE {props} IS 'Versioned metadata for files and directories. Content-addressable properties that can be attached to filesystem nodes.';
-    COMMENT ON COLUMN {props}.id IS 'Content hash of the properties, enabling deduplication of identical metadata sets';
+    COMMENT ON COLUMN {props}.props_id IS 'Content hash of the properties, enabling deduplication of identical metadata sets';
     COMMENT ON COLUMN {props}.props_labels IS 'User-defined labels and tags in JSONB format';
     COMMENT ON COLUMN {props}.props_comments IS 'Comments and annotations in JSONB format';
     COMMENT ON COLUMN {props}.props_permissions IS 'Access control and permission settings in JSONB format';
@@ -58,45 +58,21 @@ import io.vertx.mutiny.sqlclient.Row;
 public interface PropsTable {
 
   @TenantSql.FindAll(
-    sql = """
-      SELECT id, props_labels, props_comments, props_permissions, props_flags
-      FROM {props}
-    """,
+    sql = "SELECT * FROM {props}",
     rowMapper = PropsMapper.class
   )
   Sql findAll();
 
-  @TenantSql.Find(
-    optional = false,
-    sql = """
-      SELECT id, props_labels, props_comments, props_permissions, props_flags
-      FROM {props}
-      WHERE id = $1
-    """,
-    rowMapper = PropsMapper.class
-  )
-  SqlTuple getById(String id);
-
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {props}
-      (id, props_labels, props_comments, props_permissions, props_flags)
+      (props_id, props_labels, props_comments, props_permissions, props_flags)
       VALUES($1, $2, $3, $4, $5)
-      ON CONFLICT (id) DO NOTHING
+      ON CONFLICT (props_id) DO NOTHING
     """,
     propsMapper = PropsInsertMapper.class
   )
   SqlTupleList insertMany(List<Props> props);
-
-  @TenantSql.UpdateAll(
-    sql = """
-      UPDATE {props}
-      SET props_labels = $1, props_comments = $2, props_permissions = $3, props_flags = $4
-      WHERE id = $5
-    """,
-    propsMapper = PropsUpdateMapper.class
-  )
-  SqlTupleList updateMany(List<Props> props);
 
   @TenantSql.DeleteAll(
     sql = "DELETE FROM {props} WHERE id = $1",
@@ -108,13 +84,23 @@ public interface PropsTable {
     @Override
     public Props apply(Row row) {
       return ImmutableProps.builder()
-          .id(row.getString("id"))
+          .id(row.getString("props_id"))
           .propsLabels(Optional.ofNullable(row.getJsonObject("props_labels")))
           .propsComments(Optional.ofNullable(row.getJsonObject("props_comments")))
           .propsPermissions(Optional.ofNullable(row.getJsonObject("props_permissions")))
           .propsFlags(Optional.ofNullable(row.getJsonObject("props_flags")))
           .build();
     }
+    
+    public static Props fromJson(JsonObject json) {
+      return ImmutableProps.builder()
+          .id(json.getString("props_id"))
+          .propsLabels(Optional.ofNullable(json.getJsonObject("props_labels")))
+          .propsComments(Optional.ofNullable(json.getJsonObject("props_comments")))
+          .propsPermissions(Optional.ofNullable(json.getJsonObject("props_permissions")))
+          .propsFlags(Optional.ofNullable(json.getJsonObject("props_flags")))
+          .build();
+    } 
   }
 
   class PropsInsertMapper implements TenantSql.PropsMapper<Props> {
@@ -126,19 +112,6 @@ public interface PropsTable {
         props.getPropsComments().orElse(null),
         props.getPropsPermissions().orElse(null),
         props.getPropsFlags().orElse(null)
-      });
-    }
-  }
-
-  class PropsUpdateMapper implements TenantSql.PropsMapper<Props> {
-    @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(Props props) {
-      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        props.getPropsLabels().orElse(null),
-        props.getPropsComments().orElse(null),
-        props.getPropsPermissions().orElse(null),
-        props.getPropsFlags().orElse(null),
-        props.getId()
       });
     }
   }
