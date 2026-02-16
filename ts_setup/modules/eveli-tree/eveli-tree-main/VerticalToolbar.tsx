@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, styled, Tooltip } from '@mui/material';
 import { TreeColors } from '../tree-theme';
 import { TreeIcons } from '../tree-theme/tree-icons';
-import { TreeNode, TreeNodeSecondaryView } from '../../eveli-tree-api';
+import { TreeNode, TreeNodeSecondaryView } from '@dxs-ts/eveli-tree-api';
 
 
 export const TOOLBAR_WIDTH = '50px';

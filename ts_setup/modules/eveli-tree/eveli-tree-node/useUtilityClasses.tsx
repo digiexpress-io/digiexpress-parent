@@ -4,7 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { TreeColors, getNodeColor, TreeIcons } from '../tree-theme';
 import { SearchResultHighlight } from '../eveli-tree-search/SearchResultHighlight';
 
-import { ConfigOption, TreeNode, TreeNodeType, useEveliTree } from '../../eveli-tree-api';
+import { ConfigOption, TreeNode, TreeNodeType, useEveliTree } from '@dxs-ts/eveli-tree-api';
 
 
 

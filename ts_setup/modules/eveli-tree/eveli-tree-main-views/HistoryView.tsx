@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Typography, styled } from '@mui/material';
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode } from '@dxs-ts/eveli-tree-api';
 import { TreeColors, TreeIcons } from '../tree-theme';
-import { useEveliTree } from '../../eveli-tree-api';
+import { useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { ViewContainer } from './ViewContainer';
 
 export interface HistoryViewProps {

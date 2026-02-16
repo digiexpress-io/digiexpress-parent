@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
-import { TreeNodeSecondaryView, useEveliTree } from '../../eveli-tree-api';
+import { TreeNodeSecondaryView, useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 import { EveliTreeMainLeft } from './EveliTreeMainLeft';
 import { EveliTreeMainRight } from './EveliTreeMainRight';

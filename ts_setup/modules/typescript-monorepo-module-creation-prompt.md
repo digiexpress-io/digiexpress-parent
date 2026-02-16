@@ -60,6 +60,15 @@ Modules are declared in `package.json` dependency lists using the `@dxs-ts/` nam
 - **Gamut Ecosystem**: All gamut-related modules, aggregated in `lib-gamut`
 - **Cross-domain**: Utilities used by multiple domains (added to multiple lib packages)
 
+#### 6. **CRITICAL Import Rule**
+**NEVER import a module from within itself using the @dxs-ts/ namespace.**
+
+- ❌ **WRONG**: Inside `eveli-tree-api` directory, do NOT use `import { TreeNode } from '@dxs-ts/eveli-tree-api'`
+- ✅ **CORRECT**: Inside `eveli-tree-api` directory, use relative imports: `import { TreeNode } from './tree-types'`
+- ✅ **CORRECT**: Import `@dxs-ts/eveli-tree-api` ONLY from modules OUTSIDE the `eveli-tree-api` directory
+
+**Rule**: Only import `@dxs-ts/{module-name}` from packages that are EXTERNAL to that module's directory. Within a module, always use relative imports for internal files.
+
 ## Step-by-Step Module Creation Process
 
 ### Step 1: Critical Questions the AI MUST Ask

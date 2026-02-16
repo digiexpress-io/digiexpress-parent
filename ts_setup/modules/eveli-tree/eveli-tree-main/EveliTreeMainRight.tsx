@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode } from '@dxs-ts/eveli-tree-api';
 import { ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../eveli-tree-main-views';
 
 export interface EveliTreeMainRightProps {

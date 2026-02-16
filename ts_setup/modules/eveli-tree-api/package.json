@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/eveli-tree-api",
+  "version": "${project.version}",
+  "description": "Eveli tree API and types",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*"
+  },
+  "keywords": ["eveli", "tree", "api", "types"],
+  "private": true
+}

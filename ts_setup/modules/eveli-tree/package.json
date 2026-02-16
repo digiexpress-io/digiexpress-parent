@@ -5,7 +5,8 @@
   "main": "./index.ts",
   "type": "module",
   "dependencies": {
-    "@dxs-ts/eveli-primitives": "*"
+    "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/eveli-tree-api": "*"
   },
   "peerDependencies": {
     "react": "*",

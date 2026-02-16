@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
-import { TreeNode, mockTreeData, useEveliTree } from '../../eveli-tree-api';
+import { TreeNode, mockTreeData, useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { TreeIcons } from '../tree-theme';
 

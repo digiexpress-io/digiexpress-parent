@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Collapse, Divider, TextField } from '@mui/material';
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode } from '@dxs-ts/eveli-tree-api';
 import { useUtilityClasses } from './useUtilityClasses';
 import { NodeSharingAndPermissions } from './NodeSharingAndPermissions';
 import { NodeHistory } from './NodeHistory';
