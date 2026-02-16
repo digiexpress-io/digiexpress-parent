@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Box, styled } from '@mui/material';
-import { TreeNode } from '../../../eveli-tree-api';
-import { TreeColors, TreeIcons } from '../../tree-theme';
-import { useEveliTree } from '../../../eveli-tree-api';
+import { TreeNode } from '../../eveli-tree-api';
+import { TreeColors, TreeIcons } from '../tree-theme';
+import { useEveliTree } from '../../eveli-tree-api';
 import { ViewContainer } from './ViewContainer';
 
 export interface ErrorsViewProps {
@@ -29,37 +29,33 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
   const errors = [
     {
       id: 1,
-      severity: 'warning',
+      severity: 'WARNING',
       title: 'Missing Translation Warning',
       description: 'Main.article does not have a Finnish language page',
-      howToFix: 'Select "New Page with the language fi to create this page.',
       affectedFile: 'fi.language',
       timestamp: '12.02.2025 14:30'
     },
     {
       id: 2,
-      severity: 'critical',
+      severity: 'ERROR',
       title: 'Missing Markdown level 1 heading error',
       description: 'Page in main.article cannot be rendered in portal if no level 1 heading is defined.',
-      howToFix: 'Open en page and add a level 1 heading (# My Heading) at the top of the page.',
       affectedFile: 'main.article',
       timestamp: '12.02.2025 14:28'
     },
     {
       id: 3,
-      severity: 'warning',
+      severity: 'WARNING',
       title: 'Deprecated Service Reference',
       description: 'This node references "old-message.service" which has been marked as deprecated.',
-      howToFix: 'Update the service reference to use "general-message.service" instead. Check the services documentation for migration guide.',
       affectedFile: 'main.article',
       timestamp: '10.02.2025 09:15'
     },
     {
       id: 4,
-      severity: 'error',
+      severity: 'ERROR',
       title: 'Broken Reference Link',
       description: 'The reference to "ref.article" could not be resolved in the tree structure.',
-      howToFix: 'Verify that the referenced article exists and the path is correct. Check for typos in the reference ID.',
       affectedFile: 'main.article',
       timestamp: '11.02.2025 16:45'
     }
@@ -67,9 +63,8 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
 
   const errorSummary = {
     total: errors.length,
-    critical: errors.filter(e => e.severity === 'critical').length,
-    error: errors.filter(e => e.severity === 'error').length,
-    warning: errors.filter(e => e.severity === 'warning').length
+    error: errors.filter(e => e.severity === 'ERROR').length,
+    warning: errors.filter(e => e.severity === 'WARNING').length
   };
 
   const mainContent = (
@@ -77,15 +72,11 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
       <ErrorSummary isDarkMode={isDarkMode}>
         <SummaryTitle>Error Summary</SummaryTitle>
         <SummaryStats isDarkMode={isDarkMode}>
-          <StatItem severity="critical" isDarkMode={isDarkMode}>
-            <StatCount>{errorSummary.critical}</StatCount>
-            <StatLabel>Critical</StatLabel>
-          </StatItem>
-          <StatItem severity="error" isDarkMode={isDarkMode}>
+          <StatItem severity="ERROR" isDarkMode={isDarkMode}>
             <StatCount>{errorSummary.error}</StatCount>
             <StatLabel>Errors</StatLabel>
           </StatItem>
-          <StatItem severity="warning" isDarkMode={isDarkMode}>
+          <StatItem severity="WARNING" isDarkMode={isDarkMode}>
             <StatCount>{errorSummary.warning}</StatCount>
             <StatLabel>Warnings</StatLabel>
           </StatItem>
@@ -97,11 +88,9 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
           <ErrorCard key={error.id} severity={error.severity} isDarkMode={isDarkMode}>
             <ErrorHeader severity={error.severity} isDarkMode={isDarkMode}>
               <ErrorIcon>
-                {error.severity === 'critical' ?
-                  <TreeIcons.Error sx={{ color: TreeColors.semantic.dangerLight }} /> :
-                  error.severity === 'error' ?
-                    <TreeIcons.ErrorOutline sx={{ color: TreeColors.semantic.dangerLight }} /> :
-                    <TreeIcons.Warning sx={{ color: TreeColors.semantic.warningLight }} />}
+                {error.severity === 'ERROR' ?
+                  <TreeIcons.Error sx={{ color: isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight }} /> :
+                  <TreeIcons.Warning sx={{ color: isDarkMode ? TreeColors.semantic.warning : TreeColors.semantic.warningLight }} />}
               </ErrorIcon>
               <ErrorTitle>{error.title}</ErrorTitle>
               <ErrorTimestamp isDarkMode={isDarkMode}>{error.timestamp}</ErrorTimestamp>
@@ -111,10 +100,6 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
               {error.description}
             </ErrorDescription>
 
-            <FixInstruction severity={error.severity} isDarkMode={isDarkMode}>
-              <FixLabel>How to fix:</FixLabel>
-              <FixText>{error.howToFix}</FixText>
-            </FixInstruction>
           </ErrorCard>
         ))}
       </ErrorList>
@@ -134,7 +119,7 @@ export const ErrorsView: React.FC<ErrorsViewProps> = ({ node }) => {
 
 const ErrorsContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
+})<{ isDarkMode: boolean }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1),
@@ -157,7 +142,7 @@ const SummaryTitle = styled(Typography)(({ theme }) => ({
 
 const SummaryStats = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
+})<{ isDarkMode: boolean }>(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(1),
 }));
@@ -169,14 +154,10 @@ const StatItem = styled(Box, {
   flexDirection: 'column',
   alignItems: 'center',
   padding: theme.spacing(1),
-  backgroundColor:
-    severity === 'critical' ? (isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface) :
-      severity === 'error' ? (isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface) :
-        isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
-  border: `1px solid ${severity === 'critical' ? TreeColors.semantic.dangerLight :
-    severity === 'error' ? TreeColors.semantic.dangerLight :
-      TreeColors.semantic.warningLight
-    }`
+  backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
+  border: `1px solid ${severity === 'ERROR' ?
+    (isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight) :
+    (isDarkMode ? TreeColors.semantic.warning : TreeColors.semantic.warningLight)}`
 }));
 
 const StatCount = styled(Typography)(({ theme }) => ({
@@ -203,16 +184,15 @@ const ErrorCard = styled(Box, {
   marginTop: theme.spacing(1),
   backgroundColor: isDarkMode ? TreeColors.dark.background : TreeColors.light.background,
   border: `1px solid ${isDarkMode ? TreeColors.dark.border : TreeColors.light.border}`,
-  borderLeft: `4px solid ${severity === 'critical' ? TreeColors.semantic.dangerLight :
-    severity === 'error' ? TreeColors.semantic.dangerLight :
-      TreeColors.semantic.warningLight}`,
+  borderLeft: `4px solid ${severity === 'ERROR' ?
+    (isDarkMode ? TreeColors.semantic.dangerDark : TreeColors.semantic.dangerLight) :
+    (isDarkMode ? TreeColors.semantic.warning : TreeColors.semantic.warningLight)}`,
 }));
 
 const ErrorHeader = styled(Box, {
   shouldForwardProp: (prop) => !['severity', 'isDarkMode'].includes(prop as string)
-})<{ severity: string; isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
+})<{ severity: string; isDarkMode: boolean }>(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
   gap: theme.spacing(1),
   marginBottom: theme.spacing(1),
 }));
@@ -240,28 +220,4 @@ const ErrorDescription = styled(Typography, {
   ...theme.typography.subtitle2,
   color: isDarkMode ? TreeColors.dark.text : TreeColors.light.text,
   marginBottom: '8px',
-}));
-
-const FixInstruction = styled(Box, {
-  shouldForwardProp: (prop) => !['severity', 'isDarkMode'].includes(prop as string)
-})<{ severity: string; isDarkMode: boolean }>(({ severity, isDarkMode }) => ({
-  padding: '12px',
-  borderRadius: '6px',
-  backgroundColor: isDarkMode ? TreeColors.dark.surface : TreeColors.light.surface,
-  border: `1px solid ${severity === 'critical' ? TreeColors.semantic.dangerLight :
-    severity === 'error' ? TreeColors.semantic.dangerLight :
-      TreeColors.semantic.warningLight
-    }`
-}));
-
-const FixLabel = styled(Typography)(({ theme }) => ({
-  ...theme.typography.caption,
-  fontWeight: 600,
-  textTransform: 'uppercase',
-  marginBottom: '4px',
-}));
-
-const FixText = styled(Typography)(({ theme }) => ({
-  ...theme.typography.subtitle2,
-  fontWeight: 400,
 }));

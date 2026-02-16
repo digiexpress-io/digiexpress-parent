@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, darken, lighten, styled } from '@mui/material';
-import { TreeColors } from '../../tree-theme';
-import { useEveliTree } from '../../../eveli-tree-api';
+import { TreeColors } from '../tree-theme';
+import { useEveliTree } from '../../eveli-tree-api';
 
 export interface ViewContainerProps {
   title: string;

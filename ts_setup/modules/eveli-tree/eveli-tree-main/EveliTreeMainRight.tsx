@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
-import { ErrorsView, ReferencesView, PropertiesView, ViewContainer } from './views';
+import { ErrorsView, ReferencesView, PropertiesView, ViewContainer } from '../eveli-tree-main-views';
 
 export interface EveliTreeMainRightProps {
   activeNode: TreeNode | undefined;
