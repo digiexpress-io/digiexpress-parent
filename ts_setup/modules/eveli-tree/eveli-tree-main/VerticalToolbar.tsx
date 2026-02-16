@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, styled, Tooltip } from '@mui/material';
 import { TreeColors } from '../tree-theme';
 import { TreeIcons } from '../tree-theme/tree-icons';
-import { TreeNode, TreeNodeSecondaryView } from '../../eveli-tree-api';
+import { TreeNode, TreeNodeSecondaryView } from '@dxs-ts/eveli-tree-api';
 
 
 export const TOOLBAR_WIDTH = '50px';
@@ -78,7 +78,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 
       <Tooltip title="Help" placement="left" arrow>
         <StyledToolbarButton onClick={() => onViewChange('help')} isDarkMode={isDarkMode} isSelected={selectedView === 'help'}>
-          <TreeIcons.Language />
+          <TreeIcons.Help />
         </StyledToolbarButton>
       </Tooltip>
 

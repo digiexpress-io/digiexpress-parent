@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, List, IconButton, Badge, styled, Tooltip, Button } from '@mui/material';
 import { TreeColors, TreeIcons } from './tree-theme';
-import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu, useEveliTree } from '../eveli-tree-api';
+import { TreeNode, mockTreeData, ContextMenuData, collapseAll, toggleNode, handleContextMenu, useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { useUtilityClasses, EveliTreeRoot } from './useUtilityClasses';
 import { EveliTreeNode } from './eveli-tree-node';
 import { EveliTreeNodeMenu } from './eveli-tree-node-menu';

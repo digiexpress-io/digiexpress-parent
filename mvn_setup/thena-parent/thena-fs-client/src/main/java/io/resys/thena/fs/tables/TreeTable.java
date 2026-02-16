@@ -21,12 +21,14 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Tree;
+import io.resys.thena.fs.tables.NodeTable.NodeMapper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
@@ -57,8 +59,9 @@ import io.vertx.mutiny.sqlclient.Row;
 public interface TreeTable {
 
   @TenantSql.FindAll(
-    sql = "SELECT * FROM {tree}",
+    sql = "SELECT tree_id, (" + NodeTable.BASELINE + ") as nodes_json FROM {tree} as tree",
     rowMapper = TreeMapper.class
+    
   )
   Sql findAll();
 
@@ -83,11 +86,13 @@ public interface TreeTable {
   class TreeMapper implements TenantSql.RowMapper<Tree> {
     @Override
     public Tree apply(Row row) {
-      // Note: Complex mapping for node[] array would need custom logic
-      // This is a simplified version - actual implementation would need to parse the array
       return ImmutableTree.builder()
           .id(row.getString("tree_id"))
-          .treeNodes(List.of()) // TODO: Parse node[] array
+          .treeNodes(Optional.ofNullable(row.getJsonArray("nodes_json")).orElseGet(() -> new JsonArray()).stream()
+              .map(e -> (JsonObject) e)
+              .map(NodeMapper::fromJson)
+              .toList()
+          )
           .build();
     }
   }

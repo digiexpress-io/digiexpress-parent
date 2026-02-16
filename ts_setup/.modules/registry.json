@@ -350,6 +350,8 @@
           "@dxs-ts/tagomi-routes": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/eveli-tree-api": "*",
+          "@dxs-ts/eveli-tree": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
@@ -402,6 +404,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -469,6 +473,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -528,6 +534,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -1098,6 +1106,8 @@
           "@dxs-ts/task-api": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/eveli-tree-api": "*",
+          "@dxs-ts/eveli-tree": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/task-composer-v1": "*",
@@ -1152,6 +1162,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
@@ -1230,6 +1242,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
@@ -1285,6 +1299,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/eveli-tree",
+        "@dxs-ts/eveli-tree-api",
         "@dxs-ts/ledger-composer"
       ],
       "actualExternalDependencies": [
@@ -1331,6 +1347,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/eveli-tree",
+        "@dxs-ts/eveli-tree-api",
         "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
@@ -1346,7 +1364,8 @@
         "main": "./index.ts",
         "type": "module",
         "dependencies": {
-          "@dxs-ts/eveli-primitives": "*"
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/eveli-tree-api": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -1363,6 +1382,7 @@
       },
       "dependencies": [
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
         "react",
         "@mui/material",
         "@mui/icons-material",
@@ -1381,11 +1401,13 @@
         "@mui/utils"
       ],
       "internalDependencies": [
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api"
       ],
       "actualDependencies": [
         "react",
         "@mui/material",
+        "@dxs-ts/eveli-tree-api",
         "@mui/utils"
       ],
       "actualExternalDependencies": [
@@ -1393,11 +1415,65 @@
         "@mui/material",
         "@mui/utils"
       ],
-      "actualInternalDependencies": [],
+      "actualInternalDependencies": [
+        "@dxs-ts/eveli-tree-api"
+      ],
       "missingDependencies": [],
       "unusedDependencies": [
         "@dxs-ts/eveli-primitives",
         "@mui/icons-material"
+      ]
+    },
+    "@dxs-ts/eveli-tree-api": {
+      "name": "@dxs-ts/eveli-tree-api",
+      "path": "modules/eveli-tree-api",
+      "packageJson": {
+        "name": "@dxs-ts/eveli-tree-api",
+        "version": "${project.version}",
+        "description": "Eveli tree API and types",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "eveli",
+          "tree",
+          "api",
+          "types"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@mui/material",
+        "@mui/utils"
       ]
     },
     "@dxs-ts/gamut-api": {
@@ -2445,6 +2521,8 @@
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/eveli-tree-api": "*",
+          "@dxs-ts/eveli-tree": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
@@ -2488,6 +2566,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2525,6 +2605,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2585,6 +2667,8 @@
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
         "@dxs-ts/task-composer-v1",
@@ -3873,6 +3957,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -3948,6 +4034,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
@@ -3962,8 +4050,10 @@
         "@dxs-ts/xui-datetime"
       ],
       "@dxs-ts/eveli-tree": [
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api"
       ],
+      "@dxs-ts/eveli-tree-api": [],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/gamut-intl",
         "@dxs-ts/gamut-cockpit-store"
@@ -4038,6 +4128,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4178,7 +4270,17 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-ide"
       ],
-      "@dxs-ts/eveli-tree": [],
+      "@dxs-ts/eveli-tree": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/eveli-tree-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-tree",
+        "@dxs-ts/eveli-ide"
+      ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
@@ -4421,6 +4523,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/eveli-tree-api",
+        "@dxs-ts/eveli-tree",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4506,6 +4610,11 @@
       ]
     }
   },
+<<<<<<< HEAD
   "checksum": "d3774fd0fdafcfd4e8c6d3c8c91b1000accd5abc78e4acb823a36b80c11e7f4c",
   "generatedAt": "2026-02-16T14:16:03.112Z"
+=======
+  "checksum": "1ab91337ad84f3adf98b30fb8d8ffec4bda132ef9863e7370ec44dd1e3794960",
+  "generatedAt": "2026-02-16T11:23:02.801Z"
+>>>>>>> 334f0c96be045a51b3a784eb6e16bcb1a8e88402
 }

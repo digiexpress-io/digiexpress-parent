@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItemIcon } from '@mui/material';
 
-import { TreeNode, useEveliTree } from '../../eveli-tree-api';
+import { TreeNode, useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { useUtilityClasses, EveliTreeNodeRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
 import { TreeIcons } from '../tree-theme';
 import { sortChildren } from './eveli-tree-node-helpers';

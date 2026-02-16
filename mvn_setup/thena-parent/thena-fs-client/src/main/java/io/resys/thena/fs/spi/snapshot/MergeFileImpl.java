@@ -104,7 +104,7 @@ public class MergeFileImpl implements MergeFile {
     final var blobType = prevBlob.getBlobType();
 
     final var nextBlobValue = fileValue.orElse(prevBlob.getBlobValue());
-    final var nextBlob = Blob.newInstance(nextBlobValue, blobType).build();
+    final var nextBlob = Blob.newInstance(nextBlobValue, blobType, prevBlob.getBlobClass().orElse(null)).build();
 
     // static data, once in its in... can't change PK
     final var objectId = prevNode.getObjectId();

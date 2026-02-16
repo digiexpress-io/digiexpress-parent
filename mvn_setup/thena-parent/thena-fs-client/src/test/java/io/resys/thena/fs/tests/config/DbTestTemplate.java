@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ThenaTest(database = @ThenaTestDbConfig(
-  enabled = false, 
+  enabled = true, 
   database = "eveli-app", 
   host = "localhost",
   port = 5433,

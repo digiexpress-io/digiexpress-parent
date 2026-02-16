@@ -23,7 +23,6 @@ package io.resys.thena.fs.api;
 import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.fs.api.blobs.BlobQuery;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.branches.CreateBranch;
 import io.resys.thena.fs.api.commits.CommitBuilder;
@@ -155,15 +154,6 @@ public interface FileSystem {
      * @return query interface for branches
      */
     BranchQuery branchQuery();
-    
-    /**
-     * Creates a query interface for retrieving file content with filtering.
-     * Supports querying by branch state, file properties, and path patterns
-     * with performance optimization through content exclusion controls.
-     * 
-     * @return query interface for file blobs
-     */
-    BlobQuery blobQuery();
   }
 
 }

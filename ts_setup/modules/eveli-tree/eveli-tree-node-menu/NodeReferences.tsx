@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
-import { TreeNode, useEveliTree } from '../../eveli-tree-api';
+import { TreeNode, useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 
 interface NodeReferencessProps {

@@ -50,6 +50,12 @@
       "@dxs-ts/eveli-primitives": [
         "../eveli-primitives/index.ts"
       ],
+      "@dxs-ts/eveli-tree-api": [
+        "../eveli-tree-api/index.ts"
+      ],
+      "@dxs-ts/eveli-tree": [
+        "../eveli-tree/index.ts"
+      ],
       "@dxs-ts/user-profile": [
         "../user-profile/index.ts"
       ],
@@ -136,6 +142,12 @@
       "path": "../eveli-primitives"
     },
     {
+      "path": "../eveli-tree-api"
+    },
+    {
+      "path": "../eveli-tree"
+    },
+    {
       "path": "../user-profile"
     },
     {
@@ -174,9 +186,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-12-30T10:28:52.095Z",
+    "at": "2026-02-16T11:23:02.803Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "ea92967e2c4f",
+    "fromRegistry": "1ab91337ad84",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../xui-datetime"

@@ -41,6 +41,15 @@ public interface ModifyTag {
   ModifyTag beforeTagCompletion(BeforeTagCompletion callback);
   
   /**
+   * Sets the author who modified this tag.
+   * Used for accountability and audit purposes.
+   * 
+   * @param tagAuthor the tag author identifier
+   * @return builder for method chaining
+   */
+  ModifyTag tagAuthor(String tagAuthor);
+  
+  /**
    * Executes the tag creation operation.
    * Creates the tag and associates it with the specified commit.
    * 

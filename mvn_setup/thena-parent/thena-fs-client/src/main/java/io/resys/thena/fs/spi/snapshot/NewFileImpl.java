@@ -38,10 +38,12 @@ import lombok.Value;
 @RequiredArgsConstructor
 public class NewFileImpl implements NewFile {
   
+  
   private String filePath;
   private String fileName;
   private String fileId;
   private String fileType;
+  private String fileClass;
   private JsonObject fileValue;
   private Consumer<PropsBuilder> fileProps;
   private boolean validated = false;
@@ -81,7 +83,11 @@ public class NewFileImpl implements NewFile {
     this.filePath = path;
     return this;
   }
-
+  @Override
+  public NewFile fileClass(String fileClass) {
+    this.fileClass = fileClass;
+    return this;
+  }
   @Override
   public void build() {
     this.validated = true;
@@ -94,7 +100,7 @@ public class NewFileImpl implements NewFile {
         .ofNullable(this.fileId)
         .orElseGet(() -> OidUtils.genUUID());
     
-    final var blob = Blob.newInstance(this.fileValue, this.fileType).build();
+    final var blob = Blob.newInstance(this.fileValue, this.fileType, this.fileClass).build();
     
     final var props = Optional.ofNullable(this.fileProps).map(p -> {
       final var builder = new PropsBuilderImpl(Optional.empty());

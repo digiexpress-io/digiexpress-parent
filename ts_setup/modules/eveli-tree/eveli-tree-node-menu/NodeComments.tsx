@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, TextField, Typography, Divider } from '@mui/material';
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode } from '@dxs-ts/eveli-tree-api';
 import { useUtilityClasses } from './useUtilityClasses';
 
 export interface NodeCommentsProps {

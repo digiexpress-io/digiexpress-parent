@@ -59,9 +59,15 @@ public interface Blob extends FileSystemEntity {
   }
 
 
-  // H(blob) = μ(blob_value)
-  public static ImmutableBlob.Builder newInstance(JsonObject content, String type) {
-    final var hash = Hashing.murmur3_128().hashString(canonicalizeJson(content), StandardCharsets.UTF_8).toString();
+  // H(blob) = μ(blob_value ⊕ type ⊕ fileClass)
+  public static ImmutableBlob.Builder newInstance(JsonObject content, String type, String fileClass) {    
+    final var hashString = new StringBuilder()
+      .append(canonicalizeJson(content))
+      .append("type ").append(type)
+      .append("class ").append(fileClass)
+      .toString();
+    
+    final var hash = Hashing.murmur3_128().hashString(hashString, StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
         .blobType(type)

@@ -121,7 +121,7 @@ public interface TagTable {
              commit.commit_created_at, commit.commit_author, commit.commit_message
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
-      WHERE tag.tag_name = $1
+      WHERE tag.tag_name = $1 OR tag.tag_id::text = $1
     """,
     rowMapper = TagMapper.class
   )

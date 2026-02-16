@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, styled, Typography, IconButton, Popover, useTheme, alpha, lighten } from '@mui/material';
-import { TreeNode, useEveliTree } from '../../eveli-tree-api';
+import { TreeNode, useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { TreeColors, TreeIcons } from '../tree-theme';
 
 export const EveliTreeBreadcrumb: React.FC = () => {

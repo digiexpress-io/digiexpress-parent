@@ -7,6 +7,9 @@
       ],
       "@dxs-ts/eveli-primitives": [
         "../eveli-primitives/index.ts"
+      ],
+      "@dxs-ts/eveli-tree-api": [
+        "../eveli-tree-api/index.ts"
       ]
     }
   },
@@ -14,16 +17,19 @@
   "references": [
     {
       "path": "../eveli-primitives"
+    },
+    {
+      "path": "../eveli-tree-api"
     }
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-01-30T07:17:51.545Z",
+    "at": "2026-02-16T10:30:28.673Z",
     "forModule": "@dxs-ts/eveli-tree",
-    "fromRegistry": "bdc520919c83",
+    "fromRegistry": "59670c930e2b",
     "alias": {
       "@dxs-ts/eveli-tree": [
-        "../eveli-primitives"
+        "../eveli-tree-api"
       ]
     }
   }

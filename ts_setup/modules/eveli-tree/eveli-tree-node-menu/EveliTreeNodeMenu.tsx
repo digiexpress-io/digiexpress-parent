@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode } from '@dxs-ts/eveli-tree-api';
 import { useUtilityClasses, EveliTreeNodeMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { EveliTreeNodeMenuMain } from './EveliTreeNodeMenuMain';
 import { EveliTreeNodeMenuSub } from './EveliTreeNodeMenuSub';

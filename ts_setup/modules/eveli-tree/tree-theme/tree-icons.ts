@@ -64,6 +64,7 @@ import {
   Info,
   AccountTree,
   WorkHistory,
+  Help,
 } from '@mui/icons-material';
 
 export const TreeIcons = {
@@ -127,4 +128,5 @@ export const TreeIcons = {
   Info: Info,
   Tree: AccountTree,
   History: WorkHistory,
+  Help: Help,
 };

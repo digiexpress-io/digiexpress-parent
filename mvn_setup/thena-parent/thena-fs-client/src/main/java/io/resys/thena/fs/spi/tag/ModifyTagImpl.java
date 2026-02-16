@@ -1,20 +1,18 @@
 package io.resys.thena.fs.spi.tag;
 
-import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import io.resys.thena.api.envelope.BatchStatus;
 import io.resys.thena.api.envelope.CommitResultStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.fs.api.tags.CreateTag;
 import io.resys.thena.fs.api.tags.ImmutableTagResult;
+import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.TagBuilder;
 import io.resys.thena.fs.api.tags.TagBuilder.BeforeTagCompletion;
 import io.resys.thena.fs.api.tags.TagResult;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.ImmutableTagTransitives;
-import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.Tree;
 import io.resys.thena.fs.spi.commit.CommitBuilderException;
@@ -30,49 +28,42 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-
 @RequiredArgsConstructor
-public class CreateTagImpl implements CreateTag {
+public class ModifyTagImpl implements ModifyTag {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
   
-  private String commitIdOrBranchName;
   private String tagAuthor;
-  private OffsetDateTime tagCreatedAt;
-  private Consumer<TagBuilder> tagBuilder;
+  private String tagIdOrName;
+  private BiConsumer<Tag, TagBuilder> tagBuilder;
   private BeforeTagCompletion callback;
   
   @Override
-  public CreateTag commitId(String commitIdOrBranchName) {
-    this.commitIdOrBranchName = RepoAssert.notEmpty(commitIdOrBranchName, () -> "commitIdOrBranchName cannot be empty!");
+  public ModifyTag tagId(String tagIdOrName) {
+    this.tagIdOrName = RepoAssert.notEmpty(tagIdOrName, () -> "tagIdOrName cannot be empty!");
     return this;
   }
   @Override
-  public CreateTag newTag(Consumer<TagBuilder> tagBuilder) {
+  public ModifyTag modifyTag(BiConsumer<Tag, TagBuilder> tagBuilder) {
     this.tagBuilder = RepoAssert.notNull(tagBuilder, () -> "tagBuilder cannot be empty!");
     return this;
   }
   @Override
-  public CreateTag tagCreatedAt(OffsetDateTime tagCreatedAt) {
-    this.tagCreatedAt = tagCreatedAt;
-    return this;
-  }
-  @Override
-  public CreateTag tagAuthor(String tagAuthor) {
-    this.tagAuthor = RepoAssert.notEmpty(tagAuthor, () -> "tagAuthor cannot be empty!");
-    return this;
-  }
-  @Override
-  public CreateTag beforeTagCompletion(BeforeTagCompletion callback) {
+  public ModifyTag beforeTagCompletion(BeforeTagCompletion callback) {
     this.callback = RepoAssert.notNull(callback, () -> "beforeTagCompletion cannot be empty!");
+    return this;
+  }
+  @Override
+  public ModifyTag tagAuthor(String tagAuthor) {
+    this.tagAuthor = RepoAssert.notEmpty(tagAuthor, () -> "tagAuthor cannot be empty!");
     return this;
   }
   @Override
   public Uni<TagResult> build() {
     // Double validation - ensure required fields were set
-    RepoAssert.notEmpty(commitIdOrBranchName, () -> "commitIdOrBranchName cannot be empty!");
-    RepoAssert.notEmpty(tagAuthor, () -> "tagAuthor cannot be empty!");
+    RepoAssert.notEmpty(tagIdOrName, () -> "tagIdOrName cannot be empty!");
     RepoAssert.notNull(tagBuilder, () -> "tagBuilder cannot be empty!");
+    RepoAssert.notEmpty(tagAuthor, () -> "tagAuthor cannot be empty!");
 
     final var scope = ImmutableTxScope.builder()
         .commitAuthor(tagAuthor)
@@ -89,20 +80,19 @@ public class CreateTagImpl implements CreateTag {
   }
 
   private Uni<TagResult> visitTransaction(FsDb tx) {
-    return tx.query().queryCommit().findByCommitIdOrRef(commitIdOrBranchName)
+    return tx.query().queryTag().findByTagName(tagIdOrName)
         .map(found -> {
           if(found.isEmpty()) {
-            throw new TagCreationException("Can't find commit or branch by given id", JsonObject.of("id", commitIdOrBranchName));
+            throw new TagCreationException("Can't find tag by given id", JsonObject.of("id", tagIdOrName));
           }
           return found.get();
         })
         .onItem().transformToUni(found -> {
           if(callback != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId())
-              .map(tuple -> tuple.getItem2())
-              .onItem().transform(tree -> new TagRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getCommitId())
+              .map(tuple -> new TagModRequest(found, Optional.of(tuple.getItem1()), Optional.of(tuple.getItem2())));  
           }
-          return Uni.createFrom().item(new TagRequest(found.getItem1(), Optional.empty(), found.getItem2()));
+          return Uni.createFrom().item(new TagModRequest(found, Optional.empty(), Optional.empty()));
         })
         .onItem().transformToUni(request -> visitPersistenceUnit(tx, request))
         .onItem().transform(this::visitSuccess);
@@ -151,17 +141,19 @@ public class CreateTagImpl implements CreateTag {
       .tag(unit.getTagInserts().isEmpty() ? null : unit.getTagInserts().getLast())
       .build();
   }
+  
 
-  private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, TagRequest request) {
+
+  private Uni<PersistenceUnit> visitPersistenceUnit(FsDb tx, TagModRequest request) {
     try {
-      final var createdAt = tagCreatedAt != null ? tagCreatedAt : OffsetDateTime.now();
+      final var createdAt = request.getTag().getTagCreatedAt();
       final var prevTag = Optional.<Tag>empty();
-      final var commitId = request.getLock().getId();
-      final var refId = Optional.<String>ofNullable("");
+      final var commitId = request.getTag().getCommitId();
+      final var refId = request.getTag().getRefId();
       final var tagTransitives = ImmutableTagTransitives.builder().build();  
       
       final var tagBuilder = new TagBuilderImpl(prevTag, commitId, refId, tagTransitives, createdAt, tagAuthor);
-      this.tagBuilder.accept(tagBuilder);
+      this.tagBuilder.accept(request.getTag(), tagBuilder);
       if(this.callback != null) {
         this.callback.apply(tagTransitives, tagBuilder);
       }
@@ -171,7 +163,7 @@ public class CreateTagImpl implements CreateTag {
           .tenantId(tenantId)
           .status(BatchStatus.OK)
           .log("")
-          .addTagInserts(result.getTag())
+          .addTagUpdates(result.getTag())
           .build();
       return tx.builder().from(unit).persist();
     } catch(Exception e) {
@@ -180,9 +172,9 @@ public class CreateTagImpl implements CreateTag {
   }
   
   @Value
-  private static class TagRequest {
-    Commit lock; 
+  private static class TagModRequest {
+    Tag tag;
+    Optional<Commit> commit; 
     Optional<Tree> tree;
-    Optional<Ref> ref;
   }
 }

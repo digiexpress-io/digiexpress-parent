@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { EveliTreeTabs } from '../eveli-tree-tabs';
 import { EveliTreeBreadcrumb } from '../eveli-tree-breadcrumb';
 import { EveliTreeMain } from '../eveli-tree-main';
-import { useEveliTree } from '../../eveli-tree-api';
+import { useEveliTree } from '@dxs-ts/eveli-tree-api';
 import { TreeColors } from '../tree-theme';
 
 const Main: React.FC<{}> = () => {
