@@ -69,15 +69,6 @@ public interface CommitQuery {
    * @return query builder for method chaining
    */
   CommitQuery treeName(Consumer<NameExpressionBuilder> nameExpr);
-
-  /**
-   * Excludes node properties from the result set to reduce payload size.
-   * When true, properties like labels, comments, permissions will not be loaded.
-   * 
-   * @param excludeProps true to exclude properties, false to include them
-   * @return query builder for method chaining
-   */
-  CommitQuery excludeProps(boolean excludeProps);
   
   /**
    * Excludes blob content from the result set to reduce payload size.
