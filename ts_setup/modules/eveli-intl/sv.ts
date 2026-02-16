@@ -947,6 +947,8 @@ export const sv = {
   'taskTable.col.header.overdue': 'Försenad',
   'taskTable.button.archive.confirm': 'Du håller på att arkivera den här uppgiften. Är du säker på att du vill fortsätta?',
   'taskTable.confirmArchive.title': 'Bekräftar arkiveringsuppgift',
+  'taskTable.snackbar.archived': 'Arkiverade uppgift {taskRef}: {subject}',
+  'taskTable.snackbar.archiveFailed': 'Misslyckades att arkivera uppgift {taskRef}',
   'taskTable.title': 'Uppgifter',
   'taskButton.addTask': 'Lägg till uppgift',
   'eveli.table.clearFilters': 'Rensa alla filter',

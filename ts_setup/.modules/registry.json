@@ -3301,7 +3301,8 @@
         "@monaco-editor/react",
         "yaml",
         "@tanstack/react-table",
-        "@dxs-ts/xui-table"
+        "@dxs-ts/xui-table",
+        "notistack"
       ],
       "actualExternalDependencies": [
         "react",
@@ -3314,7 +3315,8 @@
         "@tanstack/react-query",
         "@monaco-editor/react",
         "yaml",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "notistack"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-datetime",
@@ -3322,7 +3324,9 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-table"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "notistack"
+      ],
       "unusedDependencies": []
     },
     "@dxs-ts/task-feedback": {
@@ -4502,6 +4506,6 @@
       ]
     }
   },
-  "checksum": "e296261578987f4da99dcce48cd24da45423fcff1811abeb6833c833bf139627",
-  "generatedAt": "2026-02-11T06:40:07.502Z"
+  "checksum": "d3774fd0fdafcfd4e8c6d3c8c91b1000accd5abc78e4acb823a36b80c11e7f4c",
+  "generatedAt": "2026-02-16T14:16:03.112Z"
 }

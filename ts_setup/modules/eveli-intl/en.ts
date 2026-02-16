@@ -959,6 +959,8 @@ export const en = {
   'taskTable.col.header.overdue': 'Overdue',
   'taskTable.button.archive.confirm': 'You are about to archive this task. Are you sure you want to continue?',
   'taskTable.confirmArchive.title': 'Confirming archive task {taskRef}',
+  'taskTable.snackbar.archived': 'Archived task {taskRef}: {subject}',
+  'taskTable.snackbar.archiveFailed': 'Failed to archive task {taskRef}',
   'taskTable.title': 'Tasks',
   'taskButton.addTask': 'Add task',
   'eveli.table.clearFilters': 'Clear all filters',

@@ -20,12 +20,14 @@ import { IndicatorSubject } from './IndicatorSubject';
 import { filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 import { IndicatorRole } from './IndicatorRole';
 import { filterDueDate, overdueFilter } from './FilterDueDate';
+import { useSnackbar } from 'notistack';
 
 export const TASK_TABLE_QUERY_KEY = 'find-all-tasks';
 
 export const TaskTable: React.FC = () => {
   const intl = useIntl();
   const backend = useTaskBackend();
+  const { enqueueSnackbar } = useSnackbar();
   const [deleteId, setArchiveId] = React.useState<string | undefined>();
 
   const { data, error, refetch, isPending } = useQuery({
@@ -34,9 +36,29 @@ export const TaskTable: React.FC = () => {
     initialData: [],
   });
 
-  async function handleArchive(data: { id: string }) {
-    backend.persistence.deleteOneTask(data.id).then(() => refetch());
-  }
+  async function handleArchive(task: TaskApi.Task) {
+    try {
+      await backend.persistence.deleteOneTask(task.id);
+  
+      enqueueSnackbar(
+        intl.formatMessage(
+          { id: 'taskTable.snackbar.archived' },
+          { taskRef: task.taskRef ?? task.id, subject: task.subject ?? '' }
+        ),
+        { variant: 'success', anchorOrigin: { vertical: 'bottom', horizontal: 'left' } }
+      );
+  
+      refetch();
+    } catch {
+      enqueueSnackbar(
+        intl.formatMessage(
+          { id: 'taskTable.snackbar.archiveFailed' },
+          { taskRef: task.taskRef ?? task.id }
+        ),
+        { variant: 'error', anchorOrigin: { vertical: 'bottom', horizontal: 'left' } }
+      );
+    }
+  }  
 
   function confirmArchive(id: string) {
     setArchiveId(id);
@@ -48,7 +70,10 @@ export const TaskTable: React.FC = () => {
 
   async function handleConfirmArchive() {
     if (deleteId) {
-      await handleArchive({ id: deleteId });
+      const task = data.find(t => t.id === deleteId);
+      if (task) {
+        await handleArchive(task);
+      }
       setArchiveId(undefined);
     }
   };

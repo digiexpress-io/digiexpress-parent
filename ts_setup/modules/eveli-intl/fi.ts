@@ -947,6 +947,8 @@ export const fi = {
   'taskTable.col.header.overdue': 'Myöhässä',
   'taskTable.button.archive.confirm': 'Olet arkistoimassa tätä tehtävää. Haluatko varmasti jatkaa?',
   'taskTable.confirmArchive.title': 'Vahvista arkistointi',
+  'taskTable.snackbar.archived': 'Arkistoitu tehtävä {taskRef}: {subject}',
+  'taskTable.snackbar.archiveFailed': 'Tehtävän {taskRef} arkistointi epäonnistui',
   'taskTable.title': 'Tehtävät',
   'taskButton.addTask': 'Lisää tehtävä',
   'eveli.table.clearFilters': 'Tyhjennä kaikki suodattimet',
