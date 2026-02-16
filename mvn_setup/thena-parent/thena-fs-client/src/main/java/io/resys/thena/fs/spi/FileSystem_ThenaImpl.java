@@ -33,7 +33,6 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.fs.api.FileSystem;
-import io.resys.thena.fs.api.blobs.BlobQuery;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.branches.CreateBranch;
 import io.resys.thena.fs.api.commits.CommitBuilder;
@@ -93,9 +92,6 @@ public class FileSystem_ThenaImpl implements FileSystem {
       @Override public CreateTag createTag() { return new CreateTagImpl(start, tenantId); }
       @Override public ModifyTag modifyTag() { return null; }      
       @Override public TagQuery tagQuery() { return new TagQueryImpl(start, tenantId); }
-      
-
-      @Override public BlobQuery blobQuery() { return null; }
     };
   }
   

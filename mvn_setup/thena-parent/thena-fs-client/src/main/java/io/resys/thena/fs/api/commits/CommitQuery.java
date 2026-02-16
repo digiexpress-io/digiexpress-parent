@@ -80,15 +80,6 @@ public interface CommitQuery {
   CommitQuery excludeProps(boolean excludeProps);
   
   /**
-   * Excludes commit objects from the result set to reduce payload size.
-   * When true, only node information is returned without commit details.
-   * 
-   * @param excludeCommits true to exclude commits, false to include them
-   * @return query builder for method chaining
-   */
-  CommitQuery excludeCommits(boolean excludeCommits);
-  
-  /**
    * Excludes blob content from the result set to reduce payload size.
    * When true, only metadata is returned without actual file content.
    * 
