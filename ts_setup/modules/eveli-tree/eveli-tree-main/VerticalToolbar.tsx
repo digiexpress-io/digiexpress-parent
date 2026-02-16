@@ -78,7 +78,7 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
 
       <Tooltip title="Help" placement="left" arrow>
         <StyledToolbarButton onClick={() => onViewChange('help')} isDarkMode={isDarkMode} isSelected={selectedView === 'help'}>
-          <TreeIcons.Language />
+          <TreeIcons.Help />
         </StyledToolbarButton>
       </Tooltip>
 

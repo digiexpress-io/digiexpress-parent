@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { TreeNode } from '../../eveli-tree-api';
-import { ErrorsView, ReferencesView, PropertiesView, HistoryView, ViewContainer } from '../eveli-tree-main-views';
+import { ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../eveli-tree-main-views';
 
 export interface EveliTreeMainRightProps {
   activeNode: TreeNode | undefined;
@@ -31,6 +31,8 @@ export const EveliTreeMainRight: React.FC<EveliTreeMainRightProps> = ({ activeNo
       return <PropertiesView node={activeNode} />;
     case 'history':
       return <HistoryView node={activeNode} />;
+    case 'help':
+      return <HelpView node={activeNode} />;
       /*
     case 'configuration':
       return 'Configuration';
@@ -38,8 +40,6 @@ export const EveliTreeMainRight: React.FC<EveliTreeMainRightProps> = ({ activeNo
       return 'Debug';
     case 'preview':
       return 'Preview';
-    case 'help':
-      return 'Help';
       */
     default:
       return (
