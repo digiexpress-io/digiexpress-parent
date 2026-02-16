@@ -44,7 +44,7 @@ public class CreateTagImpl implements CreateTag {
   
   @Override
   public CreateTag commitId(String commitIdOrBranchName) {
-    this.commitIdOrBranchName = commitIdOrBranchName;
+    this.commitIdOrBranchName = RepoAssert.notEmpty(commitIdOrBranchName, () -> "commitIdOrBranchName cannot be empty!");
     return this;
   }
   @Override
