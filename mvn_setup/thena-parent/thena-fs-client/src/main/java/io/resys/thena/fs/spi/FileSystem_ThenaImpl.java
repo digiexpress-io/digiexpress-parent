@@ -43,6 +43,7 @@ import io.resys.thena.fs.api.tags.TagQuery;
 import io.resys.thena.fs.spi.branch.BranchQueryImpl;
 import io.resys.thena.fs.spi.branch.CreateBranchImpl;
 import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
+import io.resys.thena.fs.spi.commit.CommitQueryImpl;
 import io.resys.thena.fs.spi.tag.CreateTagImpl;
 import io.resys.thena.fs.spi.tag.ModifyTagImpl;
 import io.resys.thena.fs.spi.tag.TagQueryImpl;
@@ -84,7 +85,7 @@ public class FileSystem_ThenaImpl implements FileSystem {
     return new FileSystemTenant() {
       @Override public String getTenantId() { return tenantId; }
       
-      @Override public CommitQuery commitQuery() { return null; }
+      @Override public CommitQuery commitQuery() { return new CommitQueryImpl(start, tenantId); }
       @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId); }
       
       @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start); }

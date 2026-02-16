@@ -1,25 +1,40 @@
 package io.resys.thena.fs.tables;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.immutables.value.Value;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.api.annotations.TenantSql.SqlBuilder;
+import io.resys.thena.api.annotations.TenantSql.WrapperType;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
+import io.resys.thena.fs.api.trees.NameExpressionBuilder;
+import io.resys.thena.fs.api.trees.PathExpressionBuilder;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.ImmutableCommit;
 import io.resys.thena.fs.entities.ImmutableTree;
+import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
+import io.resys.thena.fs.tables.filters.NameExpressionBuilderImpl;
+import io.resys.thena.storesql.support.SqlStatement;
+import io.resys.thena.support.TableUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
+import io.smallrye.mutiny.tuples.Tuple3;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
+import jakarta.annotation.Nullable;
 
 @TenantSql.Table(
   name = "commit",
@@ -69,6 +84,38 @@ public interface CommitTable {
   )
   SqlTuple getByIdWithNodesAndBlobs(String id);
   
+  
+  @TenantSql.FindAll(
+    wrapper = WrapperType.MULTI,
+    sql = """
+    WITH RECURSIVE commit_ancestry AS (
+      -- Start with branch heads
+      SELECT branch.ref_name as branch_name, branch.ref_id as branch_id, branch.commit_id
+      FROM {ref} as branch
+  
+      UNION ALL
+  
+      -- Follow parent commits
+      SELECT ancestry.branch_name, ancestry.branch_id, commit.parent_id
+      FROM commit_ancestry as ancestry
+      JOIN {commit} as commit ON ancestry.commit_id = commit.commit_id
+      WHERE commit.parent_id IS NOT NULL
+    )
+    SELECT DISTINCT 
+      ancestry.branch_name, 
+      ancestry.branch_id, 
+      commit.*,
+      node.*
+    FROM commit_ancestry as ancestry
+    JOIN {commit} as commit ON ancestry.commit_id = commit.commit_id
+    JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    CROSS JOIN LATERAL unnest(tree.tree_nodes) AS node
+    """,
+    rowMapper = CommitHistoryMapper.class,
+    sqlBuilder = COMMIT_HISTORY_FOR_NODES_SQL.class
+  )
+  SqlTuple findCommitHistoryByNodes(CommitHistoryFilter filter);
+  
   @TenantSql.Find(
     optional = false,
     sql = """
@@ -103,10 +150,10 @@ public interface CommitTable {
   
   
   @TenantSql.FindAll(
-      sql = "SELECT * FROM {commit} as commit",
-      rowMapper = CommitMapper.class
-    )
-    Sql findAll();
+    sql = "SELECT * FROM {commit} as commit",
+    rowMapper = CommitMapper.class
+  )
+  Sql findAll();
 
   @TenantSql.FindAll(
     sql = "SELECT * FROM {commit} as commit WHERE commit.tree_id = $1",
@@ -130,6 +177,78 @@ public interface CommitTable {
   )
   SqlTupleList deleteAll(List<Commit> commits);
 
+  
+
+  @Value.Immutable
+  interface CommitHistoryFilter {
+    String getBranchName();
+    @Nullable String getFileOrFolderId();
+    @Nullable Consumer<NameExpressionBuilder> getNameExpr();
+    @Nullable Consumer<PathExpressionBuilder> getPathExpr();
+  }
+  
+  class COMMIT_HISTORY_FOR_NODES_SQL implements SqlBuilder<CommitHistoryFilter> {
+    @Override
+    public SqlTuple apply(Tenant tenant, String baseline, CommitHistoryFilter filter) {
+      final var params = new ArrayList<Object>();
+      final var index = new MutableInt(0);
+      final var stmt = new SqlStatement();
+      
+      // branch name or id
+      if (filter.getBranchName() != null) {
+        stmt.append("(");
+        
+        try {
+          final UUID uuid =  TableUtils.toUuid(filter.getBranchName());
+          stmt.append("ancestry.branch_id = $").append(index.incrementAndGet());
+          params.add(uuid);
+        } catch(Exception e) {}
+        
+        stmt.append("ancestry.branch_name = $").append(index.incrementAndGet()).append(")");
+        params.add(filter.getBranchName());
+      }
+      
+      
+      // branch name or id
+      if (filter.getFileOrFolderId() != null) {
+        if (!params.isEmpty()) {
+          stmt.append(" AND ");
+        }
+        stmt.append("node.object_id = $").append(index.incrementAndGet());
+        params.add(filter.getFileOrFolderId());
+      }
+      
+      
+      if (filter.getNameExpr() != null) {
+        if (!params.isEmpty()) {
+          stmt.append(" AND ");
+        }
+        final var nameSql = new StringBuilder();
+        final var nameBuilder = new NameExpressionBuilderImpl(
+          "node.node_name",
+          param -> {
+            params.add(param);
+            return index.incrementAndGet();
+          },
+          nameSql
+        );
+        
+        filter.getNameExpr().accept(nameBuilder);
+        nameBuilder.close();
+        stmt.append(nameSql.toString());
+      }
+      
+      final var result = stmt.toString();
+      final var clause = (result.isBlank() ? "" : " WHERE ") + result;
+      
+      return ImmutableSqlTuple.builder()
+          .value(baseline + clause)
+          .props(Tuple.from(params))
+          .build();
+    }
+  }
+
+  
 
   class COMMIT_AND_TREE_SQL implements SqlBuilder<String> {
     @Override
@@ -149,6 +268,16 @@ public interface CommitTable {
           .props(Tuple.of(commitId))
           .build();
     }
+  }
+  
+  class CommitHistoryMapper implements TenantSql.RowMapper<Tuple3<Commit, Ref, Node>> {
+
+    @Override
+    public Tuple3<Commit, Ref, Node> apply(Row row) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+    
   }
 
   class CommitOrRefMapper implements TenantSql.RowMapper<Tuple2<Commit, Optional<Ref>>> {

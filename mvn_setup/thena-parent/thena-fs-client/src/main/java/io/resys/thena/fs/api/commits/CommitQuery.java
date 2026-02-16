@@ -59,7 +59,7 @@ public interface CommitQuery {
    * @param pathExpr lambda that configures the path expression builder
    * @return query builder for method chaining
    */
-  CommitQuery treePath(Consumer<PathExpressionBuilder> pathExpr);
+  CommitQuery path(Consumer<PathExpressionBuilder> pathExpr);
   
   /**
    * Applies complex filename filtering to find commits affecting files with specific names.
@@ -68,7 +68,7 @@ public interface CommitQuery {
    * @param nameExpr lambda that configures the name expression builder
    * @return query builder for method chaining
    */
-  CommitQuery treeName(Consumer<NameExpressionBuilder> nameExpr);
+  CommitQuery name(Consumer<NameExpressionBuilder> nameExpr);
   
   /**
    * Excludes blob content from the result set to reduce payload size.
