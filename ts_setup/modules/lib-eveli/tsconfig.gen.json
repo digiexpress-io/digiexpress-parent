@@ -89,6 +89,9 @@
       "@dxs-ts/eveli-tree-api": [
         "../eveli-tree-api/index.ts"
       ],
+      "@dxs-ts/eveli-tree": [
+        "../eveli-tree/index.ts"
+      ],
       "@dxs-ts/eveli-intl": [
         "../eveli-intl/index.ts"
       ],
@@ -196,6 +199,9 @@
       "path": "../eveli-tree-api"
     },
     {
+      "path": "../eveli-tree"
+    },
+    {
       "path": "../eveli-intl"
     },
     {
@@ -216,9 +222,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-02-16T10:29:03.388Z",
+    "at": "2026-02-16T11:05:21.831Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "4da09aeed122",
+    "fromRegistry": "099cf16efea6",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

@@ -1,4 +1,6 @@
-import { TreeNode } from '../../eveli-tree-api';
+import { TreeNode } from "@dxs-ts/eveli-tree-api";
+
+
 
 export function sortChildren(children: TreeNode[]) {
   const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
