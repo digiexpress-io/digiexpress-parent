@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -37,6 +38,7 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE TABLE {blob} (
       blob_id TEXT PRIMARY KEY,
       blob_type TEXT NOT NULL,
+      blob_class TEXT,
       blob_value JSONB NOT NULL
     );
     
@@ -45,6 +47,7 @@ import io.vertx.mutiny.sqlclient.Row;
     COMMENT ON TABLE {blob} IS 'Content-addressable storage for file data. Each blob represents immutable file content identified by its hash.';
     COMMENT ON COLUMN {blob}.blob_id IS 'Content hash (SHA-1) serving as unique identifier for this blob';
     COMMENT ON COLUMN {blob}.blob_type IS 'Content type classification (e.g., MIME types, application types) for efficient querying without parsing JSONB content';
+    COMMENT ON COLUMN {blob}.blob_class IS 'Classifier for mapping specific application-level class or entity';
     COMMENT ON COLUMN {blob}.blob_value IS 'File content stored as JSONB for structured data support';
   """,
   constraints = "",
@@ -63,8 +66,8 @@ public interface BlobTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {blob}
-      (blob_id, blob_type, blob_value)
-      VALUES($1, $2, $3)
+      (blob_id, blob_type, blob_class, blob_value)
+      VALUES($1, $2, $3, $4)
       ON CONFLICT (blob_id) DO NOTHING
     """,
     propsMapper = BlobInsertMapper.class
@@ -91,6 +94,7 @@ public interface BlobTable {
       return ImmutableBlob.builder()
           .id(json.getString("blob_id"))
           .blobType(json.getString("blob_type"))
+          .blobClass(Optional.ofNullable(json.getString("blob_class")))
           .blobValue(json.getJsonObject("blob_value"))
           .build();
     } 
@@ -104,6 +108,7 @@ public interface BlobTable {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         blob.getId(),
         blob.getBlobType(),
+        blob.getBlobClass().orElse(null),
         blob.getBlobValue()
       });
     }

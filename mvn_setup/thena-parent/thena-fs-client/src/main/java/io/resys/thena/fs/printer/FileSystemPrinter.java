@@ -156,10 +156,6 @@ public class FileSystemPrinter {
     
     for (final var blob : world.getBlob().values()) {
       ID.apply(blob.getId());
-      if (blob.getTransitives() != null) {
-        DATES.apply(blob.getTransitives().getCreatedAt());
-        DATES.apply(blob.getTransitives().getUpdatedAt());
-      }
     }
     
     for (final var props : world.getProps().values()) {

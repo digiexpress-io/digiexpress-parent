@@ -43,15 +43,22 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 100,
   ddl = """
     CREATE DOMAIN {node}_required_text AS TEXT NOT NULL;
+    
     CREATE TYPE {node} AS (
       node_id {node}_required_text,
       
       object_id {node}_required_text, -- technical id of the object (user api generated)
       node_path TEXT,
-      node_name TEXT,
+      node_name {node}_required_text,
 
       blob_id TEXT,
       props_id TEXT
+    );
+    
+    CREATE DOMAIN {node}_strict AS {node}
+    CHECK (
+        -- num_nonnulls returns 1 if exactly one of the fields is NOT NULL
+        num_nonnulls((VALUE).blob_id, (VALUE).props_id) = 1
     );
     
     COMMENT ON TYPE {node} IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
