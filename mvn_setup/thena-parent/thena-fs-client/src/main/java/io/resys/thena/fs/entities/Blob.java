@@ -31,10 +31,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
-import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableBlob.class)
@@ -44,9 +44,10 @@ public interface Blob extends FileSystemEntity {
   String getId();
   String getBlobType();
   Optional<String> getBlobClass();
-  JsonObject getBlobValue();
-
-
+  
+  // WARNINING: null only if this is not loaded on PURPOSE
+  @Nullable JsonObject getBlobValue();
+  
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.BLOB; 
@@ -54,7 +55,7 @@ public interface Blob extends FileSystemEntity {
   
   @Value.Check
   default void check() {
-    RepoAssert.isTrue(!getBlobValue().isEmpty(), () -> "blobValue cannot be empty");
+    //RepoAssert.isTrue(!getBlobValue().isEmpty(), () -> "blobValue cannot be empty");
   }
 
 

@@ -167,22 +167,17 @@ public interface NodeTable {
 
   public static class Builder {
     private Function<Object, Integer> sqlProps;
-    private boolean includeBlobsAndProps = false;
+    private boolean includeBlobs = false;
     private Optional<List<String>> objectId = Optional.empty();
 
-    public Builder includeBlobsAndProps(boolean includeBlobsAndProps) {
-      this.includeBlobsAndProps = includeBlobsAndProps;
+    public Builder includeBlobs(boolean includeBlobs) {
+      this.includeBlobs = includeBlobs;
       return this;
     }
     
     public Builder objectId(List<String> objectIdOrFullPath) {
       this.objectId = Optional.ofNullable(objectIdOrFullPath);
       return this;
-    }
-    
-    private boolean isPropsAndBlobsIncluded() {
-      final var isIncluded = objectId.isPresent() || includeBlobsAndProps;
-      return isIncluded;
     }
     
     /**
@@ -204,9 +199,15 @@ SELECT json_agg(
     'updated_by', idx.updated_by,
                             
     'blob_id', nodes.blob_id,
+    'blob_type', blobs.blob_type,
+    'blob_class', blobs.blob_class,
+    'blob_value', {hydrateBlobValue},
+
     'props_id', nodes.props_id,
-    
-    {selectBlobsAndProps}
+    'props_labels', props.props_labels, 
+    'props_flags', props.props_flags,
+    'props_comments', props.props_comments,
+    'props_permissions', props.props_permissions
   )
 ) 
 
@@ -220,76 +221,37 @@ LEFT JOIN (
   LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
 ) as idx ON idx.object_id = nodes.object_id
 
-{joinBlobsAndProps}
-""";
-    }
-    
-    /**
-     * @return join section sql with placeholders
-     */
-    private String joinBlobsAndProps() {
-      if(isPropsAndBlobsIncluded()) {
-        return 
-"""
 LEFT JOIN {props} as props 
   ON props.props_id = nodes.props_id 
   AND nodes.props_id IS NOT NULL
-  {blobAndPropsContraint}
       
 LEFT JOIN {blob} as blobs 
   ON blobs.blob_id = nodes.blob_id
-  AND nodes.blob_id IS NOT NULL   
-  {blobAndPropsContraint}
+  AND nodes.blob_id IS NOT NULL
 """;
-      }
-      return "";
     }
-    
+
     /**
      * @return extra constraint for join to select only asked blobs and props
      */
-    private String blobAndPropsConstraint() {
+    private String hydrateBlobValue() {
       if(this.objectId.isPresent()) {
         final var object_id_arr = "$" + this.sqlProps.apply(objectId.map(e -> e.toArray(new String[] {})).get());
         return 
 """
-  AND (
-    nodes.object_id = ANY({object_id_arr}) 
-    OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY({object_id_arr}) 
-  )
+CASE 
+        WHEN (
+          nodes.object_id = ANY({object_id_arr}) 
+          OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY({object_id_arr})
+        ) THEN blobs.blob_value 
+        ELSE NULL 
+      END
 """.replace("{object_id_arr}", object_id_arr);
-      }  
-      return "";
-    }
-    
-    /**
-     * @return extra select inline blob and props json attributes
-     */
-    private String selectBlobsAndProps() {
-      if(isPropsAndBlobsIncluded()) {
-        return 
-"""
-    'blob', 
-      CASE WHEN blobs.blob_id IS NOT NULL 
-      THEN json_build_object(
-        'blob_id', blobs.blob_id, 
-        'blob_type', blobs.blob_type, 
-        'blob_value', blobs.blob_value
-      ) 
-      ELSE NULL END,
-    'props', 
-      CASE WHEN props.props_id IS NOT NULL 
-      THEN json_build_object(
-        'props_id', props.props_id, 
-        'props_labels', props.props_labels, 
-        'props_flags', props.props_flags,
-        'props_comments', props.props_comments,
-        'props_permissions', props.props_permissions
-      ) 
-      ELSE NULL END
-""";
+      } else if(this.includeBlobs) {
+        return "blobs.blob_value";
+      } else {
+        return "NULL";        
       }
-      return "'blob', NULL, 'props', NULL";
     }
     
     public String build() {
@@ -301,19 +263,10 @@ LEFT JOIN {blob} as blobs
       this.sqlProps = sqlProps;
       
       final var baseline = baseline();
-      final var selectBlobsAndProps = selectBlobsAndProps();
-      final var joinBlobsAndProps = joinBlobsAndProps();
-      final var blobAndPropsContraint = blobAndPropsConstraint();
-      
-      final var statement = baseline
-          .replace("{selectBlobsAndProps}", selectBlobsAndProps)
-          .replace("{joinBlobsAndProps}", joinBlobsAndProps)
-          .replace("{blobAndPropsContraint}", blobAndPropsContraint);
-      
+      final var hydrateBlobValue = hydrateBlobValue();
+      final var statement = baseline.replace("{hydrateBlobValue}", hydrateBlobValue);
       final var sql = "({statement}) as nodes_json".replace("{statement}", statement);
-      
       return sql;
-      
     }
   }
   
@@ -332,16 +285,19 @@ LEFT JOIN {blob} as blobs
     
     public static Node fromJson(JsonObject node_json) {
       final var index = ObjectIndexMapper.fromJson(node_json);
-      final Optional<Blob> blob = Optional.ofNullable(node_json.getJsonObject("blob")).map(BlobMapper::fromJson);
-      final Optional<Props> props = Optional.ofNullable(node_json.getJsonObject("props")).map(PropsMapper::fromJson);
+      final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
+      final var propsId = Optional.ofNullable(node_json.getString("props_id"));
+      
+      final Optional<Blob> blob = blobId.map(ignore -> node_json).map(BlobMapper::fromJson);
+      final Optional<Props> props = propsId.map(ignore -> node_json).map(PropsMapper::fromJson);
       
       return ImmutableNode.builder()
           .id(node_json.getString("node_id"))
           .objectId(index.getObjectId())
           .nodePath(Optional.ofNullable(node_json.getString("node_path")))
           .nodeName(node_json.getString("node_name"))
-          .blobId(Optional.ofNullable(node_json.getString("blob_id")))
-          .propsId(Optional.ofNullable(node_json.getString("props_id")))
+          .blobId(blobId)
+          .propsId(propsId)
           .transitives(ImmutableNodeTransitives.builder()
               .objectIndex(index)
               .blob(blob.orElse(null))

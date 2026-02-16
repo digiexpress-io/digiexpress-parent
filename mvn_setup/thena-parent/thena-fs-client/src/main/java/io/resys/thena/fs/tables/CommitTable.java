@@ -135,7 +135,7 @@ public interface CommitTable {
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, String commitId) {
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobsAndProps(false).build()))
+          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobs(false).build()))
           .props(Tuple.of(commitId))
           .build();
     }
@@ -145,7 +145,7 @@ public interface CommitTable {
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, String commitId) {
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobsAndProps(true).build()))
+          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobs(true).build()))
           .props(Tuple.of(commitId))
           .build();
     }

@@ -98,6 +98,7 @@ public class MergeFileImpl implements MergeFile {
     
     // update only if defined
     final var prevBlob = prevNode.getTransitives().getBlob();
+    RepoAssert.notNull(prevBlob.getBlobValue(), () -> "Can't use partial loading in here!");
     
     // static data, once in its in... can't change content type
     final var blobType = prevBlob.getBlobType();

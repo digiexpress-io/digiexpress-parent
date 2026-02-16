@@ -4,20 +4,26 @@ CREATE TYPE node AS (
   object_id node_required_text,
   -- technical id of the object (user api generated)
   node_path TEXT,
-  node_name TEXT,
+  node_name node_required_text,
   blob_id TEXT,
   props_id TEXT
+);
+CREATE DOMAIN node_strict AS node CHECK (
+  -- num_nonnulls returns 1 if exactly one of the fields is NOT NULL
+  num_nonnulls((VALUE).blob_id, (VALUE).props_id) = 1
 );
 COMMENT ON TYPE node IS 'File or directory entry within a version tree. Represents a single item in the filesystem hierarchy with optional references to content and metadata. Referential integrity for blob_id and props_id is enforced via triggers since PostgreSQL cannot validate foreign keys within composite types.';
 CREATE TABLE blob (
   blob_id TEXT PRIMARY KEY,
   blob_type TEXT NOT NULL,
+  blob_class TEXT,
   blob_value JSONB NOT NULL
 );
 CREATE INDEX blob_type_idx ON blob(blob_type);
 COMMENT ON TABLE blob IS 'Content-addressable storage for file data. Each blob represents immutable file content identified by its hash.';
 COMMENT ON COLUMN blob.blob_id IS 'Content hash (SHA-1) serving as unique identifier for this blob';
 COMMENT ON COLUMN blob.blob_type IS 'Content type classification (e.g., MIME types, application types) for efficient querying without parsing JSONB content';
+COMMENT ON COLUMN blob.blob_class IS 'Classifier for mapping specific application-level class or entity';
 COMMENT ON COLUMN blob.blob_value IS 'File content stored as JSONB for structured data support';
 CREATE TABLE props (
   props_id TEXT PRIMARY KEY,

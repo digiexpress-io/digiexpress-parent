@@ -2,11 +2,9 @@ package io.resys.thena.fs.tables;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
-import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableObjectIndex;
 import io.resys.thena.fs.entities.ObjectIndex;
@@ -35,11 +33,11 @@ COMMENT ON COLUMN {object_index}.updated_by IS 'Points to commit with what this 
   """,
   constraints = """
       
-  ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_created_by
-    FOREIGN KEY (created_by) REFERENCES {commit}(commit_id);
-    
-  ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_updated_by
-    FOREIGN KEY (updated_by) REFERENCES {commit}(commit_id);
+ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_created_by
+  FOREIGN KEY (created_by) REFERENCES {commit}(commit_id);
+  
+ALTER TABLE {object_index} ADD CONSTRAINT fk_{object_index}_updated_by
+  FOREIGN KEY (updated_by) REFERENCES {commit}(commit_id);
 
   """,
   drop = """
@@ -50,7 +48,7 @@ public interface ObjectIndexTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
+      SELECT object_index.*,
              created_commit.commit_created_at as created_at,
              updated_commit.commit_created_at as updated_at
       FROM {object_index} as object_index
@@ -61,49 +59,6 @@ public interface ObjectIndexTable {
   )
   Sql findAll();
 
-  @TenantSql.Find(
-    optional = false,
-    sql = """
-      SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-             created_commit.commit_created_at as created_at,
-             updated_commit.commit_created_at as updated_at
-      FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
-      WHERE object_index.object_id = $1
-    """,
-    rowMapper = ObjectIndexMapper.class
-  )
-  SqlTuple getById(UUID objectId);
-
-  @TenantSql.Find(
-    optional = true,
-    sql = """
-      SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-             created_commit.commit_created_at as created_at,
-             updated_commit.commit_created_at as updated_at
-      FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
-      WHERE object_index.object_id = $1
-    """,
-    rowMapper = ObjectIndexMapper.class
-  )
-  SqlTuple findById(String objectId);
-
-  @TenantSql.FindAll(
-    sql = """
-      SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-             created_commit.commit_created_at as created_at,
-             updated_commit.commit_created_at as updated_at
-      FROM {object_index} as object_index
-      LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
-      LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
-      WHERE object_index.object_id = ANY($1)
-    """,
-    rowMapper = ObjectIndexMapper.class
-  )
-  SqlTuple findByIds(String[] objectIds);
 
   @TenantSql.InsertAll(
     sql = """

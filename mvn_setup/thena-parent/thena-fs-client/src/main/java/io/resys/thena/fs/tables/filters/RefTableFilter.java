@@ -93,7 +93,7 @@ public interface RefTableFilter {
       final var clause = (result.isBlank() ? "" : " WHERE ") + result;
       
       final var nodes_json = NodeTable.sql()
-        .includeBlobsAndProps(true)
+        .includeBlobs(true)
         .build((item) -> {
           params.add(item);
           return index.incrementAndGet();
