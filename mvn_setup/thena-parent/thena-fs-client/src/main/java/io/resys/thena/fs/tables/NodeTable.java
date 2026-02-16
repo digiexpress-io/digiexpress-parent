@@ -160,6 +160,52 @@ import io.vertx.mutiny.sqlclient.Row;
 )
 public interface NodeTable {
 
+  public static final String BASELINE = 
+"""
+  SELECT json_agg(
+    json_build_object(
+      'node_id', nodes.node_id,
+      'object_id', nodes.object_id,
+      'node_path', nodes.node_path,
+      'node_name', nodes.node_name,
+      
+      'created_at', idx.created_at,
+      'updated_at', idx.updated_at,
+      'created_by', idx.created_by,
+      'updated_by', idx.updated_by,
+                              
+      'blob_id', nodes.blob_id,
+      'blob_type', blobs.blob_type,
+      'blob_class', blobs.blob_class,
+      'blob_value', null, --HYDRATE BLOB VALUE
+
+      'props_id', nodes.props_id,
+      'props_labels', props.props_labels, 
+      'props_flags', props.props_flags,
+      'props_comments', props.props_comments,
+      'props_permissions', props.props_permissions
+    )
+  ) 
+
+  FROM unnest(tree.tree_nodes) AS nodes
+  LEFT JOIN (
+    SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
+           created_commit.commit_created_at as created_at,
+           updated_commit.commit_created_at as updated_at
+    FROM {object_index} as object_index
+    LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
+    LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
+  ) as idx ON idx.object_id = nodes.object_id
+
+  LEFT JOIN {props} as props 
+    ON props.props_id = nodes.props_id 
+    AND nodes.props_id IS NOT NULL
+        
+  LEFT JOIN {blob} as blobs 
+    ON blobs.blob_id = nodes.blob_id
+    AND nodes.blob_id IS NOT NULL
+""";
+      ; 
 
   public static Builder sql() {
     return new Builder();
@@ -184,51 +230,8 @@ public interface NodeTable {
      * @return baseline sql with placeholders
      */
     private String baseline() {
-      return 
-"""
-SELECT json_agg(
-  json_build_object(
-    'node_id', nodes.node_id,
-    'object_id', nodes.object_id,
-    'node_path', nodes.node_path,
-    'node_name', nodes.node_name,
-    
-    'created_at', idx.created_at,
-    'updated_at', idx.updated_at,
-    'created_by', idx.created_by,
-    'updated_by', idx.updated_by,
-                            
-    'blob_id', nodes.blob_id,
-    'blob_type', blobs.blob_type,
-    'blob_class', blobs.blob_class,
-    'blob_value', {hydrateBlobValue},
+      return BASELINE;
 
-    'props_id', nodes.props_id,
-    'props_labels', props.props_labels, 
-    'props_flags', props.props_flags,
-    'props_comments', props.props_comments,
-    'props_permissions', props.props_permissions
-  )
-) 
-
-FROM unnest(tree.tree_nodes) AS nodes
-LEFT JOIN (
-  SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-         created_commit.commit_created_at as created_at,
-         updated_commit.commit_created_at as updated_at
-  FROM {object_index} as object_index
-  LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.commit_id
-  LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.commit_id
-) as idx ON idx.object_id = nodes.object_id
-
-LEFT JOIN {props} as props 
-  ON props.props_id = nodes.props_id 
-  AND nodes.props_id IS NOT NULL
-      
-LEFT JOIN {blob} as blobs 
-  ON blobs.blob_id = nodes.blob_id
-  AND nodes.blob_id IS NOT NULL
-""";
     }
 
     /**
@@ -245,12 +248,12 @@ CASE
           OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY({object_id_arr})
         ) THEN blobs.blob_value 
         ELSE NULL 
-      END
+      END,
 """.replace("{object_id_arr}", object_id_arr);
       } else if(this.includeBlobs) {
-        return "blobs.blob_value";
+        return "blobs.blob_value,";
       } else {
-        return "NULL";        
+        return "NULL,";
       }
     }
     
@@ -264,7 +267,7 @@ CASE
       
       final var baseline = baseline();
       final var hydrateBlobValue = hydrateBlobValue();
-      final var statement = baseline.replace("{hydrateBlobValue}", hydrateBlobValue);
+      final var statement = baseline.replace("null, --HYDRATE BLOB VALUE", hydrateBlobValue);
       final var sql = "({statement}) as nodes_json".replace("{statement}", statement);
       return sql;
     }
@@ -284,7 +287,9 @@ CASE
     }
     
     public static Node fromJson(JsonObject node_json) {
-      final var index = ObjectIndexMapper.fromJson(node_json);
+      final var createtAt = Optional.ofNullable(node_json.getString("created_at"));
+      
+      final var index = createtAt.map(ignore -> ObjectIndexMapper.fromJson(node_json));
       final var blobId = Optional.ofNullable(node_json.getString("blob_id"));
       final var propsId = Optional.ofNullable(node_json.getString("props_id"));
       
@@ -293,13 +298,13 @@ CASE
       
       return ImmutableNode.builder()
           .id(node_json.getString("node_id"))
-          .objectId(index.getObjectId())
+          .objectId(node_json.getString("object_id"))
           .nodePath(Optional.ofNullable(node_json.getString("node_path")))
           .nodeName(node_json.getString("node_name"))
           .blobId(blobId)
           .propsId(propsId)
           .transitives(ImmutableNodeTransitives.builder()
-              .objectIndex(index)
+              .objectIndex(index.orElse(null))
               .blob(blob.orElse(null))
               .props(props.orElse(null))
               .build())

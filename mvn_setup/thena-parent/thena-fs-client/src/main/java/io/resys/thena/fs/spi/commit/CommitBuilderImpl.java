@@ -48,6 +48,7 @@ import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
+import io.resys.thena.support.RepoAssert.RepoAssertException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -160,7 +161,7 @@ public class CommitBuilderImpl implements CommitBuilder {
         .build();
     return this.db_uni
         .onItem().transformToUni(db -> db.withTransaction(scope, this::visitTransaction))
-        .onFailure(t -> !(t instanceof CommitBuilderException))
+        .onFailure(t -> !(t instanceof CommitBuilderException) && !(t instanceof RepoAssertException))
         .recoverWithItem(this::visitFailure);
   }
   
