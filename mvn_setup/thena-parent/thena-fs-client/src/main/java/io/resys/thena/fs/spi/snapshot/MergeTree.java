@@ -82,7 +82,28 @@ public class MergeTree {
   }
 
   public List<Node> rm(String idOrPath) {
-    return Collections.emptyList();
+    // 1. Find the target node (the one being explicitly deleted)
+    final Node target = nodes.values().stream()
+      .filter(n -> n.getId().equals(idOrPath) || n.getFullPath().equals(idOrPath))
+      .findFirst()
+      .orElse(null);
+
+    if (target == null) {
+      return Collections.emptyList();
+    }
+
+    final var targetPathPrefix = target.getFullPath() + "/";
+
+    // 2. Identify all victims (the target + all children)
+    final List<Node> toRemove = nodes.values().stream()
+        .filter(n -> n.getId().equals(target.getId()) || n.getObjectId().equals(target.getObjectId()) || n.getFullPath().startsWith(targetPathPrefix))
+        .toList();
+
+    // 3. Perform the actual removal from the internal state
+    toRemove.forEach(n -> nodes.remove(n.getObjectId()));
+
+    // 4. Return the list of removed nodes
+    return toRemove;
   }
   
   public MergeTree add(Node node) {
@@ -213,46 +234,4 @@ public class MergeTree {
     Node prev;
     Node next;
   }
-  
-  /*
-  private List<Node> visitRemovals(List<String> removals, List<Node> newNodes) {
-    // removal from known tree
-    final List<Node> removalNodes = new ArrayList<>(); 
-    if(lock.isPresent() && !removals.isEmpty()) {
-      
-      final var result = lock.get().getTransitives()
-        .getTree().getTreeNodes()
-        
-        .stream().filter(node -> (
-            
-            removals.contains(node.getId()) || 
-            removals.contains(node.getNodeId()) ||
-            removals.contains(node.getFullPath()) ||
-            
-            (node.getNodePath().isPresent() && removals.contains(node.getNodePath().get()))
-        ))
-        .toList();
-      
-      removalNodes.addAll(result);
-      sp_logger.rmNodes(result);
-    }
-    
-  if(!removals.isEmpty()) {
-      final var result = newNodes
-        .stream().filter(node -> (
-            removals.contains(node.getId()) || 
-            removals.contains(node.getNodeId()) ||
-            
-            removals.contains(node.getFullPath()) ||
-            (node.getNodePath().isPresent() && removals.contains(node.getNodePath().get()))
-        ))
-        .toList();
-      
-      RepoAssert.isTrue(result.isEmpty(), () -> "Can't add and remove same data in the same tx, outcome is nothing!");
-    }
-    
-    return removalNodes;
-  }
-  */
-
 }

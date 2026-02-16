@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
@@ -87,7 +88,7 @@ public interface TreeTable {
     public Tree apply(Row row) {
       return ImmutableTree.builder()
           .id(row.getString("tree_id"))
-          .treeNodes(row.getJsonArray("nodes_json").stream()
+          .treeNodes(Optional.ofNullable(row.getJsonArray("nodes_json")).orElseGet(() -> new JsonArray()).stream()
               .map(e -> (JsonObject) e)
               .map(NodeMapper::fromJson)
               .toList()
