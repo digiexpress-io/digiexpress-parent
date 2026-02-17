@@ -1,0 +1,15 @@
+{
+  "name": "@dxs-ts/fs-api",
+  "version": "${project.version}",
+  "description": "File system API and types",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*",
+    "@mui/utils": "*"
+  },
+  "keywords": ["filesystem", "explorer", "api", "types"],
+  "private": true
+}
