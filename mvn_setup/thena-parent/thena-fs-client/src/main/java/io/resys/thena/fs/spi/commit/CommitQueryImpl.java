@@ -1,5 +1,6 @@
 package io.resys.thena.fs.spi.commit;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -7,11 +8,13 @@ import io.resys.thena.fs.api.commits.CommitQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.api.trees.PathExpressionBuilder;
 import io.resys.thena.fs.spi.branch.BranchConstants;
+import io.resys.thena.fs.spi.commit.CommitTree.UsedBlobsAndProps;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.ImmutableCommitHistoryFilter;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -54,11 +57,10 @@ public class CommitQueryImpl implements CommitQuery {
     return this;
   }
   @Override
-  public Uni<Optional<CommitsByNode>> findOne() {
+  public Uni<Optional<CommitsByObject>> findOne() {
     return baseline().collect().asList().onItem().transformToUni(found -> {
       if(found.size() == 1) {
-        return Uni.createFrom().item(found.getFirst())
-            .onItem().transformToUni(this::join).map(Optional::of);
+        return Uni.createFrom().item(found.getFirst()).map(Optional::of);
       }
       if(found.size() == 0) {
         return Uni.createFrom().item(Optional.empty());
@@ -74,9 +76,8 @@ public class CommitQueryImpl implements CommitQuery {
           ));
     });
   }
-
   @Override
-  public Uni<CommitsByNode> getOne() {
+  public Uni<CommitsByObject> getOne() {
     return baseline().collect().asList().map(found -> {
       if(found.size() == 1) {
         return found.getFirst();
@@ -90,32 +91,23 @@ public class CommitQueryImpl implements CommitQuery {
               "isNameExpr", nameExpr != null,
               "isPathExpr", pathExpr != null
           ));
-    })
-    .onItem().transformToUni(this::join);
+    });
   }
-
   @Override
-  public Multi<CommitsByNode> findAll() {
+  public Multi<CommitsByObject> findAll() {
     return baseline();
   }
-  
-  private Uni<CommitsByNode> join(CommitsByNode tag) {
 
-    return Uni.createFrom().item(tag);
+  private Multi<CommitsByObject> join(Tuple2<UsedBlobsAndProps, Collection<CommitsByObject>> tuple) {
+    return Multi.createFrom().items(tuple.getItem2().stream());
   }
-  
-  public Multi<CommitsByNode> baseline() {
+  private Multi<CommitsByObject> baseline() {
     final var filter = ImmutableCommitHistoryFilter.builder()
-        .nameExpr(nameExpr)
-        .pathExpr(pathExpr)
         .branchName(branchName)
-        .fileOrFolderId(fileOrFolderId)
         .build();
-    
     return db_uni.onItem().transformToMulti(tx -> tx.query().queryCommit().findCommitHistoryByNodes(filter))
-        .map(tuple -> {
-          
-          return null;
-        });
+      .collect().asList()
+      .map(rows -> new CommitTreeBuilder(rows).build().groupByObject())
+      .onItem().transformToMulti(this::join);
   }
 }

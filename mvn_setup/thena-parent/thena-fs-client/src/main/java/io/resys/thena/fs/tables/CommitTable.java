@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.immutables.value.Value;
@@ -17,15 +16,12 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.api.trees.NameExpressionBuilder;
-import io.resys.thena.fs.api.trees.PathExpressionBuilder;
 import io.resys.thena.fs.entities.Commit;
 import io.resys.thena.fs.entities.ImmutableCommit;
 import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
-import io.resys.thena.fs.tables.filters.NameExpressionBuilderImpl;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.TableUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -34,7 +30,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
-import jakarta.annotation.Nullable;
 
 @TenantSql.Table(
   name = "commit",
@@ -104,11 +99,13 @@ public interface CommitTable {
     SELECT DISTINCT 
       ancestry.branch_name, 
       ancestry.branch_id, 
+      ref.*,
       commit.*,
       node.*
     FROM commit_ancestry as ancestry
     JOIN {commit} as commit ON ancestry.commit_id = commit.commit_id
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    JOIN {ref} as ref ON ref.ref_id = ancestry.branch_id
     CROSS JOIN LATERAL unnest(tree.tree_nodes) AS node
     """,
     rowMapper = CommitHistoryMapper.class,
@@ -182,9 +179,6 @@ public interface CommitTable {
   @Value.Immutable
   interface CommitHistoryFilter {
     String getBranchName();
-    @Nullable String getFileOrFolderId();
-    @Nullable Consumer<NameExpressionBuilder> getNameExpr();
-    @Nullable Consumer<PathExpressionBuilder> getPathExpr();
   }
   
   class COMMIT_HISTORY_FOR_NODES_SQL implements SqlBuilder<CommitHistoryFilter> {
@@ -209,7 +203,7 @@ public interface CommitTable {
       }
       
       
-      // branch name or id
+      /* branch name or id
       if (filter.getFileOrFolderId() != null) {
         if (!params.isEmpty()) {
           stmt.append(" AND ");
@@ -237,6 +231,7 @@ public interface CommitTable {
         nameBuilder.close();
         stmt.append(nameSql.toString());
       }
+      */
       
       final var result = stmt.toString();
       final var clause = (result.isBlank() ? "" : " WHERE ") + result;
@@ -274,8 +269,10 @@ public interface CommitTable {
 
     @Override
     public Tuple3<Commit, Ref, Node> apply(Row row) {
-      // TODO Auto-generated method stub
-      return null;
+      final var node = NodeTable.NodeMapper.fromRow(row);
+      final var ref = RefTable.RefMapper.fromRow(row);
+      final var commit = CommitMapper.fromRow(row);
+      return Tuple3.of(commit, ref, node);
     }
     
   }

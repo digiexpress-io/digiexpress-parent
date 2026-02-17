@@ -276,6 +276,9 @@ CASE
   class NodeMapper implements TenantSql.RowMapper<Node> {
     @Override
     public Node apply(Row row) {
+      return fromRow(row);
+    }
+    public static Node fromRow(Row row) {
       return ImmutableNode.builder()
           .id(row.getString("node_id"))
           .objectId(row.getString("object_id"))
