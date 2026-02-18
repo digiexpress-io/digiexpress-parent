@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableProps;
 import io.resys.thena.fs.entities.Props;
@@ -63,6 +64,17 @@ public interface PropsTable {
   )
   Sql findAll();
 
+  
+  @TenantSql.FindAll(
+    sql = """
+      SELECT props.*
+      FROM {props} as props
+      WHERE props.id = ANY($1)
+    """,
+    rowMapper = PropsMapper.class
+  )
+  SqlTuple findAllById(String[] id);
+  
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {props}

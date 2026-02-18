@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref;
-import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
 import io.resys.thena.support.RepoAssert;
@@ -69,45 +68,44 @@ public class BranchQueryImpl implements BranchQuery {
   }
   @Override
   public Multi<Ref> findAll() {
-    return baseline();
+    return baseline().onItem().transformToUni(this::join).concatenate();
   }
   @Override
   public Uni<Optional<Ref>> findOne() {
-    return baseline().collect().asList().map(found -> {
-      final var actual = found.size();
-      if(actual > 1) {
-        throw new BranchQueryException("Expecting exactly 1 or 0 result but found: " + actual + "!", 
-          JsonObject.of(
-            "branchId", branchId,
-            "isNameExpr", nameExpr == null ? false : true 
-          )
-        );
-      }
-      
-      return found.stream().findFirst();
-    });
+    return baseline().collect().asList()
+      .onItem().transformToUni(found -> {
+        final var actual = found.size();
+        if(actual > 1) {
+          throw new BranchQueryException("Expecting exactly 1 or 0 result but found: " + actual + "!", 
+            JsonObject.of(
+              "branchId", branchId,
+              "isNameExpr", nameExpr == null ? false : true 
+            )
+          );
+        }
+        
+        return join(found.stream().findFirst().get()).map(Optional::of);
+      });
   }
   @Override
   public Uni<Ref> getOne() {
-    return baseline().collect().asList().map(found -> {
-      final var actual = found.size();
-      if(actual != 1) {
-        throw new BranchQueryException("Expecting exactly 1 result but found: " + actual + "!", 
-          JsonObject.of(
-            "branchId", branchId,
-            "isNameExpr", nameExpr == null ? false : true 
-          )
-        );
-      }
-      return found.stream().findFirst().get();
-    });
+    return baseline().collect().asList()
+      .onItem().transformToUni(found -> {
+        final var actual = found.size();
+        if(actual != 1) {
+          throw new BranchQueryException("Expecting exactly 1 result but found: " + actual + "!", 
+            JsonObject.of(
+              "branchId", branchId,
+              "isNameExpr", nameExpr == null ? false : true 
+            )
+          );
+        }
+        return join(found.stream().findFirst().get());
+      });
   }
 
   
   private Multi<Ref> baseline() {
-
-    
-    
     final ImmutableRefTableFilter filter;
     if(branchId == null && nameExpr == null) {
       filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
@@ -117,7 +115,7 @@ public class BranchQueryImpl implements BranchQuery {
     return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
   }
   
-  private Uni<Tag> join(Tag tag) {
+  private Uni<Ref> join(Ref tag) {
     final var isBlobs = !excludeBlobs && !excludeNodes;
     
     // load all 

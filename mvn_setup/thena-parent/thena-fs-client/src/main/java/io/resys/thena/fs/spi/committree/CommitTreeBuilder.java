@@ -1,4 +1,4 @@
-package io.resys.thena.fs.spi.commit;
+package io.resys.thena.fs.spi.committree;
 
 import java.util.Collection;
 import java.util.Collections;

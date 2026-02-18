@@ -124,13 +124,13 @@ public interface CommitQuery {
     Map<String, Commit> getCommitsById();
     
     /**
-     * @return map of commit ID to file content for each commit (empty for folders)
+     * @return map of blob ID to file content for each blob (empty for folders)
      */
-    Map<String, Blob> getBlobsByCommitId();
+    Map<String, Blob> getBlobsById();
     
     /**
-     * @return map of commit ID to node properties for each commit (may be empty if excluded)
+     * @return map of props ID to prop for each props
      */
-    Map<String, Props> getPropsByCommitId();
+    Map<String, Props> getPropsById();
   }
 }

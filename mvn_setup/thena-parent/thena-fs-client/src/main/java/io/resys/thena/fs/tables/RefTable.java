@@ -206,9 +206,6 @@ public interface RefTable {
             refTransitives.putPropsById(props.getId(), props);
             visited_props.add(props.getId());
           }
-          
-          refTransitives.putNodesByPath(node.getFullPath(), node.getId());
-          refTransitives.putNodesById(node.getId(), node);
           return node;
         })
         .toList();

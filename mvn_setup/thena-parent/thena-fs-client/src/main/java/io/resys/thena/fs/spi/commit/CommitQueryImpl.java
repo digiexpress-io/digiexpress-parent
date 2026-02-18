@@ -1,6 +1,5 @@
 package io.resys.thena.fs.spi.commit;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -8,13 +7,13 @@ import io.resys.thena.fs.api.commits.CommitQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.api.trees.PathExpressionBuilder;
 import io.resys.thena.fs.spi.branch.BranchConstants;
-import io.resys.thena.fs.spi.commit.CommitTree.UsedBlobsAndProps;
+import io.resys.thena.fs.spi.committree.CommitTree;
+import io.resys.thena.fs.spi.committree.CommitTreeBuilder;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.ImmutableCommitHistoryFilter;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -98,16 +97,37 @@ public class CommitQueryImpl implements CommitQuery {
     return baseline();
   }
 
-  private Multi<CommitsByObject> join(Tuple2<UsedBlobsAndProps, Collection<CommitsByObject>> tuple) {
-    return Multi.createFrom().items(tuple.getItem2().stream());
+  private Multi<CommitsByObject> join(CommitTree tree) {
+    if(this.excludeBlobs) {
+      return Multi.createFrom().items(tree.groupByObject().stream());  
+    }
+    
+    final var deps = tree.getDeps();
+    final var propsIds = deps.getProps().toArray(new String[] {});
+    final var blobIds = deps.getBlobs().toArray(new String[] {});
+    
+    return Uni.combine().all().unis(
+        db_uni.onItem().transformToUni(tx -> tx.query().queryBlob().findAllById(blobIds)), 
+        db_uni.onItem().transformToUni(tx -> tx.query().queryProps().findAllById(propsIds))
+      ).asTuple()
+      .onItem().transform(tuple -> {
+        
+        return tree
+          .addAllBlobs(tuple.getItem1())
+          .addAllProps(tuple.getItem2())
+          .groupByObject();
+      })
+      .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()));
   }
+  
+  
   private Multi<CommitsByObject> baseline() {
     final var filter = ImmutableCommitHistoryFilter.builder()
         .branchName(branchName)
         .build();
     return db_uni.onItem().transformToMulti(tx -> tx.query().queryCommit().findCommitHistoryByNodes(filter))
       .collect().asList()
-      .map(rows -> new CommitTreeBuilder(rows).build().groupByObject())
+      .map(rows -> new CommitTreeBuilder(rows).build())
       .onItem().transformToMulti(this::join);
   }
 }

@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.ImmutableBlob;
@@ -62,6 +63,17 @@ public interface BlobTable {
     rowMapper = BlobMapper.class
   )
   Sql findAll();
+  
+  
+  @TenantSql.FindAll(
+    sql = """
+      SELECT blob.*
+      FROM {blob} as blob
+      WHERE blob.id = ANY($1)
+    """,
+    rowMapper = BlobMapper.class
+  )
+  SqlTuple findAllById(String[] id);
 
   @TenantSql.InsertAll(
     sql = """

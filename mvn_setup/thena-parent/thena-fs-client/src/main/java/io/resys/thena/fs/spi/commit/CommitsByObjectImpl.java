@@ -3,6 +3,7 @@ package io.resys.thena.fs.spi.commit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import io.resys.thena.fs.api.commits.CommitQuery.CommitsByObject;
 import io.resys.thena.fs.entities.Blob;
@@ -18,8 +19,8 @@ public class CommitsByObjectImpl implements CommitsByObject {
   
   private Map<String, Node> nodesById = new HashMap<>();
   private Map<String, Commit> commitsById = new HashMap<>();
-  private Map<String, Blob> blobsByCommitId = new HashMap<>();
-  private Map<String, Props> propsByCommitId = new HashMap<>();
+  private Map<String, Blob> blobs = new HashMap<>();
+  private Map<String, Props> props = new HashMap<>();
   
   @Override
   public String getObjectId() {
@@ -37,15 +38,26 @@ public class CommitsByObjectImpl implements CommitsByObject {
   }
 
   @Override
-  public Map<String, Blob> getBlobsByCommitId() {
-    return blobsByCommitId;
+  public Map<String, Blob> getBlobsById() {
+    return blobs;
   }
 
   @Override
-  public Map<String, Props> getPropsByCommitId() {
-    return propsByCommitId;
+  public Map<String, Props> getPropsById() {
+    return props;
   }
-
+  public CommitsByObjectImpl addProps(Optional<Props> props) {
+    if(props.isPresent()) {
+      this.props.put(props.get().getId(), props.get());
+    }
+    return this;
+  }
+  public CommitsByObjectImpl addBlobs(Optional<Blob> blob) {
+    if(blob.isPresent()) {
+      this.blobs.put(blob.get().getId(), blob.get());
+    }
+    return this;
+  }
   public CommitsByObjectImpl add(Node node) {
     nodesById.put(node.getId(), node);
     return this;
@@ -63,7 +75,7 @@ public class CommitsByObjectImpl implements CommitsByObject {
   public void close() {
     this.nodesById = Collections.unmodifiableMap(nodesById);
     this.commitsById = Collections.unmodifiableMap(commitsById);
-    this.blobsByCommitId = Collections.unmodifiableMap(blobsByCommitId);
-    this.propsByCommitId = Collections.unmodifiableMap(propsByCommitId);
+    this.blobs = Collections.unmodifiableMap(blobs);
+    this.props = Collections.unmodifiableMap(props);
   }
 }
