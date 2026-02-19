@@ -26,8 +26,8 @@ import java.util.List;
 import io.resys.thena.api.annotations.TenantSql;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
-import io.resys.thena.fs.entities.ImmutableObjectIndex;
-import io.resys.thena.fs.entities.ObjectIndex;
+import io.resys.thena.fs.entities.ImmutableIndex;
+import io.resys.thena.fs.entities.Index;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 
@@ -87,7 +87,7 @@ public interface ObjectIndexTable {
     """,
     propsMapper = ObjectIndexInsertMapper.class
   )
-  SqlTupleList insertMany(List<ObjectIndex> objectIndices);
+  SqlTupleList insertMany(List<Index> objectIndices);
 
   @TenantSql.UpdateAll(
     sql = """
@@ -97,12 +97,12 @@ public interface ObjectIndexTable {
     """,
     propsMapper = ObjectIndexUpdateMapper.class
   )
-  SqlTupleList updateMany(List<ObjectIndex> objectIndices);
+  SqlTupleList updateMany(List<Index> objectIndices);
 
-  public static class ObjectIndexMapper implements TenantSql.RowMapper<ObjectIndex> {
+  public static class ObjectIndexMapper implements TenantSql.RowMapper<Index> {
     @Override
-    public ObjectIndex apply(Row row) {
-      return ImmutableObjectIndex.builder()
+    public Index apply(Row row) {
+      return ImmutableIndex.builder()
           .objectId(row.getString("object_id"))
           .createdBy(row.getString("created_by"))
           .updatedBy(row.getString("updated_by"))
@@ -111,8 +111,8 @@ public interface ObjectIndexTable {
           .build();
     }
     
-    public static ObjectIndex fromJson(JsonObject node_json) {
-      return ImmutableObjectIndex.builder()
+    public static Index fromJson(JsonObject node_json) {
+      return ImmutableIndex.builder()
         .objectId(node_json.getString("object_id"))
         
         .createdAt(OffsetDateTime.parse(node_json.getString("created_at")))
@@ -125,9 +125,9 @@ public interface ObjectIndexTable {
     }
   }
 
-  public static class ObjectIndexInsertMapper implements TenantSql.PropsMapper<ObjectIndex> {
+  public static class ObjectIndexInsertMapper implements TenantSql.PropsMapper<Index> {
     @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(ObjectIndex objectIndex) {
+    public io.vertx.mutiny.sqlclient.Tuple apply(Index objectIndex) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         objectIndex.getObjectId(),
         objectIndex.getCreatedBy(),
@@ -136,9 +136,9 @@ public interface ObjectIndexTable {
     }
   }
 
-  public static class ObjectIndexUpdateMapper implements TenantSql.PropsMapper<ObjectIndex> {
+  public static class ObjectIndexUpdateMapper implements TenantSql.PropsMapper<Index> {
     @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(ObjectIndex objectIndex) {
+    public io.vertx.mutiny.sqlclient.Tuple apply(Index objectIndex) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
         objectIndex.getObjectId(),
         objectIndex.getCreatedBy(),

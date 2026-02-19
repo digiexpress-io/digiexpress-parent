@@ -20,30 +20,24 @@ package io.resys.thena.fs.entities;
  * #L%
  */
 
-import java.time.OffsetDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-@Value.Immutable
-@JsonSerialize(as = ImmutableObjectIndex.class)
-@JsonDeserialize(as = ImmutableObjectIndex.class)
-public interface ObjectIndex extends FileSystemEntity {
-  String getObjectId();
-  String getCreatedBy();
-  String getUpdatedBy();
-  OffsetDateTime getCreatedAt();
-  OffsetDateTime getUpdatedAt();
+public interface Entity {
   
-  @Override
-  default String getId() {
-    return getObjectId();
-  }
+  String getId();
   
-  @Override
-  default FileSystemEntityType getDocType() { 
-    return FileSystemEntityType.INDEX; 
+  @JsonIgnore
+  FileSystemEntityType getDocType();
+  
+  
+  enum FileSystemEntityType {
+    BLOB,
+    TREE,
+    PROPS,
+    COMMIT,
+    REF,
+    TAG,
+    NODE,
+    INDEX
   }
 }

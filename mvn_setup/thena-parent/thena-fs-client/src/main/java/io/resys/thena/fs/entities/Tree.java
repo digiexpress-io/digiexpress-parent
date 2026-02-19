@@ -36,7 +36,7 @@ import io.resys.thena.support.RepoAssert;
 @Value.Immutable
 @JsonSerialize(as = ImmutableTree.class)
 @JsonDeserialize(as = ImmutableTree.class)
-public interface Tree extends FileSystemEntity {
+public interface Tree extends Entity {
   
   String getId();
   List<Node> getTreeNodes();

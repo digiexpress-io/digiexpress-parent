@@ -40,7 +40,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableRef.class)
 @JsonDeserialize(as = ImmutableRef.class)
-public interface Ref extends FileSystemEntity {
+public interface Ref extends Entity {
   
   /**
    * @return the unique branch name identifier

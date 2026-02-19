@@ -36,7 +36,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableProps.class)
 @JsonDeserialize(as = ImmutableProps.class)
-public interface Props extends FileSystemEntity {
+public interface Props extends Entity {
   
   String getId();
   Optional<JsonObject> getPropsLabels();

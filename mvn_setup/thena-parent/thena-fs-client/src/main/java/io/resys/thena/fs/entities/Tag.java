@@ -34,7 +34,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableTag.class)
 @JsonDeserialize(as = ImmutableTag.class)
-public interface Tag extends FileSystemEntity {
+public interface Tag extends Entity {
   
   String getId();
   String getTagName();

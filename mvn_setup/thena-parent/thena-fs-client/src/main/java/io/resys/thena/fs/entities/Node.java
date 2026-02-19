@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableNode.class)
 @JsonDeserialize(as = ImmutableNode.class)
-public interface Node extends FileSystemEntity {
+public interface Node extends Entity {
   
   // the actual hash calculated based on the contents
   String getId();
@@ -58,6 +58,20 @@ public interface Node extends FileSystemEntity {
   @Value.Auxiliary
   @Nullable 
   NodeTransitives getTransitives();
+  
+  @Override
+  default FileSystemEntityType getDocType() { 
+    return FileSystemEntityType.NODE; 
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableNodeTransitives.class)
+  @JsonDeserialize(as = ImmutableNodeTransitives.class)
+  interface NodeTransitives {
+    @Nullable Index getObjectIndex();
+    @Nullable Blob getBlob();
+    @Nullable Props getProps();
+  }
   
   
   default boolean isDirectory() {
@@ -107,18 +121,10 @@ public interface Node extends FileSystemEntity {
   }
   
 
-  @Override
-  default FileSystemEntityType getDocType() { 
-    return FileSystemEntityType.NODE; 
-  }
+
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableNodeTransitives.class)
-  @JsonDeserialize(as = ImmutableNodeTransitives.class)
-  interface NodeTransitives {
-    @Nullable ObjectIndex getObjectIndex();
-    @Nullable Blob getBlob();
-    @Nullable Props getProps();
+  interface NodeAbstractSyntaxTree {
+    
   }
     
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
