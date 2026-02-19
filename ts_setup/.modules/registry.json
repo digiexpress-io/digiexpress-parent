@@ -1408,20 +1408,25 @@
         "react",
         "@mui/material",
         "@dxs-ts/eveli-tree-api",
+        "@mui/icons-material",
+        "react-markdown",
         "@mui/utils"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
+        "@mui/icons-material",
+        "react-markdown",
         "@mui/utils"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/eveli-tree-api"
       ],
-      "missingDependencies": [],
+      "missingDependencies": [
+        "react-markdown"
+      ],
       "unusedDependencies": [
-        "@dxs-ts/eveli-primitives",
-        "@mui/icons-material"
+        "@dxs-ts/eveli-primitives"
       ]
     },
     "@dxs-ts/eveli-tree-api": {
@@ -4610,11 +4615,6 @@
       ]
     }
   },
-<<<<<<< HEAD
-  "checksum": "d3774fd0fdafcfd4e8c6d3c8c91b1000accd5abc78e4acb823a36b80c11e7f4c",
-  "generatedAt": "2026-02-16T14:16:03.112Z"
-=======
-  "checksum": "1ab91337ad84f3adf98b30fb8d8ffec4bda132ef9863e7370ec44dd1e3794960",
-  "generatedAt": "2026-02-16T11:23:02.801Z"
->>>>>>> 334f0c96be045a51b3a784eb6e16bcb1a8e88402
+  "checksum": "8118cb10d038f46a7fda6cd5bc7bb4b38fc9a32d0d0855303c2ec6e4116f2749",
+  "generatedAt": "2026-02-18T11:50:46.491Z"
 }

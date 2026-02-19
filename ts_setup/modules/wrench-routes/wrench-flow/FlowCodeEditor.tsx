@@ -27,37 +27,45 @@ export const FlowCodeEditor: React.FC<{
   const [guided, setGuided] = React.useState<CompletionDialogProps>();
 
   React.useEffect(() => {
-    if(!monaco) {
+    if (!monaco) {
       return;
     }
-    const [model] = monaco.editor.getModels();
-    if(!model) {
+  
+    const model = monaco.editor.getModels()[0];
+    if (!model) {
       return;
     }
-
-
-    monaco.editor.setModelMarkers(model, "owner", 
-      messages.map(msg => {
-        const content = model.getLineContent(msg.line+1);
+  
+    const lineCount = model.getLineCount();
+  
+    const markers = messages
+      .map(msg => {
+        const lineNumber = msg.line + 1;
+  
+        if (lineNumber < 1 || lineNumber > lineCount) {
+          return null;
+        }
+  
+        const content = model.getLineContent(lineNumber);
+  
         return {
           message: msg.value,
-          severity: msg.type === 'WARNING' ? monaco.MarkerSeverity.Warning : monaco.MarkerSeverity.Error,
-          startLineNumber: msg.line+1,
-          endLineNumber: msg.line+1,
-
+          severity:
+            msg.type === 'WARNING'
+              ? monaco.MarkerSeverity.Warning
+              : monaco.MarkerSeverity.Error,
+          startLineNumber: lineNumber,
+          endLineNumber: lineNumber,
           startColumn: 1,
-          endColumn: content.length+1,
-        }
-    }))
-
+          endColumn: content.length + 1,
+        };
+      })
+      .filter((m): m is monaco_editor.editor.IMarkerData => m !== null);
+  
+    monaco.editor.setModelMarkers(model, "owner", markers);
+  
   }, [messages, monaco]);
-
-  React.useEffect(() => {
-    if(!monaco) {
-      return;
-    }
-  }, []);
-
+  
 
   const handleChange: OnChange = (newValue) => {
     onChange(newValue ?? '');
