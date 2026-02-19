@@ -35,7 +35,7 @@ public interface LimaOne {
     // get from cache
     T get(String id);
     
-    // retrieve from persistence and cache it... WARNING SLOW operation
+    // retrieve from persistence and cache it if not present... WARNING SLOW operation
     T force(String id);
     
     void flush(String id);
