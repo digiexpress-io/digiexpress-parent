@@ -19,11 +19,11 @@ export const TaskCardStyleSelect: React.FC<TaskCardStylerProps> = ({ value, onCh
   return (
     <FormControl fullWidth sx={{ mb: 2, maxWidth: 300 }}>
       <InputLabel>
-        {intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })}
+        {intl.formatMessage({ id: 'taskcard.cardStyle' })}
       </InputLabel>
       <Select
         value={value}
-        label={intl.formatMessage({ id: 'taskcard.cardStyle', defaultMessage: 'Card Style' })}
+        label={intl.formatMessage({ id: 'taskcard.cardStyle' })}
         onChange={handleChange}
       >
         <MenuItem value="COMPACT">

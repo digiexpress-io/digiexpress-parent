@@ -91,7 +91,7 @@ export const PriorityStatusEditDialog: React.FC<PriorityStatusEditDialogProps> =
 
   return (
     <StyledPriorityStatusEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
-      <DialogTitle>{intl.formatMessage({ id: 'task.priorityAndStatusEdit' })}{": "}{task.taskRef ?? 'no task reference id'}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'task.priorityAndStatusEdit' })}{": "}{task.taskRef ?? intl.formatMessage({ id: 'task.reference.missing' })}</DialogTitle>
 
       <DialogContent>
         <Grid2 container display='flex' alignItems='center'>

@@ -95,7 +95,7 @@ export const TaskCard: React.FC<TaskCardProps> = (props) => {
             {props.titleNotifier != null && <Box className={classes.titleNotifier}>{props.titleNotifier}</Box>}
           </Box>
 
-          {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit', defaultMessage: 'Edit' })}</Button>}
+          {props.showEditButton && <Button variant='text' onClick={handleEdit}>{intl.formatMessage({ id: 'taskCard.title.edit' })}</Button>}
           <IconButton onClick={handleCardExpand}><RotatingExpandIcon expanded={props.isExpanded} /></IconButton>
           {props.isMenu && <IconButton onClick={handleMenuOpen}><MoreVertIcon color='primary' /></IconButton>}
           <Box {...getDragHandlePropsForId(props.id)}
