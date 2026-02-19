@@ -1126,6 +1126,7 @@ tagomi.service.options.template.editDependencies,Tagomi,Change dependencies,Muut
 tagomi.template.dependencies.edit.dialog.title,Tagomi,Change dependencies,Muuta riippuvuuksia,Ändra beroenden,
 tagomi.template.dependencies.edit.dialog.desc,Tagomi,Modify existing dependencies for this service template,Muokkaa tämän palvelumallin olemassa olevia riippuvuuksia,Ändra befintliga beroenden för den här tjänstmallen,
 tagomi.template.dependencies.edit.dialog.selectOrigin,Tagomi,Select template,Valitse mallipohja,Välj mall,
+tagomi.template.dependencies.add.dialog.selectResources,,Select resources,,,
 tagomi.button.delete.dialog.template,Tagomi,Delete,Poista,Radera,
 tagomi.template.delete.dialog.noTemplates.helperText,Tagomi,No available templates to delete,Ei poistettavia malleja,Inga tillgängliga mallar att ta bort,
 tagomi.template.create.dialog.title,Tagomi,Create new template,Luo uusi mallipohja,Skapa ny mall,
