@@ -39,15 +39,15 @@ export const Toolbar: React.FC<{}> = ({ }) => {
 
       <EveliTenantFeatureEnabled id='EVELI_TREE_ENABLED'>
         <div> {/* divs needed to maintain IconButton styling, otherwise IconButton background stretches */}
-          <IconButton {...(location.pathname.includes('fileexplorer') ? { disabled: true, className: classes.itemActive } : {})}
+          <IconButton {...(location.pathname.includes('filesystem') ? { disabled: true, className: classes.itemActive } : {})}
             onClick={() => navigate({
               from: '/secured/$locale',
-              to: '/secured/$locale/worker/fileexplorer',
+              to: '/secured/$locale/worker/filesystem',
               search: { explorer: [] }
             })}>
             <FolderOutlinedIcon />
           </IconButton>
-          <Typography {...(location.pathname.includes('fileexplorer') ? { className: classes.textActive } : {})}>
+          <Typography {...(location.pathname.includes('filesystem') ? { className: classes.textActive } : {})}>
             <FormattedMessage id='toolbar.files' />
           </Typography>
         </div>

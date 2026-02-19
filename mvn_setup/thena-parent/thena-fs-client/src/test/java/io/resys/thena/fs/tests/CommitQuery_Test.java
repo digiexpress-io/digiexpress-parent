@@ -88,7 +88,7 @@ public class CommitQuery_Test extends DbTestTemplate {
         .build()
         .await().atMost(atMost);
     
-    final var commits = getClient().withTenant(tenant)
+    final var objects = getClient().withTenant(tenant)
         .commitQuery()
         .branchName("issue-2")
         //.fileOrFolderId("root/xyz/xxx2.txt")
@@ -96,7 +96,8 @@ public class CommitQuery_Test extends DbTestTemplate {
         .collect().asList()
         .await().atMost(atMost);
     
-    Assertions.assertEquals(4, commits.size());
+    Assertions.assertEquals(2, objects.size());
+    
     
 
     

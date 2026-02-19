@@ -1,0 +1,20 @@
+{
+  "name": "@dxs-ts/fs-composer",
+  "version": "${project.version}",
+  "description": "File system components",
+  "main": "./index.ts",
+  "type": "module",
+  "dependencies": {
+    "@dxs-ts/eveli-primitives": "*",
+    "@dxs-ts/fs-api": "*",
+    "react-markdown": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*",
+    "@mui/icons-material": "*",
+    "@mui/utils": "*"
+  },
+  "keywords": ["filesystem", "tree", "components"],
+  "private": true
+}

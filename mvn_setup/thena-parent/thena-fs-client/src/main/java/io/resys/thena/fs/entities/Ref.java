@@ -1,27 +1,7 @@
 package io.resys.thena.fs.entities;
 
 import java.time.OffsetDateTime;
-
-/*-
- * #%L
- * thena-fs-client
- * %%
- * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -102,12 +82,6 @@ public interface Ref extends FileSystemEntity {
     
     // might not be loaded
     @Nullable Tree getTree();
-
-    // might not be loaded
-    Map<String, Node> getNodesById();
-    
-    // might not be loaded, path to id
-    Map<String, String> getNodesByPath();
     
     // might not be loaded
     Map<String, Blob> getBlobsById();
@@ -115,17 +89,35 @@ public interface Ref extends FileSystemEntity {
     // might not be loaded
     Map<String, Props> getPropsById();  
     
-    
+
     default Optional<Node> findOneNode(String objectIdOrFullPath) {
-      var node = getNodesById().get(objectIdOrFullPath);
-      if(node == null) {
-        final var nodeId = getNodesByPath().get(objectIdOrFullPath);
-        if(nodeId != null) {
-          node = getNodesById().get(nodeId);
-        }
-      }
-      return Optional.ofNullable(node);
+      return getTree().findOneNode(objectIdOrFullPath);
     }
+  }
+  
+  default Ref withTransitives(Commit commit, Tree tree) {
+    
+    final var trs = ImmutableRefTransitives.builder();
+    final var visitedProps = new ArrayList<String>();
+    final var visitedBlobs = new ArrayList<String>();
+    
+    for(final var node : tree.getTreeNodes()) {
+      
+      final var blobId = node.getBlobId().orElse(null);
+      if(blobId != null && !visitedBlobs.contains(blobId)) {
+        visitedBlobs.add(blobId);
+        trs.putBlobsById(blobId, node.getTransitives().getBlob());
+      }
+      
+      final var propsId = node.getPropsId().orElse(null);
+      if(propsId != null && !visitedProps.contains(propsId)) {
+        visitedProps.add(propsId);
+        trs.putPropsById(node.getPropsId().get(), node.getTransitives().getProps());
+      }
+    }
+    return ImmutableRef.builder().from(this)
+        .transitives(trs.commit(commit).tree(tree).build())
+        .build();
   }
 
 }

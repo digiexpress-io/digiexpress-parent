@@ -26,8 +26,8 @@
 
     "@dxs-ts/eveli-api": "*",
     "@dxs-ts/eveli-primitives": "*",
-    "@dxs-ts/eveli-tree-api": "*",
-    "@dxs-ts/eveli-tree": "*",
+    "@dxs-ts/fs-api": "*",
+    "@dxs-ts/fs-composer": "*",
     "@dxs-ts/eveli-intl": "*",
     "@dxs-ts/eveli-routes": "*",
     "@dxs-ts/xui-datetime": "*",
