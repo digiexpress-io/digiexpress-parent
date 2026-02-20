@@ -20,6 +20,12 @@ public interface OldEnvir {
     List<Doc> docs;
     List<DocBranch> branches; 
     List<DocCommit> commits; 
+    
+    public DocCommit getCommit(Doc doc) {
+      return this.getCommits().stream()
+          .filter(e -> e.getId().equals(doc.getCreatedWithCommitId()))
+          .findFirst().get();
+    }
   }
   
   @Value

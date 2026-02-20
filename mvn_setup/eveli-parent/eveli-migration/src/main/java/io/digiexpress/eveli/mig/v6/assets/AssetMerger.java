@@ -42,19 +42,22 @@ public class AssetMerger {
     final var iterator = new CommitIterator(Arrays.asList(stencil_root, wrench_root));
     while(iterator.isNext()) {
       final var next = iterator.next();
-      commit(next);
-      tag(previous, next);
+      createCommit(next);
+      createTags(previous, next);
       previous = next;
+    }
+    
+    final var unclaimedTags = this.envir.getDocs().stream()
+      .filter(doc -> !this.released.contains(doc.getId()))
+      .sorted((a, b) -> this.envir.getCommit(a).getCreatedAt().compareTo(this.envir.getCommit(b).getCreatedAt()))
+      .toList();
+    for(final var tag : unclaimedTags) {
+      createTag(tag);
     }
     
     return new AssetMergerResult();
   }
-  
-  private void commit(TemplateNode node) {
-    System.out.println(node.getType().name() +  ", at: " + node.getCommit().getDatetime());
-  }
-  
-  private void tag(TemplateNode previous, TemplateNode next) {
+  private void createTags(TemplateNode previous, TemplateNode next) {
     final var startDate = Optional.ofNullable(previous)
         .map(e -> e.getCommit().getDatetime())
         .orElseGet(() -> LocalDateTime.MIN);
@@ -63,8 +66,7 @@ public class AssetMerger {
     final var tags = this.envir.getDocs().stream()
       .filter(doc -> !this.released.contains(doc.getId()))
       .filter(doc -> {
-        final var found = this.envir.getCommits().stream().filter(e -> e.getId().equals(doc.getCreatedWithCommitId())).findFirst().get();
-        final var targetDate = found.getCreatedAt().toLocalDateTime();
+        final var targetDate = this.envir.getCommit(doc).getCreatedAt().toLocalDateTime();
         boolean isWithinRange = !targetDate.isBefore(startDate) && !targetDate.isAfter(endDate);
         return isWithinRange;
       })
@@ -75,10 +77,23 @@ public class AssetMerger {
     }
 
     for(final var tag : tags) {
-      final var commit = this.envir.getCommits().stream().filter(e -> e.getId().equals(tag.getCreatedWithCommitId())).findFirst().get();
-      System.out.println("Tag, at: " + commit.getCreatedAt().toLocalDateTime());
+      createTag(tag);
     }
   }
+  
+  
+  private void createCommit(TemplateNode node) {
+    System.out.println(node.getType().name() +  ", at: " + node.getCommit().getDatetime());
+  }
+  
+  private void createTag(OldEnvir.Doc doc) {
+    final var commit = envir.getCommit(doc);
+    System.out.println("Tag, at: " + commit.getCreatedAt().toLocalDateTime());
+    
+    
+    this.released.add(doc.getId());
+  }
+  
 
   @Value
   public static class AssetMergerResult {
