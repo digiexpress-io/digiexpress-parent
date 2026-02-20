@@ -49,7 +49,6 @@ public class TagBuilderImpl implements TagBuilder {
   private final MutableField<JsonObject> tagExtension = new MutableField<>();
   private final MutableField<JsonObject> tagErrors = new MutableField<>();
   private final MutableField<String> externalId = new MutableField<>();
-  private final MutableField<String> externalTenantId = new MutableField<>();
   private final MutableField<OffsetDateTime> tagStartsAt = new MutableField<>();
   private final MutableField<JsonObject> tagReport = new MutableField<>();
   
@@ -84,13 +83,6 @@ public class TagBuilderImpl implements TagBuilder {
     this.externalId.withNewValue(externalId);
     return this;
   }
-
-  @Override
-  public TagBuilder externalTenantId(@Nullable String externalTenantId) {
-    this.externalTenantId.withNewValue(externalTenantId);
-    return this;
-  }
-
   @Override
   public TagBuilder tagStartsAt(@Nullable OffsetDateTime tagStartsAt) {
     this.tagStartsAt.withNewValue(tagStartsAt);
@@ -118,7 +110,6 @@ public class TagBuilderImpl implements TagBuilder {
           tagExtension.isNewValueSet() ||
           tagErrors.isNewValueSet() ||
           externalId.isNewValueSet() ||
-          externalTenantId.isNewValueSet() ||
           tagStartsAt.isNewValueSet() ||
           tagReport.isNewValueSet(),
           () -> "cannot have empty tag merge (there are no changes)!");
@@ -135,9 +126,9 @@ public class TagBuilderImpl implements TagBuilder {
     final var finalTagName = tagName.orElse(prevTag.map(Tag::getTagName).orElse(null));
     final var finalTagDescription = tagDescription.orElse(prevTag.flatMap(Tag::getTagDescription).orElse(null));
     final var finalTagExtension = tagExtension.orElse(prevTag.flatMap(Tag::getTagExtension).orElse(null));
-    final var finalTagErrors = tagErrors.orElse(prevTag.map(Tag::getTagErrors).orElse(new JsonObject()));
+    final var finalTagErrors = tagErrors.orElse(prevTag.flatMap(Tag::getTagErrors).orElse(null));
     final var finalExternalId = externalId.orElse(prevTag.flatMap(Tag::getExternalId).orElse(null));
-    final var finalExternalTenantId = externalTenantId.orElse(prevTag.flatMap(Tag::getExternalTenantId).orElse(null));
+    
     final var finalTagStartsAt = tagStartsAt.orElse(prevTag.flatMap(Tag::getTagStartsAt).orElse(null));
     final var finalTagReport = tagReport.orElse(prevTag.flatMap(Tag::getTagReport).orElse(null));
 
@@ -152,13 +143,13 @@ public class TagBuilderImpl implements TagBuilder {
         .transitives(tagTransitives)
         
         .externalId(Optional.ofNullable(finalExternalId))
-        .externalTenantId(Optional.ofNullable(finalExternalTenantId))
+        
         
         .tagName(finalTagName)
         .tagDescription(Optional.ofNullable(finalTagDescription))
         
         .tagExtension(Optional.ofNullable(finalTagExtension))
-        .tagErrors(finalTagErrors)
+        .tagErrors(Optional.ofNullable(finalTagErrors))
         .tagStartsAt(Optional.ofNullable(finalTagStartsAt))
         .tagReport(Optional.ofNullable(finalTagReport))
         

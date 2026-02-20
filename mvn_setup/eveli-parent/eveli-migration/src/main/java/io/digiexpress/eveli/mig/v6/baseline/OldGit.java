@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.Value;
@@ -15,8 +16,8 @@ public interface OldGit {
   Uni<OldGitObjects> findAll(String tenanPrefix);  
 
   @Value
-  class OldGitObjects {
-    String tenantPrefix;
+  static class OldGitObjects {
+    Tenant tenant;
 
     List<Branch> branches;
     List<Tag> tags;
@@ -27,26 +28,26 @@ public interface OldGit {
   }
 
   @Value
-  class Tree {
+  static class Tree {
     String id;
     List<TreeValue> values;
   }
 
   @Value
-  class TreeValue {
+  static class TreeValue {
     String name;
     String blob;
     String tree;
   }
 
   @Value
-  class Blob {
+  static class Blob {
     String id;
     JsonObject value;
   }
 
   @Value
-  class Commit {
+  static class Commit {
     String id;
     String author;
     LocalDateTime datetime;
@@ -57,13 +58,13 @@ public interface OldGit {
   }
 
   @Value
-  class Branch {
+  static class Branch {
     String name;
     String commit;
   }
 
   @Value
-  class Tag {
+  static class Tag {
     String id;
     String commit;
     LocalDateTime datetime;

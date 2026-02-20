@@ -2,7 +2,6 @@ package io.digiexpress.eveli.mig.v6.baseline.impl;
 
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
 import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.sqlclient.Pool;
 import lombok.RequiredArgsConstructor;
 
 

@@ -41,7 +41,8 @@ public class OldGitQuery {
            getCommits(tenant.getPrefix()),
            getTags(tenant.getPrefix()),
            getTrees(tenant.getPrefix()),
-           getTreeValues(tenant.getPrefix())
+           getTreeValues(tenant.getPrefix()),
+           Uni.createFrom().item(tenant)
        ).asTuple()
      )
      .onItem().transform(sources -> {
@@ -64,7 +65,7 @@ public class OldGitQuery {
        }
 
        final var result = new OldGit.OldGitObjects(
-         tenanPrefix, 
+        sources.getItem7(), 
          branches,
          tags, 
          new ArrayList<>(trees.values()), 
@@ -92,6 +93,7 @@ public class OldGitQuery {
       return tenant;
     }).onItem().transform(tenants -> {
       final var found = tenants.stream()
+          .filter(t -> t.getType() == StructureType.git)
           .filter(tenant -> {
             
             return tenant.getName().equals(tenanPrefix) || 

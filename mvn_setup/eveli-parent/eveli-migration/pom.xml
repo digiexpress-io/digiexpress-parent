@@ -15,8 +15,8 @@
       <artifactId>thena-db-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.digiexpress</groupId>    
-      <artifactId>tagomi-client</artifactId>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-fs-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>

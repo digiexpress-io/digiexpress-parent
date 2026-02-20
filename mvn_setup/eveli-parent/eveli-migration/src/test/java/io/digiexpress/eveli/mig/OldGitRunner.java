@@ -5,7 +5,7 @@ import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
 
-import io.digiexpress.eveli.mig.v6.baseline.impl.OldGit_Impl;
+import io.digiexpress.eveli.mig.v6.assets.V6Migration;
 import io.vertx.pgclient.PgBuilder;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -28,9 +28,10 @@ public class OldGitRunner {
       .build();
     
     
-    final var old = new OldGit_Impl(new io.vertx.mutiny.sqlclient.Pool(pool));
-    
-    final var xx = old.findAll("stencil-assets").await().atMost(Duration.ofMinutes(1));
+    final var mig = new V6Migration(new io.vertx.mutiny.sqlclient.Pool(pool))
+        .stencil("stencil-assets")
+        .execute()
+        .await().atMost(Duration.ofMinutes(1));
     
     
   }
