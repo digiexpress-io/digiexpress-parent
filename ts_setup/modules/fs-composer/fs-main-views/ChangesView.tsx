@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, styled, IconButton, Tooltip } from '@mui/material';
+import { Typography, Box, styled, IconButton, Tooltip, Dialog, DialogActions, Button, DialogTitle, DialogContent } from '@mui/material';
 import { FsNode } from '@dxs-ts/fs-api';
 import { FsColors, FsIcons } from '../fs-theme';
 import { useFs } from '@dxs-ts/fs-api';
@@ -23,7 +23,7 @@ export interface ChangesViewProps {
 
 export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
   const { isDarkMode } = useFs();
-
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -66,13 +66,14 @@ export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
           </Typography>
 
           <Tooltip title="Undo changes">
-            <IconButton size="small" sx={{
-              marginLeft: 'auto',
-              color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
-              '&:hover': {
-                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)'
-              }
-            }}
+            <IconButton size="small" onClick={() => setConfirmOpen(true)}
+              sx={{
+                marginLeft: 'auto',
+                color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
+                '&:hover': {
+                  backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)'
+                }
+              }}
             >
               <FsIcons.Undo />
             </IconButton>
@@ -84,10 +85,28 @@ export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
 
   return (
     <ViewContainer title='Unsaved changes' icon={<FsIcons.Save />} activeNode={true}>
+      {confirmOpen && <UndoConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} />}
       {mainContent}
     </ViewContainer>
   );
 };
+
+
+const UndoConfirmDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ onClose }) => {
+  return (
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle>Undo changes to asset</DialogTitle>
+      <DialogContent>
+        You are about to discard all changes to this file. This action cannot be undone.
+      </DialogContent>
+      <DialogActions>
+        <Button variant='outlined' onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>Accept</Button>
+      </DialogActions>
+
+    </Dialog >
+  )
+}
 
 const ChangesContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDarkMode'
