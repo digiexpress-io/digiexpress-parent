@@ -1,18 +1,20 @@
 package io.digiexpress.eveli.mig.v6.assets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.AddNodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.ExtractedNodeType;
+import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.MergeNodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.NodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.RmNodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.TemplateNode;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
-import io.digiexpress.eveli.mig.v6.baseline.OldGit.AddNodeOperation;
-import io.digiexpress.eveli.mig.v6.baseline.OldGit.MergeNodeOperation;
-import io.digiexpress.eveli.mig.v6.baseline.OldGit.NodeOperation;
-import io.digiexpress.eveli.mig.v6.baseline.OldGit.RmNodeOperation;
-import io.digiexpress.eveli.mig.v6.baseline.OldGit.TemplateNode;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.TreeValue;
 import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class OldGitExtractor {
-
+  private final ExtractedNodeType type;
   private final OldGit.OldGitObjects git;
   private final Map<String, String> reverseTree = new HashMap<>();
   private TemplateNode root;
@@ -35,7 +37,7 @@ public class OldGitExtractor {
         nodeOperations.add(visitAdd(commit, value));  
       }
       
-      this.root = new TemplateNode(commit, nodeOperations, Optional.empty());
+      this.root = new TemplateNode(type, commit, nodeOperations, Optional.empty());
     } else {
       final var parentId = commit.getParent().get();
       final var parentCommit = git.getCommits().get(parentId);
@@ -94,6 +96,8 @@ public class OldGitExtractor {
     }
     RepoAssert.notNull(firstCommit, () -> "Cant find first commit, " + git.getTenant() + "!");    
     visitCommit(firstCommit);
-    return this.root;
+    
+    return new TemplateNode(type, null, Collections.emptyList(), Optional.empty()).add(root);
+    
   }
 }

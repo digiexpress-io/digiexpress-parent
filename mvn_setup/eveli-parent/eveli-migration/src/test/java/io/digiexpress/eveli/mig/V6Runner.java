@@ -30,6 +30,7 @@ public class V6Runner {
     
     final var mig = new V6Migration(new io.vertx.mutiny.sqlclient.Pool(pool))
         .stencil("stencil-assets")
+        .wrench("wrench-assets")
         .envir("envir")
         .execute()
         .await().atMost(Duration.ofMinutes(1));

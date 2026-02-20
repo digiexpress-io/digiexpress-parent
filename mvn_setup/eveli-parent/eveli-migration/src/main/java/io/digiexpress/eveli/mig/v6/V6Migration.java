@@ -15,6 +15,7 @@ public class V6Migration {
   private final OldEnvir oldEnvir;
   
   private String stencil;
+  private String wrench;
   private String envir;
   
   public V6Migration(Pool pool) {
@@ -26,17 +27,23 @@ public class V6Migration {
     this.stencil = RepoAssert.notEmpty(stencil, () -> "stencil repo name must be deifned");
     return this;
   }
+  public V6Migration wrench(String wrench) {
+    this.wrench = RepoAssert.notEmpty(wrench, () -> "wrench repo name must be deifned");
+    return this;
+  }
   public V6Migration envir(String envir) {
     this.envir = RepoAssert.notEmpty(envir, () -> "envir repo name must be deifned");
     return this;
   }
   public Uni<Void> execute() {
     final var stencil = RepoAssert.notEmpty(this.stencil, () -> "stencil repo name must be deifned");
+    final var wrench = RepoAssert.notEmpty(this.wrench, () -> "wrench repo name must be deifned");
     final var envir = RepoAssert.notEmpty(this.envir, () -> "envir repo name must be deifned");
     
     
     return Uni.combine().all().unis(
       oldGit.findAll(stencil),
+      oldGit.findAll(wrench),
       oldEnvir.findAll(envir)
     )
     .asTuple()
@@ -44,8 +51,9 @@ public class V6Migration {
       
       new AssetMerger()
         .stencil(tuple.getItem1())
+        .wrench(tuple.getItem2())
+        .envir(tuple.getItem3())
         .build();
-      
       
       return tuple;
     })

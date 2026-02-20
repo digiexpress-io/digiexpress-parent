@@ -19,6 +19,7 @@ public interface OldEnvir {
     Tenant tenant;
     List<Doc> docs;
     List<DocBranch> branches; 
+    List<DocCommit> commits; 
   }
   
   @Value
@@ -39,7 +40,18 @@ public interface OldEnvir {
     Optional<String> docSubStatus;
     Optional<JsonObject> docMeta;
   }
-  
+  @Value
+  @Builder
+  public class DocCommit {
+    String id;
+    Optional<String> branchId;
+    String docId;
+    OffsetDateTime createdAt;
+    String author;
+    String message;
+    String commitLog;
+    Optional<String> parent;
+  }
   @Value
   @Builder
   static class DocBranch {

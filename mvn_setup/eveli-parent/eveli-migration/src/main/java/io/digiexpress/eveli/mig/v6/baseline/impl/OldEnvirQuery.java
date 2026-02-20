@@ -27,6 +27,7 @@ public class OldEnvirQuery {
        Uni.combine().all().unis(
            getDocs(tenant.getPrefix()),
            getBranches(tenant.getPrefix()),
+           getCommits(tenant.getPrefix()),
            Uni.createFrom().item(tenant)
        ).asTuple()
      )
@@ -34,9 +35,11 @@ public class OldEnvirQuery {
 
 
        final var result = new OldEnvir.OldEnvirObjects(
-         sources.getItem3(), 
+         sources.getItem4(),
+           
          sources.getItem2(), 
-         sources.getItem1()
+         sources.getItem1(), 
+         sources.getItem3()
        );
        
        logger.ok(result);
@@ -89,6 +92,23 @@ public class OldEnvirQuery {
         .valueName(Optional.ofNullable(row.getString("value_name")))
         .valueDescription(Optional.ofNullable(row.getString("value_description")))
         .valueStatus(Optional.ofNullable(row.getString("value_status")))
+        .build();
+    });
+  }
+  
+  private Uni<List<OldEnvir.DocCommit>> getCommits(String tenanPrefix) {
+    final var sql = "select * from " + tenanPrefix + "doc_commits";
+    
+    return processAnyQuery(OldEnvir.DocCommit.class, sql, (row) -> {
+      return OldEnvir.DocCommit.builder()
+        .id(row.getString("id"))
+        .branchId(Optional.ofNullable(row.getString("branch_id")))
+        .docId(row.getString("doc_id"))
+        .createdAt(row.getOffsetDateTime("created_at"))
+        .author(row.getString("author"))
+        .message(row.getString("message"))
+        .commitLog(row.getString("commit_log"))
+        .parent(Optional.ofNullable(row.getString("parent")))
         .build();
     });
   }
