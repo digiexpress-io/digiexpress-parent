@@ -5,19 +5,17 @@ import java.util.Optional;
 
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.Commit;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.TreeValue;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-public interface ExtractedNode {
-  ExtractedNodeType getType();
+public interface CommitNode {
+  CommitNodeType getType();
   Commit getCommit();
   List<NodeOperation> getNodeOperations();
-  Optional<ExtractedNode> getPrevious();
-  Optional<ExtractedNode> getNext();
+  Optional<CommitNode> getPrevious();
+  Optional<CommitNode> getNext();
   
-  enum ExtractedNodeType {
-    WRENCH, STENCIL
+  enum CommitNodeType {
+    WRENCH, STENCIL, ENVIR
   }
   
   interface NodeOperation {
@@ -54,31 +52,5 @@ public interface ExtractedNode {
   static class MergeNodeOperation implements NodeOperation {
     TreeValue before;
     TreeValue after;
-  }
-  
-  @RequiredArgsConstructor
-  @Getter
-  static class TemplateNode implements ExtractedNode {
-    private final ExtractedNodeType type;
-    private final Commit commit;
-    private final List<NodeOperation> nodeOperations;
-    private final Optional<ExtractedNode> previous;
-    
-    private Optional<ExtractedNode> next = Optional.empty();
-    
-    
-    public TemplateNode add(Commit commit, List<NodeOperation> op) {
-      if(this.commit.getId().equals(commit.getParent().get())) {
-        this.next = Optional.of(new TemplateNode(type, commit, op, Optional.ofNullable(this)));
-      } else {
-        ((TemplateNode)this.next.get()).add(commit, op);
-      }
-      
-      return this;
-    }
-    public TemplateNode add(TemplateNode next) {
-      this.next = Optional.of(next);
-      return this;
-    }
   }
 }

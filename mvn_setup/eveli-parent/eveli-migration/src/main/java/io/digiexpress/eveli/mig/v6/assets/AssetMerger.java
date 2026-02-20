@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.ExtractedNodeType;
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.TemplateNode;
+import io.digiexpress.eveli.mig.v6.assets.CommitNode.CommitNodeType;
+import io.digiexpress.eveli.mig.v6.assets.CommitNodeBuilder.CommitNode_Impl;
 import io.digiexpress.eveli.mig.v6.baseline.OldEnvir;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
 import lombok.Value;
@@ -32,13 +32,13 @@ public class AssetMerger {
     this.envir = envir;
     return this;
   }
-  
+
   public AssetMergerResult build() {
     
-    final var stencil_root = new OldGitExtractor(ExtractedNodeType.STENCIL, this.stencil).build();
-    final var wrench_root = new OldGitExtractor(ExtractedNodeType.WRENCH, this.wrench).build();
+    final var stencil_root = new CommitNodeBuilder(CommitNodeType.STENCIL, this.stencil).build();
+    final var wrench_root = new CommitNodeBuilder(CommitNodeType.WRENCH, this.wrench).build();
     
-    TemplateNode previous = null;
+    CommitNode previous = null;
     final var iterator = new CommitIterator(Arrays.asList(stencil_root, wrench_root));
     while(iterator.isNext()) {
       final var next = iterator.next();
@@ -57,7 +57,7 @@ public class AssetMerger {
     
     return new AssetMergerResult();
   }
-  private void createTags(TemplateNode previous, TemplateNode next) {
+  private void createTags(CommitNode previous, CommitNode next) {
     final var startDate = Optional.ofNullable(previous)
         .map(e -> e.getCommit().getDatetime())
         .orElseGet(() -> LocalDateTime.MIN);
@@ -82,7 +82,7 @@ public class AssetMerger {
   }
   
   
-  private void createCommit(TemplateNode node) {
+  private void createCommit(CommitNode_Impl node) {
     System.out.println(node.getType().name() +  ", at: " + node.getCommit().getDatetime());
   }
   
@@ -97,6 +97,11 @@ public class AssetMerger {
 
   @Value
   public static class AssetMergerResult {
+    
+  }
+  
+  
+  public static class MergedAsset {
     
   }
 }

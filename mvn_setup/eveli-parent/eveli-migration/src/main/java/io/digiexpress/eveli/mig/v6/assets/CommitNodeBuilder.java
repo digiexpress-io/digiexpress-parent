@@ -3,29 +3,31 @@ package io.digiexpress.eveli.mig.v6.assets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableSet;
 
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.AddNodeOperation;
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.ExtractedNodeType;
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.MergeNodeOperation;
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.NodeOperation;
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.RmNodeOperation;
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.TemplateNode;
+import io.digiexpress.eveli.mig.v6.assets.CommitNode.AddNodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.CommitNode.CommitNodeType;
+import io.digiexpress.eveli.mig.v6.assets.CommitNode.MergeNodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.CommitNode.NodeOperation;
+import io.digiexpress.eveli.mig.v6.assets.CommitNode.RmNodeOperation;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
+import io.digiexpress.eveli.mig.v6.baseline.OldGit.Commit;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.TreeValue;
 import io.resys.thena.support.RepoAssert;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class OldGitExtractor {
-  private final ExtractedNodeType type;
+public class CommitNodeBuilder {
+  private final CommitNodeType type;
   private final OldGit.OldGitObjects git;
   private final Map<String, String> reverseTree = new HashMap<>();
-  private TemplateNode root;
+  private CommitNode_Impl root;
 
   private void visitCommit(OldGit.Commit commit) {
     // add only
@@ -37,7 +39,7 @@ public class OldGitExtractor {
         nodeOperations.add(visitAdd(commit, value));  
       }
       
-      this.root = new TemplateNode(type, commit, nodeOperations, Optional.empty());
+      this.root = new CommitNode_Impl(type, commit, nodeOperations, Optional.empty());
     } else {
       final var parentId = commit.getParent().get();
       final var parentCommit = git.getCommits().get(parentId);
@@ -83,7 +85,7 @@ public class OldGitExtractor {
     return new RmNodeOperation(removed);
   }
 
-  public TemplateNode build() {
+  public CommitNode_Impl build() {
     OldGit.Commit firstCommit = null;
     for(final var commit : git.getCommits().values()) {
       if(commit.getParent().isEmpty()) {
@@ -97,7 +99,33 @@ public class OldGitExtractor {
     RepoAssert.notNull(firstCommit, () -> "Cant find first commit, " + git.getTenant() + "!");    
     visitCommit(firstCommit);
     
-    return new TemplateNode(type, null, Collections.emptyList(), Optional.empty()).add(root);
+    return new CommitNode_Impl(type, null, Collections.emptyList(), Optional.empty()).add(root);
     
+  }
+  
+  @RequiredArgsConstructor
+  @Getter
+  public class CommitNode_Impl implements CommitNode {
+    private final CommitNodeType type;
+    private final Commit commit;
+    private final List<NodeOperation> nodeOperations;
+    private final Optional<CommitNode> previous;
+    
+    private Optional<CommitNode> next = Optional.empty();
+    
+    
+    public CommitNode_Impl add(Commit commit, List<NodeOperation> op) {
+      if(this.commit.getId().equals(commit.getParent().get())) {
+        this.next = Optional.of(new CommitNode_Impl(type, commit, op, Optional.ofNullable(this)));
+      } else {
+        ((CommitNode_Impl)this.next.get()).add(commit, op);
+      }
+      
+      return this;
+    }
+    public CommitNode_Impl add(CommitNode_Impl next) {
+      this.next = Optional.of(next);
+      return this;
+    }
   }
 }

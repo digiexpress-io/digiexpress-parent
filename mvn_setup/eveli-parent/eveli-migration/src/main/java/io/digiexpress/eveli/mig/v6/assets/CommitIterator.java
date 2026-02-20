@@ -3,12 +3,12 @@ package io.digiexpress.eveli.mig.v6.assets;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.digiexpress.eveli.mig.v6.assets.ExtractedNode.TemplateNode;
+import io.digiexpress.eveli.mig.v6.assets.CommitNodeBuilder.CommitNode_Impl;
 
 public class CommitIterator {
-  private final List<TemplateNode> nodes = new ArrayList<>();
+  private final List<CommitNode> nodes = new ArrayList<>();
   
-  public CommitIterator(List<TemplateNode> nodes) {
+  public CommitIterator(List<CommitNode> nodes) {
     this.nodes.addAll(nodes);
   }
 
@@ -18,13 +18,13 @@ public class CommitIterator {
       .findFirst().isPresent();
   }
   
-  public TemplateNode next() {
+  public CommitNode_Impl next() {
      final var sortedNodes = nodes.stream()
         .filter(e -> e.getNext().isPresent())
         .sorted((a, b) -> a.getNext().get().getCommit().getDatetime().compareTo(b.getNext().get().getCommit().getDatetime()));
      
      final var nodeWithNext = sortedNodes.iterator().next();
-     final var next = (TemplateNode) nodeWithNext.getNext().get();
+     final var next = (CommitNode_Impl) nodeWithNext.getNext().get();
      
      nodes.remove(nodeWithNext);
      nodes.add(next);
