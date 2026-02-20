@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { FsNode } from '@dxs-ts/fs-api';
-import { ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
+import { ConfigOptionsView, ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
 
 export interface FsMainRightProps {
   activeNode: FsNode | undefined;
@@ -33,6 +33,8 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ activeNode, selectedVi
       return <HistoryView node={activeNode} />;
     case 'help':
       return <HelpView node={activeNode} />;
+    case 'configuration':
+      return <ConfigOptionsView node={activeNode} />;
       /*
     case 'configuration':
       return 'Configuration';

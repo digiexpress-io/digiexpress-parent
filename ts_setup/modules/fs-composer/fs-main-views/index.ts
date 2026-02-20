@@ -1,3 +1,4 @@
+export * from './ConfigOptionsView';
 export * from './ErrorsView';
 export * from './HelpView';
 export * from './HistoryView';
