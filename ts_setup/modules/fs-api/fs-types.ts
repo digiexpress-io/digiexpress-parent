@@ -34,7 +34,7 @@ export interface FsNodeComment {
 }
 
 export type FsNodeType = 'folder' | 'article' | 'service' | 'dialob' | 'flow' | 'link' | 'language' | 'printout' | 'image' | 'template';
-export type FsNodeSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors';
+export type FsNodeSecondaryView = 'references' | 'properties' | 'configuration' | 'debug' | 'preview' | 'history' | 'help' | 'errors' | 'changes';
 
 export type FolderId = string;
 export type ArticleId = string;

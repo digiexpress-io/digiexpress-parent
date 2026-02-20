@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled, Tooltip } from '@mui/material';
+import { Box, styled, Tooltip, Badge } from '@mui/material';
 import { FsColors } from '../fs-theme';
 import { FsIcons } from '../fs-theme/fs-icons';
 import { FsNode, FsNodeSecondaryView } from '@dxs-ts/fs-api';
@@ -82,6 +82,24 @@ export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({
         </StyledToolbarButton>
       </Tooltip>
 
+      <Tooltip title="Save" placement="left" arrow>
+        <StyledToolbarSaveButton onClick={() => onViewChange('changes')} isDarkMode={isDarkMode} isSelected={selectedView === 'changes'}>
+          <Badge badgeContent={7} color="error"
+            sx={{
+              '& .MuiBadge-badge': {
+                fontSize: '10px',
+                fontWeight: 'bold',
+                height: '16px',
+                minWidth: '16px',
+              }
+            }}
+          >
+            <FsIcons.Save color='error' />
+          </Badge>
+        </StyledToolbarSaveButton>
+      </Tooltip>
+
+
     </ToolbarContainer>
   );
 };
@@ -108,7 +126,6 @@ const StyledToolbarButton = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'disabled' && prop !== 'isSelected' && prop !== 'isDarkMode'
 })<{ disabled?: boolean; isSelected?: boolean; isDarkMode?: boolean }>(({ disabled, isSelected, isDarkMode }) => ({
   cursor: disabled ? 'not-allowed' : 'pointer',
-  userSelect: 'none' as const,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -126,6 +143,31 @@ const StyledToolbarButton = styled(Box, {
     color: isSelected ?
       (isDarkMode ? FsColors.semantic.primary : FsColors.semantic.warningLight) :
       (isDarkMode ? FsColors.dark.text : FsColors.light.text),
+  },
+  '&:hover': {
+    opacity: disabled ? 0.3 : 1,
+    backgroundColor: disabled ? 'transparent' :
+      isSelected ?
+        (isDarkMode ? FsColors.semantic.primary + '40' : FsColors.semantic.warningLight + '40') :
+        (isDarkMode ? FsColors.dark.border + '20' : FsColors.light.surface)
+  },
+}));
+
+const StyledToolbarSaveButton = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'disabled' && prop !== 'isSelected' && prop !== 'isDarkMode'
+})<{ disabled?: boolean; isSelected?: boolean; isDarkMode?: boolean }>(({ disabled, isSelected, isDarkMode, theme }) => ({
+  cursor: disabled ? 'not-allowed' : 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  opacity: disabled ? 0.3 : 1,
+  borderRadius: '4px',
+  padding: '4px',
+  backgroundColor: isSelected ? (isDarkMode ? FsColors.semantic.primary + '26' : FsColors.semantic.dangerLight + '26') : 'transparent',
+  border: isSelected ? (isDarkMode ? `1px solid ${FsColors.semantic.dangerDark}` : `1px solid ${FsColors.semantic.dangerLight}`) : '1px solid transparent',
+  '& .MuiSvgIcon-root': {
+    fontSize: '1.2rem',
+    color: theme.palette.error.main
   },
   '&:hover': {
     opacity: disabled ? 0.3 : 1,

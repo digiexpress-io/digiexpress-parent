@@ -9,7 +9,6 @@ import {
   ChevronRight,
   UnfoldLess,
   UnfoldMore,
-  UnfoldLessOutlined,
 
   // Theme & Mode Icons
   LightModeOutlined,
@@ -36,9 +35,11 @@ import {
   // Action Icons
   Add,
   Edit,
+  Save,
   ContentCopy,
   DriveFileRenameOutline,
   DeleteForever,
+  Undo,
 
   // Security & Access Icons
   Lock,
@@ -103,6 +104,8 @@ export const FsIcons = {
   Copy: ContentCopy,
   Rename: DriveFileRenameOutline,
   Delete: DeleteForever,
+  Save: Save,
+  Undo: Undo,
 
   // Security & Access
   Locked: Lock,
