@@ -975,7 +975,7 @@ export const fi = {
   'taskcard.title.formReview': 'Arvostelulomake',
   'taskcard.title.history': 'Historia ja metatiedot',
   'taskcard.title.taskRefId': 'Tehtävän viitetunnus',
-  'taskcard.title.edit': 'Muokkaa tehtävää',
+  'taskcard.title.edit': 'Muokkaa',
   'taskcard.title.transfer': 'Asiakirjasiirrot',
   'taskcard.title.assignable': 'Asiakkaalle määrätty',
   'taskcard.title.customerFeedback': 'Asiakaspalaute',

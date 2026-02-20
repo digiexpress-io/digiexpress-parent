@@ -987,7 +987,7 @@ export const en = {
   'taskcard.title.formReview': 'Review form',
   'taskcard.title.history': 'History and metadata',
   'taskcard.title.taskRefId': 'Task reference ID',
-  'taskcard.title.edit': 'Edit task',
+  'taskcard.title.edit': 'Edit',
   'taskcard.title.transfer': 'Document transfers',
   'taskcard.title.assignable': 'Assigned to customer',
   'taskcard.title.customerFeedback': 'Customer feedback',

@@ -12,7 +12,7 @@ import { TenantConfigSelect } from './TenantConfigSelect';
 
 import { UserProfileFirstName } from './UserProfileFirstName';
 import { UserProfileLastName } from './UserProfileLastName';
-import { UserProfileDetailRow } from './UserProfileDetailRow';
+import { UserProfileDetailRow, UserProfilePermissionsRowChip } from './UserProfileDetailRow';
 
 import { UserProfileApi } from '@dxs-ts/user-profile';
 import { useIam } from '@dxs-ts/eveli-api';
@@ -63,6 +63,8 @@ export const UserProfile: React.FC<{}> = () => {
     return <EveliSpinner />;
   }
 
+  console.log(userPermissions.split(","))
+
   return (<>
     <EveliUserProfileHeader ownerState={profile}>
       <Typography><FormattedMessage id='eveli.userProfile.title' /></Typography>
@@ -87,7 +89,7 @@ export const UserProfile: React.FC<{}> = () => {
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(profile.created)} />
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(profile.updated)} />
             <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value={userRoles} />
-            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
+            <UserProfilePermissionsRowChip label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
           </div>
         </EveliUserOverviewDetail>
 

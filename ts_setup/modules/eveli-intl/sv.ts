@@ -975,7 +975,7 @@ export const sv = {
   'taskcard.title.formReview': 'Granskningsformulär',
   'taskcard.title.history': 'Historik och metadata',
   'taskcard.title.taskRefId': 'Uppgiftsreferens-ID',
-  'taskcard.title.edit': 'Redigera uppgift',
+  'taskcard.title.edit': 'Redigera',
   'taskcard.title.transfer': 'Dokumentöverföringar',
   'taskcard.title.assignable': 'Tilldelad till kund',
   'taskcard.title.customerFeedback': 'Kundfeedback',

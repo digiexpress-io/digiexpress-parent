@@ -992,7 +992,7 @@ taskcard.title.statusAndPriority,TaskComposerV2,Status and priority,Tila ja prio
 taskcard.title.formReview,TaskComposerV2,Review form,Arvostelulomake,Granskningsformulär,
 taskcard.title.history,TaskComposerV2,History and metadata,Historia ja metatiedot,Historik och metadata,
 taskcard.title.taskRefId,TaskComposerV2,Task reference ID,Tehtävän viitetunnus,Uppgiftsreferens-ID,
-taskcard.title.edit,TaskComposerV2,Edit task,Muokkaa tehtävää,Redigera uppgift,
+taskcard.title.edit,TaskComposerV2,Edit,Muokkaa,Redigera,
 taskcard.title.transfer,TaskComposerV2,Document transfers,Asiakirjasiirrot,Dokumentöverföringar,
 taskcard.title.assignable,TaskComposerV2,Assigned to customer,Asiakkaalle määrätty,Tilldelad till kund,
 taskcard.title.customerFeedback,TaskComposerV2,Customer feedback,Asiakaspalaute,Kundfeedback,
