@@ -10,28 +10,36 @@ import io.vertx.mutiny.sqlclient.Pool;
 
 
 public class V6Migration {
-
-  private final io.vertx.mutiny.sqlclient.Pool pool;
   private final OldGit oldGit;
   private final OldEnvir oldEnvir;
   
   private String stencil;
+  private String envir;
   
   public V6Migration(Pool pool) {
     super();
-    this.pool = pool;
     this.oldGit = new OldGit_Impl(pool);
     this.oldEnvir = new OldEnvir_impl(pool);
   }
-
   public V6Migration stencil(String stencil) {
-    this.stencil = RepoAssert.notEmpty(stencil, () -> "Stencil repo name must be deifned");
+    this.stencil = RepoAssert.notEmpty(stencil, () -> "stencil repo name must be deifned");
     return this;
   }
-  
-  
+  public V6Migration envir(String envir) {
+    this.envir = RepoAssert.notEmpty(envir, () -> "envir repo name must be deifned");
+    return this;
+  }
   public Uni<Void> execute() {
-    final var stencil = RepoAssert.notEmpty(this.stencil, () -> "Stencil repo name must be deifned");
+    final var stencil = RepoAssert.notEmpty(this.stencil, () -> "stencil repo name must be deifned");
+    final var envir = RepoAssert.notEmpty(this.envir, () -> "envir repo name must be deifned");
+    
+    
+    return Uni.combine().all().unis(
+      oldGit.findAll(stencil),
+      oldEnvir.findAll(envir)
+    )
+    .asTuple()
+    .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
   }
   
 }

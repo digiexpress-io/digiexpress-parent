@@ -10,7 +10,7 @@ import io.vertx.pgclient.PgBuilder;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 
-public class OldGitRunner {
+public class V6Runner {
   
   @Test
   public void xxx() {
@@ -30,9 +30,9 @@ public class OldGitRunner {
     
     final var mig = new V6Migration(new io.vertx.mutiny.sqlclient.Pool(pool))
         .stencil("stencil-assets")
+        .envir("envir")
         .execute()
         .await().atMost(Duration.ofMinutes(1));
-    
     
   }
   
