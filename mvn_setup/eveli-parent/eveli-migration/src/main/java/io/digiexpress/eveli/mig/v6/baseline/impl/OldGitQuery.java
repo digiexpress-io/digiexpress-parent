@@ -1,7 +1,6 @@
 package io.digiexpress.eveli.mig.v6.baseline.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,16 +60,10 @@ public class OldGitQuery {
        }
 
        for(final TreeValue treeValue : treeValues) {
-         trees.get(treeValue.getTree()).getValues().add(treeValue);
+         trees.get(treeValue.getTree()).getValues().put(treeValue.getName(), treeValue);
        }
 
-       final var result = new OldGit.OldGitObjects(
-        sources.getItem7(), 
-         branches,
-         tags, 
-         new ArrayList<>(trees.values()), 
-         blobs, commits
-       );
+       final var result = new OldGit.OldGitObjects(sources.getItem7(), branches, tags, trees, blobs, commits);
        
        logger.ok(result);
        return result;
@@ -155,7 +148,7 @@ public class OldGitQuery {
     final var sql = "select * from " + tenanPrefix + "git_trees";
     return processAnyQuery(OldGit.Tree.class, sql, (row) -> new OldGit.Tree(
         row.getString("id"),
-        new ArrayList<>()
+        new HashMap<>()
       ));
   }
   

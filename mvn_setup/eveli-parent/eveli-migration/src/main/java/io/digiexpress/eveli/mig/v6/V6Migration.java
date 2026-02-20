@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.mig.v6;
 
+import io.digiexpress.eveli.mig.v6.assets.AssetMerger;
 import io.digiexpress.eveli.mig.v6.baseline.OldEnvir;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
 import io.digiexpress.eveli.mig.v6.baseline.impl.OldEnvir_impl;
@@ -40,6 +41,10 @@ public class V6Migration {
     )
     .asTuple()
     .onItem().transform(tuple -> {
+      
+      new AssetMerger()
+        .stencil(tuple.getItem1())
+        .build();
       
       
       return tuple;

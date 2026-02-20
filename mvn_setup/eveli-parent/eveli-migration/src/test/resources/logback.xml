@@ -20,7 +20,6 @@
 <configuration>
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-  <logger name="io.resys.hdes.client.spi.groovy" level="OFF"/>
   <logger name="io.vertx.core.impl.BlockedThreadChecker" level="OFF"/>
   
   

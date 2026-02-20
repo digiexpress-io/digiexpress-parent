@@ -63,7 +63,7 @@ public class BaselineLogger {
               "commits", String.valueOf(e.getCommits().size()),
               "tags", String.valueOf(e.getTags().size()),
               "trees", String.valueOf(e.getTrees().size()),
-              "tree values", String.valueOf(e.getTrees().stream().flatMap(n -> n.getValues().stream()).count())
+              "tree values", String.valueOf(e.getTrees().values().stream().flatMap(n -> n.getValues().values().stream()).count())
               
           ))
           .build());
