@@ -5,7 +5,7 @@ import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
 
-import io.digiexpress.eveli.mig.v6.assets.V6Migration;
+import io.digiexpress.eveli.mig.v6.V6Migration;
 import io.vertx.pgclient.PgBuilder;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -34,6 +34,8 @@ public class V6Runner {
         .execute()
         .await().atMost(Duration.ofMinutes(1));
     
+    
+    
+    
   }
-  
 }

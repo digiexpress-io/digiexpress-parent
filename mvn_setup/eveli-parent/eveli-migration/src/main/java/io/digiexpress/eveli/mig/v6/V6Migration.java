@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.mig.v6.assets;
+package io.digiexpress.eveli.mig.v6;
 
 import io.digiexpress.eveli.mig.v6.baseline.OldEnvir;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit;
@@ -39,6 +39,11 @@ public class V6Migration {
       oldEnvir.findAll(envir)
     )
     .asTuple()
+    .onItem().transform(tuple -> {
+      
+      
+      return tuple;
+    })
     .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
   }
   
