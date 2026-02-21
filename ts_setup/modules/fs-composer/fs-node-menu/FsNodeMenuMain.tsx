@@ -140,10 +140,7 @@ export const FsNodeMenuMain: React.FC<FsNodeMenuMainProps> = (props) => {
 
       <Divider className={classes.divider} />
 
-      <MenuItem
-        className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem}
-        onClick={() => handleSubmenuToggle('labels')}
-      >
+      <MenuItem className={props.openSubmenu === 'labels' ? classes.menuItemActive : classes.menuItem} onClick={() => handleSubmenuToggle('labels')}>
         <div>
           <div>Labels</div>
           {props.node?.labels && props.node.labels.length > 0 && (

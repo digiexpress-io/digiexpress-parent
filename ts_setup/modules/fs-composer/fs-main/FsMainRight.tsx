@@ -13,7 +13,7 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ activeNode, selectedVi
   if (!selectedView) {
     return (
       <ViewContainer title='Choose a View'>
-        <Typography variant='body2' color='text.secondary'>
+        <Typography>
           Select an option from the toolbar to view details.
         </Typography>
       </ViewContainer>

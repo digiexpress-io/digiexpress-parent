@@ -1,10 +1,22 @@
 import { FsNode } from "@dxs-ts/fs-api";
+import { FsNodeType } from '../fs-theme';
 
+interface FilterData {
+  label: string;
+  type: FsNodeType;
+}
 
+export function filterTreeNodes(
+  nodes: FsNode[],
+  searchTerm: string,
+  visibleFilters: FilterData[]
+): FsNode[] {
+  const visibleTypes = visibleFilters.map(filter => filter.type);
+  const isNoFiltersSelected = visibleFilters.length === 0;
+  const isSearchTermEmpty = !searchTerm.trim() || searchTerm.trim().length < 3;
 
-
-export function filterTreeNodes(nodes: FsNode[], searchTerm: string): FsNode[] {
-  if (!searchTerm.trim() || searchTerm.trim().length < 3) {
+  // If no search term and no filters, show everything
+  if (isSearchTermEmpty && isNoFiltersSelected) {
     return nodes;
   }
 
@@ -13,9 +25,12 @@ export function filterTreeNodes(nodes: FsNode[], searchTerm: string): FsNode[] {
   for (const node of nodes) {
     const nameMatches = node.name.toLowerCase().includes(searchTerm.toLowerCase());
     const descriptionMatches = node.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const childMatches = node.children ? filterTreeNodes(node.children, searchTerm) : [];
+    const typeMatches = isNoFiltersSelected || visibleTypes.includes(node.type);
+    const childMatches = node.children ? filterTreeNodes(node.children, searchTerm, visibleFilters) : [];
 
-    if (nameMatches || descriptionMatches || childMatches.length > 0) {
+    const showBySearch = isSearchTermEmpty || nameMatches || descriptionMatches;
+
+    if ((showBySearch && typeMatches) || childMatches.length > 0) {
       filtered.push({
         ...node,
         expanded: childMatches.length > 0 ? true : node.expanded,
@@ -26,3 +41,5 @@ export function filterTreeNodes(nodes: FsNode[], searchTerm: string): FsNode[] {
 
   return filtered;
 }
+
+export type { FilterData };
