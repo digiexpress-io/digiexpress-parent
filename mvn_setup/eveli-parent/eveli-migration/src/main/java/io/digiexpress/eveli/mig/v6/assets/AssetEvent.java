@@ -6,11 +6,13 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
 public interface AssetEvent {
   ObjectType getSourceType();
+  OffsetDateTime getCreatedAt();
   List<ObjectOperation> getOperations();
   
   
@@ -75,5 +77,10 @@ public interface AssetEvent {
   
   enum ObjectType {
     WRENCH, STENCIL, ENVIR
+  }
+  
+  
+  interface AssetEventMigration {
+    Uni<Void> execute();
   }
 }

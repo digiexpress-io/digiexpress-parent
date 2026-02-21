@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.mig.v6.assets;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,10 +92,13 @@ public class AssetMerger {
     
     final var commit = ImmutableAssetEvent.builder()
         .sourceType(node.getType())
+        .createdAt(node.getCommit().getDatetime().atOffset(ZoneOffset.of("+2")))
         .operations(node.getNodeOperations().stream().map(object -> {
           final var operation = mapToObjectOperation(node, object);
           return operation;
-        }).toList()).build();
+        })
+            
+        .toList()).build();
     
     log.info("{}, {} file(s), at: {}", node.getType().name(), commit.getOperations().size(), node.getCommit().getDatetime());    
     this.merged.add(commit);
@@ -156,6 +160,7 @@ public class AssetMerger {
         .build();
     
     final var newTag = ImmutableAssetEvent.builder()
+        .createdAt(commit.getCreatedAt())
         .sourceType(ObjectType.ENVIR)
         .operations(Arrays.asList(op))
         .build();

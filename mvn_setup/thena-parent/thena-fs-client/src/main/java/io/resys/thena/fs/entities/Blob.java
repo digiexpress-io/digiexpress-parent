@@ -70,6 +70,7 @@ public interface Blob extends Entity {
     final var hash = Hashing.murmur3_128().hashString(hashString, StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
+        .blobClass(fileClass)
         .blobType(type)
         .blobValue(content);
   }

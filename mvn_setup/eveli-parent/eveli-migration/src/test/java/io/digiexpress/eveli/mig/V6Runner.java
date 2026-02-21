@@ -32,6 +32,7 @@ public class V6Runner {
         .stencil("stencil-assets")
         .wrench("wrench-assets")
         .envir("envir")
+        .fs("test-mig")
         .execute()
         .await().atMost(Duration.ofMinutes(1));
     

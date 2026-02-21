@@ -148,4 +148,8 @@ public class FileSystem_ThenaImpl implements FileSystem {
       return new FileSystem_ThenaImpl(state);
     }
   }
+
+  public FsDb getStartingState() {
+    return startingState;
+  }
 }
