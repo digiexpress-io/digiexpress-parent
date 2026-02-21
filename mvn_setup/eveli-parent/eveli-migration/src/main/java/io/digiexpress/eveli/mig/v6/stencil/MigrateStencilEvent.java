@@ -57,6 +57,7 @@ public class MigrateStencilEvent implements AssetEventMigration {
         .fileType("STENCIL")
         .fileClass(type)
         .fileId(newOp.getObjectId())
+        .filePath(getFilePath(newOp.getObjectId(), newOp.getNewObject()))
         .fileName(getFileName(newOp.getObjectId(), newOp.getNewObject()) + "." + type.toLowerCase())
         .fileValue(newOp.getNewObject())
         .build();
@@ -99,6 +100,20 @@ public class MigrateStencilEvent implements AssetEventMigration {
       case "WORKFLOW": return body.getString("value");
       case "PAGE": return objectId;
       case "TEMPLATE": return objectId;
+      default: throw new IllegalArgumentException("Unknown docType: " + type);
+    }
+  }
+  
+  private String getFilePath(String objectId, JsonObject content) {
+    final var type = content.getString("type");
+    final var body = content.getJsonObject("body");
+    switch(type) {
+      case "LOCALE": return "stencil/locales";
+      case "LINK": return "stencil/links";
+      case "ARTICLE": return "stencil/articles";
+      case "WORKFLOW": return "stencil/workflows";
+      case "PAGE": return  "stencil/articles";
+      case "TEMPLATE": return "stencil/templates";
       default: throw new IllegalArgumentException("Unknown docType: " + type);
     }
   }

@@ -91,7 +91,7 @@ public interface Node extends Entity {
       if(getNodePath().isPresent()) {
         final var directoryPath = getNodePath().get();
         RepoAssert.isTrue(!directoryPath.trim().isEmpty(), () -> "directoryPath cannot be empty");
-        RepoAssert.isTrue(directoryPath.matches("^[\\p{L}0-9_. -]+$"), () -> "directoryPath: '" + directoryPath + "' contains invalid characters, only Unicode letters, digits, _, ., -, and spaces allowed");
+        RepoAssert.isTrue(directoryPath.matches("^[\\p{L}0-9_. -\\/]+$"), () -> "directoryPath: '" + directoryPath + "' contains invalid characters, only Unicode letters, digits, _, ., -, and spaces allowed");
         RepoAssert.isTrue(!directoryPath.contains("//"), () -> "directoryPath cannot contain double slashes");
         RepoAssert.isTrue(!directoryPath.endsWith("/"), () -> "directoryPath cannot end with slash");      
       }
@@ -108,7 +108,7 @@ public interface Node extends Entity {
       final var filePath = getNodePath().get();
       RepoAssert.notNull(filePath, () -> "filePath is required");
       RepoAssert.isTrue(!filePath.trim().isEmpty(), () -> "filePath cannot be empty");
-      RepoAssert.isTrue(filePath.matches("^[\\p{L}0-9_.-]+$"), () -> "filePath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
+      RepoAssert.isTrue(filePath.matches("^[\\p{L}0-9_. -\\/]+$"), () -> "filePath: '" + filePath + "' contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
       RepoAssert.isTrue(!filePath.contains("//"), () -> "filePath cannot contain double slashes");
       RepoAssert.isTrue(!filePath.endsWith("/"), () -> "filePath cannot end with slash");
     }
@@ -120,12 +120,7 @@ public interface Node extends Entity {
     RepoAssert.isTrue(!fileName.contains("/"), () -> "fileName cannot contain slashes");
   }
   
-
-
   
-  interface NodeAbstractSyntaxTree {
-    
-  }
     
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
   public static ImmutableNode.Builder newInstance(
