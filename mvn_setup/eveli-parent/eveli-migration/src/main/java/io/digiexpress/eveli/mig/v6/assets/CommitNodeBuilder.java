@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableSet;
 
+import io.digiexpress.eveli.mig.v6.assets.AssetEvent.ObjectType;
 import io.digiexpress.eveli.mig.v6.assets.CommitNode.AddNodeOperation;
-import io.digiexpress.eveli.mig.v6.assets.CommitNode.CommitNodeType;
 import io.digiexpress.eveli.mig.v6.assets.CommitNode.MergeNodeOperation;
 import io.digiexpress.eveli.mig.v6.assets.CommitNode.NodeOperation;
 import io.digiexpress.eveli.mig.v6.assets.CommitNode.RmNodeOperation;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CommitNodeBuilder {
-  private final CommitNodeType type;
+  private final ObjectType type;
   private final OldGit.OldGitObjects git;
   private final Map<String, String> reverseTree = new HashMap<>();
   private CommitNode_Impl root;
@@ -39,7 +39,7 @@ public class CommitNodeBuilder {
         nodeOperations.add(visitAdd(commit, value));  
       }
       
-      this.root = new CommitNode_Impl(type, commit, nodeOperations, Optional.empty());
+      this.root = new CommitNode_Impl(git, type, commit, nodeOperations, Optional.empty());
     } else {
       final var parentId = commit.getParent().get();
       final var parentCommit = git.getCommits().get(parentId);
@@ -99,14 +99,15 @@ public class CommitNodeBuilder {
     RepoAssert.notNull(firstCommit, () -> "Cant find first commit, " + git.getTenant() + "!");    
     visitCommit(firstCommit);
     
-    return new CommitNode_Impl(type, null, Collections.emptyList(), Optional.empty()).add(root);
+    return new CommitNode_Impl(git, type, null, Collections.emptyList(), Optional.empty()).add(root);
     
   }
   
   @RequiredArgsConstructor
   @Getter
   public class CommitNode_Impl implements CommitNode {
-    private final CommitNodeType type;
+    private final OldGit.OldGitObjects src;
+    private final ObjectType type;
     private final Commit commit;
     private final List<NodeOperation> nodeOperations;
     private final Optional<CommitNode> previous;
@@ -116,7 +117,7 @@ public class CommitNodeBuilder {
     
     public CommitNode_Impl add(Commit commit, List<NodeOperation> op) {
       if(this.commit.getId().equals(commit.getParent().get())) {
-        this.next = Optional.of(new CommitNode_Impl(type, commit, op, Optional.ofNullable(this)));
+        this.next = Optional.of(new CommitNode_Impl(src, type, commit, op, Optional.ofNullable(this)));
       } else {
         ((CommitNode_Impl)this.next.get()).add(commit, op);
       }

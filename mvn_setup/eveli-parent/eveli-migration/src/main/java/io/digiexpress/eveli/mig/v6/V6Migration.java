@@ -54,7 +54,6 @@ public class V6Migration {
         .wrench(tuple.getItem2())
         .envir(tuple.getItem3())
         .build();
-      
       return tuple;
     })
     .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());

@@ -3,22 +3,23 @@ package io.digiexpress.eveli.mig.v6.assets;
 import java.util.List;
 import java.util.Optional;
 
+import io.digiexpress.eveli.mig.v6.assets.AssetEvent.ObjectType;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.Commit;
+import io.digiexpress.eveli.mig.v6.baseline.OldGit.OldGitObjects;
 import io.digiexpress.eveli.mig.v6.baseline.OldGit.TreeValue;
 import lombok.Value;
 
 public interface CommitNode {
-  CommitNodeType getType();
+  OldGitObjects getSrc();
+  ObjectType getType();
   Commit getCommit();
   List<NodeOperation> getNodeOperations();
   Optional<CommitNode> getPrevious();
   Optional<CommitNode> getNext();
   
-  enum CommitNodeType {
-    WRENCH, STENCIL, ENVIR
-  }
-  
   interface NodeOperation {
+    
+    
     default boolean isAdd() {
       return this instanceof AddNodeOperation;
     }
