@@ -16,16 +16,7 @@ const assetsWithChanges = [
   { id: 'sipoo-main-site.link', name: 'sipoo-main-site.link', status: 'new' }
 ];
 
-
-export interface ChangesViewProps {
-  node: FsNode | undefined;
-}
-
-export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
-  const { isDarkMode } = useFs();
-  const [confirmOpen, setConfirmOpen] = React.useState(false);
-
-  const getStatusColor = (status: string) => {
+const getStatusColor = (status: string, isDarkMode: boolean) => {
     switch (status) {
       case 'deleted':
         return isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
@@ -37,6 +28,16 @@ export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
         return isDarkMode ? FsColors.dark.text : FsColors.light.text;
     }
   };
+
+export interface ChangesViewProps {
+  node: FsNode | undefined;
+}
+
+export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
+  const { isDarkMode } = useFs();
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+
+
 
 
   const mainContent = (
@@ -56,7 +57,7 @@ export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
           <Typography variant="subtitle2"
             sx={{
               fontWeight: 500,
-              color: getStatusColor(asset.status),
+              color: getStatusColor(asset.status, isDarkMode),
               width: '100px',
               flexShrink: 0,
               textAlign: 'right'
@@ -85,6 +86,10 @@ export const ChangesView: React.FC<ChangesViewProps> = ({ node }) => {
 
   return (
     <ViewContainer title='Unsaved changes' icon={<FsIcons.Save />} activeNode={true}>
+      <Box display='flex' justifyContent='center' gap={1} mb={1}>
+        <Button variant='outlined' color='error' sx={{ color: 'error.main' }}>Discard all changes</Button>
+        <Button>Save all changes</Button>
+      </Box>
       {confirmOpen && <UndoConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} />}
       {mainContent}
     </ViewContainer>
@@ -103,8 +108,7 @@ const UndoConfirmDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ o
         <Button variant='outlined' onClick={onClose}>Cancel</Button>
         <Button onClick={onClose}>Accept</Button>
       </DialogActions>
-
-    </Dialog >
+    </Dialog>
   )
 }
 
