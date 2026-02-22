@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.Value;
@@ -24,6 +25,16 @@ public interface OldGit {
     Map<String, Tree> trees;
     Map<String, Blob> blobs;
     Map<String, Commit> commits;
+    
+    
+    public Blob getBlob(String commitId, String objectId) {
+      
+      final var commit = this.getCommits().get(commitId);
+      final var tree = this.getTrees().get(commit.getTree());
+      final var treeValue = tree.getValues().get(objectId);
+      final var blob = RepoAssert.notNull(this.getBlobs().get(treeValue.getBlob()), () -> "Can't find blob");
+      return blob;
+    }
   }
 
   @Value

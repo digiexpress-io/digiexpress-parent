@@ -6,8 +6,10 @@ import io.digiexpress.eveli.mig.v6.assets.AssetEvent.MergeOperation;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.NewOperation;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.ObjectOperationType;
 import io.digiexpress.eveli.mig.v6.assets.AssetEvent.RmOperation;
+import io.digiexpress.eveli.mig.v6.baseline.OldGit;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.api.commits.CommitBuilder;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +59,8 @@ public class MigrateStencilEvent implements AssetEventMigration {
         .fileType("STENCIL")
         .fileClass(type)
         .fileId(newOp.getObjectId())
-        .filePath(getFilePath(newOp.getObjectId(), newOp.getNewObject()))
-        .fileName(getFileName(newOp.getObjectId(), newOp.getNewObject()) + "." + type.toLowerCase())
+        .filePath(getFilePath(newOp.getObjectId(), newOp.getNewObject(), newOp.getSourceTree(), newOp.getOriginalCommitId()))
+        .fileName(getFileName(newOp.getObjectId(), newOp.getNewObject(), newOp.getSourceTree(), newOp.getOriginalCommitId()) + "." + type.toLowerCase())
         .fileValue(newOp.getNewObject())
         .build();
     });
@@ -67,7 +69,8 @@ public class MigrateStencilEvent implements AssetEventMigration {
     final var type = mergeOp.getNewObject().getString("type");
     commitBuilder.mergeFile(mergeOp.getObjectId(),(pre, mergeFile) -> {
       mergeFile
-        .fileName(getFileName(mergeOp.getObjectId(), mergeOp.getNewObject()) + "." + type.toLowerCase())
+        .filePath(getFilePath(mergeOp.getObjectId(), mergeOp.getNewObject(), mergeOp.getSourceTree(), mergeOp.getOriginalCommitId()))
+        .fileName(getFileName(mergeOp.getObjectId(), mergeOp.getNewObject(), mergeOp.getSourceTree(), mergeOp.getOriginalCommitId()) + "." + type.toLowerCase())
         .fileValue(mergeOp.getNewObject())
         .build();
     });
@@ -90,7 +93,7 @@ public class MigrateStencilEvent implements AssetEventMigration {
     return "RELEASE".equals(type);
   }
   
-  private String getFileName(String objectId, JsonObject content) {
+  private String getFileName(String objectId, JsonObject content, OldGit.OldGitObjects git, String commitId) {
     final var type = content.getString("type");
     final var body = content.getJsonObject("body");
     switch(type) {
@@ -98,23 +101,60 @@ public class MigrateStencilEvent implements AssetEventMigration {
       case "LINK": return objectId;
       case "ARTICLE": return body.getString("name");
       case "WORKFLOW": return body.getString("value");
-      case "PAGE": return objectId;
+      case "PAGE": {
+        final var localeId = body.getString("locale");
+        final var locale = git.getBlob(commitId, localeId);
+        return locale.getValue().getJsonObject("body").getString("value");
+      }
       case "TEMPLATE": return objectId;
       default: throw new IllegalArgumentException("Unknown docType: " + type);
     }
   }
   
-  private String getFilePath(String objectId, JsonObject content) {
+  private String getFilePath(String objectId, JsonObject content, OldGit.OldGitObjects git, String commitId) {
     final var type = content.getString("type");
     final var body = content.getJsonObject("body");
+    
     switch(type) {
       case "LOCALE": return "stencil/locales";
       case "LINK": return "stencil/links";
-      case "ARTICLE": return "stencil/articles";
+      case "ARTICLE": return getArticleFolderName(objectId, content, git, commitId);
+      case "PAGE": {
+        final var articleId = body.getString("article");        
+        final var article = git.getBlob(commitId, articleId);
+        return getArticleFolderName(objectId, article.getValue(), git, commitId);
+      }
       case "WORKFLOW": return "stencil/workflows";
-      case "PAGE": return  "stencil/articles";
       case "TEMPLATE": return "stencil/templates";
       default: throw new IllegalArgumentException("Unknown docType: " + type);
     }
+  }
+  
+
+  private String getArticleFolderName(String objectId, JsonObject content, OldGit.OldGitObjects git, String commitId) {
+    final var body = content.getJsonObject("body");
+    
+    String folderName = "";
+    JsonObject article = body;
+    
+    while(article != null) {
+      final var articleOrder = String.format("%03d", body.getInteger("order"));
+      final var articleName = body.getString("name");    
+      
+      if(!folderName.isEmpty()) {
+        folderName += "/";
+      }
+      folderName += articleOrder + "_" + articleName;
+      
+      // next article
+      final var parentId = article.getString("parentId");
+      if(parentId == null || parentId.isEmpty()) {
+        break;
+      } 
+      final var blob = git.getBlob(commitId, objectId);
+      article = RepoAssert.notNull(blob.getValue().getJsonObject("body"), () -> "Failed to resolve blob!");
+    }
+
+    return "stencil/articles/" + folderName;
   }
 }

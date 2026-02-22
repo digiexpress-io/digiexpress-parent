@@ -14,7 +14,6 @@ public class V6Runner {
   
   @Test
   public void xxx() {
-
     final io.vertx.sqlclient.Pool pool = PgBuilder.pool().connectingTo(
       new PgConnectOptions()
         .setHost("localhost")
@@ -24,7 +23,6 @@ public class V6Runner {
         .setPassword("password123")
       )
       .with(new PoolOptions().setMaxSize(5))
-
       .build();
     
     
@@ -35,9 +33,5 @@ public class V6Runner {
         .fs("test-mig")
         .execute()
         .await().atMost(Duration.ofMinutes(1));
-    
-    
-    
-    
   }
 }

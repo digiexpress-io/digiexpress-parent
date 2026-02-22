@@ -113,6 +113,8 @@ public class AssetMerger {
       final var newObject = node.getSrc().getBlobs().get(add.getBlob());
       
       return ImmutableNewOperation.builder()
+          .originalCommitId(node.getCommit().getId())
+          .sourceTree(node.getSrc())
           .objectId(objectId)
           .newObject(newObject.getValue())
           .build();
@@ -124,6 +126,8 @@ public class AssetMerger {
       final var newObject = node.getSrc().getBlobs().get(merge.getAfter().getBlob());
       
       return ImmutableMergeOperation.builder()
+          .originalCommitId(node.getCommit().getId())
+          .sourceTree(node.getSrc())
           .objectId(objectId)
           .previous(before.getValue())
           .newObject(newObject.getValue())
@@ -135,6 +139,8 @@ public class AssetMerger {
     final var objectId = rm.getRemoved().getName();
     final var before = node.getSrc().getBlobs().get(rm.getRemoved().getBlob());
     return ImmutableRmOperation.builder()
+        .originalCommitId(node.getCommit().getId())
+        .sourceTree(node.getSrc())
         .objectId(objectId)
         .previous(before.getValue())
         .build();
@@ -157,6 +163,8 @@ public class AssetMerger {
         .description(doc.getDocDescription().orElse(""))
         .errors(doc.getDocMeta().orElse(null))
         .sources(src.getValue())
+        .sourceTree(envir)
+        .originalCommitId(commit.getId())
         .build();
     
     final var newTag = ImmutableAssetEvent.builder()

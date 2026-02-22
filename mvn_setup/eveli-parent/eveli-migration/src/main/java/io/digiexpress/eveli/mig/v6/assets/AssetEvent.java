@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.digiexpress.eveli.mig.v6.baseline.OldEnvir;
+import io.digiexpress.eveli.mig.v6.baseline.OldGit;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
@@ -18,10 +20,12 @@ public interface AssetEvent {
   
   interface ObjectOperation {
     ObjectOperationType getType();
+    String getOriginalCommitId();
   }
   
   @Value.Immutable
   interface MergeOperation extends ObjectOperation {
+    OldGit.OldGitObjects getSourceTree();
     String getObjectId();
     JsonObject getPrevious();
     JsonObject getNewObject();
@@ -33,6 +37,7 @@ public interface AssetEvent {
   
   @Value.Immutable
   interface NewOperation extends ObjectOperation {
+    OldGit.OldGitObjects getSourceTree();
     String getObjectId();
     JsonObject getNewObject();
 
@@ -43,6 +48,7 @@ public interface AssetEvent {
   
   @Value.Immutable
   interface RmOperation extends ObjectOperation {
+    OldGit.OldGitObjects getSourceTree();
     String getObjectId();
     JsonObject getPrevious();
 
@@ -53,6 +59,7 @@ public interface AssetEvent {
   
   @Value.Immutable
   interface TagOperation extends ObjectOperation {
+    OldEnvir.OldEnvirObjects getSourceTree();
     String getId();
     String getName();
     String getAuthor();
