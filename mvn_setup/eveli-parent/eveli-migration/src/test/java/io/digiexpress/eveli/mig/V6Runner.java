@@ -13,7 +13,7 @@ import io.vertx.sqlclient.PoolOptions;
 public class V6Runner {
   
   @Test
-  public void xxx() {
+  public void vs6runner() {
     final io.vertx.sqlclient.Pool pool = PgBuilder.pool().connectingTo(
       new PgConnectOptions()
         .setHost("localhost")
@@ -27,11 +27,12 @@ public class V6Runner {
     
     
     final var mig = new V6Migration(new io.vertx.mutiny.sqlclient.Pool(pool))
-        .stencil("stencil-assets")
-        .wrench("wrench-assets")
-        .envir("envir")
-        .fs("test-mig")
-        .execute()
-        .await().atMost(Duration.ofMinutes(1));
+      .stencil("stencil-assets")
+      .wrench("wrench-assets")
+      .envir("envir")
+      .fs("test-mig")
+      .execute()
+      .await()
+      .atMost(Duration.ofMinutes(1));
   }
 }
