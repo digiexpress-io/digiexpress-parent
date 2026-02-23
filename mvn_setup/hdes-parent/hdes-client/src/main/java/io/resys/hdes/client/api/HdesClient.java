@@ -70,7 +70,6 @@ public interface HdesClient extends CockpitAware<HdesClient> {
   HdesTypesMapper mapper();
   HdesAstTypes types();
   HdesStore store();
-  CSVBuilder csv();
   ClientRepoBuilder repo();
   HdesClientConfig config();
 
@@ -133,10 +132,7 @@ public interface HdesClient extends CockpitAware<HdesClient> {
     
     EnvirBuilder build();
   }
-  
-  interface CSVBuilder {
-    String ast(AstDecision ast);
-  }
+
 
   interface ProgramBuilder {
     FlowProgram ast(AstFlow ast);
