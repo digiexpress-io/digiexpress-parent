@@ -64,13 +64,15 @@ public interface Blob extends Entity {
     final var hashString = new StringBuilder()
       .append(canonicalizeJson(content))
       .append("type ").append(type)
-      .append("class ").append(fileClass)
-      .toString();
+      ;
+    if(fileClass != null) {
+      hashString.append("class ").append(fileClass);
+    }
     
-    final var hash = Hashing.murmur3_128().hashString(hashString, StandardCharsets.UTF_8).toString();
+    final var hash = Hashing.murmur3_128().hashString(hashString.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
-        .blobClass(fileClass)
+        .blobClass(Optional.ofNullable(fileClass))
         .blobType(type)
         .blobValue(content);
   }

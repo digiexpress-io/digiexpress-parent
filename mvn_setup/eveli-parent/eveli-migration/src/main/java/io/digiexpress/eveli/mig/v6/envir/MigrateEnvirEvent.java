@@ -59,17 +59,17 @@ public class MigrateEnvirEvent implements AssetEventMigration {
       
       final var form = (JsonObject) obj;
       
-      commitBuilder.newFile(newDoc -> {
-        newDoc
-        .fileType("DIALOB")
-        .fileClass("FORM")
-        .fileId(newOp.getObjectId())
-        .filePath("forms")
-        .fileName(+ ".dialob")
-        .fileValue(newOp.getNewObject())
-        .build();
-        
-      });
+//      commitBuilder.newFile(newDoc -> {
+//        newDoc
+//        .fileType("DIALOB")
+//        .fileClass("FORM")
+//        .fileId(newOp.getObjectId())
+//        .filePath("forms")
+//        .fileName(+ ".dialob")
+//        .fileValue(newOp.getNewObject())
+//        .build();
+//        
+//      });
       
     });
     

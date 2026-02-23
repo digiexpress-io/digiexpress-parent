@@ -217,7 +217,6 @@ public class EveliAutoConfigAssets {
             .pgPool(pgPool)
             .repoName("wrench-assets")
             .headName("main")
-            .authorProvider(() -> "eveli")
             .objectMapper(objectMapper)
             .build())
         .objectMapper(objectMapper)

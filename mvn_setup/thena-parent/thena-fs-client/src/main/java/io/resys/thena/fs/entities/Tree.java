@@ -40,7 +40,7 @@ public interface Tree extends Entity {
   
   String getId();
   List<Node> getTreeNodes();
-
+  
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.TREE; 
