@@ -50,7 +50,7 @@ public class HdesAstTypesImpl implements HdesAstTypes {
   public HdesAstTypesImpl(HdesTypesMapper typeDefs, List<AstFlowNodeVisitor> visitors) {
     super();
     CompilerConfiguration groovyConfig = new CompilerConfiguration();
-    groovyConfig.setTargetBytecode(CompilerConfiguration.JDK8);
+    groovyConfig.setTargetBytecode(CompilerConfiguration.JDK21);
     groovyConfig.addCompilationCustomizers(new GroovyCompilationCustomizer());
     groovyConfig.addCompilationCustomizers(new ASTTransformationCustomizer(groovy.transform.CompileStatic.class));
     
