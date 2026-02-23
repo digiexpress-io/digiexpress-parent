@@ -1,1 +1,2 @@
-export { FsBreadcrumb } from './FsBreadcrumb';
+export * from './FsBreadcrumb';
+export * from './FsBreadcrumbProps';
