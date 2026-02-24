@@ -2,19 +2,26 @@ package io.resys.limaone.authoring;
 
 import io.resys.limaone.authoring.article.ModifyArticle;
 import io.resys.limaone.authoring.article.NewArticle;
+import io.resys.limaone.authoring.articlelink.DeleteArticleLink;
 import io.resys.limaone.authoring.articlelink.ModifyArticleLink;
 import io.resys.limaone.authoring.articlelink.NewArticleLink;
 import io.resys.limaone.authoring.articlepage.ModifyArticlePage;
 import io.resys.limaone.authoring.articlepage.NewArticlePage;
 import io.resys.limaone.authoring.articletemplate.ModifyArticleTemplate;
 import io.resys.limaone.authoring.articletemplate.NewArticleTemplate;
+import io.resys.limaone.authoring.articleworkflow.DeleteArticleWorkflow;
 import io.resys.limaone.authoring.articleworkflow.ModifyArticleWorkflow;
 import io.resys.limaone.authoring.articleworkflow.NewArticleWorkflow;
+import io.resys.limaone.authoring.decisiontable.ModifyDecisionTable;
 import io.resys.limaone.authoring.decisiontable.NewDecisionTable;
+import io.resys.limaone.authoring.flow.ModifyFlow;
 import io.resys.limaone.authoring.flow.NewFlow;
+import io.resys.limaone.authoring.flowtask.ModifyFlowTask;
 import io.resys.limaone.authoring.flowtask.NewFlowTask;
 import io.resys.limaone.authoring.locale.ModifyLocale;
 import io.resys.limaone.authoring.locale.NewLocale;
+import io.resys.limaone.model.Model;
+import io.smallrye.mutiny.Uni;
 
 public interface Authoring {
 
@@ -51,6 +58,8 @@ public interface Authoring {
   }
   
   interface DeleteSource {
-    
+    Uni<Model<?>> deleteAny(String id);
+    DeleteArticleLink deleteArticleLink();
+    DeleteArticleWorkflow deleteArticleWorkflow();
   }
 }
