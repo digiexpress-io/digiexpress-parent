@@ -1,6 +1,6 @@
 package io.resys.limaone.authoring.articleworkflow;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -41,7 +41,7 @@ public interface NewArticleWorkflow {
     @Nullable Boolean getDisabled();
     @Nullable Boolean getAssignable();
     
-    @Nullable LocalDateTime getStartDate();
-    @Nullable LocalDateTime getEndDate();
+    @Nullable OffsetDateTime getStartDate();
+    @Nullable OffsetDateTime getEndDate();
   }
 }

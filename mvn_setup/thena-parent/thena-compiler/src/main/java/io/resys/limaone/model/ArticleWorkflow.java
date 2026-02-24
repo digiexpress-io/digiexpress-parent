@@ -1,6 +1,6 @@
 package io.resys.limaone.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -34,10 +34,10 @@ public interface ArticleWorkflow extends Body {
   @Nullable Boolean getDisabled();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 
-  @Nullable LocalDateTime getStartDate();
+  @Nullable OffsetDateTime getStartDate();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 
-  @Nullable LocalDateTime getEndDate();
+  @Nullable OffsetDateTime getEndDate();
   
   @JsonInclude(JsonInclude.Include.NON_NULL) 
   @Nullable String getFormId();
