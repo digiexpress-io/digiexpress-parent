@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.authoring.link.NewLink;
+import io.resys.limaone.authoring.articlelink.NewArticleLink;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.Model;
@@ -17,8 +17,8 @@ import jakarta.annotation.Nullable;
 
 public interface NewDecisionTable {
 
-  NewLink props(NewDecisionTableProps props);
-  NewLink props(Consumer<ImmutableNewDecisionTableProps.Builder> props);
+  NewArticleLink props(NewDecisionTableProps props);
+  NewArticleLink props(Consumer<ImmutableNewDecisionTableProps.Builder> props);
   
   Uni<Model<DecisionTable>> build();
   

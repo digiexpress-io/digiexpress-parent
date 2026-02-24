@@ -1,4 +1,4 @@
-package io.resys.limaone.authoring.link;
+package io.resys.limaone.authoring.articlelink;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,16 +14,16 @@ import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
-public interface NewLink {
+public interface NewArticleLink {
 
-  NewLink props(NewLinkProps props);
-  NewLink props(Consumer<ImmutableNewLinkProps.Builder> props);
+  NewArticleLink props(NewArticleLinkProps props);
+  NewArticleLink props(Consumer<ImmutableNewArticleLinkProps.Builder> props);
   
   Uni<Model<ArticleLink>> build();
   
   
-  @Value.Immutable @JsonSerialize(as = ImmutableNewLinkProps.class) @JsonDeserialize(as = ImmutableNewLinkProps.class)
-  interface NewLinkProps {
+  @Value.Immutable @JsonSerialize(as = ImmutableNewArticleLinkProps.class) @JsonDeserialize(as = ImmutableNewArticleLinkProps.class)
+  interface NewArticleLinkProps {
     String getValue(); 
     String getType();
     List<String> getArticles();

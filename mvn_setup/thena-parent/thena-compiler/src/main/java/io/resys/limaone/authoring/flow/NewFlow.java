@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.authoring.link.NewLink;
+import io.resys.limaone.authoring.articlelink.NewArticleLink;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -15,8 +15,8 @@ import jakarta.annotation.Nullable;
 
 public interface NewFlow {
 
-  NewLink props(NewFlowProps props);
-  NewLink props(Consumer<ImmutableNewFlowProps.Builder> props);
+  NewArticleLink props(NewFlowProps props);
+  NewArticleLink props(Consumer<ImmutableNewFlowProps.Builder> props);
   
   Uni<Model<Flow>> build();
   

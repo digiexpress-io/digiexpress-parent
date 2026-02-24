@@ -1,4 +1,4 @@
-package io.resys.limaone.authoring.template;
+package io.resys.limaone.authoring.articletemplate;
 
 import java.util.function.Consumer;
 
@@ -12,16 +12,16 @@ import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
-public interface NewTemplate {
+public interface NewArticleTemplate {
 
-  NewTemplate props(NewTemplateProps props);
-  NewTemplate props(Consumer<ImmutableNewTemplateProps.Builder> props);
+  NewArticleTemplate props(NewArticleTemplateProps props);
+  NewArticleTemplate props(Consumer<ImmutableNewArticleTemplateProps.Builder> props);
   
   Uni<Model<ArticleTemplate>> build();
   
   
-  @Value.Immutable @JsonSerialize(as = ImmutableNewTemplateProps.class) @JsonDeserialize(as = ImmutableNewTemplateProps.class)
-  interface NewTemplateProps {
+  @Value.Immutable @JsonSerialize(as = ImmutableNewArticleTemplateProps.class) @JsonDeserialize(as = ImmutableNewArticleTemplateProps.class)
+  interface NewArticleTemplateProps {
     String getName();
     String getDescription();
     String getContent();

@@ -1,4 +1,4 @@
-package io.resys.limaone.authoring.workflow;
+package io.resys.limaone.authoring.articleworkflow;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,16 +15,16 @@ import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
-public interface NewWorkflow {
+public interface NewArticleWorkflow {
 
-  NewWorkflow props(NewWorkflowProps props);
-  NewWorkflow props(Consumer<ImmutableNewWorkflowProps.Builder> props);
+  NewArticleWorkflow props(NewArticleWorkflowProps props);
+  NewArticleWorkflow props(Consumer<ImmutableNewArticleWorkflowProps.Builder> props);
   
   Uni<Model<ArticleWorkflow>> build();
   
   
-  @Value.Immutable @JsonSerialize(as = ImmutableNewWorkflowProps.class) @JsonDeserialize(as = ImmutableNewWorkflowProps.class)
-  interface NewWorkflowProps {
+  @Value.Immutable @JsonSerialize(as = ImmutableNewArticleWorkflowProps.class) @JsonDeserialize(as = ImmutableNewArticleWorkflowProps.class)
+  interface NewArticleWorkflowProps {
     String getValue();
     List<String> getArticles();
     List<LocaleLabel> getLabels();

@@ -1,4 +1,4 @@
-package io.resys.limaone.authoring.page;
+package io.resys.limaone.authoring.articlepage;
 
 import java.util.function.Consumer;
 
@@ -12,16 +12,16 @@ import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
-public interface NewPage {
+public interface NewArticlePage {
 
-  NewPage props(NewPageProps props);
-  NewPage props(Consumer<ImmutableNewPageProps.Builder> props);
+  NewArticlePage props(NewArticlePageProps props);
+  NewArticlePage props(Consumer<ImmutableNewArticlePageProps.Builder> props);
   
   Uni<Model<ArticlePage>> build();
   
   
-  @Value.Immutable @JsonSerialize(as = ImmutableNewPageProps.class) @JsonDeserialize(as = ImmutableNewPageProps.class)
-  interface NewPageProps {
+  @Value.Immutable @JsonSerialize(as = ImmutableNewArticlePageProps.class) @JsonDeserialize(as = ImmutableNewArticlePageProps.class)
+  interface NewArticlePageProps {
     String getArticleId();
     String getLocale();
     
