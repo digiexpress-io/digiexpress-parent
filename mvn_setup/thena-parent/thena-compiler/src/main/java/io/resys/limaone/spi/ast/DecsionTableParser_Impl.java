@@ -9,11 +9,11 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
 import io.resys.limaone.ast.AST_Parser;
-import io.resys.limaone.ast.attribute.Attribute_AST.Direction;
-import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST.ColumnExpressionType;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST.HitPolicy;
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.Attribute_AST.Direction;
+import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.ast.DecisionTable_AST.ColumnExpressionType;
+import io.resys.limaone.ast.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.DecisionTable.DecisionTableNodeType;
 import io.resys.limaone.spi.ast.decisiontable.AST_Exception;

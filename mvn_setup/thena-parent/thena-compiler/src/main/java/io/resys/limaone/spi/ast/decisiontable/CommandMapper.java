@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.limaone.ast.attribute.Attribute_AST.Direction;
-import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.Attribute_AST.Direction;
+import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.ast.DecisionTable_AST.ColumnExpressionType;
+import io.resys.limaone.ast.DecisionTable_AST.DecisionRow;
+import io.resys.limaone.ast.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.ast.attribute.ImmutableHeaders_AST;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST.ColumnExpressionType;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST.DecisionRow;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.ast.decisiontable.ImmutableDecisionCell;
 import io.resys.limaone.ast.decisiontable.ImmutableDecisionRow;
 import io.resys.limaone.ast.decisiontable.ImmutableDecisionTable_AST;

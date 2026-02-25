@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.limaone.ast.attribute.Attribute_AST;
-import io.resys.limaone.ast.attribute.Attribute_AST.Deserializer;
-import io.resys.limaone.ast.attribute.Attribute_AST.Direction;
-import io.resys.limaone.ast.attribute.Attribute_AST.Serializer;
-import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
+import io.resys.limaone.ast.Attribute_AST;
+import io.resys.limaone.ast.Attribute_AST.Deserializer;
+import io.resys.limaone.ast.Attribute_AST.Direction;
+import io.resys.limaone.ast.Attribute_AST.Serializer;
+import io.resys.limaone.ast.Attribute_AST.ValueType;
 import io.resys.limaone.ast.attribute.ImmutableAttribute_AST;
 import io.resys.thena.support.RepoAssert;
 

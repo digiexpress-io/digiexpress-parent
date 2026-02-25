@@ -2,7 +2,7 @@ package io.resys.limaone.spi.expression;
 
 import java.util.Objects;
 
-import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
+import io.resys.limaone.ast.Attribute_AST.ValueType;
 
 public class CacheKey {
   final String src;

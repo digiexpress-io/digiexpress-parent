@@ -22,8 +22,8 @@ package io.resys.limaone.spi.ast.attribute;
 
 import java.io.Serializable;
 
-import io.resys.limaone.ast.attribute.Attribute_AST;
-import io.resys.limaone.ast.attribute.Attribute_AST.Deserializer;
+import io.resys.limaone.ast.Attribute_AST;
+import io.resys.limaone.ast.Attribute_AST.Deserializer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 

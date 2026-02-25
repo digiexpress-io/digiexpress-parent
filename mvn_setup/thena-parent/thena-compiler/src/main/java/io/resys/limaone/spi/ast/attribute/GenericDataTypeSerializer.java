@@ -1,7 +1,7 @@
 package io.resys.limaone.spi.ast.attribute;
 
-import io.resys.limaone.ast.attribute.Attribute_AST;
-import io.resys.limaone.ast.attribute.Attribute_AST.Serializer;
+import io.resys.limaone.ast.Attribute_AST;
+import io.resys.limaone.ast.Attribute_AST.Serializer;
 import io.vertx.core.json.Json;
 
 public class GenericDataTypeSerializer implements Serializer {

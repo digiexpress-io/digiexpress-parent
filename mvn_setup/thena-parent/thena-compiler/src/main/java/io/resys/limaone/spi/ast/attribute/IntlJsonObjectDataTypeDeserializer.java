@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.limaone.ast.attribute.Attribute_AST;
-import io.resys.limaone.ast.attribute.Attribute_AST.Deserializer;
+import io.resys.limaone.ast.Attribute_AST;
+import io.resys.limaone.ast.Attribute_AST.Deserializer;
 import io.vertx.core.json.JsonObject;
 
 public class IntlJsonObjectDataTypeDeserializer implements Deserializer {

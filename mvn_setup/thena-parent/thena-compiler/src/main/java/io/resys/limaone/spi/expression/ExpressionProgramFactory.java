@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
+import io.resys.limaone.ast.Attribute_AST.ValueType;
 
 
 public class ExpressionProgramFactory {

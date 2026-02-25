@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
+import io.resys.limaone.ast.Attribute_AST.ValueType;
 import jakarta.annotation.Nullable;
 
 public interface ExpressionProgram {
