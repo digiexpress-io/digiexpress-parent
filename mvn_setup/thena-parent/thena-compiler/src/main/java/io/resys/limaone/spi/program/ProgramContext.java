@@ -24,7 +24,6 @@ interface ProgramContext extends Serializable {
   
   <T> T getBean(Class<T> type);
   
-  
   FlowProgram getFlow(String name);
   DecisionProgram getDecision(String name);
   FlowTaskProgram getService(String name);
