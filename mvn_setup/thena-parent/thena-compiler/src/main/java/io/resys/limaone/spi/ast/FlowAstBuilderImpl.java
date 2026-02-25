@@ -36,18 +36,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import io.resys.limaone.ast.Simple_AST;
-import io.resys.limaone.ast.Simple_AST.Message_AST;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowParser;
 import io.resys.limaone.ast.Attribute_AST.ValueType;
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Flow_AST.AstFlowInputType;
-import io.resys.limaone.ast.Flow_AST.AstFlowNode;
-import io.resys.limaone.ast.ImmutableAstFlowInputType;
+import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_AST.FlowInputType;
+import io.resys.limaone.ast.ImmutableFlowInputType;
 import io.resys.limaone.ast.ImmutableFlow_AST;
 import io.resys.limaone.ast.ImmutableMessage_AST;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.Simple_AST.Message_AST;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.ast.flow.NodeBean;
@@ -60,9 +60,9 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
   private final static String LINE_SEPARATOR = System.lineSeparator();
   
   
-  private final static Collection<AstFlowInputType> ALL_INPUTS = Collections.unmodifiableList(    
+  private final static Collection<FlowInputType> ALL_INPUTS = Collections.unmodifiableList(    
       Arrays.asList(ValueType.STRING,  ValueType.BOOLEAN, ValueType.INTEGER, ValueType.LONG, ValueType.DECIMAL, ValueType.DATE, ValueType.DATE_TIME).stream()
-      .map(v -> ImmutableAstFlowInputType.builder().name(v.name()).value(v.name()).build())
+      .map(v -> ImmutableFlowInputType.builder().name(v.name()).value(v.name()).build())
       .collect(Collectors.toList())
   );
 
@@ -102,7 +102,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
     final var ast = ImmutableFlow_AST.builder();
     
 
-    AstFlowNode id = flow.getId();
+    AnyFlowNode id = flow.getId();
     
     return ast
         .bodyType(Model.BodyType.FLOW)

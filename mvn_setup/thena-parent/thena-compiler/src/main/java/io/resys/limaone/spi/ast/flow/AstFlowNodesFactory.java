@@ -7,9 +7,9 @@ import java.util.Map;
 import io.resys.limaone.ast.Attribute_AST;
 import io.resys.limaone.ast.Attribute_AST.Direction;
 import io.resys.limaone.ast.Attribute_AST.ValueType;
-import io.resys.limaone.ast.Flow_AST.AstFlowInputNode;
-import io.resys.limaone.ast.Flow_AST.AstFlowNode;
-import io.resys.limaone.ast.Flow_AST.AstFlowRoot;
+import io.resys.limaone.ast.Flow_AST.FlowInputNode;
+import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_AST.FlowRoot;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.ast.ImmutableMessageRange_AST;
 import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
@@ -44,14 +44,14 @@ public class AstFlowNodesFactory {
     }
   }
   
-  public static String getStringValue(AstFlowNode node) {
+  public static String getStringValue(AnyFlowNode node) {
     if (node == null || node.getValue() == null) {
       return null;
     }
     return node.getValue();
   }
 
-  public static boolean getBooleanValue(AstFlowNode node) {
+  public static boolean getBooleanValue(AnyFlowNode node) {
     if (node == null || node.getValue() == null) {
       return false;
     }
@@ -60,12 +60,12 @@ public class AstFlowNodesFactory {
   
   public static class HeadersBuilder {
     
-    public ImmutableHeaders_AST build(AstFlowRoot data) {
-      Map<String, AstFlowInputNode> inputs = data.getInputs();
+    public ImmutableHeaders_AST build(FlowRoot data) {
+      Map<String, FlowInputNode> inputs = data.getInputs();
 
       int index = 0;
       Collection<Attribute_AST> result = new ArrayList<>();
-      for (Map.Entry<String, AstFlowInputNode> entry : inputs.entrySet()) {
+      for (Map.Entry<String, FlowInputNode> entry : inputs.entrySet()) {
         if (entry.getValue().getType() == null) {
           continue;
         }

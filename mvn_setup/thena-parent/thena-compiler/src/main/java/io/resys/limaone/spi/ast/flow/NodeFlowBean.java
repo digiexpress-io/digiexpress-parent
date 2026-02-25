@@ -6,18 +6,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.resys.limaone.ast.Flow_AST.AstFlowInputNode;
-import io.resys.limaone.ast.Flow_AST.AstFlowInputType;
-import io.resys.limaone.ast.Flow_AST.AstFlowNode;
-import io.resys.limaone.ast.Flow_AST.AstFlowRefNode;
-import io.resys.limaone.ast.Flow_AST.AstFlowRoot;
-import io.resys.limaone.ast.Flow_AST.AstFlowSwitchNode;
-import io.resys.limaone.ast.Flow_AST.AstFlowTaskNode;
+import io.resys.limaone.ast.Flow_AST.FlowInputNode;
+import io.resys.limaone.ast.Flow_AST.FlowInputType;
+import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_AST.FlowRefNode;
+import io.resys.limaone.ast.Flow_AST.FlowRoot;
+import io.resys.limaone.ast.Flow_AST.FlowSwitchNode;
+import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
 import io.resys.limaone.spi.ast.AST_Exception;
 
 
 
-public class NodeFlowBean extends NodeBean implements AstFlowRoot {
+public class NodeFlowBean extends NodeBean implements FlowRoot {
   public static final long serialVersionUID = 8492235102091866790L;
   public static final String KEY_ID = "id";
   public static final String KEY_THEN = "then";
@@ -39,33 +39,33 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
   public static final String KEY_DEBUG_VALUE = "debugValue";
 
 
-  private final Collection<AstFlowInputType> inputTypes;
+  private final Collection<FlowInputType> inputTypes;
   private NodeInputs inputs;
   private NodeTasks tasks;
   private String value;
 
-  public NodeFlowBean(Collection<AstFlowInputType> inputTypes) {
+  public NodeFlowBean(Collection<FlowInputType> inputTypes) {
     super(null, -2, null, null, null);
     this.inputTypes = inputTypes;
   }
   @Override
-  public AstFlowNode getId() {
+  public AnyFlowNode getId() {
     return get(KEY_ID);
   }
   @Override
-  public AstFlowNode getDescription() {
+  public AnyFlowNode getDescription() {
     return get(KEY_DESC);
   }
   @Override
-  public Map<String, AstFlowInputNode> getInputs() {
+  public Map<String, FlowInputNode> getInputs() {
     return inputs == null ? Collections.emptyMap() : inputs.getInputs();
   }
   @Override
-  public Map<String, AstFlowTaskNode> getTasks() {
+  public Map<String, FlowTaskNode> getTasks() {
     return tasks == null ? Collections.emptyMap() : tasks.getTasks();
   }
   @Override
-  public Collection<AstFlowInputType> getTypes() {
+  public Collection<FlowInputType> getTypes() {
     return inputTypes;
   }
   @Override
@@ -101,11 +101,11 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
 
   private static class NodeInputs extends NodeBean {
     private static final long serialVersionUID = 8989618439864849749L;
-    private final Map<String, AstFlowInputNode> inputs = new HashMap<>();
+    private final Map<String, FlowInputNode> inputs = new HashMap<>();
     public NodeInputs(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
       super(source, indent, keyword, value, parent);
     }
-    public Map<String, AstFlowInputNode> getInputs() {
+    public Map<String, FlowInputNode> getInputs() {
       return Collections.unmodifiableMap(inputs);
     }
     @Override
@@ -122,13 +122,13 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
 
   private static class NodeTasks extends NodeBean {
     private static final long serialVersionUID = 2001644047832806256L;
-    private final Map<String, AstFlowTaskNode> tasks = new HashMap<>();
+    private final Map<String, FlowTaskNode> tasks = new HashMap<>();
     private int order = 0;
     public NodeTasks(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
       super(source, indent, keyword, value, parent);
     }
 
-    public Map<String, AstFlowTaskNode> getTasks() {
+    public Map<String, FlowTaskNode> getTasks() {
       return Collections.unmodifiableMap(tasks);
     }
     @Override
@@ -139,27 +139,27 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
     }
   }
 
-  private static class NodeInputBean extends NodeBean implements AstFlowInputNode {
+  private static class NodeInputBean extends NodeBean implements FlowInputNode {
     private static final long serialVersionUID = 8910489078429824772L;
     public NodeInputBean(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
       super(source, indent, keyword, value, parent);
     }
     @Override
-    public AstFlowNode getRequired() {
+    public AnyFlowNode getRequired() {
       return get(KEY_REQ);
     }
 
     @Override
-    public AstFlowNode getType() {
+    public AnyFlowNode getType() {
       return get(KEY_TYPE);
     }
     @Override
-    public AstFlowNode getDebugValue() {
+    public AnyFlowNode getDebugValue() {
       return get(KEY_DEBUG_VALUE);
     }
   }
 
-  private static class NodeSwitchBean extends NodeBean implements AstFlowSwitchNode {
+  private static class NodeSwitchBean extends NodeBean implements FlowSwitchNode {
     private static final long serialVersionUID = 8910489078429824772L;
     private final int order;
 
@@ -168,11 +168,11 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
       this.order = order;
     }
     @Override
-    public AstFlowNode getThen() {
+    public AnyFlowNode getThen() {
       return get(KEY_THEN);
     }
     @Override
-    public AstFlowNode getWhen() {
+    public AnyFlowNode getWhen() {
       return get(KEY_WHEN);
     }
     @Override
@@ -183,13 +183,13 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
 
   private static class NodeCasesBean extends NodeBean {
     private static final long serialVersionUID = 2001644047832806256L;
-    private final Map<String, AstFlowSwitchNode> cases = new HashMap<>();
+    private final Map<String, FlowSwitchNode> cases = new HashMap<>();
     private int order = 0;
     public NodeCasesBean(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
       super(source, indent, keyword, value, parent);
     }
 
-    public Map<String, AstFlowSwitchNode> getValues() {
+    public Map<String, FlowSwitchNode> getValues() {
       return Collections.unmodifiableMap(cases);
     }
     @Override
@@ -200,7 +200,7 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
     }
   }
 
-  private static class NodeTaskBean extends NodeBean implements AstFlowTaskNode {
+  private static class NodeTaskBean extends NodeBean implements FlowTaskNode {
     private static final long serialVersionUID = 8910489078429824772L;
     private final int order;
     private NodeRefBean decisionTable;
@@ -254,35 +254,35 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
       return super.addChild(source, indent, keyword, value);
     }
     @Override
-    public AstFlowNode getId() {
+    public AnyFlowNode getId() {
       return get(KEY_ID);
     }
     @Override
-    public AstFlowNode getThen() {
+    public AnyFlowNode getThen() {
       return get(KEY_THEN);
     }
     @Override
-    public Map<String, AstFlowSwitchNode> getSwitch() {
+    public Map<String, FlowSwitchNode> getSwitch() {
       return cases == null ? Collections.emptyMap() : cases.getValues();
     }
     @Override
-    public AstFlowRefNode getDecisionTable() {
+    public FlowRefNode getDecisionTable() {
       return decisionTable;
     }
     @Override
-    public AstFlowRefNode getService() {
+    public FlowRefNode getService() {
       return service;
     }
     @Override
-    public AstFlowRefNode getUserTask() {
+    public FlowRefNode getUserTask() {
       return userTask;
     }
     @Override
-    public AstFlowRefNode getReturns() {
+    public FlowRefNode getReturns() {
       return returns;
     }
     @Override
-    public AstFlowRefNode getRef() {
+    public FlowRefNode getRef() {
       if(userTask != null) {
         return userTask;
       } else if(service != null) {
@@ -296,7 +296,7 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
     }
   }
 
-  private static class NodeRefBean extends NodeBean implements AstFlowRefNode {
+  private static class NodeRefBean extends NodeBean implements FlowRefNode {
 
     private static final long serialVersionUID = -3601531710393434419L;
 
@@ -304,16 +304,16 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
       super(source, indent, keyword, value, parent);
     }
     @Override
-    public AstFlowNode getRef() {
+    public AnyFlowNode getRef() {
       return get(KEY_REF);
     }
     @Override
-    public AstFlowNode getCollection() {
+    public AnyFlowNode getCollection() {
       return get(KEY_COLLECTION);
     }
     @Override
-    public Map<String, AstFlowNode> getInputs() {
-      AstFlowNode inputs = getInputsNode();
+    public Map<String, AnyFlowNode> getInputs() {
+      AnyFlowNode inputs = getInputsNode();
       if(inputs == null) {
         return Collections.emptyMap();
       }
@@ -321,7 +321,7 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
     }
     @Override
     public String getObjectInput() {
-      AstFlowNode inputs = getInputsNode();
+      AnyFlowNode inputs = getInputsNode();
       if(inputs == null) {
         return null;
       }
@@ -334,7 +334,7 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
       return inputs.getValue();
     }
     @Override
-    public AstFlowNode getInputsNode() {
+    public AnyFlowNode getInputsNode() {
       return get(KEY_INPUTS);
     }
   }

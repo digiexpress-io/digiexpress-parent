@@ -37,63 +37,62 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableFlow_AST.class)
 public interface Flow_AST extends Simple_AST, Serializable {
   
-  AstFlowRoot getRoot();
+  FlowRoot getRoot();
 
   @Value.Immutable
-  interface AstFlowInputType extends Serializable {
+  interface FlowInputType extends Serializable {
     String getName();
     String getValue();
-    @Nullable
-    String getRef();
+    @Nullable String getRef();
   }
 
-  interface AstFlowRoot extends AstFlowNode {
-    AstFlowNode getId();
-    AstFlowNode getDescription();
-    Collection<AstFlowInputType> getTypes();
-    Map<String, AstFlowInputNode> getInputs();
-    Map<String, AstFlowTaskNode> getTasks();
+  interface FlowRoot extends AnyFlowNode {
+    AnyFlowNode getId();
+    AnyFlowNode getDescription();
+    Collection<FlowInputType> getTypes();
+    Map<String, FlowInputNode> getInputs();
+    Map<String, FlowTaskNode> getTasks();
   }
 
-  interface AstFlowTaskNode extends AstFlowNode {
-    AstFlowNode getId();
+  interface FlowTaskNode extends AnyFlowNode {
+    AnyFlowNode getId();
     int getOrder();
-    AstFlowNode getThen();
-    AstFlowRefNode getRef();
-    AstFlowRefNode getUserTask();
-    AstFlowRefNode getDecisionTable();
-    AstFlowRefNode getService();
-    AstFlowRefNode getReturns();
+    AnyFlowNode getThen();
+    FlowRefNode getRef();
+    FlowRefNode getUserTask();
+    FlowRefNode getDecisionTable();
+    FlowRefNode getService();
+    FlowRefNode getReturns();
     
-    Map<String, AstFlowSwitchNode> getSwitch();
+    Map<String, FlowSwitchNode> getSwitch();
   }
   
 
-  interface AstFlowRefNode extends AstFlowNode {
-    AstFlowNode getRef();
-    AstFlowNode getCollection();
-    AstFlowNode getInputsNode();
-    Map<String, AstFlowNode> getInputs();
+  interface FlowRefNode extends AnyFlowNode {
+    AnyFlowNode getRef();
+    AnyFlowNode getCollection();
+    AnyFlowNode getInputsNode();
+    Map<String, AnyFlowNode> getInputs();
     String getObjectInput();
   }
 
-  interface AstFlowSwitchNode extends AstFlowNode {
+  interface FlowSwitchNode extends AnyFlowNode {
     int getOrder();
-    AstFlowNode getWhen();
-    AstFlowNode getThen();
+    AnyFlowNode getWhen();
+    AnyFlowNode getThen();
   }
 
-  interface AstFlowInputNode extends AstFlowNode {
-    AstFlowNode getRequired();
-    AstFlowNode getType();
-    AstFlowNode getDebugValue();
+  interface FlowInputNode extends AnyFlowNode {
+    AnyFlowNode getRequired();
+    AnyFlowNode getType();
+    AnyFlowNode getDebugValue();
   }
 
-  interface AstFlowNode extends Serializable, Comparable<AstFlowNode> {
-    AstFlowNode getParent();
+  interface AnyFlowNode extends Serializable, Comparable<AnyFlowNode> {
+    AnyFlowNode getParent();
     String getKeyword();
-    Map<String, AstFlowNode> getChildren();
-    AstFlowNode get(String name);
+    Map<String, AnyFlowNode> getChildren();
+    AnyFlowNode get(String name);
     String getValue();
     boolean hasNonNull(String name);
     int getStart();

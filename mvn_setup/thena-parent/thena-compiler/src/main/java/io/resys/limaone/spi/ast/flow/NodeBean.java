@@ -26,10 +26,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import io.resys.limaone.ast.Flow_AST.AstFlowNode;
+import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
 
 @JsonIgnoreProperties({"parent"})
-public class NodeBean implements AstFlowNode {
+public class NodeBean implements AnyFlowNode {
   private static final long serialVersionUID = 5409590378906097144L;
   private final String keyword;
   private final String value;
@@ -61,7 +61,7 @@ public class NodeBean implements AstFlowNode {
     return parent;
   }
   @Override
-  public Map<String, AstFlowNode> getChildren() {
+  public Map<String, AnyFlowNode> getChildren() {
     return Collections.unmodifiableMap(children);
   }
   public int getIndent() {
@@ -111,7 +111,7 @@ public class NodeBean implements AstFlowNode {
   }
 
   @Override
-  public int compareTo(AstFlowNode o) {
+  public int compareTo(AnyFlowNode o) {
     return Integer.compare(this.getStart(), o.getStart());
   }
 }
