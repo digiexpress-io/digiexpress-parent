@@ -10,6 +10,8 @@ export interface FsTabClasses {
   root: string;
   tabLight: string;
   tabDark: string;
+  tabTypography: string;
+  tabError: string;
 }
 
 export type FsTabClassKey = keyof FsTabClasses;
@@ -20,6 +22,8 @@ export const useUtilityClasses = (_props: FsTabProps) => {
     tab: ['tab'],
     active: ['tabActive'],
     inActive: ['tabInactive'],
+    tabTypography: ['tabTypography'],
+    tabError: ['tabError']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -62,6 +66,21 @@ export const FsTabRoot = styled('div', {
       overflow: 'hidden',
       borderTop: `1px solid ${borderColor}`,
       borderRight: `1px solid ${borderColor}`,
-    }
+    },
+
+    [`& .${MUI_NAME}-tabTypography`]: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      flex: 1,
+      minWidth: 0,
+      fontWeight: 500,
+      color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    },
+
+    [`& .${MUI_NAME}-tabError .${MUI_NAME}-tabTypography`]: {
+      fontWeight: ownerState.isDarkMode ? 400 : 500,
+      color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
+    },
   };
 });
