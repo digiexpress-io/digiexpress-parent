@@ -3,21 +3,19 @@ package io.resys.limaone.spi.expression;
 import java.util.Objects;
 
 import io.resys.limaone.ast.Attribute_AST.ValueType;
+import lombok.Value;
 
-public class CacheKey {
-  final String src;
-  final ValueType valueType;
 
-  CacheKey(String src, ValueType valueType) {
-    this.src = src;
-    this.valueType = valueType;
-  }
+@Value
+public class ExpressionCacheKey {
+  String src;
+  ValueType valueType;
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof CacheKey)) return false;
-    CacheKey cacheKey = (CacheKey) o;
+    if (!(o instanceof ExpressionCacheKey)) return false;
+    ExpressionCacheKey cacheKey = (ExpressionCacheKey) o;
     return Objects.equals(src, cacheKey.src) && Objects.equals(valueType, cacheKey.valueType);
   }
 

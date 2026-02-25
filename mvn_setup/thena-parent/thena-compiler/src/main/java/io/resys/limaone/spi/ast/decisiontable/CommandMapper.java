@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import io.resys.limaone.ast.Attribute_AST.Direction;
 import io.resys.limaone.ast.Attribute_AST.ValueType;
-import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.ast.DecisionTable_AST.ColumnExpressionType;
 import io.resys.limaone.ast.DecisionTable_AST.DecisionRow;
 import io.resys.limaone.ast.DecisionTable_AST.HitPolicy;
@@ -322,7 +321,7 @@ public class CommandMapper {
     }
   }
 
-  public DecisionTable_AST build() {
+  public ImmutableDecisionTable_AST.Builder build() {
     this.idGen.getHeaders().values().stream()
       .filter(h -> !StringUtils.isEmpty(h.getScript()))
       .forEach(h -> h.getCells().forEach(c -> c.setValue(resolveScriptValue(h, c))));
@@ -366,7 +365,6 @@ public class CommandMapper {
             .acceptDefs(headers.stream().filter(p -> p.getDirection() == Direction.IN).collect(Collectors.toList()))
             .returnDefs(headers.stream().filter(p -> p.getDirection() == Direction.OUT).collect(Collectors.toList()))
             .build())
-        .rows(rows)
-        .build();
+        .rows(rows);
   }
 }

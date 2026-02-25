@@ -24,26 +24,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
 import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.spi.LocalCache;
+import io.resys.limaone.spi.LocalCache.ExpressionCacheKey;
 
 
 public class ExpressionProgramFactory {
-  private static final ConcurrentHashMap<CacheKey, ExpressionProgram> CACHE = new ConcurrentHashMap<>();
 
-  public static void flushAll() {
-    CACHE.clear();
-  }
-  
   public static ExpressionProgram build(String src, ValueType valueType) {
     Objects.requireNonNull(src, () -> "src can't be null!");
     Objects.requireNonNull(valueType, () -> "valueType can't be null!");
-    final var key = new CacheKey(src, valueType);
-    return CACHE.computeIfAbsent(key, k -> buildProgram(k.src, k.valueType));
+    final var key = new ExpressionCacheKey(src, valueType);
+    final Function<ExpressionCacheKey, ExpressionProgram> mappingFunction = (k) -> buildProgram(k.getSrc(), k.getValueType()); 
+    return LocalCache.computeIfAbsent(key, mappingFunction);
   }
 
 

@@ -1,6 +1,7 @@
 package io.resys.limaone.spi.ast;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,11 +31,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DependencyResolution;
@@ -49,6 +53,8 @@ import io.resys.limaone.ast.ImmutableMessage_AST;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.ast.Simple_AST.Message_AST;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.spi.LocalCache;
+import io.resys.limaone.spi.LocalCache.Flow_AST_CacheKey;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.ast.flow.NodeBean;
 import io.resys.limaone.spi.ast.flow.NodeFlowBean;
@@ -70,6 +76,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
   private final ObjectMapper yamlMapper;
   private final List<Message_AST> messages = new ArrayList<>();
   private final List<String> src = new ArrayList<>();
+  private String id;
   
   
   public FlowAstBuilderImpl(ObjectMapper yamlMapper) {
@@ -92,25 +99,36 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
   }
   @Override
   public FlowParser id(String id) {
-    // TODO Auto-generated method stub
-    return null;
+    this.id = id;
+    return this;
   }
   @Override
   public Flow_AST parse() {
-    final String[] src = String.join(LINE_SEPARATOR, this.src).split("\\r?\\n");
-    final var flow = visitFlow(src);
-    final var ast = ImmutableFlow_AST.builder();
+    Objects.requireNonNull(id, () -> "id must be defined!");
     
+    final var joined = String.join(LINE_SEPARATOR, this.src);
+    final var hash = Hashing.murmur3_128().hashString(joined, StandardCharsets.UTF_8).toString();
+    final var cacheKey = new Flow_AST_CacheKey(hash);
+    final Function<Flow_AST_CacheKey, Flow_AST> mappingFunction = (k) -> {
+      
+      final String[] src = joined.split("\\r?\\n");
+      final var flow = visitFlow(src);
+      final var ast = ImmutableFlow_AST.builder();
+      
 
-    AnyFlowNode id = flow.getId();
-    
-    return ast
-        .bodyType(Model.BodyType.FLOW)
-        .messages(messages)
-        .name(id == null ? "": id.getValue())
-        .root(flow)
-        .headers(AstFlowNodesFactory.headers().build(flow))
-        .build();
+      final AnyFlowNode id = flow.getId();
+      
+      return ast
+          .id(this.id)
+          .bodyType(Model.BodyType.FLOW)
+          .messages(messages)
+          .name(id == null ? "": id.getValue())
+          .root(flow)
+          .headers(AstFlowNodesFactory.headers().build(flow))
+          .build();
+    };
+    return LocalCache.computeIfAbsent(cacheKey, mappingFunction);
+
   }
   public NodeFlowBean visitFlow(String[] sourcesAdded) {
 

@@ -1,12 +1,17 @@
 package io.resys.limaone.spi.ast;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DecsionTableParser;
@@ -17,11 +22,15 @@ import io.resys.limaone.ast.DecisionTable_AST.ColumnExpressionType;
 import io.resys.limaone.ast.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.DecisionTable.DecisionTableNodeType;
+import io.resys.limaone.spi.LocalCache;
+import io.resys.limaone.spi.LocalCache.DecisionTable_AST_CacheKey;
 import io.resys.limaone.spi.ast.decisiontable.CommandMapper;
 
 public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
 
   private final CommandMapper builder = new CommandMapper();
+  private List<DecisionTableNode> src;
+  private String id;
 
   @Override
   public DecsionTableParser_Impl nodes(List<DecisionTableNode> src) {
@@ -29,18 +38,40 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
       return this;
     }
     
-    src.forEach(command -> execute(command));
+    this.src = src;
     return this;
   }
   @Override
   public DecsionTableParser id(String id) {
-    // TODO Auto-generated method stub
-    return null;
+    this.id = id;
+    return this;
   }
 
   @Override
   public DecisionTable_AST parse() {
-    return builder.build();
+    Objects.requireNonNull(src, () -> "src must be defined!");
+    Objects.requireNonNull(id, () -> "id must be defined!");
+
+    
+    final var hashString = new StringBuilder();
+    this.src.forEach(command -> {
+      hashString.append(command.getType());
+      if(command.getId() != null) {
+        hashString.append("id: ").append(command.getId());
+      }
+      if(command.getValue() != null) {
+        hashString.append("value: ").append(command.getValue());
+      }
+      hashString.append(";");
+    });
+    
+    final var hash = Hashing.murmur3_128().hashString(hashString.toString(), StandardCharsets.UTF_8).toString();
+    final var cacheKey = new DecisionTable_AST_CacheKey(hash);
+    final Function<DecisionTable_AST_CacheKey, DecisionTable_AST> mappingFunction = (k) -> {
+      this.src.forEach(command -> execute(command));
+      return builder.build().id(id).build();
+    };
+    return LocalCache.computeIfAbsent(cacheKey, mappingFunction);
   }
 
   protected CommandMapper execute(DecisionTableNode command) {

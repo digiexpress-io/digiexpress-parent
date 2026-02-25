@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,12 +33,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.hash.Hashing;
+
 import groovy.lang.GroovyClassLoader;
-import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowTaskParser;
@@ -55,9 +58,12 @@ import io.resys.limaone.ast.ImmutableFlowTask_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.ast.ImmutableMessage_AST;
 import io.resys.limaone.ast.ImmutableServiceRef;
+import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.ServiceData;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.spi.LocalCache;
+import io.resys.limaone.spi.LocalCache.FlowTask_AST_CacheKey;
 import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
 import io.resys.limaone.spi.ast.flowtask.FailSafeService;
 import io.resys.limaone.spi.ast.flowtask.ImmutableServiceDataTypes;
@@ -71,6 +77,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
   private static final Logger LOGGER = LoggerFactory.getLogger(FlowTaskParser_Impl.class);
   private final List<String> src = new ArrayList<>();
   private final GroovyClassLoader gcl;
+  private String id;
   
   public FlowTaskParser_Impl(GroovyClassLoader gcl) {
     super();
@@ -94,65 +101,81 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
 
   @Override
   public FlowTaskParser id(String id) {
-    // TODO Auto-generated method stub
+    this.id = id;
     return this;
   }
 
   @Override
   public FlowTask_AST parse() {
     Objects.requireNonNull(this.src, () -> "src can't ne null!");
+    Objects.requireNonNull(this.id, () -> "id can't ne null!");
+    
     final var source = String.join(System.lineSeparator(), this.src);
     
-    try {
-      @SuppressWarnings("unchecked")
-      final Class<ServiceExecutorType> beanType = gcl.parseClass(source);
-      final AstServiceType executorType;
-      if(ServiceExecutorType0.class.isAssignableFrom(beanType)) {
-        executorType = AstServiceType.TYPE_0;
-      } else if(ServiceExecutorType1.class.isAssignableFrom(beanType)) {
-        executorType = AstServiceType.TYPE_1;
-      } else if(ServiceExecutorType2.class.isAssignableFrom(beanType)) {
-        executorType = AstServiceType.TYPE_2;
-      } else {
-        throw new AST_Exception(
-            System.lineSeparator() +
-            "Failed to generate groovy service ast because service executor type could not be determined for: " + System.lineSeparator() +
-            source + System.lineSeparator()); 
-      }
-      
-      final ServiceDataTypes method = getHeaders(beanType);
+    
+    final var hash = Hashing.murmur3_128().hashString(source, StandardCharsets.UTF_8).toString();
+    final var cacheKey = new FlowTask_AST_CacheKey(hash);
+    final Function<FlowTask_AST_CacheKey, FlowTask_AST> mappingFunction = (k) -> {
+      try {
+        @SuppressWarnings("unchecked")
+        final Class<ServiceExecutorType> beanType = gcl.parseClass(source);
+        final AstServiceType executorType;
+        if(ServiceExecutorType0.class.isAssignableFrom(beanType)) {
+          executorType = AstServiceType.TYPE_0;
+        } else if(ServiceExecutorType1.class.isAssignableFrom(beanType)) {
+          executorType = AstServiceType.TYPE_1;
+        } else if(ServiceExecutorType2.class.isAssignableFrom(beanType)) {
+          executorType = AstServiceType.TYPE_2;
+        } else {
+          throw new AST_Exception(
+              System.lineSeparator() +
+              "Failed to generate groovy service ast because service executor type could not be determined for: " + System.lineSeparator() +
+              source + System.lineSeparator()); 
+        }
+        
+        final ServiceDataTypes method = getHeaders(beanType);
 
-      
-      return ImmutableFlowTask_AST.builder()
-          .bodyType(Model.BodyType.FLOW_TASK)
-          .name(beanType.getSimpleName())
-          .headers(method.getHeaders())
-          .typeDef0(method.getAcceptType0())
-          .typeDef1(method.getAcceptType1())
-          .returnDef1(method.getReturnType())
-          .beanType(beanType)
-          .executorType(executorType)
-          .value(source)
-          .refs(getRefs(beanType))
-          .build();
-    } catch (Exception e) {
-      final var msg = "Failed to generate groovy service ast from: " + System.lineSeparator() + 
-          source + System.lineSeparator() + e.getMessage();
-      LOGGER.error(msg, e);
-      
-      return ImmutableFlowTask_AST.builder()
-          .bodyType(Model.BodyType.FLOW_TASK)
-          .name(parseFailSafeName(source))
-          .headers(ImmutableHeaders_AST.builder().build())
-          .beanType(FailSafeService.class)
-          .executorType(AstServiceType.TYPE_0)
-          .addMessages(ImmutableMessage_AST.builder()
-            .line(0)
-            .value("message: " + e.getMessage())
-            .type(MessageType.ERROR)
-            .build())
-          .value(source).build();
-    }
+        
+        return ImmutableFlowTask_AST.builder()
+            .bodyType(Model.BodyType.FLOW_TASK)
+            .name(beanType.getSimpleName())
+            .headers(method.getHeaders())
+            .typeDef0(method.getAcceptType0())
+            .typeDef1(method.getAcceptType1())
+            .returnDef1(method.getReturnType())
+            .beanType(beanType)
+            .executorType(executorType)
+            .value(source)
+            .refs(getRefs(beanType))
+            .build();
+      } catch (Exception e) {
+        final var msg = "Failed to generate groovy service ast from: " + System.lineSeparator() + 
+            source + System.lineSeparator() + e.getMessage();
+        LOGGER.error(msg, e);
+        
+        return ImmutableFlowTask_AST.builder()
+            .id(this.id)
+            .bodyType(Model.BodyType.FLOW_TASK)
+            .name(parseFailSafeName(source))
+            .headers(ImmutableHeaders_AST.builder().build())
+            .beanType(FailSafeService.class)
+            .executorType(AstServiceType.TYPE_0)
+            .addMessages(ImmutableMessage_AST.builder()
+              .line(0)
+              .value("message: " + e.getMessage())
+              .type(MessageType.ERROR)
+              .build())
+            .value(source).build();
+      }
+    };
+    return LocalCache.computeIfAbsent(cacheKey, mappingFunction);
+    
+    
+    
+    
+    
+    
+  
   }
 
   private String parseFailSafeName(String source) {
