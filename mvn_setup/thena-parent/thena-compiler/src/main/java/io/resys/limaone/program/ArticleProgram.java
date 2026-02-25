@@ -15,7 +15,7 @@ import jakarta.annotation.Nullable;
 
 public interface ArticleProgram extends Program {
   
-  ArticleProgramResult run(Object context);
+  ArticleProgramResult run(ProgramInput input, Object context);
   
   @Value.Immutable @JsonSerialize(as = ImmutableArticleProgramResult.class) @JsonDeserialize(as = ImmutableArticleProgramResult.class)
   interface ArticleProgramResult extends ProgramResult {

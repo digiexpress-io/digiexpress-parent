@@ -28,6 +28,11 @@ public interface Program extends Serializable {
   interface ProgramLog extends Serializable {}
   
   
+  interface ProgramInput {
+    
+  }
+  
+  
   @Value.Immutable
   interface ProgramAssociation {
     Optional<String> getId();

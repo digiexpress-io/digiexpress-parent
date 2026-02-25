@@ -20,7 +20,7 @@ public interface FlowProgram extends Program {
   String getStartStepId();
   Map<String, FlowProgramStep> getSteps();
   
-  FlowExecutor run(Runtime runtime);
+  FlowExecutor run(ProgramInput input, Runtime runtime);
   
   interface FlowExecutor {
     @Nullable

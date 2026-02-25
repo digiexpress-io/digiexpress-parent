@@ -38,7 +38,7 @@ public interface FlowTaskProgram extends Program {
   @Nullable Parameter getTypeDef0();
   @Nullable Parameter getTypeDef1();
   
-  FlowTaskExecutor run(Runtime runtime);
+  FlowTaskExecutor run(ProgramInput input, Runtime runtime);
   
   
   

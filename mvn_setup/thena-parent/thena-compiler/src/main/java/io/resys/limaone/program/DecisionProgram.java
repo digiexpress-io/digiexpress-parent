@@ -20,7 +20,7 @@ public interface DecisionProgram extends Program {
   List<DecisionRow> getRows();
   HitPolicy getHitPolicy();
   
-  FlowTaskExecutor run(Runtime runtime);
+  FlowTaskExecutor run(ProgramInput input, Runtime runtime);
   
   interface DecisionExecutor {
     DecisionExecutor callback(Consumer<DecisionTable_AST> callback);
