@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
@@ -23,8 +24,8 @@ public interface Simple_AST {
   
   @Value.Immutable @JsonSerialize(as = ImmutableHeaders_AST.class) @JsonDeserialize(as = ImmutableHeaders_AST.class)
   interface Headers_AST extends Serializable {
-    List<Attribute_AST> getAcceptDefs();
-    List<Attribute_AST> getReturnDefs();
+    List<Parameter> getAcceptDefs();
+    List<Parameter> getReturnDefs();
   }
   @Value.Immutable @JsonSerialize(as = ImmutableMessage_AST.class) @JsonDeserialize(as = ImmutableMessage_AST.class)
   interface Message_AST extends Serializable {

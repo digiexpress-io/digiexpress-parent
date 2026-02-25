@@ -3,8 +3,8 @@ package io.resys.limaone.spi.ast.decisiontable;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.resys.limaone.ast.Attribute_AST.Direction;
-import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
 
 public class MutableHeader implements Comparable<MutableHeader> {
 

@@ -1,4 +1,4 @@
-package io.resys.limaone.ast;
+package io.resys.limaone.model;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Value.Immutable
-public interface Attribute_AST extends Serializable, Comparable<Attribute_AST> {
+public interface Parameter extends Serializable, Comparable<Parameter> {
   String getId(); // GID
   String getName();
   Integer getOrder();
@@ -42,7 +42,7 @@ public interface Attribute_AST extends Serializable, Comparable<Attribute_AST> {
   ValueType getValueType();
   boolean isRequired();
   
-  Collection<Attribute_AST> getProperties();
+  Collection<Parameter> getProperties();
   
   @Nullable String getExtRef();
   @Nullable String getScript();
@@ -64,16 +64,16 @@ public interface Attribute_AST extends Serializable, Comparable<Attribute_AST> {
     return getSerializer().serialize(this, value);
   }
   @Override
-  public default int compareTo(Attribute_AST o) {
+  public default int compareTo(Parameter o) {
     return Integer.compare(getOrder(), o.getOrder());
   }
     
   interface Deserializer {
-    Serializable deserialize(Attribute_AST dataType, Object value);
+    Serializable deserialize(Parameter dataType, Object value);
   }
 
   interface Serializer {
-    String serialize(Attribute_AST dataType, Object value);
+    String serialize(Parameter dataType, Object value);
   }
 
   @FunctionalInterface

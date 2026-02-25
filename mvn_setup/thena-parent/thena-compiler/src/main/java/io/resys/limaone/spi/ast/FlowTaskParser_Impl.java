@@ -44,15 +44,7 @@ import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowTaskParser;
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.Attribute_AST.Direction;
-import io.resys.limaone.ast.Attribute_AST.ValueType;
 import io.resys.limaone.ast.FlowTask_AST;
-import io.resys.limaone.ast.FlowTask_AST.FlowTaskPropType;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType0;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType1;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType2;
 import io.resys.limaone.ast.FlowTask_AST.ServiceRef;
 import io.resys.limaone.ast.ImmutableFlowTask_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
@@ -60,14 +52,21 @@ import io.resys.limaone.ast.ImmutableMessage_AST;
 import io.resys.limaone.ast.ImmutableServiceRef;
 import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.model.FlowTask;
+import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
+import io.resys.limaone.model.FlowTask.FlowTaskPropType;
 import io.resys.limaone.model.FlowTask.ServiceData;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType0;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.FlowTask_AST_CacheKey;
-import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
 import io.resys.limaone.spi.ast.flowtask.FailSafeService;
 import io.resys.limaone.spi.ast.flowtask.ImmutableServiceDataTypes;
 import io.resys.limaone.spi.ast.flowtask.ServiceDataTypes;
+import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.thena.support.RepoAssert;
 
 
@@ -118,7 +117,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
     final Function<FlowTask_AST_CacheKey, FlowTask_AST> mappingFunction = (k) -> {
       try {
         @SuppressWarnings("unchecked")
-        final Class<ServiceExecutorType> beanType = gcl.parseClass(source);
+        final Class<FlowTaskExecutable> beanType = gcl.parseClass(source);
         final FlowTaskPropType executorType;
         if(ServiceExecutorType0.class.isAssignableFrom(beanType)) {
           executorType = FlowTaskPropType.TYPE_0;
@@ -194,7 +193,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
     }
   }
   
-  public List<ServiceRef> getRefs(Class<ServiceExecutorType> beanType) {
+  public List<ServiceRef> getRefs(Class<FlowTaskExecutable> beanType) {
     final List<ServiceRef> result = new ArrayList<>();
     final Set<String> usedRefs = new HashSet<>();
     for(FlowTask.ServiceRef ref : beanType.getDeclaredAnnotationsByType(FlowTask.ServiceRef.class)) {
@@ -229,8 +228,8 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
   }
 
   private ServiceDataTypes getParams(Method method) {
-    Attribute_AST acceptType0 = null;
-    Attribute_AST acceptType1 = null;
+    io.resys.limaone.model.Parameter acceptType0 = null;
+    io.resys.limaone.model.Parameter acceptType1 = null;
     final var result = ImmutableHeaders_AST.builder();
     int index = 0;
     for (Parameter parameter : method.getParameters()) {
@@ -238,7 +237,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
       boolean isData = type.isAnnotationPresent(ServiceData.class);
       if(isData) {
         
-        final var dataTypeBuilder = Attribute_AST_Factory.newAttribute().id("input-" + index).order(index++)
+        final var dataTypeBuilder = Parameter_Factory.newAttribute().id("input-" + index).order(index++)
             .data(isData).name(parameter.getName()).direction(Direction.IN).beanType(parameter.getType())
             .valueType(ValueType.OBJECT);
         getWrenchFlowParameter(dataTypeBuilder, parameter.getType(), isData, Direction.IN);
@@ -250,7 +249,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
 
         result.addAllAcceptDefs(getFields(parameter.getType(), Direction.IN));
       } else {
-        final var dataTypeBuilder = Attribute_AST_Factory.newAttribute().id("input-" + index).order(index++)
+        final var dataTypeBuilder = Parameter_Factory.newAttribute().id("input-" + index).order(index++)
             .data(isData).name(parameter.getName()).direction(Direction.IN).beanType(parameter.getType())
             .valueType(ValueType.OBJECT);
         
@@ -262,13 +261,13 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
       }
     }
 
-    Attribute_AST returnTypeDef = null;
+    io.resys.limaone.model.Parameter returnTypeDef = null;
     Class<?> returnType = method.getReturnType();
     if (!returnType.isAnnotationPresent(ServiceData.class)) {
       throw new AST_Exception(
           "'execute' must be void or return type must define: " + ServiceData.class.getCanonicalName() + "!");
     } else {
-      final var dataTypeBuilder = Attribute_AST_Factory.newAttribute().id("output").name(returnType.getSimpleName())
+      final var dataTypeBuilder = Parameter_Factory.newAttribute().id("output").name(returnType.getSimpleName())
           .data(true).order(index++).direction(Direction.OUT).beanType(returnType).valueType(ValueType.OBJECT);
       getWrenchFlowParameter(dataTypeBuilder, returnType, true, Direction.OUT);
       returnTypeDef = dataTypeBuilder.build();
@@ -285,8 +284,8 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
   }
 
   
-  private List<Attribute_AST> getFields(Class<?> type, Direction direction) {
-    List<Attribute_AST> result = new ArrayList<>();
+  private List<io.resys.limaone.model.Parameter> getFields(Class<?> type, Direction direction) {
+    List<io.resys.limaone.model.Parameter> result = new ArrayList<>();
     int index = 0;
 
     RepoAssert.isTrue(Serializable.class.isAssignableFrom(type), () -> "Flow types must implement Serializable!");
@@ -297,7 +296,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
         continue;
       }
       
-      final var typeDef = Attribute_AST_Factory.newAttribute()
+      final var typeDef = Parameter_Factory.newAttribute()
           .id(field.getName())
           .order(index++)
           .name(field.getName())
@@ -310,7 +309,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
     return result;
   }
   
-  private void getWrenchFlowParameter(Attribute_AST_Factory.NewAttribute attribute, Class<?> type, boolean isServiceData, Direction direction) {
+  private void getWrenchFlowParameter(Parameter_Factory.NewAttribute attribute, Class<?> type, boolean isServiceData, Direction direction) {
     if (!isServiceData) {
       return;
     }

@@ -29,7 +29,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.model.FlowTask.FlowTaskPropType;
+import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Parameter;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
@@ -38,12 +41,12 @@ import jakarta.annotation.Nullable;
 public interface FlowTask_AST extends Simple_AST, Serializable {
 
   @JsonIgnore
-  Class<? extends ServiceExecutorType> getBeanType();
+  Class<? extends FlowTaskExecutable> getBeanType();
   
   String getValue();
-  @Nullable Attribute_AST getTypeDef0();
-  @Nullable Attribute_AST getTypeDef1();
-  @Nullable Attribute_AST getReturnDef1();
+  @Nullable Parameter getTypeDef0();
+  @Nullable Parameter getTypeDef1();
+  @Nullable Parameter getReturnDef1();
   
   List<ServiceRef> getRefs();
   
@@ -57,17 +60,6 @@ public interface FlowTask_AST extends Simple_AST, Serializable {
   }
   
   FlowTaskPropType getExecutorType();
-  enum FlowTaskPropType { TYPE_0, TYPE_1, TYPE_2 }
   
-  interface ServiceExecutorType {}
-  
-  interface ServiceExecutorType0<O  extends Serializable> extends ServiceExecutorType {
-    O execute();
-  }  
-  interface ServiceExecutorType1<I, O extends Serializable> extends ServiceExecutorType {
-    O execute(I input1);
-  }
-  interface ServiceExecutorType2<I, I2, O extends Serializable> extends ServiceExecutorType {
-    O execute(I input1, I2 input2);
-  }
+
 }

@@ -6,16 +6,16 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.limaone.ast.Attribute_AST;
+import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.Program.ProgramLog;
-import io.resys.limaone.program.ServiceProgram;
+import io.resys.limaone.program.FlowTaskProgram;
 import jakarta.annotation.Nullable;
 
 interface ProgramContext extends Serializable {
   ProgramContextNamedValue getValueWithMeta(String typeDefName);
-  Serializable getValue(Attribute_AST typeDef);
+  Serializable getValue(Parameter typeDef);
   
   Map<String, Serializable> toMap(Object input);
   // Throws exception if not found
@@ -23,9 +23,11 @@ interface ProgramContext extends Serializable {
   Optional<Serializable> findValue(String typeDefName);
   
   <T> T getBean(Class<T> type);
+  
+  
   FlowProgram getFlow(String name);
   DecisionProgram getDecision(String name);
-  ServiceProgram getService(String name);
+  FlowTaskProgram getService(String name);
   
   ProgramLog getLog();
   ExecutorBuilder executor();

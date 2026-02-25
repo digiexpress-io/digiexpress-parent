@@ -1,13 +1,13 @@
-package io.resys.limaone.spi.ast.attribute;
+package io.resys.limaone.spi.parameter;
 
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.Attribute_AST.Serializer;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Serializer;
 import io.vertx.core.json.Json;
 
 public class GenericDataTypeSerializer implements Serializer {
 
   @Override
-  public String serialize(Attribute_AST dataType, Object value) {
+  public String serialize(Parameter dataType, Object value) {
     if(value == null) {
       return null;
     }

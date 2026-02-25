@@ -13,20 +13,20 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.limaone.ast.Attribute_AST.Direction;
-import io.resys.limaone.ast.Attribute_AST.ValueType;
-import io.resys.limaone.ast.DecisionTable_AST.ColumnExpressionType;
 import io.resys.limaone.ast.DecisionTable_AST.DecisionRow;
-import io.resys.limaone.ast.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.ast.ImmutableDecisionCell;
 import io.resys.limaone.ast.ImmutableDecisionRow;
 import io.resys.limaone.ast.ImmutableDecisionTable_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
+import io.resys.limaone.model.DecisionTable.ColumnExpressionType;
+import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.ExpressionProgram;
 import io.resys.limaone.spi.ast.AST_Exception;
-import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
 import io.resys.limaone.spi.expression.ExpressionProgramFactory;
+import io.resys.limaone.spi.parameter.Parameter_Factory;
 
 public class CommandMapper {
 
@@ -327,7 +327,7 @@ public class CommandMapper {
       .forEach(h -> h.getCells().forEach(c -> c.setValue(resolveScriptValue(h, c))));
 
     final var headers = this.idGen.getHeaders().values().stream().sorted()
-        .map(h -> Attribute_AST_Factory.newAttribute()
+        .map(h -> Parameter_Factory.newAttribute()
             .direction(h.getDirection())
             .name(h.getName())
             .valueType(h.getValue())

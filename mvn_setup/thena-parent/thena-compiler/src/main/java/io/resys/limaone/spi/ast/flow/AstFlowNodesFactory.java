@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.Attribute_AST.Direction;
-import io.resys.limaone.ast.Attribute_AST.ValueType;
 import io.resys.limaone.ast.Flow_AST.FlowInputNode;
 import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
 import io.resys.limaone.ast.Flow_AST.FlowRoot;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.ast.ImmutableMessageRange_AST;
-import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -64,7 +64,7 @@ public class AstFlowNodesFactory {
       Map<String, FlowInputNode> inputs = data.getInputs();
 
       int index = 0;
-      Collection<Attribute_AST> result = new ArrayList<>();
+      Collection<Parameter> result = new ArrayList<>();
       for (Map.Entry<String, FlowInputNode> entry : inputs.entrySet()) {
         if (entry.getValue().getType() == null) {
           continue;
@@ -74,7 +74,7 @@ public class AstFlowNodesFactory {
         try {
           ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
           
-          result.add(Attribute_AST_Factory.newAttribute()
+          result.add(Parameter_Factory.newAttribute()
               .id(entry.getValue().getStart() + "")
               .order(index++)
               .name(entry.getKey())
@@ -87,7 +87,7 @@ public class AstFlowNodesFactory {
         } catch (Exception e) {
           final String msg = String.format("Failed to convert data type from: %s, error: %s", entry.getValue().getType().getValue(), e.getMessage());
           log.error(msg);
-          result.add(Attribute_AST_Factory.newAttribute()
+          result.add(Parameter_Factory.newAttribute()
               .id(entry.getValue().getStart() + "")
               .order(index++)
               .name(entry.getKey())

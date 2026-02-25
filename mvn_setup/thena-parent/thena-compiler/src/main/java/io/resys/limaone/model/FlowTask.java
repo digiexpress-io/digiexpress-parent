@@ -32,4 +32,7 @@ public interface FlowTask extends Body {
     String value();
     Model.BodyType type();
   }
+  
+  interface FlowTaskExecutable {}
+  enum FlowTaskPropType { TYPE_0, TYPE_1, TYPE_2 }
 }

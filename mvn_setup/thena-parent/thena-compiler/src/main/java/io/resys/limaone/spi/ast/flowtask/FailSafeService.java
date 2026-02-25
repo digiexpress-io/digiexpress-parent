@@ -2,7 +2,7 @@ package io.resys.limaone.spi.ast.flowtask;
 
 import java.util.HashMap;
 
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType0;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType0;
 
 public class FailSafeService implements ServiceExecutorType0<HashMap<String, String>> {
   @Override

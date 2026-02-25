@@ -24,22 +24,32 @@ import java.io.Serializable;
 
 import org.immutables.value.Value;
 
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.FlowTask_AST.FlowTaskPropType;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType;
+import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
+import io.resys.limaone.model.FlowTask.FlowTaskPropType;
+import io.resys.limaone.model.Parameter;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface ServiceProgram extends Program {
+public interface FlowTaskProgram extends Program {
 
   FlowTaskPropType getExecutorType();
-  ServiceExecutorType getBean();
+  FlowTaskExecutable getBean();
   
-  @Nullable Attribute_AST getTypeDef0();
-  @Nullable Attribute_AST getTypeDef1();
+  @Nullable Parameter getTypeDef0();
+  @Nullable Parameter getTypeDef1();
   
   @Value.Immutable
   interface ServiceResult extends ProgramResult {
     Serializable getValue();
+  }
+  
+  interface ServiceExecutorType0<O  extends Serializable> extends FlowTaskExecutable {
+    O execute();
+  }  
+  interface ServiceExecutorType1<I, O extends Serializable> extends FlowTaskExecutable {
+    O execute(I input1);
+  }
+  interface ServiceExecutorType2<I, I2, O extends Serializable> extends FlowTaskExecutable {
+    O execute(I input1, I2 input2);
   }
 }

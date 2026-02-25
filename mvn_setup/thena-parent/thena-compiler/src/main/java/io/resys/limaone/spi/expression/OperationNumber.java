@@ -23,7 +23,7 @@ package io.resys.limaone.spi.expression;
 import java.math.BigDecimal;
 import java.util.function.Consumer;
 
-import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.model.Parameter.ValueType;
 
 public class OperationNumber {
 

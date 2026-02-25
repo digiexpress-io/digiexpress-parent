@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.attribute;
+package io.resys.limaone.spi.parameter;
 
 /*-
  * #%L
@@ -26,13 +26,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.Attribute_AST.Deserializer;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Deserializer;
 import io.vertx.core.json.JsonObject;
 
 public class IntlJsonObjectDataTypeDeserializer implements Deserializer {
   @Override
-  public Serializable deserialize(Attribute_AST dataType, Object value) {
+  public Serializable deserialize(Parameter dataType, Object value) {
     final List<String> locales = dataType.getValueSet() == null ? Collections.emptyList() : dataType.getValueSet();
     
     if(value == null || "".equals(value)) {

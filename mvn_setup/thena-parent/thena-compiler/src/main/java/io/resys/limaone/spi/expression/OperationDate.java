@@ -26,7 +26,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
-import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.model.Parameter.ValueType;
 
 public class OperationDate {
   private final static String AFTER = "after";

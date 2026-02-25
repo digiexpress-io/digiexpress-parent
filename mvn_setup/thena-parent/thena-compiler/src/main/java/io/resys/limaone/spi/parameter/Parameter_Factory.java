@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.attribute;
+package io.resys.limaone.spi.parameter;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -12,22 +12,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.Attribute_AST.Deserializer;
-import io.resys.limaone.ast.Attribute_AST.Direction;
-import io.resys.limaone.ast.Attribute_AST.Serializer;
-import io.resys.limaone.ast.Attribute_AST.ValueType;
-import io.resys.limaone.ast.ImmutableAttribute_AST;
+import io.resys.limaone.model.ImmutableParameter;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Deserializer;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.Serializer;
+import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.thena.support.RepoAssert;
 
-public class Attribute_AST_Factory {
+public class Parameter_Factory {
   private static Map<ValueType, Deserializer> deserializers;
   private static Map<ValueType, Serializer> serializers;
-  private static Attribute_AST.ValueTypeResolver valueTypeResolver;
+  private static Parameter.ValueTypeResolver valueTypeResolver;
   
   static {
     final Map<ValueType, Deserializer> deserializers = new HashMap<>();
-    Attribute_AST_Factory.deserializers = Collections.unmodifiableMap(deserializers);
+    Parameter_Factory.deserializers = Collections.unmodifiableMap(deserializers);
 
     deserializers.put(ValueType.ARRAY, new GenericDataTypeDeserializer(List.class));
     deserializers.put(ValueType.DURATION, null);
@@ -46,7 +46,7 @@ public class Attribute_AST_Factory {
     deserializers.put(ValueType.DATE_TIME, new DateTimeDataTypeDeserializer());
 
     final Map<ValueType, Serializer> serializers = new HashMap<>();
-    Attribute_AST_Factory.serializers = Collections.unmodifiableMap(serializers);
+    Parameter_Factory.serializers = Collections.unmodifiableMap(serializers);
 
     Serializer dataTypeSerializer = new GenericDataTypeSerializer();
     serializers.put(ValueType.ARRAY, dataTypeSerializer);
@@ -77,7 +77,7 @@ public class Attribute_AST_Factory {
     valueTypes.put(LocalDate.class, ValueType.DATE);
     valueTypes.put(LocalDateTime.class, ValueType.DATE_TIME);
     
-    Attribute_AST_Factory.valueTypeResolver = src -> valueTypes.containsKey(src) ? valueTypes.get(src) : ValueType.OBJECT;
+    Parameter_Factory.valueTypeResolver = src -> valueTypes.containsKey(src) ? valueTypes.get(src) : ValueType.OBJECT;
   }
   
   
@@ -95,9 +95,9 @@ public class Attribute_AST_Factory {
     private Class<?> beanType;
     private String description;
     private String values;
-    private List<Attribute_AST> properties = new ArrayList<>();
+    private List<Parameter> properties = new ArrayList<>();
     private String ref;
-    private Attribute_AST dataType;
+    private Parameter dataType;
     private Integer order;
     private String script;
     private String id;
@@ -165,7 +165,7 @@ public class Attribute_AST_Factory {
       return this;
     }
   
-    public NewAttribute ref(String ref, Attribute_AST dataType) {
+    public NewAttribute ref(String ref, Parameter dataType) {
       RepoAssert.isTrue(ref != null, () -> "ref can't be null!");
       RepoAssert.isTrue(dataType != null, () -> "dataType can't be null for ref: " + ref + "!");
       this.dataType = dataType;
@@ -175,7 +175,7 @@ public class Attribute_AST_Factory {
     public NewAttribute property() {
       return new NewAttribute() {
         @Override
-        public Attribute_AST build() {
+        public Parameter build() {
           final var property = super.build();
           properties.add(property);
           return property;
@@ -188,7 +188,7 @@ public class Attribute_AST_Factory {
       return this;
     }
     
-    public Attribute_AST build() {
+    public Parameter build() {
       RepoAssert.notNull(name, () -> "name can't be null!");
   
       if(dataType != null) {
@@ -197,7 +197,7 @@ public class Attribute_AST_Factory {
   
         Deserializer deserializer = dataType.getDeserializer();
         Serializer serializer = dataType.getSerializer();
-        return ImmutableAttribute_AST.builder()
+        return ImmutableParameter.builder()
             .id(id).script(script).order(order)
             .name(name).ref(ref).description(description)
             .direction(direction)
@@ -222,7 +222,7 @@ public class Attribute_AST_Factory {
       Serializer serializer = serializers.get(valueType);
   
       RepoAssert.notNull(valueType, () -> "valueType can't be null!");
-      return ImmutableAttribute_AST.builder()
+      return ImmutableParameter.builder()
           .id(id).script(script).order(order)
           .name(name)
           .ref(ref)

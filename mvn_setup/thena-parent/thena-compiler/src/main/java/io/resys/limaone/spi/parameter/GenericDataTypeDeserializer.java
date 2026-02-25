@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.attribute;
+package io.resys.limaone.spi.parameter;
 
 /*-
  * #%L
@@ -22,8 +22,8 @@ package io.resys.limaone.spi.ast.attribute;
 
 import java.io.Serializable;
 
-import io.resys.limaone.ast.Attribute_AST;
-import io.resys.limaone.ast.Attribute_AST.Deserializer;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Deserializer;
 import io.resys.limaone.spi.ast.AST_Exception;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -37,7 +37,7 @@ public class GenericDataTypeDeserializer implements Deserializer {
   }
 
   @Override
-  public Serializable deserialize(Attribute_AST dataType, Object value) {
+  public Serializable deserialize(Parameter dataType, Object value) {
     if(value == null) {
       return null;
     }
