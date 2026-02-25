@@ -84,11 +84,14 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
         return builder.addHeader(Direction.IN, command.getId() != null ? command.getId() : "").getValue();
       case ADD_HEADER_OUT:
         return builder.addHeader(Direction.OUT, command.getId() != null ? command.getId() : "").getValue();
-      case ADD_ROW:
-        return builder.addRow().getValue();
+      case ADD_ROW: {
+        builder.addRow();
+        return builder;
+      }
+
       case IMPORT_ORDERED_CSV: {
         
-        CommandMapper.Builder result = builder.deleteColumns().deleteRows();
+        final var result = builder.deleteColumns().deleteRows();
         CSVFormat format = StringUtils.isNotEmpty(command.getId()) ?
           CSVFormat.DEFAULT.builder().setDelimiter(command.getId()).get() : CSVFormat.DEFAULT;
         CSVParser parser = CSVParser.parse(command.getValue(), format);
@@ -106,9 +109,9 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
         });
 
         while(iterator.hasNext()) {
-          CSVRecord row = iterator.next();
-          String rowId = result.addRow().getKey();
-          Iterator<String> cellIterator = row.iterator();
+          final CSVRecord row = iterator.next();
+          final String rowId = result.addRow();
+          final Iterator<String> cellIterator = row.iterator();
           
           int columnIndex = 0;
           while(cellIterator.hasNext()) {
@@ -118,7 +121,7 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
         return result;
       }
       case IMPORT_CSV: 
-        CommandMapper.Builder result = builder.deleteColumns().deleteRows();
+        final var result = builder.deleteColumns().deleteRows();
         CSVParser parser = CSVParser.parse(command.getValue(), CSVFormat.DEFAULT);
         List<CSVRecord> records = parser.getRecords();
         if(records.isEmpty()) {
@@ -134,9 +137,9 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
         });
 
         while(iterator.hasNext()) {
-          CSVRecord row = iterator.next();
-          int rowId = Integer.parseInt(result.addRow().getKey());
-          Iterator<String> cellIterator = row.iterator();
+          final CSVRecord row = iterator.next();
+          int rowId = Integer.parseInt(result.addRow());
+          final Iterator<String> cellIterator = row.iterator();
           while(cellIterator.hasNext()) {
             result.changeCell(String.valueOf(++rowId), cellIterator.next());
           }
