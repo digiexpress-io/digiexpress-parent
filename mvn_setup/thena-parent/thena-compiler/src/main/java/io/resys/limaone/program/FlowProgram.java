@@ -19,6 +19,15 @@ public interface FlowProgram extends Program {
   
   String getStartStepId();
   Map<String, FlowProgramStep> getSteps();
+  
+  FlowExecutor run(Runtime runtime);
+  
+  interface FlowExecutor {
+    @Nullable
+    FlowResultLog andGetTask(String task);
+    FlowResult andGetBody();
+  }
+  
 
   @Value.Immutable
   interface FlowProgramStep extends Serializable {
