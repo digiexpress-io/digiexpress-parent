@@ -30,6 +30,8 @@ import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 
 import io.resys.limaone.ast.Attribute_AST.ValueType;
+import io.resys.limaone.program.ExpressionProgram;
+import io.resys.limaone.program.ImmutableExpressionResult;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.ExpressionCacheKey;
 

@@ -56,8 +56,8 @@ public interface FlowTask_AST extends Simple_AST, Serializable {
     String getRefValue();
   }
   
-  AstServiceType getExecutorType();
-  enum AstServiceType { TYPE_0, TYPE_1, TYPE_2 }
+  FlowTaskPropType getExecutorType();
+  enum FlowTaskPropType { TYPE_0, TYPE_1, TYPE_2 }
   
   interface ServiceExecutorType {}
   

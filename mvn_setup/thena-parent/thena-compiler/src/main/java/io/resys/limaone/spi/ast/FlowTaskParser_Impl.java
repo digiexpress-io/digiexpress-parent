@@ -48,7 +48,7 @@ import io.resys.limaone.ast.Attribute_AST;
 import io.resys.limaone.ast.Attribute_AST.Direction;
 import io.resys.limaone.ast.Attribute_AST.ValueType;
 import io.resys.limaone.ast.FlowTask_AST;
-import io.resys.limaone.ast.FlowTask_AST.AstServiceType;
+import io.resys.limaone.ast.FlowTask_AST.FlowTaskPropType;
 import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType;
 import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType0;
 import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType1;
@@ -119,13 +119,13 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
       try {
         @SuppressWarnings("unchecked")
         final Class<ServiceExecutorType> beanType = gcl.parseClass(source);
-        final AstServiceType executorType;
+        final FlowTaskPropType executorType;
         if(ServiceExecutorType0.class.isAssignableFrom(beanType)) {
-          executorType = AstServiceType.TYPE_0;
+          executorType = FlowTaskPropType.TYPE_0;
         } else if(ServiceExecutorType1.class.isAssignableFrom(beanType)) {
-          executorType = AstServiceType.TYPE_1;
+          executorType = FlowTaskPropType.TYPE_1;
         } else if(ServiceExecutorType2.class.isAssignableFrom(beanType)) {
-          executorType = AstServiceType.TYPE_2;
+          executorType = FlowTaskPropType.TYPE_2;
         } else {
           throw new AST_Exception(
               System.lineSeparator() +
@@ -159,7 +159,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
             .name(parseFailSafeName(source))
             .headers(ImmutableHeaders_AST.builder().build())
             .beanType(FailSafeService.class)
-            .executorType(AstServiceType.TYPE_0)
+            .executorType(FlowTaskPropType.TYPE_0)
             .addMessages(ImmutableMessage_AST.builder()
               .line(0)
               .value("message: " + e.getMessage())
