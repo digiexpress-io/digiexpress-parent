@@ -9,6 +9,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
 import io.resys.limaone.ast.AST_Parser;
+import io.resys.limaone.ast.AST_Parser.DecsionTableParser;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.ast.Attribute_AST.Direction;
 import io.resys.limaone.ast.Attribute_AST.ValueType;
@@ -30,6 +31,11 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
     
     src.forEach(command -> execute(command));
     return this;
+  }
+  @Override
+  public DecsionTableParser id(String id) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   @Override
