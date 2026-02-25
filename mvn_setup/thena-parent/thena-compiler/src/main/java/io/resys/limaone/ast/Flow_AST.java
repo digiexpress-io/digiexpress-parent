@@ -33,13 +33,11 @@ import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableAstFlow.class)
-@JsonDeserialize(as = ImmutableAstFlow.class)
-public interface Flow_AST extends AstBody, Serializable {
+@JsonSerialize(as = ImmutableFlow_AST.class)
+@JsonDeserialize(as = ImmutableFlow_AST.class)
+public interface Flow_AST extends AST, Serializable {
   
   AstFlowRoot getSrc();
-
-
 
   //v.name(), null, v.name()
   //public ImmutableNodeInputType(String name, String ref, String value) {
