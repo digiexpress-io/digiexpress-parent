@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableFlowTask_AST.class)
 @JsonDeserialize(as = ImmutableFlowTask_AST.class)
-public interface FlowTask_AST extends AST, Serializable {
+public interface FlowTask_AST extends Simple_AST, Serializable {
 
   @JsonIgnore
   Class<? extends ServiceExecutorType> getBeanType();

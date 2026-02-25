@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import groovy.lang.GroovyClassLoader;
-import io.resys.limaone.ast.AST.MessageType;
+import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowTaskParser;

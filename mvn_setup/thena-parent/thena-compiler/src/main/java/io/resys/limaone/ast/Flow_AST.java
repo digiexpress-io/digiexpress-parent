@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableFlow_AST.class)
 @JsonDeserialize(as = ImmutableFlow_AST.class)
-public interface Flow_AST extends AST, Serializable {
+public interface Flow_AST extends Simple_AST, Serializable {
   
   AstFlowRoot getRoot();
 

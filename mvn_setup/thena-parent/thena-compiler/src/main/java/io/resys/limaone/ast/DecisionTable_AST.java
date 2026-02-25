@@ -16,7 +16,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableDecisionTable_AST.class)
 @JsonDeserialize(as = ImmutableDecisionTable_AST.class)
-public interface DecisionTable_AST extends AST {
+public interface DecisionTable_AST extends Simple_AST {
   
   List<String> getHeaderTypes();
   Map<ValueType, List<String>> getHeaderExpressions();

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
-public interface AST {
+public interface Simple_AST {
   String getId();
   String getName();
   @Nullable String getDescription();

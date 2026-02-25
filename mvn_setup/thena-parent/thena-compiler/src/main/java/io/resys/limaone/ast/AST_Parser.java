@@ -40,7 +40,7 @@ public interface AST_Parser {
   }
     
   interface DependencyResolution {
-    Optional<AST> findOne(RequireDependency require);
+    Optional<Simple_AST> findOne(RequireDependency require);
   }
 
   interface RequireDependency {

@@ -2,7 +2,7 @@ package io.resys.limaone.spi.ast.flowtask;
 
 import org.immutables.value.Value;
 
-import io.resys.limaone.ast.AST.Headers_AST;
+import io.resys.limaone.ast.Simple_AST.Headers_AST;
 import io.resys.limaone.ast.Attribute_AST;
 import jakarta.annotation.Nullable;
 

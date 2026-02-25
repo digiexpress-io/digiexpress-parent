@@ -36,8 +36,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import io.resys.limaone.ast.AST;
-import io.resys.limaone.ast.AST.Message_AST;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.Simple_AST.Message_AST;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowParser;
@@ -148,7 +148,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
             .line(lineNumber)
             .range(AstFlowNodesFactory.range().build(start, end))
             .value("space has no meaning")
-            .type(AST.MessageType.WARNING)
+            .type(Simple_AST.MessageType.WARNING)
             .build());
       }
 
@@ -167,7 +167,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
         messages.add(ImmutableMessage_AST.builder()
             .line(lineNumber)
             .value(message)
-            .type(AST.MessageType.ERROR)
+            .type(Simple_AST.MessageType.ERROR)
             .build());
         continue;
       }
@@ -185,7 +185,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
         messages.add(ImmutableMessage_AST.builder()
             .line(lineNumber)
             .value(message)
-            .type(AST.MessageType.ERROR)
+            .type(Simple_AST.MessageType.ERROR)
             .build());
         return result.setEnd(lineNumber).setValue(buildSource(value));
       }
@@ -197,7 +197,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
             ImmutableMessage_AST.builder()
             .line(lineNumber)
             .value(e.getMessage())
-            .type(AST.MessageType.ERROR)
+            .type(Simple_AST.MessageType.ERROR)
             .build());
         return result.setEnd(lineNumber).setValue(value.toString());
       }
@@ -251,7 +251,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
         messages.add(ImmutableMessage_AST.builder()
             .line(lineNumber)
             .value(message)
-            .type(AST.MessageType.ERROR)
+            .type(Simple_AST.MessageType.ERROR)
             .build());
         return null;
       }
@@ -260,7 +260,7 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
       messages.add(ImmutableMessage_AST.builder()
           .line(lineNumber)
           .value(message)
-          .type(AST.MessageType.ERROR)
+          .type(Simple_AST.MessageType.ERROR)
           .build());
       return null;
     }
