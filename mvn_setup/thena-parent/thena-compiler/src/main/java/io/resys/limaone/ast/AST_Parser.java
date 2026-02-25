@@ -17,6 +17,7 @@ public interface AST_Parser {
   
   interface ArticleParser {
     ArticleParser deps(DependencyResolution deps);
+    Article_AST parse();
   }
   
   interface FlowParser {
