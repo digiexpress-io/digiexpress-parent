@@ -16,7 +16,6 @@ import io.resys.limaone.ast.DecisionTable_AST.ColumnExpressionType;
 import io.resys.limaone.ast.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.DecisionTable.DecisionTableNodeType;
-import io.resys.limaone.spi.ast.decisiontable.AST_Exception;
 import io.resys.limaone.spi.ast.decisiontable.CommandMapper;
 
 public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {

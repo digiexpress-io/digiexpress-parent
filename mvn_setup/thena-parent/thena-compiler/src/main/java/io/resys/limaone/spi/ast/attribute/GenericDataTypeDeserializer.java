@@ -24,6 +24,7 @@ import java.io.Serializable;
 
 import io.resys.limaone.ast.Attribute_AST;
 import io.resys.limaone.ast.Attribute_AST.Deserializer;
+import io.resys.limaone.spi.ast.AST_Exception;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
@@ -43,7 +44,7 @@ public class GenericDataTypeDeserializer implements Deserializer {
     try {
       return (Serializable) Json.CODEC.fromValue(value, type);
     } catch(Exception e) {
-      throw new Attribute_AST_Exception(
+      throw new AST_Exception(
           JsonObject.of(
               "msg", e.getMessage(),
               "type", type,

@@ -26,6 +26,7 @@ import java.time.ZonedDateTime;
 
 import io.resys.limaone.ast.Attribute_AST;
 import io.resys.limaone.ast.Attribute_AST.Deserializer;
+import io.resys.limaone.spi.ast.AST_Exception;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
@@ -46,7 +47,7 @@ public class DateTimeDataTypeDeserializer implements Deserializer {
       return ZonedDateTime.parse(date).toLocalDateTime();
     } catch(Exception e) {
       
-      throw new Attribute_AST_Exception(
+      throw new AST_Exception(
           JsonObject.of(
               "msg", "Incorrect date time: '" + date + "', correct format: YYYY-MM-DDThh:mm:ssTZD, example: 2017-07-03T00:00:00Z!",
               "value", date

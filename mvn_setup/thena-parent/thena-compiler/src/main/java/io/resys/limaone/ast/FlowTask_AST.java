@@ -23,40 +23,36 @@ package io.resys.limaone.ast;
 import java.io.Serializable;
 import java.util.List;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.ast.flow.ImmutableAstService;
-import io.resys.limaone.ast.flow.ImmutableAstServiceRef;
+import io.resys.limaone.model.Model;
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
-@JsonSerialize(as = ImmutableAstService.class)
-@JsonDeserialize(as = ImmutableAstService.class)
-public interface FlowTask_AST extends AstBody, Serializable {
+@JsonSerialize(as = ImmutableFlowTask_AST.class)
+@JsonDeserialize(as = ImmutableFlowTask_AST.class)
+public interface FlowTask_AST extends AST, Serializable {
 
   @JsonIgnore
   Class<? extends ServiceExecutorType> getBeanType();
-  String getValue();
-  @Nullable
-  TypeDef getTypeDef0();
-  @Nullable
-  TypeDef getTypeDef1();
-  @Nullable
-  TypeDef getReturnDef1();
   
-  List<AstServiceRef> getRefs();
+  String getValue();
+  @Nullable Attribute_AST getTypeDef0();
+  @Nullable Attribute_AST getTypeDef1();
+  @Nullable Attribute_AST getReturnDef1();
+  
+  List<ServiceRef> getRefs();
   
 
   @Value.Immutable
-  @JsonSerialize(as = ImmutableAstServiceRef.class)
-  @JsonDeserialize(as = ImmutableAstServiceRef.class)
-  interface AstServiceRef extends Serializable {
-    AstBodyType getBodyType();
+  @JsonSerialize(as = ImmutableServiceRef.class)
+  @JsonDeserialize(as = ImmutableServiceRef.class)
+  interface ServiceRef extends Serializable {
+    Model.BodyType getBodyType();
     String getRefValue();
   }
   

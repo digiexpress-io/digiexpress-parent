@@ -24,6 +24,7 @@ import io.resys.limaone.ast.ImmutableDecisionRow;
 import io.resys.limaone.ast.ImmutableDecisionTable_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.spi.ast.AST_Exception;
 import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
 import io.resys.limaone.spi.expression.ExpressionProgram;
 import io.resys.limaone.spi.expression.ExpressionProgramFactory;

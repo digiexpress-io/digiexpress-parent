@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.decisiontable;
+package io.resys.limaone.spi.ast;
 
 
 import io.vertx.core.json.JsonObject;

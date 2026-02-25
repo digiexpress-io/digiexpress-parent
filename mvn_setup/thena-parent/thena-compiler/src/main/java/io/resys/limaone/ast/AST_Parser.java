@@ -32,6 +32,7 @@ public interface AST_Parser {
   
   interface FlowTaskParser {
     FlowTaskParser deps(DependencyResolution deps);
+    FlowTaskParser id(String id);
     FlowTaskParser syntax(String syntax);
     FlowTask_AST parse();
   }
