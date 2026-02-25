@@ -100,6 +100,9 @@
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
-    
+    <dependency>
+      <groupId>io.dialob</groupId>
+      <artifactId>dialob-api</artifactId>
+    </dependency>
   </dependencies>
 </project>

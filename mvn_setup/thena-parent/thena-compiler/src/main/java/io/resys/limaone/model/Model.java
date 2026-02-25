@@ -58,5 +58,6 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<Flow>> getFlows();
     Map<String, Model<FlowTask>> getFlowTasks();
     Map<String, Model<Locale>> getLocales();
+    Map<String, Model<Dialob>> getForms();
   }
 }
