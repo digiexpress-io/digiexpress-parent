@@ -37,11 +37,8 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableFlow_AST.class)
 public interface Flow_AST extends AST, Serializable {
   
-  AstFlowRoot getSrc();
+  AstFlowRoot getRoot();
 
-  //v.name(), null, v.name()
-  //public ImmutableNodeInputType(String name, String ref, String value) {
-  
   @Value.Immutable
   interface AstFlowInputType extends Serializable {
     String getName();
@@ -98,7 +95,6 @@ public interface Flow_AST extends AST, Serializable {
     Map<String, AstFlowNode> getChildren();
     AstFlowNode get(String name);
     String getValue();
-    AstChangeset getSource();
     boolean hasNonNull(String name);
     int getStart();
     int getEnd();
