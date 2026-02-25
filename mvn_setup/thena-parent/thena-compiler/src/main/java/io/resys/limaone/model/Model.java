@@ -33,7 +33,13 @@ public interface Model<T extends Body>  extends Serializable {
     
     FLOW, 
     FLOW_TASK, 
+    DECISION_TABLE,
     
-    DECISION_TABLE
+    DIALOB,
+    
+    PRINTOUT,
+    PRINTOUT_PAGE,
+    PRINTOUT_SCRIPT,
+    PRINTOUT_RESOURCE
   } 
 }
