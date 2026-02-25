@@ -5,6 +5,7 @@ import java.util.List;
 import org.immutables.value.Value;
 
 import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.Program.ProgramResult;
 import jakarta.annotation.Nullable;
 
 public interface ExpressionProgram {
@@ -14,7 +15,7 @@ public interface ExpressionProgram {
   ExpressionResult run(Object context);
 
   @Value.Immutable
-  interface ExpressionResult {
+  interface ExpressionResult extends ProgramResult {
     ValueType getType();
     List<String> getConstants();
     
