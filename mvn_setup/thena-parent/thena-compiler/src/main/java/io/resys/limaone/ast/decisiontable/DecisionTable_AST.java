@@ -9,9 +9,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.ast.decisiontable.AstDecision.AstDecisionCell;
-import io.resys.limaone.ast.decisiontable.AstDecision.AstDecisionRow;
-import io.resys.limaone.ast.decisiontable.AstDecision.HitPolicy;
+import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
 import jakarta.annotation.Nullable;
 
 public interface DecisionTable_AST {
