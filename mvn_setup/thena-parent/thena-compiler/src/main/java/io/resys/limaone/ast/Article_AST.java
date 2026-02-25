@@ -32,12 +32,12 @@ import org.immutables.value.Value;
 public interface Article_AST extends Simple_AST {
   String getTagName();
   List<Markdown> getValues();
-  List<ImageResource> getImages();
-  List<LinkResource> getLinks();
+  List<Image> getImages();
+  List<Link> getLinks();
   List<String> getLocales();
 
   @Value.Immutable
-  interface LinkResource {
+  interface Link {
     String getId();
     String getType();
     String getPath();
@@ -58,7 +58,7 @@ public interface Article_AST extends Simple_AST {
   }
   
   @Value.Immutable
-  interface ImageResource {
+  interface Image {
     String getPath();
     byte[] getValue();
   }
