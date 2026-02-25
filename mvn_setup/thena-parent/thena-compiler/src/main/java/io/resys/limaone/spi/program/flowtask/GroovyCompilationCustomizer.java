@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.flowtask;
+package io.resys.limaone.spi.program.flowtask;
 
 import java.lang.reflect.Modifier;
 
@@ -16,11 +16,11 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType0;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType1;
-import io.resys.limaone.ast.FlowTask_AST.ServiceExecutorType2;
 import io.resys.limaone.model.FlowTask.ServiceRef;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType0;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
+import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
 
 public class GroovyCompilationCustomizer extends CompilationCustomizer {
   private final ClassNode type0Node = ClassHelper.make(ServiceExecutorType0.class);
@@ -124,7 +124,7 @@ public class GroovyCompilationCustomizer extends CompilationCustomizer {
   
   private boolean isContext(ClassNode ... inputTypes) {
     for(ClassNode node : inputTypes) {
-      if(node.getName().equals(ProgramContext.class.getSimpleName())) {
+      if(node.getName().equals(io.resys.limaone.program.Runtime.class.getSimpleName())) {
         return true;    
       }
     }
