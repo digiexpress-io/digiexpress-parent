@@ -32,68 +32,58 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Value.Immutable
-public abstract class Attribute_AST implements Serializable, Comparable<Attribute_AST> {
-  private static final long serialVersionUID = -1945170579949676929L;
+public interface Attribute_AST extends Serializable, Comparable<Attribute_AST> {
+  String getId(); // GID
+  String getName();
+  Integer getOrder();
+  Boolean getData();
   
-  public abstract String getId(); // GID
-  public abstract String getName();
-  public abstract Integer getOrder();
-  public abstract Boolean getData();
+  Direction getDirection();
+  ValueType getValueType();
+  boolean isRequired();
   
-  public abstract Direction getDirection();
-  public abstract ValueType getValueType();
-  public abstract boolean isRequired();
+  Collection<Attribute_AST> getProperties();
   
-  public abstract Collection<Attribute_AST> getProperties();
-  @Nullable
-  public abstract String getExtRef();
-  @Nullable
-  public abstract String getScript();
-  @Nullable
-  public abstract Class<?> getBeanType();
-  @Nullable
-  public abstract String getDescription();
-  @Nullable
-  public abstract String getValues();
-  @Nullable
-  public abstract String getRef();
-  @Nullable
-  public abstract List<String> getValueSet();
+  @Nullable String getExtRef();
+  @Nullable String getScript();
+  @Nullable Class<?> getBeanType();
+  @Nullable String getDescription();
+  @Nullable String getValues();
+  @Nullable String getRef();
+  @Nullable List<String> getValueSet();
   
-  @JsonIgnore
-  public abstract Deserializer getDeserializer();
-  @JsonIgnore
-  public abstract Serializer getSerializer();
-  @JsonIgnore
-  public Serializable toValue(Object value) {
+  @JsonIgnore Deserializer getDeserializer();
+  @JsonIgnore Serializer getSerializer();
+  
+
+  public default Serializable toValue(Object value) {
     return getDeserializer().deserialize(this, value);
   }
-  @JsonIgnore
-  public String toString(Object value) {
+
+  public default String toString(Object value) {
     return getSerializer().serialize(this, value);
   }
-  @JsonIgnore
   @Override
-  public int compareTo(Attribute_AST o) {
+  public default int compareTo(Attribute_AST o) {
     return Integer.compare(getOrder(), o.getOrder());
   }
     
-  public interface Deserializer {
+  interface Deserializer {
     Serializable deserialize(Attribute_AST dataType, Object value);
   }
 
-  public interface Serializer {
+  interface Serializer {
     String serialize(Attribute_AST dataType, Object value);
   }
 
   @FunctionalInterface
-  public interface ValueTypeResolver {
+  interface ValueTypeResolver {
     ValueType get(Class<?> src);
   }
 
-  public enum AssociationType { ONE_TO_ONE, ONE_TO_MANY }
-  public enum Direction { IN, OUT }
-  public enum ValueType {
+  enum AssociationType { ONE_TO_ONE, ONE_TO_MANY }
+  enum Direction { IN, OUT }
+  enum ValueType {
     TIME, 
     DATE, 
     DATE_TIME, 

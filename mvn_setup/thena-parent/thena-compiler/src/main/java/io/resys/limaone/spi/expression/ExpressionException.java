@@ -30,5 +30,4 @@ public class ExpressionException extends RuntimeException {
   public JsonObject getCommand() {
     return props;
   }
-
 }

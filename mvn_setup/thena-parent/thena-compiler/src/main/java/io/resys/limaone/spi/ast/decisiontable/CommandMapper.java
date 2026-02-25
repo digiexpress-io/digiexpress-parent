@@ -13,15 +13,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.hdes.client.api.ast.*;
-import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.limaone.ast.attribute.Attribute_AST.Direction;
 import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
-import io.resys.limaone.ast.decisiontable.DecisionTable_AST.AstDecisionRow;
+import io.resys.limaone.ast.attribute.ImmutableHeaders_AST;
+import io.resys.limaone.ast.decisiontable.DecisionTable_AST;
 import io.resys.limaone.ast.decisiontable.DecisionTable_AST.ColumnExpressionType;
+import io.resys.limaone.ast.decisiontable.DecisionTable_AST.DecisionRow;
 import io.resys.limaone.ast.decisiontable.DecisionTable_AST.HitPolicy;
-import io.resys.limaone.ast.decisiontable.ImmutableAstDecisionCell;
-import io.resys.limaone.ast.decisiontable.ImmutableAstDecisionRow;
+import io.resys.limaone.ast.decisiontable.ImmutableDecisionCell;
+import io.resys.limaone.ast.decisiontable.ImmutableDecisionRow;
+import io.resys.limaone.ast.decisiontable.ImmutableDecisionTable_AST;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.spi.ast.attribute.Attribute_AST_Factory;
 import io.resys.limaone.spi.expression.ExpressionProgram;
 import io.resys.limaone.spi.expression.ExpressionProgramFactory;
 
@@ -318,13 +321,13 @@ public class CommandMapper {
     }
   }
 
-  public AstDecision build() {
+  public DecisionTable_AST build() {
     this.idGen.getHeaders().values().stream()
-    .filter(h -> !StringUtils.isEmpty(h.getScript()))
-    .forEach(h -> h.getCells().forEach(c -> c.setValue(resolveScriptValue(h, c))));
+      .filter(h -> !StringUtils.isEmpty(h.getScript()))
+      .forEach(h -> h.getCells().forEach(c -> c.setValue(resolveScriptValue(h, c))));
 
-    List<TypeDef> headers = this.idGen.getHeaders().values().stream().sorted()
-        .map(h -> (TypeDef) typeDefs.dataType()
+    final var headers = this.idGen.getHeaders().values().stream().sorted()
+        .map(h -> Attribute_AST_Factory.newAttribute()
             .direction(h.getDirection())
             .name(h.getName())
             .valueType(h.getValue())
@@ -336,14 +339,14 @@ public class CommandMapper {
             .build())
         .collect(Collectors.toList());
 
-    List<AstDecisionRow> rows = this.idGen.getRows().values().stream().sorted()
-        .map(r -> ImmutableAstDecisionRow.builder()
+    final List<DecisionRow> rows = this.idGen.getRows().values().stream().sorted()
+        .map(r -> ImmutableDecisionRow.builder()
             .id(r.getId())
             .order(r.getOrder())
             .cells(this.idGen.getHeaders().values().stream().sorted()
                 .map(h -> {
                   MutableCell c = h.getRowCell(r.getId());
-                  return ImmutableAstDecisionCell.builder().id(c.getId()).value(c.getValue()).header(h.getId()).build();
+                  return ImmutableDecisionCell.builder().id(c.getId()).value(c.getValue()).header(h.getId()).build();
                 })
                 .collect(Collectors.toList()))
             .build()
@@ -351,14 +354,14 @@ public class CommandMapper {
         .collect(Collectors.toList());
 
     final HitPolicy hitPolicy = this.hitPolicy == null ? HitPolicy.FIRST : this.hitPolicy;
-    return ImmutableAstDecision.builder()
+    return ImmutableDecisionTable_AST.builder()
         .name(name)
-        .bodyType(AstBodyType.DT)
+        .bodyType(Model.BodyType.DECISION_TABLE)
         .description(description)
         .hitPolicy(hitPolicy)
         .headerTypes(headerTypes)
         .headerExpressions(headerExpressions)
-        .headers(ImmutableHeaders.builder()
+        .headers(ImmutableHeaders_AST.builder()
             .acceptDefs(headers.stream().filter(p -> p.getDirection() == Direction.IN).collect(Collectors.toList()))
             .returnDefs(headers.stream().filter(p -> p.getDirection() == Direction.OUT).collect(Collectors.toList()))
             .build())

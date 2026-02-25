@@ -1,41 +1,17 @@
 package io.resys.limaone.spi.ast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
-/*-
- * #%L
- * wrench-assets-dt
- * %%
- * Copyright (C) 2016 - 2018 Copyright 2016 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.attribute.Attribute_AST.Direction;
 import io.resys.limaone.ast.attribute.Attribute_AST.ValueType;
+import io.resys.limaone.ast.decisiontable.DecisionTable_AST;
 import io.resys.limaone.ast.decisiontable.DecisionTable_AST.ColumnExpressionType;
 import io.resys.limaone.ast.decisiontable.DecisionTable_AST.HitPolicy;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
@@ -58,7 +34,7 @@ public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
   }
 
   @Override
-  public AstDecision build() {
+  public DecisionTable_AST parse() {
     return builder.build();
   }
 

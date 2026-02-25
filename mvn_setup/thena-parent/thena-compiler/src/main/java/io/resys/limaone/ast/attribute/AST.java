@@ -1,11 +1,13 @@
 package io.resys.limaone.ast.attribute;
 
-import java.util.Map;
+import io.resys.limaone.model.Model.BodyType;
+import jakarta.annotation.Nullable;
 
 public interface AST {
   String getId();
   String getName();
+  @Nullable String getDescription();
+  BodyType getBodyType();
   
-  Map<String, Attribute_AST> getInputs();
-  Map<String, Attribute_AST> getOutputs();
+  Headers_AST getHeaders();
 }
