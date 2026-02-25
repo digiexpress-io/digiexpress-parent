@@ -5,12 +5,14 @@ import java.util.Optional;
 
 import io.resys.limaone.ast.attribute.AST;
 import io.resys.limaone.ast.decisiontable.DecisionTable_AST;
+import io.resys.limaone.ast.flow.Flow_AST;
+import io.resys.limaone.ast.flowtask.FlowTask_AST;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.Model;
 
 public interface AST_Parser {
 
-  ArticleParser articles();
+  ArticleParser parseArticles();
   FlowParser parseFlow();
   FlowTaskParser parseFlowTask();
   DecsionTableParser parseDecisionTable();
