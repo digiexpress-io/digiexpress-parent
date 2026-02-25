@@ -19,7 +19,8 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
   return (
     <FsTabRoot ownerState={ownerState} className={classes.root}>
       {ownerState.tabs.map((tab, index) => (
-        <div onClick={() => ownerState.onTabClick(index)}
+        <div key={index}
+          onClick={() => ownerState.onTabClick(index)}
           className={`${classes.tab} ${tab.isActive ? classes.active : classes.inActive} 
           ${tab.isError ? classes.tabError : ''}`}
         >
