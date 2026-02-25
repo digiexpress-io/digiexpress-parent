@@ -2,11 +2,15 @@ package io.resys.limaone.program;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import org.immutables.value.Value;
 
+import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Parameter;
+import io.resys.limaone.program.FlowTaskProgram.FlowTaskExecutor;
 import jakarta.annotation.Nullable;
 
 
@@ -15,6 +19,15 @@ import jakarta.annotation.Nullable;
 public interface DecisionProgram extends Program {
   List<DecisionRow> getRows();
   HitPolicy getHitPolicy();
+  
+  FlowTaskExecutor run(Runtime runtime);
+  
+  interface DecisionExecutor {
+    DecisionExecutor callback(Consumer<DecisionTable_AST> callback);
+    Map<String, Serializable> andGet();
+    List<Map<String, Serializable>> andFind();
+    DecisionResult andGetBody();
+  }
   
   @Value.Immutable
   interface DecisionRow extends Serializable {

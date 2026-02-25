@@ -38,6 +38,15 @@ public interface FlowTaskProgram extends Program {
   @Nullable Parameter getTypeDef0();
   @Nullable Parameter getTypeDef1();
   
+  FlowTaskExecutor run(Runtime runtime);
+  
+  
+  
+  interface FlowTaskExecutor {
+    ServiceResult andGetBody();
+  }
+  
+  
   @Value.Immutable
   interface ServiceResult extends ProgramResult {
     Serializable getValue();
