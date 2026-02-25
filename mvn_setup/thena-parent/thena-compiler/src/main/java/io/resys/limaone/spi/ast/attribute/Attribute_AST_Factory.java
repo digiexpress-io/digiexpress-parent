@@ -17,7 +17,7 @@ import io.resys.limaone.ast.Attribute_AST.Deserializer;
 import io.resys.limaone.ast.Attribute_AST.Direction;
 import io.resys.limaone.ast.Attribute_AST.Serializer;
 import io.resys.limaone.ast.Attribute_AST.ValueType;
-import io.resys.limaone.ast.attribute.ImmutableAttribute_AST;
+import io.resys.limaone.ast.ImmutableAttribute_AST;
 import io.resys.thena.support.RepoAssert;
 
 public class Attribute_AST_Factory {
