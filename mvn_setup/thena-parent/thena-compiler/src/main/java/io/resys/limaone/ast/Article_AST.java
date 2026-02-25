@@ -1,6 +1,6 @@
 package io.resys.limaone.ast;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /*-
  * #%L
@@ -23,10 +23,11 @@ import java.time.LocalDateTime;
  */
 
 import java.util.List;
-
-import jakarta.annotation.Nullable;
+import java.util.Optional;
 
 import org.immutables.value.Value;
+
+import jakarta.annotation.Nullable;
 
 @Value.Immutable
 public interface Article_AST extends Simple_AST {
@@ -47,14 +48,36 @@ public interface Article_AST extends Simple_AST {
     Boolean getGlobal();
     Boolean getAnon();
     Boolean getAssignable();
-    @Nullable LocalDateTime getStartDate();
-    @Nullable LocalDateTime getEndDate();
+    @Nullable OffsetDateTime getStartDate();
+    @Nullable OffsetDateTime getEndDate();
     @Nullable String getDesc();
     // values for workflows
     @Nullable String getFormId();
     @Nullable String getFormName();
     @Nullable String getFormTag();
     @Nullable String getFlowName();
+    
+    
+    default boolean isInPeriod(Optional<OffsetDateTime> now) {
+      final var link = this;
+      if(link.getStartDate() == null && link.getEndDate() == null) {
+        return true;
+      }
+      
+      if(now.isEmpty()) {
+        return true;
+      }
+      
+      final var target = now.get();
+      if(link.getEndDate() != null && link.getEndDate().compareTo(target) < 0) {
+        return false;
+      }
+
+      if(link.getStartDate() != null && link.getStartDate().compareTo(target) > 0) {
+        return false;
+      }
+      return true;
+    }
   }
   
   @Value.Immutable

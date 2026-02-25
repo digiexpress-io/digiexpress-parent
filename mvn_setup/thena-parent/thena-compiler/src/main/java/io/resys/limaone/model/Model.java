@@ -1,6 +1,7 @@
 package io.resys.limaone.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.immutables.value.Value;
 
@@ -41,5 +42,21 @@ public interface Model<T extends Body>  extends Serializable {
     PRINTOUT_PAGE,
     PRINTOUT_SCRIPT,
     PRINTOUT_RESOURCE
-  } 
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableModelWorld.class)
+  @JsonDeserialize(as = ImmutableModelWorld.class)
+  interface ModelWorld {
+    String getName();
+    Map<String, Model<Article>> getArticles();
+    Map<String, Model<ArticleLink>> getArticleLinks();
+    Map<String, Model<ArticlePage>> getArticlePages();
+    Map<String, Model<ArticleTemplate>> getArticleTemplates();
+    Map<String, Model<ArticleWorkflow>> getArticleWorkflows();
+    Map<String, Model<DecisionTable>> getDecisionTables();
+    Map<String, Model<Flow>> getFlows();
+    Map<String, Model<FlowTask>> getFlowTasks();
+    Map<String, Model<Locale>> getLocales();
+  }
 }

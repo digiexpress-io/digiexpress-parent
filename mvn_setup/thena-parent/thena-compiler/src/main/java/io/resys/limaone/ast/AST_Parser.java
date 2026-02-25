@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Model.ModelWorld;
 
 public interface AST_Parser {
 
@@ -17,6 +18,7 @@ public interface AST_Parser {
   
   interface ArticleParser {
     ArticleParser deps(DependencyResolution deps);
+    ArticleParser world(ModelWorld world);
     Article_AST parse();
   }
   
