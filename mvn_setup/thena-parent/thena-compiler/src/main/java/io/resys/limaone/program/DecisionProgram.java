@@ -11,7 +11,7 @@ import jakarta.annotation.Nullable;
 
 
 
-@Value.Immutable
+
 public interface DecisionProgram extends Program {
   List<DecisionRow> getRows();
   HitPolicy getHitPolicy();
