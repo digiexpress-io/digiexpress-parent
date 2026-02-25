@@ -82,5 +82,13 @@ export const FsTabRoot = styled('div', {
       fontWeight: ownerState.isDarkMode ? 400 : 500,
       color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
     },
+
+    [`& .MuiIconButton-root`]: {
+      marginLeft: theme.spacing(0.5),
+      padding: theme.spacing(0.25),
+      '& .MuiSvgIcon-root': {
+        fontSize: 'medium'
+      }
+    },
   };
 });

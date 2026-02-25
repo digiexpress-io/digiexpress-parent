@@ -10,9 +10,9 @@ export interface FsTabItemProps {
 }
 
 
-export const FsTab: React.FC<FsTabItemProps> = (props) => {
-  const { ownerState, index, className } = props;
+export const FsTab: React.FC<FsTabItemProps> = ({ ownerState, className, index }) => {
   const tab = ownerState.tabs[index];
+
   return (
     <Tooltip title={tab.name} arrow enterDelay={700} placement="bottom">
       <Typography variant='subtitle2' className={className}>

@@ -29,7 +29,7 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
             ownerState={ownerState}
             className={classes.tabTypography}
           />
-          <IconButton size="small" sx={{ ml: 0.5, p: 0.25 }} onClick={(event) => ownerState.onTabClose(index, event)}>
+          <IconButton onClick={(event) => ownerState.onTabClose(index, event)}>
             <FsIcons.Close fontSize="inherit" sx={{ color: tab.isError ? (ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight) : (ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary) }} />
           </IconButton>
         </div>
