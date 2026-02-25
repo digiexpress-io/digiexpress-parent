@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 
 
-@Value.Immutable
+
 public interface FlowProgram extends Program {
   
   String getStartStepId();
