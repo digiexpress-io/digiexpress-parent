@@ -17,10 +17,10 @@ public interface Program extends Serializable {
   String getId();
   Model.BodyType getType();
   ProgramStatus getStatus();
-  
+
+  List<Parameter> getHeaders();
   List<ProgramMessage> getWarnings();
   List<ProgramMessage> getErrors();
-  List<Parameter> getHeaders();
   List<ProgramAssociation> getAssociations();
   
   interface ProgramResult extends Serializable {}

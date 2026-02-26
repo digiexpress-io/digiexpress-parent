@@ -35,11 +35,16 @@ import io.resys.limaone.program.ImmutableDecisionRowAccepts;
 import io.resys.limaone.program.ImmutableDecisionRowReturns;
 import io.resys.limaone.spi.program.ProgramException;
 import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
+import lombok.RequiredArgsConstructor;
 
-public class DecisionProgramBuilder {
 
+@RequiredArgsConstructor
+public class DecisionProgram_Compiler {
 
-  public DecisionProgram build(DecisionTable_AST ast) {
+  private final DecisionTable_AST ast;
+  
+
+  public DecisionProgram compile() {
     try {
       final var program = ImmutableDecisionProgram.builder().hitPolicy(ast.getHitPolicy());
       
