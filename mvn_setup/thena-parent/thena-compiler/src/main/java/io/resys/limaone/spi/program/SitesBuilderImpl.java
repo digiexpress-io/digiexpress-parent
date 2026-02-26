@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program.article;
+package io.resys.limaone.spi.program;
 
 /*-
  * #%L
@@ -23,6 +23,8 @@ package io.resys.limaone.spi.program.article;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.limaone.spi.program.article.ImmutableTopicData.Builder;
+import io.resys.limaone.spi.program.article.SiteVisitor.SiteVisitorOutput;
 import io.thestencil.client.api.ImmutableSites;
 import io.thestencil.client.api.Markdowns;
 import io.thestencil.client.api.MigrationBuilder.Sites;

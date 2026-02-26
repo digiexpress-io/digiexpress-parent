@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program.decisiontable;
+package io.resys.limaone.spi.program;
 
 /*-
  * #%L
