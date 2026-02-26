@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.resys.hdes.client.api.programs.ImmutableFlowProgram;
+
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
 import io.resys.limaone.ast.Flow_AST.FlowInputNode;
@@ -193,8 +193,9 @@ public class FlowProgramBuilder {
     try {
       final var isTrue = when == null || when.isEmpty();
       final var expression = isTrue ? 
-          typesFactory.expression(ValueType.FLOW_CONTEXT, "true") :
-          typesFactory.expression(ValueType.FLOW_CONTEXT, when);
+          ExpressionProgramFactory.build("true", ValueType.FLOW_CONTEXT) :
+          ExpressionProgramFactory.build(when, ValueType.FLOW_CONTEXT);
+      
       condition.expression(expression).stepId(thenValue);
     } catch(Exception e) {
       final var message = "Failed to evaluate expression: \"" + when + "\" in flow decision: " + decisionId + "!" + System.lineSeparator() + e.getMessage();
