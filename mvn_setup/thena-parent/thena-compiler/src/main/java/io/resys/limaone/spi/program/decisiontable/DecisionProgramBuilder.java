@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program;
+package io.resys.limaone.spi.program.decisiontable;
 
 /*-
  * #%L
@@ -33,6 +33,8 @@ import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.ImmutableDecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRowAccepts;
 import io.resys.limaone.program.ImmutableDecisionRowReturns;
+import io.resys.limaone.spi.program.ProgramException;
+import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 
 public class DecisionProgramBuilder {
 

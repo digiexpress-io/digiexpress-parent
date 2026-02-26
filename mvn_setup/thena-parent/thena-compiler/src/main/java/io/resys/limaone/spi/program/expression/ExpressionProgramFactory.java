@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program;
+package io.resys.limaone.spi.program.expression;
 
 /*-
  * #%L
@@ -34,14 +34,6 @@ import io.resys.limaone.program.ExpressionProgram;
 import io.resys.limaone.program.ImmutableExpressionResult;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.ExpressionCacheKey;
-import io.resys.limaone.spi.program.expression.ExpressionException;
-import io.resys.limaone.spi.program.expression.Operation;
-import io.resys.limaone.spi.program.expression.OperationBoolean;
-import io.resys.limaone.spi.program.expression.OperationDate;
-import io.resys.limaone.spi.program.expression.OperationFlowContext;
-import io.resys.limaone.spi.program.expression.OperationMap;
-import io.resys.limaone.spi.program.expression.OperationNumber;
-import io.resys.limaone.spi.program.expression.OperationString;
 
 
 public class ExpressionProgramFactory {
