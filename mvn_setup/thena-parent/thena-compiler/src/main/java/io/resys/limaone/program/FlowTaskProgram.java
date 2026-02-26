@@ -43,12 +43,11 @@ public interface FlowTaskProgram extends Program {
   
   
   interface FlowTaskExecutor {
-    ServiceResult andGetBody();
+    FlowTaskResult andGetBody();
   }
   
-  
   @Value.Immutable
-  interface ServiceResult extends ProgramResult {
+  interface FlowTaskResult extends ProgramResult {
     Serializable getValue();
   }
   

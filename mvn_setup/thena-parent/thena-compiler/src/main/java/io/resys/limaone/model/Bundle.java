@@ -1,4 +1,4 @@
-package io.resys.limaone.authoring;
+package io.resys.limaone.model;
 
 import java.time.OffsetDateTime;
 
@@ -7,7 +7,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.model.Model;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -33,8 +32,6 @@ public interface Bundle {
   // Null when user has requested sources to be not loaded on api level
   @Nullable Model.ModelWorld getSources();
 
-
-  
   enum BundleStatus {
     BUILDING, READY, ERROR, DEPLOYED
   }

@@ -10,7 +10,6 @@ import org.immutables.value.Value;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Parameter;
-import io.resys.limaone.program.FlowTaskProgram.FlowTaskExecutor;
 import jakarta.annotation.Nullable;
 
 
@@ -20,7 +19,7 @@ public interface DecisionProgram extends Program {
   List<DecisionRow> getRows();
   HitPolicy getHitPolicy();
   
-  FlowTaskExecutor run(ProgramInput input, Runtime runtime);
+  DecisionExecutor run(ProgramInput input, Runtime runtime);
   
   interface DecisionExecutor {
     DecisionExecutor callback(Consumer<DecisionTable_AST> callback);
