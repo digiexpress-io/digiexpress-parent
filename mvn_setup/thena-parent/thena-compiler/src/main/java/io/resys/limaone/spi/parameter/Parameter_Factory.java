@@ -81,7 +81,7 @@ public class Parameter_Factory {
   }
   
   
-  public static NewAttribute newAttribute() {
+  public static NewAttribute newParam() {
     return new NewAttribute();
   }
   

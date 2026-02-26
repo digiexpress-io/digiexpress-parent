@@ -237,7 +237,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
       boolean isData = type.isAnnotationPresent(ServiceData.class);
       if(isData) {
         
-        final var dataTypeBuilder = Parameter_Factory.newAttribute().id("input-" + index).order(index++)
+        final var dataTypeBuilder = Parameter_Factory.newParam().id("input-" + index).order(index++)
             .data(isData).name(parameter.getName()).direction(Direction.IN).beanType(parameter.getType())
             .valueType(ValueType.OBJECT);
         getWrenchFlowParameter(dataTypeBuilder, parameter.getType(), isData, Direction.IN);
@@ -249,7 +249,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
 
         result.addAllAcceptDefs(getFields(parameter.getType(), Direction.IN));
       } else {
-        final var dataTypeBuilder = Parameter_Factory.newAttribute().id("input-" + index).order(index++)
+        final var dataTypeBuilder = Parameter_Factory.newParam().id("input-" + index).order(index++)
             .data(isData).name(parameter.getName()).direction(Direction.IN).beanType(parameter.getType())
             .valueType(ValueType.OBJECT);
         
@@ -267,7 +267,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
       throw new AST_Exception(
           "'execute' must be void or return type must define: " + ServiceData.class.getCanonicalName() + "!");
     } else {
-      final var dataTypeBuilder = Parameter_Factory.newAttribute().id("output").name(returnType.getSimpleName())
+      final var dataTypeBuilder = Parameter_Factory.newParam().id("output").name(returnType.getSimpleName())
           .data(true).order(index++).direction(Direction.OUT).beanType(returnType).valueType(ValueType.OBJECT);
       getWrenchFlowParameter(dataTypeBuilder, returnType, true, Direction.OUT);
       returnTypeDef = dataTypeBuilder.build();
@@ -296,7 +296,7 @@ public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
         continue;
       }
       
-      final var typeDef = Parameter_Factory.newAttribute()
+      final var typeDef = Parameter_Factory.newParam()
           .id(field.getName())
           .order(index++)
           .name(field.getName())

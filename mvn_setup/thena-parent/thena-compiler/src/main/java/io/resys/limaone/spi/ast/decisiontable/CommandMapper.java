@@ -327,7 +327,7 @@ public class CommandMapper {
       .forEach(h -> h.getCells().forEach(c -> c.setValue(resolveScriptValue(h, c))));
 
     final var headers = this.idGen.getHeaders().values().stream().sorted()
-        .map(h -> Parameter_Factory.newAttribute()
+        .map(h -> Parameter_Factory.newParam()
             .direction(h.getDirection())
             .name(h.getName())
             .valueType(h.getValue())

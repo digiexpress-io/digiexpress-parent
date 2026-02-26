@@ -74,7 +74,7 @@ public class AstFlowNodesFactory {
         try {
           ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
           
-          result.add(Parameter_Factory.newAttribute()
+          result.add(Parameter_Factory.newParam()
               .id(entry.getValue().getStart() + "")
               .order(index++)
               .name(entry.getKey())
@@ -87,7 +87,7 @@ public class AstFlowNodesFactory {
         } catch (Exception e) {
           final String msg = String.format("Failed to convert data type from: %s, error: %s", entry.getValue().getType().getValue(), e.getMessage());
           log.error(msg);
-          result.add(Parameter_Factory.newAttribute()
+          result.add(Parameter_Factory.newParam()
               .id(entry.getValue().getStart() + "")
               .order(index++)
               .name(entry.getKey())
