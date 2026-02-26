@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program;
+package io.resys.limaone.spi.compiler;
 
 import io.resys.limaone.spi.dependency.Resolution.ResolutionBuilder;
 

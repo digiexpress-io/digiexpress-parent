@@ -1,6 +1,5 @@
-package io.resys.limaone.spi.program;
+package io.resys.limaone.spi.dependency;
 
-import io.resys.limaone.spi.dependency.Resolution;
 import io.resys.limaone.spi.dependency.Resolution.NewArtifact;
 import io.resys.limaone.spi.dependency.Resolution.ResolutionBuilder;
 
@@ -19,4 +18,8 @@ public class ResolutionBuilder_Impl implements ResolutionBuilder {
     return null;
   }
 
+  
+  
+  
+  
 }

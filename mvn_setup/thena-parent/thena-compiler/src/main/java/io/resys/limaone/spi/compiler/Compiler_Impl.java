@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program;
+package io.resys.limaone.spi.compiler;
 
 import java.time.Duration;
 import java.util.List;
@@ -10,8 +10,9 @@ import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.program.Compiler;
 import io.resys.limaone.program.DecisionProgram;
+import io.resys.limaone.spi.compiler.CompilableUnit.OpenProgram;
+import io.resys.limaone.spi.dependency.ResolutionBuilder_Impl;
 import io.resys.limaone.spi.dependency.Resolution.ResolutionBuilder;
-import io.resys.limaone.spi.program.CompilableUnit.OpenProgram;
 import io.resys.limaone.spi.program.decisiontable.DecisionProgram_Compiler;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
