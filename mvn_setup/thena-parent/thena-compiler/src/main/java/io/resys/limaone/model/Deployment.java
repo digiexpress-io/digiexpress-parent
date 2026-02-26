@@ -11,10 +11,10 @@ import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 
-@JsonSerialize(as = ImmutableBundle.class)
-@JsonDeserialize(as = ImmutableBundle.class)
+@JsonSerialize(as = ImmutableDeployment.class)
+@JsonDeserialize(as = ImmutableDeployment.class)
 @Value.Immutable
-public interface Bundle {
+public interface Deployment {
   String getId();
   String getName();
   @Nullable String getExternalId();

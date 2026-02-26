@@ -11,18 +11,18 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
-public interface NewBundle {
+public interface NewDeployment {
 
   
-  NewBundle props(NewBundleProps props);
-  NewBundle props(Consumer<ImmutableNewBundleProps.Builder> props);
+  NewDeployment props(NewDeploymentProps props);
+  NewDeployment props(Consumer<ImmutableNewDeploymentProps.Builder> props);
   
-  Uni<NewBundleProps> build();
+  Uni<NewDeploymentProps> build();
   
   @Value.Immutable
-  @JsonSerialize(as = ImmutableNewBundleProps.class)
-  @JsonDeserialize(as = ImmutableNewBundleProps.class)
-  public interface NewBundleProps {
+  @JsonSerialize(as = ImmutableNewDeploymentProps.class)
+  @JsonDeserialize(as = ImmutableNewDeploymentProps.class)
+  public interface NewDeploymentProps {
     @Nullable String getStencilTag(); // auto-create tag on null
     @Nullable String getWrenchTag();  // auto-create tag on null
     
