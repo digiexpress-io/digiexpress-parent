@@ -38,18 +38,18 @@ export const TaskAiAssistant: React.FC = () => {
   }, [task.id, getSimilarFeedback]);
 
   if (!sentimentAndSubcategory && !similarFeedback) {
-    return <Typography sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.ai.assistant.loading', defaultMessage: 'Loading AI Assistant data...' })}</Typography>;
+    return <Typography sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.ai.assistant.loading' })}</Typography>;
   }
 
   return (
     <Stack direction="column" height="100%">
-      <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.sentiment', defaultMessage: 'Sentiment' })} style={style} 
+      <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.sentiment' })} style={style} 
         value={<TaskFeedbackSentiment sentiment={sentimentAndSubcategory?.sentiment.sentiment} style={style} />} />
       <Divider sx={{ mb: 1 }} />
-      <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.subcategory', defaultMessage: 'Subcategory' })} style={style} 
+      <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.subcategory' })} style={style} 
         value={<TaskFeedbackSubcategory subcategory={sentimentAndSubcategory?.subcategory.subcategory} style={style} />} />
       <Divider sx={{ mb: 1 }} />
-      <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.similar.feedback', defaultMessage: 'Similar feedback' })} style={style} 
+      <TaskCardDataRowElement label={intl.formatMessage({ id: 'taskcard.body.similar.feedback' })} style={style} 
         value={<TaskFeedbackSimilar similarities={similarities} style={style} toggleShowSimilarities={() => setShowSimilarFeedback(!showSimilarFeedback)} />} />
       {showSimilarFeedback && similarities && similarities.length > 0 && <Box sx={{ p: 0.5, mt: 1, border: '1px solid', borderColor: 'divider', borderRadius: 1, maxHeight: 200, overflowY: 'auto' }}>
         {similarities.map((similarity, index) => (

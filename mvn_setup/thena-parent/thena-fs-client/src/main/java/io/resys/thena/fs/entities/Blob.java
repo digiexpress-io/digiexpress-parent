@@ -39,7 +39,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableBlob.class)
 @JsonDeserialize(as = ImmutableBlob.class)
-public interface Blob extends FileSystemEntity {
+public interface Blob extends Entity {
   
   String getId();
   String getBlobType();
@@ -70,6 +70,7 @@ public interface Blob extends FileSystemEntity {
     final var hash = Hashing.murmur3_128().hashString(hashString, StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
+        .blobClass(fileClass)
         .blobType(type)
         .blobValue(content);
   }

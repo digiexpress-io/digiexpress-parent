@@ -33,7 +33,7 @@ import com.google.common.hash.Hashing;
 @Value.Immutable
 @JsonSerialize(as = ImmutableCommit.class)
 @JsonDeserialize(as = ImmutableCommit.class)
-public interface Commit extends FileSystemEntity {
+public interface Commit extends Entity {
   
   String getId();
   OffsetDateTime getCommitCreatedAt();

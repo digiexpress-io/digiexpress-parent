@@ -3320,6 +3320,7 @@
           "@tanstack/react-table": "*",
           "@tanstack/react-query": "*",
           "@monaco-editor/react": "*",
+          "notistack": "*",
           "yaml": "*"
         },
         "keywords": [
@@ -3342,6 +3343,7 @@
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
+        "notistack",
         "yaml"
       ],
       "peerDependencies": [
@@ -3355,6 +3357,7 @@
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
+        "notistack",
         "yaml"
       ],
       "externalDependencies": [
@@ -3368,6 +3371,7 @@
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
+        "notistack",
         "yaml"
       ],
       "internalDependencies": [
@@ -3414,9 +3418,7 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/xui-table"
       ],
-      "missingDependencies": [
-        "notistack"
-      ],
+      "missingDependencies": [],
       "unusedDependencies": []
     },
     "@dxs-ts/task-feedback": {
@@ -4616,6 +4618,6 @@
       ]
     }
   },
-  "checksum": "963342e96a05c8994abe8528c4ba9a69620f0f14cd8810d221ef2621c5b7c77a",
-  "generatedAt": "2026-02-17T11:23:46.690Z"
+  "checksum": "a7c76b75dda52d40293fe6aae7938baf895fc9e0e08ee415e45096ce04f1d0e2",
+  "generatedAt": "2026-02-20T10:49:35.157Z"
 }

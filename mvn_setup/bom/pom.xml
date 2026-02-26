@@ -154,7 +154,11 @@
         <artifactId>stencil-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-fs-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>      
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-sql-client-pg</artifactId>

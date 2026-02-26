@@ -32,19 +32,19 @@ export const TaskAuditAi: React.FC = () => {
     });
   }, [task.id, getSimilarFeedback]);
 
-  const displaySentimentAndSubcategory = sentimentAndSubcategory ? sentimentAndSubcategory : { message: "No AI analysis for sentiment and subcategory available" };
-  const displaySimilar = similarFeedback ? similarFeedback : { message: "No similar feedback available" };
+  const displaySentimentAndSubcategory = sentimentAndSubcategory ? sentimentAndSubcategory : { message: intl.formatMessage({ id: 'task.audit.ai.sentiment.unavailable' }) };
+  const displaySimilar = similarFeedback ? similarFeedback : { message: intl.formatMessage({ id: 'task.audit.ai.similar.unavailable' }) };
 
   return (
     <Box>
-      <Typography variant='h4' sx={{ mb: 2 }}>{intl.formatMessage({ id: 'task.audit.ai.sentiment.and.subcategory', defaultMessage: "Sentiment and Subcategory" })}</Typography>
+      <Typography variant='h4' sx={{ mb: 2 }}>{intl.formatMessage({ id: 'task.audit.ai.sentiment.and.subcategory' })}</Typography>
         <Editor
           value={toYaml(displaySentimentAndSubcategory)}
           onChange={() => {}}
           defaultLanguage='yaml'
           height='200px'
         />
-      <Typography variant='h4' sx={{ my: 2 }}>{intl.formatMessage({ id: 'task.audit.ai.similar.feedback', defaultMessage: "Similar Feedback" })}</Typography>
+      <Typography variant='h4' sx={{ my: 2 }}>{intl.formatMessage({ id: 'task.audit.ai.similar.feedback' })}</Typography>
         <Editor
           value={toYaml(displaySimilar)}
           onChange={() => {}}

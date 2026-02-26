@@ -34,23 +34,29 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableTag.class)
 @JsonDeserialize(as = ImmutableTag.class)
-public interface Tag extends FileSystemEntity {
+public interface Tag extends Entity {
   
   String getId();
+  Optional<String> getRefId();
+  Optional<String> getExternalId();
+  String getCommitId();
+
+  OffsetDateTime getTagCreatedAt();
+  Optional<OffsetDateTime> getTagStartsAt();
+  Optional<OffsetDateTime> getTagEndsAt();
+  
   String getTagName();
   Optional<String> getTagDescription();
-  String getCommitId();
-  OffsetDateTime getTagCreatedAt();
   String getTagAuthor();
+
+  Optional<String> getTagHealth();
+  Optional<JsonObject> getTagErrors();
+
   Optional<JsonObject> getTagExtension();
-  JsonObject getTagErrors();
-  Optional<String> getExternalId();
-  Optional<String> getExternalTenantId();
-  Optional<OffsetDateTime> getTagStartsAt();
   Optional<JsonObject> getTagReport();
 
-  Optional<String> getRefId();
-  
+  Optional<String> getTagLifecycle();
+
   
   @Value.Auxiliary
   @Nullable 

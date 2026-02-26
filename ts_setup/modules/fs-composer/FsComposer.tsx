@@ -6,7 +6,7 @@ import { useUtilityClasses, FsComposerRoot } from './useUtilityClasses';
 import { FsNodeItem } from './fs-node';
 import { FsNodeMenu } from './fs-node-menu';
 import { FsSearch, FsSearchNoResults } from './fs-search';
-import { filterTreeNodes } from './fs-search/search-helpers';
+import { filterTreeNodes, FilterData } from './fs-search/search-helpers';
 
 export const FsComposer: React.FC = () => {
   const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFs();
@@ -15,10 +15,11 @@ export const FsComposer: React.FC = () => {
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<FsContextMenuData | undefined>();
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [filters, setFilters] = React.useState<FilterData[]>([]);
 
   const filteredTreeData = React.useMemo(() => {
-    return filterTreeNodes(fsData, searchTerm)
-  }, [fsData, searchTerm])
+    return filterTreeNodes(fsData, searchTerm, filters)
+  }, [fsData, searchTerm, filters])
 
   function handleContextMenuClose() {
     setContextMenuOpen(false);
@@ -120,7 +121,14 @@ export const FsComposer: React.FC = () => {
           )}
         </Tooltip>
       </Box>
-      <FsSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} isDarkMode={isDarkMode} open={searchExpanded} />
+      <FsSearch
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        isDarkMode={isDarkMode}
+        open={searchExpanded}
+        visibleFilters={filters}
+        onFiltersChange={setFilters}
+      />
 
       {filteredTreeData.length === 0 ? <FsSearchNoResults /> :
         <List component='nav' disablePadding>

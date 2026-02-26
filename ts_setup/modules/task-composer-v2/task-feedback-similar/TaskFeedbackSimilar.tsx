@@ -18,7 +18,7 @@ export const TaskFeedbackSimilar: React.FC<TaskFeedbackSimilarProps> = ({ simila
   if (!similarities) {
     return (
       <TaskFeedbackSimilarRoot>
-        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.feedback.similarities.none', defaultMessage: 'No similar feedback entries' })}</Typography>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.feedback.similarities.none' })}</Typography>
       </TaskFeedbackSimilarRoot>)
   }
 

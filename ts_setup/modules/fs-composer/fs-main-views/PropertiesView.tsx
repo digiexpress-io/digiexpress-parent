@@ -38,7 +38,8 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
     validityPeriod: '30 days',
     configOptionsEnabled: ['Assignable', 'DevMode'],
     selectedArticles: ['000_index', '230_send_feedback', '400_contact_us'],
-    pages: ['en', 'fi', 'sv']
+    pages: ['en', 'fi', 'sv'],
+    labels: ['protected', 'gdpr']
   };
 
   const mainContent = (
@@ -52,6 +53,14 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
             <PropertyListItem key={index} className="property-list-item">{locale}</PropertyListItem>
           ))}
         </PropertyList>
+      </PropertyRow>
+
+      <PropertyRow isDarkMode={isDarkMode}>
+        <PropertyLabel className="property-label">Labels</PropertyLabel>
+        <PropertyList className="property-value">
+          {properties.labels.map((label, index) => <PropertyListItem key={index} className="property-list-item">{label}</PropertyListItem>)}
+        </PropertyList>
+        <TagLabel>label</TagLabel>
       </PropertyRow>
 
       <PropertyRow isDarkMode={isDarkMode}>
@@ -205,3 +214,53 @@ const PropertyListItem = styled(Box)(({ theme }) => ({
   paddingLeft: '5px',
   paddingRight: '5px'
 }));
+
+
+
+const TagRoot = styled(Box)(({ theme }) => ({
+  position: "relative",
+  display: "inline-flex",
+  alignItems: "center",
+  height: 28,
+  padding: "0 12px 0 16px",
+  background: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  fontSize: 13,
+  borderRadius: 0,
+
+  // left triangle (arrow)
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    left: -12,
+    width: 0,
+    height: 0,
+    borderTop: "14px solid transparent",
+    borderBottom: "14px solid transparent",
+    borderRight: `12px solid ${theme.palette.primary.main}`,
+  },
+
+  // hole
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    left: -6,
+    width: 6,
+    height: 6,
+    borderRadius: "50%",
+    background: theme.palette.background.paper,
+  },
+}));
+
+const TagLabel: React.FC<{ children: any }> = ({ children }) => {
+  return (
+    <TagRoot>
+      <Typography
+        component="span"
+        sx={{ fontSize: "inherit", fontWeight: "inherit" }}
+      >
+        {children}
+      </Typography>
+    </TagRoot>
+  );
+}

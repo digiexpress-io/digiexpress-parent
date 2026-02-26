@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, TextField, Typography, Divider } from '@mui/material';
-import { FsNode } from '@dxs-ts/fs-api';
+import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
+import { FsColors } from '../fs-theme';
 
 export interface NodeCommentsProps {
   node: FsNode | undefined;
@@ -9,13 +10,14 @@ export interface NodeCommentsProps {
 
 export const NodeComments: React.FC<NodeCommentsProps> = (props) => {
   const classes = useUtilityClasses();
+  const { isDarkMode } = useFs();
   const [newComment, setNewComment] = React.useState('');
 
   const comments = props.node?.comments || [];
 
   return (
     <Box>
-      <Typography variant='caption' fontWeight={500} sx={{ color: '#cccccc' }}>Comments ({comments.length})</Typography>
+      <Typography variant='caption' fontWeight={500} sx={{ color: isDarkMode ? FsColors.dark.text : FsColors.light.text }}>Comments ({comments.length})</Typography>
 
       <TextField className={classes.textField} placeholder='Add a comment...'
         value={newComment}
@@ -29,19 +31,19 @@ export const NodeComments: React.FC<NodeCommentsProps> = (props) => {
 
       <Box>
         {comments.length === 0 ? (
-          <Typography variant='caption' sx={{ color: '#888888', fontStyle: 'italic' }}>
+          <Typography variant='caption' sx={{ color: isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary, fontStyle: 'italic' }}>
             No comments yet.
           </Typography>
         ) : (
           comments.map((comment, index) => (
             <Box key={index}>
-              {index > 0 && <Divider sx={{ borderColor: '#3c3c3c' }} />}
+              {index > 0 && <Divider sx={{ borderColor: isDarkMode ? FsColors.dark.border : FsColors.light.border }} />}
               <Box sx={{ mb: 1 }}>
-                <Typography variant='caption' sx={{ color: '#cccccc' }}>
+                <Typography variant='caption' sx={{ color: isDarkMode ? FsColors.dark.text : FsColors.light.text }}>
                   {comment.comment}
                 </Typography>
                 <Box justifySelf='flex-end'>
-                  <Typography variant='caption' sx={{ color: '#888888', fontStyle: 'italic' }}>
+                  <Typography variant='caption' sx={{ color: isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary, fontStyle: 'italic' }}>
                     {comment.author} • {comment.created}
                   </Typography>
                 </Box>

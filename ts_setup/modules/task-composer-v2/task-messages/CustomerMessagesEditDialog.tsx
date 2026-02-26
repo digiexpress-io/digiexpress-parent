@@ -40,8 +40,8 @@ export const CustomerMessagesEditDialog: React.FC<CustomerMessagesEditDialogProp
 
       <DialogTitle>
         {intl.formatMessage({ id: 'task.customerMessages' })}
-        {intl.formatMessage({ id: 'eveli.textSeparator', defaultMessage: ": " })}
-        {task.taskRef ?? 'no task reference id'}
+        {intl.formatMessage({ id: 'eveli.textSeparator' })}
+        {task.taskRef ?? intl.formatMessage({ id: 'task.reference.missing' })}
       </DialogTitle>
 
       <DialogContent>

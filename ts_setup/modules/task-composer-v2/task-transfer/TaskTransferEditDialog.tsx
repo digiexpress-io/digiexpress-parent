@@ -36,26 +36,26 @@ export const TaskTransferEditDialog: React.FC<TaskTransferEditProps> = ({ task, 
     <>
       <StyledDialog fullWidth maxWidth='lg' className={classes.root} open={open} onClose={onClose} slots={{ transition: Zoom }}>
         <DialogTitle sx={{ display: 'flex' }}>
-          {intl.formatMessage({ id: 'task.transfer.create.title', defaultMessage: 'Task transfer' })}
+          {intl.formatMessage({ id: 'task.transfer.create.title' })}
           {intl.formatMessage({ id: 'eveli.textSeparatorColon' })}
-          {task.taskRef ?? 'no task reference id'}
+          {task.taskRef ?? intl.formatMessage({ id: 'task.reference.missing' })}
           <Box flexGrow={1} />
         </DialogTitle>
 
         <DialogContent>
           {error && <Typography color='error'>
-            {intl.formatMessage({ id: 'task.transfer.create.error', defaultMessage: 'An error has occured: ' })}
+            {intl.formatMessage({ id: 'task.transfer.create.error' })}
             {error.message}
           </Typography>
           }
           <Grid2 container display='flex' alignItems='center'>
             <Grid2 size={{ md: 3, lg: 3, xl: 3 }}>
-              <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.docTitle', defaultMessage: 'Document title' })}</Typography>
+              <Typography fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.docTitle' })}</Typography>
             </Grid2>
             <Grid2 size={{ md: 7, lg: 7, xl: 7 }}>
               <StyledTextField
                 fullWidth
-                placeholder={intl.formatMessage({ id: 'task.transfer.create.docTitle.placeholder', defaultMessage: 'Document title' })}
+                placeholder={intl.formatMessage({ id: 'task.transfer.create.docTitle.placeholder' })}
                 onChange={(e: any) => setTitle(e.target.value)}
                 value={title ?? ''}
               />

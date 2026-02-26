@@ -20,10 +20,7 @@ export const NodeReferences: React.FC<NodeReferencessProps> = ({ node }) => {
   return (
     <>
       <Typography variant='caption'>
-        {references.length > 0
-          ? `This asset is referenced in ${references.length} location(s)`
-          : 'This asset is not referenced anywhere'
-        }
+        {references.length > 0 ? `This asset is referenced in ${references.length} location(s)` : 'This asset is not referenced anywhere'}
       </Typography>
       {references.length > 0 && (
         <StyledTableContainer>

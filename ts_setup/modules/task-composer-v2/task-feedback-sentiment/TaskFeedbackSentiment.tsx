@@ -50,7 +50,7 @@ export const TaskFeedbackSentiment: React.FC<TaskFeedbackSentimentProps> = ({ se
   if (!sentiment) {
     return (
       <TaskFeedbackSentimentRoot sentiment={sentiment}>
-        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.sentiment.none', defaultMessage: 'No sentiment detected' })}</Typography>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.sentiment.none' })}</Typography>
       </TaskFeedbackSentimentRoot>)
   }
 

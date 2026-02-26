@@ -93,14 +93,17 @@ CREATE TABLE tag (
   tag_name TEXT UNIQUE NOT NULL,
   tag_description TEXT,
   tag_starts_at TIMESTAMPTZ,
+  tag_ends_at TIMESTAMPTZ,
+  tag_lifecycle TEXT,
+  tag_health TEXT,
   tag_created_at TIMESTAMPTZ NOT NULL,
   tag_author TEXT NOT NULL,
   tag_extension JSONB,
-  tag_errors JSONB NOT NULL,
+  tag_errors JSONB,
   tag_report JSONB,
   external_id TEXT,
-  external_tenant_id TEXT,
   ref_id TEXT,
+  --soft link
   commit_id TEXT NOT NULL REFERENCES commit(commit_id)
 );
 CREATE INDEX tag_name_idx ON tag(tag_name);
@@ -110,6 +113,8 @@ CREATE INDEX tag_external_id_idx ON tag(external_id);
 CREATE INDEX tag_starts_at_idx ON tag(tag_starts_at);
 CREATE INDEX tag_ref_idx ON tag(ref_id);
 COMMENT ON TABLE tag IS 'Immutable named markers for specific commits, typically used for releases or important milestones.';
+COMMENT ON COLUMN tag.tag_lifecycle IS 'The operational phase of the tag (e.g., in-force, waiting, lapsed).';
+COMMENT ON COLUMN tag.tag_health IS 'The current health status or severity level (e.g., OK, WARNING, ERROR).';
 COMMENT ON COLUMN tag.tag_id IS 'Unique tag identifier (hash)';
 COMMENT ON COLUMN tag.tag_name IS 'Human-readable tag name (e.g., "v1.0.0", "release-2023")';
 COMMENT ON COLUMN tag.tag_description IS 'Optional detailed description of this tag';
@@ -119,7 +124,6 @@ COMMENT ON COLUMN tag.tag_author IS 'Author who created this tag';
 COMMENT ON COLUMN tag.tag_extension IS 'Additional tag metadata in JSONB format for future extensibility';
 COMMENT ON COLUMN tag.tag_errors IS 'Error information and validation issues stored in JSONB format for diagnostic purposes';
 COMMENT ON COLUMN tag.external_id IS 'External system identifier for integration and tracking purposes';
-COMMENT ON COLUMN tag.external_tenant_id IS 'External tenant identifier for multi-tenant system integration';
 COMMENT ON COLUMN tag.tag_starts_at IS 'Scheduled activation timestamp when this tag becomes effective or goes live';
 COMMENT ON COLUMN tag.tag_report IS 'Operational reports and status information stored in JSONB format';
 COMMENT ON COLUMN tag.ref_id IS 'Branch pointer when created from specific branch, otherwise just commit id is used';

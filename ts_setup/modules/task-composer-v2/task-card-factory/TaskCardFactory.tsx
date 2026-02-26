@@ -190,7 +190,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
               </Box>
             }
           />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.customerName' })} value={task.clientIdentificator || 'NONE'} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.customerName' })} value={task.clientIdentificator || intl.formatMessage({ id: 'taskcard.body.customerName.none' })} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.subject' })} value={task.subject} style={style} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.additionalInfo' })} value={task.additionalInfo} style={style} />
           <TaskProperties task={task} />
@@ -207,8 +207,8 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
         >
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.formName' })} style={style} value={task.subject + " " + "v1.0"} />
           <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.submittedDate' })} value={_formatAnyDateShort(task.created)} style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback' })} value='YES' style={style} />
-          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.representative' })} value='Representative name' style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback' })} value={intl.formatMessage({ id: 'taskcard.body.form.canPublishFeedback.yes' })} style={style} />
+          <TaskCardDataRowText label={intl.formatMessage({ id: 'taskcard.body.form.representative' })} value={intl.formatMessage({ id: 'taskcard.body.form.representative.placeholder' })} style={style} />
         </TaskCard>
       );
 
@@ -376,7 +376,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
 
     case 'transfer':
       return (
-        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer', defaultMessage: 'Task transfer' })}
+        <TaskCard title={intl.formatMessage({ id: 'taskcard.title.transfer' })}
           {...commonProps}
           showFlashyToggle={true}
           showEditOnMenu={true}
@@ -388,9 +388,9 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
           isMenu
           startAdornmentIcon={<StartAdornmentIcon icon={DriveFileMoveOutlinedIcon} />}>
           <TaskCardDataRowText
-            label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title', defaultMessage: 'Document title' })
+            label={task.transferredId ? (intl.formatMessage({ id: 'taskcard.body.transfer.title' })
             ) : (
-              intl.formatMessage({ id: 'taskcard.body.transfer.none', defaultMessage: 'Not transferred' })
+              intl.formatMessage({ id: 'taskcard.body.transfer.none' })
             )}
             value={task.transferredId ?? task.transferredId}
             style={style}
@@ -497,7 +497,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'audit_ai':
       return (
         <TaskFeature id='TASK_FEEDBACK'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.ai', defaultMessage: 'Audit: AI analysis' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.audit.ai' })}
               {...commonProps}
               showFlashyToggle={false}
               showEditOnMenu={false}
@@ -511,7 +511,7 @@ export const TaskCardFactory: React.FC<{ cardId: TaskCardId }> = (initProps) => 
     case 'ai_assistant':
       return (
         <TaskFeature id='TASK_AI_FEEDBACK'>
-          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant', defaultMessage: 'AI Assistant: Feedback Analysis' })}
+          <TaskCard title={intl.formatMessage({ id: 'taskcard.title.ai.assistant' })}
             {...commonProps}
             showFlashyToggle={false}
             showEditOnMenu={false}

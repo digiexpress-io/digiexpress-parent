@@ -47,17 +47,21 @@ import io.vertx.mutiny.sqlclient.Row;
       tag_description TEXT,
       
       tag_starts_at TIMESTAMPTZ,
+      tag_ends_at TIMESTAMPTZ,
+      
+      tag_lifecycle TEXT,
+      tag_health TEXT,
+      
       tag_created_at TIMESTAMPTZ NOT NULL,
             
       tag_author TEXT NOT NULL,
       tag_extension JSONB,
-      tag_errors JSONB NOT NULL,
+      tag_errors JSONB,
       tag_report JSONB,
       
       external_id TEXT,
-      external_tenant_id TEXT,
       
-      ref_id TEXT,
+      ref_id TEXT, --soft link
       commit_id TEXT NOT NULL REFERENCES {commit}(commit_id)      
     );
     
@@ -69,6 +73,8 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE INDEX {tag}_ref_idx ON {tag}(ref_id);
     
     COMMENT ON TABLE {tag} IS 'Immutable named markers for specific commits, typically used for releases or important milestones.';
+    COMMENT ON COLUMN {tag}.tag_lifecycle IS 'The operational phase of the tag (e.g., in-force, waiting, lapsed).';
+    COMMENT ON COLUMN {tag}.tag_health IS 'The current health status or severity level (e.g., OK, WARNING, ERROR).';
     COMMENT ON COLUMN {tag}.tag_id IS 'Unique tag identifier (hash)';
     COMMENT ON COLUMN {tag}.tag_name IS 'Human-readable tag name (e.g., "v1.0.0", "release-2023")';
     COMMENT ON COLUMN {tag}.tag_description IS 'Optional detailed description of this tag';
@@ -78,7 +84,6 @@ import io.vertx.mutiny.sqlclient.Row;
     COMMENT ON COLUMN {tag}.tag_extension IS 'Additional tag metadata in JSONB format for future extensibility';
     COMMENT ON COLUMN {tag}.tag_errors IS 'Error information and validation issues stored in JSONB format for diagnostic purposes';
     COMMENT ON COLUMN {tag}.external_id IS 'External system identifier for integration and tracking purposes';
-    COMMENT ON COLUMN {tag}.external_tenant_id IS 'External tenant identifier for multi-tenant system integration';
     COMMENT ON COLUMN {tag}.tag_starts_at IS 'Scheduled activation timestamp when this tag becomes effective or goes live';
     COMMENT ON COLUMN {tag}.tag_report IS 'Operational reports and status information stored in JSONB format';
     COMMENT ON COLUMN {tag}.ref_id IS 'Branch pointer when created from specific branch, otherwise just commit id is used';
@@ -156,8 +161,10 @@ public interface TagTable {
     sql = """
       INSERT INTO {tag}
       (tag_id, tag_name, tag_description, commit_id, tag_created_at, tag_author, 
-       tag_extension, tag_errors, external_id, external_tenant_id, tag_starts_at, tag_report, ref_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+       tag_extension, tag_errors, external_id, tag_ends_at, tag_starts_at, tag_report, ref_id,
+       tag_lifecycle, tag_health
+      )
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
     """,
     propsMapper = TagInsertMapper.class
   )
@@ -168,9 +175,10 @@ public interface TagTable {
       UPDATE {tag}
       SET tag_name = $1, tag_description = $2, commit_id = $3, 
           tag_created_at = $4, tag_author = $5, tag_extension = $6,
-          tag_errors = $7, external_id = $8, external_tenant_id = $9, 
-          tag_starts_at = $10, tag_report = $11
-      WHERE tag_id = $12
+          tag_errors = $7, external_id = $8, tag_ends_at = $9, 
+          tag_starts_at = $10, tag_report = $11,
+          tag_lifecycle = $12, tag_health = $13
+      WHERE tag_id = $14
     """,
     propsMapper = TagUpdateMapper.class
   )
@@ -187,7 +195,7 @@ public interface TagTable {
     public Tag apply(Row row) {
       final String tagDescription = row.getString("tag_description");
       final String externalId = row.getString("external_id");
-      final String externalTenantId = row.getString("external_tenant_id");
+      final OffsetDateTime tagEndsAt = row.getOffsetDateTime("tag_ends_at");
       final OffsetDateTime tagStartsAt = row.getOffsetDateTime("tag_starts_at");
       
 
@@ -201,11 +209,16 @@ public interface TagTable {
           .tagCreatedAt(row.getOffsetDateTime("tag_created_at"))
           .tagAuthor(row.getString("tag_author"))
           .tagExtension(Optional.ofNullable(row.getJsonObject("tag_extension")))
-          .tagErrors(row.getJsonObject("tag_errors"))
+          .tagErrors(Optional.ofNullable(row.getJsonObject("tag_errors")))
           .externalId(Optional.ofNullable(externalId))
-          .externalTenantId(Optional.ofNullable(externalTenantId))
+          
+          .tagEndsAt(Optional.ofNullable(tagEndsAt))
           .tagStartsAt(Optional.ofNullable(tagStartsAt))
           .tagReport(Optional.ofNullable(row.getJsonObject("tag_report")))
+          
+          .tagLifecycle(Optional.ofNullable(row.getString("tag_lifecycle")))
+          .tagHealth(Optional.ofNullable(row.getString("tag_health")))
+          
           .transitives(ImmutableTagTransitives.builder().build())
           .build();
     }
@@ -222,12 +235,15 @@ public interface TagTable {
         tag.getTagCreatedAt(),
         tag.getTagAuthor(),
         tag.getTagExtension().orElse(null),
-        tag.getTagErrors(),
+        tag.getTagErrors().orElse(null),
         tag.getExternalId().orElse(null),
-        tag.getExternalTenantId().orElse(null),
+        tag.getTagEndsAt().orElse(null),
         tag.getTagStartsAt().orElse(null),
         tag.getTagReport().orElse(null),
-        tag.getRefId().orElse(null)
+        tag.getRefId().orElse(null),
+        
+        tag.getTagLifecycle().orElse(null),
+        tag.getTagHealth().orElse(null),
       });
     }
   }
@@ -244,9 +260,12 @@ public interface TagTable {
         tag.getTagExtension().orElse(null),
         tag.getTagErrors(),
         tag.getExternalId().orElse(null),
-        tag.getExternalTenantId().orElse(null),
+        tag.getTagEndsAt().orElse(null),
         tag.getTagStartsAt().orElse(null),
         tag.getTagReport().orElse(null),
+        
+        tag.getTagLifecycle().orElse(null),
+        tag.getTagHealth().orElse(null),
         
         TableUtils.toUuid(tag.getId())
       });

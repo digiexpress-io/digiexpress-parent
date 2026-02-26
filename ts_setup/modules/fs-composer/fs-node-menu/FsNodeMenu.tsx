@@ -59,6 +59,7 @@ export const FsNodeMenu: React.FC<FsNodeMenuProps> = (props) => {
           onSubmenuOpen={handleSubmenuOpen}
           onClose={props.onClose}
         />
+
         <FsNodeMenuSub
           node={props.node}
           openSubmenu={openSubmenu}
