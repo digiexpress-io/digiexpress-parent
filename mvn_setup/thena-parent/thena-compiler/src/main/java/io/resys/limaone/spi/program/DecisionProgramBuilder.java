@@ -26,28 +26,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
-import io.resys.hdes.client.api.ast.AstDecision;
-import io.resys.hdes.client.api.ast.AstDecision.AstDecisionCell;
-import io.resys.hdes.client.api.ast.AstDecision.AstDecisionRow;
-import io.resys.hdes.client.api.ast.TypeDef.ValueType;
-import io.resys.hdes.client.api.exceptions.DecisionProgramException;
-import io.resys.hdes.client.api.programs.DecisionProgram;
 import io.resys.hdes.client.api.programs.ImmutableDecisionProgram;
-import io.resys.hdes.client.api.programs.ImmutableDecisionRow;
-import io.resys.hdes.client.api.programs.ImmutableDecisionRowAccepts;
-import io.resys.hdes.client.api.programs.ImmutableDecisionRowReturns;
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.DecisionProgram;
+import io.resys.limaone.program.ImmutableDecisionRow;
+import io.resys.limaone.program.ImmutableDecisionRowAccepts;
+import io.resys.limaone.program.ImmutableDecisionRowReturns;
 
 public class DecisionProgramBuilder {
 
-  private final HdesTypesMapper typesFactory;
-  
-  public DecisionProgramBuilder(HdesTypesMapper typesFactory) {
-    super();
-    this.typesFactory = typesFactory;
-  }
 
-  public DecisionProgram build(AstDecision ast) {
+  public DecisionProgram build(DecisionTable_AST ast) {
     try {
       final var program = ImmutableDecisionProgram.builder().hitPolicy(ast.getHitPolicy());
       
@@ -62,14 +52,14 @@ public class DecisionProgramBuilder {
       });
       
       
-      final List<AstDecisionRow> rows = new ArrayList<>(ast.getRows());
+      final List<DecisionTable_AST.DecisionRowNode> rows = new ArrayList<>(ast.getRows());
       Collections.sort(rows, (o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()));
       
 
       for(var row : rows) {
 
         final var programRow = ImmutableDecisionRow.builder().order(row.getOrder());
-        for(AstDecisionCell value : row.getCells()) {
+        for(final var value : row.getCells()) {
           
           if(accepts.containsKey(value.getHeader())) {
             if(value.getValue() == null || value.getValue().isBlank()) {
@@ -78,7 +68,7 @@ public class DecisionProgramBuilder {
             final var typeDef = accepts.get(value.getHeader());
             programRow.addAccepts(ImmutableDecisionRowAccepts.builder()
                 .key(typeDef)
-                .expression(typesFactory.expression(typeDef.getValueType(), value.getValue()))
+                .expression(ExpressionProgramFactory.build(value.getValue(), typeDef.getValueType()))
                 .build());
           } else {
             final var typeDef = returns.get(value.getHeader());
@@ -93,7 +83,7 @@ public class DecisionProgramBuilder {
                   .build());
             } catch(Exception e) {
 
-              throw new DecisionProgramException(
+              throw new DecisionRowException(
                   row.getOrder(), typeDef.getOrder(),
                   "Failed to create expression: '" + value.getValue() + "'!" +
                   System.lineSeparator() + e.getMessage(), e);
@@ -104,10 +94,11 @@ public class DecisionProgramBuilder {
         program.addRows(programRow.build());
       }
       return program.build();
-    } catch(DecisionProgramException ex) {
+    } catch(ProgramException | DecisionRowException ex) {
       throw ex;
+      
     } catch(Exception e) {
-      throw new DecisionProgramException(
+      throw new ProgramException(
           "Failed to create decision program from ast: '" + ast.getName() + "'!" +
           System.lineSeparator() + e.getMessage(), e);
     }

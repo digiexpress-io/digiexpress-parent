@@ -45,7 +45,7 @@ public class DecisionProgramExecutor {
   public static DecisionResult run(DecisionProgram program, ProgramContext context) {
     final var decisions = ImmutableDecisionResult.builder();
     
-    Iterator<DecisionRow> it = program.getRows().iterator();
+    Iterator<DecisionRowNode> it = program.getRows().iterator();
     while(it.hasNext()) {
       final var node = it.next();
       final var decision = visitRow(node, context);
@@ -67,7 +67,7 @@ public class DecisionProgramExecutor {
   
   public static Map<String, Serializable> get(DecisionResult program) {
     if(program.getMatches().size() > 1) {
-      throw new DecisionProgramException("Expected 0-1 results but was: " + program.getMatches().size() + "!");
+      throw new DecisionRowException("Expected 0-1 results but was: " + program.getMatches().size() + "!");
     } else if(program.getMatches().size() == 1) {
       return toValues(program.getMatches().get(0));
     }
@@ -98,11 +98,11 @@ public class DecisionProgramExecutor {
     case ALL:
       // match all
       return false;
-    default: throw new DecisionProgramException("Unknown hit policy: " + hitPolicy + "!");
+    default: throw new DecisionRowException("Unknown hit policy: " + hitPolicy + "!");
     }
   }
 
-  private static DecisionLog visitRow(DecisionRow node, ProgramContext context) {
+  private static DecisionLog visitRow(DecisionRowNode node, ProgramContext context) {
     Boolean match = null;
     final var data = ImmutableDecisionLog.builder();
     
@@ -112,7 +112,7 @@ public class DecisionProgramExecutor {
       try {
         match = (Boolean) input.getExpression().run(input.getKey().toValue(contextEntity)).getValue();
       } catch(Exception e) {
-        throw new DecisionProgramException(
+        throw new DecisionRowException(
             "Failed to evaluate expression: '" + input.getExpression().getSrc() + "'"
             + ", because: " + e.getMessage()
             + "!", e);    

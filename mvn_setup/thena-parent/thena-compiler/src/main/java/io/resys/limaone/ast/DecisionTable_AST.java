@@ -22,21 +22,21 @@ public interface DecisionTable_AST extends Simple_AST {
   List<String> getHeaderTypes();
   Map<ValueType, List<String>> getHeaderExpressions();
   HitPolicy getHitPolicy();
-  List<DecisionRow> getRows();
+  List<DecisionRowNode> getRows();
 
   @Value.Immutable
-  @JsonSerialize(as = ImmutableDecisionRow.class)
-  @JsonDeserialize(as = ImmutableDecisionRow.class)
-  interface DecisionRow extends Serializable {
+  @JsonSerialize(as = ImmutableDecisionRowNode.class)
+  @JsonDeserialize(as = ImmutableDecisionRowNode.class)
+  interface DecisionRowNode extends Serializable {
     String getId();
     int getOrder();
-    List<DecisionCell> getCells();
+    List<DecisionCellNode> getCells();
   }
 
   @Value.Immutable
-  @JsonSerialize(as = ImmutableDecisionCell.class)
-  @JsonDeserialize(as = ImmutableDecisionCell.class)
-  interface DecisionCell extends Serializable {
+  @JsonSerialize(as = ImmutableDecisionCellNode.class)
+  @JsonDeserialize(as = ImmutableDecisionCellNode.class)
+  interface DecisionCellNode extends Serializable {
     String getId();
     String getHeader();
     @Nullable    

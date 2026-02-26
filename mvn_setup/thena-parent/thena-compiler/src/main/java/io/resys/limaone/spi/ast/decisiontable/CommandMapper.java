@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.limaone.ast.DecisionTable_AST.DecisionRow;
-import io.resys.limaone.ast.ImmutableDecisionCell;
-import io.resys.limaone.ast.ImmutableDecisionRow;
+import io.resys.limaone.ast.DecisionTable_AST.DecisionRowNode;
+import io.resys.limaone.ast.ImmutableDecisionCellNode;
+import io.resys.limaone.ast.ImmutableDecisionRowNode;
 import io.resys.limaone.ast.ImmutableDecisionTable_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.model.DecisionTable.ColumnExpressionType;
@@ -339,14 +339,14 @@ public class CommandMapper {
             .build())
         .collect(Collectors.toList());
 
-    final List<DecisionRow> rows = this.idGen.getRows().values().stream().sorted()
-        .map(r -> ImmutableDecisionRow.builder()
+    final List<DecisionRowNode> rows = this.idGen.getRows().values().stream().sorted()
+        .map(r -> ImmutableDecisionRowNode.builder()
             .id(r.getId())
             .order(r.getOrder())
             .cells(this.idGen.getHeaders().values().stream().sorted()
                 .map(h -> {
                   MutableCell c = h.getRowCell(r.getId());
-                  return ImmutableDecisionCell.builder().id(c.getId()).value(c.getValue()).header(h.getId()).build();
+                  return ImmutableDecisionCellNode.builder().id(c.getId()).value(c.getValue()).header(h.getId()).build();
                 })
                 .collect(Collectors.toList()))
             .build()
