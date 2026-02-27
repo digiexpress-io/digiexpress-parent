@@ -1,6 +1,5 @@
 package io.resys.limaone.program;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -79,8 +78,8 @@ public interface ArticleProgram extends Program {
     
     @Nullable Boolean getAssignable();
     @Nullable Boolean getAnon();
-    @Nullable LocalDateTime getStartDate();
-    @Nullable LocalDateTime getEndDate();
+    @Nullable OffsetDateTime getStartDate();
+    @Nullable OffsetDateTime getEndDate();
     @Nullable String getFormId();
     @Nullable String getFormName();
     @Nullable String getFormTag();
