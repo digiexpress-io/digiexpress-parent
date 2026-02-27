@@ -53,25 +53,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
 export const FsNodeRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkTheme',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-      styles.icon,
-      styles.iconFolder,
-      styles.iconArticle,
-      styles.iconService,
-      styles.iconDialob,
-      styles.iconFlow,
-      styles.iconLink,
-      styles.iconLanguage,
-      styles.iconPrintout,
-      styles.iconImage,
-      styles.iconTemplate,
-      styles.iconExpand,
-      styles.iconConfig
-    ];
-  },
+  shouldForwardProp: (prop) => prop !== 'isDarkTheme'
 })<{ isDarkTheme: boolean }>(({ theme, isDarkTheme }) => {
   return {
     [`& .${MUI_NAME}-icon`]: {

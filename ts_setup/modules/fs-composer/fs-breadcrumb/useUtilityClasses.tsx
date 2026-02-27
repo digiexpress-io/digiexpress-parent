@@ -27,11 +27,6 @@ export const FsBreadcrumbRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkTheme',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-    ];
-  },
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
   return {

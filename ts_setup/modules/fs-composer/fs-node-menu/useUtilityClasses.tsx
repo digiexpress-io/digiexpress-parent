@@ -54,28 +54,8 @@ export const FsNodeMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward'].includes(prop as string),
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-      styles.headerMain,
-      styles.menuItem,
-      styles.menuItemActive,
-      styles.menuItemDelete,
-      styles.menuItemLocked,
-      styles.menuItemUnlocked,
-      styles.divider,
-      styles.textField,
-      styles.label,
-      styles.expandedContent,
-      styles.menuContainer,
-      styles.sectionMain,
-      styles.dividerSub,
-      styles.sectionSub
-    ];
-  },
 })<{ isSubmenuOpen?: boolean; shouldExpandUpward?: boolean }>(({ theme, isSubmenuOpen }) => {
   return {
-    // Menu paper styles
     '& .MuiPaper-root': {
       backgroundColor: FsColors.dark.surface,
       color: FsColors.dark.text,

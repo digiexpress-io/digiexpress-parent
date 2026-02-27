@@ -123,8 +123,6 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
               level={0}
               onToggle={(nodeId) => ownerState.toggleNode(nodeId, ownerState.fsData, ownerState.setFsData)}
               onContextMenu={(event, node) => ownerState.onContextMenu(event, node, ownerState.setContextMenuData, ownerState.setContextMenuOpen)}
-              onDoubleClick={ownerState.onDoubleClick}
-              isDarkTheme={ownerState.isDarkMode}
               searchTerm={ownerState.searchTerm}
             />
           ))}

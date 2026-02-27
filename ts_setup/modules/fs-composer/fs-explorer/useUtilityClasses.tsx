@@ -34,17 +34,6 @@ export const FsExplorerRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkTheme',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-      styles.title,
-      styles.titleText,
-      styles.iconDark,
-      styles.iconLight,
-      styles.badgeDark,
-      styles.badgeLight
-    ];
-  },
 })<{ isDarkTheme: boolean }>(({ theme, isDarkTheme }) => {
   const treeThemeColors = getThemeColors(isDarkTheme);
 

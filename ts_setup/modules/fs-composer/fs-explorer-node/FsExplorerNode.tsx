@@ -1,66 +1,48 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItemIcon } from '@mui/material';
 
-import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsNodeRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
 import { FsIcons } from '../fs-theme';
-import { sortChildren } from './fs-node-helpers';
+import { FsExplorerNodeProps } from './FsExplorerNodeProps';
+import { useOwnerState } from './useOwnerState';
 
-export interface FsExplorerNodeProps {
-  node: FsNode;
-  level: number;
-  parentPath?: string;
-  onToggle: (nodeId: string) => void;
-  onContextMenu: (event: React.MouseEvent, node: FsNode) => void;
-  onDoubleClick: (node: FsNode, pathToTopParent: string) => void;
-  isDarkTheme: boolean;
-  searchTerm: string;
-}
 
-export const FsExplorerNode: React.FC<FsExplorerNodeProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
-  const children = node.children && node.children.length > 0;
-  const configOptions = node.configOptions && node.configOptions.length > 0;
-  const classes = useUtilityClasses(isDarkTheme);
-  const { isChildError } = useFs();
-
-  const childWithError = children && node.children!.some(child => isChildError(child));
-  const showError = node.error || childWithError;
-
-  // Build the full path for this node
-  const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
+export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
+  const ownerState = useOwnerState(props);
+  const classes = useUtilityClasses(ownerState.isDarkMode);
 
   return (
-    <FsNodeRoot className={classes.root} isDarkTheme={isDarkTheme}>
+    <FsNodeRoot className={classes.root} isDarkTheme={ownerState.isDarkMode}>
       <StyledListItem
-        level={level}
-        isDarkTheme={isDarkTheme}
-        onClick={() => children && onToggle(node.id)}
-        onDoubleClick={() => onDoubleClick(node, fullPath)}
-        onContextMenu={(event) => onContextMenu(event, node)}
-        error={showError ? true : false}
+        level={ownerState.level}
+        isDarkTheme={ownerState.isDarkMode}
+        onClick={() => ownerState.children && ownerState.onToggle(ownerState.node.id)}
+        onDoubleClick={() => ownerState.openAsset(ownerState.node, ownerState.fullPath)}
+        onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.node)}
+        error={ownerState.showError ? true : false}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          {children ? (
+          {ownerState.children ? (
             <IconButton size='small'>
-              {node.expanded ? <FsIcons.ExpandMore fontSize='small' className={classes.iconExpand} /> : <FsIcons.ChevronRight fontSize='small' className={classes.iconExpand} />}
+              {ownerState.node.expanded ? <FsIcons.ExpandMore fontSize='small' className={classes.iconExpand} /> : <FsIcons.ChevronRight fontSize='small' className={classes.iconExpand} />}
             </IconButton>
           ) : (
               <Box sx={{ width: 21, mr: 0.5 }} />
           )}
-          <ListItemIcon className={getIconClassName(node, classes)}>
-            {getIcon(node)}
+          <ListItemIcon className={getIconClassName(ownerState.node, classes)}>
+            {getIcon(ownerState.node)}
           </ListItemIcon>
           <StyledListItemText
-            nodeType={node.type}
-            nodeName={node.name}
-            description={node.description}
-            isDarkTheme={isDarkTheme}
-            error={showError ? true : false}
-            searchTerm={searchTerm}
+            nodeType={ownerState.node.type}
+            nodeName={ownerState.node.name}
+            description={ownerState.node.description}
+            isDarkTheme={ownerState.isDarkMode}
+            error={ownerState.showError ? true : false}
+            searchTerm={ownerState.searchTerm}
           />
-          {configOptions && (
+          {ownerState.configOptions && (
             <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
-              {getConfigIcons(node.configOptions!, classes.iconConfig).map((tooltipIcon) => (
+              {getConfigIcons(ownerState.node.configOptions!, classes.iconConfig).map((tooltipIcon) => (
                 <Box key={tooltipIcon.key} display='flex' alignItems='center'>
                   {tooltipIcon}
                 </Box>
@@ -69,20 +51,18 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = ({ node, level, par
           )}
         </Box>
       </StyledListItem>
-      {children && (
-        <Collapse in={node.expanded} timeout={0}>
+      {ownerState.children && (
+        <Collapse in={ownerState.node.expanded} timeout={0}>
           <List component='div' disablePadding>
-            {sortChildren(node.children || []).map((child) => (
+            {ownerState.sortChildren(ownerState.node.children || []).map((child) => (
               <FsExplorerNode
                 key={child.id}
                 node={child}
-                level={level + 1}
-                parentPath={fullPath}
-                onToggle={onToggle}
-                onContextMenu={onContextMenu}
-                onDoubleClick={onDoubleClick}
-                isDarkTheme={isDarkTheme}
-                searchTerm={searchTerm}
+                level={ownerState.level + 1}
+                parentPath={ownerState.fullPath}
+                onToggle={ownerState.onToggle}
+                onContextMenu={ownerState.onContextMenu}
+                searchTerm={ownerState.searchTerm}
               />
             ))}
           </List>
