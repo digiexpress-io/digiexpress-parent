@@ -108,7 +108,6 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
       <FsSearch
         searchTerm={ownerState.searchTerm}
         onSearchChange={ownerState.setSearchTerm}
-        isDarkMode={ownerState.isDarkMode}
         open={ownerState.isSearchExpanded}
         visibleFilters={ownerState.filters}
         onFiltersChange={ownerState.setFilters}

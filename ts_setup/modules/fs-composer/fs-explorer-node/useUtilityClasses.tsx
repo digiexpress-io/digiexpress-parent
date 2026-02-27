@@ -4,16 +4,17 @@ import composeClasses from '@mui/utils/composeClasses';
 import { FsColors, getNodeColor, FsIcons } from '../fs-theme';
 import { SearchResultHighlight } from '../fs-search/SearchResultHighlight';
 
-import { ConfigOption, FsNode, FsNodeType, useFs } from '@dxs-ts/fs-api';
+import { ConfigOption, FsNode, useFs } from '@dxs-ts/fs-api';
+import { ExplorerNodeNameProps } from './FsExplorerNodeProps';
 
 
 
-export const MUI_NAME = 'FsNode';
+export const MUI_NAME = 'FsExplorerNode';
 
-export interface FsNodeClasses {
+export interface FsExplorerNodeClasses {
   root: string;
-  listItem: string;
-  listItemContent: string;
+  explorerNode: string;
+  explorerNodeContent: string;
   icon: string;
   iconFolder: string;
   iconArticle: string;
@@ -29,13 +30,13 @@ export interface FsNodeClasses {
   iconConfig: string;
 }
 
-export type FsNodeClassKey = keyof FsNodeClasses;
+export type FsExplorerNodeClassKey = keyof FsExplorerNodeClasses;
 
 export const useUtilityClasses = (_isDarkTheme: boolean) => {
   const slots = {
     root: ['root'],
-    listItem: ['listItem'],
-    listItemContent: ['listItemContent'],
+    explorerNode: ['explorerNode'],
+    explorerNodeContent: ['explorerNodeContent'],
     icon: ['icon'],
     iconFolder: ['iconFolder'],
     iconArticle: ['iconArticle'],
@@ -54,7 +55,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsNodeRoot = styled('div', {
+export const FsExplorerNodeRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState'
@@ -167,7 +168,7 @@ export const FsNodeRoot = styled('div', {
       color: isDarkTheme ? FsColors.dark.text : FsColors.light.text,
     },
 
-    [`& .${MUI_NAME}-listItem`]: {
+    [`& .${MUI_NAME}-explorerNode`]: {
       paddingLeft: theme.spacing(ownerState.level * 1.2),
       cursor: 'pointer',
       '&:hover': {
@@ -181,7 +182,7 @@ export const FsNodeRoot = styled('div', {
       },
     },
 
-    [`& .${MUI_NAME}-listItemContent`]: {
+    [`& .${MUI_NAME}-explorerNodeContent`]: {
       display: 'flex',
       alignItems: 'center',
       width: '100%',
@@ -252,16 +253,9 @@ export function getIcon(node: FsNode) {
 };
 
 
-interface StyledListItemTextProps {
-  nodeType: FsNodeType;
-  nodeName: string;
-  description?: string;
-  isDarkTheme: boolean;
-  error: boolean;
-  searchTerm: string;
-}
 
-export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
+
+export const ExplorerNodeName: React.FC<ExplorerNodeNameProps> = ({
   nodeType, nodeName, description, isDarkTheme, error, searchTerm = ''
 }) => {
   return (
@@ -285,7 +279,7 @@ export const StyledListItemText: React.FC<StyledListItemTextProps> = ({
 }
 
 
-export function getIconClassName(node: FsNode, classes: FsNodeClasses) {
+export function getIconClassName(node: FsNode, classes: FsExplorerNodeClasses) {
   switch (node.type) {
     case 'folder':
       return classes.iconFolder;

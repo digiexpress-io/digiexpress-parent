@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useUtilityClasses, FsNodeRoot, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
+import { useUtilityClasses, FsExplorerNodeRoot, getIcon, getIconClassName, getConfigIcons, ExplorerNodeName } from './useUtilityClasses';
 import { FsIcons } from '../fs-theme';
 import { FsExplorerNodeProps } from './FsExplorerNodeProps';
 import { useOwnerState } from './useOwnerState';
@@ -12,14 +12,14 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
   const classes = useUtilityClasses(ownerState.isDarkMode);
 
   return (
-    <FsNodeRoot className={classes.root} ownerState={ownerState}>
+    <FsExplorerNodeRoot className={classes.root} ownerState={ownerState}>
       <ListItem
-        className={`${classes.listItem} ${ownerState.showError ? 'error' : ''}`}
+        className={`${classes.explorerNode} ${ownerState.showError ? 'error' : ''}`}
         onClick={() => ownerState.children && ownerState.onToggle(ownerState.node.id)}
         onDoubleClick={() => ownerState.openAsset(ownerState.node, ownerState.fullPath)}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.node)}
       >
-        <Box className={classes.listItemContent}>
+        <Box className={classes.explorerNodeContent}>
           {ownerState.children ? (
             <IconButton size='small'>
               {ownerState.node.expanded ? <FsIcons.ExpandMore fontSize='small' className={classes.iconExpand} /> : <FsIcons.ChevronRight fontSize='small' className={classes.iconExpand} />}
@@ -30,7 +30,7 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
           <ListItemIcon className={getIconClassName(ownerState.node, classes)}>
             {getIcon(ownerState.node)}
           </ListItemIcon>
-          <StyledListItemText
+          <ExplorerNodeName
             nodeType={ownerState.node.type}
             nodeName={ownerState.node.name}
             description={ownerState.node.description}
@@ -66,6 +66,6 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
           </List>
         </Collapse>
       )}
-    </FsNodeRoot>
+    </FsExplorerNodeRoot>
   );
 };
