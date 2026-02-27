@@ -141,7 +141,6 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({ node }) => {
   );
 };
 
-// CSS Architecture
 const MUI_NAME = 'PropertiesView';
 
 export interface PropertiesViewClasses {
