@@ -35,12 +35,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ node }) => {
 
   if (!node) {
     return (
-      <ViewContainer
-        title="History"
-        icon={<FsIcons.History />}
-        activeNode={false}
-        noNodeMessage="Select a node from the tree to view history."
-      >
+      <ViewContainer title="History" icon={<FsIcons.History />} activeNode={false} noNodeMessage="Select a node from the tree to view history.">
         <></>
       </ViewContainer>
     );
@@ -64,7 +59,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ node }) => {
               ))}
             </div>
           ) : (
-            <Typography variant="body2" color="text.secondary">
+              <Typography>
               No history available for this node.
             </Typography>
           )}
