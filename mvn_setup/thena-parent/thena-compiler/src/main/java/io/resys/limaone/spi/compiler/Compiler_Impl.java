@@ -1,19 +1,14 @@
 package io.resys.limaone.spi.compiler;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.program.Compiler;
-import io.resys.limaone.program.DecisionProgram;
-import io.resys.limaone.spi.compiler.CompilableUnit.OpenProgram;
-import io.resys.limaone.spi.dependency.ResolutionBuilder_Impl;
-import io.resys.limaone.spi.dependency.Resolution.ResolutionBuilder;
-import io.resys.limaone.spi.program.decisiontable.DecisionProgram_Compiler;
+import io.resys.limaone.spi.compiler.CompilableUnit.BundleBuilder;
+import io.resys.limaone.spi.resolution.BundleBuilder_Impl;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +24,7 @@ public class Compiler_Impl implements Compiler {
   @Override
   public Bundle compile(ModelWorld world) {
     
-    final ResolutionBuilder resolutionBuilder = new ResolutionBuilder_Impl();
+    final BundleBuilder bundler = new BundleBuilder_Impl();
     
     // dialobs
     final Stream<CompilableUnit> dialobs = world.getArticleWorkflows()
@@ -50,17 +45,14 @@ public class Compiler_Impl implements Compiler {
     // combine all to single stream
     final Stream<CompilableUnit> itemsToCompile =  Stream.of(dialobs, article, flows, flowTasks, decisions).flatMap(Function.identity());
     
-    
+    // bundle all 
     return Multi.createFrom().items(itemsToCompile)
-      .onItem().transform(unit -> unit.compile(resolutionBuilder))
+      .onItem().transform(unit -> unit.compile(bundler.newArtifact()))
       .runSubscriptionOn(this.workerPool)
-      .collect().asList().map(openProgram -> createBundle(world, openProgram, resolutionBuilder))
+      .collect().asList().onItem().transformToUni(bundler::build)
       .await().atMost(maxTimeout);
   }
 
-  private Bundle createBundle(ModelWorld world, List<OpenProgram> openProgram, ResolutionBuilder resolutionBuilder) {
-    
-  }
   
   public static class CompilerBuilder {
     private ScheduledExecutorService workerPool;
