@@ -74,7 +74,6 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
                         label={label}
                         chipType={filter?.type || 'folder'}
                         isDarkMode={ownerState.isDarkMode}
-                        size="small"
                       />
                     );
                   })}
@@ -95,12 +94,3 @@ export const FsSearch: React.FC<FsSearchProps> = (props) => {
   );
 };
 
-export const FsSearchNoResults: React.FC = () => {
-  const classes = useUtilityClasses({} as FsSearchProps);
-
-  return (
-    <div className={classes.noResultsContainer}>
-      <span className={classes.noResultsText}>No results found</span>
-    </div>
-  );
-};

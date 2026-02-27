@@ -255,21 +255,20 @@ export function getIcon(node: FsNode) {
 
 
 
-export const ExplorerNodeName: React.FC<ExplorerNodeNameProps> = ({
-  nodeType, nodeName, description, isDarkTheme, error, searchTerm = ''
-}) => {
+export const ExplorerNodeName: React.FC<ExplorerNodeNameProps> = (props) => {
   return (
-    <ListItemText primary={<Typography variant='subtitle2' sx={{
-      color: error
-        ? (isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
-        : getNodeColor(nodeType, isDarkTheme),
-      fontWeight: isDarkTheme ? 400 : 500,
-    }}
+    <ListItemText primary={<Typography variant='subtitle2'
+      sx={{
+        color: props.error
+          ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
+          : getNodeColor(props.nodeType, props.isDarkTheme),
+        fontWeight: props.isDarkTheme ? 400 : 500,
+      }}
     >
-      <SearchResultHighlight text={nodeName} searchTerm={searchTerm} isDarkMode={isDarkTheme} />
-      {description && (
+      <SearchResultHighlight text={props.nodeName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
+      {props.description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
-          - "<SearchResultHighlight text={description} searchTerm={searchTerm} isDarkMode={isDarkTheme} />"
+          - "<SearchResultHighlight text={props.description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
         </Typography>
       )}
     </Typography>

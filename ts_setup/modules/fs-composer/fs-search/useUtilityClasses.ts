@@ -13,8 +13,6 @@ export interface FsSearchClasses {
   multiSelect: string;
   chipContainer: string;
   placeholderText: string;
-  noResultsContainer: string;
-  noResultsText: string;
 }
 
 export type FsSearchClassKey = keyof FsSearchClasses;
@@ -27,8 +25,6 @@ export const useUtilityClasses = (_props: FsSearchProps) => {
     multiSelect: ['multiSelect'],
     chipContainer: ['chipContainer'],
     placeholderText: ['placeholderText'],
-    noResultsContainer: ['noResultsContainer'],
-    noResultsText: ['noResultsText'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -139,17 +135,5 @@ export const FsSearchRoot = styled('div', {
 
   '& .MuiDivider-root': {
     borderColor: ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border,
-  },
-
-  [`& .${MUI_NAME}-noResultsContainer`]: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingTop: 0,
-  },
-
-  [`& .${MUI_NAME}-noResultsText`]: {
-    ...theme.typography.subtitle2,
-    fontStyle: 'italic',
-    fontWeight: 500,
   },
 }));

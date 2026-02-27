@@ -3,7 +3,8 @@ import { Box, Typography, List, IconButton, Badge, Tooltip } from '@mui/material
 import { FsIcons } from '../fs-theme';
 import { FsExplorerNode } from '../fs-explorer-node';
 import { FsNodeMenu } from '../fs-node-menu';
-import { FsSearch, FsSearchNoResults } from '../fs-search';
+import { FsSearch } from '../fs-search';
+import { FsExplorerNoSearchResults } from './FsExplorerNoSearchResults';
 import { FsExplorerProps } from './FsExplorerProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsExplorerRoot } from './useUtilityClasses';
@@ -113,7 +114,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         onFiltersChange={ownerState.setFilters}
       />
 
-      {ownerState.filteredTreeData.length === 0 ? <FsSearchNoResults /> :
+      {ownerState.filteredTreeData.length === 0 ? <FsExplorerNoSearchResults /> :
         <List component='nav' disablePadding>
           {ownerState.filteredTreeData.map((node) => (
             <FsExplorerNode

@@ -1,14 +1,41 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { styled, generateUtilityClass } from '@mui/material';
+import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
+import { HighlightProps } from './FsSearchProps';
 
-interface HighlightProps {
-  text: string;
-  searchTerm: string;
-  isDarkMode: boolean
+const MUI_NAME = 'SearchResultHighlight';
+
+
+export interface SearchResultHighlightClasses {
+  root: string;
+  highlight: string;
 }
 
-export const SearchResultHighlight: React.FC<HighlightProps> = ({ text, searchTerm, isDarkMode }) => {
+const useUtilityClasses = (_props: HighlightProps) => {
+  const slots = {
+    root: ['root'],
+    highlight: ['highlight'],
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
+  return composeClasses(slots, getUtilityClass, {});
+};
+
+const SearchResultHighlightRoot = styled('span', {
+  name: MUI_NAME,
+  slot: 'Root',
+  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
+  [`& .${MUI_NAME}-highlight`]: {
+    backgroundColor: isDarkMode ? FsColors.semantic.highlightDark : FsColors.semantic.highlightLight,
+    borderRadius: '2px',
+    fontWeight: 'bold',
+  },
+}));
+
+export const SearchResultHighlight: React.FC<HighlightProps> = (props) => {
+  const { text, searchTerm, isDarkMode } = props;
+  const classes = useUtilityClasses(props);
 
   if (!searchTerm.trim()) {
     return <>{text}</>;
@@ -33,26 +60,18 @@ export const SearchResultHighlight: React.FC<HighlightProps> = ({ text, searchTe
     parts.push(text.substring(lastIndex));
   }
 
-
-
   return (
-    <>
+    <SearchResultHighlightRoot isDarkMode={isDarkMode} className={classes.root}>
       {parts.map((part, index) => {
         const isMatch = part.toLowerCase() === searchTerm.toLowerCase();
         return isMatch ? (
-          <Box key={index} component='span'
-            sx={{
-              backgroundColor: isDarkMode ? FsColors.semantic.highlightDark : FsColors.semantic.highlightLight,
-              borderRadius: '2px',
-              fontWeight: 'bold'
-            }}
-          >
+          <span key={index} className={classes.highlight}>
             {part}
-          </Box>
+          </span>
         ) : (
           <span key={index}>{part}</span>
         );
       })}
-    </>
+    </SearchResultHighlightRoot>
   );
 };

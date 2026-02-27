@@ -21,6 +21,15 @@ export interface OwnerState {
   fullPath: string;
 }
 
+function sortChildren(children: FsNode[]) {
+  const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
+  return children.sort((a, b) => {
+    const aIndex = order.indexOf(a.type);
+    const bIndex = order.indexOf(b.type);
+    return aIndex - bIndex;
+  });
+}
+
 export const useOwnerState = (props: FsExplorerNodeProps): OwnerState => {
   const { node, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
   const { isDarkMode, isChildError, openAsset } = useFs();
@@ -30,15 +39,6 @@ export const useOwnerState = (props: FsExplorerNodeProps): OwnerState => {
   const childWithError = !!(children && node.children!.some(child => isChildError(child)));
   const showError = !!(node.error || childWithError);
   const fullPath = parentPath ? `${parentPath} / ${node.name}` : node.name;
-
-  function sortChildren(children: FsNode[]) {
-    const order = ['article', 'service', 'dialob', 'flow', 'link', 'language', 'printout', 'image', 'template'];
-    return children.sort((a, b) => {
-      const aIndex = order.indexOf(a.type);
-      const bIndex = order.indexOf(b.type);
-      return aIndex - bIndex;
-    });
-  }
 
   return {
     node,

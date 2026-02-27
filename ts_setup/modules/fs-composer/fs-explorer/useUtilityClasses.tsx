@@ -12,6 +12,7 @@ export interface FsExplorerClasses {
   iconLight: string;
   badgeDark: string;
   badgeLight: string;
+  noSearchResults: string;
 }
 
 export type FsExplorerClassKey = keyof FsExplorerClasses;
@@ -24,7 +25,8 @@ export const useUtilityClasses = () => {
     iconDark: ['iconDark'],
     iconLight: ['iconLight'],
     badgeDark: ['badgeDark'],
-    badgeLight: ['badgeLight']
+    badgeLight: ['badgeLight'],
+    noSearchResults: ['noSearchResults']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -98,6 +100,14 @@ export const FsExplorerRoot = styled('div', {
       padding: '2px',
       right: '2px',
       bottom: '2px',
+    },
+
+    [`& .${MUI_NAME}-noSearchResults`]: {
+      padding: theme.spacing(2),
+      color: treeThemeColors.text,
+      ...theme.typography.subtitle2,
+      fontStyle: 'italic',
+      fontWeight: 500,
     },
   };
 });
