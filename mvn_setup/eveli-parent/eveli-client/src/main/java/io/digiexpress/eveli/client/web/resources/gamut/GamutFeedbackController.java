@@ -40,8 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
-import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
-import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.spi.dialob.DialobFillEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
@@ -126,12 +124,11 @@ public class GamutFeedbackController {
     final var customerRoles = authClient.getCustomerRoles();
     
     return gamutClient.userActionMetaQuery().actionId(actionId).cockpitId(cockpitId).locale(actionLocale)
-      .getOne().onItem().transform(meta -> {
+      .getOne().onItem().transformToUni(meta -> {
         if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
           throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!");
         }
-        try {
-          return ResponseEntity.ok(gamutClient.userActionBuilder()
+          return gamutClient.userActionBuilder()
             .actionId(actionId)
             .cockpitId(cockpitId)
             .anon(true)
@@ -140,14 +137,11 @@ public class GamutFeedbackController {
             .clientLocale(actionLocale)
             .inputContextId(inputContextId)
             .inputParentContextId(inputParentContextId)
-            .createOne().await().atMost(timeout));
-        } catch(UserActionNotAllowedException e) {
-          return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (WorkflowNotFoundException e) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    });
-    
-
+            .createOne();
+    })
+    .map(ResponseEntity::ok)
+    .onFailure().recoverWithItem(() -> ResponseEntity.notFound().build())
+    // make the type as "<?>"
+    .map(e -> e);
   }
 }
