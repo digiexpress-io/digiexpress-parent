@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program.decisiontable;
+package io.resys.limaone.spi.compiler.decisiontable;
 
 import java.util.List;
 

@@ -54,7 +54,7 @@ import io.resys.limaone.program.ImmutableFlowExecutionLog;
 import io.resys.limaone.program.ImmutableFlowResult;
 import io.resys.limaone.program.ImmutableFlowResultErrorLog;
 import io.resys.limaone.program.ImmutableFlowResultLog;
-import io.resys.limaone.spi.program.decisiontable.DecisionProgramExecutor;
+import io.resys.limaone.spi.compiler.decisiontable.DecisionProgramExecutor;
 import io.resys.limaone.spi.program.expression.OperationFlowContext.FlowTaskExpressionContext;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
