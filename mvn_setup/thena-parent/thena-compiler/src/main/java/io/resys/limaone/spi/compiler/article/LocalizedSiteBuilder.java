@@ -24,6 +24,7 @@ public class LocalizedSiteBuilder {
   private final Map<String, TopicLink> siteLinks = new LinkedHashMap<String, TopicLink>();
   private final List<String> parents = new ArrayList<String>();
   private final String locale;
+  private final String imageUrl = "{imageUrl}";
   
   public LocalizedSiteBuilder(String locale) {
     this.locale = locale;
@@ -59,25 +60,6 @@ public class LocalizedSiteBuilder {
   }
   
   public ImmutableLocalizedSite build() {
-    // Add missing levels
-    for(final String parent : parents) {
-      if(siteTopics.containsKey(parent)) {
-        continue;
-      }
-      final var id = parent;
-      final var name = parent;
-      final var topicLinks = getTopicLinks(id);
-      final var topic = ImmutableTopic.builder()
-          .id(id)
-          .name(name)
-          .links(topicLinks.stream().map(e -> e.getId()).toList())
-          .build(); 
-      
-      topicLinks.forEach(link -> siteLinks.put(link.getId(), link));
-      siteTopics.put(topic.getId(), topic);
-    }
-    
-    
     // add assignable links
     getTopicLinks("_").stream()
       .filter(link -> Boolean.TRUE.equals(link.getAssignable()))
