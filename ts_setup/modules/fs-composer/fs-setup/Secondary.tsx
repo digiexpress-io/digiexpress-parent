@@ -1,6 +1,6 @@
 import React from 'react';
-import { FsComposer } from '../FsComposer';
+import { FsExplorer } from '../fs-explorer';
 
 export const Secondary: React.FC = () => {
-  return (<FsComposer />);
+  return (<FsExplorer />);
 }

@@ -1,16 +1,16 @@
 import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled } from '@mui/material';
-import { getThemeColors } from './fs-theme';
+import { getThemeColors } from '../fs-theme';
 
-export const MUI_NAME = 'FsComposer';
+export const MUI_NAME = 'FsExplorer';
 
-export interface FsComposerClasses {
+export interface FsExplorerClasses {
   root: string;
   title: string;
   titleText: string;
 }
 
-export type FsComposerClassKey = keyof FsComposerClasses;
+export type FsExplorerClassKey = keyof FsExplorerClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -22,7 +22,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsComposerRoot = styled('div', {
+export const FsExplorerRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkTheme',
