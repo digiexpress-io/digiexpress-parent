@@ -1,11 +1,13 @@
 package io.resys.limaone.spi.compiler.article;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.program.ArticleProgram.Topic;
@@ -15,7 +17,6 @@ import io.resys.limaone.program.ImmutableLocalizedSite;
 import io.resys.limaone.program.ImmutableTopic;
 import io.resys.limaone.program.ImmutableTopicLink;
 import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
-import io.vertx.core.json.JsonObject;
 
 public class LocalizedSiteBuilder {
   private final Map<String, List<Link>> pathLinkData;
@@ -25,10 +26,13 @@ public class LocalizedSiteBuilder {
   private final List<String> parents = new ArrayList<String>();
   private final String locale;
   private final String imageUrl = "{imageUrl}";
+  private final StringBuilder hashBuilder = new StringBuilder();
   
   public LocalizedSiteBuilder(String locale, Map<String, List<Link>> pathLinkData) {
     this.locale = locale;
     this.pathLinkData = pathLinkData;
+    // Initialize hash with locale
+    this.hashBuilder.append("locale:").append(locale).append("|");
   }
 
   public void addTopic(TopicData src) {
@@ -51,6 +55,24 @@ public class LocalizedSiteBuilder {
         .headings(topicHeadings)
         .build(); 
     
+    // Add to hash incrementally
+    this.hashBuilder.append("topic:")
+        .append(topicId).append("|")
+        .append(name != null ? name : "").append("|")
+        .append(src.getAuth() != null ? src.getAuth() : false).append("|")
+        .append(parent != null ? parent : "").append("|")
+        .append(blob.getId()).append("|");
+    
+    // Add sorted link IDs to hash
+    links.forEach(linkId -> hashBuilder.append("link:").append(linkId).append(","));
+    this.hashBuilder.append("|");
+    
+    // Add headings in order
+    topicHeadings.forEach(heading -> 
+        hashBuilder.append("heading:").append(heading.getId())
+            .append("-").append(heading.getOrder()).append(","));
+    hashBuilder.append("||");
+    
     if(parent != null) {
       parents.add(parent);
     }
@@ -62,12 +84,17 @@ public class LocalizedSiteBuilder {
   
   public ImmutableLocalizedSite build() {
     // add assignable links
+    hashBuilder.append("assignable:");
     getTopicLinks("_").stream()
       .filter(link -> Boolean.TRUE.equals(link.getAssignable()))
-      .forEach(link -> siteLinks.put(link.getId(), link));
-    
+      .forEach(link -> {
+        siteLinks.put(link.getId(), link);
+        hashBuilder.append(link.getId()).append(",");
+      });
+    hashBuilder.append("|");
     
     // Add missing levels
+    hashBuilder.append("missing:");
     for(final String parent : parents) {
       if(siteTopics.containsKey(parent)) {
         continue;
@@ -81,21 +108,27 @@ public class LocalizedSiteBuilder {
           .links(topicLinks.stream().map(e -> e.getId()).toList())
           .build(); 
       
+      // Add missing parent to hash
+      hashBuilder.append("parent:").append(id).append("-").append(name).append(",");
+      
       topicLinks.forEach(link -> siteLinks.put(link.getId(), link));
       siteTopics.put(topic.getId(), topic);
     }
+    hashBuilder.append("|");
     
+    // Calculate final hash
+    String calculatedId = Hashing.murmur3_128()
+        .hashString(hashBuilder.toString(), StandardCharsets.UTF_8)
+        .toString();
     
-    final var result = ImmutableLocalizedSite.builder()
-        .id("")
+    return ImmutableLocalizedSite.builder()
+        .id(calculatedId)
         .images(imageUrl)
         .locale(locale)
         .topics(siteTopics)
         .blobs(siteBlobs)
         .links(siteLinks)
         .build();
-    final var id = Sha2.blobId(JsonObject.mapFrom(result).encode());
-    return ImmutableLocalizedSite.builder().from(result).id(id).build();
   }
   
   
