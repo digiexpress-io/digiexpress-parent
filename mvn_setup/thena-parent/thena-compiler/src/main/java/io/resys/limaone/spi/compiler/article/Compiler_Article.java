@@ -1,6 +1,5 @@
 package io.resys.limaone.spi.compiler.article;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.google.common.hash.Hashing;
-
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Article_AST.Markdown;
@@ -18,16 +15,11 @@ import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.program.ArticleProgram.LocalizedSite;
 import io.resys.limaone.program.ArticleProgram.Topic;
 import io.resys.limaone.program.ArticleProgram.TopicBlob;
-import io.resys.limaone.program.ArticleProgram.TopicHeading;
 import io.resys.limaone.program.ArticleProgram.TopicLink;
 import io.resys.limaone.program.ImmutableLocalizedSite;
 import io.resys.limaone.program.ImmutableTopic;
-import io.resys.limaone.program.ImmutableTopicBlob;
-import io.resys.limaone.program.ImmutableTopicHeading;
 import io.resys.limaone.program.ImmutableTopicLink;
 import io.resys.limaone.spi.compiler.CompilableUnit;
-import io.resys.limaone.spi.compiler.article.Deltas.LinkData;
-import io.resys.limaone.spi.compiler.article.Deltas.Message;
 import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +88,6 @@ public class Compiler_Article implements CompilableUnit {
       final var blob = src.getTopicBlob();
       final var topicLinks = getTopicLinks(topicId, locale);
       final var topicHeadings = src.getTopicHeadings();
-      
       final var links = topicLinks.stream().map(e -> e.getId()).sorted().toList();
       
       final var topic = ImmutableTopic.builder()
@@ -126,7 +117,7 @@ public class Compiler_Article implements CompilableUnit {
     
     
     // Add missing levels
-    for(String parent : parents) {
+    for(final String parent : parents) {
       if(visitedTopics.contains(parent)) {
         continue;
       }
