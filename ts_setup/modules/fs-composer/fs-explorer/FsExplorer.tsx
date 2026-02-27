@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Typography, List, IconButton, Badge, styled, Tooltip } from '@mui/material';
-import { FsColors, FsIcons } from '../fs-theme';
-import { useUtilityClasses, FsExplorerRoot } from './useUtilityClasses';
+import { Box, Typography, List, IconButton, Badge, Tooltip } from '@mui/material';
+import { FsIcons } from '../fs-theme';
 import { FsNodeItem } from '../fs-node';
 import { FsNodeMenu } from '../fs-node-menu';
 import { FsSearch, FsSearchNoResults } from '../fs-search';
 import { FsExplorerProps } from './FsExplorerProps';
 import { useOwnerState } from './useOwnerState';
+import { useUtilityClasses, FsExplorerRoot } from './useUtilityClasses';
 
 export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
   const classes = useUtilityClasses();
@@ -20,84 +20,88 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         <Box flexGrow={1} />
         <Tooltip title='Toggle search' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
-            <StyledIconDark onClick={() => ownerState.setSearchExpanded(!ownerState.searchExpanded)}>
-              <StyledBadgeDark
-                badgeContent={ownerState.searchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
+            <IconButton className={classes.iconDark} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
+              <Badge
+                className={classes.badgeDark}
+                badgeContent={ownerState.isSearchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
                 <FsIcons.Search sx={{ fontSize: '15px', transform: 'scaleX(-1)' }} />
-              </StyledBadgeDark>
-            </StyledIconDark>
+              </Badge>
+            </IconButton>
           ) : (
-            <StyledIconLight onClick={() => ownerState.setSearchExpanded(!ownerState.searchExpanded)}>
-              <StyledBadgeLight
-                badgeContent={ownerState.searchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
+              <IconButton className={classes.iconLight} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
+                <Badge
+                  className={classes.badgeLight}
+                  badgeContent={ownerState.isSearchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
                 <FsIcons.Search sx={{ fontSize: '15px', transform: 'rotate(90deg)' }} />
-              </StyledBadgeLight>
-            </StyledIconLight>
+                </Badge>
+              </IconButton>
           )}
         </Tooltip>
         <Tooltip title='New file' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
-            <StyledIconDark>
-              <StyledBadgeDark badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+            <IconButton className={classes.iconDark}>
+              <Badge className={classes.badgeDark} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <FsIcons.File sx={{ fontSize: '15px' }} />
-              </StyledBadgeDark>
-            </StyledIconDark>
+              </Badge>
+            </IconButton>
           ) : (
-            <StyledIconLight>
-              <StyledBadgeLight badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <IconButton className={classes.iconLight}>
+                <Badge className={classes.badgeLight} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <FsIcons.File sx={{ fontSize: '15px' }} />
-              </StyledBadgeLight>
-            </StyledIconLight>
+                </Badge>
+              </IconButton>
           )}
         </Tooltip>
         <Tooltip title='New folder' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
-            <StyledIconDark>
-              <StyledBadgeDark badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+            <IconButton className={classes.iconDark}>
+              <Badge className={classes.badgeDark} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <FsIcons.Folder sx={{ fontSize: '15px' }} />
-              </StyledBadgeDark>
-            </StyledIconDark>
+              </Badge>
+            </IconButton>
           ) : (
-            <StyledIconLight>
-              <StyledBadgeLight badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+              <IconButton className={classes.iconLight}>
+                <Badge className={classes.badgeLight} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <FsIcons.Folder sx={{ fontSize: '15px' }} />
-              </StyledBadgeLight>
-            </StyledIconLight>
+                </Badge>
+              </IconButton>
           )}
 
         </Tooltip>
 
         <Tooltip title='Collapse all' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
-            <StyledIconDark
+            <IconButton
+              className={classes.iconDark}
               onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
               disabled={!ownerState.isAnyNodeExpanded}
             >
               <FsIcons.CollapseAll sx={{ fontSize: '15px' }} />
-            </StyledIconDark>
+            </IconButton>
           ) : (
-            <StyledIconLight
+              <IconButton
+                className={classes.iconLight}
               onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
               disabled={!ownerState.isAnyNodeExpanded}
             >
               <FsIcons.CollapseAll sx={{ fontSize: '15px' }} />
-            </StyledIconLight>
+              </IconButton>
           )}
         </Tooltip>
 
         <Tooltip title='Toggle light/dark mode' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
-            <StyledIconDark onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
+            <IconButton className={classes.iconDark} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
               <FsIcons.LightMode sx={{ fontSize: '15px' }} />
-            </StyledIconDark>
+            </IconButton>
           ) : (
-            <StyledIconLight onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
+              <IconButton className={classes.iconLight} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
               <FsIcons.DarkMode sx={{ fontSize: '15px' }} />
-            </StyledIconLight>
+              </IconButton>
           )}
         </Tooltip>
       </Box>
@@ -105,7 +109,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         searchTerm={ownerState.searchTerm}
         onSearchChange={ownerState.setSearchTerm}
         isDarkMode={ownerState.isDarkMode}
-        open={ownerState.searchExpanded}
+        open={ownerState.isSearchExpanded}
         visibleFilters={ownerState.filters}
         onFiltersChange={ownerState.setFilters}
       />
@@ -129,54 +133,10 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
       <FsNodeMenu
         node={ownerState.contextMenuData?.node || undefined}
         anchorPosition={ownerState.contextMenuData?.anchorPosition || undefined}
-        open={ownerState.contextMenuOpen}
+        open={ownerState.isContextMenuOpen}
         onClose={ownerState.onContextMenuClose}
         onExited={() => ownerState.setContextMenuData(undefined)}
       />
     </FsExplorerRoot>
   );
 }
-
-const StyledIconDark = styled(IconButton)(() => ({
-  size: 'small',
-  color: FsColors.dark.text,
-}));
-
-const StyledIconLight = styled(IconButton)(() => ({
-  size: 'small',
-  color: FsColors.light.text,
-}));
-
-const StyledBadgeDark = styled(Badge)(() => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: FsColors.dark.text,
-    color: FsColors.dark.surface,
-    height: '10px',
-    width: '10px',
-    minWidth: '10px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2px',
-    right: '2px',
-    bottom: '2px',
-  },
-}));
-
-const StyledBadgeLight = styled(Badge)(() => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: FsColors.light.text,
-    color: FsColors.light.background,
-    height: '10px',
-    width: '10px',
-    minWidth: '10px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2px',
-    right: '2px',
-    bottom: '2px',
-  },
-}));

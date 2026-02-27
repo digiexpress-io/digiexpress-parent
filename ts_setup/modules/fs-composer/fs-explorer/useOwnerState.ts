@@ -5,36 +5,36 @@ import { FsContextMenuData, FsNode, mockFsData, useFs, handleContextMenu, collap
 
 
 export interface OwnerState {
-isDarkMode: boolean;
-searchExpanded: boolean;
-isAnyNodeExpanded: boolean;
-contextMenuOpen: boolean;
+  isDarkMode: boolean;
+  isSearchExpanded: boolean;
+  isAnyNodeExpanded: boolean;
+  isContextMenuOpen: boolean;
 
-filteredTreeData: FsNode[];
-searchTerm: string;
-fsData: FsNode[];
-filters: FilterData[];
-contextMenuData: FsContextMenuData | undefined;
+  filteredTreeData: FsNode[];
+  searchTerm: string;
+  fsData: FsNode[];
+  filters: FilterData[];
+  contextMenuData: FsContextMenuData | undefined;
 
-setContextMenuData: Dispatch<SetStateAction<FsContextMenuData | undefined>>;
-setContextMenuOpen:Dispatch<SetStateAction<boolean>>;
-onContextMenuClose:() => void;
-onContextMenu: (event: React.MouseEvent, node: FsNode,
-  setContextMenuData: React.Dispatch<React.SetStateAction<FsContextMenuData | undefined>>,
-  setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
+  setContextMenuData: Dispatch<SetStateAction<FsContextMenuData | undefined>>;
+  setContextMenuOpen: Dispatch<SetStateAction<boolean>>;
+  onContextMenuClose: () => void;
+  onContextMenu: (event: React.MouseEvent, node: FsNode,
+    setContextMenuData: React.Dispatch<React.SetStateAction<FsContextMenuData | undefined>>,
+    setContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
 
-setIsDarkMode: (darkMode: boolean) => void;
-setSearchExpanded: (expanded: boolean) => void;
-setSearchTerm: (searchTerm: string) => void;
-setFsData:Dispatch<SetStateAction<FsNode[]>>;
-setFilters:Dispatch<SetStateAction<FilterData[]>>;
-onDoubleClick:(node: FsNode, pathToTopParent: string) => void;
-collapseAll: (fsData: FsNode[], setFsData: Dispatch<SetStateAction<FsNode[]>>) => void;
-toggleNode: (nodeId: string, fsData: FsNode[], setFsData: Dispatch<SetStateAction<FsNode[]>>) => void;
+  setIsDarkMode: (darkMode: boolean) => void;
+  setSearchExpanded: (expanded: boolean) => void;
+  setSearchTerm: (searchTerm: string) => void;
+  setFsData: Dispatch<SetStateAction<FsNode[]>>;
+  setFilters: Dispatch<SetStateAction<FilterData[]>>;
+  onDoubleClick: (node: FsNode, pathToTopParent: string) => void;
+  collapseAll: (fsData: FsNode[], setFsData: Dispatch<SetStateAction<FsNode[]>>) => void;
+  toggleNode: (nodeId: string, fsData: FsNode[], setFsData: Dispatch<SetStateAction<FsNode[]>>) => void;
 }
 
 export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
-   const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFs();
+  const { isDarkMode, setIsDarkMode, openAsset, searchExpanded, setSearchExpanded } = useFs();
   const [fsData, setFsData] = React.useState<FsNode[]>(mockFsData);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
   const [contextMenuData, setContextMenuData] = React.useState<FsContextMenuData | undefined>();
@@ -58,8 +58,8 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
   return {
     isAnyNodeExpanded,
     isDarkMode,
-    searchExpanded,
-    contextMenuOpen,
+    isSearchExpanded: searchExpanded,
+    isContextMenuOpen: contextMenuOpen,
 
     filteredTreeData,
     searchTerm,
@@ -68,17 +68,19 @@ export const useOwnerState = (_props: FsExplorerProps): OwnerState => {
     contextMenuData,
 
     onContextMenu: handleContextMenu,
-    setContextMenuOpen,
+    onDoubleClick,
     onContextMenuClose,
+
+    setContextMenuOpen,
     setSearchExpanded,
     setIsDarkMode,
     setSearchTerm,
     setContextMenuData,
     setFsData,
     setFilters,
-    onDoubleClick,
+
     collapseAll,
     toggleNode,
   }
-  
+
 }

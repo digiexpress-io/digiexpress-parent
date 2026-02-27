@@ -8,6 +8,10 @@ export interface FsExplorerClasses {
   root: string;
   title: string;
   titleText: string;
+  iconDark: string;
+  iconLight: string;
+  badgeDark: string;
+  badgeLight: string;
 }
 
 export type FsExplorerClassKey = keyof FsExplorerClasses;
@@ -16,7 +20,11 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     title: ['title'],
-    titleText: ['titleText']
+    titleText: ['titleText'],
+    iconDark: ['iconDark'],
+    iconLight: ['iconLight'],
+    badgeDark: ['badgeDark'],
+    badgeLight: ['badgeLight']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -30,7 +38,11 @@ export const FsExplorerRoot = styled('div', {
     return [
       styles.root,
       styles.title,
-      styles.titleText
+      styles.titleText,
+      styles.iconDark,
+      styles.iconLight,
+      styles.badgeDark,
+      styles.badgeLight
     ];
   },
 })<{ isDarkTheme: boolean }>(({ theme, isDarkTheme }) => {
@@ -57,6 +69,46 @@ export const FsExplorerRoot = styled('div', {
       color: treeThemeColors.text,
       ...theme.typography.subtitle2,
       fontWeight: 500
+    },
+
+    [`& .${MUI_NAME}-iconDark`]: {
+      size: 'small',
+      color: treeThemeColors.text,
+    },
+
+    [`& .${MUI_NAME}-iconLight`]: {
+      size: 'small',
+      color: treeThemeColors.text,
+    },
+
+    [`& .${MUI_NAME}-badgeDark .MuiBadge-badge`]: {
+      backgroundColor: treeThemeColors.text,
+      color: treeThemeColors.surface,
+      height: '10px',
+      width: '10px',
+      minWidth: '10px',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2px',
+      right: '2px',
+      bottom: '2px',
+    },
+
+    [`& .${MUI_NAME}-badgeLight .MuiBadge-badge`]: {
+      backgroundColor: treeThemeColors.text,
+      color: isDarkTheme ? treeThemeColors.surface : treeThemeColors.background,
+      height: '10px',
+      width: '10px',
+      minWidth: '10px',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2px',
+      right: '2px',
+      bottom: '2px',
     },
   };
 });
