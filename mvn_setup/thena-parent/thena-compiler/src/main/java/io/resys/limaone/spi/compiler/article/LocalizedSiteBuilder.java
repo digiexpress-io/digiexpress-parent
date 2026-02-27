@@ -58,8 +58,6 @@ public class LocalizedSiteBuilder {
     siteBlobs.put(topic.getBlob(), blob);
   }
   
-
-  
   public ImmutableLocalizedSite build() {
     // Add missing levels
     for(final String parent : parents) {
