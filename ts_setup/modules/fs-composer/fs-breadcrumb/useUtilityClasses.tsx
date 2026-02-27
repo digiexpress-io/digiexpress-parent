@@ -26,7 +26,7 @@ export const useUtilityClasses = () => {
 export const FsBreadcrumbRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkTheme',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
   return {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, darken, lighten, styled } from '@mui/material';
+import { Box, Typography, darken, lighten, styled, generateUtilityClass } from '@mui/material';
+import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
 import { useFs } from '@dxs-ts/fs-api';
 
@@ -12,6 +13,64 @@ export interface ViewContainerProps {
   activeNode?: boolean;
 }
 
+const MUI_NAME = 'ViewContainer';
+
+export interface ViewContainerClasses {
+  root: string;
+  content: string;
+  header: string;
+  mainSection: string;
+  secondarySection: string;
+}
+
+export type ViewContainerClassKey = keyof ViewContainerClasses;
+
+const useUtilityClasses = (isDarkMode: boolean) => {
+  const slots = {
+    root: ['root'],
+    content: ['content'],
+    header: ['header'],
+    mainSection: ['mainSection'],
+    secondarySection: ['secondarySection'],
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
+  return composeClasses(slots, getUtilityClass, {});
+};
+
+const ViewContainerRoot = styled('div', {
+  name: MUI_NAME,
+  slot: 'Root',
+  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+})<{ isDarkMode: boolean }>(({ theme, isDarkMode }) => ({
+  flex: 1,
+  height: '100%',
+  backgroundColor: isDarkMode ? lighten(FsColors.dark.background, 0.03) : darken(FsColors.light.background, 0.01),
+  color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
+  overflow: 'auto',
+
+  [`& .${MUI_NAME}-content`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(1),
+  },
+
+  [`& .${MUI_NAME}-header`]: {
+    display: 'flex',
+    marginBottom: theme.spacing(1.25),
+    '& .MuiBox-root': {
+      marginRight: theme.spacing(1),
+    },
+  },
+
+  [`& .${MUI_NAME}-mainSection`]: {
+    marginBottom: theme.spacing(2),
+  },
+
+  [`& .${MUI_NAME}-secondarySection`]: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
 export const ViewContainer: React.FC<ViewContainerProps> = ({
   title,
   icon,
@@ -21,58 +80,31 @@ export const ViewContainer: React.FC<ViewContainerProps> = ({
   activeNode = true
 }) => {
   const { isDarkMode } = useFs();
+  const classes = useUtilityClasses(isDarkMode);
 
   return (
-    <ViewContainerRoot isDarkMode={isDarkMode}>
-      <Content>
-        <Header>
-          {icon && <Box sx={{ mr: 1 }}>{icon}</Box>}
+    <ViewContainerRoot isDarkMode={isDarkMode} className={classes.root}>
+      <div className={classes.content}>
+        <div className={classes.header}>
+          {icon && <Box>{icon}</Box>}
           <Typography variant="body1" fontWeight={500}>{title}</Typography>
-        </Header>
+        </div>
 
-        <MainSection>
+        <div className={classes.mainSection}>
           {activeNode ? children : (
             <Typography variant="body2" color="text.secondary">
               {noNodeMessage || 'Select a node from the tree to view details.'}
             </Typography>
           )}
-        </MainSection>
+        </div>
 
         {activeNode && secondaryChildren && (
-          <SecondarySection>
+          <div className={classes.secondarySection}>
             {secondaryChildren}
-          </SecondarySection>
+          </div>
         )}
-      </Content>
+      </div>
     </ViewContainerRoot>
   );
 };
 
-const ViewContainerRoot = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
-  flex: 1,
-  height: '100%',
-  backgroundColor: isDarkMode ? lighten(FsColors.dark.background, 0.03) : darken(FsColors.light.background, 0.01),
-  color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  overflow: 'auto'
-}));
-
-const Content = styled(Box)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '8px'
-}));
-
-const Header = styled(Box)(() => ({
-  display: 'flex',
-  marginBottom: '10px'
-}));
-
-const MainSection = styled(Box)(() => ({
-  marginBottom: '16px'
-}));
-
-const SecondarySection = styled(Box)(() => ({
-  marginTop: '16px'
-}));
