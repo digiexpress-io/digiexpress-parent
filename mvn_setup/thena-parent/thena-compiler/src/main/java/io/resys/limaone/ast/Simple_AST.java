@@ -15,6 +15,8 @@ import jakarta.annotation.Nullable;
 public interface Simple_AST {
   String getId();
   String getName();
+  String getHash();
+  
   @Nullable String getDescription();
   BodyType getBodyType();
   

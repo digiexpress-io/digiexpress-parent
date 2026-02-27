@@ -27,7 +27,7 @@ public interface Model<T extends Body>  extends Serializable {
     LOCALE,
     
     ARTICLE_LINK,
-    ARTICLE_ARTICLE,
+    ARTICLE,
     ARTICLE_WORKFLOW,
     ARTICLE_PAGE,
     ARTICLE_TEMPLATE,

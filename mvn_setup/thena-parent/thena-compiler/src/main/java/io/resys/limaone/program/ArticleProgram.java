@@ -31,6 +31,7 @@ public interface ArticleProgram extends Program {
     String getId();
     String getImages();
     String getLocale();
+    List<OffsetDateTime> getRefreshDates();
     
     Map<String, Topic> getTopics();
     Map<String, TopicBlob> getBlobs();
