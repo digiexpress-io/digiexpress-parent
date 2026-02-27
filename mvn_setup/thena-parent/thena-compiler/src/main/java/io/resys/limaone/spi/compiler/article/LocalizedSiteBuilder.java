@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.Article_AST.Link;
@@ -41,7 +42,7 @@ public class LocalizedSiteBuilder {
     final var name = src.getTopicName();
     
     final var blob = src.getTopicBlob();
-    final var topicLinks = getTopicLinks(topicId);
+    final var topicLinks = createTopicLinks(topicId);
     final var topicHeadings = src.getTopicHeadings();
     final var links = topicLinks.stream().map(e -> e.getId()).sorted().toList();
     
@@ -85,7 +86,7 @@ public class LocalizedSiteBuilder {
   public ImmutableLocalizedSite build() {
     // add assignable links
     hashBuilder.append("assignable:");
-    getTopicLinks("_").stream()
+    createTopicLinks("_").stream()
       .filter(link -> Boolean.TRUE.equals(link.getAssignable()))
       .forEach(link -> {
         siteLinks.put(link.getId(), link);
@@ -101,7 +102,7 @@ public class LocalizedSiteBuilder {
       }
       final var id = parent;
       final var name = parent;
-      final var topicLinks = getTopicLinks(id);
+      final var topicLinks = createTopicLinks(id);
       final var topic = ImmutableTopic.builder()
           .id(id)
           .name(name)
@@ -132,7 +133,7 @@ public class LocalizedSiteBuilder {
   }
   
   
-  private List<TopicLink> getTopicLinks(String path) {
+  private List<TopicLink> createTopicLinks(String path) {
     var src = pathLinkData.get(path);
     if(src == null) {
       final var prefix = path.indexOf("_");
@@ -143,6 +144,10 @@ public class LocalizedSiteBuilder {
     
     final var links = new ArrayList<>(src == null ? Collections.emptyList() : src);
     links.addAll(pathLinkData.getOrDefault("", Collections.emptyList()));
+    links.sort((a, b) -> ComparisonChain.start()
+        .compare(a.getPath(), b.getPath())
+        .compare(a.getDesc() != null ? a.getDesc() : "", b.getDesc() != null ? b.getDesc() : "")
+        .result());
     
     final List<TopicLink> result = new ArrayList<>();
     for(final Link link : links) {
@@ -166,6 +171,16 @@ public class LocalizedSiteBuilder {
           .formTag(link.getFormTag())
           .flowName(link.getFlowName())
           .build();
+
+        // Add link details to hash
+        hashBuilder.append("topicLink:")
+            .append(template.getId()).append("|")
+            .append(template.getPath() != null ? template.getPath() : "").append("|")
+            .append(template.getType() != null ? template.getType() : "").append("|")
+            .append(template.getName() != null ? template.getName() : "").append("|")
+            .append(template.getValue() != null ? template.getValue() : "").append("|")
+            .append(template.getGlobal() != null ? template.getGlobal() : false).append("|")
+            .append(template.getWorkflow() != null ? template.getWorkflow() : false).append("||");
 
         result.add(template);
       }
