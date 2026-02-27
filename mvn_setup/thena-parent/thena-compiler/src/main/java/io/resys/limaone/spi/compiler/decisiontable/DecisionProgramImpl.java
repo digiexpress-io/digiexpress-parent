@@ -8,7 +8,7 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.Runtime;
 
-public class DecisionProgram_Impl implements DecisionProgram {
+public class DecisionProgramImpl implements DecisionProgram {
 
   @Override
   public String getId() {
