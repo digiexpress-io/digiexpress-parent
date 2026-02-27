@@ -30,10 +30,7 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
           <ListItemIcon className={getIconClassName(ownerState.node, classes)}>
             {getIcon(ownerState.node)}
           </ListItemIcon>
-          <ExplorerNodeName
-            nodeType={ownerState.node.type}
-            nodeName={ownerState.node.name}
-            description={ownerState.node.description}
+          <ExplorerNodeName node={ownerState.node}
             isDarkTheme={ownerState.isDarkMode}
             error={ownerState.showError ? true : false}
             searchTerm={ownerState.searchTerm}

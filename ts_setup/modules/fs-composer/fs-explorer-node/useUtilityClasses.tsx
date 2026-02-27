@@ -259,16 +259,16 @@ export const ExplorerNodeName: React.FC<ExplorerNodeNameProps> = (props) => {
   return (
     <ListItemText primary={<Typography variant='subtitle2'
       sx={{
-        color: props.error
-          ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
-          : getNodeColor(props.nodeType, props.isDarkTheme),
+        color: props.error ? (props.isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight)
+          :
+          getNodeColor(props.node.type, props.isDarkTheme),
         fontWeight: props.isDarkTheme ? 400 : 500,
       }}
     >
-      <SearchResultHighlight text={props.nodeName} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
-      {props.description && (
+      <SearchResultHighlight text={props.node.name} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />
+      {props.node.description && (
         <Typography component='span' variant='caption' sx={{ ml: 1, color: FsColors.dark.textMuted, fontStyle: 'italic' }}>
-          - "<SearchResultHighlight text={props.description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
+          - "<SearchResultHighlight text={props.node.description} searchTerm={props.searchTerm} isDarkMode={props.isDarkTheme} />"
         </Typography>
       )}
     </Typography>

@@ -1,4 +1,4 @@
-import { FsNode, FsNodeType } from '@dxs-ts/fs-api';
+import { FsNode } from '@dxs-ts/fs-api';
 
 export interface FsExplorerNodeProps {
   node: FsNode;
@@ -10,9 +10,7 @@ export interface FsExplorerNodeProps {
 }
 
 export interface ExplorerNodeNameProps {
-  nodeType: FsNodeType;
-  nodeName: string;
-  description?: string;
+  node: FsNode;
   isDarkTheme: boolean;
   error: boolean;
   searchTerm: string;
