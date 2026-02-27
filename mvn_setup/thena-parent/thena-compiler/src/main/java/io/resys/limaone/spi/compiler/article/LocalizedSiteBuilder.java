@@ -18,7 +18,7 @@ import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
 import io.vertx.core.json.JsonObject;
 
 public class LocalizedSiteBuilder {
-  private final Map<String, List<Link>> pathLinkData = new HashMap<>();
+  private final Map<String, List<Link>> pathLinkData;
   private final Map<String, Topic> siteTopics = new LinkedHashMap<String, Topic>();
   private final Map<String, TopicBlob> siteBlobs = new LinkedHashMap<String, TopicBlob>();
   private final Map<String, TopicLink> siteLinks = new LinkedHashMap<String, TopicLink>();
@@ -26,8 +26,9 @@ public class LocalizedSiteBuilder {
   private final String locale;
   private final String imageUrl = "{imageUrl}";
   
-  public LocalizedSiteBuilder(String locale) {
+  public LocalizedSiteBuilder(String locale, Map<String, List<Link>> pathLinkData) {
     this.locale = locale;
+    this.pathLinkData = pathLinkData;
   }
 
   public void addTopic(TopicData src) {

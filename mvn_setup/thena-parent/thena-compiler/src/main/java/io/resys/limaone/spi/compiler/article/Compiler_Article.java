@@ -62,7 +62,7 @@ public class Compiler_Article implements CompilableUnit {
     
     // built result
     final var sites = localeTopicData.keySet().stream().sorted()
-      .map(locale -> visitLocale(locale, localeTopicData.get(locale)))
+      .map(locale -> visitLocale(locale, localeTopicData.get(locale), pathLinkData))
       .collect(Collectors.toList());
   
     final List<ProgramMessage> errors = new ArrayList<>();
@@ -87,8 +87,8 @@ public class Compiler_Article implements CompilableUnit {
     };
   }
 
-  private LocalizedSite visitLocale(String locale, List<TopicData> localeTopics) {
-    final var builder = new LocalizedSiteBuilder(locale);
+  private LocalizedSite visitLocale(String locale, List<TopicData> localeTopics, Map<String, List<Link>> pathLinkData) {
+    final var builder = new LocalizedSiteBuilder(locale, pathLinkData);
     localeTopics.sort((e1, e2) -> e1.getFullPath().compareTo(e2.getFullPath()));
     localeTopics.forEach(builder::addTopic);
     return builder.build();
