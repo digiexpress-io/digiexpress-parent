@@ -1,53 +1,82 @@
 package io.resys.limaone.spi.compiler.decisiontable;
 
-/*-
- * #%L
- * hdes-client-api
- * %%
- * Copyright (C) 2020 - 2021 Copyright 2020 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.hdes.client.api.programs.ImmutableDecisionProgram;
+import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.model.Parameter.ValueType;
-import io.resys.limaone.program.DecisionProgram;
+import io.resys.limaone.program.DecisionProgram.DecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRowAccepts;
 import io.resys.limaone.program.ImmutableDecisionRowReturns;
+import io.resys.limaone.program.Program;
+import io.resys.limaone.program.Program.ProgramAssociation;
+import io.resys.limaone.program.Program.ProgramMessage;
+import io.resys.limaone.program.Program.ProgramStatus;
+import io.resys.limaone.spi.compiler.CompilableUnit;
 import io.resys.limaone.spi.program.ProgramException;
 import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 import lombok.RequiredArgsConstructor;
 
 
+
 @RequiredArgsConstructor
-public class DecisionProgram_Compiler {
-
-  private final DecisionTable_AST ast;
+public class Compiler_DecisionTable implements CompilableUnit {
+  private final AST_Parser parser;
+  private final ModelWorld world;
+  private final Model<DecisionTable> target;
   
-
-  public DecisionProgram compile() {
+  @Override
+  public OpenProgram compile(NewArtifact resolution) {
+    final DecisionTable_AST ast = parser.parseDecisionTable()
+        .id(target.getId())
+        .nodes(target.getBody().getNodes())
+        .parse();
+        
+    return new OpenProgram() {
+      @Override
+      public String getId() {
+        return ast.getId();
+      }
+      @Override
+      public Simple_AST getAst() {
+        return ast;
+      }
+      @Override
+      public Program close(Artifact artifact) {
+        final List<ProgramAssociation> assocs = new ArrayList<>();
+        final List<ProgramMessage> errors = new ArrayList<>();
+        
+        List<DecisionRow> rows;
+        ProgramStatus status;
+        try {
+          rows = createRows(ast);
+          status = ProgramStatus.UP;
+        } catch(Exception e) {
+          rows = Collections.emptyList();
+          status = ProgramStatus.PROGRAM_ERROR;
+        }
+        
+        final var program = new DecisionProgramImpl(ast, status, rows, errors, errors, assocs);
+        
+        return program;
+      }
+    };
+  }
+  
+  private List<DecisionRow> createRows(DecisionTable_AST ast) {
+    
+    final List<DecisionRow> result = new ArrayList<>();
+    
     try {
-      final var program = ImmutableDecisionProgram.builder().hitPolicy(ast.getHitPolicy());
-      
       final var accepts = ast.getHeaders().getAcceptDefs().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
       
       final var returns = new HashMap<>(ast.getHeaders()
@@ -98,9 +127,9 @@ public class DecisionProgram_Compiler {
             }
           }
         }
-        program.addRows(programRow.build());
+        result.add(programRow.build());
       }
-      return program.build();
+      return result;
     } catch(ProgramException | DecisionRowException ex) {
       throw ex;
       
@@ -109,6 +138,5 @@ public class DecisionProgram_Compiler {
           "Failed to create decision program from ast: '" + ast.getName() + "'!" +
           System.lineSeparator() + e.getMessage(), e);
     }
-
   }
 }

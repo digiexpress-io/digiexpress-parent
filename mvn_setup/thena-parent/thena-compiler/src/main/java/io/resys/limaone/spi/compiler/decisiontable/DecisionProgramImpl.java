@@ -1,72 +1,97 @@
 package io.resys.limaone.spi.compiler.decisiontable;
 
+import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.Streams;
+
+import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.Runtime;
 
+
+
 public class DecisionProgramImpl implements DecisionProgram {
 
+
+  private static final long serialVersionUID = 6616773813732711822L;
+  private final DecisionTable_AST ast;
+  private final ProgramStatus status; 
+  private final List<DecisionRow> rows;
+  private final List<Parameter> headers;
+  private final List<ProgramMessage> warnings;
+  private final List<ProgramMessage> errors;
+  private final List<ProgramAssociation> associations;
+  
+  public DecisionProgramImpl(
+      DecisionTable_AST ast, 
+      ProgramStatus status,
+      List<DecisionRow> rows,
+      List<ProgramMessage> warnings, 
+      List<ProgramMessage> errors,
+      List<ProgramAssociation> associations) {
+    super();
+    this.ast = ast;
+    this.status = status;
+    this.rows = Collections.unmodifiableList(rows);
+    this.warnings = Collections.unmodifiableList(warnings);
+    this.errors = Collections.unmodifiableList(errors);
+    this.associations = Collections.unmodifiableList(associations);
+    this.headers = Streams
+        .concat(ast.getHeaders().getAcceptDefs().stream(), ast.getHeaders().getReturnDefs().stream())
+        .toList();
+  }
   @Override
   public String getId() {
-    // TODO Auto-generated method stub
-    return null;
+    return ast.getId();
   }
 
   @Override
   public BodyType getType() {
-    // TODO Auto-generated method stub
-    return null;
+    return ast.getBodyType();
   }
 
   @Override
   public ProgramStatus getStatus() {
-    // TODO Auto-generated method stub
-    return null;
+    return status;
   }
 
   @Override
   public List<ProgramMessage> getWarnings() {
-    // TODO Auto-generated method stub
-    return null;
+    return warnings;
   }
 
   @Override
   public List<ProgramMessage> getErrors() {
-    // TODO Auto-generated method stub
-    return null;
+    return errors;
   }
 
   @Override
   public List<Parameter> getHeaders() {
-    // TODO Auto-generated method stub
-    return null;
+    return headers;
   }
 
   @Override
   public List<ProgramAssociation> getAssociations() {
-    // TODO Auto-generated method stub
-    return null;
+    return associations;
   }
 
   @Override
   public List<DecisionRow> getRows() {
-    // TODO Auto-generated method stub
-    return null;
+    return rows;
   }
 
   @Override
   public HitPolicy getHitPolicy() {
-    // TODO Auto-generated method stub
-    return null;
+    return ast.getHitPolicy();
   }
 
   @Override
   public DecisionExecutor run(ProgramInput input, Runtime runtime) {
-    // TODO Auto-generated method stub
+    
     return null;
   }
 
