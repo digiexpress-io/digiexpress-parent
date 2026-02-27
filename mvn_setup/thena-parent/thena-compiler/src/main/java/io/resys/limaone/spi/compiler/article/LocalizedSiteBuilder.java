@@ -6,20 +6,31 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.hash.Hashing;
 
+import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.ast.Article_AST.Link;
+import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.program.ArticleProgram.Topic;
 import io.resys.limaone.program.ArticleProgram.TopicBlob;
 import io.resys.limaone.program.ArticleProgram.TopicLink;
 import io.resys.limaone.program.ImmutableLocalizedSite;
+import io.resys.limaone.program.ImmutableProgramMessage;
 import io.resys.limaone.program.ImmutableTopic;
 import io.resys.limaone.program.ImmutableTopicLink;
+import io.resys.limaone.program.Program.ProgramStatus;
+import io.resys.limaone.spi.compiler.CompilableUnit.NewArtifact;
+import io.resys.limaone.spi.compiler.CompilableUnit.Validator;
+import io.resys.limaone.spi.compiler.CompilableUnit.ValidatorResult;
+import io.resys.limaone.spi.compiler.ImmutableValidatorResult;
 import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
+import io.vertx.core.json.JsonObject;
 
 public class LocalizedSiteBuilder {
+  private final NewArtifact newArtifact;
   private final Map<String, List<Link>> pathLinkData;
   private final Map<String, Topic> siteTopics = new LinkedHashMap<String, Topic>();
   private final Map<String, TopicBlob> siteBlobs = new LinkedHashMap<String, TopicBlob>();
@@ -29,11 +40,12 @@ public class LocalizedSiteBuilder {
   private final String imageUrl = "{imageUrl}";
   private final StringBuilder hashBuilder = new StringBuilder();
   
-  public LocalizedSiteBuilder(String locale, Map<String, List<Link>> pathLinkData) {
+  public LocalizedSiteBuilder(String locale, Map<String, List<Link>> pathLinkData, NewArtifact newArtifact) {
     this.locale = locale;
     this.pathLinkData = pathLinkData;
     // Initialize hash with locale
     this.hashBuilder.append("locale:").append(locale).append("|");
+    this.newArtifact = newArtifact;
   }
 
   public void addTopic(TopicData src) {
@@ -183,8 +195,60 @@ public class LocalizedSiteBuilder {
             .append(template.getWorkflow() != null ? template.getWorkflow() : false).append("||");
 
         result.add(template);
+        
+        addDependency(link);
       }
     }
     return result;    
+  }
+  
+  private void addDependency(Link link) {
+    if(!Boolean.TRUE.equals(link.getWorkflow())) {
+      return;
+    }
+    
+    newArtifact.requireDependnecy()
+      .bodyType(BodyType.FLOW)
+      .id(link.getFlowName())
+      .validator(new Validator() {
+        @Override
+        public ValidatorResult validate(Optional<Simple_AST> dependency) {
+          return ImmutableValidatorResult.builder()
+              .addMessages(ImmutableProgramMessage.builder()
+                  .id("flow-not-found")
+                  .msg(JsonObject.of(
+                      "linkName", link.getValue(),
+                      "flowName", link.getFlowName(),
+                      "errorMessage", "Flow not found!")
+                  .encodePrettily())
+                  .build())
+              .programStatus(dependency.isEmpty() ? ProgramStatus.DEPENDENCY_ERROR : ProgramStatus.UP)
+              .build();
+        }
+      })
+      .build();
+      
+    newArtifact.requireDependnecy()
+      .bodyType(BodyType.DIALOB)
+      .id(link.getFormName() + "::" + link.getFormTag())
+      .validator(new Validator() {
+        
+        @Override
+        public ValidatorResult validate(Optional<Simple_AST> dependency) {
+          return ImmutableValidatorResult.builder()
+              .addMessages(ImmutableProgramMessage.builder()
+                  .id("dialob-not-found")
+                  .msg(JsonObject.of(
+                      "linkName", link.getValue(),
+                      "formName", link.getFormName(),
+                      "formTag", link.getFormTag(),
+                      "errorMessage", "Form not found!"
+                      ).encodePrettily())
+                  .build())
+              .programStatus(dependency.isEmpty() ? ProgramStatus.DEPENDENCY_ERROR : ProgramStatus.UP)
+              .build();
+        }
+      })
+      .build();
   }
 }

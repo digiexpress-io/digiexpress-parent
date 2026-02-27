@@ -14,7 +14,6 @@ import io.resys.limaone.program.ArticleProgram.LocalizedSite;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
-import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.compiler.CompilableUnit;
 import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
 import lombok.RequiredArgsConstructor;
@@ -62,13 +61,9 @@ public class Compiler_Article implements CompilableUnit {
     
     // built result
     final var sites = localeTopicData.keySet().stream().sorted()
-      .map(locale -> visitLocale(locale, localeTopicData.get(locale), pathLinkData))
+      .map(locale -> visitLocale(locale, localeTopicData.get(locale), pathLinkData, resolution))
       .collect(Collectors.toList());
   
-    final List<ProgramMessage> errors = new ArrayList<>();
-    final List<ProgramAssociation> assocs = new ArrayList<>();
-    
-    final var program = new ImmutableArticleProgram(articleAST, ProgramStatus.UP, errors, assocs, sites);
     return new OpenProgram() {
       @Override
       public String getId() {
@@ -82,13 +77,17 @@ public class Compiler_Article implements CompilableUnit {
       
       @Override
       public Program close(Artifact artifact) {
+        final List<ProgramMessage> errors = artifact.getErrors();
+        final List<ProgramAssociation> assocs = artifact.getAssociations();
+        final var program = new ImmutableArticleProgram(articleAST, artifact.getProgramStatus(), errors, assocs, sites);
+        
         return program;
       }
     };
   }
 
-  private LocalizedSite visitLocale(String locale, List<TopicData> localeTopics, Map<String, List<Link>> pathLinkData) {
-    final var builder = new LocalizedSiteBuilder(locale, pathLinkData);
+  private LocalizedSite visitLocale(String locale, List<TopicData> localeTopics, Map<String, List<Link>> pathLinkData, NewArtifact resolution) {
+    final var builder = new LocalizedSiteBuilder(locale, pathLinkData, resolution);
     localeTopics.sort((e1, e2) -> e1.getFullPath().compareTo(e2.getFullPath()));
     localeTopics.forEach(builder::addTopic);
     return builder.build();

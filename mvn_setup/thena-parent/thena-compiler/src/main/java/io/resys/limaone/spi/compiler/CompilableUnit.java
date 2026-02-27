@@ -3,6 +3,8 @@ package io.resys.limaone.spi.compiler;
 import java.util.List;
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.program.Compiler.BundleBuilder;
@@ -48,6 +50,7 @@ public interface CompilableUnit {
     ValidatorResult validate(Optional<Simple_AST> dependency);
   }
   
+  @Value.Immutable
   interface ValidatorResult {
     List<ProgramMessage> getMessages();
     ProgramStatus getProgramStatus();
