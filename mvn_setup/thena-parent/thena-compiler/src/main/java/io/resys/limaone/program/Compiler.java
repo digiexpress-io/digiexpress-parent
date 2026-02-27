@@ -7,7 +7,20 @@ import io.resys.limaone.model.Model.ModelWorld;
 
 public interface Compiler {  
   
-  Bundle compile(ModelWorld world);
+  BundleBuilder compile(ModelWorld world);
+  
+  interface BundleBuilder {
+    // open for user definition
+    BundleBuilder id(String id);
+    BundleBuilder name(String name);
+    BundleBuilder externalId(String externalId);
+    BundleBuilder created(OffsetDateTime created);
+    BundleBuilder startDate(OffsetDateTime startDate);
+    BundleBuilder endDate(OffsetDateTime endDate);
+    
+    // end result
+    Bundle build();
+  }
   
   interface Bundle {
     String getId();

@@ -7,8 +7,8 @@ import java.util.stream.Stream;
 
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.program.Compiler;
-import io.resys.limaone.spi.compiler.CompilableUnit.BundleBuilder;
-import io.resys.limaone.spi.resolution.BundleBuilder_Impl;
+import io.resys.limaone.spi.bundler.BundlerImpl;
+import io.resys.limaone.spi.compiler.CompilableUnit.Bundler;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +16,15 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class Compiler_Impl implements Compiler {
+public class CompilerImpl implements Compiler {
 
   private final ScheduledExecutorService workerPool;
   private final Duration maxTimeout;
   
   @Override
-  public Bundle compile(ModelWorld world) {
+  public BundleBuilder compile(ModelWorld world) {
     
-    final BundleBuilder bundler = new BundleBuilder_Impl();
+    final Bundler bundler = new BundlerImpl();
     
     // dialobs
     final Stream<CompilableUnit> dialobs = world.getArticleWorkflows()
@@ -57,9 +57,9 @@ public class Compiler_Impl implements Compiler {
   public static class CompilerBuilder {
     private ScheduledExecutorService workerPool;
     
-    public Compiler_Impl build() {
+    public CompilerImpl build() {
       final var workerPool = this.workerPool == null ? Infrastructure.getDefaultWorkerPool() : this.workerPool;
-      return new Compiler_Impl(workerPool, Duration.ofMinutes(15));
+      return new CompilerImpl(workerPool, Duration.ofMinutes(15));
     }
   }
   

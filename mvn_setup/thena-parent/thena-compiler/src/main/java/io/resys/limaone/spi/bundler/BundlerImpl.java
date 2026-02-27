@@ -1,26 +1,27 @@
-package io.resys.limaone.spi.resolution;
+package io.resys.limaone.spi.bundler;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import io.resys.limaone.program.Compiler.Bundle;
+import io.resys.limaone.program.Compiler.BundleBuilder;
 import io.resys.limaone.program.Program;
-import io.resys.limaone.spi.compiler.CompilableUnit.BundleBuilder;
+import io.resys.limaone.spi.compiler.CompilableUnit.Bundler;
 import io.resys.limaone.spi.compiler.CompilableUnit.NewArtifact;
 import io.resys.limaone.spi.compiler.CompilableUnit.OpenProgram;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 
-public class BundleBuilder_Impl implements BundleBuilder {
-
+public class BundlerImpl implements Bundler {
   private final Map<String, ArtifactBuilder> artifacts_byId = new ConcurrentHashMap<>();
   private final Map<String, ArtifactBuilder> artifacts_byName = new ConcurrentHashMap<>();
   private final List<DependencyBuilder> deps = Collections.synchronizedList(new ArrayList<>()); 
+  private final BundleBuilderImpl bundleBuilder = new BundleBuilderImpl();
   
   
   @Override
@@ -36,7 +37,7 @@ public class BundleBuilder_Impl implements BundleBuilder {
   }
   
   @Override
-  public Uni<Bundle> build(List<OpenProgram> openProgram) {
+  public Uni<BundleBuilder> build(List<OpenProgram> openProgram) {
     return Multi.createFrom().items(deps.stream())
       .onItem().invoke(this::validate)
       .collect().asList().replaceWithVoid()
@@ -46,15 +47,21 @@ public class BundleBuilder_Impl implements BundleBuilder {
       .onItem().transform((ignore) -> createBundle());
   }
   
-  private Bundle createBundle() {
-    
+  private BundleBuilder createBundle() {
+    return bundleBuilder;
   }
   
   private Program close(OpenProgram open) {
-    
+    final var artifact = artifacts_byId.get(open.getId()).build();
+    final var program = open.close(artifact);
+    bundleBuilder.addProgram(program);
+    return program;
   }
   
   private void validate(DependencyBuilder dep) {
-    
+    final var id = dep.getId();
+    final var name = dep.getBodyType() + "/" + dep.getId();
+    final var ref = Optional.ofNullable(artifacts_byId.get(id)).or(() -> Optional.ofNullable(artifacts_byName.get(name)));
+    dep.close(ref);
   }
 }

@@ -3,8 +3,9 @@ package io.resys.limaone.spi.compiler;
 import java.util.List;
 import java.util.Optional;
 
+import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
-import io.resys.limaone.program.Compiler.Bundle;
+import io.resys.limaone.program.Compiler.BundleBuilder;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
@@ -16,19 +17,21 @@ public interface CompilableUnit {
   
   interface OpenProgram {
     String getId();
+    Simple_AST getAst();
     Program close(Artifact artifact);
   }
 
 
-  interface BundleBuilder {
+  interface Bundler {
     NewArtifact newArtifact();
-    Uni<Bundle> build(List<OpenProgram> openProgram);
+    Uni<BundleBuilder> build(List<OpenProgram> openProgram);
   }
   
   interface NewArtifact {
     NewArtifact id(String id);
     NewArtifact name(String name);
     NewArtifact type(Model.BodyType bodyType);
+    NewArtifact ast(Simple_AST ast);
     RequireDependency requireDependnecy();
     void build();
   }
@@ -42,7 +45,7 @@ public interface CompilableUnit {
   
   
   interface Validator {
-    ValidatorResult validate(Optional<Artifact> dependency);
+    ValidatorResult validate(Optional<Simple_AST> dependency);
   }
   
   interface ValidatorResult {
@@ -69,6 +72,5 @@ public interface CompilableUnit {
     String getArtifactId();
     String getArtifactName();
     Model.BodyType getArtifactType();
-    Validator getValidator();
   }
 }
