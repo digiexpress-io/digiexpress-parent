@@ -6,7 +6,7 @@ import { useUtilityClasses, FsNodeRoot, StyledListItem, StyledListItemText, getI
 import { FsIcons } from '../fs-theme';
 import { sortChildren } from './fs-node-helpers';
 
-export interface FsNodeProps {
+export interface FsExplorerNodeProps {
   node: FsNode;
   level: number;
   parentPath?: string;
@@ -17,7 +17,7 @@ export interface FsNodeProps {
   searchTerm: string;
 }
 
-export const FsNodeItem: React.FC<FsNodeProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
+export const FsExplorerNode: React.FC<FsExplorerNodeProps> = ({ node, level, parentPath = '', onToggle, onContextMenu, onDoubleClick, isDarkTheme, searchTerm }) => {
   const children = node.children && node.children.length > 0;
   const configOptions = node.configOptions && node.configOptions.length > 0;
   const classes = useUtilityClasses(isDarkTheme);
@@ -73,7 +73,7 @@ export const FsNodeItem: React.FC<FsNodeProps> = ({ node, level, parentPath = ''
         <Collapse in={node.expanded} timeout={0}>
           <List component='div' disablePadding>
             {sortChildren(node.children || []).map((child) => (
-              <FsNodeItem
+              <FsExplorerNode
                 key={child.id}
                 node={child}
                 level={level + 1}
