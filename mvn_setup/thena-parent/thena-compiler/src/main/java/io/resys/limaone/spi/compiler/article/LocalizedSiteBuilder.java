@@ -56,8 +56,8 @@ public class LocalizedSiteBuilder {
     }
     
     siteTopics.put(topic.getId(), topic);
-    topicLinks.forEach(link -> siteLinks.put(link.getId(), link));
     siteBlobs.put(topic.getBlob(), blob);
+    topicLinks.forEach(link -> siteLinks.put(link.getId(), link));
   }
   
   public ImmutableLocalizedSite build() {
