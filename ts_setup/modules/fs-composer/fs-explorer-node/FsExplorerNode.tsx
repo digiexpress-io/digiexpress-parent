@@ -19,7 +19,7 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
         onDoubleClick={() => ownerState.openAsset(ownerState.node, ownerState.fullPath)}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.node)}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <Box className={classes.listItemContent}>
           {ownerState.children ? (
             <IconButton size='small'>
               {ownerState.node.expanded ? <FsIcons.ExpandMore fontSize='small' className={classes.iconExpand} /> : <FsIcons.ChevronRight fontSize='small' className={classes.iconExpand} />}

@@ -13,6 +13,7 @@ export const MUI_NAME = 'FsNode';
 export interface FsNodeClasses {
   root: string;
   listItem: string;
+  listItemContent: string;
   icon: string;
   iconFolder: string;
   iconArticle: string;
@@ -34,6 +35,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
   const slots = {
     root: ['root'],
     listItem: ['listItem'],
+    listItemContent: ['listItemContent'],
     icon: ['icon'],
     iconFolder: ['iconFolder'],
     iconArticle: ['iconArticle'],
@@ -177,6 +179,12 @@ export const FsNodeRoot = styled('div', {
           backgroundColor: isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2),
         },
       },
+    },
+
+    [`& .${MUI_NAME}-listItemContent`]: {
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
     },
   };
 });
