@@ -97,11 +97,13 @@ public class Compiler_Article implements CompilableUnit {
       final var topicLinks = getTopicLinks(topicId, locale);
       final var topicHeadings = src.getTopicHeadings();
       
+      final var links = topicLinks.stream().map(e -> e.getId()).sorted().toList();
+      
       final var topic = ImmutableTopic.builder()
           .id(topicId)
           .name(name)
           .auth(src.getAuth())
-          .links(topicLinks.stream().map(e -> e.getId()).toList())
+          .links(links)
           .parent(parent)
           .blob(blob.getId())
           .headings(topicHeadings)
@@ -221,4 +223,5 @@ public class Compiler_Article implements CompilableUnit {
     }
     return result;    
   }
+
 }
