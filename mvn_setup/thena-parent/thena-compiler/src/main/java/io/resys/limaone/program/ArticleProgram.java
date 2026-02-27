@@ -14,11 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 
 public interface ArticleProgram extends Program {
-  String getTagName();
-  OffsetDateTime getStartDate();
-  OffsetDateTime getEndDate();
   List<OffsetDateTime> getRefreshDates();
-  
   ArticleProgramResult run(ProgramInput input, Runtime context);
   
   

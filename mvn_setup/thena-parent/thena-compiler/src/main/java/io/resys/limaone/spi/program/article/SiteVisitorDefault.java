@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.program.article;
 
+import java.nio.charset.StandardCharsets;
+
 /*-
  * #%L
  * stencil-static-content
@@ -28,17 +30,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.thestencil.client.api.ImmutableLocalizedSite;
-import io.thestencil.client.api.ImmutableTopic;
-import io.thestencil.client.api.ImmutableTopicLink;
-import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
-import io.thestencil.client.api.MigrationBuilder.Topic;
-import io.thestencil.client.api.MigrationBuilder.TopicBlob;
-import io.thestencil.client.api.MigrationBuilder.TopicHeading;
-import io.thestencil.client.api.MigrationBuilder.TopicLink;
-import io.thestencil.client.spi.beans.TopicBlobBean;
-import io.thestencil.client.spi.beans.TopicHeadingBean;
-import io.thestencil.client.spi.staticontent.support.ParserAssert;
+import com.google.common.hash.Hashing;
+
+import io.resys.limaone.program.ArticleProgram.LocalizedSite;
+import io.resys.limaone.program.ArticleProgram.Topic;
+import io.resys.limaone.program.ArticleProgram.TopicBlob;
+import io.resys.limaone.program.ArticleProgram.TopicHeading;
+import io.resys.limaone.program.ArticleProgram.TopicLink;
+import io.resys.limaone.program.ImmutableLocalizedSite;
+import io.resys.limaone.program.ImmutableTopic;
+import io.resys.limaone.program.ImmutableTopicBlob;
+import io.resys.limaone.program.ImmutableTopicHeading;
+import io.resys.limaone.program.ImmutableTopicLink;
 import io.thestencil.client.spi.staticontent.support.Sha2;
 import io.vertx.core.json.JsonObject;
 
@@ -47,7 +50,6 @@ public class SiteVisitorDefault implements SiteVisitor {
   private final Map<String, List<TopicData>> localeTopicData = new HashMap<>();
   private final Map<String, List<LinkData>> pathLinkData = new HashMap<>();
   private final Map<String, TopicNameData> pathTopicNamesData = new HashMap<>();
-  private final Map<String, ImageData> images = new HashMap<>();
   private final Map<String, TopicBlob> blobs = new HashMap<>();
   private final Map<String, TopicLink> links = new HashMap<>();
   private String imageUrl;
@@ -70,12 +72,6 @@ public class SiteVisitorDefault implements SiteVisitor {
     }
     links.add(link); 
   }
-  @Override
-  public void visitImageData(ImageData image) {
-    ParserAssert.isTrue(!images.containsKey(image.getPath()), () -> "Image with path: '" + image.getPath() + "' is already defined!");
-    images.put(image.getPath(), image);
-  }
-
   @Override
   public void visitTopicNameData(TopicNameData names) {
     pathTopicNamesData.put(names.getPath(), names);
@@ -235,15 +231,15 @@ public class SiteVisitorDefault implements SiteVisitor {
   } 
   private String visitTopicBlob(TopicData topic) {
     String blob = topic.getValue();
-    String id = Sha2.blobId(blob);
-    this.blobs.put(id, TopicBlobBean.builder().id(id).value(blob).build());
+    final var id = Hashing.murmur3_128().hashString(blob, StandardCharsets.UTF_8).toString();
+    this.blobs.put(id, ImmutableTopicBlob.builder().id(id).value(blob).build());
     return id;
   }   
   private List<TopicHeading> visitTopicHeadings(TopicData topic) {
     List<TopicHeading> result = new ArrayList<>();
     int index = 1;
     for(final var heading : topic.getHeadings()) {      
-      result.add(TopicHeadingBean.builder()
+      result.add(ImmutableTopicHeading.builder()
         .id(String.valueOf(index++))
         .name(heading.getName())
         .order(heading.getOrder())
@@ -264,7 +260,7 @@ public class SiteVisitorDefault implements SiteVisitor {
     final var links = new ArrayList<>(src == null ? Collections.emptyList() : src);
     links.addAll(pathLinkData.getOrDefault("", Collections.emptyList()));
     
-    List<String> result = new ArrayList<>();
+    final List<String> result = new ArrayList<>();
     for(var link : links) {
       final var allLocales = link.getLocale() == null || link.getLocale().isBlank();
       final var topicLocale = link.getLocale() != null && link.getLocale().indexOf(locale) > -1;
@@ -288,12 +284,40 @@ public class SiteVisitorDefault implements SiteVisitor {
           .flowName(link.getFlowName())
           .build();
         
-        String id = Sha2.blobId(template.toString());
+        final var id = hash(link);
         this.links.put(id, ImmutableTopicLink.builder().from(template).id(id).build());
         result.add(id);
       }
     }
-    
     return result;    
+  }
+  
+  
+  private String hash(LinkData link) {
+    final var hashString = new StringBuilder()
+      .append(link.getPath() != null ? link.getPath() : "")
+      .append("|")
+      .append(link.getType() != null ? link.getType() : "")
+      .append("|")
+      .append(link.getName() != null ? link.getName() : "")
+      .append("|")
+      .append(link.getValue() != null ? link.getValue() : "")
+      .append("|")
+      .append(link.getGlobal() != null ? link.getGlobal() : false)
+      .append("|")
+      .append(link.getAssignable() != null ? link.getAssignable() : false)
+      .append("|")
+      .append(link.getAnon() != null ? link.getAnon() : false)
+      .append("|")
+      .append(link.getWorkflow() != null ? link.getWorkflow() : false)
+      .append("|")
+      .append(link.getFormId() != null ? link.getFormId() : "")
+      .append("|")
+      .append(link.getFormName() != null ? link.getFormName() : "")
+      .append("|")
+      .append(link.getFormTag() != null ? link.getFormTag() : "")
+      .append("|")
+      .append(link.getFlowName() != null ? link.getFlowName() : "");
+    return Hashing.murmur3_128().hashString(hashString.toString(), StandardCharsets.UTF_8).toString();
   }
 }

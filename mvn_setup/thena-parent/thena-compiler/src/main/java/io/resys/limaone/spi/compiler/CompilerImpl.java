@@ -76,8 +76,6 @@ public class CompilerImpl implements Compiler {
       final var astParser = this.astParser == null ? AST_ParserImpl.builder().dev(false).build() : this.astParser;
       return new CompilerImpl(workerPool, Duration.ofMinutes(15), astParser);
     }
-
-
   }
   
   public static CompilerBuilder builder() {

@@ -1,37 +1,15 @@
 package io.resys.limaone.spi.program.article;
 
 import java.time.LocalDateTime;
-
-/*-
- * #%L
- * stencil-static-content
- * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import java.util.List;
 import java.util.Map;
 
-import jakarta.annotation.Nullable;
-
 import org.immutables.value.Value;
 
-import io.thestencil.client.api.Markdowns.Heading;
-import io.thestencil.client.api.Markdowns.ImageTag;
-import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
+import io.resys.limaone.ast.Article_AST;
+import io.resys.limaone.ast.Article_AST.ImageTag;
+import io.resys.limaone.program.ArticleProgram.LocalizedSite;
+import jakarta.annotation.Nullable;
 
 public interface SiteVisitor {
   void visitTopicData(TopicData topic);
@@ -59,7 +37,7 @@ public interface SiteVisitor {
     String getLocale();
     String getValue();
     Boolean getAuth();
-    List<Heading> getHeadings();
+    List<Article_AST.Heading> getHeadings();
     List<ImageTag> getImages();
   }
 
