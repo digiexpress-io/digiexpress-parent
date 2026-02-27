@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, styled } from '@mui/material';
+import { Typography, styled, generateUtilityClass } from '@mui/material';
+import composeClasses from '@mui/utils/composeClasses';
 import { FsNode } from '@dxs-ts/fs-api';
 import { FsColors, FsIcons } from '../fs-theme';
 import { useFs } from '@dxs-ts/fs-api';
@@ -15,7 +16,6 @@ interface ItemHistoryEntry {
   date: string;
 }
 
-// Mock history data from NodeHistory.tsx
 const historyData: ItemHistoryEntry[] = [
   { user: 'Diana Hasselback', change: 'Updated content', date: '15.01.2025' },
   { user: 'office-staff', change: 'Modified labels', date: '14.01.2025' },
@@ -31,6 +31,7 @@ const historyData: ItemHistoryEntry[] = [
 
 export const HistoryView: React.FC<HistoryViewProps> = ({ node }) => {
   const { isDarkMode } = useFs();
+  const classes = useUtilityClasses(isDarkMode);
 
   if (!node) {
     return (
@@ -46,87 +47,118 @@ export const HistoryView: React.FC<HistoryViewProps> = ({ node }) => {
   }
 
   return (
-    <ViewContainer
-      title={`History: ${node.name}`}
-      icon={<FsIcons.History />}
-      activeNode={true}
-    >
-      <HistorySection>
-        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
-          Recent changes to this item
-        </Typography>
-        {historyData.length > 0 ? (
-          <HistoryContainer isDarkMode={isDarkMode}>
-            {historyData.map((entry, index) => (
-              <HistoryRow key={index} isDarkMode={isDarkMode}>
-                <HistoryUser isDarkMode={isDarkMode}>{entry.user}</HistoryUser>
-                <HistoryChange isDarkMode={isDarkMode}>{entry.change}</HistoryChange>
-                <HistoryDate isDarkMode={isDarkMode}>{entry.date}</HistoryDate>
-              </HistoryRow>
-            ))}
-          </HistoryContainer>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            No history available for this node.
+    <ViewContainer title={`History: ${node.name}`} icon={<FsIcons.History />} activeNode={true}>
+      <HistoryViewRoot className={classes.root} isDarkMode={isDarkMode}>
+        <div className={classes.section}>
+          <Typography variant="caption" className={classes.caption}>
+            Recent changes to this item
           </Typography>
-        )}
-      </HistorySection>
+          {historyData.length > 0 ? (
+            <div className={classes.container}>
+              {historyData.map((entry, index) => (
+                <div key={index} className={classes.row}>
+                  <Typography className={classes.user}>{entry.user}</Typography>
+                  <Typography className={classes.change}>{entry.change}</Typography>
+                  <Typography className={classes.date}>{entry.date}</Typography>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No history available for this node.
+            </Typography>
+          )}
+        </div>
+      </HistoryViewRoot>
     </ViewContainer>
   );
 };
 
-const HistorySection = styled(Box)(() => ({
-  marginBottom: '16px'
-}));
+const MUI_NAME = 'FsHistoryView';
 
-const HistoryContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  border: `1px solid ${isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-  '& > div:nth-of-type(odd)': {
-    backgroundColor: isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+export interface HistoryViewClasses {
+  root: string;
+  section: string;
+  caption: string;
+  container: string;
+  row: string;
+  user: string;
+  change: string;
+  date: string;
+}
+
+export type HistoryViewClassKey = keyof HistoryViewClasses;
+
+const useUtilityClasses = (isDarkMode: boolean) => {
+  const slots = {
+    root: ['root'],
+    section: ['section'],
+    caption: ['caption'],
+    container: ['container'],
+    row: ['row'],
+    user: ['user'],
+    change: ['change'],
+    date: ['date'],
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
+  return composeClasses(slots, getUtilityClass, {});
+};
+
+const HistoryViewRoot = styled('div', {
+  name: MUI_NAME,
+  slot: 'Root',
+  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+})<{ isDarkMode: boolean }>(({ theme, isDarkMode }) => ({
+  [`& .${MUI_NAME}-section`]: {
+    marginBottom: theme.spacing(2),
   },
-}));
 
-const HistoryRow = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode }) => ({
-  display: 'flex',
-  padding: '8px 12px',
-  backgroundColor: isDarkMode ? FsColors.dark.background : FsColors.light.background,
-  borderBottom: `1px solid ${isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
-  '&:last-child': {
-    borderBottom: 'none'
-  }
-}));
+  [`& .${MUI_NAME}-caption`]: {
+    marginBottom: theme.spacing(1),
+    display: 'block',
+  },
 
-const HistoryUser = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
-  ...theme.typography.subtitle2,
-  color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  flex: 1,
-  fontSize: '12px',
-  fontWeight: 500,
-}));
+  [`& .${MUI_NAME}-container`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    border: `1px solid ${isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
 
-const HistoryChange = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
-  ...theme.typography.subtitle2,
-  color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
-  flex: 2,
-  fontSize: '12px',
-}));
+    '& > div:nth-of-type(odd)': {
+      backgroundColor: isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+    },
+  },
 
-const HistoryDate = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isDarkMode'
-})<{ isDarkMode: boolean }>(({ isDarkMode, theme }) => ({
-  ...theme.typography.subtitle2,
-  color: isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
-  flex: 1,
-  fontSize: '12px',
-  textAlign: 'right',
+  [`& .${MUI_NAME}-row`]: {
+    display: 'flex',
+    padding: theme.spacing(1, 1.5),
+    backgroundColor: isDarkMode ? FsColors.dark.background : FsColors.light.background,
+    borderBottom: `1px solid ${isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+
+    '&:last-child': {
+      borderBottom: 'none'
+    }
+  },
+
+  [`& .${MUI_NAME}-user`]: {
+    ...theme.typography.subtitle2,
+    color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    flex: 1,
+    fontSize: '12px',
+    fontWeight: 500,
+  },
+
+  [`& .${MUI_NAME}-change`]: {
+    ...theme.typography.subtitle2,
+    color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    flex: 2,
+    fontSize: '12px',
+  },
+
+  [`& .${MUI_NAME}-date`]: {
+    ...theme.typography.subtitle2,
+    color: isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    flex: 1,
+    fontSize: '12px',
+    textAlign: 'right',
+  },
 }));
