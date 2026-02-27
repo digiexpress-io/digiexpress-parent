@@ -22,6 +22,7 @@ import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.article.MarkdownVisitor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ArticleParser_Impl implements AST_Parser.ArticleParser {
+public class ArticleParserImpl implements AST_Parser.ArticleParser {
 
   public static String LINK_TYPE_WORKFLOW = "workflow";
 
   private final List<Model<Locale>> locales = new ArrayList<>();
   private final Map<String, Model<Locale>> enablesLocales = new HashMap<>();
-  private final boolean dev;
+  private final AST_ParserProps props;
   
   private ModelWorld world;
   
@@ -76,7 +77,7 @@ public class ArticleParser_Impl implements AST_Parser.ArticleParser {
       return result;
     }
     
-    if(!dev && Boolean.TRUE.equals(link.getBody().getDevMode())){
+    if(!props.isDev() && Boolean.TRUE.equals(link.getBody().getDevMode())){
       return result;
     }
     
@@ -188,7 +189,7 @@ public class ArticleParser_Impl implements AST_Parser.ArticleParser {
   private List<Link> visitLinks(Model<ArticleLink> link) {
     final List<Link> result = new ArrayList<>();
 
-    if(!dev && Boolean.TRUE.equals(link.getBody().getDevMode())){
+    if(!props.isDev() && Boolean.TRUE.equals(link.getBody().getDevMode())){
       return result;
     }
     
@@ -252,7 +253,7 @@ public class ArticleParser_Impl implements AST_Parser.ArticleParser {
     final String path = visitArticlePath(article);
     final List<Markdown> result = new ArrayList<>();
 
-    if(!dev && Boolean.TRUE.equals(article.getBody().getDevMode())){
+    if(!props.isDev() && Boolean.TRUE.equals(article.getBody().getDevMode())){
       return result;
     }
 
@@ -264,7 +265,7 @@ public class ArticleParser_Impl implements AST_Parser.ArticleParser {
       if(locale.isEmpty()) {
         continue;
       }
-      if(!dev && Boolean.TRUE.equals(page.getBody().getDevMode())){
+      if(!props.isDev() && Boolean.TRUE.equals(page.getBody().getDevMode())){
         continue;
       }
       

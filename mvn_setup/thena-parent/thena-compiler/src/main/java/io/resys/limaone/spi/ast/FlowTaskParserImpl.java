@@ -63,6 +63,7 @@ import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType1;
 import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.FlowTask_AST_CacheKey;
+import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.flowtask.FailSafeService;
 import io.resys.limaone.spi.ast.flowtask.ImmutableServiceDataTypes;
 import io.resys.limaone.spi.ast.flowtask.ServiceDataTypes;
@@ -71,20 +72,20 @@ import io.resys.thena.support.RepoAssert;
 
 
 
-public class FlowTaskParser_Impl implements AST_Parser.FlowTaskParser {
+public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(FlowTaskParser_Impl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(FlowTaskParserImpl.class);
   private final List<String> src = new ArrayList<>();
   private final GroovyClassLoader gcl;
   private String id;
   
-  public FlowTaskParser_Impl(GroovyClassLoader gcl) {
+  public FlowTaskParserImpl(AST_ParserProps props) {
     super();
-    this.gcl = gcl;
+    this.gcl = props.getGroovy();
   }
 
   @Override
-  public FlowTaskParser_Impl syntax(String src) {
+  public FlowTaskParserImpl syntax(String src) {
     if (src == null) {
       return this;
     }

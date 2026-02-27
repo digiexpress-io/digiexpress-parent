@@ -26,14 +26,14 @@ import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.DecisionTable_AST_CacheKey;
 import io.resys.limaone.spi.ast.decisiontable.CommandMapper;
 
-public class DecsionTableParser_Impl implements AST_Parser.DecsionTableParser {
+public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
 
   private final CommandMapper builder = new CommandMapper();
   private List<DecisionTableNode> src;
   private String id;
 
   @Override
-  public DecsionTableParser_Impl nodes(List<DecisionTableNode> src) {
+  public DecsionTableParserImpl nodes(List<DecisionTableNode> src) {
     if(src == null) {
       return this;
     }

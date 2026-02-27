@@ -55,6 +55,7 @@ import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.Flow_AST_CacheKey;
+import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.ast.flow.NodeBean;
 import io.resys.limaone.spi.ast.flow.NodeFlowBean;
@@ -62,7 +63,7 @@ import io.resys.limaone.spi.ast.flow.NodeSource;
 
 
 
-public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
+public class FlowParserImpl implements AST_Parser.FlowParser {
   private final static String LINE_SEPARATOR = System.lineSeparator();
   
   
@@ -79,13 +80,13 @@ public class FlowAstBuilderImpl implements AST_Parser.FlowParser {
   private String id;
   
   
-  public FlowAstBuilderImpl(ObjectMapper yamlMapper) {
+  public FlowParserImpl(AST_ParserProps props) {
     super();
-    this.yamlMapper = yamlMapper;
+    this.yamlMapper = props.getYaml();
   }
   
   @Override
-  public FlowAstBuilderImpl syntax(String src) {
+  public FlowParserImpl syntax(String src) {
     if (src == null) {
       return this;
     }

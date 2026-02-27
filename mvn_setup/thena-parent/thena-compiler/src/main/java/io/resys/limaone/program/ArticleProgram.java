@@ -14,6 +14,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 
 public interface ArticleProgram extends Program {
+  String getTagName();
+  OffsetDateTime getStartDate();
+  OffsetDateTime getEndDate();
+  List<OffsetDateTime> getRefreshDates();
   
   ArticleProgramResult run(ProgramInput input, Runtime context);
   
@@ -24,9 +28,6 @@ public interface ArticleProgram extends Program {
   
   @Value.Immutable @JsonSerialize(as = ImmutableArticleProgramResult.class) @JsonDeserialize(as = ImmutableArticleProgramResult.class)
   interface ArticleProgramResult extends ProgramResult {
-    String getTagName();
-    OffsetDateTime getStartDate();
-    OffsetDateTime getEndDate();
     Map<String, LocalizedSite> getSites();
   }
 
