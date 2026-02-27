@@ -9,7 +9,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
-import io.resys.limaone.spi.program.flowtask.GroovyCompilationCustomizer;
+import io.resys.limaone.spi.compiler.flowtask.GroovyCompilationCustomizer;
 import lombok.RequiredArgsConstructor;
 
 
