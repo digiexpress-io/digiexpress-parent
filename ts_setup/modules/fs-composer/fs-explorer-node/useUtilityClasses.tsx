@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, styled, Badge, ListItem, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
+import { generateUtilityClass, styled, Badge, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors, getNodeColor, FsIcons } from '../fs-theme';
 import { SearchResultHighlight } from '../fs-search/SearchResultHighlight';
@@ -12,6 +12,7 @@ export const MUI_NAME = 'FsNode';
 
 export interface FsNodeClasses {
   root: string;
+  listItem: string;
   icon: string;
   iconFolder: string;
   iconArticle: string;
@@ -32,6 +33,7 @@ export type FsNodeClassKey = keyof FsNodeClasses;
 export const useUtilityClasses = (_isDarkTheme: boolean) => {
   const slots = {
     root: ['root'],
+    listItem: ['listItem'],
     icon: ['icon'],
     iconFolder: ['iconFolder'],
     iconArticle: ['iconArticle'],
@@ -53,8 +55,9 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
 export const FsNodeRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkTheme'
-})<{ isDarkTheme: boolean }>(({ theme, isDarkTheme }) => {
+  shouldForwardProp: (prop) => prop !== 'ownerState'
+})<{ ownerState: any }>(({ theme, ownerState }) => {
+  const isDarkTheme = ownerState.isDarkMode;
   return {
     [`& .${MUI_NAME}-icon`]: {
       minWidth: 10,
@@ -161,6 +164,20 @@ export const FsNodeRoot = styled('div', {
       fontSize: '14px',
       color: isDarkTheme ? FsColors.dark.text : FsColors.light.text,
     },
+
+    [`& .${MUI_NAME}-listItem`]: {
+      paddingLeft: theme.spacing(ownerState.level * 1.2),
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: isDarkTheme ? FsColors.dark.surface : FsColors.light.surface,
+      },
+      '&.error': {
+        backgroundColor: alpha(isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
+        '&:hover': {
+          backgroundColor: isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2),
+        },
+      },
+    },
   };
 });
 
@@ -226,29 +243,6 @@ export function getIcon(node: FsNode) {
   return baseIcon;
 };
 
-export const StyledListItem = styled(ListItem, {
-  shouldForwardProp: (prop) =>
-    prop !== 'isDarkTheme' &&
-    prop !== 'level' &&
-    prop !== 'error'
-})<{
-  level: number, isDarkTheme: boolean, error: boolean
-}>(({ theme, level, isDarkTheme, error }) => ({
-
-  paddingLeft: theme.spacing(level * 1.2),
-  cursor: 'pointer',
-  '&:hover': {
-    backgroundColor: isDarkTheme ? FsColors.dark.surface : FsColors.light.surface,
-  },
-  ...error && {
-    backgroundColor: alpha(isDarkTheme ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight, 0.1),
-    //borderBottom: `1px solid ${isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2)}`,
-    '&:hover': {
-      backgroundColor: isDarkTheme ? alpha(FsColors.semantic.dangerDark, 0.3) : alpha(FsColors.semantic.dangerLight, 0.2),
-      //borderBottom: `1px solid ${FsColors.semantic.dangerDark}`
-    }
-  }
-}));
 
 interface StyledListItemTextProps {
   nodeType: FsNodeType;

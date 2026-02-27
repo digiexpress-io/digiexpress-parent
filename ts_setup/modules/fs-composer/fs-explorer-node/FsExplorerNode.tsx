@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Collapse, IconButton, List, ListItemIcon } from '@mui/material';
+import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useUtilityClasses, FsNodeRoot, StyledListItem, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
+import { useUtilityClasses, FsNodeRoot, StyledListItemText, getIcon, getIconClassName, getConfigIcons } from './useUtilityClasses';
 import { FsIcons } from '../fs-theme';
 import { FsExplorerNodeProps } from './FsExplorerNodeProps';
 import { useOwnerState } from './useOwnerState';
@@ -12,14 +12,12 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
   const classes = useUtilityClasses(ownerState.isDarkMode);
 
   return (
-    <FsNodeRoot className={classes.root} isDarkTheme={ownerState.isDarkMode}>
-      <StyledListItem
-        level={ownerState.level}
-        isDarkTheme={ownerState.isDarkMode}
+    <FsNodeRoot className={classes.root} ownerState={ownerState}>
+      <ListItem
+        className={`${classes.listItem} ${ownerState.showError ? 'error' : ''}`}
         onClick={() => ownerState.children && ownerState.onToggle(ownerState.node.id)}
         onDoubleClick={() => ownerState.openAsset(ownerState.node, ownerState.fullPath)}
         onContextMenu={(event) => ownerState.onContextMenu(event, ownerState.node)}
-        error={ownerState.showError ? true : false}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {ownerState.children ? (
@@ -50,7 +48,7 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
             </Box>
           )}
         </Box>
-      </StyledListItem>
+      </ListItem>
       {ownerState.children && (
         <Collapse in={ownerState.node.expanded} timeout={0}>
           <List component='div' disablePadding>
