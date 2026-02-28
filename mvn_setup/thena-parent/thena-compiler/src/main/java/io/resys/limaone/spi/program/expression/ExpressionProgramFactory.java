@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -56,6 +57,7 @@ public class ExpressionProgramFactory {
         }
       };
 
+      Optional<ValueType> override = Optional.empty();
       Operation<?> operation = null;
       switch (valueType) {
       case MAP: 
@@ -73,7 +75,16 @@ public class ExpressionProgramFactory {
       case INTEGER:
       case LONG:
       case DECIMAL:
-        operation = OperationNumber.build(src, valueType, constantsConsumer);
+        try {
+          operation = OperationNumber.build(src, valueType, constantsConsumer);
+        } catch(Exception e) {
+          try {
+            operation = OperationString.build(src, constantsConsumer);
+            override = Optional.of(ValueType.STRING);
+          } catch(Exception x) {
+            throw e;
+          }
+        }
         break;
       case DATE:
       case DATE_TIME:
@@ -83,7 +94,7 @@ public class ExpressionProgramFactory {
         throw new ExpressionException("Unknown type: " + valueType + "!");
       }
 
-      return new ImmutableExpressionProgram(operation, valueType, Collections.unmodifiableList(constants), src);
+      return new ImmutableExpressionProgram(operation, override.orElse(valueType), Collections.unmodifiableList(constants), src);
     } catch(ExpressionException e) {
       throw e;
     } catch (Exception e) {

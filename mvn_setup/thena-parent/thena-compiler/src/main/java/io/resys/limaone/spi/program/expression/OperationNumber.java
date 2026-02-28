@@ -28,9 +28,10 @@ import io.resys.limaone.model.Parameter.ValueType;
 public class OperationNumber {
 
   public static Operation<?> build(String value, ValueType valueType, Consumer<String> constants) {
+
     // Comparison
     if(!(value.startsWith("[") || value.startsWith("("))) {
-      String number = parseNumber(value);
+      final String number = parseNumber(value);
       constants.accept(number);
       if(value.startsWith("<=")) {
         return lteThen(valueType, number);  
@@ -75,6 +76,13 @@ public class OperationNumber {
       }
     } catch(Exception e) {
     }
+    
+    try {
+      new BigDecimal(value);
+      return value.trim();
+    } catch(Exception e) {
+    }
+    
     return null;
   }
 
