@@ -21,6 +21,7 @@ package io.resys.limaone.program;
  */
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.immutables.value.Value;
 
@@ -29,7 +30,6 @@ import io.resys.limaone.model.FlowTask.FlowTaskPropType;
 import io.resys.limaone.model.Parameter;
 import jakarta.annotation.Nullable;
 
-@Value.Immutable
 public interface FlowTaskProgram extends Program {
 
   FlowTaskPropType getExecutorType();
@@ -39,7 +39,7 @@ public interface FlowTaskProgram extends Program {
   @Nullable Parameter getTypeDef1();
   
   FlowTaskExecutor run(ProgramInput input, Runtime runtime);
-  
+  FlowTaskExecutor run(Map<String, Serializable> input);
   
   
   interface FlowTaskExecutor {

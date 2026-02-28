@@ -1,7 +1,9 @@
-package io.resys.limaone.spi.compiler.flowtask;
+package io.resys.limaone.spi.program;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Streams;
 
@@ -14,7 +16,7 @@ import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 
-public class ImmutableFlowTaskProgram implements FlowTaskProgram {
+public class FlowTaskProgramImpl implements FlowTaskProgram {
   private static final long serialVersionUID = 5909985495850322300L;
 
   private final FlowTask_AST ast;
@@ -26,7 +28,7 @@ public class ImmutableFlowTaskProgram implements FlowTaskProgram {
   private final List<ProgramMessage> errors;
   private final List<ProgramAssociation> associations;
   
-  public ImmutableFlowTaskProgram(
+  public FlowTaskProgramImpl(
       FlowTask_AST ast,
       FlowTaskExecutable executable,
       ProgramStatus status,
@@ -47,17 +49,18 @@ public class ImmutableFlowTaskProgram implements FlowTaskProgram {
   public String getId() {
     return ast.getId();
   }
-
+  @Override
+  public String getName() {
+    return ast.getName();
+  }
   @Override
   public BodyType getType() {
     return ast.getBodyType();
   }
-
   @Override
   public ProgramStatus getStatus() {
     return status;
   }
-
   @Override
   public List<Parameter> getHeaders() {
     return headers;
@@ -66,34 +69,33 @@ public class ImmutableFlowTaskProgram implements FlowTaskProgram {
   public List<ProgramMessage> getErrors() {
     return errors;
   }
-
   @Override
   public List<ProgramAssociation> getAssociations() {
     return associations;
   }
-
   @Override
   public FlowTaskPropType getExecutorType() {
     return ast.getExecutorType();
   }
-
   @Override
   public FlowTaskExecutable getBean() {
     return executable;
   }
-
   @Override
   public Parameter getTypeDef0() {
     return ast.getTypeDef0();
   }
-
   @Override
   public Parameter getTypeDef1() {
     return ast.getTypeDef1();
   }
-
   @Override
   public FlowTaskExecutor run(ProgramInput input, Runtime runtime) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public FlowTaskExecutor run(Map<String, Serializable> input) {
     // TODO Auto-generated method stub
     return null;
   }

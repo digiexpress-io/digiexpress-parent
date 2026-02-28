@@ -1,0 +1,31 @@
+package io.resys.wrench.assets.bundle.groovy;
+
+import io.resys.hdes.client.api.programs.Program.ProgramContext;
+import io.resys.hdes.client.api.programs.ServiceData;
+import java.io.Serializable;
+import io.resys.hdes.client.spi.util.HdesAssert;
+
+
+public class Type2Service {
+
+  public Output execute(Input input, ProgramContext ctx) {
+    HdesAssert.notNull(ctx, () -> "ctx can't be null");
+    Output output = new Output();
+    output.sum = input.a + input.b;
+    
+    
+    return output;
+  }
+  
+  
+  @ServiceData
+  public static class Input implements Serializable {
+    Integer a;
+    Integer b;
+  }
+  
+  @ServiceData
+  public static class Output implements Serializable {
+    Integer sum;
+  }
+}

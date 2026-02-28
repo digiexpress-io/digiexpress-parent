@@ -6,8 +6,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.limaone.model.Model.Body;
 
+
+
+@Value.Immutable
+@JsonSerialize(as = ImmutableFlowTask.class)
+@JsonDeserialize(as = ImmutableFlowTask.class)
 public interface FlowTask extends Body {
   String getTaskName();
   String getTaskValue();
