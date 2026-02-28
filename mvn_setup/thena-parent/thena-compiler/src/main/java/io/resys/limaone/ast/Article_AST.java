@@ -31,7 +31,6 @@ import jakarta.annotation.Nullable;
 
 @Value.Immutable
 public interface Article_AST extends Simple_AST {
-  String getTagName();
   List<Markdown> getValues();
   List<Image> getImages();
   List<Link> getLinks();

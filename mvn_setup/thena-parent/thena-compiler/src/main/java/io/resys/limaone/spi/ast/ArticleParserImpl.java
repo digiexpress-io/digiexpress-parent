@@ -13,6 +13,7 @@ import io.resys.limaone.ast.Article_AST;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Article_AST.Markdown;
 import io.resys.limaone.ast.ImmutableArticle_AST;
+import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.ast.ImmutableLink;
 import io.resys.limaone.ast.ImmutableMarkdown;
 import io.resys.limaone.model.Article;
@@ -20,6 +21,7 @@ import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.article.MarkdownVisitor;
@@ -61,7 +63,12 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
       result.addAllLinks(visitWorkflows(link));
     }
     
-    return result.tagName(world.getName()).build();
+    return result
+        .id(world.getName())
+        .name(world.getName())
+        .bodyType(BodyType.ARTICLE)
+        .headers(ImmutableHeaders_AST.builder().build())
+        .build();
   }
 
   private List<Link> visitWorkflows(Model<ArticleWorkflow> link) {
