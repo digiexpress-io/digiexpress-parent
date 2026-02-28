@@ -17,8 +17,8 @@ import io.resys.limaone.model.Model.Body;
 public interface Model<T extends Body>  extends Serializable {
   String getId();
   T getBody();
-  BodyType getType();
-    
+  BodyType getBodyType();
+  String getBodyHash();
 
   interface Body extends Serializable {
   }

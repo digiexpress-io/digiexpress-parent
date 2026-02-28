@@ -69,7 +69,7 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
     final var cacheKey = new DecisionTable_AST_CacheKey(hash);
     final Function<DecisionTable_AST_CacheKey, DecisionTable_AST> mappingFunction = (k) -> {
       this.src.forEach(command -> execute(command));
-      return builder.build().id(id).build();
+      return builder.build().id(id).hash(hash).build();
     };
     return LocalCache.computeIfAbsent(cacheKey, mappingFunction);
   }

@@ -11,6 +11,8 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.hash.Hashing;
+
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.ImmutableDecisionTable;
@@ -38,7 +40,8 @@ public class DecisionTest {
       final var nodeString = IOUtils.toString(DecisionTest.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
       final var model = ImmutableModel.<DecisionTable>builder()
           .id(fullPath)
-          .type(BodyType.DECISION_TABLE)
+          .bodyHash(Hashing.murmur3_128().hashString(nodeString, StandardCharsets.UTF_8).toString())
+          .bodyType(BodyType.DECISION_TABLE)
           .body(ImmutableDecisionTable.builder()
               .name(fullPath)
               .nodes(new JsonArray(nodeString).stream()

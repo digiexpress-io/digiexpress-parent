@@ -1,11 +1,15 @@
 package io.resys.limaone.spi.ast;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.ArticleParser;
@@ -35,9 +39,10 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
 
   public static String LINK_TYPE_WORKFLOW = "workflow";
 
-  private final List<Model<Locale>> locales = new ArrayList<>();
+  //private final List<Model<Locale>> locales = new ArrayList<>();
   private final Map<String, Model<Locale>> enablesLocales = new HashMap<>();
   private final AST_ParserProps props;
+  private final StringBuilder hashBuilder = new StringBuilder();
   
   private ModelWorld world;
 
@@ -67,6 +72,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
         .id(world.getName())
         .name(world.getName())
         .bodyType(BodyType.ARTICLE)
+        .hash(Hashing.murmur3_128().hashString(hashBuilder.toString(), StandardCharsets.UTF_8).toString())
         .headers(ImmutableHeaders_AST.builder().build())
         .build();
   }
@@ -86,7 +92,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
         .map(label -> label.getLocale())
         .collect(Collectors.toList());
 
-    if(locales.stream().filter(l -> usedLocales.contains(l.getId())).findFirst().isEmpty()) {
+    if(this.enablesLocales.values().stream().filter(l -> usedLocales.contains(l.getId())).findFirst().isEmpty()) {
       return result;
     }
     
@@ -96,6 +102,8 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
           continue;
         }
       
+        hashBuilder.append("workflow: ").append(link.getBodyHash());
+        
         final var locale = enablesLocales.get(label.getLocale());
         final var resource = ImmutableLink.builder()
             .id(link.getId() + "-" + locale.getBody().getValue())
@@ -131,6 +139,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
           continue;
         }
         
+        hashBuilder.append("workflow: ").append(link.getBodyHash());
         final var locale = enablesLocales.get(label.getLocale());
         final var resource = ImmutableLink.builder()
             .id(link.getId() + "-" + locale.getBody().getValue())
@@ -162,6 +171,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
             continue;
           }
         
+          hashBuilder.append("workflow: ").append(link.getBodyHash());
           final var locale = enablesLocales.get(label.getLocale());
           final var resource = ImmutableLink.builder()
               .id(link.getId() + "-" + locale.getBody().getValue())
@@ -198,7 +208,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
         .map(label -> label.getLocale())
         .collect(Collectors.toList());
 
-    if(locales.stream().filter(l -> usedLocales.contains(l.getId())).findFirst().isEmpty()) {
+    if(this.enablesLocales.values().stream().filter(l -> usedLocales.contains(l.getId())).findFirst().isEmpty()) {
       return result;
     }
     
@@ -210,6 +220,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
           continue;
         }
       
+        hashBuilder.append("link: ").append(link.getBodyHash());
         final var locale = enablesLocales.get(label.getLocale());
         final var resource = ImmutableLink.builder()
             .id(link.getId() + "-" + locale.getBody().getValue())
@@ -221,6 +232,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
             .type(link.getBody().getContentType())
             .build();
         result.add(resource);
+        
       }
     }
     
@@ -232,6 +244,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
             continue;
           }
         
+          hashBuilder.append("link: ").append(link.getBodyHash());
           final var locale = enablesLocales.get(label.getLocale());
           final var resource = ImmutableLink.builder()
               .id(link.getId() + "-" + locale.getBody().getValue())
@@ -262,7 +275,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
       if(!page.getBody().getArticle().equals(article.getId())) {
         continue;
       }
-      final var locale = locales.stream().filter(l -> page.getBody().getLocale().equals(l.getId())).findFirst();
+      final var locale = enablesLocales.values().stream().filter(l -> page.getBody().getLocale().equals(l.getId())).findFirst();
       if(locale.isEmpty()) {
         continue;
       }
@@ -275,6 +288,8 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
       if(ast.getHeadings().stream().filter(Model -> Model.getLevel() == 1).findFirst().isEmpty()) {
         log.error("Failed to parse article '" + article.getBody().getName() + "', markdown must have atleast one h1(line starting with one # my super menu)");
       }
+      
+      hashBuilder.append("page: ").append(page.getBodyHash());
 
       result.add(ImmutableMarkdown.builder()
           .path(path)
@@ -335,12 +350,16 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
   }
   
   
-  private List<Model<Locale>> visitLocales() {
-    this.locales.addAll(this.world.getLocales().values().stream()
+  private Collection<Model<Locale>> visitLocales() {
+    final var locales = this.world.getLocales().values().stream()
         .filter(l -> l.getBody().getEnabled())
-        .collect(Collectors.toList()));
+        .map(locale -> {
+          hashBuilder.append("locale: ").append(locale.getBodyHash());
+          return locale;
+        })
+        .toList();
     
-    this.enablesLocales.putAll(this.locales.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+    this.enablesLocales.putAll(locales.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     return locales;
   }
 }
