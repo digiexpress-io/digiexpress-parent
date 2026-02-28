@@ -45,7 +45,7 @@ public class CompilerImpl implements Compiler {
     final Stream<CompilableUnit> flows = world.getFlows().values().stream().map(f -> new Compiler_Flow(astParser, world, f));
     
     // wrench flow tasks
-    final Stream<CompilableUnit> flowTasks = world.getFlowTasks().values().stream().map(f -> new Compiler_FlowTask(world, f));
+    final Stream<CompilableUnit> flowTasks = world.getFlowTasks().values().stream().map(f -> new Compiler_FlowTask(astParser, world, f));
     
     // wrench dt
     final Stream<CompilableUnit> decisions = world.getDecisionTables().values().stream().map(f -> new Compiler_DecisionTable(astParser, world, f));

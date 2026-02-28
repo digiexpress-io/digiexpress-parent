@@ -9,6 +9,7 @@ import io.resys.limaone.ast.Article_AST;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.ArticleProgram;
+import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 
 

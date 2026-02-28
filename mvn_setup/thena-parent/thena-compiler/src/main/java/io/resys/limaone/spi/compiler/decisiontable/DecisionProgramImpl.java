@@ -10,6 +10,7 @@ import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.DecisionProgram;
+import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 
 
