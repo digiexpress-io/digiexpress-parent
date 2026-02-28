@@ -74,7 +74,7 @@ public class FlowTaskTest {
     // map conversion
     final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
     
-    Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result).encode());
+    Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result.getValue()).encode());
   }
   
   

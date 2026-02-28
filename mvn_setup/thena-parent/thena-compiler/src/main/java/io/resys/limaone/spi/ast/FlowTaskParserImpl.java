@@ -24,9 +24,7 @@ import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.FlowTask_AST.ServiceRef;
 import io.resys.limaone.ast.ImmutableFlowTask_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
-import io.resys.limaone.ast.ImmutableMessage_AST;
 import io.resys.limaone.ast.ImmutableServiceRef;
-import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
 import io.resys.limaone.model.FlowTask.FlowTaskPropType;
@@ -43,6 +41,8 @@ import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.flowtask.FailSafeService;
 import io.resys.limaone.spi.ast.flowtask.ImmutableServiceDataTypes;
 import io.resys.limaone.spi.ast.flowtask.ServiceDataTypes;
+import io.resys.limaone.spi.compiler.groovy.GroovyErrorParser;
+import io.resys.limaone.spi.compiler.groovy.JavaClassMeta;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.thena.support.RepoAssert;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +51,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
 
+  private final List<String> imports = Arrays.asList(
+    java.time.LocalDate.class.getCanonicalName(),
+    java.time.Period.class.getCanonicalName(),
+    java.time.format.DateTimeFormatter.class.getCanonicalName(),
+    java.time.DayOfWeek.class.getCanonicalName(),
+    java.time.Duration.class.getCanonicalName(),
+    java.util.ArrayList.class.getCanonicalName(),
+    java.util.Arrays.class.getCanonicalName(),
+    java.util.List.class.getCanonicalName(),
+    java.util.Optional.class.getCanonicalName(),
+    java.util.Objects.class.getCanonicalName(),
+    
+    io.smallrye.mutiny.Uni.class.getCanonicalName(),
+    io.smallrye.mutiny.Multi.class.getCanonicalName(),
+    
+    
+    io.resys.limaone.model.FlowTask.class.getCanonicalName(),
+    io.resys.limaone.model.FlowTask.ServiceRef.class.getCanonicalName(),
+    io.resys.limaone.model.FlowTask.ServiceRefs.class.getCanonicalName(),
+    io.resys.limaone.model.FlowTask.ServiceData.class.getCanonicalName(),
+    io.resys.limaone.program.Runtime.class.getCanonicalName(),
+    io.resys.limaone.program.ProgramInput.class.getCanonicalName()
+  );
+  
   private final List<String> src = new ArrayList<>();
   private final GroovyClassLoader gcl;
   private String id;
@@ -75,12 +99,37 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
     return this;
   }
 
+  private String constructSource(String syntax) {
+    
+    final var meta = JavaClassMeta.parse(syntax);
+    final var src = new StringBuilder("package io.resys.limaone.spi.compiler.groovy.pkg_")
+        .append(JavaClassMeta.makePackageSafe(id))
+        .append(";").append(System.lineSeparator());
+    
+    for(final var entry : this.imports) {
+      if(!meta.getImports().contains(entry)) {
+        src.append("import ").append(entry).append(";").append(System.lineSeparator());;
+      }
+    }
+    for(final var entry : meta.getImports()) {
+      src.append("import ").append(entry).append(";").append(System.lineSeparator());;
+    }
+  
+    return src
+        .append("\n\n")
+        .append("public class ").append(meta.getClassName())
+        .append(" {").append(System.lineSeparator())
+        .append(System.lineSeparator()).append("  ")
+        .append(meta.getBody())
+        .toString();
+  }
+  
   @Override
   public FlowTask_AST parse() {
     Objects.requireNonNull(this.src, () -> "src can't ne null!");
     Objects.requireNonNull(this.id, () -> "id can't ne null!");
-    final var source = String.join(System.lineSeparator(), this.src);
-    
+    final var syntax = String.join(System.lineSeparator(), this.src);
+    final var source = constructSource(syntax);
     
     final var hash = Hashing.murmur3_128().hashString(source, StandardCharsets.UTF_8).toString();
     final var cacheKey = new FlowTask_AST_CacheKey(hash);
@@ -120,7 +169,11 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
       } catch (Exception e) {
         final var msg = "Failed to generate groovy service ast from: " + System.lineSeparator() + 
             source + System.lineSeparator() + e.getMessage();
-        log.trace(msg, e);
+        
+        log.trace(msg + "{}", source, e);
+        
+        final var groovyErrors = GroovyErrorParser.parseErrors(e.getMessage(), syntax);
+        
         return ImmutableFlowTask_AST.builder()
             .id(this.id)
             .hash(hash)
@@ -129,11 +182,7 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
             .headers(ImmutableHeaders_AST.builder().build())
             .beanType(FailSafeService.class)
             .executorType(FlowTaskPropType.TYPE_0)
-            .addMessages(ImmutableMessage_AST.builder()
-              .line(0)
-              .value("message: " + e.getMessage())
-              .type(MessageType.ERROR)
-              .build())
+            .addAllMessages(groovyErrors)
             .value(source).build();
       }
     };

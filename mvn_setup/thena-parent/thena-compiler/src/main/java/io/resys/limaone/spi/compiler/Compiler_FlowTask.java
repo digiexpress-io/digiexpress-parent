@@ -51,9 +51,9 @@ public class Compiler_FlowTask implements CompilableUnit {
           errors.addAll(ast.getMessages().stream()
                 .filter(e -> e.getType() == MessageType.ERROR)
                 .map(e -> ImmutableProgramMessage.builder()
-                .id("flow-task-failed")
-                .msg(e.getValue())
-                .build())
+                  .id("flow-task-failed")
+                  .msg("@line "+ e.getLine() + ":  " + e.getValue() )
+                  .build())
               .toList());
           
           final var beanInstance = (FlowTaskExecutable) constructors[0].newInstance();
