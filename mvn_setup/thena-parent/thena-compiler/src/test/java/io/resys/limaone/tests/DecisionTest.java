@@ -76,7 +76,16 @@ public class DecisionTest {
     
     Assertions.assertEquals(
         """
-        
+Decision Table: testDecisionTable
+Hit Policy: ALL
+
+| risk IN               | sri IN | sriBoolean IN | sriDate IN                  | category OUT | reason OUT | reasonBoolean OUT | reasonDate OUT |
+|-----------------------|--------|---------------|-----------------------------|--------------|------------|-------------------|----------------|
+| in ["CAREFUL", "NOT"] | [1..2] | false         | equals 2017-07-03T00:00:00Z | GREEN        |            | false             | 2017-07-03     |
+| in ["CAREFUL"]        | >= 3   | false         |                             | GREY         | HIGH_RISK  | false             |                |
+| not in ["MODERATE"]   | [1..5] | false         | equals 2017-07-03T00:00:00Z | GREEN        |            | false             |                |
+|                       | > 6    | false         | equals 2017-07-03T00:00:00Z | GREY         | HIGH_RISK  | false             |                |
+| in ["AGGRESSIVE"]     |        | false         | equals 2017-07-03T00:00:00Z | GREEN        |            | false             |                |
         """, decisionTable.encodePrettily());
     
   }
@@ -138,6 +147,17 @@ public class DecisionTest {
   @Test
   public void qinMatchingTest() throws IOException {
     final var envir = compileDt("decision/dt3.json");
+    Assertions.assertEquals(
+        """
+Decision Table: testDecisionTableQInExpression
+Hit Policy: FIRST
+
+| path IN                                   | sri IN | sriBoolean IN | sriDate IN                  | category OUT | reason OUT | reasonBoolean OUT | reasonDate OUT |
+|-------------------------------------------|--------|---------------|-----------------------------|--------------|------------|-------------------|----------------|
+| qin ["task/#/name", "task/#/description"] | [1..2] | false         | equals 2017-07-03T00:00:00Z | GREEN        |            | false             | 2017-07-03     |
+| in ["comment.*"]                          | >= 3   | false         |                             | GREY         | HIGH_RISK  | false             |                |
+        """, envir.encodePrettily());
+    
 
     {
       Map<String, Serializable> values = new HashMap<>();
@@ -171,6 +191,16 @@ public class DecisionTest {
     DecisionResult result = envir.run(values).andGetBody();
 
     Assertions.assertEquals(1, result.getMatches().size());
+    
+    Assertions.assertEquals(
+        """
+Decision Table: nullEqualsNull
+Hit Policy: FIRST
+
+| risk IN | match OUT |
+|---------|-----------|
+|         | success   |
+        """, envir.encodePrettily());
   }
   
   @Test
@@ -189,6 +219,17 @@ public class DecisionTest {
     result = envir.run(values).andGetBody();
     Assertions.assertEquals(1, result.getMatches().size());
     Assertions.assertEquals(1, result.getMatches().get(0).getOrder());
+    
+    Assertions.assertEquals(
+        """
+Decision Table: testRegion
+Hit Policy: FIRST
+
+| regionName IN   | regionFactor OUT |
+|-----------------|------------------|
+| in["FIN","EST"] | 1                |
+|                 | 10               |
+        """, envir.encodePrettily());
   }
 
   @Test
@@ -199,12 +240,33 @@ public class DecisionTest {
     values.put("firstName", "Mark");
     DecisionResult result = envir.run(values).andGetBody();
     Assertions.assertEquals(2, result.getMatches().size());
+    Assertions.assertEquals(
+        """
+Decision Table: hitPolicyExample
+Hit Policy: ALL
+
+| firstName IN       | output OUT      |
+|--------------------|-----------------|
+| in["Mark","Peter"] | Found a match   |
+|                    | Fall back value |
+        """, envir.encodePrettily());
   }
   
   @Test
   public void csvImportCommand() throws IOException {
     final var ast = compileDt("decision/dt-import.json");
     Assertions.assertEquals(ProgramStatus.UP, ast.getStatus());
+    
+    Assertions.assertEquals(
+        """
+Decision Table: hitPolicyExample
+Hit Policy: ALL
+
+| firstName IN       | output OUT      |
+|--------------------|-----------------|
+| in["Mark","Peter"] | Found a match   |
+|                    | Fall back value |
+        """, ast.encodePrettily());
   }
 
   @Test
@@ -212,6 +274,18 @@ public class DecisionTest {
     final var ast = compileDt("decision/dtWithValueSet.json");
     List<String> valueSet = ast.getHeaders().get(0).getValueSet();
     Assertions.assertEquals(3, valueSet.size());
+    
+    Assertions.assertEquals(
+        """
+Decision Table: decimalTest
+Hit Policy: FIRST
+
+| letterCode IN | decimalValue OUT |
+|---------------|------------------|
+| ["M"]         | 0.5              |
+| ["S"]         | 0.7              |
+| ["L"]         | 1                |
+        """, ast.encodePrettily());
   }
 
 }
