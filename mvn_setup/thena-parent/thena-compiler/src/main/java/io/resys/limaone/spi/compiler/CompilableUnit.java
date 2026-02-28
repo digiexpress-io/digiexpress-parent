@@ -32,7 +32,6 @@ public interface CompilableUnit {
   interface NewArtifact {
     NewArtifact id(String id);
     NewArtifact name(String name);
-    NewArtifact type(Model.BodyType bodyType);
     NewArtifact ast(Simple_AST ast);
     RequireDependency requireDependnecy();
     void build();
@@ -57,6 +56,7 @@ public interface CompilableUnit {
   }
   
   
+  @Value.Immutable
   interface Artifact {
     String getArtifactId(); // who am I
     String getArtifactName(); // who am I

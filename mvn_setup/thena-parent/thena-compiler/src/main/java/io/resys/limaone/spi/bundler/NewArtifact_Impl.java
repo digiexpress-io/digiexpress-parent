@@ -18,7 +18,7 @@ public class NewArtifact_Impl implements NewArtifact {
   private final ArtifactBuilder artifactBuilder = new ArtifactBuilder();
   @Override
   public NewArtifact ast(Simple_AST ast) {
-    artifactBuilder.ast(ast);
+    artifactBuilder.ast(ast).artifactType(ast.getBodyType());
     return this;
   }
   @Override
@@ -29,11 +29,6 @@ public class NewArtifact_Impl implements NewArtifact {
   @Override
   public NewArtifact name(String name) {
     artifactBuilder.artifactName(name);
-    return this;
-  }
-  @Override
-  public NewArtifact type(BodyType bodyType) {
-    artifactBuilder.artifactType(bodyType);
     return this;
   }
   @Override

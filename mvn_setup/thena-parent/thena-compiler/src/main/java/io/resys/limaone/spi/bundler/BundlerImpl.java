@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -52,7 +53,14 @@ public class BundlerImpl implements Bundler {
   }
   
   private Program close(OpenProgram open) {
-    final var artifact = artifacts_byId.get(open.getId()).build();
+    final var builder = Optional.ofNullable(artifacts_byId.get(open.getId()))
+      .or(() -> {
+        final var name = open.getAst().getBodyType() + "/" + open.getAst().getName();
+        return Optional.ofNullable(artifacts_byName.get(name));
+      }).orElse(null);
+  
+    Objects.requireNonNull(builder, () -> "Can't find program to finalize, id: " + open.getId());
+    final var artifact = builder.build();
     final var program = open.close(artifact);
     bundleBuilder.addProgram(program);
     return program;

@@ -2,6 +2,7 @@ package io.resys.limaone.spi.compiler.decisiontable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Streams;
 
@@ -80,6 +81,11 @@ public class DecisionProgramImpl implements DecisionProgram {
   @Override
   public DecisionExecutor run(ProgramInput input, Runtime runtime) {
     
+    return null;
+  }
+  @Override
+  public DecisionExecutor run(Map<String, ?> input) {
+    // TODO Auto-generated method stub
     return null;
   }
 }

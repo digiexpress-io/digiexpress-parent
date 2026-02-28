@@ -11,7 +11,7 @@ import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
 import io.resys.limaone.spi.compiler.CompilableUnit.Dependency;
-import io.resys.limaone.spi.compiler.CompilableUnit.NewArtifact;
+import io.resys.limaone.spi.compiler.ImmutableArtifact;
 
 public class ArtifactBuilder {
   private String artifactId;
@@ -92,7 +92,7 @@ public class ArtifactBuilder {
         .parentDeps(parentDeps)
         .errors(errors)
         .associations(associations)
-        .programStatus(programStatus)
+        .programStatus(errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.DEPENDENCY_ERROR)
         .build();
   }
 

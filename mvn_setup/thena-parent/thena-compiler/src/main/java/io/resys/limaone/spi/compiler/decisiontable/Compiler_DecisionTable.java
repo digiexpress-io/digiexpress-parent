@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Compiler_DecisionTable implements CompilableUnit {
   private final AST_Parser parser;
+  @SuppressWarnings("unused")
   private final ModelWorld world;
   private final Model<DecisionTable> target;
   
@@ -41,7 +42,11 @@ public class Compiler_DecisionTable implements CompilableUnit {
         .id(target.getId())
         .nodes(target.getBody().getNodes())
         .parse();
-        
+    
+    // register to bundler
+    resolution.ast(ast).name(ast.getName()).id(target.getId()).build();
+    
+    // start "compilation", close is triggered when dependency tree is resolved
     return new OpenProgram() {
       @Override
       public String getId() {
@@ -52,7 +57,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
         return ast;
       }
       @Override
-      public Program close(Artifact artifact) {
+      public Program close(Artifact artifact) {        
         final List<ProgramAssociation> assocs = artifact.getAssociations();
         final List<ProgramMessage> errors = new ArrayList<>(artifact.getErrors());
         

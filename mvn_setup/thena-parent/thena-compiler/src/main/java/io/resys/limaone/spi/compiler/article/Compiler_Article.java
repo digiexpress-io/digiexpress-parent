@@ -29,6 +29,8 @@ public class Compiler_Article implements CompilableUnit {
   public OpenProgram compile(NewArtifact resolution) {
     final var articleAST = parser.parseArticles().world(world).parse();
    
+    resolution.ast(articleAST).id(world.getName()).name(world.getName()).build();
+    
     // topics
     final Map<String, List<TopicData>> localeTopicData = new HashMap<>();  
     for(final var md : articleAST.getValues()) {
