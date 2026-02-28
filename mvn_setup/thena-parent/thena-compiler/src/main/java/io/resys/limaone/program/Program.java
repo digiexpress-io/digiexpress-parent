@@ -19,7 +19,6 @@ public interface Program extends Serializable {
   ProgramStatus getStatus();
 
   List<Parameter> getHeaders();
-  List<ProgramMessage> getWarnings();
   List<ProgramMessage> getErrors();
   List<ProgramAssociation> getAssociations();
   

@@ -1,32 +1,20 @@
 package io.resys.limaone.spi.compiler.flow;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
-import io.resys.limaone.ast.Flow_AST.FlowInputNode;
 import io.resys.limaone.ast.Flow_AST.FlowSwitchNode;
 import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
+import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
-import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Model.ModelWorld;
-import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
-import io.resys.limaone.program.FlowProgram;
-import io.resys.limaone.program.ImmutableFlowProgramStep;
-import io.resys.limaone.program.ImmutableFlowProgramStepBody;
-import io.resys.limaone.program.ImmutableFlowProgramStepConditionalThenPointer;
-import io.resys.limaone.program.ImmutableFlowProgramStepEndPointer;
-import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
-import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
-import io.resys.limaone.program.Program;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepBody;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepConditionalThenPointer;
@@ -34,9 +22,15 @@ import io.resys.limaone.program.FlowProgram.FlowProgramStepEndPointer;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepPointer;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepPointerType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepRefType;
+import io.resys.limaone.program.ImmutableFlowProgramStep;
+import io.resys.limaone.program.ImmutableFlowProgramStepBody;
+import io.resys.limaone.program.ImmutableFlowProgramStepConditionalThenPointer;
+import io.resys.limaone.program.ImmutableFlowProgramStepEndPointer;
+import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
+import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
+import io.resys.limaone.program.Program;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.compiler.CompilableUnit;
-import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.limaone.spi.program.ProgramException;
 import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 import lombok.RequiredArgsConstructor;
@@ -78,12 +72,11 @@ public class Compiler_Flow implements CompilableUnit {
 
         final var firstTask = visitTasksById(ast);
         final var firstStep = firstTask == null ? END_STEP: visitTask(firstTask);
-        return ImmutableFlowProgram.builder()
-            .startStepId(firstStep.getId())
-            .steps(steps)
-            .acceptDefs(visitAcceptDefs(ast))
-            .build();
-        return null;
+        
+        return new ImmutableFlowProgram(
+            ast, firstStep.getId(), steps, 
+            artifact.getProgramStatus(), 
+            artifact.getErrors(), artifact.getAssociations());
       }
     };
   }
@@ -215,32 +208,5 @@ public class Compiler_Flow implements CompilableUnit {
       throw new ProgramException(message, e);
     } 
     return condition.build();
-  }
-  
-  private Collection<Parameter> visitAcceptDefs(Flow_AST ast) {
-    Map<String, FlowInputNode> inputs = ast.getRoot().getInputs();
-
-    int index = 0;
-    final Collection<Parameter> result = new ArrayList<>();
-    for (Map.Entry<String, FlowInputNode> entry : inputs.entrySet()) {
-      if (entry.getValue().getType() == null) {
-        continue;
-      }
-      try {
-        ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
-        boolean required = AstFlowNodesFactory.getBooleanValue(entry.getValue().getRequired());
-        result.add(Parameter_Factory.newParam()
-            .id(entry.getValue().getStart() + "")
-            .order(index++)
-            .name(entry.getKey()).valueType(valueType).direction(Direction.IN).required(required)
-            .values(AstFlowNodesFactory.getStringValue(entry.getValue().getDebugValue()))
-            .build());
-        
-      } catch (Exception e) {
-        final String msg = String.format("Failed to convert data type from: %s, error: %s", entry.getValue().getType().getValue(), e.getMessage());
-        throw new ProgramException(msg, e);
-      }
-    }
-    return Collections.unmodifiableCollection(result);
   }
 }

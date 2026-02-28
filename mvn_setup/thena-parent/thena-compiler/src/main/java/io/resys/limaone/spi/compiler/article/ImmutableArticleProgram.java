@@ -3,17 +3,13 @@ package io.resys.limaone.spi.compiler.article;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import io.resys.limaone.ast.Article_AST;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.ArticleProgram;
 import io.resys.limaone.program.Runtime;
-import lombok.RequiredArgsConstructor;
 
 
 public class ImmutableArticleProgram implements ArticleProgram {
@@ -68,11 +64,6 @@ public class ImmutableArticleProgram implements ArticleProgram {
 
   @Override
   public List<Parameter> getHeaders() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<ProgramMessage> getWarnings() {
     return Collections.emptyList();
   }
 

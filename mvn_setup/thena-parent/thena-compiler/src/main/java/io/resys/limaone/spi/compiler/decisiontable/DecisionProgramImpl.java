@@ -22,7 +22,6 @@ public class DecisionProgramImpl implements DecisionProgram {
   private final ProgramStatus status; 
   private final List<DecisionRow> rows;
   private final List<Parameter> headers;
-  private final List<ProgramMessage> warnings;
   private final List<ProgramMessage> errors;
   private final List<ProgramAssociation> associations;
   
@@ -30,14 +29,12 @@ public class DecisionProgramImpl implements DecisionProgram {
       DecisionTable_AST ast, 
       ProgramStatus status,
       List<DecisionRow> rows,
-      List<ProgramMessage> warnings, 
       List<ProgramMessage> errors,
       List<ProgramAssociation> associations) {
     super();
     this.ast = ast;
     this.status = status;
     this.rows = Collections.unmodifiableList(rows);
-    this.warnings = Collections.unmodifiableList(warnings);
     this.errors = Collections.unmodifiableList(errors);
     this.associations = Collections.unmodifiableList(associations);
     this.headers = Streams
@@ -58,32 +55,22 @@ public class DecisionProgramImpl implements DecisionProgram {
   public ProgramStatus getStatus() {
     return status;
   }
-
-  @Override
-  public List<ProgramMessage> getWarnings() {
-    return warnings;
-  }
-
   @Override
   public List<ProgramMessage> getErrors() {
     return errors;
   }
-
   @Override
   public List<Parameter> getHeaders() {
     return headers;
   }
-
   @Override
   public List<ProgramAssociation> getAssociations() {
     return associations;
   }
-
   @Override
   public List<DecisionRow> getRows() {
     return rows;
   }
-
   @Override
   public HitPolicy getHitPolicy() {
     return ast.getHitPolicy();
@@ -94,6 +81,4 @@ public class DecisionProgramImpl implements DecisionProgram {
     
     return null;
   }
-
-
 }
