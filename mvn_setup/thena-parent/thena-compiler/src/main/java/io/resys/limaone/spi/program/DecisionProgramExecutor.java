@@ -28,30 +28,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.hdes.client.api.programs.Program.ProgramContext;
-import io.resys.limaone.ast.DecisionTable_AST;
-import io.resys.limaone.ast.DecisionTable_AST.DecisionRowNode;
-import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.DecisionProgram.DecisionLog;
 import io.resys.limaone.program.DecisionProgram.DecisionLogEntry;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
+import io.resys.limaone.program.DecisionProgram.DecisionRow;
 import io.resys.limaone.program.DecisionProgram.DecisionRowAccepts;
-import io.resys.limaone.spi.compiler.CompilerException;
 import io.resys.limaone.program.ImmutableDecisionLog;
 import io.resys.limaone.program.ImmutableDecisionLogEntry;
 import io.resys.limaone.program.ImmutableDecisionResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 
+
+
 public class DecisionProgramExecutor {
   
-  public static DecisionResult run(DecisionTable_AST ast, ProgramInput input, Runtime runtime) {
+  
+  public static DecisionResult run(DecisionProgramImpl impl, ProgramInput input, Runtime runtime) {
     final var decisions = ImmutableDecisionResult.builder();
     
-    Iterator<DecisionRowNode> it = ast.getRows().iterator();
+    Iterator<DecisionRow> it = impl.getRows().iterator();
     while(it.hasNext()) {
       final var node = it.next();
-      final var decision = visitRow(node, context);
+      final var decision = visitRow(node, input);
       
       if(decision.getMatch()) {
         decisions.addMatches(decision);
@@ -59,7 +58,7 @@ public class DecisionProgramExecutor {
         decisions.addRejections(decision);
       }
       
-      final var isBreak = visitHitPolicy(program, decision);
+      final var isBreak = visitHitPolicy(impl, decision);
       if(isBreak) {
         break;
       }
@@ -70,7 +69,7 @@ public class DecisionProgramExecutor {
   
   public static Map<String, Serializable> get(DecisionResult program) {
     if(program.getMatches().size() > 1) {
-      throw new CompilerException("Expected 0-1 results but was: " + program.getMatches().size() + "!");
+      throw new ProgramException("Expected 0-1 results but was: " + program.getMatches().size() + "!");
     } else if(program.getMatches().size() == 1) {
       return toValues(program.getMatches().get(0));
     }
@@ -92,7 +91,7 @@ public class DecisionProgramExecutor {
     return result;
   }
   
-  private static boolean visitHitPolicy(DecisionProgram program, DecisionLog decision) {
+  private static boolean visitHitPolicy(DecisionProgramImpl program, DecisionLog decision) {
     final var hitPolicy = program.getHitPolicy();
     switch(hitPolicy) {
     case FIRST:
@@ -101,11 +100,11 @@ public class DecisionProgramExecutor {
     case ALL:
       // match all
       return false;
-    default: throw new CompilerException("Unknown hit policy: " + hitPolicy + "!");
+    default: throw new ProgramException("Unknown hit policy: " + hitPolicy + "!");
     }
   }
 
-  private static DecisionLog visitRow(DecisionRowNode node, ProgramContext context) {
+  private static DecisionLog visitRow(DecisionRow node, ProgramInput context) {
     Boolean match = null;
     final var data = ImmutableDecisionLog.builder();
     
@@ -115,7 +114,7 @@ public class DecisionProgramExecutor {
       try {
         match = (Boolean) input.getExpression().run(input.getKey().toValue(contextEntity)).getValue();
       } catch(Exception e) {
-        throw new CompilerException(
+        throw new ProgramException(
             "Failed to evaluate expression: '" + input.getExpression().getSrc() + "'"
             + ", because: " + e.getMessage()
             + "!", e);    

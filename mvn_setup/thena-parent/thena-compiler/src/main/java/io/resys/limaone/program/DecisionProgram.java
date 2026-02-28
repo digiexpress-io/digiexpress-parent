@@ -19,7 +19,7 @@ public interface DecisionProgram extends Program {
   List<DecisionRow> getRows();
   HitPolicy getHitPolicy();
   
-  DecisionExecutor run(Map<String, ?> input);
+  DecisionExecutor run(Map<String, Serializable> input);
   DecisionExecutor run(ProgramInput input, Runtime runtime);
   
   interface DecisionExecutor {

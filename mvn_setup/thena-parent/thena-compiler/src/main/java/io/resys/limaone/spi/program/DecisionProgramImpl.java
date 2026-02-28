@@ -1,8 +1,10 @@
 package io.resys.limaone.spi.program;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Streams;
 
@@ -13,6 +15,7 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 
 
 
@@ -51,12 +54,10 @@ public class DecisionProgramImpl implements DecisionProgram {
   public String getName() {
     return ast.getName();
   }
-
   @Override
   public BodyType getType() {
     return ast.getBodyType();
   }
-
   @Override
   public ProgramStatus getStatus() {
     return status;
@@ -81,15 +82,32 @@ public class DecisionProgramImpl implements DecisionProgram {
   public HitPolicy getHitPolicy() {
     return ast.getHitPolicy();
   }
-
   @Override
   public DecisionExecutor run(ProgramInput input, Runtime runtime) {
+    final var result = DecisionProgramExecutor.run(this, input, runtime);
     
-    return new DecisionProgramExecutor(ast, input, runtime);
+    return new DecisionExecutor() {
+      @Override
+      public DecisionResult andGetBody() {
+        return result;
+      }
+      @Override
+      public Map<String, Serializable> andGet() {
+        return DecisionProgramExecutor.get(result);
+      }
+      @Override
+      public List<Map<String, Serializable>> andFind() {
+        return DecisionProgramExecutor.find(result);
+      }
+      @Override
+      public DecisionExecutor callback(Consumer<DecisionTable_AST> callback) {
+        callback.accept(ast);
+        return this;
+      }
+    };
   }
   @Override
-  public DecisionExecutor run(Map<String, ?> input) {
-    // TODO Auto-generated method stub
-    return null;
+  public DecisionExecutor run(Map<String, Serializable> input) {
+    return run(DefaultProgramInput.of(input), DefaultRuntime.empty());
   }
 }
