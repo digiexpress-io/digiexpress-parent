@@ -54,35 +54,33 @@ public class ImmutableArticleProgram implements ArticleProgram {
     return articleAST.getId();
   }
   @Override
+  public String getName() {
+    return articleAST.getName();
+  }
+  @Override
   public BodyType getType() {
     return BodyType.ARTICLE;
   }
-
   @Override
   public ProgramStatus getStatus() {
     return status;
   }
-
   @Override
   public List<Parameter> getHeaders() {
     return Collections.emptyList();
   }
-
   @Override
   public List<ProgramMessage> getErrors() {
     return errors;
   }
-
   @Override
   public List<ProgramAssociation> getAssociations() {
     return assocs;
   }
-
   @Override
   public List<OffsetDateTime> getRefreshDates() {
     return refreshDates;
   }
-
   @Override
   public ArticleProgramResult run(ProgramInput input, Runtime context) {
 
@@ -100,5 +98,4 @@ public class ImmutableArticleProgram implements ArticleProgram {
     //todo
     return null;
   }
-
 }

@@ -47,6 +47,10 @@ public class DecisionProgramImpl implements DecisionProgram {
   public String getId() {
     return ast.getId();
   }
+  @Override
+  public String getName() {
+    return ast.getName();
+  }
 
   @Override
   public BodyType getType() {

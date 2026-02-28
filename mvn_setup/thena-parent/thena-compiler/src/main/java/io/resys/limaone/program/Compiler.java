@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import io.resys.limaone.model.Model.ModelWorld;
+import jakarta.annotation.Nullable;
 
 public interface Compiler {  
   
@@ -13,10 +14,11 @@ public interface Compiler {
     // open for user definition
     BundleBuilder id(String id);
     BundleBuilder name(String name);
-    BundleBuilder externalId(String externalId);
     BundleBuilder created(OffsetDateTime created);
-    BundleBuilder startDate(OffsetDateTime startDate);
-    BundleBuilder endDate(OffsetDateTime endDate);
+    
+    BundleBuilder externalId(@Nullable String externalId);
+    BundleBuilder startDate(@Nullable OffsetDateTime startDate);
+    BundleBuilder endDate(@Nullable OffsetDateTime endDate);
     
     // end result
     Bundle build();

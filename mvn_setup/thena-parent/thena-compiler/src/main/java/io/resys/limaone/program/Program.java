@@ -15,6 +15,7 @@ import jakarta.annotation.Nullable;
 public interface Program extends Serializable {
   
   String getId();
+  String getName();
   Model.BodyType getType();
   ProgramStatus getStatus();
 
