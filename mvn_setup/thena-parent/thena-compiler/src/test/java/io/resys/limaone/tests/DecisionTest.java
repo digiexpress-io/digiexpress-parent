@@ -48,7 +48,7 @@ public class DecisionTest {
               .build())
           .build();
       
-      final var world = ImmutableModelWorld.builder().putDecisionTables(model.getId(), model).build();
+      final var world = ImmutableModelWorld.builder().name("DecisionTest").putDecisionTables(model.getId(), model).build();
       return compiler.compile(world).build().queryDecisions().name(fullPath).getOne();
     } catch(IOException e) {
       throw new RuntimeException(e.getMessage(), e);

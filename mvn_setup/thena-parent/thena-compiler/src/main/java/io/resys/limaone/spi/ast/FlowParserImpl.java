@@ -41,7 +41,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.AST_Parser;
-import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowParser;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
@@ -92,11 +91,6 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     }
     this.src.add(src);
     return this;
-  }
-  @Override
-  public FlowParser deps(DependencyResolution deps) {
-    // TODO Auto-generated method stub
-    return null;
   }
   @Override
   public FlowParser id(String id) {

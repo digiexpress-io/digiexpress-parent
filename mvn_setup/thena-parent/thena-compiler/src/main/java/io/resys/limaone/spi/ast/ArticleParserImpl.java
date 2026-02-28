@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.ArticleParser;
-import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.Article_AST;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Article_AST.Markdown;
@@ -39,12 +38,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
   private final AST_ParserProps props;
   
   private ModelWorld world;
-  
-  @Override
-  public ArticleParser deps(DependencyResolution deps) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+
   @Override
   public ArticleParser world(ModelWorld world) {
     this.world = world;

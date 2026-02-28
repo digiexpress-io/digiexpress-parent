@@ -42,7 +42,6 @@ import com.google.common.hash.Hashing;
 
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
-import io.resys.limaone.ast.AST_Parser.DependencyResolution;
 import io.resys.limaone.ast.AST_Parser.FlowTaskParser;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.FlowTask_AST.ServiceRef;
@@ -90,12 +89,6 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
       return this;
     }
     this.src.add(src);
-    return this;
-  }
-  
-  @Override
-  public FlowTaskParser deps(DependencyResolution deps) {
-    // TODO Auto-generated method stub
     return this;
   }
 
