@@ -18,6 +18,7 @@ import jakarta.annotation.Nullable;
 public interface DecisionProgram extends Program {
   List<DecisionRow> getRows();
   HitPolicy getHitPolicy();
+  String encodePrettily();
   
   DecisionExecutor run(Map<String, Serializable> input);
   DecisionExecutor run(ProgramInput input, Runtime runtime);

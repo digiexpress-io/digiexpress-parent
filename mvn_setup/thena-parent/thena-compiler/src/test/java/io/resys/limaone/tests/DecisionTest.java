@@ -72,6 +72,13 @@ public class DecisionTest {
     Assertions.assertEquals(3, rows.get(3).getOrder());
     Assertions.assertEquals(4, rows.get(4).getOrder());
     Assertions.assertEquals(5, rows.size());
+    
+    
+    Assertions.assertEquals(
+        """
+        
+        """, decisionTable.encodePrettily());
+    
   }
 
   

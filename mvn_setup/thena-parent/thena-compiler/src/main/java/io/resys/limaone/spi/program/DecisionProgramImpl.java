@@ -110,4 +110,8 @@ public class DecisionProgramImpl implements DecisionProgram {
   public DecisionExecutor run(Map<String, Serializable> input) {
     return run(DefaultProgramInput.of(input), DefaultRuntime.empty());
   }
+  @Override
+  public String encodePrettily() {
+    return DecisionProgramPrettyEncoder.encodePrettily(ast);
+  }
 }
