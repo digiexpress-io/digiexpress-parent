@@ -7,6 +7,7 @@ import org.apache.commons.lang3.Validate;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
 import io.resys.limaone.model.Model;
@@ -42,17 +43,25 @@ public class Compiler_FlowTask implements CompilableUnit {
       }
       @Override
       public Program close(Artifact artifact) {
-        
         try {
           final var constructors = ast.getBeanType().getConstructors();
           Validate.isTrue(constructors.length == 1, () -> "There can be only one constructor for flow task, expected: 1 actual: " + constructors.length);
-        
+          
+          final var errors = new ArrayList<>(artifact.getErrors());
+          errors.addAll(ast.getMessages().stream()
+                .filter(e -> e.getType() == MessageType.ERROR)
+                .map(e -> ImmutableProgramMessage.builder()
+                .id("flow-task-failed")
+                .msg(e.getValue())
+                .build())
+              .toList());
+          
           final var beanInstance = (FlowTaskExecutable) constructors[0].newInstance();
           final var flowTask = new FlowTaskProgramImpl(
               ast, 
               beanInstance, 
-              artifact.getProgramStatus(), 
-              artifact.getErrors(), 
+              errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.PROGRAM_ERROR, 
+              errors, 
               artifact.getAssociations());
           return flowTask;
         } catch(Exception e) {

@@ -13,14 +13,15 @@ import io.resys.limaone.model.FlowTask.FlowTaskPropType;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.FlowTaskProgram;
+import io.resys.limaone.program.ImmutableFlowTaskResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 
 public class FlowTaskProgramImpl implements FlowTaskProgram {
   private static final long serialVersionUID = 5909985495850322300L;
 
   private final FlowTask_AST ast;
-  
   private final FlowTaskExecutable executable;
   
   private final ProgramStatus status; 
@@ -91,13 +92,47 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
   }
   @Override
   public FlowTaskExecutor run(ProgramInput input, Runtime runtime) {
-    // TODO Auto-generated method stub
-    return null;
+    return new FlowTaskExecutor() {
+      @Override
+      public FlowTaskResult andGetBody() {
+        return execute(input, runtime);
+      }
+    };
   }
   @Override
   public FlowTaskExecutor run(Map<String, Serializable> input) {
-    // TODO Auto-generated method stub
-    return null;
+    return run(DefaultProgramInput.of(input), DefaultRuntime.empty());
   }
-
+  
+  
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  private FlowTaskResult execute(ProgramInput input, Runtime runtime) {
+    if(this.status != ProgramStatus.UP) {
+      final var errors = String.join("\n", this.errors.stream().map(e -> e.getMsg()).toList());
+      throw new ProgramException(
+          "Can't run program: " + this.getName() + " because of errors:\n" + errors);
+    }
+    
+    switch (this.getExecutorType()) {
+      case TYPE_0: {
+        final var exec = (ServiceExecutorType0) executable;
+        final var value = exec.execute();
+        return ImmutableFlowTaskResult.builder().value(value).build();
+      }
+      case TYPE_1: { 
+        final var param1 = input.getValue(ast.getTypeDef0());
+        final var exec = (ServiceExecutorType1) executable;
+        final var value = exec.execute(param1);
+        return ImmutableFlowTaskResult.builder().value(value).build();
+      }
+      case TYPE_2: {
+        final var param1 = input.getValue(ast.getTypeDef0());
+        final var param2 = input.getValue(ast.getTypeDef1());
+        final var exec = (ServiceExecutorType2) executable;
+        final var value = exec.execute(param1, param2);
+        return ImmutableFlowTaskResult.builder().value(value).build();
+      }
+      default: throw new ProgramException("Can't find/call execute method!");
+    }    
+  }
 }
