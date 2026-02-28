@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.decisiontable;
+package io.resys.limaone.spi.program;
 
 import java.util.Collections;
 import java.util.List;
@@ -85,7 +85,7 @@ public class DecisionProgramImpl implements DecisionProgram {
   @Override
   public DecisionExecutor run(ProgramInput input, Runtime runtime) {
     
-    return null;
+    return new DecisionProgramExecutor(ast, input, runtime);
   }
   @Override
   public DecisionExecutor run(Map<String, ?> input) {

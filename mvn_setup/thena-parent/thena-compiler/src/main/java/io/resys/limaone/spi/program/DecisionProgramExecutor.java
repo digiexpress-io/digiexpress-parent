@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.decisiontable;
+package io.resys.limaone.spi.program;
 
 /*-
  * #%L
@@ -28,24 +28,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.hdes.client.api.exceptions.DecisionProgramException;
-import io.resys.hdes.client.api.programs.DecisionProgram;
-import io.resys.hdes.client.api.programs.DecisionProgram.DecisionLog;
-import io.resys.hdes.client.api.programs.DecisionProgram.DecisionLogEntry;
-import io.resys.hdes.client.api.programs.DecisionProgram.DecisionResult;
-import io.resys.hdes.client.api.programs.DecisionProgram.DecisionRow;
-import io.resys.hdes.client.api.programs.DecisionProgram.DecisionRowAccepts;
-import io.resys.hdes.client.api.programs.ImmutableDecisionLog;
-import io.resys.hdes.client.api.programs.ImmutableDecisionLogEntry;
-import io.resys.hdes.client.api.programs.ImmutableDecisionResult;
 import io.resys.hdes.client.api.programs.Program.ProgramContext;
+import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.DecisionTable_AST.DecisionRowNode;
+import io.resys.limaone.program.DecisionProgram;
+import io.resys.limaone.program.DecisionProgram.DecisionLog;
+import io.resys.limaone.program.DecisionProgram.DecisionLogEntry;
+import io.resys.limaone.program.DecisionProgram.DecisionResult;
+import io.resys.limaone.program.DecisionProgram.DecisionRowAccepts;
+import io.resys.limaone.spi.compiler.decisiontable.DecisionRowException;
+import io.resys.limaone.program.ImmutableDecisionLog;
+import io.resys.limaone.program.ImmutableDecisionLogEntry;
+import io.resys.limaone.program.ImmutableDecisionResult;
+import io.resys.limaone.program.ProgramInput;
+import io.resys.limaone.program.Runtime;
 
 public class DecisionProgramExecutor {
   
-  public static DecisionResult run(DecisionProgram program, ProgramContext context) {
+  public static DecisionResult run(DecisionTable_AST ast, ProgramInput input, Runtime runtime) {
     final var decisions = ImmutableDecisionResult.builder();
     
-    Iterator<DecisionRowNode> it = program.getRows().iterator();
+    Iterator<DecisionRowNode> it = ast.getRows().iterator();
     while(it.hasNext()) {
       final var node = it.next();
       final var decision = visitRow(node, context);
