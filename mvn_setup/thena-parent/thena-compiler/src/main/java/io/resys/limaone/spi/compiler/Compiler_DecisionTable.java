@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.decisiontable;
+package io.resys.limaone.spi.compiler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,9 +22,7 @@ import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
-import io.resys.limaone.spi.compiler.CompilableUnit;
 import io.resys.limaone.spi.program.DecisionProgramImpl;
-import io.resys.limaone.spi.program.ProgramException;
 import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -128,7 +126,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
                   .value(typeDef.toValue(value.getValue()))
                   .build());
             } catch(Exception e) {
-              throw new DecisionRowException(
+              throw new CompilerException(
                   row.getOrder(), typeDef.getOrder(),
                   "Failed to create expression: '" + value.getValue() + "'!" +
                   System.lineSeparator() + e.getMessage(), e);
@@ -139,11 +137,10 @@ public class Compiler_DecisionTable implements CompilableUnit {
         result.add(programRow.build());
       }
       return result;
-    } catch(ProgramException | DecisionRowException ex) {
+    } catch(CompilerException ex) {
       throw ex;
-      
     } catch(Exception e) {
-      throw new ProgramException(
+      throw new CompilerException(
           "Failed to create decision program from ast: '" + ast.getName() + "'!" +
           System.lineSeparator() + e.getMessage(), e);
     }

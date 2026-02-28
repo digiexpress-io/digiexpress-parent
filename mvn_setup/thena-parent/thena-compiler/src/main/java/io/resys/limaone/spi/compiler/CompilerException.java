@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.decisiontable;
+package io.resys.limaone.spi.compiler;
 
 /*-
  * #%L
@@ -20,14 +20,20 @@ package io.resys.limaone.spi.compiler.decisiontable;
  * #L%
  */
 
-public class DecisionRowException extends RuntimeException {
+public class CompilerException extends RuntimeException {
 
   private static final long serialVersionUID = -7154685569622201632L;
 
   private final Integer row;
   private final Integer column;
   
-  public DecisionRowException(int row, int column, String message, Throwable cause) {
+  public CompilerException(String message, Throwable cause) {
+    super(message, cause);
+    row = null;
+    column = null;
+  }
+  
+  public CompilerException(int row, int column, String message, Throwable cause) {
     super(message, cause);
     this.row = row;
     this.column = column;

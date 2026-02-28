@@ -36,7 +36,7 @@ import io.resys.limaone.program.DecisionProgram.DecisionLog;
 import io.resys.limaone.program.DecisionProgram.DecisionLogEntry;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
 import io.resys.limaone.program.DecisionProgram.DecisionRowAccepts;
-import io.resys.limaone.spi.compiler.decisiontable.DecisionRowException;
+import io.resys.limaone.spi.compiler.CompilerException;
 import io.resys.limaone.program.ImmutableDecisionLog;
 import io.resys.limaone.program.ImmutableDecisionLogEntry;
 import io.resys.limaone.program.ImmutableDecisionResult;
@@ -70,7 +70,7 @@ public class DecisionProgramExecutor {
   
   public static Map<String, Serializable> get(DecisionResult program) {
     if(program.getMatches().size() > 1) {
-      throw new DecisionRowException("Expected 0-1 results but was: " + program.getMatches().size() + "!");
+      throw new CompilerException("Expected 0-1 results but was: " + program.getMatches().size() + "!");
     } else if(program.getMatches().size() == 1) {
       return toValues(program.getMatches().get(0));
     }
@@ -101,7 +101,7 @@ public class DecisionProgramExecutor {
     case ALL:
       // match all
       return false;
-    default: throw new DecisionRowException("Unknown hit policy: " + hitPolicy + "!");
+    default: throw new CompilerException("Unknown hit policy: " + hitPolicy + "!");
     }
   }
 
@@ -115,7 +115,7 @@ public class DecisionProgramExecutor {
       try {
         match = (Boolean) input.getExpression().run(input.getKey().toValue(contextEntity)).getValue();
       } catch(Exception e) {
-        throw new DecisionRowException(
+        throw new CompilerException(
             "Failed to evaluate expression: '" + input.getExpression().getSrc() + "'"
             + ", because: " + e.getMessage()
             + "!", e);    
