@@ -9,7 +9,7 @@ import org.immutables.value.Value;
 import io.resys.limaone.model.Parameter;
 import jakarta.annotation.Nullable;
 
-public interface Runtime {
+public interface Runtime extends Serializable {
   Heap getHeap();
   EnvironmentProperties getProperties();
   ProgramParameters getParameters();

@@ -101,10 +101,9 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
   }
   @Override
   public FlowTaskExecutor run(Map<String, Serializable> input) {
-    return run(DefaultProgramInput.of(input), DefaultRuntime.empty());
+    final var runtime = DefaultRuntime.empty();
+    return run(DefaultProgramInput.of(input, runtime), runtime);
   }
-  
-  
   @SuppressWarnings({"rawtypes", "unchecked"})
   private FlowTaskResult execute(ProgramInput input, Runtime runtime) {
     if(this.status != ProgramStatus.UP) {
@@ -112,14 +111,13 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
       throw new ProgramException(
           "Can't run program: " + this.getName() + " because of errors:\n" + errors);
     }
-    
     switch (this.getExecutorType()) {
       case TYPE_0: {
         final var exec = (ServiceExecutorType0) executable;
         final var value = exec.execute();
         return ImmutableFlowTaskResult.builder().value(value).build();
       }
-      case TYPE_1: { 
+      case TYPE_1: {
         final var param1 = input.getValue(ast.getTypeDef0());
         final var exec = (ServiceExecutorType1) executable;
         final var value = exec.execute(param1);

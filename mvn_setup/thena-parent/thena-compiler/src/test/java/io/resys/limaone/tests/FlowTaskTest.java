@@ -66,28 +66,25 @@ public class FlowTaskTest {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
+
   @Test
   public void type0() throws IOException {
     final var envir = compile("flow-task/Type1Service.txt");
 
     // map conversion
     final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
-    
     Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result.getValue()).encode());
   }
-  
-  
+
   @Test
   public void type2() throws IOException {
     final var envir = compile("flow-task/Type2Service.txt");
 
     // map conversion
     final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
-    
-    Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result).encode());
+    Assertions.assertEquals("{\"sum\":15}", JsonObject.mapFrom(result.getValue()).encode());
   }
-  
+
   @ServiceData
   @Value.Immutable
   public interface TestServiceInput {
