@@ -39,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Compiler_Flow implements CompilableUnit {
   private final AST_Parser parser;
+  @SuppressWarnings("unused")
   private final ModelWorld world;
   private final Model<Flow> flow;
   private static final FlowProgramStepEndPointer END_STEP_POINTER = ImmutableFlowProgramStepEndPointer.builder().type(FlowProgramStepPointerType.END).build();
