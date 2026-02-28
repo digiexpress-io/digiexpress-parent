@@ -105,7 +105,7 @@ public class ImmutableArticleProgram implements ArticleProgram {
           return isUserAuthenticated;  
         }
      */
-    todo
+    //todo
     return null;
   }
 

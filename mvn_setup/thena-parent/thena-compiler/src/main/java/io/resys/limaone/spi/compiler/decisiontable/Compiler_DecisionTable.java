@@ -17,6 +17,7 @@ import io.resys.limaone.program.DecisionProgram.DecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRowAccepts;
 import io.resys.limaone.program.ImmutableDecisionRowReturns;
+import io.resys.limaone.program.ImmutableProgramMessage;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
@@ -52,17 +53,22 @@ public class Compiler_DecisionTable implements CompilableUnit {
       }
       @Override
       public Program close(Artifact artifact) {
-        final List<ProgramAssociation> assocs = new ArrayList<>();
-        final List<ProgramMessage> errors = new ArrayList<>();
+        final List<ProgramAssociation> assocs = artifact.getAssociations();
+        final List<ProgramMessage> errors = new ArrayList<>(artifact.getErrors());
         
         List<DecisionRow> rows;
-        ProgramStatus status;
+        ProgramStatus status = artifact.getProgramStatus();
         try {
           rows = createRows(ast);
           status = ProgramStatus.UP;
         } catch(Exception e) {
           rows = Collections.emptyList();
           status = ProgramStatus.PROGRAM_ERROR;
+          errors.add(ImmutableProgramMessage.builder()
+              .exception(e)
+              .id("decision-table-compiler-exception")
+              .msg(e.getMessage())
+              .build());
         }
         
         final var program = new DecisionProgramImpl(ast, status, rows, errors, errors, assocs);
@@ -73,9 +79,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
   }
   
   private List<DecisionRow> createRows(DecisionTable_AST ast) {
-    
-    final List<DecisionRow> result = new ArrayList<>();
-    
+    final List<DecisionRow> result = new ArrayList<>();    
     try {
       final var accepts = ast.getHeaders().getAcceptDefs().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
       
@@ -118,7 +122,6 @@ public class Compiler_DecisionTable implements CompilableUnit {
                   .value(typeDef.toValue(value.getValue()))
                   .build());
             } catch(Exception e) {
-
               throw new DecisionRowException(
                   row.getOrder(), typeDef.getOrder(),
                   "Failed to create expression: '" + value.getValue() + "'!" +
