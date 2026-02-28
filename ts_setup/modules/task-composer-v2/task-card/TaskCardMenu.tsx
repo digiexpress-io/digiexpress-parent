@@ -53,19 +53,19 @@ export const TaskCardMenu: React.FC<CardMenuProps> = (props) => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
       {props.showReview && (
-        <MenuItem onClick={handleReview}>{intl.formatMessage({ id: 'taskcard.menu.option.formReview', defaultMessage: 'Show form review' })}</MenuItem>
+        <MenuItem onClick={handleReview}>{intl.formatMessage({ id: 'taskcard.menu.option.formReview' })}</MenuItem>
       )}
 
       {props.showEdit && (
-        <MenuItem onClick={handleEdit}>{intl.formatMessage({ id: 'taskcard.menu.option.editSection', defaultMessage: 'Edit this section' })}</MenuItem>
+        <MenuItem onClick={handleEdit}>{intl.formatMessage({ id: 'taskcard.menu.option.editSection' })}</MenuItem>
       )}
 
       {props.showFlashyToggle && (
         <MenuItem onClick={handleFlashyToggle}>
           {props.flashy ? (
-            intl.formatMessage({ id: 'taskcard.menu.option.removeFlashy', defaultMessage: 'Remove Flashy' })
+            intl.formatMessage({ id: 'taskcard.menu.option.removeFlashy' })
           ) : (
-            intl.formatMessage({ id: 'taskcard.menu.option.setFlashy', defaultMessage: 'Make Flashy' })
+            intl.formatMessage({ id: 'taskcard.menu.option.setFlashy' })
           )
           }
         </MenuItem>

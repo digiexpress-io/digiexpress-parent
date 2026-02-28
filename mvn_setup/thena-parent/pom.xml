@@ -30,6 +30,7 @@
     <module>thena-contract-client</module>
     <module>thena-ledger-client</module>
     <module>thena-cockpit-client</module>
+    <module>thena-fs-client</module>
   </modules>
 
 </project>

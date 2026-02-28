@@ -59,7 +59,7 @@ public interface CommitQuery {
    * @param pathExpr lambda that configures the path expression builder
    * @return query builder for method chaining
    */
-  CommitQuery treePath(Consumer<PathExpressionBuilder> pathExpr);
+  CommitQuery path(Consumer<PathExpressionBuilder> pathExpr);
   
   /**
    * Applies complex filename filtering to find commits affecting files with specific names.
@@ -68,25 +68,7 @@ public interface CommitQuery {
    * @param nameExpr lambda that configures the name expression builder
    * @return query builder for method chaining
    */
-  CommitQuery treeName(Consumer<NameExpressionBuilder> nameExpr);
-
-  /**
-   * Excludes node properties from the result set to reduce payload size.
-   * When true, properties like labels, comments, permissions will not be loaded.
-   * 
-   * @param excludeProps true to exclude properties, false to include them
-   * @return query builder for method chaining
-   */
-  CommitQuery excludeProps(boolean excludeProps);
-  
-  /**
-   * Excludes commit objects from the result set to reduce payload size.
-   * When true, only node information is returned without commit details.
-   * 
-   * @param excludeCommits true to exclude commits, false to include them
-   * @return query builder for method chaining
-   */
-  CommitQuery excludeCommits(boolean excludeCommits);
+  CommitQuery name(Consumer<NameExpressionBuilder> nameExpr);
   
   /**
    * Excludes blob content from the result set to reduce payload size.
@@ -103,7 +85,7 @@ public interface CommitQuery {
    * 
    * @return reactive stream containing optional commit result with associated data
    */
-  Uni<Optional<CommitsByNode>> findOne();
+  Uni<Optional<CommitsByObject>> findOne();
   
   /**
    * Executes query expecting exactly one commit result.
@@ -111,7 +93,7 @@ public interface CommitQuery {
    * 
    * @return reactive stream containing the single matching commit with associated data
    */
-  Uni<CommitsByNode> getOne();
+  Uni<CommitsByObject> getOne();
   
   /**
    * Executes query returning all matching commits as a reactive stream.
@@ -119,18 +101,22 @@ public interface CommitQuery {
    * 
    * @return reactive stream of all matching commits with their associated data
    */
-  Multi<CommitsByNode> findAll();
+  Multi<CommitsByObject> findAll();
   
   /**
    * Aggregated result containing a filesystem node and all commits that modified it,
    * along with the file content from each commit. Provides a complete view of how
    * a file or folder evolved over time.
    */
-  interface CommitsByNode {
+  
+  interface CommitsByObject {
+    // target object that was changed
+    String getObjectId();
+    
     /**
      * @return the filesystem node (file or folder) that was tracked
      */
-    Node getNode();
+    Map<String, Node> getNodesById();
     
     /**
      * @return map of commit ID to commit object for all commits that modified this node
@@ -138,13 +124,13 @@ public interface CommitQuery {
     Map<String, Commit> getCommitsById();
     
     /**
-     * @return map of commit ID to file content for each commit (empty for folders)
+     * @return map of blob ID to file content for each blob (empty for folders)
      */
-    Map<String, Blob> getBlobsByCommitId();
+    Map<String, Blob> getBlobsById();
     
     /**
-     * @return map of commit ID to node properties for each commit (may be empty if excluded)
+     * @return map of props ID to prop for each props
      */
-    Map<String, Props> getPropsByCommitId();
+    Map<String, Props> getPropsById();
   }
 }

@@ -50,6 +50,12 @@
       "@dxs-ts/eveli-primitives": [
         "../eveli-primitives/index.ts"
       ],
+      "@dxs-ts/fs-api": [
+        "../fs-api/index.ts"
+      ],
+      "@dxs-ts/fs-composer": [
+        "../fs-composer/index.ts"
+      ],
       "@dxs-ts/user-profile": [
         "../user-profile/index.ts"
       ],
@@ -136,6 +142,12 @@
       "path": "../eveli-primitives"
     },
     {
+      "path": "../fs-api"
+    },
+    {
+      "path": "../fs-composer"
+    },
+    {
       "path": "../user-profile"
     },
     {
@@ -174,9 +186,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2025-12-30T10:28:52.095Z",
+    "at": "2026-02-17T10:11:51.051Z",
     "forModule": "@dxs-ts/eveli-routes",
-    "fromRegistry": "ea92967e2c4f",
+    "fromRegistry": "599b57f47d17",
     "alias": {
       "@dxs-ts/eveli-routes": [
         "../xui-datetime"

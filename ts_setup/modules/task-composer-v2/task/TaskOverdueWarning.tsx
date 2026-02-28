@@ -75,7 +75,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography textAlign='center' sx={{ ...props.style.bodyTypographySmall }}>
-            {intl.formatMessage({ id: 'task.overdue.daysLeft', defaultMessage: `${taskInfo.days} day(s) left to complete task` })}
+            {intl.formatMessage({ id: 'task.overdue.daysLeft' }, { days: taskInfo.days })}
           </Typography>
         </StyledTaskOverrdueWarning>
       );
@@ -85,7 +85,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography textAlign='center' sx={{ ...props.style.bodyTypographySmall ?? undefined }}>
-            {intl.formatMessage({ id: 'task.overdue.dueToday', defaultMessage: 'Task is due today!' })}
+            {intl.formatMessage({ id: 'task.overdue.dueToday' })}
           </Typography>
         </StyledTaskOverrdueWarning>
       )
@@ -95,7 +95,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography sx={{ ...props.style.bodyTypographySmall }}>
-            {intl.formatMessage({ id: 'task.overdue.closedOverdue', defaultMessage: `Task was closed ${taskInfo.days} day(s) overdue` })}
+            {intl.formatMessage({ id: 'task.overdue.closedOverdue' }, { days: taskInfo.days })}
           </Typography>
         </StyledTaskOverrdueWarning>
       )
@@ -105,7 +105,7 @@ export const TaskOverdueWarning: React.FC<TaskOverdueWarningProps> = ({ ...props
         <StyledTaskOverrdueWarning className={classes.root} ownerState={{ ...props, status: taskInfo.status }}>
           <ErrorOutlinedIcon />
           <Typography sx={{ ...props.style.bodyTypographySmall }}>
-            {intl.formatMessage({ id: 'task.overdue', defaultMessage: `Task is ${taskInfo.days} day(s) overdue` })}
+            {intl.formatMessage({ id: 'task.overdue' }, { days: taskInfo.days })}
           </Typography>
         </StyledTaskOverrdueWarning>
       )

@@ -86,6 +86,12 @@
       "@dxs-ts/eveli-primitives": [
         "../eveli-primitives/index.ts"
       ],
+      "@dxs-ts/fs-api": [
+        "../fs-api/index.ts"
+      ],
+      "@dxs-ts/fs-composer": [
+        "../fs-composer/index.ts"
+      ],
       "@dxs-ts/eveli-intl": [
         "../eveli-intl/index.ts"
       ],
@@ -190,6 +196,12 @@
       "path": "../eveli-primitives"
     },
     {
+      "path": "../fs-api"
+    },
+    {
+      "path": "../fs-composer"
+    },
+    {
       "path": "../eveli-intl"
     },
     {
@@ -210,9 +222,9 @@
   ],
   "_generated": {
     "by": "ModuleTSConfigGenerator",
-    "at": "2026-01-30T07:17:51.545Z",
+    "at": "2026-02-17T10:11:51.051Z",
     "forModule": "@dxs-ts/eveli-ide",
-    "fromRegistry": "bdc520919c83",
+    "fromRegistry": "599b57f47d17",
     "alias": {
       "@dxs-ts/eveli-ide": [
         "../task-composer-v2"

@@ -16,7 +16,7 @@ export const TaskFeedbackSubcategory: React.FC<TaskFeedbackSubcategoryProps> = (
   if (!subcategory) {
     return (
       <TaskFeedbackSubcategoryRoot>
-        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.subcategory.none', defaultMessage: 'No subcategory detected' })}</Typography>
+        <Typography color='error' sx={{ ...style.bodyTypography }}>{intl.formatMessage({ id: 'task.subcategory.none' })}</Typography>
       </TaskFeedbackSubcategoryRoot>)
   }
 

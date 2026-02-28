@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@emotion/styled": [
+        "../../node_modules/@emotion/styled"
+      ],
+      "@dxs-ts/eveli-primitives": [
+        "../eveli-primitives/index.ts"
+      ],
+      "@dxs-ts/fs-api": [
+        "../fs-api/index.ts"
+      ]
+    }
+  },
+  "extends": "../../tsconfig.json",
+  "references": [
+    {
+      "path": "../eveli-primitives"
+    },
+    {
+      "path": "../fs-api"
+    }
+  ],
+  "_generated": {
+    "by": "ModuleTSConfigGenerator",
+    "at": "2026-02-17T09:56:55.036Z",
+    "forModule": "@dxs-ts/eveli-tree",
+    "fromRegistry": "dcc7f3b9e54b",
+    "alias": {
+      "@dxs-ts/eveli-tree": [
+        "../fs-api"
+      ]
+    }
+  }
+}

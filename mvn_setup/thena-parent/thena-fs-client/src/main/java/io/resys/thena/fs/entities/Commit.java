@@ -30,12 +30,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
-import jakarta.annotation.Nullable;
-
 @Value.Immutable
 @JsonSerialize(as = ImmutableCommit.class)
 @JsonDeserialize(as = ImmutableCommit.class)
-public interface Commit extends FileSystemEntity {
+public interface Commit extends Entity {
   
   String getId();
   OffsetDateTime getCommitCreatedAt();
@@ -45,19 +43,10 @@ public interface Commit extends FileSystemEntity {
   Optional<String> getParentId();
   Optional<String> getMergeId();
 
-  @Value.Auxiliary
-  @Nullable 
-  CommitTransitives getTransitives();
 
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.COMMIT; 
-  }
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCommitTransitives.class)
-  @JsonDeserialize(as = ImmutableCommitTransitives.class)
-  interface CommitTransitives {
   }
 
   // H(commit) = μ(H(tree) ⊕ H(parent) ⊕ H(merge) ⊕ author ⊕ timestamp ⊕ message)

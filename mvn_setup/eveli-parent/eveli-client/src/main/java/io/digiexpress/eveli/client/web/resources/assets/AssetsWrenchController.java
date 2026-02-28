@@ -52,7 +52,6 @@ import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.hdes.client.api.HdesComposer.TagDiff;
 import io.resys.hdes.client.api.HdesComposer.UpdateEntity;
 import io.resys.hdes.client.api.HdesStore.CommitLog;
-import io.resys.hdes.client.api.HdesStore.HistoryEntity;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ImmutableDiffRequest;
 import io.resys.hdes.client.api.ast.AstCommand;
@@ -165,11 +164,6 @@ public class AssetsWrenchController {
     return getComposer()
         .onItem().transformToUni(composer -> composer.withBranch(branchName).copyAs(entity)
         .onItem().invoke(() -> envir.invalidateCache()));
-  }
-
-  @GetMapping(path = "/history/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Uni<HistoryEntity> history(@RequestParam("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.getHistory(id));
   }
 
   @GetMapping(path = "/diff", produces = MediaType.APPLICATION_JSON_VALUE)

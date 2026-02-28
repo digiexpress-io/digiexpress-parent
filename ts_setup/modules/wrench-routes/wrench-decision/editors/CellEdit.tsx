@@ -14,6 +14,23 @@ import { ValueSetChooser } from './builders/ValueSetChooser';
 import { ValueSetChooserSimple } from './builders/ValueSetChooserSimple';
 import { CancelButton } from '@dxs-ts/eveli-primitives';
 
+const trimOuterWhitespace = (value: unknown): unknown => {
+  if (value == null) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+    if (Array.isArray(value)) {
+      return value.map(trimOuterWhitespace);
+    }
+    if (typeof value === 'object') {
+      return Object.fromEntries(
+        Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, trimOuterWhitespace(v)])
+      );
+    }
+    return value;
+  };
 
 interface CellEditProps {
   dt:HdesApi.AstDecision,
@@ -106,7 +123,8 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
         </Button>
         <CancelButton onClick={props.onClose} />
         <Button onClick={() => {
-          const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
+          const normalized = trimOuterWhitespace(value.value);
+          const command:HdesApi.AstCommand = { id: props.cell.id, value: normalized as any, type: 'SET_CELL_VALUE' };
           props.onChange(command);
           props.onClose();
         }}>

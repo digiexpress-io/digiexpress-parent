@@ -87,7 +87,7 @@
       <groupId>jakarta.json</groupId>
       <artifactId>jakarta.json-api</artifactId>
     </dependency>
-   <dependency>
+    <dependency>
       <groupId>com.github.vertical-blank</groupId>
       <artifactId>sql-formatter</artifactId>
     </dependency>

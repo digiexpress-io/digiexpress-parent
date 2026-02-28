@@ -16,13 +16,13 @@ function Component() {
   const { mode } = Route.useSearch();
   const location = useLocation();
 
-  // IMPORTANT: Let fileexplorer child route handle its own EveliApp layout
+  // IMPORTANT: Let filesystem child route handle its own EveliApp layout
   // This prevents nested EveliApp components which cause:
   // - Duplicate CSS classes with same specificity
   // - Conflicting drawer width settings (parent=300px vs child=450px)
   // - Multiple shell layouts stacking on top of each other
-  // Instead of wrapping fileexplorer in our EveliApp, let it render its own
-  if (location.pathname.includes('/fileexplorer')) {
+  // Instead of wrapping filesystem in our EveliApp, let it render its own
+  if (location.pathname.includes('/filesystem')) {
     return <Outlet />;
   }
 

@@ -64,7 +64,7 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ open, onClose })
       slots={{ transition: Zoom }}
     >
       <DialogTitle>
-        {intl.formatMessage({ id: 'task.edit' })} {task.taskRef ?? 'no task reference id'}
+        {intl.formatMessage({ id: 'task.edit' })} {task.taskRef ?? intl.formatMessage({ id: 'task.reference.missing' })}
       </DialogTitle>
 
       <DialogContent>

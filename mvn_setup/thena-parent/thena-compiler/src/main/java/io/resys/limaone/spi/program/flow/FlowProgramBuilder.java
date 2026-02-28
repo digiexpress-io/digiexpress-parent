@@ -1,0 +1,235 @@
+package io.resys.limaone.spi.program.flow;
+
+/*-
+ * #%L
+ * hdes-client-api
+ * %%
+ * Copyright (C) 2020 - 2021 Copyright 2020 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+
+import io.resys.limaone.ast.Flow_AST;
+import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_AST.FlowInputNode;
+import io.resys.limaone.ast.Flow_AST.FlowSwitchNode;
+import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.FlowProgram;
+import io.resys.limaone.program.FlowProgram.FlowProgramStep;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepBody;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepConditionalThenPointer;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepEndPointer;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepPointer;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepPointerType;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepRefType;
+import io.resys.limaone.program.ImmutableFlowProgramStep;
+import io.resys.limaone.program.ImmutableFlowProgramStepBody;
+import io.resys.limaone.program.ImmutableFlowProgramStepConditionalThenPointer;
+import io.resys.limaone.program.ImmutableFlowProgramStepEndPointer;
+import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
+import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
+import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
+import io.resys.limaone.spi.parameter.Parameter_Factory;
+import io.resys.limaone.spi.program.ProgramException;
+import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
+
+
+public class FlowProgramBuilder {
+  private static final FlowProgramStepEndPointer END_STEP_POINTER = ImmutableFlowProgramStepEndPointer.builder().type(FlowProgramStepPointerType.END).build();
+  public static final FlowProgramStep END_STEP = ImmutableFlowProgramStep.builder()
+      .id("end")
+      .pointer(END_STEP_POINTER)
+      .build();
+  public static final String OBJECT_INPUT_FLAG = "OBJECT_INPUT";
+
+  private final Map<String, FlowProgramStep> steps = new HashMap<>();
+  private final Map<String, FlowTaskNode> tasksById = new HashMap<>();
+  
+
+  public FlowProgram build(Flow_AST ast) {
+    final var firstTask = visitTasksById(ast);
+    final var firstStep = firstTask == null ? END_STEP: visitTask(firstTask);
+    return ImmutableFlowProgram.builder()
+        .startStepId(firstStep.getId())
+        .steps(steps)
+        .acceptDefs(visitAcceptDefs(ast))
+        .build();
+  }
+  
+
+  private FlowTaskNode visitTasksById(Flow_AST ast) {
+    FlowTaskNode firstTask = null;
+    final var data = ast.getRoot();
+    for(final var task : data.getTasks().values()) {
+      tasksById.put(AstFlowNodesFactory.getStringValue(task.getId()), task);
+      if(task.getOrder() == 0) {
+        firstTask = task;
+      }
+    }
+    return firstTask;
+  }
+
+  private FlowProgramStep visitTask(FlowTaskNode task) {
+    String taskId = AstFlowNodesFactory.getStringValue(task.getId());
+    if(steps.containsKey(taskId)) {
+      return steps.get(taskId);
+    }
+    steps.put(taskId, null);
+    
+    final var body = visitStepBody(task);
+    final var pointer = visitStepPointer(task);
+    
+    final var step = ImmutableFlowProgramStep.builder()
+        .id(taskId)
+        .body(body)
+        .pointer(pointer)
+        .build();
+    
+    steps.put(step.getId(), step);
+    return step;
+  }
+
+  public FlowProgramStepBody visitStepBody(FlowTaskNode task) {
+    if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
+      return null;
+    }
+
+    final var collection = task.getReturns() != null ? AstFlowNodesFactory.getBooleanValue(task.getReturns().getCollection()) : AstFlowNodesFactory.getBooleanValue(task.getRef().getCollection());
+    final var ref =  task.getReturns() != null ? "" : AstFlowNodesFactory.getStringValue(task.getRef().getRef());
+    
+    final var inputs = new HashMap<String, String>();
+    
+    // use reference input
+    if(task.getRef() != null) {
+      if (task.getRef().getObjectInput() != null) {
+        inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
+      } else {
+        for (Map.Entry<String, AnyFlowNode> entry : task.getRef().getInputs().entrySet()) {
+          inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+        }
+      }
+      // use returns input mapping
+    } else {
+      if (task.getReturns().getObjectInput() != null) {
+        inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
+      } else {
+        for (Map.Entry<String, AnyFlowNode> entry : task.getReturns().getInputs().entrySet()) {
+          inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+        }
+      }
+    }
+    
+    final FlowProgramStepRefType refType;
+    if(task.getDecisionTable() != null) {
+      refType = FlowProgramStepRefType.DT;
+    } else if(task.getService() != null) {
+      refType = FlowProgramStepRefType.SERVICE;
+    } else {
+      refType = FlowProgramStepRefType.RETURNS;
+    }
+    return ImmutableFlowProgramStepBody.builder()
+        .ref(ref)
+        .refType(refType)
+        .collection(collection)
+        .inputMapping(inputs)
+        .build();
+  }
+  
+
+  private FlowProgramStepPointer visitStepPointer(FlowTaskNode task) {
+    if(!task.getSwitch().isEmpty()) {
+      final var pointer = ImmutableFlowProgramStepWhenThenPointer.builder().type(FlowProgramStepPointerType.SWITCH);
+      final var decisions = new ArrayList<FlowSwitchNode>(task.getSwitch().values());
+      Collections.sort(decisions, (o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()));
+      decisions.forEach(d -> {
+        
+        final var condition = visitSwitchNode(d);
+        if(!condition.getStepId().equals(END_STEP.getId())) {
+          visitTask(tasksById.get(condition.getStepId()));
+        }
+        pointer.addConditions(condition);
+        
+        
+      });
+      return pointer.build();
+    }
+    
+    final var thenId = AstFlowNodesFactory.getStringValue(task.getThen());
+    if(thenId != null && !thenId.equals(END_STEP.getId())) {
+      visitTask(tasksById.get(thenId));
+      return ImmutableFlowProgramStepThenPointer.builder()
+          .type(FlowProgramStepPointerType.THEN)
+          .stepId(thenId)
+          .build();
+    }
+    
+    return END_STEP_POINTER;
+  }
+  
+  private FlowProgramStepConditionalThenPointer visitSwitchNode(FlowSwitchNode decision) {
+    final var condition = ImmutableFlowProgramStepConditionalThenPointer.builder();
+    final var decisionId = decision.getKeyword();
+    final var when = AstFlowNodesFactory.getStringValue(decision.getWhen());
+    final var thenValue = AstFlowNodesFactory.getStringValue(decision.getThen());    
+    try {
+      final var isTrue = when == null || when.isEmpty();
+      final var expression = isTrue ? 
+          ExpressionProgramFactory.build("true", ValueType.FLOW_CONTEXT) :
+          ExpressionProgramFactory.build(when, ValueType.FLOW_CONTEXT);
+      
+      condition.expression(expression).stepId(thenValue);
+    } catch(Exception e) {
+      final var message = "Failed to evaluate expression: \"" + when + "\" in flow decision: " + decisionId + "!" + System.lineSeparator() + e.getMessage();
+      throw new ProgramException(message, e);
+    } 
+    return condition.build();
+  }
+  
+  private Collection<Parameter> visitAcceptDefs(Flow_AST ast) {
+    Map<String, FlowInputNode> inputs = ast.getRoot().getInputs();
+
+    int index = 0;
+    final Collection<Parameter> result = new ArrayList<>();
+    for (Map.Entry<String, FlowInputNode> entry : inputs.entrySet()) {
+      if (entry.getValue().getType() == null) {
+        continue;
+      }
+      try {
+        ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
+        boolean required = AstFlowNodesFactory.getBooleanValue(entry.getValue().getRequired());
+        result.add(Parameter_Factory.newParam()
+            .id(entry.getValue().getStart() + "")
+            .order(index++)
+            .name(entry.getKey()).valueType(valueType).direction(Direction.IN).required(required)
+            .values(AstFlowNodesFactory.getStringValue(entry.getValue().getDebugValue()))
+            .build());
+        
+      } catch (Exception e) {
+        final String msg = String.format("Failed to convert data type from: %s, error: %s", entry.getValue().getType().getValue(), e.getMessage());
+        throw new ProgramException(msg, e);
+      }
+    }
+    return Collections.unmodifiableCollection(result);
+  }
+}

@@ -21,8 +21,8 @@ package io.resys.thena.fs.entities;
  */
 
 import java.nio.charset.StandardCharsets;
-import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
-import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -40,16 +39,15 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableBlob.class)
 @JsonDeserialize(as = ImmutableBlob.class)
-public interface Blob extends FileSystemEntity {
+public interface Blob extends Entity {
   
   String getId();
   String getBlobType();
-  JsonObject getBlobValue();
-
-  @Value.Auxiliary
-  @Nullable 
-  BlobTransitives getTransitives();
-
+  Optional<String> getBlobClass();
+  
+  // WARNINING: null only if this is not loaded on PURPOSE
+  @Nullable JsonObject getBlobValue();
+  
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.BLOB; 
@@ -57,23 +55,24 @@ public interface Blob extends FileSystemEntity {
   
   @Value.Check
   default void check() {
-    RepoAssert.isTrue(!getBlobValue().isEmpty(), () -> "blobValue cannot be empty");
+    //RepoAssert.isTrue(!getBlobValue().isEmpty(), () -> "blobValue cannot be empty");
   }
 
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableBlobTransitives.class)
-  @JsonDeserialize(as = ImmutableBlobTransitives.class)
-  interface BlobTransitives {
-    OffsetDateTime getCreatedAt();
-    OffsetDateTime getUpdatedAt();
-  }
-  
-  
-  // H(blob) = μ(blob_value)
-  public static ImmutableBlob.Builder newInstance(JsonObject content, String type) {
-    final var hash = Hashing.murmur3_128().hashString(canonicalizeJson(content), StandardCharsets.UTF_8).toString();
+
+  // H(blob) = μ(blob_value ⊕ type ⊕ fileClass)
+  public static ImmutableBlob.Builder newInstance(JsonObject content, String type, String fileClass) {    
+    final var hashString = new StringBuilder()
+      .append(canonicalizeJson(content))
+      .append("type ").append(type)
+      ;
+    if(fileClass != null) {
+      hashString.append("class ").append(fileClass);
+    }
+    
+    final var hash = Hashing.murmur3_128().hashString(hashString.toString(), StandardCharsets.UTF_8).toString();
     return ImmutableBlob.builder()
         .id(hash)
+        .blobClass(Optional.ofNullable(fileClass))
         .blobType(type)
         .blobValue(content);
   }

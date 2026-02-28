@@ -33,17 +33,19 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.fs.api.FileSystem;
-import io.resys.thena.fs.api.blobs.BlobQuery;
-import io.resys.thena.fs.api.branches.BranchBuilder;
 import io.resys.thena.fs.api.branches.BranchQuery;
+import io.resys.thena.fs.api.branches.CreateBranch;
 import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.CommitQuery;
-import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.CreateTag;
+import io.resys.thena.fs.api.tags.ModifyTag;
 import io.resys.thena.fs.api.tags.TagQuery;
 import io.resys.thena.fs.spi.branch.BranchQueryImpl;
+import io.resys.thena.fs.spi.branch.CreateBranchImpl;
 import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
-import io.resys.thena.fs.spi.tag.NewTagImpl;
+import io.resys.thena.fs.spi.commit.CommitQueryImpl;
+import io.resys.thena.fs.spi.tag.CreateTagImpl;
+import io.resys.thena.fs.spi.tag.ModifyTagImpl;
 import io.resys.thena.fs.spi.tag.TagQueryImpl;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.spi.FsDbImpl;
@@ -82,16 +84,16 @@ public class FileSystem_ThenaImpl implements FileSystem {
     
     return new FileSystemTenant() {
       @Override public String getTenantId() { return tenantId; }
+      
+      @Override public CommitQuery commitQuery() { return new CommitQueryImpl(start, tenantId); }
       @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId); }
+      
       @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start); }
+      @Override public CreateBranch createBranch() { return new CreateBranchImpl(start, tenantId); }
       
-      @Override public CreateTag createTag() { return new NewTagImpl(start, tenantId); }
-      @Override public ModifyTag modifyTag() { return null; }      
+      @Override public CreateTag createTag() { return new CreateTagImpl(start, tenantId); }
+      @Override public ModifyTag modifyTag() { return new ModifyTagImpl(start, tenantId); }      
       @Override public TagQuery tagQuery() { return new TagQueryImpl(start, tenantId); }
-      
-      @Override public CommitQuery commitQuery() { return null; }
-      @Override public BranchBuilder branchBuilder() { return null; }
-      @Override public BlobQuery blobQuery() { return null; }
     };
   }
   
@@ -145,5 +147,9 @@ public class FileSystem_ThenaImpl implements FileSystem {
       final var state = new FsDbImpl(datasource());
       return new FileSystem_ThenaImpl(state);
     }
+  }
+
+  public FsDb getStartingState() {
+    return startingState;
   }
 }

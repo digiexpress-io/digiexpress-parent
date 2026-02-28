@@ -47,7 +47,6 @@ import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.config.HdesClientConfig.AstFlowNodeVisitor;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.hdes.client.spi.decision.DecisionCSVBuilder;
 import io.resys.hdes.client.spi.decision.DecisionProgramBuilder;
 import io.resys.hdes.client.spi.envir.ProgramEnvirFactory;
 import io.resys.hdes.client.spi.flow.FlowProgramBuilder;
@@ -178,15 +177,6 @@ public class HdesClientImpl implements HdesClient {
       @Override
       public FlowProgram ast(AstFlow ast) {
         return new FlowProgramBuilder(config.getTypes()).build(ast);
-      }
-    };
-  }
-  @Override
-  public CSVBuilder csv() {
-    return new CSVBuilder() {
-      @Override
-      public String ast(AstDecision ast) {
-        return DecisionCSVBuilder.build(ast);
       }
     };
   }

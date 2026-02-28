@@ -84,7 +84,7 @@ public class Snapshot {
   }
 
   private Tuple3<Node, Optional<Props>, Blob> visitNewFileCommand(MergeTree mergeTree, MergeIndex mergeIndex, NewFileCommand command) {
-    final var merger = new NewFileImpl();
+    final var merger = new NewFileImpl(lock);
     command.consumer().accept(merger);
     
     final var result = merger.close();
@@ -92,7 +92,13 @@ public class Snapshot {
     final var newProps = result.getProps();
     final var newBlobs = result.getBlob();
 
-    mergeIndex.create(newNode);
+    if(result.getPrevNode().isPresent()) {
+      mergeIndex.merge(result.getPrevNode().get(), newNode);
+    } else {
+      mergeIndex.create(newNode);
+    }
+     
+    
     mergeTree.add(newNode).add(newProps).add(newBlobs);
     return Tuple3.of(newNode, newProps, newBlobs);
   }
@@ -199,7 +205,7 @@ public class Snapshot {
       return result.getBranch();
     }
     
-    final var result = new NewBranchImpl(branchName, commit).close();
+    final var result = new NewBranchImpl(branchName, commit, now).close();
     sp_logger.newBranch(result.getBranch());
     persistenceUnit.addRefInserts(result.getBranch());
     return result.getBranch();

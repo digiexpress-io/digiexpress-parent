@@ -44,6 +44,25 @@ public interface BranchQuery {
   BranchQuery branchName(Consumer<NameExpressionBuilder> nameExpr);
   
   /**
+   * Excludes blob content from the result set to reduce payload size.
+   * When true, only branch, commit, tree, and node metadata is returned without file content.
+   * 
+   * @param excludeBlobs true to exclude blobs, false to include them
+   * @return query builder for method chaining
+   */
+  BranchQuery excludeBlobs(boolean excludeBlobs);
+  
+  /**
+   * Excludes node information from the result set to reduce payload size.
+   * When true, also automatically excludes blobs since nodes reference blob content.
+   * Only branch, commit, and tree structure information is returned.
+   * 
+   * @param excludeNodes true to exclude nodes (and blobs), false to include them
+   * @return query builder for method chaining
+   */
+  BranchQuery excludeNodes(boolean excludeNodes);
+  
+  /**
    * Filters to a specific branch by its unique identifier.
    * Used for retrieving exact branch instances or checking branch existence.
    * 

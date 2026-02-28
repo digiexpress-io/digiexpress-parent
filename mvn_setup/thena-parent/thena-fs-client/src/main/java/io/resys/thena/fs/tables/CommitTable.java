@@ -1,28 +1,68 @@
 package io.resys.thena.fs.tables;
 
+/*-
+ * #%L
+ * thena-fs-client
+ * %%
+ * Copyright (C) 2015 - 2026 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.immutables.value.Value;
 
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.annotations.TenantSql.SqlBuilder;
+import io.resys.thena.api.annotations.TenantSql.WrapperType;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.Commit;
-import io.resys.thena.fs.tables.mappers.CommitAndTreeMapper;
-import io.resys.thena.fs.tables.mappers.CommitMapper;
-import io.resys.thena.fs.tables.mappers.CommitOrRefMapper;
+import io.resys.thena.fs.entities.ImmutableCommit;
+import io.resys.thena.fs.entities.ImmutableTree;
+import io.resys.thena.fs.entities.Node;
+import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.entities.Tree;
+import io.resys.thena.storesql.support.SqlStatement;
+import io.resys.thena.support.TableUtils;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.smallrye.mutiny.tuples.Tuple3;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.Tuple;
 
 @TenantSql.Table(
   name = "commit",
   order = 500,
   ddl = """
     CREATE TABLE {commit} (
-      id TEXT PRIMARY KEY,
+      commit_id TEXT PRIMARY KEY,
       commit_created_at TIMESTAMPTZ NOT NULL,
       commit_author TEXT NOT NULL,
       commit_message TEXT NOT NULL,
-      tree_id TEXT NOT NULL REFERENCES {tree}(id),
-      parent_id TEXT REFERENCES {commit}(id),
-      merge_id TEXT REFERENCES {commit}(id)
+      tree_id TEXT NOT NULL REFERENCES {tree}(tree_id),
+      parent_id TEXT REFERENCES {commit}(commit_id),
+      merge_id TEXT REFERENCES {commit}(commit_id)
     );
     
     CREATE INDEX {commit}_tree_idx ON {commit}(tree_id);
@@ -31,7 +71,7 @@ import io.resys.thena.fs.tables.mappers.CommitOrRefMapper;
     CREATE INDEX {commit}_created_at_idx ON {commit}(commit_created_at);
     
     COMMENT ON TABLE {commit} IS 'Version control commits representing immutable snapshots of the filesystem state with metadata about the change.';
-    COMMENT ON COLUMN {commit}.id IS 'Unique commit identifier (hash)';
+    COMMENT ON COLUMN {commit}.commit_id IS 'Unique commit identifier (hash)';
     COMMENT ON COLUMN {commit}.commit_created_at IS 'Timestamp when this commit was created, stored in UTC';
     COMMENT ON COLUMN {commit}.commit_author IS 'Author of this commit';
     COMMENT ON COLUMN {commit}.commit_message IS 'Commit message describing the changes';
@@ -46,171 +86,94 @@ import io.resys.thena.fs.tables.mappers.CommitOrRefMapper;
 )
 public interface CommitTable {
 
-  @TenantSql.FindAll(
-    sql = """
-      SELECT commit.*
-      FROM {commit} as commit
-    """,
-    rowMapper = CommitMapper.class
-  )
-  Sql findAll();
-
   @TenantSql.Find(
     optional = false,
     sql = """
-    SELECT 
-      commits.id,
-      commits.commit_created_at, commits.commit_author, 
-      commits.commit_message, commits.tree_id, 
-      commits.parent_id, commits.merge_id,
-      tree.id as tree_id,
-    
-      -- Aggregated Nodes
-      (SELECT json_agg(
-        json_build_object(
-          'id', nodes.id,
-          'object_id', nodes.object_id,
-          'node_path', nodes.node_path,
-          'node_name', nodes.node_name,
-          
-          'created_at', idx.created_at,
-          'updated_at', idx.updated_at,
-          'created_by', idx.created_by,
-          'updated_by', idx.updated_by,
-                                  
-          'blob_id', nodes.blob_id,
-          'props_id', nodes.props_id,
-          
-          'blob', 
-            CASE WHEN blobs.id IS NOT NULL 
-            THEN json_build_object(
-              'blob_type', blobs.blob_type, 
-              'blob_value', blobs.blob_value
-            ) 
-            ELSE NULL END,
-          'props', 
-            CASE WHEN props.id IS NOT NULL 
-            THEN json_build_object(
-              'props_labels', props.props_labels, 
-              'props_flags', props.props_flags,
-              'props_comments', props.props_comments,
-              'props_permissions', props.props_permissions
-            ) 
-            ELSE NULL END
-        )
-      ) 
-      FROM unnest(tree.tree_nodes) AS nodes
-        LEFT JOIN {props} as props ON props.id = nodes.props_id AND nodes.props_id IS NOT NULL
-        LEFT JOIN {blob} as blobs ON blobs.id = nodes.blob_id AND nodes.blob_id IS NOT NULL
-        LEFT JOIN (
-          SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-                 created_commit.commit_created_at as created_at,
-                 updated_commit.commit_created_at as updated_at
-          FROM {object_index} as object_index
-          LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-          LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
-        ) as idx ON idx.object_id = nodes.object_id
-      ) as nodes_json
-
-    FROM {commit} as commits
-    JOIN {tree} as tree ON tree.id = commits.tree_id
-    WHERE commits.id = $1
+    SELECT commit.*, __nodes_json
+    FROM {commit} as commit
+    JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    WHERE commit.commit_id = $1
     """,
-    rowMapper = CommitAndTreeMapper.class
+    rowMapper = CommitAndTreeMapper.class,
+    sqlBuilder = COMMIT_AND_NODES_SQL.class
   )
   SqlTuple getByIdWithNodesAndBlobs(String id);
+  
+  
+  @TenantSql.FindAll(
+    wrapper = WrapperType.MULTI,
+    sql = """
+    WITH RECURSIVE commit_ancestry AS (
+      -- Start with branch heads
+      SELECT branch.ref_name as branch_name, branch.ref_id as branch_id, branch.commit_id
+      FROM {ref} as branch
+  
+      UNION ALL
+  
+      -- Follow parent commits
+      SELECT ancestry.branch_name, ancestry.branch_id, commit.parent_id
+      FROM commit_ancestry as ancestry
+      JOIN {commit} as commit ON ancestry.commit_id = commit.commit_id
+      WHERE commit.parent_id IS NOT NULL
+    )
+    SELECT DISTINCT 
+      ancestry.branch_name, 
+      ancestry.branch_id, 
+      ref.*,
+      commit.*,
+      node.*
+    FROM commit_ancestry as ancestry
+    JOIN {commit} as commit ON ancestry.commit_id = commit.commit_id
+    JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    JOIN {ref} as ref ON ref.ref_id = ancestry.branch_id
+    CROSS JOIN LATERAL unnest(tree.tree_nodes) AS node
+    """,
+    rowMapper = CommitHistoryMapper.class,
+    sqlBuilder = COMMIT_HISTORY_FOR_NODES_SQL.class
+  )
+  SqlTuple findCommitHistoryByNodes(CommitHistoryFilter filter);
   
   @TenantSql.Find(
     optional = false,
     sql = """
-    SELECT 
-      commits.id,
-      commits.commit_created_at, commits.commit_author, 
-      commits.commit_message, commits.tree_id, 
-      commits.parent_id, commits.merge_id,
-      tree.id as tree_id,
-    
-      -- Aggregated Nodes
-      (SELECT json_agg(
-        json_build_object(
-          'id', nodes.id,
-          'object_id', nodes.object_id,
-          'node_path', nodes.node_path,
-          'node_name', nodes.node_name,
-          
-          'created_at', idx.created_at,
-          'updated_at', idx.updated_at,
-          'created_by', idx.created_by,
-          'updated_by', idx.updated_by,
-                                  
-          'blob_id', nodes.blob_id,
-          'props_id', nodes.props_id,
-          
-          'blob', null,
-          'props', null
-        )
-      ) 
-      FROM unnest(tree.tree_nodes) AS nodes
-        LEFT JOIN (
-          SELECT object_index.object_id, object_index.created_by, object_index.updated_by,
-                 created_commit.commit_created_at as created_at,
-                 updated_commit.commit_created_at as updated_at
-          FROM {object_index} as object_index
-          LEFT JOIN {commit} as created_commit ON object_index.created_by = created_commit.id
-          LEFT JOIN {commit} as updated_commit ON object_index.updated_by = updated_commit.id
-        ) as idx ON idx.object_id = nodes.object_id
-      ) as nodes_json
-
-    FROM {commit} as commits ON commits.id = ref.commit_id
-    JOIN {tree} as tree ON tree.id = commits.tree_id
+    SELECT commit.*, __nodes_json
+    FROM {commit} as commit ON commit.commit_id = ref.commit_id
+    JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    WHERE commit.commit_id = $1
     """,
-    rowMapper = CommitAndTreeMapper.class
+    rowMapper = CommitAndTreeMapper.class,
+    sqlBuilder = COMMIT_AND_TREE_SQL.class
   )
   SqlTuple getByIdWithNodes(String id);
   
   @TenantSql.Find(
       optional = true,
       sql = """
-        SELECT 
-            commit.*,
-            'commit' as found_by, 
-            null as ref_id,
-            null as ref_name, 
-            null as ref_description,
-            null as ref_props,
-            null as ref_permissions,
-            null as ref_flags,
-            null as ref_author
+        SELECT 'commit' as found_by, commit.*, ref.*
         FROM {commit} as commit
-        WHERE commit.id = $1 
+        LEFT JOIN {ref} as ref ON commit.commit_id = ref.commit_id AND FALSE
+        WHERE commit.commit_id = $1 
         
         UNION 
         
-        SELECT 
-            commit.*,
-            'ref' as found_by,
-            ref.id as ref_id,
-            ref.ref_name, 
-            ref.ref_description,
-            ref.ref_props,
-            ref.ref_permissions,
-            ref.ref_flags,
-            ref.ref_author            
+        SELECT 'ref' as found_by, commit.*, ref.*
         FROM {ref} as ref
-        RIGHT JOIN {commit} as commit ON commit.id = ref.commit_id
-        WHERE ref.id::text = $1 OR ref.ref_name = $1
+        RIGHT JOIN {commit} as commit ON commit.commit_id = ref.commit_id
+        WHERE ref.ref_id::text = $1 OR ref.ref_name = $1
       """,
       rowMapper = CommitOrRefMapper.class
     )
   SqlTuple findByCommitIdOrRef(String commitId);
   
+  
+  @TenantSql.FindAll(
+    sql = "SELECT * FROM {commit} as commit",
+    rowMapper = CommitMapper.class
+  )
+  Sql findAll();
 
   @TenantSql.FindAll(
-    sql = """
-      SELECT commit.*
-      FROM {commit} as commit
-      WHERE commit.tree_id = $1
-    """,
+    sql = "SELECT * FROM {commit} as commit WHERE commit.tree_id = $1",
     rowMapper = CommitMapper.class
   )
   SqlTuple findAllByTreeId(String treeId);
@@ -218,31 +181,176 @@ public interface CommitTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {commit}
-      (id, commit_created_at, commit_author, commit_message, tree_id, parent_id, merge_id)
+      (commit_id, commit_created_at, commit_author, commit_message, tree_id, parent_id, merge_id)
       VALUES($1, $2, $3, $4, $5, $6, $7)
     """,
     propsMapper = CommitInsertMapper.class
   )
   SqlTupleList insertMany(List<Commit> commits);
 
-  @TenantSql.UpdateAll(
-    sql = """
-      UPDATE {commit}
-      SET commit_created_at = $1, commit_author = $2, commit_message = $3, 
-          tree_id = $4, parent_id = $5, merge_id = $6
-      WHERE id = $7
-    """,
-    propsMapper = CommitUpdateMapper.class
-  )
-  SqlTupleList updateMany(List<Commit> commits);
-
   @TenantSql.DeleteAll(
-    sql = "DELETE FROM {commit} WHERE id = $1",
+    sql = "DELETE FROM {commit} WHERE commit_id = $1",
     propsMapper = CommitDeleteMapper.class
   )
   SqlTupleList deleteAll(List<Commit> commits);
 
   
+
+  @Value.Immutable
+  interface CommitHistoryFilter {
+    String getBranchName();
+  }
+  
+  class COMMIT_HISTORY_FOR_NODES_SQL implements SqlBuilder<CommitHistoryFilter> {
+    @Override
+    public SqlTuple apply(Tenant tenant, String baseline, CommitHistoryFilter filter) {
+      final var params = new ArrayList<Object>();
+      final var index = new MutableInt(0);
+      final var stmt = new SqlStatement();
+      
+      // branch name or id
+      if (filter.getBranchName() != null) {
+        stmt.append("(");
+        
+        try {
+          final UUID uuid =  TableUtils.toUuid(filter.getBranchName());
+          stmt.append("ancestry.branch_id = $").append(index.incrementAndGet());
+          params.add(uuid);
+        } catch(Exception e) {}
+        
+        stmt.append("ancestry.branch_name = $").append(index.incrementAndGet()).append(")");
+        params.add(filter.getBranchName());
+      }
+      
+      
+      /* branch name or id
+      if (filter.getFileOrFolderId() != null) {
+        if (!params.isEmpty()) {
+          stmt.append(" AND ");
+        }
+        stmt.append("node.object_id = $").append(index.incrementAndGet());
+        params.add(filter.getFileOrFolderId());
+      }
+      
+      
+      if (filter.getNameExpr() != null) {
+        if (!params.isEmpty()) {
+          stmt.append(" AND ");
+        }
+        final var nameSql = new StringBuilder();
+        final var nameBuilder = new NameExpressionBuilderImpl(
+          "node.node_name",
+          param -> {
+            params.add(param);
+            return index.incrementAndGet();
+          },
+          nameSql
+        );
+        
+        filter.getNameExpr().accept(nameBuilder);
+        nameBuilder.close();
+        stmt.append(nameSql.toString());
+      }
+      */
+      
+      final var result = stmt.toString();
+      final var clause = (result.isBlank() ? "" : " WHERE ") + result;
+      
+      return ImmutableSqlTuple.builder()
+          .value(baseline + clause)
+          .props(Tuple.from(params))
+          .build();
+    }
+  }
+
+  
+
+  class COMMIT_AND_TREE_SQL implements SqlBuilder<String> {
+    @Override
+    public SqlTuple apply(Tenant tenant, String baseline, String commitId) {
+      return ImmutableSqlTuple.builder()
+          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobs(false).build()))
+          .props(Tuple.of(commitId))
+          .build();
+    }
+  }
+
+  class COMMIT_AND_NODES_SQL implements SqlBuilder<String> {
+    @Override
+    public SqlTuple apply(Tenant tenant, String baseline, String commitId) {
+      return ImmutableSqlTuple.builder()
+          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobs(true).build()))
+          .props(Tuple.of(commitId))
+          .build();
+    }
+  }
+  
+  class CommitHistoryMapper implements TenantSql.RowMapper<Tuple3<Commit, Ref, Node>> {
+
+    @Override
+    public Tuple3<Commit, Ref, Node> apply(Row row) {
+      final var node = NodeTable.NodeMapper.fromRow(row);
+      final var ref = RefTable.RefMapper.fromRow(row);
+      final var commit = CommitMapper.fromRow(row);
+      return Tuple3.of(commit, ref, node);
+    }
+    
+  }
+
+  class CommitOrRefMapper implements TenantSql.RowMapper<Tuple2<Commit, Optional<Ref>>> {
+    @Override
+    public Tuple2<Commit, Optional<Ref>> apply(Row row) {
+      final var commit = CommitMapper.fromRow(row);
+      final Ref ref;
+      
+      if(row.getString("found_by").equals("commit")) {
+        ref = null;
+      } else {
+        ref = RefTable.RefMapper.fromRow(row);
+      }
+      return Tuple2.of(commit, Optional.ofNullable(ref));
+    }
+  }
+  
+  class CommitAndTreeMapper implements TenantSql.RowMapper<Tuple2<Commit, Tree>> {
+    @Override
+    public Tuple2<Commit, Tree> apply(Row row) {
+      final var commit = CommitMapper.fromRow(row);
+      final var allNodes = Optional
+        .ofNullable(row.getJsonArray("nodes_json"))
+        .orElseGet(() -> new JsonArray())
+        .stream().map(node_json -> (JsonObject) node_json)
+        .map(NodeTable.NodeMapper::fromJson)
+        .toList();
+      final var tree = ImmutableTree.builder()
+          .id(row.getString("tree_id"))
+          .treeNodes(allNodes)
+          .build();
+      return Tuple2.of(commit, tree);
+    }
+  }
+  
+  class CommitMapper implements TenantSql.RowMapper<Commit> {
+    @Override
+    public Commit apply(Row row) {
+      return fromRow(row);
+    }
+    
+    public static Commit fromRow(Row row) {
+      final String parentId = row.getString("parent_id");
+      final String mergeId = row.getString("merge_id");
+
+      return ImmutableCommit.builder()
+        .id(row.getString("commit_id"))
+        .commitCreatedAt(row.getOffsetDateTime("commit_created_at"))
+        .commitAuthor(row.getString("commit_author"))
+        .commitMessage(row.getString("commit_message"))
+        .treeId(row.getString("tree_id"))
+        .parentId(Optional.ofNullable(parentId))
+        .mergeId(Optional.ofNullable(mergeId))
+        .build();
+    }
+  }
   class CommitInsertMapper implements TenantSql.PropsMapper<Commit> {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Commit commit) {
@@ -254,21 +362,6 @@ public interface CommitTable {
         commit.getTreeId(),
         commit.getParentId().orElse(null),
         commit.getMergeId().orElse(null)
-      });
-    }
-  }
-
-  class CommitUpdateMapper implements TenantSql.PropsMapper<Commit> {
-    @Override
-    public io.vertx.mutiny.sqlclient.Tuple apply(Commit commit) {
-      return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        commit.getCommitCreatedAt(),
-        commit.getCommitAuthor(),
-        commit.getCommitMessage(),
-        commit.getTreeId(),
-        commit.getParentId().orElse(null),
-        commit.getMergeId().orElse(null),
-        commit.getId()
       });
     }
   }

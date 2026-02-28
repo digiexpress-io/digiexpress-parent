@@ -44,9 +44,22 @@ const FlowEdit: React.FC<{ flow: HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow })
   const commands = React.useMemo(() => update ? update.value : flow.source.commands, [flow, update]);
   const flowId = flow.id;
   
+  const astReqSeq = React.useRef(0);
+
   React.useEffect(() => {
-    service.ast(flowId, commands).then(data => setAst(data.ast));
-  }, [commands, flowId, service])
+    const reqId = ++astReqSeq.current;
+  
+    service.ast(flowId, commands)
+      .then(data => {
+        if (reqId === astReqSeq.current) {
+          setAst(data.ast);
+        }
+      })
+      .catch(error => {
+        console.error('AST request failed:', error);
+      });
+  
+  }, [commands, flowId, service]);
 
 
   const originalState = flow.ast?.src.value;

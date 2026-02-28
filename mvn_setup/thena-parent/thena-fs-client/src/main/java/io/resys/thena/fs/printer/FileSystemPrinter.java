@@ -156,10 +156,6 @@ public class FileSystemPrinter {
     
     for (final var blob : world.getBlob().values()) {
       ID.apply(blob.getId());
-      if (blob.getTransitives() != null) {
-        DATES.apply(blob.getTransitives().getCreatedAt());
-        DATES.apply(blob.getTransitives().getUpdatedAt());
-      }
     }
     
     for (final var props : world.getProps().values()) {
@@ -191,11 +187,11 @@ public class FileSystemPrinter {
       result.append("  - ").append(ref.getRefName())
           .append(" -> ").append(ID.apply(ref.getCommitId()));
       
-      if (ref.getBranchDescription().isPresent()) {
-        result.append(" (").append(ref.getBranchDescription().get()).append(")");
+      if (ref.getRefDescription().isPresent()) {
+        result.append(" (").append(ref.getRefDescription().get()).append(")");
       }
-      if (ref.getBranchAuthor().isPresent()) {
-        result.append(" by ").append(ref.getBranchAuthor().get());
+      if (ref.getRefAuthor().isPresent()) {
+        result.append(" by ").append(ref.getRefAuthor().get());
       }
       
       result.append(System.lineSeparator());

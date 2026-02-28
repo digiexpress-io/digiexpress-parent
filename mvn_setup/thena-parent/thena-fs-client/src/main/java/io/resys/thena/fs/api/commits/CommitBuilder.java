@@ -275,6 +275,14 @@ public interface CommitBuilder {
     NewFile fileType(String type);
     
     /**
+     * Sets the classifier for mapping specific application-level class or entity.
+     * 
+     * @param fileClass the entity mapper type for parsing the body
+     * @return builder for method chaining
+     */
+    NewFile fileClass(String fileClass);
+    
+    /**
      * Sets the filename (basename) for the file.
      * Combined with the path to determine the full file location.
      * 

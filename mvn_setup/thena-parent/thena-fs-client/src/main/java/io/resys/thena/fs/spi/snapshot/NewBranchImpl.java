@@ -1,5 +1,7 @@
 package io.resys.thena.fs.spi.snapshot;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-fs-client
@@ -32,12 +34,14 @@ public class NewBranchImpl {
 
   private final String branchName;
   private final Commit commit; 
+  private final OffsetDateTime createdAt;
   
   public NewBranchResult close() {
     final var newRef = ImmutableRef.builder()
         .id(OidUtils.genUUID())
         .refName(branchName)
         .commitId(commit.getId())
+        .refCreatedAt(createdAt)
         .build();
     return new NewBranchResult(newRef);
   }

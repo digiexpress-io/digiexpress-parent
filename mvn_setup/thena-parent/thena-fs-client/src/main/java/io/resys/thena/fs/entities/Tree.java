@@ -23,6 +23,7 @@ package io.resys.thena.fs.entities;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -35,22 +36,34 @@ import io.resys.thena.support.RepoAssert;
 @Value.Immutable
 @JsonSerialize(as = ImmutableTree.class)
 @JsonDeserialize(as = ImmutableTree.class)
-public interface Tree extends FileSystemEntity {
+public interface Tree extends Entity {
   
   String getId();
   List<Node> getTreeNodes();
-
+  
   @Override
   default FileSystemEntityType getDocType() { 
     return FileSystemEntityType.TREE; 
   }
   
-  default Node getOneNode(String fullPath) {
+  
+  default Optional<Node> findOneNode(String fullPath) {
     final var found = getTreeNodes().stream()
-        .filter(node -> node.getFullPath().equals(fullPath))
+        .filter(node -> (
+            node.getFullPath().equals(fullPath) || 
+            node.getId().equals(fullPath) || 
+            node.getObjectId().equals(fullPath)
+        ))
         .toList();
-    RepoAssert.isTrue(found.size() == 1, () -> "Expected exactly 1 node but found: " + found.size() + " for path: " + fullPath);
-    return found.getFirst();
+    
+    RepoAssert.isTrue(found.size() <= 1, () -> "Expected exactly 0..1 nodes, but found: " + found.size() + " for path: " + fullPath);
+    return found.stream().findFirst();
+  }
+  
+  default Node getOneNode(String fullPath) {
+    final var found = findOneNode(fullPath);
+    RepoAssert.isTrue(found.isPresent(), () -> "Expected exactly 1 node, but found: 0 for path: " + fullPath);
+    return found.get();
   }
 
 

@@ -105,10 +105,10 @@ const Attempts: React.FC<{ value: any }> = ({ value }) => {
   return (
     <div>
       <Button endIcon={<OpenInNewOutlinedIcon />} variant='text' sx={{ fontSize: '9pt' }} onClick={handleOnClick}>
-        {intl.formatMessage({ id: 'button.view', defaultMessage: 'View' })}
+        {intl.formatMessage({ id: 'button.view' })}
       </Button>
       <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>{intl.formatMessage({ id: 'task.audit.deliveries.attempts.title', defaultMessage: 'Attempts' })}</DialogTitle>
+        <DialogTitle>{intl.formatMessage({ id: 'task.audit.deliveries.attempts.title' })}</DialogTitle>
         <DialogContent>
           <Editor
             value={toYaml(value)}

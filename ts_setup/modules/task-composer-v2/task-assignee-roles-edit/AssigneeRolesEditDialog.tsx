@@ -70,7 +70,7 @@ export const AssigneeRolesEditDialog: React.FC<AssigneeRolesEditDialogProps> = (
   return (
     <StyledAssigneeRolesEditDialog className={classes.editDialog} open={open} onClose={onClose} maxWidth='md' slots={{ transition: Zoom }}>
       <DialogTitle>
-        {intl.formatMessage({ id: 'task.assigneesAndRolesEdit' })}{": "}{task.taskRef ?? 'no task reference id'}
+        {intl.formatMessage({ id: 'task.assigneesAndRolesEdit' })}{": "}{task.taskRef ?? intl.formatMessage({ id: 'task.reference.missing' })}
       </DialogTitle>
 
       <DialogContent>

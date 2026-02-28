@@ -78,15 +78,6 @@ public interface TagBuilder {
   TagBuilder externalId(@Nullable String externalId);
   
   /**
-   * Sets the external tenant identifier for this tag.
-   * Used in multi-tenant scenarios to associate tags with external tenant systems.
-   * 
-   * @param externalTenantId external tenant identifier, null if not applicable
-   * @return builder for method chaining
-   */
-  TagBuilder externalTenantId(@Nullable String externalTenantId);
-  
-  /**
    * Sets the scheduled start time for tag-related operations.
    * Used for delayed or scheduled processing of tagged commits.
    * 
@@ -107,8 +98,6 @@ public interface TagBuilder {
   /**
    * Executes the tag creation operation.
    * Creates the tag and associates it with the specified commit.
-   * 
-   * @return reactive stream containing the tag creation result
    */
   void build();
   

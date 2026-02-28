@@ -32,6 +32,7 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
+import io.resys.thena.fs.tables.NodeTable;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -47,9 +48,10 @@ public interface RefTableFilter {
     
     @Override
     public SqlTuple apply(Tenant tenant, String baseline, RefTableFilter filter) {
-      final var stmt = new SqlStatement();
       final var params = new ArrayList<Object>();
-      final MutableInt index = new MutableInt(0);
+      final var index = new MutableInt(0);
+      final var stmt = new SqlStatement();
+
 
       // Handle branch ID filter
       if (filter.getBranchId() != null) {
@@ -57,7 +59,7 @@ public interface RefTableFilter {
         
         try {
           final UUID uuid =  TableUtils.toUuid(filter.getBranchId());
-          stmt.append("ref.id = $").append(index.incrementAndGet());
+          stmt.append("ref.ref_id = $").append(index.incrementAndGet());
           params.add(uuid);
         } catch(Exception e) {}
         
@@ -89,8 +91,16 @@ public interface RefTableFilter {
       
       final var result = stmt.toString();
       final var clause = (result.isBlank() ? "" : " WHERE ") + result;
+      
+      final var nodes_json = NodeTable.sql()
+        .includeBlobs(true)
+        .build((item) -> {
+          params.add(item);
+          return index.incrementAndGet();
+        });
+    
       return ImmutableSqlTuple.builder()
-          .value(baseline + clause)
+          .value(baseline.replace("__nodes_json", nodes_json) + clause)
           .props(Tuple.from(params))
           .build();
     }

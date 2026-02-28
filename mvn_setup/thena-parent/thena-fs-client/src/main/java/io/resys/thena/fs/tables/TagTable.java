@@ -33,6 +33,7 @@ import io.resys.thena.fs.entities.ImmutableTag;
 import io.resys.thena.fs.entities.ImmutableTagTransitives;
 import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.tables.filters.TagTableFilter;
+import io.resys.thena.support.TableUtils;
 import io.vertx.mutiny.sqlclient.Row;
 
 @TenantSql.Table(
@@ -40,24 +41,28 @@ import io.vertx.mutiny.sqlclient.Row;
   order = 700,
   ddl = """
     CREATE TABLE {tag} (
-      id TEXT PRIMARY KEY,
+      tag_id UUID PRIMARY KEY,
 
       tag_name TEXT UNIQUE NOT NULL,
       tag_description TEXT,
       
       tag_starts_at TIMESTAMPTZ,
+      tag_ends_at TIMESTAMPTZ,
+      
+      tag_lifecycle TEXT,
+      tag_health TEXT,
+      
       tag_created_at TIMESTAMPTZ NOT NULL,
             
       tag_author TEXT NOT NULL,
       tag_extension JSONB,
-      tag_errors JSONB NOT NULL,
+      tag_errors JSONB,
       tag_report JSONB,
       
       external_id TEXT,
-      external_tenant_id TEXT,
       
-      ref_id TEXT,
-      commit_id TEXT NOT NULL REFERENCES {commit}(id)      
+      ref_id TEXT, --soft link
+      commit_id TEXT NOT NULL REFERENCES {commit}(commit_id)      
     );
     
     CREATE INDEX {tag}_name_idx ON {tag}(tag_name);
@@ -68,7 +73,9 @@ import io.vertx.mutiny.sqlclient.Row;
     CREATE INDEX {tag}_ref_idx ON {tag}(ref_id);
     
     COMMENT ON TABLE {tag} IS 'Immutable named markers for specific commits, typically used for releases or important milestones.';
-    COMMENT ON COLUMN {tag}.id IS 'Unique tag identifier (hash)';
+    COMMENT ON COLUMN {tag}.tag_lifecycle IS 'The operational phase of the tag (e.g., in-force, waiting, lapsed).';
+    COMMENT ON COLUMN {tag}.tag_health IS 'The current health status or severity level (e.g., OK, WARNING, ERROR).';
+    COMMENT ON COLUMN {tag}.tag_id IS 'Unique tag identifier (hash)';
     COMMENT ON COLUMN {tag}.tag_name IS 'Human-readable tag name (e.g., "v1.0.0", "release-2023")';
     COMMENT ON COLUMN {tag}.tag_description IS 'Optional detailed description of this tag';
     COMMENT ON COLUMN {tag}.commit_id IS 'The specific commit this tag points to (immutable)';
@@ -77,7 +84,6 @@ import io.vertx.mutiny.sqlclient.Row;
     COMMENT ON COLUMN {tag}.tag_extension IS 'Additional tag metadata in JSONB format for future extensibility';
     COMMENT ON COLUMN {tag}.tag_errors IS 'Error information and validation issues stored in JSONB format for diagnostic purposes';
     COMMENT ON COLUMN {tag}.external_id IS 'External system identifier for integration and tracking purposes';
-    COMMENT ON COLUMN {tag}.external_tenant_id IS 'External tenant identifier for multi-tenant system integration';
     COMMENT ON COLUMN {tag}.tag_starts_at IS 'Scheduled activation timestamp when this tag becomes effective or goes live';
     COMMENT ON COLUMN {tag}.tag_report IS 'Operational reports and status information stored in JSONB format';
     COMMENT ON COLUMN {tag}.ref_id IS 'Branch pointer when created from specific branch, otherwise just commit id is used';
@@ -91,14 +97,10 @@ public interface TagTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
-             tag.tag_created_at, tag.tag_author, tag.tag_extension,
-             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report, tag.ref_id,
-             
+      SELECT tag.*,
              commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
       FROM {tag} as tag
-      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
     """,
     rowMapper = TagMapper.class
   )
@@ -107,14 +109,10 @@ public interface TagTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
-             tag.tag_created_at, tag.tag_author, tag.tag_extension,
-             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report, tag.ref_id,
-
+      SELECT tag.*,
              commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
       FROM {tag} as tag
-      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
       WHERE tag.id = $1
     """,
     rowMapper = TagMapper.class
@@ -124,15 +122,11 @@ public interface TagTable {
   @TenantSql.Find(
     optional = true,
     sql = """
-      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
-             tag.tag_created_at, tag.tag_author, tag.tag_extension,
-             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report, tag.ref_id,
-
+      SELECT tag.*,
              commit.commit_created_at, commit.commit_author, commit.commit_message
       FROM {tag} as tag
-      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
-      WHERE tag.tag_name = $1
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      WHERE tag.tag_name = $1 OR tag.tag_id::text = $1
     """,
     rowMapper = TagMapper.class
   )
@@ -153,14 +147,10 @@ public interface TagTable {
 
   @TenantSql.FindAll(
     sql = """
-      SELECT tag.id, tag.tag_name, tag.tag_description, tag.commit_id, 
-             tag.tag_created_at, tag.tag_author, tag.tag_extension,
-             tag.tag_errors, tag.external_id, tag.external_tenant_id, 
-             tag.tag_starts_at, tag.tag_report, tag.ref_id,
-
+      SELECT tag.*,
              commit.commit_created_at, commit.commit_author, commit.commit_message
       FROM {tag} as tag
-      LEFT JOIN {commit} as commit ON tag.commit_id = commit.id
+      LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
       WHERE tag.commit_id = $1
     """,
     rowMapper = TagMapper.class
@@ -170,9 +160,11 @@ public interface TagTable {
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {tag}
-      (id, tag_name, tag_description, commit_id, tag_created_at, tag_author, 
-       tag_extension, tag_errors, external_id, external_tenant_id, tag_starts_at, tag_report, ref_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      (tag_id, tag_name, tag_description, commit_id, tag_created_at, tag_author, 
+       tag_extension, tag_errors, external_id, tag_ends_at, tag_starts_at, tag_report, ref_id,
+       tag_lifecycle, tag_health
+      )
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
     """,
     propsMapper = TagInsertMapper.class
   )
@@ -183,16 +175,17 @@ public interface TagTable {
       UPDATE {tag}
       SET tag_name = $1, tag_description = $2, commit_id = $3, 
           tag_created_at = $4, tag_author = $5, tag_extension = $6,
-          tag_errors = $7, external_id = $8, external_tenant_id = $9, 
-          tag_starts_at = $10, tag_report = $11
-      WHERE id = $12
+          tag_errors = $7, external_id = $8, tag_ends_at = $9, 
+          tag_starts_at = $10, tag_report = $11,
+          tag_lifecycle = $12, tag_health = $13
+      WHERE tag_id = $14
     """,
     propsMapper = TagUpdateMapper.class
   )
   SqlTupleList updateMany(List<Tag> tags);
 
   @TenantSql.DeleteAll(
-    sql = "DELETE FROM {tag} WHERE id = $1",
+    sql = "DELETE FROM {tag} WHERE tag_id = $1",
     propsMapper = TagDeleteMapper.class
   )
   SqlTupleList deleteAll(List<Tag> tags);
@@ -202,12 +195,12 @@ public interface TagTable {
     public Tag apply(Row row) {
       final String tagDescription = row.getString("tag_description");
       final String externalId = row.getString("external_id");
-      final String externalTenantId = row.getString("external_tenant_id");
+      final OffsetDateTime tagEndsAt = row.getOffsetDateTime("tag_ends_at");
       final OffsetDateTime tagStartsAt = row.getOffsetDateTime("tag_starts_at");
       
 
       return ImmutableTag.builder()
-          .id(row.getString("id"))
+          .id(TableUtils.toStringUUID(row, "tag_id"))
           .refId(Optional.ofNullable(row.getString("ref_id")))
           
           .tagName(row.getString("tag_name"))
@@ -216,14 +209,17 @@ public interface TagTable {
           .tagCreatedAt(row.getOffsetDateTime("tag_created_at"))
           .tagAuthor(row.getString("tag_author"))
           .tagExtension(Optional.ofNullable(row.getJsonObject("tag_extension")))
-          .tagErrors(row.getJsonObject("tag_errors"))
+          .tagErrors(Optional.ofNullable(row.getJsonObject("tag_errors")))
           .externalId(Optional.ofNullable(externalId))
-          .externalTenantId(Optional.ofNullable(externalTenantId))
+          
+          .tagEndsAt(Optional.ofNullable(tagEndsAt))
           .tagStartsAt(Optional.ofNullable(tagStartsAt))
           .tagReport(Optional.ofNullable(row.getJsonObject("tag_report")))
-          .transitives(ImmutableTagTransitives.builder()
-
-              .build())
+          
+          .tagLifecycle(Optional.ofNullable(row.getString("tag_lifecycle")))
+          .tagHealth(Optional.ofNullable(row.getString("tag_health")))
+          
+          .transitives(ImmutableTagTransitives.builder().build())
           .build();
     }
   }
@@ -232,19 +228,22 @@ public interface TagTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tag tag) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        tag.getId(),
+        TableUtils.toUuid(tag.getId()),
         tag.getTagName(),
         tag.getTagDescription().orElse(null),
         tag.getCommitId(),
         tag.getTagCreatedAt(),
         tag.getTagAuthor(),
         tag.getTagExtension().orElse(null),
-        tag.getTagErrors(),
+        tag.getTagErrors().orElse(null),
         tag.getExternalId().orElse(null),
-        tag.getExternalTenantId().orElse(null),
+        tag.getTagEndsAt().orElse(null),
         tag.getTagStartsAt().orElse(null),
         tag.getTagReport().orElse(null),
-        tag.getRefId().orElse(null)
+        tag.getRefId().orElse(null),
+        
+        tag.getTagLifecycle().orElse(null),
+        tag.getTagHealth().orElse(null),
       });
     }
   }
@@ -261,10 +260,14 @@ public interface TagTable {
         tag.getTagExtension().orElse(null),
         tag.getTagErrors(),
         tag.getExternalId().orElse(null),
-        tag.getExternalTenantId().orElse(null),
+        tag.getTagEndsAt().orElse(null),
         tag.getTagStartsAt().orElse(null),
         tag.getTagReport().orElse(null),
-        tag.getId()
+        
+        tag.getTagLifecycle().orElse(null),
+        tag.getTagHealth().orElse(null),
+        
+        TableUtils.toUuid(tag.getId())
       });
     }
   }
@@ -273,7 +276,7 @@ public interface TagTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tag tag) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{
-        tag.getId()
+        TableUtils.toUuid(tag.getId())
       });
     }
   }

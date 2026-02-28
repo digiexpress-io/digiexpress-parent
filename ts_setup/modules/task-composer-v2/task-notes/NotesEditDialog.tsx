@@ -39,7 +39,7 @@ export const NotesEditDialog: React.FC<NotesEditDialogProps> = ({ open, onClose 
   return (
     <StyledEditNotesDialog fullWidth maxWidth='xl' className={classes.editDialog} open={open} onClose={onClose} slots={{ transition: Zoom }}>
 
-      <DialogTitle>{intl.formatMessage({ id: 'task.notes.edit' })}{": "}{task.taskRef ?? 'no task reference id'}</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'task.notes.edit' })}{": "}{task.taskRef ?? intl.formatMessage({ id: 'task.reference.missing' })}</DialogTitle>
 
       <DialogContent>
         <Box className={classes.historyLabel}>

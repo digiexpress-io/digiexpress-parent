@@ -29,6 +29,7 @@ import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.CommitResultStatus;
+import io.resys.thena.fs.spi.commit.CommitBuilderException;
 import io.resys.thena.fs.tests.config.DbTestTemplate;
 import io.resys.thena.fs.tests.config.TestAsserts;
 import io.vertx.core.json.JsonObject;
@@ -51,30 +52,38 @@ public class ReadWrite_Test extends DbTestTemplate {
     
     final var fs = getClient().withTenant(tenant);
     
-    
-    var result = fs
-      .commitBuilder()
-      .commitAuthor("john smith")
-      .commitMessage("create main branch with some content")
-      .newFile((newFile) -> newFile
-          .fileName("xxx.txt")
-          .filePath("root/xyz")
-          .fileType("text")
-          .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
-          .build())
-      .newFile((newFile) -> newFile
-          .fileName("xxx.txt")
-          .filePath("root/xyz")
-          .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
-          .fileType("text")
-          .build())
-      .build()
-      .await().atMost(atMost);
-    
-    
-    TestAsserts.assertEqualsCodeAndMessage(result, 
-        CommitResultStatus.ERROR, 
-        "Node(code 006) validation failed: 1 duplicate path+name combinations in tree (P0001)");
+    try {
+      var result = fs
+        .commitBuilder()
+        .commitAuthor("john smith")
+        .commitMessage("create main branch with some content")
+        .newFile((newFile) -> newFile
+            .fileName("xxx.txt")
+            .filePath("root/xyz")
+            .fileType("text")
+            .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+            .build())
+        .newFile((newFile) -> newFile
+            .fileName("xxx.txt")
+            .filePath("root/xyz")
+            .fileValue(JsonObject.of("firstName", "Sam", "lastName", "Vimes"))
+            .fileType("text")
+            .build())
+        .build()
+        .await().atMost(atMost);
+      
+      
+      TestAsserts.assertEqualsCodeAndMessage(result, 
+          CommitResultStatus.ERROR, 
+          "Node(code 006) validation failed: 1 duplicate path+name combinations in tree (P0001)");
+    } catch(CommitBuilderException e) {
+      Assertions.assertEquals(
+          """
+{
+  "tenantId" : "ReadWrite_1",
+  "message" : "Can't add the same node multiple times: 'root/xyz/xxx.txt'"
+}""", e.getMessage());
+    }
   }
   
   

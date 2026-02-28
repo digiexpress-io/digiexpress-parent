@@ -350,6 +350,8 @@
           "@dxs-ts/tagomi-routes": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/fs-api": "*",
+          "@dxs-ts/fs-composer": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
@@ -402,6 +404,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -469,6 +473,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -528,6 +534,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -1098,6 +1106,8 @@
           "@dxs-ts/task-api": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/fs-api": "*",
+          "@dxs-ts/fs-composer": "*",
           "@dxs-ts/user-profile": "*",
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/task-composer-v1": "*",
@@ -1152,6 +1162,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
@@ -1230,6 +1242,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
@@ -1285,6 +1299,8 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-api",
         "@dxs-ts/ledger-composer"
       ],
       "actualExternalDependencies": [
@@ -1331,22 +1347,78 @@
         "@dxs-ts/wrench-routes",
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/contract-composer",
+        "@dxs-ts/fs-composer",
+        "@dxs-ts/fs-api",
         "@dxs-ts/ledger-composer"
       ],
       "missingDependencies": [],
       "unusedDependencies": []
     },
-    "@dxs-ts/eveli-tree": {
-      "name": "@dxs-ts/eveli-tree",
-      "path": "modules/eveli-tree",
+    "@dxs-ts/fs-api": {
+      "name": "@dxs-ts/fs-api",
+      "path": "modules/fs-api",
       "packageJson": {
-        "name": "@dxs-ts/eveli-tree",
+        "name": "@dxs-ts/fs-api",
         "version": "${project.version}",
-        "description": "Eveli tree components",
+        "description": "File system API and types",
+        "main": "./index.ts",
+        "type": "module",
+        "dependencies": {},
+        "peerDependencies": {
+          "react": "*",
+          "@mui/material": "*",
+          "@mui/utils": "*"
+        },
+        "keywords": [
+          "filesystem",
+          "explorer",
+          "api",
+          "types"
+        ],
+        "private": true
+      },
+      "dependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "peerDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "externalDependencies": [
+        "react",
+        "@mui/material",
+        "@mui/utils"
+      ],
+      "internalDependencies": [],
+      "actualDependencies": [
+        "react"
+      ],
+      "actualExternalDependencies": [
+        "react"
+      ],
+      "actualInternalDependencies": [],
+      "missingDependencies": [],
+      "unusedDependencies": [
+        "@mui/material",
+        "@mui/utils"
+      ]
+    },
+    "@dxs-ts/fs-composer": {
+      "name": "@dxs-ts/fs-composer",
+      "path": "modules/fs-composer",
+      "packageJson": {
+        "name": "@dxs-ts/fs-composer",
+        "version": "${project.version}",
+        "description": "File system components",
         "main": "./index.ts",
         "type": "module",
         "dependencies": {
-          "@dxs-ts/eveli-primitives": "*"
+          "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/fs-api": "*",
+          "react-markdown": "*"
         },
         "peerDependencies": {
           "react": "*",
@@ -1355,7 +1427,7 @@
           "@mui/utils": "*"
         },
         "keywords": [
-          "eveli",
+          "filesystem",
           "tree",
           "components"
         ],
@@ -1363,6 +1435,8 @@
       },
       "dependencies": [
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "react-markdown",
         "react",
         "@mui/material",
         "@mui/icons-material",
@@ -1375,29 +1449,37 @@
         "@mui/utils"
       ],
       "externalDependencies": [
+        "react-markdown",
         "react",
         "@mui/material",
         "@mui/icons-material",
         "@mui/utils"
       ],
       "internalDependencies": [
-        "@dxs-ts/eveli-primitives"
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api"
       ],
       "actualDependencies": [
         "react",
         "@mui/material",
+        "@dxs-ts/fs-api",
+        "@mui/icons-material",
+        "react-markdown",
         "@mui/utils"
       ],
       "actualExternalDependencies": [
         "react",
         "@mui/material",
+        "@mui/icons-material",
+        "react-markdown",
         "@mui/utils"
       ],
-      "actualInternalDependencies": [],
+      "actualInternalDependencies": [
+        "@dxs-ts/fs-api"
+      ],
       "missingDependencies": [],
       "unusedDependencies": [
-        "@dxs-ts/eveli-primitives",
-        "@mui/icons-material"
+        "@dxs-ts/eveli-primitives"
       ]
     },
     "@dxs-ts/gamut-api": {
@@ -2445,6 +2527,8 @@
           "@dxs-ts/task-feedback": "*",
           "@dxs-ts/eveli-api": "*",
           "@dxs-ts/eveli-primitives": "*",
+          "@dxs-ts/fs-api": "*",
+          "@dxs-ts/fs-composer": "*",
           "@dxs-ts/eveli-intl": "*",
           "@dxs-ts/eveli-routes": "*",
           "@dxs-ts/xui-datetime": "*",
@@ -2488,6 +2572,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2525,6 +2611,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -2585,6 +2673,8 @@
         "@dxs-ts/cockpit-composer",
         "@dxs-ts/task-api",
         "@dxs-ts/task-feedback",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/xui-datetime",
         "@dxs-ts/xui-table",
         "@dxs-ts/task-composer-v1",
@@ -3230,6 +3320,7 @@
           "@tanstack/react-table": "*",
           "@tanstack/react-query": "*",
           "@monaco-editor/react": "*",
+          "notistack": "*",
           "yaml": "*"
         },
         "keywords": [
@@ -3252,6 +3343,7 @@
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
+        "notistack",
         "yaml"
       ],
       "peerDependencies": [
@@ -3265,6 +3357,7 @@
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
+        "notistack",
         "yaml"
       ],
       "externalDependencies": [
@@ -3278,6 +3371,7 @@
         "@tanstack/react-table",
         "@tanstack/react-query",
         "@monaco-editor/react",
+        "notistack",
         "yaml"
       ],
       "internalDependencies": [
@@ -3301,7 +3395,8 @@
         "@monaco-editor/react",
         "yaml",
         "@tanstack/react-table",
-        "@dxs-ts/xui-table"
+        "@dxs-ts/xui-table",
+        "notistack"
       ],
       "actualExternalDependencies": [
         "react",
@@ -3314,7 +3409,8 @@
         "@tanstack/react-query",
         "@monaco-editor/react",
         "yaml",
-        "@tanstack/react-table"
+        "@tanstack/react-table",
+        "notistack"
       ],
       "actualInternalDependencies": [
         "@dxs-ts/xui-datetime",
@@ -3869,6 +3965,8 @@
         "@dxs-ts/tagomi-routes",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -3944,6 +4042,8 @@
         "@dxs-ts/task-api",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/user-profile",
         "@dxs-ts/task-feedback",
         "@dxs-ts/task-composer-v1",
@@ -3957,8 +4057,10 @@
         "@dxs-ts/xui-table",
         "@dxs-ts/xui-datetime"
       ],
-      "@dxs-ts/eveli-tree": [
-        "@dxs-ts/eveli-primitives"
+      "@dxs-ts/fs-api": [],
+      "@dxs-ts/fs-composer": [
+        "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api"
       ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/gamut-intl",
@@ -4034,6 +4136,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4164,7 +4268,7 @@
       "@dxs-ts/eveli-primitives": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-routes",
-        "@dxs-ts/eveli-tree",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-ide",
         "@dxs-ts/stencil-routes",
         "@dxs-ts/tagomi-routes",
@@ -4174,7 +4278,17 @@
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/eveli-ide"
       ],
-      "@dxs-ts/eveli-tree": [],
+      "@dxs-ts/fs-api": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/fs-composer",
+        "@dxs-ts/eveli-ide"
+      ],
+      "@dxs-ts/fs-composer": [
+        "@dxs-ts/eveli-demo-app",
+        "@dxs-ts/eveli-routes",
+        "@dxs-ts/eveli-ide"
+      ],
       "@dxs-ts/gamut-api": [
         "@dxs-ts/eveli-demo-app",
         "@dxs-ts/gamut-demo-app",
@@ -4417,6 +4531,8 @@
         "@dxs-ts/task-feedback",
         "@dxs-ts/eveli-api",
         "@dxs-ts/eveli-primitives",
+        "@dxs-ts/fs-api",
+        "@dxs-ts/fs-composer",
         "@dxs-ts/eveli-intl",
         "@dxs-ts/eveli-routes",
         "@dxs-ts/xui-datetime",
@@ -4502,6 +4618,6 @@
       ]
     }
   },
-  "checksum": "e296261578987f4da99dcce48cd24da45423fcff1811abeb6833c833bf139627",
-  "generatedAt": "2026-02-11T06:40:07.502Z"
+  "checksum": "a7c76b75dda52d40293fe6aae7938baf895fc9e0e08ee415e45096ce04f1d0e2",
+  "generatedAt": "2026-02-20T10:49:35.157Z"
 }

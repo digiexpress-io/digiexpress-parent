@@ -21,6 +21,7 @@
     "@tanstack/react-table": "*",
     "@tanstack/react-query": "*",
     "@monaco-editor/react": "*",
+    "notistack": "*",
     "yaml": "*"
   },
   "keywords": ["task-composer"],

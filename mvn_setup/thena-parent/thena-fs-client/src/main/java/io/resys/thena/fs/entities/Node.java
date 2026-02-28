@@ -35,7 +35,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableNode.class)
 @JsonDeserialize(as = ImmutableNode.class)
-public interface Node extends FileSystemEntity {
+public interface Node extends Entity {
   
   // the actual hash calculated based on the contents
   String getId();
@@ -59,6 +59,20 @@ public interface Node extends FileSystemEntity {
   @Nullable 
   NodeTransitives getTransitives();
   
+  @Override
+  default FileSystemEntityType getDocType() { 
+    return FileSystemEntityType.NODE; 
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableNodeTransitives.class)
+  @JsonDeserialize(as = ImmutableNodeTransitives.class)
+  interface NodeTransitives {
+    @Nullable Index getObjectIndex();
+    @Nullable Blob getBlob();
+    @Nullable Props getProps();
+  }
+  
   
   default boolean isDirectory() {
     return getBlobId().isEmpty();
@@ -70,13 +84,14 @@ public interface Node extends FileSystemEntity {
   
   @Value.Check
   default void check() {
+    RepoAssert.isTrue(getPropsId().isPresent() || getBlobId().isPresent(), () -> "blobId and propsId both cannot be empty");
     
     if(isDirectory()) {
       
       if(getNodePath().isPresent()) {
         final var directoryPath = getNodePath().get();
         RepoAssert.isTrue(!directoryPath.trim().isEmpty(), () -> "directoryPath cannot be empty");
-        RepoAssert.isTrue(directoryPath.matches("^[a-zA-Z0-9/_ -]+$"), () -> "directoryPath contains invalid characters, only a-z, A-Z, 0-9, /, _, -, space allowed");
+        RepoAssert.isTrue(directoryPath.matches("^[\\p{L}0-9_. -\\/]+$"), () -> "directoryPath: '" + directoryPath + "' contains invalid characters, only Unicode letters, digits, _, ., -, and spaces allowed");
         RepoAssert.isTrue(!directoryPath.contains("//"), () -> "directoryPath cannot contain double slashes");
         RepoAssert.isTrue(!directoryPath.endsWith("/"), () -> "directoryPath cannot end with slash");      
       }
@@ -84,7 +99,7 @@ public interface Node extends FileSystemEntity {
       final var directoryName = getNodeName();
       RepoAssert.notNull(directoryName, () -> "directoryName is required");
       RepoAssert.isTrue(!directoryName.trim().isEmpty(), () -> "directoryName cannot be empty");
-      RepoAssert.isTrue(directoryName.matches("^[a-zA-Z0-9_ -]+$"), () -> "directoryPath contains invalid characters, only a-z, A-Z, 0-9, /, _, -, space allowed");
+      RepoAssert.isTrue(directoryName.matches("^[\\p{L}0-9_. -]+$"), () -> "directoryName: '" + directoryName + "' contains invalid characters, only Unicode letters, digits, _, ., -, and spaces allowed");
       RepoAssert.isTrue(!directoryName.contains("/"), () -> "directoryName cannot contain slashes");   
       return;
     }
@@ -93,7 +108,7 @@ public interface Node extends FileSystemEntity {
       final var filePath = getNodePath().get();
       RepoAssert.notNull(filePath, () -> "filePath is required");
       RepoAssert.isTrue(!filePath.trim().isEmpty(), () -> "filePath cannot be empty");
-      RepoAssert.isTrue(filePath.matches("^[a-zA-Z0-9/_-]+$"), () -> "filePath contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
+      RepoAssert.isTrue(filePath.matches("^[\\p{L}0-9_. -\\/]+$"), () -> "filePath: '" + filePath + "' contains invalid characters, only a-z, A-Z, 0-9, /, _, - allowed");
       RepoAssert.isTrue(!filePath.contains("//"), () -> "filePath cannot contain double slashes");
       RepoAssert.isTrue(!filePath.endsWith("/"), () -> "filePath cannot end with slash");
     }
@@ -101,24 +116,11 @@ public interface Node extends FileSystemEntity {
     final var fileName = getNodeName();
     RepoAssert.notNull(fileName, () -> "fileName is required");
     RepoAssert.isTrue(!fileName.trim().isEmpty(), () -> "fileName cannot be empty");
-    RepoAssert.isTrue(fileName.matches("^[a-zA-Z0-9_.-]+$"), () -> "fileName contains invalid characters, only a-z, A-Z, 0-9, _, ., - allowed");
+    RepoAssert.isTrue(fileName.matches("^[\\p{L}0-9_. -]+$"), () -> "fileName: '" + fileName + "' contains invalid characters, only Unicode letters, digits, _, ., -, and spaces allowed");
     RepoAssert.isTrue(!fileName.contains("/"), () -> "fileName cannot contain slashes");
   }
   
-
-  @Override
-  default FileSystemEntityType getDocType() { 
-    return FileSystemEntityType.NODE; 
-  }
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableNodeTransitives.class)
-  @JsonDeserialize(as = ImmutableNodeTransitives.class)
-  interface NodeTransitives {
-    @Nullable ObjectIndex getObjectIndex();
-    @Nullable Blob getBlob();
-    @Nullable Props getProps();
-  }
     
   // H(node) = μ(node_path ⊕ node_name ⊕ H(blob) ⊕ H(props))
   public static ImmutableNode.Builder newInstance(
