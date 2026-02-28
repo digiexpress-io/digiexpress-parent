@@ -71,7 +71,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
               .build());
         }
         
-        final var program = new DecisionProgramImpl(ast, status, rows, errors, errors, assocs);
+        final var program = new DecisionProgramImpl(ast, status, rows, errors, assocs);
         
         return program;
       }
