@@ -63,7 +63,7 @@ public class OperationDate {
     } else if(value.trim().isEmpty()) {
       return isEmpty(valueType, value);
     }
-    throw new ExpressionException(String.format("unknown value type: %s, '%s'", valueType, value));
+    throw new IllegalArgumentException(String.format("unknown value type: %s, '%s'", valueType, value));
   }
 
 

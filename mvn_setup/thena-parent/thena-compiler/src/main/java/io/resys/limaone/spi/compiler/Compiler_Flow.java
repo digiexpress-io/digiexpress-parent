@@ -31,8 +31,6 @@ import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.compiler.flow.ImmutableFlowProgram;
-import io.resys.limaone.spi.program.ProgramException;
-import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 import lombok.RequiredArgsConstructor;
 
 
@@ -51,15 +49,18 @@ public class Compiler_Flow implements CompilableUnit {
 
   private final Map<String, FlowProgramStep> steps = new HashMap<>();
   private final Map<String, FlowTaskNode> tasksById = new HashMap<>();
-  
+  private NewArtifact resolution;
   
   @Override
   public OpenProgram compile(NewArtifact resolution) {
     final Flow_AST ast = parser.parseFlow().id(flow.getId()).syntax(flow.getBody().getFlowValue()).parse();
+    
+    this.resolution = resolution;
+    final var firstTask = visitTasksById(ast);
+    final var firstStep = firstTask == null ? END_STEP: visitTask(firstTask);
     resolution.ast(ast).name(ast.getName()).id(flow.getId()).build();
     
     return new OpenProgram() {
-      
       @Override
       public String getId() {
         return ast.getId();
@@ -68,13 +69,8 @@ public class Compiler_Flow implements CompilableUnit {
       public Simple_AST getAst() {
         return ast;
       }
-      
       @Override
       public Program close(Artifact artifact) {
-
-        final var firstTask = visitTasksById(ast);
-        final var firstStep = firstTask == null ? END_STEP: visitTask(firstTask);
-        
         return new ImmutableFlowProgram(
             ast, firstStep.getId(), steps, 
             artifact.getProgramStatus(), 
@@ -201,13 +197,13 @@ public class Compiler_Flow implements CompilableUnit {
     try {
       final var isTrue = when == null || when.isEmpty();
       final var expression = isTrue ? 
-          ExpressionProgramFactory.build("true", ValueType.FLOW_CONTEXT) :
-          ExpressionProgramFactory.build(when, ValueType.FLOW_CONTEXT);
+          Compiler_Expression.build("true", ValueType.FLOW_CONTEXT) :
+          Compiler_Expression.build(when, ValueType.FLOW_CONTEXT);
       
       condition.expression(expression).stepId(thenValue);
     } catch(Exception e) {
       final var message = "Failed to evaluate expression: \"" + when + "\" in flow decision: " + decisionId + "!" + System.lineSeparator() + e.getMessage();
-      throw new ProgramException(message, e);
+      throw new CompilerException(message, e);
     } 
     return condition.build();
   }

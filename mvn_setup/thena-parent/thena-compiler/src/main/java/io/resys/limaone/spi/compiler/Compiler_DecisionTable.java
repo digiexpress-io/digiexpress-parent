@@ -23,7 +23,6 @@ import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.program.DecisionProgramImpl;
-import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 import lombok.RequiredArgsConstructor;
 
 
@@ -112,7 +111,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
             final var typeDef = accepts.get(value.getHeader());
             programRow.addAccepts(ImmutableDecisionRowAccepts.builder()
                 .key(typeDef)
-                .expression(ExpressionProgramFactory.build(value.getValue(), typeDef.getValueType()))
+                .expression(Compiler_Expression.build(value.getValue(), typeDef.getValueType()))
                 .build());
           } else {
             final var typeDef = returns.get(value.getHeader());

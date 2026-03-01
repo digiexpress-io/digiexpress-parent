@@ -25,8 +25,8 @@ import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.ExpressionProgram;
 import io.resys.limaone.spi.ast.AST_Exception;
+import io.resys.limaone.spi.compiler.Compiler_Expression;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
-import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 
 public class CommandMapper {
 
@@ -135,7 +135,7 @@ public class CommandMapper {
       .forEach(cell -> {
 
         try {
-          final var expression = ExpressionProgramFactory.build(cell.getValue(), valueType);
+          final var expression = Compiler_Expression.build(cell.getValue(), valueType);
           if(expression.getConstants().size() == 1) {
             cell.setValue(expression.getConstants().get(0));
           }
@@ -151,7 +151,7 @@ public class CommandMapper {
   private String getExpression(ValueType valueType, ColumnExpressionType value, String columnValue) {
     String constant;
     try {
-      final ExpressionProgram expression = ExpressionProgramFactory.build(columnValue, valueType);
+      final ExpressionProgram expression = Compiler_Expression.build(columnValue, valueType);
       if(expression.getConstants().size() != 1) {
         return null;
       }
@@ -315,7 +315,7 @@ public class CommandMapper {
     }
 
     try {
-      return ExpressionProgramFactory.build(header.getScript(), ValueType.MAP).run(context) + "";
+      return Compiler_Expression.build(header.getScript(), ValueType.MAP).run(context) + "";
     } catch(Exception e) {
       return null;
     }

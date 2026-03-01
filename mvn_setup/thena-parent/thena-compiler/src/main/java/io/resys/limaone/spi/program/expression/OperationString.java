@@ -34,7 +34,7 @@ public class OperationString {
         return in(Arrays.asList(value));
       }
     } catch(Exception e) {
-      throw new ExpressionException("Incorrect string expression: " + value + "!", e);
+      throw new IllegalArgumentException("Incorrect string expression: " + value + "!", e);
     }
   }
   private static Operation<String> xin(Collection<String> constant) {
