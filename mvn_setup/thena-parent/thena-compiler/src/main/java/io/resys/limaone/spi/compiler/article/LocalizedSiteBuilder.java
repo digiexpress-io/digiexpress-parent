@@ -11,14 +11,14 @@ import java.util.Optional;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.hash.Hashing;
 
-import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.ast.Article_AST.Link;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.program.ArticleProgram.Topic;
 import io.resys.limaone.program.ArticleProgram.TopicBlob;
 import io.resys.limaone.program.ArticleProgram.TopicLink;
 import io.resys.limaone.program.ImmutableLocalizedSite;
-import io.resys.limaone.program.ImmutableProgramMessage;
 import io.resys.limaone.program.ImmutableTopic;
 import io.resys.limaone.program.ImmutableTopicLink;
 import io.resys.limaone.program.Program.ProgramStatus;
@@ -214,7 +214,7 @@ public class LocalizedSiteBuilder {
         @Override
         public ValidatorResult validate(Optional<Simple_AST> dependency) {
           return ImmutableValidatorResult.builder()
-              .addMessages(ImmutableProgramMessage.builder()
+              .addMessages(ImmutableModelError.builder()
                   .id("flow-not-found")
                   .msg(JsonObject.of(
                       "linkName", link.getValue(),
@@ -222,7 +222,7 @@ public class LocalizedSiteBuilder {
                       "errorMessage", "Flow not found!")
                   .encodePrettily())
                   .build())
-              .programStatus(dependency.isEmpty() ? ProgramStatus.DEPENDENCY_ERROR : ProgramStatus.UP)
+              .programStatus(dependency.isEmpty() ? ProgramStatus.ERROR : ProgramStatus.UP)
               .build();
         }
       })
@@ -236,8 +236,7 @@ public class LocalizedSiteBuilder {
         @Override
         public ValidatorResult validate(Optional<Simple_AST> dependency) {
           return ImmutableValidatorResult.builder()
-              .addMessages(ImmutableProgramMessage.builder()
-                  .id("dialob-not-found")
+              .addMessages(ImmutableModelError.builder()
                   .msg(JsonObject.of(
                       "linkName", link.getValue(),
                       "formName", link.getFormName(),
@@ -245,7 +244,7 @@ public class LocalizedSiteBuilder {
                       "errorMessage", "Form not found!"
                       ).encodePrettily())
                   .build())
-              .programStatus(dependency.isEmpty() ? ProgramStatus.DEPENDENCY_ERROR : ProgramStatus.UP)
+              .programStatus(dependency.isEmpty() ? ProgramStatus.ERROR : ProgramStatus.UP)
               .build();
         }
       })

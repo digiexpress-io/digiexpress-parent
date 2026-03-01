@@ -8,6 +8,7 @@ import java.util.Map;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.FlowInputNode;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;

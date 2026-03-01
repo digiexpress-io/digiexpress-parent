@@ -11,6 +11,7 @@ import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
 import io.resys.limaone.model.FlowTask.FlowTaskPropType;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.program.ImmutableFlowTaskResult;

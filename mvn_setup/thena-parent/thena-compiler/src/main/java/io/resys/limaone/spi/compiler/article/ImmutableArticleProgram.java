@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.resys.limaone.ast.Article_AST;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.ArticleProgram;
 import io.resys.limaone.program.ProgramInput;
