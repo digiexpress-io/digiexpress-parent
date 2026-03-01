@@ -115,6 +115,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       return ast
           .id(this.id)
           .bodyType(Model.BodyType.FLOW)
+          .hash(hash)
           .errors(messages)
           .name(id == null ? "": id.getValue())
           .root(flow)
