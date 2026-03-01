@@ -24,6 +24,10 @@ public class CompilerImpl implements Compiler {
   private final Duration maxTimeout;
   private final AST_Parser astParser;
   
+  @Override
+  public AST_Parser getParser() {
+    return astParser;
+  }
   
   @Override
   public BundleBuilder compile(ModelWorld world) {

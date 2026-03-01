@@ -25,6 +25,8 @@ import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.DecisionTable_AST_CacheKey;
 import io.resys.limaone.spi.ast.decisiontable.CommandMapper;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
 
@@ -40,6 +42,16 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
     
     this.src = src;
     return this;
+  }
+
+  @Override
+  public DecsionTableParser syntax(String syntax) {
+    Objects.requireNonNull(syntax, () -> "syntax must be defined!");
+    final var nodes = new JsonArray(syntax).stream()
+        .map(e -> ((JsonObject) e))
+        .map(e -> e.mapTo(DecisionTableNode.class))
+        .toList();
+    return nodes(nodes);
   }
   @Override
   public DecsionTableParser id(String id) {

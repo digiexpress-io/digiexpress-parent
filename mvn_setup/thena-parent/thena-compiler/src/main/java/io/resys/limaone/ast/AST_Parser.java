@@ -27,6 +27,7 @@ public interface AST_Parser {
   interface DecsionTableParser {
     DecsionTableParser id(String id);
     DecsionTableParser nodes(List<DecisionTableNode> nodes);
+    DecsionTableParser syntax(String syntax);
     DecisionTable_AST parse();
   }
   

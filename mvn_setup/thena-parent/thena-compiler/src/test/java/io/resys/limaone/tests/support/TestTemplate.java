@@ -1,6 +1,5 @@
 package io.resys.limaone.tests.support;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,23 +11,25 @@ import org.apache.commons.io.IOUtils;
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.DecisionTable.DecisionTableNode;
+import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.ImmutableDecisionTable;
+import io.resys.limaone.model.ImmutableFlow;
 import io.resys.limaone.model.ImmutableFlowTask;
 import io.resys.limaone.model.ImmutableModel;
 import io.resys.limaone.model.ImmutableModelWorld;
-import io.resys.limaone.model.DecisionTable.DecisionTableNode;
 import io.resys.limaone.model.Model.BodyType;
-import io.resys.limaone.program.Compiler;
 import io.resys.limaone.program.DecisionProgram;
+import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.spi.compiler.CompilerImpl;
-import io.resys.limaone.tests.DecisionTest;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import lombok.Value;
 
 public class TestTemplate {
-  private static final Compiler compiler = CompilerImpl.builder().build();
+  private static final CompilerImpl compiler = CompilerImpl.builder().build();
 
   
   public static LocalDateTime parseLocalDateTime(String date) {
@@ -52,79 +53,150 @@ public class TestTemplate {
   
 
   public DecisionProgram compileDt(String fullPath) {
-    try {
-      final var nodeString = IOUtils.toString(DecisionTest.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
-      final var model = ImmutableModel.<DecisionTable>builder()
-          .id(fullPath)
-          .bodyHash(Hashing.murmur3_128().hashString(nodeString, StandardCharsets.UTF_8).toString())
-          .bodyType(BodyType.DECISION_TABLE)
-          .body(ImmutableDecisionTable.builder()
-              .name(fullPath)
-              .nodes(new JsonArray(nodeString).stream()
-                    .map(e -> ((JsonObject) e))
-                    .map(e -> e.mapTo(DecisionTableNode.class))
-                    .toList())
-              .build())
-          .build();
-      
-      final var world = ImmutableModelWorld.builder().name("DecisionTest")
-          .putDecisionTables(model.getId(), model)
-          .build();
-      return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
-    } catch(IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    final var nodeString = toString(fullPath);
+    final var model = ImmutableModel.<DecisionTable>builder()
+        .id(fullPath)
+        .bodyHash(Hashing.murmur3_128().hashString(nodeString, StandardCharsets.UTF_8).toString())
+        .bodyType(BodyType.DECISION_TABLE)
+        .body(ImmutableDecisionTable.builder()
+            .name(fullPath)
+            .nodes(new JsonArray(nodeString).stream()
+                  .map(e -> ((JsonObject) e))
+                  .map(e -> e.mapTo(DecisionTableNode.class))
+                  .toList())
+            .build())
+        .build();
+    
+    final var world = ImmutableModelWorld.builder().name("DecisionTest")
+        .putDecisionTables(model.getId(), model)
+        .build();
+    return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
   }
   
   
   
   public static DecisionProgram compileOneDt(String fullPath) {
-    try {
-      final var nodeString = IOUtils.toString(DecisionTest.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
-      final var model = ImmutableModel.<DecisionTable>builder()
-          .id(fullPath)
-          .bodyHash(Hashing.murmur3_128().hashString(nodeString, StandardCharsets.UTF_8).toString())
-          .bodyType(BodyType.DECISION_TABLE)
-          .body(ImmutableDecisionTable.builder()
-              .name(fullPath)
-              .nodes(new JsonArray(nodeString).stream()
-                    .map(e -> ((JsonObject) e))
-                    .map(e -> e.mapTo(DecisionTableNode.class))
-                    .toList())
-              .build())
-          .build();
-      
-      final var world = ImmutableModelWorld.builder().name("DecisionTest")
-          .putDecisionTables(model.getId(), model)
-          .build();
-      return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
-    } catch(IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    final var nodeString = toString(fullPath);
+    final var model = ImmutableModel.<DecisionTable>builder()
+        .id(fullPath)
+        .bodyHash(Hashing.murmur3_128().hashString(nodeString, StandardCharsets.UTF_8).toString())
+        .bodyType(BodyType.DECISION_TABLE)
+        .body(ImmutableDecisionTable.builder()
+            .name(fullPath)
+            .nodes(new JsonArray(nodeString).stream()
+                  .map(e -> ((JsonObject) e))
+                  .map(e -> e.mapTo(DecisionTableNode.class))
+                  .toList())
+            .build())
+        .build();
+    
+    final var world = ImmutableModelWorld.builder().name("DecisionTest")
+        .putDecisionTables(model.getId(), model)
+        .build();
+    return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
   }
   
   
 
   public static FlowTaskProgram compileOneFlowTask(String fullPath) {
+  
+    final var taskValue = toString(fullPath);
+    final var model = ImmutableModel.<FlowTask>builder()
+        .id(fullPath)
+        .bodyHash(Hashing.murmur3_128().hashString(taskValue, StandardCharsets.UTF_8).toString())
+        .bodyType(BodyType.FLOW_TASK)
+        .body(ImmutableFlowTask.builder()
+            .taskName(fullPath)
+            .taskValue(taskValue)
+            .build())
+        .build();
+    
+    final var world = ImmutableModelWorld.builder().name("FlowTaskTest")
+        .putFlowTasks(model.getId(), model)
+        .build();
+    return compiler.compile(world).id(fullPath).build().queryFlowTasks().name(fullPath).getOne();
+
+  }
+
+  
+  
+  public static FlowProgram compileOneFlow(String fullPath, Deps ... deps) {
+    
+    final var flowValue = toString(fullPath);
+    final var ast = compiler.getParser().parseFlow().id(fullPath).syntax(flowValue).parse();
+    final var model = ImmutableModel.<Flow>builder()
+        .id(fullPath)
+        .bodyHash(ast.getHash())
+        .bodyType(BodyType.FLOW)
+        .body(ImmutableFlow.builder()
+            .flowName(ast.getName())
+            .flowValue(flowValue)
+            .build())
+        .build();
+    
+    final var world = ImmutableModelWorld.builder().name("FlowTest").putFlows(model.getId(), model);
+    
+    
+    for(final var dep : deps) {
+      final var syntax = toString(dep.getFullPath());
+      if(dep.getType() == BodyType.FLOW_TASK) {
+        final var target_ast = compiler.getParser().parseFlowTask().id(dep.getFullPath()).syntax(syntax).parse();
+        final var ft = ImmutableModel.<FlowTask>builder()
+            .id(dep.getFullPath())
+            .bodyHash(target_ast.getHash())
+            .bodyType(BodyType.FLOW_TASK)
+            .body(ImmutableFlowTask.builder()
+                .taskName(target_ast.getName())
+                .taskValue(syntax)
+                .build())
+            .build();
+        
+        world.putFlowTasks(ft.getId(), ft);
+      } else {
+        final var nodes = new JsonArray(syntax).stream()
+            .map(e -> ((JsonObject) e))
+            .map(e -> e.mapTo(DecisionTableNode.class))
+            .toList();
+
+        final var target_ast = compiler.getParser().parseDecisionTable().id(dep.getFullPath()).nodes(nodes).parse();
+        final var dt = ImmutableModel.<DecisionTable>builder()
+            .id(dep.getFullPath())
+            .bodyHash(target_ast.getHash())
+            .bodyType(BodyType.DECISION_TABLE)
+            .body(ImmutableDecisionTable.builder()
+                .name(target_ast.getName())
+                .nodes(nodes)
+                .build())
+            .build();
+        
+        world.putDecisionTables(dt.getId(), dt);
+      }
+    }
+  
+    
+    return compiler.compile(world.build()).id(fullPath).build().queryFlows().name(ast.getName()).getOne();
+  }
+  
+  
+  private static String toString(String fullPath) {
     try {
-      final var taskValue = IOUtils.toString(DecisionTest.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
-      final var model = ImmutableModel.<FlowTask>builder()
-          .id(fullPath)
-          .bodyHash(Hashing.murmur3_128().hashString(taskValue, StandardCharsets.UTF_8).toString())
-          .bodyType(BodyType.FLOW_TASK)
-          .body(ImmutableFlowTask.builder()
-              .taskName(fullPath)
-              .taskValue(taskValue)
-              .build())
-          .build();
-      
-      final var world = ImmutableModelWorld.builder().name("FlowTaskTest")
-          .putFlowTasks(model.getId(), model)
-          .build();
-      return compiler.compile(world).id(fullPath).build().queryFlowTasks().name(fullPath).getOne();
-    } catch(IOException e) {
+      return IOUtils.toString(TestTemplate.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
+    } catch(Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-
+  
+  @Value
+  public static class Deps {
+    BodyType type;
+    String fullPath;
+    
+    public static Deps dt(String fullPath) {
+      return new Deps(BodyType.DECISION_TABLE, fullPath);
+    }
+    
+    public static Deps ft(String fullPath) {
+      return new Deps(BodyType.FLOW_TASK, fullPath);
+    }
+  }
 }
