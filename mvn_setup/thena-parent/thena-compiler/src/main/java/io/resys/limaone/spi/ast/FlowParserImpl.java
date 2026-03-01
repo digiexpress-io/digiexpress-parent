@@ -57,8 +57,8 @@ import io.resys.limaone.spi.LocalCache.Flow_AST_CacheKey;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.ast.flow.NodeBean;
+import io.resys.limaone.spi.ast.flow.NodeBean.NodeSource;
 import io.resys.limaone.spi.ast.flow.NodeFlowBean;
-import io.resys.limaone.spi.ast.flow.NodeSource;
 
 
 

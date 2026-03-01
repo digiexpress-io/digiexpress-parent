@@ -13,6 +13,7 @@ import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface CompilableUnit {
   OpenProgram compile(NewArtifact resolution);
@@ -40,7 +41,7 @@ public interface CompilableUnit {
   interface RequireDependency {
     RequireDependency id(String id); 
     RequireDependency bodyType(Model.BodyType bodyType); 
-    RequireDependency validator(Validator validator);
+    RequireDependency validator(@Nullable Validator validator);
     void build();
   }
   

@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Parameter;
 import jakarta.annotation.Nullable;
@@ -40,9 +38,10 @@ public interface Program extends Serializable {
   interface ProgramMessage {
     String getId();
     String getMsg();
-    @JsonIgnore
-    @Nullable Integer getRow();
+
+    @Nullable Integer getLine();
     @Nullable Integer getColumn();
+
     @Nullable Exception getException();
   }
   enum ProgramStatus { 

@@ -30,38 +30,36 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.hdes.client.api.ast.AstBody.AstCommandMessage;
-import io.resys.hdes.client.api.ast.AstBody.CommandMessageType;
-import io.resys.hdes.client.api.ast.AstFlow;
-import io.resys.hdes.client.api.ast.AstFlow.AstFlowInputNode;
-import io.resys.hdes.client.api.ast.AstFlow.AstFlowNode;
-import io.resys.hdes.client.api.ast.AstFlow.AstFlowTaskNode;
-import io.resys.hdes.client.api.ast.ImmutableAstCommandMessage;
-import io.resys.hdes.client.api.ast.TypeDef;
-import io.resys.hdes.client.api.ast.TypeDef.Direction;
-import io.resys.hdes.client.api.ast.TypeDef.ValueType;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowProgramStep;
-import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
-import io.resys.hdes.client.spi.flow.ast.AstFlowNodesFactory;
-import io.resys.hdes.client.spi.flow.ast.beans.NodeFlowBean;
-import io.resys.hdes.client.spi.util.HdesAssert;
+
+import io.resys.limaone.ast.Flow_AST;
+import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_AST.FlowInputNode;
+import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
+import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.model.Parameter;
+import io.resys.limaone.model.Parameter.Direction;
+import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.FlowProgram.FlowProgramStep;
+import io.resys.limaone.program.ImmutableProgramMessage;
+import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
+import io.resys.limaone.spi.ast.flow.NodeFlowBean;
 
 public class FlowAssociationValidator {
 
-  private final AstFlow ast;
-  private final Map<String, TypeDef> allParams = new HashMap<>();
+  private final Flow_AST ast;
+  private final Map<String, Parameter> allParams = new HashMap<>();
   private final List<TaskStepToValidate> toValidate = new ArrayList<>();
   
-  public FlowAssociationValidator(AstFlow ast) {
+  public FlowAssociationValidator(Flow_AST ast) {
     this.ast = ast;
   }
 
-  public void visitStep(FlowProgramStep step, ProgramWrapper<?, ?> wrapper) {
-    final var taskModel = ast.getSrc().getTasks().values().stream()
+  public void visitStep(FlowProgramStep step, Simple_AST wrapper) {
+    final var taskModel = ast.getRoot().getTasks().values().stream()
         .filter(t -> t.getId() != null && t.getId().getValue().equals(step.getId()))
         .findFirst().get();
     
-    for(TypeDef param : wrapper.getAst().get().getHeaders().getReturnDefs()) {
+    for(Parameter param : wrapper.getHeaders().getReturnDefs()) {
       if(param.getDirection() == Direction.OUT) {
         String name = AstFlowNodesFactory.getStringValue(taskModel.getId()) + "." + param.getName();
         HdesAssert.isTrue(!allParams.containsKey(name), () -> "Can't have duplicate param: " + name + "!");
@@ -72,8 +70,8 @@ public class FlowAssociationValidator {
   }
   
   public List<TaskStepToValidate> build() {    
-    final var node = ast.getSrc();
-    Map<String, AstFlowInputNode> unusedInputs = new HashMap<>(node.getInputs());
+    final var node = ast.getRoot();
+    Map<String, FlowInputNode> unusedInputs = new HashMap<>(node.getInputs());
     for(final var entry : toValidate) {
 
       // Validate inputs
@@ -87,21 +85,21 @@ public class FlowAssociationValidator {
         if (!taskInput.getDataType().getValueType().equals(ValueType.OBJECT)) {
           error(entry,
               taskInput.getNode().getStart(),
-              taskInput.getNode().getSource().getValue().length(),
+              taskInput.getNode().getSyntax().length(),
               "Task: " + taskModel.getKeyword() + ", input: '" + taskInput.getNode().getValue() + "', type has wrong type, expecting: 'OBJECT' but was: '" + ref + "'!");
         }
         taskInputs.remove(taskInput.getNode().getValue());
         unusedInputs.remove(taskInput.getNode().getValue());
 
       } else {
-        for (final var input : entry.getWrapper().getAst().get().getHeaders().getAcceptDefs()) {
+        for (final var input : entry.getWrapper().getHeaders().getAcceptDefs()) {
 
           if (taskInputs.containsKey(input.getName())) {
             TaskInput taskInput = taskInputs.get(input.getName());
             if (taskInput.getDataType() == null) {
               error(entry,
                   taskInput.getNode().getStart(),
-                  taskInput.getNode().getSource().getValue().length(),
+                  taskInput.getNode().getSyntax().length(),
                   "Task: " + taskModel.getKeyword() + ", input: '" + input.getName() + "', type has unknown mapping:'" + taskInput.getNode().getValue() + "'!");
               continue;
             }
@@ -109,7 +107,7 @@ public class FlowAssociationValidator {
             if (input.getValueType() != ref) {
               error(entry,
                   taskInput.getNode().getStart(),
-                  taskInput.getNode().getSource().getValue().length(),
+                  taskInput.getNode().getSyntax().length(),
                   "Task: " + taskModel.getKeyword() + ", input: '" + input.getName() + "', type has wrong type, expecting:'" + input.getValueType() + "' but was: '" + ref + "'!");
             }
             taskInputs.remove(input.getName());
@@ -117,7 +115,7 @@ public class FlowAssociationValidator {
           } else if(input.isRequired()) {
             error(entry,
                 taskModel.getRef().getInputsNode() == null ? taskModel.getRef().getStart() : taskModel.getRef().getInputsNode().getStart(),
-                taskModel.getRef().getInputsNode() == null ? taskModel.getRef().getStart() : taskModel.getRef().getInputsNode().getSource().getValue().length(),
+                taskModel.getRef().getInputsNode() == null ? taskModel.getRef().getStart() : taskModel.getRef().getInputsNode().getSyntax().length(),
                 "Task: " + taskModel.getKeyword() + ", is missing input: '" + input.getName() + "'!");
           }
         }
@@ -128,7 +126,7 @@ public class FlowAssociationValidator {
         String inputName = input.getDataType() == null ? input.getNode().getKeyword() : input.getDataType().getName();
         error(entry,
             input.getNode().getStart(),
-            input.getNode().getSource().getValue().length(),
+            input.getNode().getSyntax().length(),
             "Task: " + taskModel.getId().getValue() + ", has unused input: '" + inputName + "'!");
       }
     }
@@ -136,10 +134,10 @@ public class FlowAssociationValidator {
     // Unused inputs on task
     TaskStepToValidate warnings = new TaskStepToValidate(null, null, null);
     toValidate.add(warnings);
-    for(AstFlowInputNode input : unusedInputs.values()) {
+    for(final var input : unusedInputs.values()) {
       warning(warnings, 
           input.getStart(),
-          input.getSource().getValue().length(),
+          input.getSyntax().length(),
           "Input: " + input.getKeyword() + " is unused!");
     }
     
@@ -151,11 +149,11 @@ public class FlowAssociationValidator {
 
   private Map<String, TaskInput> getTaskServiceInput(TaskStepToValidate toValidate) {
 
-    AstFlowTaskNode taskModel = toValidate.getTaskNode();
-    ProgramWrapper<?, ?> wrapper = toValidate.getWrapper();
+    final var taskModel = toValidate.getTaskNode();
+    final var wrapper = toValidate.getWrapper();
     
-    Map<String, TypeDef> serviceTypes = wrapper.getAst().get()
-        .getHeaders().getAcceptDefs().stream()
+    Map<String, Parameter> serviceTypes = wrapper.getHeaders()
+        .getAcceptDefs().stream()
         .collect(Collectors.toMap(p -> p.getName(), p -> p));
 
     Map<String, TaskInput> result = new HashMap<>();
@@ -163,28 +161,28 @@ public class FlowAssociationValidator {
 
     if (objectInput != null) {
       // see if object input matches any of the flow inputs
-      Optional<TypeDef> matchedInput = ast.getHeaders().getAcceptDefs().stream().filter(typeDef -> typeDef.getName().equals(objectInput)).findFirst();
+      Optional<Parameter> matchedInput = ast.getHeaders().getAcceptDefs().stream().filter(Parameter -> Parameter.getName().equals(objectInput)).findFirst();
       if (matchedInput.isPresent()) {
         result.put(objectInput, new TaskInput(taskModel.getRef().getInputsNode(), matchedInput.get()));
       } else {
         error(toValidate,
           taskModel.getRef().getRef().getStart(),
-          taskModel.getRef().getRef().getSource().getValue().length(),
+          taskModel.getRef().getRef().getSyntax().length(),
           "Task: " + taskModel.getKeyword() + ", has unknown object input: '" + objectInput + "'!");
       }
     } else {
-      for (Map.Entry<String, AstFlowNode> entry : taskModel.getRef().getInputs().entrySet()) {
-        AstFlowNode node = entry.getValue();
+      for (final var entry : taskModel.getRef().getInputs().entrySet()) {
+        final var node = entry.getValue();
         String mappingName = AstFlowNodesFactory.getStringValue(node);
         if (StringUtils.isEmpty(mappingName)) {
           error(toValidate,
               node.getStart(),
-              node.getSource().getValue().length(),
+              node.getSyntax().length(),
               "Task: " + taskModel.getKeyword() + " mapping: '" + entry.getKey() + "' is missing value!");
         } else if (!serviceTypes.containsKey(entry.getKey())) {
           warning(toValidate,
               node.getStart(),
-              node.getSource().getValue().length(),
+              node.getSyntax().length(),
               "Task: " + taskModel.getKeyword() + ", has unknown input: '" + entry.getKey() + "'!");
         } else if (allParams.containsKey(mappingName)) {
           result.put(entry.getKey(), new TaskInput(node, allParams.get(mappingName)));
@@ -197,7 +195,7 @@ public class FlowAssociationValidator {
   }
   
   private void error(TaskStepToValidate toValidate, int start, int range, String value) {
-    toValidate.getMessages().add(ImmutableAstCommandMessage.builder()
+    toValidate.getMessages().add(ImmutableProgramMessage.builder()
         .line(start)
         .range(AstFlowNodesFactory.range().build(0, range))
         .type(CommandMessageType.ERROR)
@@ -216,10 +214,10 @@ public class FlowAssociationValidator {
 
   public static class TaskStepToValidate {
     private final FlowProgramStep step; 
-    private final ProgramWrapper<?, ?> wrapper;
-    private final AstFlowTaskNode taskNode;
+    private final Simple_AST wrapper;
+    private final FlowTaskNode taskNode;
     private final List<AstCommandMessage> messages = new ArrayList<>();
-    private TaskStepToValidate(FlowProgramStep step, ProgramWrapper<?, ?> wrapper, AstFlowTaskNode taskNode) {
+    private TaskStepToValidate(FlowProgramStep step, Simple_AST wrapper, FlowTaskNode taskNode) {
       super();
       this.step = step;
       this.wrapper = wrapper;
@@ -231,26 +229,26 @@ public class FlowAssociationValidator {
     public List<AstCommandMessage> getMessages() {
       return messages;
     }
-    public ProgramWrapper<?, ?> getWrapper() {
+    public Simple_AST getWrapper() {
       return wrapper;
     }
-    public AstFlowTaskNode getTaskNode() {
+    public FlowTaskNode getTaskNode() {
       return taskNode;
     }
   }
   
   private static class TaskInput {
-    private final AstFlowNode node;
-    private final TypeDef dataType;
-    public TaskInput(AstFlowNode node, TypeDef dataType) {
+    private final AnyFlowNode node;
+    private final Parameter dataType;
+    public TaskInput(AnyFlowNode node, Parameter dataType) {
       super();
       this.node = node;
       this.dataType = dataType;
     }
-    public AstFlowNode getNode() {
+    public AnyFlowNode getNode() {
       return node;
     }
-    public TypeDef getDataType() {
+    public Parameter getDataType() {
       return dataType;
     }
   }

@@ -94,8 +94,10 @@ public interface Flow_AST extends Simple_AST, Serializable {
     Map<String, AnyFlowNode> getChildren();
     AnyFlowNode get(String name);
     String getValue();
+    String getSyntax();
     boolean hasNonNull(String name);
     int getStart();
     int getEnd();
   }
+
 }
