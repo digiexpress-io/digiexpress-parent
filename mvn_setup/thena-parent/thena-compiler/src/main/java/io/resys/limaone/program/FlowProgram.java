@@ -17,8 +17,6 @@ import jakarta.annotation.Nullable;
 
 public interface FlowProgram extends Program {
   
-  String getStartStepId();
-  Map<String, FlowProgramStep> getSteps();
   FlowExecutor run(ProgramInput input, Runtime runtime);
   FlowExecutor run(Map<String, Serializable> input);
   
@@ -26,45 +24,6 @@ public interface FlowProgram extends Program {
     @Nullable
     FlowResultLog andGetTask(String task);
     FlowResult andGetBody();
-  }
-  
-
-  @Value.Immutable
-  interface FlowProgramStep extends Serializable {
-    String getId();
-    FlowProgramStepPointer getPointer();
-    @Nullable FlowProgramStepBody getBody();
-  }
-  
-  @Value.Immutable
-  interface FlowProgramStepBody extends Serializable {
-    String getRef();
-    FlowProgramStepRefType getRefType();
-    Map<String, String> getInputMapping();
-    Boolean getCollection();
-  }
-  
-  interface FlowProgramStepPointer extends Serializable {
-    FlowProgramStepPointerType getType();
-  }
-  
-  
-  @Value.Immutable
-  interface FlowProgramStepEndPointer extends FlowProgramStepPointer {
-  }
-  @Value.Immutable
-  interface FlowProgramStepThenPointer extends FlowProgramStepPointer {
-    String getStepId();
-  }
-  @Value.Immutable
-  interface FlowProgramStepWhenThenPointer extends FlowProgramStepPointer {
-    List<FlowProgramStepConditionalThenPointer> getConditions();
-  }
-  @Value.Immutable  
-  interface FlowProgramStepConditionalThenPointer {
-    @Nullable
-    ExpressionProgram getExpression();
-    String getStepId();
   }
   
   @Value.Immutable

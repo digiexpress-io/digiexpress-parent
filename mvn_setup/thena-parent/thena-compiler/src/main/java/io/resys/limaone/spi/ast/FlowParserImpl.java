@@ -47,7 +47,6 @@ import io.resys.limaone.spi.ast.flow.MutableYamlParseTree;
 import io.resys.limaone.spi.ast.flow.YamlMapper;
 import io.resys.limaone.spi.compiler.Compiler_Expression;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
-import io.resys.limaone.spi.program.FlowProgramExecutor;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -223,7 +222,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   private NextStatement visitStepPointer(YamlTask task) {
     if(task.getSwitch().isEmpty()) {
       final var thenId = YamlMapper.getStringValue(task.getThen());
-      if(thenId != null && !thenId.equals(FlowProgramExecutor.END_STEP.getId())) {
+      if(thenId != null && !thenId.equalsIgnoreCase(MutableYamlParseTree.VALUE_END)) {
         return new ImmutablePointerStatement(visitTask(tasksById.get(thenId))); 
       }
       return ImmutableEndStatement.getInstance();
