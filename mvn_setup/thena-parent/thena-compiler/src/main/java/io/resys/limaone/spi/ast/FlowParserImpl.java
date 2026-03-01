@@ -100,7 +100,6 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
           .hash(hash)
           .statement(new ImmutableInputsStatement(headers.getAcceptDefs(), new ImmutableManyTasksStatement(next)))
           .errors(cst.getItem2())
-          .statement(null)
           .name(id == null ? "": id.getValue())
           .parseTree(cst.getItem1())
           .headers(headers)
@@ -202,7 +201,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     } else {
       if (task.getReturns().getObjectInput() != null) {
         isObjectMapping = true;
-        inputs.put(MutableYamlParseTree.OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
+        inputs.put(MutableYamlParseTree.OBJECT_INPUT_FLAG, task.getReturns().getObjectInput());
       } else {
         for (Map.Entry<String, Yaml> entry : task.getReturns().getInputs().entrySet()) {
           inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
