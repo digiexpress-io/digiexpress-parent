@@ -18,6 +18,7 @@ import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
+import io.resys.limaone.spi.program.input.DefaultProgramInput;
 
 public class FlowProgramImpl implements FlowProgram {
 
@@ -121,12 +122,11 @@ public class FlowProgramImpl implements FlowProgram {
   }
   @Override
   public FlowExecutor run(ProgramInput input, Runtime runtime) {
-    // TODO Auto-generated method stub
-    return null;
+
   }
   @Override
   public FlowExecutor run(Map<String, Serializable> input) {
-    // TODO Auto-generated method stub
-    return null;
+    final var runtime = DefaultRuntime.empty();
+    return run(DefaultProgramInput.of(input, runtime), runtime);
   }
 }

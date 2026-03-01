@@ -18,18 +18,17 @@ import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepBody;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepConditionalThenPointer;
-import io.resys.limaone.program.FlowProgram.FlowProgramStepEndPointer;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepPointer;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepPointerType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepRefType;
 import io.resys.limaone.program.ImmutableFlowProgramStep;
 import io.resys.limaone.program.ImmutableFlowProgramStepBody;
 import io.resys.limaone.program.ImmutableFlowProgramStepConditionalThenPointer;
-import io.resys.limaone.program.ImmutableFlowProgramStepEndPointer;
 import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
 import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
+import io.resys.limaone.spi.program.FlowProgramExecutor;
 import io.resys.limaone.spi.program.FlowProgramImpl;
 import lombok.RequiredArgsConstructor;
 
@@ -40,11 +39,7 @@ public class Compiler_Flow implements CompilableUnit {
   @SuppressWarnings("unused")
   private final ModelWorld world;
   private final Model<Flow> flow;
-  private static final FlowProgramStepEndPointer END_STEP_POINTER = ImmutableFlowProgramStepEndPointer.builder().type(FlowProgramStepPointerType.END).build();
-  public static final FlowProgramStep END_STEP = ImmutableFlowProgramStep.builder()
-      .id("end")
-      .pointer(END_STEP_POINTER)
-      .build();
+
   public static final String OBJECT_INPUT_FLAG = "OBJECT_INPUT";
 
   private final Map<String, FlowProgramStep> steps = new HashMap<>();
@@ -57,7 +52,7 @@ public class Compiler_Flow implements CompilableUnit {
     
     this.resolution = resolution;
     final var firstTask = visitTasksById(ast);
-    final var firstStep = firstTask == null ? END_STEP: visitTask(firstTask);
+    final var firstStep = firstTask == null ? FlowProgramExecutor.END_STEP: visitTask(firstTask);
     resolution.ast(ast).name(ast.getName()).id(flow.getId()).build();
     
     return new OpenProgram() {
@@ -167,7 +162,7 @@ public class Compiler_Flow implements CompilableUnit {
       decisions.forEach(d -> {
         
         final var condition = visitSwitchNode(d);
-        if(!condition.getStepId().equals(END_STEP.getId())) {
+        if(!condition.getStepId().equals(FlowProgramExecutor.END_STEP.getId())) {
           visitTask(tasksById.get(condition.getStepId()));
         }
         pointer.addConditions(condition);
@@ -178,7 +173,7 @@ public class Compiler_Flow implements CompilableUnit {
     }
     
     final var thenId = AstFlowNodesFactory.getStringValue(task.getThen());
-    if(thenId != null && !thenId.equals(END_STEP.getId())) {
+    if(thenId != null && !thenId.equals(FlowProgramExecutor.END_STEP.getId())) {
       visitTask(tasksById.get(thenId));
       return ImmutableFlowProgramStepThenPointer.builder()
           .type(FlowProgramStepPointerType.THEN)
@@ -186,7 +181,7 @@ public class Compiler_Flow implements CompilableUnit {
           .build();
     }
     
-    return END_STEP_POINTER;
+    return FlowProgramExecutor.END_STEP_POINTER;
   }
   
   private FlowProgramStepConditionalThenPointer visitSwitchNode(FlowSwitchNode decision) {

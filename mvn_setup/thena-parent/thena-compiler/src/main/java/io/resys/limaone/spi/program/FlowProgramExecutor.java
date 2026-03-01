@@ -36,8 +36,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
-import io.resys.hdes.client.api.exceptions.ProgramException;
 import io.resys.hdes.client.api.programs.Program.ProgramContext;
 import io.resys.hdes.client.api.programs.Program.ProgramContextNamedValue;
 import io.resys.hdes.client.spi.ImmutableProgramContext;
@@ -45,12 +43,16 @@ import io.resys.hdes.client.spi.groovy.ServiceProgramExecutor;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepEndPointer;
+import io.resys.limaone.program.FlowProgram.FlowProgramStepPointerType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepThenPointer;
 import io.resys.limaone.program.FlowProgram.FlowProgramStepWhenThenPointer;
 import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.program.FlowProgram.FlowResultErrorLog;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.program.ImmutableFlowExecutionLog;
+import io.resys.limaone.program.ImmutableFlowProgramStep;
+import io.resys.limaone.program.ImmutableFlowProgramStepEndPointer;
 import io.resys.limaone.program.ImmutableFlowResult;
 import io.resys.limaone.program.ImmutableFlowResultErrorLog;
 import io.resys.limaone.program.ImmutableFlowResultLog;
@@ -64,7 +66,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlowProgramExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(FlowProgramExecutor.class);
-  private final HdesTypesMapper factory;
+  public static final FlowProgramStepEndPointer END_STEP_POINTER = ImmutableFlowProgramStepEndPointer.builder().type(FlowProgramStepPointerType.END).build();
+  public static final FlowProgramStep END_STEP = ImmutableFlowProgramStep.builder().id("end").pointer(END_STEP_POINTER).build();
+  
+  
   private final FlowProgram program;
   private final ProgramContext context;
   private final Map<String, Serializable> accepted = new HashMap<>();
@@ -72,11 +77,10 @@ public class FlowProgramExecutor {
   private final LocalDateTime start = LocalDateTime.now();
   private final StringBuilder shortHistory = new StringBuilder();
   
-  public FlowProgramExecutor(FlowProgram program, ProgramContext context, HdesTypesMapper factory) {
+  public FlowProgramExecutor(FlowProgram program, ProgramContext context) {
     super();
     this.program = program;
     this.context = context;
-    this.factory = factory;
   }
 
   public FlowResult run() {
@@ -87,7 +91,7 @@ public class FlowProgramExecutor {
     FlowExecutionStatus status = FlowExecutionStatus.COMPLETED;
     try {
       last = visitStep(program.getStartStepId());
-    } catch(StepException e) {
+    } catch(Exception e) {
       LOGGER.error(e.getMessage(), e);
       status = FlowExecutionStatus.ERROR;
       last = Arrays.asList(visitException(e));
@@ -251,7 +255,7 @@ public class FlowProgramExecutor {
         
         ((Collection) old).addAll(newEntries);
       } else {
-        throw new StepException("Don't know how to merge array result: " + JsonObject.mapFrom(entry), null);
+        throw new ProgramException("Don't know how to merge array result: " + JsonObject.mapFrom(entry), null);
       }
     }
   }
@@ -283,7 +287,7 @@ public class FlowProgramExecutor {
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
-          throw new StepException(e.getMessage(), e);
+          throw new ProgramException(e.getMessage(), e);
         }
       }
       case DT: {
@@ -315,7 +319,7 @@ public class FlowProgramExecutor {
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
-          throw new StepException(e.getMessage(), e);
+          throw new ProgramException(e.getMessage(), e);
         }
       }
       case SERVICE: {
@@ -345,7 +349,7 @@ public class FlowProgramExecutor {
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
-          throw new StepException("Error in step: " + step.getId() + ", error: "  + e.getMessage(), e);
+          throw new ProgramException("Error in step: " + step.getId() + ", error: "  + e.getMessage(), e);
         }
       }
       default: 
@@ -463,7 +467,7 @@ public class FlowProgramExecutor {
         if((Boolean) whenThen.getExpression().run(expressionContext).getValue()) {
           isAtleastOneMatch = true;
           //switch leads to end
-          if(FlowProgramBuilder.END_STEP.getId().equals(whenThen.getStepId())) {
+          if(END_STEP.getId().equals(whenThen.getStepId())) {
             visited.add(visitStepLog(
                 ImmutableFlowResultLog.builder()
                 .id(this.stepLogs.size() + 1)
@@ -731,15 +735,5 @@ public class FlowProgramExecutor {
     .forEach(e -> result.put(e.getKey(), e.getValue()));
     
     return result;
-  }
-  
-  
-  private static class StepException extends RuntimeException {
-    private static final long serialVersionUID = 2352180316876534777L;
-
-    public StepException(String message, Throwable cause) {
-      super(message, cause);
-    }
-    
   }
 }
