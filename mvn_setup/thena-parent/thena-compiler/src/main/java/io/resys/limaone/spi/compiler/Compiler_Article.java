@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.article;
+package io.resys.limaone.spi.compiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,10 @@ import io.resys.limaone.program.ArticleProgram.LocalizedSite;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramMessage;
-import io.resys.limaone.spi.compiler.CompilableUnit;
+import io.resys.limaone.spi.compiler.article.Deltas;
+import io.resys.limaone.spi.compiler.article.ImmutableArticleProgram;
+import io.resys.limaone.spi.compiler.article.ImmutableTopicData;
+import io.resys.limaone.spi.compiler.article.LocalizedSiteBuilder;
 import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
 import lombok.RequiredArgsConstructor;
 

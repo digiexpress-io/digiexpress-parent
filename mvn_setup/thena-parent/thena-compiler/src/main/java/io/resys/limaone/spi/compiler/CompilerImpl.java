@@ -11,7 +11,6 @@ import io.resys.limaone.program.Compiler;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.bundler.BundlerImpl;
 import io.resys.limaone.spi.compiler.CompilableUnit.Bundler;
-import io.resys.limaone.spi.compiler.article.Compiler_Article;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
