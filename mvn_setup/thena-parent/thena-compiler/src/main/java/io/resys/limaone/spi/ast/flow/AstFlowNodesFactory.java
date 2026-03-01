@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import io.resys.limaone.ast.Flow_AST.FlowInputNode;
 import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_AST.FlowInputNode;
 import io.resys.limaone.ast.Flow_AST.FlowRoot;
+import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
-import io.resys.limaone.ast.ImmutableHeaders_AST;
-import io.resys.limaone.ast.ImmutableMessageRange_AST;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,29 +20,7 @@ public class AstFlowNodesFactory {
   public static HeadersBuilder headers() {
     return new HeadersBuilder();
   }
-  public static RangeBuilder range() {
-    return new RangeBuilder();
-  }
-  
-  public static class RangeBuilder {
     
-    public ImmutableMessageRange_AST build(int start, int end, Boolean insert) {
-      return ImmutableMessageRange_AST.builder().start(start).end(end).insert(insert).build();
-    }
-
-    public ImmutableMessageRange_AST build(int start, int end, Boolean insert, Integer column) {
-      return ImmutableMessageRange_AST.builder().start(start).end(end).insert(insert).column(column).build();
-    }
-
-    public ImmutableMessageRange_AST build(int start, int end) {
-      return ImmutableMessageRange_AST.builder().start(start).end(end).build();
-    }
-
-    public ImmutableMessageRange_AST build(int start) {
-      return ImmutableMessageRange_AST.builder().start(start).end(start).build();
-    }
-  }
-  
   public static String getStringValue(AnyFlowNode node) {
     if (node == null || node.getValue() == null) {
       return null;

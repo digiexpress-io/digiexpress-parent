@@ -30,17 +30,17 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
 import io.resys.limaone.ast.Flow_AST.FlowInputNode;
 import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
 import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.model.ImmutableModelError;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
-import io.resys.limaone.program.ImmutableProgramMessage;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.ast.flow.NodeFlowBean;
 
@@ -130,17 +130,6 @@ public class FlowAssociationValidator {
             "Task: " + taskModel.getId().getValue() + ", has unused input: '" + inputName + "'!");
       }
     }
-
-    // Unused inputs on task
-    TaskStepToValidate warnings = new TaskStepToValidate(null, null, null);
-    toValidate.add(warnings);
-    for(final var input : unusedInputs.values()) {
-      warning(warnings, 
-          input.getStart(),
-          input.getSyntax().length(),
-          "Input: " + input.getKeyword() + " is unused!");
-    }
-    
     
     return toValidate;
   }
@@ -180,7 +169,7 @@ public class FlowAssociationValidator {
               node.getSyntax().length(),
               "Task: " + taskModel.getKeyword() + " mapping: '" + entry.getKey() + "' is missing value!");
         } else if (!serviceTypes.containsKey(entry.getKey())) {
-          warning(toValidate,
+          error(toValidate,
               node.getStart(),
               node.getSyntax().length(),
               "Task: " + taskModel.getKeyword() + ", has unknown input: '" + entry.getKey() + "'!");
@@ -195,7 +184,7 @@ public class FlowAssociationValidator {
   }
   
   private void error(TaskStepToValidate toValidate, int start, int range, String value) {
-    toValidate.getMessages().add(ImmutableProgramMessage.builder()
+    toValidate.getMessages().add(ImmutableModelError.builder()
         .line(start)
         .range(AstFlowNodesFactory.range().build(0, range))
         .type(CommandMessageType.ERROR)
@@ -203,20 +192,12 @@ public class FlowAssociationValidator {
         .build());
   }
 
-  private void warning(TaskStepToValidate toValidate, int start, int range, String value) {
-    toValidate.getMessages().add(ImmutableAstCommandMessage.builder()
-        .line(start)
-        .range(AstFlowNodesFactory.range().build(0, range))
-        .type(CommandMessageType.WARNING)
-        .value(value)
-        .build());
-  }
 
   public static class TaskStepToValidate {
     private final FlowProgramStep step; 
     private final Simple_AST wrapper;
     private final FlowTaskNode taskNode;
-    private final List<AstCommandMessage> messages = new ArrayList<>();
+    private final List<ModelError> messages = new ArrayList<>();
     private TaskStepToValidate(FlowProgramStep step, Simple_AST wrapper, FlowTaskNode taskNode) {
       super();
       this.step = step;
@@ -226,7 +207,7 @@ public class FlowAssociationValidator {
     public FlowProgramStep getStep() {
       return step;
     }
-    public List<AstCommandMessage> getMessages() {
+    public List<ModelError> getMessages() {
       return messages;
     }
     public Simple_AST getWrapper() {
