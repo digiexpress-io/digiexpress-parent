@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
-import io.resys.limaone.ast.Flow_AST.FlowInputNode;
-import io.resys.limaone.ast.Flow_AST.FlowRoot;
+import io.resys.limaone.ast.Flow_CST.Yaml;
+import io.resys.limaone.ast.Flow_CST.YamlInput;
+import io.resys.limaone.ast.Flow_CST.YamlParseTree;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
@@ -15,20 +15,20 @@ import io.resys.limaone.spi.parameter.Parameter_Factory;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AstFlowNodesFactory {
+public class YamlMapper {
 
   public static HeadersBuilder headers() {
     return new HeadersBuilder();
   }
     
-  public static String getStringValue(AnyFlowNode node) {
+  public static String getStringValue(Yaml node) {
     if (node == null || node.getValue() == null) {
       return null;
     }
     return node.getValue();
   }
 
-  public static boolean getBooleanValue(AnyFlowNode node) {
+  public static boolean getBooleanValue(Yaml node) {
     if (node == null || node.getValue() == null) {
       return false;
     }
@@ -37,12 +37,12 @@ public class AstFlowNodesFactory {
   
   public static class HeadersBuilder {
     
-    public ImmutableHeaders_AST build(FlowRoot data) {
-      Map<String, FlowInputNode> inputs = data.getInputs();
+    public ImmutableHeaders_AST build(YamlParseTree data) {
+      Map<String, YamlInput> inputs = data.getInputs();
 
       int index = 0;
       Collection<Parameter> result = new ArrayList<>();
-      for (Map.Entry<String, FlowInputNode> entry : inputs.entrySet()) {
+      for (Map.Entry<String, YamlInput> entry : inputs.entrySet()) {
         if (entry.getValue().getType() == null) {
           continue;
         }

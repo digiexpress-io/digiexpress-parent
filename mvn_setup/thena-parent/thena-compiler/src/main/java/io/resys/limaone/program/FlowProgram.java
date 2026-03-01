@@ -33,8 +33,7 @@ public interface FlowProgram extends Program {
   interface FlowProgramStep extends Serializable {
     String getId();
     FlowProgramStepPointer getPointer();
-    @Nullable
-    FlowProgramStepBody getBody();
+    @Nullable FlowProgramStepBody getBody();
   }
   
   @Value.Immutable
@@ -44,9 +43,12 @@ public interface FlowProgram extends Program {
     Map<String, String> getInputMapping();
     Boolean getCollection();
   }
+  
   interface FlowProgramStepPointer extends Serializable {
     FlowProgramStepPointerType getType();
   }
+  
+  
   @Value.Immutable
   interface FlowProgramStepEndPointer extends FlowProgramStepPointer {
   }

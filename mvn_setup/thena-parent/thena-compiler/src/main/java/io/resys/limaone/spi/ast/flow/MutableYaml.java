@@ -8,23 +8,23 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
+import io.resys.limaone.ast.Flow_CST.Yaml;
 import lombok.Value;
 
 
 
 @JsonIgnoreProperties({"parent"})
-public class NodeBean implements AnyFlowNode {
+public class MutableYaml implements Yaml {
   private static final long serialVersionUID = 5409590378906097144L;
   private final String keyword;
   private final String value;
   private final int indent;
   private final NodeSource source;
-  private final NodeBean parent;
-  private final Map<String, NodeBean> children = new HashMap<>();
+  private final MutableYaml parent;
+  private final Map<String, MutableYaml> children = new HashMap<>();
   private Integer end;
 
-  public NodeBean(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
+  public MutableYaml(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
     super();
     this.source = source;
     this.keyword = keyword;
@@ -42,29 +42,29 @@ public class NodeBean implements AnyFlowNode {
     return value;
   }
   @Override
-  public NodeBean getParent() {
+  public MutableYaml getParent() {
     return parent;
   }
   @Override
-  public Map<String, AnyFlowNode> getChildren() {
+  public Map<String, Yaml> getChildren() {
     return Collections.unmodifiableMap(children);
   }
   public int getIndent() {
     return indent;
   }
   @Override
-  public NodeBean get(String keyword) {
+  public MutableYaml get(String keyword) {
     return children.get(keyword);
   }
   public boolean contains(String keyword) {
     return children.get(keyword) != null;
   }
-  public NodeBean addChild(NodeSource source, int indent, String keyword, String value) {
-    NodeBean result = new NodeBean(source, indent, keyword, value, this);
+  public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
+    MutableYaml result = new MutableYaml(source, indent, keyword, value, this);
     children.put(keyword, result);
     return result;
   }
-  public NodeBean addChild(NodeBean result) {
+  public MutableYaml addChild(MutableYaml result) {
     children.put(result.getKeyword(), result);
     return result;
   }
@@ -72,7 +72,7 @@ public class NodeBean implements AnyFlowNode {
   public int getEnd() {
     if(end == null) {
       end = getStart();
-      for(NodeBean node : children.values()) {
+      for(MutableYaml node : children.values()) {
         if(end < node.getEnd()) {
           end = node.getEnd();
         }
@@ -80,7 +80,7 @@ public class NodeBean implements AnyFlowNode {
     }
     return end;
   }
-  public NodeBean setEnd(int end) {
+  public MutableYaml setEnd(int end) {
     this.end = end;
     return this;
   }
@@ -96,7 +96,7 @@ public class NodeBean implements AnyFlowNode {
   }
 
   @Override
-  public int compareTo(AnyFlowNode o) {
+  public int compareTo(Yaml o) {
     return Integer.compare(this.getStart(), o.getStart());
   }
 

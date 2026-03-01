@@ -6,18 +6,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.resys.limaone.ast.Flow_AST.FlowInputNode;
-import io.resys.limaone.ast.Flow_AST.FlowInputType;
-import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
-import io.resys.limaone.ast.Flow_AST.FlowRefNode;
-import io.resys.limaone.ast.Flow_AST.FlowRoot;
-import io.resys.limaone.ast.Flow_AST.FlowSwitchNode;
-import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
+import io.resys.limaone.ast.Flow_CST.YamlParseTree;
 import io.resys.limaone.spi.ast.AST_Exception;
 
 
 
-public class NodeFlowBean extends NodeBean implements FlowRoot {
+public class MutableYamlParseTree extends MutableYaml implements YamlParseTree {
   public static final long serialVersionUID = 8492235102091866790L;
   public static final String KEY_ID = "id";
   public static final String KEY_THEN = "then";
@@ -39,50 +33,50 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
   public static final String KEY_DEBUG_VALUE = "debugValue";
 
 
-  private final Collection<FlowInputType> inputTypes;
+  private final Collection<YamlInputType> inputTypes;
   private NodeInputs inputs;
   private NodeTasks tasks;
   private String value;
 
-  public NodeFlowBean(Collection<FlowInputType> inputTypes) {
+  public MutableYamlParseTree(Collection<YamlInputType> inputTypes) {
     super(null, -2, null, null, null);
     this.inputTypes = inputTypes;
   }
   @Override
-  public AnyFlowNode getId() {
+  public Yaml getId() {
     return get(KEY_ID);
   }
   @Override
-  public AnyFlowNode getDescription() {
+  public Yaml getDescription() {
     return get(KEY_DESC);
   }
   @Override
-  public Map<String, FlowInputNode> getInputs() {
+  public Map<String, YamlInput> getInputs() {
     return inputs == null ? Collections.emptyMap() : inputs.getInputs();
   }
   @Override
-  public Map<String, FlowTaskNode> getTasks() {
+  public Map<String, YamlTask> getTasks() {
     return tasks == null ? Collections.emptyMap() : tasks.getTasks();
   }
   @Override
-  public Collection<FlowInputType> getTypes() {
+  public Collection<YamlInputType> getTypes() {
     return inputTypes;
   }
   @Override
   public String getValue() {
     return value;
   }
-  public NodeFlowBean setValue(String value) {
+  public MutableYamlParseTree setValue(String value) {
     this.value = value;
     return this;
   }
   @Override
-  public NodeFlowBean setEnd(int value) {
+  public MutableYamlParseTree setEnd(int value) {
     super.setEnd(value);
     return this;
   }
   @Override
-  public NodeBean addChild(NodeSource source, int indent, String keyword, String value) {
+  public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
     if(KEY_INPUTS.equals(keyword)) {
       if(inputs == null) {
         inputs = new NodeInputs(source, indent, keyword, value, this);
@@ -99,18 +93,18 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
     return super.addChild(source, indent, keyword, value);
   }
 
-  private static class NodeInputs extends NodeBean {
+  private static class NodeInputs extends MutableYaml {
     private static final long serialVersionUID = 8989618439864849749L;
-    private final Map<String, FlowInputNode> inputs = new HashMap<>();
-    public NodeInputs(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
+    private final Map<String, YamlInput> inputs = new HashMap<>();
+    public NodeInputs(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
     }
-    public Map<String, FlowInputNode> getInputs() {
+    public Map<String, YamlInput> getInputs() {
       return Collections.unmodifiableMap(inputs);
     }
     @Override
-    public NodeBean addChild(NodeSource source, int indent, String keyword, String value) {
-      NodeInputBean result = new NodeInputBean(source, indent, keyword, value, this);
+    public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
+      MutableYamlInput result = new MutableYamlInput(source, indent, keyword, value, this);
       if(inputs.containsKey(result.getKeyword())) {
         String message = String.format("Duplicate input: %s!", result.getKeyword());
         throw new AST_Exception(message);
@@ -120,59 +114,59 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
     }
   }
 
-  private static class NodeTasks extends NodeBean {
+  private static class NodeTasks extends MutableYaml {
     private static final long serialVersionUID = 2001644047832806256L;
-    private final Map<String, FlowTaskNode> tasks = new HashMap<>();
+    private final Map<String, YamlTask> tasks = new HashMap<>();
     private int order = 0;
-    public NodeTasks(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
+    public NodeTasks(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
     }
 
-    public Map<String, FlowTaskNode> getTasks() {
+    public Map<String, YamlTask> getTasks() {
       return Collections.unmodifiableMap(tasks);
     }
     @Override
-    public NodeBean addChild(NodeSource source, int indent, String keyword, String value) {
-      NodeTaskBean result = new NodeTaskBean(source, order++, indent, keyword, value, this);
+    public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
+      MutableYamlTask result = new MutableYamlTask(source, order++, indent, keyword, value, this);
       tasks.put(result.getKeyword(), result);
       return addChild(result);
     }
   }
 
-  private static class NodeInputBean extends NodeBean implements FlowInputNode {
+  private static class MutableYamlInput extends MutableYaml implements YamlInput {
     private static final long serialVersionUID = 8910489078429824772L;
-    public NodeInputBean(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
+    public MutableYamlInput(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
     }
     @Override
-    public AnyFlowNode getRequired() {
+    public Yaml getRequired() {
       return get(KEY_REQ);
     }
 
     @Override
-    public AnyFlowNode getType() {
+    public Yaml getType() {
       return get(KEY_TYPE);
     }
     @Override
-    public AnyFlowNode getDebugValue() {
+    public Yaml getDebugValue() {
       return get(KEY_DEBUG_VALUE);
     }
   }
 
-  private static class NodeSwitchBean extends NodeBean implements FlowSwitchNode {
+  private static class MutableYamlSwitch extends MutableYaml implements YamlSwitch {
     private static final long serialVersionUID = 8910489078429824772L;
     private final int order;
 
-    public NodeSwitchBean(NodeSource source, int order, int indent, String keyword, String value, NodeBean parent) {
+    public MutableYamlSwitch(NodeSource source, int order, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
       this.order = order;
     }
     @Override
-    public AnyFlowNode getThen() {
+    public Yaml getThen() {
       return get(KEY_THEN);
     }
     @Override
-    public AnyFlowNode getWhen() {
+    public Yaml getWhen() {
       return get(KEY_WHEN);
     }
     @Override
@@ -181,68 +175,68 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
     }
   }
 
-  private static class NodeCasesBean extends NodeBean {
+  private static class MutableYamlCases extends MutableYaml {
     private static final long serialVersionUID = 2001644047832806256L;
-    private final Map<String, FlowSwitchNode> cases = new HashMap<>();
+    private final Map<String, YamlSwitch> cases = new HashMap<>();
     private int order = 0;
-    public NodeCasesBean(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
+    public MutableYamlCases(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
     }
 
-    public Map<String, FlowSwitchNode> getValues() {
+    public Map<String, YamlSwitch> getValues() {
       return Collections.unmodifiableMap(cases);
     }
     @Override
-    public NodeBean addChild(NodeSource source, int indent, String keyword, String value) {
-      NodeSwitchBean result = new NodeSwitchBean(source, order++, indent, keyword, value, this);
+    public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
+      MutableYamlSwitch result = new MutableYamlSwitch(source, order++, indent, keyword, value, this);
       cases.put(result.getKeyword(), result);
       return addChild(result);
     }
   }
 
-  private static class NodeTaskBean extends NodeBean implements FlowTaskNode {
+  private static class MutableYamlTask extends MutableYaml implements YamlTask {
     private static final long serialVersionUID = 8910489078429824772L;
     private final int order;
-    private NodeRefBean decisionTable;
-    private NodeRefBean userTask;
-    private NodeRefBean service;
-    private NodeRefBean returns;
-    private NodeCasesBean cases;
+    private MutableYamlBody decisionTable;
+    private MutableYamlBody userTask;
+    private MutableYamlBody service;
+    private MutableYamlBody returns;
+    private MutableYamlCases cases;
 
-    public NodeTaskBean(NodeSource source, int order, int indent, String keyword, String value, NodeBean parent) {
+    public MutableYamlTask(NodeSource source, int order, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
       this.order = order;
     }
     @Override
-    public NodeBean addChild(NodeSource source, int indent, String keyword, String value) {
+    public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
       if(KEY_SWITCH.equals(keyword)) {
         if(cases == null) {
-          cases = new NodeCasesBean(source, indent, keyword, value, this);
+          cases = new MutableYamlCases(source, indent, keyword, value, this);
           addChild(cases);
         }
         return cases;
 
       } else if(KEY_USER_TASK.equals(keyword)) {
         if(userTask == null) {
-          userTask = new NodeRefBean(source, indent, keyword, value, this);
+          userTask = new MutableYamlBody(source, indent, keyword, value, this);
           addChild(userTask);
         }
         return userTask;
       } else if(KEY_DT.equals(keyword)) {
         if(decisionTable == null) {
-          decisionTable = new NodeRefBean(source, indent, keyword, value, this);
+          decisionTable = new MutableYamlBody(source, indent, keyword, value, this);
           addChild(decisionTable);
         }
         return decisionTable;
       } else if(KEY_SERVICE.equals(keyword)) {
         if(service == null) {
-          service = new NodeRefBean(source, indent, keyword, value, this);
+          service = new MutableYamlBody(source, indent, keyword, value, this);
           addChild(service);
         }
         return service;
       } else if(KEY_RETURNS.equals(keyword)) {
         if(returns == null) {
-          returns = new NodeRefBean(source, indent, keyword, value, this);
+          returns = new MutableYamlBody(source, indent, keyword, value, this);
           addChild(returns);
         }
         return returns;
@@ -254,35 +248,35 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
       return super.addChild(source, indent, keyword, value);
     }
     @Override
-    public AnyFlowNode getId() {
+    public Yaml getId() {
       return get(KEY_ID);
     }
     @Override
-    public AnyFlowNode getThen() {
+    public Yaml getThen() {
       return get(KEY_THEN);
     }
     @Override
-    public Map<String, FlowSwitchNode> getSwitch() {
+    public Map<String, YamlSwitch> getSwitch() {
       return cases == null ? Collections.emptyMap() : cases.getValues();
     }
     @Override
-    public FlowRefNode getDecisionTable() {
+    public YamlBody getDecisionTable() {
       return decisionTable;
     }
     @Override
-    public FlowRefNode getService() {
+    public YamlBody getService() {
       return service;
     }
     @Override
-    public FlowRefNode getUserTask() {
+    public YamlBody getUserTask() {
       return userTask;
     }
     @Override
-    public FlowRefNode getReturns() {
+    public YamlBody getReturns() {
       return returns;
     }
     @Override
-    public FlowRefNode getRef() {
+    public YamlBody getRef() {
       if(userTask != null) {
         return userTask;
       } else if(service != null) {
@@ -296,24 +290,24 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
     }
   }
 
-  private static class NodeRefBean extends NodeBean implements FlowRefNode {
+  private static class MutableYamlBody extends MutableYaml implements YamlBody {
 
     private static final long serialVersionUID = -3601531710393434419L;
 
-    public NodeRefBean(NodeSource source, int indent, String keyword, String value, NodeBean parent) {
+    public MutableYamlBody(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
     }
     @Override
-    public AnyFlowNode getRef() {
+    public Yaml getRef() {
       return get(KEY_REF);
     }
     @Override
-    public AnyFlowNode getCollection() {
+    public Yaml getCollection() {
       return get(KEY_COLLECTION);
     }
     @Override
-    public Map<String, AnyFlowNode> getInputs() {
-      AnyFlowNode inputs = getInputsNode();
+    public Map<String, Yaml> getInputs() {
+      Yaml inputs = getInputsNode();
       if(inputs == null) {
         return Collections.emptyMap();
       }
@@ -321,7 +315,7 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
     }
     @Override
     public String getObjectInput() {
-      AnyFlowNode inputs = getInputsNode();
+      Yaml inputs = getInputsNode();
       if(inputs == null) {
         return null;
       }
@@ -334,7 +328,7 @@ public class NodeFlowBean extends NodeBean implements FlowRoot {
       return inputs.getValue();
     }
     @Override
-    public AnyFlowNode getInputsNode() {
+    public Yaml getInputsNode() {
       return get(KEY_INPUTS);
     }
   }

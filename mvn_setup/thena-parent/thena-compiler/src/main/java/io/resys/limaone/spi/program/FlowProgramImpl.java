@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Flow_AST.FlowInputNode;
+import io.resys.limaone.ast.Flow_AST.YamlInput;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
@@ -16,7 +16,7 @@ import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
-import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
+import io.resys.limaone.spi.ast.flow.YamlMapper;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.limaone.spi.program.input.DefaultProgramInput;
 
@@ -52,22 +52,22 @@ public class FlowProgramImpl implements FlowProgram {
   }
   
   private List<Parameter> getHeaders(Flow_AST ast) {
-    final Map<String, FlowInputNode> inputs = ast.getRoot().getInputs();
+    final Map<String, YamlInput> inputs = ast.getParseTree().getInputs();
 
     int index = 0;
     final List<Parameter> result = new ArrayList<>();
-    for (Map.Entry<String, FlowInputNode> entry : inputs.entrySet()) {
+    for (Map.Entry<String, YamlInput> entry : inputs.entrySet()) {
       if (entry.getValue().getType() == null) {
         continue;
       }
       try {
         ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
-        boolean required = AstFlowNodesFactory.getBooleanValue(entry.getValue().getRequired());
+        boolean required = YamlMapper.getBooleanValue(entry.getValue().getRequired());
         result.add(Parameter_Factory.newParam()
             .id(entry.getValue().getStart() + "")
             .order(index++)
             .name(entry.getKey()).valueType(valueType).direction(Direction.IN).required(required)
-            .values(AstFlowNodesFactory.getStringValue(entry.getValue().getDebugValue()))
+            .values(YamlMapper.getStringValue(entry.getValue().getDebugValue()))
             .build());
         
       } catch (Exception e) {

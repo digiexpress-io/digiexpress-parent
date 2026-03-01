@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
-import io.resys.limaone.ast.Flow_AST.FlowInputNode;
-import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
+import io.resys.limaone.ast.Flow_AST.Yaml;
+import io.resys.limaone.ast.Flow_AST.YamlInput;
+import io.resys.limaone.ast.Flow_AST.YamlTask;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
@@ -41,8 +41,8 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
-import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
-import io.resys.limaone.spi.ast.flow.NodeFlowBean;
+import io.resys.limaone.spi.ast.flow.YamlMapper;
+import io.resys.limaone.spi.ast.flow.MutableYamlParseTree;
 
 public class FlowAssociationValidator {
 
@@ -55,13 +55,13 @@ public class FlowAssociationValidator {
   }
 
   public void visitStep(FlowProgramStep step, Simple_AST wrapper) {
-    final var taskModel = ast.getRoot().getTasks().values().stream()
+    final var taskModel = ast.getParseTree().getTasks().values().stream()
         .filter(t -> t.getId() != null && t.getId().getValue().equals(step.getId()))
         .findFirst().get();
     
     for(Parameter param : wrapper.getHeaders().getReturnDefs()) {
       if(param.getDirection() == Direction.OUT) {
-        String name = AstFlowNodesFactory.getStringValue(taskModel.getId()) + "." + param.getName();
+        String name = YamlMapper.getStringValue(taskModel.getId()) + "." + param.getName();
         HdesAssert.isTrue(!allParams.containsKey(name), () -> "Can't have duplicate param: " + name + "!");
         allParams.put(name, param);
       }
@@ -70,15 +70,15 @@ public class FlowAssociationValidator {
   }
   
   public List<TaskStepToValidate> build() {    
-    final var node = ast.getRoot();
-    Map<String, FlowInputNode> unusedInputs = new HashMap<>(node.getInputs());
+    final var node = ast.getParseTree();
+    Map<String, YamlInput> unusedInputs = new HashMap<>(node.getInputs());
     for(final var entry : toValidate) {
 
       // Validate inputs
       final var taskInputs = getTaskServiceInput(entry);
       final var taskModel = entry.getTaskNode();
 
-      if (taskInputs.size() == 1 && taskInputs.values().stream().findFirst().get().getNode().getKeyword().equals(NodeFlowBean.KEY_INPUTS)) {
+      if (taskInputs.size() == 1 && taskInputs.values().stream().findFirst().get().getNode().getKeyword().equals(MutableYamlParseTree.KEY_INPUTS)) {
         TaskInput taskInput = taskInputs.values().stream().findFirst().get();
 
         ValueType ref = taskInput.getDataType().getValueType();
@@ -162,7 +162,7 @@ public class FlowAssociationValidator {
     } else {
       for (final var entry : taskModel.getRef().getInputs().entrySet()) {
         final var node = entry.getValue();
-        String mappingName = AstFlowNodesFactory.getStringValue(node);
+        String mappingName = YamlMapper.getStringValue(node);
         if (StringUtils.isEmpty(mappingName)) {
           error(toValidate,
               node.getStart(),
@@ -186,7 +186,7 @@ public class FlowAssociationValidator {
   private void error(TaskStepToValidate toValidate, int start, int range, String value) {
     toValidate.getMessages().add(ImmutableModelError.builder()
         .line(start)
-        .range(AstFlowNodesFactory.range().build(0, range))
+        .range(YamlMapper.range().build(0, range))
         .type(CommandMessageType.ERROR)
         .value(value)
         .build());
@@ -196,9 +196,9 @@ public class FlowAssociationValidator {
   public static class TaskStepToValidate {
     private final FlowProgramStep step; 
     private final Simple_AST wrapper;
-    private final FlowTaskNode taskNode;
+    private final YamlTask taskNode;
     private final List<ModelError> messages = new ArrayList<>();
-    private TaskStepToValidate(FlowProgramStep step, Simple_AST wrapper, FlowTaskNode taskNode) {
+    private TaskStepToValidate(FlowProgramStep step, Simple_AST wrapper, YamlTask taskNode) {
       super();
       this.step = step;
       this.wrapper = wrapper;
@@ -213,20 +213,20 @@ public class FlowAssociationValidator {
     public Simple_AST getWrapper() {
       return wrapper;
     }
-    public FlowTaskNode getTaskNode() {
+    public YamlTask getTaskNode() {
       return taskNode;
     }
   }
   
   private static class TaskInput {
-    private final AnyFlowNode node;
+    private final Yaml node;
     private final Parameter dataType;
-    public TaskInput(AnyFlowNode node, Parameter dataType) {
+    public TaskInput(Yaml node, Parameter dataType) {
       super();
       this.node = node;
       this.dataType = dataType;
     }
-    public AnyFlowNode getNode() {
+    public Yaml getNode() {
       return node;
     }
     public Parameter getDataType() {

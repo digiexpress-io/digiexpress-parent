@@ -7,9 +7,9 @@ import java.util.Map;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
-import io.resys.limaone.ast.Flow_AST.FlowSwitchNode;
-import io.resys.limaone.ast.Flow_AST.FlowTaskNode;
+import io.resys.limaone.ast.Flow_AST.Yaml;
+import io.resys.limaone.ast.Flow_AST.YamlSwitch;
+import io.resys.limaone.ast.Flow_AST.YamlTask;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
@@ -27,7 +27,7 @@ import io.resys.limaone.program.ImmutableFlowProgramStepConditionalThenPointer;
 import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
 import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
 import io.resys.limaone.program.Program;
-import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
+import io.resys.limaone.spi.ast.flow.YamlMapper;
 import io.resys.limaone.spi.program.FlowProgramExecutor;
 import io.resys.limaone.spi.program.FlowProgramImpl;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class Compiler_Flow implements CompilableUnit {
   public static final String OBJECT_INPUT_FLAG = "OBJECT_INPUT";
 
   private final Map<String, FlowProgramStep> steps = new HashMap<>();
-  private final Map<String, FlowTaskNode> tasksById = new HashMap<>();
+  private final Map<String, YamlTask> tasksById = new HashMap<>();
   private NewArtifact resolution;
   
   @Override
@@ -75,11 +75,11 @@ public class Compiler_Flow implements CompilableUnit {
   }
 
 
-  private FlowTaskNode visitTasksById(Flow_AST ast) {
-    FlowTaskNode firstTask = null;
-    final var data = ast.getRoot();
+  private YamlTask visitTasksById(Flow_AST ast) {
+    YamlTask firstTask = null;
+    final var data = ast.getParseTree();
     for(final var task : data.getTasks().values()) {
-      tasksById.put(AstFlowNodesFactory.getStringValue(task.getId()), task);
+      tasksById.put(YamlMapper.getStringValue(task.getId()), task);
       if(task.getOrder() == 0) {
         firstTask = task;
       }
@@ -87,8 +87,8 @@ public class Compiler_Flow implements CompilableUnit {
     return firstTask;
   }
 
-  private FlowProgramStep visitTask(FlowTaskNode task) {
-    String taskId = AstFlowNodesFactory.getStringValue(task.getId());
+  private FlowProgramStep visitTask(YamlTask task) {
+    String taskId = YamlMapper.getStringValue(task.getId());
     if(steps.containsKey(taskId)) {
       return steps.get(taskId);
     }
@@ -107,13 +107,13 @@ public class Compiler_Flow implements CompilableUnit {
     return step;
   }
 
-  public FlowProgramStepBody visitStepBody(FlowTaskNode task) {
+  public FlowProgramStepBody visitStepBody(YamlTask task) {
     if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
       return null;
     }
 
-    final var collection = task.getReturns() != null ? AstFlowNodesFactory.getBooleanValue(task.getReturns().getCollection()) : AstFlowNodesFactory.getBooleanValue(task.getRef().getCollection());
-    final var ref =  task.getReturns() != null ? "" : AstFlowNodesFactory.getStringValue(task.getRef().getRef());
+    final var collection = task.getReturns() != null ? YamlMapper.getBooleanValue(task.getReturns().getCollection()) : YamlMapper.getBooleanValue(task.getRef().getCollection());
+    final var ref =  task.getReturns() != null ? "" : YamlMapper.getStringValue(task.getRef().getRef());
     
     final var inputs = new HashMap<String, String>();
     
@@ -122,8 +122,8 @@ public class Compiler_Flow implements CompilableUnit {
       if (task.getRef().getObjectInput() != null) {
         inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
       } else {
-        for (Map.Entry<String, AnyFlowNode> entry : task.getRef().getInputs().entrySet()) {
-          inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+        for (Map.Entry<String, Yaml> entry : task.getRef().getInputs().entrySet()) {
+          inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
         }
       }
       // use returns input mapping
@@ -131,8 +131,8 @@ public class Compiler_Flow implements CompilableUnit {
       if (task.getReturns().getObjectInput() != null) {
         inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
       } else {
-        for (Map.Entry<String, AnyFlowNode> entry : task.getReturns().getInputs().entrySet()) {
-          inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+        for (Map.Entry<String, Yaml> entry : task.getReturns().getInputs().entrySet()) {
+          inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
         }
       }
     }
@@ -154,10 +154,10 @@ public class Compiler_Flow implements CompilableUnit {
   }
   
 
-  private FlowProgramStepPointer visitStepPointer(FlowTaskNode task) {
+  private FlowProgramStepPointer visitStepPointer(YamlTask task) {
     if(!task.getSwitch().isEmpty()) {
       final var pointer = ImmutableFlowProgramStepWhenThenPointer.builder().type(FlowProgramStepPointerType.SWITCH);
-      final var decisions = new ArrayList<FlowSwitchNode>(task.getSwitch().values());
+      final var decisions = new ArrayList<YamlSwitch>(task.getSwitch().values());
       Collections.sort(decisions, (o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()));
       decisions.forEach(d -> {
         
@@ -172,7 +172,7 @@ public class Compiler_Flow implements CompilableUnit {
       return pointer.build();
     }
     
-    final var thenId = AstFlowNodesFactory.getStringValue(task.getThen());
+    final var thenId = YamlMapper.getStringValue(task.getThen());
     if(thenId != null && !thenId.equals(FlowProgramExecutor.END_STEP.getId())) {
       visitTask(tasksById.get(thenId));
       return ImmutableFlowProgramStepThenPointer.builder()
@@ -184,11 +184,11 @@ public class Compiler_Flow implements CompilableUnit {
     return FlowProgramExecutor.END_STEP_POINTER;
   }
   
-  private FlowProgramStepConditionalThenPointer visitSwitchNode(FlowSwitchNode decision) {
+  private FlowProgramStepConditionalThenPointer visitSwitchNode(YamlSwitch decision) {
     final var condition = ImmutableFlowProgramStepConditionalThenPointer.builder();
     final var decisionId = decision.getKeyword();
-    final var when = AstFlowNodesFactory.getStringValue(decision.getWhen());
-    final var thenValue = AstFlowNodesFactory.getStringValue(decision.getThen());    
+    final var when = YamlMapper.getStringValue(decision.getWhen());
+    final var thenValue = YamlMapper.getStringValue(decision.getThen());    
     try {
       final var isTrue = when == null || when.isEmpty();
       final var expression = isTrue ? 
