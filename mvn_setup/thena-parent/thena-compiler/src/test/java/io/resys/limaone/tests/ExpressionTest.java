@@ -135,7 +135,7 @@ public class ExpressionTest {
     public Object getValue(Object entity) {
       long start = System.nanoTime();
       final var result = delegate.run(entity);
-      LOGGER.debug(delegate.getSrc() + " execution in nano: " + (System.nanoTime() - start));
+      log.debug(delegate.getSrc() + " execution in nano: " + (System.nanoTime() - start));
       return result.getValue();
     }
   }
