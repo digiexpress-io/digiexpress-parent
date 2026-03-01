@@ -28,10 +28,12 @@ public class MutableYamlParseTree extends MutableYaml implements YamlParseTree {
   public static final String KEY_REF = "ref";
   public static final String KEY_COLLECTION = "collection";
   public static final String KEY_SERVICE = "service";
+  
   public static final String VALUE_NEXT = "next";
   public static final String VALUE_END = "end";
+  
   public static final String KEY_DEBUG_VALUE = "debugValue";
-
+  public static final String OBJECT_INPUT_FLAG = "OBJECT_INPUT";
 
   private final Collection<YamlInputType> inputTypes;
   private NodeInputs inputs;

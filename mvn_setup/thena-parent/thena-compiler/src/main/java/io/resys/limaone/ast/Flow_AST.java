@@ -39,11 +39,9 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableFlow_AST.class)
 @JsonDeserialize(as = ImmutableFlow_AST.class)
 public interface Flow_AST extends Simple_AST, Serializable {
+  
   YamlParseTree getParseTree();
-  
-  
   AnyStatement getStatement();
-
 
   //root marker
   interface AnyStatement {
@@ -52,11 +50,11 @@ public interface Flow_AST extends Simple_AST, Serializable {
   }
 
   // markers
-  interface BodyStatement {}
-  interface NextStatement {}
+  interface BodyStatement extends AnyStatement {}
+  interface NextStatement extends AnyStatement  {}
 
 
-  interface InputsStatement {
+  interface InputsStatement extends AnyStatement {
     List<Parameter> getParameters();
     default StatementType getType() { return StatementType.FLOW_INPUTS; }
     ManyTasksStatement getNext();
@@ -74,46 +72,48 @@ public interface Flow_AST extends Simple_AST, Serializable {
     default StatementType getType() { return StatementType.FLOW_TASK; }
   }
 
-  interface EmptyBodyStatement extends BodyStatement, AnyStatement {
+  interface EmptyBodyStatement extends BodyStatement {
     default StatementType getType() { return StatementType.BODY_EMPTY; }
   }  
-  interface DecisionTableStatement extends BodyStatement, AnyStatement {
+  interface DecisionTableStatement extends BodyStatement {
+    String getDecisionTableName();
     boolean isCollection();
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_DECISION_TABLE; }
   }
-  interface FlowTaskStatement extends BodyStatement, AnyStatement {
+  interface FlowTaskStatement extends BodyStatement {
+    String getFlowTaskName();
     boolean isCollection();
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_FLOW_TASK; }
   }
-  interface ReturnsStatement extends BodyStatement, AnyStatement {
+  interface ReturnsStatement extends BodyStatement {
     boolean isCollection();
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_RETURNS; }
   }
 
 
-  interface SwitchStatement extends BodyStatement, AnyStatement {
-    List<CaseStatement> getCases();
-    default StatementType getType() { return StatementType.BODY_SWITCH; }
-  }
   interface CaseStatement extends AnyStatement {
     @Nullable ExpressionProgram getWhen();
     NextStatement getThen();    
     default StatementType getType() { return StatementType.BODY_SWITCH_CASE; }
   }
-
-  interface StartStatement extends AnyStatement, NextStatement {
+  interface SwitchStatement extends NextStatement {
+    List<CaseStatement> getCases();
+    default StatementType getType() { return StatementType.BODY_SWITCH; }
+  }
+  
+  interface StartStatement extends NextStatement {
     OneTaskStatement getFirstTask();
     default StatementType getType() { return StatementType.NEXT_IS_START; }
   }
 
-  interface EndStatement extends AnyStatement, NextStatement {
+  interface EndStatement extends NextStatement {
     default StatementType getType() { return StatementType.NEXT_IS_END; }
   }
 
-  interface PointerStatement extends AnyStatement, NextStatement {
+  interface PointerStatement extends NextStatement {
     OneTaskStatement getTask();
 
     default StatementType getType() { return StatementType.NEXT_IS_POINTER; }
@@ -121,6 +121,8 @@ public interface Flow_AST extends Simple_AST, Serializable {
   interface MappingStatement extends AnyStatement {
     //  to------from
     Map<String, String> getAssignments();
+    
+    boolean isObjectMapping(); // inputs not defined... just assume that mapping is default de-constructing
 
     default StatementType getType() { return StatementType.MAPPING; }
   }
