@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.flow;
+package io.resys.limaone.spi.compiler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,7 @@ import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
 import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
-import io.resys.limaone.spi.compiler.CompilableUnit;
+import io.resys.limaone.spi.compiler.flow.ImmutableFlowProgram;
 import io.resys.limaone.spi.program.ProgramException;
 import io.resys.limaone.spi.program.expression.ExpressionProgramFactory;
 import lombok.RequiredArgsConstructor;
