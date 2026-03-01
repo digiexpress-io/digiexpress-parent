@@ -30,7 +30,7 @@ import io.resys.limaone.program.ImmutableFlowProgramStepThenPointer;
 import io.resys.limaone.program.ImmutableFlowProgramStepWhenThenPointer;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
-import io.resys.limaone.spi.compiler.flow.ImmutableFlowProgram;
+import io.resys.limaone.spi.program.FlowProgramImpl;
 import lombok.RequiredArgsConstructor;
 
 
@@ -71,7 +71,7 @@ public class Compiler_Flow implements CompilableUnit {
       }
       @Override
       public Program close(Artifact artifact) {
-        return new ImmutableFlowProgram(
+        return new FlowProgramImpl(
             ast, firstStep.getId(), steps, 
             artifact.getProgramStatus(), 
             artifact.getErrors(), artifact.getAssociations());

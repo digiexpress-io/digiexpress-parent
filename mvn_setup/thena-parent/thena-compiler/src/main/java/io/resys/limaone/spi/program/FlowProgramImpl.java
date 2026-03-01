@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.flow;
+package io.resys.limaone.spi.program;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,9 +16,8 @@ import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.spi.ast.flow.AstFlowNodesFactory;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
-import io.resys.limaone.spi.program.ProgramException;
 
-public class ImmutableFlowProgram implements FlowProgram {
+public class FlowProgramImpl implements FlowProgram {
 
   private static final long serialVersionUID = -4209510801206880302L;
   private final Flow_AST ast;
@@ -32,7 +31,7 @@ public class ImmutableFlowProgram implements FlowProgram {
   private final List<ProgramAssociation> associations;
   
   
-  public ImmutableFlowProgram(
+  public FlowProgramImpl(
       Flow_AST ast, 
       String startStepId,
       Map<String, FlowProgramStep> steps,
