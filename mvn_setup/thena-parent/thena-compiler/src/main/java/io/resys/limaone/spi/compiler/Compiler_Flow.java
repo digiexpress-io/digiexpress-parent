@@ -7,9 +7,9 @@ import java.util.Map;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Flow_AST.Yaml;
-import io.resys.limaone.ast.Flow_AST.YamlSwitch;
-import io.resys.limaone.ast.Flow_AST.YamlTask;
+import io.resys.limaone.ast.Flow_CST.Yaml;
+import io.resys.limaone.ast.Flow_CST.YamlSwitch;
+import io.resys.limaone.ast.Flow_CST.YamlTask;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
