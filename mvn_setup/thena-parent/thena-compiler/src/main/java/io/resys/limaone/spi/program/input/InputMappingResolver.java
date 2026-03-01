@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.compiler.flow;
+package io.resys.limaone.spi.program.input;
 
 /*-
  * #%L
