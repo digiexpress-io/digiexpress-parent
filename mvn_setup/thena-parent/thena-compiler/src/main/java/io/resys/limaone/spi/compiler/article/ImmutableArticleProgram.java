@@ -20,14 +20,14 @@ public class ImmutableArticleProgram implements ArticleProgram {
   
   private final Article_AST articleAST;
   private final ProgramStatus status;
-  private final List<ProgramMessage> errors;
+  private final List<ModelError> errors;
   private final List<ProgramAssociation> assocs;
   private final List<LocalizedSite> sites;
   
   public ImmutableArticleProgram(
       Article_AST articleAST, 
       ProgramStatus status,
-      List<ProgramMessage> errors, 
+      List<ModelError> errors, 
       List<ProgramAssociation> assocs,
       List<LocalizedSite> sites) {
     
@@ -70,7 +70,7 @@ public class ImmutableArticleProgram implements ArticleProgram {
     return Collections.emptyList();
   }
   @Override
-  public List<ProgramMessage> getErrors() {
+  public List<ModelError> getErrors() {
     return errors;
   }
   @Override

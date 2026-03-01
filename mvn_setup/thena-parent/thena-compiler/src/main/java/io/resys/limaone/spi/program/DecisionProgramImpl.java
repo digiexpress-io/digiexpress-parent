@@ -11,6 +11,7 @@ import com.google.common.collect.Streams;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Model.BodyType;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.ProgramInput;
@@ -27,14 +28,14 @@ public class DecisionProgramImpl implements DecisionProgram {
   private final ProgramStatus status; 
   private final List<DecisionRow> rows;
   private final List<Parameter> headers;
-  private final List<ProgramMessage> errors;
+  private final List<ModelError> errors;
   private final List<ProgramAssociation> associations;
   
   public DecisionProgramImpl(
       DecisionTable_AST ast, 
       ProgramStatus status,
       List<DecisionRow> rows,
-      List<ProgramMessage> errors,
+      List<ModelError> errors,
       List<ProgramAssociation> associations) {
     super();
     this.ast = ast;
@@ -63,7 +64,7 @@ public class DecisionProgramImpl implements DecisionProgram {
     return status;
   }
   @Override
-  public List<ProgramMessage> getErrors() {
+  public List<ModelError> getErrors() {
     return errors;
   }
   @Override

@@ -10,15 +10,14 @@ import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.ArticleProgram.LocalizedSite;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
-import io.resys.limaone.program.Program.ProgramMessage;
-import io.resys.limaone.spi.compiler.article.Deltas;
+import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
 import io.resys.limaone.spi.compiler.article.ImmutableArticleProgram;
 import io.resys.limaone.spi.compiler.article.ImmutableTopicData;
 import io.resys.limaone.spi.compiler.article.LocalizedSiteBuilder;
-import io.resys.limaone.spi.compiler.article.Deltas.TopicData;
 import lombok.RequiredArgsConstructor;
 
 
@@ -82,7 +81,7 @@ public class Compiler_Article implements CompilableUnit {
       
       @Override
       public Program close(Artifact artifact) {
-        final List<ProgramMessage> errors = artifact.getErrors();
+        final List<ModelError> errors = artifact.getErrors();
         final List<ProgramAssociation> assocs = artifact.getAssociations();
         final var program = new ImmutableArticleProgram(articleAST, artifact.getProgramStatus(), errors, assocs, sites);
         

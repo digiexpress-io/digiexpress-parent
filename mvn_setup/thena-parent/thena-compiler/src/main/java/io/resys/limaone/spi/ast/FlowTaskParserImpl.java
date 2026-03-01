@@ -182,7 +182,7 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
             .headers(ImmutableHeaders_AST.builder().build())
             .beanType(FailSafeService.class)
             .executorType(FlowTaskPropType.TYPE_0)
-            .addAllMessages(groovyErrors)
+            .addAllErrors(groovyErrors)
             .value(source).build();
       }
     };

@@ -27,7 +27,7 @@ public class FlowProgramImpl implements FlowProgram {
   
   private final ProgramStatus status; 
   private final List<Parameter> headers;
-  private final List<ProgramMessage> errors;
+  private final List<ModelError> errors;
   private final List<ProgramAssociation> associations;
   
   
@@ -36,7 +36,7 @@ public class FlowProgramImpl implements FlowProgram {
       String startStepId,
       Map<String, FlowProgramStep> steps,
       ProgramStatus status,
-      List<ProgramMessage> errors,
+      List<ModelError> errors,
       List<ProgramAssociation> associations) {
     super();
     this.ast = ast;
@@ -95,7 +95,7 @@ public class FlowProgramImpl implements FlowProgram {
     return headers;
   }
   @Override
-  public List<ProgramMessage> getErrors() {
+  public List<ModelError> getErrors() {
     return errors;
   }
 

@@ -6,8 +6,8 @@ import java.util.Objects;
 
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.Program.ProgramAssociation;
-import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
 import io.resys.limaone.spi.compiler.CompilableUnit.Dependency;
@@ -20,7 +20,7 @@ public class ArtifactBuilder {
 
   private final List<Dependency> childDeps = new ArrayList<>();
   private final List<Dependency> parentDeps = new ArrayList<>();
-  private final List<ProgramMessage> errors = new ArrayList<>();
+  private final List<ModelError> errors = new ArrayList<>();
   private final List<ProgramAssociation> associations = new ArrayList<>();
 
   private Simple_AST ast;
@@ -52,7 +52,7 @@ public class ArtifactBuilder {
     return this;
   }
 
-  public ArtifactBuilder addError(ProgramMessage error) {
+  public ArtifactBuilder addError(ModelError error) {
     this.errors.add(error);
     return this;
   }
@@ -63,7 +63,7 @@ public class ArtifactBuilder {
   }
 
   // Direct list access for complex operations
-  public List<ProgramMessage> getErrors() {
+  public List<ModelError> getErrors() {
     return errors; // Mutable access
   }
 

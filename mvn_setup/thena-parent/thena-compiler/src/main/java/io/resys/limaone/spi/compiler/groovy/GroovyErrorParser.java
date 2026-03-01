@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import io.resys.limaone.ast.ImmutableMessage_AST;
-import io.resys.limaone.ast.Simple_AST.MessageType;
-import io.resys.limaone.ast.Simple_AST.Message_AST;
+import io.resys.limaone.model.ImmutableModelError;
+import io.resys.limaone.model.ModelError;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GroovyErrorParser {
 
   @Data
-  public static class GroovyError {
+  private static class GroovyError {
     private final String fileName;
     private final int lineNumber;
     private final int columnNumber;
@@ -22,7 +21,6 @@ public class GroovyErrorParser {
     private final String codeSnippet;
   }
 
-  
   //Matches "FileName.groovy: 1: message"
   private static final Pattern HEADER_PATTERN = Pattern.compile("^([^:]+\\.groovy):\\s*(\\d+):\\s*(.*)$");
   // Matches " @ line 1, column 391."
@@ -30,8 +28,8 @@ public class GroovyErrorParser {
   // Matches the visual indicator "   ^"
   private static final Pattern MARKER_PATTERN = Pattern.compile("^\\s*\\^\\s*$");
 
-  public static List<Message_AST> parseErrors(String errorOutput, String origin) {
-    final var errors = new ArrayList<Message_AST>();
+  public static List<ModelError> parseErrors(String errorOutput, String origin) {
+    final var errors = new ArrayList<ModelError>();
     final var lines = errorOutput.split("\\r?\\n");
 
     for (int i = 0; i < lines.length; i++) {
@@ -73,7 +71,7 @@ public class GroovyErrorParser {
     return errors;
   }
   
-  private static Message_AST createMessage(GroovyError error, String origin) {
+  private static ModelError createMessage(GroovyError error, String origin) {
     int actualLine = 0;
     final String snippet = error.getCodeSnippet();
 
@@ -93,10 +91,9 @@ public class GroovyErrorParser {
       actualLine = error.getLineNumber(); 
     }
 
-    return ImmutableMessage_AST.builder()
+    return ImmutableModelError.builder()
       .line(actualLine)
-      .value(error.getMessage() + System.lineSeparator() + "        broken at > " + snippet)
-      .type(MessageType.ERROR)
+      .msg(error.getMessage() + System.lineSeparator() + "        broken at > " + snippet)
       .build();
   }
 

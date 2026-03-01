@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
-import jakarta.annotation.Nullable;
 
 public interface Program extends Serializable {
   
@@ -18,7 +18,7 @@ public interface Program extends Serializable {
   ProgramStatus getStatus();
 
   List<Parameter> getHeaders();
-  List<ProgramMessage> getErrors();
+  List<ModelError> getErrors();
   List<ProgramAssociation> getAssociations();
   
   interface ProgramResult extends Serializable {}
@@ -33,21 +33,7 @@ public interface Program extends Serializable {
     ProgramStatus getRefStatus();
     Boolean getOwner();
   }
-  
-  @Value.Immutable
-  interface ProgramMessage {
-    String getId();
-    String getMsg();
 
-    @Nullable Integer getLine();
-    @Nullable Integer getColumn();
-
-    @Nullable Exception getException();
-  }
-  enum ProgramStatus { 
-    UP, 
-    AST_ERROR, 
-    PROGRAM_ERROR, 
-    DEPENDENCY_ERROR }
+  enum ProgramStatus { UP, ERROR }
 
 }

@@ -10,17 +10,17 @@ import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.DecisionTable;
+import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.DecisionProgram.DecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRow;
 import io.resys.limaone.program.ImmutableDecisionRowAccepts;
 import io.resys.limaone.program.ImmutableDecisionRowReturns;
-import io.resys.limaone.program.ImmutableProgramMessage;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
-import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.program.DecisionProgramImpl;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
       @Override
       public Program close(Artifact artifact) {        
         final List<ProgramAssociation> assocs = artifact.getAssociations();
-        final List<ProgramMessage> errors = new ArrayList<>(artifact.getErrors());
+        final List<ModelError> errors = new ArrayList<>(artifact.getErrors());
         
         List<DecisionRow> rows;
         ProgramStatus status = artifact.getProgramStatus();
@@ -66,10 +66,9 @@ public class Compiler_DecisionTable implements CompilableUnit {
           status = ProgramStatus.UP;
         } catch(Exception e) {
           rows = Collections.emptyList();
-          status = ProgramStatus.PROGRAM_ERROR;
-          errors.add(ImmutableProgramMessage.builder()
+          status = ProgramStatus.ERROR;
+          errors.add(ImmutableModelError.builder()
               .exception(e)
-              .id("decision-table-compiler-exception")
               .msg(e.getMessage())
               .build());
         }

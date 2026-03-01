@@ -7,10 +7,10 @@ import org.immutables.value.Value;
 
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.Compiler.BundleBuilder;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
-import io.resys.limaone.program.Program.ProgramMessage;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
@@ -52,7 +52,7 @@ public interface CompilableUnit {
   
   @Value.Immutable
   interface ValidatorResult {
-    List<ProgramMessage> getMessages();
+    List<ModelError> getMessages();
     ProgramStatus getProgramStatus();
   }
   
@@ -67,7 +67,7 @@ public interface CompilableUnit {
     List<Dependency> getChildDeps(); // who do I depend on aka children
     List<Dependency> getParentDeps(); // who depends on me
     
-    List<ProgramMessage> getErrors();
+    List<ModelError> getErrors();
     List<ProgramAssociation> getAssociations(); 
     ProgramStatus getProgramStatus();
   }

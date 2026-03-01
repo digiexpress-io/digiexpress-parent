@@ -26,14 +26,14 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
   
   private final ProgramStatus status; 
   private final List<Parameter> headers;
-  private final List<ProgramMessage> errors;
+  private final List<ModelError> errors;
   private final List<ProgramAssociation> associations;
   
   public FlowTaskProgramImpl(
       FlowTask_AST ast,
       FlowTaskExecutable executable,
       ProgramStatus status,
-      List<ProgramMessage> errors,
+      List<ModelError> errors,
       List<ProgramAssociation> associations) {
     super();
     this.ast = ast;
@@ -67,7 +67,7 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
     return headers;
   }
   @Override
-  public List<ProgramMessage> getErrors() {
+  public List<ModelError> getErrors() {
     return errors;
   }
   @Override

@@ -47,10 +47,9 @@ import io.resys.limaone.ast.Flow_AST.AnyFlowNode;
 import io.resys.limaone.ast.Flow_AST.FlowInputType;
 import io.resys.limaone.ast.ImmutableFlowInputType;
 import io.resys.limaone.ast.ImmutableFlow_AST;
-import io.resys.limaone.ast.ImmutableMessage_AST;
-import io.resys.limaone.ast.Simple_AST;
-import io.resys.limaone.ast.Simple_AST.Message_AST;
+import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.Flow_AST_CacheKey;
@@ -74,7 +73,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
 
   private final NodeFlowBean result = new NodeFlowBean(ALL_INPUTS);
   private final ObjectMapper yamlMapper;
-  private final List<Message_AST> messages = new ArrayList<>();
+  private final List<ModelError> messages = new ArrayList<>();
   private final List<String> src = new ArrayList<>();
   private String id;
   
@@ -116,7 +115,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       return ast
           .id(this.id)
           .bodyType(Model.BodyType.FLOW)
-          .messages(messages)
+          .errors(messages)
           .name(id == null ? "": id.getValue())
           .root(flow)
           .headers(AstFlowNodesFactory.headers().build(flow))
@@ -152,19 +151,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
         continue;
       }
 
-      boolean containsOnlySpaces = src.length() > 0 && "".equals(src.trim());
-      boolean endsWithSpace = src.endsWith(" ");
-      if(containsOnlySpaces || endsWithSpace) {
-        int start = containsOnlySpaces ? 0 : getSpaceStart(src);
-        int end = src.length();
-        messages.add(ImmutableMessage_AST.builder()
-            .line(lineNumber)
-            .range(AstFlowNodesFactory.range().build(start, end))
-            .value("space has no meaning")
-            .type(Simple_AST.MessageType.WARNING)
-            .build());
-      }
-
+      final boolean containsOnlySpaces = src.length() > 0 && "".equals(src.trim());
       if(containsOnlySpaces || src.length() == 0) {
         continue;
       }
@@ -177,10 +164,9 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       int indent = getIndent(src);
       if(indent % 2 != 0) {
         String message = String.format("Incorrect indent: %s, at line: %s!", indent, lineNumber);
-        messages.add(ImmutableMessage_AST.builder()
+        messages.add(ImmutableModelError.builder()
             .line(lineNumber)
-            .value(message)
-            .type(Simple_AST.MessageType.ERROR)
+            .msg(message)
             .build());
         continue;
       }
@@ -195,10 +181,9 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
 
       if(parent == null) {
         String message = String.format("Incorrect indent at line: %s, expecting: %s but was: %s!", lineNumber, indentToFind, indent);
-        messages.add(ImmutableMessage_AST.builder()
+        messages.add(ImmutableModelError.builder()
             .line(lineNumber)
-            .value(message)
-            .type(Simple_AST.MessageType.ERROR)
+            .msg(message)
             .build());
         return result.setEnd(lineNumber).setValue(buildSource(value));
       }
@@ -207,10 +192,9 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
         parent = parent.addChild(new NodeSource(src, lineNumber), indent, keywordAndValue.getKey(), keywordAndValue.getValue());
       } catch(Exception e) {
         messages.add(
-            ImmutableMessage_AST.builder()
+            ImmutableModelError.builder()
             .line(lineNumber)
-            .value(e.getMessage())
-            .type(Simple_AST.MessageType.ERROR)
+            .msg(e.getMessage())
             .build());
         return result.setEnd(lineNumber).setValue(value.toString());
       }
@@ -225,18 +209,6 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       return result.substring(0, result.length() - LINE_SEPARATOR.length());
     }
     return result;
-  }
-
-  private static int getSpaceStart(String lineContent) {
-    char[] charArray = lineContent.toCharArray();
-    int index = charArray.length;
-    do {
-      index--;
-      if(charArray[index] != ' ') {
-        break;
-      }
-    } while(index > -1);
-    return index + 1;
   }
 
   private Map.Entry<String, String> getKeywordAndValue(String lineContent, int lineNumber) {
@@ -260,21 +232,13 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
           value = nodeValue.asText();
         }
       } else {
-        String message = String.format("Unknown content on line: %d", lineNumber);
-        messages.add(ImmutableMessage_AST.builder()
-            .line(lineNumber)
-            .value(message)
-            .type(Simple_AST.MessageType.ERROR)
-            .build());
+        final var message = String.format("Unknown content on line: %d", lineNumber);
+        messages.add(ImmutableModelError.builder().line(lineNumber).msg(message).build());
         return null;
       }
     } catch(IOException e) {
-      String message = String.format("Unknown content on line: %d", lineNumber);
-      messages.add(ImmutableMessage_AST.builder()
-          .line(lineNumber)
-          .value(message)
-          .type(Simple_AST.MessageType.ERROR)
-          .build());
+      final var message = String.format("Unknown content on line: %d", lineNumber);
+      messages.add(ImmutableModelError.builder().line(lineNumber).msg(message).build());
       return null;
     }
     return new AbstractMap.SimpleImmutableEntry<String, String>(keyword, value);
@@ -292,5 +256,4 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   protected String getString(JsonNode node, String name) {
     return node.hasNonNull(name) ? node.get(name).asText() : null;
   }
-
 }
