@@ -21,55 +21,21 @@ package io.resys.limaone.tests;
  */
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.hash.Hashing;
-
-import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.ServiceData;
-import io.resys.limaone.model.ImmutableFlowTask;
-import io.resys.limaone.model.ImmutableModel;
-import io.resys.limaone.model.ImmutableModelWorld;
-import io.resys.limaone.model.Model.BodyType;
-import io.resys.limaone.program.Compiler;
-import io.resys.limaone.program.FlowTaskProgram;
-import io.resys.limaone.spi.compiler.CompilerImpl;
+import io.resys.limaone.tests.support.TestTemplate;
 import io.vertx.core.json.JsonObject;
 
 public class FlowTaskTest {
-  private final Compiler compiler = CompilerImpl.builder().build();
-
-  public FlowTaskProgram compile(String fullPath) {
-    try {
-      final var taskValue = IOUtils.toString(DecisionTest.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
-      final var model = ImmutableModel.<FlowTask>builder()
-          .id(fullPath)
-          .bodyHash(Hashing.murmur3_128().hashString(taskValue, StandardCharsets.UTF_8).toString())
-          .bodyType(BodyType.FLOW_TASK)
-          .body(ImmutableFlowTask.builder()
-              .taskName(fullPath)
-              .taskValue(taskValue)
-              .build())
-          .build();
-      
-      final var world = ImmutableModelWorld.builder().name("FlowTaskTest")
-          .putFlowTasks(model.getId(), model)
-          .build();
-      return compiler.compile(world).id(fullPath).build().queryFlowTasks().name(fullPath).getOne();
-    } catch(IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
 
   @Test
   public void type0() throws IOException {
-    final var envir = compile("flow-task/Type1Service.txt");
+    final var envir = TestTemplate.compileOneFlowTask("flow-task/Type1Service.txt");
 
     // map conversion
     final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();
@@ -78,7 +44,7 @@ public class FlowTaskTest {
 
   @Test
   public void type2() throws IOException {
-    final var envir = compile("flow-task/Type2Service.txt");
+    final var envir = TestTemplate.compileOneFlowTask("flow-task/Type2Service.txt");
 
     // map conversion
     final var result = envir.run(Map.of("a", 5, "b", 10)).andGetBody();

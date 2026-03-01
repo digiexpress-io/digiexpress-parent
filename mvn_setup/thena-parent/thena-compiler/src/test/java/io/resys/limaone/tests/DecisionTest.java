@@ -2,68 +2,25 @@ package io.resys.limaone.tests;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.hash.Hashing;
-
-import io.resys.limaone.model.DecisionTable;
-import io.resys.limaone.model.DecisionTable.DecisionTableNode;
-import io.resys.limaone.model.ImmutableDecisionTable;
-import io.resys.limaone.model.ImmutableModel;
-import io.resys.limaone.model.ImmutableModelWorld;
-import io.resys.limaone.model.Model.BodyType;
-import io.resys.limaone.program.Compiler;
-import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
 import io.resys.limaone.program.DecisionProgram.DecisionRow;
 import io.resys.limaone.program.Program.ProgramStatus;
-import io.resys.limaone.spi.compiler.CompilerImpl;
-import io.resys.limaone.tests.support.DateParser;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
+import io.resys.limaone.tests.support.TestTemplate;
 
 
 
 public class DecisionTest {
 
-  private final Compiler compiler = CompilerImpl.builder().build();
-
-  public DecisionProgram compileDt(String fullPath) {
-    try {
-      final var nodeString = IOUtils.toString(DecisionTest.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
-      final var model = ImmutableModel.<DecisionTable>builder()
-          .id(fullPath)
-          .bodyHash(Hashing.murmur3_128().hashString(nodeString, StandardCharsets.UTF_8).toString())
-          .bodyType(BodyType.DECISION_TABLE)
-          .body(ImmutableDecisionTable.builder()
-              .name(fullPath)
-              .nodes(new JsonArray(nodeString).stream()
-                    .map(e -> ((JsonObject) e))
-                    .map(e -> e.mapTo(DecisionTableNode.class))
-                    .toList())
-              .build())
-          .build();
-      
-      final var world = ImmutableModelWorld.builder().name("DecisionTest")
-          .putDecisionTables(model.getId(), model)
-          .build();
-      return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
-    } catch(IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-  
-  
   @Test
   public void readerNodeOrderTest() throws IOException {
-    final var decisionTable = compileDt("decision/dt.json");
+    final var decisionTable = TestTemplate.compileOneDt("decision/dt.json");
     
     List<DecisionRow> rows = decisionTable.getRows();
     Assertions.assertEquals(0, rows.get(0).getOrder());
@@ -128,13 +85,13 @@ Hit Policy: ALL
 //}
   @Test
   public void executionTest() throws IOException {
-    final var envir = compileDt("decision/dt.json");
+    final var envir = TestTemplate.compileOneDt("decision/dt.json");
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("sriBoolean", false);
     values.put("risk", "CAREFUL");
     values.put("sri", 1);
-    values.put("sriDate", DateParser.parseLocalDate("2017-07-03"));
+    values.put("sriDate", TestTemplate.parseLocalDate("2017-07-03"));
     
     DecisionResult result = envir.run(values).andGetBody();
 
@@ -146,7 +103,7 @@ Hit Policy: ALL
   
   @Test
   public void qinMatchingTest() throws IOException {
-    final var envir = compileDt("decision/dt3.json");
+    final var envir = TestTemplate.compileOneDt("decision/dt3.json");
     Assertions.assertEquals(
         """
 Decision Table: testDecisionTableQInExpression
@@ -164,7 +121,7 @@ Hit Policy: FIRST
       values.put("sriBoolean", false);
       values.put("path", "xyz");
       values.put("sri", 1);
-      values.put("sriDate", DateParser.parseLocalDate("2017-07-03"));
+      values.put("sriDate", TestTemplate.parseLocalDate("2017-07-03"));
       DecisionResult result = envir.run(values).andGetBody();
       Assertions.assertEquals(0, result.getMatches().size());
     }
@@ -174,7 +131,7 @@ Hit Policy: FIRST
       values.put("sriBoolean", false);
       values.put("path", "task/smt/name");
       values.put("sri", 1);
-      values.put("sriDate", DateParser.parseLocalDate("2017-07-03"));
+      values.put("sriDate", TestTemplate.parseLocalDate("2017-07-03"));
       DecisionResult result = envir.run(values).andGetBody();
       Assertions.assertEquals(1, result.getMatches().size());
     }
@@ -183,7 +140,7 @@ Hit Policy: FIRST
   
   @Test
   public void nullEqualsNull() throws IOException {
-    final var envir = compileDt("decision/nullEqualsNull.json");
+    final var envir = TestTemplate.compileOneDt("decision/nullEqualsNull.json");
     
     Map<String, Serializable> values = new HashMap<>();
     values.put("risk", null);
@@ -205,7 +162,7 @@ Hit Policy: FIRST
   
   @Test
   public void firstHitPolicy() throws IOException {
-    final var envir = compileDt("decision/firstHitPolicy.json");
+    final var envir = TestTemplate.compileOneDt("decision/firstHitPolicy.json");
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("regionName", "FIN");
@@ -234,7 +191,7 @@ Hit Policy: FIRST
 
   @Test
   public void all() throws IOException {
-    final var envir = compileDt("decision/allHitPolicy.json");
+    final var envir = TestTemplate.compileOneDt("decision/allHitPolicy.json");
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("firstName", "Mark");
@@ -254,7 +211,7 @@ Hit Policy: ALL
   
   @Test
   public void valueSetTest() throws IOException {
-    final var ast = compileDt("decision/dtWithValueSet.json");
+    final var ast = TestTemplate.compileOneDt("decision/dtWithValueSet.json");
     List<String> valueSet = ast.getHeaders().get(0).getValueSet();
     Assertions.assertEquals(3, valueSet.size());
     
@@ -273,7 +230,7 @@ Hit Policy: FIRST
 
   @Test
   public void csvImportCommandRandoGarbageIn() throws IOException {
-    final var ast = compileDt("decision/dt-import.json");
+    final var ast = TestTemplate.compileOneDt("decision/dt-import.json");
     Assertions.assertEquals(ProgramStatus.UP, ast.getStatus());
     
     Assertions.assertEquals(

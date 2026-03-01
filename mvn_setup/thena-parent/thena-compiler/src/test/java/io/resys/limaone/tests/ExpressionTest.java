@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.ExpressionProgram;
 import io.resys.limaone.spi.compiler.Compiler_Expression;
-import io.resys.limaone.tests.support.DateParser;
+import io.resys.limaone.tests.support.TestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -89,27 +89,27 @@ public class ExpressionTest {
   public void toDate() throws IOException {
     // equals
     var expression = build(ValueType.DATE_TIME, "equals 2017-07-03T00:00:00Z");
-    Assertions.assertEquals(true, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:00Z")));
+    Assertions.assertEquals(true, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:00Z")));
 
     // after
     expression = build(ValueType.DATE_TIME, "after 2017-07-03T00:00:00Z");
-    Assertions.assertEquals(false, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:00Z")));
+    Assertions.assertEquals(false, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:00Z")));
 
-    Assertions.assertEquals(true, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:01Z")));
+    Assertions.assertEquals(true, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:01Z")));
 
     // before
     expression = build(ValueType.DATE_TIME, "before 2017-07-03T00:00:00Z");
-    Assertions.assertEquals(false, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:00Z")));
-    Assertions.assertEquals(true, expression.getValue(DateParser.parseLocalDateTime("2017-07-02T23:59:59Z")));
+    Assertions.assertEquals(false, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:00Z")));
+    Assertions.assertEquals(true, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-02T23:59:59Z")));
 
 
     // before between
     expression = build(ValueType.DATE_TIME, "between 2017-07-03T00:00:01Z and 2017-07-03T00:00:03Z");
-    Assertions.assertEquals(false, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:00Z")));
-    Assertions.assertEquals(true, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:01Z")));
-    Assertions.assertEquals(true, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:02Z")));
-    Assertions.assertEquals(true, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:03Z")));
-    Assertions.assertEquals(false, expression.getValue(DateParser.parseLocalDateTime("2017-07-03T00:00:04Z")));
+    Assertions.assertEquals(false, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:00Z")));
+    Assertions.assertEquals(true, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:01Z")));
+    Assertions.assertEquals(true, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:02Z")));
+    Assertions.assertEquals(true, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:03Z")));
+    Assertions.assertEquals(false, expression.getValue(TestTemplate.parseLocalDateTime("2017-07-03T00:00:04Z")));
   }
 
   public LoggingDecisionTableExpression build(ValueType type, String src) {
