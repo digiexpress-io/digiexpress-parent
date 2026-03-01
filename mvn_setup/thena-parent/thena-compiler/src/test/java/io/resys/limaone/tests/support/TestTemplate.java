@@ -120,12 +120,12 @@ public class TestTemplate {
 
   
   
-  public static FlowProgram compileOneFlow(String fullPath, Deps ... deps) {
+  public static FlowProgram compileOneFlow(String flowSyntax, Deps ... deps) {
     
-    final var flowValue = toString(fullPath);
-    final var ast = compiler.getParser().parseFlow().id(fullPath).syntax(flowValue).parse();
+    final var flowValue = flowSyntax;
+    final var ast = compiler.getParser().parseFlow().id("test-flow").syntax(flowValue).parse();
     final var model = ImmutableModel.<Flow>builder()
-        .id(fullPath)
+        .id("test-value")
         .bodyHash(ast.getHash())
         .bodyType(BodyType.FLOW)
         .body(ImmutableFlow.builder()
@@ -174,7 +174,7 @@ public class TestTemplate {
     }
   
     
-    return compiler.compile(world.build()).id(fullPath).build().queryFlows().name(ast.getName()).getOne();
+    return compiler.compile(world.build()).id("test-bundle").build().queryFlows().name(ast.getName()).getOne();
   }
   
   
