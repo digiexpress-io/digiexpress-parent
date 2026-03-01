@@ -1,5 +1,6 @@
 package io.resys.limaone.spi.program;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,11 +115,18 @@ public class FlowProgramImpl implements FlowProgram {
   public Map<String, FlowProgramStep> getSteps() {
     return steps;
   }
-
+  @Override
+  public String getName() {
+    return ast.getName();
+  }
   @Override
   public FlowExecutor run(ProgramInput input, Runtime runtime) {
     // TODO Auto-generated method stub
     return null;
   }
-
+  @Override
+  public FlowExecutor run(Map<String, Serializable> input) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
