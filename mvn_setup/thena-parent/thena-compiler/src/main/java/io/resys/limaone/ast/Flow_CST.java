@@ -27,7 +27,7 @@ public interface Flow_CST extends Serializable {
 
   interface YamlTask extends Yaml {
     Yaml getId();
-    int getOrder();
+    int getOrder(); // 0 = first task
     Yaml getThen();
     YamlBody getRef();
     YamlBody getUserTask();

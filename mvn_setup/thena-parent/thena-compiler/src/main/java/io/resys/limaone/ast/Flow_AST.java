@@ -40,12 +40,15 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableFlow_AST.class)
 public interface Flow_AST extends Simple_AST, Serializable {
   YamlParseTree getParseTree();
+  
+  
   AnyStatement getStatement();
 
 
   //root marker
   interface AnyStatement {
     StatementType getType();
+
   }
 
   // markers
@@ -56,6 +59,7 @@ public interface Flow_AST extends Simple_AST, Serializable {
   interface InputsStatement {
     List<Parameter> getParameters();
     default StatementType getType() { return StatementType.FLOW_INPUTS; }
+    ManyTasksStatement getNext();
   }
 
   interface ManyTasksStatement extends AnyStatement {
