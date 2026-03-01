@@ -7,12 +7,11 @@ import org.apache.commons.lang3.Validate;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.Simple_AST;
-import io.resys.limaone.ast.Simple_AST.MessageType;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
+import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
-import io.resys.limaone.program.ImmutableProgramMessage;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.program.FlowTaskProgramImpl;
@@ -48,25 +47,19 @@ public class Compiler_FlowTask implements CompilableUnit {
           Validate.isTrue(constructors.length == 1, () -> "There can be only one constructor for flow task, expected: 1 actual: " + constructors.length);
           
           final var errors = new ArrayList<>(artifact.getErrors());
-          errors.addAll(ast.getMessages().stream()
-                .filter(e -> e.getType() == MessageType.ERROR)
-                .map(e -> ImmutableProgramMessage.builder()
-                  .id("flow-task-failed")
-                  .msg("@line "+ e.getLine() + ":  " + e.getValue() )
-                  .build())
-              .toList());
+          errors.addAll(ast.getErrors());
           
           final var beanInstance = (FlowTaskExecutable) constructors[0].newInstance();
           final var flowTask = new FlowTaskProgramImpl(
               ast, 
               beanInstance, 
-              errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.PROGRAM_ERROR, 
+              errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.ERROR, 
               errors, 
               artifact.getAssociations());
           return flowTask;
         } catch(Exception e) {
           final var errors = new ArrayList<>(artifact.getErrors());
-          errors.add(ImmutableProgramMessage.builder()
+          errors.add(ImmutableModelError.builder()
               .exception(e)
               .id("flow-task-failed")
               .msg(e.getMessage())
@@ -74,7 +67,7 @@ public class Compiler_FlowTask implements CompilableUnit {
           return new FlowTaskProgramImpl(
               ast, 
               null, 
-              ProgramStatus.PROGRAM_ERROR, 
+              ProgramStatus.ERROR, 
               errors, 
               artifact.getAssociations());
         }

@@ -92,7 +92,7 @@ public class ArtifactBuilder {
         .parentDeps(parentDeps)
         .errors(errors)
         .associations(associations)
-        .programStatus(errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.DEPENDENCY_ERROR)
+        .programStatus(errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.ERROR)
         .build();
   }
 
