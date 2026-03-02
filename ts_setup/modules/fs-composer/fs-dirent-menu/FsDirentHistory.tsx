@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
 
-interface ItemHistoryEntry {
+interface DirentHistoryEntry {
   user: string;
   change: string;
   date: string;
 }
 
-const historyData: ItemHistoryEntry[] = [
+const historyData: DirentHistoryEntry[] = [
   { user: 'Diana Hasselback', change: 'Updated content', date: '15.01.2025' },
   { user: 'office-staff', change: 'Modified labels', date: '14.01.2025' },
   { user: 'John Smith', change: 'Updated description', date: '13.01.2025' },
@@ -20,7 +20,7 @@ const historyData: ItemHistoryEntry[] = [
   { user: 'System', change: 'File created', date: '20.12.2024' }
 ];
 
-export const NodeHistory: React.FC = () => {
+export const FsDirentHistory: React.FC = () => {
   return (
     <>
       <Typography variant='caption'>Recent changes to this item</Typography>

@@ -4,11 +4,11 @@ import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsColors } from '../fs-theme';
 
-export interface NodeCommentsProps {
+export interface FsDirentCommentsProps {
   node: FsNode | undefined;
 }
 
-export const NodeComments: React.FC<NodeCommentsProps> = (props) => {
+export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
   const classes = useUtilityClasses();
   const { isDarkMode } = useFs();
   const [newComment, setNewComment] = React.useState('');

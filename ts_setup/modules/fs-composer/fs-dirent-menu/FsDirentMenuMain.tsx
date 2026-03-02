@@ -21,14 +21,14 @@ function getReferencesCount(nodeId: string, nodeName: string): number {
   return count;
 }
 
-export interface FsNodeMenuMainProps {
+export interface FsDirentMenuMainProps {
   node: FsNode | undefined;
   openSubmenu: string | undefined;
   onSubmenuOpen: (submenuType: string) => void;
   onClose: () => void;
 }
 
-export const FsNodeMenuMain: React.FC<FsNodeMenuMainProps> = (props) => {
+export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
   const classes = useUtilityClasses();
   const { openAsset } = useFs();
 

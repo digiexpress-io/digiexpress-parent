@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, List, IconButton, Badge, Tooltip } from '@mui/material';
 import { FsIcons } from '../fs-theme';
 import { FsDirent } from '../fs-dirent';
-import { FsNodeMenu } from '../fs-node-menu';
+import { FsDirentMenu } from '../fs-dirent-menu';
 import { FsSearch } from '../fs-search';
 import { FsExplorerNoSearchResults } from './FsExplorerNoSearchResults';
 import { FsExplorerProps } from './FsExplorerProps';
@@ -128,7 +128,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
           ))}
         </List>
       }
-      <FsNodeMenu
+      <FsDirentMenu
         node={ownerState.contextMenuData?.node || undefined}
         anchorPosition={ownerState.contextMenuData?.anchorPosition || undefined}
         open={ownerState.isContextMenuOpen}

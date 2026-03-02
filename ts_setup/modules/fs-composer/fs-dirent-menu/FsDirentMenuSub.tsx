@@ -2,18 +2,18 @@ import React from 'react';
 import { Box, Collapse, Divider, TextField } from '@mui/material';
 import { FsNode } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
-import { NodeSharingAndPermissions } from './NodeSharingAndPermissions';
-import { NodeHistory } from './NodeHistory';
-import { NodeReferences } from './NodeReferences';
-import { NodeCreate } from './NodeCreate';
-import { NodeComments } from './NodeComments';
+import { FsDirentSharingPermissions } from './FsDirentSharingPermissions';
+import { FsDirentHistory } from './FsDirentHistory';
+import { FsDirentReferences } from './FsDirentReferences';
+import { FsDirentCreate } from './FsDirentCreate';
+import { FsDirentComments } from './FsDirentComments';
 
-export interface FsNodeMenuSubProps {
+export interface FsDirentMenuSubProps {
   node: FsNode | undefined;
   openSubmenu: string | undefined;
 }
 
-export const FsNodeMenuSub: React.FC<FsNodeMenuSubProps> = (props) => {
+export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
   const classes = useUtilityClasses();
   const [labels, setLabels] = React.useState('');
 
@@ -29,11 +29,11 @@ export const FsNodeMenuSub: React.FC<FsNodeMenuSubProps> = (props) => {
             size='small'
           />
         )}
-        {props.openSubmenu === 'comments' && <NodeComments node={props.node} />}
-        {props.openSubmenu === 'sharing' && <NodeSharingAndPermissions />}
-        {props.openSubmenu === 'history' && <NodeHistory />}
-        {props.openSubmenu === 'references' && <NodeReferences node={props.node} />}
-        {props.openSubmenu === 'new' && <NodeCreate />}
+        {props.openSubmenu === 'comments' && <FsDirentComments node={props.node} />}
+        {props.openSubmenu === 'sharing' && <FsDirentSharingPermissions />}
+        {props.openSubmenu === 'history' && <FsDirentHistory />}
+        {props.openSubmenu === 'references' && <FsDirentReferences node={props.node} />}
+        {props.openSubmenu === 'new' && <FsDirentCreate />}
       </Box>
     </Collapse>
   );

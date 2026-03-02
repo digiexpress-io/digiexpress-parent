@@ -3,11 +3,11 @@ import { Box, styled, Typography } from '@mui/material';
 import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { FsColors } from '../fs-theme';
 
-interface NodeReferencessProps {
+interface FsDirentReferencesProps {
   node?: FsNode;
 }
 
-export const NodeReferences: React.FC<NodeReferencessProps> = ({ node }) => {
+export const FsDirentReferences: React.FC<FsDirentReferencesProps> = ({ node }) => {
   const { findReferencesToNode } = useFs();
 
   const references = React.useMemo(() => {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Divider, styled, Typography } from '@mui/material';
 
-interface ItemSharingAndPermissions {
+interface DirentSharingAndPermissions {
   name: string;
   privilege: string;
 }
 
-const permissions: ItemSharingAndPermissions[] = [
+const permissions: DirentSharingAndPermissions[] = [
   { name: 'John Smith (Me)', privilege: 'Read & write' },
   { name: 'Diana Hasselback', privilege: 'Read & write' },
   { name: 'office-staff', privilege: 'read' },
@@ -14,7 +14,7 @@ const permissions: ItemSharingAndPermissions[] = [
   { name: 'everyone', privilege: 'read' }
 ];
 
-export const NodeSharingAndPermissions: React.FC = () => {
+export const FsDirentSharingPermissions: React.FC = () => {
   return (<>
     <Typography variant='caption'>You can read and write</Typography>
     <StyledTableContainer>

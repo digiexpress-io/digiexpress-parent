@@ -2,11 +2,11 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { FsNode } from '@dxs-ts/fs-api';
 import { useUtilityClasses, FsNodeMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
-import { FsNodeMenuMain } from './FsNodeMenuMain';
-import { FsNodeMenuSub } from './FsNodeMenuSub';
+import { FsDirentMenuMain } from './FsDirentMenuMain';
+import { FsDirentMenuSub } from './FsDirentMenuSub';
 import { usePositioningStrategy } from './helpers';
 
-interface FsNodeMenuProps {
+interface FsDirentMenuProps {
   node: FsNode | undefined;
   anchorPosition: { top: number; left: number } | undefined;
   open: boolean;
@@ -14,7 +14,7 @@ interface FsNodeMenuProps {
   onExited?: () => void;
 }
 
-export const FsNodeMenu: React.FC<FsNodeMenuProps> = (props) => {
+export const FsDirentMenu: React.FC<FsDirentMenuProps> = (props) => {
   const classes = useUtilityClasses();
   const [openSubmenu, setOpenSubmenu] = React.useState<string | undefined>(undefined);
   const { shouldExpandUpward, vertical } = usePositioningStrategy(props.anchorPosition, MENU_HEIGHT);
@@ -53,14 +53,14 @@ export const FsNodeMenu: React.FC<FsNodeMenuProps> = (props) => {
       }}
     >
       <Box className={classes.menuContainer}>
-        <FsNodeMenuMain
+        <FsDirentMenuMain
           node={props.node}
           openSubmenu={openSubmenu}
           onSubmenuOpen={handleSubmenuOpen}
           onClose={props.onClose}
         />
 
-        <FsNodeMenuSub
+        <FsDirentMenuSub
           node={props.node}
           openSubmenu={openSubmenu}
         />
