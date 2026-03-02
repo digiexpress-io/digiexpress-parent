@@ -1,0 +1,126 @@
+import React from 'react';
+import { Typography, Box } from '@mui/material';
+import { FsIcons } from '../fs-theme';
+import { ViewContainer } from '../fs-main-views';
+import { FsPropertiesProps, propertiesMock} from './FsPropertiesProps';
+import { useOwnerState } from './useOwnerState';
+import { FsPropertiesRoot, useUtilityClasses } from './useUtilityClasses';
+
+
+
+
+export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
+  const ownerState = useOwnerState(props);
+  const {node} = props;
+  const classes = useUtilityClasses();
+
+  if (!node) {
+    return (
+      <ViewContainer
+        title="Properties"
+        icon={<FsIcons.Settings />}
+        activeNode={false}
+        noNodeMessage="Select a node from the tree to view properties."
+      >
+        <></>
+      </ViewContainer>
+    );
+  }
+
+  return (
+    <ViewContainer
+      title={`Properties: ${node.name}`}
+      icon={<FsIcons.Settings />}
+      activeNode={true}
+    >
+      <FsPropertiesRoot className={classes.root} ownerState={ownerState}>
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Page Locales</Typography>
+          <div className={classes.propertyList}>
+          {propertiesMock.pages.map((locale, index) => (
+            <Box key={index} className={classes.propertyListItem}>{locale}</Box>
+          ))}
+          </div>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Labels</Typography>
+          <div className={classes.propertyList}>
+            {propertiesMock.labels.map((label, index) => <Box key={index} className={classes.propertyListItem}>{label}</Box>)}
+          </div>
+          <div className={classes.tagLabel}>
+            <Typography component="span">label</Typography>
+          </div>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Service Name</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.serviceName}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Service Locales</Typography>
+          <div className={classes.propertyList}>
+          {propertiesMock.serviceLocaleLabels.map((label, index) => (
+            <Box key={index} className={classes.propertyListItem}>{label}</Box>
+          ))}
+          </div>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Service Validity Start</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.validityStart}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Service Validity End</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.validityEnd}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Service Validity Period</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.validityPeriod}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Dialob Form Name</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.dialobFormName}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Dialob Form Tag</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.dialobFormTag}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Flow Name</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.flowName}</Typography>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Config Options Enabled</Typography>
+          <div className={classes.propertyList}>
+          {propertiesMock.configOptionsEnabled.map((option, index) => (
+            <Box key={index} className={classes.propertyListItem}>{option}</Box>
+          ))}
+          </div>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Selected Articles</Typography>
+          <div className={classes.propertyList}>
+          {propertiesMock.selectedArticles.map((article, index) => (
+            <Box key={index} className={classes.propertyListItem}>{article}</Box>
+          ))}
+          </div>
+        </div>
+
+        <div className={classes.propertyRow}>
+          <Typography className={classes.propertyLabel}>Comments</Typography>
+          <Typography className={classes.propertyValue}>{propertiesMock.comments}</Typography>
+        </div>
+
+      </FsPropertiesRoot>
+    </ViewContainer>
+  );
+};
