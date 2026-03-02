@@ -9,10 +9,12 @@ public class ImmutableReturnsStatement implements ReturnsStatement {
 
   private final boolean collection;
   private final MappingStatement mapping;
+  private final String taskId;
   
-  public ImmutableReturnsStatement(boolean collection, MappingStatement mapping) {
+  public ImmutableReturnsStatement(boolean collection, MappingStatement mapping, String taskId) {
     super();
     this.collection = collection;
     this.mapping = mapping;
+    this.taskId = taskId;
   }
 }

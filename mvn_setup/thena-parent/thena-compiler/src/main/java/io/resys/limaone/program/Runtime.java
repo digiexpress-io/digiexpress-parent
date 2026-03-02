@@ -7,12 +7,14 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.resys.limaone.model.Parameter;
+import io.resys.limaone.program.Compiler.Bundle;
 import jakarta.annotation.Nullable;
 
 public interface Runtime extends Serializable {
   Heap getHeap();
   EnvironmentProperties getProperties();
   ProgramParameters getParameters();
+  Bundle getBundle();
   
   <T> T getBean(Class<T> type); 
   

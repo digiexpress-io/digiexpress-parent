@@ -5,8 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class ImmutableEmptyBodyStatement implements EmptyBodyStatement {
-
-  public ImmutableEmptyBodyStatement() {
+  private final String taskId;
+  
+  public ImmutableEmptyBodyStatement(String taskId) {
     super();
+    this.taskId = taskId;
   }
 }

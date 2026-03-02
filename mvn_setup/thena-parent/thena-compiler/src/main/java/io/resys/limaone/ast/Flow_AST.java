@@ -50,7 +50,10 @@ public interface Flow_AST extends Simple_AST, Serializable {
   }
 
   // markers
-  interface BodyStatement extends AnyStatement {}
+  interface BodyStatement extends AnyStatement {
+    String getTaskId();
+    boolean isCollection();
+  }
   interface NextStatement extends AnyStatement  {}
 
 
@@ -62,6 +65,7 @@ public interface Flow_AST extends Simple_AST, Serializable {
 
   interface ManyTasksStatement extends AnyStatement {
     NextStatement getNext();
+    Map<String, OneTaskStatement> getTasks();
     default StatementType getType() { return StatementType.FLOW_TASKS; }
   }
 
@@ -74,6 +78,7 @@ public interface Flow_AST extends Simple_AST, Serializable {
 
   interface EmptyBodyStatement extends BodyStatement {
     default StatementType getType() { return StatementType.BODY_EMPTY; }
+    default boolean isCollection() { return false; }
   }  
   interface DecisionTableStatement extends BodyStatement {
     String getDecisionTableName();
@@ -101,6 +106,7 @@ public interface Flow_AST extends Simple_AST, Serializable {
   }
   interface SwitchStatement extends NextStatement {
     List<CaseStatement> getCases();
+    MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_SWITCH; }
   }
   
@@ -122,8 +128,15 @@ public interface Flow_AST extends Simple_AST, Serializable {
     //  to------from
     Map<String, String> getAssignments();
     
-    boolean isObjectMapping(); // inputs not defined... just assume that mapping is default de-constructing
+    
+    // inputs not defined... just assume that mapping is default de-constructing
+    boolean isDeconstructing(); 
 
+    // variable names that contain objects that will be deconstructed 
+    List<String> getDeconstructors(); 
+    
+    String getTaskId();
+    
     default StatementType getType() { return StatementType.MAPPING; }
   }
 

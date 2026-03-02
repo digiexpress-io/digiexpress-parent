@@ -3,11 +3,12 @@ package io.resys.limaone.spi.program;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.resys.limaone.ast.Flow_AST;
-import io.resys.limaone.ast.Flow_AST.YamlInput;
+import io.resys.limaone.ast.Flow_CST.YamlInput;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
@@ -25,9 +26,6 @@ public class FlowProgramImpl implements FlowProgram {
   private static final long serialVersionUID = -4209510801206880302L;
   private final Flow_AST ast;
   
-  private final String startStepId;
-  private final Map<String, FlowProgramStep> steps;
-  
   private final ProgramStatus status; 
   private final List<Parameter> headers;
   private final List<ModelError> errors;
@@ -36,16 +34,12 @@ public class FlowProgramImpl implements FlowProgram {
   
   public FlowProgramImpl(
       Flow_AST ast, 
-      String startStepId,
-      Map<String, FlowProgramStep> steps,
       ProgramStatus status,
       List<ModelError> errors,
       List<ProgramAssociation> associations) {
     super();
     this.ast = ast;
     this.status = status;
-    this.startStepId = startStepId;
-    this.steps = Collections.unmodifiableMap(steps);
     this.errors = Collections.unmodifiableList(errors);
     this.associations = Collections.unmodifiableList(associations);
     this.headers = Collections.unmodifiableList(getHeaders(ast));
@@ -108,21 +102,25 @@ public class FlowProgramImpl implements FlowProgram {
   }
 
   @Override
-  public String getStartStepId() {
-    return startStepId;
-  }
-
-  @Override
-  public Map<String, FlowProgramStep> getSteps() {
-    return steps;
-  }
-  @Override
   public String getName() {
     return ast.getName();
   }
   @Override
   public FlowExecutor run(ProgramInput input, Runtime runtime) {
-
+    final var executor = new FlowProgramExecutor(runtime, input).visit(ast.getStatement(), null);
+    final Map<String, FlowResultLog> stack = new HashMap<>();
+    return new FlowExecutor() {
+      @Override
+      public FlowResultLog andGetTask(String task) {
+        return stack.values().stream()
+            .filter(t -> t.getStepId().equals(task)).findFirst().orElse(null);
+      }
+      @Override
+      public FlowResult andGetBody() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    };
   }
   @Override
   public FlowExecutor run(Map<String, Serializable> input) {

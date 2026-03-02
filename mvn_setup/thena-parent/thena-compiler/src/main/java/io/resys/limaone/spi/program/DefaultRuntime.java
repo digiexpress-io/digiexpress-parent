@@ -1,5 +1,7 @@
 package io.resys.limaone.spi.program;
 
+import io.resys.limaone.program.Compiler.Bundle;
+
 public class DefaultRuntime implements io.resys.limaone.program.Runtime {
 
   @Override
@@ -29,5 +31,11 @@ public class DefaultRuntime implements io.resys.limaone.program.Runtime {
   
   public static DefaultRuntime empty() {
     return new DefaultRuntime();
+  }
+
+  @Override
+  public Bundle getBundle() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

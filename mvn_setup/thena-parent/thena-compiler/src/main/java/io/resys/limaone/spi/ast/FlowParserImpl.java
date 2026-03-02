@@ -3,6 +3,7 @@ package io.resys.limaone.spi.ast;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,9 @@ import io.resys.limaone.ast.Flow_CST.YamlSwitch;
 import io.resys.limaone.ast.Flow_CST.YamlTask;
 import io.resys.limaone.ast.ImmutableFlow_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
+import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
@@ -61,6 +64,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
 
   private final Map<String, OneTaskStatement> steps = new HashMap<>();
   private final Map<String, YamlTask> tasksById = new HashMap<>();
+  private final List<ModelError> errors = new ArrayList<>();
   
   private String id;
   
@@ -97,8 +101,9 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
           .id(this.id)
           .bodyType(Model.BodyType.FLOW)
           .hash(hash)
-          .statement(new ImmutableInputsStatement(headers.getAcceptDefs(), new ImmutableManyTasksStatement(next)))
+          .statement(new ImmutableInputsStatement(headers.getAcceptDefs(), new ImmutableManyTasksStatement(next, steps)))
           .errors(cst.getItem2())
+          .addAllErrors(errors)
           .name(id == null ? "": id.getValue())
           .parseTree(cst.getItem1())
           .headers(headers)
@@ -179,42 +184,46 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
       return null;
     }
-
+    final var taskId = YamlMapper.getStringValue(task.getId());
     final var collection = task.getReturns() != null ? YamlMapper.getBooleanValue(task.getReturns().getCollection()) : YamlMapper.getBooleanValue(task.getRef().getCollection());
     final var ref =  task.getReturns() != null ? "" : YamlMapper.getStringValue(task.getRef().getRef());
     
     final var inputs = new HashMap<String, String>();
-    boolean isObjectMapping = false;
+    final var deconstruct = new ArrayList<String>();
     
     // use reference input
     if(task.getRef() != null) {
       if (task.getRef().getObjectInput() != null) {
-        isObjectMapping = true;
-        inputs.put(MutableYamlParseTree.OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
-      } else {
-        for (Map.Entry<String, Yaml> entry : task.getRef().getInputs().entrySet()) {
-          inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
-        }
+        deconstruct.add(task.getRef().getObjectInput());
       }
+      for (Map.Entry<String, Yaml> entry : task.getRef().getInputs().entrySet()) {
+        if(entry.getKey().equals(task.getRef().getObjectInput())) {
+          continue;
+        }
+        inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
+      }
+
       // use returns input mapping
     } else {
       if (task.getReturns().getObjectInput() != null) {
-        isObjectMapping = true;
-        inputs.put(MutableYamlParseTree.OBJECT_INPUT_FLAG, task.getReturns().getObjectInput());
-      } else {
-        for (Map.Entry<String, Yaml> entry : task.getReturns().getInputs().entrySet()) {
-          inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
+        deconstruct.add(task.getReturns().getObjectInput());        
+      }
+      
+      for (Map.Entry<String, Yaml> entry : task.getReturns().getInputs().entrySet()) {
+        if(entry.getKey().equals(task.getReturns().getObjectInput())) {
+          continue;
         }
+        inputs.put(entry.getKey(), YamlMapper.getStringValue(entry.getValue()));
       }
     }
     
-    final var inputsStmnt = new ImmutableMappingStatement(inputs, isObjectMapping);
+    final var inputsStmnt = new ImmutableMappingStatement(inputs, deconstruct, taskId);
     if(task.getDecisionTable() != null) {
-      return new ImmutableDecisionTableStatement(ref, collection, inputsStmnt);
+      return new ImmutableDecisionTableStatement(ref, collection, inputsStmnt, taskId);
     } else if(task.getService() != null) {
-      return new ImmutableFlowTaskStatement(ref, collection, inputsStmnt);
+      return new ImmutableFlowTaskStatement(ref, collection, inputsStmnt, taskId);
     } else {
-      return new ImmutableReturnsStatement(collection, inputsStmnt);
+      return new ImmutableReturnsStatement(collection, inputsStmnt, taskId);
     }
   }
   
@@ -229,6 +238,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
 
     }
     
+    final var inputMappings = new HashMap<String, String>();
     final var cases = task.getSwitch().values().stream()
       .sorted((o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()))
       .map(d -> {
@@ -239,11 +249,15 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
         if(!stepId.equalsIgnoreCase(MutableYamlParseTree.VALUE_END)) {
           visitTask(tasksById.get(stepId));
         }
+        condition.getWhen().getConstants().forEach(e -> inputMappings.put(e, e));
         return condition;
       }).toList();
     
-    return new ImmutableSwitchStatement(cases);
+    final var taskId = YamlMapper.getStringValue(task.getId());
+    return new ImmutableSwitchStatement(cases, new ImmutableMappingStatement(inputMappings, Collections.emptyList(), taskId));
   }
+  
+
   
   private Tuple2<String, CaseStatement> visitSwitchNode(YamlSwitch decision) {
     
@@ -254,8 +268,8 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       final var isTrue = when == null || when.isEmpty();
       final var expression = isTrue ? 
           Compiler_Expression.build("true", ValueType.FLOW_CONTEXT) :
-          Compiler_Expression.build(when, ValueType.FLOW_CONTEXT);
-      
+          Compiler_Expression.build(when, ValueType.FLOW_CONTEXT);      
+
       final String stepId;
       final NextStatement next;
       if(MutableYamlParseTree.VALUE_END.equalsIgnoreCase(thenValue)) {
@@ -280,7 +294,13 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       return Tuple2.of(stepId, new ImmutableCaseStatement(expression, next));
     } catch(Exception e) {
       final var message = "Failed to evaluate expression: \"" + when + "\" in flow decision: " + decisionId + "!" + System.lineSeparator() + e.getMessage();
-      throw new AST_Exception(message, e);
+      this.errors.add(ImmutableModelError.builder()
+          .line(decision.getStart())
+          .msg(message)
+          .exception(e)
+          .build());
+      
+      return Tuple2.of(MutableYamlParseTree.VALUE_END, new ImmutableCaseStatement(Compiler_Expression.build("true", ValueType.FLOW_CONTEXT), ImmutableEndStatement.getInstance())); 
     } 
   }
 }

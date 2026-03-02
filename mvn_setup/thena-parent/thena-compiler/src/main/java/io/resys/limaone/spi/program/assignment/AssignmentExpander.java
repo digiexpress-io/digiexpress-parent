@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program.input;
+package io.resys.limaone.spi.program.assignment;
 
 /*-
  * #%L
@@ -28,11 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import io.resys.limaone.ast.Flow_AST.MappingStatement;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class InputMappingResolver {
+public class AssignmentExpander {
 
   private final Map<String, String> mapping;
   private final List<Map<String, String>> expanded = new ArrayList<>();
@@ -126,5 +127,10 @@ public class InputMappingResolver {
       return null;
     }
     return (List) firstValue;
+  }
+  
+  
+  public static List<Map<String, String>> from(MappingStatement statement, Function<String, Serializable> getVariable) {
+    return new AssignmentExpander(statement.getAssignments(), getVariable).accept();
   }
 }

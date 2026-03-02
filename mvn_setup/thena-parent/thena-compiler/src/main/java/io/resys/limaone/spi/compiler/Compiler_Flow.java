@@ -38,7 +38,7 @@ public class Compiler_Flow implements CompilableUnit {
       @Override
       public Program close(Artifact artifact) {
         return new FlowProgramImpl(
-            ast, firstStep.getId(), steps, 
+            ast, 
             artifact.getProgramStatus(), 
             artifact.getErrors(), artifact.getAssociations());
       }

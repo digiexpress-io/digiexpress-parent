@@ -10,11 +10,13 @@ public class ImmutableDecisionTableStatement implements DecisionTableStatement {
   private final boolean collection;
   private final MappingStatement mapping;
   private final String decisionTableName;
+  private final String taskId;
   
-  public ImmutableDecisionTableStatement(String decisionTableName, boolean collection, MappingStatement mapping) {
+  public ImmutableDecisionTableStatement(String decisionTableName, boolean collection, MappingStatement mapping, String taskId) {
     super();
     this.collection = collection;
     this.mapping = mapping;
     this.decisionTableName = decisionTableName;
+    this.taskId = taskId;
   }
 }
