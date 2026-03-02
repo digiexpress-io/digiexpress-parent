@@ -1,15 +1,10 @@
 import React from 'react';
 import { Typography, Switch, Divider } from '@mui/material';
-import { ConfigOption } from '@dxs-ts/fs-api';
 import { FsIcons } from '../fs-theme';
 import { ViewContainer } from '../fs-main-views';
-import { FsConfigOptionsProps } from './FsConfigOptionsProps';
+import { FsConfigOptionsProps, allConfigOptions } from './FsConfigOptionsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsConfigOptionsRoot, useUtilityClasses } from './useUtilityClasses';
-
-
-
-const allConfigOptions: (keyof ConfigOption)[] = ['devMode', 'disabledMode', 'anonymousMode', 'assignableMode'];
 
 
 export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {

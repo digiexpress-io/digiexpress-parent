@@ -1,40 +1,15 @@
 import React from 'react';
 import { Typography, IconButton, Tooltip, Dialog, DialogActions, Button, DialogTitle, DialogContent } from '@mui/material';
-import { FsColors, FsIcons } from '../fs-theme';
+import { FsIcons } from '../fs-theme';
 import { ViewContainer } from '../fs-main-views';
-import { FsChangesProps } from './FsChangesProps';
+import { FsChangesProps, assetsWithChanges } from './FsChangesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsChangesRoot, useUtilityClasses } from './useUtilityClasses';
 
 
-const assetsWithChanges = [
-  { id: 'main.article', name: 'main.article', status: 'modified' },
-  { id: 'info-gdpr.article', name: 'info-gdpr.article', status: 'modified' },
-  { id: 'general-message.service', name: 'general-message.service', status: 'modified' },
-  { id: 'taskMsgFlow.flow', name: 'taskMsgFlow.flow', status: 'new' },
-  { id: 'public-inforeq.service', name: 'public-inforeq.service', status: 'deleted' },
-  { id: 'trustee-info-form.service', name: 'trustee-info-form.service', status: 'modified' },
-  { id: 'sipoo-main-site.link', name: 'sipoo-main-site.link', status: 'new' }
-];
-
-const getStatusColor = (status: string, isDarkMode: boolean) => {
-  switch (status) {
-    case 'deleted':
-      return isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight;
-    case 'new':
-      return FsColors.semantic.success;
-    case 'modified':
-      return isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight;
-    default:
-      return isDarkMode ? FsColors.dark.text : FsColors.light.text;
-  }
-};
-
-
-
 export const FsChanges: React.FC<FsChangesProps> = (props) => {
   const ownerState = useOwnerState(props)
-  const { confirmOpen, isDarkMode, setConfirmOpen } = ownerState;
+  const { confirmOpen, isDarkMode, setConfirmOpen, getStatusColor } = ownerState;
   const classes = useUtilityClasses();
 
 
@@ -51,11 +26,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
             <Typography variant="subtitle2" className={classes.assetName}>
               {asset.name}
             </Typography>
-            <Typography
-              variant="subtitle2"
-              className={classes.statusText}
-              style={{ color: getStatusColor(asset.status, isDarkMode) }}
-            >
+            <Typography variant="subtitle2" className={classes.statusText} style={{ color: getStatusColor(asset.status, isDarkMode) }}>
               {asset.status}
             </Typography>
 

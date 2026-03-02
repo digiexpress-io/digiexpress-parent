@@ -37,8 +37,9 @@ export const useUtilityClasses = () => {
 export const FsChangesRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+
   display: 'flex',
   flexDirection: 'column',
   border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
