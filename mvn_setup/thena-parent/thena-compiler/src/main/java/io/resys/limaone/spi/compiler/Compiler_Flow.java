@@ -23,6 +23,8 @@ public class Compiler_Flow implements CompilableUnit {
   @Override
   public OpenProgram compile(NewArtifact resolution) {
     final Flow_AST ast = parser.parseFlow().id(flow.getId()).syntax(flow.getBody().getFlowValue()).parse();
+    resolution.ast(ast).id(flow.getId()).name(ast.getName()).build();
+    
     
     this.resolution = resolution;
     

@@ -253,6 +253,7 @@ public class FlowProgramExecutor {
     final var builder = ImmutableFlowResultLog.builder()
         .id(sequence.incrementAndGet())
         .start(start)
+        .isReturnsCollection(false)
         .end(LocalDateTime.now());
     
     callback.accept(builder);

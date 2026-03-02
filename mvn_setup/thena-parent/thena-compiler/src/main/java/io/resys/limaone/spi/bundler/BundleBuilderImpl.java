@@ -9,6 +9,7 @@ import java.util.Optional;
 import io.resys.limaone.program.Compiler.Bundle;
 import io.resys.limaone.program.Compiler.BundleBuilder;
 import io.resys.limaone.program.Program;
+import io.resys.limaone.spi.LocalCache;
 
 public class BundleBuilderImpl implements BundleBuilder {
 
@@ -19,7 +20,7 @@ public class BundleBuilderImpl implements BundleBuilder {
   private OffsetDateTime endDate;
   private OffsetDateTime created;
   private final List<Program> programs = new ArrayList<>();
-  
+  public static final String LAST_BUNDLE = "LAST_BUNDLE";
   
   public BundleBuilderImpl addProgram(Program program) {
     this.programs.add(Objects.requireNonNull(program, () -> "program must be defined!"));
@@ -63,7 +64,7 @@ public class BundleBuilderImpl implements BundleBuilder {
   }
   @Override
   public Bundle build() {
-    return new ImmutableBundle(
+    final var bundle = new ImmutableBundle(
         Objects.requireNonNull(id, () -> "id must be defined!"),
         Optional.ofNullable(name).orElse(id),
         Optional.ofNullable(externalId).orElse(id),
@@ -72,5 +73,7 @@ public class BundleBuilderImpl implements BundleBuilder {
         Optional.ofNullable(endDate).orElse(OffsetDateTime.MAX),
         programs
     );
+    LocalCache.computeIfAbsent(LAST_BUNDLE, (key) -> bundle);
+    return bundle;
   }
 }

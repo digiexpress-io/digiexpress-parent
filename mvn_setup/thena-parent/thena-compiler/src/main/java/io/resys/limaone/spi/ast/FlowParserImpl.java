@@ -37,6 +37,7 @@ import io.resys.limaone.spi.LocalCache.Flow_AST_CacheKey;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.flow.ImmutableCaseStatement;
 import io.resys.limaone.spi.ast.flow.ImmutableDecisionTableStatement;
+import io.resys.limaone.spi.ast.flow.ImmutableEmptyBodyStatement;
 import io.resys.limaone.spi.ast.flow.ImmutableEndStatement;
 import io.resys.limaone.spi.ast.flow.ImmutableFlowTaskStatement;
 import io.resys.limaone.spi.ast.flow.ImmutableInputsStatement;
@@ -181,10 +182,11 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   }
 
   private BodyStatement visitStepBody(YamlTask task) {
-    if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
-      return null;
-    }
     final var taskId = YamlMapper.getStringValue(task.getId());
+    if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
+      return new ImmutableEmptyBodyStatement(taskId);
+    }
+    
     final var collection = task.getReturns() != null ? YamlMapper.getBooleanValue(task.getReturns().getCollection()) : YamlMapper.getBooleanValue(task.getRef().getCollection());
     final var ref =  task.getReturns() != null ? "" : YamlMapper.getStringValue(task.getRef().getRef());
     

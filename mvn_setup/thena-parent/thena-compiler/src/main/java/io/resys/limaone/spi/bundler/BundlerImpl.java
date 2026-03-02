@@ -21,7 +21,7 @@ import io.smallrye.mutiny.Uni;
 public class BundlerImpl implements Bundler {
   private final Map<String, ArtifactBuilder> artifacts_byId = new ConcurrentHashMap<>();
   private final Map<String, ArtifactBuilder> artifacts_byName = new ConcurrentHashMap<>();
-  private final List<DependencyBuilder> deps = Collections.synchronizedList(new ArrayList<>()); 
+  private final List<DependencyBuilder> deps = Collections.synchronizedList(new ArrayList<>());
   private final BundleBuilderImpl bundleBuilder = new BundleBuilderImpl();
   
   

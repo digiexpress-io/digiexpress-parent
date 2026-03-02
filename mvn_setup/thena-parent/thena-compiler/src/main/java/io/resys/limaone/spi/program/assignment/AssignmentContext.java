@@ -26,7 +26,7 @@ public class AssignmentContext {
   
   private final io.resys.limaone.program.Runtime runtime;
   private final ProgramInput input;
-  private Map<String, Initializer> initalizers;
+  private Map<String, Initializer> initalizers = new HashMap<>();
   private ManyTasksStatement initalizers_tasks;
   
   private Map<String, Assignment> assigned = new HashMap<>();
@@ -35,12 +35,12 @@ public class AssignmentContext {
   
   // program input... ie constructor args
   public void initalizers(InputsStatement statement) {
-    Map<String, Serializable> result = new HashMap<>();
+
     List<String> required = new ArrayList<>();
     for(final var dataType : statement.getParameters()) {
       Serializable value = input.getValue(dataType);
       if(value != null) {
-        result.put(dataType.getName(), value);
+        initalizers.put(dataType.getName(), new Initializer(value));
       }
       if(dataType.isRequired() && value == null) {
         required.add(dataType.getName());
@@ -142,7 +142,7 @@ public class AssignmentContext {
           if(target.isMap()) {
             prev = target.getMap();
           } else if(isLast) {
-            return (Serializable) target;
+            return (Serializable) target.getRaw();
           } else {
             prev = target.getExploded();
           }
@@ -227,6 +227,6 @@ public class AssignmentContext {
 
   // creates new instance of inputs 
   public ProgramInput withInputs(Map<String, Serializable> nextInputs) {
-    return null;
+    return input.withInputs(nextInputs);
   }
 }

@@ -4,11 +4,12 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-import io.resys.limaone.program.ExpressionProgram;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.model.Parameter.ValueType;
+import io.resys.limaone.program.Compiler.Bundle;
+import io.resys.limaone.program.ExpressionProgram;
 import lombok.Value;
 
 public class LocalCache {
@@ -16,7 +17,16 @@ public class LocalCache {
   private static final ConcurrentHashMap<DecisionTable_AST_CacheKey, DecisionTable_AST> DT_CACHE = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap<Flow_AST_CacheKey, Flow_AST> FLOW_CACHE = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap<FlowTask_AST_CacheKey, FlowTask_AST> FLOW_TASK_CACHE = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<String, Bundle> BUNDLE_CACHE = new ConcurrentHashMap<>();
 
+
+  public static Bundle computeIfAbsent( 
+      String key, 
+      Function<String, Bundle> mappingFunction) {
+
+    return BUNDLE_CACHE.computeIfAbsent(key, mappingFunction);
+  }
+  
 
   public static FlowTask_AST computeIfAbsent(
       FlowTask_AST_CacheKey key, 
