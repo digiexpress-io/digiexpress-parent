@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { ChangesView, ConfigOptionsView, ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
+import { ConfigOptionsView, ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
+import { FsChanges } from '../fs-changes';
 import { OwnerState } from './useOwnerState';
 
 export interface FsMainRightProps {
@@ -18,7 +19,7 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ ownerState, className 
           <Typography>Select an option from the toolbar to view details.</Typography>
         </ViewContainer>
       ) : selectedView === 'changes' ? (
-        <ChangesView node={activeNode} />
+          <FsChanges node={activeNode} />
         ) : (() => {
           switch (selectedView) {
             case 'errors':

@@ -1,4 +1,3 @@
-export * from './ChangesView';
 export * from './ConfigOptionsView';
 export * from './ErrorsView';
 export * from './HelpView';
