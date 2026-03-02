@@ -1,6 +1,7 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { FsColors } from '../fs-theme';
+import { OwnerState } from './useOwnerState';
 
 
 
@@ -37,13 +38,13 @@ export const FsChangesRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkMode',
-})<{ isDarkMode: boolean }>(({ theme, isDarkMode }) => ({
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
-  border: `1px solid ${isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+  border: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
 
   [`& .${MUI_NAME}-changeRow:nth-of-type(odd)`]: {
-    backgroundColor: isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
+    backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface,
   },
 
   [`& .${MUI_NAME}-changeRow`]: {
@@ -51,8 +52,8 @@ export const FsChangesRoot = styled('div', {
     alignItems: 'center',
     gap: theme.spacing(2),
     padding: theme.spacing(1, 1.5),
-    backgroundColor: isDarkMode ? FsColors.dark.background : FsColors.light.background,
-    borderBottom: `1px solid ${isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
+    backgroundColor: ownerState.isDarkMode ? FsColors.dark.background : FsColors.light.background,
+    borderBottom: `1px solid ${ownerState.isDarkMode ? FsColors.dark.border : FsColors.light.border}`,
     '&:last-child': {
       borderBottom: 'none'
     }
@@ -60,7 +61,7 @@ export const FsChangesRoot = styled('div', {
 
   [`& .${MUI_NAME}-assetName`]: {
     fontWeight: 500,
-    color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     width: '300px',
     flexShrink: 0
   },
@@ -74,9 +75,9 @@ export const FsChangesRoot = styled('div', {
 
   [`& .${MUI_NAME}-undoButton`]: {
     marginLeft: 'auto',
-    color: isDarkMode ? FsColors.dark.text : FsColors.light.text,
+    color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     '&:hover': {
-      backgroundColor: isDarkMode ? FsColors.dark.surface : FsColors.light.surface
+      backgroundColor: ownerState.isDarkMode ? FsColors.dark.surface : FsColors.light.surface
     }
   },
 
@@ -88,6 +89,6 @@ export const FsChangesRoot = styled('div', {
   },
 
   [`& .${MUI_NAME}-discardButton`]: {
-    color: isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
+    color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight,
   },
 }));

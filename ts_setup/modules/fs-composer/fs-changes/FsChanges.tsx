@@ -33,7 +33,8 @@ const getStatusColor = (status: string, isDarkMode: boolean) => {
 
 
 export const FsChanges: React.FC<FsChangesProps> = (props) => {
-  const { confirmOpen, isDarkMode, setConfirmOpen } = useOwnerState(props)
+  const ownerState = useOwnerState(props)
+  const { confirmOpen, isDarkMode, setConfirmOpen } = ownerState;
   const classes = useUtilityClasses();
 
 
@@ -44,7 +45,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
         <Button>Save all changes</Button>
       </div>
       {confirmOpen && <UndoConfirmDialog open={confirmOpen} onClose={() => setConfirmOpen(false)} />}
-      <FsChangesRoot className={classes.root} isDarkMode={isDarkMode}>
+      <FsChangesRoot className={classes.root} ownerState={ownerState}>
         {assetsWithChanges.map((asset) => (
           <div key={asset.id} className={classes.changeRow}>
             <Typography variant="subtitle2" className={classes.assetName}>

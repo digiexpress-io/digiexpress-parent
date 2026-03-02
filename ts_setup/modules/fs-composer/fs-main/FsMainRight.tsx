@@ -1,7 +1,8 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { ConfigOptionsView, ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
+import { ErrorsView, ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
 import { FsChanges } from '../fs-changes';
+import { FsConfigOptions } from '../fs-config-options';
 import { OwnerState } from './useOwnerState';
 
 export interface FsMainRightProps {
@@ -33,7 +34,7 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ ownerState, className 
             case 'help':
               return <HelpView node={activeNode} />;
             case 'configuration':
-              return <ConfigOptionsView node={activeNode} />;
+              return <FsConfigOptions node={activeNode} />;
             default:
               return (
                 <ViewContainer title='View not implemented'>
