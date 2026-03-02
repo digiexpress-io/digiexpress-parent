@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, List, IconButton, Badge, Tooltip } from '@mui/material';
 import { FsIcons } from '../fs-theme';
-import { FsExplorerNode } from '../fs-explorer-node';
+import { FsDirent } from '../fs-dirent';
 import { FsNodeMenu } from '../fs-node-menu';
 import { FsSearch } from '../fs-search';
 import { FsExplorerNoSearchResults } from './FsExplorerNoSearchResults';
@@ -117,7 +117,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
       {ownerState.filteredTreeData.length === 0 ? <FsExplorerNoSearchResults /> :
         <List component='nav' disablePadding>
           {ownerState.filteredTreeData.map((node) => (
-            <FsExplorerNode
+            <FsDirent
               key={node.id}
               node={node}
               level={0}

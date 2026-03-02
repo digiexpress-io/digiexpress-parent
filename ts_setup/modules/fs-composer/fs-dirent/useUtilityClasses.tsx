@@ -5,13 +5,13 @@ import { FsColors, getNodeColor, FsIcons } from '../fs-theme';
 import { SearchResultHighlight } from '../fs-search/SearchResultHighlight';
 
 import { ConfigOption, FsNode, useFs } from '@dxs-ts/fs-api';
-import { ExplorerNodeNameProps } from './FsExplorerNodeProps';
+import { FsDirentNameProps } from './FsDirentProps';
 
 
 
-export const MUI_NAME = 'FsExplorerNode';
+export const MUI_NAME = 'FsDirent';
 
-export interface FsExplorerNodeClasses {
+export interface FsDirentClasses {
   root: string;
   explorerNode: string;
   explorerNodeContent: string;
@@ -30,7 +30,7 @@ export interface FsExplorerNodeClasses {
   iconConfig: string;
 }
 
-export type FsExplorerNodeClassKey = keyof FsExplorerNodeClasses;
+export type FsDirentClassKey = keyof FsDirentClasses;
 
 export const useUtilityClasses = (_isDarkTheme: boolean) => {
   const slots = {
@@ -55,7 +55,7 @@ export const useUtilityClasses = (_isDarkTheme: boolean) => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsExplorerNodeRoot = styled('div', {
+export const FsDirentRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'ownerState'
@@ -255,7 +255,7 @@ export function getIcon(node: FsNode) {
 
 
 
-export const ExplorerNodeName: React.FC<ExplorerNodeNameProps> = (props) => {
+export const FsDirentName: React.FC<FsDirentNameProps> = (props) => {
   return (
     <ListItemText primary={<Typography variant='subtitle2'
       sx={{
@@ -278,7 +278,7 @@ export const ExplorerNodeName: React.FC<ExplorerNodeNameProps> = (props) => {
 }
 
 
-export function getIconClassName(node: FsNode, classes: FsExplorerNodeClasses) {
+export function getIconClassName(node: FsNode, classes: FsDirentClasses) {
   switch (node.type) {
     case 'folder':
       return classes.iconFolder;

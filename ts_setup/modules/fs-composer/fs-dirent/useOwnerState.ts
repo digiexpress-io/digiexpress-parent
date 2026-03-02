@@ -1,6 +1,6 @@
 import React from 'react';
 import { FsNode, useFs } from '@dxs-ts/fs-api';
-import { FsExplorerNodeProps } from './FsExplorerNodeProps';
+import { FsDirentProps } from './FsDirentProps';
 
 export interface OwnerState {
   node: FsNode;
@@ -30,7 +30,7 @@ function sortChildren(children: FsNode[]) {
   });
 }
 
-export const useOwnerState = (props: FsExplorerNodeProps): OwnerState => {
+export const useOwnerState = (props: FsDirentProps): OwnerState => {
   const { node, level, parentPath, onToggle, onContextMenu, searchTerm } = props;
   const { isDarkMode, isChildError, openAsset } = useFs();
 

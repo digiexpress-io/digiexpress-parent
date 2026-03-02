@@ -1,6 +1,6 @@
 import { FsNode } from '@dxs-ts/fs-api';
 
-export interface FsExplorerNodeProps {
+export interface FsDirentProps {
   node: FsNode;
   level: number;
   parentPath?: string;
@@ -9,7 +9,7 @@ export interface FsExplorerNodeProps {
   searchTerm: string;
 }
 
-export interface ExplorerNodeNameProps {
+export interface FsDirentNameProps {
   node: FsNode;
   isDarkTheme: boolean;
   error: boolean;

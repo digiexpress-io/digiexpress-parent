@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
-import { useUtilityClasses, FsExplorerNodeRoot, getIcon, getIconClassName, getConfigIcons, ExplorerNodeName } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentRoot, getIcon, getIconClassName, getConfigIcons, FsDirentName } from './useUtilityClasses';
 import { FsIcons } from '../fs-theme';
-import { FsExplorerNodeProps } from './FsExplorerNodeProps';
+import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
 
 
-export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
+export const FsDirent: React.FC<FsDirentProps> = (props) => {
   const ownerState = useOwnerState(props);
   const classes = useUtilityClasses(ownerState.isDarkMode);
 
   return (
-    <FsExplorerNodeRoot className={classes.root} ownerState={ownerState}>
+    <FsDirentRoot className={classes.root} ownerState={ownerState}>
       <ListItem
         className={`${classes.explorerNode} ${ownerState.showError ? 'error' : ''}`}
         onClick={() => ownerState.children && ownerState.onToggle(ownerState.node.id)}
@@ -30,7 +30,7 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
           <ListItemIcon className={getIconClassName(ownerState.node, classes)}>
             {getIcon(ownerState.node)}
           </ListItemIcon>
-          <ExplorerNodeName node={ownerState.node}
+          <FsDirentName node={ownerState.node}
             isDarkTheme={ownerState.isDarkMode}
             error={ownerState.showError ? true : false}
             searchTerm={ownerState.searchTerm}
@@ -50,7 +50,7 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
         <Collapse in={ownerState.node.expanded} timeout={0}>
           <List component='div' disablePadding>
             {ownerState.sortChildren(ownerState.node.children || []).map((child) => (
-              <FsExplorerNode
+              <FsDirent
                 key={child.id}
                 node={child}
                 level={ownerState.level + 1}
@@ -63,6 +63,6 @@ export const FsExplorerNode: React.FC<FsExplorerNodeProps> = (props) => {
           </List>
         </Collapse>
       )}
-    </FsExplorerNodeRoot>
+    </FsDirentRoot>
   );
 };
