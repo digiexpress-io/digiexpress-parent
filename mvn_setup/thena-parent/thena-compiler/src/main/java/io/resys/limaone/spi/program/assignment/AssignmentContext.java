@@ -229,4 +229,12 @@ public class AssignmentContext {
   public ProgramInput withInputs(Map<String, Serializable> nextInputs) {
     return input.withInputs(nextInputs);
   }
+
+  public Map<String, Assignment> getAssigned() {
+    return assigned;
+  }
+
+  public Map<String, Initializer> getInitalizers() {
+    return initalizers;
+  }
 }

@@ -3,7 +3,6 @@ package io.resys.limaone.spi.program;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram;
+import io.resys.limaone.program.ImmutableFlowResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.spi.ast.flow.YamlMapper;
@@ -107,8 +107,7 @@ public class FlowProgramImpl implements FlowProgram {
   }
   @Override
   public FlowExecutor run(ProgramInput input, Runtime runtime) {
-    final var executor = new FlowProgramExecutor(runtime, input).visit(ast.getStatement(), null);
-    final Map<String, FlowResultLog> stack = new HashMap<>();
+    final var stack = new FlowProgramExecutor(runtime, input).walk(ast, null);
     return new FlowExecutor() {
       @Override
       public FlowResultLog andGetTask(String task) {
@@ -117,8 +116,7 @@ public class FlowProgramImpl implements FlowProgram {
       }
       @Override
       public FlowResult andGetBody() {
-        // TODO Auto-generated method stub
-        return null;
+        return stack;
       }
     };
   }

@@ -87,7 +87,7 @@ tasks:
       values.put("test", true);
       values.put("passed", false);
       values.put("age", 50);
-      values.put("lang", "es");  
+      values.put("lang", "es");
 
       
       final var result = envir.run(values).andGetBody();

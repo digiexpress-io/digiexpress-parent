@@ -27,8 +27,11 @@ import io.resys.limaone.ast.Flow_AST.StartStatement;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
+import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.program.FlowTaskProgram.FlowTaskResult;
+import io.resys.limaone.program.FlowProgram;
+import io.resys.limaone.program.ImmutableFlowResult;
 import io.resys.limaone.program.ImmutableFlowResultLog;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
@@ -50,6 +53,7 @@ public class FlowProgramExecutor {
   private final AtomicInteger sequence = new AtomicInteger(0);
   private final LocalDateTime start = LocalDateTime.now();
   private final Map<String, FlowResultLog> stack = new HashMap<>();
+  private final StringBuilder shortHistory = new StringBuilder();
   
   public FlowProgramExecutor(Runtime runtime, ProgramInput input) {
     super();
@@ -69,8 +73,21 @@ public class FlowProgramExecutor {
   /**
    * Walk the entire Flow AST starting from the root statement
    */
-  public ExecutorResult walk(Flow_AST flow, ExecutorProps ExecutorProps) {
-    return visit(flow.getStatement(), null);
+  public FlowResult walk(Flow_AST flow, ExecutorProps ExecutorProps) {
+    visit(flow.getStatement(), null);
+    final var isArray = false;
+    final FlowProgram.FlowResultLog last = null;
+    
+    return ImmutableFlowResult.builder()
+      .logs(stack.values())
+      .lastLogs(stack.values())
+      .stepId("")
+      .status(FlowExecutionStatus.COMPLETED)
+      .accepts(assignment.getInitalizers().entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getRaw())))
+      .isReturnsCollection(isArray)
+      .returns(Map.<String, Serializable>of("", ""))
+      .shortHistory(shortHistory.toString())
+      .build();
   }
   
 
