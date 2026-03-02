@@ -1,4 +1,3 @@
-export * from './HelpView';
 export * from './HistoryView';
 export * from './PropertiesView';
 export * from './ReferencesView';

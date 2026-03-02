@@ -1,9 +1,11 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { ReferencesView, PropertiesView, HistoryView, HelpView, ViewContainer } from '../fs-main-views';
+import { ReferencesView, PropertiesView, HistoryView, ViewContainer } from '../fs-main-views';
 import { FsChanges } from '../fs-changes';
 import { FsConfigOptions } from '../fs-config-options';
 import { FsErrors } from '../fs-errors';
+import { FsHelp } from '../fs-help';
+
 import { OwnerState } from './useOwnerState';
 
 export interface FsMainRightProps {
@@ -33,7 +35,7 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ ownerState, className 
             case 'history':
               return <HistoryView node={activeNode} />;
             case 'help':
-              return <HelpView node={activeNode} />;
+              return <FsHelp node={activeNode} />;
             case 'configuration':
               return <FsConfigOptions node={activeNode} />;
             default:
