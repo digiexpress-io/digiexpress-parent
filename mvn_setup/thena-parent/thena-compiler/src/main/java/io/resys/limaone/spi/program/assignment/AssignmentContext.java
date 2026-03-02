@@ -164,7 +164,7 @@ public class AssignmentContext {
         }
         
         // root context
-        final var runtimeProp = runtime.getParameters().findValueWithMeta(path);
+        final var runtimeProp = input.getValueWithMeta(path);
         if(runtimeProp.getFound()) {
           final var result = runtimeProp.getValue();
           if(isLast) {

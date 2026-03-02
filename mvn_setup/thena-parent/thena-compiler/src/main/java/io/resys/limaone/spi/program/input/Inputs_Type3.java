@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import io.resys.limaone.model.Parameter;
+import io.resys.limaone.program.ImmutableResolvedParameter;
+import io.resys.limaone.program.ProgramInput.ResolvedParameter;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -27,11 +29,11 @@ public class Inputs_Type3 implements ParameterResolver {
     }
     if(typeDef.getData() && typeDef.getBeanType() != null) {
       final var value = (Serializable) JsonObject.mapFrom(genericData).mapTo(typeDef.getBeanType());
-      return ImmutableResolvedParameter.builder().suitable(true).value(value).build();
+      return ImmutableResolvedParameter.builder().found(true).value(value).build();
     }
     
     final var value = (Serializable) genericData.get(typeDef.getName());
-    return ImmutableResolvedParameter.builder().suitable(true).value(value).build();
+    return ImmutableResolvedParameter.builder().found(true).value(value).build();
   }
   
   

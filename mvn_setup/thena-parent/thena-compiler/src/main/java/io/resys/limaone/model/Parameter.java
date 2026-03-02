@@ -99,7 +99,8 @@ public interface Parameter extends Serializable, Comparable<Parameter> {
     PERCENT, 
     OBJECT, 
     ARRAY,
-    MAP, 
+    MAP,
+    UNKNOWN,
     FLOW_CONTEXT;
   }
 }

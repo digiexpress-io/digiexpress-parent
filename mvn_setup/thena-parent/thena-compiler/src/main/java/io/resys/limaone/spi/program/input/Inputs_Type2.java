@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import io.resys.limaone.model.FlowTask.ServiceData;
 import io.resys.limaone.model.Parameter;
+import io.resys.limaone.program.ImmutableResolvedParameter;
+import io.resys.limaone.program.ProgramInput.ResolvedParameter;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +19,7 @@ public class Inputs_Type2 implements ParameterResolver {
   
   public ResolvedParameter getValue(Parameter typeDef) {
     if(serviceData == null) {
-      return ImmutableResolvedParameter.builder().suitable(false).build();
+      return ImmutableResolvedParameter.builder().found(false).build();
     }
     if(!isBuilt) {
       isBuilt = true;
@@ -25,13 +27,13 @@ public class Inputs_Type2 implements ParameterResolver {
     }
     
     if(!isSuitable) {
-      return ImmutableResolvedParameter.builder().suitable(false).build();
+      return ImmutableResolvedParameter.builder().found(false).build();
     }
     
     if(Boolean.TRUE.equals(typeDef.getData())) {
       final var value = (Serializable) JsonObject.mapFrom(serviceData).mapTo(typeDef.getBeanType());
-      return ImmutableResolvedParameter.builder().suitable(true).value(value).build();
+      return ImmutableResolvedParameter.builder().found(true).value(value).build();
     }
-    return ImmutableResolvedParameter.builder().suitable(false).build();
+    return ImmutableResolvedParameter.builder().found(false).build();
   }
 }
