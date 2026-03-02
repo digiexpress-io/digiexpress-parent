@@ -4,7 +4,7 @@ import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 
 import { FsIcons } from '../fs-theme';
-import { ViewContainer } from '../fs-main-views';
+import { FsMainContent } from '../fs-primitives';
 import { FsHelpProps, helpMarkdownMock } from './FsHelpProps';
 import { useOwnerState } from './useOwnerState';
 import { useUtilityClasses, FsHelpRoot } from './useUtilityClasses';
@@ -24,7 +24,7 @@ export const FsHelp: React.FC<FsHelpProps> = (props) => {
   };
 
   return (
-    <ViewContainer title="Help" icon={<FsIcons.Help />} activeNode={true}>
+    <FsMainContent title="Help" icon={<FsIcons.Help />} activeNode={true}>
       <FsHelpRoot className={classes.root} ownerState={ownerState}>
         <ReactMarkdown components={
           {
@@ -50,7 +50,7 @@ export const FsHelp: React.FC<FsHelpProps> = (props) => {
           {helpMarkdownMock}
         </ReactMarkdown>
       </FsHelpRoot>
-    </ViewContainer>
+    </FsMainContent>
   );
 };
 

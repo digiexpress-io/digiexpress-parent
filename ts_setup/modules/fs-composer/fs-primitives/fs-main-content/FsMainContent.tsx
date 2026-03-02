@@ -1,21 +1,15 @@
 import React from 'react';
 import { Box, Typography, darken, lighten, styled, generateUtilityClass } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { FsColors } from '../fs-theme';
+import { FsColors } from '../../fs-theme';
 import { useFs } from '@dxs-ts/fs-api';
+import { FsMainContentProps } from './FsMainContentProps';
 
-export interface ViewContainerProps {
-  title: string;
-  icon?: React.ReactNode;
-  children: React.ReactNode;
-  secondaryChildren?: React.ReactNode;
-  noNodeMessage?: string;
-  activeNode?: boolean;
-}
 
-const MUI_NAME = 'ViewContainer';
 
-export interface ViewContainerClasses {
+const MUI_NAME = 'FsMainContent';
+
+export interface FsMainContentClasses {
   root: string;
   content: string;
   header: string;
@@ -23,7 +17,7 @@ export interface ViewContainerClasses {
   secondarySection: string;
 }
 
-export type ViewContainerClassKey = keyof ViewContainerClasses;
+export type FsMainContentClassKey = keyof FsMainContentClasses;
 
 const useUtilityClasses = (isDarkMode: boolean) => {
   const slots = {
@@ -37,7 +31,7 @@ const useUtilityClasses = (isDarkMode: boolean) => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-const ViewContainerRoot = styled('div', {
+const FsMainContentRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkMode',
@@ -71,7 +65,7 @@ const ViewContainerRoot = styled('div', {
   },
 }));
 
-export const ViewContainer: React.FC<ViewContainerProps> = ({
+export const FsMainContent: React.FC<FsMainContentProps> = ({
   title,
   icon,
   children,
@@ -83,7 +77,7 @@ export const ViewContainer: React.FC<ViewContainerProps> = ({
   const classes = useUtilityClasses(isDarkMode);
 
   return (
-    <ViewContainerRoot isDarkMode={isDarkMode} className={classes.root}>
+    <FsMainContentRoot isDarkMode={isDarkMode} className={classes.root}>
       <div className={classes.content}>
         <div className={classes.header}>
           {icon && <Box>{icon}</Box>}
@@ -104,7 +98,7 @@ export const ViewContainer: React.FC<ViewContainerProps> = ({
           </div>
         )}
       </div>
-    </ViewContainerRoot>
+    </FsMainContentRoot>
   );
 };
 

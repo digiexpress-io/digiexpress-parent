@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { FsColors, FsIcons } from '../fs-theme';
-import { ViewContainer } from '../fs-main-views';
+import { FsMainContent } from '../fs-primitives';
 import { FsErrorsProps, errorsMock } from './FsErrorsProps';
 import { useOwnerState } from './useOwnerState';
 import { FsErrorsRoot, useUtilityClasses } from './useUtilityClasses';
@@ -18,19 +18,19 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
 
   if (!props.node) {
     return (
-      <ViewContainer
+      <FsMainContent
         title="Errors"
         icon={<FsIcons.Error />}
         activeNode={false}
         noNodeMessage="Select a node from the tree to view errors1."
       >
         <></>
-      </ViewContainer>
+      </FsMainContent>
     );
   }
 
   return (
-    <ViewContainer
+    <FsMainContent
       title={`Errors: ${props.node.name}`}
       icon={<FsIcons.Error />}
       activeNode={true}
@@ -70,7 +70,7 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
           ))}
         </div>
       </FsErrorsRoot>
-    </ViewContainer>
+    </FsMainContent>
   );
 };
 
