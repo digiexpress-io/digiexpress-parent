@@ -109,7 +109,7 @@ public class DecisionProgramExecutor {
     final var data = ImmutableDecisionLog.builder();
     
     for(DecisionRowAccepts input : node.getAccepts()) {
-      Serializable contextEntity = context.getValue(input.getKey());
+      final Serializable contextEntity = context.getValue(input.getKey());
 
       try {
         match = (Boolean) input.getExpression().run(input.getKey().toValue(contextEntity)).getValue();
