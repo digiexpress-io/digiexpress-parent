@@ -1,4 +1,6 @@
-export interface FsMainContentProps {
+
+
+export interface FsPanelProps {
   title: string;
   icon?: React.ReactNode;
   children: React.ReactNode;

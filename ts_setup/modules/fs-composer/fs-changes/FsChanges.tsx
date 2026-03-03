@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, IconButton, Tooltip, Dialog, DialogActions, Button, DialogTitle, DialogContent } from '@mui/material';
 import { FsIcons } from '../fs-theme';
-import { FsMainContent } from '../fs-primitives';
+import { FsPanel } from '../fs-primitives';
 import { FsChangesProps, assetsWithChanges } from './FsChangesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsChangesRoot, useUtilityClasses } from './useUtilityClasses';
@@ -14,7 +14,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
 
 
   return (
-    <FsMainContent title='Unsaved changes' icon={<FsIcons.Save />} activeNode={true}>
+    <FsPanel title='Unsaved changes' icon={<FsIcons.Save />} activeNode={true}>
       <div className={classes.actionBar}>
         <Button variant='outlined' className={classes.discardButton}>Discard all changes</Button>
         <Button>Save all changes</Button>
@@ -42,7 +42,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
           </div>
         ))}
       </FsChangesRoot>
-    </FsMainContent>
+    </FsPanel>
   );
 };
 

@@ -5,9 +5,9 @@ import { OwnerState } from "./useOwnerState";
 
 
 
-const MUI_NAME = 'FsMainContent';
+const MUI_NAME = 'FsPanel';
 
-export interface FsMainContentClasses {
+export interface FsPanelClasses {
   root: string;
   content: string;
   header: string;
@@ -15,7 +15,7 @@ export interface FsMainContentClasses {
   secondarySection: string;
 }
 
-export type FsMainContentClassKey = keyof FsMainContentClasses;
+export type FsPanelClassKey = keyof FsPanelClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -29,7 +29,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsMainContentRoot = styled('div', {
+export const FsPanelRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'isDarkMode',

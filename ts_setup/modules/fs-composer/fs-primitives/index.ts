@@ -1,1 +1,1 @@
-export * from './fs-main-content';
+export * from './fs-panel';

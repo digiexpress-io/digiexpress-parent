@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { FsMainContent } from '../fs-primitives';
+import { FsPanel } from '../fs-primitives';
 
 import { FsChanges } from '../fs-changes';
 import { FsConfigOptions } from '../fs-config-options';
@@ -23,9 +23,9 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ ownerState, className 
   return (
     <div className={className}>
       {!selectedView ? (
-        <FsMainContent title='Choose a View'>
+        <FsPanel title='Choose a View'>
           <Typography>Select an option from the toolbar to view details.</Typography>
-        </FsMainContent>
+        </FsPanel>
       ) : selectedView === 'changes' ? (
           <FsChanges node={activeNode} />
         ) : (() => {
@@ -44,11 +44,11 @@ export const FsMainRight: React.FC<FsMainRightProps> = ({ ownerState, className 
             return <FsConfigOptions node={activeNode} />;
           default:
             return (
-              <FsMainContent title='View not implemented'>
+              <FsPanel title='View not implemented'>
                 <Typography>
                   The "{selectedView}" view is not yet implemented.
                 </Typography>
-              </FsMainContent>
+              </FsPanel>
             );
         }
       })()}

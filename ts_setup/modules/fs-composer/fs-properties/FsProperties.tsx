@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { FsIcons } from '../fs-theme';
-import { FsMainContent } from '../fs-primitives';
+import { FsPanel } from '../fs-primitives';
 import { FsPropertiesProps, propertiesMock} from './FsPropertiesProps';
 import { useOwnerState } from './useOwnerState';
 import { FsPropertiesRoot, useUtilityClasses } from './useUtilityClasses';
@@ -16,19 +16,19 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
 
   if (!node) {
     return (
-      <FsMainContent
+      <FsPanel
         title="Properties"
         icon={<FsIcons.Settings />}
         activeNode={false}
         noNodeMessage="Select a node from the tree to view properties."
       >
         <></>
-      </FsMainContent>
+      </FsPanel>
     );
   }
 
   return (
-    <FsMainContent
+    <FsPanel
       title={`Properties: ${node.name}`}
       icon={<FsIcons.Settings />}
       activeNode={true}
@@ -121,6 +121,6 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
         </div>
 
       </FsPropertiesRoot>
-    </FsMainContent>
+    </FsPanel>
   );
 };

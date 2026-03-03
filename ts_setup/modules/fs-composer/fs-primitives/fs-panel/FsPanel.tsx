@@ -1,19 +1,19 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { FsMainContentProps } from './FsMainContentProps';
-import { FsMainContentRoot, useUtilityClasses } from './useUtilityClasses';
+import { FsPanelProps } from './FsPanelProps';
+import { FsPanelRoot, useUtilityClasses } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
 
 
 
 
-export const FsMainContent: React.FC<FsMainContentProps> = (props) => {
+export const FsPanel: React.FC<FsPanelProps> = (props) => {
   const ownerState = useOwnerState(props);
   const { children, title, activeNode, icon, noNodeMessage, secondaryChildren } = props;
   const classes = useUtilityClasses();
 
   return (
-    <FsMainContentRoot className={classes.root} ownerState={ownerState}>
+    <FsPanelRoot className={classes.root} ownerState={ownerState}>
       <div className={classes.content}>
         <div className={classes.header}>
           {icon && <Box>{icon}</Box>}
@@ -34,7 +34,7 @@ export const FsMainContent: React.FC<FsMainContentProps> = (props) => {
           </div>
         )}
       </div>
-    </FsMainContentRoot>
+    </FsPanelRoot>
   );
 };
 
