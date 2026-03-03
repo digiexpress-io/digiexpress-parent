@@ -1,25 +1,10 @@
 import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
-import { FsNode, mockFsData, useFs } from '@dxs-ts/fs-api';
+import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
 import { FsIcons } from '../fs-theme';
+import { getReferencesCount } from './helpers';
 
-function getReferencesCount(nodeId: string, nodeName: string): number {
-  let count = 0;
-  function searchInNode(node: FsNode): void {
-    if (node.reference && node.name === nodeName && node.id !== nodeId) {
-      count++;
-    }
-
-    if (node.children) {
-      node.children.forEach(child => searchInNode(child));
-    }
-  }
-
-  mockFsData.forEach(rootNode => searchInNode(rootNode));
-
-  return count;
-}
 
 export interface FsDirentMenuMainProps {
   node: FsNode | undefined;

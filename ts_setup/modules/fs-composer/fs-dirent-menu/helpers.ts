@@ -1,3 +1,4 @@
+import { FsNode, mockFsData } from '@dxs-ts/fs-api';
 import React from 'react';
 
 export interface PositioningStrategy {
@@ -43,4 +44,21 @@ export function usePositioningStrategy(
 export interface ItemReferencesEntry {
   assetName: string;
   location: string;
+}
+
+export function getReferencesCount(nodeId: string, nodeName: string): number {
+  let count = 0;
+  function searchInNode(node: FsNode): void {
+    if (node.reference && node.name === nodeName && node.id !== nodeId) {
+      count++;
+    }
+
+    if (node.children) {
+      node.children.forEach(child => searchInNode(child));
+    }
+  }
+
+  mockFsData.forEach(rootNode => searchInNode(rootNode));
+
+  return count;
 }

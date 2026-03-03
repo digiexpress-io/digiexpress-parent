@@ -5,7 +5,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 import { FsDirentPermissions } from '../fs-dirent-permissions';
 import { FsDirentHistory } from '../fs-dirent-history';
 import { FsDirentReferences } from '../fs-dirent-references';
-import { FsDirentCreate } from './FsDirentCreate';
+import { FsDirentCreate } from '../fs-dirent-create';
 import { FsDirentComments } from '../fs-dirent-comments';
 
 export interface FsDirentMenuSubProps {
