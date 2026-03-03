@@ -9,10 +9,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
+import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
 import io.resys.limaone.ast.Flow_AST.InputsStatement;
 import io.resys.limaone.ast.Flow_AST.ManyTasksStatement;
 import io.resys.limaone.ast.Flow_AST.MappingStatement;
-import io.resys.limaone.ast.Flow_AST.OneTaskStatement;
+import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
 import io.resys.limaone.program.FlowTaskProgram.FlowTaskResult;
 import io.resys.limaone.program.ProgramInput;
@@ -55,19 +57,19 @@ public class AssignmentContext {
     this.initalizers_tasks = Objects.requireNonNull(tasks, "tasks can't be null!");
   }
   
-  public void assignFromTask(OneTaskStatement task, DecisionResult result) {
+  public void assignFromTask(DecisionTableStatement task, DecisionResult result) {
     
   }
 
-  public void assignFromTask(OneTaskStatement task, FlowTaskResult result) {
+  public void assignFromTask(FlowTaskStatement task, FlowTaskResult result) {
     
   }
 
-  /*
-  public void assignFromTask(OneTaskStatement task, ReturnsResult result) {
+  
+  public void assignFromTask(ReturnsStatement task, Map<String, Serializable> result) {
     
   }
-  */
+  
   
   
   public List<Map<String, Serializable>> assignTo(String taskId, MappingStatement statement) {

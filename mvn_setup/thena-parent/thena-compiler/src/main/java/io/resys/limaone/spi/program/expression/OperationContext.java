@@ -40,7 +40,7 @@ import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-public class OperationFlowContext {
+public class OperationContext {
   private final static ExpressionParser PARSER = new SpelExpressionParser();
   private final static MapPropertyAccessor mapAccessor = new MapPropertyAccessor();
   private final static FlowContextPropertyAccessor contextAccessor = new FlowContextPropertyAccessor();
@@ -55,7 +55,7 @@ public class OperationFlowContext {
     getInputs(exp.getAST(), inputs);
     inputs.forEach(constants);
     
-    return (FlowTaskExpressionContext context) -> {
+    return (ExternalContext context) -> {
       try {
         StandardEvaluationContext evalContext = new StandardEvaluationContext(context);
         evalContext.addPropertyAccessor(mapAccessor);
@@ -114,15 +114,15 @@ public class OperationFlowContext {
   private static class FlowContextPropertyAccessor implements PropertyAccessor {
     @Override
     public Class<?>[] getSpecificTargetClasses() {
-      return new Class<?>[] { FlowTaskExpressionContext.class };
+      return new Class<?>[] { ExternalContext.class };
     }
     @Override
     public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
-      return target instanceof FlowTaskExpressionContext;
+      return target instanceof ExternalContext;
     }
     @Override
     public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
-       Object object = ((FlowTaskExpressionContext) target).apply(name);
+       Object object = ((ExternalContext) target).apply(name);
        return new TypedValue(object);
     }
     @Override
@@ -134,7 +134,7 @@ public class OperationFlowContext {
   }
 
   
-  public interface FlowTaskExpressionContext {
+  public interface ExternalContext {
     Object apply(String name);
   }
 }

@@ -14,7 +14,6 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram;
-import io.resys.limaone.program.ImmutableFlowResult;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
 import io.resys.limaone.spi.ast.flow.YamlMapper;

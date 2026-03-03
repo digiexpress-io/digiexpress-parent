@@ -39,7 +39,7 @@ import io.resys.limaone.spi.program.expression.ExpressionException;
 import io.resys.limaone.spi.program.expression.Operation;
 import io.resys.limaone.spi.program.expression.OperationBoolean;
 import io.resys.limaone.spi.program.expression.OperationDate;
-import io.resys.limaone.spi.program.expression.OperationFlowContext;
+import io.resys.limaone.spi.program.expression.OperationContext;
 import io.resys.limaone.spi.program.expression.OperationMap;
 import io.resys.limaone.spi.program.expression.OperationNumber;
 import io.resys.limaone.spi.program.expression.OperationString;
@@ -72,7 +72,7 @@ public class Compiler_Expression {
         operation = OperationMap.build(src, constantsConsumer);
         break;
       case FLOW_CONTEXT: 
-        operation = OperationFlowContext.build(src, constantsConsumer);
+        operation = OperationContext.build(src, constantsConsumer);
         break;
       case STRING:
         operation = OperationString.build(src, constantsConsumer);
