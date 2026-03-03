@@ -3,7 +3,6 @@ package io.resys.limaone.spi.program.stack;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +12,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.resys.limaone.ast.Flow_AST.BodyStatement;
-import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
-import io.resys.limaone.program.DecisionProgram.DecisionResult;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.program.ImmutableFlowResultErrorLog;
 import io.resys.limaone.program.ImmutableFlowResultLog;
 import io.resys.limaone.program.Program.ProgramResult;
 import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
+import io.resys.limaone.spi.program.assignment.Assignment;
 import io.resys.limaone.spi.program.result.ResultEnvlope;
 import io.vertx.core.json.JsonObject;
 import lombok.Value;
@@ -39,22 +37,28 @@ public class FlowStack {
   
   public FlowStackResult close() {
 
-    List<FlowResultLog> allLogs = new ArrayList<>()
-        .stream().sorted()
+    final List<FlowResultLog> allLogs = frames.values().stream()
+        .map(this::mapToFlowResultLog)
         .sorted((a, b) -> Integer.compare(a.getId(), b.getId()))
         .toList();
-    List<FlowResultLog> lastLogs = new ArrayList<>();
+    final List<FlowResultLog> lastLogs = allLogs.stream()
+        .filter(log -> log.getStepId().equals(lastStepId))
+        .toList();
     
-    final boolean isReturnsCollection = last != null && last.size() > 1;
-    final Map<String, Serializable> returns = Map.<String, Serializable>of("", mergeResults(last)) : last.iterator().next().getReturns();
-    
+    final boolean isReturnsCollection = lastLogs != null && lastLogs.size() > 1;
+    final Map<String, Serializable> returnProps;
+    if(isReturnsCollection) {
+      returnProps = Assignment.toArrayMap(lastLogs.stream().map(e -> e.getReturns()));
+    } else {
+      returnProps = lastLogs.iterator().next().getReturns();
+    }
     return new FlowStackResult(
         allLogs, 
         lastLogs, 
         shortHistory.toString(), 
         lastStepId, 
         isReturnsCollection, 
-        returns);
+        returnProps);
   }
   
   public void newFrame(Exception exception) {
@@ -111,52 +115,9 @@ public class FlowStack {
     logToHistory(statement.getTaskId(), Optional.empty());
   }
   
-  
-  
-  public void newFrame(DecisionTableStatement statement, Map<String, Serializable> inputs, DecisionResult result, int size) {
-    if(size == 1) {
-      return result.iterator().next();
-    } else if(size == 0) {
-      
-      return visitStepLog(
-          ImmutableFlowResultLog.builder()
-          .id(this.stepLogs.size() + 1)
-          .stepId(step.getId())
-          .start(start)
-          .end(LocalDateTime.now())
-          .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
-          .status(FlowExecutionStatus.COMPLETED)
-          .build()); 
-    }
+  private FlowResultLog mapToFlowResultLog(ResultEnvlope envlope) {
     
-    // This should be only valid for DT return types that have multiple matches
-    final var merged = ImmutableFlowResultLog.builder()
-      .id(this.stepLogs.size() + 1)
-      .stepId(step.getId())
-      .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
-      .start(start)
-      .status(FlowExecutionStatus.COMPLETED);
-    
-    var index = 0;
-    final var returnValues = new HashMap<String, Serializable>();
-    final var returns = new HashMap<String, Serializable>();
-    for(final var entry : result) {
-      
-  
-      merge(returnValues, (Map<String, Serializable>) entry.getReturnsValue());    
-      merge(returns, toNonNull(entry.getReturns()));
-      merged.putAccepts(String.valueOf(index++), (Serializable) entry.getAccepts());
-      
-      if(entry.getStatus() == FlowExecutionStatus.ERROR) {
-        merged.status(entry.getStatus());
-        break;
-      }
-    }
   }
-  
-  
-  
-
   
   private String getLogIndent(Optional<ResultEnvlope> previous) {
     if(previous.isEmpty()) {

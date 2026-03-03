@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import io.resys.limaone.ast.Flow_AST.OneTaskStatement;
 
@@ -26,6 +27,10 @@ public class Assignment {
     this.ownerOutput = ownerOutput;
   }
 
+  
+  public static Map<String, Serializable> toArrayMap(Stream<Object> object) {
+    return Map.<String, Serializable>of(ARRAY_KEY, (Serializable) object.toList());
+  }
 
   @SuppressWarnings("unchecked")
   public Map<String, Serializable> getValue() {
