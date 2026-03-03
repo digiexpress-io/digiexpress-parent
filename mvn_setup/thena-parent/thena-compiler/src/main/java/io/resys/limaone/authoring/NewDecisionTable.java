@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.DecisionTable;
-import io.resys.limaone.model.DecisionTable.DecisionTableNode;
+import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
@@ -26,6 +26,6 @@ public interface NewDecisionTable {
   interface NewDecisionTableProps {
     @Nullable String getName();
     @Nullable String getDesc();
-    List<DecisionTableNode> getNodes();
+    List<DecisionStatement> getNodes();
   }
 }

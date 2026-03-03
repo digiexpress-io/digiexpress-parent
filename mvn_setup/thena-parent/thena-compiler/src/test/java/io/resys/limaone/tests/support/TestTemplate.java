@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.model.DecisionTable;
-import io.resys.limaone.model.DecisionTable.DecisionTableNode;
+import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.ImmutableDecisionTable;
@@ -62,7 +62,7 @@ public class TestTemplate {
             .name(fullPath)
             .nodes(new JsonArray(nodeString).stream()
                   .map(e -> ((JsonObject) e))
-                  .map(e -> e.mapTo(DecisionTableNode.class))
+                  .map(e -> e.mapTo(DecisionStatement.class))
                   .toList())
             .build())
         .build();
@@ -85,7 +85,7 @@ public class TestTemplate {
             .name(fullPath)
             .nodes(new JsonArray(nodeString).stream()
                   .map(e -> ((JsonObject) e))
-                  .map(e -> e.mapTo(DecisionTableNode.class))
+                  .map(e -> e.mapTo(DecisionStatement.class))
                   .toList())
             .build())
         .build();
@@ -155,7 +155,7 @@ public class TestTemplate {
       } else {
         final var nodes = new JsonArray(syntax).stream()
             .map(e -> ((JsonObject) e))
-            .map(e -> e.mapTo(DecisionTableNode.class))
+            .map(e -> e.mapTo(DecisionStatement.class))
             .toList();
 
         final var target_ast = compiler.getParser().parseDecisionTable().id(dep.getFullPath()).nodes(nodes).parse();

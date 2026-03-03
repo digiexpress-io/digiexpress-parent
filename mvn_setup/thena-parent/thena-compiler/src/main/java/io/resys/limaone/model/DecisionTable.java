@@ -19,17 +19,17 @@ import jakarta.annotation.Nullable;
 public interface DecisionTable extends Body {
 
   String getName();
-  List<DecisionTableNode> getNodes();
+  List<DecisionStatement> getNodes();
   
   @JsonIgnoreProperties(ignoreUnknown = true)
-  @Value.Immutable @JsonSerialize(as = ImmutableDecisionTableNode.class) @JsonDeserialize(as = ImmutableDecisionTableNode.class)
-  interface DecisionTableNode extends Serializable {
+  @Value.Immutable @JsonSerialize(as = ImmutableDecisionStatement.class) @JsonDeserialize(as = ImmutableDecisionStatement.class)
+  interface DecisionStatement extends Serializable {
     @Nullable String getId();
     @Nullable String getValue();
-    DecisionTableNodeType getType();
+    StatementType getType();
   }
   
-  enum DecisionTableNodeType {
+  enum StatementType {
     SET_NAME, SET_DESCRIPTION, IMPORT_CSV, IMPORT_ORDERED_CSV,
     MOVE_ROW, MOVE_HEADER, INSERT_ROW, COPY_ROW,
     SET_HEADER_TYPE, SET_HEADER_REF, SET_HEADER_NAME, SET_HEADER_EXTERNAL_REF,

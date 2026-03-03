@@ -17,8 +17,8 @@ import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DecsionTableParser;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.model.DecisionTable.ColumnExpressionType;
-import io.resys.limaone.model.DecisionTable.DecisionTableNode;
-import io.resys.limaone.model.DecisionTable.DecisionTableNodeType;
+import io.resys.limaone.model.DecisionTable.DecisionStatement;
+import io.resys.limaone.model.DecisionTable.StatementType;
 import io.resys.limaone.model.DecisionTable.HitPolicy;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
@@ -31,11 +31,11 @@ import io.vertx.core.json.JsonObject;
 public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
 
   private final CommandMapper builder = new CommandMapper();
-  private List<DecisionTableNode> src;
+  private List<DecisionStatement> src;
   private String id;
 
   @Override
-  public DecsionTableParserImpl nodes(List<DecisionTableNode> src) {
+  public DecsionTableParserImpl nodes(List<DecisionStatement> src) {
     if(src == null) {
       return this;
     }
@@ -49,7 +49,7 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
     Objects.requireNonNull(syntax, () -> "syntax must be defined!");
     final var nodes = new JsonArray(syntax).stream()
         .map(e -> ((JsonObject) e))
-        .map(e -> e.mapTo(DecisionTableNode.class))
+        .map(e -> e.mapTo(DecisionStatement.class))
         .toList();
     return nodes(nodes);
   }
@@ -86,9 +86,9 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
     return LocalCache.computeIfAbsent(cacheKey, mappingFunction);
   }
 
-  protected CommandMapper execute(DecisionTableNode command) {
+  protected CommandMapper execute(DecisionStatement command) {
     try {
-      final DecisionTableNodeType type = command.getType();
+      final StatementType type = command.getType();
       switch(type) {
       case SET_NAME:
         return builder.name(command.getValue());

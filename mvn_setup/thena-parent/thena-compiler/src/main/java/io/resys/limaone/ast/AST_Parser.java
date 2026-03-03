@@ -2,7 +2,7 @@ package io.resys.limaone.ast;
 
 import java.util.List;
 
-import io.resys.limaone.model.DecisionTable.DecisionTableNode;
+import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
 
@@ -26,7 +26,7 @@ public interface AST_Parser {
   
   interface DecsionTableParser {
     DecsionTableParser id(String id);
-    DecsionTableParser nodes(List<DecisionTableNode> nodes);
+    DecsionTableParser nodes(List<DecisionStatement> nodes);
     DecsionTableParser syntax(String syntax);
     DecisionTable_AST parse();
   }
