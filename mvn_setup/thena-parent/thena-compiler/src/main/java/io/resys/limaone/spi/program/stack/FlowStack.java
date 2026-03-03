@@ -3,6 +3,7 @@ package io.resys.limaone.spi.program.stack;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class FlowStack {
           errorFrames.stream())
         .sorted((a, b) -> Integer.compare(a.getId(), b.getId()))
         .toList();
+    
+    
     final List<FlowResultLog> lastLogs = allLogs.stream()
         .filter(log -> log.getStepId().equals(lastStepId))
         .toList();
@@ -53,7 +56,7 @@ public class FlowStack {
     if(isReturnsCollection) {
       returnProps = Assignment.toArrayMap(lastLogs.stream().map(e -> e.getReturns()));
     } else {
-      returnProps = lastLogs.iterator().next().getReturns();
+      returnProps = lastLogs.stream().findFirst().map(e -> e.getReturns()).orElse(Collections.emptyMap());
     }
     return new FlowStackResult(
         allLogs, 
@@ -131,8 +134,8 @@ public class FlowStack {
         
         .accepts(match.getInputs())
         .returns(match.getOutputs())
-        
-        .returnsValue(match.getOutputRaw())
+
+        .returnsValue(match.getRaw().orElse(null))
         .cost(match.getCost())
         .build();
       
@@ -153,6 +156,7 @@ public class FlowStack {
     return result.toString();
   }
   private void logToHistory(String stepId, Optional<ResultEnvlope> env) {
+    lastStepId = stepId;
     if(shortHistory.length() > 0) {
       shortHistory.append(" -> ");
     }

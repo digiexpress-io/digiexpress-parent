@@ -28,7 +28,7 @@ public class Assignment {
   }
 
   
-  public static Map<String, Serializable> toArrayMap(Stream<Object> object) {
+  public static Map<String, Serializable> toArrayMap(Stream<?> object) {
     return Map.<String, Serializable>of(ARRAY_KEY, (Serializable) object.toList());
   }
 
