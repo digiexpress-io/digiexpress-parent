@@ -5,7 +5,7 @@ import { FsMainProps } from './FsMainProps';
 
 type ToolbarButtonType = 'toggle' | 'view' | 'save';
 
-export interface Button {
+export interface PanelButton {
   id: string;
   type: ToolbarButtonType;
   icon: React.ElementType;
@@ -26,7 +26,7 @@ export interface OwnerState {
   handleViewChange: (view: FsNodeSecondaryView) => void;
   toolbar: {
     width: string;
-    buttons: Button[];
+    buttons: PanelButton[];
   };
 }
 
@@ -49,7 +49,7 @@ export const useOwnerState = (_props: FsMainProps): OwnerState => {
     }
   }, [isRightPanelOpen]);
 
-  const toolbarButtons = React.useMemo((): Button[] => [
+  const toolbarButtons = React.useMemo((): PanelButton[] => [
     {
       id: 'toggle-panel',
       type: 'toggle',

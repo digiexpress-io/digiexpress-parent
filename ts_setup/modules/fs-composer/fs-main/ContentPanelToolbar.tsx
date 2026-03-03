@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip, Badge } from '@mui/material';
-import { Button, OwnerState } from './useOwnerState';
+import { PanelButton, OwnerState } from './useOwnerState';
 
 export interface ContentPanelToolbarProps {
   ownerState: OwnerState;
@@ -10,7 +10,7 @@ export interface ContentPanelToolbarProps {
 export const ContentPanelToolbar: React.FC<ContentPanelToolbarProps> = ({ ownerState, className }) => {
   const { toolbar } = ownerState;
 
-  const renderIcon = (button: Button) => {
+  const renderIcon = (button: PanelButton) => {
     const IconComponent = button.icon;
     return <IconComponent color={button.type === 'save' ? 'error' : undefined} />;
   };
