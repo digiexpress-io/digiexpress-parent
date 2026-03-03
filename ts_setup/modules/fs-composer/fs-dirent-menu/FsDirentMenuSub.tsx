@@ -4,7 +4,7 @@ import { FsNode } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
 import { FsDirentSharingPermissions } from './FsDirentSharingPermissions';
 import { FsDirentHistory } from './FsDirentHistory';
-import { FsDirentReferences } from './FsDirentReferences';
+import { FsDirentReferences } from '../fs-dirent-references';
 import { FsDirentCreate } from './FsDirentCreate';
 import { FsDirentComments } from './FsDirentComments';
 
