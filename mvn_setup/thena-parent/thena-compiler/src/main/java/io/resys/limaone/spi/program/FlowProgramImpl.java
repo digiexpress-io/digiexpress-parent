@@ -111,12 +111,16 @@ public class FlowProgramImpl implements FlowProgram {
     return new FlowExecutor() {
       @Override
       public FlowResultLog andGetTask(String task) {
-        return stack.values().stream()
+        return stack.getLogs().stream()
             .filter(t -> t.getStepId().equals(task)).findFirst().orElse(null);
       }
       @Override
       public FlowResult andGetBody() {
         return stack;
+      }
+      @Override
+      public String andEncodePrettily() {
+        return FlowProgramExecutionPrettyPrint.toAsciiTable(stack, ast);
       }
     };
   }

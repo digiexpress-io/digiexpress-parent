@@ -24,6 +24,7 @@ public interface FlowProgram extends Program {
     @Nullable
     FlowResultLog andGetTask(String task);
     FlowResult andGetBody();
+    String andEncodePrettily();
   }
   
   @Value.Immutable

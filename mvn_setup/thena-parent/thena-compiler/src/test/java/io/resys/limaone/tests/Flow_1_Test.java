@@ -89,9 +89,23 @@ tasks:
       values.put("age", 50);
       values.put("lang", "es");
 
+      final var result = envir.run(values).andEncodePrettily();
+      Assertions.assertEquals(
+"""
+NAME: optional-dt-combination
+HISTORY: 
+----------------------------
+| FIELD        | splitFlow |
+----------------------------
+| STATUS       | COMPLETED |
+| [ACCEPTS]                |
+|   clientType | company   |
+| [RETURNS]                |
+|   isMatch    | true      |
+----------------------------
+"""
+          , result);
       
-      final var result = envir.run(values).andGetBody();
-      Assertions.assertEquals("{}", JsonObject.mapFrom(result.getReturns()).encode());
     }
   }
 
