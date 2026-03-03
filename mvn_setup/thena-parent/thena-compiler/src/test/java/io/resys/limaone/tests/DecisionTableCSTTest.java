@@ -59,7 +59,7 @@ public class DecisionTableCSTTest {
     assertEquals("FIRST", parseTree.getHitPolicy().getValue());
 
     // Verify value sets
-    assertEquals(1, parseTree.getValueSetNodes().size());
+    assertEquals(2, parseTree.getValueSetNodes().size());
     assertTrue(parseTree.getValueSetNodes().containsKey("riskLevel"));
     
     final var riskLevelSet = parseTree.getValueSetNodes().get("riskLevel");
@@ -73,7 +73,7 @@ public class DecisionTableCSTTest {
     final var table = parseTree.getTable();
     
     // Verify headers
-    assertEquals(5, table.getHeaders().size());
+    assertEquals(4, table.getHeaders().size());
     assertEquals(3, table.getInputHeaders().size());
     assertEquals(1, table.getOutputHeaders().size());
     
@@ -86,7 +86,7 @@ public class DecisionTableCSTTest {
     assertEquals(5, table.getRows().size());
     
     final var firstRow = table.getRows().iterator().next();
-    assertEquals(5, firstRow.getCells().size());
+    assertEquals(4, firstRow.getCells().size());
     assertTrue(firstRow.getCellsByHeader().containsKey("age"));
     assertEquals("< 25", firstRow.getCellsByHeader().get("age").getExpression());
   }

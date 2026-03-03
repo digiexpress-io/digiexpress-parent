@@ -58,12 +58,9 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
   @Override
   public MutableDecisionParseTree setEnd(int value) {
     super.setEnd(value);
-    
-    if(table == null) {
-      table = new NodeTable(source, indent, keyword, value, this);
-      addChild(table);
+    if(table != null) {
+      table.parse();
     }
-    
     return this;
   }
   @Override
@@ -74,6 +71,12 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
         addChild(valueSets);
       }
       return valueSets;
+    } else if(KEY_TABLE.equals(keyword)) {
+      if(table == null) {
+        table = new NodeTable(source, indent, keyword, value, this);
+        addChild(table);
+      }
+      return table;
     }
     return super.addChild(source, indent, keyword, value);
   }
@@ -102,7 +105,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
   }
 
-  private static class NodeTable extends MutableDecisionYaml implements YamlTable {
+  public static class NodeTable extends MutableDecisionYaml implements YamlTable {
     private static final long serialVersionUID = 2001644047832806256L;
     private final List<YamlTableHeader> headers = new ArrayList<>();
     private final List<YamlTableRow> rows = new ArrayList<>();
@@ -111,12 +114,17 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     private String markdownContent;
     
     
-    public NodeTable(List<NodeSource> source, MutableDecisionYaml parent) {
-      super(source, indent, KEY_TABLE, value, parent);
+    public NodeTable(NodeSource source, int indent, String keyword, String value, MutableDecisionYaml parent) {
+      super(source, indent, keyword, value, parent);
       this.markdownContent = value;
-      
-
-      String[] lines = markdownContent.split("\n");
+    }
+    
+    public void addMarkdown(String content) {
+      this.markdownContent += content + "\n";
+    }
+    
+    public void parse() {
+      final var lines = markdownContent.split("\n");
       if (lines.length < 2) {
         return;
       }

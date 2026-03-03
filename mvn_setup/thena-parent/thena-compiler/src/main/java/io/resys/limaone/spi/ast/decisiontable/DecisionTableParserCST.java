@@ -15,6 +15,7 @@ import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.MutableDecisionYaml.NodeSource;
+import io.resys.thena.fs.tables.NodeTable;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 public class DecisionTableParserCST {
@@ -72,7 +73,7 @@ public class DecisionTableParserCST {
         // Accumulate table content until we find a non-indented line
         if(src.startsWith(" ") || src.startsWith("|")) {
           // This is table content, accumulate it
-          parent.addSource(new NodeSource(src, lineNumber));
+          ((MutableDecisionParseTree.NodeTable) parent).addMarkdown(src);
           continue;
         } else {
           // End of table content, move back to parent
