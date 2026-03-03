@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, Collapse, Divider, TextField } from '@mui/material';
 import { FsNode } from '@dxs-ts/fs-api';
 import { useUtilityClasses } from './useUtilityClasses';
-import { FsDirentSharingPermissions } from './FsDirentSharingPermissions';
-import { FsDirentHistory } from './FsDirentHistory';
+import { FsDirentPermissions } from '../fs-dirent-permissions';
+import { FsDirentHistory } from '../fs-dirent-history';
 import { FsDirentReferences } from '../fs-dirent-references';
 import { FsDirentCreate } from './FsDirentCreate';
 import { FsDirentComments } from '../fs-dirent-comments';
@@ -30,7 +30,7 @@ export const FsDirentMenuSub: React.FC<FsDirentMenuSubProps> = (props) => {
           />
         )}
         {props.openSubmenu === 'comments' && <FsDirentComments node={props.node} />}
-        {props.openSubmenu === 'sharing' && <FsDirentSharingPermissions />}
+        {props.openSubmenu === 'sharing' && <FsDirentPermissions />}
         {props.openSubmenu === 'history' && <FsDirentHistory />}
         {props.openSubmenu === 'references' && <FsDirentReferences node={props.node} />}
         {props.openSubmenu === 'new' && <FsDirentCreate />}
