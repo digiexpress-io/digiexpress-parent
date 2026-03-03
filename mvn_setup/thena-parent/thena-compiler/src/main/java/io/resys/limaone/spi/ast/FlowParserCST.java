@@ -54,7 +54,7 @@ public class FlowParserCST {
   
   
   private final static Collection<YamlInputType> ALL_INPUTS = Collections.unmodifiableList(    
-      Arrays.asList(ValueType.STRING,  ValueType.BOOLEAN, ValueType.INTEGER, ValueType.LONG, ValueType.DECIMAL, ValueType.DATE, ValueType.DATE_TIME).stream()
+      Arrays.asList(ValueType.STRING, ValueType.BOOLEAN, ValueType.INTEGER, ValueType.LONG, ValueType.DECIMAL, ValueType.DATE, ValueType.DATE_TIME).stream()
       .map(v -> ImmutableYamlInputType.builder().name(v.name()).value(v.name()).build())
       .collect(Collectors.toList())
   );
