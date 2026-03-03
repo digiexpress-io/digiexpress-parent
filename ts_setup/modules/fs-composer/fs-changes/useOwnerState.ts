@@ -13,6 +13,13 @@ export interface OwnerState {
   getStatusColor: (status: string, isDarkMode: boolean) => string;
 }
 
+export const useOwnerState = (_props: FsChangesProps): OwnerState => {
+  const { isDarkMode } = useFs();
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+
+  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor });
+}
+
 function getStatusColor(status: string, isDarkMode: boolean) {
   switch (status) {
     case 'deleted':
@@ -25,12 +32,3 @@ function getStatusColor(status: string, isDarkMode: boolean) {
       return isDarkMode ? FsColors.dark.text : FsColors.light.text;
   }
 };
-
-export const useOwnerState = (_props: FsChangesProps): OwnerState => {
-  const { isDarkMode } = useFs();
-  const [confirmOpen, setConfirmOpen] = React.useState(false);
-
-
-
-  return ({ isDarkMode, confirmOpen, setConfirmOpen, getStatusColor });
-}

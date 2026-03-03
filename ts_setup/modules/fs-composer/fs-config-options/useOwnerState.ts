@@ -9,6 +9,16 @@ export interface OwnerState {
   getConfigDescription: (optionKey: keyof ConfigOption) => string;
 }
 
+export const useOwnerState = (props: FsConfigOptionsProps): OwnerState => {
+  const { isDarkMode } = useFs();
+
+  function isConfigOptionEnabled(optionKey: keyof ConfigOption): boolean {
+    return props.node?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
+  }
+
+  return ({ isDarkMode, isConfigOptionEnabled, getConfigDescription });
+}
+
 const getConfigDescription = (optionKey: keyof ConfigOption): string => {
   switch (optionKey) {
     case 'devMode':
@@ -23,13 +33,3 @@ const getConfigDescription = (optionKey: keyof ConfigOption): string => {
       return 'No description available for this configuration option.';
   }
 };
-
-export const useOwnerState = (props: FsConfigOptionsProps): OwnerState => {
-  const { isDarkMode } = useFs();
-
-  function isConfigOptionEnabled(optionKey: keyof ConfigOption): boolean {
-    return props.node?.configOptions?.some(configOption => configOption[optionKey] === true) ?? false;
-  }
-
-  return ({ isDarkMode, isConfigOptionEnabled, getConfigDescription });
-}
