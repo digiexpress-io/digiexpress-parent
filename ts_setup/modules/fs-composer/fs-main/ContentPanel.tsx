@@ -12,12 +12,12 @@ import { FsReferences } from '../fs-references';
 
 import { OwnerState } from './useOwnerState';
 
-export interface FsMainContentPanelProps {
+export interface ContentPanelProps {
   ownerState: OwnerState;
   className: string;
 }
 
-export const FsMainContentPanel: React.FC<FsMainContentPanelProps> = ({ ownerState, className }) => {
+export const ContentPanel: React.FC<ContentPanelProps> = ({ ownerState, className }) => {
   const { activeNode, selectedView } = ownerState;
 
   return (

@@ -32,7 +32,7 @@ export const useUtilityClasses = () => {
 export const FsPanelRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
-  shouldForwardProp: (prop) => prop !== 'isDarkMode',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   flex: 1,
   height: '100%',

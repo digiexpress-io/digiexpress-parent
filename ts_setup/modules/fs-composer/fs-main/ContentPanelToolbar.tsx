@@ -2,12 +2,12 @@ import React from 'react';
 import { Tooltip, Badge } from '@mui/material';
 import { Button, OwnerState } from './useOwnerState';
 
-export interface VerticalToolbarProps {
+export interface ContentPanelToolbarProps {
   ownerState: OwnerState;
   className: string;
 }
 
-export const VerticalToolbar: React.FC<VerticalToolbarProps> = ({ ownerState, className }) => {
+export const ContentPanelToolbar: React.FC<ContentPanelToolbarProps> = ({ ownerState, className }) => {
   const { toolbar } = ownerState;
 
   const renderIcon = (button: Button) => {

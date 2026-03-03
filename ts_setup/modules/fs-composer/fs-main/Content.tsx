@@ -2,12 +2,12 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { OwnerState } from './useOwnerState';
 
-export interface FsMainContentProps {
+export interface ContentProps {
   ownerState: OwnerState;
   className: string;
 }
 
-export const FsMainContent: React.FC<FsMainContentProps> = ({ className, ownerState }) => {
+export const Content: React.FC<ContentProps> = ({ className, ownerState }) => {
   const activeTab = ownerState.openTabs[ownerState.activeTabIndex];
 
   return (
