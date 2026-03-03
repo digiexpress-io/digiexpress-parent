@@ -14,14 +14,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
-import io.resys.limaone.spi.ast.decisiontable.MutableDecisionTableYaml.NodeSource;
+import io.resys.limaone.spi.ast.decisiontable.MutableDecisionYaml.NodeSource;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 public class DecisionTableParserCST {
   private final static String LINE_SEPARATOR = System.lineSeparator();
  
 
-  private final MutableDecisionTableParseTree result = new MutableDecisionTableParseTree();
+  private final MutableDecisionParseTree result = new MutableDecisionParseTree();
   private final ObjectMapper yamlMapper;
   private final List<ModelError> messages = new ArrayList<>();
   
@@ -30,16 +30,16 @@ public class DecisionTableParserCST {
     this.yamlMapper = props.getYaml();
   }
   
-  public Tuple2<MutableDecisionTableParseTree, List<ModelError>> parseCST(String joined) {
+  public Tuple2<MutableDecisionParseTree, List<ModelError>> parseCST(String joined) {
     final String[] src = joined.split("\\r?\\n");
     final var parseTree = visitDecisionTable(src);
     return Tuple2.of(parseTree, messages);
   }
 
-  public MutableDecisionTableParseTree visitDecisionTable(String[] sourcesAdded) {
+  public MutableDecisionParseTree visitDecisionTable(String[] sourcesAdded) {
     final var iterator = Arrays.asList(sourcesAdded).iterator();
     final var value = new StringBuilder();
-    MutableDecisionTableYaml parent = result;
+    MutableDecisionYaml parent = result;
 
     int previousLineNumber = 0;
     int lineNumber = 0;
@@ -68,12 +68,11 @@ public class DecisionTableParserCST {
       }
 
       // Handle table content specially
-      if(parent != null && "table".equals(parent.getKeyword())) {
+      if(parent != null && MutableDecisionParseTree.KEY_TABLE.equals(parent.getKeyword())) {
         // Accumulate table content until we find a non-indented line
         if(src.startsWith(" ") || src.startsWith("|")) {
           // This is table content, accumulate it
-          String currentValue = parent.getValue() != null ? parent.getValue() : "";
-          parent = updateTableContent(parent, currentValue + (currentValue.isEmpty() ? "" : "\n") + src);
+          parent.addSource(new NodeSource(src, lineNumber));
           continue;
         } else {
           // End of table content, move back to parent
@@ -81,14 +80,14 @@ public class DecisionTableParserCST {
         }
       }
 
-      java.util.Map.Entry<String, String> keywordAndValue = getKeywordAndValue(src, lineNumber);
+      final var keywordAndValue = getKeywordAndValue(src, lineNumber);
       if(keywordAndValue == null) {
         continue;
       }
 
-      int indent = getIndent(src);
+      final var indent = getIndent(src);
       if(indent % 2 != 0) {
-        String message = String.format("Incorrect indent: %s, at line: %s!", indent, lineNumber);
+        final var message = String.format("Incorrect indent: %s, at line: %s!", indent, lineNumber);
         messages.add(ImmutableModelError.builder()
             .line(lineNumber)
             .msg(message)
@@ -96,7 +95,7 @@ public class DecisionTableParserCST {
         continue;
       }
 
-      int indentToFind = indent - 2;
+      final var indentToFind = indent - 2;
       while(parent != null) {
         if(parent.getIndent() <= indentToFind) {
           break;
@@ -128,11 +127,6 @@ public class DecisionTableParserCST {
     return result.setEnd(lineNumber).setValue(buildSource(value));
   }
 
-  private MutableDecisionTableYaml updateTableContent(MutableDecisionTableYaml tableNode, String newContent) {
-    // This is a simplified approach - in a full implementation we would need to
-    // create a new node with updated content
-    return tableNode;
-  }
   
   private String buildSource(StringBuilder value) {
     String result = value.toString();

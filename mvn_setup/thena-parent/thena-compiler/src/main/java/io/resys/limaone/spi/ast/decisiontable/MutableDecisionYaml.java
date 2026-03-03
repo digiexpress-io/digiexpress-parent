@@ -10,17 +10,17 @@ import io.resys.limaone.ast.DecisionTable_CST.Yaml;
 import lombok.Value;
 
 @JsonIgnoreProperties({"parent"})
-public class MutableDecisionTableYaml implements Yaml {
+public class MutableDecisionYaml implements Yaml {
   private static final long serialVersionUID = 5409590378906097144L;
   private final String keyword;
   private final String value;
   private final int indent;
   private final NodeSource source;
-  private final MutableDecisionTableYaml parent;
-  private final Map<String, MutableDecisionTableYaml> children = new HashMap<>();
+  private final MutableDecisionYaml parent;
+  private final Map<String, MutableDecisionYaml> children = new HashMap<>();
   private Integer end;
 
-  public MutableDecisionTableYaml(NodeSource source, int indent, String keyword, String value, MutableDecisionTableYaml parent) {
+  public MutableDecisionYaml(NodeSource source, int indent, String keyword, String value, MutableDecisionYaml parent) {
     super();
     this.source = source;
     this.keyword = keyword;
@@ -38,7 +38,7 @@ public class MutableDecisionTableYaml implements Yaml {
     return value;
   }
   @Override
-  public MutableDecisionTableYaml getParent() {
+  public MutableDecisionYaml getParent() {
     return parent;
   }
   @Override
@@ -49,18 +49,18 @@ public class MutableDecisionTableYaml implements Yaml {
     return indent;
   }
   @Override
-  public MutableDecisionTableYaml get(String keyword) {
+  public MutableDecisionYaml get(String keyword) {
     return children.get(keyword);
   }
   public boolean contains(String keyword) {
     return children.get(keyword) != null;
   }
-  public MutableDecisionTableYaml addChild(NodeSource source, int indent, String keyword, String value) {
-    MutableDecisionTableYaml result = new MutableDecisionTableYaml(source, indent, keyword, value, this);
+  public MutableDecisionYaml addChild(NodeSource source, int indent, String keyword, String value) {
+    MutableDecisionYaml result = new MutableDecisionYaml(source, indent, keyword, value, this);
     children.put(keyword, result);
     return result;
   }
-  public MutableDecisionTableYaml addChild(MutableDecisionTableYaml result) {
+  public MutableDecisionYaml addChild(MutableDecisionYaml result) {
     children.put(result.getKeyword(), result);
     return result;
   }
@@ -68,7 +68,7 @@ public class MutableDecisionTableYaml implements Yaml {
   public int getEnd() {
     if(end == null) {
       end = getStart();
-      for(MutableDecisionTableYaml node : children.values()) {
+      for(MutableDecisionYaml node : children.values()) {
         if(end < node.getEnd()) {
           end = node.getEnd();
         }
@@ -76,7 +76,7 @@ public class MutableDecisionTableYaml implements Yaml {
     }
     return end;
   }
-  public MutableDecisionTableYaml setEnd(int end) {
+  public MutableDecisionYaml setEnd(int end) {
     this.end = end;
     return this;
   }
@@ -101,9 +101,8 @@ public class MutableDecisionTableYaml implements Yaml {
   }
   @Override
   public String getSyntax() {
-    return source.getLine();
+    return getSource().getLine();
   }
-
   @Value
   public static class NodeSource {
     String line;

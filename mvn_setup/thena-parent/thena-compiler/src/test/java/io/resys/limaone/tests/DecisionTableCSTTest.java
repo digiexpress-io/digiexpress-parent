@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,33 +14,33 @@ import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.DecisionTableParserCST;
-import io.resys.limaone.spi.ast.decisiontable.MutableDecisionTableParseTree;
+import io.resys.limaone.spi.ast.decisiontable.MutableDecisionParseTree;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 public class DecisionTableCSTTest {
   private final AST_ParserProps props = AST_ParserImpl.builder().props(); 
   @Test
   public void testBasicDecisionTableParsing() {
-    final String yaml = String.join("\n", Arrays.asList(
-        "name: Customer Risk Assessment",
-        "description: Determines customer risk level based on age and income",
-        "hitPolicy: FIRST",
-        "valueSets:",
-        "  riskLevel: low, medium, high",
-        "  ageGroup: young, middle, senior",
-        "table: |",
-        "  | age:NUMBER | income:NUMBER | ageGroup:STRING | -> | riskLevel:STRING |",
-        "  |------------|---------------|------------------|----|--------------------|",
-        "  | < 25       | < 30000       | young           |    | high               |",
-        "  | < 25       | >= 30000      | young           |    | medium             |",
-        "  | >= 25 && < 55 | < 50000    | middle          |    | medium             |",
-        "  | >= 25 && < 55 | >= 50000   | middle          |    | low                |",
-        "  | >= 55      | *             | senior          |    | low                |"
-    ));
+    final String yaml = """
+        name: Customer Risk Assessment
+        description: Determines customer risk level based on age and income
+        hitPolicy: FIRST
+        valueSets:
+          riskLevel: low, medium, high
+          ageGroup: young, middle, senior
+        table: |
+          | age:NUMBER    | income:NUMBER | ageGroup:STRING  | -> | riskLevel:STRING   |
+          |---------------|---------------|------------------|----|--------------------|
+          | < 25          | < 30000       | young            |    | high               |
+          | < 25          | >= 30000      | young            |    | medium             |
+          | >= 25 && < 55 | < 50000       | middle           |    | medium             |
+          | >= 25 && < 55 | >= 50000      | middle           |    | low                |
+          | >= 55         | *             | senior           |    | low                |
+        """;
 
 
     final DecisionTableParserCST parser = new DecisionTableParserCST(props);
-    final Tuple2<MutableDecisionTableParseTree, List<ModelError>> result = parser.parseCST(yaml);
+    final Tuple2<MutableDecisionParseTree, List<ModelError>> result = parser.parseCST(yaml);
     
     final YamlParseTree parseTree = result.getItem1();
     final List<ModelError> errors = result.getItem2();
@@ -94,14 +93,14 @@ public class DecisionTableCSTTest {
 
   @Test
   public void testInvalidIndentation() {
-    final String yaml = String.join("\n", Arrays.asList(
-        "name: Test Table",
-        " description: Invalid indent",  // Invalid single space indent
-        "hitPolicy: FIRST"
-    ));
+    final String yaml = """
+        name: Test Table
+         description: Invalid indent
+        hitPolicy: FIRST
+        """;
 
     final DecisionTableParserCST parser = new DecisionTableParserCST(props);
-    final Tuple2<MutableDecisionTableParseTree, List<ModelError>> result = parser.parseCST(yaml);
+    final Tuple2<MutableDecisionParseTree, List<ModelError>> result = parser.parseCST(yaml);
     
     final List<ModelError> errors = result.getItem2();
     
@@ -112,17 +111,17 @@ public class DecisionTableCSTTest {
 
   @Test
   public void testMinimalDecisionTable() {
-    final String yaml = String.join("\n", Arrays.asList(
-        "name: Minimal Table",
-        "hitPolicy: ALL",
-        "table: |",
-        "  | input:STRING | -> | output:STRING |",
-        "  |-------------|----|--------------| ",
-        "  | value1      |    | result1      |"
-    ));
+    final String yaml = """
+        name: Minimal Table
+        hitPolicy: ALL
+        table: |
+          | input:STRING | -> | output:STRING |
+          |--------------|----|---------------| 
+          | value1       |    | result1       |
+        """;
 
     final DecisionTableParserCST parser = new DecisionTableParserCST(props);
-    final Tuple2<MutableDecisionTableParseTree, List<ModelError>> result = parser.parseCST(yaml);
+    final Tuple2<MutableDecisionParseTree, List<ModelError>> result = parser.parseCST(yaml);
     
     final YamlParseTree parseTree = result.getItem1();
     final List<ModelError> errors = result.getItem2();
