@@ -80,9 +80,11 @@ public class FlowProgramExecutor {
     try {
       visit(flow.getStatement(), NO_PROPS);
     } catch(Exception exception) {
-      stack.newError(exception);
+      stack.newFrame(exception);
       status = FlowExecutionStatus.ERROR;
     }
+    
+    final var stack = this.stack.close();
     
     return ImmutableFlowResult.builder()
       .logs(stack.getLogs())

@@ -53,8 +53,8 @@ public class ResultEnvlope {
     private final LocalDateTime createdAt;
   }
 
-  public static ResultEnvlope of(BodyStatement statement) {
-    return new ResultEnvlope(statement.getTaskId(), statement);
+  public static ResultEnvlope of(int sequence, BodyStatement statement) {
+    return new ResultEnvlope(sequence, statement);
   }
   
 
