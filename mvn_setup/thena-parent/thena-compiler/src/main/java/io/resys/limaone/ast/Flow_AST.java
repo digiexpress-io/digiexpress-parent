@@ -97,19 +97,19 @@ public interface Flow_AST extends Simple_AST, Serializable {
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_RETURNS; }
   }
-
+  interface SwitchStatement extends NextStatement, BodyStatement {
+    List<CaseStatement> getCases();
+    MappingStatement getMapping();
+    default StatementType getType() { return StatementType.BODY_SWITCH; }
+  }
+  
 
   interface CaseStatement extends AnyStatement {
     @Nullable ExpressionProgram getWhen();
     NextStatement getThen();    
     default StatementType getType() { return StatementType.BODY_SWITCH_CASE; }
   }
-  interface SwitchStatement extends NextStatement {
-    List<CaseStatement> getCases();
-    MappingStatement getMapping();
-    default StatementType getType() { return StatementType.BODY_SWITCH; }
-  }
-  
+
   interface StartStatement extends NextStatement {
     OneTaskStatement getFirstTask();
     default StatementType getType() { return StatementType.NEXT_IS_START; }

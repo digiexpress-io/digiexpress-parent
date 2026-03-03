@@ -9,63 +9,95 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
-import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
 import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
-import io.resys.limaone.program.FlowTaskProgram.FlowTaskResult;
+import io.resys.limaone.program.ImmutableFlowResultErrorLog;
 import io.resys.limaone.program.ImmutableFlowResultLog;
+import io.resys.limaone.program.Program.ProgramResult;
+import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
+import io.resys.limaone.spi.program.result.ResultEnvlope;
+import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 public class FlowStack {
   private final AtomicInteger sequence = new AtomicInteger(0);
   private final LocalDateTime start = LocalDateTime.now();
-  private final Map<String, FlowResultLog> frames = new HashMap<>();
+  private final Map<String, ResultEnvlope> frames = new HashMap<>();
   private final StringBuilder shortHistory = new StringBuilder();
-  
   private String lastStepId;
-  private FlowExecutionStatus status = FlowExecutionStatus.COMPLETED;
+
   
-  
-  public void newFrame(Consumer<ImmutableFlowResultLog.Builder> callback) {
-    final var builder = ImmutableFlowResultLog.builder()
-        .id(sequence.incrementAndGet())
-        .start(start)
-        .isReturnsCollection(false)
-        .end(LocalDateTime.now());
-    callback.accept(builder);
-    final var frame = builder.build();
+  private void newFrame(ResultEnvlope frame) {
+    final var stepId = frame.getStatement().getTaskId();
     
-    this.frames.put(frame.getStepId(), frame);
-    this.lastStepId = frame.getStepId();
-    
+    this.frames.put(stepId, frame);
+    this.lastStepId = stepId;
     
     if(shortHistory.length() > 0) {
       shortHistory.append(" -> ");
     }
     
-    if(frames.containsKey(frame.getStepId())) {
+    if(frames.containsKey(stepId)) {
       shortHistory.append("(recursion) ");
       shortHistory.append(System.lineSeparator() + getIndent(frame));
     }
-    shortHistory.append(frame.getStepId());
+    shortHistory.append(stepId);
+  }
+
+  
+  public void newError(Exception exception) {
+    log.error(exception.getMessage(), exception);
+    
+    final var rootCause = ExceptionUtils.getRootCause(exception);
+    final var rootMsg = ExceptionUtils.getRootCauseStackTrace(rootCause);
+    
+    final var traceBuilder = new StringBuilder();
+    for(final var trace : rootMsg) {
+      if(trace.contains("resys")) {
+        traceBuilder.append(trace);
+      }
+    }
+    
+    final var errorMsg = new StringBuilder("Message: ").append(exception.getMessage() == null ? "-" : exception.getMessage());
+    if(exception instanceof StatementException) {
+      final StatementException ex = (StatementException) exception;
+      errorMsg.append(System.lineSeparator())
+        .append(" props: ").append(JsonObject.mapFrom(ex.getProps()).encodePrettily()).append(System.lineSeparator())
+        .append(" statement: ").append(JsonObject.mapFrom(ex.getStatement()).encodePrettily());
+    }
+    
+    newFrame((newFrame) -> newFrame
+        .addErrors(ImmutableFlowResultErrorLog.builder().id("error").msg(errorMsg.toString()).build())
+        .addErrors(ImmutableFlowResultErrorLog.builder().id("trace").msg(traceBuilder.toString()).build())
+        .status(FlowExecutionStatus.ERROR));
+  }
+  
+  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs) {
+    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(statement));
+    wrapper.add(inputs);
+  }
+  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result) {
+    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(statement));
+    wrapper.add(inputs, result);
   }
   
   
-  public void newFrame(ReturnsStatement statement, Map<String, Serializable> inputs, int size) {
-    
-  }  
-  
-  public void newFrame(FlowTaskStatement statement, Map<String, Serializable> inputs, FlowTaskResult result, int size) {
-    
-  }
   
   public void newFrame(DecisionTableStatement statement, Map<String, Serializable> inputs, DecisionResult result, int size) {
 
-    if(result.size() == 1) {
+    if(size == 1) {
+      
       return result.iterator().next();
-    } else if(result.isEmpty()) {
+    } else if(size == 0) {
+      
       return visitStepLog(
           ImmutableFlowResultLog.builder()
           .id(this.stepLogs.size() + 1)
@@ -116,17 +148,16 @@ public class FlowStack {
   public List<FlowResultLog> getLastLogs() {
     return Collections.emptyList();
   }
-  public FlowExecutionStatus getStatus() {
-    return status;
-  }
   public boolean isReturnsCollection() {
+    final var isArray = last != null && last.size() > 1;
     return false;
   }
   public Map<String, Serializable> getReturns() {
+    Map.<String, Serializable>of("", mergeResults(last)) : last.iterator().next().getReturns()
     return Collections.emptyMap();
   }
   
-  private String getIndent(FlowResultLog previous) {
+  private String getIndent(ResultEnvlope previous) {
     StringBuilder result = new StringBuilder();
     for(int index = 0; index <= previous.getId(); index++) {
       result.append("  ");

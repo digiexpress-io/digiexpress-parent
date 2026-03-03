@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.AnyStatement;
+import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.ast.Flow_AST.CaseStatement;
 import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
 import io.resys.limaone.ast.Flow_AST.EmptyBodyStatement;
@@ -57,7 +58,7 @@ public class FlowProgramExecutor {
 
   @Value
   private static class CaseStatementProps implements ExecutorProps {
-    String stepId;
+    BodyStatement body;
     ExternalContext context;
     Map<String, Serializable> accepts;    
   }
@@ -75,13 +76,19 @@ public class FlowProgramExecutor {
    * Walk the entire Flow AST starting from the root statement
    */
   public FlowResult walk(Flow_AST flow, ExecutorProps ExecutorProps) {
-    visit(flow.getStatement(), NO_PROPS);
+    FlowExecutionStatus status = FlowExecutionStatus.COMPLETED;
+    try {
+      visit(flow.getStatement(), NO_PROPS);
+    } catch(Exception exception) {
+      stack.newError(exception);
+      status = FlowExecutionStatus.ERROR;
+    }
     
     return ImmutableFlowResult.builder()
       .logs(stack.getLogs())
       .lastLogs(stack.getLastLogs())
       .stepId(stack.getLastStepId())
-      .status(FlowExecutionStatus.COMPLETED)
+      .status(status)
       .accepts(assignment.getInitalizers().entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getRaw())))
       .isReturnsCollection(stack.isReturnsCollection())
       .returns(stack.getReturns())
@@ -116,11 +123,6 @@ public class FlowProgramExecutor {
   
 
   public ExecutorResult visitEmptyBodyStatement(EmptyBodyStatement statement, ExecutorProps ExecutorProps) {
-    stack.newFrame((newResult -> newResult
-        .stepId(statement.getTaskId())
-        .status(FlowExecutionStatus.COMPLETED)
-        .isReturnsCollection(false)
-    ));
     return REACHED_END;
   }
   
@@ -157,7 +159,7 @@ public class FlowProgramExecutor {
         
         final var result = ft.run(assignment.withInputs(inputs), runtime).andGetBody();
         assignment.assignFromTask(statement, result, sets.size());
-        stack.newFrame(statement, inputs, result, sets.size());
+        stack.newFrame(statement, inputs, result);
         
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
@@ -175,7 +177,7 @@ public class FlowProgramExecutor {
     for(final var inputs : sets) {
       try {
         assignment.assignFromTask(statement, inputs, sets.size());
-        stack.newFrame(statement, inputs, sets.size());
+        stack.newFrame(statement, inputs);
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }
@@ -200,7 +202,7 @@ public class FlowProgramExecutor {
       
       boolean isAtleastOneMatch = false;
       for(final var whenThen : statement.getCases()) {
-        final var propsResult = visitCaseStatement(whenThen, new CaseStatementProps(statement.getMapping().getTaskId(), context, mappingEntry));
+        final var propsResult = visitCaseStatement(whenThen, new CaseStatementProps(statement, context, mappingEntry));
         if(propsResult.isMatch) {
           isAtleastOneMatch = true;
           break;
@@ -218,13 +220,8 @@ public class FlowProgramExecutor {
   public CaseStatementResult visitCaseStatement(CaseStatement statement, CaseStatementProps props) {
 
     final var condition = statement.getWhen().run(props.getContext());
-    
-    stack.newFrame(newFlowResult -> newFlowResult
-        .stepId(props.getStepId() + "/" + statement.getWhen().getSrc())
-        .status(FlowExecutionStatus.COMPLETED)
-        .accepts(props.getAccepts())
-        .returns(Map.of("isMatch", (Boolean) condition.getValue())));
-    
+    stack.newFrame(props.getBody(), props.getAccepts(), condition);
+
     if(Boolean.TRUE.equals(condition.getValue())) {
       visit(statement.getThen(), null);
       return new CaseStatementResult(true);
