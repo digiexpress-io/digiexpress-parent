@@ -53,15 +53,15 @@ public class FlowStack {
   }
   
   
-  public void newFrame(ReturnsStatement statement, Map<String, Serializable> inputs) {
+  public void newFrame(ReturnsStatement statement, Map<String, Serializable> inputs, int size) {
     
   }  
   
-  public void newFrame(FlowTaskStatement statement, Map<String, Serializable> inputs, FlowTaskResult result) {
+  public void newFrame(FlowTaskStatement statement, Map<String, Serializable> inputs, FlowTaskResult result, int size) {
     
   }
   
-  public void newFrame(DecisionTableStatement statement, Map<String, Serializable> inputs, DecisionResult result) {
+  public void newFrame(DecisionTableStatement statement, Map<String, Serializable> inputs, DecisionResult result, int size) {
 
     if(result.size() == 1) {
       return result.iterator().next();

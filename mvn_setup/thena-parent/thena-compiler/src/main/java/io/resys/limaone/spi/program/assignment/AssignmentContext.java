@@ -57,16 +57,16 @@ public class AssignmentContext {
     this.initalizers_tasks = Objects.requireNonNull(tasks, "tasks can't be null!");
   }
   
-  public void assignFromTask(DecisionTableStatement task, DecisionResult result) {
+  public void assignFromTask(DecisionTableStatement task, DecisionResult result, int size) {
     
   }
 
-  public void assignFromTask(FlowTaskStatement task, FlowTaskResult result) {
+  public void assignFromTask(FlowTaskStatement task, FlowTaskResult result, int size) {
     
   }
 
   
-  public void assignFromTask(ReturnsStatement task, Map<String, Serializable> result) {
+  public void assignFromTask(ReturnsStatement task, Map<String, Serializable> result, int size) {
     
   }
   

@@ -135,8 +135,8 @@ public class FlowProgramExecutor {
     for(final var inputs : sets) {
       try {
         final var result = dt.run(assignment.withInputs(inputs), runtime).andGetBody();
-        assignment.assignFromTask(statement, result);
-        stack.newFrame(statement, inputs, result);
+        assignment.assignFromTask(statement, result, sets.size());
+        stack.newFrame(statement, inputs, result, sets.size());
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }
@@ -156,8 +156,8 @@ public class FlowProgramExecutor {
       try {
         
         final var result = ft.run(assignment.withInputs(inputs), runtime).andGetBody();
-        assignment.assignFromTask(statement, result);
-        stack.newFrame(statement, inputs, result);
+        assignment.assignFromTask(statement, result, sets.size());
+        stack.newFrame(statement, inputs, result, sets.size());
         
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
@@ -174,8 +174,8 @@ public class FlowProgramExecutor {
     final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();;
     for(final var inputs : sets) {
       try {
-        assignment.assignFromTask(statement, inputs);
-        stack.newFrame(statement, inputs);
+        assignment.assignFromTask(statement, inputs, sets.size());
+        stack.newFrame(statement, inputs, sets.size());
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }
