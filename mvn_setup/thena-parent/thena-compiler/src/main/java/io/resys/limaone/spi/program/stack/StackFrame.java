@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.program.result;
+package io.resys.limaone.spi.program.stack;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,14 +24,14 @@ import lombok.Value;
 
 @Getter
 @RequiredArgsConstructor
-public class ResultEnvlope {
+public class StackFrame {
   private final int id;
   private final BodyStatement statement;
-  private final List<Match> matches = new ArrayList<>();
+  private final List<StackFrameBody> matches = new ArrayList<>();
   
   public void add(Map<String, Serializable> inputs, LocalDateTime startAt) {
     matches.add(
-        new Match(
+        new StackFrameBody(
             matches.size(), 
             Collections.emptyMap(), 
             inputs,
@@ -68,7 +68,7 @@ public class ResultEnvlope {
     
     
     matches.add(
-        new Match(
+        new StackFrameBody(
             matches.size(), 
             inputs, 
             outputs, 
@@ -80,7 +80,7 @@ public class ResultEnvlope {
   
   
   @Value
-  public static class Match {
+  public static class StackFrameBody {
     private final int id;
     private final Map<String, Serializable> inputs;
     private final Map<String, Serializable> outputs;
@@ -95,8 +95,8 @@ public class ResultEnvlope {
     }
   }
 
-  public static ResultEnvlope of(int sequence, BodyStatement statement) {
-    return new ResultEnvlope(sequence, statement);
+  public static StackFrame of(int sequence, BodyStatement statement) {
+    return new StackFrame(sequence, statement);
   }
   
 

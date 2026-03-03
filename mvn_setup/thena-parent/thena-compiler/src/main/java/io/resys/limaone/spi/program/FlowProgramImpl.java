@@ -77,6 +77,11 @@ public class FlowProgramImpl implements FlowProgram {
   }
 
   @Override
+  public Flow_AST getAst() {
+    return ast;
+  }
+  
+  @Override
   public BodyType getType() {
     return ast.getBodyType();
   }

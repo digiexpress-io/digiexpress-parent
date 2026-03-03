@@ -9,15 +9,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
-import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
 import io.resys.limaone.ast.Flow_AST.InputsStatement;
 import io.resys.limaone.ast.Flow_AST.ManyTasksStatement;
 import io.resys.limaone.ast.Flow_AST.MappingStatement;
-import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
-import io.resys.limaone.program.DecisionProgram.DecisionResult;
-import io.resys.limaone.program.FlowTaskProgram.FlowTaskResult;
 import io.resys.limaone.program.ProgramInput;
+import io.resys.limaone.spi.program.stack.StackFrame;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,20 +53,13 @@ public class AssignmentContext {
     this.initalizers_tasks = Objects.requireNonNull(tasks, "tasks can't be null!");
   }
   
-  public void assignFromTask(DecisionTableStatement task, DecisionResult result, int size) {
-    
+  public void assignFromTask(StackFrame frame) {
+    final var taskId = frame.getStatement().getTaskId();
+    if(!assigned.containsKey(taskId)) {
+      assigned.put(taskId, Assignment.of(frame));
+    }
   }
 
-  public void assignFromTask(FlowTaskStatement task, FlowTaskResult result, int size) {
-    
-  }
-
-  
-  public void assignFromTask(ReturnsStatement task, Map<String, Serializable> result, int size) {
-    
-  }
-  
-  
   
   public List<Map<String, Serializable>> assignTo(String taskId, MappingStatement statement) {
     final Map<String, Serializable> deconstructed = new HashMap<>();
@@ -85,15 +74,16 @@ public class AssignmentContext {
     }
 
     final List<Map<String, Serializable>> exploded = new ArrayList<>();
+    final var sets = AssignmentExpander.from(statement, this::findParameter);
     
-    for(final var mapping : AssignmentExpander.from(statement, this::findParameter)) {
+    for(final var mapping : sets) {
       final Map<String, Serializable> result = new HashMap<>(deconstructed);
       for(final var entry : mapping.entrySet()) {
         final String nameOnService = entry.getKey();
         
         try {
           // Flat mapping
-          Serializable value = findParameter(entry.getValue());
+          final Serializable value = findParameter(entry.getValue());
           
           if(value != null) {
             result.put(nameOnService, value);

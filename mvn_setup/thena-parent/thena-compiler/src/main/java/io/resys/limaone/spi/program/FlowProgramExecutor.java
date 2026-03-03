@@ -141,8 +141,10 @@ public class FlowProgramExecutor {
       try {
         final LocalDateTime start = LocalDateTime.now();
         final var result = dt.run(assignment.withInputs(inputs), runtime).andGetBody();
-        assignment.assignFromTask(statement, result, sets.size());
-        stack.newFrame(statement, inputs, result, start);
+        
+        final var newFrame = stack.newFrame(statement, inputs, result, start);
+        assignment.assignFromTask(newFrame);
+        
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }
@@ -162,8 +164,9 @@ public class FlowProgramExecutor {
       try {
         final LocalDateTime start = LocalDateTime.now();
         final var result = ft.run(assignment.withInputs(inputs), runtime).andGetBody();
-        assignment.assignFromTask(statement, result, sets.size());
-        stack.newFrame(statement, inputs, result, start);
+        
+        final var newFrame = stack.newFrame(statement, inputs, result, start);
+        assignment.assignFromTask(newFrame);
         
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
@@ -177,12 +180,12 @@ public class FlowProgramExecutor {
   public ExecutorResult visitReturnsStatement(ReturnsStatement statement, ExecutorProps ExecutorProps) {
     
     // Visit return mapping
-    final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();;
+    final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
     for(final var inputs : sets) {
       try {
         final LocalDateTime start = LocalDateTime.now();
-        assignment.assignFromTask(statement, inputs, sets.size());
-        stack.newFrame(statement, inputs, start);
+        final var newFrame = stack.newFrame(statement, inputs, start);
+        assignment.assignFromTask(newFrame);
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }

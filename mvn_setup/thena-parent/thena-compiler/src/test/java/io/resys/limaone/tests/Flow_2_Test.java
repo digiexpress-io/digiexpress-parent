@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,11 +34,12 @@ import io.resys.hdes.client.api.ast.AstBody.AstCommandMessage;
 import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowNode;
 import io.resys.hdes.client.api.ast.ImmutableAstCommand;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowExecutionStatus;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResultLog;
-import io.resys.hdes.client.spi.util.FileUtils;
 import io.resys.hdes.client.test.config.TestUtils;
+import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
+import io.resys.limaone.program.FlowProgram.FlowResult;
+import io.resys.limaone.program.FlowProgram.FlowResultLog;
+import io.resys.limaone.spi.ast.AST_ParserImpl;
+import io.resys.limaone.spi.ast.FlowParserCST;
 
 
 public class Flow_2_Test {
@@ -45,32 +47,32 @@ public class Flow_2_Test {
   @Test
   public void astIndentNormal() throws IOException {
     
-    final var ast = TestUtils.client.types().flow()
-        .srcAdd(1, "id: uber flow")
-        .srcAdd(2, "description: uber description")
-        .srcAdd(3, "tasks:")
-        .srcAdd(4, "  - first task:")
-        .srcAdd(5, "  - second task:")
-        .build();
-
-    AstFlowNode node = ast.getSrc();
-    List<AstCommandMessage> messages = ast.getMessages();
     
-    Assertions.assertTrue(messages.isEmpty());
+    final var parseTree = new FlowParserCST(AST_ParserImpl.builder().props()).parseCST(
+"""
+id: uber flow
+description: uber description
+tasks:
+  - first task:
+  - second task:
+""");
+    final var cst = parseTree.getItem1();
+    
+    Assertions.assertTrue(parseTree.getItem2().isEmpty());
 
-    Assertions.assertEquals(3, node.getChildren().size());
+    Assertions.assertEquals(3, cst.getChildren().size());
 
-    Assertions.assertNotNull(node.get("id"));
-    Assertions.assertEquals("uber flow", node.get("id").getValue());
+    Assertions.assertNotNull(cst.get("id"));
+    Assertions.assertEquals("uber flow", cst.get("id").getValue());
 
-    Assertions.assertNotNull(node.get("description"));
-    Assertions.assertEquals("uber description", node.get("description").getValue());
+    Assertions.assertNotNull(cst.get("description"));
+    Assertions.assertEquals("uber description", cst.get("description").getValue());
 
-    Assertions.assertNotNull(node.get("tasks"));
-    Assertions.assertEquals(2, node.get("tasks").getChildren().size());
+    Assertions.assertNotNull(cst.get("tasks"));
+    Assertions.assertEquals(2, cst.get("tasks").getChildren().size());
 
-    Assertions.assertNotNull(node.get("tasks").get("first task"));
-    Assertions.assertNotNull(node.get("tasks").get("second task"));
+    Assertions.assertNotNull(cst.get("tasks").get("first task"));
+    Assertions.assertNotNull(cst.get("tasks").get("second task"));
   }
 
 

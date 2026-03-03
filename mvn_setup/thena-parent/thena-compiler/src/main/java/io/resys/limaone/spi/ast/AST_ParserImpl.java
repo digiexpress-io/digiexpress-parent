@@ -48,6 +48,8 @@ public class AST_ParserImpl implements AST_Parser {
     return new Builder();
   }
   
+  
+  
   public static class Builder {
     private boolean dev;
     
@@ -56,7 +58,7 @@ public class AST_ParserImpl implements AST_Parser {
       return this;
     }
     
-    public AST_ParserImpl build() {
+    public ImmutableAST_ParserProps props() {
       final CompilerConfiguration groovyConfig = new CompilerConfiguration();
       groovyConfig.setTargetBytecode(CompilerConfiguration.JDK21);
       groovyConfig.addCompilationCustomizers(new GroovyCompilationCustomizer());
@@ -64,12 +66,12 @@ public class AST_ParserImpl implements AST_Parser {
       final var groovy = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), groovyConfig);
       
       final ObjectMapper yaml = new ObjectMapper(new YAMLFactory());
+      return ImmutableAST_ParserProps.builder().groovy(groovy).isDev(dev).yaml(yaml).build();
+    }
+    
+    public AST_ParserImpl build() {
       
-      return new AST_ParserImpl(ImmutableAST_ParserProps.builder()
-          .groovy(groovy)
-          .isDev(dev)
-          .yaml(yaml)
-          .build());
+      return new AST_ParserImpl(props());
     }
   }
 }

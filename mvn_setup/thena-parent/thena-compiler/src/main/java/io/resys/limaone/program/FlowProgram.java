@@ -11,11 +11,14 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.ast.Flow_AST;
 import jakarta.annotation.Nullable;
 
 
 
 public interface FlowProgram extends Program {
+  
+  Flow_AST getAst();
   
   FlowExecutor run(ProgramInput input, Runtime runtime);
   FlowExecutor run(Map<String, Serializable> input);
@@ -48,10 +51,12 @@ public interface FlowProgram extends Program {
     List<FlowResultErrorLog> getErrors();
     FlowExecutionStatus getStatus();
     boolean isReturnsCollection();
+    
+    
     Map<String, Serializable> getAccepts();
     Map<String, Serializable> getReturns();
-    @Nullable
-    Serializable getReturnsValue();
+    
+    @Nullable Serializable getReturnsValue();
     @Nullable Long getCost(); // cost in millis
   }
   

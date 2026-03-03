@@ -22,7 +22,6 @@ import io.resys.limaone.program.ImmutableFlowResultLog;
 import io.resys.limaone.program.Program.ProgramResult;
 import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
 import io.resys.limaone.spi.program.assignment.Assignment;
-import io.resys.limaone.spi.program.result.ResultEnvlope;
 import io.vertx.core.json.JsonObject;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FlowStack {
   private final AtomicInteger sequence = new AtomicInteger(0);
   private final LocalDateTime start = LocalDateTime.now();
-  private final Map<String, ResultEnvlope> frames = new HashMap<>();
+  private final Map<String, StackFrame> frames = new HashMap<>();
   private final StringBuilder shortHistory = new StringBuilder();
   private final List<FlowResultLog> errorFrames = new ArrayList<>();
   private String lastStepId;
@@ -111,19 +110,21 @@ public class FlowStack {
     errorFrames.add(errorFrame);
   }
   
-  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, LocalDateTime startedAt) {
+  public StackFrame newFrame(BodyStatement statement, Map<String, Serializable> inputs, LocalDateTime startedAt) {
     logToHistory(statement.getTaskId(), Optional.empty());
-    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(sequence.incrementAndGet(), statement));
+    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> StackFrame.of(sequence.incrementAndGet(), statement));
     wrapper.add(inputs, startedAt);
+    return wrapper;
 
   }
-  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startedAt) {
+  public StackFrame newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startedAt) {
     logToHistory(statement.getTaskId(), Optional.empty());
-    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(sequence.incrementAndGet(), statement));
+    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> StackFrame.of(sequence.incrementAndGet(), statement));
     wrapper.add(inputs, result, startedAt);
+    return wrapper;
   }
   
-  private List<FlowResultLog> mapToFlowResultLog(ResultEnvlope envlope) {
+  private List<FlowResultLog> mapToFlowResultLog(StackFrame envlope) {
     return envlope.getMatches().stream().map(match -> {
       
       final FlowResultLog log = ImmutableFlowResultLog.builder()
@@ -147,7 +148,7 @@ public class FlowStack {
 
   }
   
-  private String getLogIndent(Optional<ResultEnvlope> previous) {
+  private String getLogIndent(Optional<StackFrame> previous) {
     if(previous.isEmpty()) {
       return "";
     }
@@ -157,7 +158,7 @@ public class FlowStack {
     }
     return result.toString();
   }
-  private void logToHistory(String stepId, Optional<ResultEnvlope> env) {
+  private void logToHistory(String stepId, Optional<StackFrame> env) {
 
     if(shortHistory.length() > 0) {
       shortHistory.append(" -> ");
