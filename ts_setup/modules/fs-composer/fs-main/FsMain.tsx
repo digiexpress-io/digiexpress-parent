@@ -2,8 +2,8 @@ import React from 'react';
 import { FsMainProps } from './FsMainProps';
 import { useOwnerState } from './useOwnerState';
 import { FsMainRoot, useUtilityClasses } from './useUtilityClasses';
-import { FsMainLeft } from './FsMainLeft';
-import { FsMainRight } from './FsMainRight';
+import { FsMainContent } from './FsMainContent';
+import { FsMainContentPanel } from './FsMainContentPanel';
 import { VerticalToolbar } from './VerticalToolbar';
 
 export const FsMain: React.FC<FsMainProps> = (props) => {
@@ -12,12 +12,12 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
 
   return (
     <FsMainRoot ownerState={ownerState} className={classes.root}>
-      <FsMainLeft ownerState={ownerState} className={classes.leftPanel} />
+      <FsMainContent ownerState={ownerState} className={classes.leftPanel} />
 
       <div className={classes.divider} />
 
       <div className={`${classes.rightPanel} ${ownerState.isRightPanelOpen ? classes.rightPanelOpen : classes.rightPanelClosed}`}>
-        <FsMainRight ownerState={ownerState} className={classes.rightPanelContent} />
+        <FsMainContentPanel ownerState={ownerState} className={classes.rightPanelContent} />
       </div>
 
       <VerticalToolbar ownerState={ownerState} className={classes.toolbar} />
