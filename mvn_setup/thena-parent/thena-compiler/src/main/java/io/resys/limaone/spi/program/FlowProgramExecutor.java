@@ -1,6 +1,7 @@
 package io.resys.limaone.spi.program;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -138,9 +139,10 @@ public class FlowProgramExecutor {
     final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
     for(final var inputs : sets) {
       try {
+        final LocalDateTime start = LocalDateTime.now();
         final var result = dt.run(assignment.withInputs(inputs), runtime).andGetBody();
         assignment.assignFromTask(statement, result, sets.size());
-        stack.newFrame(statement, inputs, result, sets.size());
+        stack.newFrame(statement, inputs, result, start);
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }
@@ -158,10 +160,10 @@ public class FlowProgramExecutor {
     final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
     for(final var inputs : sets) {
       try {
-        
+        final LocalDateTime start = LocalDateTime.now();
         final var result = ft.run(assignment.withInputs(inputs), runtime).andGetBody();
         assignment.assignFromTask(statement, result, sets.size());
-        stack.newFrame(statement, inputs, result);
+        stack.newFrame(statement, inputs, result, start);
         
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
@@ -178,8 +180,9 @@ public class FlowProgramExecutor {
     final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();;
     for(final var inputs : sets) {
       try {
+        final LocalDateTime start = LocalDateTime.now();
         assignment.assignFromTask(statement, inputs, sets.size());
-        stack.newFrame(statement, inputs);
+        stack.newFrame(statement, inputs, start);
       } catch(Exception e) {
         throw new StatementException(e.getMessage(), statement, inputs, e);
       }
@@ -221,8 +224,10 @@ public class FlowProgramExecutor {
 
   public CaseStatementResult visitCaseStatement(CaseStatement statement, CaseStatementProps props) {
 
+    
+    final LocalDateTime start = LocalDateTime.now();
     final var condition = statement.getWhen().run(props.getContext());
-    stack.newFrame(props.getBody(), props.getAccepts(), condition);
+    stack.newFrame(props.getBody(), props.getAccepts(), condition, start);
 
     if(Boolean.TRUE.equals(condition.getValue())) {
       visit(statement.getThen(), null);

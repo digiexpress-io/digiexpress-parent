@@ -52,6 +52,7 @@ public interface FlowProgram extends Program {
     Map<String, Serializable> getReturns();
     @Nullable
     Serializable getReturnsValue();
+    @Nullable Long getCost(); // cost in millis
   }
   
   @Value.Immutable

@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.resys.limaone.ast.Flow_AST.BodyStatement;
+import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.program.ImmutableFlowResultErrorLog;
@@ -37,8 +39,9 @@ public class FlowStack {
   
   public FlowStackResult close() {
 
-    final List<FlowResultLog> allLogs = frames.values().stream()
-        .map(this::mapToFlowResultLog)
+    final List<FlowResultLog> allLogs = Stream.concat(
+          frames.values().stream().flatMap(e -> mapToFlowResultLog(e).stream()), 
+          errorFrames.stream())
         .sorted((a, b) -> Integer.compare(a.getId(), b.getId()))
         .toList();
     final List<FlowResultLog> lastLogs = allLogs.stream()
@@ -104,19 +107,39 @@ public class FlowStack {
     logToHistory(errorFrame.getStepId(), Optional.empty());
   }
   
-  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs) {
+  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, LocalDateTime startedAt) {
     final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(sequence.incrementAndGet(), statement));
-    wrapper.add(inputs);
+    wrapper.add(inputs, startedAt);
     logToHistory(statement.getTaskId(), Optional.empty());
   }
-  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result) {
+  public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startedAt) {
     final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(sequence.incrementAndGet(), statement));
-    wrapper.add(inputs, result);
+    wrapper.add(inputs, result, startedAt);
     logToHistory(statement.getTaskId(), Optional.empty());
   }
   
-  private FlowResultLog mapToFlowResultLog(ResultEnvlope envlope) {
-    
+  private List<FlowResultLog> mapToFlowResultLog(ResultEnvlope envlope) {
+    return envlope.getMatches().stream().map(match -> {
+      
+      final FlowResultLog log = ImmutableFlowResultLog.builder()
+        .id(envlope.getId())
+        .stepId(envlope.getStatement().getTaskId())
+        .start(match.getStartedAt())
+        .end(match.getEndedAt())
+        .status(FlowProgram.FlowExecutionStatus.COMPLETED)
+        .isReturnsCollection(envlope.getStatement().isCollection())
+        
+        .accepts(match.getInputs())
+        .returns(match.getOutputs())
+        
+        .returnsValue(match.getOutputRaw())
+        .cost(match.getCost())
+        .build();
+      
+      return log;
+    }).toList(); 
+        
+
   }
   
   private String getLogIndent(Optional<ResultEnvlope> previous) {

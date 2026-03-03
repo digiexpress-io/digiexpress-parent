@@ -2,6 +2,7 @@ package io.resys.limaone.spi.program.result;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,23 +23,23 @@ public class ResultEnvlope {
   private final BodyStatement statement;
   private final List<Match> matches = new ArrayList<>();
   
-  public void add(Match match) {
+  private void add(Match match, LocalDateTime startedAt) {
     this.matches.add(match);
   }
   
-  public void add(Map<String, Serializable> inputs) {
+  public void add(Map<String, Serializable> inputs, LocalDateTime startAt) {
     
   }  
-  public void add(Map<String, Serializable> inputs, ProgramResult result) {
+  public void add(Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startAt) {
     
   }  
   
   
-  public void add(Map<String, Serializable> inputs, FlowTaskResult result) {
+  private void add(Map<String, Serializable> inputs, FlowTaskResult result) {
     
   }
   
-  public void add(Map<String, Serializable> inputs, DecisionResult result) {
+  private void add(Map<String, Serializable> inputs, DecisionResult result) {
     
   }
   
@@ -50,7 +51,12 @@ public class ResultEnvlope {
     private final Map<String, Serializable> outputs;  
     private final Serializable outputRaw;
     private final ProgramResult src;
-    private final LocalDateTime createdAt;
+    private final LocalDateTime startedAt;
+    private final LocalDateTime endedAt;
+    
+    public long getCost() {
+      return ChronoUnit.MILLIS.between(startedAt, endedAt);
+    }
   }
 
   public static ResultEnvlope of(int sequence, BodyStatement statement) {
