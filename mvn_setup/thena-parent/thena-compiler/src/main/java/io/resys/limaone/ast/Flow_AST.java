@@ -101,6 +101,7 @@ public interface Flow_AST extends Simple_AST, Serializable {
     List<CaseStatement> getCases();
     MappingStatement getMapping();
     default StatementType getType() { return StatementType.BODY_SWITCH; }
+    default boolean isCollection() { return false; }
   }
   
 

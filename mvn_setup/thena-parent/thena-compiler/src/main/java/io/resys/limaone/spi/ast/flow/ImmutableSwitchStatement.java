@@ -19,4 +19,9 @@ public class ImmutableSwitchStatement implements SwitchStatement {
     this.cases = Collections.unmodifiableList(cases);
     this.mapping = mapping;
   }
+
+  @Override
+  public String getTaskId() {
+    return mapping.getTaskId();
+  }
 }
