@@ -1,102 +1,297 @@
 package io.resys.limaone.spi.program;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.program.FlowProgram.FlowResult;
+import io.resys.limaone.program.FlowProgram.FlowResultErrorLog;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
+import lombok.Builder;
+import lombok.NonNull;
+import lombok.Singular;
+import lombok.Value;
 
 public class FlowProgramExecutionPrettyPrint {
-  
-  public static String toAsciiTable(FlowResult result, Flow_AST ast) {
-    List<FlowResultLog> logs = result.getLogs();
-    int colCount = logs.size();
 
-    // 1. Identify all unique keys for vertical rows
-    Set<String> allAcceptKeys = logs.stream().flatMap(l -> l.getAccepts().keySet().stream()).collect(Collectors.toCollection(TreeSet::new));
-    Set<String> allReturnKeys = logs.stream().flatMap(l -> l.getReturns().keySet().stream()).collect(Collectors.toCollection(TreeSet::new));
+  @Value
+  @Builder
+  public static class TableConfig {
+    @Builder.Default
+    int minColumnWidth = 15;
+    @Builder.Default  
+    int maxColumnWidth = 50;
+    @Builder.Default
+    int maxTableWidth = 120;
+    @Builder.Default
+    String padding = " ";
+    @Builder.Default
+    boolean unicodeEnabled = true;
+  }
 
-    // 2. Precalculate Max Widths for each column
-    // widths[0] = Label column, widths[1...N] = Log columns
-    int[] widths = new int[colCount + 1];
+  @Value
+  @Builder
+  public static class ColumnData {
+    @NonNull
+    String title;
+    @NonNull
+    @Singular
+    List<String> entries;
+    int calculatedWidth;
+  }
 
-    // Label Column (Column 0)
-    widths[0] = Stream.concat(allAcceptKeys.stream(), allReturnKeys.stream())
-            .mapToInt(s -> ("  " + s).length()).max().orElse(0);
-    widths[0] = Math.max(widths[0], Math.max("FIELD".length(), "STATUS".length()));
+  @Value
+  @Builder  
+  public static class StepBox {
+    @NonNull
+    String stepHeader;
+    @NonNull
+    ColumnData acceptsColumn;
+    @NonNull
+    ColumnData returnsColumn;
+    int totalWidth;
+  }
 
-    // Log Columns (Columns 1 to N)
-    for (int i = 0; i < colCount; i++) {
-        FlowResultLog log = logs.get(i);
-        int max = log.getStepId().length();
-        max = Math.max(max, log.getStatus().toString().length());
-        
-        // Check all values in Accepts and Returns for this specific log
-        int finalI = i;
-        int maxVal = Stream.concat(log.getAccepts().values().stream(), log.getReturns().values().stream())
-                .mapToInt(v -> v == null ? 1 : v.toString().length()).max().orElse(0);
-        
-        widths[i + 1] = Math.max(max, maxVal);
-    }
+  @Value
+  @Builder
+  public static class FlowOutput {
+    @NonNull
+    String flowName;
+    @NonNull
+    String history;
+    @NonNull
+    @Singular
+    List<String> errors;
+    @NonNull
+    @Singular  
+    List<StepBox> stepBoxes;
+  }
 
-    // 3. Build Formatting Strings based on widths
-    StringBuilder sb = new StringBuilder();
-    String rowFormat = "| %-" + widths[0] + "s |" + 
-        IntStream.range(1, widths.length).mapToObj(i -> " %-" + widths[i] + "s |").collect(Collectors.joining("")) + "%n";
+  public static String toVerticalAsciiTable(final FlowResult result, final Flow_AST ast) {
+    final TableConfig config = TableConfig.builder().build();
+    final FlowOutput output = buildFlowOutput(result, ast, config);
+    return renderFlowOutput(output, config);
+  }
+
+  private static FlowOutput buildFlowOutput(final FlowResult result, final Flow_AST ast, final TableConfig config) {
+    final List<String> errors = extractErrors(result);
+    final List<StepBox> stepBoxes = buildStepBoxes(result.getLogs(), config);
     
-    int totalLineLength = Arrays.stream(widths).sum() + (3 * widths.length) + 1;
-    String separator = "-".repeat(totalLineLength) + "\n";
+    return FlowOutput.builder()
+        .flowName(ast.getName())
+        .history(result.getShortHistory())
+        .errors(errors)
+        .stepBoxes(stepBoxes)
+        .build();
+  }
 
-    // Header
-    sb.append("NAME: ").append(ast.getName()).append("\n");
-    sb.append("HISTORY: ").append(result.getShortHistory()).append("\n").append(separator);
-
-    // Step ID Row
-    Object[] headers = new Object[colCount + 1];
-    headers[0] = "FIELD";
-    for (int i = 0; i < colCount; i++) headers[i + 1] = logs.get(i).getStepId();
-    sb.append(String.format(rowFormat, headers)).append(separator);
-
-    // Status Row
-    Object[] statuses = new Object[colCount + 1];
-    statuses[0] = "STATUS";
-    for (int i = 0; i < colCount; i++) statuses[i + 1] = logs.get(i).getStatus();
-    sb.append(String.format(rowFormat, statuses));
-
-    // Accepts Section
-    if (!allAcceptKeys.isEmpty()) {
-        sb.append(String.format("| %-" + (totalLineLength - 4) + "s |%n", "[ACCEPTS]"));
-        for (String key : allAcceptKeys) {
-            Object[] vals = new Object[colCount + 1];
-            vals[0] = "  " + key;
-            for (int i = 0; i < colCount; i++) vals[i + 1] = formatVal(logs.get(i).getAccepts().get(key));
-            sb.append(String.format(rowFormat, vals));
-        }
+  private static List<String> extractErrors(final FlowResult result) {
+    final List<String> errors = new ArrayList<>();
+    int errorIndex = 1;
+    
+    for (final FlowResultLog log : result.getLogs()) {
+      for (final FlowResultErrorLog errorLog : log.getErrors()) {
+        errors.add("ERROR " + errorIndex + ": " + errorLog.getMsg());
+        errorIndex++;
+      }
     }
+    
+    return errors;
+  }
 
-    // Returns Section
-    if (!allReturnKeys.isEmpty()) {
-        sb.append(String.format("| %-" + (totalLineLength - 4) + "s |%n", "[RETURNS]"));
-        for (String key : allReturnKeys) {
-            Object[] vals = new Object[colCount + 1];
-            vals[0] = "  " + key;
-            for (int i = 0; i < colCount; i++) vals[i + 1] = formatVal(logs.get(i).getReturns().get(key));
-            sb.append(String.format(rowFormat, vals));
-        }
+  private static List<StepBox> buildStepBoxes(final List<FlowResultLog> logs, final TableConfig config) {
+    final List<StepBox> stepBoxes = new ArrayList<>();
+    final Map<String, Integer> stepCounters = new HashMap<>();
+    
+    for (int i = 0; i < logs.size(); i++) {
+      final FlowResultLog log = logs.get(i);
+      final String stepId = log.getStepId();
+      
+      // Track loop iterations
+      final int loopIndex = stepCounters.getOrDefault(stepId, 0) + 1;
+      stepCounters.put(stepId, loopIndex);
+      
+      final String stepName = loopIndex > 1 ? stepId + "[" + loopIndex + "]" : stepId;
+      final String stepHeader = "STEP {" + (i + 1) + "} " + stepName + " : " + log.getStatus();
+      
+      final ColumnData acceptsColumn = buildColumnData("ACCEPTS", log.getAccepts(), config);
+      final ColumnData returnsColumn = buildColumnData("RETURNS", log.getReturns(), config);
+      
+      final int totalWidth = calculateTotalWidth(stepHeader, acceptsColumn, returnsColumn, config);
+      
+      stepBoxes.add(StepBox.builder()
+          .stepHeader(stepHeader)
+          .acceptsColumn(acceptsColumn)
+          .returnsColumn(returnsColumn)
+          .totalWidth(totalWidth)
+          .build());
     }
+    
+    return stepBoxes;
+  }
 
-    return sb.append(separator).toString();
-}
+  private static ColumnData buildColumnData(final String title, final Map<String, ?> data, final TableConfig config) {
+    final List<String> entries = data.entrySet().stream()
+        .map(entry -> entry.getKey() + ": " + formatValue(entry.getValue(), config))
+        .collect(Collectors.toList());
+    
+    final int maxEntryWidth = entries.stream()
+        .mapToInt(String::length)
+        .max()
+        .orElse(title.length());
+    
+    final int calculatedWidth = Math.max(maxEntryWidth, config.getMinColumnWidth());
+    
+    return ColumnData.builder()
+        .title(title)
+        .entries(entries)
+        .calculatedWidth(calculatedWidth)
+        .build();
+  }
 
-private static String formatVal(Object val) {
-    return val == null ? "-" : val.toString().replace("\n", " ");
-}
+  private static int calculateTotalWidth(final String stepHeader, final ColumnData acceptsColumn, 
+                                       final ColumnData returnsColumn, final TableConfig config) {
+    final int headerWidth = stepHeader.length();
+    final int columnsWidth = acceptsColumn.getCalculatedWidth() + returnsColumn.getCalculatedWidth() + 3; // +3 for separators
+    final int contentBasedWidth = Math.max(headerWidth, columnsWidth) + 4; // +4 for borders
+    
+    // Use the larger of content-based width or configured max width
+    return Math.max(contentBasedWidth, config.getMaxTableWidth());
+  }
 
+  private static String renderFlowOutput(final FlowOutput output, final TableConfig config) {
+    final StringBuilder sb = new StringBuilder();
+    
+    // Header section
+    sb.append("FLOW NAME: ").append(output.getFlowName()).append("\n");
+    sb.append("HISTORY: ").append(output.getHistory()).append("\n");
+    
+    // Errors section
+    if (!output.getErrors().isEmpty()) {
+      sb.append("\n");
+      for (final String error : output.getErrors()) {
+        sb.append(error).append("\n");
+      }
+    }
+    
+    sb.append("\n");
+    
+    // Step boxes
+    for (final StepBox stepBox : output.getStepBoxes()) {
+      sb.append(renderStepBox(stepBox, config)).append("\n");
+    }
+    
+    return sb.toString();
+  }
+
+  private static String renderStepBox(final StepBox stepBox, final TableConfig config) {
+    final StringBuilder sb = new StringBuilder();
+    final int totalWidth = stepBox.getTotalWidth();
+    
+    // Calculate balanced column widths
+    final int availableWidth = totalWidth - 3; // -3 for borders and separator
+    final int baseAcceptsWidth = stepBox.getAcceptsColumn().getCalculatedWidth();
+    final int baseReturnsWidth = stepBox.getReturnsColumn().getCalculatedWidth();
+    final int totalContentWidth = baseAcceptsWidth + baseReturnsWidth;
+    
+    final int leftColWidth;
+    final int rightColWidth;
+    
+    if (totalContentWidth < availableWidth) {
+      // Distribute extra space proportionally, but ensure accepts gets at least 50 chars if possible
+      final int extraSpace = availableWidth - totalContentWidth;
+      final int minAcceptsWidth = Math.min(50, availableWidth / 2);
+      
+      if (baseAcceptsWidth < minAcceptsWidth) {
+        final int acceptsBonus = Math.min(extraSpace, minAcceptsWidth - baseAcceptsWidth);
+        leftColWidth = baseAcceptsWidth + acceptsBonus;
+        rightColWidth = availableWidth - leftColWidth;
+      } else {
+        // Distribute proportionally
+        final double acceptsRatio = (double) baseAcceptsWidth / totalContentWidth;
+        leftColWidth = Math.max(baseAcceptsWidth, (int) (availableWidth * acceptsRatio));
+        rightColWidth = availableWidth - leftColWidth;
+      }
+    } else {
+      leftColWidth = baseAcceptsWidth;
+      rightColWidth = baseReturnsWidth;
+    }
+    
+    final String topBorder = config.isUnicodeEnabled() ? 
+        "┌" + "─".repeat(totalWidth - 2) + "┐" :
+        "+" + "-".repeat(totalWidth - 2) + "+";
+    
+    final String bottomBorder = config.isUnicodeEnabled() ? 
+        "└" + "─".repeat(leftColWidth) + "┴" + "─".repeat(rightColWidth) + "┘" :
+        "+" + "-".repeat(leftColWidth) + "+" + "-".repeat(rightColWidth) + "+";
+    
+    final String middleBorder = config.isUnicodeEnabled() ? 
+        "├" + "─".repeat(leftColWidth) + "┬" + "─".repeat(rightColWidth) + "┤" :
+        "+" + "-".repeat(leftColWidth) + "+" + "-".repeat(rightColWidth) + "+";
+    
+    final String separator = config.isUnicodeEnabled() ? "│" : "|";
+    
+    // Top border
+    sb.append(topBorder).append("\n");
+    
+    // Step header
+    sb.append(separator).append(" ").append(padRight(stepBox.getStepHeader(), totalWidth - 3)).append(separator).append("\n");
+    
+    // Column separator
+    sb.append(middleBorder).append("\n");
+    
+    // Column headers
+    sb.append(separator).append(" ").append(padRight(stepBox.getAcceptsColumn().getTitle(), leftColWidth - 1))
+      .append(separator).append(" ").append(padRight(stepBox.getReturnsColumn().getTitle(), rightColWidth - 1))
+      .append(separator).append("\n");
+    
+    // Another separator
+    sb.append(middleBorder).append("\n");
+    
+    // Data rows
+    final int maxRows = Math.max(stepBox.getAcceptsColumn().getEntries().size(), 
+                                stepBox.getReturnsColumn().getEntries().size());
+    
+    for (int i = 0; i < maxRows; i++) {
+      final String leftEntry = i < stepBox.getAcceptsColumn().getEntries().size() ? 
+          stepBox.getAcceptsColumn().getEntries().get(i) : "";
+      final String rightEntry = i < stepBox.getReturnsColumn().getEntries().size() ? 
+          stepBox.getReturnsColumn().getEntries().get(i) : "";
+      
+      sb.append(separator).append(" ").append(padRight(leftEntry, leftColWidth - 1))
+        .append(separator).append(" ").append(padRight(rightEntry, rightColWidth - 1))
+        .append(separator).append("\n");
+    }
+    
+    // Bottom border
+    sb.append(bottomBorder);
+    
+    return sb.toString();
+  }
+
+  private static String formatValue(final Object value, final TableConfig config) {
+    if (value == null) {
+      return "-";
+    }
+    
+    return value.toString().replace("\n", " ").replace("\r", " ");
+  }
+
+  private static String truncate(final String str, final int maxLength) {
+    if (str.length() <= maxLength) {
+      return str;
+    }
+    return str.substring(0, maxLength - 3) + "...";
+  }
+
+  private static String padRight(final String str, final int width) {
+    if (str.length() >= width) {
+      return str;
+    }
+    return str + " ".repeat(width - str.length());
+  }
 }
 

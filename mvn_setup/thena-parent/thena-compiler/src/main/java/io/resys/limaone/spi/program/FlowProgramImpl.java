@@ -119,7 +119,7 @@ public class FlowProgramImpl implements FlowProgram {
       }
       @Override
       public String andEncodePrettily() {
-        return FlowProgramExecutionPrettyPrint.toAsciiTable(stack, ast);
+        return FlowProgramExecutionPrettyPrint.toVerticalAsciiTable(stack, ast);
       }
     };
   }

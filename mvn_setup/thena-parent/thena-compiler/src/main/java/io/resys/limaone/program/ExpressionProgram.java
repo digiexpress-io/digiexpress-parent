@@ -18,7 +18,7 @@ public interface ExpressionProgram {
   interface ExpressionResult extends ProgramResult {
     ValueType getType();
     List<String> getConstants();
-    
+    String getSrc();
     @Nullable Object getValue();
   }
 }

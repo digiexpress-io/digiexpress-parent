@@ -140,6 +140,7 @@ public class Compiler_Expression {
     public ExpressionResult run(Object entity) {
       return ImmutableExpressionResult.builder()
           .constants(constants)
+          .src(src)
           .value(expression.apply(entity))
           .type(type)
           .build();

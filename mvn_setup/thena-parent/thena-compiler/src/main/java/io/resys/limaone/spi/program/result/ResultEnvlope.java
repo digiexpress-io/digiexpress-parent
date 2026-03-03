@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.program.DecisionProgram.DecisionResult;
+import io.resys.limaone.program.ExpressionProgram.ExpressionResult;
 import io.resys.limaone.program.FlowTaskProgram.FlowTaskResult;
 import io.resys.limaone.program.Program.ProgramResult;
 import io.resys.limaone.spi.program.DecisionProgramExecutor;
@@ -58,7 +59,12 @@ public class ResultEnvlope {
       outputs = raw.map(JsonObject::mapFrom)
           .map(json -> json.mapTo(Map.class))
           .orElse(Collections.<String, Serializable>emptyMap()); 
+    } else if(result instanceof ExpressionResult) {
+      
+      final var et = (ExpressionResult) result;
+      outputs = Map.of(et.getSrc(), (Serializable) et.getValue());      
     }
+    
     
     
     matches.add(

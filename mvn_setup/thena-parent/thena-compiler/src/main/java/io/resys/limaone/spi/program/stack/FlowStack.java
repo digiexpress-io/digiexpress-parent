@@ -61,7 +61,7 @@ public class FlowStack {
     return new FlowStackResult(
         allLogs, 
         lastLogs, 
-        shortHistory.toString(), 
+        shortHistory.toString().trim(), 
         lastStepId, 
         isReturnsCollection, 
         returnProps);
@@ -106,19 +106,21 @@ public class FlowStack {
       .addErrors(ImmutableFlowResultErrorLog.builder().id("trace").msg(traceBuilder.toString()).build())
       .status(FlowExecutionStatus.ERROR)
       .build();
-    errorFrames.add(errorFrame);
+    
     logToHistory(errorFrame.getStepId(), Optional.empty());
+    errorFrames.add(errorFrame);
   }
   
   public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, LocalDateTime startedAt) {
+    logToHistory(statement.getTaskId(), Optional.empty());
     final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(sequence.incrementAndGet(), statement));
     wrapper.add(inputs, startedAt);
-    logToHistory(statement.getTaskId(), Optional.empty());
+
   }
   public void newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startedAt) {
+    logToHistory(statement.getTaskId(), Optional.empty());
     final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> ResultEnvlope.of(sequence.incrementAndGet(), statement));
     wrapper.add(inputs, result, startedAt);
-    logToHistory(statement.getTaskId(), Optional.empty());
   }
   
   private List<FlowResultLog> mapToFlowResultLog(ResultEnvlope envlope) {
@@ -156,16 +158,21 @@ public class FlowStack {
     return result.toString();
   }
   private void logToHistory(String stepId, Optional<ResultEnvlope> env) {
-    lastStepId = stepId;
+
     if(shortHistory.length() > 0) {
       shortHistory.append(" -> ");
     }
-    
-    if(frames.containsKey(stepId)) {
-      shortHistory.append("(recursion) ");
+    if(stepId.equals(lastStepId)) {
+      shortHistory.append("(loop)");
       shortHistory.append(System.lineSeparator() + getLogIndent(env));
+    } else if(frames.containsKey(stepId)) {
+      shortHistory.append("(recursion)");
+      shortHistory.append(System.lineSeparator() + getLogIndent(env));
+    } else {
+      
     }
     shortHistory.append(stepId);
+    lastStepId = stepId;
   }
   
   
