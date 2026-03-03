@@ -6,7 +6,7 @@ import { FsDirentSharingPermissions } from './FsDirentSharingPermissions';
 import { FsDirentHistory } from './FsDirentHistory';
 import { FsDirentReferences } from '../fs-dirent-references';
 import { FsDirentCreate } from './FsDirentCreate';
-import { FsDirentComments } from './FsDirentComments';
+import { FsDirentComments } from '../fs-dirent-comments';
 
 export interface FsDirentMenuSubProps {
   node: FsNode | undefined;
