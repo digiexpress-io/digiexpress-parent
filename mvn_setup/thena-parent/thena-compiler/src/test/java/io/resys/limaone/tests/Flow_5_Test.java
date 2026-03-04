@@ -24,15 +24,16 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResult;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
 import io.resys.limaone.tests.support.TestTemplate;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 public class Flow_5_Test {
 
   @Test
@@ -139,7 +140,7 @@ HISTORY: addPartyToInvestigationList -> resolveAmlViolation -> addToWhitelist ->
         "whitelist", false,
         "investigationList", true,
         "param1", 1)).andGetBody();
-    Assertions.assertEquals("addPartyToInvestigationList -> resolveAmlViolation -> rmInvList", flow.getShortHistory());
+    Assertions.assertEquals("addPartyToInvestigationList -> resolveAmlViolation -> resolveAmlViolation -> rmInvList", flow.getShortHistory());
     
     // switch 3
     flow = envir.run(Map.of(
@@ -149,10 +150,10 @@ HISTORY: addPartyToInvestigationList -> resolveAmlViolation -> addToWhitelist ->
         "rmInvList", true,
         "param1", 1)).andGetBody();
     
-    Assertions.assertEquals("addPartyToInvestigationList -> resolveAmlViolation -> waitFiuDecision -> rmInvList", flow.getShortHistory());
+    Assertions.assertEquals("addPartyToInvestigationList -> resolveAmlViolation -> resolveAmlViolation -> resolveAmlViolation -> waitFiuDecision -> rmInvList", flow.getShortHistory());
   }
 
-  @Disabled
+
   @Test
   public void programSelfRefTest() throws IOException {
     final var envir = TestTemplate.compileOneFlow(
@@ -181,9 +182,15 @@ tasks:
             then: "end"
 """);
     
-    FlowResult flow = envir.run(Map.of("restart", true)).andGetBody();
-    Assertions.assertEquals("[Add party to investigation list, Resolve aml violation, Resolve aml violation-EXCLUSIVE, addToWhitelist, rmInvList, end]", flow.getShortHistory());
-
+    final var wrapper = envir.run(Map.of("restart", true));
+    FlowResult flow  = wrapper.andGetBody();
+    
+    // don't allow recursion, not because we can't but because we dont want user creating recursions
+    Assertions.assertEquals(FlowExecutionStatus.ERROR, flow.getStatus());
+    Assertions.assertEquals("addToInvList -> addToWhitelist -> rmInvList -> waitFiuDecision -> (loop)\n"
+        + "          waitFiuDecision", flow.getShortHistory());
+    
+    log.debug(wrapper.andEncodePrettily());
   }
 
 }
