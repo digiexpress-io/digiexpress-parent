@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,14 +15,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
-import io.resys.limaone.spi.ast.decisiontable.MutableDecisionYaml.NodeSource;
+import io.resys.limaone.spi.ast.decisiontable.MutableYaml.NodeSource;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 public class DecisionParserCST {
   private final static String LINE_SEPARATOR = System.lineSeparator();
  
 
-  private final MutableDecisionParseTree result = new MutableDecisionParseTree();
+  private final MutableYamlParseTree result = new MutableYamlParseTree();
   private final ObjectMapper yamlMapper;
   private final List<ModelError> messages = new ArrayList<>();
   
@@ -30,16 +31,16 @@ public class DecisionParserCST {
     this.yamlMapper = props.getYaml();
   }
   
-  public Tuple2<MutableDecisionParseTree, List<ModelError>> parseCST(String joined) {
+  public Tuple2<MutableYamlParseTree, List<ModelError>> parseCST(String joined) {
     final String[] src = joined.split("\\r?\\n");
     final var parseTree = visitDecisionTable(src);
     return Tuple2.of(parseTree, messages);
   }
 
-  public MutableDecisionParseTree visitDecisionTable(String[] sourcesAdded) {
+  public MutableYamlParseTree visitDecisionTable(String[] sourcesAdded) {
     final var iterator = Arrays.asList(sourcesAdded).iterator();
     final var value = new StringBuilder();
-    MutableDecisionYaml parent = result;
+    MutableYaml parent = result;
 
     int previousLineNumber = 0;
     int lineNumber = 0;
@@ -68,11 +69,11 @@ public class DecisionParserCST {
       }
 
       // Handle table content specially
-      if(parent != null && MutableDecisionParseTree.KEY_TABLE.equals(parent.getKeyword())) {
+      if(parent != null && MutableYamlParseTree.KEY_TABLE.equals(parent.getKeyword())) {
         // Accumulate table content until we find a non-indented line
         if(src.startsWith(" ") || src.startsWith("|")) {
           // This is table content, accumulate it
-          ((MutableDecisionParseTree.NodeTable) parent).addMarkdown(src);
+          ((MutableYamlParseTree.NodeTable) parent).addMarkdown(src);
           continue;
         } else {
           // End of table content, move back to parent
@@ -136,7 +137,7 @@ public class DecisionParserCST {
     return result;
   }
 
-  private java.util.Map.Entry<String, String> getKeywordAndValue(String lineContent, int lineNumber) {
+  private Map.Entry<String, String> getKeywordAndValue(String lineContent, int lineNumber) {
     String value;
     String keyword;
     try {
@@ -145,7 +146,7 @@ public class DecisionParserCST {
         return null;
       }
       node = node.isArray() ? ((ArrayNode) node).iterator().next() : node;
-      Iterator<String> iterator = node.fieldNames();
+      final Iterator<String> iterator = node.fieldNames();
       if(iterator.hasNext()) {
         keyword = iterator.next();
         JsonNode nodeValue = node.get(keyword);
@@ -177,9 +178,5 @@ public class DecisionParserCST {
       }
     }
     return 0;
-  }
-
-  protected String getString(JsonNode node, String name) {
-    return node.hasNonNull(name) ? node.get(name).asText() : null;
   }
 }

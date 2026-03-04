@@ -11,7 +11,7 @@ import io.resys.limaone.ast.DecisionTable_CST.YamlParseTree;
 import io.resys.limaone.spi.ast.AST_Exception;
 import jakarta.annotation.Nullable;
 
-public class MutableDecisionParseTree extends MutableDecisionYaml implements YamlParseTree {
+public class MutableYamlParseTree extends MutableYaml implements YamlParseTree {
   public static final long serialVersionUID = 8492235102091866790L;
   public static final String KEY_NAME = "name";
   public static final String KEY_DESC = "description";
@@ -23,7 +23,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
   private NodeTable table;
   private String value;
 
-  public MutableDecisionParseTree() {
+  public MutableYamlParseTree() {
     super(null, -2, null, null, null);
   }
 
@@ -51,12 +51,12 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
   public String getValue() {
     return value;
   }
-  public MutableDecisionParseTree setValue(String value) {
+  public MutableYamlParseTree setValue(String value) {
     this.value = value;
     return this;
   }
   @Override
-  public MutableDecisionParseTree setEnd(int value) {
+  public MutableYamlParseTree setEnd(int value) {
     super.setEnd(value);
     if(table != null) {
       table.parse();
@@ -64,7 +64,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     return this;
   }
   @Override
-  public MutableDecisionYaml addChild(NodeSource source, int indent, String keyword, String value) {
+  public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
     if(KEY_VALUE_SETS.equals(keyword)) {
       if(valueSets == null) {
         valueSets = new NodeValueSets(source, indent, keyword, value, this);
@@ -81,11 +81,11 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     return super.addChild(source, indent, keyword, value);
   }
 
-  private static class NodeValueSets extends MutableDecisionYaml {
+  private static class NodeValueSets extends MutableYaml {
     private static final long serialVersionUID = 8989618439864849749L;
     private final Map<String, YamlValueSet> valueSets = new HashMap<>();
     
-    public NodeValueSets(NodeSource source, int indent, String keyword, String value, MutableDecisionYaml parent) {
+    public NodeValueSets(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
     }
     
@@ -94,7 +94,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
     
     @Override
-    public MutableDecisionYaml addChild(NodeSource source, int indent, String keyword, String value) {
+    public MutableYaml addChild(NodeSource source, int indent, String keyword, String value) {
       MutableYamlValueSet result = new MutableYamlValueSet(source, indent, keyword, value, this);
       if(valueSets.containsKey(result.getKeyword())) {
         String message = String.format("Duplicate value set: %s!", result.getKeyword());
@@ -105,7 +105,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
   }
 
-  public static class NodeTable extends MutableDecisionYaml implements YamlTable {
+  public static class NodeTable extends MutableYaml implements YamlTable {
     private static final long serialVersionUID = 2001644047832806256L;
     private final List<YamlTableHeader> headers = new ArrayList<>();
     private final List<YamlTableRow> rows = new ArrayList<>();
@@ -114,7 +114,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     private String markdownContent;
     
     
-    public NodeTable(NodeSource source, int indent, String keyword, String value, MutableDecisionYaml parent) {
+    public NodeTable(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
       this.markdownContent = value;
     }
@@ -219,11 +219,11 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
   }
 
-  private static class MutableYamlValueSet extends MutableDecisionYaml implements YamlValueSet {
+  private static class MutableYamlValueSet extends MutableYaml implements YamlValueSet {
     private static final long serialVersionUID = 8910489078429824772L;
     private final Collection<String> values;
     
-    public MutableYamlValueSet(NodeSource source, int indent, String keyword, String value, MutableDecisionYaml parent) {
+    public MutableYamlValueSet(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
       super(source, indent, keyword, value, parent);
       this.values = parseValues(value);
     }
@@ -250,7 +250,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
   }
 
-  private static class MutableYamlTableHeader extends MutableDecisionYaml implements YamlTableHeader {
+  private static class MutableYamlTableHeader extends MutableYaml implements YamlTableHeader {
     private static final long serialVersionUID = 8910489078429824772L;
     private final String name;
     private final String type;
@@ -258,7 +258,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     private final int columnIndex;
 
     public MutableYamlTableHeader(NodeSource source, int indent, String keyword, String value, 
-                                 MutableDecisionYaml parent, int columnIndex, boolean isOutput, int typeIndex) {
+                                 MutableYaml parent, int columnIndex, boolean isOutput, int typeIndex) {
       super(source, indent, keyword, value, parent);
       this.name = keyword;
       this.type = value != null ? value : "STRING";
@@ -287,14 +287,14 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
   }
 
-  private static class MutableYamlTableRow extends MutableDecisionYaml implements YamlTableRow {
+  private static class MutableYamlTableRow extends MutableYaml implements YamlTableRow {
     private static final long serialVersionUID = 8910489078429824772L;
     private final List<YamlTableCell> cells = new ArrayList<>();
     private final Map<String, YamlTableCell> cellsByHeader = new HashMap<>();
     private final int rowIndex;
 
     public MutableYamlTableRow(NodeSource source, int indent, String keyword, String value, 
-                              MutableDecisionYaml parent, int rowIndex) {
+                              MutableYaml parent, int rowIndex) {
       super(source, indent, keyword, value, parent);
       this.rowIndex = rowIndex;
     }
@@ -320,7 +320,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     }
   }
 
-  private static class MutableYamlTableCell extends MutableDecisionYaml implements YamlTableCell {
+  private static class MutableYamlTableCell extends MutableYaml implements YamlTableCell {
     private static final long serialVersionUID = 8910489078429824772L;
     private final String headerName;
     private final String expression;
@@ -328,7 +328,7 @@ public class MutableDecisionParseTree extends MutableDecisionYaml implements Yam
     private final int rowIndex;
 
     public MutableYamlTableCell(NodeSource source, int indent, String keyword, String value, 
-                               MutableDecisionYaml parent, String headerName, int columnIndex, int rowIndex) {
+                               MutableYaml parent, String headerName, int columnIndex, int rowIndex) {
       super(source, indent, keyword, value, parent);
       this.headerName = headerName;
       this.expression = value;

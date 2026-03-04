@@ -29,7 +29,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.limaone.ast.Flow_CST.YamlParseTree;
+import io.resys.limaone.ast.Flow_CST.YamlFlow;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.ExpressionProgram;
 import jakarta.annotation.Nullable;
@@ -40,7 +40,7 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableFlow_AST.class)
 public interface Flow_AST extends Simple_AST, Serializable {
   
-  YamlParseTree getParseTree();
+  YamlFlow getParseTree();
   AnyStatement getStatement();
 
   //root marker

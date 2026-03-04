@@ -14,10 +14,10 @@ import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.DecisionParserCST;
-import io.resys.limaone.spi.ast.decisiontable.MutableDecisionParseTree;
+import io.resys.limaone.spi.ast.decisiontable.MutableYamlParseTree;
 import io.smallrye.mutiny.tuples.Tuple2;
 
-public class DecisionTableCSTTest {
+public class DecisionCST_2_Test {
   private final AST_ParserProps props = AST_ParserImpl.builder().props(); 
   @Test
   public void testBasicDecisionTableParsing() {
@@ -40,7 +40,7 @@ public class DecisionTableCSTTest {
 
 
     final DecisionParserCST parser = new DecisionParserCST(props);
-    final Tuple2<MutableDecisionParseTree, List<ModelError>> result = parser.parseCST(yaml);
+    final Tuple2<MutableYamlParseTree, List<ModelError>> result = parser.parseCST(yaml);
     
     final YamlParseTree parseTree = result.getItem1();
     final List<ModelError> errors = result.getItem2();
@@ -100,7 +100,7 @@ public class DecisionTableCSTTest {
         """;
 
     final DecisionParserCST parser = new DecisionParserCST(props);
-    final Tuple2<MutableDecisionParseTree, List<ModelError>> result = parser.parseCST(yaml);
+    final Tuple2<MutableYamlParseTree, List<ModelError>> result = parser.parseCST(yaml);
     
     final List<ModelError> errors = result.getItem2();
     
@@ -121,7 +121,7 @@ public class DecisionTableCSTTest {
         """;
 
     final DecisionParserCST parser = new DecisionParserCST(props);
-    final Tuple2<MutableDecisionParseTree, List<ModelError>> result = parser.parseCST(yaml);
+    final Tuple2<MutableYamlParseTree, List<ModelError>> result = parser.parseCST(yaml);
     
     final YamlParseTree parseTree = result.getItem1();
     final List<ModelError> errors = result.getItem2();

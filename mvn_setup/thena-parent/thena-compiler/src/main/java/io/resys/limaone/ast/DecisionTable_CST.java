@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import io.resys.limaone.ast.Yaml_CST.Yaml;
 import jakarta.annotation.Nullable;
 
 public interface DecisionTable_CST extends Serializable {
@@ -56,17 +57,5 @@ public interface DecisionTable_CST extends Serializable {
     int getColumnIndex();
     int getRowIndex();
     @Nullable String getValue();
-  }
-
-  interface Yaml extends DecisionTable_CST, Comparable<Yaml> {
-    Yaml getParent();
-    String getKeyword();
-    Map<String, Yaml> getChildren();
-    Yaml get(String name);
-    String getValue();
-    String getSyntax();
-    boolean hasNonNull(String name);
-    int getStart();
-    int getEnd();
   }
 }

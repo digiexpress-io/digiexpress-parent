@@ -19,13 +19,13 @@ import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.ast.Flow_AST.CaseStatement;
 import io.resys.limaone.ast.Flow_AST.NextStatement;
 import io.resys.limaone.ast.Flow_AST.OneTaskStatement;
-import io.resys.limaone.ast.Flow_CST.Yaml;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
-import io.resys.limaone.ast.Flow_CST.YamlParseTree;
+import io.resys.limaone.ast.Flow_CST.YamlFlow;
 import io.resys.limaone.ast.Flow_CST.YamlSwitch;
 import io.resys.limaone.ast.Flow_CST.YamlTask;
 import io.resys.limaone.ast.ImmutableFlow_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
+import io.resys.limaone.ast.Yaml_CST.Yaml;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.ModelError;
@@ -47,7 +47,7 @@ import io.resys.limaone.spi.ast.flow.ImmutableOneTaskStatement;
 import io.resys.limaone.spi.ast.flow.ImmutablePointerStatement;
 import io.resys.limaone.spi.ast.flow.ImmutableReturnsStatement;
 import io.resys.limaone.spi.ast.flow.ImmutableSwitchStatement;
-import io.resys.limaone.spi.ast.flow.MutableYamlParseTree;
+import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
 import io.resys.limaone.spi.ast.flow.YamlMapper;
 import io.resys.limaone.spi.compiler.Compiler_Expression;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
@@ -114,7 +114,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
 
   }
 
-  private ImmutableHeaders_AST headers(YamlParseTree data) {
+  private ImmutableHeaders_AST headers(YamlFlow data) {
     Map<String, YamlInput> inputs = data.getInputs();
 
     int index = 0;
@@ -155,7 +155,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     return ImmutableHeaders_AST.builder().acceptDefs(result).build();
   }
 
-  private YamlTask visitTasksById(YamlParseTree data) {
+  private YamlTask visitTasksById(YamlFlow data) {
     YamlTask firstTask = null;
     for(final var task : data.getTasks().values()) {
       tasksById.put(YamlMapper.getStringValue(task.getId()), task);
@@ -233,7 +233,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   private NextStatement visitStepPointer(YamlTask task) {
     if(task.getSwitch().isEmpty()) {
       final var thenId = YamlMapper.getStringValue(task.getThen());
-      if(thenId != null && !thenId.equalsIgnoreCase(MutableYamlParseTree.VALUE_END)) {
+      if(thenId != null && !thenId.equalsIgnoreCase(MutableYamlFlow.VALUE_END)) {
         return new ImmutablePointerStatement(visitTask(tasksById.get(thenId))); 
       }
       return ImmutableEndStatement.getInstance();
@@ -248,7 +248,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
         final var condition = switchTuple.getItem2();
         final var stepId = switchTuple.getItem1();
         
-        if(!stepId.equalsIgnoreCase(MutableYamlParseTree.VALUE_END)) {
+        if(!stepId.equalsIgnoreCase(MutableYamlFlow.VALUE_END)) {
           visitTask(tasksById.get(stepId));
         }
         condition.getWhen().getConstants().forEach(e -> inputMappings.put(e, e));
@@ -274,20 +274,20 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
 
       final String stepId;
       final NextStatement next;
-      if(MutableYamlParseTree.VALUE_END.equalsIgnoreCase(thenValue)) {
-        stepId = MutableYamlParseTree.VALUE_END;
+      if(MutableYamlFlow.VALUE_END.equalsIgnoreCase(thenValue)) {
+        stepId = MutableYamlFlow.VALUE_END;
         next = ImmutableEndStatement.getInstance();
       } else {
-        stepId = MutableYamlParseTree.VALUE_NEXT.equalsIgnoreCase(thenValue) ? 
+        stepId = MutableYamlFlow.VALUE_NEXT.equalsIgnoreCase(thenValue) ? 
             tasksById.values().stream()
               .sorted((a, b) -> Integer.compare(a.getStart(), b.getStart()))
               .filter(e -> e.getOrder() > decision.getOrder())
               .findFirst()
               .map(task -> YamlMapper.getStringValue(task.getId()))
-              .orElse(MutableYamlParseTree.VALUE_END)
+              .orElse(MutableYamlFlow.VALUE_END)
             : thenValue;
 
-        next = MutableYamlParseTree.VALUE_END.equalsIgnoreCase(stepId) ? 
+        next = MutableYamlFlow.VALUE_END.equalsIgnoreCase(stepId) ? 
             ImmutableEndStatement.getInstance() : 
             new ImmutablePointerStatement(visitTask(Objects.requireNonNull(tasksById.get(stepId), 
                 () -> "Can't find task by id: " + stepId)));
@@ -302,7 +302,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
           .exception(e)
           .build());
       
-      return Tuple2.of(MutableYamlParseTree.VALUE_END, new ImmutableCaseStatement(Compiler_Expression.build("true", ValueType.FLOW_CONTEXT), ImmutableEndStatement.getInstance())); 
+      return Tuple2.of(MutableYamlFlow.VALUE_END, new ImmutableCaseStatement(Compiler_Expression.build("true", ValueType.FLOW_CONTEXT), ImmutableEndStatement.getInstance())); 
     } 
   }
 }

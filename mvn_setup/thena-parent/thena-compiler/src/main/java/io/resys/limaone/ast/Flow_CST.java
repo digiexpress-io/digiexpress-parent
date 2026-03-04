@@ -1,26 +1,16 @@
 package io.resys.limaone.ast;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Map;
 
-import org.immutables.value.Value;
-
-import jakarta.annotation.Nullable;
+import io.resys.limaone.ast.Yaml_CST.Yaml;
 
 public interface Flow_CST extends Serializable {
 
-  @Value.Immutable
-  interface YamlInputType extends Flow_CST {
-    String getName();
-    String getValue();
-    @Nullable String getRef();
-  }
 
-  interface YamlParseTree extends Yaml {
+  interface YamlFlow extends Yaml {
     Yaml getId();
     Yaml getDescription();
-    Collection<YamlInputType> getTypes();
     Map<String, YamlInput> getInputs();
     Map<String, YamlTask> getTasks();
   }
@@ -29,16 +19,15 @@ public interface Flow_CST extends Serializable {
     Yaml getId();
     int getOrder(); // 0 = first task
     Yaml getThen();
-    YamlBody getRef();
-    YamlBody getUserTask();
-    YamlBody getDecisionTable();
-    YamlBody getService();
-    YamlBody getReturns();
-    
+    YamlTaskBody getRef();
+    YamlTaskBody getUserTask();
+    YamlTaskBody getDecisionTable();
+    YamlTaskBody getService();
+    YamlTaskBody getReturns();
     Map<String, YamlSwitch> getSwitch();
   }
   
-  interface YamlBody extends Yaml {
+  interface YamlTaskBody extends Yaml {
     Yaml getRef();
     Yaml getCollection();
     Yaml getInputsNode();
@@ -53,20 +42,18 @@ public interface Flow_CST extends Serializable {
   }
 
   interface YamlInput extends Yaml {
+    /*
+     * valid input types: 
+     *   - ValueType.STRING, 
+     *   - ValueType.BOOLEAN, 
+     *   - ValueType.INTEGER, 
+     *   - ValueType.LONG, 
+     *   - ValueType.DECIMAL, 
+     *   - ValueType.DATE, 
+     *   - ValueType.DATE_TIME
+     */
     Yaml getRequired();
     Yaml getType();
     Yaml getDebugValue();
-  }
-
-  interface Yaml extends Flow_CST, Comparable<Yaml> {
-    Yaml getParent();
-    String getKeyword();
-    Map<String, Yaml> getChildren();
-    Yaml get(String name);
-    String getValue();
-    String getSyntax();
-    boolean hasNonNull(String name);
-    int getStart();
-    int getEnd();
   }
 }

@@ -1,6 +1,6 @@
 package io.resys.limaone.spi.ast.flow;
 
-import io.resys.limaone.ast.Flow_CST.Yaml;
+import io.resys.limaone.ast.Yaml_CST.Yaml;
 
 
 public class YamlMapper {

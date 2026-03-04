@@ -8,14 +8,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import io.resys.limaone.ast.Flow_CST.Yaml;
+import io.resys.limaone.ast.Yaml_CST.Yaml;
 import lombok.Value;
 
 
 
 @JsonIgnoreProperties({"parent"})
 public class MutableYaml implements Yaml {
-  private static final long serialVersionUID = 5409590378906097144L;
+  private static final long serialVersionUID = -2089273947467651756L;
   private final String keyword;
   private final String value;
   private final int indent;
@@ -107,8 +107,6 @@ public class MutableYaml implements Yaml {
   public String getSyntax() {
     return source.getLine();
   }
-  
-  
 
   @Value
   public static class NodeSource {

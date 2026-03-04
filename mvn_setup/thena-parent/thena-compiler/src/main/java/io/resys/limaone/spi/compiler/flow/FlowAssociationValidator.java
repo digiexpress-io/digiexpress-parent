@@ -42,7 +42,7 @@ import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
 import io.resys.limaone.spi.ast.flow.YamlMapper;
-import io.resys.limaone.spi.ast.flow.MutableYamlParseTree;
+import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
 
 public class FlowAssociationValidator {
 
@@ -78,7 +78,7 @@ public class FlowAssociationValidator {
       final var taskInputs = getTaskServiceInput(entry);
       final var taskModel = entry.getTaskNode();
 
-      if (taskInputs.size() == 1 && taskInputs.values().stream().findFirst().get().getNode().getKeyword().equals(MutableYamlParseTree.KEY_INPUTS)) {
+      if (taskInputs.size() == 1 && taskInputs.values().stream().findFirst().get().getNode().getKeyword().equals(MutableYamlFlow.KEY_INPUTS)) {
         TaskInput taskInput = taskInputs.values().stream().findFirst().get();
 
         ValueType ref = taskInput.getDataType().getValueType();
