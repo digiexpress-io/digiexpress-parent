@@ -1,13 +1,10 @@
 package io.resys.limaone.tests;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.tests.support.TestTemplate;
@@ -18,7 +15,7 @@ public class Flow_3_Test {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void runAll() throws IOException {
+  public void runAll() {
         final var envir = TestTemplate.compileOneFlow(
 """
 id: flow with 2 DT
@@ -133,7 +130,7 @@ format_result
     Assertions.assertEquals("{queue2=sms, queue3=sms, event=TASK_UPDATED, queue=sms}", values.get(1).toString());
   }
   
-  public String events_dt() throws JsonProcessingException {
+  public String events_dt() {
     return """
 name: events_dt
 hitPolicy: ALL
@@ -146,7 +143,7 @@ table: |
   }
   
   
-  public String queues_dt() throws JsonProcessingException {
+  public String queues_dt() {
     return """
 name: queues_dt
 hitPolicy: ALL

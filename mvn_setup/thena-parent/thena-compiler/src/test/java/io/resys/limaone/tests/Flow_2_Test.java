@@ -14,7 +14,7 @@ import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
 public class Flow_2_Test {
 
   @Test
-  public void astIndentNormal() throws IOException {
+  public void astIndentNormal() {
     
     
     final var parseTree = new CST_YamlParser<>(AST_ParserImpl.builder().props(), new MutableYamlFlow()).parseCST(
@@ -46,7 +46,7 @@ tasks:
 
 
   @Test
-  public void astDeleteId() throws IOException {
+  public void astDeleteId() {
     final var parseTree = new CST_YamlParser<>(AST_ParserImpl.builder().props(), new MutableYamlFlow()).parseCST(
 """
 description: uber description

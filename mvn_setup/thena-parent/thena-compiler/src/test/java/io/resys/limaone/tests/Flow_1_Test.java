@@ -1,6 +1,5 @@
 package io.resys.limaone.tests;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,7 @@ import io.resys.limaone.tests.support.TestTemplate;
 public class Flow_1_Test {
 
   @Test
-  public void firstMatch() throws IOException {
+  public void firstMatch() {
     
     final var envir = TestTemplate.compileOneFlow("""
 id: optional-dt-combination
@@ -123,8 +122,7 @@ splitFlow -> last-match -> format_text
 │ ACCEPTS                                          │ RETURNS                                                           │
 ├──────────────────────────────────────────────────┬───────────────────────────────────────────────────────────────────┤
 └──────────────────────────────────────────────────┴───────────────────────────────────────────────────────────────────┘
-"""
-          , result);
+""", result);
       
     }
   }
