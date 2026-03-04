@@ -86,7 +86,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
 
     const isChanged = React.useMemo(() => {
       return (
-        value !== link.body.value ||
+        value.trim() !== link.body.value ||
         contentType !== link.body.contentType ||
         (devMode ?? false) !== (link.body.devMode ?? false) ||
         !areSetsEqual(articleId, link.body.articles) ||
