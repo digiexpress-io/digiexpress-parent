@@ -25,7 +25,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const message = <FormattedMessage id="snack.article.createdMessage" values={{ name }} />
 
   const handleCreate = () => {
-    const entity: StencilApi.CreateArticle = { name, parentId: parentId && parentId !== DUMMY_ID ? parentId : undefined, order, devMode };
+    const entity: StencilApi.CreateArticle = { name: name.trim(), parentId: parentId && parentId !== DUMMY_ID ? parentId : undefined, order, devMode };
 
     service.create().article(entity).then(success => {
       console.log(success)
@@ -34,7 +34,8 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       actions.handleLoadSite();
     });
   }
- 
+
+
   return (
     <Dialog open={true} onClose={onClose}>
     <DialogTitle><FormattedMessage id='article.composer.title'/></DialogTitle>
@@ -69,7 +70,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           value={name}
           onChange={setName}
         />
-        {!name && (
+        {!name.trim() && (
           <FormHelperText error>
             {intl.formatMessage({ id: 'error.valueRequired' })}
           </FormHelperText>
@@ -85,7 +86,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     </DialogContent>
     <DialogActions>
       <CancelButton onClick={onClose} />
-      <Button onClick={handleCreate} disabled={!name}>
+        <Button onClick={handleCreate} disabled={!name.trim()}>
         <FormattedMessage id='article.create'/>
       </Button>
     </DialogActions>

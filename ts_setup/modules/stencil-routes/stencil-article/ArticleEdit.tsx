@@ -28,7 +28,8 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
   const message = <FormattedMessage id="snack.article.editedMessage" />
 
   const handleUpdate = () => {
-    const entity: StencilApi.ArticleMutator = { articleId: article.id, name, parentId, order, links: undefined, workflows: undefined, devMode };
+    const entity: StencilApi.ArticleMutator = { articleId: article.id, name: name.trim(), parentId, order, links: undefined, workflows: undefined, devMode };
+
     service.update().article(entity).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });
       onClose();
@@ -80,7 +81,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
       </Box>
 
       <Burger.TextField label="article.name" required value={name} onChange={setName} />
-        {!name && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+        {!name.trim() && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
       <Box maxWidth="50%" sx={{ ml: 1 }}>
         <Burger.Switch
@@ -93,7 +94,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
     </DialogContent>
     <DialogActions>
       <CancelButton onClick={onClose} />
-        <Button onClick={handleUpdate} disabled={!name || !order}>
+        <Button onClick={handleUpdate} disabled={!name.trim() || !order}>
         <FormattedMessage id='button.update' />
       </Button>
     </DialogActions>
