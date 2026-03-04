@@ -2,6 +2,7 @@ package io.resys.limaone.spi.program;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import io.resys.limaone.ast.Flow_AST.OneTaskStatement;
 import io.resys.limaone.ast.Flow_AST.PointerStatement;
 import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.ast.Flow_AST.StartStatement;
+import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResult;
@@ -118,7 +120,9 @@ public class FlowProgramExecutor {
 
   public ExecutorResult visitOneTaskStatement(OneTaskStatement statement, ExecutorProps ExecutorProps) {
     // Visit task body
-    visit(statement.getBody(), NO_PROPS);
+    if(statement.getThen().getType() != StatementType.BODY_SWITCH) {
+      visit(statement.getBody(), NO_PROPS);  
+    }
     
     // Visit next statement
     return visit(statement.getThen(), NO_PROPS);
@@ -126,6 +130,8 @@ public class FlowProgramExecutor {
   
 
   public ExecutorResult visitEmptyBodyStatement(EmptyBodyStatement statement, ExecutorProps ExecutorProps) {
+    final LocalDateTime start = LocalDateTime.now();
+    stack.newFrame(statement, Collections.emptyMap(), start);
     return REACHED_END;
   }
   

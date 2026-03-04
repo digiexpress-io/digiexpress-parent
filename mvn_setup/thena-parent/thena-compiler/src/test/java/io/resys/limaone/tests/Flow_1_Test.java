@@ -91,8 +91,7 @@ tasks:
       Assertions.assertEquals(
 """
 FLOW NAME: optional-dt-combination
-HISTORY: splitFlow -> (loop)
-splitFlow -> last-match -> format_text
+HISTORY: splitFlow -> splitFlow -> last-match -> format_text
 
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │ STEP {1} splitFlow : COMPLETED                                                                                       │

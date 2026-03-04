@@ -67,8 +67,8 @@ tasks:
 """
 FLOW NAME: flow with 2 DT
 HISTORY: task_events -> task_event_queues -> (loop)
-task_event_queues -> format_result -> (loop)
-format_result
+      task_event_queues -> format_result -> (loop)
+        format_result
 
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │ STEP {1} task_events : COMPLETED                                                                                     │

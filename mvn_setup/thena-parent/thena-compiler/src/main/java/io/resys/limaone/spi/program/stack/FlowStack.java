@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.resys.limaone.ast.Flow_AST.BodyStatement;
+import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowProgram.FlowExecutionStatus;
 import io.resys.limaone.program.FlowProgram.FlowResultLog;
@@ -23,6 +24,7 @@ import io.resys.limaone.program.Program.ProgramResult;
 import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
 import io.resys.limaone.spi.program.assignment.Assignment;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
@@ -111,16 +113,17 @@ public class FlowStack {
   }
   
   public StackFrame newFrame(BodyStatement statement, Map<String, Serializable> inputs, LocalDateTime startedAt) {
-    logToHistory(statement.getTaskId(), Optional.empty());
-    final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> StackFrame.of(sequence.incrementAndGet(), statement));
-    wrapper.add(inputs, startedAt);
-    return wrapper;
+    return newFrame(statement, inputs, null, startedAt);
 
   }
-  public StackFrame newFrame(BodyStatement statement, Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startedAt) {
-    logToHistory(statement.getTaskId(), Optional.empty());
+  public StackFrame newFrame(BodyStatement statement, Map<String, Serializable> inputs, @Nullable ProgramResult result, LocalDateTime startedAt) {
+    logToHistory(statement.getTaskId(), Optional.of(statement));
     final var wrapper = frames.computeIfAbsent(statement.getTaskId(), (taskId) -> StackFrame.of(sequence.incrementAndGet(), statement));
-    wrapper.add(inputs, result, startedAt);
+    if(result == null) {
+      wrapper.add(inputs, startedAt);  
+    } else {
+      wrapper.add(inputs, result, startedAt);
+    }
     return wrapper;
   }
   
@@ -148,7 +151,8 @@ public class FlowStack {
 
   }
   
-  private String getLogIndent(Optional<StackFrame> previous) {
+  private String getLogIndent() {
+    final var previous = Optional.ofNullable(frames.get(lastStepId));
     if(previous.isEmpty()) {
       return "";
     }
@@ -158,19 +162,20 @@ public class FlowStack {
     }
     return result.toString();
   }
-  private void logToHistory(String stepId, Optional<StackFrame> env) {
-
+  private void logToHistory(String stepId, Optional<BodyStatement> env) {
+    final var statement = env.map(e -> e.getType()).orElse(null);
+    
     if(shortHistory.length() > 0) {
       shortHistory.append(" -> ");
     }
-    if(stepId.equals(lastStepId)) {
+    if(statement == StatementType.BODY_SWITCH) {
+      
+    } else if(stepId.equals(lastStepId)) {
       shortHistory.append("(loop)");
-      shortHistory.append(System.lineSeparator() + getLogIndent(env));
+      shortHistory.append(System.lineSeparator() + getLogIndent());
     } else if(frames.containsKey(stepId)) {
       shortHistory.append("(recursion)");
-      shortHistory.append(System.lineSeparator() + getLogIndent(env));
-    } else {
-      
+      shortHistory.append(System.lineSeparator() + getLogIndent());
     }
     shortHistory.append(stepId);
     lastStepId = stepId;
