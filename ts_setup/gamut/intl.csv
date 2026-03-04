@@ -92,7 +92,7 @@ gamut.forms.files,,Files,Liitteet,Filer,Fail,Datoteke
 gamut.forms.messages,,Messages,Viestit,Meddelanden,Mesej,Poruke
 gamut.forms.page.subtitle,,Next:{nextPageTitle},Seuraava:{nextPageTitle},Nästa:{nextPageTitle},Seterusnya:{nextPageTitle},Sljedeće:{nextPageTitle}
 gamut.forms.page.subtitle.complete,,Next: Complete,Seuraava: Valmis,Nästa: Komplett,Seterusnya: Lengkap,Sljedeće: Završi
-gamut.forms.page.stepper,,{start} of {end},{start} sivu {end},{start} av {slut},{start} of {end},{start] od {end}
+gamut.forms.page.stepper,,{start} of {end},{start} sivu {end},{start} av {end},{start} of {end},{start} od {end}
 gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Vaihe {stepNumber} vaiheista {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps},Korak {stepNumber} od {totalSteps}
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya,Sledeći
 gamut.forms.page.previous,,Previous,Edellinen,Föregående,

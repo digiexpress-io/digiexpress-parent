@@ -79,7 +79,7 @@ export const sv = {
   'gamut.forms.messages': 'Meddelanden',
   'gamut.forms.page.subtitle': 'Nästa:{nextPageTitle}',
   'gamut.forms.page.subtitle.complete': 'Nästa: Komplett',
-  'gamut.forms.page.stepper': '{start} av {slut}',
+  'gamut.forms.page.stepper': '{start} av {end}',
   'gamut.forms.page.selection.key': 'Steg {stepNumber} av {totalSteps}',
   'gamut.forms.page.next': 'Nästa',
   'gamut.forms.page.previous': 'Föregående',
