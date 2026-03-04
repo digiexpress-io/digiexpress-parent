@@ -15,9 +15,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
-import io.resys.limaone.spi.ast.flow.MutableYaml;
-import io.resys.limaone.spi.ast.flow.MutableYaml.NodeSource;
 import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
+import io.resys.limaone.yaml.MutableYaml;
+import io.resys.limaone.yaml.MutableYaml.NodeSource;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 

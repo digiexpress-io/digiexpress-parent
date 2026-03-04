@@ -41,8 +41,8 @@ import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram.FlowProgramStep;
-import io.resys.limaone.spi.ast.flow.YamlMapper;
 import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
+import io.resys.limaone.yaml.YamlMapper;
 
 public class FlowAssociationValidator {
 

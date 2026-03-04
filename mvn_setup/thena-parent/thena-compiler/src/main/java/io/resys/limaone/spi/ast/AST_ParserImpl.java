@@ -5,11 +5,11 @@ import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.spi.compiler.groovy.GroovyCompilationCustomizer;
+import io.resys.limaone.yaml.YamlMapper;
 import lombok.RequiredArgsConstructor;
 
 
@@ -65,12 +65,11 @@ public class AST_ParserImpl implements AST_Parser {
       groovyConfig.addCompilationCustomizers(new ASTTransformationCustomizer(groovy.transform.CompileStatic.class));
       final var groovy = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), groovyConfig);
       
-      final ObjectMapper yaml = new ObjectMapper(new YAMLFactory());
-      return ImmutableAST_ParserProps.builder().groovy(groovy).isDev(dev).yaml(yaml).build();
+
+      return ImmutableAST_ParserProps.builder().groovy(groovy).isDev(dev).yaml(new YamlMapper().unwrap()).build();
     }
     
     public AST_ParserImpl build() {
-      
       return new AST_ParserImpl(props());
     }
   }

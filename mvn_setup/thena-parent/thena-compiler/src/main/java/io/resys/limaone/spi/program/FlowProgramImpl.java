@@ -16,9 +16,9 @@ import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.ProgramInput;
 import io.resys.limaone.program.Runtime;
-import io.resys.limaone.spi.ast.flow.YamlMapper;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.limaone.spi.program.input.DefaultProgramInput;
+import io.resys.limaone.yaml.YamlMapper;
 
 public class FlowProgramImpl implements FlowProgram {
 

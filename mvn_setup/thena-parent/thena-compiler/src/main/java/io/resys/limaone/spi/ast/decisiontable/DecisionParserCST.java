@@ -15,14 +15,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
-import io.resys.limaone.spi.ast.decisiontable.MutableYaml.NodeSource;
+import io.resys.limaone.yaml.MutableYaml;
+import io.resys.limaone.yaml.MutableYaml.NodeSource;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 public class DecisionParserCST {
   private final static String LINE_SEPARATOR = System.lineSeparator();
  
 
-  private final MutableYamlParseTree result = new MutableYamlParseTree();
+  private final MutableYamlDecision result = new MutableYamlDecision();
   private final ObjectMapper yamlMapper;
   private final List<ModelError> messages = new ArrayList<>();
   
@@ -31,13 +32,13 @@ public class DecisionParserCST {
     this.yamlMapper = props.getYaml();
   }
   
-  public Tuple2<MutableYamlParseTree, List<ModelError>> parseCST(String joined) {
+  public Tuple2<MutableYamlDecision, List<ModelError>> parseCST(String joined) {
     final String[] src = joined.split("\\r?\\n");
     final var parseTree = visitDecisionTable(src);
     return Tuple2.of(parseTree, messages);
   }
 
-  public MutableYamlParseTree visitDecisionTable(String[] sourcesAdded) {
+  public MutableYamlDecision visitDecisionTable(String[] sourcesAdded) {
     final var iterator = Arrays.asList(sourcesAdded).iterator();
     final var value = new StringBuilder();
     MutableYaml parent = result;
@@ -69,11 +70,11 @@ public class DecisionParserCST {
       }
 
       // Handle table content specially
-      if(parent != null && MutableYamlParseTree.KEY_TABLE.equals(parent.getKeyword())) {
+      if(parent != null && MutableYamlDecision.KEY_TABLE.equals(parent.getKeyword())) {
         // Accumulate table content until we find a non-indented line
         if(src.startsWith(" ") || src.startsWith("|")) {
           // This is table content, accumulate it
-          ((MutableYamlParseTree.NodeTable) parent).addMarkdown(src);
+          ((MutableYamlDecision.NodeTable) parent).addMarkdown(src);
           continue;
         } else {
           // End of table content, move back to parent

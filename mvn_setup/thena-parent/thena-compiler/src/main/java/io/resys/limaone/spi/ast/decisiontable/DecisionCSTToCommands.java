@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.resys.limaone.ast.DecisionTable_CST.YamlParseTree;
+import io.resys.limaone.ast.DecisionTable_CST.YamlDecision;
 import io.resys.limaone.ast.DecisionTable_CST.YamlTable;
 import io.resys.limaone.ast.DecisionTable_CST.YamlTableHeader;
 import io.resys.limaone.ast.DecisionTable_CST.YamlTableRow;
@@ -20,7 +20,7 @@ public class DecisionCSTToCommands {
   
   private final AtomicInteger SEQUENCE = new AtomicInteger(-1);
 
-  public List<DecisionStatement> convert(YamlParseTree parseTree) {
+  public List<DecisionStatement> convert(YamlDecision parseTree) {
     final List<DecisionStatement> commands = new ArrayList<>();
     
     // Set basic properties

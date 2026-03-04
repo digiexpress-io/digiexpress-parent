@@ -7,11 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.resys.limaone.ast.DecisionTable_CST.YamlParseTree;
+import io.resys.limaone.ast.DecisionTable_CST.YamlDecision;
+import io.resys.limaone.ast.DecisionTable_CST.YamlTable;
+import io.resys.limaone.ast.DecisionTable_CST.YamlTableCell;
+import io.resys.limaone.ast.DecisionTable_CST.YamlTableHeader;
+import io.resys.limaone.ast.DecisionTable_CST.YamlTableRow;
+import io.resys.limaone.ast.DecisionTable_CST.YamlValueSet;
 import io.resys.limaone.spi.ast.AST_Exception;
+import io.resys.limaone.yaml.MutableYaml;
+import io.resys.limaone.yaml.MutableYaml.NodeSource;
 import jakarta.annotation.Nullable;
 
-public class MutableYamlParseTree extends MutableYaml implements YamlParseTree {
+public class MutableYamlDecision extends MutableYaml implements YamlDecision {
   public static final long serialVersionUID = 8492235102091866790L;
   public static final String KEY_NAME = "name";
   public static final String KEY_DESC = "description";
@@ -23,7 +30,7 @@ public class MutableYamlParseTree extends MutableYaml implements YamlParseTree {
   private NodeTable table;
   private String value;
 
-  public MutableYamlParseTree() {
+  public MutableYamlDecision() {
     super(null, -2, null, null, null);
   }
 
@@ -51,12 +58,12 @@ public class MutableYamlParseTree extends MutableYaml implements YamlParseTree {
   public String getValue() {
     return value;
   }
-  public MutableYamlParseTree setValue(String value) {
+  public MutableYamlDecision setValue(String value) {
     this.value = value;
     return this;
   }
   @Override
-  public MutableYamlParseTree setEnd(int value) {
+  public MutableYamlDecision setEnd(int value) {
     super.setEnd(value);
     if(table != null) {
       table.parse();

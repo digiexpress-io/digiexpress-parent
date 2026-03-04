@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.resys.limaone.ast.DecisionTable_CST.YamlParseTree;
+import io.resys.limaone.ast.DecisionTable_CST.YamlDecision;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.DecisionTable.StatementType;
 import io.resys.limaone.model.ModelError;
@@ -15,7 +15,7 @@ import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.DecisionCSTToCommands;
 import io.resys.limaone.spi.ast.decisiontable.DecisionParserCST;
-import io.resys.limaone.spi.ast.decisiontable.MutableYamlParseTree;
+import io.resys.limaone.spi.ast.decisiontable.MutableYamlDecision;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 
@@ -38,8 +38,8 @@ public class DecisionCST_1_Test {
         """;
 
     final DecisionParserCST parser = new DecisionParserCST(props);
-    final Tuple2<MutableYamlParseTree, List<ModelError>> result = parser.parseCST(yaml);
-    final YamlParseTree parseTree = result.getItem1();
+    final Tuple2<MutableYamlDecision, List<ModelError>> result = parser.parseCST(yaml);
+    final YamlDecision parseTree = result.getItem1();
     
     assertTrue(result.getItem2().isEmpty(), "Should have no parsing errors");
     
@@ -90,8 +90,8 @@ public class DecisionCST_1_Test {
         """;
 
     final DecisionParserCST parser = new DecisionParserCST(props);
-    final Tuple2<MutableYamlParseTree, List<ModelError>> result = parser.parseCST(yaml);
-    final YamlParseTree parseTree = result.getItem1();
+    final Tuple2<MutableYamlDecision, List<ModelError>> result = parser.parseCST(yaml);
+    final YamlDecision parseTree = result.getItem1();
     
     final List<DecisionStatement> commands = new DecisionCSTToCommands().convert(parseTree);
     

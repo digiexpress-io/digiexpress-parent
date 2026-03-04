@@ -17,7 +17,7 @@ public interface DecisionTable_CST extends Serializable {
     Collection<String> getValues();
   }
 
-  interface YamlParseTree extends Yaml {
+  interface YamlDecision extends Yaml {
     Yaml getName();
     Yaml getDescription();
     Yaml getHitPolicy();
