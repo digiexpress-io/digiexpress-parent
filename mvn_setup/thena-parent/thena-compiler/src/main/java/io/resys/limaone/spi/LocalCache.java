@@ -17,12 +17,12 @@ public class LocalCache {
   private static final ConcurrentHashMap<DecisionTable_AST_CacheKey, DecisionTable_AST> DT_CACHE = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap<Flow_AST_CacheKey, Flow_AST> FLOW_CACHE = new ConcurrentHashMap<>();
   private static final ConcurrentHashMap<FlowTask_AST_CacheKey, FlowTask_AST> FLOW_TASK_CACHE = new ConcurrentHashMap<>();
-  private static final ConcurrentHashMap<String, Bundle> BUNDLE_CACHE = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<Bundle_CacheKey, Bundle> BUNDLE_CACHE = new ConcurrentHashMap<>();
 
 
   public static Bundle computeIfAbsent( 
-      String key, 
-      Function<String, Bundle> mappingFunction) {
+      Bundle_CacheKey key, 
+      Function<Bundle_CacheKey, Bundle> mappingFunction) {
 
     return BUNDLE_CACHE.computeIfAbsent(key, mappingFunction);
   }
@@ -68,8 +68,8 @@ public class LocalCache {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof FlowTask_AST_CacheKey)) return false;
-      return key.equals(((FlowTask_AST_CacheKey) o).key);
+      if (!(o instanceof Flow_AST_CacheKey)) return false;
+      return key.equals(((Flow_AST_CacheKey) o).key);
     }
 
     @Override
@@ -95,8 +95,8 @@ public class LocalCache {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof FlowTask_AST_CacheKey)) return false;
-      return key.equals(((FlowTask_AST_CacheKey) o).key);
+      if (!(o instanceof DecisionTable_AST_CacheKey)) return false;
+      return key.equals(((DecisionTable_AST_CacheKey) o).key);
     }
 
     @Override
@@ -134,6 +134,34 @@ public class LocalCache {
     @Override
     public String toString() {
       return "FlowTask_AST_CacheKey{" + key + "}";
+    }
+  }
+  
+  
+  public static class Bundle_CacheKey {
+    private final String key;
+    private final int hashCode;
+
+    public Bundle_CacheKey(String input) {
+      this.key = input != null ? input : "";
+      this.hashCode = this.key.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Bundle_CacheKey)) return false;
+      return key.equals(((Bundle_CacheKey) o).key);
+    }
+
+    @Override
+    public int hashCode() {
+      return hashCode;
+    }
+
+    @Override
+    public String toString() {
+      return "Bundle_CacheKey{" + key + "}";
     }
   }
   

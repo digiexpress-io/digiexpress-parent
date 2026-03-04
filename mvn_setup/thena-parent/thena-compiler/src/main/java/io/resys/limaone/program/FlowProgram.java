@@ -19,9 +19,11 @@ import jakarta.annotation.Nullable;
 public interface FlowProgram extends Program {
   
   Flow_AST getAst();
-  
+
+  FlowProgram withRuntime(Runtime runtime);
   FlowExecutor run(ProgramInput input, Runtime runtime);
   FlowExecutor run(Map<String, Serializable> input);
+
   
   interface FlowExecutor {
     @Nullable

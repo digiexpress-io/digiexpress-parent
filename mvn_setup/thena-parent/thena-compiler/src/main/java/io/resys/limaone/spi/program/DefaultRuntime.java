@@ -1,12 +1,17 @@
 package io.resys.limaone.spi.program;
 
+import java.util.Optional;
+
 import io.resys.limaone.program.Compiler.Bundle;
 import io.resys.limaone.spi.LocalCache;
-import io.resys.limaone.spi.bundler.BundleBuilderImpl;
+import io.resys.limaone.spi.LocalCache.Bundle_CacheKey;
+import lombok.RequiredArgsConstructor;
 
+
+@RequiredArgsConstructor
 public class DefaultRuntime implements io.resys.limaone.program.Runtime {
   private static final long serialVersionUID = 119708670216052569L;
-  
+  private final Optional<Bundle_CacheKey> cacheKey;
   
 
   @Override
@@ -28,12 +33,21 @@ public class DefaultRuntime implements io.resys.limaone.program.Runtime {
 
   
   public static DefaultRuntime empty() {
-    return new DefaultRuntime();
+    return new DefaultRuntime(Optional.empty());
   }
 
+  public static DefaultRuntime withCache(String cacheKey) {
+    return new DefaultRuntime(Optional.of(new Bundle_CacheKey(cacheKey)));
+  }
+  
   @Override
   public Bundle getBundle() {
-    return LocalCache.computeIfAbsent(BundleBuilderImpl.LAST_BUNDLE, (key) -> {
+
+    if(cacheKey.isEmpty()) {
+      throw new RuntimeException("Can't load bundle");
+    }
+
+    return LocalCache.computeIfAbsent(cacheKey.get(), (key) -> {
       throw new RuntimeException("Can't load bundle");
     });
   }

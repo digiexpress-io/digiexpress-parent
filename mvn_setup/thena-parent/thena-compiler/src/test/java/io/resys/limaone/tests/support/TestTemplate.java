@@ -24,6 +24,7 @@ import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.spi.compiler.CompilerImpl;
+import io.resys.limaone.spi.program.DefaultRuntime;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.Value;
@@ -71,7 +72,6 @@ public class TestTemplate {
         .putDecisionTables(model.getId(), model)
         .build();
     return compiler.compile(world).id(fullPath)
-        .cacheKey(LocalDateTime.now().toString())
         .build().queryDecisions().name(fullPath).getOne();
   }
   
@@ -96,7 +96,6 @@ public class TestTemplate {
         .putDecisionTables(model.getId(), model)
         .build();
     return compiler.compile(world).id(fullPath)
-        .cacheKey(LocalDateTime.now().toString())
         .build().queryDecisions().name(fullPath).getOne();
   }
   
@@ -119,7 +118,6 @@ public class TestTemplate {
         .putFlowTasks(model.getId(), model)
         .build();
     return compiler.compile(world).id(fullPath)
-        .cacheKey(LocalDateTime.now().toString())
         .build().queryFlowTasks().name(fullPath).getOne();
 
   }
@@ -179,10 +177,11 @@ public class TestTemplate {
       }
     }
   
-    
+    final var cacheKey = LocalDateTime.now().toString();
     return compiler.compile(world.build()).id("test-bundle")
-        .cacheKey(LocalDateTime.now().toString())
-        .build().queryFlows().name(ast.getName()).getOne();
+        .cacheKey(cacheKey)
+        .build().queryFlows().name(ast.getName()).getOne()
+        .withRuntime(DefaultRuntime.withCache(cacheKey));
   }
   
   

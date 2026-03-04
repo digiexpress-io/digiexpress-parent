@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
@@ -24,7 +25,7 @@ public class FlowProgramImpl implements FlowProgram {
 
   private static final long serialVersionUID = -4209510801206880302L;
   private final Flow_AST ast;
-  
+  private final Optional<Runtime> runtime;
   private final ProgramStatus status; 
   private final List<Parameter> headers;
   private final List<ModelError> errors;
@@ -36,12 +37,25 @@ public class FlowProgramImpl implements FlowProgram {
       ProgramStatus status,
       List<ModelError> errors,
       List<ProgramAssociation> associations) {
-    super();
+    this(ast, status, errors, associations, Optional.empty());
+  }
+  
+  
+  
+  public FlowProgramImpl(
+      Flow_AST ast, 
+      ProgramStatus status,
+      List<ModelError> errors,
+      List<ProgramAssociation> associations,
+      Optional<Runtime> runtime) {
+    
     this.ast = ast;
     this.status = status;
     this.errors = Collections.unmodifiableList(errors);
     this.associations = Collections.unmodifiableList(associations);
     this.headers = Collections.unmodifiableList(getHeaders(ast));
+    this.runtime = runtime;
+    
   }
   
   private List<Parameter> getHeaders(Flow_AST ast) {
@@ -130,7 +144,12 @@ public class FlowProgramImpl implements FlowProgram {
   }
   @Override
   public FlowExecutor run(Map<String, Serializable> input) {
-    final var runtime = DefaultRuntime.empty();
+    final var runtime = this.runtime.orElseGet(() ->  DefaultRuntime.empty());
     return run(DefaultProgramInput.of(input, runtime), runtime);
+  }
+
+  @Override
+  public FlowProgram withRuntime(Runtime runtime) {
+    return new FlowProgramImpl(ast, status, errors, associations, Optional.ofNullable(runtime));
   }
 }

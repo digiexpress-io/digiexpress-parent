@@ -10,6 +10,7 @@ import io.resys.limaone.program.Compiler.Bundle;
 import io.resys.limaone.program.Compiler.BundleBuilder;
 import io.resys.limaone.program.Program;
 import io.resys.limaone.spi.LocalCache;
+import io.resys.limaone.spi.LocalCache.Bundle_CacheKey;
 
 public class BundleBuilderImpl implements BundleBuilder {
 
@@ -80,8 +81,9 @@ public class BundleBuilderImpl implements BundleBuilder {
         Optional.ofNullable(endDate).orElse(OffsetDateTime.MAX),
         programs
     );
+    
     if(cacheKey != null) {
-      LocalCache.computeIfAbsent(cacheKey, (key) -> bundle);
+      LocalCache.computeIfAbsent(new Bundle_CacheKey(cacheKey), (key) -> bundle);
     }
     return bundle;
   }
