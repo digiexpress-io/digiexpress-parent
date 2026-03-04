@@ -65,7 +65,6 @@ public class CompilerImpl implements Compiler {
   public static class CompilerBuilder {
     private ScheduledExecutorService workerPool;
     private AST_Parser astParser;
-    
     public CompilerBuilder workerPool(ScheduledExecutorService workerPool) {
       this.workerPool = workerPool;
       return this;

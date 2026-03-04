@@ -24,7 +24,6 @@ public class BundlerImpl implements Bundler {
   private final List<DependencyBuilder> deps = Collections.synchronizedList(new ArrayList<>());
   private final BundleBuilderImpl bundleBuilder = new BundleBuilderImpl();
   
-  
   @Override
   public NewArtifact newArtifact() {
     final Consumer<ArtifactBuilder> artifact_callback = (artifactBuilder) -> {

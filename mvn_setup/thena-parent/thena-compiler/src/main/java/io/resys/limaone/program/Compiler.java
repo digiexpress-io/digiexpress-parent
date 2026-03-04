@@ -21,6 +21,9 @@ public interface Compiler {
     BundleBuilder startDate(@Nullable OffsetDateTime startDate);
     BundleBuilder endDate(@Nullable OffsetDateTime endDate);
     
+    // force to internal cache, makes the bundle by default visible to dependencies
+    BundleBuilder cacheKey(@Nullable String cacheKey); 
+    
     // end result
     Bundle build();
   }

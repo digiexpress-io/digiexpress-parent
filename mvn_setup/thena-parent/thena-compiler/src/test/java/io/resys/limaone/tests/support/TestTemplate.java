@@ -70,7 +70,9 @@ public class TestTemplate {
     final var world = ImmutableModelWorld.builder().name("DecisionTest")
         .putDecisionTables(model.getId(), model)
         .build();
-    return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
+    return compiler.compile(world).id(fullPath)
+        .cacheKey(LocalDateTime.now().toString())
+        .build().queryDecisions().name(fullPath).getOne();
   }
   
   
@@ -93,7 +95,9 @@ public class TestTemplate {
     final var world = ImmutableModelWorld.builder().name("DecisionTest")
         .putDecisionTables(model.getId(), model)
         .build();
-    return compiler.compile(world).id(fullPath).build().queryDecisions().name(fullPath).getOne();
+    return compiler.compile(world).id(fullPath)
+        .cacheKey(LocalDateTime.now().toString())
+        .build().queryDecisions().name(fullPath).getOne();
   }
   
   
@@ -114,7 +118,9 @@ public class TestTemplate {
     final var world = ImmutableModelWorld.builder().name("FlowTaskTest")
         .putFlowTasks(model.getId(), model)
         .build();
-    return compiler.compile(world).id(fullPath).build().queryFlowTasks().name(fullPath).getOne();
+    return compiler.compile(world).id(fullPath)
+        .cacheKey(LocalDateTime.now().toString())
+        .build().queryFlowTasks().name(fullPath).getOne();
 
   }
 
@@ -174,7 +180,9 @@ public class TestTemplate {
     }
   
     
-    return compiler.compile(world.build()).id("test-bundle").build().queryFlows().name(ast.getName()).getOne();
+    return compiler.compile(world.build()).id("test-bundle")
+        .cacheKey(LocalDateTime.now().toString())
+        .build().queryFlows().name(ast.getName()).getOne();
   }
   
   

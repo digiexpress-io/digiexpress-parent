@@ -19,8 +19,10 @@ public class BundleBuilderImpl implements BundleBuilder {
   private OffsetDateTime startDate;
   private OffsetDateTime endDate;
   private OffsetDateTime created;
+  private String cacheKey;
   private final List<Program> programs = new ArrayList<>();
-  public static final String LAST_BUNDLE = "LAST_BUNDLE";
+  
+  
   
   public BundleBuilderImpl addProgram(Program program) {
     this.programs.add(Objects.requireNonNull(program, () -> "program must be defined!"));
@@ -63,6 +65,11 @@ public class BundleBuilderImpl implements BundleBuilder {
     return this;
   }
   @Override
+  public BundleBuilder cacheKey(String cacheKey) {
+    this.cacheKey = cacheKey;
+    return this;
+  }
+  @Override
   public Bundle build() {
     final var bundle = new ImmutableBundle(
         Objects.requireNonNull(id, () -> "id must be defined!"),
@@ -73,7 +80,11 @@ public class BundleBuilderImpl implements BundleBuilder {
         Optional.ofNullable(endDate).orElse(OffsetDateTime.MAX),
         programs
     );
-    LocalCache.computeIfAbsent(LAST_BUNDLE, (key) -> bundle);
+    if(cacheKey != null) {
+      LocalCache.computeIfAbsent(cacheKey, (key) -> bundle);
+    }
     return bundle;
   }
+
+
 }
