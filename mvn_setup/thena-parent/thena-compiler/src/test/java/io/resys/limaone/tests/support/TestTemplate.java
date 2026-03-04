@@ -1,15 +1,20 @@
 package io.resys.limaone.tests.support;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.hash.Hashing;
 
+import io.resys.limaone.ast.DecisionTable_CST.YamlDecision;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Flow;
@@ -19,17 +24,25 @@ import io.resys.limaone.model.ImmutableFlow;
 import io.resys.limaone.model.ImmutableFlowTask;
 import io.resys.limaone.model.ImmutableModel;
 import io.resys.limaone.model.ImmutableModelWorld;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.program.DecisionProgram;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
+import io.resys.limaone.spi.ast.AST_ParserImpl;
+import io.resys.limaone.spi.ast.CST_YamlParser;
+import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
+import io.resys.limaone.spi.ast.decisiontable.DecisionCSTToCommands;
+import io.resys.limaone.spi.ast.decisiontable.MutableYamlDecision;
 import io.resys.limaone.spi.compiler.CompilerImpl;
 import io.resys.limaone.spi.program.DefaultRuntime;
+import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.Value;
 
 public class TestTemplate {
+  public static final AST_ParserProps props = AST_ParserImpl.builder().props(); 
   private static final CompilerImpl compiler = CompilerImpl.builder().build();
 
   
@@ -142,29 +155,29 @@ public class TestTemplate {
     
     
     for(final var dep : deps) {
-      final var syntax = toString(dep.getFullPath());
+      
       if(dep.getType() == BodyType.FLOW_TASK) {
-        final var target_ast = compiler.getParser().parseFlowTask().id(dep.getFullPath()).syntax(syntax).parse();
+        final var target_ast = compiler.getParser().parseFlowTask().id(dep.getId()).syntax(dep.getContent()).parse();
         final var ft = ImmutableModel.<FlowTask>builder()
-            .id(dep.getFullPath())
+            .id(dep.getId())
             .bodyHash(target_ast.getHash())
             .bodyType(BodyType.FLOW_TASK)
             .body(ImmutableFlowTask.builder()
                 .taskName(target_ast.getName())
-                .taskValue(syntax)
+                .taskValue(dep.getContent())
                 .build())
             .build();
         
         world.putFlowTasks(ft.getId(), ft);
       } else {
-        final var nodes = new JsonArray(syntax).stream()
+        final var nodes = new JsonArray(dep.getContent()).stream()
             .map(e -> ((JsonObject) e))
             .map(e -> e.mapTo(DecisionStatement.class))
             .toList();
 
-        final var target_ast = compiler.getParser().parseDecisionTable().id(dep.getFullPath()).nodes(nodes).parse();
+        final var target_ast = compiler.getParser().parseDecisionTable().id(dep.getId()).nodes(nodes).parse();
         final var dt = ImmutableModel.<DecisionTable>builder()
-            .id(dep.getFullPath())
+            .id(dep.getId())
             .bodyHash(target_ast.getHash())
             .bodyType(BodyType.DECISION_TABLE)
             .body(ImmutableDecisionTable.builder()
@@ -185,7 +198,7 @@ public class TestTemplate {
   }
   
   
-  private static String toString(String fullPath) {
+  public static String toString(String fullPath) {
     try {
       return IOUtils.toString(TestTemplate.class.getClassLoader().getResource(fullPath), StandardCharsets.UTF_8);
     } catch(Exception e) {
@@ -196,14 +209,27 @@ public class TestTemplate {
   @Value
   public static class Deps {
     BodyType type;
-    String fullPath;
+    String id;
+    String content;
     
     public static Deps dt(String fullPath) {
-      return new Deps(BodyType.DECISION_TABLE, fullPath);
+      final var syntax = TestTemplate.toString(fullPath);
+      return new Deps(BodyType.DECISION_TABLE, fullPath, syntax);
+    }
+    public static Deps dtx(String yaml) {
+      final var parser = new CST_YamlParser<MutableYamlDecision>(props, new MutableYamlDecision());
+      final Tuple2<MutableYamlDecision, List<ModelError>> result = parser.parseCST(yaml);
+      final YamlDecision parseTree = result.getItem1();
+      assertTrue(result.getItem2().isEmpty(), "Should have no parsing errors");
+      
+      final List<DecisionStatement> commands = new DecisionCSTToCommands().convert(parseTree);
+      
+      return new Deps(BodyType.DECISION_TABLE, UUID.randomUUID().toString(), new JsonArray(commands).encode());
     }
     
     public static Deps ft(String fullPath) {
-      return new Deps(BodyType.FLOW_TASK, fullPath);
+      final var syntax = TestTemplate.toString(fullPath);
+      return new Deps(BodyType.FLOW_TASK, fullPath, syntax);
     }
   }
 }

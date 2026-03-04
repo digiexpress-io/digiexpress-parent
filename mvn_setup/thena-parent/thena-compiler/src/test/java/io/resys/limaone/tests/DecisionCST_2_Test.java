@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.ast.DecisionTable_CST.YamlDecision;
 import io.resys.limaone.model.ModelError;
-import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.CST_YamlParser;
 import io.resys.limaone.spi.ast.decisiontable.MutableYamlDecision;
+import io.resys.limaone.tests.support.TestTemplate;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 public class DecisionCST_2_Test {
-  private final AST_ParserProps props = AST_ParserImpl.builder().props(); 
+  private final AST_ParserProps props = TestTemplate.props; 
   @Test
   public void testBasicDecisionTableParsing() {
     final String yaml = """
