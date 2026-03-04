@@ -47,7 +47,6 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
   const [labels, setLabels] = React.useState(link.body.labels);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
   const [contentType, setContentType] = React.useState(link.body.contentType);
-
   const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>(link.body.articles);
   //const locales = labels.map(l => l.locale);
   //const articles: StencilApi.Article[] = locales ? session.getArticlesForLocales(locales) : Object.values(site.articles);
@@ -56,8 +55,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
 
 
   const handleUpdate = () => {
-    const entity: StencilApi.LinkMutator = { linkId: link.id, type: contentType, articles: articleId, labels, value, devMode };
-    console.log("entity", entity)
+    const entity: StencilApi.LinkMutator = { linkId: link.id, type: contentType, articles: articleId, labels, value: value.trim(), devMode };
     service.update().link(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -115,7 +113,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
           required
           value={value}
           onChange={setValue} />
-        {!value && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+        {!value.trim() && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
         <Divider sx={{ my: theme.spacing(2) }} />
 
@@ -148,7 +146,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
         <CancelButton onClick={onClose} />
         <Button
           onClick={handleUpdate}
-          disabled={!value || changeInProgress || labels.length < 1 || !isChanged}
+          disabled={!value.trim() || changeInProgress || labels.length < 1 || !isChanged}
         >
           <FormattedMessage id='button.update' />
         </Button>

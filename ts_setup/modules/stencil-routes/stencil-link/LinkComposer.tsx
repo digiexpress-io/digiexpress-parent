@@ -27,7 +27,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [devMode, setDevMode] = React.useState<boolean>(false);
 
   const handleCreate = () => {
-    const entity: StencilApi.CreateLink = { type, value, articles: articleId, labels, devMode };
+    const entity: StencilApi.CreateLink = { type, value: value.trim(), articles: articleId, labels, devMode };
     service.create().link(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -81,7 +81,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           required
           value={value}
           onChange={setValue} />
-        {!value && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
+        {!value.trim() && <FormHelperText error>{intl.formatMessage({ id: 'error.valueRequired' })}</FormHelperText>}
 
         <Divider sx={{ my: theme.spacing(2) }} />
 
@@ -115,7 +115,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={onClose} />
-        <Button onClick={handleCreate} disabled={!value || changeInProgress || labels.length < 1}>
+        <Button onClick={handleCreate} disabled={!value.trim() || changeInProgress || labels.length < 1}>
           <FormattedMessage id='button.create' />
         </Button>
       </DialogActions>
