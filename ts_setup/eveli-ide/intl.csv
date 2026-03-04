@@ -45,8 +45,8 @@ task.subject,Task detail,Subject,Aihe,Ämne,
 task.additionalInfo,Task detail,Additional info,Lisätiedot,Ytterligare information,
 task.ai.assistant.loading,TaskComposerV2,Loading AI assistant...,Ladataan AI-avustajaa...,Laddar AI-assistent...,
 task.metaData,Task detail,Metadata,Metatiedot,Metadata,
-task.status,TaskComposerV2,Status,,,
-task.priority,TaskComposerV2,Priority,,,
+task.status,TaskComposerV2,Status,Tila,Status,
+task.priority,TaskComposerV2,Priority,Prioriteetti,Prioritet,
 task.status.new,Task detail; TaskComposerV2,New,Uusi,Nya,
 task.status.open,Task detail; TaskComposerV2,Open,Käsittelyssä,Läsning,
 task.status.completed,Task detail; TaskComposerV2,Completed,Valmis,Redo,
@@ -464,7 +464,7 @@ snack.migration.createdMessage,,Site data updated,Sivuston tiedot päivitetty,We
 toolbar.save,,Save,Tallenna,Spara,
 toolbar.stencil,,theStencil,theStencil,theStencil,
 toolbar.contracts,,Contracts,Sopimukset,Kontrakt,
-toolbar.ledgers,,Ledgers,,,
+toolbar.ledgers,,Ledgers,Kirjanpito,Ledningsböcker,
 toolbar.wrench,,theWrench,theWrench,theWrench,
 toolbar.menu,,Menu,Valikko,Meny,
 toolbar.help,,Help,Tuki,Hjälp,
@@ -1068,6 +1068,10 @@ task.composer.additionalInfo,TaskComposerV2,Additional info,Lisätietoja,Ytterli
 task.composer.roles,TaskComposerV2,Roles,Roolit,Roller,
 task.composer.assignee,TaskComposerV2,Assignee,Määräysvaltalainen,Övertagare,
 task.composer.assignments.none,TaskComposerV2,No assignments,Ei asiakasvastuita,Inga kundtilldelningar,
+task.composer.assignments.status.NEW,,New,Uusi,Ny
+task.composer.assignments.status.OPEN,,Open,Avoin,Öppen
+task.composer.assignments.status.COMPLETED,,Completed,Valmis,Slutförd
+task.composer.assignments.status.CANCELLED,,Cancelled,Peruutettu,Annullerad
 task.composer.priority,TaskComposerV2,Priority,Prioriteetti,Prioritet,
 task.composer.status,TaskComposerV2,Status,Status,Status,
 task.composer.task.edit,TaskComposerV2,Edit task,Muokkaa tehtävää,Redigera uppgift,

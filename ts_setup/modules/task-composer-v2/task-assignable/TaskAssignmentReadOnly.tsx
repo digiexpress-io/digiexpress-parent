@@ -45,7 +45,7 @@ export const TaskAssignmentReadOnly: React.FC<{ task: TaskApi.Task, onClickRevie
               <Typography>{option.locale}</Typography>
             </Grid2>
             <Grid2 size={{ xs: 6, sm: 2, md: 2, lg: 2, xl: 2 }}>
-              <Typography>{option.status}</Typography>
+              <Typography>{intl.formatMessage({ id: `task.composer.assignments.status.${option.status}` })}</Typography>
             </Grid2>
             <Grid2 size={{ xs: 6, sm: 2, md: 2, lg: 2, xl: 2 }} display='flex' justifyContent='flex-end'>
               <Button disabled={option.status !== "COMPLETED"} onClick={() => onClickReview(option)}>{intl.formatMessage({ id: 'task.form.review' })}</Button>
