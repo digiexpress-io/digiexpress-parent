@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.spi.ast.AST_ParserImpl;
-import io.resys.limaone.spi.ast.FlowParserCST;
+import io.resys.limaone.spi.ast.CST_YamlParser;
+import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
 
 
 public class Flow_2_Test {
@@ -16,7 +17,7 @@ public class Flow_2_Test {
   public void astIndentNormal() throws IOException {
     
     
-    final var parseTree = new FlowParserCST(AST_ParserImpl.builder().props()).parseCST(
+    final var parseTree = new CST_YamlParser<>(AST_ParserImpl.builder().props(), new MutableYamlFlow()).parseCST(
 """
 id: uber flow
 description: uber description
@@ -46,7 +47,7 @@ tasks:
 
   @Test
   public void astDeleteId() throws IOException {
-    final var parseTree = new FlowParserCST(AST_ParserImpl.builder().props()).parseCST(
+    final var parseTree = new CST_YamlParser<>(AST_ParserImpl.builder().props(), new MutableYamlFlow()).parseCST(
 """
 description: uber description
 tasks:
@@ -65,7 +66,7 @@ tasks:
 
   @Test
   public void astDeleteAndSetId() throws IOException {
-    final var parseTree = new FlowParserCST(AST_ParserImpl.builder().props()).parseCST(
+    final var parseTree = new CST_YamlParser<>(AST_ParserImpl.builder().props(), new MutableYamlFlow()).parseCST(
 """
 id: uber flow
 description: uber description
