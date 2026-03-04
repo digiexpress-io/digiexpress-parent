@@ -231,5 +231,10 @@ public class TestTemplate {
       final var syntax = TestTemplate.toString(fullPath);
       return new Deps(BodyType.FLOW_TASK, fullPath, syntax);
     }
+    
+    
+    public static Deps ftx(String syntax) {
+      return new Deps(BodyType.FLOW_TASK, UUID.randomUUID().toString(), syntax);
+    }
   }
 }
