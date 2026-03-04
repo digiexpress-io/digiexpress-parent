@@ -15,10 +15,9 @@ import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.MutableDecisionYaml.NodeSource;
-import io.resys.thena.fs.tables.NodeTable;
 import io.smallrye.mutiny.tuples.Tuple2;
 
-public class DecisionTableParserCST {
+public class DecisionParserCST {
   private final static String LINE_SEPARATOR = System.lineSeparator();
  
 
@@ -26,7 +25,7 @@ public class DecisionTableParserCST {
   private final ObjectMapper yamlMapper;
   private final List<ModelError> messages = new ArrayList<>();
   
-  public DecisionTableParserCST(AST_ParserProps props) {
+  public DecisionParserCST(AST_ParserProps props) {
     super();
     this.yamlMapper = props.getYaml();
   }
