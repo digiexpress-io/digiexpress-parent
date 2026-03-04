@@ -54,7 +54,9 @@ const TaskProgressBar: React.FC<{ status: TaskApi.TaskStatus }> = ({ status }) =
 
   return (
     <Box className={classes.progressBar}>
-      <Typography sx={{ fontWeight: 500, mb: 1 }}>{intl.formatMessage({ id: 'task.status' })}{": "}{status} </Typography>
+      <Typography sx={{ fontWeight: 500, mb: 1 }}>
+        {intl.formatMessage({ id: 'task.status' })}{": "}{intl.formatMessage({ id: `task.status.${status.toLowerCase()}` })}
+      </Typography>
       <Box className={classes.backgroundTrack}>
         <Box sx={{
           height: '100%',
