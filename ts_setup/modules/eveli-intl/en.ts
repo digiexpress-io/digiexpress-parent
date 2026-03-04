@@ -78,6 +78,7 @@ export const en = {
   'task.transfer.create.error': 'Transfer creation error',
   'task.transfer.props.title': 'Transfer properties',
   'task.assigneesAndRolesEdit': 'Edit assignees and roles',
+  'task.assigneesAndRolesEdit.assignee.select': 'Select assignee',
   'task.assignee': 'Assignee',
   'task.assignedRoles': 'Roles',
   'internalComments': 'Internal comments',

@@ -78,6 +78,7 @@ task.transfer.create.docTitle.placeholder,TaskComposerV2,Enter document title,Sy
 task.transfer.create.error,TaskComposerV2,Transfer creation error,Siirron luontivirhe,Fel vid skapande av överföring,
 task.transfer.props.title,TaskComposerV2,Transfer properties,Siirto-ominaisuudet,Överföringsegenskaper,
 task.assigneesAndRolesEdit,Task detail,Edit assignees and roles,Muokkaa vastuuhenkilöitä ja rooleja,Redigera tilldelade personer och roller,
+task.assigneesAndRolesEdit.assignee.select,TaskComposerV2,Select assignee,Valitse vastuuhenkilö,Välj tilldelad,
 task.assignee,Task detail,Assignee,Valtuutettu,Övertagare,
 task.assignedRoles,Task detail,Roles,Roolit,Roller,
 internalComments,Task detail,Internal comments,Sisäiset kommentit,Interna kommentarer,

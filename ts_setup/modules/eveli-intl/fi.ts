@@ -78,6 +78,7 @@ export const fi = {
   'task.transfer.create.error': 'Siirron luontivirhe',
   'task.transfer.props.title': 'Siirto-ominaisuudet',
   'task.assigneesAndRolesEdit': 'Muokkaa vastuuhenkilöitä ja rooleja',
+  'task.assigneesAndRolesEdit.assignee.select': 'Valitse vastuuhenkilö',
   'task.assignee': 'Valtuutettu',
   'task.assignedRoles': 'Roolit',
   'internalComments': 'Sisäiset kommentit',

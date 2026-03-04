@@ -78,6 +78,7 @@ export const sv = {
   'task.transfer.create.error': 'Fel vid skapande av överföring',
   'task.transfer.props.title': 'Överföringsegenskaper',
   'task.assigneesAndRolesEdit': 'Redigera tilldelade personer och roller',
+  'task.assigneesAndRolesEdit.assignee.select': 'Välj tilldelad',
   'task.assignee': 'Övertagare',
   'task.assignedRoles': 'Roller',
   'internalComments': 'Interna kommentarer',

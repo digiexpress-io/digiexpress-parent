@@ -1,6 +1,7 @@
 import React from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 import { TaskApi } from '@dxs-ts/task-api';
+import { useIntl } from 'react-intl';
 
 export type TaskCreateAssigneeProps = {
   value: TaskApi.User | null;
@@ -9,6 +10,8 @@ export type TaskCreateAssigneeProps = {
 };
 
 export const TaskCreateAssignee: React.FC<TaskCreateAssigneeProps> = ({ value, userList, onChange }) => {
+  const intl = useIntl();
+
   return (
     <Autocomplete
       id="assignedUser"
@@ -24,8 +27,7 @@ export const TaskCreateAssignee: React.FC<TaskCreateAssigneeProps> = ({ value, u
         typeof val === 'string' ? false : option.userName === val.userName
       }
       renderInput={(params) => (
-        <TextField {...params}  fullWidth
-          placeholder="Select assignee"
+        <TextField {...params} fullWidth placeholder={intl.formatMessage({ id: 'task.assigneesAndRolesEdit.assignee.select' })}
           sx={{
             '& .MuiOutlinedInput-root': {
               height: '2.5rem',
