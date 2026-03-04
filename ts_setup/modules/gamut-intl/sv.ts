@@ -82,6 +82,7 @@ export const sv = {
   'gamut.forms.page.stepper': '{start} av {slut}',
   'gamut.forms.page.selection.key': 'Steg {stepNumber} av {totalSteps}',
   'gamut.forms.page.next': 'Nästa',
+  'gamut.forms.page.previous': 'Föregående',
   'gamut.forms.page.complete': 'Komplett',
   'gamut.forms.page.cancel': 'Avboka',
   'gamut.forms.filling.welcome': 'Välkomna!',

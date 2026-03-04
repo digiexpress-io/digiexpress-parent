@@ -46,9 +46,7 @@ export const CustomerMessagesEditor: React.FC<CustomerMessagesEditorProps> = ({ 
                   <Avatar className={comment.source === 'FRONTDESK' ? classes.frontdeskAvatar : classes.customerAvatar} />
                   <Box className={comment.source === 'FRONTDESK' ? classes.frontdeskMessageBody : classes.customerMessageBody}>
                     <Typography className={classes.senderInfo}>
-                      {comment.userName}
-                      {intl.formatMessage({ id: 'user.message.wroteOn' })}
-                      <DateTimeFormatter value={comment.created} variant='text' />
+                      {comment.userName}{" "}<DateTimeFormatter value={comment.created} variant='text' />
                     </Typography>
                     <Typography
                       style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}

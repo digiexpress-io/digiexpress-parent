@@ -82,6 +82,7 @@ export const fi = {
   'gamut.forms.page.stepper': '{start} sivu {end}',
   'gamut.forms.page.selection.key': 'Vaihe {stepNumber} vaiheista {totalSteps}',
   'gamut.forms.page.next': 'Seuraava',
+  'gamut.forms.page.previous': 'Edellinen',
   'gamut.forms.page.complete': 'Valmis',
   'gamut.forms.page.cancel': 'Peruuta',
   'gamut.forms.filling.welcome': 'Tervetuloa',
