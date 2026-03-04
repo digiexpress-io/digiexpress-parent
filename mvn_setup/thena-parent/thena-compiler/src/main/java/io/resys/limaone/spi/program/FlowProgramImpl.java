@@ -63,13 +63,13 @@ public class FlowProgramImpl implements FlowProgram {
 
     int index = 0;
     final List<Parameter> result = new ArrayList<>();
-    for (Map.Entry<String, YamlInput> entry : inputs.entrySet()) {
+    for (final Map.Entry<String, YamlInput> entry : inputs.entrySet()) {
       if (entry.getValue().getType() == null) {
         continue;
       }
       try {
-        ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
-        boolean required = YamlMapper.getBooleanValue(entry.getValue().getRequired());
+        final ValueType valueType = ValueType.valueOf(entry.getValue().getType().getValue());
+        final boolean required = YamlMapper.getBooleanValue(entry.getValue().getRequired());
         result.add(Parameter_Factory.newParam()
             .id(entry.getValue().getStart() + "")
             .order(index++)
