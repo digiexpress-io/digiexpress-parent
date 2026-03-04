@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import io.resys.limaone.program.ExpressionProgram.ExpressionResult;
 import io.resys.limaone.program.FlowTaskProgram.FlowTaskResult;
 import io.resys.limaone.program.Program.ProgramResult;
 import io.resys.limaone.spi.program.DecisionProgramExecutor;
-import io.resys.limaone.spi.program.assignment.Assignment;
 import io.vertx.core.json.JsonObject;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,40 +42,40 @@ public class StackFrame {
   }  
   @SuppressWarnings("unchecked")
   public void add(Map<String, Serializable> inputs, ProgramResult result, LocalDateTime startAt) {
+    final var endAt  = LocalDateTime.now();
+    final Optional<ProgramResult> src = Optional.of(result);    
     
-    Map<String, Serializable> outputs = Collections.emptyMap();
-    Optional<Serializable> raw = Optional.empty();
     if(result instanceof DecisionResult) {
       final var dt = (DecisionResult) result;
       final var isCollection = dt.getMatches().size() > 1;
-      outputs = isCollection ? 
-        Assignment.toArrayMap(DecisionProgramExecutor.find(dt).stream()) : 
-        DecisionProgramExecutor.get(dt);
-      raw = Optional.ofNullable((Serializable) outputs);
+      final var unwrap = isCollection ? DecisionProgramExecutor.find(dt) : Arrays.asList(DecisionProgramExecutor.get(dt));
       
+      for(final var set : unwrap) {
+        final Map<String, Serializable> outputs = set;
+        final Optional<Serializable> raw = Optional.of((Serializable) set);
+        final int id = matches.size();
+        matches.add(new StackFrameBody(id, inputs, outputs, raw, src, startAt, endAt));
+      }
+      return;
     } else if (result instanceof FlowTaskResult) {
+      final int id = matches.size();
       final var ft = (FlowTaskResult) result;
-      raw = Optional.ofNullable(ft.getValue());
-      outputs = raw.map(JsonObject::mapFrom)
+      final var raw = Optional.ofNullable(ft.getValue());
+      final var outputs = raw.map(JsonObject::mapFrom)
           .map(json -> json.mapTo(Map.class))
-          .orElse(Collections.<String, Serializable>emptyMap()); 
+          .orElse(Collections.<String, Serializable>emptyMap());
+      matches.add(new StackFrameBody(id, inputs, outputs, raw, src, startAt, endAt));
+      return;      
     } else if(result instanceof ExpressionResult) {
-      
+      final int id = matches.size();
       final var et = (ExpressionResult) result;
-      outputs = Map.of(et.getSrc(), (Serializable) et.getValue());      
+      final var outputs = Map.of(et.getSrc(), (Serializable) et.getValue());
+      final var raw = Optional.ofNullable((Serializable) et.getValue());
+      matches.add(new StackFrameBody(id, inputs, outputs, raw, src, startAt, endAt));
+      return;
     }
     
-    
-    
-    matches.add(
-        new StackFrameBody(
-            matches.size(), 
-            inputs, 
-            outputs, 
-            raw,
-            Optional.of(result), 
-            startAt, LocalDateTime.now())
-    );
+    throw new RuntimeException("Result handling for: " + result.getClass() + " not implemented");
   }  
   
   

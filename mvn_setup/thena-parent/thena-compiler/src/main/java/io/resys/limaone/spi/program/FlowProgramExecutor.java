@@ -261,7 +261,7 @@ public class FlowProgramExecutor {
   
 
   public MappingResults visitMappingStatement(MappingStatement statement, ExecutorProps props) {
-    return new MappingResults(assignment.assignTo(statement.getTaskId(), statement));
+    return new MappingResults(assignment.mapTo(statement.getTaskId(), statement));
   }
   
 

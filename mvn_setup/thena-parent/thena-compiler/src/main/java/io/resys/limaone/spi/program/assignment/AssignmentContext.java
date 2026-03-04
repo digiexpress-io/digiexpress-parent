@@ -61,7 +61,7 @@ public class AssignmentContext {
   }
 
   
-  public List<Map<String, Serializable>> assignTo(String taskId, MappingStatement statement) {
+  public List<Map<String, Serializable>> mapTo(String taskId, MappingStatement statement) {
     final Map<String, Serializable> deconstructed = new HashMap<>();
     for(final var deconstruct : statement.getDeconstructors()) {
       deconstructed.putAll(Optional.ofNullable(assigned.get(deconstruct))
