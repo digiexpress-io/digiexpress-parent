@@ -35,7 +35,6 @@ export const StyledConfirmDialog: React.FC<ConfirmDialogProps> = ({
             onClose={onCancel}
             maxWidth="xs"
             fullWidth
-            TransitionComponent={React.Fragment}
             keepMounted={false}
         >
             <DialogTitle>{title}</DialogTitle>
