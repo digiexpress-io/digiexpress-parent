@@ -66,13 +66,13 @@ public class DecisionCSTToCommands {
   
   private void convertTable(YamlTable table, List<DecisionStatement> commands) {
     // Add headers in order (input headers first, then output headers)
-    final var headIdByName = new ArrayList<>();
+    final var headers = new ArrayList<Tuple2<String, YamlTableHeader>>();
     
     for (final YamlTableHeader header : table.getHeaders()) {
       final var headerId = allocateId();
       final var headerType = header.isOutput() ? StatementType.ADD_HEADER_OUT : StatementType.ADD_HEADER_IN;
       final var headerValue = ValueType.valueOf(header.getType().toUpperCase()).name();
-      headIdByName.add(Tuple2.of(headerId, header));
+      headers.add(Tuple2.of(headerId, header));
       
       commands.add(ImmutableDecisionStatement.builder().type(headerType).build());
       commands.add(ImmutableDecisionStatement.builder().type(DecisionTable.StatementType.SET_HEADER_REF).id(headerId).value(header.getName()).build());
@@ -87,9 +87,9 @@ public class DecisionCSTToCommands {
       commands.add(ImmutableDecisionStatement.builder().type(StatementType.ADD_ROW).build());
       
       final var cells = row.getCellsByHeader();
-      for(final var header : headIdByName) {
+      for(final var header : headers) {
         
-        final var cell = cells.get(header);
+        final var cell = cells.get(header.getItem2().getName());
         final var cellId = allocateId();
         
         commands.add(ImmutableDecisionStatement.builder()

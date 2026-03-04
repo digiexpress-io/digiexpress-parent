@@ -15,38 +15,40 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
-import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
 import io.resys.limaone.yaml.MutableYaml;
 import io.resys.limaone.yaml.MutableYaml.NodeSource;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 
 
-public class FlowParserCST {
+public class CST_YamlParser<T extends MutableYaml> {
   private final static String LINE_SEPARATOR = System.lineSeparator();
   
-  private final MutableYamlFlow result = new MutableYamlFlow();
+  private final T result;
   private final ObjectMapper yamlMapper;
   private final List<ModelError> messages = new ArrayList<>();
   
-  public FlowParserCST(AST_ParserProps props) {
+  public CST_YamlParser(AST_ParserProps props, T result) {
     super();
     this.yamlMapper = props.getYaml();
+    this.result = result;
   }
   
-  public Tuple2<MutableYamlFlow, List<ModelError>> parseCST(String joined) {
+  public Tuple2<T, List<ModelError>> parseCST(String joined) {
     final String[] src = joined.split("\\r?\\n");
-    final var parseTree = visitFlow(src);
+    final var parseTree = parseLines(src);
     return Tuple2.of(parseTree, messages);
   }
-  public MutableYamlFlow visitFlow(String[] sourcesAdded) {
-
+  
+  @SuppressWarnings("unchecked")
+  private T parseLines(String[] sourcesAdded) {
     final var iterator = Arrays.asList(sourcesAdded).iterator();
     final var value = new StringBuilder();
     MutableYaml parent = result;
 
     int previousLineNumber = 0;
     int lineNumber = 0;
+    boolean isMultilineStarted = false;
     while(iterator.hasNext()) {
       final var src = iterator.next();
       lineNumber++;
@@ -71,9 +73,29 @@ public class FlowParserCST {
         continue;
       }
 
+      if(isMultilineStarted) {
+        // Accumulate table content until we find a non-indented line
+        if(src.startsWith(" ") || src.startsWith("|")) {
+          // This is table content, accumulate it
+          parent.addMultiline(src);
+          continue;
+        } else {
+          // End of table content, move back to parent
+          parent = parent.getParent();
+          isMultilineStarted = false; 
+        }
+      }
+      
       final var keywordAndValue = getKeywordAndValue(src, lineNumber);
       if(keywordAndValue == null) {
         continue;
+      }
+
+      final var isMultiline = keywordAndValue.getValue() != null &&
+          keywordAndValue.getValue().isEmpty() &&
+          src.trim().endsWith("|");
+      if(!isMultilineStarted && isMultiline) {
+        isMultilineStarted = true; 
       }
 
       final var indent = getIndent(src);
@@ -100,7 +122,7 @@ public class FlowParserCST {
             .line(lineNumber)
             .msg(message)
             .build());
-        return result.setEnd(lineNumber).setValue(buildSource(value));
+        return (T) result.setEnd(lineNumber).setValue(buildSource(value));
       }
 
       try {
@@ -111,11 +133,11 @@ public class FlowParserCST {
             .line(lineNumber)
             .msg(e.getMessage())
             .build());
-        return result.setEnd(lineNumber).setValue(value.toString());
+        return (T) result.setEnd(lineNumber).setValue(value.toString());
       }
     }
 
-    return result.setEnd(lineNumber).setValue(buildSource(value));
+    return (T) result.setEnd(lineNumber).setValue(buildSource(value));
   }
   
   private String buildSource(StringBuilder value) {

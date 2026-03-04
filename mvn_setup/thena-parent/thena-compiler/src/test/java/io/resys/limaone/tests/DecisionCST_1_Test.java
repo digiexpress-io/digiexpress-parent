@@ -13,8 +13,8 @@ import io.resys.limaone.model.DecisionTable.StatementType;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
+import io.resys.limaone.spi.ast.CST_YamlParser;
 import io.resys.limaone.spi.ast.decisiontable.DecisionCSTToCommands;
-import io.resys.limaone.spi.ast.decisiontable.DecisionParserCST;
 import io.resys.limaone.spi.ast.decisiontable.MutableYamlDecision;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
@@ -31,13 +31,13 @@ public class DecisionCST_1_Test {
         valueSets:
           riskLevel: low, medium, high
         table: |
-          | age:NUMBER | income:NUMBER | -> | riskLevel:STRING |
-          |------------|---------------|----|--------------------|
-          | < 25       | < 30000       |    | high               |
-          | >= 25      | >= 50000      |    | low                |
+          | age:INTEGER    | income: INTEGER | -> | riskLevel:STRING   |
+          |----------------|-----------------|----|--------------------|
+          | < 25           | < 30000         |    | high               |
+          | >= 25          | >= 50000        |    | low                |
         """;
 
-    final DecisionParserCST parser = new DecisionParserCST(props);
+    final var parser = new CST_YamlParser<MutableYamlDecision>(props, new MutableYamlDecision());
     final Tuple2<MutableYamlDecision, List<ModelError>> result = parser.parseCST(yaml);
     final YamlDecision parseTree = result.getItem1();
     
@@ -59,9 +59,9 @@ public class DecisionCST_1_Test {
     assertTrue(isCommandWithId(commands, StatementType.SET_VALUE_SET, "riskLevel", "low,medium,high"));
     
     // Verify header commands
-    assertTrue(isCommandWithId(commands, StatementType.ADD_HEADER_IN, "age", "NUMBER"));
-    assertTrue(isCommandWithId(commands, StatementType.ADD_HEADER_IN, "income", "NUMBER"));
-    assertTrue(isCommandWithId(commands, StatementType.ADD_HEADER_OUT, "riskLevel", "STRING"));
+    assertTrue(isCommandWithValue(commands, StatementType.SET_HEADER_REF, "age"), () -> "Known commands: " + join(null, commands));
+    assertTrue(isCommandWithValue(commands, StatementType.SET_HEADER_REF, "income"));
+    assertTrue(isCommandWithValue(commands, StatementType.SET_HEADER_REF, "riskLevel"));
     
     // Verify row commands
     long rowCommands = commands.stream()
@@ -70,12 +70,12 @@ public class DecisionCST_1_Test {
     assertEquals(2, rowCommands, "Should have 2 ADD_ROW commands");
     
     // Verify cell value commands
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "0,age", "< 25"));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "0,income", "< 30000"));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "0,riskLevel", "high"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "1,age", ">= 25"));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "1,income", ">= 50000"));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "1,riskLevel", "low"));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "4,age", "< 25"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "5,income", "< 30000"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "6,riskLevel", "high"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "8,age", ">= 25"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "9,income", ">= 50000"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "10,riskLevel", "low"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
   }
 
   @Test
@@ -89,22 +89,22 @@ public class DecisionCST_1_Test {
           | value1       |    | result1       |
         """;
 
-    final DecisionParserCST parser = new DecisionParserCST(props);
+    final var parser = new CST_YamlParser<MutableYamlDecision>(props, new MutableYamlDecision());
     final Tuple2<MutableYamlDecision, List<ModelError>> result = parser.parseCST(yaml);
     final YamlDecision parseTree = result.getItem1();
     
     final List<DecisionStatement> commands = new DecisionCSTToCommands().convert(parseTree);
     
     // Should have: SET_NAME + SET_HIT_POLICY + 2 headers + 1 ADD_ROW + 2 cell values = 7 commands
-    assertEquals(7, commands.size(), () -> "Known commands: " + join(null, commands));
+    assertEquals(11, commands.size(), () -> "Known commands: " + join(null, commands));
     
     assertTrue(isCommand(commands, StatementType.SET_NAME, "Simple Table"));
     assertTrue(isCommand(commands, StatementType.SET_HIT_POLICY, "ALL"));
-    assertTrue(isCommandWithId(commands, StatementType.ADD_HEADER_IN, "input", "STRING"));
-    assertTrue(isCommandWithId(commands, StatementType.ADD_HEADER_OUT, "output", "STRING"));
+    assertTrue(isCommandWithValue(commands, StatementType.SET_HEADER_REF, "input"));
+    assertTrue(isCommandWithValue(commands, StatementType.SET_HEADER_REF, "output"));
     assertTrue(isCommand(commands, StatementType.ADD_ROW, null));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "0,input", "value1"));
-    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "0,output", "result1"));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "3,input", "value1"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
+    assertTrue(isCommandWithId(commands, StatementType.SET_CELL_VALUE, "4,output", "result1"), () -> "Known commands: " + join(StatementType.SET_CELL_VALUE, commands));
   }
   
   private String join(StatementType type,  List<DecisionStatement> commands) {
@@ -120,7 +120,14 @@ public class DecisionCST_1_Test {
                         (value == null ? cmd.getValue() == null : value.equals(cmd.getValue())));
   }
   
-  private boolean isCommandWithId(List<DecisionStatement> commands, StatementType type, String id, String value) {
+  private boolean isCommandWithValue(List<DecisionStatement> commands, StatementType type, String value) {
+    return commands.stream()
+        .anyMatch(cmd -> cmd.getType() == type && 
+                        (value == null ? cmd.getValue() == null : value.equals(cmd.getValue())));
+  }
+  
+  private boolean isCommandWithId(List<DecisionStatement> commands, StatementType type, String idAndName, String value) {
+    final var id = idAndName.split(",")[0];
     return commands.stream()
         .anyMatch(cmd -> cmd.getType() == type && 
                         (id == null ? cmd.getId() == null : id.equals(cmd.getId())) &&

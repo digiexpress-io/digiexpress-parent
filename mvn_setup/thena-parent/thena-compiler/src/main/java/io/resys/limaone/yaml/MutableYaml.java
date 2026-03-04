@@ -17,12 +17,12 @@ import lombok.Value;
 public class MutableYaml implements Yaml {
   private static final long serialVersionUID = -2089273947467651756L;
   private final String keyword;
-  private final String value;
   private final int indent;
   private final NodeSource source;
   private final MutableYaml parent;
   private final Map<String, MutableYaml> children = new HashMap<>();
   private Integer end;
+  private String value;
 
   public MutableYaml(NodeSource source, int indent, String keyword, String value, MutableYaml parent) {
     super();
@@ -112,5 +112,18 @@ public class MutableYaml implements Yaml {
   public static class NodeSource {
     String line;
     int lineNumber;
+  }
+  
+  public MutableYaml setValue(String value) {
+    this.value = value;
+    return this;
+  }
+  
+  public boolean isMultilineValue() {
+    return false;
+  }
+  
+  public MutableYaml addMultiline(String multiline) {
+    return this;
   }
 }

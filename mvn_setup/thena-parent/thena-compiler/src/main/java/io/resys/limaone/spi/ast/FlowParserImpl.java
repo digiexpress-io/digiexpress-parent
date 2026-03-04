@@ -91,7 +91,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     final var cacheKey = new Flow_AST_CacheKey(hash);
     final Function<Flow_AST_CacheKey, Flow_AST> mappingFunction = (k) -> {
       
-      final var cst = new FlowParserCST(props).parseCST(joined);
+      final var cst = new CST_YamlParser<MutableYamlFlow>(props, new MutableYamlFlow()).parseCST(joined);
       final Yaml id = cst.getItem1().getId();
       final var firstTask = visitTasksById(cst.getItem1());
       final var next = firstTask == null ? ImmutableEndStatement.getInstance() : new ImmutablePointerStatement(visitTask(firstTask));

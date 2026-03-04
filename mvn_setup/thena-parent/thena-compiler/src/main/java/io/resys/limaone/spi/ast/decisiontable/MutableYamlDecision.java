@@ -1,6 +1,7 @@
 package io.resys.limaone.spi.ast.decisiontable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,9 +14,9 @@ import io.resys.limaone.ast.DecisionTable_CST.YamlTableCell;
 import io.resys.limaone.ast.DecisionTable_CST.YamlTableHeader;
 import io.resys.limaone.ast.DecisionTable_CST.YamlTableRow;
 import io.resys.limaone.ast.DecisionTable_CST.YamlValueSet;
+import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.ast.AST_Exception;
 import io.resys.limaone.yaml.MutableYaml;
-import io.resys.limaone.yaml.MutableYaml.NodeSource;
 import jakarta.annotation.Nullable;
 
 public class MutableYamlDecision extends MutableYaml implements YamlDecision {
@@ -25,7 +26,8 @@ public class MutableYamlDecision extends MutableYaml implements YamlDecision {
   public static final String KEY_HIT_POLICY = "hitPolicy";
   public static final String KEY_VALUE_SETS = "valueSets";
   public static final String KEY_TABLE = "table";
-
+  private static final List<String> qualifiedTypes = Arrays.asList(ValueType.values()).stream().map(e -> e.name()).toList();
+  
   private NodeValueSets valueSets;
   private NodeTable table;
   private String value;
@@ -126,8 +128,10 @@ public class MutableYamlDecision extends MutableYaml implements YamlDecision {
       this.markdownContent = value;
     }
     
-    public void addMarkdown(String content) {
+    @Override
+    public NodeTable addMultiline(String content) {
       this.markdownContent += content + "\n";
+      return this;
     }
     
     public void parse() {
@@ -137,16 +141,17 @@ public class MutableYamlDecision extends MutableYaml implements YamlDecision {
       }
 
       // Parse header line
-      String headerLine = lines[0].trim();
+      final var headerLine = lines[0].trim();
+      Integer outputMarkerIndex = null;
       if (headerLine.startsWith("|") && headerLine.endsWith("|")) {
-        parseHeaders(headerLine);
+        outputMarkerIndex = parseHeaders(headerLine);
       }
 
       // Parse data rows (skip separator line)
       for (int i = 2; i < lines.length; i++) {
-        String rowLine = lines[i].trim();
+        final var rowLine = lines[i].trim();
         if (rowLine.startsWith("|") && rowLine.endsWith("|")) {
-          parseRow(rowLine, i - 2);
+          parseRow(rowLine, i - 2, outputMarkerIndex);
         }
       }
     }
@@ -176,27 +181,41 @@ public class MutableYamlDecision extends MutableYaml implements YamlDecision {
       return Collections.unmodifiableMap(outputHeaders);
     }
 
-    private void parseHeaders(String headerLine) {
-      String[] columns = headerLine.substring(1, headerLine.length() - 1).split("\\|");
+    private Integer parseHeaders(String headerLine) {
+      final var columns = headerLine.substring(1, headerLine.length() - 1).split("\\|");
       boolean outputMode = false;
-      int inputIndex = 0;
-      int outputIndex = 0;
+      Integer outputMarkerIndex = null;
+      
 
-      for (int i = 0; i < columns.length; i++) {
-        String column = columns[i].trim();
+      
+      for (int index = 0; index < columns.length; index++) {
+        final var column = columns[index].trim();
         if ("->".equals(column)) {
+          outputMarkerIndex = index;
           outputMode = true;
           continue;
         }
 
-        String[] parts = column.split(":");
-        String name = parts[0].trim();
-        String type = parts.length > 1 ? parts[1].trim() : "STRING";
-
-        MutableYamlTableHeader header = new MutableYamlTableHeader(
-            null, 0, name, type, this, i, outputMode, 
-            outputMode ? outputIndex++ : inputIndex++
-        );
+        final var parts = column.split(":");
+        final String name;
+        final String type;
+        
+        if(parts.length == 1) {
+          final var singleValue = parts[0].trim();
+          final var isType = qualifiedTypes.contains(singleValue.toUpperCase());
+          name = isType ? singleValue + "-" + index : singleValue;
+          type = isType ? singleValue.toUpperCase() : ValueType.STRING.name();
+        } else {
+          name = parts[0].trim();
+          
+          final var singleValue = parts[1].trim();
+          final var isType = qualifiedTypes.contains(singleValue.toUpperCase());
+          type = isType ? singleValue.toUpperCase() : ValueType.STRING.name();
+        }
+        
+        final var headerLineNumber = this.getSource().getLineNumber() + 1;
+        final var node = new NodeSource(headerLine, headerLineNumber);
+        final var header = new MutableYamlTableHeader(node, 0, name, type, this, index, outputMode);
         
         headers.add(header);
         if (outputMode) {
@@ -205,17 +224,23 @@ public class MutableYamlDecision extends MutableYaml implements YamlDecision {
           inputHeaders.put(name, header);
         }
       }
+      return outputMarkerIndex;
     }
 
-    private void parseRow(String rowLine, int rowIndex) {
-      String[] cells = rowLine.substring(1, rowLine.length() - 1).split("\\|");
-      MutableYamlTableRow row = new MutableYamlTableRow(null, 0, "row_" + rowIndex, null, this, rowIndex);
+    private void parseRow(String rowLine, int rowIndex, Integer outputMarkerIndex) {
+      final var cells = rowLine.substring(1, rowLine.length() - 1).split("\\|");
+      final var row = new MutableYamlTableRow(null, 0, "row_" + rowIndex, null, this, rowIndex);
+
       
       for (int i = 0; i < cells.length && i < headers.size(); i++) {
-        String cellValue = cells[i].trim();
-        YamlTableHeader header = headers.get(i);
+        final var header = headers.get(i);
         
-        MutableYamlTableCell cell = new MutableYamlTableCell(
+        final var isOutputMarker = outputMarkerIndex != null && outputMarkerIndex == i;
+        final var shift = isOutputMarker ? 1 : 0;
+        final var cellIndex = i + shift;
+        final var cellValue = cells[cellIndex].trim();
+
+        final var cell = new MutableYamlTableCell(
             null, 0, "cell_" + rowIndex + "_" + i, cellValue, row, 
             header.getName(), i, rowIndex
         );
@@ -265,7 +290,7 @@ public class MutableYamlDecision extends MutableYaml implements YamlDecision {
     private final int columnIndex;
 
     public MutableYamlTableHeader(NodeSource source, int indent, String keyword, String value, 
-                                 MutableYaml parent, int columnIndex, boolean isOutput, int typeIndex) {
+                                 MutableYaml parent, int columnIndex, boolean isOutput) {
       super(source, indent, keyword, value, parent);
       this.name = keyword;
       this.type = value != null ? value : "STRING";
