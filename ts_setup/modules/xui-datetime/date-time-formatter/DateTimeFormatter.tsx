@@ -1,7 +1,6 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
-import { FormattedDate, FormattedTime } from 'react-intl';
 
 
 function parse(textOrDate: string | Date): DateTime {
@@ -27,21 +26,20 @@ function parse(textOrDate: string | Date): DateTime {
 
 export const DateTimeFormatter: React.FC<{ value: string | Date | undefined, variant?: 'text' }> = ({ value, variant }) => {
   if (value) {
-    const localTime = parse(value).toLocal().toJSDate();
-    if(variant === 'text') {
-      return (<>
-        <FormattedDate value={localTime} />
-        &nbsp;
-        <FormattedTime value={localTime} />
-      </>)
+    const localTime = parse(value).toLocal().setLocale('fi-FI');
+    const dateStr = localTime.toLocaleString(DateTime.DATE_SHORT);
+    const timeStr = localTime.toLocaleString(DateTime.TIME_SIMPLE);
+
+    if (variant === 'text') {
+      return <>{dateStr}&nbsp;{timeStr}</>
     }
 
     return (
-      <Stack direction='column' >
-        <Typography variant='body2'><FormattedDate value={localTime} /></Typography >
-        <Typography variant='body1'><FormattedTime value={localTime} /></Typography >
+      <Stack direction='column'>
+        <Typography variant='body2'>{dateStr}</Typography>
+        <Typography variant='body1'>{timeStr}</Typography>
       </Stack>
-    )
+    );
   }
   return "-";
 }
