@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.flow;
+package io.resys.limaone.spi.ast;
 
 import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.ast.Flow_AST.CaseStatement;

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.limaone.spi.ast.CST_YamlParser;
-import io.resys.limaone.spi.ast.flow.MutableYamlFlow;
+import io.resys.limaone.spi.ast.MutableYamlFlow;
 
 
 public class Flow_2_Test {
