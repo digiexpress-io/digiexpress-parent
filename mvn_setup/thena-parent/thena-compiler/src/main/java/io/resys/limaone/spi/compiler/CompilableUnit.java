@@ -21,7 +21,7 @@ public interface CompilableUnit {
   interface OpenProgram {
     String getId();
     Simple_AST getAst();
-    Program close(Artifact artifact, List<Dependency_AST> dependencies);
+    Program close(Artifact artifact);
   }
 
 

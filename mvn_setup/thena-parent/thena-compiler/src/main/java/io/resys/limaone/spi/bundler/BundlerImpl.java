@@ -38,12 +38,14 @@ public class BundlerImpl implements Bundler {
   
   @Override
   public Uni<BundleBuilder> build(List<OpenProgram> openProgram) {
-    return Multi.createFrom().items(deps.stream())
+    return Multi.createFrom().items(deps.stream().filter(dep -> dep.getValidator() != null))
       .onItem().invoke(this::validate)
       .collect().asList().replaceWithVoid()
+      
       .onItem().transformToMulti((ignore) -> Multi.createFrom().items(openProgram.stream()))
       .onItem().transform(open -> close(open))
       .collect().asList().replaceWithVoid()
+      
       .onItem().transform((ignore) -> createBundle());
   }
   

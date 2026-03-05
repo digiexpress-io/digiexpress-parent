@@ -12,6 +12,7 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.Article_AST.Link;
+import io.resys.limaone.ast.ImmutableDependency_AST;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model.BodyType;
@@ -207,10 +208,10 @@ public class LocalizedSiteBuilder {
       return;
     }
     
-    newArtifact.requireDependnecy()
-      .bodyType(BodyType.FLOW)
-      .id(link.getFlowName())
-      .validator(new Validator() {
+    newArtifact.requireDependnecy(ImmutableDependency_AST.builder()
+      .type(BodyType.FLOW)
+      .dependencyId(link.getFlowName())
+      .build(), new Validator() {
         @Override
         public ValidatorResult validate(Optional<Simple_AST> dependency) {
           return ImmutableValidatorResult.builder()
@@ -225,13 +226,12 @@ public class LocalizedSiteBuilder {
               .programStatus(dependency.isEmpty() ? ProgramStatus.ERROR : ProgramStatus.UP)
               .build();
         }
-      })
-      .build();
+      });
       
-    newArtifact.requireDependnecy()
-      .bodyType(BodyType.DIALOB)
-      .id(link.getFormName() + "::" + link.getFormTag())
-      .validator(new Validator() {
+    newArtifact.requireDependnecy(ImmutableDependency_AST.builder()
+      .type(BodyType.DIALOB)
+      .dependencyId(link.getFormName() + "::" + link.getFormTag())
+      .build(), new Validator() {
         
         @Override
         public ValidatorResult validate(Optional<Simple_AST> dependency) {

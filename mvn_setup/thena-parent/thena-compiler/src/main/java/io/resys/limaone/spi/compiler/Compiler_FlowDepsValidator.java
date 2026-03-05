@@ -22,7 +22,7 @@ import io.resys.limaone.ast.Flow_AST.StartStatement;
 import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
 import io.resys.limaone.model.Parameter;
-import io.resys.limaone.spi.compiler.CompilableUnit.NewArtifact;
+import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
 import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
 import io.resys.limaone.spi.program.expression.OperationContext.ExternalContext;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Compiler_FlowDepsValidator {
-  private final NewArtifact resolution;
+  private final Artifact artifact;
   private final Flow_AST ast;
   
     
@@ -46,8 +46,8 @@ public class Compiler_FlowDepsValidator {
   /**
    * Walk the entire Flow AST starting from the root statement
    */
-  public ValidatorResult walk(Flow_AST flow, ValidatorProps ValidatorProps) {
-    visit(flow.getStatement(), NO_PROPS);
+  public ValidatorResult walk() {
+    visit(ast.getStatement(), NO_PROPS);
     return REACHED_END;
   }
   

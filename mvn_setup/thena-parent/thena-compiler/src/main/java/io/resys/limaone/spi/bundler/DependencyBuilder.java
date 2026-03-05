@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.resys.limaone.model.Model;
 import io.resys.limaone.spi.compiler.CompilableUnit.Validator;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,9 +32,8 @@ public class DependencyBuilder {
   public void init() {
     Objects.requireNonNull(id, () -> "id must be defined");
     Objects.requireNonNull(bodyType, () -> "bodyType must be defined");
-    Objects.requireNonNull(validator, () -> "validator must be defined");
   }
-  public Validator getValidator() {
+  public @Nullable Validator getValidator() {
     return validator;
   }
   public String getId() {

@@ -8,26 +8,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.AST_Parser;
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.AST_Parser.FlowParser;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.BodyStatement;
 import io.resys.limaone.ast.Flow_AST.CaseStatement;
+import io.resys.limaone.ast.Flow_AST.DecisionTableStatement;
+import io.resys.limaone.ast.Flow_AST.FlowTaskStatement;
 import io.resys.limaone.ast.Flow_AST.NextStatement;
 import io.resys.limaone.ast.Flow_AST.OneTaskStatement;
 import io.resys.limaone.ast.Flow_CST.YamlFlow;
 import io.resys.limaone.ast.Flow_CST.YamlInput;
 import io.resys.limaone.ast.Flow_CST.YamlSwitch;
 import io.resys.limaone.ast.Flow_CST.YamlTask;
+import io.resys.limaone.ast.ImmutableDependency_AST;
 import io.resys.limaone.ast.ImmutableFlow_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.ast.Yaml_CST.Yaml;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
+import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.model.Parameter.Direction;
@@ -65,6 +71,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   private final Map<String, OneTaskStatement> steps = new HashMap<>();
   private final Map<String, YamlTask> tasksById = new HashMap<>();
   private final List<ModelError> errors = new ArrayList<>();
+  private Consumer<Dependency_AST> dependency;
   
   private String id;
   
@@ -79,6 +86,11 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   @Override
   public FlowParser id(String id) {
     this.id = id;
+    return this;
+  }
+  @Override
+  public FlowParser onDependency(Consumer<Dependency_AST> dependency) {
+    this.dependency = Objects.requireNonNull(dependency, () -> "dependency must be defined!");
     return this;
   }
   @Override
@@ -224,14 +236,32 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     
     final var inputsStmnt = new ImmutableMappingStatement(inputs, deconstruct, taskId);
     if(task.getDecisionTable() != null) {
-      return new ImmutableDecisionTableStatement(ref, collection, inputsStmnt, taskId);
+      return registerDependency(new ImmutableDecisionTableStatement(ref, collection, inputsStmnt, taskId));
     } else if(task.getService() != null) {
-      return new ImmutableFlowTaskStatement(ref, collection, inputsStmnt, taskId);
+      return registerDependency(new ImmutableFlowTaskStatement(ref, collection, inputsStmnt, taskId));
     } else {
       return new ImmutableReturnsStatement(collection, inputsStmnt, taskId);
     }
   }
   
+  private DecisionTableStatement registerDependency(DecisionTableStatement stment) {
+    if(dependency != null) {
+      dependency.accept(ImmutableDependency_AST.builder()
+          .dependencyId(stment.getDecisionTableName())
+          .type(BodyType.DECISION_TABLE)
+          .build());
+    }
+    return stment;
+  }
+  private FlowTaskStatement registerDependency(FlowTaskStatement stment) {
+    if(dependency != null) {
+      dependency.accept(ImmutableDependency_AST.builder()
+          .dependencyId(stment.getFlowTaskName())
+          .type(BodyType.FLOW_TASK)
+          .build());
+    }
+    return stment;
+  }
 
   private NextStatement visitStepPointer(YamlTask task) {
     if(task.getSwitch().isEmpty()) {
@@ -308,4 +338,5 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       return Tuple2.of(MutableYamlFlow.VALUE_END, new ImmutableCaseStatement(Compiler_Expression.build("true", ValueType.FLOW_CONTEXT), ImmutableEndStatement.getInstance())); 
     } 
   }
+
 }

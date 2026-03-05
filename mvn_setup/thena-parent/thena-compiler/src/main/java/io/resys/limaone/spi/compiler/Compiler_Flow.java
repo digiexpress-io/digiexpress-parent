@@ -1,11 +1,8 @@
 package io.resys.limaone.spi.compiler;
 
-import java.util.List;
-
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Simple_AST;
-import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -41,8 +38,8 @@ public class Compiler_Flow implements CompilableUnit {
         return ast;
       }
       @Override
-      public Program close(Artifact artifact, List<Dependency_AST> dependencies) {
-        new Compiler_FlowDepsValidator(resolution, ast).walk();
+      public Program close(Artifact artifact) {
+        new Compiler_FlowDepsValidator(artifact, ast).walk();
         return new FlowProgramImpl(
             ast, 
             artifact.getProgramStatus(), 

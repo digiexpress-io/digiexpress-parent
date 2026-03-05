@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Simple_AST;
-import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.ArticleProgram.LocalizedSite;
@@ -32,7 +31,7 @@ public class Compiler_Article implements CompilableUnit {
   public OpenProgram compile(NewArtifact resolution) {
     final var articleAST = parser.parseArticles().world(world).parse();
    
-    resolution.ast(articleAST).id(world.getName()).name(world.getName()).build();
+    final var artifact = resolution.ast(articleAST).id(world.getName()).name(world.getName());
     
     // topics
     final Map<String, List<TopicData>> localeTopicData = new HashMap<>();  
@@ -68,7 +67,9 @@ public class Compiler_Article implements CompilableUnit {
     final var sites = localeTopicData.keySet().stream().sorted()
       .map(locale -> visitLocale(locale, localeTopicData.get(locale), pathLinkData, resolution))
       .collect(Collectors.toList());
-  
+    
+    artifact.build();
+    
     return new OpenProgram() {
       @Override
       public String getId() {
@@ -81,7 +82,7 @@ public class Compiler_Article implements CompilableUnit {
       }
       
       @Override
-      public Program close(Artifact artifact, List<Dependency_AST> dependencies) {
+      public Program close(Artifact artifact) {
         final List<ModelError> errors = artifact.getErrors();
         final List<ProgramAssociation> assocs = artifact.getAssociations();
         final var program = new ImmutableArticleProgram(articleAST, artifact.getProgramStatus(), errors, assocs, sites);

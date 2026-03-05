@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.immutables.value.Value;
+
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -40,6 +42,7 @@ public interface AST_Parser {
     FlowTask_AST parse();
   }
 
+  @Value.Immutable
   interface Dependency_AST {
     String getDependencyId();
     Model.BodyType getType();
