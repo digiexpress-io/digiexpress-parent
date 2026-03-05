@@ -90,7 +90,8 @@ public class ArtifactBuilder {
         .artifactType(artifactType)
         .childDeps(childDeps)
         .parentDeps(parentDeps)
-        .errors(errors)
+        .addAllErrors(errors)
+        .addAllErrors(ast.getErrors())
         .associations(associations)
         .programStatus(errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.ERROR)
         .build();

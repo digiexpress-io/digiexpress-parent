@@ -281,6 +281,8 @@ public class MutableYamlFlow extends MutableYaml implements YamlFlow {
         return userTask;
       } else if(service != null) {
         return service;
+      } else if(returns != null) {
+        return returns;
       }
       return decisionTable;
     }

@@ -22,7 +22,9 @@ public class Compiler_Flow implements CompilableUnit {
   public OpenProgram compile(NewArtifact resolution) {
     final Flow_AST ast = parser.parseFlow().id(flow.getId()).syntax(flow.getBody().getFlowValue()).parse();
     
-    resolution.ast(ast).id(flow.getId()).name(ast.getName());
+    resolution.ast(ast)
+      .id(flow.getId())
+      .name(ast.getName());
     
     
     resolution.build();
@@ -42,7 +44,8 @@ public class Compiler_Flow implements CompilableUnit {
         return new FlowProgramImpl(
             ast, 
             artifact.getProgramStatus(), 
-            artifact.getErrors(), artifact.getAssociations());
+            artifact.getErrors(), 
+            artifact.getAssociations());
       }
     };
   }

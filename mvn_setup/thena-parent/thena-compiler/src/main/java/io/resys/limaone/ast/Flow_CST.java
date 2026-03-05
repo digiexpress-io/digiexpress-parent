@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import io.resys.limaone.ast.Yaml_CST.Yaml;
+import jakarta.annotation.Nullable;
 
 public interface Flow_CST extends Serializable {
 
@@ -19,11 +20,11 @@ public interface Flow_CST extends Serializable {
     Yaml getId();
     int getOrder(); // 0 = first task
     Yaml getThen();
-    YamlTaskBody getRef();
-    YamlTaskBody getUserTask();
-    YamlTaskBody getDecisionTable();
-    YamlTaskBody getService();
-    YamlTaskBody getReturns();
+    @Nullable YamlTaskBody getRef();
+    @Nullable YamlTaskBody getUserTask();
+    @Nullable YamlTaskBody getDecisionTable();
+    @Nullable YamlTaskBody getService();
+    @Nullable YamlTaskBody getReturns();
     Map<String, YamlSwitch> getSwitch();
   }
   
@@ -32,7 +33,7 @@ public interface Flow_CST extends Serializable {
     Yaml getCollection();
     Yaml getInputsNode();
     Map<String, Yaml> getInputs();
-    String getObjectInput();
+    @Nullable String getObjectInput();
   }
 
   interface YamlSwitch extends Yaml {

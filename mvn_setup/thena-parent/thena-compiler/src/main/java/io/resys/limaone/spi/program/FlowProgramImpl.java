@@ -123,8 +123,38 @@ public class FlowProgramImpl implements FlowProgram {
   public String getName() {
     return ast.getName();
   }
+  
+  private String getPrettyErrors() {
+    final var result = new StringBuilder();
+    for(final var error : this.errors) {       
+      result
+        .append(System.lineSeparator())
+        .append("@line ").append(error.getLine())
+        .append(": ").append(error.getMsg());
+    }
+    return result.toString();
+  }
+  
+  private RuntimeException generateError(String msg) {
+    final var start = new RuntimeException(msg);
+    Exception prev = start;
+    for(final var error : this.errors) {  
+      if(error.getException() == null) {
+        continue;
+      }
+      prev.initCause(error.getException());
+      prev = error.getException();
+    }
+    return start;
+  }
+
   @Override
   public FlowExecutor run(ProgramInput input, Runtime runtime) {
+    if(!this.errors.isEmpty()) {
+      final var msg = "Flow with id: '" + this.getId() + "' and name: '" + this.getName() + "' can't be executed because of errors: " +  getPrettyErrors();
+      throw generateError(msg);
+    }
+    
     final var stack = new FlowProgramExecutor(runtime, input).walk(ast, null);
     return new FlowExecutor() {
       @Override

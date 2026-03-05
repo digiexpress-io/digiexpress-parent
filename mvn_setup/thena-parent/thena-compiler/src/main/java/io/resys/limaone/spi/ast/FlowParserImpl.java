@@ -91,11 +91,14 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     final var cacheKey = new Flow_AST_CacheKey(hash);
     final Function<Flow_AST_CacheKey, Flow_AST> mappingFunction = (k) -> {
       
-      final var cst = new CST_YamlParser<MutableYamlFlow>(props, new MutableYamlFlow()).parseCST(joined);
-      final Yaml id = cst.getItem1().getId();
-      final var firstTask = visitTasksById(cst.getItem1());
+      final var parsed = new CST_YamlParser<MutableYamlFlow>(props, new MutableYamlFlow()).parseCST(joined);
+      final var cst = parsed.getItem1();
+      final var cstExtraErrors = new CSTT_YamlFlowValidator(cst).validate();
+
+      final Yaml id = cst.getId();
+      final var firstTask = visitTasksById(cst);
       final var next = firstTask == null ? ImmutableEndStatement.getInstance() : new ImmutablePointerStatement(visitTask(firstTask));
-      final var headers = headers(cst.getItem1());
+      final var headers = headers(cst);
       
                   
       return ImmutableFlow_AST.builder()
@@ -103,10 +106,11 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
           .bodyType(Model.BodyType.FLOW)
           .hash(hash)
           .statement(new ImmutableInputsStatement(headers.getAcceptDefs(), new ImmutableManyTasksStatement(next, steps)))
-          .errors(cst.getItem2())
+          .addAllErrors(parsed.getItem2())
           .addAllErrors(errors)
+          .addAllErrors(cstExtraErrors)
           .name(id == null ? "": id.getValue())
-          .parseTree(cst.getItem1())
+          .parseTree(cst)
           .headers(headers)
           .build();
     };
