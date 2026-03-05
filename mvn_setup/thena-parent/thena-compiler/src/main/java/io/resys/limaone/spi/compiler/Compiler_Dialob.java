@@ -11,4 +11,10 @@ public class Compiler_Dialob implements CompilableUnit {
 
   private final ModelWorld world;
   private final Model<ArticleWorkflow> target;
+  
+  @Override
+  public OpenProgram compile(NewArtifact resolution) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
