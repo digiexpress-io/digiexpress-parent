@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Switch, Divider } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-primitives';
 import { FsConfigOptionsProps, allConfigOptions } from './FsConfigOptionsProps';
 import { useOwnerState } from './useOwnerState';
@@ -14,14 +14,14 @@ export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {
 
   if (!props.node) {
     return (
-      <FsPanel title="Config Options" icon={<FsIcons.Settings />} activeNode={false} noNodeMessage="Select a node from the tree to view config options.">
+      <FsPanel title="Config Options" icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={false} noNodeMessage="Select a node from the tree to view config options.">
         <></>
       </FsPanel>
     );
   }
 
   return (
-    <FsPanel title={`Config Options: ${props.node.name}`} icon={<FsIcons.Settings />} activeNode={true}>
+    <FsPanel title={`Config Options: ${props.node.name}`} icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={true}>
       <FsConfigOptionsRoot className={classes.root} ownerState={ownerState}>
         {allConfigOptions.map((optionKey) => (
           <div key={optionKey} className={classes.optionItem}>

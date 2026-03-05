@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem, Divider, Typography, Box, Chip } from '@mui/material';
 import { FsNode, useFs } from '@dxs-ts/fs-api';
 import { useUtilityClasses, MENU_WIDTH } from './useUtilityClasses';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { getReferencesCount } from './helpers';
 
 
@@ -49,9 +49,9 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
 
   function handleSubmenuToggle(submenuType: string) {
     if (props.openSubmenu === submenuType) {
-      props.onSubmenuOpen(''); 
+      props.onSubmenuOpen('');
     } else {
-      props.onSubmenuOpen(submenuType); 
+      props.onSubmenuOpen(submenuType);
     }
   }
 
@@ -70,29 +70,39 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
         className={props.openSubmenu === 'new' ? classes.menuItemActive : classes.menuItem}
         onClick={() => handleSubmenuToggle('new')}
       >
-        <FsIcons.New fontSize='small' />New
+        <FsIcon icon={FsIcons.New} small />
+        New
         <Box flex={1} />
-        <FsIcons.ChevronRight fontSize='small' />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
+
       <MenuItem className={classes.menuItem} onClick={handleEdit}>
-        <FsIcons.Edit fontSize='small' />Edit</MenuItem>
+        <FsIcon icon={FsIcons.Edit} small />
+        Edit
+      </MenuItem>
+
       <MenuItem
         className={props.node?.locked ? classes.menuItemLocked : classes.menuItemUnlocked}
         onClick={handleLock}
       >
-        {props.node?.locked ? (
-          <FsIcons.Locked fontSize='small' />
-        ) : (
-          <FsIcons.Unlocked fontSize='small' />
-        )}
+        {props.node?.locked ? (<FsIcon icon={FsIcons.Locked} small />) : (<FsIcon icon={FsIcons.Unlocked} small />)}
         {props.node?.locked ? 'Unlock' : 'Lock'}
       </MenuItem>
+
       <MenuItem className={classes.menuItem} onClick={handleCopy}>
-        <FsIcons.Copy fontSize='small' />Copy</MenuItem>
+        <FsIcon icon={FsIcons.Copy} small />
+        Copy
+      </MenuItem>
+
       <MenuItem className={classes.menuItem} onClick={handleDuplicate}>
-        <FsIcons.Rename fontSize='small' />Rename</MenuItem>
+        <FsIcon icon={FsIcons.Rename} small />
+        Rename
+      </MenuItem>
+
       <MenuItem className={classes.menuItemDelete} onClick={handleDelete}>
-        <FsIcons.Delete fontSize='small' />Delete</MenuItem>
+        <FsIcon icon={FsIcons.Delete} small />
+        Delete
+      </MenuItem>
 
       <Divider className={classes.divider} />
 
@@ -111,10 +121,10 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
               }}>
                 {props.node.configOptions.map((config, index) => (
                   <React.Fragment key={index}>
-                    {config.devMode && (<Chip icon={<FsIcons.DevMode />} label="Development" size='small' className={classes.label} />)}
-                    {config.assignableMode && (<Chip icon={<FsIcons.Assignment />} label="Assignable" size='small' className={classes.label} />)}
-                    {config.disabledMode && (<Chip icon={<FsIcons.Disabled />} label="Disabled" size='small' className={classes.label} />)}
-                    {config.anonymousMode && (<Chip icon={<FsIcons.Anonymous />} label="Anonymous" size='small' className={classes.label} />)}
+                    {config.devMode && (<Chip icon={<FsIcon icon={FsIcons.DevMode} />} label="Development" size='small' className={classes.label} />)}
+                    {config.assignableMode && (<Chip icon={<FsIcon icon={FsIcons.Assignment} />} label="Assignable" size='small' className={classes.label} />)}
+                    {config.disabledMode && (<Chip icon={<FsIcon icon={FsIcons.Disabled} />} label="Disabled" size='small' className={classes.label} />)}
+                    {config.anonymousMode && (<Chip icon={<FsIcon icon={FsIcons.Anonymous} />} label="Anonymous" size='small' className={classes.label} />)}
                   </React.Fragment>
                 ))}
               </Box>
@@ -143,7 +153,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
           )}
         </div>
         <Box flex={1} />
-        <FsIcons.ChevronRight fontSize='small' />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -154,7 +164,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       >
         Comments ({props.node?.comments?.length || 0})
         <Box flex={1} />
-        <FsIcons.ChevronRight fontSize='small' />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -165,7 +175,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       >
         Sharing and Permissions
         <Box flex={1} />
-        <FsIcons.ChevronRight fontSize='small' />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -176,7 +186,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       >
         History
         <Box flex={1} />
-        <FsIcons.ChevronRight fontSize='small' />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
 
       <Divider className={classes.divider} />
@@ -187,7 +197,7 @@ export const FsDirentMenuMain: React.FC<FsDirentMenuMainProps> = (props) => {
       >
         References ({referencesCount})
         <Box flex={1} />
-        <FsIcons.ChevronRight fontSize='small' />
+        <FsIcon icon={FsIcons.ChevronRight} small />
       </MenuItem>
     </Box>
   );

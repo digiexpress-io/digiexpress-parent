@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { FsColors, FsIcons } from '../fs-theme';
+import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-primitives';
 import { FsErrorsProps, errorsMock } from './FsErrorsProps';
 import { useOwnerState } from './useOwnerState';
@@ -18,9 +18,7 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
 
   if (!props.node) {
     return (
-      <FsPanel
-        title="Errors"
-        icon={<FsIcons.Error />}
+      <FsPanel title="Errors" icon={<FsIcon icon={FsIcons.Error} large />}
         activeNode={false}
         noNodeMessage="Select a node from the tree to view errors1."
       >
@@ -32,7 +30,7 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
   return (
     <FsPanel
       title={`Errors: ${props.node.name}`}
-      icon={<FsIcons.Error />}
+      icon={<FsIcon icon={FsIcons.Error} large />}
       activeNode={true}
     >
       <FsErrorsRoot className={classes.root} ownerState={ownerState}>
@@ -56,8 +54,8 @@ export const FsErrors: React.FC<FsErrorsProps> = (props) => {
               <div className={classes.errorHeader}>
                 <div className={classes.errorIcon}>
                   {error.severity === 'ERROR' ?
-                    <FsIcons.Error sx={{ color: ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight }} /> :
-                    <FsIcons.Warning sx={{ color: ownerState.isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight }} />}
+                    <FsIcon icon={FsIcons.Error} large color={ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight} /> :
+                    <FsIcon icon={FsIcons.Warning} large color={ownerState.isDarkMode ? FsColors.semantic.warning : FsColors.semantic.warningLight} />}
                 </div>
                 <Typography className={classes.errorTitle}>{error.title}</Typography>
                 <Typography className={classes.errorTimestamp}>{error.timestamp}</Typography>

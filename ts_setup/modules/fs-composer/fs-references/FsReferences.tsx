@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { useFs } from '@dxs-ts/fs-api';
 import { FsPanel } from '../fs-primitives';
 import { FsReferencesProps } from './FsReferencesProps';
@@ -16,7 +16,7 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
 
   if (!node) {
     return (
-      <FsPanel title="References" icon={<FsIcons.Tree />} activeNode={false} noNodeMessage="Select a node from the tree to view references.">
+      <FsPanel title="References" icon={<FsIcon icon={FsIcons.Tree} large />} activeNode={false} noNodeMessage="Select a node from the tree to view references.">
         <></>
       </FsPanel>
     );
@@ -39,7 +39,7 @@ export const FsReferences: React.FC<FsReferencesProps> = (props) => {
   ) : undefined;
 
   return (
-    <FsPanel title={`References: ${node.name}`} icon={<FsIcons.Tree />} secondaryChildren={secondaryContent} activeNode={true}>
+    <FsPanel title={`References: ${node.name}`} icon={<FsIcon icon={FsIcons.Tree} large />} secondaryChildren={secondaryContent} activeNode={true}>
       <FsReferencesRoot className={classes.root} ownerState={ownerState}>
         <div className={classes.referenceSection}>
           {references.length > 0 ? (

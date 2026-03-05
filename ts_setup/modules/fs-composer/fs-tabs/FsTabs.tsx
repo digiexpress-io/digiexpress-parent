@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton } from '@mui/material';
-import { FsColors, FsIcons } from '../fs-theme';
+import { FsColors, FsIcon, FsIcons } from '../fs-theme';
 import { FsTabProps } from './FsTabProps';
 import { useOwnerState } from './useOwnerState';
 import { FsTabRoot, useUtilityClasses } from './useUtilityClasses';
@@ -30,7 +30,11 @@ export const FsTabs: React.FC<FsTabProps> = (props) => {
             className={classes.tabTypography}
           />
           <IconButton onClick={(event) => ownerState.onTabClose(index, event)}>
-            <FsIcons.Close fontSize="inherit" sx={{ color: tab.isError ? (ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight) : (ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary) }} />
+            <FsIcon icon={FsIcons.Close} large color={tab.isError ? (
+              ownerState.isDarkMode ? FsColors.semantic.dangerDark : FsColors.semantic.dangerLight
+            ) : (
+              ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary
+            )} />
           </IconButton>
         </div>
       ))}

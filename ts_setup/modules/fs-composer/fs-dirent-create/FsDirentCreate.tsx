@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, Typography, FormControl, Select, MenuItem, Chip, OutlinedInput } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsDirentCreateProps, configOptions, mockSelectedValues } from './FsDirentCreateProps';
 import { useUtilityClasses, FsDirentCreateRoot } from './useUtilityClasses';
 import { useOwnerState } from './useOwnerState';
@@ -54,7 +54,7 @@ export const FsDirentCreate: React.FC<FsDirentCreateProps> = (props) => {
                     <Chip
                       key={value}
                       className={classes.chip}
-                      icon={IconComponent ? <IconComponent fontSize='small' /> : undefined}
+                      icon={IconComponent ? <FsIcon icon={IconComponent} small /> : undefined}
                       label={option?.label}
                       size="small"
                     />
@@ -68,7 +68,7 @@ export const FsDirentCreate: React.FC<FsDirentCreateProps> = (props) => {
               return (
                 <MenuItem key={option.value} value={option.value} className={classes.menuItem}>
                   <div className={classes.menuItemContent}>
-                    {IconComponent && <IconComponent fontSize='small' />}
+                    {IconComponent && <FsIcon icon={IconComponent} small />}
                     {option.label}
                   </div>
                 </MenuItem>
@@ -78,16 +78,14 @@ export const FsDirentCreate: React.FC<FsDirentCreateProps> = (props) => {
         </FormControl>
 
         <Typography className={classes.label}>Labels</Typography>
-        <TextField
-          className={classes.textField}
+        <TextField className={classes.textField}
           size='small'
           fullWidth
           placeholder="Select or add new labels"
         />
 
         <Typography className={classes.label}>Comments</Typography>
-        <TextField
-          className={classes.textField}
+        <TextField className={classes.textField}
           placeholder="Notes about this asset"
           size='small'
           fullWidth

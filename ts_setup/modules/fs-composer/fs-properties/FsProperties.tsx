@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-primitives';
 import { FsPropertiesProps, propertiesMock} from './FsPropertiesProps';
 import { useOwnerState } from './useOwnerState';
@@ -16,23 +16,14 @@ export const FsProperties: React.FC<FsPropertiesProps> = (props) => {
 
   if (!node) {
     return (
-      <FsPanel
-        title="Properties"
-        icon={<FsIcons.Settings />}
-        activeNode={false}
-        noNodeMessage="Select a node from the tree to view properties."
-      >
+      <FsPanel title="Properties" icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={false} noNodeMessage="Select a node from the tree to view properties.">
         <></>
       </FsPanel>
     );
   }
 
   return (
-    <FsPanel
-      title={`Properties: ${node.name}`}
-      icon={<FsIcons.Settings />}
-      activeNode={true}
-    >
+    <FsPanel title={`Properties: ${node.name}`} icon={<FsIcon icon={FsIcons.Settings} large />} activeNode={true}>
       <FsPropertiesRoot className={classes.root} ownerState={ownerState}>
         <div className={classes.propertyRow}>
           <Typography className={classes.propertyLabel}>Page Locales</Typography>

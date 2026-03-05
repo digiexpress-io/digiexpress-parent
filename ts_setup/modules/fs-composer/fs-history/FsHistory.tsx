@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-primitives';
 import { FsHistoryProps, historyData } from './FsHistoryProps';
 import { useOwnerState } from './useOwnerState';
@@ -13,14 +13,14 @@ export const FsHistory: React.FC<FsHistoryProps> = (props) => {
 
   if (!props.node) {
     return (
-      <FsPanel title="History" icon={<FsIcons.History />} activeNode={false} noNodeMessage="Select a node from the tree to view history.">
+      <FsPanel title="History" icon={<FsIcon icon={FsIcons.History} large />} activeNode={false} noNodeMessage="Select a node from the tree to view history.">
         <></>
       </FsPanel>
     );
   }
 
   return (
-    <FsPanel title={`History: ${props.node.name}`} icon={<FsIcons.History />} activeNode={true}>
+    <FsPanel title={`History: ${props.node.name}`} icon={<FsIcon icon={FsIcons.History} large />} activeNode={true}>
       <FsHistoryRoot className={classes.root} ownerState={ownerState}>
         <div className={classes.section}>
           <Typography variant="caption" className={classes.caption}>

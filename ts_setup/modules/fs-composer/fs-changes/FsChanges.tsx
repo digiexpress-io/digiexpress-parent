@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, IconButton, Tooltip, Dialog, DialogActions, Button, DialogTitle, DialogContent } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-primitives';
 import { FsChangesProps, assetsWithChanges } from './FsChangesProps';
 import { useOwnerState } from './useOwnerState';
@@ -14,7 +14,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
 
 
   return (
-    <FsPanel title='Unsaved changes' icon={<FsIcons.Save />} activeNode={true}>
+    <FsPanel title='Unsaved changes' icon={<FsIcon icon={FsIcons.Save} large />} activeNode={true}>
       <div className={classes.actionBar}>
         <Button variant='outlined' className={classes.discardButton}>Discard all changes</Button>
         <Button>Save all changes</Button>
@@ -32,7 +32,7 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
 
             <Tooltip title="Undo changes">
               <IconButton size="small" onClick={() => setConfirmOpen(true)} className={classes.undoButton}>
-                <FsIcons.Undo />
+                <FsIcon icon={FsIcons.Undo} medium />
               </IconButton>
             </Tooltip>
           </div>

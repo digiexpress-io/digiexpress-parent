@@ -3,7 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 
-import { FsIcons } from '../fs-theme';
+import { FsIcon, FsIcons } from '../fs-theme';
 import { FsPanel } from '../fs-primitives';
 import { FsHelpProps, helpMarkdownMock } from './FsHelpProps';
 import { useOwnerState } from './useOwnerState';
@@ -24,7 +24,7 @@ export const FsHelp: React.FC<FsHelpProps> = (props) => {
   };
 
   return (
-    <FsPanel title="Help" icon={<FsIcons.Help />} activeNode={true}>
+    <FsPanel title="Help" icon={<FsIcon icon={FsIcons.Help} large />} activeNode={true}>
       <FsHelpRoot className={classes.root} ownerState={ownerState}>
         <ReactMarkdown components={
           {

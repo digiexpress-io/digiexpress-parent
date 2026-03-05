@@ -148,6 +148,7 @@ export const FsIcon: React.FC<FsIconProps> = ({ icon, xsmall, small, large, clas
   const ICON_SIZES = { xsmall: 8, small: 15, medium: 20, large: 24 };
 
   let fontSize = ICON_SIZES.medium;
+
   if (xsmall) {
     fontSize = ICON_SIZES.xsmall;
   }
@@ -165,6 +166,6 @@ export const FsIcon: React.FC<FsIconProps> = ({ icon, xsmall, small, large, clas
   }
 
   return (
-    <Icon className={className} sx={{ fontSize }} />
+    <Icon className={className} sx={{ fontSize, color }} />
   );
 };
