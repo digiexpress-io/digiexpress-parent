@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.DecisionTable_AST;
 import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
@@ -55,7 +56,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
         return ast;
       }
       @Override
-      public Program close(Artifact artifact) {        
+      public Program close(Artifact artifact, List<Dependency_AST> dependencies) {        
         final List<ProgramAssociation> assocs = artifact.getAssociations();
         final List<ModelError> errors = new ArrayList<>(artifact.getErrors());
         

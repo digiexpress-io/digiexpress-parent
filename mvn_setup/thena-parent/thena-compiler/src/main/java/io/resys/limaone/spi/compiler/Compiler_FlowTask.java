@@ -1,12 +1,14 @@
 package io.resys.limaone.spi.compiler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
 import io.resys.limaone.model.ImmutableModelError;
@@ -41,7 +43,7 @@ public class Compiler_FlowTask implements CompilableUnit {
         return ast;
       }
       @Override
-      public Program close(Artifact artifact) {
+      public Program close(Artifact artifact, List<Dependency_AST> dependencies) {
         try {
           final var constructors = ast.getBeanType().getConstructors();
           Validate.isTrue(constructors.length == 1, () -> "There can be only one constructor for flow task, expected: 1 actual: " + constructors.length);

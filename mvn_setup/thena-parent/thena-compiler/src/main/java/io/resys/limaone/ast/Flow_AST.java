@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Flow_CST.YamlFlow;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.program.ExpressionProgram;
@@ -42,11 +43,13 @@ public interface Flow_AST extends Simple_AST, Serializable {
   
   YamlFlow getParseTree();
   AnyStatement getStatement();
+  List<Dependency_AST> getDependencies();
 
   //root marker
-  interface AnyStatement {
+  interface AnyStatement extends Serializable {
     StatementType getType();
   }
+  
 
   // markers
   interface BodyStatement extends AnyStatement {

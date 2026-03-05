@@ -1,6 +1,8 @@
 package io.resys.limaone.ast;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Model;
@@ -21,6 +23,7 @@ public interface AST_Parser {
   interface FlowParser {
     FlowParser id(String id);
     FlowParser syntax(String syntax);
+    FlowParser onDependency(Consumer<Dependency_AST> dependency);
     Flow_AST parse();
   }
   
@@ -37,9 +40,10 @@ public interface AST_Parser {
     FlowTask_AST parse();
   }
 
-  interface RequireDependency {
+  interface Dependency_AST {
     String getDependencyId();
-    String getDependencyName();
     Model.BodyType getType();
+    
+    Optional<Simple_AST> getArtifactAst();
   }
 }

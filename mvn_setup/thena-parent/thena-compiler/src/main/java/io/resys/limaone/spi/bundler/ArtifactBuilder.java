@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
-import io.resys.limaone.spi.compiler.CompilableUnit.Dependency;
 import io.resys.limaone.spi.compiler.ImmutableArtifact;
 
 public class ArtifactBuilder {
@@ -18,8 +18,8 @@ public class ArtifactBuilder {
   private String artifactName;
   private Model.BodyType artifactType;
 
-  private final List<Dependency> childDeps = new ArrayList<>();
-  private final List<Dependency> parentDeps = new ArrayList<>();
+  private final List<Dependency_AST> childDeps = new ArrayList<>();
+  private final List<Dependency_AST> parentDeps = new ArrayList<>();
   private final List<ModelError> errors = new ArrayList<>();
   private final List<ProgramAssociation> associations = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class ArtifactBuilder {
   }
 
   // Mutable list operations
-  public ArtifactBuilder addChildDep(Dependency dep) {
+  public ArtifactBuilder addChildDep(Dependency_AST dep) {
     this.childDeps.add(dep);
     return this;
   }
@@ -67,7 +67,7 @@ public class ArtifactBuilder {
     return errors; // Mutable access
   }
 
-  public List<Dependency> getChildDeps() {
+  public List<Dependency_AST> getChildDeps() {
     return childDeps; // Mutable access
   }
 

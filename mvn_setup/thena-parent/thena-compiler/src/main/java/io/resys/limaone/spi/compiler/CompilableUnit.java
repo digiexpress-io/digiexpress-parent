@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.ModelError;
@@ -13,7 +14,6 @@ import io.resys.limaone.program.Program;
 import io.resys.limaone.program.Program.ProgramAssociation;
 import io.resys.limaone.program.Program.ProgramStatus;
 import io.smallrye.mutiny.Uni;
-import jakarta.annotation.Nullable;
 
 public interface CompilableUnit {
   OpenProgram compile(NewArtifact resolution);
@@ -21,7 +21,7 @@ public interface CompilableUnit {
   interface OpenProgram {
     String getId();
     Simple_AST getAst();
-    Program close(Artifact artifact);
+    Program close(Artifact artifact, List<Dependency_AST> dependencies);
   }
 
 
@@ -34,17 +34,10 @@ public interface CompilableUnit {
     NewArtifact id(String id);
     NewArtifact name(String name);
     NewArtifact ast(Simple_AST ast);
-    RequireDependency requireDependnecy();
+    NewArtifact requireDependnecy(Dependency_AST ast);
+    NewArtifact requireDependnecy(Dependency_AST ast, Validator validator);
     void build();
   }
-  
-  interface RequireDependency {
-    RequireDependency id(String id); 
-    RequireDependency bodyType(Model.BodyType bodyType); 
-    RequireDependency validator(@Nullable Validator validator);
-    void build();
-  }
-  
   
   interface Validator {
     ValidatorResult validate(Optional<Simple_AST> dependency);
@@ -64,17 +57,11 @@ public interface CompilableUnit {
     
     Model.BodyType getArtifactType();
     
-    List<Dependency> getChildDeps(); // who do I depend on aka children
-    List<Dependency> getParentDeps(); // who depends on me
+    List<Dependency_AST> getChildDeps(); // who do I depend on aka children
+    List<Dependency_AST> getParentDeps(); // who depends on me
     
     List<ModelError> getErrors();
     List<ProgramAssociation> getAssociations(); 
     ProgramStatus getProgramStatus();
-  }
-
-  interface Dependency {
-    String getArtifactId();
-    String getArtifactName();
-    Model.BodyType getArtifactType();
   }
 }

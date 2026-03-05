@@ -2,11 +2,9 @@ package io.resys.limaone.spi.bundler;
 
 import java.util.function.Consumer;
 
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Simple_AST;
-import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.spi.compiler.CompilableUnit.NewArtifact;
-import io.resys.limaone.spi.compiler.CompilableUnit.RequireDependency;
-import io.resys.limaone.spi.compiler.CompilableUnit.Validator;
 import lombok.RequiredArgsConstructor;
 
 
@@ -14,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class NewArtifact_Impl implements NewArtifact {
 
   private final Consumer<ArtifactBuilder> artifact_callback;
-  private final Consumer<DependencyBuilder> dependency_callback;
+  private final Consumer<Dependency_AST> dependency_callback;
   private final ArtifactBuilder artifactBuilder = new ArtifactBuilder();
   @Override
   public NewArtifact ast(Simple_AST ast) {
@@ -32,32 +30,9 @@ public class NewArtifact_Impl implements NewArtifact {
     return this;
   }
   @Override
-  public RequireDependency requireDependnecy() {
-    final DependencyBuilder dependencyBuilder = new DependencyBuilder(artifactBuilder); 
-    this.dependency_callback.accept(dependencyBuilder);
-    
-    return new RequireDependency() {
-      @Override
-      public RequireDependency validator(Validator validator) {
-        dependencyBuilder.validator(validator);
-        return this;
-      }
-      @Override
-      public RequireDependency id(String idOrName) {
-        dependencyBuilder.id(idOrName);
-        return this;
-      }
-      @Override
-      public RequireDependency bodyType(BodyType bodyType) {
-        dependencyBuilder.bodyType(bodyType);
-        return this;
-      }
-      @Override
-      public void build() {
-        dependencyBuilder.init();
-      }
-      
-    };
+  public NewArtifact_Impl requireDependnecy(Dependency_AST dep) { 
+    this.dependency_callback.accept(dep);
+    return this;
   }
   @Override
   public void build() {

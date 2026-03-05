@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.model.ModelError;
 import io.resys.limaone.program.ArticleProgram.LocalizedSite;
@@ -80,7 +81,7 @@ public class Compiler_Article implements CompilableUnit {
       }
       
       @Override
-      public Program close(Artifact artifact) {
+      public Program close(Artifact artifact, List<Dependency_AST> dependencies) {
         final List<ModelError> errors = artifact.getErrors();
         final List<ProgramAssociation> assocs = artifact.getAssociations();
         final var program = new ImmutableArticleProgram(articleAST, artifact.getProgramStatus(), errors, assocs, sites);

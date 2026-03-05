@@ -1,8 +1,11 @@
 package io.resys.limaone.spi.compiler;
 
+import java.util.List;
+
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Simple_AST;
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.ModelWorld;
@@ -20,13 +23,13 @@ public class Compiler_Flow implements CompilableUnit {
   
   @Override
   public OpenProgram compile(NewArtifact resolution) {
-    final Flow_AST ast = parser.parseFlow().id(flow.getId()).syntax(flow.getBody().getFlowValue()).parse();
     
-    resolution.ast(ast).id(flow.getId()).name(ast.getName());
-    
-    new Compiler_FlowDepsValidator(resolution, ast).validate();
-    resolution.build();
-    
+    final Flow_AST ast = parser.parseFlow()
+        .id(flow.getId())
+        .syntax(flow.getBody().getFlowValue())
+        .onDependency(dep -> resolution.requireDependnecy(dep))
+        .parse();
+    resolution.ast(ast).id(flow.getId()).name(ast.getName()).build();
     
     return new OpenProgram() {
       @Override
@@ -38,7 +41,8 @@ public class Compiler_Flow implements CompilableUnit {
         return ast;
       }
       @Override
-      public Program close(Artifact artifact) {
+      public Program close(Artifact artifact, List<Dependency_AST> dependencies) {
+        new Compiler_FlowDepsValidator(resolution, ast).walk();
         return new FlowProgramImpl(
             ast, 
             artifact.getProgramStatus(), 
