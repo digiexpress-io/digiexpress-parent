@@ -1,10 +1,12 @@
 package io.resys.limaone.spi.compiler;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Flow_AST;
 import io.resys.limaone.ast.Flow_AST.AnyStatement;
 import io.resys.limaone.ast.Flow_AST.CaseStatement;
@@ -21,33 +23,47 @@ import io.resys.limaone.ast.Flow_AST.ReturnsStatement;
 import io.resys.limaone.ast.Flow_AST.StartStatement;
 import io.resys.limaone.ast.Flow_AST.StatementType;
 import io.resys.limaone.ast.Flow_AST.SwitchStatement;
+import io.resys.limaone.model.ImmutableModelError;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter;
 import io.resys.limaone.spi.compiler.CompilableUnit.Artifact;
-import io.resys.limaone.spi.program.FlowProgramExecutor.StatementException;
-import io.resys.limaone.spi.program.expression.OperationContext.ExternalContext;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
 
 @RequiredArgsConstructor
 public class Compiler_FlowDepsValidator {
   private final Artifact artifact;
   private final Flow_AST ast;
-  
+  private final Map<String, Dependency_AST> childrenByName = new HashMap<>();
     
   private final ValidatorResult REACHED_END = new ValidatorResult() {};
   private final ValidatorProps NO_PROPS = new ValidatorProps() {};
-
   private final Map<String, Parameter> flowInputs = new HashMap<>();
+  private final Map<String, OneTaskStatement> tasks = new HashMap<>();
+  private final Map<String, Map<String, Parameter>> acceptDefs = new HashMap<>();
+  private final Map<String, Map<String, Parameter>> returnDefs = new HashMap<>();
+  private final List<DepToValidate> toValidate = new ArrayList<>();
+  
+  private final List<ModelError> errors = new ArrayList<>();
   
 
   interface ValidatorResult {}
   interface ValidatorProps {}
+  
+  @Value
+  public static class MappingValidatorProps implements ValidatorProps {
+    Optional<String> dependencyId; 
+    StatementType parent;
+  }
 
   /**
    * Walk the entire Flow AST starting from the root statement
    */
   public ValidatorResult walk() {
+    artifact.getChildDeps().forEach(dep -> childrenByName.put(dep.getDependencyId(), dep));
     visit(ast.getStatement(), NO_PROPS);
+    toValidate.forEach(this::visitDepToValidate);
     return REACHED_END;
   }
   
@@ -61,6 +77,10 @@ public class Compiler_FlowDepsValidator {
   
 
   public ValidatorResult visitManyTasksStatement(ManyTasksStatement statement, ValidatorProps ValidatorProps) {
+    
+    for (final var task : statement.getTasks().values()) {
+      tasks.put(task.getId(), task); 
+    }
     
     // Container for multiple tasks - continue to next
     return visit(statement.getNext(), NO_PROPS);
@@ -84,113 +104,43 @@ public class Compiler_FlowDepsValidator {
   
 
   public ValidatorResult visitDecisionTableStatement(DecisionTableStatement statement, ValidatorProps ValidatorProps) {
-    // Process decision table execution
-    final var dt = runtime.getBundle().queryDecisions()
-        .name(statement.getDecisionTableName())
-        .getOne();
-    
-    final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
-    for(final var inputs : sets) {
-      try {
-        final LocalDateTime start = LocalDateTime.now();
-        final var result = dt.run(assignment.withInputs(inputs), runtime).andGetBody();
-        
-        final var newFrame = stack.newFrame(statement, inputs, result, start);
-        assignment.assignFromTask(newFrame);
-        
-      } catch(Exception e) {
-        throw new StatementException(e.getMessage(), statement, inputs, e);
-      }
-    }
+    visitMappingStatement(statement.getMapping(), new MappingValidatorProps(
+        Optional.of(statement.getDecisionTableName()),
+        StatementType.BODY_DECISION_TABLE
+    ));
     return REACHED_END;
   }
   
 
   public ValidatorResult visitFlowTaskStatement(FlowTaskStatement statement, ValidatorProps ValidatorProps) {
-    // Process service/groovy task execution
-    final var ft = runtime.getBundle().queryFlowTasks()
-        .name(statement.getFlowTaskName())
-        .getOne();
-    
-    final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
-    for(final var inputs : sets) {
-      try {
-        final LocalDateTime start = LocalDateTime.now();
-        final var result = ft.run(assignment.withInputs(inputs), runtime).andGetBody();
-        
-        final var newFrame = stack.newFrame(statement, inputs, result, start);
-        assignment.assignFromTask(newFrame);
-        
-      } catch(Exception e) {
-        throw new StatementException(e.getMessage(), statement, inputs, e);
-      }
-    }
-    
+    visitMappingStatement(statement.getMapping(), new MappingValidatorProps(
+        Optional.of(statement.getFlowTaskName()),
+        StatementType.BODY_FLOW_TASK
+    ));
     return REACHED_END;
   }
   
 
   public ValidatorResult visitReturnsStatement(ReturnsStatement statement, ValidatorProps ValidatorProps) {
-    
-    // Visit return mapping
-    final var sets = visitMappingStatement(statement.getMapping(), NO_PROPS).getValues();
-    for(final var inputs : sets) {
-      try {
-        final LocalDateTime start = LocalDateTime.now();
-        final var newFrame = stack.newFrame(statement, inputs, start);
-        assignment.assignFromTask(newFrame);
-      } catch(Exception e) {
-        throw new StatementException(e.getMessage(), statement, inputs, e);
-      }
-    }
+    visitMappingStatement(statement.getMapping(), new MappingValidatorProps(
+        Optional.empty(),
+        StatementType.BODY_RETURNS
+    ));
     return REACHED_END;
   }
   
 
   public ValidatorResult visitSwitchStatement(SwitchStatement statement, ValidatorProps ValidatorProps) {
-    
-    for(final var mappingEntry : visitMappingStatement(statement.getMapping(), NO_PROPS).getValues()) {
-      final var context = new ExternalContext() {
-        public Object apply(String name) {
-          if(mappingEntry.containsKey(name)) {
-            return mappingEntry.get(name);
-          }
-          return mappingEntry.entrySet().stream()
-            .filter(e -> e.getKey().startsWith(name + "."))
-            .collect(Collectors.toMap(e -> e.getKey().substring(name.length() + 1), e -> e.getValue()));
-        }
-      };
-      
-      boolean isAtleastOneMatch = false;
-      for(final var whenThen : statement.getCases()) {
-        final var propsResult = visitCaseStatement(whenThen, new CaseStatementProps(statement, context, mappingEntry));
-        if(propsResult.isMatch) {
-          isAtleastOneMatch = true;
-          break;
-        }
-      }
-      
-      if(!isAtleastOneMatch) {
-        log.debug("Flow switch: '" + statement.getMapping().getTaskId() + "' does not match any expressions!");
-      }
-    }
+    visitMappingStatement(statement.getMapping(), new MappingValidatorProps(
+        Optional.empty(),
+        StatementType.BODY_SWITCH
+    ));
     return REACHED_END;
   }
   
 
   public ValidatorResult visitCaseStatement(CaseStatement statement, ValidatorProps props) {
-
-    final LocalDateTime start = LocalDateTime.now();
-    final var condition = statement.getWhen().run(props.getContext());
-    stack.newFrame(props.getBody(), props.getAccepts(), condition, start);
-
-    if(Boolean.TRUE.equals(condition.getValue())) {
-      visit(statement.getThen(), null);
-      return new CaseStatementResult(true);
-    }
-    
-    // Visit next statement for this case
-    return new CaseStatementResult(false);
+    return REACHED_END;
   }
   
 
@@ -212,10 +162,85 @@ public class Compiler_FlowDepsValidator {
   }
   
 
-  public ValidatorResult visitMappingStatement(MappingStatement statement, ValidatorProps props) {
-    return new MappingResults(assignment.mapTo(statement.getTaskId(), statement));
+  public ValidatorResult visitMappingStatement(MappingStatement statement, MappingValidatorProps props) {
+    final var taskId = statement.getTaskId();
+    acceptDefs.put(taskId, new HashMap<>());
+    returnDefs.put(taskId, new HashMap<>());
+    
+    
+    if(props.getDependencyId().isPresent()) {
+      final var childDep = this.childrenByName.get(props.getDependencyId().get());
+      if(childDep.getArtifactAst().isEmpty()) {
+        errors.add(ImmutableModelError.builder()
+            .msg("Task: '" + statement.getTaskId() + "' has ref: " + childDep.getDependencyId() + " to unknown asset!")
+            .build());
+        return REACHED_END;
+      }
+      
+      final var headers = childDep.getArtifactAst().get().getHeaders();
+      headers.getAcceptDefs().forEach(e -> acceptDefs.get(taskId).put(e.getName(), e));
+      headers.getReturnDefs().forEach(e -> returnDefs.get(taskId).put(e.getName(), e));
+    }
+    this.toValidate.add(new DepToValidate(statement, props.getParent()));
+    return REACHED_END;
   }
   
+  public ValidatorResult visitDepToValidate(DepToValidate depToValidate) {
+    final var statement = depToValidate.getStatement();
+    for(final var mapping : statement.getAssignments().entrySet()) {
+      final var fromPath = mapping.getValue().split("\\.");
+      final var to = mapping.getKey();
+      final var fromTask = fromPath[0];
+      final var from = fromPath.length > 1 ? fromPath[1] : fromPath[0];
+      final var toTask = depToValidate.getStatement().getTaskId();
+      final var toParam = acceptDefs.get(toTask).get(to);
+      
+      final Parameter fromParam;
+      if(flowInputs.containsKey(from)) {
+        fromParam = flowInputs.get(from);
+      } else if(tasks.containsKey(fromTask)) {
+        fromParam = returnDefs.get(fromTask).get(from);
+      } else {
+        fromParam = null;
+      }
+      
+      visitMappingProp(Optional.ofNullable(fromParam), Optional.ofNullable(toParam), statement, depToValidate, to, from);
+    }
+    
+    return REACHED_END;
+  }
+  
+  public void visitMappingProp(
+      Optional<Parameter> from, Optional<Parameter> to, 
+      MappingStatement statement, DepToValidate props, 
+      String toName, String fromName) {
+    
+    if(from.isPresent() && to.isPresent() && 
+      !to.get().getValueType().equals(from.get().getValueType())) {
+      
+      errors.add(ImmutableModelError.builder()
+          .msg("Task: '" + statement.getTaskId() + "' has type mismatch " + 
+              "@" + to.get().getName() + ": " + to.get().getValueType().name().toLowerCase() + 
+              " <> " +
+              "@" + from.get().getName() + ": " + from.get().getValueType().name().toLowerCase())
+          .build());
+      
+      return;
+    }
+    
+    if(to.isEmpty()) {
+      errors.add(ImmutableModelError.builder()
+          .msg("Task: '" + statement.getTaskId() + "' has unknown parameter @to: " + toName)
+          .build());
+      return;
+    }
+    if(from.isEmpty()) {
+      errors.add(ImmutableModelError.builder()
+          .msg("Task: '" + statement.getTaskId() + "' has unknown parameter @from: " + fromName)
+          .build());
+      return;
+    }
+  }
 
   
   public ValidatorResult visit(AnyStatement statement, ValidatorProps props) {
@@ -245,9 +270,15 @@ public class Compiler_FlowDepsValidator {
       case NEXT_IS_POINTER:
         return visitPointerStatement((PointerStatement) statement, props);
       case MAPPING:
-        return visitMappingStatement((MappingStatement) statement, props);
+        return visitMappingStatement((MappingStatement) statement, (MappingValidatorProps) props);
       default:
         throw new IllegalArgumentException("Unknown statement type: " + statement.getType());
     }
+  }
+  
+  @Value
+  private static class DepToValidate {
+    MappingStatement statement; 
+    StatementType parent;
   }
 }
