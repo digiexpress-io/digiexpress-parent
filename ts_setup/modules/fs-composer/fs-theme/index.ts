@@ -1,2 +1,2 @@
 export * from './fs-colors';
-export { FsIcons } from './fs-icons';
+export * from './fs-icons';

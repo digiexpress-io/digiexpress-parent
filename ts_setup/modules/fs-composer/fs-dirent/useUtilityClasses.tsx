@@ -1,7 +1,7 @@
 import React from 'react';
 import { generateUtilityClass, styled, Badge, ListItemText, Typography, Tooltip, alpha, Box } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { FsColors, getNodeColor, FsIcons } from '../fs-theme';
+import { FsColors, getNodeColor, FsIcons, FsIcon } from '../fs-theme';
 import { SearchResultHighlight } from '../fs-search/SearchResultHighlight';
 
 import { ConfigOption, FsNode, useFs } from '@dxs-ts/fs-api';
@@ -312,28 +312,28 @@ export function getConfigIcons(configOptions: ConfigOption[], iconClassName: str
     if (config.devMode) {
       icons.push(
         <Tooltip key="dev" title="Development Mode" arrow>
-          <FsIcons.DevMode fontSize='small' className={iconClassName} />
+          <FsIcon small icon={FsIcons.DevMode} className={iconClassName} />
         </Tooltip>
       );
     }
     if (config.assignableMode) {
       icons.push(
         <Tooltip key="assign" title="Assignable Mode" arrow>
-          <FsIcons.Assignment fontSize='small' className={iconClassName} />
+          <FsIcon small icon={FsIcons.Assignment} className={iconClassName} />
         </Tooltip>
       );
     }
     if (config.disabledMode) {
       icons.push(
         <Tooltip key="disabled" title="Disabled Mode" arrow>
-          <FsIcons.Disabled fontSize='small' className={iconClassName} />
+          <FsIcon small icon={FsIcons.Disabled} className={iconClassName} />
         </Tooltip>
       );
     }
     if (config.anonymousMode) {
       icons.push(
         <Tooltip key="anonymous" title="Anonymous Mode" arrow>
-          <FsIcons.Anonymous fontSize='small' className={iconClassName} />
+          <FsIcon small icon={FsIcons.Anonymous} className={iconClassName} />
         </Tooltip>
       );
     }
@@ -341,7 +341,7 @@ export function getConfigIcons(configOptions: ConfigOption[], iconClassName: str
 
   return icons.length > 0 ? icons : [
     <Tooltip key="default" title="Configuration" arrow>
-      <FsIcons.Settings fontSize='small' className={iconClassName} />
+      <FsIcon small icon={FsIcons.Settings} className={iconClassName} />
     </Tooltip>
   ];
 }

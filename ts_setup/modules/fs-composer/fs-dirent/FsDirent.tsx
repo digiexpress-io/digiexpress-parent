@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Collapse, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 
 import { useUtilityClasses, FsDirentRoot, getIcon, getIconClassName, getConfigIcons, FsDirentName } from './useUtilityClasses';
-import { FsIcons } from '../fs-theme';
+import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
 import { FsNode } from '@dxs-ts/fs-api';
@@ -23,7 +23,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
         <Box className={classes.explorerNodeContent}>
           {ownerState.children ? (
             <IconButton size='small'>
-              {ownerState.node.expanded ? <FsIcons.ExpandMore fontSize='small' className={classes.iconExpand} /> : <FsIcons.ChevronRight fontSize='small' className={classes.iconExpand} />}
+              {ownerState.node.expanded ? <FsIcon small icon={FsIcons.ExpandMore} className={classes.iconExpand} /> : <FsIcon small icon={FsIcons.ChevronRight} className={classes.iconExpand} />}
             </IconButton>
           ) : (
               <Box sx={{ width: 21, mr: 0.5 }} />

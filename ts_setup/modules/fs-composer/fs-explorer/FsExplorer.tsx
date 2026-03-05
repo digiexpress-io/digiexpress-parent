@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, List, IconButton, Badge, Tooltip } from '@mui/material';
-import { FsIcons } from '../fs-theme';
+import { FsIcons, FsIcon } from '../fs-theme';
 import { FsDirent } from '../fs-dirent';
 import { FsDirentMenu } from '../fs-dirent-menu';
 import { FsSearch } from '../fs-search';
@@ -22,12 +22,11 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         <Tooltip title='Toggle search' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
             <IconButton className={classes.iconDark} onClick={() => ownerState.setSearchExpanded(!ownerState.isSearchExpanded)}>
-              <Badge
-                className={classes.badgeDark}
+              <Badge className={classes.badgeDark}
                 badgeContent={ownerState.isSearchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
-                <FsIcons.Search sx={{ fontSize: '15px', transform: 'scaleX(-1)' }} />
+                <FsIcon icon={FsIcons.Search} small />
               </Badge>
             </IconButton>
           ) : (
@@ -37,7 +36,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
                   badgeContent={ownerState.isSearchExpanded ? <FsIcons.Close sx={{ fontSize: '8px' }} /> : undefined}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
-                <FsIcons.Search sx={{ fontSize: '15px', transform: 'rotate(90deg)' }} />
+                  <FsIcon icon={FsIcons.Search} small />
                 </Badge>
               </IconButton>
           )}
@@ -46,13 +45,13 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
           {ownerState.isDarkMode ? (
             <IconButton className={classes.iconDark}>
               <Badge className={classes.badgeDark} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.File sx={{ fontSize: '15px' }} />
+                <FsIcon icon={FsIcons.File} small />
               </Badge>
             </IconButton>
           ) : (
               <IconButton className={classes.iconLight}>
                 <Badge className={classes.badgeLight} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.File sx={{ fontSize: '15px' }} />
+                  <FsIcon icon={FsIcons.File} small />
                 </Badge>
               </IconButton>
           )}
@@ -61,13 +60,13 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
           {ownerState.isDarkMode ? (
             <IconButton className={classes.iconDark}>
               <Badge className={classes.badgeDark} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.Folder sx={{ fontSize: '15px' }} />
+                <FsIcon icon={FsIcons.Folder} small />
               </Badge>
             </IconButton>
           ) : (
               <IconButton className={classes.iconLight}>
                 <Badge className={classes.badgeLight} badgeContent={<FsIcons.Add sx={{ fontSize: '8px' }} />} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <FsIcons.Folder sx={{ fontSize: '15px' }} />
+                  <FsIcon icon={FsIcons.Folder} small />
                 </Badge>
               </IconButton>
           )}
@@ -81,7 +80,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
               onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
               disabled={!ownerState.isAnyNodeExpanded}
             >
-              <FsIcons.CollapseAll sx={{ fontSize: '15px' }} />
+              <FsIcon icon={FsIcons.CollapseAll} small />
             </IconButton>
           ) : (
               <IconButton
@@ -89,7 +88,7 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
               onClick={() => ownerState.collapseAll(ownerState.fsData, ownerState.setFsData)}
               disabled={!ownerState.isAnyNodeExpanded}
             >
-              <FsIcons.CollapseAll sx={{ fontSize: '15px' }} />
+                <FsIcon icon={FsIcons.CollapseAll} small />
               </IconButton>
           )}
         </Tooltip>
@@ -97,11 +96,11 @@ export const FsExplorer: React.FC<FsExplorerProps> = (props) => {
         <Tooltip title='Toggle light/dark mode' arrow enterDelay={1000}>
           {ownerState.isDarkMode ? (
             <IconButton className={classes.iconDark} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
-              <FsIcons.LightMode sx={{ fontSize: '15px' }} />
+              <FsIcon icon={FsIcons.LightMode} small />
             </IconButton>
           ) : (
               <IconButton className={classes.iconLight} onClick={() => ownerState.setIsDarkMode(!ownerState.isDarkMode)}>
-              <FsIcons.DarkMode sx={{ fontSize: '15px' }} />
+                <FsIcon icon={FsIcons.LightMode} small />
               </IconButton>
           )}
         </Tooltip>

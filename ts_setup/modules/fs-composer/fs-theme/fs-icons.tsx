@@ -1,8 +1,5 @@
-/**
- * Centralized icon declarations for FsComposer components
- * All Material-UI icons used across the fs-composer component system
- * Usage: <FsIcons.IconName>
- */
+import React from 'react';
+
 import {
   // Navigation & Expansion Icons
   ExpandMore,
@@ -67,6 +64,7 @@ import {
   WorkHistory,
   Help,
 } from '@mui/icons-material';
+import { SvgIconProps } from '@mui/material';
 
 export const FsIcons = {
   // Navigation & Expansion
@@ -132,4 +130,28 @@ export const FsIcons = {
   Tree: AccountTree,
   History: WorkHistory,
   Help: Help,
+};
+
+export interface FsIconProps {
+  icon: React.ElementType<SvgIconProps>;
+  small?: boolean;
+  medium?: boolean;
+  large?: boolean;
+  className?: string;
+}
+
+export const FsIcon: React.FC<FsIconProps> = ({ icon, small, large, className }) => {
+  const Icon = icon;
+  const ICON_SIZES = { small: 15, medium: 20, large: 24 };
+
+  let fontSize = ICON_SIZES.medium;
+
+  if (small) {
+    fontSize = ICON_SIZES.small
+  }
+  if (large) {
+    fontSize = ICON_SIZES.large
+  }
+
+  return <Icon className={className} sx={{ fontSize }} />;
 };
