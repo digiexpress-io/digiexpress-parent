@@ -64,7 +64,7 @@ import {
   WorkHistory,
   Help,
 } from '@mui/icons-material';
-import { SvgIconProps } from '@mui/material';
+import { SvgIconProps, Tooltip } from '@mui/material';
 
 export const FsIcons = {
   // Navigation & Expansion
@@ -134,24 +134,37 @@ export const FsIcons = {
 
 export interface FsIconProps {
   icon: React.ElementType<SvgIconProps>;
+  xsmall?: boolean;
   small?: boolean;
   medium?: boolean;
   large?: boolean;
   className?: string;
+  tooltip?: string;
+  color?: string;
 }
 
-export const FsIcon: React.FC<FsIconProps> = ({ icon, small, large, className }) => {
+export const FsIcon: React.FC<FsIconProps> = ({ icon, xsmall, small, large, className, tooltip, color }) => {
   const Icon = icon;
-  const ICON_SIZES = { small: 15, medium: 20, large: 24 };
+  const ICON_SIZES = { xsmall: 8, small: 15, medium: 20, large: 24 };
 
   let fontSize = ICON_SIZES.medium;
-
+  if (xsmall) {
+    fontSize = ICON_SIZES.xsmall;
+  }
   if (small) {
     fontSize = ICON_SIZES.small
   }
   if (large) {
     fontSize = ICON_SIZES.large
   }
+  if (tooltip) {
+    return (
+      <Tooltip title={tooltip} arrow>
+        <Icon className={className} sx={{ fontSize, color }} />
+      </Tooltip>)
+  }
 
-  return <Icon className={className} sx={{ fontSize }} />;
+  return (
+    <Icon className={className} sx={{ fontSize }} />
+  );
 };

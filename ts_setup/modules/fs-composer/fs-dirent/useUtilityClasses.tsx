@@ -311,38 +311,28 @@ export function getConfigIcons(configOptions: ConfigOption[], iconClassName: str
   for (const config of configOptions) {
     if (config.devMode) {
       icons.push(
-        <Tooltip key="dev" title="Development Mode" arrow>
-          <FsIcon small icon={FsIcons.DevMode} className={iconClassName} />
-        </Tooltip>
+        <FsIcon small icon={FsIcons.DevMode} className={iconClassName} tooltip='Development Mode' key='development' />
       );
     }
     if (config.assignableMode) {
       icons.push(
-        <Tooltip key="assign" title="Assignable Mode" arrow>
-          <FsIcon small icon={FsIcons.Assignment} className={iconClassName} />
-        </Tooltip>
+        <FsIcon small icon={FsIcons.Assignment} className={iconClassName} tooltip='Assignable Mode' key='assignable' />
       );
     }
     if (config.disabledMode) {
       icons.push(
-        <Tooltip key="disabled" title="Disabled Mode" arrow>
-          <FsIcon small icon={FsIcons.Disabled} className={iconClassName} />
-        </Tooltip>
+        <FsIcon small icon={FsIcons.Disabled} className={iconClassName} tooltip='Disabled Mode' key='disabled' />
       );
     }
     if (config.anonymousMode) {
       icons.push(
-        <Tooltip key="anonymous" title="Anonymous Mode" arrow>
-          <FsIcon small icon={FsIcons.Anonymous} className={iconClassName} />
-        </Tooltip>
+        <FsIcon small icon={FsIcons.Anonymous} className={iconClassName} tooltip='Anonymous Mode' key='anonymous' />
       );
     }
   }
 
   return icons.length > 0 ? icons : [
-    <Tooltip key="default" title="Configuration" arrow>
-      <FsIcon small icon={FsIcons.Settings} className={iconClassName} />
-    </Tooltip>
+    <FsIcon small icon={FsIcons.Settings} className={iconClassName} tooltip='Configuration' key='configuration' />
   ];
 }
 
