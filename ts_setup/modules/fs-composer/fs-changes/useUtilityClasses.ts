@@ -64,14 +64,16 @@ export const FsChangesRoot = styled('div', {
     fontWeight: 500,
     color: ownerState.isDarkMode ? FsColors.dark.text : FsColors.light.text,
     width: '300px',
-    flexShrink: 0
+    flexShrink: 0,
+    ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-statusText`]: {
     fontWeight: 500,
     width: '100px',
     flexShrink: 0,
-    textAlign: 'right'
+    textAlign: 'right',
+    ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-undoButton`]: {

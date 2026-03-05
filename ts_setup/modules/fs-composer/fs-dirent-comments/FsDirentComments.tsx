@@ -16,13 +16,10 @@ export const FsDirentComments: React.FC<FsDirentCommentsProps> = (props) => {
     <FsDirentCommentsRoot className={classes.root} ownerState={ownerState}>
       <Typography className={classes.title}>Comments ({comments.length})</Typography>
 
-      <TextField
-        className={classes.textField}
+      <TextField fullWidth multiline className={classes.textField}
         placeholder='Add a comment...'
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
-        fullWidth
-        multiline
         minRows={2}
         maxRows={10}
       />

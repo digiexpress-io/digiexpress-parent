@@ -2,13 +2,13 @@ import composeClasses from '@mui/utils/composeClasses';
 import { generateUtilityClass, styled, Popover } from '@mui/material';
 import { FsColors } from '../fs-theme';
 
-export const MUI_NAME = 'FsNodeMenu';
+export const MUI_NAME = 'FsDirentMenu';
 export const MENU_WIDTH = 350;
 export const MENU_WIDTH_EXTENDED = MENU_WIDTH * 2;
 export const MENU_HEIGHT = 700; // Approximate height when submenu is open
 export const MENU_PADDING = 8; // theme.spacing(0.5) * 2 for top and bottom padding
 
-export interface FsNodeMenuClasses {
+export interface FsDirentMenuClasses {
   root: string;
   headerMain: string;
   menuItem: string;
@@ -26,7 +26,7 @@ export interface FsNodeMenuClasses {
   sectionSub: string;
 }
 
-export type FsNodeMenuClassKey = keyof FsNodeMenuClasses;
+export type FsDirentMenuClassKey = keyof FsDirentMenuClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -50,7 +50,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 };
 
-export const FsNodeMenuRoot = styled(Popover, {
+export const FsDirentMenuRoot = styled(Popover, {
   name: MUI_NAME,
   slot: 'Root',
   shouldForwardProp: (prop) => !['isSubmenuOpen', 'shouldExpandUpward'].includes(prop as string),

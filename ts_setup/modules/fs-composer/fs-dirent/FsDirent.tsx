@@ -5,6 +5,7 @@ import { useUtilityClasses, FsDirentRoot, getIcon, getIconClassName, getConfigIc
 import { FsIcons } from '../fs-theme';
 import { FsDirentProps } from './FsDirentProps';
 import { useOwnerState } from './useOwnerState';
+import { FsNode } from '@dxs-ts/fs-api';
 
 
 export const FsDirent: React.FC<FsDirentProps> = (props) => {
@@ -35,15 +36,7 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
             error={ownerState.showError ? true : false}
             searchTerm={ownerState.searchTerm}
           />
-          {ownerState.configOptions && (
-            <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
-              {getConfigIcons(ownerState.node.configOptions!, classes.iconConfig).map((tooltipIcon) => (
-                <Box key={tooltipIcon.key} display='flex' alignItems='center'>
-                  {tooltipIcon}
-                </Box>
-              ))}
-            </Box>
-          )}
+          {ownerState.configOptions && (<ConfigOptionIcons iconConfig={classes.iconConfig} node={props.node} />)}
         </Box>
       </ListItem>
       {ownerState.children && (
@@ -66,3 +59,21 @@ export const FsDirent: React.FC<FsDirentProps> = (props) => {
     </FsDirentRoot>
   );
 };
+
+interface ConfigOptionIconsProps {
+  node: FsNode;
+  iconConfig: string;
+}
+
+const ConfigOptionIcons: React.FC<ConfigOptionIconsProps> = ({ node, iconConfig }) => {
+
+  return (
+    <Box sx={{ marginLeft: 'auto', paddingRight: 1, display: 'flex', gap: 0.5 }}>
+      {getConfigIcons(node.configOptions!, iconConfig).map((tooltipIcon) => (
+        <Box key={tooltipIcon.key} display='flex' alignItems='center'>
+          {tooltipIcon}
+        </Box>
+      ))}
+    </Box>
+  )
+}

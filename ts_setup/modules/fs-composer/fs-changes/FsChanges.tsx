@@ -23,19 +23,15 @@ export const FsChanges: React.FC<FsChangesProps> = (props) => {
       <FsChangesRoot className={classes.root} ownerState={ownerState}>
         {assetsWithChanges.map((asset) => (
           <div key={asset.id} className={classes.changeRow}>
-            <Typography variant="subtitle2" className={classes.assetName}>
+            <Typography className={classes.assetName}>
               {asset.name}
             </Typography>
-            <Typography variant="subtitle2" className={classes.statusText} style={{ color: getStatusColor(asset.status, isDarkMode) }}>
+            <Typography className={classes.statusText} style={{ color: getStatusColor(asset.status, isDarkMode) }}>
               {asset.status}
             </Typography>
 
             <Tooltip title="Undo changes">
-              <IconButton
-                size="small"
-                onClick={() => setConfirmOpen(true)}
-                className={classes.undoButton}
-              >
+              <IconButton size="small" onClick={() => setConfirmOpen(true)} className={classes.undoButton}>
                 <FsIcons.Undo />
               </IconButton>
             </Tooltip>

@@ -42,9 +42,7 @@ export const FsDirentCreate: React.FC<FsDirentCreateProps> = (props) => {
 
         <Typography className={classes.label}>Config options</Typography>
         <FormControl className={classes.formControl} fullWidth size='small'>
-          <Select
-            className={classes.select}
-            multiple
+          <Select className={classes.select} multiple
             value={mockSelectedValues}
             input={<OutlinedInput />}
             renderValue={(selected) => (

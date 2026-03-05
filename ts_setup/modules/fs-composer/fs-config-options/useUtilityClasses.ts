@@ -50,10 +50,12 @@ export const FsConfigOptionsRoot = styled('div', {
 
   [`& .${MUI_NAME}-optionTitle`]: {
     fontWeight: 'bold',
+    ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-optionDescription`]: {
     color: ownerState.isDarkMode ? FsColors.dark.textSecondary : FsColors.light.textSecondary,
+    ...theme.typography.subtitle2
   },
 
   [`& .${MUI_NAME}-divider`]: {

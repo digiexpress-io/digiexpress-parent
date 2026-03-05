@@ -26,10 +26,10 @@ export const FsConfigOptions: React.FC<FsConfigOptionsProps> = (props) => {
         {allConfigOptions.map((optionKey) => (
           <div key={optionKey} className={classes.optionItem}>
             <div className={classes.optionHeader}>
-              <Typography variant="subtitle2" className={classes.optionTitle}>{optionKey}</Typography>
+              <Typography className={classes.optionTitle}>{optionKey}</Typography>
               <Switch checked={ownerState.isConfigOptionEnabled(optionKey)} />
             </div>
-            <Typography variant="subtitle2" className={classes.optionDescription}>
+            <Typography className={classes.optionDescription}>
               {ownerState.getConfigDescription(optionKey)}
             </Typography>
             <Divider className={classes.divider} />

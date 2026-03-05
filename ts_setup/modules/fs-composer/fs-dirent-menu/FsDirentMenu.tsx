@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { FsNode } from '@dxs-ts/fs-api';
-import { useUtilityClasses, FsNodeMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
+import { useUtilityClasses, FsDirentMenuRoot as Root, MENU_HEIGHT } from './useUtilityClasses';
 import { FsDirentMenuMain } from './FsDirentMenuMain';
 import { FsDirentMenuSub } from './FsDirentMenuSub';
 import { usePositioningStrategy } from './helpers';
