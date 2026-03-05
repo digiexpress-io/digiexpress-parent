@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.resys.limaone.ast.AST_Parser.Dependency_AST;
+import io.resys.limaone.ast.ImmutableDependency_AST;
 import io.resys.limaone.ast.Simple_AST;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.ModelError;
@@ -108,5 +109,13 @@ public class ArtifactBuilder {
   }
   public Simple_AST getAst() {
     return ast;
+  }
+  
+  public void addParent(ArtifactBuilder parent) {
+    this.parentDeps.add(ImmutableDependency_AST.builder()
+        .artifactAst(parent.getAst())
+        .type(parent.getAst().getBodyType())
+        .dependencyId(parent.getArtifactId())
+        .build());
   }
 }

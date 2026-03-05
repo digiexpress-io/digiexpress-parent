@@ -3,6 +3,8 @@ package io.resys.limaone.spi.bundler;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.resys.limaone.ast.ImmutableDependency_AST;
+import io.resys.limaone.model.ImmutableModelError;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.spi.compiler.CompilableUnit.Validator;
 import jakarta.annotation.Nullable;
@@ -14,7 +16,7 @@ public class DependencyBuilder {
   
   private String id;
   private Model.BodyType bodyType;
-  private Validator validator;
+  private @Nullable Validator validator;
 
   // Fluent setters
   public DependencyBuilder id(String id) {
@@ -44,6 +46,22 @@ public class DependencyBuilder {
   }
   
   public void close(Optional<ArtifactBuilder> ref) {
-    dep.getValidator().validate(ref.map(e -> e.getAst()));
+    if(validator != null) {
+      // turn ref to depen
+      validator.validate(ref.map(r -> r.getAst()));
+    }
+    
+    if(ref.isEmpty()) {
+      artifactBuilder.addError(ImmutableModelError.builder()
+          .msg("@missing '" + bodyType.name() + "': '" + id + "'")
+          .build());
+    } else {
+      artifactBuilder.addChildDep(ImmutableDependency_AST.builder()
+          .artifactAst(ref.get().getAst())
+          .dependencyId(ref.get().getAst().getName())
+          .type(bodyType)
+          .build());
+      ref.get().addParent(artifactBuilder);
+    }
   }
 }

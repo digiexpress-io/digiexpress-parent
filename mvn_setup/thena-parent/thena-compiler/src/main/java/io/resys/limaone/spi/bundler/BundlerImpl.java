@@ -21,6 +21,8 @@ import io.smallrye.mutiny.Uni;
 public class BundlerImpl implements Bundler {
   private final Map<String, ArtifactBuilder> artifacts_byId = new ConcurrentHashMap<>();
   private final Map<String, ArtifactBuilder> artifacts_byName = new ConcurrentHashMap<>();
+  
+  
   private final List<DependencyBuilder> deps = Collections.synchronizedList(new ArrayList<>());
   private final BundleBuilderImpl bundleBuilder = new BundleBuilderImpl();
   
@@ -38,8 +40,8 @@ public class BundlerImpl implements Bundler {
   
   @Override
   public Uni<BundleBuilder> build(List<OpenProgram> openProgram) {
-    return Multi.createFrom().items(deps.stream().filter(dep -> dep.getValidator() != null))
-      .onItem().invoke(this::validate)
+    return Multi.createFrom().items(() -> deps.stream())
+      .onItem().transform(this::validate)
       .collect().asList().replaceWithVoid()
       
       .onItem().transformToMulti((ignore) -> Multi.createFrom().items(openProgram.stream()))
@@ -67,10 +69,17 @@ public class BundlerImpl implements Bundler {
     return program;
   }
   
-  private void validate(DependencyBuilder dep) {
+  private DependencyBuilder validate(DependencyBuilder dep) {
+    
+    // start closing dependencies
+    
+    
     final var id = dep.getId();
     final var name = dep.getBodyType() + "/" + dep.getId();
     final var ref = Optional.ofNullable(artifacts_byId.get(id)).or(() -> Optional.ofNullable(artifacts_byName.get(name)));
     dep.close(ref);
+    
+    return dep;
   }
+  
 }

@@ -39,7 +39,8 @@ public class CompilerImpl implements Compiler {
       .values().stream().map(wk -> new Compiler_Dialob(world, wk));
 
     // main stencil article
-    final Stream<CompilableUnit> article = Stream.of(new Compiler_Article(astParser, world));
+    final Stream<CompilableUnit> article = world.getArticles().isEmpty() && world.getArticleWorkflows().isEmpty() ?
+        Stream.empty() : Stream.of(new Compiler_Article(astParser, world));
     
     // wrench flows
     final Stream<CompilableUnit> flows = world.getFlows().values().stream().map(f -> new Compiler_Flow(astParser, world, f));
