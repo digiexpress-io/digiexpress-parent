@@ -17,16 +17,16 @@ public class Compiler_Flow implements CompilableUnit {
   @SuppressWarnings("unused")
   private final ModelWorld world;
   private final Model<Flow> flow;
-
-  private NewArtifact resolution;
   
   @Override
   public OpenProgram compile(NewArtifact resolution) {
     final Flow_AST ast = parser.parseFlow().id(flow.getId()).syntax(flow.getBody().getFlowValue()).parse();
-    resolution.ast(ast).id(flow.getId()).name(ast.getName()).build();
+    
+    resolution.ast(ast).id(flow.getId()).name(ast.getName());
     
     
-    this.resolution = resolution;
+    resolution.build();
+    
     
     return new OpenProgram() {
       @Override
@@ -46,7 +46,4 @@ public class Compiler_Flow implements CompilableUnit {
       }
     };
   }
-
-
-
 }

@@ -46,7 +46,6 @@ public interface Flow_AST extends Simple_AST, Serializable {
   //root marker
   interface AnyStatement {
     StatementType getType();
-
   }
 
   // markers
