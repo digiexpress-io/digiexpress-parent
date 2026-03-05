@@ -25,6 +25,7 @@ import io.resys.limaone.ast.FlowTask_AST.ServiceRef;
 import io.resys.limaone.ast.ImmutableFlowTask_AST;
 import io.resys.limaone.ast.ImmutableHeaders_AST;
 import io.resys.limaone.ast.ImmutableServiceRef;
+import io.resys.limaone.ast.Simple_AST.Headers_AST;
 import io.resys.limaone.model.FlowTask;
 import io.resys.limaone.model.FlowTask.FlowTaskExecutable;
 import io.resys.limaone.model.FlowTask.FlowTaskPropType;
@@ -38,13 +39,14 @@ import io.resys.limaone.program.FlowTaskProgram.ServiceExecutorType2;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.FlowTask_AST_CacheKey;
 import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
-import io.resys.limaone.spi.ast.flowtask.FailSafeService;
-import io.resys.limaone.spi.ast.flowtask.ImmutableServiceDataTypes;
-import io.resys.limaone.spi.ast.flowtask.ServiceDataTypes;
+import io.resys.limaone.spi.compiler.groovy.FailSafeService;
 import io.resys.limaone.spi.compiler.groovy.GroovyErrorParser;
 import io.resys.limaone.spi.compiler.groovy.JavaClassMeta;
 import io.resys.limaone.spi.parameter.Parameter_Factory;
 import io.resys.thena.support.RepoAssert;
+import jakarta.annotation.Nullable;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -287,7 +289,7 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
       result.addAllReturnDefs(getFields(returnType, Direction.OUT));
     }
 
-    return ImmutableServiceDataTypes.builder()
+    return ServiceDataTypes.builder()
         .headers(result.build())
         .acceptType0(acceptType0)
         .acceptType1(acceptType1)
@@ -343,5 +345,15 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
         .beanType(field.getType())
         .build();
     }
+  }
+  
+  
+  @Builder @Getter
+  private static class ServiceDataTypes {
+    Headers_AST headers;
+    
+    @Nullable io.resys.limaone.model.Parameter acceptType0;
+    @Nullable io.resys.limaone.model.Parameter acceptType1;
+    @Nullable io.resys.limaone.model.Parameter returnType;
   }
 }

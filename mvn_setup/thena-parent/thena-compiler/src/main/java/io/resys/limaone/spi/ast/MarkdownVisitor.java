@@ -1,4 +1,4 @@
-package io.resys.limaone.spi.ast.article;
+package io.resys.limaone.spi.ast;
 
 /*-
  * #%L
