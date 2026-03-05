@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class CSTT_YamlFlowValidator {
+public class CST_YamlFlowValidator {
 
   private final YamlFlow yaml;
   private final List<ModelError> messages = new ArrayList<>();
   private final Map<String, PseudoParam> inputs = new HashMap<>();
   private final Map<String, YamlTask> tasks = new HashMap<>();
   
-  public CSTT_YamlFlowValidator(YamlFlow yaml) {
+  public CST_YamlFlowValidator(YamlFlow yaml) {
     this.yaml = yaml;
   }
   

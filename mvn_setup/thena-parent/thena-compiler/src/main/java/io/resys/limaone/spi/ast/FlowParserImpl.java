@@ -93,7 +93,7 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
       
       final var parsed = new CST_YamlParser<MutableYamlFlow>(props, new MutableYamlFlow()).parseCST(joined);
       final var cst = parsed.getItem1();
-      final var cstExtraErrors = new CSTT_YamlFlowValidator(cst).validate();
+      final var cstExtraErrors = new CST_YamlFlowValidator(cst).validate();
 
       final Yaml id = cst.getId();
       final var firstTask = visitTasksById(cst);
