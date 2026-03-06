@@ -18,7 +18,7 @@ export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => 
   function handleOnTransfer() {
     setSaving(true)
     backend.persistence
-      .createOnTaskTransfer(props.task, {})
+      .createOnTaskTransfer(props.task, {transferTitle: ''})
       .then(() => props.onTransferComplete())
   }
 
