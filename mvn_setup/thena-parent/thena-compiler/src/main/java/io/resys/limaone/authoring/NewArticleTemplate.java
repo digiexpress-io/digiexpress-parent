@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.ArticleTemplate;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -21,7 +22,7 @@ public interface NewArticleTemplate {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleTemplateProps.class) @JsonDeserialize(as = ImmutableNewArticleTemplateProps.class)
-  interface NewArticleTemplateProps {
+  interface NewArticleTemplateProps extends AuthoringModelProps {
     String getName();
     String getDescription();
     String getContent();

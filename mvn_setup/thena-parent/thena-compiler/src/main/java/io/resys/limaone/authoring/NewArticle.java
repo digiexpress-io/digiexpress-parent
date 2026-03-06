@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.Article;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -21,7 +22,7 @@ public interface NewArticle {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleProps.class) @JsonDeserialize(as = ImmutableNewArticleProps.class)
-  interface NewArticleProps {
+  interface NewArticleProps extends AuthoringModelProps {
     String getName();
     
     @Nullable String getId();

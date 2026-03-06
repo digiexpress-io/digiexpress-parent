@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -20,7 +21,7 @@ public interface ModifyLocale {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyLocaleProps.class) @JsonDeserialize(as = ImmutableModifyLocaleProps.class)
-  interface ModifyLocaleProps {
+  interface ModifyLocaleProps extends AuthoringModelProps {
     String getLocaleId();
     String getValue();
     Boolean getEnabled();

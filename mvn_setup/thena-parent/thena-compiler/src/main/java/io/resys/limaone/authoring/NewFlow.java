@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.Flow;
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
@@ -21,7 +22,7 @@ public interface NewFlow {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewFlowProps.class) @JsonDeserialize(as = ImmutableNewFlowProps.class)
-  interface NewFlowProps {
+  interface NewFlowProps extends AuthoringModelProps {
     @Nullable String getName();
     @Nullable String getDesc();
   }

@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.ArticleWorkflow;
 import io.resys.limaone.model.LocaleLabel;
 import io.resys.limaone.model.Model;
@@ -24,7 +25,7 @@ public interface NewArticleWorkflow {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleWorkflowProps.class) @JsonDeserialize(as = ImmutableNewArticleWorkflowProps.class)
-  interface NewArticleWorkflowProps {
+  interface NewArticleWorkflowProps extends AuthoringModelProps {
     String getValue();
     List<String> getArticles();
     List<LocaleLabel> getLabels();

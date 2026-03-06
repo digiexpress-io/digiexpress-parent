@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.DecisionTable;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
 import io.resys.limaone.model.Model;
@@ -22,7 +23,7 @@ public interface ModifyDecisionTable {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyDecisionTableProps.class) @JsonDeserialize(as = ImmutableModifyDecisionTableProps.class)
-  interface ModifyDecisionTableProps {
+  interface ModifyDecisionTableProps extends AuthoringModelProps {
     String getDecisionTableId();
     String getName();
     List<DecisionStatement> getNodes();

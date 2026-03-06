@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.ArticleLink;
 import io.resys.limaone.model.LocaleLabel;
 import io.resys.limaone.model.Model;
@@ -23,7 +24,7 @@ public interface ModifyArticleLink {
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyArticleLinkProps.class) @JsonDeserialize(as = ImmutableModifyArticleLinkProps.class)
-  interface ModifyArticleLinkProps {
+  interface ModifyArticleLinkProps extends AuthoringModelProps {
     String getLinkId();
     String getValue();
     String getType();

@@ -5,12 +5,12 @@ import io.smallrye.mutiny.Uni;
 
 public interface Authoring {
 
-  ModifySource modifySource();
-  NewSource newSource();
-  DeleteSource deleteSource();
+  ModifyModel modifyModel();
+  NewModel newSource();
+  DeleteModel deleteSource();
   
   
-  interface ModifySource {
+  interface ModifyModel {
     ModifyFlow modifyFlow();
     ModifyFlowTask modifyFlowTask();
     ModifyDecisionTable modifyDecisionTable();
@@ -23,7 +23,7 @@ public interface Authoring {
     ModifyArticleTemplate modifyArticleTemplate();  
   }
   
-  interface NewSource {
+  interface NewModel {
     NewFlow newFlow();
     NewFlowTask newFlowTask();
     NewDecisionTable newDecisionTable();
@@ -37,9 +37,14 @@ public interface Authoring {
     NewArticleTemplate newArticleTemplate();  
   }
   
-  interface DeleteSource {
+  interface DeleteModel {
     Uni<Model<?>> deleteAny(String id);
     DeleteArticleLink deleteArticleLink();
     DeleteArticleWorkflow deleteArticleWorkflow();
+  }
+  
+  
+  interface AuthoringModelProps {
+    
   }
 }

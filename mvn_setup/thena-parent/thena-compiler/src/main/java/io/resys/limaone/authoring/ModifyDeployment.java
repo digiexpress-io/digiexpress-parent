@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.limaone.authoring.Authoring.AuthoringModelProps;
 import io.resys.limaone.model.Deployment.BundleStatus;
 import io.smallrye.mutiny.Uni;
 
@@ -19,7 +20,7 @@ public interface ModifyDeployment {
   @Value.Immutable
   @JsonSerialize(as = ImmutableModifyDeploymentProps.class)
   @JsonDeserialize(as = ImmutableModifyDeploymentProps.class)
-  interface ModifyDeploymentProps {
+  interface ModifyDeploymentProps extends AuthoringModelProps {
     String getId();
     BundleStatus getStatus();
   }
