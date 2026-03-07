@@ -28,7 +28,6 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
   private final List<String> src = new ArrayList<>();
   private Consumer<Dependency_AST> dependency;
   
-  private String id;
   
   @Override
   public FlowParserImpl syntax(String src) {
@@ -39,24 +38,18 @@ public class FlowParserImpl implements AST_Parser.FlowParser {
     return this;
   }
   @Override
-  public FlowParser id(String id) {
-    this.id = id;
-    return this;
-  }
-  @Override
   public FlowParser onDependency(Consumer<Dependency_AST> dependency) {
     this.dependency = Objects.requireNonNull(dependency, () -> "dependency must be defined!");
     return this;
   }
   @Override
   public Flow_AST parse() {
-    Objects.requireNonNull(id, () -> "id must be defined!");
     
     final var joined = String.join(System.lineSeparator(), this.src);
     final var hash = Hashing.murmur3_128().hashString(joined, StandardCharsets.UTF_8).toString();
     final var cacheKey = new Flow_AST_CacheKey(hash);
     
-    final Function<Flow_AST_CacheKey, Flow_AST> mappingFunction = (k) -> new FlowParserVisitor(props, id, joined, hash).accept();
+    final Function<Flow_AST_CacheKey, Flow_AST> mappingFunction = (k) -> new FlowParserVisitor(props, joined, hash).accept();
     final var ast = LocalCache.computeIfAbsent(cacheKey, mappingFunction);
     
     if(dependency != null) {

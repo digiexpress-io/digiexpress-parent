@@ -37,7 +37,6 @@ public class Compiler_DecisionTable implements CompilableUnit {
   @Override
   public OpenProgram compile(NewArtifact resolution) {
     final DecisionTable_AST ast = parser.parseDecisionTable()
-        .id(target.getId())
         .nodes(target.getBody().getNodes())
         .parse();
     
@@ -46,10 +45,6 @@ public class Compiler_DecisionTable implements CompilableUnit {
     
     // start "compilation", close is triggered when dependency tree is resolved
     return new OpenProgram() {
-      @Override
-      public String getId() {
-        return ast.getId();
-      }
       @Override
       public Simple_AST getAst() {
         return ast;
@@ -73,7 +68,7 @@ public class Compiler_DecisionTable implements CompilableUnit {
               .build());
         }
         
-        final var program = new DecisionProgramImpl(ast, status, rows, errors, assocs);
+        final var program = new DecisionProgramImpl(target.getId(), ast, status, rows, errors, assocs);
         
         return program;
       }

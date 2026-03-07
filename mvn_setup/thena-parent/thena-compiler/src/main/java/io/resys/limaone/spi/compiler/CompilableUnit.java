@@ -19,11 +19,9 @@ public interface CompilableUnit {
   OpenProgram compile(NewArtifact resolution);
   
   interface OpenProgram {
-    String getId();
     Simple_AST getAst();
     Program close(Artifact artifact);
   }
-
 
   interface Bundler {
     NewArtifact newArtifact();

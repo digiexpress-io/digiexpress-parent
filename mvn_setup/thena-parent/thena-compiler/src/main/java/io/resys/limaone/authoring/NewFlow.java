@@ -15,8 +15,8 @@ import jakarta.annotation.Nullable;
 
 public interface NewFlow {
 
-  NewArticleLink props(NewFlowProps props);
-  NewArticleLink props(Consumer<ImmutableNewFlowProps.Builder> props);
+  NewFlow props(NewFlowProps props);
+  NewFlow props(Consumer<ImmutableNewFlowProps.Builder> props);
   
   Uni<Model<Flow>> build();
   

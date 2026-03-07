@@ -25,6 +25,7 @@ public class DecisionProgramImpl implements DecisionProgram {
 
   private static final long serialVersionUID = 6616773813732711822L;
   private final DecisionTable_AST ast;
+  private final String id;
   private final ProgramStatus status; 
   private final List<DecisionRow> rows;
   private final List<Parameter> headers;
@@ -32,12 +33,14 @@ public class DecisionProgramImpl implements DecisionProgram {
   private final List<ProgramAssociation> associations;
   
   public DecisionProgramImpl(
+      String id,
       DecisionTable_AST ast, 
       ProgramStatus status,
       List<DecisionRow> rows,
       List<ModelError> errors,
       List<ProgramAssociation> associations) {
     super();
+    this.id = id;
     this.ast = ast;
     this.status = status;
     this.rows = Collections.unmodifiableList(rows);
@@ -49,7 +52,7 @@ public class DecisionProgramImpl implements DecisionProgram {
   }
   @Override
   public String getId() {
-    return ast.getId();
+    return id;
   }
   @Override
   public String getName() {

@@ -32,7 +32,6 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
 
   private final CommandMapper builder = new CommandMapper();
   private List<DecisionStatement> src;
-  private String id;
 
   @Override
   public DecsionTableParserImpl nodes(List<DecisionStatement> src) {
@@ -53,17 +52,10 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
         .toList();
     return nodes(nodes);
   }
-  @Override
-  public DecsionTableParser id(String id) {
-    this.id = id;
-    return this;
-  }
 
   @Override
   public DecisionTable_AST parse() {
     Objects.requireNonNull(src, () -> "src must be defined!");
-    Objects.requireNonNull(id, () -> "id must be defined!");
-
     
     final var hashString = new StringBuilder();
     this.src.forEach(command -> {
@@ -81,7 +73,7 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
     final var cacheKey = new DecisionTable_AST_CacheKey(hash);
     final Function<DecisionTable_AST_CacheKey, DecisionTable_AST> mappingFunction = (k) -> {
       this.src.forEach(command -> execute(command));
-      return builder.build().id(id).hash(hash).build();
+      return builder.build().hash(hash).build();
     };
     return LocalCache.computeIfAbsent(cacheKey, mappingFunction);
   }

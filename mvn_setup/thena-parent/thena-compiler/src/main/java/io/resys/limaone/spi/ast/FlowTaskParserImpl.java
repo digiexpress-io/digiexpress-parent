@@ -19,7 +19,6 @@ import com.google.common.hash.Hashing;
 
 import groovy.lang.GroovyClassLoader;
 import io.resys.limaone.ast.AST_Parser;
-import io.resys.limaone.ast.AST_Parser.FlowTaskParser;
 import io.resys.limaone.ast.FlowTask_AST;
 import io.resys.limaone.ast.FlowTask_AST.ServiceRef;
 import io.resys.limaone.ast.ImmutableFlowTask_AST;
@@ -79,7 +78,6 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
   
   private final List<String> src = new ArrayList<>();
   private final GroovyClassLoader gcl;
-  private String id;
   
   public FlowTaskParserImpl(AST_ParserProps props) {
     super();
@@ -95,17 +93,10 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
     return this;
   }
 
-  @Override
-  public FlowTaskParser id(String id) {
-    this.id = id;
-    return this;
-  }
-
   private String constructSource(String syntax) {
     
     final var meta = JavaClassMeta.parse(syntax);
     final var src = new StringBuilder("package io.resys.limaone.spi.compiler.groovy.pkg_")
-        .append(JavaClassMeta.makePackageSafe(id))
         .append(";").append(System.lineSeparator());
     
     for(final var entry : this.imports) {
@@ -129,7 +120,6 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
   @Override
   public FlowTask_AST parse() {
     Objects.requireNonNull(this.src, () -> "src can't ne null!");
-    Objects.requireNonNull(this.id, () -> "id can't ne null!");
     final var syntax = String.join(System.lineSeparator(), this.src);
     final var source = constructSource(syntax);
     
@@ -155,7 +145,6 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
         
         final ServiceDataTypes method = getHeaders(beanType);
         return ImmutableFlowTask_AST.builder()
-            .id(this.id)
             .hash(hash)
             .bodyType(Model.BodyType.FLOW_TASK)
             .name(beanType.getSimpleName())
@@ -177,7 +166,6 @@ public class FlowTaskParserImpl implements AST_Parser.FlowTaskParser {
         final var groovyErrors = GroovyErrorParser.parseErrors(e.getMessage(), syntax);
         
         return ImmutableFlowTask_AST.builder()
-            .id(this.id)
             .hash(hash)
             .bodyType(Model.BodyType.FLOW_TASK)
             .name(parseFailSafeName(source))

@@ -22,6 +22,7 @@ import io.resys.limaone.spi.program.input.DefaultProgramInput;
 public class FlowTaskProgramImpl implements FlowTaskProgram {
   private static final long serialVersionUID = 5909985495850322300L;
 
+  private final String id;
   private final FlowTask_AST ast;
   private final FlowTaskExecutable executable;
   
@@ -31,12 +32,14 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
   private final List<ProgramAssociation> associations;
   
   public FlowTaskProgramImpl(
+      String id,
       FlowTask_AST ast,
       FlowTaskExecutable executable,
       ProgramStatus status,
       List<ModelError> errors,
       List<ProgramAssociation> associations) {
     super();
+    this.id = id;
     this.ast = ast;
     this.executable = executable;
     this.status = status;
@@ -49,7 +52,7 @@ public class FlowTaskProgramImpl implements FlowTaskProgram {
 
   @Override
   public String getId() {
-    return ast.getId();
+    return id;
   }
   @Override
   public String getName() {

@@ -18,7 +18,7 @@ public class ImmutableArticleProgram implements ArticleProgram {
 
   private static final long serialVersionUID = -5191441381711565812L;
   private final List<OffsetDateTime> refreshDates;
-  
+  private final String id;
   private final Article_AST articleAST;
   private final ProgramStatus status;
   private final List<ModelError> errors;
@@ -26,6 +26,7 @@ public class ImmutableArticleProgram implements ArticleProgram {
   private final List<LocalizedSite> sites;
   
   public ImmutableArticleProgram(
+      String id,
       Article_AST articleAST, 
       ProgramStatus status,
       List<ModelError> errors, 
@@ -33,6 +34,7 @@ public class ImmutableArticleProgram implements ArticleProgram {
       List<LocalizedSite> sites) {
     
     super();
+    this.id = id;
     this.articleAST = articleAST;
     this.status = status;
     this.errors = errors;
@@ -52,7 +54,7 @@ public class ImmutableArticleProgram implements ArticleProgram {
   
   @Override
   public String getId() {
-    return articleAST.getId();
+    return id;
   }
   @Override
   public String getName() {

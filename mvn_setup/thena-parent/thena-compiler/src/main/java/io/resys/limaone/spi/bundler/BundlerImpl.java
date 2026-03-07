@@ -19,7 +19,6 @@ import io.smallrye.mutiny.Uni;
 
 
 public class BundlerImpl implements Bundler {
-  private final Map<String, ArtifactBuilder> artifacts_byId = new ConcurrentHashMap<>();
   private final Map<String, ArtifactBuilder> artifacts_byName = new ConcurrentHashMap<>();
   
   
@@ -29,7 +28,6 @@ public class BundlerImpl implements Bundler {
   @Override
   public NewArtifact newArtifact() {
     final Consumer<ArtifactBuilder> artifact_callback = (artifactBuilder) -> {
-      artifacts_byId.put(artifactBuilder.getArtifactId(), artifactBuilder);
       artifacts_byName.put(artifactBuilder.getArtifactType() + "/" + artifactBuilder.getArtifactName(), artifactBuilder);
     };
     final Consumer<DependencyBuilder> dependency_callback = (dependencyBuilder) -> {
@@ -56,13 +54,10 @@ public class BundlerImpl implements Bundler {
   }
   
   private Program close(OpenProgram open) {
-    final var builder = Optional.ofNullable(artifacts_byId.get(open.getId()))
-      .or(() -> {
-        final var name = open.getAst().getBodyType() + "/" + open.getAst().getName();
-        return Optional.ofNullable(artifacts_byName.get(name));
-      }).orElse(null);
+    final var name = open.getAst().getBodyType() + "/" + open.getAst().getName();
+    final var builder = Optional.ofNullable(artifacts_byName.get(name)).orElse(null);
   
-    Objects.requireNonNull(builder, () -> "Can't find program to finalize, id: " + open.getId());
+    Objects.requireNonNull(builder, () -> "Can't find program to finalize, name: " + name);
     final var artifact = builder.build();
     final var program = open.close(artifact);
     bundleBuilder.addProgram(program);
@@ -70,15 +65,10 @@ public class BundlerImpl implements Bundler {
   }
   
   private DependencyBuilder validate(DependencyBuilder dep) {
-    
     // start closing dependencies
-    
-    
-    final var id = dep.getId();
     final var name = dep.getBodyType() + "/" + dep.getId();
-    final var ref = Optional.ofNullable(artifacts_byId.get(id)).or(() -> Optional.ofNullable(artifacts_byName.get(name)));
+    final var ref = Optional.ofNullable(artifacts_byName.get(name));
     dep.close(ref);
-    
     return dep;
   }
   

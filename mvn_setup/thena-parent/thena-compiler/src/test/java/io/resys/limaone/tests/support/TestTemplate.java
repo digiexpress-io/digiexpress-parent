@@ -140,7 +140,7 @@ public class TestTemplate {
   public static FlowProgram compileOneFlow(String flowSyntax, Deps ... deps) {
     
     final var flowValue = flowSyntax;
-    final var ast = compiler.getParser().parseFlow().id("test-flow").syntax(flowValue).parse();
+    final var ast = compiler.getParser().parseFlow().syntax(flowValue).parse();
     final var model = ImmutableModel.<Flow>builder()
         .id("test-value")
         .bodyHash(ast.getHash())
@@ -157,7 +157,7 @@ public class TestTemplate {
     for(final var dep : deps) {
       
       if(dep.getType() == BodyType.FLOW_TASK) {
-        final var target_ast = compiler.getParser().parseFlowTask().id(dep.getId()).syntax(dep.getContent()).parse();
+        final var target_ast = compiler.getParser().parseFlowTask().syntax(dep.getContent()).parse();
         final var ft = ImmutableModel.<FlowTask>builder()
             .id(dep.getId())
             .bodyHash(target_ast.getHash())
@@ -175,7 +175,7 @@ public class TestTemplate {
             .map(e -> e.mapTo(DecisionStatement.class))
             .toList();
 
-        final var target_ast = compiler.getParser().parseDecisionTable().id(dep.getId()).nodes(nodes).parse();
+        final var target_ast = compiler.getParser().parseDecisionTable().nodes(nodes).parse();
         final var dt = ImmutableModel.<DecisionTable>builder()
             .id(dep.getId())
             .bodyHash(target_ast.getHash())

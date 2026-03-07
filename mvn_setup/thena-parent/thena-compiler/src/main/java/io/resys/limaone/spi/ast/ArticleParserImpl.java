@@ -68,7 +68,6 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
     }
     
     return result
-        .id(world.getName())
         .name(world.getName())
         .bodyType(BodyType.ARTICLE)
         .hash(Hashing.murmur3_128().hashString(hashBuilder.toString(), StandardCharsets.UTF_8).toString())

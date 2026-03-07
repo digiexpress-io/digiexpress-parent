@@ -27,15 +27,11 @@ public class Compiler_FlowTask implements CompilableUnit {
   
   @Override
   public OpenProgram compile(NewArtifact resolution) {
-    final FlowTask_AST ast = parser.parseFlowTask().id(target.getId()).syntax(target.getBody().getTaskValue()).parse();
+    final FlowTask_AST ast = parser.parseFlowTask().syntax(target.getBody().getTaskValue()).parse();
     // register to bundler
     resolution.ast(ast).name(ast.getName()).id(target.getId()).build();
 
     return new OpenProgram() {
-      @Override
-      public String getId() {
-        return ast.getId();
-      }
       @Override
       public Simple_AST getAst() {
         return ast;
@@ -51,6 +47,7 @@ public class Compiler_FlowTask implements CompilableUnit {
           
           final var beanInstance = (FlowTaskExecutable) constructors[0].newInstance();
           final var flowTask = new FlowTaskProgramImpl(
+              target.getId(),
               ast, 
               beanInstance, 
               errors.isEmpty() ? ProgramStatus.UP : ProgramStatus.ERROR, 
@@ -65,6 +62,7 @@ public class Compiler_FlowTask implements CompilableUnit {
               .msg(e.getMessage())
               .build());
           return new FlowTaskProgramImpl(
+              target.getId(),
               ast, 
               null, 
               ProgramStatus.ERROR, 

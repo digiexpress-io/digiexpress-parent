@@ -72,11 +72,6 @@ public class Compiler_Article implements CompilableUnit {
     
     return new OpenProgram() {
       @Override
-      public String getId() {
-        return articleAST.getId();
-      }
-      
-      @Override
       public Simple_AST getAst() {
         return articleAST;
       }
@@ -85,7 +80,7 @@ public class Compiler_Article implements CompilableUnit {
       public Program close(Artifact artifact) {
         final List<ModelError> errors = artifact.getErrors();
         final List<ProgramAssociation> assocs = artifact.getAssociations();
-        final var program = new ImmutableArticleProgram(articleAST, artifact.getProgramStatus(), errors, assocs, sites);
+        final var program = new ImmutableArticleProgram(world.getName(), articleAST, artifact.getProgramStatus(), errors, assocs, sites);
         
         return program;
       }

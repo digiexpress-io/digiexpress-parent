@@ -58,7 +58,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FlowParserVisitor {
 
   private final AST_ParserProps props;
-  private final String id;
   private final String src;
   private final String hash;
 
@@ -69,7 +68,6 @@ public class FlowParserVisitor {
     
 
   public Flow_AST accept() {
-    Objects.requireNonNull(id, () -> "id must be defined!");
     Objects.requireNonNull(src, () -> "src must be defined!");
     Objects.requireNonNull(hash, () -> "hash must be defined!");
     Objects.requireNonNull(props, () -> "props must be defined!");
@@ -89,7 +87,6 @@ public class FlowParserVisitor {
     
                 
     return ImmutableFlow_AST.builder()
-        .id(this.id)
         .bodyType(Model.BodyType.FLOW)
         .hash(hash)
         .dependencies(dependencies)

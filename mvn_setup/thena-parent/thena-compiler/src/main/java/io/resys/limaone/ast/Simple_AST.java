@@ -14,7 +14,6 @@ import io.resys.limaone.model.Parameter;
 import jakarta.annotation.Nullable;
 
 public interface Simple_AST {
-  String getId();
   String getName();
   String getHash();
   

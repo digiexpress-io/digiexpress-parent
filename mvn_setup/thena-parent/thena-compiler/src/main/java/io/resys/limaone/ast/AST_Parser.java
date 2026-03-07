@@ -23,21 +23,18 @@ public interface AST_Parser {
   }
   
   interface FlowParser {
-    FlowParser id(String id);
     FlowParser syntax(String syntax);
     FlowParser onDependency(Consumer<Dependency_AST> dependency);
     Flow_AST parse();
   }
   
   interface DecsionTableParser {
-    DecsionTableParser id(String id);
     DecsionTableParser nodes(List<DecisionStatement> nodes);
     DecsionTableParser syntax(String syntax);
     DecisionTable_AST parse();
   }
   
   interface FlowTaskParser {
-    FlowTaskParser id(String id);
     FlowTaskParser syntax(String syntax);
     FlowTask_AST parse();
   }

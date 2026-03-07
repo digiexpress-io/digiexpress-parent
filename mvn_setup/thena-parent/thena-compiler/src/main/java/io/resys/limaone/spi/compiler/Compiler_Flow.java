@@ -22,17 +22,12 @@ public class Compiler_Flow implements CompilableUnit {
   public OpenProgram compile(NewArtifact resolution) {
     
     final Flow_AST ast = parser.parseFlow()
-        .id(flow.getId())
         .syntax(flow.getBody().getFlowValue())
         .onDependency(dep -> resolution.requireDependnecy(dep))
         .parse();
     resolution.ast(ast).id(flow.getId()).name(ast.getName()).build();
     
     return new OpenProgram() {
-      @Override
-      public String getId() {
-        return ast.getId();
-      }
       @Override
       public Simple_AST getAst() {
         return ast;
@@ -41,6 +36,7 @@ public class Compiler_Flow implements CompilableUnit {
       public Program close(Artifact artifact) {
         new Compiler_FlowDepsValidator(artifact, ast).walk();
         return new FlowProgramImpl(
+            flow.getId(),
             ast, 
             artifact.getProgramStatus(), 
             artifact.getErrors(), 

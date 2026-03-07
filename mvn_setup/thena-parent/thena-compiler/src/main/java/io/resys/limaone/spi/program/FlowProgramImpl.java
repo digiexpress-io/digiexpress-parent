@@ -24,6 +24,7 @@ import io.resys.limaone.yaml.YamlMapper;
 public class FlowProgramImpl implements FlowProgram {
 
   private static final long serialVersionUID = -4209510801206880302L;
+  private final String id;
   private final Flow_AST ast;
   private final Optional<Runtime> runtime;
   private final ProgramStatus status; 
@@ -33,22 +34,23 @@ public class FlowProgramImpl implements FlowProgram {
   
   
   public FlowProgramImpl(
+      String id,
       Flow_AST ast, 
       ProgramStatus status,
       List<ModelError> errors,
       List<ProgramAssociation> associations) {
-    this(ast, status, errors, associations, Optional.empty());
+    this(id, ast, status, errors, associations, Optional.empty());
   }
   
-  
-  
   public FlowProgramImpl(
+      String id,
       Flow_AST ast, 
       ProgramStatus status,
       List<ModelError> errors,
       List<ProgramAssociation> associations,
       Optional<Runtime> runtime) {
     
+    this.id = id;
     this.ast = ast;
     this.status = status;
     this.errors = Collections.unmodifiableList(errors);
@@ -87,7 +89,7 @@ public class FlowProgramImpl implements FlowProgram {
   
   @Override
   public String getId() {
-    return ast.getId();
+    return id;
   }
 
   @Override
@@ -180,6 +182,6 @@ public class FlowProgramImpl implements FlowProgram {
 
   @Override
   public FlowProgram withRuntime(Runtime runtime) {
-    return new FlowProgramImpl(ast, status, errors, associations, Optional.ofNullable(runtime));
+    return new FlowProgramImpl(id, ast, status, errors, associations, Optional.ofNullable(runtime));
   }
 }
