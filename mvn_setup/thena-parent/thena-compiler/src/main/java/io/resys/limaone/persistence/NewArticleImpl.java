@@ -42,7 +42,7 @@ public class NewArticleImpl extends AuthoringTemplate<NewArticleImpl, Model<Arti
   public Uni<Model<Article>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.ARTICLE)
-      .lock().build(nextWorld -> {
+      .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body);
       });

@@ -39,7 +39,7 @@ public class NewLocaleImpl extends AuthoringTemplate<NewLocaleImpl, Model<Locale
   public Uni<Model<Locale>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE)
-      .lock().build(nextWorld -> {
+      .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body);
       });

@@ -44,7 +44,7 @@ public class NewArticleWorkflowImpl extends AuthoringTemplate<NewArticleWorkflow
   public Uni<Model<ArticleWorkflow>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE, BodyType.ARTICLE)
-      .lock().build(nextWorld -> {
+      .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body);
       });

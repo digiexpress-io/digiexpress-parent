@@ -41,7 +41,7 @@ public class NewFlowImpl extends AuthoringTemplate<NewFlowImpl, Model<Flow>> imp
   public Uni<Model<Flow>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.FLOW)
-      .lock().build(nextWorld -> {
+      .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body);
       });

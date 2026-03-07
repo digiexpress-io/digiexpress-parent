@@ -41,7 +41,7 @@ public class NewFlowTaskImpl extends AuthoringTemplate<NewFlowTaskImpl, Model<Fl
   public Uni<Model<FlowTask>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.FLOW_TASK)
-      .lock().build(nextWorld -> {
+      .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body);
       });
