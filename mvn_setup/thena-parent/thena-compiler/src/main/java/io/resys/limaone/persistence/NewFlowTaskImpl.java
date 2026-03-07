@@ -43,7 +43,7 @@ public class NewFlowTaskImpl extends AuthoringTemplate<NewFlowTaskImpl, Model<Fl
       .docs(BodyType.FLOW_TASK)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body);
+        return nextWorld.newModel(body.getTaskName(), body);
       });
   }
   

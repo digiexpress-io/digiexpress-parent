@@ -43,7 +43,7 @@ public class NewDecisionTableImpl extends AuthoringTemplate<NewDecisionTableImpl
       .docs(BodyType.DECISION_TABLE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body);
+        return nextWorld.newModel(body.getName(), body);
       });
   }
   

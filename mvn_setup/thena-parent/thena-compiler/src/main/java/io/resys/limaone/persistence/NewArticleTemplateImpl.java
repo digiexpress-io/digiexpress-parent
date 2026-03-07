@@ -44,7 +44,7 @@ public class NewArticleTemplateImpl extends AuthoringTemplate<NewArticleTemplate
       .docs(BodyType.ARTICLE_TEMPLATE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body);
+        return nextWorld.newModel(body.getName(), body);
       });
   }
   

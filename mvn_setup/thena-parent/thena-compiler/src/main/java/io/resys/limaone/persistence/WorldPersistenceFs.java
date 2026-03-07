@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import io.resys.limaone.model.ImmutableModel;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.Body;
 import io.resys.limaone.model.Model.BodyType;
@@ -12,8 +13,11 @@ import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.api.FileSystem.FileSystemTenant;
 import io.resys.thena.fs.api.commits.CommitBuilder;
+import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -69,39 +73,54 @@ public class WorldPersistenceFs implements WorldPersistence {
   }
 
   
-  @RequiredArgsConstructor
+  
   public static class NextWorldImpl implements NextWorld {
-    
     private final FileSystemTenant tenant;
     private final Ref ref;
+    private final ModelWorld world;
+    private final CommitBuilder commitBuilder;
     
     private String commitAuthor = "world-builder";
     private String commitMessage = "default-authoring";
-    
-    
-    
-    public CommitBuilder close() {
-      return null;
+        
+    public NextWorldImpl(FileSystemTenant tenant, Ref ref) {
+      super();
+      this.tenant = tenant;
+      this.ref = ref;
+      this.world = WorldPersistenceMapper.mapFrom(ref);
+      this.commitBuilder = tenant.commitBuilder();
     }
 
-
+    public CommitBuilder close() {
+      return commitBuilder.commitAuthor(commitAuthor).commitMessage(commitMessage);
+    }
 
     @Override
     public ModelWorld getCurrentWorld() {
-      // TODO Auto-generated method stub
-      return null;
+      return world;
     }
-
-
 
     @Override
-    public <T extends Body> Model<T> newModel(T body) {
-      // TODO Auto-generated method stub
-      return null;
+    public <T extends Body> Model<T> newModel(String name, T body) {
+      final var id = OidUtils.genUUID();
+      this.commitBuilder.newFile(newFile -> {
+        newFile
+          .fileId(id)
+          .fileName(name)
+          .fileValue(JsonObject.mapFrom(body))
+          .fileType(body.getBodyType().name())
+          .build()
+        ;
+      });
+
+      
+      return ImmutableModel.<T>builder()
+          .id(id)
+          .body(body)
+          .bodyType(body.getBodyType())
+          .bodyHash("not possible at a time")
+          .build();
     }
-
-
-
     @Override
     public <T extends Body> Model<T> mergeModel(String id, T body) {
       // TODO Auto-generated method stub

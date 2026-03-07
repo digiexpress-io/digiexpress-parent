@@ -41,7 +41,7 @@ public class NewLocaleImpl extends AuthoringTemplate<NewLocaleImpl, Model<Locale
       .docs(BodyType.LOCALE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body);
+        return nextWorld.newModel(body.getValue(), body);
       });
   }
   

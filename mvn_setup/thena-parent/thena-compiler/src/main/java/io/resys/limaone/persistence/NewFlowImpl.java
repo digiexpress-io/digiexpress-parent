@@ -43,7 +43,7 @@ public class NewFlowImpl extends AuthoringTemplate<NewFlowImpl, Model<Flow>> imp
       .docs(BodyType.FLOW)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body);
+        return nextWorld.newModel(body.getFlowName(), body);
       });
   }
   

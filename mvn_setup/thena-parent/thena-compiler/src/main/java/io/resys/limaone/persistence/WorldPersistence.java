@@ -22,7 +22,7 @@ public interface WorldPersistence {
     // model state at current commit
     ModelWorld getCurrentWorld();
     
-    <T extends Model.Body> Model<T> newModel(T body);
+    <T extends Model.Body> Model<T> newModel(String fileName, T body);
     <T extends Model.Body> Model<T> mergeModel(String id, T body);
   }
 }

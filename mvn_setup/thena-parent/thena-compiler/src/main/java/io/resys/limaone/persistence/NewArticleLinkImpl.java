@@ -46,7 +46,7 @@ public class NewArticleLinkImpl extends AuthoringTemplate<NewArticleLinkImpl, Mo
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body);
+        return nextWorld.newModel(body.getValue(), body);
       });
   }
   
