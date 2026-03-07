@@ -15,8 +15,8 @@ import jakarta.annotation.Nullable;
 
 public interface NewFlowTask {
 
-  NewArticleLink props(NewFlowTaskProps props);
-  NewArticleLink props(Consumer<ImmutableNewFlowTaskProps.Builder> props);
+  NewFlowTask props(NewFlowTaskProps props);
+  NewFlowTask props(Consumer<ImmutableNewFlowTaskProps.Builder> props);
   
   Uni<Model<FlowTask>> build();
   
