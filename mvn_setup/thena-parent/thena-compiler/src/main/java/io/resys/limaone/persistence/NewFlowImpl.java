@@ -13,7 +13,6 @@ import io.resys.limaone.model.ImmutableFlow;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
-import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +49,6 @@ public class NewFlowImpl implements NewFlow {
   private Flow internalBuild(ModelWorld world) {
     Objects.requireNonNull(props, () -> "props must be defined");
 
-    final var id = OidUtils.gen();
     final var syntax = """
 id: {id}
 description: {desc}
@@ -68,7 +66,7 @@ tasks:
     .replace("{id}", Optional.ofNullable(props.getName()).orElse("first_flow"))
     .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my first flow"));
     
-    final var flow = parser.parseFlow().id(id).syntax(syntax).parse();
+    final var flow = parser.parseFlow().syntax(syntax).parse();
     return ImmutableFlow.builder()
         .flowName(flow.getName())
         .flowValue(syntax)
