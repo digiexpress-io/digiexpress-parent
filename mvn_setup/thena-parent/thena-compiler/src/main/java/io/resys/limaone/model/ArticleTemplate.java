@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableArticleTemplate.class)
@@ -16,4 +17,8 @@ public interface ArticleTemplate extends Body {
   String getDescription();
   String getContent();
   String getType();
+  
+  default BodyType getBodyType() {
+    return BodyType.ARTICLE_TEMPLATE;
+  }
 }

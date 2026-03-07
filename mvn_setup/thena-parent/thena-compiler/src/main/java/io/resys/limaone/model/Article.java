@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
@@ -24,4 +25,8 @@ public interface Article extends Body {
   
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Nullable Boolean getAuthOnly();
+    
+  default BodyType getBodyType() {
+    return BodyType.ARTICLE;
+  }
 }

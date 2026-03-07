@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -21,6 +22,9 @@ public interface Model<T extends Body>  extends Serializable {
   String getBodyHash();
 
   interface Body extends Serializable {
+    
+    @JsonIgnore
+    BodyType getBodyType();
   }
     
   enum BodyType {
@@ -41,7 +45,9 @@ public interface Model<T extends Body>  extends Serializable {
     PRINTOUT,
     PRINTOUT_PAGE,
     PRINTOUT_SCRIPT,
-    PRINTOUT_RESOURCE
+    PRINTOUT_RESOURCE,
+    
+    DEPLOYMENT
   }
   
   @Value.Immutable

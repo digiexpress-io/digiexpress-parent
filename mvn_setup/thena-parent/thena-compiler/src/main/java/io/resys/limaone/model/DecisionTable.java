@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
 import jakarta.annotation.Nullable;
 
 
@@ -46,5 +47,10 @@ public interface DecisionTable extends Body {
     // "#" - match one or more word 
     // "*" - match one word
     QIN  
+  }
+  
+  
+  default BodyType getBodyType() {
+    return BodyType.DECISION_TABLE;
   }
 }

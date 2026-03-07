@@ -71,7 +71,7 @@ public class DbSupport {
         .name(this.client.getTenantName(), StructureType.fs)
         .buildOnlyIfNotCreated()
         .await().atMost(Duration.ofMinutes(1)).getItem2();
-    
+    wipeRepo(repo.getRepo());
     
     this.client.withTenant()
       .commitBuilder()
@@ -89,7 +89,7 @@ public class DbSupport {
     log.debug("created repo {}", repo);
     
     Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());
-    wipeRepo(repo.getRepo());
+
   }
   
   public void wipeRepo(Tenant repo) {

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
 
 
 
@@ -45,4 +46,8 @@ public interface FlowTask extends Body {
   
   interface FlowTaskExecutable {}
   enum FlowTaskPropType { TYPE_0, TYPE_1, TYPE_2 }
+  
+  default BodyType getBodyType() {
+    return BodyType.FLOW_TASK;
+  }
 }

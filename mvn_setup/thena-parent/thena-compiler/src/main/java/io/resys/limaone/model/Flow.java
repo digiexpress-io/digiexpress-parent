@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
+import io.resys.limaone.model.Model.BodyType;
 
 
 @Value.Immutable
@@ -14,4 +15,8 @@ import io.resys.limaone.model.Model.Body;
 public interface Flow extends Body {
   String getFlowName();
   String getFlowValue();
+  
+  default BodyType getBodyType() {
+    return BodyType.FLOW;
+  }
 }
