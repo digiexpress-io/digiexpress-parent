@@ -152,4 +152,8 @@ public class FileSystem_ThenaImpl implements FileSystem {
   public FsDb getStartingState() {
     return startingState;
   }
+  
+  public String getTenantName() {
+    return startingState.getDataSource().getTenant().getName();
+  }
 }

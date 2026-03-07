@@ -11,14 +11,16 @@ import io.resys.limaone.model.Locale;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewLocaleImpl implements NewLocale {
-  private final WorldPersistence persistence;
+public class NewLocaleImpl extends AuthoringTemplate<NewLocaleImpl, Model<Locale>> implements NewLocale {
+
   private NewLocaleProps props;
+  public NewLocaleImpl(AuthoringConfig config) {
+    super(config);
+  }
   
   @Override
   public NewLocale props(NewLocaleProps props) {
@@ -35,7 +37,7 @@ public class NewLocaleImpl implements NewLocale {
 
   @Override
   public Uni<Model<Locale>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());

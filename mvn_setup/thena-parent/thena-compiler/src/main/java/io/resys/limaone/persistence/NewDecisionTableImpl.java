@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.authoring.ImmutableNewDecisionTableProps;
 import io.resys.limaone.authoring.ImmutableNewDecisionTableProps.Builder;
 import io.resys.limaone.authoring.NewDecisionTable;
@@ -13,15 +12,17 @@ import io.resys.limaone.model.ImmutableDecisionTable;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewDecisionTableImpl implements NewDecisionTable {
-  private final WorldPersistence persistence;
-  private final AST_Parser parser;
+public class NewDecisionTableImpl extends AuthoringTemplate<NewDecisionTableImpl, Model<DecisionTable>> implements NewDecisionTable {
+
   private NewDecisionTableProps props;
+
+  public NewDecisionTableImpl(AuthoringConfig config) {
+    super(config);
+  }
   
   @Override
   public NewDecisionTable props(NewDecisionTableProps props) {
@@ -38,7 +39,7 @@ public class NewDecisionTableImpl implements NewDecisionTable {
 
   @Override
   public Uni<Model<DecisionTable>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.DECISION_TABLE)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
@@ -64,7 +65,7 @@ table: |
     .replace("{name}", Optional.ofNullable(props.getName()).orElse("first_dt"))
     .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my dt"));
     
-    final var decision = parser.parseDecisionTable().syntax(syntax).parse();
+    final var decision = config.getAstParser().parseDecisionTable().syntax(syntax).parse();
     return ImmutableDecisionTable.builder()
         .name(decision.getName())
         .build();

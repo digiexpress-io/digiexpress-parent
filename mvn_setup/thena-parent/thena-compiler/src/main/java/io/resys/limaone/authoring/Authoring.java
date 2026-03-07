@@ -6,8 +6,8 @@ import io.smallrye.mutiny.Uni;
 public interface Authoring {
 
   ModifyModel modifyModel();
-  NewModel newSource();
-  DeleteModel deleteSource();
+  NewModel newModel();
+  DeleteModel deleteModel();
   
   
   interface ModifyModel {

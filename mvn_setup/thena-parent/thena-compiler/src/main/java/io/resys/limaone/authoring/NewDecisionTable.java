@@ -21,7 +21,7 @@ public interface NewDecisionTable {
   NewDecisionTable props(Consumer<ImmutableNewDecisionTableProps.Builder> props);
   
   Uni<Model<DecisionTable>> build();
-  
+  Model<DecisionTable> buildSync();
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewDecisionTableProps.class) @JsonDeserialize(as = ImmutableNewDecisionTableProps.class)
   interface NewDecisionTableProps extends AuthoringModelProps {

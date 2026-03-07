@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.authoring.ImmutableNewFlowTaskProps;
 import io.resys.limaone.authoring.ImmutableNewFlowTaskProps.Builder;
 import io.resys.limaone.authoring.NewFlowTask;
@@ -13,15 +12,17 @@ import io.resys.limaone.model.ImmutableFlowTask;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewFlowTaskImpl implements NewFlowTask {
-  private final WorldPersistence persistence;
-  private final AST_Parser parser;
+public class NewFlowTaskImpl extends AuthoringTemplate<NewFlowTaskImpl, Model<FlowTask>> implements NewFlowTask {
+
   private NewFlowTaskProps props;
+
+  public NewFlowTaskImpl(AuthoringConfig config) {
+    super(config);
+  }
   
   @Override
   public NewFlowTask props(NewFlowTaskProps props) {
@@ -38,7 +39,7 @@ public class NewFlowTaskImpl implements NewFlowTask {
 
   @Override
   public Uni<Model<FlowTask>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.FLOW_TASK)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
@@ -75,7 +76,7 @@ public class {name} {
 """
     .replace("{name}", Optional.ofNullable(props.getName()).orElse("MyFirstTask"));
     
-    final var flow = parser.parseFlowTask().syntax(syntax).parse();
+    final var flow = config.getAstParser().parseFlowTask().syntax(syntax).parse();
     return ImmutableFlowTask.builder()
         .taskName(flow.getName())
         .taskValue(syntax)

@@ -11,14 +11,19 @@ import io.resys.limaone.model.ImmutableArticleTemplate;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewArticleTemplateImpl implements NewArticleTemplate {
-  private final WorldPersistence persistence;
+
+public class NewArticleTemplateImpl extends AuthoringTemplate<NewArticleTemplateImpl, Model<ArticleTemplate>> implements NewArticleTemplate {
+
   private NewArticleTemplateProps props;
+
+  public NewArticleTemplateImpl(AuthoringConfig config) {
+    super(config);
+  }
+
   
   @Override
   public NewArticleTemplate props(NewArticleTemplateProps props) {
@@ -35,7 +40,7 @@ public class NewArticleTemplateImpl implements NewArticleTemplate {
 
   @Override
   public Uni<Model<ArticleTemplate>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.ARTICLE_TEMPLATE)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());

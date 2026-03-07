@@ -12,15 +12,18 @@ import io.resys.limaone.model.ImmutableArticlePage;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewArticlePageImpl implements NewArticlePage {
-  private final WorldPersistence persistence;
+public class NewArticlePageImpl extends AuthoringTemplate<NewArticlePageImpl, Model<ArticlePage>> implements NewArticlePage {
+
   private NewArticlePageProps props;
-  
+
+  public NewArticlePageImpl(AuthoringConfig config) {
+    super(config);
+  }
+
   @Override
   public NewArticlePage props(NewArticlePageProps props) {
     this.props = props;
@@ -36,7 +39,7 @@ public class NewArticlePageImpl implements NewArticlePage {
 
   @Override
   public Uni<Model<ArticlePage>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_PAGE)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());

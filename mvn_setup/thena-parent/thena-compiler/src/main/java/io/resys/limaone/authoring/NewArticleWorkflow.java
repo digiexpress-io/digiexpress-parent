@@ -22,6 +22,7 @@ public interface NewArticleWorkflow {
   NewArticleWorkflow props(Consumer<ImmutableNewArticleWorkflowProps.Builder> props);
   
   Uni<Model<ArticleWorkflow>> build();
+  Model<ArticleWorkflow> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleWorkflowProps.class) @JsonDeserialize(as = ImmutableNewArticleWorkflowProps.class)

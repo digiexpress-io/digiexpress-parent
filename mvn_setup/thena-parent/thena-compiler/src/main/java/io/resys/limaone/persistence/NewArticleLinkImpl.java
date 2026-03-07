@@ -14,14 +14,18 @@ import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewArticleLinkImpl implements NewArticleLink {
-  private final WorldPersistence persistence;
+
+public class NewArticleLinkImpl extends AuthoringTemplate<NewArticleLinkImpl, Model<ArticleLink>>  implements NewArticleLink {
+
   private NewArticleLinkProps props;
+  
+  public NewArticleLinkImpl(AuthoringConfig config) {
+    super(config);
+  }
   
   @Override
   public NewArticleLink props(NewArticleLinkProps props) {
@@ -38,7 +42,7 @@ public class NewArticleLinkImpl implements NewArticleLink {
 
   @Override
   public Uni<Model<ArticleLink>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());

@@ -19,6 +19,7 @@ public interface NewArticle {
   NewArticle props(Consumer<ImmutableNewArticleProps.Builder> props);
   
   Uni<Model<Article>> build();
+  Model<Article> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleProps.class) @JsonDeserialize(as = ImmutableNewArticleProps.class)

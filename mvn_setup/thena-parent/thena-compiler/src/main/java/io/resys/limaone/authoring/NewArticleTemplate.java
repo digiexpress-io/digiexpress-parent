@@ -19,6 +19,7 @@ public interface NewArticleTemplate {
   NewArticleTemplate props(Consumer<ImmutableNewArticleTemplateProps.Builder> props);
   
   Uni<Model<ArticleTemplate>> build();
+  Model<ArticleTemplate> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewArticleTemplateProps.class) @JsonDeserialize(as = ImmutableNewArticleTemplateProps.class)

@@ -14,8 +14,7 @@ import jakarta.annotation.Nullable;
 @JsonSerialize(as = ImmutableDeployment.class)
 @JsonDeserialize(as = ImmutableDeployment.class)
 @Value.Immutable
-public interface Deployment {
-  String getId();
+public interface Deployment extends Model.Body {
   String getName();
   @Nullable String getExternalId();
   @Nullable String getCockpitId();

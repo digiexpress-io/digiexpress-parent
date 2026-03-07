@@ -37,6 +37,12 @@ import io.resys.thena.fs.api.tags.TagQuery;
  * branching, and tagging capabilities backed by PostgreSQL.
  */
 public interface FileSystem {
+  
+  /**
+   * @return whatever is the current tenant name
+   */
+  String getTenantName();
+  
   /**
    * Access tenant management operations for creating and managing isolated
    * filesystem instances. Each tenant maintains its own independent namespace

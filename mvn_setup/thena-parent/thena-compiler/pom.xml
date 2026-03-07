@@ -104,5 +104,12 @@
       <groupId>io.dialob</groupId>
       <artifactId>dialob-api</artifactId>
     </dependency>
+    
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-test-client</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 </project>

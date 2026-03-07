@@ -14,14 +14,18 @@ import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
+import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
 import io.smallrye.mutiny.Uni;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
-public class NewArticleWorkflowImpl implements NewArticleWorkflow {
-  private final WorldPersistence persistence;
+
+public class NewArticleWorkflowImpl extends AuthoringTemplate<NewArticleWorkflowImpl, Model<ArticleWorkflow>> implements NewArticleWorkflow {
+
   private NewArticleWorkflowProps props;
+
+  public NewArticleWorkflowImpl(AuthoringConfig config) {
+    super(config);
+  }
   
   @Override
   public NewArticleWorkflow props(NewArticleWorkflowProps props) {
@@ -38,7 +42,7 @@ public class NewArticleWorkflowImpl implements NewArticleWorkflow {
 
   @Override
   public Uni<Model<ArticleWorkflow>> build() {
-    return persistence.worldBuilder()
+    return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE, BodyType.ARTICLE)
       .lock().build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
