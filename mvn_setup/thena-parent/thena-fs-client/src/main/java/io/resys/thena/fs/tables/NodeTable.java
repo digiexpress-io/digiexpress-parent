@@ -1,5 +1,6 @@
 package io.resys.thena.fs.tables;
 
+import java.util.Collections;
 import java.util.List;
 
 /*-
@@ -215,12 +216,16 @@ public interface NodeTable {
     private Function<Object, Integer> sqlProps;
     private boolean includeBlobs = false;
     private Optional<List<String>> objectId = Optional.empty();
-
+    private Optional<List<String>> includeBlobTypes = Optional.empty();
+    
     public Builder includeBlobs(boolean includeBlobs) {
       this.includeBlobs = includeBlobs;
       return this;
     }
-    
+    public Builder includeBlobTypes(List<String> includeBlobTypes) {
+      this.includeBlobTypes = Optional.ofNullable(includeBlobTypes);
+      return this;
+    }
     public Builder objectId(List<String> objectIdOrFullPath) {
       this.objectId = Optional.ofNullable(objectIdOrFullPath);
       return this;
@@ -242,19 +247,25 @@ public interface NodeTable {
         final var object_id_arr = "$" + this.sqlProps.apply(objectId.map(e -> e.toArray(new String[] {})).get());
         return 
 """
-CASE 
-        WHEN (
+      CASE WHEN (
           nodes.object_id = ANY({object_id_arr}) 
           OR CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name) = ANY({object_id_arr})
         ) THEN blobs.blob_value 
-        ELSE NULL 
-      END,
+      ELSE NULL END,
 """.replace("{object_id_arr}", object_id_arr);
       } else if(this.includeBlobs) {
         return "blobs.blob_value,";
       } else {
         return "NULL,";
       }
+    }
+    
+    private String where() {
+      if(includeBlobTypes.orElse(Collections.emptyList()).isEmpty()) {
+        return "";
+      }
+      final var type = "$" + this.sqlProps.apply(includeBlobTypes.map(e -> e.toArray(new String[] {})).get());
+      return " WHERE blobs.blob_type = ANY({type})".replace("{type}", type);
     }
     
     public String build() {
@@ -269,7 +280,7 @@ CASE
       final var hydrateBlobValue = hydrateBlobValue();
       final var statement = baseline.replace("null, --HYDRATE BLOB VALUE", hydrateBlobValue);
       final var sql = "({statement}) as nodes_json".replace("{statement}", statement);
-      return sql;
+      return sql + where();
     }
   }
   

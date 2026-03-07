@@ -72,6 +72,20 @@ public class DbSupport {
         .buildOnlyIfNotCreated()
         .await().atMost(Duration.ofMinutes(1)).getItem2();
     
+    
+    this.client.withTenant()
+      .commitBuilder()
+      .branchName("main")
+      .commitAuthor("john smith")
+      .commitMessage("create main branch with some content")
+      .newFile((newFile) -> newFile
+          .fileName("init.md")
+          .fileType("init_md")
+          .fileValue(new JsonObject())
+          .build())
+      .build()
+      .await().atMost(atMost);
+    
     log.debug("created repo {}", repo);
     
     Assertions.assertEquals(TenantOperationStatus.OK, repo.getStatus());

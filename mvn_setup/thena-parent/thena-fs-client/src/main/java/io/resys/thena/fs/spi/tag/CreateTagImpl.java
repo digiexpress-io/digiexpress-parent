@@ -40,6 +40,7 @@ import io.resys.thena.fs.entities.Tag;
 import io.resys.thena.fs.entities.Tree;
 import io.resys.thena.fs.spi.commit.CommitBuilderException;
 import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
+import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -119,7 +120,7 @@ public class CreateTagImpl implements CreateTag {
         })
         .onItem().transformToUni(found -> {
           if(callback != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId(), Collections.emptyList())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getItem1().getId(), Collections.emptyList()))
               .map(tuple -> tuple.getItem2())
               .onItem().transform(tree -> new TagRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
           }

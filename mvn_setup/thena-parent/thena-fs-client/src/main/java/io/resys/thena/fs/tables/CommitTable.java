@@ -86,6 +86,8 @@ import io.vertx.mutiny.sqlclient.Tuple;
 )
 public interface CommitTable {
 
+  
+  record NodesAndBlobsFilter(String commitId, List<String> blobTypes) { }
   @TenantSql.Find(
     optional = false,
     sql = """
@@ -97,8 +99,10 @@ public interface CommitTable {
     rowMapper = CommitAndTreeMapper.class,
     sqlBuilder = COMMIT_AND_NODES_SQL.class
   )
-  SqlTuple getByIdWithNodesAndBlobs(String id, List<String> blobTypes);
+  SqlTuple getByIdWithNodesAndBlobs(NodesAndBlobsFilter filter);
   
+  
+  record NodesFilter(String commitId, List<String> blobTypes) { }
   @TenantSql.Find(
     optional = false,
     sql = """
@@ -110,7 +114,7 @@ public interface CommitTable {
     rowMapper = CommitAndTreeMapper.class,
     sqlBuilder = COMMIT_AND_TREE_SQL.class
   )
-  SqlTuple getByIdWithNodes(String id, List<String> blobTypes);
+  SqlTuple getByIdWithNodes(NodesFilter filter);
   
   @TenantSql.FindAll(
     wrapper = WrapperType.MULTI,
@@ -264,22 +268,45 @@ public interface CommitTable {
 
   
 
-  class COMMIT_AND_TREE_SQL implements SqlBuilder<String> {
+  class COMMIT_AND_TREE_SQL implements SqlBuilder<NodesFilter> {
     @Override
-    public SqlTuple apply(Tenant tenant, String baseline, String commitId) {
+    public SqlTuple apply(Tenant tenant, String baseline, NodesFilter filter) {
+      final var params = new ArrayList<Object>();
+      params.add(filter.commitId);
+      final var index = new MutableInt(1);
+      final var nodes_json = NodeTable.sql()
+        .includeBlobs(false)
+        .includeBlobTypes(filter.blobTypes)
+        .build((prop) -> {
+          params.add(prop);
+          return index.incrementAndGet();
+        });
+    
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobs(false).build()))
-          .props(Tuple.of(commitId))
+          .value(baseline.replace("__nodes_json", nodes_json))
+          .props(Tuple.from(params))
           .build();
     }
   }
 
-  class COMMIT_AND_NODES_SQL implements SqlBuilder<String> {
+  class COMMIT_AND_NODES_SQL implements SqlBuilder<NodesAndBlobsFilter> {
     @Override
-    public SqlTuple apply(Tenant tenant, String baseline, String commitId) {
+    public SqlTuple apply(Tenant tenant, String baseline, NodesAndBlobsFilter filter) {
+      final var params = new ArrayList<Object>();
+      params.add(filter.commitId);
+      final var index = new MutableInt(1);
+      
+      final var nodes_json = NodeTable.sql()
+        .includeBlobs(true)
+        .includeBlobTypes(filter.blobTypes)
+        .build((prop) -> {
+          params.add(prop);
+          return index.incrementAndGet();
+        });
+      
       return ImmutableSqlTuple.builder()
-          .value(baseline.replace("__nodes_json", NodeTable.sql().includeBlobs(true).build()))
-          .props(Tuple.of(commitId))
+          .value(baseline.replace("__nodes_json", nodes_json))
+          .props(Tuple.from(params))
           .build();
     }
   }

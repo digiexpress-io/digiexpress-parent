@@ -39,6 +39,7 @@ import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tree;
 import io.resys.thena.fs.spi.commit.CommitBuilderException;
 import io.resys.thena.fs.spi.commit.CommitBuilderImpl;
+import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
@@ -118,7 +119,7 @@ public class CreateBranchImpl implements CreateBranch {
         })
         .onItem().transformToUni(found -> {
           if(beforeBranchCompletion != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId(), Collections.emptyList())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getItem1().getId(), Collections.emptyList()))
               .map(tuple -> tuple.getItem2())
               .onItem().transform(tree -> new BranchRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
           }

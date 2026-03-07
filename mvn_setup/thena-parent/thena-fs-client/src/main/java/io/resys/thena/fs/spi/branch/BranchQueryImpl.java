@@ -30,6 +30,8 @@ import java.util.function.Consumer;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
+import io.resys.thena.fs.tables.CommitTable.NodesFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
 import io.resys.thena.support.RepoAssert;
@@ -133,7 +135,7 @@ public class BranchQueryImpl implements BranchQuery {
     // load all 
     if(isBlobs) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId(), blobTypes))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(tag.getCommitId(), blobTypes)))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
     }
     
@@ -141,7 +143,7 @@ public class BranchQueryImpl implements BranchQuery {
     final var isNodes = !excludeNodes;
     if(isNodes) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId(), blobTypes))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(new NodesFilter(tag.getCommitId(), blobTypes)))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
     }    
     return Uni.createFrom().item(tag);

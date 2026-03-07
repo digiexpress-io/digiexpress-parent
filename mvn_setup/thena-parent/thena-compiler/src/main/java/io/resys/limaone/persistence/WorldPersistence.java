@@ -14,7 +14,6 @@ public interface WorldPersistence {
   
   interface WorldBuilder {
     WorldBuilder docs(BodyType ... type);
-    WorldBuilder lock();
     WorldBuilder lockWithCommit(String commitId);
     <T> Uni<T> build(Function<NextWorld, T> mergeFunction); 
   }
