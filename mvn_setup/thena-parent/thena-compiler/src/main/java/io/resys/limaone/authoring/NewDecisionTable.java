@@ -17,8 +17,8 @@ import jakarta.annotation.Nullable;
 
 public interface NewDecisionTable {
 
-  NewArticleLink props(NewDecisionTableProps props);
-  NewArticleLink props(Consumer<ImmutableNewDecisionTableProps.Builder> props);
+  NewDecisionTable props(NewDecisionTableProps props);
+  NewDecisionTable props(Consumer<ImmutableNewDecisionTableProps.Builder> props);
   
   Uni<Model<DecisionTable>> build();
   

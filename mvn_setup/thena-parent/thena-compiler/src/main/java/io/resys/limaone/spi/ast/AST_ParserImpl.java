@@ -32,7 +32,7 @@ public class AST_ParserImpl implements AST_Parser {
   }
   @Override
   public DecsionTableParser parseDecisionTable() {
-    return new DecsionTableParserImpl();
+    return new DecsionTableParserImpl(props);
   }
 
   

@@ -1,6 +1,7 @@
 package io.resys.limaone.spi.ast;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -16,21 +17,32 @@ import com.google.common.hash.Hashing;
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.DecsionTableParser;
 import io.resys.limaone.ast.DecisionTable_AST;
+import io.resys.limaone.ast.DecisionTable_CST.YamlDecision;
 import io.resys.limaone.model.DecisionTable.ColumnExpressionType;
 import io.resys.limaone.model.DecisionTable.DecisionStatement;
-import io.resys.limaone.model.DecisionTable.StatementType;
 import io.resys.limaone.model.DecisionTable.HitPolicy;
+import io.resys.limaone.model.DecisionTable.StatementType;
+import io.resys.limaone.model.ModelError;
 import io.resys.limaone.model.Parameter.Direction;
 import io.resys.limaone.model.Parameter.ValueType;
 import io.resys.limaone.spi.LocalCache;
 import io.resys.limaone.spi.LocalCache.DecisionTable_AST_CacheKey;
+import io.resys.limaone.spi.ast.AST_ParserImpl.AST_ParserProps;
 import io.resys.limaone.spi.ast.decisiontable.CommandMapper;
+import io.resys.limaone.spi.ast.decisiontable.DecisionCSTToCommands;
+import io.resys.limaone.spi.ast.decisiontable.MutableYamlDecision;
+import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
 
+  private final AST_ParserProps props;
   private final CommandMapper builder = new CommandMapper();
+  private final List<ModelError> errors = new ArrayList<>();
+  
   private List<DecisionStatement> src;
 
   @Override
@@ -46,11 +58,20 @@ public class DecsionTableParserImpl implements AST_Parser.DecsionTableParser {
   @Override
   public DecsionTableParser syntax(String syntax) {
     Objects.requireNonNull(syntax, () -> "syntax must be defined!");
-    final var nodes = new JsonArray(syntax).stream()
-        .map(e -> ((JsonObject) e))
-        .map(e -> e.mapTo(DecisionStatement.class))
-        .toList();
-    return nodes(nodes);
+   
+    if(syntax.trim().startsWith("[")) {
+      final var nodes = new JsonArray(syntax).stream()
+          .map(e -> ((JsonObject) e))
+          .map(e -> e.mapTo(DecisionStatement.class))
+          .toList();
+      return nodes(nodes);
+    } 
+    final var parser = new CST_YamlParser<MutableYamlDecision>(props, new MutableYamlDecision());
+    final Tuple2<MutableYamlDecision, List<ModelError>> result = parser.parseCST(syntax);
+    final YamlDecision parseTree = result.getItem1();
+    
+    errors.addAll(result.getItem2());
+    return nodes(new DecisionCSTToCommands().convert(parseTree));
   }
 
   @Override
