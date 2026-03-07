@@ -1,5 +1,7 @@
 package io.resys.thena.fs.spi.tag;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-fs-client
@@ -109,7 +111,7 @@ public class ModifyTagImpl implements ModifyTag {
         })
         .onItem().transformToUni(found -> {
           if(callback != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getCommitId())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getCommitId(), Collections.emptyList())
               .map(tuple -> new TagModRequest(found, Optional.of(tuple.getItem1()), Optional.of(tuple.getItem2())));  
           }
           return Uni.createFrom().item(new TagModRequest(found, Optional.empty(), Optional.empty()));

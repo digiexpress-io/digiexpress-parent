@@ -70,6 +70,15 @@ public interface BranchQuery {
    * @return query builder for method chaining
    */
   BranchQuery branchId(String branchId);
+
+  /**
+   * Filters to a specific node and blob types.
+   * 
+   * @param type the blob types for nodes and blobs that to include
+   * @return query builder for method chaining
+   */
+  BranchQuery blobTypes(String ... type);
+
   
   /**
    * Executes query that may return zero or one branch result.

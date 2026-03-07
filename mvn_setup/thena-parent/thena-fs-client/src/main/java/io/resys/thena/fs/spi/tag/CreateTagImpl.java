@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi.tag;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -118,7 +119,7 @@ public class CreateTagImpl implements CreateTag {
         })
         .onItem().transformToUni(found -> {
           if(callback != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId(), Collections.emptyList())
               .map(tuple -> tuple.getItem2())
               .onItem().transform(tree -> new TagRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
           }

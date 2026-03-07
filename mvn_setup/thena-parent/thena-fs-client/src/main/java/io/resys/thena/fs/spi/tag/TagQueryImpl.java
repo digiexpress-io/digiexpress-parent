@@ -1,5 +1,7 @@
 package io.resys.thena.fs.spi.tag;
 
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-fs-client
@@ -112,7 +114,7 @@ public class TagQueryImpl implements TagQuery {
     // load all 
     if(isBlobs) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId()))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId(), Collections.emptyList()))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
     }
     
@@ -120,7 +122,7 @@ public class TagQueryImpl implements TagQuery {
     final var isNodes = !excludeNodes;
     if(isNodes) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId()))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId(), Collections.emptyList()))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
     }    
     return Uni.createFrom().item(tag);

@@ -21,6 +21,7 @@ package io.resys.thena.fs.spi.branch;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -117,7 +118,7 @@ public class CreateBranchImpl implements CreateBranch {
         })
         .onItem().transformToUni(found -> {
           if(beforeBranchCompletion != null) {
-            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId())
+            return tx.query().queryCommit().getByIdWithNodesAndBlobs(found.getItem1().getId(), Collections.emptyList())
               .map(tuple -> tuple.getItem2())
               .onItem().transform(tree -> new BranchRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
           }

@@ -1,7 +1,5 @@
 package io.resys.limaone.tests;
 
-import java.time.Duration;
-
 import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.persistence.AuthoringImpl;
@@ -12,26 +10,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthoringTest extends DbSupport {
 
-  
-  
   @Test
   public void createTest() {
-    final var authoring = new AuthoringImpl(createPersistence());
+    final var authoring = new AuthoringImpl(createConfig());
     
-    final var template1 = authoring.newModel().newArticleTemplate().props(props -> props
-      .name("Nice page template")
-      .content("# Header 1")
-      .type("Page")
-      .description("Generic page structure")
-    ).build().await().atMost(Duration.ofMinutes(1));
+    final var template1 = authoring.newModel()
+        .newArticleTemplate()
+        .props(props -> props.name("Nice page template").content("# Header 1").type("Page").description("Generic page structure"))
+        .buildSync();
         
-    final var article1 = repo.create().article(
-        ImmutableCreateArticle.builder().name("My first article").order(100).build()
-    )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    final var article1 = authoring.newModel()
+        .newArticle()
+        .props(builder -> builder.name("My first article").order(100))
+        .buildSync();
 
-    final var article2 = repo.create().article(
-        ImmutableCreateArticle.builder().name("My second article").order(100).build()
-    )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    final var article2 = authoring.newModel()
+        .newArticle()
+        .props(builder -> builder.name("My second article").order(100).build())
+        .buildSync();
     
    /*
    repo.create().release(

@@ -11,7 +11,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
-import io.resys.limaone.persistence.WorldPersistence;
+import io.resys.limaone.persistence.AuthoringImpl;
+import io.resys.limaone.persistence.ImmutableAuthoringConfig;
+import io.resys.limaone.persistence.WorldPersistenceFs;
+import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;
 import io.resys.thena.api.entities.Tenant;
@@ -26,6 +29,7 @@ import io.resys.thena.fs.tables.spi.FsTableNames;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.test.ThenaTest;
 import io.resys.thena.test.ThenaTestDbConfig;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -177,7 +181,12 @@ public class DbSupport {
     
   }
   
-  public WorldPersistence createPersistence() {
-    
+  public AuthoringImpl.AuthoringConfig createConfig() {
+    return ImmutableAuthoringConfig.builder()
+        .astParser(AST_ParserImpl.builder().dev(true).build())
+        .workerPool(Infrastructure.getDefaultWorkerPool())
+        .workerTimeout(Duration.ofMinutes(1))
+        .persistence(new WorldPersistenceFs(client))
+        .build();
   }
 }

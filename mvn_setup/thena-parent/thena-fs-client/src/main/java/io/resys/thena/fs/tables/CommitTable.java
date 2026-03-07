@@ -97,8 +97,20 @@ public interface CommitTable {
     rowMapper = CommitAndTreeMapper.class,
     sqlBuilder = COMMIT_AND_NODES_SQL.class
   )
-  SqlTuple getByIdWithNodesAndBlobs(String id);
+  SqlTuple getByIdWithNodesAndBlobs(String id, List<String> blobTypes);
   
+  @TenantSql.Find(
+    optional = false,
+    sql = """
+    SELECT commit.*, __nodes_json
+    FROM {commit} as commit ON commit.commit_id = ref.commit_id
+    JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    WHERE commit.commit_id = $1
+    """,
+    rowMapper = CommitAndTreeMapper.class,
+    sqlBuilder = COMMIT_AND_TREE_SQL.class
+  )
+  SqlTuple getByIdWithNodes(String id, List<String> blobTypes);
   
   @TenantSql.FindAll(
     wrapper = WrapperType.MULTI,
@@ -132,19 +144,6 @@ public interface CommitTable {
     sqlBuilder = COMMIT_HISTORY_FOR_NODES_SQL.class
   )
   SqlTuple findCommitHistoryByNodes(CommitHistoryFilter filter);
-  
-  @TenantSql.Find(
-    optional = false,
-    sql = """
-    SELECT commit.*, __nodes_json
-    FROM {commit} as commit ON commit.commit_id = ref.commit_id
-    JOIN {tree} as tree ON tree.tree_id = commit.tree_id
-    WHERE commit.commit_id = $1
-    """,
-    rowMapper = CommitAndTreeMapper.class,
-    sqlBuilder = COMMIT_AND_TREE_SQL.class
-  )
-  SqlTuple getByIdWithNodes(String id);
   
   @TenantSql.Find(
       optional = true,

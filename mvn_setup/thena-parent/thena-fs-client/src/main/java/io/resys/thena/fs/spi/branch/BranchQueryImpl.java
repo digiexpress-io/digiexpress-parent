@@ -1,5 +1,9 @@
 package io.resys.thena.fs.spi.branch;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /*-
  * #%L
  * thena-fs-client
@@ -39,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class BranchQueryImpl implements BranchQuery {
 
   private final Uni<FsDb> db_uni;
+  private final List<String> blobTypes = new ArrayList<>();
   private Consumer<NameExpressionBuilder> nameExpr;
   private String branchId;
   
@@ -66,10 +71,17 @@ public class BranchQueryImpl implements BranchQuery {
     this.nameExpr = RepoAssert.notNull(nameExpr, () -> "nameExpr can't be empty!");
     return this;
   }
+
+  @Override
+  public BranchQuery blobTypes(String... type) {
+    this.blobTypes.addAll(Arrays.asList(type));
+    return this;
+  } 
   @Override
   public Multi<Ref> findAll() {
     return baseline().onItem().transformToUni(this::join).concatenate();
   }
+  
   @Override
   public Uni<Optional<Ref>> findOne() {
     return baseline().collect().asList()
@@ -121,7 +133,7 @@ public class BranchQueryImpl implements BranchQuery {
     // load all 
     if(isBlobs) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId()))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(tag.getCommitId(), blobTypes))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
     }
     
@@ -129,10 +141,11 @@ public class BranchQueryImpl implements BranchQuery {
     final var isNodes = !excludeNodes;
     if(isNodes) {
       return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId()))
+        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(tag.getCommitId(), blobTypes))
         .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
     }    
     return Uni.createFrom().item(tag);
   }
   
+
 }

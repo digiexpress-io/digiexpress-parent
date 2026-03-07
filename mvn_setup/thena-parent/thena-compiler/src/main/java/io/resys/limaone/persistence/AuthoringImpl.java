@@ -8,6 +8,15 @@ import org.immutables.value.Value;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.authoring.NewArticle;
+import io.resys.limaone.authoring.NewArticleLink;
+import io.resys.limaone.authoring.NewArticlePage;
+import io.resys.limaone.authoring.NewArticleTemplate;
+import io.resys.limaone.authoring.NewArticleWorkflow;
+import io.resys.limaone.authoring.NewDecisionTable;
+import io.resys.limaone.authoring.NewFlow;
+import io.resys.limaone.authoring.NewFlowTask;
+import io.resys.limaone.authoring.NewLocale;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +34,24 @@ public class AuthoringImpl implements Authoring {
   }
 
   @Override
-  public NewModel newModel() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public DeleteModel deleteModel() {
     // TODO Auto-generated method stub
     return null;
+  }
+  
+  @Override
+  public NewModel newModel() {
+    return new NewModel() {
+      @Override public NewLocale newLocale() { return new NewLocaleImpl(config); }
+      @Override public NewFlowTask newFlowTask() { return new NewFlowTaskImpl(config); }
+      @Override public NewFlow newFlow() { return new NewFlowImpl(config); }
+      @Override public NewDecisionTable newDecisionTable() { return new NewDecisionTableImpl(config); }
+      @Override public NewArticleWorkflow newArticleWorkflow() { return new NewArticleWorkflowImpl(config); }
+      @Override public NewArticleTemplate newArticleTemplate() { return new NewArticleTemplateImpl(config); }
+      @Override public NewArticlePage newArticlePage() { return new NewArticlePageImpl(config); }
+      @Override public NewArticleLink newArticleLink() { return new NewArticleLinkImpl(config); }
+      @Override public NewArticle newArticle() { return new NewArticleImpl(config); }
+    };
   }
 
   
@@ -74,7 +92,7 @@ public class AuthoringImpl implements Authoring {
   }
 
   @Value.Immutable
-  interface AuthoringConfig {
+  public interface AuthoringConfig {
     WorldPersistence getPersistence();
     ScheduledExecutorService getWorkerPool();
     Duration getWorkerTimeout();
