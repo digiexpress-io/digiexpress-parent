@@ -13,7 +13,6 @@ import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.api.FileSystem.FileSystemTenant;
 import io.resys.thena.fs.api.commits.CommitBuilder;
-import io.resys.thena.fs.entities.Blob;
 import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
@@ -29,6 +28,7 @@ public class WorldPersistenceFs implements WorldPersistence {
   @Override
   public WorldBuilder worldBuilder() {
     return new WorldBuilder() {
+      private final WorldPersistenceLogger logger = new WorldPersistenceLogger();
       private String branchName = "main";
       private String commitId;
       private final List<String> blobTypes = new ArrayList<>();
@@ -46,15 +46,15 @@ public class WorldPersistenceFs implements WorldPersistence {
       
       @Override
       public <T> Uni<T> build(Function<NextWorld, T> mergeFunction) {
-        
         final var tenant = fileSystem.withTenant();
+        logger.stage1TenantConfigured(tenant, commitId);
         return tenant.branchQuery()
           .branchId(branchName)
-          .excludeBlobs(false)
-          .excludeNodes(false)
           .getOne()
           .onItem().transformToUni(ref -> {
+            logger.stage2CurrentState(ref);
             if(commitId != null && !ref.getCommitId().equals(commitId)) {
+              logger.stage3LockFailed(ref);
               throw new WorldLockException();
             }
 
@@ -62,11 +62,18 @@ public class WorldPersistenceFs implements WorldPersistence {
             final var mapped = mergeFunction.apply(nextWorld);
             final var commitBuilder = nextWorld.close();
             
+            
+            logger.stage4NextState();
+            
             return commitBuilder
                 .branchName(branchName)
                 .branchLock(ref.getCommitId())
+                .queryHeadOnly()
                 .build()
-                .onItem().transform(commited -> mapped);
+                .onItem().transform(commited -> mapped)
+                .onFailure().invoke((e) -> logger.closeWithFailure(e))
+                .onItem().invoke(() -> logger.close());
+
           });
       }
     };

@@ -30,8 +30,6 @@ import java.util.function.Consumer;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref;
-import io.resys.thena.fs.tables.CommitTable.NodesAndBlobsFilter;
-import io.resys.thena.fs.tables.CommitTable.NodesFilter;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
 import io.resys.thena.support.RepoAssert;
@@ -120,34 +118,39 @@ public class BranchQueryImpl implements BranchQuery {
 
   
   private Multi<Ref> baseline() {
-    final ImmutableRefTableFilter filter;
+    final ImmutableRefTableFilter.Builder filter = ImmutableRefTableFilter.builder();
     if(branchId == null && nameExpr == null) {
-      filter = ImmutableRefTableFilter.builder().branchId(branchId).nameExpr(nameExpr).build();
+      filter.branchId(branchId).nameExpr(nameExpr);
     } else {
-      filter = ImmutableRefTableFilter.builder().branchId(BranchConstants.DEFAULT_BRANCH).build();
+      filter.branchId(BranchConstants.DEFAULT_BRANCH);
     }
-    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter));
+    filter
+      .blobTypes(blobTypes)
+      .excludeNodes(Boolean.TRUE.equals(excludeNodes))
+      .excludeBlobs(Boolean.TRUE.equals(excludeBlobs));
+    
+    
+//    final var isBlobs = !excludeBlobs && !excludeNodes;
+    
+//    // load all 
+//    if(isBlobs) {
+//      return db_uni
+//        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(tag.getCommitId(), blobTypes)))
+//        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
+//    }
+//    
+//    // load nodes
+//    final var isNodes = !excludeNodes;
+//    if(isNodes) {
+//      return db_uni
+//        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(new NodesFilter(tag.getCommitId(), blobTypes)))
+//        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
+//    }    
+//    
+    return db_uni.onItem().transformToMulti(db -> db.query().queryRef().findAllByFilter(filter.build()));
   }
   
   private Uni<Ref> join(Ref tag) {
-    final var isBlobs = !excludeBlobs && !excludeNodes;
-    
-    // load all 
-    if(isBlobs) {
-      return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(tag.getCommitId(), blobTypes)))
-        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
-    }
-    
-    // load nodes
-    final var isNodes = !excludeNodes;
-    if(isNodes) {
-      return db_uni
-        .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(new NodesFilter(tag.getCommitId(), blobTypes)))
-        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
-    }    
     return Uni.createFrom().item(tag);
   }
-  
-
 }

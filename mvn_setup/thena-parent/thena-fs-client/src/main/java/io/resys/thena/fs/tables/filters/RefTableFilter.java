@@ -21,6 +21,7 @@ package io.resys.thena.fs.tables.filters;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -43,6 +44,9 @@ import jakarta.annotation.Nullable;
 public interface RefTableFilter {
   @Nullable Consumer<NameExpressionBuilder> getNameExpr();
   @Nullable String getBranchId();
+  @Nullable Boolean getExcludeNodes();
+  @Nullable Boolean getExcludeBlobs();
+  List<String> getBlobTypes();
   
   final static class SQL implements SqlBuilder<RefTableFilter> {
     
@@ -92,13 +96,20 @@ public interface RefTableFilter {
       final var result = stmt.toString();
       final var clause = (result.isBlank() ? "" : " WHERE ") + result;
       
-      final var nodes_json = NodeTable.sql()
-        .includeBlobs(true)
-        .build((item) -> {
-          params.add(item);
-          return index.incrementAndGet();
-        });
-    
+      final String nodes_json;
+      if(Boolean.TRUE.equals(filter.getExcludeNodes())) {
+        nodes_json = "-- disabled by user " + System.lineSeparator() + " SELECT null as tree_node_blob";
+      } else {
+        nodes_json = NodeTable.sql()
+            .includeBlobTypes(filter.getBlobTypes())
+            .includeBlobs(filter.getExcludeBlobs() == null ? true : !filter.getExcludeBlobs())
+            .build((item) -> {
+              params.add(item);
+              return index.incrementAndGet();
+            });
+      }
+      
+      
       return ImmutableSqlTuple.builder()
           .value(baseline.replace("__nodes_json", nodes_json) + clause)
           .props(Tuple.from(params))

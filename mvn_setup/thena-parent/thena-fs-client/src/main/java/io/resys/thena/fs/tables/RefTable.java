@@ -134,13 +134,12 @@ public interface RefTable {
     commit.tree_id, 
     commit.parent_id, 
     commit.merge_id,
-    
-    -- Aggregated Nodes
-    __nodes_json
+    nodes_and_blobs.tree_node_blob    
 
   FROM {ref} as ref
   JOIN {commit} as commit ON commit.commit_id = ref.commit_id
   JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+  LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
       """,
       wrapper = WrapperType.MULTI,
       rowMapper = RefMapper.class,
@@ -160,13 +159,13 @@ public interface RefTable {
     commit.tree_id, 
     commit.parent_id, 
     commit.merge_id,
-    
-    -- Aggregated Nodes
-    __nodes_json
+
+    nodes_and_blobs.tree_node_blob
     
   FROM (SELECT * FROM {ref} WHERE ref_name = $1 FOR UPDATE NOWAIT) as ref
   JOIN {commit} as commit ON commit.commit_id = ref.commit_id
   JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+  LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
     """,
     rowMapper = RefMapper.class,
     sqlBuilder = RefTableLockFilter.SQL.class
@@ -185,10 +184,11 @@ public interface RefTable {
       final var visited_blobs = new ArrayList<String>();
       final var visited_props = new ArrayList<String>();
       
-      final var isTreeEnabled = row.getColumnIndex("nodes_json") != -1;
+      final var isTreeSelected = row.getColumnIndex("tree_node_blob") != -1;
+      final var tree_node_blob = isTreeSelected ? row.getJsonArray("tree_node_blob") : null;
       
       final var allNodes = Optional
-        .ofNullable(isTreeEnabled ? row.getJsonArray("nodes_json") : new JsonArray())
+        .ofNullable(tree_node_blob)
         .orElseGet(() -> new JsonArray())
         .stream().map(node_json -> (JsonObject) node_json)
         .map(node_json -> {
@@ -210,7 +210,7 @@ public interface RefTable {
         })
         .toList();
       
-      final var tree = isTreeEnabled ? ImmutableTree.builder().id(row.getString("tree_id")).treeNodes(allNodes).build() : null;
+      final var tree = isTreeSelected && tree_node_blob != null ? ImmutableTree.builder().id(row.getString("tree_id")).treeNodes(allNodes).build() : null;
       
       final var isCommitEnabled = row.getColumnIndex("commit_created_at") != -1;
       final var commit = isCommitEnabled ? CommitTable.CommitMapper.fromRow(row) : null;

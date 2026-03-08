@@ -46,7 +46,6 @@ import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.TableUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.smallrye.mutiny.tuples.Tuple3;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -91,9 +90,10 @@ public interface CommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-    SELECT commit.*, __nodes_json
+    SELECT commit.*, nodes_and_blobs.tree_node_blob
     FROM {commit} as commit
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
     WHERE commit.commit_id = $1
     """,
     rowMapper = CommitAndTreeMapper.class,
@@ -106,9 +106,10 @@ public interface CommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-    SELECT commit.*, __nodes_json
+    SELECT commit.*, nodes_and_blobs.tree_node_blob
     FROM {commit} as commit ON commit.commit_id = ref.commit_id
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
     WHERE commit.commit_id = $1
     """,
     rowMapper = CommitAndTreeMapper.class,
@@ -338,13 +339,17 @@ public interface CommitTable {
     }
   }
   
-  class CommitAndTreeMapper implements TenantSql.RowMapper<Tuple2<Commit, Tree>> {
+  class CommitAndTreeMapper implements TenantSql.RowMapper<Tuple2<Commit, Optional<Tree>>> {
     @Override
-    public Tuple2<Commit, Tree> apply(Row row) {
+    public Tuple2<Commit, Optional<Tree>> apply(Row row) {
       final var commit = CommitMapper.fromRow(row);
-      final var allNodes = Optional
-        .ofNullable(row.getJsonArray("nodes_json"))
-        .orElseGet(() -> new JsonArray())
+      
+      final var tree_node_blob = row.getJsonArray("tree_node_blob");
+      if(tree_node_blob == null) {
+        return Tuple2.of(commit, Optional.empty());
+      }
+      
+      final var allNodes = tree_node_blob
         .stream().map(node_json -> (JsonObject) node_json)
         .map(NodeTable.NodeMapper::fromJson)
         .toList();
@@ -352,7 +357,7 @@ public interface CommitTable {
           .id(row.getString("tree_id"))
           .treeNodes(allNodes)
           .build();
-      return Tuple2.of(commit, tree);
+      return Tuple2.of(commit, Optional.of(tree));
     }
   }
   

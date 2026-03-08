@@ -21,6 +21,7 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.fs.api.FileSystem;
 import io.resys.thena.fs.printer.FileSystemPrinter;
 import io.resys.thena.fs.spi.FileSystem_ThenaImpl;
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ThenaTest(database = @ThenaTestDbConfig(
-  enabled = false, 
+  enabled = true, 
   database = "eveli-app", 
   host = "localhost",
   port = 5433,
@@ -44,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 ))
 public class DbSupport {
 
-  private FileSystem client;
+  private FileSystem_ThenaImpl client;
   protected io.vertx.mutiny.sqlclient.Pool pgPool;
   protected static Duration atMost = Duration.ofMinutes(1);
 
@@ -93,11 +94,7 @@ public class DbSupport {
   }
   
   public void wipeRepo(Tenant repo) {
-    final var datasource = FileSystem_ThenaImpl.createInstance()
-      .tenantName(repo.getName())
-      .client(pgPool)
-      .errorHandler(new PgErrors())
-      .datasource();
+    final var datasource = (ThenaSqlDataSource) this.client.getStartingState().getDataSource();
     
     final var names = FsTableNames.defaults().toRepo(repo);
     

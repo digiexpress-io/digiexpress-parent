@@ -39,6 +39,7 @@ import io.vertx.mutiny.sqlclient.Tuple;
 public interface RefTableLockFilter {
   Optional<List<String>> getDocIds();
   String getRefName();
+  Boolean getQueryHeadOnly();
   
   final static class SQL implements SqlBuilder<RefTableLockFilter> {
 
@@ -49,12 +50,17 @@ public interface RefTableLockFilter {
       params.add(filter.getRefName());
       final var index = new MutableInt(1);
       
-      final var nodes_json = NodeTable.sql()
-        .objectId(filter.getDocIds().orElse(null))
-        .build((item) -> {
-          params.add(item);
-          return index.incrementAndGet();
-        });
+      final String nodes_json;
+      if(Boolean.TRUE.equals(filter.getQueryHeadOnly())) {
+        nodes_json = "-- disabled by user " + System.lineSeparator() + "  SELECT null as tree_node_blob";
+      } else {
+        nodes_json = NodeTable.sql()
+            .objectId(filter.getDocIds().orElse(null))
+            .build((item) -> {
+              params.add(item);
+              return index.incrementAndGet();
+            });
+      }
     
       return ImmutableSqlTuple.builder()
           .value(baseline.replace("__nodes_json", nodes_json))

@@ -186,7 +186,7 @@ public interface NodeTable {
       'props_comments', props.props_comments,
       'props_permissions', props.props_permissions
     )
-  ) 
+  ) as tree_node_blob
 
   FROM unnest(tree.tree_nodes) AS nodes
   LEFT JOIN (
@@ -278,8 +278,7 @@ public interface NodeTable {
       
       final var baseline = baseline();
       final var hydrateBlobValue = hydrateBlobValue();
-      final var statement = baseline.replace("null, --HYDRATE BLOB VALUE", hydrateBlobValue);
-      final var sql = "({statement}) as nodes_json".replace("{statement}", statement);
+      final var sql = baseline.replace("null, --HYDRATE BLOB VALUE", hydrateBlobValue);
       return sql + where();
     }
   }

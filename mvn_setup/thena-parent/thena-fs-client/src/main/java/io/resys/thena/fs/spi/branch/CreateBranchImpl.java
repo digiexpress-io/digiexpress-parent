@@ -121,7 +121,7 @@ public class CreateBranchImpl implements CreateBranch {
           if(beforeBranchCompletion != null) {
             return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getItem1().getId(), Collections.emptyList()))
               .map(tuple -> tuple.getItem2())
-              .onItem().transform(tree -> new BranchRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
+              .onItem().transform(tree -> new BranchRequest(found.getItem1(), tree, found.getItem2()));  
           }
           return Uni.createFrom().item(new BranchRequest(found.getItem1(), Optional.empty(), found.getItem2()));
         })

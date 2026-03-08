@@ -122,7 +122,7 @@ public class CreateTagImpl implements CreateTag {
           if(callback != null) {
             return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getItem1().getId(), Collections.emptyList()))
               .map(tuple -> tuple.getItem2())
-              .onItem().transform(tree -> new TagRequest(found.getItem1(), Optional.ofNullable(tree), found.getItem2()));  
+              .onItem().transform(tree -> new TagRequest(found.getItem1(), tree, found.getItem2()));  
           }
           return Uni.createFrom().item(new TagRequest(found.getItem1(), Optional.empty(), found.getItem2()));
         })

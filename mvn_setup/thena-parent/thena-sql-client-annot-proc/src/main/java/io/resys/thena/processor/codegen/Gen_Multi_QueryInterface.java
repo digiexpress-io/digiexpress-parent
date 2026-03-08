@@ -151,7 +151,11 @@ public class Gen_Multi_QueryInterface implements MultiTableCodeGenerator {
     for (final var method : table.getSqlMethods()) {
       if (method.getType() == SqlMethodType.SELECT || method.getType() == SqlMethodType.SELECT_ALL) {
         final var methodBuilder = MethodSpec.methodBuilder(method.getMethodName())
-          .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+          .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+          .addJavadoc("@see $T#$L", 
+              ClassName.get(table.getPackageName(), table.getInterfaceName()),
+              method.getMethodName()
+          );
         
         // Add parameters
         for (final var param : method.getParameters()) {

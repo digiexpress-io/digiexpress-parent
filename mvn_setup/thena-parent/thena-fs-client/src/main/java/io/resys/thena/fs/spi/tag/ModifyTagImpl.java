@@ -113,7 +113,7 @@ public class ModifyTagImpl implements ModifyTag {
         .onItem().transformToUni(found -> {
           if(callback != null) {
             return tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(found.getCommitId(), Collections.emptyList()))
-              .map(tuple -> new TagModRequest(found, Optional.of(tuple.getItem1()), Optional.of(tuple.getItem2())));  
+              .map(tuple -> new TagModRequest(found, Optional.of(tuple.getItem1()), tuple.getItem2()));  
           }
           return Uni.createFrom().item(new TagModRequest(found, Optional.empty(), Optional.empty()));
         })

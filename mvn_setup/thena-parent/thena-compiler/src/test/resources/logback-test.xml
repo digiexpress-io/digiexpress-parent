@@ -6,7 +6,10 @@
     <!-- Debug for your package -->
     <logger name="io.resys.limaone" level="DEBUG"/>
     <logger name="tc" level="OFF"/>
+    <logger name="io.netty" level="OFF"/>
     <logger name="org.testcontainers" level="OFF"/>
+    
+    <logger name="io.resys.thena.show_sql" level="DEBUG"/>
     
     
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

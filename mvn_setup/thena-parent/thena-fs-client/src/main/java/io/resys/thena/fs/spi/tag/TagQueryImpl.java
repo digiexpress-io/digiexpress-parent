@@ -117,7 +117,7 @@ public class TagQueryImpl implements TagQuery {
     if(isBlobs) {
       return db_uni
         .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodesAndBlobs(new NodesAndBlobsFilter(tag.getCommitId(), Collections.emptyList())))
-        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2())); 
+        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2().get())); 
     }
     
     // load nodes
@@ -125,7 +125,7 @@ public class TagQueryImpl implements TagQuery {
     if(isNodes) {
       return db_uni
         .onItem().transformToUni(tx -> tx.query().queryCommit().getByIdWithNodes(new NodesFilter(tag.getCommitId(), Collections.emptyList())))
-        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2()));
+        .map(tuple -> tag.withTransitives(tuple.getItem1(), tuple.getItem2().get()));
     }    
     return Uni.createFrom().item(tag);
   }

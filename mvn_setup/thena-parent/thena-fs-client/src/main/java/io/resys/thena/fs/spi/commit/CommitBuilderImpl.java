@@ -59,7 +59,9 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
   
+
   // Builder state
+  private boolean queryHeadOnly;
   private String lockCommitId;
   private String branchName = BranchConstants.DEFAULT_BRANCH;
   private String commitAuthor;
@@ -69,6 +71,11 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final List<ChangeCommand> changes = new ArrayList<>();
   private final List<String> allIds = new ArrayList<>();
 
+  @Override
+  public CommitBuilder queryHeadOnly() {
+    this.queryHeadOnly = true;
+    return this;
+  }
   @Override
   public CommitBuilder branchLock(String commitId) {
     this.lockCommitId = RepoAssert.notEmpty(commitId, () -> "branchHead commitId can't be empty!");
@@ -233,6 +240,7 @@ public class CommitBuilderImpl implements CommitBuilder {
     final var query = ImmutableRefTableLockFilter.builder()
       .refName(branchName)
       .docIds(Optional.ofNullable(allIds.isEmpty() ? null : allIds))
+      .queryHeadOnly(queryHeadOnly)
       .build();
     return tx.query().queryRef().findOneWithLock(query)
         .invoke(lock -> {
@@ -276,4 +284,5 @@ public class CommitBuilderImpl implements CommitBuilder {
       throw new CommitBuilderException(e, JsonObject.of("tenantId", tenantId, "message", e.getMessage()));
     }
   }
+
 }

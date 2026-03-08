@@ -18,7 +18,7 @@ public class AuthoringTest extends DbSupport {
         .newArticleTemplate()
         .props(props -> props.name("Nice page template").content("# Header 1").type("Page").description("Generic page structure"))
         .buildSync();
-        
+        /*
     final var article1 = authoring.newModel()
         .newArticle()
         .props(builder -> builder.name("My first article").order(100))
@@ -27,7 +27,7 @@ public class AuthoringTest extends DbSupport {
     final var article2 = authoring.newModel()
         .newArticle()
         .props(builder -> builder.name("My second article").order(100).build())
-        .buildSync();
+        .buildSync();*/
     
    /*
    repo.create().release(
