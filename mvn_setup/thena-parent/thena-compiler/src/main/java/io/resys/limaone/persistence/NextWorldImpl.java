@@ -54,11 +54,10 @@ public class NextWorldImpl implements NextWorld {
 
   @Override
   public <T extends Body> Model<T> newModel(String name, T body) {
-    final var id = OidUtils.genUUID();
+    append("created new file: " + name);
+
+    final var id = OidUtils.genUUID();    
     this.commitBuilder.newFile(newFile -> {
-      
-      append("created new file: " + name);
-      
       newFile
         .fileId(id)
         .fileName(name)
