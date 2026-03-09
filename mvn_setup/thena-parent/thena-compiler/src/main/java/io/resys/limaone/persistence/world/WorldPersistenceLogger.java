@@ -1,5 +1,6 @@
 package io.resys.limaone.persistence.world;
 
+import io.resys.limaone.persistence.world.NextWorldImpl.NextWorldResult;
 import io.resys.thena.fs.api.FileSystem.FileSystemTenant;
 import io.resys.thena.fs.entities.Ref;
 
@@ -15,7 +16,7 @@ public class WorldPersistenceLogger {
     
   }  
   
-  public void stage4NextState() {
+  public void stage4NextState(NextWorldResult nextWorldResult) {
     
   }
   

@@ -2,6 +2,7 @@ package io.resys.limaone.tests;
 
 import org.junit.jupiter.api.Test;
 
+import io.resys.limaone.model.ImmutableLocaleLabel;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.tests.support.DbSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -40,38 +41,43 @@ public class AuthoringTest extends DbSupport {
       .props(props -> props.name("v2.4").description("new content"))
       .buildSync();
    
-   /*
-    Entity<Locale> locale1 = repo.create().locale(
-        ImmutableCreateLocale.builder().locale("en").build()
-      )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+   
+    final var locale1 = authoring.newModel()
+        .newLocale()
+        .props(props -> props.locale("en"))
+        .buildSync();
     
-    Entity<Locale> locale2 = repo.create().locale(
-        ImmutableCreateLocale.builder().locale("fi").build()
-      ).await().atMost(Duration.ofMinutes(1));
+    final var locale2 = authoring.newModel()
+        .newLocale()
+        .props(props -> props.locale("fi"))
+        .buildSync();
     
-    Entity<Page> page1 = repo.create().page(
-        ImmutableCreatePage.builder().articleId(article1.getId()).locale(locale1.getId()).content("# English content").build()
-      )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    final var page1 = authoring.newModel()
+        .newArticlePage()
+        .props(props -> props.articleId(article1.getId()).locale(locale1.getId()).content("# English content"))
+        .buildSync();
     
-    repo.create().page(
-        ImmutableCreatePage.builder().articleId(article1.getId()).locale(locale2.getId()).content("# Finnish content").build()
-      )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.newModel()
+      .newArticlePage()
+      .props(props -> props.articleId(article1.getId()).locale(locale2.getId()).content("# Finnish content"))
+      .buildSync();
     
-    Entity<Link> link1 = repo.create().link(
-        ImmutableCreateLink.builder().type("internal").value("www.example.com")
+    final var link1 = authoring.newModel()
+        .newArticleLink().props(props -> props.type("internal").value("www.example.com")
         .addLabels(ImmutableLocaleLabel.builder()
             .locale(locale1.getId()).labelValue("click me")
             .build())
-        .build()
-      )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+      ).buildSync();
     
-    Entity<Workflow> workflow1 = repo.create().workflow( 
-        ImmutableCreateWorkflow.builder().value("Form1")
+    final var workflow1 = authoring.newModel()
+        .newArticleWorkflow().props(props -> props.value("Form1")
           .formName("form1").formTag("v1").flowName("flow1").formId("external-form-id")
           .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("firstForm").build())
           .build()
-      )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+      ).buildSync();
     
+    
+    /*
     // create state
     var expected = TestExporter.toString(getClass(), "create_state.txt");
     var actual = super.toRepoExport("test1");

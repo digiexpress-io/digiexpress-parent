@@ -180,7 +180,10 @@ public class CreateTagImpl implements CreateTag {
       final var prevTag = Optional.<Tag>empty();
       final var commitId = request.getLock().getId();
       final var refId = Optional.<String>ofNullable("");
-      final var tagTransitives = ImmutableTagTransitives.builder().build();  
+      final var tagTransitives = ImmutableTagTransitives.builder()
+          .commit(request.getLock())
+          .tree(request.getTree().orElse(null))
+          .build();  
       
       final var tagBuilder = new TagBuilderImpl(prevTag, commitId, refId, tagTransitives, createdAt, tagAuthor);
       this.tagBuilder.accept(tagBuilder);

@@ -19,7 +19,7 @@ public interface NewFlowTask {
   NewFlowTask props(Consumer<ImmutableNewFlowTaskProps.Builder> props);
   
   Uni<Model<FlowTask>> build();
-  
+  Model<FlowTask> buildSync();
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewFlowTaskProps.class) @JsonDeserialize(as = ImmutableNewFlowTaskProps.class)
   interface NewFlowTaskProps extends AuthoringModelProps {

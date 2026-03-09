@@ -12,6 +12,8 @@ import io.resys.limaone.persistence.WorldPersistence.NextWorld;
 import io.resys.limaone.persistence.WorldPersistence.WorldBuilder;
 import io.resys.limaone.persistence.world.WorldPersistenceFs.WorldLockException;
 import io.resys.thena.fs.api.FileSystem;
+import io.resys.thena.fs.api.tags.TagBuilder;
+import io.resys.thena.fs.entities.Tag.TagTransitives;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -48,19 +50,45 @@ public class WorldBuilderImpl implements WorldBuilder {
           logger.stage3LockFailed(ref);
           throw new WorldLockException();
         }
-
-        final var nextWorld = new NextWorldImpl(tenant, ref, author, createdAt);
+        final var commitBuilder = tenant.commitBuilder();
+        final var nextWorld = new NextWorldImpl(commitBuilder, ref, author, createdAt);
         final var mapped = mergeFunction.apply(nextWorld);
-        final var commitBuilder = nextWorld.close();
+        final var nextWorldResult = nextWorld.close();
+        
+        logger.stage4NextState(nextWorldResult);
         
         
-        logger.stage4NextState();
-        
-        return commitBuilder
+        final var commitStream = nextWorldResult.isCommits() ? commitBuilder
             .branchName(branchName)
-            .branchLock(ref.getCommitId())
-            .build()
-            .onItem().transform(commited -> mapped)
+            .branchLock(ref.getCommitId()).build()
+            .onItem().transformToUni(ignore -> Uni.createFrom().voidItem()) : Uni.createFrom().voidItem();
+        
+        final var tagStream = nextWorldResult.getDeployment()
+            .map(deployment -> tenant.createTag()
+                
+                .commitId(deployment.getFromRefId())
+                .tagAuthor(deployment.getCreatedBy())
+                .tagCreatedAt(deployment.getCreatedAt())
+                .beforeTagCompletion((TagTransitives loaded, TagBuilder builder) -> {
+                  if(!loaded.getCommit().getId().equals(deployment.getFromCommitId())) {
+                    throw new WorldLockException();
+                  }
+                })
+                .newTag(props -> props
+                    .externalId(deployment.getExternalId())
+                    
+                    .tagName(deployment.getName())
+                    .tagDescription(deployment.getDescription())
+                    .tagStartsAt(deployment.getStartsAt())
+                    .build()
+                )
+                .build()
+            .onItem().transformToUni(ignore -> Uni.createFrom().voidItem()))
+            .orElse(Uni.createFrom().voidItem());
+        
+        return commitStream
+            .onItem().transformToUni(ignore -> tagStream)
+            .onItem().transform(ignore -> mapped)
             .onFailure().invoke((e) -> logger.closeWithFailure(e))
             .onItem().invoke(() -> logger.close());
 

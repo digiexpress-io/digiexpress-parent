@@ -22,7 +22,7 @@ public interface NewLocale {
   NewLocale props(Consumer<ImmutableNewLocaleProps.Builder> props);
   
   Uni<Model<Locale>> build();
-  
+  Model<Locale> buildSync();
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewLocaleProps.class) @JsonDeserialize(as = ImmutableNewLocaleProps.class)
   interface NewLocaleProps extends AuthoringModelProps {

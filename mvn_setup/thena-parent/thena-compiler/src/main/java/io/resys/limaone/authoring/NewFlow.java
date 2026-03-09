@@ -19,7 +19,7 @@ public interface NewFlow {
   NewFlow props(Consumer<ImmutableNewFlowProps.Builder> props);
   
   Uni<Model<Flow>> build();
-  
+  Model<Flow> buildSync();
   
   @Value.Immutable @JsonSerialize(as = ImmutableNewFlowProps.class) @JsonDeserialize(as = ImmutableNewFlowProps.class)
   interface NewFlowProps extends AuthoringModelProps {
