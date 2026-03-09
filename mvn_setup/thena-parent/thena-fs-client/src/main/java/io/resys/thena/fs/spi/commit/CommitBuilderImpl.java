@@ -34,6 +34,7 @@ import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.commits.ImmutableCommitResult;
 import io.resys.thena.fs.entities.Node;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.spi.FileSystemConfig;
 import io.resys.thena.fs.spi.branch.BranchConstants;
 import io.resys.thena.fs.spi.snapshot.ChangeCommand;
 import io.resys.thena.fs.spi.snapshot.ChangeCommand.MergeFileCommand;
@@ -45,6 +46,7 @@ import io.resys.thena.fs.spi.snapshot.Snapshot;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.FsDbBuilder.FsBuilderException;
 import io.resys.thena.fs.tables.FsDbBuilder.PersistenceUnit;
+import io.resys.thena.fs.tables.TreeTable.TreeFilter;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableLockFilter;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.support.RepoAssert;
@@ -58,10 +60,8 @@ import lombok.RequiredArgsConstructor;
 public class CommitBuilderImpl implements CommitBuilder {
   private final Uni<FsDb> db_uni;
   private final String tenantId;
-  
+  private final FileSystemConfig config;
 
-  // Builder state
-  private boolean queryHeadOnly;
   private String lockCommitId;
   private String branchName = BranchConstants.DEFAULT_BRANCH;
   private String commitAuthor;
@@ -71,11 +71,7 @@ public class CommitBuilderImpl implements CommitBuilder {
   private final List<ChangeCommand> changes = new ArrayList<>();
   private final List<String> allIds = new ArrayList<>();
 
-  @Override
-  public CommitBuilder queryHeadOnly() {
-    this.queryHeadOnly = true;
-    return this;
-  }
+
   @Override
   public CommitBuilder branchLock(String commitId) {
     this.lockCommitId = RepoAssert.notEmpty(commitId, () -> "branchHead commitId can't be empty!");
@@ -236,39 +232,80 @@ public class CommitBuilderImpl implements CommitBuilder {
     return CommitResultStatus.ERROR;
   }
   
-  private Uni<Optional<Ref>> visitLock(FsDb tx) {    
+  private Uni<Optional<Ref>> visitLock(FsDb tx) {
     final var query = ImmutableRefTableLockFilter.builder()
       .refName(branchName)
       .docIds(Optional.ofNullable(allIds.isEmpty() ? null : allIds))
-      .queryHeadOnly(queryHeadOnly)
+      .queryHeadOnly(true)
       .build();
     return tx.query().queryRef().findOneWithLock(query)
-        .invoke(lock -> {
-          if(lockCommitId == null) {
-            return;
-          }
-          
-          if(lock.isEmpty() && lockCommitId != null) {
-            throw new CommitBuilderException(
-                "Could not find branch for locking", 
-                JsonObject.of("tenantId", tenantId, "lockCommitId", lockCommitId)
-            );
-          }
-          
-          if( lock.isPresent() && lockCommitId != null &&
-              !lock.get().getCommitId().equals(lockCommitId)) {
-          
-            throw new CommitBuilderException(
-                "Find branch for locking but commits do not match", 
-                JsonObject.of(
-                    "tenantId", tenantId, 
-                    "expectedCommitId", lockCommitId,
-                    "actualCommitId", lock.get().getCommitId()
-                ));
-          }
-          
-          
-        });
+      .onItem().transformToUni(lock -> {
+        validateLock(lock);
+        return join(lock, tx);
+      });
+  }
+  
+  private Uni<Optional<Ref>> join(Optional<Ref> raw, FsDb tx) {
+    if(raw.isEmpty()) {
+      return Uni.createFrom().item(raw);
+    }
+    
+    // find the tree
+    final var ref = raw.get();
+    final var commit = ref.getTransitives().getCommit();
+    final var cachedTree = config.getCache().findOneTreeById(commit.getTreeId());
+    
+    // no cache at all - easy, query all 
+    if(cachedTree.isEmpty()) {
+      return tx.query().queryTree().getById(new TreeFilter(commit.getTreeId(), allIds, null))
+      .onItem().transform(tree -> {
+        final var refWithTr = ref.withTransitives(commit, tree);
+        config.getCache().cacheOneTree(tree);
+        return Optional.of(refWithTr);
+      });
+    }
+    
+    final var missingNodes = new ArrayList<String>();
+    final var cachedNodes = cachedTree.get();
+    cachedNodes.findAllNodes(allIds, missingNodes::add);
+    
+    // get missing
+    if(!missingNodes.isEmpty()) {
+      return tx.query().queryTree().getByIdWithOnlySpecifiedNodes(new TreeFilter(commit.getTreeId(), missingNodes, null))
+      .onItem().transform(freshTree -> {
+        final var recached = config.getCache().cacheOneTree(freshTree);
+        final var refWithTr = ref.withTransitives(commit, recached);
+        return Optional.of(refWithTr);
+      });
+    }
+    
+    final var cached = ref.withTransitives(commit, cachedTree.get());
+    return Uni.createFrom().item(Optional.of(cached));
+  }
+  
+  private void validateLock(Optional<Ref> lock) {
+    if(lockCommitId == null) {
+      return;
+    }
+    
+    if(lock.isEmpty() && lockCommitId != null) {
+      throw new CommitBuilderException(
+          "Could not find branch for locking", 
+          JsonObject.of("tenantId", tenantId, "lockCommitId", lockCommitId)
+      );
+    }
+    
+    if( lock.isPresent() && lockCommitId != null &&
+        !lock.get().getCommitId().equals(lockCommitId)) {
+    
+      throw new CommitBuilderException(
+          "Find branch for locking but commits do not match", 
+          JsonObject.of(
+              "tenantId", tenantId, 
+              "expectedCommitId", lockCommitId,
+              "actualCommitId", lock.get().getCommitId()
+          ));
+    }
   }
   
   private Uni<Snapshot.SnapshotResult> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {

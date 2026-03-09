@@ -170,6 +170,8 @@ public interface NodeTable {
       'node_path', nodes.node_path,
       'node_name', nodes.node_name,
       
+      'node_full_name', CONCAT_WS('/', NULLIF(nodes.node_path, ''), nodes.node_name),
+      
       'created_at', idx.created_at,
       'updated_at', idx.updated_at,
       'created_by', idx.created_by,

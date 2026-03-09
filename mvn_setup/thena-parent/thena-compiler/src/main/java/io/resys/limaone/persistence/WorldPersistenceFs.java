@@ -68,7 +68,6 @@ public class WorldPersistenceFs implements WorldPersistence {
             return commitBuilder
                 .branchName(branchName)
                 .branchLock(ref.getCommitId())
-                .queryHeadOnly()
                 .build()
                 .onItem().transform(commited -> mapped)
                 .onFailure().invoke((e) -> logger.closeWithFailure(e))

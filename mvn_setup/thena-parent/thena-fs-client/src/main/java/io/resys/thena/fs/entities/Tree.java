@@ -21,9 +21,16 @@ package io.resys.thena.fs.entities;
  */
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.immutables.value.Value;
 
@@ -46,16 +53,45 @@ public interface Tree extends Entity {
     return FileSystemEntityType.TREE; 
   }
   
+  default Tree withTransitives(Stream<Node> merge) {
+    final Map<String, Node> all = new HashMap<>();
+    
+    merge.forEach(node -> {
+      if(all.containsKey(node.getId())) {
+        if(node.getTransitives() == null || node.getTransitives().getBlob() == null) {
+          return;
+        }
+        all.put(node.getId(), node);
+      } else {
+        all.put(node.getId(), node);
+      }
+    });
+  
+    
+    return ImmutableTree.builder()
+        .id(getId())
+        .treeNodes(all.values())
+        .build();
+  }
+  
+  default List<Node> findAllNodes(List<String> filters, Consumer<String> onMissing) {
+    final var result = new ArrayList<Node>(); 
+    for(final var objectId : filters) {
+      final var found = getTreeNodes().stream()
+          .filter(node -> (
+              node.getFullPath().equals(objectId) || 
+              node.getId().equals(objectId) || 
+              node.getObjectId().equals(objectId)
+          ))
+          .toList();
+      onMissing.accept(objectId);
+      result.addAll(found);
+    }
+    return Collections.unmodifiableList(result);
+  }
   
   default Optional<Node> findOneNode(String fullPath) {
-    final var found = getTreeNodes().stream()
-        .filter(node -> (
-            node.getFullPath().equals(fullPath) || 
-            node.getId().equals(fullPath) || 
-            node.getObjectId().equals(fullPath)
-        ))
-        .toList();
-    
+    final var found = findAllNodes(Arrays.asList(fullPath), (ignore) -> {});
     RepoAssert.isTrue(found.size() <= 1, () -> "Expected exactly 0..1 nodes, but found: " + found.size() + " for path: " + fullPath);
     return found.stream().findFirst();
   }

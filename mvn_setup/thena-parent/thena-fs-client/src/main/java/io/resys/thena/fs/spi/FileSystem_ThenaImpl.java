@@ -59,6 +59,7 @@ import lombok.RequiredArgsConstructor;
 public class FileSystem_ThenaImpl implements FileSystem {
 
   private final FsDb startingState;
+  private final FileSystemConfig config;
   
   @Override
   public TenantActions tenants() {
@@ -86,9 +87,9 @@ public class FileSystem_ThenaImpl implements FileSystem {
       @Override public String getTenantId() { return tenantId; }
       
       @Override public CommitQuery commitQuery() { return new CommitQueryImpl(start, tenantId); }
-      @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId); }
+      @Override public CommitBuilder commitBuilder() { return new CommitBuilderImpl(start, tenantId, config); }
       
-      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start); }
+      @Override public BranchQuery branchQuery() { return new BranchQueryImpl(start, config); }
       @Override public CreateBranch createBranch() { return new CreateBranchImpl(start, tenantId); }
       
       @Override public CreateTag createTag() { return new CreateTagImpl(start, tenantId); }
@@ -145,7 +146,9 @@ public class FileSystem_ThenaImpl implements FileSystem {
     
     public FileSystem_ThenaImpl build() {
       final var state = new FsDbImpl(datasource());
-      return new FileSystem_ThenaImpl(state);
+      final var cache = new FileSystemCache_Caffeine();
+      final var config = ImmutableFileSystemConfig.builder().cache(cache).build();
+      return new FileSystem_ThenaImpl(state, config);
     }
   }
 

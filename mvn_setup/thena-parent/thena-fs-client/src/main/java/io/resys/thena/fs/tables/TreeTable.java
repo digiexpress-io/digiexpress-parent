@@ -1,5 +1,7 @@
 package io.resys.thena.fs.tables;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-fs-client
@@ -23,8 +25,14 @@ package io.resys.thena.fs.tables;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.mutable.MutableInt;
+
 import io.resys.thena.api.annotations.TenantSql;
+import io.resys.thena.api.annotations.TenantSql.SqlBuilder;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.fs.entities.ImmutableTree;
 import io.resys.thena.fs.entities.Tree;
@@ -32,6 +40,7 @@ import io.resys.thena.fs.tables.NodeTable.NodeMapper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.Tuple;
 
 @TenantSql.Table(
   name = "tree",
@@ -65,6 +74,42 @@ public interface TreeTable {
   )
   Sql findAll();
 
+  record TreeFilter(String treeId, List<String> objectIds, List<String> blobType) {}
+  @TenantSql.Find(
+    optional = false,
+    sql = """
+      SELECT tree.tree_id, nodes_and_blobs.tree_node_blob as nodes_json
+      FROM {tree} as tree
+      LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
+      WHERE tree.tree_id = $1
+    """,
+    rowMapper = TreeMapper.class,
+    sqlBuilder = TreeTable.TREE_AND_NODES_SQL.class
+  )
+  SqlTuple getById(TreeFilter filter);
+  
+  
+
+  @TenantSql.Find(
+    optional = false,
+    sql = """
+      SELECT 
+        tree.tree_id,
+        jsonb_path_query_array(
+          nodes_and_blobs.tree_node_blob::jsonb, 
+          '$[*] ? (@.object_id == $ids[*] || @.node_full_name == $ids[*])',
+          jsonb_build_object('ids', to_jsonb($2))
+        ) as nodes_json
+      FROM {tree} as tree
+      LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
+      WHERE tree.tree_id = $1
+    """,
+    rowMapper = TreeMapper.class,
+    sqlBuilder = TreeTable.TREE_AND_NODES_SQL.class
+  )
+  SqlTuple getByIdWithOnlySpecifiedNodes(TreeFilter filter);
+  
+  
   @TenantSql.InsertAll(
     sql = """
       INSERT INTO {tree} (tree_id, tree_nodes)
@@ -119,6 +164,28 @@ public interface TreeTable {
     @Override
     public io.vertx.mutiny.sqlclient.Tuple apply(Tree tree) {
       return io.vertx.mutiny.sqlclient.Tuple.from(new Object[]{ tree.getId() });
+    }
+  }
+  
+  
+  class TREE_AND_NODES_SQL implements SqlBuilder<TreeFilter> {
+    @Override
+    public SqlTuple apply(Tenant tenant, String baseline, TreeFilter treeFilter) {
+      final var params = new ArrayList<Object>();
+      params.add(treeFilter.treeId);
+      final var index = new MutableInt(1);
+      final var nodes_json = NodeTable.sql()
+        .includeBlobTypes(treeFilter.blobType)
+        .objectId(treeFilter.objectIds)
+        .build((prop) -> {
+          params.add(prop);
+          return index.incrementAndGet();
+        });
+    
+      return ImmutableSqlTuple.builder()
+          .value(baseline.replace("__nodes_json", nodes_json))
+          .props(Tuple.from(params))
+          .build();
     }
   }
 }

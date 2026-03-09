@@ -44,14 +44,6 @@ import jakarta.annotation.Nullable;
  * All operations are executed within a transaction to prevent race conditions.
  */
 public interface CommitBuilder {
-  
-  /**
-   * When locking the branch don't query trees or nodes 
-   * 
-   * @return builder for method chaining
-   */
-  CommitBuilder queryHeadOnly();
-  
   /**
    * Expected commit id on current branch head. 
    * 

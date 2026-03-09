@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import io.resys.thena.fs.api.branches.BranchQuery;
 import io.resys.thena.fs.api.trees.NameExpressionBuilder;
 import io.resys.thena.fs.entities.Ref;
+import io.resys.thena.fs.spi.FileSystemConfig;
 import io.resys.thena.fs.tables.FsDb;
 import io.resys.thena.fs.tables.filters.ImmutableRefTableFilter;
 import io.resys.thena.support.RepoAssert;
@@ -44,6 +45,7 @@ public class BranchQueryImpl implements BranchQuery {
 
   private final Uni<FsDb> db_uni;
   private final List<String> blobTypes = new ArrayList<>();
+  private final FileSystemConfig config;
   private Consumer<NameExpressionBuilder> nameExpr;
   private String branchId;
   
@@ -151,6 +153,9 @@ public class BranchQueryImpl implements BranchQuery {
   }
   
   private Uni<Ref> join(Ref tag) {
+    if(tag.getTransitives() != null && tag.getTransitives().getTree() != null) {
+      config.getCache().cacheOneTree(tag.getTransitives().getTree());
+    }
     return Uni.createFrom().item(tag);
   }
 }
