@@ -1,7 +1,10 @@
 package io.resys.limaone.authoring;
 
+import java.time.OffsetDateTime;
+
 import io.resys.limaone.model.Model;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface Authoring {
 
@@ -24,6 +27,9 @@ public interface Authoring {
   }
   
   interface NewModel {
+    
+    NewDeployment newDeployment();
+    
     NewFlow newFlow();
     NewFlowTask newFlowTask();
     NewDecisionTable newDecisionTable();
@@ -43,8 +49,13 @@ public interface Authoring {
     DeleteArticleWorkflow deleteArticleWorkflow();
   }
   
+  interface AuthorProps {
+    @Nullable String getAuthor(); 
+    @Nullable OffsetDateTime getCreatedAt();
+  }
+  
   
   interface AuthoringModelProps {
-    
+ 
   }
 }

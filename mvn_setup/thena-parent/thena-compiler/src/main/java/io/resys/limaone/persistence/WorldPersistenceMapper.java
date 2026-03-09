@@ -30,7 +30,10 @@ public class WorldPersistenceMapper {
 
   
   public static ModelWorld mapFrom(Ref ref) {
-    final var builder = ImmutableModelWorld.builder().name(ref.getRefName());
+    final var builder = ImmutableModelWorld.builder()
+        .refId(ref.getId())
+        .commitId(ref.getCommitId())
+        .name(ref.getRefName());
     
     ref.getTransitives().getTree().getTreeNodes()
       .stream()

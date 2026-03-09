@@ -255,8 +255,10 @@ public class CommitBuilderImpl implements CommitBuilder {
     final var commit = ref.getTransitives().getCommit();
     final var cachedTree = config.getCache().findOneTreeById(commit.getTreeId());
     
-    // no cache at all - easy, query all 
-    if(cachedTree.isEmpty()) {
+    // no cache at all OR tree is partially cached - easy, query all 
+    final var isPartialTree = commit.getCommitNodesCount() != cachedTree.map(tree -> tree.getTreeNodes().size()).orElse(0);
+    
+    if(isPartialTree) {
       return tx.query().queryTree().getById(new TreeFilter(commit.getTreeId(), allIds, null))
       .onItem().transform(tree -> {
         final var refWithTr = ref.withTransitives(commit, tree);
@@ -310,13 +312,40 @@ public class CommitBuilderImpl implements CommitBuilder {
   
   private Uni<Snapshot.SnapshotResult> visitPersistenceUnit(FsDb tx, Optional<Ref> lock) {
     try {
+      
+      lock.ifPresent(ref -> {
+        final var expectedCount = ref.getTransitives().getCommit().getCommitNodesCount();
+        final var actualCount = ref.getTransitives().getTree().getTreeNodes().size();
+        
+        if(expectedCount != actualCount) {
+          
+          throw new CommitBuilderException("Partial tree update is not supported yet!", 
+              JsonObject.of(
+                "tenantId", tenantId,
+                "fullTree", expectedCount,
+                "actualTree", actualCount 
+            )
+          );    
+        }
+      });
+      
       final var createdAt = commitCreatedAt != null ? commitCreatedAt : OffsetDateTime.now();
       final var snapshot = new Snapshot(tenantId, lock, branchName, createdAt);
       final var unit = snapshot.addAll(this.changes).build(commitAuthor, commitMessage, createdAt);
 
       return tx.builder().from(unit.getPersistenceUnit()).persist()
-          .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()));
+          .map(persisted -> new Snapshot.SnapshotResult(persisted, unit.getLog()))
+          .onItem().transform(result -> {
+            
+            // cache the successful save
+            //result.getPersistenceUnit().getTreeInserts()
+            //  .forEach(tree -> config.getCache().cacheOneTree(tree));
+            
+            return result;
+          });
       
+    } catch(CommitBuilderException e) {
+      throw e;
     } catch(Exception e) {
       throw new CommitBuilderException(e, JsonObject.of("tenantId", tenantId, "message", e.getMessage()));
     }

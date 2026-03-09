@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.limaone.model.Model.Body;
+import jakarta.annotation.Nullable;
 
 
 @Value.Immutable
@@ -55,6 +56,9 @@ public interface Model<T extends Body>  extends Serializable {
   @JsonDeserialize(as = ImmutableModelWorld.class)
   interface ModelWorld {
     String getName();
+    @Nullable String getRefId();
+    @Nullable String getCommitId();
+    
     Map<String, Model<Article>> getArticles();
     Map<String, Model<ArticleLink>> getArticleLinks();
     Map<String, Model<ArticlePage>> getArticlePages();

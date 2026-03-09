@@ -198,6 +198,7 @@ public class DbSupport {
         .workerPool(Infrastructure.getDefaultWorkerPool())
         .workerTimeout(Duration.ofMinutes(1))
         .persistence(new WorldPersistenceFs(client))
+        .author(() -> "sam vimes")
         .build();
   }
 }

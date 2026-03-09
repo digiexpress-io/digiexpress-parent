@@ -16,6 +16,9 @@ import jakarta.annotation.Nullable;
 @JsonDeserialize(as = ImmutableDeployment.class)
 @Value.Immutable
 public interface Deployment extends Model.Body {
+  String getFromCommitId();
+  String getFromRefId();
+  
   String getName();
   @Nullable String getExternalId();
   @Nullable String getCockpitId();
@@ -33,7 +36,7 @@ public interface Deployment extends Model.Body {
   @Nullable Model.ModelWorld getSources();
 
   enum BundleStatus {
-    BUILDING, READY, ERROR, DEPLOYED
+    BUILDING, READY, ERROR, DEPLOYED, UNKNOWN
   }
   
   default BodyType getBodyType() {

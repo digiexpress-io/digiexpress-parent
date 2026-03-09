@@ -3,6 +3,7 @@ package io.resys.limaone.persistence;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Supplier;
 
 import org.immutables.value.Value;
 
@@ -14,10 +15,12 @@ import io.resys.limaone.authoring.NewArticlePage;
 import io.resys.limaone.authoring.NewArticleTemplate;
 import io.resys.limaone.authoring.NewArticleWorkflow;
 import io.resys.limaone.authoring.NewDecisionTable;
+import io.resys.limaone.authoring.NewDeployment;
 import io.resys.limaone.authoring.NewFlow;
 import io.resys.limaone.authoring.NewFlowTask;
 import io.resys.limaone.authoring.NewLocale;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
+import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +54,7 @@ public class AuthoringImpl implements Authoring {
       @Override public NewArticlePage newArticlePage() { return new NewArticlePageImpl(config); }
       @Override public NewArticleLink newArticleLink() { return new NewArticleLinkImpl(config); }
       @Override public NewArticle newArticle() { return new NewArticleImpl(config); }
+      @Override public NewDeployment newDeployment() { return new NewDeploymentImpl(config); }
     };
   }
 
@@ -62,6 +66,7 @@ public class AuthoringImpl implements Authoring {
     private WorldPersistence persistence;
     private ScheduledExecutorService workerPool;
     private AST_Parser astParser;
+    private Supplier<String> author = () -> "unknown";
     
     public AuthoringBuilder persistence(WorldPersistence persistence) {
       this.persistence = persistence;
@@ -75,18 +80,28 @@ public class AuthoringImpl implements Authoring {
       this.astParser = astParser;
       return this;
     }
-    
+    public AuthoringBuilder author(Supplier<String> author) {
+      this.author = author;
+      return this;
+    }
     public AuthoringImpl build() {
       Objects.requireNonNull(persistence, () -> "persistence must be defined");
-      
-      final var workerPool = this.workerPool == null ? Infrastructure.getDefaultWorkerPool() : this.workerPool;
-      final var astParser = this.astParser == null ? AST_ParserImpl.builder().dev(true).build() : this.astParser;
 
+      final var astParser = this.astParser == null ? AST_ParserImpl.builder().dev(true).build() : this.astParser;
+      final var workerPool = this.workerPool == null ? Infrastructure.getDefaultWorkerPool() : this.workerPool;
+      final var workerTimeout = Duration.ofMinutes(15);
+                  
+      
       return new AuthoringImpl(ImmutableAuthoringConfig.builder()
-          .workerTimeout(Duration.ofMinutes(15))
+          .workerTimeout(workerTimeout)
           .workerPool(workerPool)
           .astParser(astParser)
           .persistence(persistence)
+          .author(() -> Uni.createFrom()
+            .item(() -> author.get())
+            .runSubscriptionOn(workerPool)
+            .await().atMost(workerTimeout)
+          )
           .build());
     }
   }
@@ -97,5 +112,6 @@ public class AuthoringImpl implements Authoring {
     ScheduledExecutorService getWorkerPool();
     Duration getWorkerTimeout();
     AST_Parser getAstParser();
+    Supplier<String> getAuthor();
   }
 }

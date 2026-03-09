@@ -18,7 +18,7 @@ public class AuthoringTest extends DbSupport {
         .newArticleTemplate()
         .props(props -> props.name("Nice page template").content("# Header 1").type("Page").description("Generic page structure"))
         .buildSync();
-        /*
+        
     final var article1 = authoring.newModel()
         .newArticle()
         .props(builder -> builder.name("My first article").order(100))
@@ -26,18 +26,21 @@ public class AuthoringTest extends DbSupport {
 
     final var article2 = authoring.newModel()
         .newArticle()
-        .props(builder -> builder.name("My second article").order(100).build())
-        .buildSync();*/
+        .props(builder -> builder.name("My second article").order(100))
+        .buildSync();
     
+   
+    authoring.newModel()
+      .newDeployment()
+      .props(props -> props.name("v1.5").description("test release"))
+      .buildSync();
+   
+    authoring.newModel()
+      .newDeployment()
+      .props(props -> props.name("v2.4").description("new content"))
+      .buildSync();
+   
    /*
-   repo.create().release(
-       ImmutableCreateRelease.builder().name("v1.5").note("test release").build()
-    )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
-   
-   repo.create().release(
-       ImmutableCreateRelease.builder().name("v2.4").note("new content").build()
-    )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
-   
     Entity<Locale> locale1 = repo.create().locale(
         ImmutableCreateLocale.builder().locale("en").build()
       )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
