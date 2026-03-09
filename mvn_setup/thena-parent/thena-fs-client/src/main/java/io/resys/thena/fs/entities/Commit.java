@@ -42,6 +42,7 @@ public interface Commit extends Entity {
   String getTreeId();
   Optional<String> getParentId();
   Optional<String> getMergeId();
+  Integer getCommitNodesCount();
 
 
   @Override

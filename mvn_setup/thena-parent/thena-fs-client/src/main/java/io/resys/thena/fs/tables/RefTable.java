@@ -134,6 +134,8 @@ public interface RefTable {
     commit.tree_id, 
     commit.parent_id, 
     commit.merge_id,
+    cardinality(tree.tree_nodes) as commit_nodes_count,
+        
     nodes_and_blobs.tree_node_blob    
 
   FROM {ref} as ref
@@ -159,6 +161,7 @@ public interface RefTable {
     commit.tree_id, 
     commit.parent_id, 
     commit.merge_id,
+    cardinality(tree.tree_nodes) as commit_nodes_count,
 
     nodes_and_blobs.tree_node_blob
     

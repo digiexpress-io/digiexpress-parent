@@ -184,8 +184,9 @@ public class Snapshot {
     final var result = Commit.newInstance(tree.getId(), 
         lock.map(e -> e.getCommitId()), 
         Optional.empty(), 
-        commitAuthor, commitCreatedAt, commitMessage
-    ).build();
+        commitAuthor, commitCreatedAt, commitMessage)
+      .commitNodesCount(tree.getTreeNodes().size())
+      .build();
     
     if(lock.isPresent()) {
       sp_logger.mergeCommit(lock.get().getTransitives().getCommit(), result);

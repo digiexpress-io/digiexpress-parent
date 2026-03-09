@@ -98,9 +98,11 @@ public interface TagTable {
   @TenantSql.FindAll(
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
     """,
     rowMapper = TagMapper.class
   )
@@ -110,9 +112,11 @@ public interface TagTable {
     optional = false,
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message
+             commit.commit_created_at, commit.commit_author as commit_author_name, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       WHERE tag.id = $1
     """,
     rowMapper = TagMapper.class
@@ -123,9 +127,11 @@ public interface TagTable {
     optional = true,
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author, commit.commit_message
+             commit.commit_created_at, commit.commit_author, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       WHERE tag.tag_name = $1 OR tag.tag_id::text = $1
     """,
     rowMapper = TagMapper.class
@@ -148,9 +154,11 @@ public interface TagTable {
   @TenantSql.FindAll(
     sql = """
       SELECT tag.*,
-             commit.commit_created_at, commit.commit_author, commit.commit_message
+             commit.commit_created_at, commit.commit_author, commit.commit_message,
+             cardinality(tree.tree_nodes) as commit_nodes_count
       FROM {tag} as tag
       LEFT JOIN {commit} as commit ON tag.commit_id = commit.commit_id
+      JOIN {tree} as tree ON tree.tree_id = commit.tree_id
       WHERE tag.commit_id = $1
     """,
     rowMapper = TagMapper.class

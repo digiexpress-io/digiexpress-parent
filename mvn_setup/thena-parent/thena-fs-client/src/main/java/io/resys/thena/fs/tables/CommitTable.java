@@ -90,7 +90,10 @@ public interface CommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-    SELECT commit.*, nodes_and_blobs.tree_node_blob
+    SELECT 
+        commit.*,
+        cardinality(tree.tree_nodes) as commit_nodes_count, 
+        nodes_and_blobs.tree_node_blob
     FROM {commit} as commit
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
     LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
@@ -106,7 +109,10 @@ public interface CommitTable {
   @TenantSql.Find(
     optional = false,
     sql = """
-    SELECT commit.*, nodes_and_blobs.tree_node_blob
+    SELECT 
+        commit.*,
+        cardinality(tree.tree_nodes) as commit_nodes_count,  
+        nodes_and_blobs.tree_node_blob
     FROM {commit} as commit ON commit.commit_id = ref.commit_id
     JOIN {tree} as tree ON tree.tree_id = commit.tree_id
     LEFT JOIN LATERAL (__nodes_json) as nodes_and_blobs ON TRUE
@@ -138,6 +144,7 @@ public interface CommitTable {
       ancestry.branch_id, 
       ref.*,
       commit.*,
+      cardinality(tree.tree_nodes) as commit_nodes_count, 
       node.*
     FROM commit_ancestry as ancestry
     JOIN {commit} as commit ON ancestry.commit_id = commit.commit_id
@@ -153,16 +160,26 @@ public interface CommitTable {
   @TenantSql.Find(
       optional = true,
       sql = """
-        SELECT 'commit' as found_by, commit.*, ref.*
+        SELECT 
+            'commit' as found_by, 
+            commit.*,
+            cardinality(tree.tree_nodes) as commit_nodes_count, 
+            ref.*
         FROM {commit} as commit
         LEFT JOIN {ref} as ref ON commit.commit_id = ref.commit_id AND FALSE
+        JOIN {tree} as tree ON tree.tree_id = commit.tree_id
         WHERE commit.commit_id = $1 
         
         UNION 
         
-        SELECT 'ref' as found_by, commit.*, ref.*
+        SELECT 
+            'ref' as found_by, 
+            commit.*, 
+            cardinality(tree.tree_nodes) as commit_nodes_count,
+            ref.*
         FROM {ref} as ref
         RIGHT JOIN {commit} as commit ON commit.commit_id = ref.commit_id
+        JOIN {tree} as tree ON tree.tree_id = commit.tree_id
         WHERE ref.ref_id::text = $1 OR ref.ref_name = $1
       """,
       rowMapper = CommitOrRefMapper.class
@@ -171,13 +188,23 @@ public interface CommitTable {
   
   
   @TenantSql.FindAll(
-    sql = "SELECT * FROM {commit} as commit",
+    sql = """
+        SELECT *,
+            cardinality(tree.tree_nodes) as commit_nodes_count
+        FROM {commit} as commit
+        JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+    """,
     rowMapper = CommitMapper.class
   )
   Sql findAll();
 
   @TenantSql.FindAll(
-    sql = "SELECT * FROM {commit} as commit WHERE commit.tree_id = $1",
+    sql = """
+        SELECT *,
+            cardinality(tree.tree_nodes) as commit_nodes_count
+        FROM {commit} as commit WHERE commit.tree_id = $1
+        JOIN {tree} as tree ON tree.tree_id = commit.tree_id
+        """,
     rowMapper = CommitMapper.class
   )
   SqlTuple findAllByTreeId(String treeId);
@@ -372,11 +399,13 @@ public interface CommitTable {
       final String mergeId = row.getString("merge_id");
 
       return ImmutableCommit.builder()
+        .commitNodesCount(row.getInteger("commit_nodes_count"))
         .id(row.getString("commit_id"))
         .commitCreatedAt(row.getOffsetDateTime("commit_created_at"))
         .commitAuthor(row.getString("commit_author"))
         .commitMessage(row.getString("commit_message"))
         .treeId(row.getString("tree_id"))
+        .commitNodesCount(row.getInteger("commit_nodes_count"))
         .parentId(Optional.ofNullable(parentId))
         .mergeId(Optional.ofNullable(mergeId))
         .build();
