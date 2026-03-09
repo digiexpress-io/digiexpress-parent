@@ -44,6 +44,8 @@ public class NewArticleLinkImpl extends AuthoringTemplate<NewArticleLinkImpl, Mo
   public Uni<Model<ArticleLink>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK)
+      .createdAt(getCreatedAt())
+      .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body.getValue(), body);

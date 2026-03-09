@@ -41,6 +41,8 @@ public class NewDeploymentImpl extends AuthoringTemplate<NewDeploymentImpl, Mode
   public Uni<Model<Deployment>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.DEPLOYMENT)
+      .createdAt(getCreatedAt())
+      .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body.getName(), body);

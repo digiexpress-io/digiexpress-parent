@@ -41,6 +41,8 @@ public class NewFlowImpl extends AuthoringTemplate<NewFlowImpl, Model<Flow>> imp
   public Uni<Model<Flow>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.FLOW)
+      .createdAt(getCreatedAt())
+      .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body.getFlowName(), body);

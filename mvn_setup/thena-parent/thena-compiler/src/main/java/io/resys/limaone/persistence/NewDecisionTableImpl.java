@@ -41,6 +41,8 @@ public class NewDecisionTableImpl extends AuthoringTemplate<NewDecisionTableImpl
   public Uni<Model<DecisionTable>> build() {
     return config.getPersistence().worldBuilder()
       .docs(BodyType.DECISION_TABLE)
+      .createdAt(getCreatedAt())
+      .author(getAuthor())
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
         return nextWorld.newModel(body.getName(), body);

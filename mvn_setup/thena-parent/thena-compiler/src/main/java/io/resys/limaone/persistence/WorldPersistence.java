@@ -1,5 +1,6 @@
 package io.resys.limaone.persistence;
 
+import java.time.OffsetDateTime;
 import java.util.function.Function;
 
 import io.resys.limaone.model.Model;
@@ -13,6 +14,8 @@ public interface WorldPersistence {
   
   
   interface WorldBuilder {
+    WorldBuilder author(String string);
+    WorldBuilder createdAt(OffsetDateTime createdAt);
     WorldBuilder docs(BodyType ... type);
     WorldBuilder lockWithCommit(String commitId);
     <T> Uni<T> build(Function<NextWorld, T> mergeFunction); 
@@ -23,6 +26,6 @@ public interface WorldPersistence {
     ModelWorld getCurrentWorld();
     
     <T extends Model.Body> Model<T> newModel(String fileName, T body);
-    <T extends Model.Body> Model<T> mergeModel(String id, T body);
+    <T extends Model.Body> Model<T> mergeModel(String id, String fileName, T body);
   }
 }

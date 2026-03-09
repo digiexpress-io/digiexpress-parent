@@ -41,6 +41,8 @@ public class NewArticleImpl extends AuthoringTemplate<NewArticleImpl, Model<Arti
   @Override
   public Uni<Model<Article>> build() {
     return config.getPersistence().worldBuilder()
+      .createdAt(getCreatedAt())
+      .author(getAuthor())
       .docs(BodyType.ARTICLE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
