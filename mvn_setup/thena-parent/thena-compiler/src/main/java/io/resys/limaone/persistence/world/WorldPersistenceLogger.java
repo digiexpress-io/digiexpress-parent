@@ -1,4 +1,4 @@
-package io.resys.limaone.persistence;
+package io.resys.limaone.persistence.world;
 
 import io.resys.thena.fs.api.FileSystem.FileSystemTenant;
 import io.resys.thena.fs.entities.Ref;

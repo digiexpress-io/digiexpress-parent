@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.persistence.ImmutableAuthoringConfig;
-import io.resys.limaone.persistence.WorldPersistenceFs;
+import io.resys.limaone.persistence.world.WorldPersistenceFs;
 import io.resys.limaone.spi.ast.AST_ParserImpl;
 import io.resys.thena.api.actions.TenantActions.CreatedTenant;
 import io.resys.thena.api.actions.TenantActions.TenantOperationStatus;

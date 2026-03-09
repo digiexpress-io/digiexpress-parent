@@ -1,4 +1,4 @@
-package io.resys.limaone.persistence;
+package io.resys.limaone.persistence.world;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.function.Function;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.persistence.WorldPersistence.NextWorld;
 import io.resys.limaone.persistence.WorldPersistence.WorldBuilder;
-import io.resys.limaone.persistence.WorldPersistenceFs.WorldLockException;
+import io.resys.limaone.persistence.world.WorldPersistenceFs.WorldLockException;
 import io.resys.thena.fs.api.FileSystem;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;

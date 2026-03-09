@@ -1,5 +1,6 @@
-package io.resys.limaone.persistence;
+package io.resys.limaone.persistence.world;
 
+import io.resys.limaone.persistence.WorldPersistence;
 import io.resys.thena.fs.api.FileSystem;
 import lombok.RequiredArgsConstructor;
 

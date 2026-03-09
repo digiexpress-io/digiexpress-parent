@@ -1,4 +1,4 @@
-package io.resys.limaone.persistence;
+package io.resys.limaone.persistence.world;
 
 import java.time.OffsetDateTime;
 
