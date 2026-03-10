@@ -199,7 +199,7 @@ public class Compiler_FlowDepsValidator {
       if(flowInputs.containsKey(from)) {
         fromParam = flowInputs.get(from);
       } else if(tasks.containsKey(fromTask)) {
-        fromParam = returnDefs.get(fromTask).get(from);
+        fromParam = Optional.ofNullable(returnDefs.get(fromTask)).map(e -> e.get(from)).orElse(null);
       } else {
         fromParam = null;
       }
