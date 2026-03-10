@@ -20,6 +20,7 @@ public interface ModifyDecisionTable {
   ModifyDecisionTable props(Consumer<ImmutableModifyDecisionTableProps.Builder> props);
   
   Uni<Model<DecisionTable>> build();
+  Model<DecisionTable> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyDecisionTableProps.class) @JsonDeserialize(as = ImmutableModifyDecisionTableProps.class)

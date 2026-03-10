@@ -18,6 +18,7 @@ public interface ModifyLocale {
   ModifyLocale props(Consumer<ImmutableModifyLocaleProps.Builder> props);
   
   Uni<Model<Locale>> build();
+  Model<Locale> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyLocaleProps.class) @JsonDeserialize(as = ImmutableModifyLocaleProps.class)

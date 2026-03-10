@@ -113,7 +113,7 @@ public class ModifyArticleImpl extends AuthoringTemplate<ModifyArticleImpl, Mode
     }
     
     // update article workflows
-    if(world.getArticleWorkflows() != null) {
+    if(props.getWorkflows() != null) {
       for(final var workflow : world.getArticleWorkflows().values()) {
         
         final var isArticleInWorkflow = workflow.getBody().getArticles().contains(props.getArticleId());

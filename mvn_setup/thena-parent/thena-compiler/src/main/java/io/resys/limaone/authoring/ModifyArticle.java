@@ -20,6 +20,7 @@ public interface ModifyArticle {
   ModifyArticle props(Consumer<ImmutableModifyArticleProps.Builder> props);
   
   Uni<Model<Article>> build();
+  Model<Article> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyArticleProps.class) @JsonDeserialize(as = ImmutableModifyArticleProps.class)

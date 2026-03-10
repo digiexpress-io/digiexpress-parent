@@ -21,6 +21,7 @@ public interface ModifyArticleLink {
   ModifyArticleLink props(Consumer<ImmutableModifyArticleLinkProps.Builder> props);
   
   Uni<Model<ArticleLink>> build();
+  Model<ArticleLink> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyArticleLinkProps.class) @JsonDeserialize(as = ImmutableModifyArticleLinkProps.class)

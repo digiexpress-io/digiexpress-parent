@@ -18,6 +18,7 @@ public interface ModifyArticleTemplate {
   ModifyArticleTemplate props(Consumer<ImmutableModifyArticleTemplateProps.Builder> props);
   
   Uni<Model<ArticleTemplate>> build();
+  Model<ArticleTemplate> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyArticleTemplateProps.class) @JsonDeserialize(as = ImmutableModifyArticleTemplateProps.class)

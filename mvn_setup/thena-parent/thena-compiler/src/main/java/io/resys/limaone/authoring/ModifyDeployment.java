@@ -20,6 +20,7 @@ public interface ModifyDeployment {
   ModifyDeployment props(ModifyDeploymentProps props);
   ModifyDeployment props(Consumer<ImmutableModifyDeploymentProps.Builder> props);
   Uni<Model<Deployment>> build();
+  Model<Deployment> buildSync();
   
   @Value.Immutable
   @JsonSerialize(as = ImmutableModifyDeploymentProps.class)

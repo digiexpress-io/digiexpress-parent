@@ -18,7 +18,7 @@ public interface DeleteArticleLink {
   DeleteArticleLink props(Consumer<ImmutableDeleteArticleLinkProps.Builder> props);
   
   Uni<Model<ArticleLink>> build();
-  
+  Model<ArticleLink> buildSync();
   
   @Value.Immutable @JsonSerialize(as = ImmutableDeleteArticleLinkProps.class) @JsonDeserialize(as = ImmutableDeleteArticleLinkProps.class)
   interface DeleteArticleLinkProps extends AuthoringModelProps {

@@ -17,7 +17,7 @@ public interface DeleteArticleWorkflow {
   DeleteArticleWorkflow props(DeleteArticleWorkflowProps props);
   DeleteArticleWorkflow props(Consumer<ImmutableDeleteArticleWorkflowProps.Builder> props); 
   Uni<Model<ArticleWorkflow>> build();
-
+  Model<ArticleWorkflow> buildSync();
   
   @Value.Immutable
   @JsonSerialize(as = ImmutableDeleteArticleWorkflowProps.class)

@@ -1,8 +1,11 @@
 package io.resys.limaone.tests;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 import io.resys.limaone.model.ImmutableLocaleLabel;
+import io.resys.limaone.model.Model;
 import io.resys.limaone.persistence.AuthoringImpl;
 import io.resys.limaone.tests.support.DbSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -83,42 +86,48 @@ public class AuthoringTest extends DbSupport {
     // var actual = super.toRepoExport("test1");
     // Assertions.assertEquals(expected, actual);
     
-    repo.update().template(ImmutableTemplateMutator.builder().templateId(template1.getId())
-      .name("new name")
-      .content("cool content")
-      .type("PAGE")
-      .description("description")
-      .build())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.modifyModel()
+        .modifyArticleTemplate()
+        .props(props -> props.templateId(template1.getId())
+            .name("new name")
+            .content("cool content")
+            .type("PAGE")
+            .description("description"))
+        .buildSync();
 
-    repo.update().article(ImmutableArticleMutator.builder().articleId(article1.getId()).name("Revised Article1").order(300).build())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.modifyModel()
+        .modifyArticle()
+        .props(props -> props.articleId(article1.getId()).name("Revised Article1").order(300))
+        .buildSync();
     
-    repo.update().locale(ImmutableLocaleMutator.builder().localeId(locale1.getId()).value("gb").enabled(false).build())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.modifyModel()
+        .modifyLocale()
+        .props(props -> props.localeId(locale1.getId()).value("gb").enabled(false))
+        .buildSync();
     
-    repo.update().page(ImmutablePageMutator.builder().pageId(page1.getId()).content("new content for page1").locale(locale1.getId()).build())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.modifyModel()
+        .modifyArticlePage()
+        .props(props -> props.pageId(page1.getId()).content("new content for page1").locale(locale1.getId()))
+        .buildSync();
     
-    repo.update().link(ImmutableLinkMutator.builder()
-          .linkId(link1.getId()).articles(Arrays.asList(article1.getId()))
-          .value("www.wikipedia.com").type("external")
-          .addLabels(ImmutableLocaleLabel.builder()
-              .labelValue("Don't click me").locale(locale2.getId())
-              .build())
-          .build())
-          
-    .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.modifyModel()
+        .modifyArticleLink()
+        .props(props -> props.linkId(link1.getId()).articles(Arrays.asList(article1.getId()))
+            .value("www.wikipedia.com").type("external")
+            .addLabels(ImmutableLocaleLabel.builder()
+                .labelValue("Don't click me").locale(locale2.getId())
+                .build()))
+        .buildSync();
     
-    repo.update().workflow(ImmutableWorkflowMutator.builder()
-        .workflowId(workflow1.getId())
-        .value("revision of firstForm")
-        .addLabels(ImmutableLocaleLabel.builder()
-            .locale(locale2.getId())
-            .labelValue("First form part 2")
-            .build())
-        .build())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.modifyModel()
+        .modifyArticleWorkflow()
+        .props(props -> props.workflowId(workflow1.getId())
+            .value("revision of firstForm")
+            .addLabels(ImmutableLocaleLabel.builder()
+                .locale(locale2.getId())
+                .labelValue("First form part 2")
+                .build()))
+        .buildSync();
     
     
     // update state
@@ -126,31 +135,44 @@ public class AuthoringTest extends DbSupport {
     // actual = super.toRepoExport("test1");
     // Assertions.assertEquals(expected, actual);
     
-    repo.delete().template(template1.getId())
-        .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(template1.getId()).bodyType(Model.BodyType.ARTICLE_TEMPLATE))
+        .buildSync();
 
-    repo.delete().page(page1.getId())
-        .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(page1.getId()).bodyType(Model.BodyType.ARTICLE_PAGE))
+        .buildSync();
 
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(article1.getId()).bodyType(Model.BodyType.ARTICLE))
+        .buildSync();
     
-    repo.delete().article(article1.getId())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(article2.getId()).bodyType(Model.BodyType.ARTICLE))
+        .buildSync();
     
-    repo.delete().article(article2.getId())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(locale1.getId()).bodyType(Model.BodyType.LOCALE))
+        .buildSync();
     
-    repo.delete().locale(locale1.getId())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(link1.getId()).bodyType(Model.BodyType.ARTICLE_LINK))
+        .buildSync();
     
-    repo.delete().link(link1.getId())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
-    
-    repo.delete().workflow(workflow1.getId())
-          .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
+    authoring.deleteModel()
+        .deleteAny()
+        .props(props -> props.id(workflow1.getId()).bodyType(Model.BodyType.ARTICLE_WORKFLOW))
+        .buildSync();
     
     // delete state
-    expected = TestExporter.toString(getClass(), "delete_state.txt");
-    actual = super.toRepoExport("test1");
-    Assertions.assertEquals(expected, actual);*/
+    // expected = TestExporter.toString(getClass(), "delete_state.txt");
+    // actual = super.toRepoExport("test1");
+    // Assertions.assertEquals(expected, actual);
   }
 }

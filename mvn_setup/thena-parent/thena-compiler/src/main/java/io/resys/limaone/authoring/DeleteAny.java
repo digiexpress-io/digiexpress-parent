@@ -17,6 +17,7 @@ public interface DeleteAny {
   DeleteAny props(Consumer<ImmutableDeleteAnyProps.Builder> props);
   
   Uni<Model<?>> build();
+  Model<?> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableDeleteAnyProps.class) @JsonDeserialize(as = ImmutableDeleteAnyProps.class)

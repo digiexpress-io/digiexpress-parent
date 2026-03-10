@@ -18,6 +18,7 @@ public interface ModifyFlow {
   ModifyFlow props(Consumer<ImmutableModifyFlowProps.Builder> props);
   
   Uni<Model<Flow>> build();
+  Model<Flow> buildSync();
   
   
   @Value.Immutable @JsonSerialize(as = ImmutableModifyFlowProps.class) @JsonDeserialize(as = ImmutableModifyFlowProps.class)
