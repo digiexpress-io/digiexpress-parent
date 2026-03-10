@@ -71,8 +71,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         if(model == null) {
           throw new AuthoringException(props, "Locale with id: '" + props.getId() + "' not found!");
         }
-        // Sanity check if used in articles, links, workflows, pages
-        // TODO: Add validation logic
+        sanitizeLocale(world, props.getId());
         yield model.getBody();
       }
       case ARTICLE -> {
@@ -80,8 +79,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         if(model == null) {
           throw new AuthoringException(props, "Article with id: '" + props.getId() + "' not found!");
         }
-        // Sanity check if used in links, workflows, parent/children relationships
-        // TODO: Add validation logic
+        sanitizeArticle(world, props.getId());
         yield model.getBody();
       }
       case ARTICLE_LINK -> {
@@ -89,8 +87,6 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         if(model == null) {
           throw new AuthoringException(props, "Article link with id: '" + props.getId() + "' not found!");
         }
-        // Sanity check for articles if used
-        // TODO: Add validation logic
         yield model.getBody();
       }
       case ARTICLE_WORKFLOW -> {
@@ -98,8 +94,6 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         if(model == null) {
           throw new AuthoringException(props, "Article workflow with id: '" + props.getId() + "' not found!");
         }
-        // Sanity check for articles if used
-        // TODO: Add validation logic
         yield model.getBody();
       }
       case ARTICLE_PAGE -> {
@@ -147,4 +141,59 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
       default -> throw new AuthoringException(props, "Unexpected value: " + props.getBodyType());
     };
   }
+  
+  private void sanitizeLocale(ModelWorld world, String localeId) {
+    // Check if locale is used in article pages
+    final var usedInPages = world.getArticlePages().values().stream()
+        .filter(page -> page.getBody().getLocale().equals(localeId))
+        .findFirst();
+    if(usedInPages.isPresent()) {
+      throw new AuthoringException(props, "Locale '" + localeId + "' is used in article page: '" + usedInPages.get().getId() + "'!");
+    }
+    
+    // Check if locale is used in article workflow labels
+    final var usedInWorkflows = world.getArticleWorkflows().values().stream()
+        .filter(workflow -> workflow.getBody().getLabels().stream()
+            .anyMatch(label -> label.getLocale().equals(localeId)))
+        .findFirst();
+    if(usedInWorkflows.isPresent()) {
+      throw new AuthoringException(props, "Locale '" + localeId + "' is used in article workflow: '" + usedInWorkflows.get().getId() + "'!");
+    }
+    
+    // Check if locale is used in article link labels  
+    final var usedInLinks = world.getArticleLinks().values().stream()
+        .filter(link -> link.getBody().getLabels().stream()
+            .anyMatch(label -> label.getLocale().equals(localeId)))
+        .findFirst();
+    if(usedInLinks.isPresent()) {
+      throw new AuthoringException(props, "Locale '" + localeId + "' is used in article link: '" + usedInLinks.get().getId() + "'!");
+    }
+  }
+  
+  private void sanitizeArticle(ModelWorld world, String articleId) {
+    // Check if article is used in article links
+    final var usedInLinks = world.getArticleLinks().values().stream()
+        .filter(link -> link.getBody().getArticles().contains(articleId))
+        .findFirst();
+    if(usedInLinks.isPresent()) {
+      throw new AuthoringException(props, "Article '" + articleId + "' is used in article link: '" + usedInLinks.get().getId() + "'!");
+    }
+    
+    // Check if article is used in article workflows
+    final var usedInWorkflows = world.getArticleWorkflows().values().stream()
+        .filter(workflow -> workflow.getBody().getArticles().contains(articleId))
+        .findFirst();
+    if(usedInWorkflows.isPresent()) {
+      throw new AuthoringException(props, "Article '" + articleId + "' is used in article workflow: '" + usedInWorkflows.get().getId() + "'!");
+    }
+    
+    // Check for parent/children relationships
+    final var usedAsParent = world.getArticles().values().stream()
+        .filter(article -> article.getBody().getParentId() != null && article.getBody().getParentId().equals(articleId))
+        .findFirst();
+    if(usedAsParent.isPresent()) {
+      throw new AuthoringException(props, "Article '" + articleId + "' is used as parent in article: '" + usedAsParent.get().getId() + "'!");
+    }
+  }
+
 }
