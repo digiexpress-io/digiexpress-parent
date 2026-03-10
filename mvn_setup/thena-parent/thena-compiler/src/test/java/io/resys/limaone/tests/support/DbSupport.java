@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ThenaTest(database = @ThenaTestDbConfig(
-  enabled = true, 
+  enabled = false, 
   database = "eveli-app", 
   host = "localhost",
   port = 5433,
