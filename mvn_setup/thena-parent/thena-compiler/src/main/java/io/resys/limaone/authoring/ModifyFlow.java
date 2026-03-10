@@ -23,7 +23,6 @@ public interface ModifyFlow {
   @Value.Immutable @JsonSerialize(as = ImmutableModifyFlowProps.class) @JsonDeserialize(as = ImmutableModifyFlowProps.class)
   interface ModifyFlowProps extends AuthoringModelProps {
     String getFlowId();
-    String getFlowName();
     String getFlowValue();
   }
 }

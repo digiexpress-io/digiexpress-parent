@@ -69,7 +69,16 @@ tasks:
     .replace("{id}", Optional.ofNullable(props.getName()).orElse("first_flow"))
     .replace("{desc}", Optional.ofNullable(props.getDesc()).orElse("my first flow"));
     
-    final var flow = config.getAstParser().parseFlow().syntax(syntax).parse();
+    
+    // Check for duplicate name only if the name is actually being changed
+    final var flow = config.getAstParser().parseFlow().syntax(syntax).parse();    
+    final var duplicate = world.getFlows().values().stream()
+        .filter(p -> p.getBody().getFlowName().equalsIgnoreCase(flow.getName()))
+        .findFirst();
+
+    if(duplicate.isPresent()) {
+      throw new AuthoringException(props, "Flow with name: '" + flow.getName() + "' already exists!");
+    }
     return ImmutableFlow.builder()
         .flowName(flow.getName())
         .flowValue(syntax)

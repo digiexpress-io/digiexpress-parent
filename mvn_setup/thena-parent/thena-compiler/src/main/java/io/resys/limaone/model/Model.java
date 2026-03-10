@@ -71,7 +71,7 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<Locale>> getLocales();
     Map<String, Model<Dialob>> getForms();
     
-    
+
     default Optional<Model<Locale>> findOneLocale(String idOrValue) {
       final var allLocales = this.getLocales();
       final var localeRef = idOrValue;
