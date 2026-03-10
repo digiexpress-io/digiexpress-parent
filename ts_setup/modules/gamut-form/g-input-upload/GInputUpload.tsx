@@ -153,7 +153,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
         <TableRow>
           <TableCell align="right" colSpan={2}>
               <input type='file' id='file' multiple ref={inputFile} style={{ display: 'none' }} onChange={handleFileUpload} accept='.jpg, .jpeg, .png, .pdf' />
-              <IconButton disabled={props.disabled} onClick={() => inputFile.current?.click()}>
+              <IconButton disabled={props.disabled || props.readOnly} onClick={() => inputFile.current?.click()}>
               <AddIcon color="primary" />
             </IconButton>
           </TableCell>
@@ -166,7 +166,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
               <TextField
                 fullWidth
                 sx={{ pointerEvents: 'none' }}
-                inputProps={{ readOnly: true }}
+                slotProps={{ input: { readOnly: true } }}
                 label={<FormattedMessage id="attachment.fileName" values={{ index: index + 1 }} />}
                 value={name}
                 error={(props.errors?.length ?? 0) > 0}
@@ -174,7 +174,7 @@ const UploadInput: React.FC<GInputBaseAnyProps & GInputUploadProps> = (props) =>
             </TableCell>
             <TableCell align="right">
               <Tooltip title={<FormattedMessage id='attachment.remove' />}>
-                <IconButton onClick={() => handleFileDelete(index)}>
+                <IconButton disabled={props.readOnly} onClick={() => handleFileDelete(index)}>
                   <ClearIcon />
                 </IconButton>
               </Tooltip>

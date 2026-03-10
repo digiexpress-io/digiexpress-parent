@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, Button, Typography } from '@mui/material';
+import { useThemeProps, Box, Button, Typography } from '@mui/material';
 import { OverridableStringUnion } from '@mui/types';
 import { CheckBox as CheckBoxIcon } from '@mui/icons-material';
 import { CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon } from '@mui/icons-material';
@@ -64,7 +64,7 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
     slots: {
       error: GInputError,
       label: GInputLabel,
-      input: YesAndNoCheckbox,
+      input: props.readOnly ? ReadOnlyBoolean : YesAndNoCheckbox,
       adornment: GInputAdornment
     },
     slotProps: {
@@ -78,6 +78,26 @@ export const GInputBoolean: React.FC<GInputBooleanProps> = (initProps) => {
   return (<GInputBooleanRoot className={classes.root} ownerState={ownerState} as={props.component}>
     <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
   </GInputBooleanRoot>);
+}
+
+
+const ReadOnlyBoolean: React.FC<GInputBaseAnyProps & GInputBooleanProps> = (props) => {
+  const classes = useUtilityClasses(props.id, props.variant);
+  const isYes = props.value === true;
+  const isNo = props.value === false;
+
+  return (
+    <div className={classes.input}>
+      <Box className={classes.option} sx={{ cursor: 'not-allowed', display: 'flex', alignItems: 'center', gap: 1 }}>
+        {isYes ? <CheckBoxIcon className={classes.optionIcon} /> : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />}
+        <Typography className={classes.optionTitle}><FormattedMessage id='gamut.forms.answer.boolean.yes' /></Typography>
+      </Box>
+      <Box className={classes.option} sx={{ cursor: 'not-allowed', display: 'flex', alignItems: 'center', gap: 1 }}>
+        {isNo ? <CheckBoxIcon className={classes.optionIcon} /> : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />}
+        <Typography className={classes.optionTitle}><FormattedMessage id='gamut.forms.answer.boolean.no' /></Typography>
+      </Box>
+    </div>
+  );
 }
 
 

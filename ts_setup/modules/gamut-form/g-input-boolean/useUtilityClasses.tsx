@@ -56,6 +56,15 @@ export const GInputBooleanRoot = styled("div", {
       },
     } : {},
 
+    ...(ownerState.readOnly) ? {
+      '& .GInputBoolean-input': {
+        cursor: 'not-allowed',
+      },
+      '& .MuiButtonBase-root, & .MuiButtonBase-root *': {
+        pointerEvents: 'none',
+      },
+    } : {},
+
     '& .GInputBoolean-input': {
       display: 'flex',
       flexDirection: 'row',

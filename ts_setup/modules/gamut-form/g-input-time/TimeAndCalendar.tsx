@@ -47,31 +47,34 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
           setValue(next);
         }}
         inputProps={{ step, className: classes.input }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end" className={classes.endAdornment}>
-              <IconButton
-                size="small"
-                onClick={() => setValue(null)}
-                disabled={!value || props.disabled}
-                aria-label={intl.formatMessage({ id: 'common.clear', defaultMessage: 'Clear' })}
-                edge="end"
-                className={classes.clearButton}
-              >
-                <ClearIcon fontSize="small" />
-              </IconButton>
-              <IconButton
-                size="small"
-                onClick={openNativePicker}
-                disabled={props.disabled}
-                aria-label={intl.formatMessage({ id: 'gamut.openTimePicker', defaultMessage: 'Open time picker' })}
-                edge="end"
-                className={classes.timeButton}
-              >
-                <AccessTimeIcon fontSize="small" />
-              </IconButton>
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            readOnly: props.readOnly,
+            endAdornment: (
+              <InputAdornment position="end" className={classes.endAdornment}>
+                <IconButton
+                  size="small"
+                  onClick={() => setValue(null)}
+                  disabled={!value || props.disabled || props.readOnly}
+                  aria-label={intl.formatMessage({ id: 'common.clear', defaultMessage: 'Clear' })}
+                  edge="end"
+                  className={classes.clearButton}
+                >
+                  <ClearIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={openNativePicker}
+                  disabled={props.disabled || props.readOnly}
+                  aria-label={intl.formatMessage({ id: 'gamut.openTimePicker', defaultMessage: 'Open time picker' })}
+                  edge="end"
+                  className={classes.timeButton}
+                >
+                  <AccessTimeIcon fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }
         }}
       />
     </GInputTimeInputContainer>

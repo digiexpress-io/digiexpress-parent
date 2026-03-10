@@ -121,6 +121,8 @@ const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) 
   const finalFormat = themeFormat ?? DEFAULT_FORMAT;
   return <>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange} />
-    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0}
+      slotProps={{ input: { readOnly: props.readOnly } }}
+    />
   </>
 }

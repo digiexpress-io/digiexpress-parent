@@ -119,7 +119,9 @@ const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
 
   return (<>
     <InputHidden id={props.id} value={value} format={finalFormat} onChange={props.onChange}/>
-    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0} />
+    <TextField disabled={props.disabled} value={value} onChange={handleChange} error={(props.errors?.length ?? 0) > 0}
+      slotProps={{ input: { readOnly: props.readOnly } }}
+    />
     </>
   )
 }

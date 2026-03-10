@@ -79,6 +79,13 @@ const GInput = styled(TextField, {
   };
 });
 
+interface OwnerState {
+  variant: string;
+  disabled: boolean;
+  readOnly?: boolean;
+  visibleErrors?: any;
+}
+
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInputTextAreaRoot = styled("div", {
   name: MUI_NAME,
@@ -89,9 +96,8 @@ export const GInputTextAreaRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean, visibleErrors?: any } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
   const isErrorsVisible = ownerState.visibleErrors && ownerState.visibleErrors.length > 0;
-
 
   if (ownerState.disabled) {
     return {
@@ -101,6 +107,22 @@ export const GInputTextAreaRoot = styled("div", {
       '& .MuiOutlinedInput-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
       }
+    }
+  }
+
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiOutlinedInput-notchedOutline': {
+        border: 'none',
+      },
+      '& .MuiOutlinedInput-root': {
+        backgroundColor: 'transparent',
+      },
+      '& .MuiInputBase-input': {
+        cursor: 'not-allowed',
+        color: theme.palette.text.primary,
+        ...theme.typography.body1,
+      },
     }
   }
 
