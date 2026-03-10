@@ -9,6 +9,19 @@ import org.immutables.value.Value;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.authoring.Authoring;
+import io.resys.limaone.authoring.DeleteAny;
+import io.resys.limaone.authoring.DeleteArticleLink;
+import io.resys.limaone.authoring.DeleteArticleWorkflow;
+import io.resys.limaone.authoring.ModifyArticle;
+import io.resys.limaone.authoring.ModifyArticleLink;
+import io.resys.limaone.authoring.ModifyArticlePage;
+import io.resys.limaone.authoring.ModifyArticleTemplate;
+import io.resys.limaone.authoring.ModifyArticleWorkflow;
+import io.resys.limaone.authoring.ModifyDecisionTable;
+import io.resys.limaone.authoring.ModifyDeployment;
+import io.resys.limaone.authoring.ModifyFlow;
+import io.resys.limaone.authoring.ModifyFlowTask;
+import io.resys.limaone.authoring.ModifyLocale;
 import io.resys.limaone.authoring.NewArticle;
 import io.resys.limaone.authoring.NewArticleLink;
 import io.resys.limaone.authoring.NewArticlePage;
@@ -32,14 +45,27 @@ public class AuthoringImpl implements Authoring {
   
   @Override
   public ModifyModel modifyModel() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyModel() {
+      @Override public ModifyLocale modifyLocale() { return new ModifyLocaleImpl(config); }
+      @Override public ModifyFlowTask modifyFlowTask() { return new ModifyFlowTaskImpl(config); }
+      @Override public ModifyFlow modifyFlow() { return new ModifyFlowImpl(config); }
+      @Override public ModifyDecisionTable modifyDecisionTable() { return new ModifyDecisionTableImpl(config); }
+      @Override public ModifyArticleWorkflow modifyArticleWorkflow() { return new ModifyArticleWorkflowImpl(config); }
+      @Override public ModifyArticleTemplate modifyArticleTemplate() { return new ModifyArticleTemplateImpl(config); }
+      @Override public ModifyArticlePage modifyArticlePage() { return new ModifyArticlePageImpl(config); }
+      @Override public ModifyArticleLink modifyArticleLink() { return new ModifyArticleLinkImpl(config); }
+      @Override public ModifyArticle modifyArticle() { return new ModifyArticleImpl(config); }
+      @Override public ModifyDeployment modifyDeployment() { return new ModifyDeploymentImpl(config); }
+    };
   }
 
   @Override
   public DeleteModel deleteModel() {
-    // TODO Auto-generated method stub
-    return null;
+    return new DeleteModel() {
+      @Override public DeleteArticleLink deleteArticleLink() { return new DeleteArticleLinkImpl(config); }
+      @Override public DeleteArticleWorkflow deleteArticleWorkflow() { return new DeleteArticleWorkflowImpl(config); }
+      @Override public DeleteAny deleteAny() { return new DeleteAnyImpl(config); }
+    };
   }
   
   @Override

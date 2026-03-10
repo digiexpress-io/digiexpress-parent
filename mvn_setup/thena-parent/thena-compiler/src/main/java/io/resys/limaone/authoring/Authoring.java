@@ -12,6 +12,8 @@ public interface Authoring {
   
   
   interface ModifyModel {
+    ModifyDeployment modifyDeployment();
+    
     ModifyFlow modifyFlow();
     ModifyFlowTask modifyFlowTask();
     ModifyDecisionTable modifyDecisionTable();
@@ -42,7 +44,7 @@ public interface Authoring {
   }
   
   interface DeleteModel {
-    DeleteAny deleteAny(String id);
+    DeleteAny deleteAny();
     DeleteArticleLink deleteArticleLink();
     DeleteArticleWorkflow deleteArticleWorkflow();
   }

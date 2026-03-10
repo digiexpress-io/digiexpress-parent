@@ -77,11 +77,11 @@ public class AuthoringTest extends DbSupport {
       ).buildSync();
     
     
-    /*
+    
     // create state
-    var expected = TestExporter.toString(getClass(), "create_state.txt");
-    var actual = super.toRepoExport("test1");
-    Assertions.assertEquals(expected, actual);
+    // var expected = TestExporter.toString(getClass(), "create_state.txt");
+    // var actual = super.toRepoExport("test1");
+    // Assertions.assertEquals(expected, actual);
     
     repo.update().template(ImmutableTemplateMutator.builder().templateId(template1.getId())
       .name("new name")
