@@ -84,7 +84,7 @@ public class MergeTree {
   public List<Node> rm(String idOrPath) {
     // 1. Find the target node (the one being explicitly deleted)
     final Node target = nodes.values().stream()
-      .filter(n -> n.getId().equals(idOrPath) || n.getFullPath().equals(idOrPath))
+      .filter(n -> n.getId().equals(idOrPath) || n.getFullPath().equals(idOrPath) ||  n.getObjectId().equals(idOrPath) )
       .findFirst()
       .orElse(null);
 

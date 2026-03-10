@@ -70,8 +70,18 @@ public class NextWorldImpl implements NextWorld {
 
   @Override
   public <T extends Body> Model<T> deleteModel(String id, T body) {
-    // TODO Auto-generated method stub
-    return null;
+
+    changes++;
+    append("deleting file: " + id);
+    
+    commitBuilder.remove(id);
+    
+    return ImmutableModel.<T>builder()
+        .id(id)
+        .body(body)
+        .bodyType(body.getBodyType())
+        .bodyHash("not possible at a time")
+        .build();
   }
 
   @Override
