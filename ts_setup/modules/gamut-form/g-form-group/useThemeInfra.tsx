@@ -67,6 +67,9 @@ export const GFormGroupRoot = styled('div', {
       margin: nestingLevel > 1 ? theme.spacing(nestingLevel) : theme.spacing(1),
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
     } : {}),
+    ...(ownerState.readOnly ? {
+      cursor: 'not-allowed'
+    } : {}),
   };
 });
 

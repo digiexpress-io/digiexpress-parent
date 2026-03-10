@@ -9,6 +9,7 @@ export const GInputGroupDialob: React.FC<GFormBaseElementProps> = ({ disabled, a
   const description = store.form.toDescription(element.id);
   const border: boolean | undefined = element.props?.border ? (DialobApi.isTrue(element.props?.border)) : undefined;
 
+  console.log("llll")
   return (
     <GInputGroup
       disabled={disabled}

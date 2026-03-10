@@ -1,5 +1,5 @@
 import React from 'react';
-import { OutlinedInput } from '@mui/material';
+import { OutlinedInput, TextField } from '@mui/material';
 import { DatePicker as XuiDatePicker } from '@dxs-ts/xui-datetime';
 import { DateTime } from 'luxon';
 
@@ -53,6 +53,17 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   const [value, setValue] = React.useState<DateTime | null>(parseInit(props.value));
   const ownerState = { variant: props.variant ?? 'date' };
   const { setExtendedErrors, disabled } = props;
+
+  if (props.readOnly) {
+    const displayValue = value ? value.toFormat('dd.MM.yyyy') : '';
+    return (
+      <GInputDateInput ownerState={ownerState} className={classes.input}>
+        <TextField fullWidth value={displayValue}
+          slotProps={{ input: { readOnly: true } }}
+        />
+      </GInputDateInput>
+    );
+  }
 
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>

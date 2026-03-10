@@ -10,11 +10,30 @@ export const useUtilityClasses = (itemId: string, variant: string | undefined) =
   return composeClasses(slots, getUtilityClass, {});
 }
 
+interface OwnerState {
+  variant: string;
+  disabled: boolean;
+  readOnly?: boolean;
+}
+
 export const GInputDateRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (props, styles) => [styles.root, useVariantOverride(props, styles)],
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
+
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+      '& .MuiOutlinedInput-root': { backgroundColor: 'transparent' },
+      '& .MuiInputBase-input': {
+        cursor: 'not-allowed',
+        color: theme.palette.text.primary,
+        ...theme.typography.body1,
+      },
+    }
+  }
+
   if (ownerState.disabled) {
     return {
       '& .MuiSvgIcon-root': { display: 'none' }
