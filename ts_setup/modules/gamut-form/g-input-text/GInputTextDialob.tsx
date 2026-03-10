@@ -27,6 +27,7 @@ export const GInputTextDialob: React.FC<GFormBaseElementProps> = ({ disabled, ac
       variant='text'
       labelPosition={labelPosition}
       onChange={onChange}
+      readOnly={element.readOnly}
     />
   </>);
 }

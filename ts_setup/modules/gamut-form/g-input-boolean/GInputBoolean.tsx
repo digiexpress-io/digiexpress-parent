@@ -41,6 +41,8 @@ export interface GInputBooleanProps {
     GInputBooleanPropsVariantOverrides>,
     React.ElementType>; 
 
+  readOnly?: boolean;
+
   component?: React.ElementType<GInputBooleanProps>;
 }
 

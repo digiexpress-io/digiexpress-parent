@@ -28,6 +28,7 @@ export const GInputUploadDialob: React.FC<GFormBaseElementProps> = ({ disabled, 
         required={!!element.required}
         labelPosition={labelPosition}
         onChange={onChange}
+        readOnly={element.readOnly}
       />
     </>
   );

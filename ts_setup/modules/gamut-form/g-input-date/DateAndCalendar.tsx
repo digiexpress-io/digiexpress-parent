@@ -57,8 +57,7 @@ export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>
       <InputHidden dateTime={value} onChange={props.onChange} id={props.id} />
-      <OutlinedInput fullWidth 
-        slots={{ input }}
+      <OutlinedInput fullWidth slots={{ input }}
         slotProps={{
           input:
             { value, disabled, setValue, setExtendedErrors } as any

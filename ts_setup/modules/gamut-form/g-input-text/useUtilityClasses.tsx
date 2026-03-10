@@ -5,6 +5,12 @@ import { useVariantOverride } from '@dxs-ts/gamut-api'
 
 export const MUI_NAME = 'GInputText';
 
+interface OwnerState {
+  variant: string,
+  disabled: boolean,
+  readOnly?: boolean
+}
+
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInputTextRoot = styled("div", {
@@ -16,7 +22,7 @@ export const GInputTextRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
   if (ownerState.disabled) {
     return {
@@ -27,6 +33,22 @@ export const GInputTextRoot = styled("div", {
       '& .MuiOutlinedInput-root.Mui-disabled': {
         backgroundColor: theme.palette.background.paper,
       }
+    }
+  }
+
+  if (ownerState.readOnly) {
+    return {
+      '& .MuiOutlinedInput-notchedOutline': {
+        border: 'none',
+      },
+      '& .MuiOutlinedInput-root': {
+        backgroundColor: 'transparent',
+      },
+      '& .MuiInputBase-input': {
+        cursor: 'not-allowed',
+        color: theme.palette.text.primary,
+        ...theme.typography.body1,
+      },
     }
   }
 

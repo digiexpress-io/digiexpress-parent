@@ -24,6 +24,7 @@ export interface GInputSurveyQuestionProps {
   navrefid: string,
   errors?: DialobApi.ActionError[] | undefined;
   required: boolean;
+  readOnly?: boolean;
 }
 
 

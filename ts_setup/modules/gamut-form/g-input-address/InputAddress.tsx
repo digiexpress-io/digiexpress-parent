@@ -57,7 +57,7 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
   }
 
 
-  return (
+  return (<>
     <Autocomplete fullWidth freeSolo
       options={options}
       value={selected ?? ''}
@@ -66,5 +66,6 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
       disabled={props.disabled}
       renderInput={handelRenderInput}
     />
+  </>
   )
 }

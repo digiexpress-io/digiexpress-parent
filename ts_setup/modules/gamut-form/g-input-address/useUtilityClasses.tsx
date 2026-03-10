@@ -16,7 +16,7 @@ export const GInputAddressRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: { variant: string, disabled: boolean, readOnly?: boolean } }>(({ theme, ownerState }) => {
 
   if (ownerState.disabled) {
     return {
@@ -28,6 +28,8 @@ export const GInputAddressRoot = styled("div", {
       },
     }
   }
+
+
 
 });
 

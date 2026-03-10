@@ -15,6 +15,8 @@ export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
     store.setAnswer(element.id, newValue ? newValue : undefined);
   }
 
+  console.log(element.id, element.readOnly + "")
+
   return (
     <>
       <div ref={navRef} id={navRefId} />
@@ -30,6 +32,7 @@ export const GInputDateDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
         format={undefined}
         required={!!element.required}
         onChange={onChange}
+        readOnly={element.readOnly}
       />
     </>);
 }

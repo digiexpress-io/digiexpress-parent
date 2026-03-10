@@ -25,6 +25,7 @@ export interface GInputDecimalProps {
   description: string | undefined;
   disabled: boolean;
   required: boolean;
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;

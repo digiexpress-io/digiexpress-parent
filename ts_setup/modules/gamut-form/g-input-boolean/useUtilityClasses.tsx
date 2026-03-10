@@ -7,6 +7,12 @@ import { useVariantOverride } from '@dxs-ts/gamut-api';
 
 export const MUI_NAME = 'GInputBoolean';
 
+interface OwnerState {
+  variant: string,
+  disabled: boolean,
+  readOnly?: boolean
+}
+
 
 export const useUtilityClasses = (itemId: string, variant: string | undefined) => {
   const slots = {
@@ -31,7 +37,7 @@ export const GInputBooleanRoot = styled("div", {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string, disabled: boolean } }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
 
 
 
@@ -48,10 +54,7 @@ export const GInputBooleanRoot = styled("div", {
           color: theme.palette.info.main,
         }
       },
-
-
     } : {},
-
 
     '& .GInputBoolean-input': {
       display: 'flex',

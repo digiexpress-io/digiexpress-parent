@@ -28,6 +28,7 @@ export const GInputAddressDialob: React.FC<GFormBaseElementProps> = ({ disabled,
         variant='address'
         onChange={onChange}
         labelPosition={labelPosition}
+        readOnly={element.readOnly}
       />
     </>
   );

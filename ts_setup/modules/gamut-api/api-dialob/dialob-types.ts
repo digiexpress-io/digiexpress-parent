@@ -76,6 +76,7 @@ export declare namespace DialobApi {
     answered?: boolean;
     valueSetId?: string;
     props?: any;
+    readOnly?: boolean;
   }
 
 
@@ -143,18 +144,6 @@ export declare namespace DialobApi {
     errorChecksum: string | undefined;
   }
 
-
-  // top level interface for representing every form element, see inherited concreate members for more details
-  export interface ControlInput {
-    id: ControlId;
-    label: ControlLocalizedString | undefined;
-    description: ControlLocalizedString | undefined;
-    errors: ActionError[];
-    invalid: boolean | undefined;
-    source: ActionItem;
-  }
-
-
   // top level interface for representing every form element, see inherited concreate members for more details
   export interface ControlInputRow {
     id: ControlId;
@@ -182,6 +171,7 @@ export declare namespace DialobApi {
     getItem(id: ControlId): ActionItem | undefined;
     getValueSet(id: string): ActionValueSet | undefined;
 
+    toReadOnly(id: ControlId): boolean;
     toDescription(id: ControlId): string | undefined;
     toLabel(id: ControlId): string | undefined;
 

@@ -10,6 +10,6 @@ export function parseInputRow(inputRowId: string, session: DialobApi.Form): Dial
     id: inputRowId,
     source: inputRow!,
     order: inputGroup?.items?.indexOf(inputRowId) ?? 0,
-    total: inputGroup?.items?.length ?? 0
+    total: inputGroup?.items?.length ?? 0,
   };
 }

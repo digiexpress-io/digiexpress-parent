@@ -29,6 +29,7 @@ export interface GInputDateProps {
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;
   required: boolean;
+  readOnly?: boolean;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setExtendedErrors?: (extendedErrors: DialobApi.ActionError[]) => void;

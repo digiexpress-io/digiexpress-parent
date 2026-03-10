@@ -14,6 +14,7 @@ export interface GInputGroupRowProps {
   children: React.ReactNode;
   onDelete: (id: string) => void
   columns?: string | undefined; // numerical string
+  readOnly?: boolean;
 
   order: number;
   total: number;

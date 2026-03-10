@@ -12,7 +12,7 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
 
   return (
     <FsMainRoot ownerState={ownerState} className={classes.root}>
-      <Content ownerState={ownerState} className={classes.leftPanel} />
+      <Content ownerState={ownerState} className={classes.leftPanel} children={<MainContent />} />
 
       <div className={classes.divider} />
 
@@ -24,4 +24,10 @@ export const FsMain: React.FC<FsMainProps> = (props) => {
     </FsMainRoot>
   );
 };
+
+
+const MainContent: React.FC = () => {
+
+  return (<>Main content</>)
+}
 

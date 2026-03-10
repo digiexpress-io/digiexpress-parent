@@ -47,7 +47,13 @@ export class FormImpl implements DialobApi.Form {
   public withState(next: Readonly<DialobApi.FormState>) {
     return new FormImpl(this._id, next, this._dirty);
   }
-
+  public toReadOnly(id: string): boolean {
+    const sessionItem = this.getItem(id)
+    if (!sessionItem) {
+      return true;
+    }
+    return sessionItem.readOnly === true;
+  }
   public toParents(id: string): DialobApi.ActionItem[] {
     const parents: DialobApi.ActionItem[] = []
     let parent: DialobApi.ActionItem | undefined;

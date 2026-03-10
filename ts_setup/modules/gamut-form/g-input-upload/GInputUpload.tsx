@@ -27,6 +27,7 @@ export interface GInputUploadProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   disabled: boolean;
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;

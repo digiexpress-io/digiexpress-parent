@@ -32,6 +32,7 @@ export const GInputSurveyQuestionDialob: React.FC<GFormBaseElementProps> = ({ di
       onChange={onChange}
       navref={navRef}
       navrefid={navRefId}
+      readOnly={element.readOnly}
     />
   )
 }

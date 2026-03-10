@@ -23,6 +23,7 @@ export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
       border={border}
       collapsible={collapsible}
       columns={element.props?.columns}
+      readOnly={element.readOnly}
     />);
 }
 

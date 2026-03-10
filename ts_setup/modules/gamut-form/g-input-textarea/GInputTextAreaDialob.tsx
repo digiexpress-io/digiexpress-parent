@@ -64,7 +64,7 @@ export const GInputTextAreaDialob: React.FC<GFormBaseElementProps> = ({
         onChange={onChange}
         labelPosition={labelPosition}
         rows={rows}
-
+        readOnly={element.readOnly}
       />
     </>
   );

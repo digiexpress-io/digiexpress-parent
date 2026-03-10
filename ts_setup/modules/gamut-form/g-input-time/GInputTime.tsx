@@ -27,6 +27,7 @@ export interface GInputTimeProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   format: string | undefined;
+  readOnly?: boolean;
 
   required: boolean;
   errors?: DialobApi.ActionError[] | undefined;

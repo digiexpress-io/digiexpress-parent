@@ -25,6 +25,7 @@ export interface GInputIntProps {
   labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   required: boolean;
+  readOnly?: boolean;
 
   errors?: DialobApi.ActionError[] | undefined;
   invalid?: boolean | undefined;

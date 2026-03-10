@@ -11,7 +11,7 @@ export interface GInputGroupProps {
   disabled: boolean;
   children: React.ReactNode;
   onAddRow: (id: string) => void;
-
+  readOnly?: boolean;
   /**
 - Styles resembling MUI Paper, which include a border, elevation, and padding/margins   
 - Set in Composer properties: border = true  
