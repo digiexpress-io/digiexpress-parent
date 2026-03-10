@@ -55,7 +55,7 @@ tasks:
       inputs:
         test: test
         passed: passed
-        language: lan
+        language: lang
           
   - last-match:
     id: last-match
@@ -78,6 +78,8 @@ tasks:
     TestTemplate.Deps.dt("decision/match-first.json"),
     TestTemplate.Deps.dt("decision/match-last.json")); 
     
+    
+    TestTemplate.compileOneDt("decision/match-first.json").encodePrettily();
     
     {            
       Map<String, Serializable> values = new HashMap<>();
