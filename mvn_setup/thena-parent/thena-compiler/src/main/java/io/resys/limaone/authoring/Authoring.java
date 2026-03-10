@@ -2,8 +2,6 @@ package io.resys.limaone.authoring;
 
 import java.time.OffsetDateTime;
 
-import io.resys.limaone.model.Model;
-import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
 public interface Authoring {
@@ -44,7 +42,7 @@ public interface Authoring {
   }
   
   interface DeleteModel {
-    Uni<Model<?>> deleteAny(String id);
+    DeleteAny deleteAny(String id);
     DeleteArticleLink deleteArticleLink();
     DeleteArticleWorkflow deleteArticleWorkflow();
   }

@@ -66,6 +66,7 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<ArticleTemplate>> getArticleTemplates();
     Map<String, Model<ArticleWorkflow>> getArticleWorkflows();
     Map<String, Model<DecisionTable>> getDecisionTables();
+    Map<String, Model<Deployment>> getDeployments();
     Map<String, Model<Flow>> getFlows();
     Map<String, Model<FlowTask>> getFlowTasks();
     Map<String, Model<Locale>> getLocales();
