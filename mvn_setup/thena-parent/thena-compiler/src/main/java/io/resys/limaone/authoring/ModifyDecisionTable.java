@@ -25,7 +25,6 @@ public interface ModifyDecisionTable {
   @Value.Immutable @JsonSerialize(as = ImmutableModifyDecisionTableProps.class) @JsonDeserialize(as = ImmutableModifyDecisionTableProps.class)
   interface ModifyDecisionTableProps extends AuthoringModelProps {
     String getDecisionTableId();
-    String getName();
     List<DecisionStatement> getNodes();
   }
 }
