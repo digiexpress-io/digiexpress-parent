@@ -53,12 +53,10 @@ public class NewArticlePageImpl extends AuthoringTemplate<NewArticlePageImpl, Mo
     Objects.requireNonNull(props, () -> "props must be defined");
 
     final var localeRef = props.getLocale();
-    final var locale = AuthoringMapper.resolveLocale(localeRef, world);
+    final var locale = world.findOneLocale(localeRef);
     
     final var articleRef = props.getArticleId();
-    final var article = world.getArticles().containsKey(articleRef) ? 
-      Optional.of(world.getArticles().get(articleRef)) : 
-      world.getArticles().values().stream().filter(l -> l.getBody().getName().equalsIgnoreCase(articleRef)).findFirst();
+    final var article = world.findOneArticle(articleRef);
 
     final var page = ImmutableArticlePage.builder()
       .devMode(props.getDevMode())

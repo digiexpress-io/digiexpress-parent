@@ -2,6 +2,7 @@ package io.resys.limaone.model;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -69,5 +70,22 @@ public interface Model<T extends Body>  extends Serializable {
     Map<String, Model<FlowTask>> getFlowTasks();
     Map<String, Model<Locale>> getLocales();
     Map<String, Model<Dialob>> getForms();
+    
+    
+    default Optional<Model<Locale>> findOneLocale(String idOrValue) {
+      final var allLocales = this.getLocales();
+      final var localeRef = idOrValue;
+      final var locale = allLocales.containsKey(localeRef) ? 
+          Optional.of(allLocales.get(localeRef)) : 
+          allLocales.values().stream().filter(l -> l.getBody().getValue().equalsIgnoreCase(localeRef)).findFirst();
+       return locale;
+    }
+    
+    default Optional<Model<Article>> findOneArticle(String articleRef) {
+      final var allArticles = this.getArticles();
+      return allArticles.containsKey(articleRef) ? 
+          Optional.of(allArticles.get(articleRef)) : 
+          allArticles.values().stream().filter(l -> l.getBody().getName().equalsIgnoreCase(articleRef)).findFirst();
+    }
   }
 }

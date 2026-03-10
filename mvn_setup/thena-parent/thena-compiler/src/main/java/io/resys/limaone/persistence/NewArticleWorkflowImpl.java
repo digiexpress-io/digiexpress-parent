@@ -2,7 +2,6 @@ package io.resys.limaone.persistence;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.limaone.authoring.ImmutableNewArticleWorkflowProps;
@@ -70,9 +69,7 @@ public class NewArticleWorkflowImpl extends AuthoringTemplate<NewArticleWorkflow
 
     final var articles = new ArrayList<String>();
     for(final var articleRef : props.getArticles()) {
-      final var article = world.getArticles().containsKey(articleRef) ? 
-          Optional.of(world.getArticles().get(articleRef)) : 
-            world.getArticles().values().stream().filter(l -> l.getBody().getName().equalsIgnoreCase(articleRef)).findFirst();
+      final var article = world.findOneArticle(articleRef);
 
       if(article.isEmpty()) {
         final var msg = "Article with id: '" + articleRef + "' does not exist in: '" + String.join(",", world.getArticles().keySet()) + "'!";
@@ -84,7 +81,7 @@ public class NewArticleWorkflowImpl extends AuthoringTemplate<NewArticleWorkflow
     
     for(final var label : props.getLabels()) {
       final var localeRef = label.getLocale();
-      final var locale = AuthoringMapper.resolveLocale(localeRef, world);
+      final var locale = world.findOneLocale(localeRef);
           
       workflow.addLabels(ImmutableLocaleLabel.builder()
           .locale(locale.map(e -> e.getId()).orElse(localeRef))
