@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.hash.Hashing;
 
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.JsonArray;
 
 @Value.Immutable
 @JsonSerialize(as = ImmutableTree.class)
@@ -92,7 +93,14 @@ public interface Tree extends Entity {
   
   default Optional<Node> findOneNode(String fullPath) {
     final var found = findAllNodes(Arrays.asList(fullPath), (ignore) -> {});
-    RepoAssert.isTrue(found.size() <= 1, () -> "Expected exactly 0..1 nodes, but found: " + found.size() + " for path: " + fullPath);
+    if(found.size() > 1) {
+      RepoAssert.isTrue(found.size() <= 1, 
+          () -> "Expected exactly 0..1 nodes, but found: " + found.size() + 
+                " for path: " + fullPath + " nodes: " + System.lineSeparator() + 
+                new JsonArray(found).encodePrettily().replace("\"", "'")
+                );      
+    }
+
     return found.stream().findFirst();
   }
   

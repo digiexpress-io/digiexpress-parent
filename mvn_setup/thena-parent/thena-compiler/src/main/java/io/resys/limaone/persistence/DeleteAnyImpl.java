@@ -172,7 +172,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
   
   private void sanitizeArticle(ModelWorld world, String articleId) {
     // Check if article is used in article links
-    final var usedInLinks = world.getArticleLinks().values().stream()
+    /*final var usedInLinks = world.getArticleLinks().values().stream()
         .filter(link -> link.getBody().getArticles().contains(articleId))
         .findFirst();
     if(usedInLinks.isPresent()) {
@@ -185,7 +185,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         .findFirst();
     if(usedInWorkflows.isPresent()) {
       throw new AuthoringException(props, "Article '" + articleId + "' is used in article workflow: '" + usedInWorkflows.get().getId() + "'!");
-    }
+    }*/
     
     // Check for parent/children relationships
     final var usedAsParent = world.getArticles().values().stream()

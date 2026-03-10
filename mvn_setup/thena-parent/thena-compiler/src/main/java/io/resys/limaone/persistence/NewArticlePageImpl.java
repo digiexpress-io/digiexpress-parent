@@ -13,6 +13,7 @@ import io.resys.limaone.model.Model;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.model.Model.ModelWorld;
 import io.resys.limaone.persistence.AuthoringImpl.AuthoringConfig;
+import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 
 
@@ -45,7 +46,7 @@ public class NewArticlePageImpl extends AuthoringTemplate<NewArticlePageImpl, Mo
       .docs(BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_PAGE)
       .build(nextWorld -> {
         final var body = internalBuild(nextWorld.getCurrentWorld());
-        return nextWorld.newModel(body.getLocale(), body);
+        return nextWorld.newModel(OidUtils.gen(), body);
       });
   }
   
