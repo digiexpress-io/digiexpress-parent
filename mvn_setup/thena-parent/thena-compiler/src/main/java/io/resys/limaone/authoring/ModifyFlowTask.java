@@ -23,7 +23,6 @@ public interface ModifyFlowTask {
   @Value.Immutable @JsonSerialize(as = ImmutableModifyFlowTaskProps.class) @JsonDeserialize(as = ImmutableModifyFlowTaskProps.class)
   interface ModifyFlowTaskProps extends AuthoringModelProps {
     String getFlowTaskId();
-    String getTaskName();
     String getTaskValue();
   }
 }

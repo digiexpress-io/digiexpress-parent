@@ -51,7 +51,6 @@ public class NewFlowTaskImpl extends AuthoringTemplate<NewFlowTaskImpl, Model<Fl
   
   private FlowTask internalBuild(ModelWorld world) {
     Objects.requireNonNull(props, () -> "props must be defined");
-    Objects.requireNonNull(props, () -> "props must be defined");
 
     final var syntax = """
 // custom ref example - @ServiceRef(value="newService", type=BodyType.DT)
