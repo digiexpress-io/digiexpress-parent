@@ -60,7 +60,7 @@ public class AuthoringTest extends DbSupport {
         .props(props -> props.articleId(article1.getId()).locale(locale1.getId()).content("# English content"))
         .buildSync();
     
-    authoring.newModel()
+    final var page2 = authoring.newModel()
       .newArticlePage()
       .props(props -> props.articleId(article1.getId()).locale(locale2.getId()).content("# Finnish content"))
       .buildSync();
@@ -136,40 +136,47 @@ public class AuthoringTest extends DbSupport {
     // Assertions.assertEquals(expected, actual);
     
     authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(template1.getId()).bodyType(Model.BodyType.ARTICLE_TEMPLATE))
-        .buildSync();
+      .deleteAny()
+      .props(props -> props.id(template1.getId()).bodyType(Model.BodyType.ARTICLE_TEMPLATE))
+      .buildSync();
 
     authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(page1.getId()).bodyType(Model.BodyType.ARTICLE_PAGE))
-        .buildSync();
+      .deleteAny()
+      .props(props -> props.id(page1.getId()).bodyType(Model.BodyType.ARTICLE_PAGE))
+      .buildSync();
+    
+    authoring.deleteModel()
+      .deleteAny()
+      .props(props -> props.id(page2.getId()).bodyType(Model.BodyType.ARTICLE_PAGE))
+      .buildSync();
+    
+    
+    authoring.deleteModel()
+      .deleteAny()
+      .props(props -> props.id(link1.getId()).bodyType(Model.BodyType.ARTICLE_LINK))
+      .buildSync();
+  
+    authoring.deleteModel()
+      .deleteAny()
+      .props(props -> props.id(workflow1.getId()).bodyType(Model.BodyType.ARTICLE_WORKFLOW))
+      .buildSync();
+  
+    
+    authoring.deleteModel()
+      .deleteAny()
+      .props(props -> props.id(article1.getId()).bodyType(Model.BodyType.ARTICLE))
+      .buildSync();
 
     authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(article1.getId()).bodyType(Model.BodyType.ARTICLE))
-        .buildSync();
-    
+      .deleteAny()
+      .props(props -> props.id(article2.getId()).bodyType(Model.BodyType.ARTICLE))
+      .buildSync();
+  
     authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(article2.getId()).bodyType(Model.BodyType.ARTICLE))
-        .buildSync();
-    
-    authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(locale1.getId()).bodyType(Model.BodyType.LOCALE))
-        .buildSync();
-    
-    authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(link1.getId()).bodyType(Model.BodyType.ARTICLE_LINK))
-        .buildSync();
-    
-    authoring.deleteModel()
-        .deleteAny()
-        .props(props -> props.id(workflow1.getId()).bodyType(Model.BodyType.ARTICLE_WORKFLOW))
-        .buildSync();
-    
+      .deleteAny()
+      .props(props -> props.id(locale1.getId()).bodyType(Model.BodyType.LOCALE))
+      .buildSync();
+  
     // delete state
     // expected = TestExporter.toString(getClass(), "delete_state.txt");
     // actual = super.toRepoExport("test1");

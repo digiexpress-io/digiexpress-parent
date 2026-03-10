@@ -39,7 +39,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
   public Uni<Model<?>> build() {
     final BodyType[] docsToLoad = switch (props.getBodyType()) {
       case LOCALE -> new BodyType[] { BodyType.LOCALE, BodyType.ARTICLE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW, BodyType.ARTICLE_PAGE };
-      case ARTICLE -> new BodyType[] { BodyType.ARTICLE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW };
+      case ARTICLE -> new BodyType[] { BodyType.ARTICLE, BodyType.ARTICLE_PAGE, BodyType.ARTICLE_LINK, BodyType.ARTICLE_WORKFLOW };
       case ARTICLE_LINK -> new BodyType[] { BodyType.ARTICLE_LINK, BodyType.ARTICLE };
       case ARTICLE_WORKFLOW -> new BodyType[] { BodyType.ARTICLE_WORKFLOW, BodyType.ARTICLE };
       case ARTICLE_PAGE -> new BodyType[] { BodyType.ARTICLE_PAGE };
@@ -171,8 +171,16 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
   }
   
   private void sanitizeArticle(ModelWorld world, String articleId) {
+    // Check if article has pages
+    final var usedInPages = world.getArticlePages().values().stream()
+        .filter(page -> page.getBody().getArticle().equals(articleId))
+        .findFirst();
+    if(usedInPages.isPresent()) {
+      throw new AuthoringException(props, "Article '" + articleId + "' has article page: '" + usedInPages.get().getId() + "'!");
+    }
+    
     // Check if article is used in article links
-    /*final var usedInLinks = world.getArticleLinks().values().stream()
+    final var usedInLinks = world.getArticleLinks().values().stream()
         .filter(link -> link.getBody().getArticles().contains(articleId))
         .findFirst();
     if(usedInLinks.isPresent()) {
@@ -185,7 +193,7 @@ public class DeleteAnyImpl extends AuthoringTemplate<DeleteAnyImpl, Model<?>> im
         .findFirst();
     if(usedInWorkflows.isPresent()) {
       throw new AuthoringException(props, "Article '" + articleId + "' is used in article workflow: '" + usedInWorkflows.get().getId() + "'!");
-    }*/
+    }
     
     // Check for parent/children relationships
     final var usedAsParent = world.getArticles().values().stream()
