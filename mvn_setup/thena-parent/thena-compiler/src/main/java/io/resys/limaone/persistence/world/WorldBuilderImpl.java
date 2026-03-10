@@ -10,9 +10,13 @@ import java.util.function.Function;
 import io.resys.limaone.model.Model.BodyType;
 import io.resys.limaone.persistence.WorldPersistence.NextWorld;
 import io.resys.limaone.persistence.WorldPersistence.WorldBuilder;
+import io.resys.limaone.persistence.world.NextWorldImpl.NextWorldResult;
 import io.resys.limaone.persistence.world.WorldPersistenceFs.WorldLockException;
 import io.resys.thena.fs.api.FileSystem;
+import io.resys.thena.fs.api.FileSystem.FileSystemTenant;
+import io.resys.thena.fs.api.commits.CommitBuilder;
 import io.resys.thena.fs.api.tags.TagBuilder;
+import io.resys.thena.fs.entities.Ref;
 import io.resys.thena.fs.entities.Tag.TagTransitives;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -58,41 +62,81 @@ public class WorldBuilderImpl implements WorldBuilder {
         logger.stage4NextState(nextWorldResult);
         
         
-        final var commitStream = nextWorldResult.isCommits() ? commitBuilder
-            .branchName(branchName)
-            .branchLock(ref.getCommitId()).build()
-            .onItem().transformToUni(ignore -> Uni.createFrom().voidItem()) : Uni.createFrom().voidItem();
-        
-        final var tagStream = nextWorldResult.getDeployment()
-            .map(deployment -> tenant.createTag()
-                
-                .commitId(deployment.getFromRefId())
-                .tagAuthor(deployment.getCreatedBy())
-                .tagCreatedAt(deployment.getCreatedAt())
-                .beforeTagCompletion((TagTransitives loaded, TagBuilder builder) -> {
-                  if(!loaded.getCommit().getId().equals(deployment.getFromCommitId())) {
-                    throw new WorldLockException();
-                  }
-                })
-                .newTag(props -> props
-                    .externalId(deployment.getExternalId())
-                    
-                    .tagName(deployment.getName())
-                    .tagDescription(deployment.getDescription())
-                    .tagStartsAt(deployment.getStartsAt())
-                    .build()
-                )
-                .build()
-            .onItem().transformToUni(ignore -> Uni.createFrom().voidItem()))
-            .orElse(Uni.createFrom().voidItem());
-        
+        final var commitStream = createCommitStream(ref, nextWorldResult, commitBuilder);
+        final var newTagStream = createNewTagStream(nextWorldResult, tenant);
+        final var updateTagStream = createUpdateTagStream(nextWorldResult, tenant);
+
         return commitStream
-            .onItem().transformToUni(ignore -> tagStream)
+            .onItem().transformToUni(ignore -> newTagStream)
+            .onItem().transformToUni(ignore -> updateTagStream)
             .onItem().transform(ignore -> mapped)
             .onFailure().invoke((e) -> logger.closeWithFailure(e))
             .onItem().invoke(() -> logger.close());
 
       });
   }
+  
+  
+  private Uni<Void> createCommitStream(Ref ref, NextWorldResult nextWorldResult, CommitBuilder commitBuilder) {
+    if(nextWorldResult.isCommits()) {
+      return commitBuilder
+        .branchName(branchName)
+        .branchLock(ref.getCommitId()).build()
+        .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
+    }
+    return Uni.createFrom().voidItem();
+  }
 
+  private Uni<Void> createNewTagStream(NextWorldResult nextWorldResult, FileSystemTenant tenant) {
+    if(nextWorldResult.getNewDeployment().isEmpty()) {
+      return Uni.createFrom().voidItem();
+    }
+    
+    final var deployment = nextWorldResult.getNewDeployment().get();
+    return tenant.createTag()
+        .commitId(deployment.getFromRefId())
+        
+        .tagAuthor(deployment.getCreatedBy())
+        .tagCreatedAt(deployment.getCreatedAt())
+
+        .beforeTagCompletion((TagTransitives loaded, TagBuilder builder) -> {
+          if(!loaded.getCommit().getId().equals(deployment.getFromCommitId())) {
+            throw new WorldLockException();
+          }
+        })
+        
+        .newTag(props -> props
+            .externalId(deployment.getExternalId())
+            
+            .tagName(deployment.getName())
+            .tagDescription(deployment.getDescription())
+            .tagStartsAt(deployment.getStartsAt())
+            .build()
+        )
+        .build()
+    .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
+  }
+  
+  
+  private Uni<Void> createUpdateTagStream(NextWorldResult nextWorldResult, FileSystemTenant tenant) {
+    if(nextWorldResult.getUpdateDeployment().isEmpty()) {
+      return Uni.createFrom().voidItem();
+    }
+    
+    final var model = nextWorldResult.getUpdateDeployment().get();
+    final var deployment = model.getBody();
+    
+    return tenant.modifyTag()
+        .tagId(model.getId())
+        .tagAuthor(deployment.getCreatedBy())
+        .modifyTag((prev, props) -> props
+            .externalId(deployment.getExternalId())
+            .tagName(deployment.getName())
+            .tagDescription(deployment.getDescription())
+            .tagStartsAt(deployment.getStartsAt())
+            .build()
+        )
+        .build()
+    .onItem().transformToUni(ignore -> Uni.createFrom().voidItem());
+  }
 }

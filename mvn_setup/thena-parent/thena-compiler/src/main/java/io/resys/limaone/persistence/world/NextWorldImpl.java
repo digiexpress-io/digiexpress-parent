@@ -20,14 +20,16 @@ import io.vertx.core.json.JsonObject;
 import lombok.Value;
 
 public class NextWorldImpl implements NextWorld {
+  @SuppressWarnings("unused")
   private final Ref ref;
   private final ModelWorld world;
   private final CommitBuilder commitBuilder;
+  private final String commitAuthor;
+  private final OffsetDateTime createdAt;
   
-  private OffsetDateTime createdAt;
-  private String commitAuthor = "world-builder";
   private StringBuilder commitMessage = new StringBuilder();
-  private List<Deployment> deployments = new ArrayList<>();
+  private List<Deployment> newDeployment = new ArrayList<>();
+  private List<Model<Deployment>> updateDeployment = new ArrayList<>();
   private int changes;
       
   public NextWorldImpl(CommitBuilder commitBuilder, Ref ref, String author, OffsetDateTime createdAt) {
@@ -46,7 +48,11 @@ public class NextWorldImpl implements NextWorld {
         .commitAuthor(commitAuthor)
         .commitMessage(commitMessage.toString());
     }
-    return new NextWorldResult(changes > 0, deployments.stream().findFirst());
+    return new NextWorldResult(
+        changes > 0, 
+        newDeployment.stream().findFirst(),
+        updateDeployment.stream().findFirst()
+    );
   }
   
   private void append(String msg) {
@@ -60,14 +66,21 @@ public class NextWorldImpl implements NextWorld {
   public ModelWorld getCurrentWorld() {
     return world;
   }
+  
+
+  @Override
+  public <T extends Body> Model<T> deleteModel(String id, T body) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
   @Override
   public <T extends Body> Model<T> newModel(String name, T body) {
     final var id = OidUtils.genUUID();   
     if(body.getBodyType() == BodyType.DEPLOYMENT) {
       
-      RepoAssert.isTrue(deployments.isEmpty(), () -> "No point in creating more then one tag in one tx!");
-      deployments.add((Deployment) body);
+      RepoAssert.isTrue(newDeployment.isEmpty() && updateDeployment.isEmpty(), () -> "No point in creating more then one tag in one tx!");
+      newDeployment.add((Deployment) body);
       
       return ImmutableModel.<T>builder()
           .id(id)
@@ -82,7 +95,7 @@ public class NextWorldImpl implements NextWorld {
     this.commitBuilder.newFile(newFile -> {
       newFile
         .fileId(id)
-        .fileName(name)
+        .fileName(getFileName(name, body))
         .fileValue(JsonObject.mapFrom(body))
         .fileType(body.getBodyType().name())
         .build()
@@ -96,14 +109,50 @@ public class NextWorldImpl implements NextWorld {
         .bodyHash("not possible at a time")
         .build();
   }
+  
+  @SuppressWarnings("unchecked")
   @Override
   public <T extends Body> Model<T> mergeModel(String id, String name, T body) {
+    if(body.getBodyType() == BodyType.DEPLOYMENT) {
+      
+      RepoAssert.isTrue(newDeployment.isEmpty() && updateDeployment.isEmpty(), () -> "No point in creating more then one tag in one tx!");
+      
+      final var updated = ImmutableModel.<Deployment>builder()
+          .id(id)
+          .body((Deployment) body)
+          .bodyType(body.getBodyType())
+          .bodyHash("not possible at a time")
+          .build();
+      
+      updateDeployment.add(updated);
+      return (Model<T>) updated;
+    }
+    
+    changes++;
     append("updated file: " + name);
-    return null;
+    this.commitBuilder.mergeFile(id, (node, mergeFile) -> {
+      mergeFile
+        .fileName(getFileName(name, body))
+        .fileValue(JsonObject.mapFrom(body))
+        .build();
+    });
+    
+    return ImmutableModel.<T>builder()
+        .id(id)
+        .body(body)
+        .bodyType(body.getBodyType())
+        .bodyHash("not possible at a time")
+        .build();
   }
   @Value
   public static class NextWorldResult {
     boolean isCommits;
-    Optional<Deployment> deployment;
+    Optional<Deployment> newDeployment;
+    Optional<Model<Deployment>> updateDeployment;
+  }
+  
+  
+  private String getFileName(String name, Model.Body body) {
+    return name;
   }
 }
