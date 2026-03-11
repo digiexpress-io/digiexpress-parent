@@ -8,7 +8,7 @@ import io.resys.limaone.program.ArticleProgram;
 import io.resys.limaone.program.Compiler.Bundle;
 import io.resys.limaone.program.Compiler.BundleQuery;
 import io.resys.limaone.program.DecisionProgram;
-import io.resys.limaone.program.DialobProgram;
+import io.resys.limaone.program.WorkflowProgram;
 import io.resys.limaone.program.FlowProgram;
 import io.resys.limaone.program.FlowTaskProgram;
 import io.resys.limaone.program.Program;
@@ -28,7 +28,7 @@ public class ImmutableBundle implements Bundle {
   private final BundleGroup<FlowProgram> flows;
   private final BundleGroup<FlowTaskProgram> flowTasks;
   private final BundleGroup<DecisionProgram> decisions;
-  private final BundleGroup<DialobProgram> dialobs;
+  private final BundleGroup<WorkflowProgram> dialobs;
   
   
   public ImmutableBundle(
@@ -51,7 +51,7 @@ public class ImmutableBundle implements Bundle {
     final var flows = new BundleGroup<FlowProgram>(BodyType.FLOW);
     final var flowTasks = new BundleGroup<FlowTaskProgram>(BodyType.FLOW_TASK);
     final var decisions = new BundleGroup<DecisionProgram>(BodyType.DECISION_TABLE);
-    final var dialobs = new BundleGroup<DialobProgram>(BodyType.DIALOB);
+    final var dialobs = new BundleGroup<WorkflowProgram>(BodyType.DIALOB);
     
     programs.stream().forEach(program -> {
       articles.accept(program);
@@ -69,7 +69,7 @@ public class ImmutableBundle implements Bundle {
   }
 
   @Override
-  public BundleQuery<DialobProgram> queryDialob() {
+  public BundleQuery<WorkflowProgram> queryDialob() {
     return new BundleQueryImpl<>(dialobs);
   }
   @Override
