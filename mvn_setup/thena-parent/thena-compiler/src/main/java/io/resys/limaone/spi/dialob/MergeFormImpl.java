@@ -27,6 +27,7 @@ public class MergeFormImpl implements MergeForm {
         .httpQuery()
         .uri(uri -> uri.append("forms").append(form.getId()).build())
         .method(Form.class)
-        .putOneObject(form);
+        .putOneObject(form)
+        .onItem().invoke(updatedForm -> db.getCache().putForm(form.getId(), updatedForm));
   }
 }

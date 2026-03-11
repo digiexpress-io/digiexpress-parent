@@ -34,15 +34,34 @@ public class FormQueryImpl implements FormQuery {
   @Override
   public Uni<Optional<Form>> findOne() {
     if (formId != null) {
+      final var cached = db.getCache().getForm(formId);
+      if (cached.isPresent()) {
+        return Uni.createFrom().item(cached);
+      }
       return db.getClient()
         .httpQuery()
         .uri(uri -> uri.append("forms").append(formId).build())
         .method(Form.class)
-        .findOneObject();
+        .findOneObject()
+        .onItem().invoke(formOpt -> {
+          if (formOpt.isPresent()) {
+            db.getCache().putForm(formId, formOpt.get());
+          }
+        });
     }
     
     Objects.requireNonNull(formName, () -> "formName must be defined");
     Objects.requireNonNull(formVersion, () -> "formVersion must be defined");
+    
+    final var cachedTag = db.getCache().getFormTag(formName, formVersion);
+    if (cachedTag.isPresent()) {
+      final var resolvedFormId = cachedTag.get().getFormId();
+      final var cachedForm = db.getCache().getForm(resolvedFormId);
+      if (cachedForm.isPresent()) {
+        return Uni.createFrom().item(cachedForm);
+      }
+    }
+    
     return db.getClient()
       .httpQuery()
       .uri(uri -> uri.append("forms").append(formName).append("tags").append(formVersion).build())
@@ -52,12 +71,25 @@ public class FormQueryImpl implements FormQuery {
         if (tagOpt.isEmpty()) {
           return Uni.createFrom().item(Optional.<Form>empty());
         }
+        final var tag = tagOpt.get();
+        db.getCache().putFormTag(formName, formVersion, tag);
+        
+        final var resolvedFormId = tag.getFormId();
+        final var cachedForm = db.getCache().getForm(resolvedFormId);
+        if (cachedForm.isPresent()) {
+          return Uni.createFrom().item(cachedForm);
+        }
+        
         return db.getClient()
           .httpQuery()
-          .uri(uri -> uri.append("forms").append(tagOpt.get().getFormId()).build())
+          .uri(uri -> uri.append("forms").append(resolvedFormId).build())
           .method(Form.class)
-          .findOneObject();
+          .findOneObject()
+          .onItem().invoke(formOpt -> {
+            if (formOpt.isPresent()) {
+              db.getCache().putForm(resolvedFormId, formOpt.get());
+            }
+          });
       });
-    
   }
 }
