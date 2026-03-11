@@ -7,7 +7,7 @@
     <logger name="io.resys.limaone" level="DEBUG"/>
     <logger name="tc" level="OFF"/>
     <logger name="io.netty" level="OFF"/>
-    <logger name="org.testcontainers" level="OFF"/>
+    <logger name="org.testcontainers" level="INFO"/>
     
     <logger name="io.resys.thena.show_sql" level="DEBUG"/>
     

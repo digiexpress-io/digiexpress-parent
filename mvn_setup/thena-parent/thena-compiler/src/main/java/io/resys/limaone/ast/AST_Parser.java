@@ -16,9 +16,19 @@ public interface AST_Parser {
   FlowParser parseFlow();
   FlowTaskParser parseFlowTask();
   DecsionTableParser parseDecisionTable();
-
+  DialobFormParser parseDialobForm();
+  
+  
+  interface DialobFormParser {
+    DialobFormParser formId(String formId);
+    DialobFormParser formName(String formName);
+    DialobFormParser formVersion(String formVersion);
+    DialobForm_AST parse();
+  }
+  
   interface ArticleParser {
     ArticleParser world(ModelWorld world);
+    ArticleParser onDependency(Consumer<Dependency_AST> dependency);
     Article_AST parse();
   }
   
