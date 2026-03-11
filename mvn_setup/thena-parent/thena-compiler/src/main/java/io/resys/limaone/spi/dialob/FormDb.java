@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.form.FormTag;
-import io.resys.limaone.model.ImmutableArticleLink;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
