@@ -11,6 +11,16 @@ function parseInit(value: string | undefined) {
   return value ?? null;
 }
 
+export const ReadOnlyTime: React.FC<GInputTimeProps> = (props) => {
+  const classes = useUtilityClasses(props.id, props.variant);
+  const ownerState = { variant: props.variant ?? 'time' };
+  return (
+    <GInputTimeInputContainer ownerState={ownerState} className={classes.inputContainer}>
+      <TextField type="time" fullWidth value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />
+    </GInputTimeInputContainer>
+  );
+}
+
 export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
   const intl = useIntl();
   const classes = useUtilityClasses(props.id, props.variant);
@@ -49,13 +59,12 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
         inputProps={{ step, className: classes.input }}
         slotProps={{
           input: {
-            readOnly: props.readOnly,
             endAdornment: (
               <InputAdornment position="end" className={classes.endAdornment}>
                 <IconButton
                   size="small"
                   onClick={() => setValue(null)}
-                  disabled={!value || props.disabled || props.readOnly}
+                  disabled={!value || props.disabled}
                   aria-label={intl.formatMessage({ id: 'common.clear', defaultMessage: 'Clear' })}
                   edge="end"
                   className={classes.clearButton}
@@ -65,7 +74,7 @@ export const TimeAndCalendar: React.FC<GInputTimeProps> = (props) => {
                 <IconButton
                   size="small"
                   onClick={openNativePicker}
-                  disabled={props.disabled || props.readOnly}
+                  disabled={props.disabled}
                   aria-label={intl.formatMessage({ id: 'gamut.openTimePicker', defaultMessage: 'Open time picker' })}
                   edge="end"
                   className={classes.timeButton}

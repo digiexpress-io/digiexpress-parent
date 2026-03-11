@@ -10,6 +10,10 @@ import { useInput } from './InputProvider';
 
 
 
+export const ReadOnlyAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (props) => {
+  return <TextField fullWidth value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />;
+}
+
 export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (props) => {
   const backendValue = props.value;
 
@@ -56,24 +60,13 @@ export const InputAddress: React.FC<GInputBaseAnyProps & GInputAddressProps> = (
     return <TextField  {...params} error={(props.errors?.length ?? 0) > 0} InputLabelProps={{ shrink: true }} />
   }
 
-  // avoid messy overriding of mui disabled props on autocomplete -- use alternative component instead
-  if (props.readOnly) {
-    return (
-      <TextField
-        fullWidth
-        value={selected ?? ''}
-        slotProps={{ input: { readOnly: true } }}
-      />
-    );
-  }
-
   return (
     <Autocomplete fullWidth freeSolo
       options={options}
       value={selected ?? ''}
       onInputChange={handleFiltering}
       onChange={handleChange}
-      disabled={props.disabled || props.readOnly}
+      disabled={props.disabled}
       renderInput={handelRenderInput}
     />
   )

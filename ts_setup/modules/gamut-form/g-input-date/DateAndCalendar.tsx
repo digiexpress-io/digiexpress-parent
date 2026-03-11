@@ -48,22 +48,23 @@ const input = React.forwardRef<any, DelegateInputProps>((props, _ref) => {
   />)
 })
 
+export const ReadOnlyDate: React.FC<GInputDateProps> = (props) => {
+  const classes = useUtilityClasses(props.id, props.variant);
+  const ownerState = { variant: props.variant ?? 'date' };
+  const parsed = parseInit(props.value);
+  const displayValue = parsed ? parsed.toFormat('dd.MM.yyyy') : '';
+  return (
+    <GInputDateInput ownerState={ownerState} className={classes.input}>
+      <TextField fullWidth value={displayValue} slotProps={{ input: { readOnly: true } }} />
+    </GInputDateInput>
+  );
+}
+
 export const DateAndCalendar: React.FC<GInputDateProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const [value, setValue] = React.useState<DateTime | null>(parseInit(props.value));
   const ownerState = { variant: props.variant ?? 'date' };
   const { setExtendedErrors, disabled } = props;
-
-  if (props.readOnly) {
-    const displayValue = value ? value.toFormat('dd.MM.yyyy') : '';
-    return (
-      <GInputDateInput ownerState={ownerState} className={classes.input}>
-        <TextField fullWidth value={displayValue}
-          slotProps={{ input: { readOnly: true } }}
-        />
-      </GInputDateInput>
-    );
-  }
 
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>

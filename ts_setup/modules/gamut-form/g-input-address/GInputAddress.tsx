@@ -12,7 +12,7 @@ import { GInputBase, GInputBaseProps } from '../g-input-base'
 
 import { MUI_NAME, GInputAddressRoot, useUtilityClasses } from './useUtilityClasses'
 import { useIntl } from 'react-intl'
-import { InputAddress } from './InputAddress'
+import { InputAddress, ReadOnlyAddress } from './InputAddress'
 import { InputMap } from './InputMap'
 import { InputProvider } from './InputProvider'
 
@@ -90,7 +90,7 @@ export const GInputAddress: React.FC<GInputAddressProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: InputAddress,
+      input: props.readOnly ? ReadOnlyAddress : InputAddress,
       secondary: InputMap
     },
     slotProps: {

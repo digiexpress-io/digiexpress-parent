@@ -1,3 +1,4 @@
+import React from 'react';
 import { generateUtilityClass, styled, useThemeProps, TextField, TextFieldProps } from '@mui/material'
 import composeClasses from "@mui/utils/composeClasses";
 
@@ -41,7 +42,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: GInput,
+      input: props.readOnly ? ReadOnlyTextarea : GInput,
     },
     slotProps: {
       error: { id, errors },
@@ -52,6 +53,18 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
   }
   const classes = useUtilityClasses(props.id, variant);
   return { classes, ownerState, props, slots };
+}
+
+
+const ReadOnlyTextarea: React.FC<GInputBaseAnyProps & TextFieldProps & { errors?: any }> = (props) => {
+  return (
+    <TextField
+      value={props.value}
+      rows={props.rows}
+      multiline
+      slotProps={{ input: { readOnly: true } }}
+    />
+  );
 }
 
 

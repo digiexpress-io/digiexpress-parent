@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { OverridableStringUnion } from '@mui/types'
-import { Box, TextField, Typography, useThemeProps } from '@mui/material'
+import { TextField, useThemeProps } from '@mui/material'
 
 import { DialobApi } from '@dxs-ts/gamut-api'
 import { GInputError } from '../g-input-error'
@@ -54,6 +54,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
   const classes = useUtilityClasses(props.id, variant);
   const ownerState = { ...props, variant };
 
+
   const { id, label, description } = props;
   const slots: GInputBaseProps<GInputTextProps> = {
     id,
@@ -61,7 +62,7 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: TextInput,
+      input: props.readOnly ? ReadOnlyText : TextInput,
     },
     slotProps: {
       error: { id, errors },
@@ -79,10 +80,21 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
 }
 
 
+const ReadOnlyText: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
+  const classes = useUtilityClasses(props.id, props.variant);
+  return (
+    <TextField
+      value={props.value ?? ''}
+      className={classes.input}
+      slotProps={{ input: { readOnly: true } }}
+    />
+  );
+}
+
 const TextInput: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   return (<>
-    <TextField slotProps={{ input: { readOnly: props.readOnly } }}
+    <TextField
       disabled={props.disabled}
       value={props.value ?? ''}
       name={props.name}

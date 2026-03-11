@@ -40,7 +40,6 @@ export const GInputGroupRoot = styled('div', {
 
     ...(ownerState.readOnly ? {
       cursor: 'not-allowed',
-      backgroundColor: 'pink'
     } : {})
   };
 });
