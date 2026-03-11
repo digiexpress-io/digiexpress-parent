@@ -34,7 +34,7 @@ export const GInputGroupRow: React.FC<GInputGroupRowProps> = (initProps) => {
     name: MUI_NAME,
   });
 
-  const { id, label, children } = props;
+  const { id, children } = props;
   const ownerState = { ...props };
   const classes = useUtilityClasses(id);
 
@@ -56,9 +56,11 @@ export const GInputGroupRow: React.FC<GInputGroupRowProps> = (initProps) => {
             <Typography>{props.order + 1}</Typography>
           </div>
           <Divider flexItem />
-          <IconButton disabled={props.disabled} color='error' onClick={handleDelete}>
-            <DeleteIcon />
-          </IconButton>
+          {props.readOnly ? null : (
+            <IconButton disabled={props.disabled} color='error' onClick={handleDelete}>
+              <DeleteIcon />
+            </IconButton>
+          )}
         </Label>)
       }
       <Body {...props} disabled={props.disabled} className={classes.body}>

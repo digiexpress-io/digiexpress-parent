@@ -16,7 +16,7 @@ export const ReadOnlyTime: React.FC<GInputTimeProps> = (props) => {
   const ownerState = { variant: props.variant ?? 'time' };
   return (
     <GInputTimeInputContainer ownerState={ownerState} className={classes.inputContainer}>
-      <TextField type="time" fullWidth value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />
+      <TextField type="time" fullWidth value={props.value || '--'} slotProps={{ input: { readOnly: true } }} />
     </GInputTimeInputContainer>
   );
 }

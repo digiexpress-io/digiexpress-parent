@@ -42,7 +42,7 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
       error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
-      input: props.readOnly ? ReadOnlyTextarea : GInput,
+      input: props.readOnly ? ReadOnlyTextArea : GInput,
     },
     slotProps: {
       error: { id, errors },
@@ -56,11 +56,11 @@ export function useThemeInfra(initProps: GInputTextAreaProps) {
 }
 
 
-const ReadOnlyTextarea: React.FC<GInputBaseAnyProps & TextFieldProps & { errors?: any }> = (props) => {
+const ReadOnlyTextArea: React.FC<GInputBaseAnyProps & TextFieldProps & { errors?: any }> = (props) => {
   return (
     <TextField
-      value={props.value}
-      rows={props.rows}
+      value={props.value || '--'}
+      rows={1}
       multiline
       slotProps={{ input: { readOnly: true } }}
     />

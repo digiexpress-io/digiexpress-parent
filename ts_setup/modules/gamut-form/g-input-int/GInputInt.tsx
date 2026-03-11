@@ -88,7 +88,7 @@ const DEFAULT_FORMAT: numbro.Format = {
 
 
 const ReadOnlyInt: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {
-  return <TextField value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />;
+  return <TextField value={props.value ?? '--'} slotProps={{ input: { readOnly: true } }} />;
 }
 
 const IntInput: React.FC<GInputBaseAnyProps & GInputIntProps> = (props) => {

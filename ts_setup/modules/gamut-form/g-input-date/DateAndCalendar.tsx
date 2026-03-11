@@ -52,7 +52,7 @@ export const ReadOnlyDate: React.FC<GInputDateProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
   const ownerState = { variant: props.variant ?? 'date' };
   const parsed = parseInit(props.value);
-  const displayValue = parsed ? parsed.toFormat('dd.MM.yyyy') : '';
+  const displayValue = parsed ? parsed.toFormat('dd.MM.yyyy') : '--';
   return (
     <GInputDateInput ownerState={ownerState} className={classes.input}>
       <TextField fullWidth value={displayValue} slotProps={{ input: { readOnly: true } }} />

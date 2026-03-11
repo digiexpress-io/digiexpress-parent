@@ -53,7 +53,7 @@ export const ReadOnlyDropdown: React.FC<GInputListProps> = (props) => {
   const { datasource, value } = props;
   const classes = useUtilityClasses(props.id, props.variant);
   const selectedItem = datasource?.entries.find(e => e.key + '' === value + '');
-  const displayValue = selectedItem?.value ?? '';
+  const displayValue = selectedItem?.value ?? '--';
 
   return (
     <TextField fullWidth value={displayValue} className={classes.input}

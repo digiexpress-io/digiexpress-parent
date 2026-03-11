@@ -88,7 +88,7 @@ const DEFAULT_FORMAT: numbro.Format = {
 
 
 const ReadOnlyDecimal: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
-  return <TextField value={props.value ?? ''} slotProps={{ input: { readOnly: true } }} />;
+  return <TextField value={props.value || '--'} slotProps={{ input: { readOnly: true } }} />;
 }
 
 const DecimalInput: React.FC<GInputBaseAnyProps & GInputDecimalProps> = (props) => {
