@@ -6,13 +6,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.common.hash.Hashing;
 
 import io.resys.limaone.ast.AST_Parser;
 import io.resys.limaone.ast.AST_Parser.ArticleParser;
+import io.resys.limaone.ast.AST_Parser.Dependency_AST;
 import io.resys.limaone.ast.Article_AST;
 import io.resys.limaone.ast.Article_AST.Link;
 import io.resys.limaone.ast.Article_AST.Markdown;
@@ -42,7 +45,7 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
   private final Map<String, Model<Locale>> enablesLocales = new HashMap<>();
   private final AST_ParserProps props;
   private final StringBuilder hashBuilder = new StringBuilder();
-  
+  private Consumer<Dependency_AST> dependency;
   private ModelWorld world;
 
   @Override
@@ -51,6 +54,12 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
     return this;
   }  
 
+
+  @Override
+  public ArticleParser onDependency(Consumer<Dependency_AST> dependency) {
+    this.dependency = Objects.requireNonNull(dependency, () -> "dependency must be defined!");
+    return this;
+  }
 
   public Article_AST parse() {
     final var result = ImmutableArticle_AST.builder()
@@ -360,4 +369,5 @@ public class ArticleParserImpl implements AST_Parser.ArticleParser {
     this.enablesLocales.putAll(locales.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     return locales;
   }
+
 }

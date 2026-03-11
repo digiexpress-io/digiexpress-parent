@@ -1,6 +1,5 @@
 package io.resys.limaone.spi.dialob;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -192,13 +191,17 @@ public interface FormDb {
    */
   interface FormTagQuery {
     
+    Multi<FormTag> findAll(String formId);
+    
+    Uni<FormTag> getOneTag(String formId, String tagName);
+    
     /**
      * Finds all form tags across all forms in the current tenant.
      * <strong>Warning:</strong> Can cause serious latency with many forms/tags.
      * 
-     * @return a list of all form tags in the tenant
+     * @return a {@link Multi} stream of all form tags
      */
-    List<FormTag> findAll(); 
+    Multi<FormTag> findAll(); 
   }
   
   /**

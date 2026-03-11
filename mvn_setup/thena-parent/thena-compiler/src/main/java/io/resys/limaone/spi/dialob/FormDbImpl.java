@@ -30,12 +30,12 @@ public class FormDbImpl implements FormDb {
   public FormTenant withTenant(String tenantIdOrName) {
     return new FormTenant() {
       @Override public String getTenantId() { return tenantIdOrName; }
-      @Override public CreateForm createForm() { return null; }
-      @Override public FormQuery formQuery() { return null; }
-      @Override public FormTagQuery formTagQuery() { return null; }
-      @Override public FormMetaQuery formMetaQuery() { return null; }
-      @Override public CreateFormTag createFormTag() { return null; }
-      @Override public MergeForm mergeForm() { return null; }
+      @Override public CreateForm createForm() { return new CreateFormImpl(formDbProps); }
+      @Override public FormQuery formQuery() { return new FormQueryImpl(formDbProps); }
+      @Override public FormTagQuery formTagQuery() { return new FormTagQueryImpl(formDbProps); }
+      @Override public FormMetaQuery formMetaQuery() { return new FormMetaQueryImpl(formDbProps); }
+      @Override public CreateFormTag createFormTag() { return new CreateFormTagImpl(formDbProps); }
+      @Override public MergeForm mergeForm() { return new MergeFormImpl(formDbProps); }
     };
   }
 

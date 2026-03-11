@@ -70,4 +70,11 @@ public class AST_ParserImpl implements AST_Parser {
       return new AST_ParserImpl(props());
     }
   }
+
+
+  @Override
+  public DialobFormParser parseDialobForm() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
