@@ -191,8 +191,23 @@ public interface FormDb {
    */
   interface FormTagQuery {
     
+    /**
+     * Finds all form tags for a specific form.
+     * Returns tags for a single form by its technical ID.
+     * 
+     * @param formId the technical form identifier
+     * @return a {@link Multi} stream of form tags for the specified form
+     */
     Multi<FormTag> findAll(String formId);
     
+    /**
+     * Gets a specific form tag by form ID and tag name.
+     * Direct access to a specific tagged version.
+     * 
+     * @param formId the technical form identifier
+     * @param tagName the tag/version name
+     * @return a {@link Uni} containing the specific form tag
+     */
     Uni<FormTag> getOneTag(String formId, String tagName);
     
     /**
